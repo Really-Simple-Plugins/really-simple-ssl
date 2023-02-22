@@ -365,6 +365,7 @@ class rsssl_admin
 			    'site_url_changed' => false,
 		    ];
         }
+        error_log("logged in, continue activating");
 	    $safe_mode = defined('RSSSL_SAFE_MODE') && RSSSL_SAFE_MODE;
         $error = false;
 	    $is_rest_request =  $request instanceof WP_REST_Request;
@@ -372,7 +373,9 @@ class rsssl_admin
 	    $wpcli = defined( 'WP_CLI' ) && WP_CLI;
 
         if ( rsssl_get_option('site_has_ssl') || get_option('rsssl_ssl_detection_overridden') || $wpcli ){
-		    //in a configuration reverse proxy without a set server variable https, add code to wpconfig
+	        error_log("site has ssl or wp cli active");
+
+	        //in a configuration reverse proxy without a set server variable https, add code to wpconfig
 	        if ( $this->do_wpconfig_loadbalancer_fix || $this->no_server_variable ) {
 		        $this->wpconfig_loadbalancer_fix();
 	        }
@@ -394,6 +397,7 @@ class rsssl_admin
 		        }
 		        update_option('rsssl_flush_caches', time(), false );
 	        }
+	        error_log("set SSL enabled");
 
 	        rsssl_update_option('ssl_enabled', true);
 	        $site_url_changed = $this->set_siteurl_to_ssl();
