@@ -20643,6 +20643,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_data_table_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-data-table-component */ "./node_modules/react-data-table-component/dist/index.cjs.js");
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _utils_sleeper__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../utils/sleeper */ "./src/utils/sleeper.js");
+/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @wordpress/data */ "@wordpress/data");
+/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__);
+
+
+
 
 
 
@@ -20715,8 +20723,24 @@ const RiskComponent = props => {
       grow: column.grow
     };
   }
+  function dispachNotification(risk, type) {
+    let text = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)('Measure was set for ' + risk, 'really-simple-ssl');
+    (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_6__.dispatch)('core/notices').createNotice(type, text, {
+      __unstableHTML: true,
+      id: 'rsssl_settings_saved',
+      type: 'snackbar',
+      isDismissible: false
+    }).then((0,_utils_sleeper__WEBPACK_IMPORTED_MODULE_5__["default"])(2000)).then(response => {
+      (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_6__.dispatch)('core/notices').removeNotice('rsssl_settings_saved');
+    });
+  }
   function onChangeHandler(fieldValue, item) {
-    updateRiskData(item.id, fieldValue);
+    updateRiskData(item.id, fieldValue).then(response => {
+      dispachNotification(item.risk, 'success');
+    }).then(response => {
+      dispachNotification(item.risk, 'error');
+    });
+    ;
   }
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (RiskComponent);
