@@ -98,6 +98,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 == Changelog ==
 = 6.2.1 =
 * Improvement: permissions check re-structuring
+* Improvement: notice on subsite within multisite environment about wildcard updated
 
 = 6.2.0 =
 * New: optional email notifications on advanced settings
