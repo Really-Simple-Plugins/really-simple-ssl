@@ -2,16 +2,16 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Really Simple SSL 6.1.1\n"
+"Project-Id-Version: Really Simple SSL 6.2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/really-simple-ssl\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-01-24T08:30:19+00:00\n"
+"POT-Creation-Date: 2023-02-22T14:05:39+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.6.0\n"
+"X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: really-simple-ssl\n"
 
 #. Plugin Name of the plugin
@@ -45,345 +45,353 @@ msgstr ""
 msgid "%s is a singleton class and you cannot create a second instance."
 msgstr ""
 
-#: class-admin.php:105
+#: class-admin.php:102
+msgid "Feature enabled"
+msgstr ""
+
+#: class-admin.php:103
+msgid "You have enabled a feature on %s. We think it's important to let you know a little bit more about this feature so you can use it without worries."
+msgstr ""
+
+#: class-admin.php:135
 msgid "Really Simple SSL and Really Simple SSL add-ons do not process any personal identifiable information, so the GDPR does not apply to these plugins or usage of these plugins on your website. You can find our privacy policy <a href=\"%s\" target=\"_blank\">here</a>."
 msgstr ""
 
-#: class-admin.php:471
+#: class-admin.php:502
 #: settings/build/index.js:382
 #: settings/src/Onboarding/Onboarding.js:269
 msgid "Dismiss"
 msgstr ""
 
-#: class-admin.php:473
+#: class-admin.php:504
 #: settings/build/index.js:382
 #: settings/src/Dashboard/TaskElement.js:54
-#: settings/src/Settings/Help.js:26
+#: settings/src/Settings/Help.js:23
 msgid "More info"
 msgstr ""
 
-#: class-admin.php:1602
+#: class-admin.php:1633
 msgid "Hi, Really Simple SSL has kept your site secure for some time now, awesome! If you have a moment, please consider leaving a review on WordPress.org to spread the word. We greatly appreciate it! If you have any questions or feedback, leave us a %smessage%s."
 msgstr ""
 
-#: class-admin.php:1604
+#: class-admin.php:1635
 msgid "Hi, Really Simple SSL has kept your site secure for a month now, awesome! If you have a moment, please consider leaving a review on WordPress.org to spread the word. We greatly appreciate it! If you have any questions or feedback, leave us a %smessage%s."
 msgstr ""
 
-#: class-admin.php:1610
+#: class-admin.php:1641
 msgid "Leave a review"
 msgstr ""
 
-#: class-admin.php:1611
+#: class-admin.php:1642
 msgid "Maybe later"
 msgstr ""
 
-#: class-admin.php:1612
+#: class-admin.php:1643
 msgid "Don't show again"
 msgstr ""
 
-#: class-admin.php:1779
+#: class-admin.php:1810
 msgid "Completed"
 msgstr ""
 
-#: class-admin.php:1780
+#: class-admin.php:1811
 #: settings/build/index.js:382
 #: settings/src/Settings/MixedContentScan.js:198
 msgid "Warning"
 msgstr ""
 
-#: class-admin.php:1781
+#: class-admin.php:1812
 msgid "Open"
 msgstr ""
 
-#: class-admin.php:1782
+#: class-admin.php:1813
 #: settings/build/index.js:382
 #: settings/src/Dashboard/OtherPlugins.js:85
-#: settings/src/Settings/SettingsGroup.js:133
+#: settings/src/Settings/SettingsGroup.js:134
 msgid "Upgrade"
 msgstr ""
 
-#: class-admin.php:1819
+#: class-admin.php:1850
 msgid "No recommended redirect rules detected."
 msgstr ""
 
-#: class-admin.php:1834
+#: class-admin.php:1865
 msgid "(Unknown)"
 msgstr ""
 
-#: class-admin.php:1843
+#: class-admin.php:1874
 msgid "Your wp-config.php has to be edited, but is not writable."
 msgstr ""
 
-#: class-admin.php:1844
-#: class-admin.php:1865
+#: class-admin.php:1875
+#: class-admin.php:1896
 msgid "Set your wp-config.php to writable and reload this page."
 msgstr ""
 
-#: class-admin.php:1845
+#: class-admin.php:1876
 msgid "To safely enable SSL on your server configuration, you should add the following line of code to your wp-config.php."
 msgstr ""
 
-#: class-admin.php:1865
+#: class-admin.php:1896
 msgid "A definition of a site url or home url was detected in your wp-config.php, but the file is not writable."
 msgstr ""
 
-#: class-admin.php:1880
+#: class-admin.php:1911
 msgid "The 'force-deactivate.php' file has to be renamed to .txt. Otherwise your ssl can be deactivated by anyone on the internet."
 msgstr ""
 
-#: class-admin.php:1881
+#: class-admin.php:1912
 msgid "Check again"
 msgstr ""
 
-#: class-admin.php:1895
+#: class-admin.php:1926
 msgid "The Really Simple SSL plugin folder in the /wp-content/plugins/ directory has been renamed to %s. This might cause issues when deactivating, or with premium add-ons. To fix this you can rename the Really Simple SSL folder back to the default %s."
 msgstr ""
 
-#: class-admin.php:1909
+#: class-admin.php:1940
 msgid "Really Simple SSL Pro is not up to date. Update Really Simple SSL Pro to ensure compatibility."
 msgstr ""
 
-#: class-admin.php:1925
+#: class-admin.php:1956
 msgid "SSL is now activated. Follow the three steps in this article to check if your website is secure."
 msgstr ""
 
-#: class-admin.php:1938
+#: class-admin.php:1969
 msgid "SSL is enabled on your site."
 msgstr ""
 
-#: class-admin.php:1942
+#: class-admin.php:1973
 msgid "SSL is not enabled yet."
 msgstr ""
 
-#: class-admin.php:1959
+#: class-admin.php:1990
 msgid "The wp-config.php file is not writable, and needs to be edited. Please set this file to writable."
 msgstr ""
 
-#: class-admin.php:1963
+#: class-admin.php:1994
 msgid "No SSL detected"
 msgstr ""
 
-#: class-admin.php:1964
+#: class-admin.php:1995
 msgid "No SSL detected. Use the retry button to check again."
 msgstr ""
 
-#: class-admin.php:1965
-#: class-admin.php:1973
-#: class-admin.php:1987
+#: class-admin.php:1996
+#: class-admin.php:2004
+#: class-admin.php:2018
 msgid "Install SSL certificate"
 msgstr ""
 
-#: class-admin.php:1966
+#: class-admin.php:1997
 msgid "Retry"
 msgstr ""
 
-#: class-admin.php:1971
+#: class-admin.php:2002
 msgid "Could not test certificate"
 msgstr ""
 
-#: class-admin.php:1972
+#: class-admin.php:2003
 #: onboarding/config.php:175
 msgid "Automatic certificate detection is not possible on your server."
 msgstr ""
 
-#: class-admin.php:1974
+#: class-admin.php:2005
 msgid "Check manually"
 msgstr ""
 
-#: class-admin.php:1979
+#: class-admin.php:2010
 msgid "An SSL certificate was detected on your site."
 msgstr ""
 
-#: class-admin.php:1984
+#: class-admin.php:2015
 msgid "Your SSL certificate will expire soon."
 msgstr ""
 
-#: class-admin.php:1985
+#: class-admin.php:2016
 msgid "SSL certificate will expire on %s."
 msgstr ""
 
-#: class-admin.php:1985
+#: class-admin.php:2016
 msgid "If your hosting provider auto-renews your certificate, no action is required. Alternatively, you have the option to generate an SSL certificate with Really Simple SSL."
 msgstr ""
 
-#: class-admin.php:1986
+#: class-admin.php:2017
 msgid "Depending on your hosting provider, %smanual installation%s may be required."
 msgstr ""
 
-#: class-admin.php:1988
+#: class-admin.php:2019
 #: settings/build/index.js:382
 #: settings/src/Dashboard/TaskElement.js:55
 msgid "Re-check"
 msgstr ""
 
-#: class-admin.php:2000
+#: class-admin.php:2031
 msgid "Mixed content fixer was successfully detected on the front-end."
 msgstr ""
 
-#: class-admin.php:2005
+#: class-admin.php:2036
 msgid "Really Simple SSL has received no response from the webpage."
 msgstr ""
 
-#: class-admin.php:2012
+#: class-admin.php:2043
 msgid "The mixed content fixer is active, but was not detected on the frontpage."
 msgstr ""
 
-#: class-admin.php:2017
+#: class-admin.php:2048
 msgid "Error occurred when retrieving the webpage."
 msgstr ""
 
-#: class-admin.php:2023
+#: class-admin.php:2054
 msgid "Mixed content fixer not enabled. Enable the option to fix mixed content on your site."
 msgstr ""
 
-#: class-admin.php:2029
+#: class-admin.php:2060
 msgid "The mixed content fixer could not be detected due to a cURL error: %s. cURL errors are often caused by an outdated version of PHP or cURL and don't affect the front-end of your site. Contact your hosting provider for a fix."
 msgstr ""
 
-#: class-admin.php:2042
+#: class-admin.php:2073
 msgid "301 redirect to https set."
 msgstr ""
 
-#: class-admin.php:2046
+#: class-admin.php:2077
 msgid "No 301 redirect is set. Enable the WordPress 301 redirect in the settings to get a 301 permanent redirect."
 msgstr ""
 
-#: class-admin.php:2061
+#: class-admin.php:2092
 msgid "301 redirect to https set: .htaccess redirect."
 msgstr ""
 
-#: class-admin.php:2066
+#: class-admin.php:2097
 msgid "WordPress 301 redirect enabled. We recommend to enable a 301 .htaccess redirect."
 msgstr ""
 
-#: class-admin.php:2073
+#: class-admin.php:2104
 msgid "Enable a .htaccess redirect or PHP redirect in the settings to create a 301 redirect."
 msgstr ""
 
-#: class-admin.php:2078
+#: class-admin.php:2109
 msgid ".htaccess redirect."
 msgstr ""
 
-#: class-admin.php:2080
+#: class-admin.php:2111
 msgid "The .htaccess redirect rules selected by this plugin failed in the test. Set manually or dismiss to leave on PHP redirect."
 msgstr ""
 
-#: class-admin.php:2095
+#: class-admin.php:2126
 msgid "Your site uses Elementor. This can require some additional steps before getting the secure lock."
 msgstr ""
 
-#: class-admin.php:2109
+#: class-admin.php:2140
 msgid "Your site uses Divi. This can require some additional steps before getting the secure lock."
 msgstr ""
 
-#: class-admin.php:2125
+#: class-admin.php:2156
 msgid "HttpOnly Secure cookies have been set automatically!"
 msgstr ""
 
-#: class-admin.php:2130
+#: class-admin.php:2161
 msgid "HttpOnly Secure cookies not set."
 msgstr ""
 
-#: class-admin.php:2137
+#: class-admin.php:2168
 msgid "To set the httponly secure cookie settings, your wp-config.php has to be edited, but the file is not writable."
 msgstr ""
 
-#: class-admin.php:2137
+#: class-admin.php:2168
 msgid "Add the following lines of code to your wp-config.php."
 msgstr ""
 
-#: class-admin.php:2145
+#: class-admin.php:2176
 msgid "Or set your wp-config.php to writable and reload this page."
 msgstr ""
 
-#: class-admin.php:2159
+#: class-admin.php:2190
 msgid "See which recommended security headers are not present on your website."
 msgstr ""
 
-#: class-admin.php:2165
+#: class-admin.php:2196
 msgid "Recommended security headers enabled."
 msgstr ""
 
-#: class-admin.php:2177
+#: class-admin.php:2208
 msgid "Improve security with Really Simple SSL Pro."
 msgstr ""
 
-#: class-admin.php:2191
+#: class-admin.php:2222
 msgid "Due to a recent update by WP Engine, we have changed your settings automatically to adapt."
 msgstr ""
 
-#: class-admin.php:2204
+#: class-admin.php:2235
 msgid "You have the Really Simple SSL Let's Encrypt beta add-on activated. This functionality has now been integrated in core, so you can deactivate the add-on."
 msgstr ""
 
-#: class-admin.php:2215
+#: class-admin.php:2246
 msgid "We have detected the %s plugin on your website."
 msgstr ""
 
-#: class-admin.php:2215
+#: class-admin.php:2246
 msgid "As Really Simple SSL handles all the functionality this plugin provides, we recommend to disable this plugin to prevent unexpected behavior."
 msgstr ""
 
-#: class-admin.php:2230
+#: class-admin.php:2261
 msgid "Black Friday sale! Get 40% Off Really Simple SSL Pro"
 msgstr ""
 
-#: class-admin.php:2246
+#: class-admin.php:2277
 msgid "Thanks for updating to Really Simple SSL 6.0! Check out our new features on the settings page."
 msgstr ""
 
-#: class-admin.php:2596
+#: class-admin.php:2627
 msgid "Are you sure?"
 msgstr ""
 
-#: class-admin.php:2607
+#: class-admin.php:2638
 msgid "To deactivate the plugin correctly, please select if you want to:"
 msgstr ""
 
-#: class-admin.php:2609
+#: class-admin.php:2640
 msgid "Deactivate, but stay on SSL."
 msgstr ""
 
-#: class-admin.php:2610
+#: class-admin.php:2641
 msgid "Deactivate, and revert to http. This will remove all changes by the plugin."
 msgstr ""
 
-#: class-admin.php:2612
+#: class-admin.php:2643
 msgid "Deactivating the plugin while keeping SSL will do the following:"
 msgstr ""
 
-#: class-admin.php:2614
+#: class-admin.php:2645
 msgid "The mixed content fixer will stop working"
 msgstr ""
 
-#: class-admin.php:2615
+#: class-admin.php:2646
 msgid "The WordPress 301 redirect will stop working"
 msgstr ""
 
-#: class-admin.php:2616
+#: class-admin.php:2647
 msgid "Your site address will remain https://"
 msgstr ""
 
-#: class-admin.php:2617
+#: class-admin.php:2648
 msgid "The .htaccess redirect will remain active"
 msgstr ""
 
-#: class-admin.php:2626
+#: class-admin.php:2657
 #: upgrade/upgrade-to-pro.php:370
 msgid "Cancel"
 msgstr ""
 
-#: class-admin.php:2627
+#: class-admin.php:2658
 msgid "Deactivate, keep https"
 msgstr ""
 
-#: class-admin.php:2628
+#: class-admin.php:2659
 msgid "Deactivate, revert to http"
 msgstr ""
 
-#: class-admin.php:2654
-#: class-admin.php:2657
+#: class-admin.php:2685
+#: class-admin.php:2688
 #: class-multisite.php:216
 #: settings/config/config.php:17
 #: settings/build/index.js:382
@@ -391,14 +399,14 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: class-admin.php:2662
+#: class-admin.php:2693
 #: class-multisite.php:219
 #: settings/build/index.js:382
 #: settings/src/Header.js:48
 msgid "Support"
 msgstr ""
 
-#: class-admin.php:2667
+#: class-admin.php:2698
 #: class-multisite.php:223
 msgid "Improve security - Upgrade"
 msgstr ""
@@ -943,6 +951,7 @@ msgstr ""
 
 #: lets-encrypt/config/fields.php:91
 #: lets-encrypt/config/fields.php:94
+#: settings/config/config.php:370
 msgid "Email address"
 msgstr ""
 
@@ -1357,6 +1366,50 @@ msgstr ""
 msgid "Successfully installed SSL"
 msgstr ""
 
+#: mailer/class-mail.php:33
+msgid "Email address not valid"
+msgstr ""
+
+#: mailer/class-mail.php:35
+msgid "Really Simple SSL - Notification Test"
+msgstr ""
+
+#: mailer/class-mail.php:36
+msgid "This email is confirmation that any security notices are likely to reach your inbox."
+msgstr ""
+
+#: mailer/class-mail.php:37
+msgid "Notification by Really Simple SSL"
+msgstr ""
+
+#: mailer/class-mail.php:40
+msgid "About notifications"
+msgstr ""
+
+#: mailer/class-mail.php:41
+msgid "Email notifications are only sent for important updates, security notices or when certain features are enabled."
+msgstr ""
+
+#: mailer/class-mail.php:47
+msgid "Email sent! Please check your mail"
+msgstr ""
+
+#: mailer/class-mail.php:51
+msgid "Email could not be sent."
+msgstr ""
+
+#: mailer/class-mail.php:53
+msgid "An error occurred:"
+msgstr ""
+
+#: mailer/class-mail.php:76
+msgid "Learn more about our features!"
+msgstr ""
+
+#: mailer/class-mail.php:117
+msgid "Learn more"
+msgstr ""
+
 #: onboarding/config.php:23
 msgid "You can also let the automatic scan of the pro version handle this for you, and get premium support, increased security with HSTS and more!"
 msgstr ""
@@ -1398,7 +1451,7 @@ msgid "Burst Statistics - Self-hosted, Privacy-friendly analytics tool"
 msgstr ""
 
 #: onboarding/config.php:76
-#: settings/settings.php:346
+#: settings/settings.php:350
 msgid "Complianz - Cookie Consent Management as it should be"
 msgstr ""
 
@@ -1481,7 +1534,7 @@ msgstr ""
 #: placeholders/class-placeholder.php:159
 #: placeholders/class-placeholder.php:185
 #: placeholders/class-placeholder.php:210
-#: settings/config/config.php:894
+#: settings/config/config.php:963
 #: settings/build/index.js:382
 #: settings/src/Settings/MixedContentScan.js:227
 msgid "Details"
@@ -1555,15 +1608,15 @@ msgstr ""
 msgid "Really Simple SSL cannot be activated. The plugin requires WordPress 5.7 or higher"
 msgstr ""
 
-#: rlrsssl-really-simple-ssl.php:197
+#: rlrsssl-really-simple-ssl.php:198
 msgid "Update Really Simple SSL Pro: the plugin needs to be updated to the latest version to be compatible."
 msgstr ""
 
-#: rlrsssl-really-simple-ssl.php:201
+#: rlrsssl-really-simple-ssl.php:202
 msgid "%sUpdate%s or %srenew your license%s."
 msgstr ""
 
-#: rlrsssl-really-simple-ssl.php:203
+#: rlrsssl-really-simple-ssl.php:204
 msgid "Visit the plugins overview or %srenew your license%s."
 msgstr ""
 
@@ -1779,7 +1832,7 @@ msgstr ""
 
 #: settings/config/config.php:44
 #: settings/config/config.php:50
-#: settings/config/config.php:1162
+#: settings/config/config.php:1231
 msgid "Hardening"
 msgstr ""
 
@@ -1792,7 +1845,7 @@ msgid "Get Advanced Hardening with %sReally Simple SSL Pro%s"
 msgstr ""
 
 #: settings/config/config.php:63
-#: settings/config/config.php:626
+#: settings/config/config.php:695
 msgid "XML-RPC"
 msgstr ""
 
@@ -1879,48 +1932,76 @@ msgid "DNS verification"
 msgstr ""
 
 #: settings/config/config.php:287
-#: settings/config/config.php:295
+msgid "Changing redirect methods should be done with caution. Please make sure you have read our instructions beforehand at the right-hand side."
+msgstr ""
+
+#: settings/config/config.php:288
+#: settings/config/config.php:299
+#: settings/config/disable-fields-filter.php:18
 msgid "Redirect method"
 msgstr ""
 
-#: settings/config/config.php:289
+#: settings/config/config.php:291
 msgid "No redirect"
 msgstr ""
 
-#: settings/config/config.php:290
+#: settings/config/config.php:292
 msgid "301 PHP redirect"
 msgstr ""
 
-#: settings/config/config.php:291
-msgid "301 .htaccess redirect"
+#: settings/config/config.php:293
+msgid "301 .htaccess redirect (read instructions first)"
 msgstr ""
 
 #: settings/config/config.php:296
-msgid "Redirects all requests over HTTP to HTTPS using a PHP 301 redirect. Enable if the .htaccess redirect cannot be used, for example on NGINX servers."
+msgid "Redirects all requests over HTTP to HTTPS."
 msgstr ""
 
-#: settings/config/config.php:312
+#: settings/config/config.php:300
+#: settings/config/disable-fields-filter.php:19
+msgid "Redirects your site to https with a SEO friendly 301 redirect if it is requested over http."
+msgstr ""
+
+#: settings/config/config.php:315
 msgid "Mixed content fixer"
 msgstr ""
 
-#: settings/config/config.php:326
 #: settings/config/config.php:329
+#: settings/config/config.php:332
 msgid "Mixed content fixer - init hook"
 msgstr ""
 
-#: settings/config/config.php:330
+#: settings/config/config.php:333
 msgid "If this option is set to true, the mixed content fixer will fire on the init hook instead of the template_redirect hook. Only use this option when you experience problems with the mixed content fixer."
 msgstr ""
 
-#: settings/config/config.php:348
+#: settings/config/config.php:351
 msgid "Mixed content fixer - back-end"
 msgstr ""
 
-#: settings/config/config.php:357
-msgid "Dismiss all notices"
+#: settings/config/config.php:360
+msgid "Notifications by email"
 msgstr ""
 
-#: settings/config/config.php:367
+#: settings/config/config.php:361
+msgid "Get notified of important changes, updates and settings. Recommended when using security features."
+msgstr ""
+
+#: settings/config/config.php:387
+#: settings/build/index.js:382
+#: settings/src/Settings/Support.js:72
+msgid "Send"
+msgstr ""
+
+#: settings/config/config.php:388
+msgid "Send test notification by email"
+msgstr ""
+
+#: settings/config/config.php:404
+msgid "Dismiss all notifications"
+msgstr ""
+
+#: settings/config/config.php:414
 #: settings/build/index.js:382
 #: settings/src/LetsEncrypt/Installation.js:103
 #: settings/src/LetsEncrypt/Installation.js:108
@@ -1928,249 +2009,289 @@ msgstr ""
 msgid "Download"
 msgstr ""
 
-#: settings/config/config.php:368
+#: settings/config/config.php:415
 msgid "System status"
 msgstr ""
 
-#: settings/config/config.php:377
+#: settings/config/config.php:424
 msgid "Delete all data on plugin deletion"
 msgstr ""
 
-#: settings/config/config.php:385
+#: settings/config/config.php:432
 msgid "Stop editing the .htaccess file"
 msgstr ""
 
-#: settings/config/config.php:402
+#: settings/config/config.php:449
 msgid "Premium support"
 msgstr ""
 
-#: settings/config/config.php:415
+#: settings/config/config.php:462
 msgid "Disable \"anyone can register\""
 msgstr ""
 
-#: settings/config/config.php:421
+#: settings/config/config.php:468
 msgid "About Hardening"
 msgstr ""
 
-#: settings/config/config.php:422
+#: settings/config/config.php:469
 msgid "Hardening features limit the possibility of potential weaknesses and vulnerabilities which can be misused."
 msgstr ""
 
-#: settings/config/config.php:425
+#: settings/config/config.php:472
 msgid "User registration is restricted"
 msgstr ""
 
-#: settings/config/config.php:426
+#: settings/config/config.php:473
 msgid "User registration is not restricted"
 msgstr ""
 
-#: settings/config/config.php:435
+#: settings/config/config.php:482
 msgid "Disable the built-in file editors"
 msgstr ""
 
-#: settings/config/config.php:439
+#: settings/config/config.php:486
 msgid "File editing is disabled"
 msgstr ""
 
-#: settings/config/config.php:440
+#: settings/config/config.php:487
 msgid "File editing is enabled"
 msgstr ""
 
-#: settings/config/config.php:449
+#: settings/config/config.php:496
 msgid "Prevent code execution in the public 'Uploads' folder"
 msgstr ""
 
-#: settings/config/config.php:453
+#: settings/config/config.php:500
 msgid "Code execution is restricted"
 msgstr ""
 
-#: settings/config/config.php:454
+#: settings/config/config.php:501
 msgid "Code execution is not restricted"
 msgstr ""
 
-#: settings/config/config.php:463
+#: settings/config/config.php:510
 msgid "Hide your WordPress version"
 msgstr ""
 
-#: settings/config/config.php:472
-msgid "Prevent exposed login feedback"
+#: settings/config/config.php:519
+msgid "By default, WordPress shows if a username or email address exists when a login fails. This will change it to generic feedback."
 msgstr ""
 
-#: settings/config/config.php:481
+#: settings/config/config.php:520
+msgid "Prevent login feedback"
+msgstr ""
+
+#: settings/config/config.php:529
 msgid "Disable directory browsing"
 msgstr ""
 
-#: settings/config/config.php:485
+#: settings/config/config.php:533
 msgid "Browsing directories is blocked"
 msgstr ""
 
-#: settings/config/config.php:486
+#: settings/config/config.php:534
 msgid "Browsing directories is possible"
 msgstr ""
 
-#: settings/config/config.php:495
+#: settings/config/config.php:543
 msgid "Disable user enumeration"
 msgstr ""
 
-#: settings/config/config.php:499
+#: settings/config/config.php:547
 msgid "User enumeration is restricted"
 msgstr ""
 
-#: settings/config/config.php:500
+#: settings/config/config.php:548
 msgid "User enumeration is possible"
 msgstr ""
 
-#: settings/config/config.php:509
-msgid "Rename current 'admin' username"
+#: settings/config/config.php:558
+msgid "Block the username 'admin'"
 msgstr ""
 
-#: settings/config/config.php:513
+#: settings/config/config.php:560
+msgid "Settings update: Username 'admin' renamed"
+msgstr ""
+
+#: settings/config/config.php:561
+msgid "As a security precaution, the username ‘admin’ has been changed on %s. From now on, you can login with '%s' or an email address."
+msgstr ""
+
+#: settings/config/config.php:564
+msgid "If the username 'admin' currenlty exists, you can rename it here. Please note that you can no longer use this username, and should use the new username or an email address"
+msgstr ""
+
+#: settings/config/config.php:569
 msgid "Username 'Admin' is not allowed"
 msgstr ""
 
-#: settings/config/config.php:514
+#: settings/config/config.php:570
 msgid "Username 'Admin' is allowed"
 msgstr ""
 
-#: settings/config/config.php:523
+#: settings/config/config.php:579
 msgid "Choose new username to replace 'admin'"
 msgstr ""
 
-#: settings/config/config.php:547
+#: settings/config/config.php:603
 msgid "Disable XML-RPC"
 msgstr ""
 
-#: settings/config/config.php:556
+#: settings/config/config.php:612
 msgid "Block user registrations when login and display name are the same"
 msgstr ""
 
-#: settings/config/config.php:565
+#: settings/config/config.php:621
+msgid "This will limit or fully disable HTTP requests that are not needed, but could be used with malicious intent."
+msgstr ""
+
+#: settings/config/config.php:622
 msgid "Disable HTTP methods"
 msgstr ""
 
-#: settings/config/config.php:574
-msgid "Rename and randomize your database prefix"
+#: settings/config/config.php:631
+msgid "Settings update: Database prefix changed"
 msgstr ""
 
-#: settings/config/config.php:577
-msgid "Make sure you have a backup before you do this."
+#: settings/config/config.php:632
+msgid "Security through obscurity. Your site is no longer using the default wp_ prefix for database tables. The process has been designed to only complete and replace the tables after all wp_ tables are successfully renamed. In the unlikely event that this does lead to database issues on your site, please navigate to our troubleshooting article."
 msgstr ""
 
-#: settings/config/config.php:584
-msgid "Change debug.log file location"
-msgstr ""
-
-#: settings/config/config.php:588
-msgid "Debug log not publicly accessible"
-msgstr ""
-
-#: settings/config/config.php:589
-msgid "Debug log is now public"
-msgstr ""
-
-#: settings/config/config.php:598
-msgid "Disable application passwords"
+#: settings/config/config.php:635
+msgid "This will permanently change your database prefixes and you can NOT rollback this feature. Please make sure you have a back-up."
 msgstr ""
 
 #: settings/config/config.php:638
-msgid "Method"
+msgid "Rename and randomize your database prefix"
 msgstr ""
 
-#: settings/config/config.php:643
-msgid "Login status"
+#: settings/config/config.php:647
+msgid "A debug.log is publicly accessibile and has a standard location. This will change the location to a randomly named folder in /wp-content/"
 msgstr ""
 
-#: settings/config/config.php:648
-msgid "Count"
+#: settings/config/config.php:649
+msgid "Settings update: Debug.log file relocated"
+msgstr ""
+
+#: settings/config/config.php:650
+msgid "From now on, the debug.log won’t be publicly accessible whenever wp-debugging is enabled. The debug log will be stored in a randomly named folder in /wp-content/. This prevents possible leakage of sensitive debugging information."
 msgstr ""
 
 #: settings/config/config.php:653
-#: settings/config/config.php:1097
-msgid "Action"
+msgid "Change debug.log file location"
+msgstr ""
+
+#: settings/config/config.php:657
+msgid "Debug log not publicly accessible"
 msgstr ""
 
 #: settings/config/config.php:658
+msgid "Debug log is now public"
+msgstr ""
+
+#: settings/config/config.php:667
+msgid "Disable application passwords"
+msgstr ""
+
+#: settings/config/config.php:707
+msgid "Method"
+msgstr ""
+
+#: settings/config/config.php:712
+msgid "Login status"
+msgstr ""
+
+#: settings/config/config.php:717
+msgid "Count"
+msgstr ""
+
+#: settings/config/config.php:722
+#: settings/config/config.php:1166
+msgid "Action"
+msgstr ""
+
+#: settings/config/config.php:727
 msgid "Delete"
 msgstr ""
 
-#: settings/config/config.php:671
+#: settings/config/config.php:740
 msgid "disabled"
 msgstr ""
 
-#: settings/config/config.php:672
+#: settings/config/config.php:741
 msgid "(recommended)"
 msgstr ""
 
-#: settings/config/config.php:681
+#: settings/config/config.php:750
 msgid "About Recommended Security Headers"
 msgstr ""
 
-#: settings/config/config.php:682
+#: settings/config/config.php:751
 msgid "These security headers are the fundamental security measures to protect your website visitors while visiting your website."
 msgstr ""
 
-#: settings/config/config.php:700
-#: settings/config/config.php:714
-#: settings/config/config.php:814
-#: settings/config/config.php:836
-#: settings/config/config.php:851
+#: settings/config/config.php:769
+#: settings/config/config.php:783
+#: settings/config/config.php:883
+#: settings/config/config.php:905
+#: settings/config/config.php:920
 msgid "Off"
 msgstr ""
 
-#: settings/config/config.php:715
+#: settings/config/config.php:784
 msgid "recommended"
 msgstr ""
 
-#: settings/config/config.php:739
+#: settings/config/config.php:808
 msgid "About HTTP Strict Transport Security"
 msgstr ""
 
-#: settings/config/config.php:740
+#: settings/config/config.php:809
 msgid "Leveraging your SSL certificate with HSTS is a staple for every website. Force your website over SSL, mitigating risks of malicious counterfeit websites in your name."
 msgstr ""
 
-#: settings/config/config.php:794
+#: settings/config/config.php:863
 msgid "One day (for testing only)"
 msgstr ""
 
-#: settings/config/config.php:795
+#: settings/config/config.php:864
 msgid "One year"
 msgstr ""
 
-#: settings/config/config.php:796
+#: settings/config/config.php:865
 msgid "Two years (required for preload)"
 msgstr ""
 
-#: settings/config/config.php:822
+#: settings/config/config.php:891
 msgid "About Cross Origin Policies"
 msgstr ""
 
-#: settings/config/config.php:823
+#: settings/config/config.php:892
 msgid "One of the most powerful features, and therefore the most complex are the Cross-Origin headers that can isolate your website so any data leaks are minimized."
 msgstr ""
 
-#: settings/config/config.php:870
+#: settings/config/config.php:939
 msgid "About the Mixed Content Scan"
 msgstr ""
 
-#: settings/config/config.php:871
+#: settings/config/config.php:940
 msgid "The extensive mixed content scan will list all current and future issues and provide a fix, or instructions to fix manually."
 msgstr ""
 
-#: settings/config/config.php:875
+#: settings/config/config.php:944
 msgid "Type"
 msgstr ""
 
-#: settings/config/config.php:881
+#: settings/config/config.php:950
 msgid "Description"
 msgstr ""
 
-#: settings/config/config.php:887
-#: settings/config/config.php:1082
+#: settings/config/config.php:956
+#: settings/config/config.php:1151
 msgid "Location"
 msgstr ""
 
-#: settings/config/config.php:900
+#: settings/config/config.php:969
 #: settings/build/index.js:382
 #: settings/src/Dashboard/TaskElement.js:56
 #: settings/src/Dashboard/TaskElement.js:57
@@ -2179,101 +2300,117 @@ msgstr ""
 msgid "Fix"
 msgstr ""
 
-#: settings/config/config.php:915
+#: settings/config/config.php:984
 #: settings/build/index.js:382
-#: settings/src/Settings/ChangeStatus.js:11
+#: settings/src/Settings/ChangeStatus.js:4
 msgid "Allow"
 msgstr ""
 
-#: settings/config/config.php:915
+#: settings/config/config.php:984
 #: settings/build/index.js:382
 #: settings/src/Settings/LearningMode.js:260
 #: settings/src/Settings/PermissionsPolicy.js:149
 msgid "Disable"
 msgstr ""
 
-#: settings/config/config.php:915
+#: settings/config/config.php:984
 msgid "Self (Default)"
 msgstr ""
 
-#: settings/config/config.php:916
+#: settings/config/config.php:985
 msgid "Permissions Policy"
 msgstr ""
 
-#: settings/config/config.php:921
+#: settings/config/config.php:990
 msgid "About the Permission Policy"
 msgstr ""
 
-#: settings/config/config.php:922
+#: settings/config/config.php:991
 msgid "Browser features are plentiful, but most are not needed on your website."
 msgstr ""
 
-#: settings/config/config.php:922
+#: settings/config/config.php:991
 msgid "They might be misused if you don’t actively tell the browser to disable these features."
 msgstr ""
 
-#: settings/config/config.php:926
+#: settings/config/config.php:995
 msgid "Feature"
 msgstr ""
 
-#: settings/config/config.php:931
+#: settings/config/config.php:1000
 msgid "Options"
 msgstr ""
 
-#: settings/config/config.php:1004
+#: settings/config/config.php:1073
 msgid "Enable Permissions Policy"
 msgstr ""
 
-#: settings/config/config.php:1013
+#: settings/config/config.php:1082
 msgid "Serve encrypted and authenticated responses"
 msgstr ""
 
-#: settings/config/config.php:1019
+#: settings/config/config.php:1088
 msgid "About the Content Security Policy"
 msgstr ""
 
-#: settings/config/config.php:1020
+#: settings/config/config.php:1089
 msgid "The content security policy has many options, so we always recommend starting in ‘learning mode’ to see what files and scripts are loaded."
 msgstr ""
 
-#: settings/config/config.php:1035
+#: settings/config/config.php:1104
 msgid "Disable (Default)"
 msgstr ""
 
-#: settings/config/config.php:1039
+#: settings/config/config.php:1108
 msgid "Allow your domain to be embedded"
 msgstr ""
 
-#: settings/config/config.php:1048
+#: settings/config/config.php:1117
 msgid "Add additional domains which can embed your website, if needed. Comma seperated."
 msgstr ""
 
-#: settings/config/config.php:1087
+#: settings/config/config.php:1156
 msgid "Directive"
 msgstr ""
 
-#: settings/config/config.php:1092
+#: settings/config/config.php:1161
 msgid "Source"
 msgstr ""
 
-#: settings/config/config.php:1139
+#: settings/config/config.php:1208
 msgid "Progress"
 msgstr ""
 
-#: settings/config/config.php:1152
+#: settings/config/config.php:1221
 msgid "Powered by Qualys"
 msgstr ""
 
-#: settings/config/config.php:1154
+#: settings/config/config.php:1223
 msgid "Status"
 msgstr ""
 
-#: settings/config/config.php:1170
+#: settings/config/config.php:1239
 msgid "Tips & Tricks"
 msgstr ""
 
-#: settings/config/config.php:1181
+#: settings/config/config.php:1250
 msgid "Other Plugins"
+msgstr ""
+
+#: settings/config/disable-fields-filter.php:15
+msgid "On Apache you can use a .htaccess redirect, which is usually faster, but may cause issues on some configurations. Read the instructions in the sidebar first."
+msgstr ""
+
+#: settings/config/disable-fields-filter.php:19
+msgid "Enable .htaccess only if you know how to regain access in case of issues."
+msgstr ""
+
+#: settings/config/disable-fields-filter.php:23
+msgid ".htaccess redirect"
+msgstr ""
+
+#: settings/config/disable-fields-filter.php:24
+msgid "The .htaccess redirect has been enabled on your site. If the server configuration is non-standard, this might cause issues. Please check if all pages on your site are functioning properly. ."
 msgstr ""
 
 #: settings/settings.php:97
@@ -2284,11 +2421,11 @@ msgstr ""
 msgid "SSL"
 msgstr ""
 
-#: settings/settings.php:338
+#: settings/settings.php:342
 msgid "Self-hosted, Privacy-friendly analytics tool"
 msgstr ""
 
-#: settings/settings.php:353
+#: settings/settings.php:357
 msgid "Terms and Conditions"
 msgstr ""
 
@@ -2462,7 +2599,7 @@ msgstr ""
 #: settings/build/index.js:382
 #: settings/src/Dashboard/ProgressFooter.js:44
 #: settings/src/Header.js:53
-#: settings/src/Menu/Menu.js:49
+#: settings/src/Menu/Menu.js:40
 msgid "Go Pro"
 msgstr ""
 
@@ -2522,38 +2659,38 @@ msgid "301 redirect"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Dashboard/SslLabs.js:349
+#: settings/src/Dashboard/SslLabs.js:347
 msgid "No test started yet"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Dashboard/SslLabs.js:377
+#: settings/src/Dashboard/SslLabs.js:375
 msgid "Not available on localhost"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Dashboard/SslLabs.js:268
+#: settings/src/Dashboard/SslLabs.js:266
 msgid "Cipher strength"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Dashboard/SslLabs.js:411
+#: settings/src/Dashboard/SslLabs.js:409
 msgid "What does my score mean?"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Dashboard/SslLabs.js:411
+#: settings/src/Dashboard/SslLabs.js:409
 #: settings/src/LetsEncrypt/DnsVerification.js:60
 msgid "Read more"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Dashboard/SslLabs.js:417
+#: settings/src/Dashboard/SslLabs.js:415
 msgid "Last check:"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Dashboard/SslLabs.js:423
+#: settings/src/Dashboard/SslLabs.js:421
 msgid "View detailed report on Qualys SSL Labs"
 msgstr ""
 
@@ -2581,7 +2718,7 @@ msgid "Downloading..."
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Menu/MenuItem.js:40
+#: settings/src/Menu/MenuItem.js:29
 msgid "New"
 msgstr ""
 
@@ -2937,7 +3074,7 @@ msgid "No results"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/ChangeStatus.js:11
+#: settings/src/Settings/ChangeStatus.js:4
 msgid "Revoke"
 msgstr ""
 
@@ -2978,11 +3115,6 @@ msgstr ""
 #: settings/build/index.js:382
 #: settings/src/Settings/Support.js:65
 msgid "Type your question here"
-msgstr ""
-
-#: settings/build/index.js:382
-#: settings/src/Settings/Support.js:72
-msgid "Send"
 msgstr ""
 
 #: settings/build/index.js:382
@@ -3062,14 +3194,19 @@ msgid "Blocked"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/Field.js:134
-#: settings/src/Settings/SettingsGroup.js:143
+#: settings/src/Settings/Button.js:14
+msgid "Test notification by email"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Settings/Field.js:115
+#: settings/src/Settings/SettingsGroup.js:144
 msgid "This feature is only available networkwide."
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/Field.js:134
-#: settings/src/Settings/SettingsGroup.js:143
+#: settings/src/Settings/Field.js:115
+#: settings/src/Settings/SettingsGroup.js:144
 msgid "Network settings"
 msgstr ""
 
@@ -3084,47 +3221,47 @@ msgid "Reset Let's Encrypt"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/SettingsGroup.js:135
+#: settings/src/Settings/SettingsGroup.js:136
 msgid "Check license"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/SettingsGroup.js:142
+#: settings/src/Settings/SettingsGroup.js:143
 msgid "Network feature"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/Settings.js:75
+#: settings/src/Settings/Settings.js:72
 msgid "Save"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/Settings.js:78
+#: settings/src/Settings/Settings.js:75
 msgid "Refresh"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/Settings.js:147
+#: settings/src/Settings/Settings.js:145
 msgid "Previous"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/Settings.js:159
+#: settings/src/Settings/Settings.js:157
 msgid "Save and Continue"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/Settings.js:168
+#: settings/src/Settings/Settings.js:166
 msgid "Notifications"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/Settings.js:171
+#: settings/src/Settings/Settings.js:169
 msgid "Expand all"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/Settings.js:172
+#: settings/src/Settings/Settings.js:170
 msgid "Collapse all"
 msgstr ""
 
