@@ -1,6 +1,5 @@
 /* Creates A Store For Risk Data using Zustand */
 import {create} from 'zustand';
-import {__} from "@wordpress/i18n";
 import * as rsssl_api from "../../utils/api";
 
 const UseRiskData = create((set, get) => ({

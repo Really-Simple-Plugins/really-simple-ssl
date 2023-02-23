@@ -6,6 +6,8 @@ const WPVul = ( props ) => {
     const hasErrors = false;
     const grade = 'A+';
 
+
+
     const scoreSnippet = (className, content) => {
         return (
             <div className="rsssl-score-container"><div className={"rsssl-score-snippet "+className}>{content}</div></div>
@@ -51,7 +53,7 @@ const WPVul = ( props ) => {
                     <div className="rsssl-ssl-test-information">
                         {enabledVul()}
                     </div>
-                    <div className={"rsssl-ssl-test-grade red"}>
+                    <div className={"rsssl-ssl-test-grade success"}>
                         {!neverScannedYet() && <span>{grade}</span>}
                         {neverScannedYet() && <span><Icon color={'red'} name = "sync-error"></Icon></span>}
                     </div>
