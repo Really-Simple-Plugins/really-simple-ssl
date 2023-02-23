@@ -438,7 +438,6 @@ function rsssl_sanitize_field_type($type){
  * @return array
  */
 function rsssl_rest_api_fields_set($request){
-    error_log(print_r($request, true));
     if ( !rsssl_user_can_manage()) {
         return [];
     }

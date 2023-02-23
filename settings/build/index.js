@@ -20203,53 +20203,112 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/api */ "./src/utils/api.js");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/api */ "./src/utils/api.js");
+
 
 
 
 const PostDropdown = () => {
   const [posts, setPosts] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)([]);
-  const [selectedPost, setSelectedPost] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)("404");
+  const [selectedPost, setSelectedPost] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)("");
+  const [defaultPost, setDefaultPost] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)({
+    title: {
+      rendered: "404 (default)"
+    },
+    id: "404_default"
+  });
   const [searchTerm, setSearchTerm] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)("");
   const baseUrl = rsssl_settings.site_url;
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     // Fetch the value of the "change_login_url_failure_url" option
-    _utils_api__WEBPACK_IMPORTED_MODULE_2__.getFields().then(response => {
+    _utils_api__WEBPACK_IMPORTED_MODULE_3__.getFields().then(response => {
       const changeLoginUrlFailureUrl = response.fields.find(field => field.id === "change_login_url_failure_url").value;
       setSelectedPost(changeLoginUrlFailureUrl);
     });
   }, []);
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     const endpoint = `${baseUrl}wp/v2/posts?per_page=100`;
-    fetch(endpoint).then(response => response.json()).then(data => setPosts(data));
+    fetch(endpoint).then(response => response.json()).then(data => {
+      // remove any existing post with id "404_default"
+      const filteredData = data.filter(post => post.id !== "404_default");
+      // add default post to beginning of posts state
+      setPosts([defaultPost, ...filteredData]);
+    });
   }, [baseUrl]);
-  const handleSelectChange = event => {
-    const selectedPostId = event.target.value;
-    setSelectedPost(selectedPostId);
-    setSearchTerm("");
+  (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
+    // Fetch the value of the "change_login_url_failure_url" option
+    _utils_api__WEBPACK_IMPORTED_MODULE_3__.getFields().then(response => {
+      const changeLoginUrlFailureUrl = response.fields.find(field => field.id === "change_login_url_failure_url").value;
+      setSelectedPost(changeLoginUrlFailureUrl);
 
-    // Update the change_login_url_failure_url field in rsssl_settings
-    const fieldsToUpdate = [{
-      id: "change_login_url_failure_url",
-      value: selectedPostId
-    }];
-    _utils_api__WEBPACK_IMPORTED_MODULE_2__.setFields(fieldsToUpdate);
+      // Fetch the post data for the selected post
+      const endpoint = `${baseUrl}wp/v2/posts/${changeLoginUrlFailureUrl}`;
+      fetch(endpoint).then(response => response.json()).then(data => {
+        if (data.title) {
+          setSelectedPost(data.title.rendered);
+        }
+      });
+    });
+  }, []);
+  const filteredPosts = searchTerm ? posts.filter(post => post.title.rendered.toLowerCase().includes(searchTerm)) : posts.filter(post => {
+    if (post.id === "404_default") {
+      return defaultPost;
+    }
+    return post;
+  });
+  const handleSearchTermChange = event => {
+    const inputValue = event.target.value;
+    setSearchTerm(inputValue);
+    if (inputValue === "" || selectedPost !== "") {
+      setSelectedPost("");
+      setSearchTerm("");
+    }
+    if (event.type === "keydown" && event.key === "backspace") {
+      event.target.value = "";
+      setSelectedPost("");
+    }
   };
-  const filteredPosts = searchTerm ? posts.filter(post => post.title.rendered.toLowerCase().includes(searchTerm)) : posts;
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
-    htmlFor: "post-input"
-  }, "Select or search a post:"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
+    htmlFor: "rsssl-filter-post-input"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Redirect to this post when someone tries to access /wp-admin or /wp-login.php. The default is a 404 page", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    style: {
+      position: "relative"
+    }
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "text",
     id: "post-input",
-    value: selectedPost,
-    onChange: handleSelectChange
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
-    value: ""
-  }, "Select a post"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
-    value: "404"
-  }, "404 (default)"), filteredPosts.map(post => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
+    value: selectedPost !== "" ? selectedPost : searchTerm !== "" ? searchTerm : "",
+    onChange: handleSearchTermChange,
+    placeholder: selectedPost !== "" ? "" : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Search for a post", "really-simple-ssl")
+  }), filteredPosts.length > 0 && !selectedPost && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    style: {
+      top: "100%",
+      left: 0,
+      width: "100%",
+      border: "1px solid #ccc",
+      borderTop: "none",
+      backgroundColor: "#fff",
+      zIndex: 1
+    }
+  }, filteredPosts.map(post => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     key: post.id,
-    value: post.id
-  }, post.title.rendered))));
+    style: {
+      padding: "8px",
+      cursor: "pointer",
+      borderBottom: "1px solid #ccc"
+    },
+    onClick: () => {
+      setSelectedPost(post.title.rendered);
+      setSearchTerm("");
+      const fieldsToUpdate = [{
+        id: "change_login_url_failure_url",
+        value: post.id
+      }];
+      _utils_api__WEBPACK_IMPORTED_MODULE_3__.setFields(fieldsToUpdate);
+    }
+  }, post.title.rendered)))));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (PostDropdown);
 
