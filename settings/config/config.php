@@ -663,16 +663,16 @@ function rsssl_fields( $load_values = true ) {
 			'disabled' => false,
 			'default'  => false,
 		],
-        [
-            'id'       => 'change_login_url_enabled',
-            'menu_id'  => 'hardening',
-            'group_id' => 'hardening_extended',
-            'type'     => 'text',
-            'tooltip'  => __( "Allows you to enter a custom login URL.", 'really-simple-ssl' ),
-            'label'    => __( "Enable Custom login URL", 'really-simple-ssl' ),
-            'disabled' => false,
-            'default'  => false,
-        ],
+//        [
+//            'id'       => 'change_login_url_enabled',
+//            'menu_id'  => 'hardening',
+//            'group_id' => 'hardening_extended',
+//            'type'     => 'text',
+//            'tooltip'  => __( "Allows you to enter a custom login URL.", 'really-simple-ssl' ),
+//            'label'    => __( "Enable Custom login URL", 'really-simple-ssl' ),
+//            'disabled' => false,
+//            'default'  => false,
+//        ],
         [
             'id'       => 'change_login_url',
             'menu_id'  => 'hardening',
@@ -694,18 +694,18 @@ function rsssl_fields( $load_values = true ) {
             'id'       => 'change_login_url_failure_url',
             'menu_id'  => 'hardening',
             'group_id' => 'hardening_extended',
-            'type'     => 'text',
+            'type'     => 'postdropdown',
             'tooltip'  => __( "Users trying to enter via /wp-admin or /wp-login.php will be redirected to this URL.", 'really-simple-ssl' ),
             'label'    => __( "Redirect to a specific URL when someone tries to access the standard login URLs. The default is a 404 page.", 'really-simple-ssl' ),
             'disabled' => false,
-            'default'  => '404',
-            'condition_action'   => 'hide',
-            'react_conditions' => [
-                'relation' => 'AND',
-                [
-                    'change_login_url_enabled' => 1,
-                ]
-            ],
+//            'default'  => '404',
+//            'condition_action'   => 'hide',
+//            'react_conditions' => [
+//                'relation' => 'AND',
+//                [
+//                    'change_login_url_enabled' => 1,
+//                ]
+//            ],
         ],
 		[
 			'id'       => 'xmlrpc_status',

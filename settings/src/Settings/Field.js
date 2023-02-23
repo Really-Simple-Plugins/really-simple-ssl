@@ -20,9 +20,8 @@ import Support from "./Support";
 import LearningMode from "./LearningMode";
 import Button from "./Button";
 import Icon from "../utils/Icon";
+import PostDropdown from "./PostDropDown";
 const Field = (props) => {
-
-
 
     const onChangeHandler = (fieldValue) => {
         let fields = props.fields;
@@ -260,6 +259,14 @@ const Field = (props) => {
         return (
             <div className={highLightClass}>
               <Support/>
+            </div>
+        )
+    }
+
+    if ( field.type==='postdropdown' ) {
+        return (
+            <div className={highLightClass}>
+              <PostDropdown/>
             </div>
         )
     }
