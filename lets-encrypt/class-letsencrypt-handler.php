@@ -1506,7 +1506,7 @@ class rsssl_letsencrypt_handler {
 		if ( !is_multisite() ) {
 			$is_subdomain = false;
 		} else {
-			if ( defined('SUBDOMAIN_INSTALL') && SUBDOMAIN_INSTALL ) {
+			if ( defined('SUBDOMAIN_INSTALL') && SUBDOMAIN_INSTALL && ! is_main_site() ) {
 				$is_subdomain = true;
 			} else {
 				$is_subdomain = false;
