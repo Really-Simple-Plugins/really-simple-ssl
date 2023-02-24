@@ -266,7 +266,7 @@ const Field = (props) => {
     if ( field.type==='postdropdown' ) {
         return (
             <div className={highLightClass}>
-              <PostDropdown/>
+              <PostDropdown fields={fields}/>
             </div>
         )
     }
