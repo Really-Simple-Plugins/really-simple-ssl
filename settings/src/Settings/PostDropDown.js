@@ -32,7 +32,7 @@ const PostDropdown = ({ fields, setFields, updateField }) => {
             });
     }, []);
 
-    // Fetch the data for the selected post from the WordPress database when the component mounts or when the selected post is updated.
+    // Fetch the data for the selected post from the WordPress database when the component mounts.
     useEffect(() => {
         if (changeLoginUrlFailureUrl === "404_default" || changeLoginUrlFailureUrl === "404") {
             setSelectedPost("404 (default)");
@@ -47,14 +47,6 @@ const PostDropdown = ({ fields, setFields, updateField }) => {
         }
     }, [changeLoginUrlFailureUrl]);
 
-    // Update the selected post and changeLoginUrlFailureUrl values when the fields prop is updated.
-    useEffect(() => {
-        const changeLoginUrlFailureUrl = fields.find(
-            (field) => field.id === "change_login_url_failure_url"
-        ).value;
-        setChangeLoginUrlFailureUrl(changeLoginUrlFailureUrl);
-        setSelectedPost(changeLoginUrlFailureUrl);
-    }, [fields]);
 
     const handleSearchTermChange = (event, value) => {
         if (value === null) {
@@ -94,11 +86,7 @@ const PostDropdown = ({ fields, setFields, updateField }) => {
                 options={filteredPosts}
                 getOptionLabel={(option) => option.title}
                 renderInput={(params) => (
-                    <TextField
-                        {...params}
-                        variant="outlined"
-                        placeholder={__('Search for a post.','really-simple-ssl')}
-                    />
+                    <TextField {...params} variant="outlined" placeholder={__('Search for a post.','really-simple-ssl')} />
                 )}
                 getOptionSelected={(option, value) => {
                     if (value === null) {
