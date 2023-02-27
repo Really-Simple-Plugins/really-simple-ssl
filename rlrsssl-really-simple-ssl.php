@@ -3,7 +3,7 @@
  * Plugin Name: Really Simple SSL
  * Plugin URI: https://really-simple-ssl.com
  * Description: Lightweight SSL & Hardening Plugin
- * Version: 6.2.0
+ * Version: 6.2.1
  * Author: Really Simple Plugins
  * Author URI: https://really-simple-plugins.com
  * License: GPL2
@@ -109,7 +109,7 @@ class REALLY_SIMPLE_SSL
         if (!defined('rsssl_file') ){
             define('rsssl_file', __FILE__);
         }
-		define('rsssl_version', '6.2.0');
+		define('rsssl_version', '6.2.1');
 		define('rsssl_le_cron_generation_renewal_check', 20);
 		define('rsssl_le_manual_generation_renewal_check', 15);
 	}
@@ -138,8 +138,8 @@ class REALLY_SIMPLE_SSL
             require_once( rsssl_path . 'progress/class-progress.php');
 			require_once( rsssl_path . 'class-certificate.php');
 			require_once( rsssl_path . 'class-site-health.php');
-			require_once( rsssl_path . 'mailer/class-mail.php');
 			require_once( rsssl_path . 'lets-encrypt/letsencrypt.php' );
+			require_once( rsssl_path . 'mailer/class-mail.php');
 			if ( isset($_GET['install_pro'])) {
 				require_once( rsssl_path . 'upgrade/upgrade-to-pro.php');
 			}
@@ -157,13 +157,12 @@ class REALLY_SIMPLE_SSL
 		if ( rsssl_admin_logged_in() ) {
 			add_action('admin_notices', array( $this, 'admin_notices'));
             if ( is_multisite() ) {
-	           add_action('network_admin_notices', array( $this, 'admin_notices'));
+	            add_action('network_admin_notices', array( $this, 'admin_notices'));
             }
 		}
 
 		add_action('wp_loaded', array(self::$instance->front_end, 'force_ssl'), 20);
-
-        if ( rsssl_admin_logged_in() ) { //TODO: @Rogier check if this is needed this was is_admin() before but broke the /wp-admin redirect to login
+		if ( rsssl_admin_logged_in() ) {
 			add_action('plugins_loaded', array(self::$instance->admin, 'init'), 10);
 		}
 	}
