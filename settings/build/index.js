@@ -37217,6 +37217,26 @@ const theme = (0,_material_ui_core_styles__WEBPACK_IMPORTED_MODULE_6__["default"
         fontSize: '12px !important',
         fontWeight: '400 !important'
       }
+    },
+    MuiList: {
+      root: {
+        fontSize: '8px !important',
+        fontWeight: '400 !important'
+      }
+    },
+    MuiAutocomplete: {
+      popper: {
+        fontSize: '12px !important',
+        fontWeight: '400 !important'
+      },
+      paper: {
+        fontSize: '12px !important',
+        fontWeight: '400 !important'
+      },
+      option: {
+        fontSize: '12px !important',
+        fontWeight: '400 !important'
+      }
     }
   }
 });
