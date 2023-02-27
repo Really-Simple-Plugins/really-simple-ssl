@@ -94,6 +94,11 @@ if (!class_exists("rsssl_vulnerabilities")) {
             }
         }
 
+        /**
+         * Generate plugin files for testing purposes.
+         *
+         * @return array
+         */
         public static function testGenerator(): array
         {
             $vul = new rsssl_vulnerabilities();
@@ -101,6 +106,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
             $vul->create_test_plugin('m');
             $vul->create_test_plugin('h');
             $vul->create_test_plugin('c');
+
             return [
                 'success' => true,
                 'message' => __('A set of test plugins were created.', "really-simple-ssl")
