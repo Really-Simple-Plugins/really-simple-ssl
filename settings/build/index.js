@@ -37199,6 +37199,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _material_ui_core_styles__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @material-ui/core/styles */ "./node_modules/@material-ui/styles/esm/ThemeProvider/ThemeProvider.js");
 
 
+/**
+ * This file contains the PostDropdown component.
+ *
+ * This component displays a dropdown menu that allows the user to select a post
+ * from a list of posts fetched from the WordPress database. The selected post
+ * is then used to set a value in an options array stored in the WordPress
+ * database. The component also allows the user to search for posts by typing
+ * in a search box.
+ */
 
 
 
@@ -37206,36 +37215,35 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
+// Material UI theme overrides
 const theme = (0,_material_ui_core_styles__WEBPACK_IMPORTED_MODULE_6__["default"])({
   typography: {
     fontSize: 12,
-    fontWeightMedium: 400
+    fontFamily: 'inherit'
   },
   overrides: {
     MuiInputBase: {
       root: {
-        fontSize: '12px !important',
-        fontWeight: '400 !important'
+        fontSize: '12px',
+        fontFamily: 'inherit'
       }
     },
     MuiList: {
       root: {
-        fontSize: '8px !important',
-        fontWeight: '400 !important'
+        fontSize: '8px'
       }
     },
     MuiAutocomplete: {
       popper: {
-        fontSize: '12px !important',
-        fontWeight: '400 !important'
+        fontSize: '12px'
       },
       paper: {
-        fontSize: '12px !important',
-        fontWeight: '400 !important'
+        fontSize: '12px'
       },
       option: {
-        fontSize: '12px !important',
-        fontWeight: '400 !important'
+        fontSize: '12px'
       }
     }
   }
@@ -37294,13 +37302,8 @@ const PostDropdown = _ref => {
     }
   }, [changeLoginUrlFailureUrl]);
   const handleSearchTermChange = (event, value) => {
-    if (value === null) {
-      setSelectedPost("");
-      setChangeLoginUrlFailureUrl("");
-    } else {
-      setSelectedPost(value.title);
-      setChangeLoginUrlFailureUrl(value.id);
-    }
+    setSelectedPost(value ? value.title : "");
+    setChangeLoginUrlFailureUrl(value ? value.id : "");
 
     // Update the value of the `change_login_url_failure_url` field in the `fields` array.
     const updatedFields = fields.map(field => {
@@ -37313,7 +37316,6 @@ const PostDropdown = _ref => {
         return field;
       }
     });
-
     // Update the fields in the parent component's state.
     _utils_api__WEBPACK_IMPORTED_MODULE_5__.setFields(updatedFields);
   };

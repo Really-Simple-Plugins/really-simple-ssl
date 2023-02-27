@@ -1,3 +1,13 @@
+/**
+ * This file contains the PostDropdown component.
+ *
+ * This component displays a dropdown menu that allows the user to select a post
+ * from a list of posts fetched from the WordPress database. The selected post
+ * is then used to set a value in an options array stored in the WordPress
+ * database. The component also allows the user to search for posts by typing
+ * in a search box.
+ */
+
 import React, { useState, useEffect } from "react";
 import { __ } from '@wordpress/i18n';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -6,36 +16,33 @@ import apiFetch from '@wordpress/api-fetch';
 import * as rsssl_api from "../utils/api";
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 
+// Material UI theme overrides
 const theme = createTheme({
     typography: {
         fontSize: 12,
-        fontWeightMedium: 400,
+        fontFamily: 'inherit',
     },
     overrides: {
         MuiInputBase: {
             root: {
-                fontSize: '12px !important',
-                fontWeight: '400 !important',
+                fontSize: '12px',
+                fontFamily: 'inherit',
             }
         },
         MuiList: {
             root: {
-                fontSize: '8px !important',
-                fontWeight: '400 !important',
+                fontSize: '8px',
             }
         },
         MuiAutocomplete: {
             popper: {
-                fontSize: '12px !important',
-                fontWeight: '400 !important',
+                fontSize: '12px',
             },
             paper: {
-                fontSize: '12px !important',
-                fontWeight: '400 !important',
+                fontSize: '12px',
             },
             option: {
-                fontSize: '12px !important',
-                fontWeight: '400 !important',
+                fontSize: '12px',
             },
         },
     },
@@ -84,15 +91,9 @@ const PostDropdown = ({ fields, setFields, updateField }) => {
         }
     }, [changeLoginUrlFailureUrl]);
 
-
     const handleSearchTermChange = (event, value) => {
-        if (value === null) {
-            setSelectedPost("");
-            setChangeLoginUrlFailureUrl("");
-        } else {
-            setSelectedPost(value.title);
-            setChangeLoginUrlFailureUrl(value.id);
-        }
+        setSelectedPost(value ? value.title : "");
+        setChangeLoginUrlFailureUrl(value ? value.id : "");
 
         // Update the value of the `change_login_url_failure_url` field in the `fields` array.
         const updatedFields = fields.map((field) => {
@@ -105,7 +106,6 @@ const PostDropdown = ({ fields, setFields, updateField }) => {
                 return field;
             }
         });
-
         // Update the fields in the parent component's state.
         rsssl_api.setFields(updatedFields);
     };
