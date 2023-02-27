@@ -54,7 +54,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
         public function __construct()
         {
-
         }
 
 
@@ -64,27 +63,86 @@ if (!class_exists("rsssl_vulnerabilities")) {
          *
          * @return void
          */
-        public function init()
+        public static function init()
         {
+            $self = new self();
             //we check if the vulnerability scanner is enabled and then the fun happens.
             if (rsssl_get_option('enable_vulnerability_scanner')) {
-                $this->check_files();
+                $self->check_files();
                 //first we need to make sure we update the files every day. So we add a daily cron.
-                add_filter('rsssl_daily_cron', array($this, 'daily_cron'));
+                add_filter('rsssl_daily_cron', array($self, 'daily_cron'));
 
                 //we cache the plugins in the class. Since we need quite some info from the plugins.
-                $this->cache_installed_plugins();
+                $self->cache_installed_plugins();
                 //we check the rsssl options if the enable_feedback_in_plugin is set to true
                 if (rsssl_get_option('enable_feedback_in_plugin')) {
                     // we enable the feedback in the plugin
-                    $this->enable_feedback_in_plugin();
+                    $self->enable_feedback_in_plugin();
                  //   $this->enable_feedback_in_theme();
 
                     //TODO: move the actions below to the pro version
 
                 }
+                //we add the notices to the notices array.
+                $self->get_vulnerabilities();
+                //we display the admin notices if available.
+               foreach ($self->admin_notices as $notice) {
+                    add_action('admin_notices', function () use ($notice) {
+                        echo $notice;
+                    });
+                }
             }
         }
+
+        public static function testGenerator(): array
+        {
+            $vul = new rsssl_vulnerabilities();
+            $vul->create_test_plugin('l');
+            $vul->create_test_plugin('m');
+            $vul->create_test_plugin('h');
+            $vul->create_test_plugin('c');
+            return [
+                'success' => true,
+                'message' => __('A set of test plugins were created.', "really-simple-ssl")
+            ];
+        }
+
+
+        private function create_test_plugin($vul) {
+            $plugin = [
+                'Plugin Name' => 'Test Plugin for '. $this->risk_naming[$vul] . ' vulnerability',
+                'PluginURI' => 'https://test.com',
+                'Version' => '1.0',
+                'Description' => __('This is a test plugin for the vulnerability scanner. To validate the settings of your vulnerabilities configuration please uninstall after testing is done.', 'really-simple-ssl'),
+                'Author' => 'Really Simple SSL',
+                'AuthorURI' => 'https://test.com',
+                'TextDomain' => 'test-plugin-'.$vul,
+                'DomainPath' => '',
+                'Network' => false,
+                'Title' => 'Test Plugin for '. $this->risk_naming[$vul] . ' vulnerability',
+                'AuthorName' => 'Test',
+            ];
+            //now we create a plugin directory for the plugin.
+            $plugin_dir = WP_PLUGIN_DIR . '/test-plugin-'.$vul;
+            if (!file_exists($plugin_dir)) {
+                mkdir($plugin_dir);
+            }
+            //we create a plugin file for the plugin.
+            $plugin_file = $plugin_dir . '/test-plugin-'.$vul.'.php';
+            if (!file_exists($plugin_file)) {
+                file_put_contents($plugin_file, '<?php');
+            }
+            // now we add the name and version in the plugin file.
+            $plugin_file_content = file_get_contents($plugin_file);
+            $plugin_file_content .= "\n" . '/*' . "\n";
+            foreach ($plugin as $key => $value) {
+                $plugin_file_content .= ' * ' . $key . ': ' . $value . "\n";
+            }
+            $plugin_file_content .= ' */';
+
+            file_put_contents($plugin_file, $plugin_file_content);
+        }
+
 
         /**
          * Instantiates the class
@@ -116,24 +174,27 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 if (isset($plugin['vulnerable']) && $plugin['vulnerable']) {
                     //first we get our setting
                     $warnAt = rsssl_get_option('vulnerability_notification_dashboard');
+
+                    //If the setting is not set, we set it to low.
+                    if(!$warnAt){
+                        $warnAt = 'l';
+                    }
+
                     if ($plugin['risk_level'] === '') {
                         $plugin['risk_level'] = 'l';
                     }
-                    //we check if the risk is higher than the setting.
-                    if ($this->risk_levels[$plugin['risk_level']] >= $this->risk_levels[$warnAt]) {
-                        //we add the notice to the notices array.
-                        $this->add_notice($plugin);
-                    }
+
 
                     // we do the same for the admin notices.
                     $warnAt = rsssl_get_option('vulnerability_notification_sitewide');
+                    if (!$warnAt) {
+                        $warnAt = 'l';
+                    }
                     if ($this->risk_levels[$plugin['risk_level']] >= $this->risk_levels[$warnAt]) {
                         //we add the notice to the notices array.
+
                         $message = $this->add_admin_notice($plugin);
-                        //now we add admin notices for the admin dashboard.
-                        add_action('admin_notices', function () use ($message) {
-                            echo $message;
-                        });
+                        $this->admin_notices[] = $message;
                     }
                 }
             }
@@ -295,22 +356,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 $this->download_plugin_vulnerabilities();
             }
             $this->cache_installed_plugins();
-        }
-
-        /**
-         * Activates a test notification
-         *
-         */
-        public function test_vulnerability_notification(): array
-        {
-            //we add the option vulnerability test notification to true
-            add_option('rsssl_test_vulnerability_notification', 'true');
-
-            //Everything went according to plan
-            return [
-                'success' => true,
-                'message' => __('Please validate your settings.', "really-simple-ssl")
-            ];
         }
 
         /* Private functions | Files and storage */
@@ -681,38 +726,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
             }
             //we then build the notice
-            return '<div class="notice notice-error is-dismissible"><p>' . '<strong>' . $plugin['Name'] . '</strong> ' . __("has vulnerabilities.", "really-simple-ssl") . '</p></div>';
-        }
-
-        private function add_vulnerability_warning(string $risk_level, $closed, $quarantine, $force_update)
-        {
-            //Example notice
-            echo '<div class="notice notice-error is-dismissible"><p>' . '<strong>' . __("Theme", "really-simple-ssl") . '</strong> ' . __("has vulnerabilities.", "really-simple-ssl") . '</p></div>';
-
-//            $riskSetting = true; //rsssl_get_option('vulnerability_notification_sitewide');
-//            if (!$riskSetting) {
-//                $risk = 'high';
-//            } else {
-//                if ($risk_level === '') {
-//                    $risk = 'low';
-//                } else {
-//                    $risk = $this->risk_naming[$risk_level];
-//                }
-//
-//            }
-//
-//            $message = '<span class="rsssl-badge rsp-' . $risk . '">' . __($risk, "really-simple-ssl") .
-//                '</span><span class="rsssl-badge rsp-dark">' . __("Theme", "really-simple-ssl") . '</span>' . __("has vulnerabilities.", "really-simple-ssl");
-//            if ($closed) {
-//                $message .= '<br>' . __("This theme is closed for security reasons.", "really-simple-ssl");
-//            }
-//            if ($quarantine) {
-//                $message .= '<br>' . __("This theme is quarantined for security reasons.", "really-simple-ssl");
-//            }
-//            if ($force_update) {
-//                $message .= '<br>' . __("This theme is forced to update for security reasons.", "really-simple-ssl");
-//            }
-//            echo '<tr class="plugin-update-tr active"><td colspan="3" class="plugin-update colspanchange"><div class="update-message notice inline notice-error notice-alt"><p>' . $message . '</p></div></td></tr>';
+            return '<div data-dismissible="disable-done-notice-forever" class="notice notice-error is-dismissible"><p>' . '<strong>' . $plugin['Name'] . '</strong> ' . __("has vulnerabilities.", "really-simple-ssl") . '</p></div>';
         }
 
         public function enable_feedback_in_theme()
@@ -735,26 +749,8 @@ if (!class_exists("rsssl_vulnerabilities")) {
             echo '<div class="theme-warning"><span class="warning-icon"></span> <p>Here is your custom warning message for this theme.</p></div>';
         }
     }
-}
-
-//if the function rsssl_vulnerabilities does not exist, we create it
-if (!function_exists('rsssl_vulnerabilities')) {
-    /**
-     * Returns the RSSSL_Vulnerabilities instance
-     *
-     * @return void
-     */
-    function rsssl_vulnerabilities(): void
-    {
-        global $rsssl_vulnerabilities;
-        if (!isset($rsssl_vulnerabilities)) {
-            $rsssl_vulnerabilities = new rsssl_vulnerabilities();
-            $rsssl_vulnerabilities = rsssl_vulnerabilities::instance();
-        }
-        $rsssl_vulnerabilities->init();
-    }
-
-    add_action('admin_init', 'rsssl_vulnerabilities');
+    //we initialize the class
+    add_action('admin_init', array(rsssl_vulnerabilities::class, 'init'));
 }
 
 //we now check add notifications onboarding and vulnerability TODO: check if this is the best place for this please convey with Mark, Rogier.
@@ -772,28 +768,28 @@ if (!function_exists('rsssl_vulnerabilities_enabled')) {
         return rsssl_get_option('enable_vulnerability_scanner');
     }
 }
-add_action('after_setup_theme', 'add_theme_version_warning');
+//add_action('after_setup_theme', 'add_theme_version_warning');
 
-function add_theme_version_warning() {
-    $themes = wp_get_themes();
-    foreach ($themes as $theme) {
-        $version = $theme->get('Version');
-        $message = '';
-        $class = '';
-
-        if (version_compare($version, '1.0', '>')) {
-            $message = __('This theme has a version greater than 1.0', 'text-domain');
-            $class = 'has-version-warning success';
-        } else {
-            $message = __('This theme has a version less than or equal to 1.0', 'text-domain');
-            $class = 'has-version-warning warning';
-        }
-        // Add the version warning message to the theme card
-        add_action("after_theme_row_{$theme->get_stylesheet()}", function() use ($message, $class) {
-            echo "<div class='{$class}' style='display: inline-block; margin-left: 10px; padding: 5px;'>{$message}</div>";
-        });
-    }
-}
+//function add_theme_version_warning() {
+//    $themes = wp_get_themes();
+//    foreach ($themes as $theme) {
+//        $version = $theme->get('Version');
+//        $message = '';
+//        $class = '';
+//
+//        if (version_compare($version, '1.0', '>')) {
+//            $message = __('This theme has a version greater than 1.0', 'text-domain');
+//            $class = 'has-version-warning success';
+//        } else {
+//            $message = __('This theme has a version less than or equal to 1.0', 'text-domain');
+//            $class = 'has-version-warning warning';
+//        }
+//        // Add the version warning message to the theme card
+//        add_action("after_theme_row_{$theme->get_stylesheet()}", function() use ($message, $class) {
+//            echo "<div class='{$class}' style='display: inline-block; margin-left: 10px; padding: 5px;'>{$message}</div>";
+//        });
+//    }
+//}
 
 /**
  * function die and dump
