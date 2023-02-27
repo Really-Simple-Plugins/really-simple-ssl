@@ -4,6 +4,22 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 import apiFetch from '@wordpress/api-fetch';
 import * as rsssl_api from "../utils/api";
+import { createTheme, ThemeProvider } from '@material-ui/core/styles';
+
+const theme = createTheme({
+    typography: {
+        fontSize: 12,
+        fontWeightMedium: 400,
+    },
+    overrides: {
+        MuiInputBase: {
+            root: {
+                fontSize: '12px !important',
+                fontWeight: '400 !important',
+            }
+        },
+    },
+});
 
 const PostDropdown = ({ fields, setFields, updateField }) => {
     const [posts, setPosts] = useState([]);
@@ -34,6 +50,7 @@ const PostDropdown = ({ fields, setFields, updateField }) => {
 
     // Fetch the data for the selected post from the WordPress database when the component mounts.
     useEffect(() => {
+        console.log(changeLoginUrlFailureUrl);
         if (changeLoginUrlFailureUrl === "404_default" || changeLoginUrlFailureUrl === "404") {
             setSelectedPost("404 (default)");
             return { title: "404 (default)", id: "404_default" };
@@ -82,26 +99,32 @@ const PostDropdown = ({ fields, setFields, updateField }) => {
             <label htmlFor="rsssl-filter-post-input">
                 {__("Redirect to this post when someone tries to access /wp-admin or /wp-login.php. The default is a 404 page.","really-simple-ssl")}
             </label>
-            <Autocomplete
-                options={filteredPosts}
-                getOptionLabel={(option) => option.title}
-                renderInput={(params) => (
-                    <TextField {...params} variant="outlined" placeholder={__('Search for a post.','really-simple-ssl')} />
-                )}
-                getOptionSelected={(option, value) => {
-                    if (value === null) {
-                        return option.id === "404_default";
-                    } else {
-                        return value.title;
+            <ThemeProvider theme={theme}>
+                <Autocomplete
+                    options={filteredPosts}
+                    getOptionLabel={(option) => option.title}
+                    renderInput={(params) => (
+                        <TextField
+                            {...params}
+                            variant="outlined"
+                            placeholder={__('Search for a post.','really-simple-ssl')}
+                        />
+                    )}
+                    getOptionSelected={(option, value) => {
+                        if (value === null) {
+                            return option.id === "404_default";
+                        } else {
+                            return value.title;
+                        }
+                    }}
+                    onChange={handleSearchTermChange}
+                    value={
+                        selectedPost
+                            ? { title: selectedPost, id: changeLoginUrlFailureUrl }
+                            : null
                     }
-                }}
-                onChange={() => handleSearchTermChange()}
-                value={
-                    selectedPost
-                        ? { title: selectedPost, id: changeLoginUrlFailureUrl }
-                        : null
-                }
-            />
+                />
+            </ThemeProvider>
         </div>
     );
 };
