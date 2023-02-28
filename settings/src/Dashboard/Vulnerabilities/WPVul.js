@@ -2,10 +2,12 @@ import Icon from "../../utils/Icon";
 import {__} from "@wordpress/i18n";
 import useWPVul from "./WPVulData";
 import {useEffect} from "react";
+import useFields from "../../Settings/FieldsData";
 
 const WPVul = (props) => {
     const {vulnerabilities, HighestRisk, lastChecked, vulEnabled, updates, dataLoaded, fetchVulnerabilities} = useWPVul();
-
+    const {fields, fieldsLoaded} = useFields();
+    let featuredFields = fields.filter( field => field.new_features_block );
     useEffect(() => {
         fetchVulnerabilities().then(r => {
             console.log(r);
@@ -13,11 +15,14 @@ const WPVul = (props) => {
     }, []);
 
     if (!dataLoaded) {
+        //we do not have the data yet, so we return null
         return null;
     }
 
     let vulClass = 'rsssl-inactive';
-    const hardening = 0;
+    const hardening = featuredFields.filter(field => field.value === 0);
+
+    // console.log(updates, vulnerabilities, 'hardening',hardening);
     if (!(updates === 0 && vulnerabilities === 0 && hardening)) {
         vulClass = 'rsssl-error';
     }
@@ -81,6 +86,20 @@ const WPVul = (props) => {
         }
     }
 
+    const checkHardening = () => {
+        //
+        if (hardening.length) {
+            return (
+                <>
+                    <div className="rsssl-detail-icon"><Icon name="circle-times" color='red'/></div>
+                    <div className="rsssl-detail">
+                        {__("You have %s open hardening features", "really-simple-ssl").replace("%s", hardening.length)}
+                    </div>
+                </>
+            )
+        }
+    }
+
     return (
         <div className={vulClass}>
             <div className={"rsssl-gridblock-progress-container " + vulClass}>
@@ -115,6 +134,9 @@ const WPVul = (props) => {
             </div>
             <div className="rsssl-details">
                 {checkVul()}
+            </div>
+            <div className="rsssl-details">
+                {checkHardening()}
             </div>
             <div className="rsssl-details">
                 <div className="rsssl-detail-icon"><Icon name="external-link" color='black'/></div>
