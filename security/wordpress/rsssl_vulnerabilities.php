@@ -241,7 +241,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
             $stats = [
                 'vulnerabilities' => count($vulnerabilities),
                 'updates' => $updates,
-                'lastChecked' => $self->get_file_stored_info(),
+                'lastChecked' => date('d / m / Y @ H:i',$self->get_file_stored_info()),
                 'vulEnabled' => $vulEnabled,
             ];
             return [
@@ -397,11 +397,18 @@ if (!class_exists("rsssl_vulnerabilities")) {
         {
             //We check the core vulnerabilities and validate age and existence
             if (!$this->validate_local_file(true)) {
+                //if the file is younger than 24 hours, we don't download it again.
+                if($this->get_file_stored_info(true) > time() - 86400){
+                    return;
+                }
                 $this->download_core_vulnerabilities();
             }
 
             //We check the plugin vulnerabilities and validate age and existence
             if (!$this->validate_local_file()) {
+                if($this->get_file_stored_info() > time() - 86400){
+                    return;
+                }
                 $this->download_plugin_vulnerabilities();
             }
             $this->cache_installed_plugins();
@@ -538,7 +545,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
             if (!file_exists($file)) {
                 return false;
             }
-            $date = \library\FileStorage::GetDate($file);
+            return \library\FileStorage::GetDate($file);
             //now we return the unix timestamp as a normal date
             return date('d / m / Y @ H:i', $date);
         }
