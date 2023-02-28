@@ -73,16 +73,16 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
                 switch ($data['field']) {
                     case 'low_risk':
                         //storing the update value
-                        update_option('rsssl_low_risk_measure', $data['value']);
+                        rsssl_update_option('low_risk_measure', $data['value']);
                         break;
                     case 'medium_risk':
-                        update_option('rsssl_medium_risk_measure', $data['value']);
+                        rsssl_update_option('medium_risk_measure', $data['value']);
                         break;
                     case 'high_risk':
-                        update_option('rsssl_high_risk_measure', $data['value']);
+                        rsssl_update_option('high_risk_measure', $data['value']);
                         break;
                     case 'critical_risk':
-                        update_option('rsssl_critical_risk_measure', $data['value']);
+                        rsssl_update_option('critical_risk_measure', $data['value']);
                         break;
                 }
                 return $this->measures_data();
@@ -145,25 +145,25 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
             $data[] = [
                 'id' => 'low_risk',
                 'risk' => __('Low-risk', 'really-simple-ssl'),
-                'value' => get_option('rsssl_low_risk_measure'),
+                'value' => rsssl_get_option('low_risk_measure'),
                 'description' => __('Low risk vulnerabilities', 'really-simple-ssl'),
             ];
             $data[] = [
                 'id' => 'medium_risk',
                 'risk' => __('Medium-risk', 'really-simple-ssl'),
-                'value' => get_option('rsssl_medium_risk_measure'),
+                'value' => rsssl_get_option('medium_risk_measure'),
                 'description' => __('Medium risk vulnerabilities', 'really-simple-ssl'),
             ];
             $data[] = [
                 'id' => 'high_risk',
-                'risk' => __('High-risk', 'rsssl_really-simple-ssl'),
-                'value' => get_option('rsssl_high_risk_measure'),
+                'risk' => __('High-risk', 'really-simple-ssl'),
+                'value' => rsssl_get_option('high_risk_measure'),
                 'description' => __('High risk vulnerabilities', 'really-simple-ssl'),
             ];
             $data[] = [
                 'id' => 'critical_risk',
                 'risk' => __('Critical-risk', 'really-simple-ssl'),
-                'value' => get_option('rsssl_critical_risk_measure'),
+                'value' => rsssl_get_option('critical_risk_measure'),
                 'description' => __('Critical risk vulnerabilities', 'really-simple-ssl'),
             ];
             return $data;

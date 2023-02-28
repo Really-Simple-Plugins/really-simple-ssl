@@ -32,6 +32,32 @@
   }
 }
 
+.rsssl-wpvul {
+  .rsssl-number {
+    font-size: 2.5em;
+    font-weight: 700;
+    text-align: center;
+  }
+  .time {
+    position : absolute;
+    right:2em;
+    padding-right: 5px;
+    text-align: right;
+  }
+  .alignright {
+    //we make sure this element is floating right and in the middle of the container
+    float: right;
+    margin-top: 1em;
+    margin-left: 10px;
+  }
+  .alignleft {
+    //we make sure this element is floating left and in the middle of the container
+    float: left;
+    margin-top: 5px;
+    margin-right: 10px;
+  }
+}
+
 .rsssl-grid-item.rsssl-progress {
   .rsssl-grid-item-content {
     padding: 0;

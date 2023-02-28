@@ -1,17 +1,14 @@
 import React from 'react';
 import {__} from '@wordpress/i18n';
+import useWPVul from "./WPVulData";
 
 const WPVulFooter = (props) => {
-
+    const {lastChecked} = useWPVul();
     return (
         <div className={'rsssl-wpvul'}>
-            <div className={'alignleft'}>
-                <a href="#settings/vulnerabilities"
-                   className={'button button-black'}>{__('Settings', 'really-simple-ssl')}</a>
-            </div>
-            <div className={'alignright'}>
-                <small>{__('Last checken on', 'really-simple-ssl')} 22-02-2023</small>
-            </div>
+            <a href="#settings/vulnerabilities"
+               className={'button button-default alignleft'}>{__('Settings', 'really-simple-ssl')}</a>
+            <small className={'alignright'}>{__('Last checked on', 'really-simple-ssl')}: {lastChecked}</small>
         </div>
     )
 }

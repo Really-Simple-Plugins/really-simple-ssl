@@ -222,3 +222,16 @@ export const doAction = (action, data) => {
 export const getOnboarding = (forceRefresh) => {
     return apiGet('reallysimplessl/v1/onboarding'+glue()+'forceRefresh='+forceRefresh+getNonce());
 }
+
+export const vulPostAction = (action, data) => {
+    if (typeof data === 'undefined') data = {};
+    console.log(action);
+    data.nonce = rsssl_settings.rsssl_nonce;
+    return apiPost('reallysimplessl/v1/vulnerabilities/'+action, data);
+}
+
+export const vulGetAction = (action, data) => {
+    if (typeof data === 'undefined') data = {};
+    data.nonce = rsssl_settings.rsssl_nonce;
+    return apiGet('reallysimplessl/v1/vulnerabilities');
+}

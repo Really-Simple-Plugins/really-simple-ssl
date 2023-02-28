@@ -31,6 +31,10 @@
       background: var(--rsp-red-faded);
     }
 
+    &.rsssl-warning {
+      background: var(--rsp-yellow-faded);
+    }
+
     &.rsssl-success {
       background: var(--rsp-green-faded);
     }

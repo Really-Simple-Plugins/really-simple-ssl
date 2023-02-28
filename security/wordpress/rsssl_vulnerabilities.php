@@ -78,7 +78,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 if (rsssl_get_option('enable_feedback_in_plugin')) {
                     // we enable the feedback in the plugin
                     $self->enable_feedback_in_plugin();
-                 //   $this->enable_feedback_in_theme();
+                    //   $this->enable_feedback_in_theme();
 
                     //TODO: move the actions below to the pro version
 
@@ -86,11 +86,20 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 //we add the notices to the notices array.
                 $self->get_vulnerabilities();
                 //we display the admin notices if available.
-               foreach ($self->admin_notices as $notice) {
+                foreach ($self->admin_notices as $notice) {
                     add_action('admin_notices', function () use ($notice) {
                         echo $notice;
                     });
                 }
+            }
+        }
+
+        public static function testDismiss()
+        {
+            $self = new self();
+            //We remove the created plugin files
+            foreach ($self->risk_naming as $risk => $name) {
+                $self->remove_plugin_files($risk);
             }
         }
 
@@ -102,10 +111,9 @@ if (!class_exists("rsssl_vulnerabilities")) {
         public static function testGenerator(): array
         {
             $vul = new rsssl_vulnerabilities();
-            $vul->create_test_plugin('l');
-            $vul->create_test_plugin('m');
-            $vul->create_test_plugin('h');
-            $vul->create_test_plugin('c');
+            foreach ($vul->risk_naming as $risk => $name) {
+                $vul->create_test_plugin($risk);
+            }
 
             return [
                 'success' => true,
@@ -114,27 +122,28 @@ if (!class_exists("rsssl_vulnerabilities")) {
         }
 
 
-        private function create_test_plugin($vul) {
+        private function create_test_plugin($vul)
+        {
             $plugin = [
-                'Plugin Name' => 'Test Plugin for '. $this->risk_naming[$vul] . ' vulnerability',
+                'Plugin Name' => 'Test Plugin for ' . $this->risk_naming[$vul] . ' vulnerability',
                 'PluginURI' => 'https://test.com',
                 'Version' => '1.0',
                 'Description' => __('This is a test plugin for the vulnerability scanner. To validate the settings of your vulnerabilities configuration please uninstall after testing is done.', 'really-simple-ssl'),
                 'Author' => 'Really Simple SSL',
                 'AuthorURI' => 'https://test.com',
-                'TextDomain' => 'test-plugin-'.$vul,
+                'TextDomain' => 'test-plugin-' . $vul,
                 'DomainPath' => '',
                 'Network' => false,
-                'Title' => 'Test Plugin for '. $this->risk_naming[$vul] . ' vulnerability',
+                'Title' => 'Test Plugin for ' . $this->risk_naming[$vul] . ' vulnerability',
                 'AuthorName' => 'Test',
             ];
             //now we create a plugin directory for the plugin.
-            $plugin_dir = WP_PLUGIN_DIR . '/test-plugin-'.$vul;
+            $plugin_dir = WP_PLUGIN_DIR . '/test-plugin-' . $vul;
             if (!file_exists($plugin_dir)) {
                 mkdir($plugin_dir);
             }
             //we create a plugin file for the plugin.
-            $plugin_file = $plugin_dir . '/test-plugin-'.$vul.'.php';
+            $plugin_file = $plugin_dir . '/test-plugin-' . $vul . '.php';
             if (!file_exists($plugin_file)) {
                 file_put_contents($plugin_file, '<?php');
             }
@@ -179,10 +188,10 @@ if (!class_exists("rsssl_vulnerabilities")) {
             foreach ($this->workable_plugins as $plugin) {
                 if (isset($plugin['vulnerable']) && $plugin['vulnerable']) {
                     //first we get our setting
-                    $warnAt = rsssl_get_option('vulnerability_notification_dashboard');
+                    $warnAt = rsssl_get_option('vulnerability_notification_dashboard')?? false;
 
                     //If the setting is not set, we set it to low.
-                    if(!$warnAt){
+                    if (!$warnAt) {
                         $warnAt = 'l';
                     }
 
@@ -206,6 +215,40 @@ if (!class_exists("rsssl_vulnerabilities")) {
             }
         }
 
+
+        public static function get_stats($data): array
+        {
+            $self = new self();
+
+            $vulEnabled = rsssl_get_option('enable_vulnerability_scanner');
+            $self->cache_installed_plugins();
+
+            //now we only get the data we need.
+            $vulnerabilities = array_filter($self->workable_plugins, function ($plugin) {
+                if(isset($plugin['vulnerable']) && $plugin['vulnerable'])
+                return $plugin;
+            });
+
+            $updates = 0;
+            //now we fetch all plugins that have an update available.
+            foreach ($self->workable_plugins as $plugin) {
+                if (isset($plugin['update_available']) && $plugin['update_available']) {
+                    $updates++;
+                }
+            }
+
+
+            $stats = [
+                'vulnerabilities' => count($vulnerabilities),
+                'updates' => $updates,
+                'lastChecked' => $self->get_file_stored_info(),
+                'vulEnabled' => $vulEnabled,
+            ];
+            return [
+                "request_success" =>true,
+                'data' => $stats
+            ];
+        }
 
         /**
          * Merges our feature notices with the notices array.
@@ -486,6 +529,20 @@ if (!class_exists("rsssl_vulnerabilities")) {
             \library\FileStorage::StoreFile($file, $data);
         }
 
+        public function get_file_stored_info($isCore = false)
+        {
+            $upload_dir = wp_upload_dir();
+            $upload_dir = $upload_dir['basedir'];
+            $upload_dir = $upload_dir . self::RSS_VULNERABILITIES_LOCATION;
+            $file = $upload_dir . '/' . ($isCore ? 'core.json' : 'components.json');
+            if (!file_exists($file)) {
+                return false;
+            }
+            $date = \library\FileStorage::GetDate($file);
+            //now we return the unix timestamp as a normal date
+            return date('d / m / Y @ H:i', $date);
+        }
+
         /**
          * Loads the info from the files
          *
@@ -590,26 +647,33 @@ if (!class_exists("rsssl_vulnerabilities")) {
             //now we get the components from the file
             $components = $this->get_components();
 
-            //if there are no components, we return
-            if (empty($components)) {
-                return;
-            }
+
             //We loop through plugins and check if they are in the components array
             foreach ($installed_plugins as $key => $plugin) {
                 $plugin['vulnerable'] = false;
-                //we walk through the components array
-                foreach ($components as $component) {
-                    if ($plugin['TextDomain'] === $component->slug) {
-                        if (!empty($component->vulnerabilities)) {
-                            $plugin['vulnerable'] = true;
-                            $plugin['risk_level'] = $this->get_highest_vulnerability($component->vulnerabilities);
-                            $plugin['closed'] = $component->closed;
-                            $plugin['quarantine'] = $component->quarantine;
-                            $plugin['force_update'] = $component->force_update;
-                            $plugin['file'] = $key;
+                $update = get_site_transient('update_plugins');
+                if (isset($update->response[$key])) {
+                    $plugin['update_available'] = true;
+                } else {
+                    $plugin['update_available'] = false;
+                }
+                //if there are no components, we return
+                if (!empty($components)) {
+                    foreach ($components as $component) {
+                        if ($plugin['TextDomain'] === $component->slug) {
+                            if (!empty($component->vulnerabilities)) {
+                                $plugin['vulnerable'] = true;
+                                $plugin['risk_level'] = $this->get_highest_vulnerability($component->vulnerabilities);
+                                $plugin['closed'] = $component->closed;
+                                $plugin['quarantine'] = $component->quarantine;
+                                $plugin['force_update'] = $component->force_update;
+                                $plugin['file'] = $key;
+                            }
                         }
                     }
                 }
+                //we walk through the components array
+
                 $this->workable_plugins[$key] = $plugin;
             }
 
@@ -737,7 +801,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
         public function enable_feedback_in_theme()
         {
-           //if we are on the themes.php site we do this
+            //if we are on the themes.php site we do this
             if (strpos($_SERVER['REQUEST_URI'], 'themes.php') !== false) {
                 //we add the action to the theme row
                 add_action('after_theme_row_', array($this, 'my_custom_theme_row_warning'), 10, 2);
@@ -750,11 +814,21 @@ if (!class_exists("rsssl_vulnerabilities")) {
             return $columns;
         }
 
-        public function my_custom_theme_row_warning() {
+        public function my_custom_theme_row_warning()
+        {
             // Replace "your_theme_slug" with your theme's slug
             echo '<div class="theme-warning"><span class="warning-icon"></span> <p>Here is your custom warning message for this theme.</p></div>';
         }
+
+        public function getAllUpdatesCount(): int
+        {
+            $updates = get_plugin_updates();
+            $updates = array_merge($updates, get_theme_updates());
+            $updates = array_merge($updates, get_core_updates());
+            return count($updates);
+        }
     }
+
     //we initialize the class
     add_action('admin_init', array(rsssl_vulnerabilities::class, 'init'));
 }
@@ -774,28 +848,23 @@ if (!function_exists('rsssl_vulnerabilities_enabled')) {
         return rsssl_get_option('enable_vulnerability_scanner');
     }
 }
-//add_action('after_setup_theme', 'add_theme_version_warning');
 
-//function add_theme_version_warning() {
-//    $themes = wp_get_themes();
-//    foreach ($themes as $theme) {
-//        $version = $theme->get('Version');
-//        $message = '';
-//        $class = '';
-//
-//        if (version_compare($version, '1.0', '>')) {
-//            $message = __('This theme has a version greater than 1.0', 'text-domain');
-//            $class = 'has-version-warning success';
-//        } else {
-//            $message = __('This theme has a version less than or equal to 1.0', 'text-domain');
-//            $class = 'has-version-warning warning';
-//        }
-//        // Add the version warning message to the theme card
-//        add_action("after_theme_row_{$theme->get_stylesheet()}", function() use ($message, $class) {
-//            echo "<div class='{$class}' style='display: inline-block; margin-left: 10px; padding: 5px;'>{$message}</div>";
-//        });
-//    }
-//}
+
+//registering an new Rest Api Route
+add_action('rest_api_init', function () {
+    //the get route
+    register_rest_route('reallysimplessl/v1', '/vulnerabilities/', array(
+        'methods' => 'GET',
+        'callback' => array(rsssl_vulnerabilities::class, 'get_stats'),
+    ));
+
+    //the post route
+    register_rest_route('reallysimplessl/v1', '/vulnerabilities/', array(
+        'methods' => 'POST',
+        'callback' => array(rsssl_vulnerabilities::class, 'post_vulnerabilities'),
+    ));
+
+});
 
 /**
  * function die and dump

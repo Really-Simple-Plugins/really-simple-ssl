@@ -86,4 +86,12 @@ class FileStorage
             rsssl_update_option('hashkey', $this->hash);
         }
     }
+
+    public static function GetDate(string $file)
+    {
+        if (file_exists($file)) {
+            return filemtime($file);
+        }
+        return false;
+    }
 }

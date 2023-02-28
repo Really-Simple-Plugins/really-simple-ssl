@@ -1,40 +1,37 @@
 import Icon from "../../utils/Icon";
 import {__} from "@wordpress/i18n";
+import useWPVul from "./WPVulData";
+import {useEffect} from "react";
 
-const WPVul = ( props ) => {
-    const vulClass = 'rsssl-inactive';
-    const hasErrors = false;
-    const grade = 'A+';
+const WPVul = (props) => {
+    const {vulnerabilities, HighestRisk, lastChecked, vulEnabled, updates, dataLoaded, fetchVulnerabilities} = useWPVul();
 
+    useEffect(() => {
+        fetchVulnerabilities().then(r => {
+            console.log(r);
+        });
+    }, []);
 
-
-    const scoreSnippet = (className, content) => {
-        return (
-            <div className="rsssl-score-container"><div className={"rsssl-score-snippet "+className}>{content}</div></div>
-        )
+    if (!dataLoaded) {
+        return null;
     }
 
-    let vulStatusColor = 'black';
+    let vulClass = 'rsssl-inactive';
+    const hardening = 0;
+    if (!(updates === 0 && vulnerabilities === 0 && hardening)) {
+        vulClass = 'rsssl-error';
+    }
 
     const getStyles = () => {
         let progress = 0;
         let vulScanStatus = 'disabled';
-          if (vulScanStatus==='active') progress=50;
-          if (vulScanStatus==='paused') progress=100;
+        if (vulScanStatus === 'active') progress = 50;
+        if (vulScanStatus === 'paused') progress = 100;
 
         return Object.assign(
             {},
-            {width: progress+"%"},
+            {width: progress + "%"},
         );
-    }
-
-    function enabledVul() {
-        const status = 'enabled';
-        return (
-            <>
-                {(status==='enabled') && scoreSnippet("rsssl-test-inactive", "Vulnerability support")}
-            </>
-        )
     }
 
     function neverScannedYet() {
@@ -42,6 +39,47 @@ const WPVul = ( props ) => {
     }
 
     let gradeClass = neverScannedYet() ? 'inactive' : '?';
+
+    const checkVulActive = () => {
+        if (vulEnabled) {
+            return (<></>)
+        }
+
+        return (
+            <>
+                <div className="rsssl-detail-icon"><Icon name="info" color='yellow'/></div>
+                <div className="rsssl-detail">
+                    {__("Enable vulnerability scanning for more information", "really-simple-ssl")}
+                </div>
+            </>
+        )
+    }
+
+    const checkUpdates = () => {
+        if (updates) {
+            return (
+                <>
+                    <div className="rsssl-detail-icon"><Icon name="circle-times" color='red'/></div>
+                    <div className="rsssl-detail">
+                        {__("You have %s updates pending", "really-simple-ssl").replace("%s", updates)}
+                    </div>
+                </>
+            )
+        }
+    }
+
+    const checkVul = () => {
+        if (vulnerabilities) {
+            return (
+                <>
+                    <div className="rsssl-detail-icon"><Icon name="circle-times" color='red'/></div>
+                    <div className="rsssl-detail">
+                        {__("You have %s vulnerabilities", "really-simple-ssl").replace("%s", vulnerabilities)}
+                    </div>
+                </>
+            )
+        }
+    }
 
     return (
         <div className={vulClass}>
@@ -51,28 +89,32 @@ const WPVul = ( props ) => {
             <div className={"rsssl-ssl-test-container " + vulClass}>
                 <div className="rsssl-ssl-test ">
                     <div className="rsssl-ssl-test-information">
-                        {enabledVul()}
+                        {<span><Icon color={'red'} name="file-search"></Icon></span>}
+                        <span>
+                            <h2 className={"rsssl-number"}>{vulnerabilities}</h2>
+                        <p className={"rsssl-badge rsp-default"}>Vulnerabilities</p>
+                        </span>
                     </div>
-                    <div className={"rsssl-ssl-test-grade success"}>
-                        {!neverScannedYet() && <span>{grade}</span>}
-                        {neverScannedYet() && <span><Icon color={'red'} name = "sync-error"></Icon></span>}
+                    <div className={"rsssl-ssl-test-information"}>
+                        {<span><Icon color={'red'} name="download"></Icon>
+                        </span>}
+                        <span>
+                            <h2 className={"rsssl-number"}>{updates}</h2>
+                        <p className={"rsssl-badge rsp-default"}>Updates</p>
+                        </span>
+
                     </div>
                 </div>
+
             </div>
             <div className="rsssl-details">
-                <div className="rsssl-detail-icon"><Icon name="info" color={vulStatusColor}/></div>
-                <div className={"rsssl-detail rsssl-status-" + vulStatusColor}>
-                    {hasErrors && <>{vulStatusColor}</>}
-                    {!hasErrors && <> {__("What are vulnerabilities", "really-simple-ssl")}&nbsp;<a
-                        href="https://really-simple-ssl.com/instructions/about-vulnerabilities/"
-                        target="_blank">{__("Read more", "really-simple-ssl")}</a></>}
-                </div>
+                {checkVulActive()}
             </div>
             <div className="rsssl-details">
-                <div className="rsssl-detail-icon"><Icon name="list" color='black'/></div>
-                <div className="rsssl-detail">
-                    {__("Last check:", "really-simple-ssl")}&nbsp;{'never'}
-                </div>
+                {checkUpdates()}
+            </div>
+            <div className="rsssl-details">
+                {checkVul()}
             </div>
             <div className="rsssl-details">
                 <div className="rsssl-detail-icon"><Icon name="external-link" color='black'/></div>
