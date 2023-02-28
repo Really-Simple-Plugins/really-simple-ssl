@@ -425,6 +425,7 @@ function rsssl_sanitize_field_type($type){
         'learningmode',
         'mixedcontentscan',
         'LetsEncrypt',
+        'postdropdown',
     ];
     if ( in_array($type, $types) ){
         return $type;
@@ -689,6 +690,7 @@ function rsssl_sanitize_field( $value, string $type, string $id ) {
 		case 'text':
         case 'textarea':
 		case 'license':
+		case 'postdropdown':
 		    return sanitize_text_field( $value );
 		case 'multicheckbox':
 			if ( ! is_array( $value ) ) {

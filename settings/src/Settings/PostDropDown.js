@@ -48,20 +48,9 @@ const theme = createTheme({
     },
 });
 
-const PostDropdown = ({ fields, setFields, updateField }) => {
+const PostDropdown = ({ field, fields, saveChangedFields, updateField }) => {
     const [posts, setPosts] = useState([]);
     const [selectedPost, setSelectedPost] = useState("");
-    const [searchTerm, setSearchTerm] = useState("");
-    const [changeLoginUrlFailureUrl, setChangeLoginUrlFailureUrl] = useState("");
-
-    // Fetch the value of an RSSSL option in the WordPress database when the component mounts.
-    useEffect(() => {
-        const changeLoginUrlFailureUrl = fields.find(
-            (field) => field.id === "change_login_url_failure_url"
-        ).value;
-        setChangeLoginUrlFailureUrl(changeLoginUrlFailureUrl);
-        setSelectedPost(changeLoginUrlFailureUrl);
-    }, [fields]);
 
     // Fetch the list of posts from the WordPress database when the component mounts.
     useEffect(() => {
@@ -71,48 +60,26 @@ const PostDropdown = ({ fields, setFields, updateField }) => {
                     title: post.title.rendered,
                     id: post.id
                 }));
-                setPosts([{ title: "404 (default)", id: "404_default" }, ...formattedData]);
+                setPosts([{ 'title': "404 (default)", 'id': "404_default" }, ...formattedData]);
             });
     }, []);
 
     // Fetch the data for the selected post from the WordPress database when the component mounts.
     useEffect(() => {
-        console.log(changeLoginUrlFailureUrl);
-        if (changeLoginUrlFailureUrl === "404_default" || changeLoginUrlFailureUrl === "404") {
-            setSelectedPost("404 (default)");
-            return { title: "404 (default)", id: "404_default" };
-        } else {
-            apiFetch({ path: `wp/v2/posts/${changeLoginUrlFailureUrl}` })
+        if (field.value !== '404_default') {
+            apiFetch({ path: `wp/v2/posts/${field.value}` })
                 .then((data) => {
                     if (data.title) {
-                        setSelectedPost(data.title.rendered);
+                        setSelectedPost({ 'title': data.title.rendered, 'id': field.value })
+                    } else {
+                        setSelectedPost({ 'title': "404 (default)", 'id': '404_default' })
                     }
                 });
+        } else {
+            setSelectedPost({ 'title': "404 (default)", 'id': '404_default' })
         }
-    }, [changeLoginUrlFailureUrl]);
+    }, [field.value]);
 
-    const handleSearchTermChange = (event, value) => {
-        setSelectedPost(value ? value.title : "");
-        setChangeLoginUrlFailureUrl(value ? value.id : "");
-
-        // Update the value of the `change_login_url_failure_url` field in the `fields` array.
-        const updatedFields = fields.map((field) => {
-            if (field.id === "change_login_url_failure_url") {
-                return {
-                    ...field,
-                    value: value ? value.id : "",
-                };
-            } else {
-                return field;
-            }
-        });
-        // Update the fields in the parent component's state.
-        rsssl_api.setFields(updatedFields);
-    };
-
-    const filteredPosts = posts.filter((post) => {
-        return post.title.toLowerCase().includes(searchTerm.toLowerCase());
-    });
 
     return (
         <div>
@@ -121,8 +88,8 @@ const PostDropdown = ({ fields, setFields, updateField }) => {
             </label>
             <ThemeProvider theme={theme}>
                 <Autocomplete
-                    options={filteredPosts}
-                    getOptionLabel={(option) => option.title}
+                    options={posts}
+                    getOptionLabel={(option) => option.title ? option.title : ''}
                     renderInput={(params) => (
                         <TextField
                             {...params}
@@ -131,18 +98,14 @@ const PostDropdown = ({ fields, setFields, updateField }) => {
                         />
                     )}
                     getOptionSelected={(option, value) => {
-                        if (value === null) {
-                            return option.id === "404_default";
-                        } else {
-                            return value.title;
-                        }
+                        return option.id === value.id;
                     }}
-                    onChange={handleSearchTermChange}
-                    value={
-                        selectedPost
-                            ? { title: selectedPost, id: changeLoginUrlFailureUrl }
-                            : null
-                    }
+                    onChange={(event, newValue) => {
+                        let value = newValue && newValue.id ? newValue.id : '404_default';
+                        updateField(field.id, value);
+                        saveChangedFields( field.id );
+                    }}
+                    value={selectedPost}
                 />
             </ThemeProvider>
         </div>
