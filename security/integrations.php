@@ -65,7 +65,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		'risk'                 => 'high',
 		'option_id'            => 'rename_admin_user',
 	),
-
 	'display-name-is-login-name' => array(
 		'label'                => __('Block user registration when login name equals display name', 'really-simple-ssl'),
 		'folder'               => 'wordpress',
