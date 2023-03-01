@@ -15,6 +15,7 @@ import TextField from '@material-ui/core/TextField';
 import apiFetch from '@wordpress/api-fetch';
 import * as rsssl_api from "../utils/api";
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
+import useFields from "./FieldsData";
 
 // Material UI theme overrides
 const theme = createTheme({
@@ -48,9 +49,10 @@ const theme = createTheme({
     },
 });
 
-const PostDropdown = ({ field, fields, saveChangedFields, updateField }) => {
+const PostDropdown = ({ field }) => {
     const [posts, setPosts] = useState([]);
     const [selectedPost, setSelectedPost] = useState("");
+    const {updateField, setChangedField} = useFields();
 
     // Fetch the list of posts from the WordPress database when the component mounts.
     useEffect(() => {
@@ -103,7 +105,7 @@ const PostDropdown = ({ field, fields, saveChangedFields, updateField }) => {
                     onChange={(event, newValue) => {
                         let value = newValue && newValue.id ? newValue.id : '404_default';
                         updateField(field.id, value);
-                        saveChangedFields( field.id );
+                        setChangedField( field.id, value );
                     }}
                     value={selectedPost}
                 />
