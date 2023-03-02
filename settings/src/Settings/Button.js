@@ -18,7 +18,6 @@ const Button = (props) => {
     }
     return (
         <>
-            <label>{props.field.label}</label>
             { props.field.url &&
                 <Hyperlink className="button button-default" text={props.field.button_text} url={props.field.url}/>
             }

@@ -9,6 +9,7 @@ import Placeholder from '../Placeholder/Placeholder';
 
 const Onboarding = (props) => {
 const [steps, setSteps] = useState([]);
+const [error, setError] = useState(false);
 const [overrideSSL, setOverrideSSL] = useState(false);
 const [certificateValid, setCertificateValid] = useState(false);
 const [sslActivated, setsslActivated] = useState(false);
@@ -37,25 +38,30 @@ const [networkProgress, setNetworkProgress] = useState(0);
 
     const updateOnBoardingData = (forceRefresh) => {
         rsssl_api.getOnboarding(forceRefresh).then( ( response ) => {
-            let steps = response.steps;
-            setNetworkwide(response.networkwide);
-            setOverrideSSL(response.ssl_detection_overridden);
-            setActivateSSLDisabled(!response.ssl_detection_overridden);
-            setCertificateValid(response.certificate_valid);
-            setsslActivated(response.ssl_enabled);
-            steps[0].visible = true;
-            //if ssl is already enabled, the server will send only one step. In that case we can skip the below.
-            //it's only needed when SSL is activated just now, client side.
-            if ( response.ssl_enabled && steps.length > 1 ) {
-                steps[0].visible = false;
-                steps[1].visible = true;
+            if ( response.error ){
+                setError(response.error);
+            } else {
+                let steps = response.steps;
+                setNetworkwide(response.networkwide);
+                setOverrideSSL(response.ssl_detection_overridden);
+                setActivateSSLDisabled(!response.ssl_detection_overridden);
+                setCertificateValid(response.certificate_valid);
+                setsslActivated(response.ssl_enabled);
+                steps[0].visible = true;
+                //if ssl is already enabled, the server will send only one step. In that case we can skip the below.
+                //it's only needed when SSL is activated just now, client side.
+                if ( response.ssl_enabled && steps.length > 1 ) {
+                    steps[0].visible = false;
+                    steps[1].visible = true;
+                }
+                setNetworkActivationStatus(response.network_activation_status);
+                if (response.network_activation_status==='completed') {
+                    setNetworkProgress(100);
+                }
+                setSteps(steps);
+                setStepsChanged('initial');
             }
-            setNetworkActivationStatus(response.network_activation_status);
-            if (response.network_activation_status==='completed') {
-                setNetworkProgress(100);
-            }
-            setSteps(steps);
-            setStepsChanged('initial');
+
         });
     }
 
@@ -272,6 +278,11 @@ const [networkProgress, setNetworkProgress] = useState(0);
         }
     }
 
+    if (error){
+        return (
+            <Placeholder lines="12" error={error}></Placeholder>
+        )
+    }
     return (
         <>
             { !stepsChanged && <Placeholder lines="12"></Placeholder>}
