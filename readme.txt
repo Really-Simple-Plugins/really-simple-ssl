@@ -97,6 +97,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 
 == Changelog ==
 = 6.2.1 =
+* Fix: race condition when activating SSL through wp-cli, because of upgrade script
 * Improvement: permissions check re-structuring
 * Improvement: notice on subsite within multisite environment about wildcard updated
 
