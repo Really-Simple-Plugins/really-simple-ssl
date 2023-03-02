@@ -17,6 +17,112 @@ const usesPlainPermalinks = () => {
     return rsssl_settings.site_url.indexOf('?') !==-1;
 };
 
+const ajaxPost = (path, requestData) => {
+    return new Promise(function (resolve, reject) {
+        let url = siteUrl('ajax');
+        let xhr = new XMLHttpRequest();
+        xhr.open('POST', url );
+        xhr.onload = function () {
+            let response = JSON.parse(xhr.response);
+            if (xhr.status >= 200 && xhr.status < 300) {
+                resolve(response);
+            } else {
+                resolve(invalidDataError(xhr.response, xhr.status, xhr.statusText) );
+            }
+        };
+        xhr.onerror = function () {
+            resolve(invalidDataError(xhr.response, xhr.status, xhr.statusText) );
+        };
+
+        let data = {};
+        data['path'] = path;
+        data['data'] = requestData;
+        data = JSON.stringify(data, stripControls);
+        xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+        xhr.send(data);
+    });
+}
+
+/**
+ * All data elements with 'Control' in the name are dropped, to prevent:
+ * TypeError: Converting circular structure to JSON
+ * @param key
+ * @param value
+ * @returns {any|undefined}
+ */
+const stripControls = (key, value) => {
+    if (!key){return value}
+    if (key && key.includes("Control")) {
+        return undefined;
+    }
+    if (typeof value === "object") {
+        return JSON.parse(JSON.stringify(value, stripControls));
+    }
+    return value;
+}
+
+const ajaxGet = (path) => {
+    return new Promise(function (resolve, reject) {
+        let url = siteUrl('ajax');
+        url+='&rest_action='+path.replace('?', '&');
+
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', url);
+        xhr.onload = function () {
+            let response;
+            try {
+                response = JSON.parse(xhr.response);
+            } catch (error) {
+                resolve(invalidDataError(xhr.response, 500, 'invalid_data') );
+            }
+            if (xhr.status >= 200 && xhr.status < 300) {
+                if ( !response.hasOwnProperty('request_success') ) {
+                    resolve(invalidDataError(xhr.response, 500, 'invalid_data') );
+                }
+                resolve(response);
+            } else {
+                resolve(invalidDataError(xhr.response, xhr.status, xhr.statusText) );
+            }
+        };
+        xhr.onerror = function () {
+            resolve(invalidDataError(xhr.response, xhr.status, xhr.statusText) );
+        };
+        xhr.send();
+    });
+
+}
+
+
+/**
+ * if the site is loaded over https, but the site url is not https, force to use https anyway, because otherwise we get mixed content issues.
+ * @returns {*}
+ */
+const siteUrl = (type) => {
+    let url;
+    if (typeof type ==='undefined') {
+        url = rsssl_settings.site_url;
+    } else {
+        url = rsssl_settings.admin_ajax_url
+    }
+	if ( window.location.protocol === "https:" && url.indexOf('https://')===-1 ) {
+		return url.replace('http://', 'https://');
+	}
+	return  url;
+}
+
+
+const invalidDataError = (apiResponse, status, code ) => {
+    let response = {}
+    let error = {};
+    let data = {};
+    data.status = status;
+    error.code = code;
+    error.data = data;
+    error.message = apiResponse;
+    response.error = error;
+    return response;
+}
+
 const apiGet = (path) => {
     if ( usesPlainPermalinks() ) {
         let config = {
@@ -24,9 +130,26 @@ const apiGet = (path) => {
                 'X-WP-Nonce': rsssl_settings.nonce,
             }
         }
-        return axios.get(rsssl_settings.site_url+path, config ).then( ( response ) => {return response.data;})
+        return axios.get(siteUrl()+path, config ).then(
+            ( response ) => {
+                if (!response.data.request_success) {
+                    return ajaxGet(path);
+                }
+                return response.data;
+            }
+        ).catch((error) => {
+            //try with admin-ajax
+            return ajaxGet(path);
+        });
     } else {
-        return apiFetch( { path: path } );
+        return apiFetch( { path: path } ).then((response) => {
+            if ( !response.request_success ) {
+                return ajaxGet(path);
+            }
+            return response;
+        }).catch((error) => {
+            return ajaxGet(path);
+        });
     }
 }
 
@@ -37,13 +160,17 @@ const apiPost = (path, data) => {
                 'X-WP-Nonce': rsssl_settings.nonce,
             }
         }
-    	return axios.post(rsssl_settings.site_url+path, data, config ).then( ( response ) => {return response.data;});
+    	return axios.post(siteUrl()+path, data, config ).then( ( response ) => {return response.data;}).catch((error) => {
+            return ajaxPost(path, data);
+        });
     } else {
         return apiFetch( {
             path: path,
             method: 'POST',
             data: data,
-        } );
+        } ).catch((error) => {
+            return ajaxPost(path, data);
+        });
     }
 }
 
@@ -70,14 +197,14 @@ export const setFields = (data) => {
     return apiPost('reallysimplessl/v1/fields/set'+glue()+anchor, data);
 };
 
-export const getBlock = (block) => {
-    return apiGet('reallysimplessl/v1/block/'+block+glue()+getNonce());
-};
-
 export const runTest = (test, state, data ) => {
-	if ( data ) {
-		data = encodeURIComponent(JSON.stringify(data));
+    if ( !state ){
+        state = false;
+    }
+	if ( !data ) {
+		data = false;
 	}
+    data = encodeURIComponent(JSON.stringify(data));
     return apiGet('reallysimplessl/v1/tests/'+test+glue()+'state='+state+getNonce()+'&data='+data)
 };
 

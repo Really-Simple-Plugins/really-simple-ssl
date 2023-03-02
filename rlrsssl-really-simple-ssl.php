@@ -3,14 +3,14 @@
  * Plugin Name: Really Simple SSL
  * Plugin URI: https://really-simple-ssl.com
  * Description: Lightweight SSL & Hardening Plugin
- * Version: 6.1.0
+ * Version: 6.2.1
  * Author: Really Simple Plugins
  * Author URI: https://really-simple-plugins.com
  * License: GPL2
  * Text Domain: really-simple-ssl
  * Domain Path: /languages
  */
-/*  Copyright 2020  Really Simple Plugins BV  (email : support@really-simple-ssl.com)
+/*  Copyright 2023  Really Simple Plugins BV  (email : support@really-simple-ssl.com)
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as
     published by the Free Software Foundation.
@@ -78,11 +78,10 @@ class REALLY_SIMPLE_SSL
 			self::$instance->front_end = new rsssl_front_end();
 			self::$instance->mixed_content_fixer = new rsssl_mixed_content_fixer();
 
-			$wpcli = defined( 'WP_CLI' ) && WP_CLI;
 			if ( is_multisite() ) {
 				self::$instance->multisite = new rsssl_multisite();
 			}
-			if ( is_admin() || rsssl_is_logged_in_rest() || wp_doing_cron() || $wpcli || defined('RSSSL_DOING_SYSTEM_STATUS') || defined('RSSSL_LEARNING_MODE') ) {
+			if ( rsssl_admin_logged_in() ) {
 				self::$instance->cache = new rsssl_cache();
 				self::$instance->placeholder = new rsssl_placeholder();
 				self::$instance->server = new rsssl_server();
@@ -91,7 +90,7 @@ class REALLY_SIMPLE_SSL
 				self::$instance->progress = new rsssl_progress();
 				self::$instance->certificate = new rsssl_certificate();
 				self::$instance->site_health = new rsssl_site_health();
-                if ( $wpcli ) {
+                if ( defined( 'WP_CLI' ) && WP_CLI ) {
 					self::$instance->wp_cli = new rsssl_wp_cli();
 				}
 			}
@@ -106,11 +105,11 @@ class REALLY_SIMPLE_SSL
 		define('rsssl_path', trailingslashit(plugin_dir_path(__FILE__)));
         define('rsssl_template_path', trailingslashit(plugin_dir_path(__FILE__)).'grid/templates/');
         define('rsssl_plugin', plugin_basename(__FILE__));
-        define('rsssl_add_on_version_requirement', '6.0');
+        define('rsssl_add_on_version_requirement', '6.2');
         if (!defined('rsssl_file') ){
             define('rsssl_file', __FILE__);
         }
-		define('rsssl_version', '6.1.0');
+		define('rsssl_version', '6.2.1');
 		define('rsssl_le_cron_generation_renewal_check', 20);
 		define('rsssl_le_manual_generation_renewal_check', 15);
 	}
@@ -120,14 +119,13 @@ class REALLY_SIMPLE_SSL
 		require_once(rsssl_path . 'class-front-end.php');
 		require_once(rsssl_path . 'functions.php');
 		require_once(rsssl_path . 'class-mixed-content-fixer.php');
-		$wpcli = defined( 'WP_CLI' ) && WP_CLI;
-		if ( $wpcli ) {
+		if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			require_once( rsssl_path . 'class-wp-cli.php');
 		}
 		if ( is_multisite() ) {
 			require_once( rsssl_path . 'class-multisite.php');
 		}
-		if ( is_admin() || rsssl_is_logged_in_rest() ||  wp_doing_cron() || $wpcli || defined('RSSSL_DOING_SYSTEM_STATUS') || defined('RSSSL_LEARNING_MODE') ) {
+		if ( rsssl_admin_logged_in() ) {
 			require_once( rsssl_path . 'compatibility.php');
             require_once( rsssl_path . 'upgrade.php');
 			require_once( rsssl_path . 'settings/settings.php' );
@@ -140,15 +138,12 @@ class REALLY_SIMPLE_SSL
             require_once( rsssl_path . 'progress/class-progress.php');
 			require_once( rsssl_path . 'class-certificate.php');
 			require_once( rsssl_path . 'class-site-health.php');
+			require_once( rsssl_path . 'lets-encrypt/letsencrypt.php' );
 			require_once( rsssl_path . 'mailer/class-mail.php');
 			if ( isset($_GET['install_pro'])) {
 				require_once( rsssl_path . 'upgrade/upgrade-to-pro.php');
 			}
 		}
-
-		if ( is_admin() || rsssl_is_logged_in_rest() || wp_doing_cron() ) {
-            require_once( rsssl_path . 'lets-encrypt/letsencrypt.php' );
-        }
 
         require_once( rsssl_path . 'lets-encrypt/cron.php' );
 		require_once( rsssl_path . '/security/security.php');
@@ -159,7 +154,7 @@ class REALLY_SIMPLE_SSL
 		/**
 		 * Fire custom hook
 		 */
-		if ( is_admin() ) {
+		if ( rsssl_admin_logged_in() ) {
 			add_action('admin_notices', array( $this, 'admin_notices'));
             if ( is_multisite() ) {
 	            add_action('network_admin_notices', array( $this, 'admin_notices'));
@@ -167,7 +162,7 @@ class REALLY_SIMPLE_SSL
 		}
 
 		add_action('wp_loaded', array(self::$instance->front_end, 'force_ssl'), 20);
-		if ( is_admin() ) {
+		if ( rsssl_admin_logged_in() ) {
 			add_action('plugins_loaded', array(self::$instance->admin, 'init'), 10);
 		}
 	}
@@ -199,9 +194,9 @@ class REALLY_SIMPLE_SSL
                 <p>
                     <?php
                     if (!empty($license) ) {
-	                    echo sprintf(__("%sUpdate%s or %srenew your license%s.","really-simple-ssl"),'<a href="'.$update_link.'.">','</a>','<a href="https://really-simple-ssl.com/pro" target="_blank">','</a>');
+	                    echo sprintf(__("%sUpdate%s or %srenew your license%s.","really-simple-ssl"),'<a href="'.$update_link.'.">','</a>','<a href="https://really-simple-ssl.com/pro/?mtm_campaign=renew&mtm_source=free&mtm_content=upgrade" target="_blank">','</a>');
                     } else {
-                        echo sprintf(__("Visit the plugins overview or %srenew your license%s.","really-simple-ssl"),'<a href="https://really-simple-ssl.com/pro" target="_blank">','</a>');
+                        echo sprintf(__("Visit the plugins overview or %srenew your license%s.","really-simple-ssl"),'<a href="https://really-simple-ssl.com/pro/?mtm_campaign=renew&mtm_source=free&mtm_content=upgrade" target="_blank">','</a>');
                    }
                     ?>
                 </p>
@@ -237,14 +232,10 @@ if ( ! function_exists('rsssl_add_manage_security_capability')){
 	 * Add a user capability to WordPress and add to admin and editor role
 	 */
 	function rsssl_add_manage_security_capability(){
-		$capability = 'manage_security';
-		$roles = apply_filters('rsssl_add_manage_security_capability', array('administrator') );
-		foreach( $roles as $role ){
-			$role = get_role( $role );
-			if( $role && !$role->has_cap( $capability ) ){
-				$role->add_cap( $capability );
-			}
-		}
+        $role = get_role( 'administrator' );
+        if( $role && !$role->has_cap( 'manage_security' ) ){
+            $role->add_cap( 'manage_security' );
+        }
 	}
 
 	register_activation_hook( __FILE__, 'rsssl_add_manage_security_capability' );
@@ -267,6 +258,13 @@ if ( ! function_exists( 'rsssl_user_can_manage' ) ) {
 
 		return false;
 	}
+}
+
+if ( !function_exists('rsssl_admin_logged_in')){
+    function rsssl_admin_logged_in(){
+	    $wpcli = defined( 'WP_CLI' ) && WP_CLI;
+	    return (is_admin() && rsssl_user_can_manage()) || rsssl_is_logged_in_rest() ||  wp_doing_cron() || $wpcli || defined('RSSSL_DOING_SYSTEM_STATUS') || defined('RSSSL_LEARNING_MODE');
+    }
 }
 
 function RSSSL()

@@ -92,8 +92,8 @@ class rsssl_progress {
 			} else {
 				echo $doing_well;
 			}
-		} else {
-			if ( !is_network_admin() ) _e("SSL is not yet enabled on this site." , "really-simple-ssl");
+		} else if ( !is_network_admin() ) {
+			_e( "SSL is not yet enabled on this site.", "really-simple-ssl" );
 		}
 		do_action('rsssl_progress_feedback');
 		return ob_get_clean();
