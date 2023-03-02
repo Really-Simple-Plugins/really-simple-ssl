@@ -28,6 +28,7 @@ const theme = createTheme({
             root: {
                 fontSize: '12px',
                 fontFamily: 'inherit',
+                height: '40px',
             }
         },
         MuiList: {
@@ -36,6 +37,13 @@ const theme = createTheme({
             }
         },
         MuiAutocomplete: {
+            inputRoot: {
+                '& .MuiAutocomplete-input': {
+                    padding: '0 !important',
+                    border: 0,
+                },
+                flexWrap: 'inherit',
+            },
             popper: {
                 fontSize: '12px',
             },
@@ -45,6 +53,9 @@ const theme = createTheme({
             option: {
                 fontSize: '12px',
             },
+            root: {
+                padding: 0,
+            }
         },
     },
 });
@@ -56,7 +67,7 @@ const PostDropdown = ({ field }) => {
 
     // Fetch the list of posts from the WordPress database when the component mounts.
     useEffect(() => {
-        apiFetch({ path: '/wp/v2/posts?per_page=100' })
+        apiFetch({ path: '/wp/v2/pages?per_page=100' })
             .then((data) => {
                 const formattedData = data.map(post => ({
                     title: post.title.rendered,
@@ -69,7 +80,7 @@ const PostDropdown = ({ field }) => {
     // Fetch the data for the selected post from the WordPress database when the component mounts.
     useEffect(() => {
         if (field.value !== '404_default') {
-            apiFetch({ path: `wp/v2/posts/${field.value}` })
+            apiFetch({ path: `wp/v2/pages/${field.value}` })
                 .then((data) => {
                     if (data.title) {
                         setSelectedPost({ 'title': data.title.rendered, 'id': field.value })
