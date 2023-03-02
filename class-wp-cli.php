@@ -28,10 +28,13 @@ class rsssl_wp_cli
 	 */
     public function activate_ssl()
     {
-		if (!$this->wp_cli_active() ) {
+		if ( !$this->wp_cli_active() ) {
 			return;
 		}
-        $success = RSSSL()->admin->activate_ssl(false);
+
+	    update_option("rsssl_onboarding_dismissed", true, false);
+	    update_option('rsssl_6_upgrade_completed', true, false);
+	    $success = RSSSL()->admin->activate_ssl(false);
 		if ($success) {
 			WP_CLI::success( 'SSL activated successfully' );
 		} else {
