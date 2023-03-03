@@ -11,7 +11,7 @@ class SecurityFeaturesFooter extends Component {
 
   render(){
     return (
-            <a className="button button-default" href="#settings">{ __( 'Settings', 'really-simple-ssl' ) }</a>
+            <a className="button button-default" href="#settings/hardening">{ __( 'Settings', 'really-simple-ssl' ) }</a>
     );
   }
 }

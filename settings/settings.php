@@ -583,7 +583,6 @@ function rsssl_rest_api_fields_set( WP_REST_Request $request, $ajax_data = false
         do_action( "rsssl_before_save_option", $field['id'], $field['value'], $prev_value, $field['type'] );
         $options[ $field['id'] ] = 	apply_filters("rsssl_fieldvalue",  $field['value'], $field['id'], $field['type']);
     }
-
     if ( ! empty( $options ) ) {
         if ( is_multisite() && rsssl_is_networkwide_active() ) {
 	        update_site_option( 'rsssl_options', $options );
@@ -638,7 +637,6 @@ function rsssl_update_option( $name, $value ) {
 	$type = rsssl_sanitize_field_type($config_field['type']);
 	$value = rsssl_sanitize_field( $value, $type, $name );
 	$value = apply_filters("rsssl_fieldvalue", $value, sanitize_text_field($name), $type);
-
     #skip if value wasn't changed
     if ( isset($options[$name]) && $options[$name]===$value ) {
         return;
