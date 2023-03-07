@@ -395,6 +395,15 @@ if (!class_exists("rsssl_vulnerabilities")) {
          */
         public function check_files()
         {
+
+            //we download the manifest file if it doesn't exist or is older than 24 hours
+            if (!$this->validate_local_file(true, true)) {
+                if($this->get_file_stored_info(true, true) > time() - 86400){
+                    return;
+                }
+                $this->download_manifest();
+            }
+
             //We check the core vulnerabilities and validate age and existence
             if (!$this->validate_local_file(true)) {
                 //if the file is younger than 24 hours, we don't download it again.
@@ -422,14 +431,17 @@ if (!class_exists("rsssl_vulnerabilities")) {
          * @param bool $isCore
          * @return bool
          */
-        private function validate_local_file(bool $isCore = false): bool
+        private function validate_local_file(bool $isCore = false, bool $manifest = false): bool
         {
-            $isCore ? $file = 'core.json' : $file = 'components.json';
+            if(!$manifest) {
+
+                $isCore ? $file = 'core.json' : $file = 'components.json';
+            } else {
+                $file = 'manifest.json';
+            }
             $upload_dir = wp_upload_dir();
             $upload_dir = $upload_dir['basedir'];
-            $upload_dir = $upload_dir . '/rsssl';
-            $file = $upload_dir . self::RSS_VULNERABILITIES_LOCATION . $file;
-
+            $file = $upload_dir . self::RSS_VULNERABILITIES_LOCATION . '/' .$file;
             if (file_exists($file)) {
                 //now we check if the file is older than 3 days, if so, we download it again
                 $file_time = filemtime($file);
@@ -471,10 +483,17 @@ if (!class_exists("rsssl_vulnerabilities")) {
         {
             //we get all the installed plugins
             $installed_plugins = get_plugins();
+            //first we get the manifest file
+            $manifest = $this->getManifest();
             $vulnerabilities = [];
             foreach ($installed_plugins as $plugin) {
                 $plugin = $plugin['TextDomain'];
                 $url = self::RSS_SECURITY_API . 'plugin/' . $plugin . '.json';
+                //if the plugin is not in the manifest, we skip it
+                if (!in_array($plugin, $manifest)) {
+                    continue;
+                }
+
                 $data = $this->download($url);
                 if ($data !== null)
                     $vulnerabilities[] = $data;
@@ -510,7 +529,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
          * @param bool $isCore
          * @return void
          */
-        private function store_file($data, bool $isCore = false): void
+        private function store_file($data, bool $isCore = false, bool $manifest = false): void
         {
             //if the data is empty, we return null
             if (empty($data)) {
@@ -521,7 +540,12 @@ if (!class_exists("rsssl_vulnerabilities")) {
             $upload_dir = $upload_dir['basedir'];
             $upload_dir = $upload_dir . self::RSS_VULNERABILITIES_LOCATION;
 
-            $file = $upload_dir . '/' . ($isCore ? 'core.json' : 'components.json');
+            if(!$manifest) {
+                $file = $upload_dir . '/' . ($isCore ? 'core.json' : 'components.json');
+            } else {
+                $file = $upload_dir . '/manifest.json';
+            }
+
 
             //we check if the directory exists, if not, we create it
             if (!file_exists($upload_dir)) {
@@ -536,18 +560,23 @@ if (!class_exists("rsssl_vulnerabilities")) {
             \library\FileStorage::StoreFile($file, $data);
         }
 
-        public function get_file_stored_info($isCore = false)
+        public function get_file_stored_info($isCore = false, $manifest = false)
         {
             $upload_dir = wp_upload_dir();
             $upload_dir = $upload_dir['basedir'];
             $upload_dir = $upload_dir . self::RSS_VULNERABILITIES_LOCATION;
+            if($manifest){
+                $file = $upload_dir . '/manifest.json';
+                if (!file_exists($file)) {
+                    return false;
+                }
+                return \library\FileStorage::GetDate($file);
+            }
             $file = $upload_dir . '/' . ($isCore ? 'core.json' : 'components.json');
             if (!file_exists($file)) {
                 return false;
             }
             return \library\FileStorage::GetDate($file);
-            //now we return the unix timestamp as a normal date
-            return date('d / m / Y @ H:i', $date);
         }
 
         /**
@@ -833,6 +862,32 @@ if (!class_exists("rsssl_vulnerabilities")) {
             $updates = array_merge($updates, get_theme_updates());
             $updates = array_merge($updates, get_core_updates());
             return count($updates);
+        }
+
+        private function download_manifest()
+        {
+
+            $url = self::RSS_SECURITY_API . 'manifest.json';
+            $data = $this->download($url);
+
+            //we convert the data to an array
+            $data = json_decode(json_encode($data), true);
+
+            //first we store this as a json file in the uploads folder
+            $this->store_file($data, true, true);
+
+        }
+
+        private function getManifest()
+        {
+            $upload_dir = wp_upload_dir();
+            $upload_dir = $upload_dir['basedir'];
+            $upload_dir = $upload_dir . self::RSS_VULNERABILITIES_LOCATION;
+            $file = $upload_dir . '/manifest.json';
+            if (!file_exists($file)) {
+                return false;
+            }
+            return \library\FileStorage::GetFile($file);
         }
     }
 
