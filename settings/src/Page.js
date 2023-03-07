@@ -20,7 +20,6 @@ const Page = (props) => {
             fetchMenuData(fields);
         }
         window.addEventListener('hashchange', () => {
-            console.log("fetch menu data on hash change");
             fetchMenuData(fields);
         });
     }, [fields] );

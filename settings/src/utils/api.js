@@ -124,6 +124,7 @@ const invalidDataError = (apiResponse, status, code ) => {
 }
 
 const apiGet = (path) => {
+
     if ( usesPlainPermalinks() ) {
         let config = {
             headers: {

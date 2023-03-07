@@ -11,93 +11,53 @@ import useOnboardingData from "./OnboardingData";
 
 const Onboarding = (props) => {
     const { fetchFieldsData, updateField, saveFields, setChangedField} = useFields();
-    const {dismissModal} = useOnboardingData();
-    const {setSelectedMainMenuItem} = useMenu();
-    const [steps, setSteps] = useState([]);
-    const [error, setError] = useState(false);
-    const [overrideSSL, setOverrideSSL] = useState(false);
-    const [certificateValid, setCertificateValid] = useState(false);
-    const [stepsChanged, setStepsChanged] = useState('');
-    const [networkwide, setNetworkwide] = useState(false);
-    const [networkActivationStatus, setNetworkActivationStatus] = useState(false);
-    const [networkProgress, setNetworkProgress] = useState(0);
+    const {
+        dismissModal,
+        updateActionForItem,
+        actionHandler,
+        getSteps,
+        error,
+        certificateValid,
+        networkwide,
+        dataLoaded,
+        steps,
+        currentStep,
+        currentStepIndex,
+        setCurrentStepIndex,
+        overrideSSL,
+        setOverrideSSL,
+        networkActivationStatus,
+        setNetworkActivationStatus,
+        networkProgress,
+        refreshSSLStatus,
+        activateSSLNetworkWide
+    } = useOnboardingData();
+    const {setSelectedMainMenuItem, selectedMainMenuItem} = useMenu();
 
-    useUpdateEffect(()=> {
-        if ( networkProgress<100 && networkwide && networkActivationStatus==='main_site_activated' ){
-            rsssl_api.runTest('activate_ssl_networkwide' ).then( ( response ) => {
-               if (response.success) {
-                    setNetworkProgress(response.progress);
-                    if (response.progress>=100) {
-                        updateActionForItem('ssl_enabled', '', 'success');
-                    }
-                }
-            });
+    useEffect( async () => {
+        if (networkwide && networkActivationStatus==='main_site_activated') {
+            await activateSSLNetworkWide();
         }
-    })
+    }, [networkProgress])
 
-    useEffect(() => {
-        updateOnBoardingData(false);
+    useEffect( async () => {
+        await getSteps(false);
     }, [])
 
-    const updateOnBoardingData = (forceRefresh) => {
-        rsssl_api.getOnboarding(forceRefresh).then( ( response ) => {
-            if ( response.error ){
-                setError(response.error);
-            } else {
-                let steps = response.steps;
-                setNetworkwide(response.networkwide);
-                setOverrideSSL(response.ssl_detection_overridden);
-                setCertificateValid(response.certificate_valid);
-                steps[0].visible = true;
-                //if ssl is already enabled, the server will send only one step. In that case we can skip the below.
-                //it's only needed when SSL is activated just now, client side.
-                if ( response.ssl_enabled && steps.length > 1 ) {
-                    steps[0].visible = false;
-                    steps[1].visible = true;
-                }
-                setNetworkActivationStatus(response.network_activation_status);
-                if (response.network_activation_status==='completed') {
-                    setNetworkProgress(100);
-                }
-                setSteps(steps);
-                setStepsChanged('initial');
-            }
-        });
-    }
-
-    const refreshSSLStatus = (e) => {
-        e.preventDefault();
-        steps.forEach(function(step, i) {
-            if (step.id==='activate_ssl') {
-                step.items.forEach(function(item, j){
-                    if (item.status==='error') {
-                        steps[i].items[j].status = 'processing';
-                        steps[i].items[j].title = __("Re-checking SSL certificate, please wait...","really-simple-ssl");
-                    }
-                });
-            }
-        });
-
-        setSteps(steps);
-        setStepsChanged(true);
-        setTimeout(function(){
-            updateOnBoardingData(true)
-        }, 1000) //add a delay, otherwise it's so fast the user may not trust it.
-    }
+    //ensure all fields are updated, and progress is retrieved again
+    useEffect( async () => {
+        if ( dataLoaded && currentStep.action === 'activate_setting' ){
+            await fetchFieldsData('general');
+        }
+    }, [currentStep])
 
     const activateSSL = () => {
-        setStepsChanged(false);
         rsssl_api.runTest('activate_ssl' ).then( async ( response ) => {
-            steps[0].visible = false;
-            steps[1].visible = true;
+            setCurrentStepIndex(currentStepIndex+1);
             //change url to https, after final check
             if ( response.success ) {
-                setSteps(steps);
-                setStepsChanged(true);
-                updateField('ssl_enabled', true);
-                setChangedField('ssl_enabled', true);
-                await saveFields(true, false);
-                if (response.site_url_changed) {
+
+                if ( response.site_url_changed ) {
                     window.location.reload();
                 } else {
                     if ( networkwide ) {
@@ -105,62 +65,11 @@ const Onboarding = (props) => {
                     }
                 }
             }
-        });
-    }
-
-    const updateActionForItem = (findItem, newAction, newStatus) => {
-        let stepsCopy = steps;
-        stepsCopy.forEach(function(step, i) {
-            stepsCopy[i].items.forEach(function(item, j) {
-                if (item.id===findItem){
-                  let itemCopy = stepsCopy[i].items[j];
-                  itemCopy.current_action = newAction;
-                  if (newStatus) {
-                       itemCopy.status=newStatus;
-                  }
-                  stepsCopy[i].items[j] = itemCopy;
-                }
-            });
-        });
-        setSteps(stepsCopy);
-        setStepsChanged(findItem+newAction+newStatus);
-    }
-
-    const itemButtonHandler = (id, action) => {
-        let data={};
-        data.id = id;
-        updateActionForItem(id, action, false);
-        rsssl_api.doAction(action, data).then( async ( response ) => {
-            if ( response.success ){
-                if (action==='activate_setting'){
-                    //ensure all fields are updated, and progress is retrieved again
-                    await fetchFieldsData('general');
-                }
-                let nextAction = response.next_action;
-                if ( nextAction!=='none' && nextAction!=='completed') {
-                    updateActionForItem(id, nextAction, false);
-                    rsssl_api.doAction(nextAction, data).then( ( response ) => {
-                        if ( response.success ){
-                            updateActionForItem(id, 'completed', 'success' );
-                        } else {
-                            updateActionForItem(id, 'failed', 'error' );
-                        }
-                    }).catch(error => {
-                        updateActionForItem(id, 'failed', 'error' );
-                    })
-                } else {
-                    updateActionForItem(id, 'completed', 'success' );
-                }
-            } else {
-                updateActionForItem(id, 'failed', 'error' );
-            }
-        }).catch(error => {
-            updateActionForItem(id, 'failed', 'error' );
-        });
+        }).then( async () => { await fetchFieldsData(selectedMainMenuItem ) } );
     }
 
     const parseStepItems = (items) => {
-        return items.map((item, index) => {
+        return items && items.map( (item, index) => {
             let { title, current_action, action, status, button, id } = item
             if (id==='ssl_enabled' && networkwide ) {
                 if ( networkProgress>=100) {
@@ -208,7 +117,7 @@ const Onboarding = (props) => {
                 buttonTitle = button;
                 if ( current_action!=='none' ) {
                     buttonTitle = currentActions[current_action];
-                    if (current_action==='failed') {
+                    if ( current_action==='failed' ) {
                         buttonTitle = currentActions['error'];
                     }
                 }
@@ -225,7 +134,7 @@ const Onboarding = (props) => {
                         {networkProgress>=100 && __("completed", "really-simple-ssl") }
                         </>}
                     {button && <>&nbsp;-&nbsp;
-                    {showLink && <Button isLink={true} onClick={() => itemButtonHandler(id, action)}>{buttonTitle}</Button>}
+                    {showLink && <Button isLink={true} onClick={(e) => actionHandler(id, action, e)}>{buttonTitle}</Button>}
                     {!showLink && <>{buttonTitle}</>}
                     </>}
                 </li>
@@ -245,7 +154,7 @@ const Onboarding = (props) => {
 
     const controlButtons = () => {
         let ActivateSSLText = networkwide ? __("Activate SSL networkwide", "really-simple-ssl") : __("Activate SSL", "really-simple-ssl");
-        if (steps[0].visible && steps.length > 1) {
+        if ( currentStepIndex === 0 ) {
            return (
                 <>
                 <button disabled={!certificateValid && !overrideSSL} className="button button-primary" onClick={() => {activateSSL()}}>{ActivateSSLText}</button>
@@ -265,7 +174,8 @@ const Onboarding = (props) => {
             );
         }
 
-        if ( ( steps.length>1 && steps[1].visible ) || steps[0].visible){
+        //for last step only
+        if ( steps.length === currentStepIndex + 1 ) {
             return (
                 <>
                     <button className="button button-primary" onClick={() => {goToDashboard()}}>{__('Go to Dashboard', 'really-simple-ssl')}</button>
@@ -280,39 +190,35 @@ const Onboarding = (props) => {
             <Placeholder lines="3" error={error}></Placeholder>
         )
     }
+    let step = currentStep;
     return (
         <>
-            { !stepsChanged && <>
+            { !dataLoaded && <>
                 <ul>
                     <li><Icon name = "file-download" color = 'grey' />{__("Fetching next step...", "really-simple-ssl")}</li>
                 </ul>
                 <Placeholder lines="3" ></Placeholder></>}
 
             {
-                stepsChanged && steps.map((step, index) => {
-                    const {title, subtitle, items, info_text: infoText, visible} = step;
-                    return (
-                        <div className="rsssl-modal-content-step" key={index} style={{ display: visible ? 'block' : 'none' }}>
-                            {title && <h2 className="rsssl-modal-subtitle">{title}</h2>}
-                            {subtitle && <div className="rsssl-modal-description">{subtitle}</div>}
-                            <ul>
-                                { parseStepItems(items) }
-                            </ul>
-                            { certificateValid && infoText && <div className="rsssl-modal-description" dangerouslySetInnerHTML={{__html: infoText}} /> }
-                            { !certificateValid &&
-                                <div className="rsssl-modal-description">
-                                   <a href="#" onClick={ (e) => refreshSSLStatus(e)}>
-                                       { __("Refresh SSL status", "really-simple-ssl")}
-                                   </a>&nbsp;{__("The SSL detection method is not 100% accurate.", "really-simple-ssl")}&nbsp;
-                                   {__("If you’re certain an SSL certificate is present, and refresh SSL status does not work, please check “Override SSL detection” to continue activating SSL.", "really-simple-ssl")}
-                                </div> }
-                            <div className="rsssl-modal-content-step-footer">
-                                {controlButtons()}
-                            </div>
-
+                dataLoaded &&
+                    <div className="rsssl-modal-content-step">
+                        {step.title && <h2 className="rsssl-modal-subtitle">{step.title}</h2>}
+                        {step.subtitle && <div className="rsssl-modal-description">{step.subtitle}</div>}
+                        <ul>
+                            { parseStepItems(step.items) }
+                        </ul>
+                        { certificateValid && step.info_text && <div className="rsssl-modal-description" dangerouslySetInnerHTML={{__html: step.info_text}} /> }
+                        { !certificateValid &&
+                            <div className="rsssl-modal-description">
+                               <a href="#" onClick={ (e) => refreshSSLStatus(e)}>
+                                   { __("Refresh SSL status", "really-simple-ssl")}
+                               </a>&nbsp;{__("The SSL detection method is not 100% accurate.", "really-simple-ssl")}&nbsp;
+                               {__("If you’re certain an SSL certificate is present, and refresh SSL status does not work, please check “Override SSL detection” to continue activating SSL.", "really-simple-ssl")}
+                            </div> }
+                        <div className="rsssl-modal-content-step-footer">
+                            {controlButtons()}
                         </div>
-                    )
-                })
+                    </div>
             }
         </>
     )
