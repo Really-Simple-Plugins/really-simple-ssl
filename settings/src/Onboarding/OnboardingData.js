@@ -22,6 +22,9 @@ const useOnboardingData = create(( set, get ) => ({
     setOverrideSSL: (overrideSSL) => {
         set(state => ({ overrideSSL }))
     },
+    setNetworkActivationStatus: (networkActivationStatus) => {
+        set(state => ({ networkActivationStatus }))
+    },
     setCurrentStepIndex: (currentStepIndex) => {
         const currentStep = get().steps[currentStepIndex];
         set(state => ({ currentStepIndex, currentStep }))
@@ -32,20 +35,16 @@ const useOnboardingData = create(( set, get ) => ({
         set((state) => ({showOnboardingModal: false}));
         rsssl_api.doAction('dismiss_modal', data).then(( response ) => { });
     },
-    setShowOnBoardingModal: (showOnboardingModal) => set(state => ({ showOnboardingModal })),
-    actionHandler: async (id, action, event) => {
-        console.log("start action handler "+id+" "+action);
-        event.preventDefault();
+    updateItemStatus: (action, status, id) => {
         const currentStepIndex = get().currentStepIndex;
         const itemIndex = get().steps[currentStepIndex].items.findIndex(item => {return item.id===id;});
-
         set(
             produce((state) => {
                 let step = get().currentStep;
                 let stepCopy = {...step};
                 let itemsCopy = [...step.items];
                 let itemCopy = {...step.items[itemIndex]};
-                itemCopy.status = 'processing';
+                itemCopy.status = status;
                 itemCopy.current_action = action;
                 itemsCopy[itemIndex] = itemCopy;
                 stepCopy.items = itemsCopy;
@@ -53,44 +52,17 @@ const useOnboardingData = create(( set, get ) => ({
                 state.currentStep = state.steps[currentStepIndex];
             })
         )
-
+    },
+    setShowOnBoardingModal: (showOnboardingModal) => set(state => ({ showOnboardingModal })),
+    actionHandler: async (id, action, event) => {
+        event.preventDefault();
+        get().updateItemStatus(action, 'processing', id);
         let next = await processAction(action, id);
-        console.log("after first action");
-        console.log(next);
-        set(
-            produce((state) => {
-                let step = get().currentStep;
-                let stepCopy = {...step};
-                let itemsCopy = [...step.items];
-                let itemCopy = {...step.items[itemIndex]};
-                itemCopy.status = next.status;
-                itemCopy.current_action = next.action;
-                itemsCopy[itemIndex] = itemCopy;
-                stepCopy.items = itemsCopy;
-                state.steps[currentStepIndex] = stepCopy;
-                state.currentStep = state.steps[currentStepIndex];
-            })
-        )
-
+        get().updateItemStatus(next.action, next.status, id);
         if ( next.action!=='none' && next.action!=='completed') {
             next = await processAction(next.action, id);
-            set(
-                produce((state) => {
-                    let step = get().currentStep;
-                    let stepCopy = {...step};
-                    let itemsCopy = [...step.items];
-                    let itemCopy = {...step.items[itemIndex]};
-                    itemCopy.status = next.status;
-                    itemCopy.current_action = next.action;
-                    itemsCopy[itemIndex] = itemCopy;
-                    stepCopy.items = itemsCopy;
-                    state.steps[currentStepIndex] = stepCopy;
-                    state.currentStep = state.steps[currentStepIndex];
-                })
-            )
-
+            get().updateItemStatus(next.action, next.status, id);
         }
-
     },
     getSteps: async (forceRefresh) => {
         set({
@@ -201,7 +173,6 @@ const processAction = (action, id) => {
     let data={};
     data.id = id;
     let next = {};
-    console.log("process action " + action)
     return rsssl_api.doAction(action, data).then( async ( response ) => {
         console.log(response);
         if ( response.success ){

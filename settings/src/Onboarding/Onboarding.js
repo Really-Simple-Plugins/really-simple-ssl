@@ -38,7 +38,7 @@ const Onboarding = (props) => {
         if (networkwide && networkActivationStatus==='main_site_activated') {
             await activateSSLNetworkWide();
         }
-    }, [networkProgress])
+    }, [networkActivationStatus, networkProgress])
 
     useEffect( async () => {
         await getSteps(false);
@@ -69,6 +69,7 @@ const Onboarding = (props) => {
     }
 
     const parseStepItems = (items) => {
+
         return items && items.map( (item, index) => {
             let { title, current_action, action, status, button, id } = item
             if (id==='ssl_enabled' && networkwide ) {
@@ -123,7 +124,6 @@ const Onboarding = (props) => {
                 }
             }
             let showLink = (button && button===buttonTitle);
-
             return (
                 <li key={index} >
                     <Icon name = {statusIcon} color = {statusColor} />

@@ -34564,7 +34564,7 @@ const Onboarding = props => {
     if (networkwide && networkActivationStatus === 'main_site_activated') {
       await activateSSLNetworkWide();
     }
-  }, [networkProgress]);
+  }, [networkActivationStatus, networkProgress]);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(async () => {
     await getSteps(false);
   }, []);
@@ -34791,6 +34791,11 @@ const useOnboardingData = (0,zustand__WEBPACK_IMPORTED_MODULE_2__.create)((set, 
       overrideSSL
     }));
   },
+  setNetworkActivationStatus: networkActivationStatus => {
+    set(state => ({
+      networkActivationStatus
+    }));
+  },
   setCurrentStepIndex: currentStepIndex => {
     const currentStep = get().steps[currentStepIndex];
     set(state => ({
@@ -34806,12 +34811,7 @@ const useOnboardingData = (0,zustand__WEBPACK_IMPORTED_MODULE_2__.create)((set, 
     }));
     _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('dismiss_modal', data).then(response => {});
   },
-  setShowOnBoardingModal: showOnboardingModal => set(state => ({
-    showOnboardingModal
-  })),
-  actionHandler: async (id, action, event) => {
-    console.log("start action handler " + id + " " + action);
-    event.preventDefault();
+  updateItemStatus: (action, status, id) => {
     const currentStepIndex = get().currentStepIndex;
     const itemIndex = get().steps[currentStepIndex].items.findIndex(item => {
       return item.id === id;
@@ -34825,50 +34825,25 @@ const useOnboardingData = (0,zustand__WEBPACK_IMPORTED_MODULE_2__.create)((set, 
       let itemCopy = {
         ...step.items[itemIndex]
       };
-      itemCopy.status = 'processing';
+      itemCopy.status = status;
       itemCopy.current_action = action;
       itemsCopy[itemIndex] = itemCopy;
       stepCopy.items = itemsCopy;
       state.steps[currentStepIndex] = stepCopy;
       state.currentStep = state.steps[currentStepIndex];
     }));
+  },
+  setShowOnBoardingModal: showOnboardingModal => set(state => ({
+    showOnboardingModal
+  })),
+  actionHandler: async (id, action, event) => {
+    event.preventDefault();
+    get().updateItemStatus(action, 'processing', id);
     let next = await processAction(action, id);
-    console.log("after first action");
-    console.log(next);
-    set((0,immer__WEBPACK_IMPORTED_MODULE_3__.produce)(state => {
-      let step = get().currentStep;
-      let stepCopy = {
-        ...step
-      };
-      let itemsCopy = [...step.items];
-      let itemCopy = {
-        ...step.items[itemIndex]
-      };
-      itemCopy.status = next.status;
-      itemCopy.current_action = next.action;
-      itemsCopy[itemIndex] = itemCopy;
-      stepCopy.items = itemsCopy;
-      state.steps[currentStepIndex] = stepCopy;
-      state.currentStep = state.steps[currentStepIndex];
-    }));
+    get().updateItemStatus(next.action, next.status, id);
     if (next.action !== 'none' && next.action !== 'completed') {
       next = await processAction(next.action, id);
-      set((0,immer__WEBPACK_IMPORTED_MODULE_3__.produce)(state => {
-        let step = get().currentStep;
-        let stepCopy = {
-          ...step
-        };
-        let itemsCopy = [...step.items];
-        let itemCopy = {
-          ...step.items[itemIndex]
-        };
-        itemCopy.status = next.status;
-        itemCopy.current_action = next.action;
-        itemsCopy[itemIndex] = itemCopy;
-        stepCopy.items = itemsCopy;
-        state.steps[currentStepIndex] = stepCopy;
-        state.currentStep = state.steps[currentStepIndex];
-      }));
+      get().updateItemStatus(next.action, next.status, id);
     }
   },
   getSteps: async forceRefresh => {
@@ -34998,7 +34973,6 @@ const processAction = (action, id) => {
   let data = {};
   data.id = id;
   let next = {};
-  console.log("process action " + action);
   return _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction(action, data).then(async response => {
     console.log(response);
     if (response.success) {

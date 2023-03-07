@@ -149,8 +149,6 @@ class rsssl_onboarding {
 			]
 		];
 
-		x_log($steps);
-
 		//if the user called with a refresh action, clear the cache
 		if ($refresh) {
 			delete_transient('rsssl_certinfo');
@@ -257,7 +255,6 @@ class rsssl_onboarding {
 
 		foreach ($plugins_to_install as $plugin_info) {
 			require_once(rsssl_path . 'class-installer.php');
-			x_log($plugin_info["slug"]);
 			$plugin = new rsssl_installer($plugin_info["slug"]);
 			$premium_active = $plugin_info['constant_premium'] && defined($plugin_info['constant_premium']);
 			$free_active = $plugin->plugin_is_downloaded() && $plugin->plugin_is_activated();
