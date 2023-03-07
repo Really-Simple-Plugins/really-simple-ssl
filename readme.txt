@@ -100,6 +100,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 * Fix: race condition when activating SSL through wp-cli, because of upgrade script
 * Fix: missing disabled state in textarea and checkboxes
 * Fix: some strings not translatable
+* Fix: Let's Encrypt renewal with add on
 * Improvement: permissions check re-structuring
 * Improvement: notice on subsite within multisite environment about wildcard updated
 
