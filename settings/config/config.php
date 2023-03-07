@@ -1388,14 +1388,14 @@ function rsssl_blocks() {
             'footer'   => [ 'type' => 'react', 'data' => 'WPVulFooter' ],
             'class'    => '',
         ],
-		[
-			'id'       => 'new-features-block',
-			'controls' => false,
-			'title'    => __( "Hardening", 'really-simple-ssl' ),
-			'content'  => [ 'type' => 'react', 'data' => 'SecurityFeaturesBlock' ],
-			'footer'   => [ 'type' => 'react', 'data' => 'SecurityFeaturesFooter' ],
-			'class'    => '',
-		],
+//		[
+//			'id'       => 'new-features-block',
+//			'controls' => false,
+//			'title'    => __( "Hardening", 'really-simple-ssl' ),
+//			'content'  => [ 'type' => 'react', 'data' => 'SecurityFeaturesBlock' ],
+//			'footer'   => [ 'type' => 'react', 'data' => 'SecurityFeaturesFooter' ],
+//			'class'    => '',
+//		],
 		[
 			'id'       => 'tips_tricks',
 			'controls' => false,

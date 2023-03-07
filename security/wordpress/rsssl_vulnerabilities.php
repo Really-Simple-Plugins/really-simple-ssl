@@ -85,8 +85,17 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 }
                 //we add the notices to the notices array.
                 $self->get_vulnerabilities();
-                //we display the admin notices if available.
-                foreach ($self->admin_notices as $notice) {
+
+                //if we are not in the SSL admin page, we add the admin notices.
+                add_action( 'current_screen', array($self, 'show_admin_notices') );
+            }
+        }
+
+        public function show_admin_notices() {
+            $screen = get_current_screen();
+
+            if ( $screen->id !== 'settings_page_really-simple-security' ) {
+                foreach ($this->admin_notices as $notice) {
                     add_action('admin_notices', function () use ($notice) {
                         echo $notice;
                     });
@@ -236,8 +245,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
                     $updates++;
                 }
             }
-
-
             $stats = [
                 'vulnerabilities' => count($vulnerabilities),
                 'updates' => $updates,
