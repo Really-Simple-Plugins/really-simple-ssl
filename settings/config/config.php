@@ -820,7 +820,7 @@ function rsssl_fields( $load_values = true ) {
                 'c' => __('Critical risk', 'really-simple-ssl'),
             ],
             'label' => __('Email admin', 'really-simple-ssl'),
-            'disabled' => !rsssl_get_option('enable_vulnerability_scanner'),
+            'disabled' => (!rsssl_get_option('enable_vulnerability_scanner') || !rsssl_get_option('send_notifications_email')),
             'default' => 'critical_risk',
         ],
         [
