@@ -339,6 +339,15 @@ const Icon = (props) => {
     };
   }
 
+    if (iconName === 'empty') {
+        renderedIcon = {
+            html:
+                <svg height={iconSize} width={iconSize} aria-hidden="true" focusable="false" role="img"
+                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280.8 363.67">
+                </svg>
+        };
+    }
+
   if (iconName === 'external-link') {
     renderedIcon = {
       html:

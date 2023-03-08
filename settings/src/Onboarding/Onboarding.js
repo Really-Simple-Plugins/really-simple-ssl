@@ -13,13 +13,14 @@ const Onboarding = (props) => {
     const { fetchFieldsData, updateField, saveFields, setChangedField} = useFields();
     const {
         dismissModal,
-        updateActionForItem,
         actionHandler,
         getSteps,
         error,
         certificateValid,
         networkwide,
         dataLoaded,
+        processing,
+        setProcessing,
         steps,
         currentStep,
         currentStepIndex,
@@ -30,9 +31,38 @@ const Onboarding = (props) => {
         setNetworkActivationStatus,
         networkProgress,
         refreshSSLStatus,
-        activateSSLNetworkWide
+        activateSSLNetworkWide,
+        email,
+        setEmail,
+        saveEmail,
+        includeTips,
+        setIncludeTips,
+        sendTestEmail,
+        setSendTestEmail
     } = useOnboardingData();
     const {setSelectedMainMenuItem, selectedMainMenuItem} = useMenu();
+    const statuses = {
+        'inactive': {
+            'icon': 'info',
+            'color': 'orange',
+        },
+        'warning': {
+            'icon': 'circle-times',
+            'color': 'orange',
+        },
+        'error': {
+            'icon': 'circle-times',
+            'color': 'red',
+        },
+        'success': {
+            'icon': 'circle-check',
+            'color': 'green',
+        },
+        'processing': {
+            'icon': 'file-download',
+            'color': 'red',
+        },
+    };
 
     useEffect( async () => {
         if (networkwide && networkActivationStatus==='main_site_activated') {
@@ -52,7 +82,9 @@ const Onboarding = (props) => {
     }, [currentStep])
 
     const activateSSL = () => {
+        setProcessing(true);
         rsssl_api.runTest('activate_ssl' ).then( async ( response ) => {
+            setProcessing(false);
             setCurrentStepIndex(currentStepIndex+1);
             //change url to https, after final check
             if ( response.success ) {
@@ -69,10 +101,10 @@ const Onboarding = (props) => {
     }
 
     const parseStepItems = (items) => {
-
         return items && items.map( (item, index) => {
+            console.log(item);
             let { title, current_action, action, status, button, id } = item
-            if (id==='ssl_enabled' && networkwide ) {
+            if ( id==='ssl_enabled' && networkwide ) {
                 if ( networkProgress>=100) {
                     status = 'success';
                     title = __( "SSL has been activated network wide", "really-simple-ssl" );
@@ -81,29 +113,7 @@ const Onboarding = (props) => {
                     title = __( "Processing activation of subsites networkwide", "really-simple-ssl" );
                 }
             }
-            const statuses = {
-                'inactive': {
-                    'icon': 'info',
-                    'color': 'orange',
-                },
-                'warning': {
-                    'icon': 'circle-times',
-                    'color': 'orange',
-                },
-                'error': {
-                    'icon': 'circle-times',
-                    'color': 'red',
-                },
-                'success': {
-                    'icon': 'circle-check',
-                    'color': 'green',
-                },
-                'processing': {
-                    'icon': 'file-download',
-                    'color': 'red',
-                },
-            };
-            const statusIcon = statuses[status].icon;
+            const statusIcon = item.status!=='success' && item.is_plugin && item.current_action === 'none' ? 'empty' : statuses[status].icon;
             const statusColor = statuses[status].color;
             const currentActions = {
                 'activate_setting': __('Activating...',"really-simple-ssl"),
@@ -124,8 +134,10 @@ const Onboarding = (props) => {
                 }
             }
             let showLink = (button && button===buttonTitle);
+            let isPluginClass = item.status!=='success' && item.is_plugin && item.current_action === 'none' ? 'rsssl-is-plugin' : '';
+
             return (
-                <li key={index} >
+                <li key={index} className={isPluginClass}>
                     <Icon name = {statusIcon} color = {statusColor} />
                     {title}
                     {id==='ssl_enabled' && networkwide && networkActivationStatus==='main_site_activated' && <>
@@ -152,30 +164,42 @@ const Onboarding = (props) => {
           window.location.href=rsssl_settings.letsencrypt_url;
     }
 
+
+
     const controlButtons = () => {
+
         let ActivateSSLText = networkwide ? __("Activate SSL networkwide", "really-simple-ssl") : __("Activate SSL", "really-simple-ssl");
         if ( currentStepIndex === 0 ) {
            return (
                 <>
-                <button disabled={!certificateValid && !overrideSSL} className="button button-primary" onClick={() => {activateSSL()}}>{ActivateSSLText}</button>
-                { certificateValid && !rsssl_settings.pro_plugin_active && <a target="_blank" href={rsssl_settings.upgrade_link} className="button button-default" >{__("Improve Security with PRO", "really-simple-ssl")}</a>}
-                {!certificateValid && <button className="button button-default" onClick={() => {goToLetsEncrypt()}}>{__("Install SSL", "really-simple-ssl")}</button>}
-                {!certificateValid && <ToggleControl
-                    label={__("Override SSL detection","really-simple-ssl")}
-                    checked={overrideSSL}
-                    onChange={(value) => {
-                        setOverrideSSL(value);
-                        let data = {};
-                        data.overrideSSL = value;
-                        rsssl_api.doAction('override_ssl_detection',data );
-                   }}
-                />}
+                    <button disabled={processing || (!certificateValid && !overrideSSL) } className="button button-primary" onClick={() => {activateSSL()}}>{ActivateSSLText}</button>
+                    { certificateValid && !rsssl_settings.pro_plugin_active && <a target="_blank" href={rsssl_settings.upgrade_link} className="button button-default" >{__("Improve Security with PRO", "really-simple-ssl")}</a>}
+                    { !certificateValid && <button className="button button-default" onClick={() => {goToLetsEncrypt()}}>{__("Install SSL", "really-simple-ssl")}</button>}
+                    { !certificateValid && <ToggleControl
+                        label={__("Override SSL detection","really-simple-ssl")}
+                        checked={overrideSSL}
+                        onChange={(value) => {
+                            setOverrideSSL(value);
+                            let data = {};
+                            data.overrideSSL = value;
+                            rsssl_api.doAction('override_ssl_detection',data );
+                       }}
+                    />}
+                </>
+            );
+        }
+
+        if (currentStepIndex>0 && currentStepIndex<steps.length-1) {
+            return (
+                <>
+                    <button disabled={processing} className="button button-primary" onClick={() => saveEmail()}>{__('Save and continue', 'really-simple-ssl')}</button>
+                    <button disabled={processing} className="button button-default" onClick={() => {setCurrentStepIndex(currentStepIndex+1)}}>{__('Skip', 'really-simple-ssl')}</button>
                 </>
             );
         }
 
         //for last step only
-        if ( steps.length === currentStepIndex + 1 ) {
+        if ( steps.length-1 === currentStepIndex ) {
             return (
                 <>
                     <button className="button button-primary" onClick={() => {goToDashboard()}}>{__('Go to Dashboard', 'really-simple-ssl')}</button>
@@ -191,24 +215,40 @@ const Onboarding = (props) => {
         )
     }
     let step = currentStep;
+    let processingClass = processing ? 'rsssl-processing' : '';
     return (
         <>
             { !dataLoaded && <>
-                <ul>
-                    <li><Icon name = "file-download" color = 'grey' />{__("Fetching next step...", "really-simple-ssl")}</li>
-                </ul>
-                <Placeholder lines="3" ></Placeholder></>}
-
+                <div className="rsssl-onboarding-placeholder">
+                    <ul>
+                        <li><Icon name = "file-download" color = 'grey' />{__("Fetching next step...", "really-simple-ssl")}</li>
+                    </ul>
+                    <Placeholder lines="3" ></Placeholder>
+                </div>
+            </>
+            }
             {
                 dataLoaded &&
-                    <div className="rsssl-modal-content-step">
+                    <div className={ "rsssl-modal-content-step "+processingClass }>
                         {step.title && <h2 className="rsssl-modal-subtitle">{step.title}</h2>}
                         {step.subtitle && <div className="rsssl-modal-description">{step.subtitle}</div>}
                         <ul>
                             { parseStepItems(step.items) }
                         </ul>
+                        { currentStep.id === 'email'&&
+                            <>
+                                <div>
+                                    <input type="email" placeholder={__("Your email address", "really-simple-ssl")} onChange={(e) => setEmail(e.target.value)} />
+                                </div><div>
+                                <label><input onChange={ (e) => setIncludeTips(e.target.checked)} type="checkbox" checked={includeTips} />{__("Include 6 Tips & Tricks to get started with Really Simple SSL.","really-simple-ssl")}&nbsp;<a href="https://really-simple-ssl.com" target="_blank">{__("Privacy Statement", "really-simple-ssl")}</a></label>
+                                </div><div>
+                                    <label><input onChange={ (e) => setSendTestEmail(e.target.checked)} type="checkbox" checked={sendTestEmail} />{__("Send a notification test email - Notification emails are sent from your server.","really-simple-ssl")}</label>
+                                </div>
+                            </>
+
+                        }
                         { certificateValid && step.info_text && <div className="rsssl-modal-description" dangerouslySetInnerHTML={{__html: step.info_text}} /> }
-                        { !certificateValid &&
+                        { currentStepIndex===0 && !certificateValid &&
                             <div className="rsssl-modal-description">
                                <a href="#" onClick={ (e) => refreshSSLStatus(e)}>
                                    { __("Refresh SSL status", "really-simple-ssl")}

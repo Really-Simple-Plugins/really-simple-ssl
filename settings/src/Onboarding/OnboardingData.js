@@ -16,8 +16,24 @@ const useOnboardingData = create(( set, get ) => ({
     overrideSSL: false,
     showOnboardingModal: false,
     dataLoaded: false,
+    processing: false,
+    email: '',
+    includeTips:false,
+    sendTestEmail:true,
+    setIncludeTips: (includeTips) => {
+        set(state => ({ includeTips }))
+    },
+    setSendTestEmail: (sendTestEmail) => {
+        set(state => ({ sendTestEmail }))
+    },
+    setEmail: (email) => {
+        set(state => ({ email }))
+    },
     setShowOnboardingModal: (showOnboardingModal) => {
         set(state => ({ showOnboardingModal }))
+    },
+    setProcessing: (processing) => {
+        set(state => ({ processing }))
     },
     setOverrideSSL: (overrideSSL) => {
         set(state => ({ overrideSSL }))
@@ -33,7 +49,20 @@ const useOnboardingData = create(( set, get ) => ({
         let data={};
         data.dismiss = true;
         set((state) => ({showOnboardingModal: false}));
-        rsssl_api.doAction('dismiss_modal', data).then(( response ) => { });
+        rsssl_api.doAction('dismiss_modal', data).then(( response ) => {
+        });
+    },
+    saveEmail:() => {
+        let data={};
+        data.email = get().email;
+        data.includeTips = get().includeTips;
+        data.sendTestEmail = get().sendTestEmail;
+        set((state) => ({processing:true}));
+        rsssl_api.doAction('update_email', data).then(( response ) => {
+            set((state) => ({processing:false}));
+            get().setCurrentStepIndex(get().currentStepIndex+1);
+        });
+
     },
     updateItemStatus: (action, status, id) => {
         const currentStepIndex = get().currentStepIndex;
@@ -65,9 +94,6 @@ const useOnboardingData = create(( set, get ) => ({
         }
     },
     getSteps: async (forceRefresh) => {
-        set({
-            dataLoaded: false,
-        });
         const {steps, networkActivationStatus, certificateValid, networkProgress, networkwide, overrideSSL, error, sslEnabled} = await retrieveSteps(forceRefresh);
         //if ssl is already enabled, the server will send only one step. In that case we can skip the below.
         //it's only needed when SSL is activated just now, client side.
@@ -96,6 +122,7 @@ const useOnboardingData = create(( set, get ) => ({
     },
     refreshSSLStatus: (e) => {
         e.preventDefault();
+        set( {processing: true} );
         set(
             produce((state) => {
                 const stepIndex = state.steps.findIndex(step => {
@@ -121,18 +148,21 @@ const useOnboardingData = create(( set, get ) => ({
             set({
                 steps: steps,
                 certificateValid: certificateValid,
-                dataLoaded: true,
+                processing: false,
                 error: error,
             });
         }, 1000) //add a delay, otherwise it's so fast the user may not trust it.
     },
     activateSSLNetworkWide: () => {
+        set((state) => ({processing: true}));
         rsssl_api.runTest('activate_ssl_networkwide' ).then( ( response ) => {
+
             if (response.success) {
                 set({
                     networkProgress: response.progress,
                 });
                 if (response.progress>=100) {
+
                     const currentStepIndex = get().currentStepIndex;
                     const itemIndex = get().steps[currentStepIndex].items.findIndex(item => {return item.id==='ssl_enabled';});
                     set(
@@ -147,6 +177,7 @@ const useOnboardingData = create(( set, get ) => ({
                             stepCopy.items = itemsCopy;
                             state.steps[currentStepIndex] = stepCopy;
                             state.currentStep = state.steps[currentStepIndex];
+                            state.processing = false;
                         })
                     )
                 }
@@ -174,7 +205,6 @@ const processAction = (action, id) => {
     data.id = id;
     let next = {};
     return rsssl_api.doAction(action, data).then( async ( response ) => {
-        console.log(response);
         if ( response.success ){
             next.action = response.next_action;
             next.status = 'success';

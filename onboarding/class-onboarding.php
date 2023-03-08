@@ -91,6 +91,22 @@ class rsssl_onboarding {
 					'success' => $success
 				];
 				break;
+			case 'update_email':
+				$email = sanitize_email($data['email']);
+				rsssl_update_option('notifications_email_address', $email );
+				rsssl_update_option('send_notifications_email', 1 );
+
+				if ( $data['sendTestEmail'] ) {
+					$mailer = new rsssl_mailer();
+					$mailer->send_test_mail();
+				}
+
+				$this->signup_for_mailinglist($email);
+
+				$response = [
+					'success' => true,
+				];
+				break;
 			case 'activate_setting':
 				foreach ($this->hardening as $h ){
 					rsssl_update_option($h, true);
@@ -104,6 +120,36 @@ class rsssl_onboarding {
 				return $response;
 		}
 		return $response;
+	}
+
+	/**
+	 * Signup for Tips & Tricks from Really Simple SSL
+	 *
+	 * @param string $email
+	 *
+	 * @return void
+	 */
+	public function signup_for_mailinglist( string $email): void {
+		$license = '';
+		if ( defined('rsssl_pro_version') ) {
+			$license = get_site_option('rsssl_pro_license_key');
+			if ( strpos( $license , 'really_simple_ssl_') !== FALSE ) {
+				$key = get_site_option( 'rsssl_key' );
+				$string = str_replace('really_simple_ssl_', '', $license);
+				$ivlength = openssl_cipher_iv_length('aes-256-cbc');
+				$iv = substr(base64_decode($string), 0, $ivlength);
+				$encrypted_data = substr(base64_decode($string), $ivlength);
+				$license =  openssl_decrypt($encrypted_data, 'aes-256-cbc', $key, 0, $iv);
+			}
+		}
+
+		$api_params = array(
+			'has_premium' => defined('rsssl_pro_version'),
+			'license' => $license,
+			'email' => sanitize_email($email),
+			'domain' => esc_url_raw( site_url() ),
+		);
+		wp_remote_post( 'https://mailinglist.really-simple-ssl.com', array( 'timeout' => 15, 'sslverify' => true, 'body' => $api_params ) );
 	}
 
 	/**
@@ -140,13 +186,20 @@ class rsssl_onboarding {
 				"visible" => true
 			],
 			[
+				"id" => 'email',
+				"title" => __( "Get notified!", 'really-simple-ssl' ),
+				"subtitle" => __("We use email notification to explain important updates in plugin settings.", "really-simple-ssl").' '.__("Add your email address below.", "really-simple-ssl"),
+				"visible" => true
+			],
+			[
 				"id" => 'onboarding',
 				"title" => get_option('rsssl_show_onboarding') ? __( "Thanks for updating!", 'really-simple-ssl' ) : __( "Congratulations!", 'really-simple-ssl' ),
 				"subtitle" => __("Now have a look at our new features.", "really-simple-ssl"),
 				"items" => $this->second_step(),
 				"info_text" => __("Want to know more about our features and plugins?", "really-simple-ssl").' '.sprintf(__("Please read this %sarticle%s.", 'really-simple-ssl'), '<a target="_blank" href="https://really-simple-ssl.com/meet-really-simple-ssl-6/">', '</a>'),
 				"visible" => true
-			]
+			],
+
 		];
 
 		//if the user called with a refresh action, clear the cache
@@ -204,7 +257,6 @@ class rsssl_onboarding {
 		return $items;
 	}
 
-
 	/**
 	 * Returns onboarding items if user upgraded plugin to 6.0 or SSL is detected
 	 * @return array
@@ -260,6 +312,8 @@ class rsssl_onboarding {
 			$free_active = $plugin->plugin_is_downloaded() && $plugin->plugin_is_activated();
 			if( $premium_active || $free_active ) {
 				$items[] = [
+					"id" => $plugin_info['slug'],
+					"is_plugin" => true,
 					"title" => sprintf(__("%s has been installed!", "really-simple-ssl"), $plugin_info["title"]),
 					"action" => "none",
 					"current_action" => "none",
@@ -267,20 +321,22 @@ class rsssl_onboarding {
 				];
 			} else if( !$plugin->plugin_is_downloaded() ){
 				$items[] = [
+					"id" => $plugin_info['slug'],
+					"is_plugin" => true,
 					"title" => $plugin_info["description"],
 					"action" => "install_plugin",
 					"current_action" => "none",
 					"status" => "warning",
-					"id" => $plugin_info['slug'],
 					"button" => __("Install", "really-simple-ssl"),
 				];
 			} else if ( $plugin->plugin_is_downloaded() && !$plugin->plugin_is_activated() ) {
 				$items[] = [
+					"id" => $plugin_info['slug'],
+					"is_plugin" => true,
 					"title" => sprintf(__("Activate our plugin %s", "really-simple-ssl"), $plugin_info["title"]),
 					"action" => "activate",
 					"current_action" => "none",
 					"status" => "warning",
-					"id" => $plugin_info['slug'],
 					"button" => __("Activate", "really-simple-ssl"),
 				];
 			}

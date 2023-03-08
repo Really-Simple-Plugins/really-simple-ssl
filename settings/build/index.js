@@ -34537,13 +34537,14 @@ const Onboarding = props => {
   } = (0,_Settings_FieldsData__WEBPACK_IMPORTED_MODULE_7__["default"])();
   const {
     dismissModal,
-    updateActionForItem,
     actionHandler,
     getSteps,
     error,
     certificateValid,
     networkwide,
     dataLoaded,
+    processing,
+    setProcessing,
     steps,
     currentStep,
     currentStepIndex,
@@ -34554,12 +34555,41 @@ const Onboarding = props => {
     setNetworkActivationStatus,
     networkProgress,
     refreshSSLStatus,
-    activateSSLNetworkWide
+    activateSSLNetworkWide,
+    email,
+    setEmail,
+    saveEmail,
+    includeTips,
+    setIncludeTips,
+    sendTestEmail,
+    setSendTestEmail
   } = (0,_OnboardingData__WEBPACK_IMPORTED_MODULE_8__["default"])();
   const {
     setSelectedMainMenuItem,
     selectedMainMenuItem
   } = (0,_Menu_MenuData__WEBPACK_IMPORTED_MODULE_6__["default"])();
+  const statuses = {
+    'inactive': {
+      'icon': 'info',
+      'color': 'orange'
+    },
+    'warning': {
+      'icon': 'circle-times',
+      'color': 'orange'
+    },
+    'error': {
+      'icon': 'circle-times',
+      'color': 'red'
+    },
+    'success': {
+      'icon': 'circle-check',
+      'color': 'green'
+    },
+    'processing': {
+      'icon': 'file-download',
+      'color': 'red'
+    }
+  };
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(async () => {
     if (networkwide && networkActivationStatus === 'main_site_activated') {
       await activateSSLNetworkWide();
@@ -34576,7 +34606,9 @@ const Onboarding = props => {
     }
   }, [currentStep]);
   const activateSSL = () => {
+    setProcessing(true);
     _utils_api__WEBPACK_IMPORTED_MODULE_2__.runTest('activate_ssl').then(async response => {
+      setProcessing(false);
       setCurrentStepIndex(currentStepIndex + 1);
       //change url to https, after final check
       if (response.success) {
@@ -34594,6 +34626,7 @@ const Onboarding = props => {
   };
   const parseStepItems = items => {
     return items && items.map((item, index) => {
+      console.log(item);
       let {
         title,
         current_action,
@@ -34611,29 +34644,7 @@ const Onboarding = props => {
           title = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Processing activation of subsites networkwide", "really-simple-ssl");
         }
       }
-      const statuses = {
-        'inactive': {
-          'icon': 'info',
-          'color': 'orange'
-        },
-        'warning': {
-          'icon': 'circle-times',
-          'color': 'orange'
-        },
-        'error': {
-          'icon': 'circle-times',
-          'color': 'red'
-        },
-        'success': {
-          'icon': 'circle-check',
-          'color': 'green'
-        },
-        'processing': {
-          'icon': 'file-download',
-          'color': 'red'
-        }
-      };
-      const statusIcon = statuses[status].icon;
+      const statusIcon = item.status !== 'success' && item.is_plugin && item.current_action === 'none' ? 'empty' : statuses[status].icon;
       const statusColor = statuses[status].color;
       const currentActions = {
         'activate_setting': (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('Activating...', "really-simple-ssl"),
@@ -34653,8 +34664,10 @@ const Onboarding = props => {
         }
       }
       let showLink = button && button === buttonTitle;
+      let isPluginClass = item.status !== 'success' && item.is_plugin && item.current_action === 'none' ? 'rsssl-is-plugin' : '';
       return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", {
-        key: index
+        key: index,
+        className: isPluginClass
       }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_4__["default"], {
         name: statusIcon,
         color: statusColor
@@ -34676,7 +34689,7 @@ const Onboarding = props => {
     let ActivateSSLText = networkwide ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Activate SSL networkwide", "really-simple-ssl") : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Activate SSL", "really-simple-ssl");
     if (currentStepIndex === 0) {
       return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-        disabled: !certificateValid && !overrideSSL,
+        disabled: processing || !certificateValid && !overrideSSL,
         className: "button button-primary",
         onClick: () => {
           activateSSL();
@@ -34701,9 +34714,22 @@ const Onboarding = props => {
         }
       }));
     }
+    if (currentStepIndex > 0 && currentStepIndex < steps.length - 1) {
+      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+        disabled: processing,
+        className: "button button-primary",
+        onClick: () => saveEmail()
+      }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('Save and continue', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+        disabled: processing,
+        className: "button button-default",
+        onClick: () => {
+          setCurrentStepIndex(currentStepIndex + 1);
+        }
+      }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('Skip', 'really-simple-ssl')));
+    }
 
     //for last step only
-    if (steps.length === currentStepIndex + 1) {
+    if (steps.length - 1 === currentStepIndex) {
       return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
         className: "button button-primary",
         onClick: () => {
@@ -34722,23 +34748,41 @@ const Onboarding = props => {
     });
   }
   let step = currentStep;
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, !dataLoaded && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_4__["default"], {
+  let processingClass = processing ? 'rsssl-processing' : '';
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, !dataLoaded && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-onboarding-placeholder"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_4__["default"], {
     name: "file-download",
     color: "grey"
   }), (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Fetching next step...", "really-simple-ssl"))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Placeholder_Placeholder__WEBPACK_IMPORTED_MODULE_5__["default"], {
     lines: "3"
-  })), dataLoaded && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-modal-content-step"
+  }))), dataLoaded && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-modal-content-step " + processingClass
   }, step.title && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
     className: "rsssl-modal-subtitle"
   }, step.title), step.subtitle && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-modal-description"
-  }, step.subtitle), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", null, parseStepItems(step.items)), certificateValid && step.info_text && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, step.subtitle), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", null, parseStepItems(step.items)), currentStep.id === 'email' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "email",
+    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Your email address", "really-simple-ssl"),
+    onChange: e => setEmail(e.target.value)
+  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    onChange: e => setIncludeTips(e.target.checked),
+    type: "checkbox",
+    checked: includeTips
+  }), (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Include 6 Tips & Tricks to get started with Really Simple SSL.", "really-simple-ssl"), "\xA0", (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    href: "https://really-simple-ssl.com",
+    target: "_blank"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Privacy Statement", "really-simple-ssl")))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    onChange: e => setSendTestEmail(e.target.checked),
+    type: "checkbox",
+    checked: sendTestEmail
+  }), (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Send a notification test email - Notification emails are sent from your server.", "really-simple-ssl")))), certificateValid && step.info_text && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-modal-description",
     dangerouslySetInnerHTML: {
       __html: step.info_text
     }
-  }), !certificateValid && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }), currentStepIndex === 0 && !certificateValid && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-modal-description"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
     href: "#",
@@ -34781,9 +34825,33 @@ const useOnboardingData = (0,zustand__WEBPACK_IMPORTED_MODULE_2__.create)((set, 
   overrideSSL: false,
   showOnboardingModal: false,
   dataLoaded: false,
+  processing: false,
+  email: '',
+  includeTips: false,
+  sendTestEmail: true,
+  setIncludeTips: includeTips => {
+    set(state => ({
+      includeTips
+    }));
+  },
+  setSendTestEmail: sendTestEmail => {
+    set(state => ({
+      sendTestEmail
+    }));
+  },
+  setEmail: email => {
+    set(state => ({
+      email
+    }));
+  },
   setShowOnboardingModal: showOnboardingModal => {
     set(state => ({
       showOnboardingModal
+    }));
+  },
+  setProcessing: processing => {
+    set(state => ({
+      processing
     }));
   },
   setOverrideSSL: overrideSSL => {
@@ -34810,6 +34878,21 @@ const useOnboardingData = (0,zustand__WEBPACK_IMPORTED_MODULE_2__.create)((set, 
       showOnboardingModal: false
     }));
     _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('dismiss_modal', data).then(response => {});
+  },
+  saveEmail: () => {
+    let data = {};
+    data.email = get().email;
+    data.includeTips = get().includeTips;
+    data.sendTestEmail = get().sendTestEmail;
+    set(state => ({
+      processing: true
+    }));
+    _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('update_email', data).then(response => {
+      set(state => ({
+        processing: false
+      }));
+      get().setCurrentStepIndex(get().currentStepIndex + 1);
+    });
   },
   updateItemStatus: (action, status, id) => {
     const currentStepIndex = get().currentStepIndex;
@@ -34847,9 +34930,6 @@ const useOnboardingData = (0,zustand__WEBPACK_IMPORTED_MODULE_2__.create)((set, 
     }
   },
   getSteps: async forceRefresh => {
-    set({
-      dataLoaded: false
-    });
     const {
       steps,
       networkActivationStatus,
@@ -34887,6 +34967,9 @@ const useOnboardingData = (0,zustand__WEBPACK_IMPORTED_MODULE_2__.create)((set, 
   },
   refreshSSLStatus: e => {
     e.preventDefault();
+    set({
+      processing: true
+    });
     set((0,immer__WEBPACK_IMPORTED_MODULE_3__.produce)(state => {
       const stepIndex = state.steps.findIndex(step => {
         return step.id === 'activate_ssl';
@@ -34909,13 +34992,16 @@ const useOnboardingData = (0,zustand__WEBPACK_IMPORTED_MODULE_2__.create)((set, 
       set({
         steps: steps,
         certificateValid: certificateValid,
-        dataLoaded: true,
+        processing: false,
         error: error
       });
     }, 1000); //add a delay, otherwise it's so fast the user may not trust it.
   },
 
   activateSSLNetworkWide: () => {
+    set(state => ({
+      processing: true
+    }));
     _utils_api__WEBPACK_IMPORTED_MODULE_0__.runTest('activate_ssl_networkwide').then(response => {
       if (response.success) {
         set({
@@ -34941,6 +35027,7 @@ const useOnboardingData = (0,zustand__WEBPACK_IMPORTED_MODULE_2__.create)((set, 
             stepCopy.items = itemsCopy;
             state.steps[currentStepIndex] = stepCopy;
             state.currentStep = state.steps[currentStepIndex];
+            state.processing = false;
           }));
         }
       }
@@ -34974,7 +35061,6 @@ const processAction = (action, id) => {
   data.id = id;
   let next = {};
   return _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction(action, data).then(async response => {
-    console.log(response);
     if (response.success) {
       next.action = response.next_action;
       next.status = 'success';
@@ -38333,6 +38419,19 @@ const Icon = props => {
         fill: iconColors[iconColor],
         d: "M184.1 38.2c9.9 8.9 10.7 24 1.8 33.9l-72 80c-4.4 4.9-10.6 7.8-17.2 7.9s-12.9-2.4-17.6-7L39 113c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l22.1 22.1 55.1-61.2c8.9-9.9 24-10.7 33.9-1.8zm0 160c9.9 8.9 10.7 24 1.8 33.9l-72 80c-4.4 4.9-10.6 7.8-17.2 7.9s-12.9-2.4-17.6-7L39 273c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l22.1 22.1 55.1-61.2c8.9-9.9 24-10.7 33.9-1.8zM256 96c0-17.7 14.3-32 32-32H512c17.7 0 32 14.3 32 32s-14.3 32-32 32H288c-17.7 0-32-14.3-32-32zm0 160c0-17.7 14.3-32 32-32H512c17.7 0 32 14.3 32 32s-14.3 32-32 32H288c-17.7 0-32-14.3-32-32zM192 416c0-17.7 14.3-32 32-32H512c17.7 0 32 14.3 32 32s-14.3 32-32 32H224c-17.7 0-32-14.3-32-32zM80 464c-26.5 0-48-21.5-48-48s21.5-48 48-48s48 21.5 48 48s-21.5 48-48 48z"
       }))
+    };
+  }
+  if (iconName === 'empty') {
+    renderedIcon = {
+      html: (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("svg", {
+        height: iconSize,
+        width: iconSize,
+        "aria-hidden": "true",
+        focusable: "false",
+        role: "img",
+        xmlns: "http://www.w3.org/2000/svg",
+        viewBox: "0 0 280.8 363.67"
+      })
     };
   }
   if (iconName === 'external-link') {
