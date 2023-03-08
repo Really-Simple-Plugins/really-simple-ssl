@@ -97,13 +97,22 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
 					// we enable the feedback in the plugin
 					$self->enable_feedback_in_plugin();
 					$self->enable_feedback_in_theme();
-
 				}
 				//we add the notices to the notices array.
 				$self->get_vulnerabilities();
 
 				//if we are not in the SSL admin page, we add the admin notices.
 				add_action( 'current_screen', array( $self, 'show_admin_notices' ) );
+
+                //if a theme is installed, we force the components to be updated.
+                //we check if upgrader_process_complete is called, so we can reload the files.
+                add_action('upgrader_process_complete', array($self, 'reload_files_on_update'), 10, 2);
+                //After activation, we need to reload the files.
+                add_action('activate_plugin', array($self, 'reload_files_on_update'), 10, 2);
+
+                //same goes for themes.
+                add_action('switch_theme', array($self, 'reload_files_on_update'), 10, 2);
+
 			}
 		}
 
@@ -422,6 +431,16 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
 			}
 			$this->cache_installed_plugins();
 		}
+
+        public function reload_files_on_update()
+        {
+            //if the file is not older than 10 minutes, we don't download it again.
+            if ( $this->get_file_stored_info( false, false ) > time() - 600 ) {
+                return;
+            }
+            $this->download_plugin_vulnerabilities();
+            $this->cache_installed_plugins();
+        }
 
 
 		/**
