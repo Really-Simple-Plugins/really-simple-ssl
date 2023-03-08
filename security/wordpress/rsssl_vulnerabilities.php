@@ -36,10 +36,10 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
 
 		private $admin_notices = [];
 		private $risk_naming = [
-			'l' => 'low',
-			'm' => 'medium',
-			'h' => 'high',
-			'c' => 'critical',
+			'l' => 'Low-Risk',
+			'm' => 'Medium-Risk',
+			'h' => 'High-Risk',
+			'c' => 'Critical',
 		];
 
 		/**
@@ -111,7 +111,9 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
                 add_action('activate_plugin', array($self, 'reload_files_on_update'), 10, 2);
 
                 //same goes for themes.
-                add_action('switch_theme', array($self, 'reload_files_on_update'), 10, 2);
+                add_action('after_setup_theme', array($self, 'reload_files_on_update'), 10, 2);
+
+                add_action('current_screen', array($self, 'show_inline_code'));
 
 			}
 		}
@@ -685,6 +687,8 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
 
 			$vulnerable = false;
 			$closed    = false;
+
+
 			foreach ( $components as $component ) {
 				if ( $component->slug === $theme ) {
 					if ( count( $component->vulnerabilities ) > 0 ) {
@@ -695,8 +699,6 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
 					}
 				}
 			}
-			//Check if theme is closed
-
 			if ( ! $vulnerable && ! $closed) {
 				//well nothing is wrong with the theme so we can return false
 				return false;
@@ -737,8 +739,70 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
 					<?php
 				});
 			}
+            //we add warning scripts to themes
+            add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_theme_warning_scripts' ] );
+
 		}
 
+        public function show_inline_code($hook)
+        {
+            if ( $hook !== 'themes.php' ) {
+                return;
+            }
+            //we add warning scripts to themes
+            add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_theme_warning_scripts' ] );
+        }
+
+        public function enqueue_theme_warning_scripts($hook) {
+            if ( $hook !== 'themes.php' ) {
+                return;
+            }
+            //we get all components with vulnerabilities
+            $components = $this->get_components();
+            wp_enqueue_script( 'my-script', plugins_url( '../../scripts.js', __FILE__ ), array(), '1.0.0', true );
+            $inline_script = "
+                jQuery(document).ready(function($) {
+                    let style = document.createElement('style');
+                    let vulnerable_components = [".implode(',', array_map(function($component) {
+                       //we return slug and risk
+                        return "{slug: '".$component->slug."', risk: '".$this->get_highest_vulnerability($component->vulnerabilities)."'}";
+                    }, $components))."];
+                    console.log(vulnerable_components);
+                    //we create the style for warning
+                    style.innerHTML = '.rss-theme-notice-warning {background-color: #fff; border-left: 4px solid #ffb900; box-shadow: 0 1px 1px 0 rgba(0,0,0,.1); margin: 0; padding: 1px 12px;}';
+                    //we create the style for danger
+                    style.innerHTML += '.rss-theme-notice-danger {background-color: #fff; border-left: 4px solid #dc3232; box-shadow: 0 1px 1px 0 rgba(0,0,0,.1); margin: 0; padding: 1px 12px;}';
+                    //we create the style for closed
+                    style.innerHTML += '.rss-theme-notice-closed {background-color: #fff; border-left: 4px solid #dc3232; box-shadow: 0 1px 1px 0 rgba(0,0,0,.1); margin: 0; padding: 1px 12px;}';
+                    let levels = ".json_encode($this->risk_naming).";
+       
+                    //we add the style to the head       
+                    document.head.appendChild(style);
+                    //we loop through the components
+                   
+                    vulnerable_components.forEach(function(component) {
+                        //we get the theme element
+                        let theme_element = $(\".theme[data-slug='\"+component.slug+\"']\");
+                        //if the theme exists
+                        if (theme_element.length > 0) {
+                            //we check the risk
+                            let level = levels[component.risk];
+                            let text = '".__('Security: <-level->', 'really-simple-ssl')."';
+                            text = text.replace('<-level->', level);
+                            console.log(level, text, levels);
+                            if (component.risk === 'h' || component.risk === 'c') {
+                                
+                                //we add the danger class
+                                theme_element.prepend('<div class=\"rss-theme-notice-danger\"><p><span class=\"dashicons dashicons-no\"></span>  '+text+'</p></div>');
+                            } else {
+                                theme_element.prepend('<div class=\"rss-theme-notice-warning\"><p></p><span class=\"dashicons dashicons-info\"></span>  '+text+'</p></div>');
+                            }
+                            }
+                        });
+                });
+            ";
+            wp_add_inline_script( 'my-script', $inline_script );
+        }
 		public function show_theme_closed() {
 			$screen = get_current_screen();
 			$theme = wp_get_theme();
@@ -836,7 +900,7 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
 				}
 			}
 
-			return '';
+			return 'l';
 		}
 
 		/* End of private functions | Filtering and walks */
