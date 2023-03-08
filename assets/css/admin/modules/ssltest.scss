@@ -1,7 +1,9 @@
+.rsssl-grid-item.rsssl-wpvul .rsssl-grid-item-content,
 .rsssl-grid-item.rsssl-ssllabs .rsssl-grid-item-content {
   padding: 0;
 }
 
+.rsssl-wpvul,
 .rsssl-ssllabs {
   .rsssl-placeholder {
     @include rsssl-block-padding;
@@ -27,6 +29,10 @@
 
     &.rsssl-error {
       background: var(--rsp-red-faded);
+    }
+
+    &.rsssl-warning {
+      background: var(--rsp-yellow-faded);
     }
 
     &.rsssl-success {

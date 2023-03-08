@@ -61,8 +61,9 @@ class REALLY_SIMPLE_SSL
 	public $certificate;
 	public $wp_cli;
 	public $site_health;
+    public $vulnerabilities;
 
-	private function __construct()
+    private function __construct()
 	{
         if (isset($_GET['rsssl_apitoken']) && $_GET['rsssl_apitoken'] == get_option('rsssl_csp_report_token') ) {
             if ( !defined('RSSSL_LEARNING_MODE') ) define( 'RSSSL_LEARNING_MODE' , true );

@@ -834,6 +834,7 @@
     color: var(--rsp-white);
     margin: 3px;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    width: auto;
 }
 
 .rsssl .rsssl-badge.rsp-dark {
@@ -854,6 +855,11 @@
 
 .rsssl .rsssl-badge.rsp-critical {
     background-color: var(--rsp-red);
+}
+
+.rsssl .rsssl-badge.rsp-default {
+    background-color: #d9d3d3;
+    color: black;
 }
 
 .rsssl-modal.rsssl-onboarding {
@@ -909,6 +915,7 @@
     margin-top: 8px;
 }
 
+.rsssl-wpvul.rsssl-block-highlight,
 .rsssl-ssllabs.rsssl-block-highlight {
     border: 0;
     -o-animation: fadeItBlock 3s ease-in-out;
@@ -941,6 +948,31 @@
     100% {
         border: 0;
     }
+}
+
+.rsssl-wpvul .rsssl-number {
+    font-size: 2.5em;
+    font-weight: 700;
+    text-align: center;
+}
+
+.rsssl-wpvul .time {
+    position: absolute;
+    right: 2em;
+    padding-right: 5px;
+    text-align: right;
+}
+
+.rsssl-wpvul .alignright {
+    float: right;
+    margin-top: 1em;
+    margin-left: 10px;
+}
+
+.rsssl-wpvul .alignleft {
+    float: left;
+    margin-top: 5px;
+    margin-right: 10px;
 }
 
 .rsssl-grid-item.rsssl-progress .rsssl-grid-item-content {
@@ -1234,73 +1266,93 @@
     }
 }
 
+.rsssl-grid-item.rsssl-wpvul .rsssl-grid-item-content,
 .rsssl-grid-item.rsssl-ssllabs .rsssl-grid-item-content {
     padding: 0;
 }
 
+.rsssl-wpvul .rsssl-placeholder,
 .rsssl-ssllabs .rsssl-placeholder {
     padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
 }
 
 @media screen and (max-width: 1280px) {
-    .rsssl-ssllabs .rsssl-placeholder {
+    .rsssl-wpvul .rsssl-placeholder,
+  .rsssl-ssllabs .rsssl-placeholder {
         padding: var(--rsp-spacing-xs) var(--rsp-spacing-s);
     }
 }
 
 @media screen and (max-width: 1080px) {
-    .rsssl-ssllabs .rsssl-placeholder {
+    .rsssl-wpvul .rsssl-placeholder,
+  .rsssl-ssllabs .rsssl-placeholder {
         padding: var(--rsp-spacing-xs) var(--rsp-spacing-s);
     }
 }
 
+.rsssl-wpvul .rsssl-inactive .rsssl-score-snippet,
 .rsssl-ssllabs .rsssl-inactive .rsssl-score-snippet {
     color: var(--rsp-color-disabled);
 }
 
+.rsssl-wpvul .rsssl-inactive .rsssl-ssl-test > div,
 .rsssl-ssllabs .rsssl-inactive .rsssl-ssl-test > div {
     background: var(--rsp-grey-300);
 }
 
+.rsssl-wpvul .rsssl-inactive .rsssl-details:last-of-type,
 .rsssl-ssllabs .rsssl-inactive .rsssl-details:last-of-type {
     opacity: 0.2;
 }
 
+.rsssl-wpvul .rsssl-ssl-test-container,
 .rsssl-ssllabs .rsssl-ssl-test-container {
     background: var(--rsp-grey-100);
     padding: 20px 25px;
 }
 
+.rsssl-wpvul .rsssl-ssl-test-container.rsssl-error,
 .rsssl-ssllabs .rsssl-ssl-test-container.rsssl-error {
     background: var(--rsp-red-faded);
 }
 
+.rsssl-wpvul .rsssl-ssl-test-container.rsssl-warning,
+.rsssl-ssllabs .rsssl-ssl-test-container.rsssl-warning {
+    background: var(--rsp-yellow-faded);
+}
+
+.rsssl-wpvul .rsssl-ssl-test-container.rsssl-success,
 .rsssl-ssllabs .rsssl-ssl-test-container.rsssl-success {
     background: var(--rsp-green-faded);
 }
 
 @media only screen and (max-width: 1599px) and (min-width: 1280px) {
-    .rsssl-ssllabs .rsssl-ssl-test-container {
+    .rsssl-wpvul .rsssl-ssl-test-container,
+  .rsssl-ssllabs .rsssl-ssl-test-container {
         padding: 5px;
     }
 }
 
+.rsssl-wpvul .rsssl-ssl-test,
 .rsssl-ssllabs .rsssl-ssl-test {
     display: flex;
     gap: 15px;
 }
 
+.rsssl-wpvul .rsssl-ssl-test > div,
 .rsssl-ssllabs .rsssl-ssl-test > div {
     flex: 1;
     background-color: #fff;
 }
 
 @media only screen and (max-width: 1599px) and (min-width: 1280px) {
-    .rsssl-ssllabs .rsssl-ssl-test > div {
+    .rsssl-wpvul .rsssl-ssl-test > div,
+  .rsssl-ssllabs .rsssl-ssl-test > div {
         background-color: transparent;
     }
 }
 
+.rsssl-wpvul .rsssl-ssl-test-grade,
 .rsssl-ssllabs .rsssl-ssl-test-grade {
     text-align: center;
     display: flex;
@@ -1311,10 +1363,12 @@
     border-radius: 8px;
 }
 
+.rsssl-wpvul .rsssl-ssl-test-grade.rsssl-grade-inactive,
 .rsssl-ssllabs .rsssl-ssl-test-grade.rsssl-grade-inactive {
     display: flex;
 }
 
+.rsssl-wpvul .rsssl-ssl-test-grade.rsssl-grade-inactive div,
 .rsssl-ssllabs .rsssl-ssl-test-grade.rsssl-grade-inactive div {
     width: 20px;
     height: 8px;
@@ -1323,16 +1377,19 @@
     border-radius: 50px;
 }
 
+.rsssl-wpvul .rsssl-ssl-test-information,
 .rsssl-ssllabs .rsssl-ssl-test-information {
     padding: 10px 0;
     max-width: 50%;
     border-radius: var(--rsp-border-radius);
 }
 
+.rsssl-wpvul .rsssl-ssl-test-information .rsssl-score-container,
 .rsssl-ssllabs .rsssl-ssl-test-information .rsssl-score-container {
     display: flex;
 }
 
+.rsssl-wpvul .rsssl-ssl-test-information .rsssl-score-container .rsssl-score-snippet,
 .rsssl-ssllabs .rsssl-ssl-test-information .rsssl-score-container .rsssl-score-snippet {
     white-space: nowrap;
     padding: 0 8px;
@@ -1342,49 +1399,59 @@
     color: var(--rsp-text-color);
 }
 
+.rsssl-wpvul .rsssl-ssl-test-information .rsssl-score-container .rsssl-score-snippet.rsssl-test-inactive,
 .rsssl-ssllabs .rsssl-ssl-test-information .rsssl-score-container .rsssl-score-snippet.rsssl-test-inactive {
     background-color: var(--rsp-grey-200);
     color: var(--rsp-color-disabled);
 }
 
+.rsssl-wpvul .rsssl-ssl-test-information .rsssl-score-container .rsssl-score-snippet.rsssl-test-processing,
 .rsssl-ssllabs .rsssl-ssl-test-information .rsssl-score-container .rsssl-score-snippet.rsssl-test-processing {
     background-color: var(--rsp-yellow);
     color: var(--rsp-black);
 }
 
+.rsssl-wpvul .rsssl-ssl-test-information .rsssl-score-container .rsssl-score-snippet.rsssl-test-success,
 .rsssl-ssllabs .rsssl-ssl-test-information .rsssl-score-container .rsssl-score-snippet.rsssl-test-success {
     background-color: var(--rsp-color-success);
     color: var(--rsp-text-color-white);
 }
 
+.rsssl-wpvul .rsssl-ssl-test-information .rsssl-score-container .rsssl-score-snippet.rsssl-test-error,
 .rsssl-ssllabs .rsssl-ssl-test-information .rsssl-score-container .rsssl-score-snippet.rsssl-test-error {
     background-color: var(--rsp-brand-primary);
     color: var(--rsp-black);
 }
 
+.rsssl-wpvul .rsssl-details,
 .rsssl-ssllabs .rsssl-details {
     margin: var(--rsp-spacing-m);
     display: flex;
 }
 
+.rsssl-wpvul .rsssl-details .rsssl-detail-icon,
 .rsssl-ssllabs .rsssl-details .rsssl-detail-icon {
     width: 30px;
 }
 
+.rsssl-wpvul .rsssl-details .rsssl-detail-icon .rsssl-icon,
 .rsssl-ssllabs .rsssl-details .rsssl-detail-icon .rsssl-icon {
     margin-top: 2px;
 }
 
+.rsssl-wpvul .rsssl-details .rsssl-status-red,
 .rsssl-ssllabs .rsssl-details .rsssl-status-red {
     color: var(--rsp-red);
 }
 
 @media only screen and (max-width: 1599px) and (min-width: 1280px) {
-    .rsssl-ssllabs .rsssl-details {
+    .rsssl-wpvul .rsssl-details,
+  .rsssl-ssllabs .rsssl-details {
         margin: var(--rsp-spacing-s);
     }
 }
 
+.rsssl-wpvul .rsssl-details + .rsssl-details,
 .rsssl-ssllabs .rsssl-details + .rsssl-details {
     margin-top: 0;
 }
@@ -1448,75 +1515,75 @@
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(2) {
-    width: 88%;
+    width: 65%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(3) {
-    width: 89%;
+    width: 69%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(4) {
-    width: 64%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(5) {
-    width: 73%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(6) {
-    width: 74%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(7) {
-    width: 77%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
-    width: 73%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
-    width: 86%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
     width: 98%;
 }
 
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
-    width: 83%;
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(5) {
+    width: 87%;
 }
 
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
-    width: 64%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(6) {
     width: 95%;
 }
 
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(7) {
+    width: 85%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
+    width: 78%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
+    width: 98%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
+    width: 75%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
+    width: 72%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
+    width: 67%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
+    width: 79%;
+}
+
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(14) {
-    width: 70%;
+    width: 80%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
-    width: 76%;
+    width: 72%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(16) {
-    width: 78%;
+    width: 83%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(17) {
-    width: 84%;
+    width: 61%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(18) {
-    width: 76%;
+    width: 92%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(19) {
-    width: 78%;
+    width: 71%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(20) {

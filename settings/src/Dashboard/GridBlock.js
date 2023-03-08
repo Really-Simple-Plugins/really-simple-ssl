@@ -6,7 +6,7 @@ import SslLabs from "./SslLabs/SslLabs";
 import SslLabsFooter from "./SslLabs/SslLabsFooter";
 
 import WPVul from "./Vulnerabilities/WPVul";
-import WPVulFooter from "./Vulnerabilities/WPVulData";
+import WPVulFooter from "./Vulnerabilities/WPVulFooter";
 
 import UseFields from "../Settings/FieldsData";
 import OtherPlugins from "./OtherPlugins";

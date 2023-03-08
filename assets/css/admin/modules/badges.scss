@@ -5,6 +5,7 @@
     color: var(--rsp-white);
     margin: 3px;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    width: auto;
 
     &.rsp-dark {
       background-color: var(--rsp-black);
@@ -24,6 +25,11 @@
 
     &.rsp-critical {
       background-color: var(--rsp-red);
+    }
+
+    &.rsp-default {
+      background-color: #d9d3d3;
+      color:black;
     }
   }
 }
