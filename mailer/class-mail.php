@@ -13,6 +13,10 @@ if ( !class_exists('rsssl_mailer') ) {
 		public $headers;
 		public $message;
 		public $subject;
+        public $change_text;
+        public $sent_to_text;
+        public $what_now_text;
+        public $sent_by_text;
 		public $warning_blocks;
 		public $error = '';
 
@@ -35,6 +39,11 @@ if ( !class_exists('rsssl_mailer') ) {
 			$this->title = __("Really Simple SSL - Notification Test", "really-simple-ssl");
 			$this->message = __("This email is confirmation that any security notices are likely to reach your inbox.", "really-simple-ssl");
 			$this->subject = __("Notification by Really Simple SSL", "really-simple-ssl");
+            $this->change_text = __("I didn't change any settings in the plugin.", "really-simple-ssl");
+            $this->sent_to_text = __("This email was sent to", "really-simple-ssl");
+            $this->what_now_text = __("What now?", "really-simple-ssl");
+            $this->sent_by_text = __("This email is part of the Really Simple SSL Notification System", "really-simple-ssl");
+
 			$this->warning_blocks = [
 				[
 					'title' => __("About notifications","really-simple-ssl"),
@@ -107,7 +116,11 @@ if ( !class_exists('rsssl_mailer') ) {
 					'{email-address}',
 					'{learn-more}',
 					'{site_url}',
-					'{username}'
+					'{username}',
+                    '{change_text}',
+                    '{what_now}',
+                    '{sent_to_text}',
+                    '{sent_by_text}'
 				],
 				[
 					sanitize_text_field( $this->title ),
@@ -116,9 +129,12 @@ if ( !class_exists('rsssl_mailer') ) {
 					$this->to,
 					__( "Learn more", 'really-simple-ssl' ),
 					site_url(),
-					$username
-				],
-				$template );
+					$username,
+                    $this->change_text,
+                    $this->what_now_text,
+                    $this->sent_to_text,
+                    $this->sent_by_text
+				], $template );
 			$success = wp_mail( $this->to, sanitize_text_field($this->subject), $body, array('Content-Type: text/html; charset=UTF-8') );
 			set_transient('rsssl_email_recently_sent', true, 5 * MINUTE_IN_SECONDS );
 			return $success;
