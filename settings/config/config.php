@@ -835,54 +835,54 @@ function rsssl_fields( $load_values = true ) {
             'default'     => false,
         ],
 		/* Measures Setting Premium Only */
-        [
-            'id'               => 'vulnerabilities_measures',
-            'menu_id'          => 'vulnerabilities',
-            'group_id'         => 'vulnerabilities_measures',
-            'type'             => 'riskcomponent',
-            'options'          => [
-                'none' => __( 'None', 'really-simple-ssl' ),
-                'notify_admin' => __( 'Admin notification', 'really-simple-ssl' ),
-                'notify_admin_email' => __( 'Email', 'really-simple-ssl' ),
-                'force_update' => __( 'Force update', 'really-simple-ssl' ),
-                'quarantine_component' => __( 'Quarantine Component', 'really-simple-ssl' ),
-            ],
-            'disabled'         => false,
-            'default'          => false,
-            'columns'          => [
-                [
-                    'name'     => __( 'Risk', 'really-simple-ssl' ),
-                    'sortable' => false,
-                    'column'   => 'risk',
-                    'width'    => '20%',
-                ],
-                [
-                    'name'     => __( 'Action', 'really-simple-ssl' ),
-                    'sortable' => false,
-                    'column'   => 'riskSelection',
-                    'width'         => '30%',
-                ],
-                [
-                    'name'     => __( 'Description', 'really-simple-ssl' ),
-                    'sortable' => false,
-                    'column'   => 'description',
-                    'type'   => 'text',
-                    'width'     => '50%',
-                    'minWidth'  => '300px',
-                ],
-                [
-                    //TODO: remove this column added because of annoying bug in table
-                    'name'     => __( 'Component', 'really-simple-ssl' ),
-                    'sortable' => false,
-                    'visible'  => false,
-                    'column'   => 'component',
-                    'type'   => 'hidden',
-                    'hidden' => true,
-                    'width'     => '0',
-                    'minWidth'  => '0',
-                ],
-            ],
-        ],
+//        [
+//            'id'               => 'vulnerabilities_measures',
+//            'menu_id'          => 'vulnerabilities',
+//            'group_id'         => 'vulnerabilities_measures',
+//            'type'             => 'riskcomponent',
+//            'options'          => [
+//                'none' => __( 'None', 'really-simple-ssl' ),
+//                'notify_admin' => __( 'Admin notification', 'really-simple-ssl' ),
+//                'notify_admin_email' => __( 'Email', 'really-simple-ssl' ),
+//                'force_update' => __( 'Force update', 'really-simple-ssl' ),
+//                'quarantine_component' => __( 'Quarantine Component', 'really-simple-ssl' ),
+//            ],
+//            'disabled'         => false,
+//            'default'          => false,
+//            'columns'          => [
+//                [
+//                    'name'     => __( 'Risk', 'really-simple-ssl' ),
+//                    'sortable' => false,
+//                    'column'   => 'risk',
+//                    'width'    => '20%',
+//                ],
+//                [
+//                    'name'     => __( 'Action', 'really-simple-ssl' ),
+//                    'sortable' => false,
+//                    'column'   => 'riskSelection',
+//                    'width'         => '30%',
+//                ],
+//                [
+//                    'name'     => __( 'Description', 'really-simple-ssl' ),
+//                    'sortable' => false,
+//                    'column'   => 'description',
+//                    'type'   => 'text',
+//                    'width'     => '50%',
+//                    'minWidth'  => '300px',
+//                ],
+//                [
+//                    //TODO: remove this column added because of annoying bug in table
+//                    'name'     => __( 'Component', 'really-simple-ssl' ),
+//                    'sortable' => false,
+//                    'visible'  => false,
+//                    'column'   => 'component',
+//                    'type'   => 'hidden',
+//                    'hidden' => true,
+//                    'width'     => '0',
+//                    'minWidth'  => '0',
+//                ],
+//            ],
+//        ],
         /* section x_xss_protection */
 		[
 			'id'       => 'x_xss_protection',
