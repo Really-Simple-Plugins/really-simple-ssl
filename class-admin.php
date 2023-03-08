@@ -365,6 +365,7 @@ class rsssl_admin
 			    'site_url_changed' => false,
 		    ];
         }
+
 	    $safe_mode = defined('RSSSL_SAFE_MODE') && RSSSL_SAFE_MODE;
         $error = false;
 	    $is_rest_request =  isset($data['is_rest_request']);

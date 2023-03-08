@@ -130,22 +130,15 @@ class rsssl_onboarding {
 	 * @return void
 	 */
 	public function signup_for_mailinglist( string $email): void {
-		$license = '';
+		$license_key = '';
 		if ( defined('rsssl_pro_version') ) {
-			$license = get_site_option('rsssl_pro_license_key');
-			if ( strpos( $license , 'really_simple_ssl_') !== FALSE ) {
-				$key = get_site_option( 'rsssl_key' );
-				$string = str_replace('really_simple_ssl_', '', $license);
-				$ivlength = openssl_cipher_iv_length('aes-256-cbc');
-				$iv = substr(base64_decode($string), 0, $ivlength);
-				$encrypted_data = substr(base64_decode($string), $ivlength);
-				$license =  openssl_decrypt($encrypted_data, 'aes-256-cbc', $key, 0, $iv);
-			}
+			$license_key = RSSSL_PRO()->licensing->license_key();
+			$license_key = RSSSL_PRO()->licensing->maybe_decode( $license_key );
 		}
 
 		$api_params = array(
 			'has_premium' => defined('rsssl_pro_version'),
-			'license' => $license,
+			'license' => $license_key,
 			'email' => sanitize_email($email),
 			'domain' => esc_url_raw( site_url() ),
 		);

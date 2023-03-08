@@ -1,8 +1,7 @@
-import {useState, useEffect} from "@wordpress/element";
+import { useEffect} from "@wordpress/element";
 import { Button, ToggleControl } from '@wordpress/components';
 import * as rsssl_api from "../utils/api";
 import { __ } from '@wordpress/i18n';
-import {useUpdateEffect} from 'react-use';
 import Icon from "../utils/Icon";
 import Placeholder from '../Placeholder/Placeholder';
 import useMenu from "../Menu/MenuData";
@@ -10,7 +9,7 @@ import useFields from "../Settings/FieldsData";
 import useOnboardingData from "./OnboardingData";
 
 const Onboarding = (props) => {
-    const { fetchFieldsData, updateField, saveFields, setChangedField} = useFields();
+    const { fetchFieldsData, updateField, updateFieldsData} = useFields();
     const {
         dismissModal,
         actionHandler,
@@ -102,7 +101,6 @@ const Onboarding = (props) => {
 
     const parseStepItems = (items) => {
         return items && items.map( (item, index) => {
-            console.log(item);
             let { title, current_action, action, status, button, id } = item
             if ( id==='ssl_enabled' && networkwide ) {
                 if ( networkProgress>=100) {
@@ -164,7 +162,13 @@ const Onboarding = (props) => {
           window.location.href=rsssl_settings.letsencrypt_url;
     }
 
+    const saveEmailAndUpdateFields = async () => {
+        await saveEmail();
 
+        updateField('send_notifications_email', true );
+        updateField('notifications_email_address', email );
+        updateFieldsData();
+    }
 
     const controlButtons = () => {
 
@@ -192,7 +196,7 @@ const Onboarding = (props) => {
         if (currentStepIndex>0 && currentStepIndex<steps.length-1) {
             return (
                 <>
-                    <button disabled={processing} className="button button-primary" onClick={() => saveEmail()}>{__('Save and continue', 'really-simple-ssl')}</button>
+                    <button disabled={processing} className="button button-primary" onClick={() => saveEmailAndUpdateFields()}>{__('Save and continue', 'really-simple-ssl')}</button>
                     <button disabled={processing} className="button button-default" onClick={() => {setCurrentStepIndex(currentStepIndex+1)}}>{__('Skip', 'really-simple-ssl')}</button>
                 </>
             );
