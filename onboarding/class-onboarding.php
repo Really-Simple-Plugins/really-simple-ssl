@@ -415,7 +415,6 @@ class rsssl_onboarding {
 	 */
 
 	function show_onboarding_modal() {
-		return true;
 		if ( get_option("rsssl_onboarding_dismissed") ) {
 			return false;
 		}
