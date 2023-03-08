@@ -274,6 +274,9 @@ if (!class_exists('rsssl_multisite')) {
             if ( !is_multisite() || !rsssl_is_networkwide_active() ) {
 				return;
             }
+	        if ( !rsssl_user_can_manage() ) {
+		        return;
+	        }
 	        $count = RSSSL()->admin->count_plusones();
 	        $update_count = $count > 0 ? "<span class='update-plugins rsssl-update-count'><span class='update-count'>$count</span></span>" : "";
 
