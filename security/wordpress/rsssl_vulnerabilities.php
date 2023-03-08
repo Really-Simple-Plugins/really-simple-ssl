@@ -767,11 +767,10 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
                        //we return slug and risk
                         return "{slug: '".$component->slug."', risk: '".$this->get_highest_vulnerability($component->vulnerabilities)."'}";
                     }, $components))."];
-                    console.log(vulnerable_components);
                     //we create the style for warning
-                    style.innerHTML = '.rss-theme-notice-warning {background-color: #fff; border-left: 4px solid #ffb900; box-shadow: 0 1px 1px 0 rgba(0,0,0,.1); margin: 0; padding: 1px 12px;}';
+                    style.innerHTML = '.rss-theme-notice-warning {background-color: #FFF6CE; border-left: 4px solid #ffb900; box-shadow: 0 1px 1px 0 rgba(0,0,0,.1); position:relative; z-index:50; margin-bottom: -48px; padding: 1px 12px;}';
                     //we create the style for danger
-                    style.innerHTML += '.rss-theme-notice-danger {background-color: #fff; border-left: 4px solid #dc3232; box-shadow: 0 1px 1px 0 rgba(0,0,0,.1); margin: 0; padding: 1px 12px;}';
+                    style.innerHTML += '.rss-theme-notice-danger {background-color: #FFCECE; border-left: 4px solid #dc3232; box-shadow: 0 1px 1px 0 rgba(0,0,0,.1); position:relative; z-index:50; margin-bottom: -48px; padding: 1px 12px;}';
                     //we create the style for closed
                     style.innerHTML += '.rss-theme-notice-closed {background-color: #fff; border-left: 4px solid #dc3232; box-shadow: 0 1px 1px 0 rgba(0,0,0,.1); margin: 0; padding: 1px 12px;}';
                     let levels = ".json_encode($this->risk_naming).";
@@ -789,7 +788,7 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
                             let level = levels[component.risk];
                             let text = '".__('Security: <-level->', 'really-simple-ssl')."';
                             text = text.replace('<-level->', level);
-                            console.log(level, text, levels);
+        
                             if (component.risk === 'h' || component.risk === 'c') {
                                 
                                 //we add the danger class
