@@ -675,6 +675,15 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
 			add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_theme_warning_scripts' ] );
 		}
 
+		private function getCurrentInstalledVersion(string $slug)
+		{
+			foreach ($this->workable_plugins as $plugin) {
+				if ($plugin['TextDomain'] === $slug) {
+					return $plugin['Version'];
+				}
+			}
+		}
+
 		public function enqueue_theme_warning_scripts( $hook ) {
 			//we get all components with vulnerabilities
 			$components = $this->get_components();
@@ -684,7 +693,7 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
                     let style = document.createElement('style');
                     let vulnerable_components = [" . implode( ',', array_map( function ( $component ) {
 					//we return slug and risk
-					return "{slug: '" . $component->slug . "', risk: '" . $this->get_highest_vulnerability( $component->vulnerabilities ) . "'}";
+					return "{slug: '" . $component->slug . "', version: '".$this->getCurrentInstalledVersion($component->slug)."', risk: '" . $this->get_highest_vulnerability( $component->vulnerabilities,  $this->getCurrentInstalledVersion($component->slug)) . "'}";
 				}, $components ) ) . "];
                     console.log(vulnerable_components);
                     //we create the style for warning
@@ -800,9 +809,11 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
 		 *
 		 * @return string
 		 */
-		private function get_highest_vulnerability( $vulnerabilities ): string {
+		private function get_highest_vulnerability( $vulnerabilities, $version = false ): string {
 			//we loop through the vulnerabilities and get the highest risk level
 			$highest_risk_level = 0;
+
+			//TODO: create logic for version after discussion with the team
 
 			foreach ( $vulnerabilities as $vulnerability ) {
 				if ( $vulnerability->rss_severity === null ) {
@@ -821,7 +832,6 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
 					return $key;
 				}
 			}
-
 			return 'l';
 		}
 
@@ -839,7 +849,6 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
 			//first we get all installed plugins
 			$installed_plugins = get_plugins();
 			$installed_themes  = wp_get_themes();
-
 			//we flatten the array
 
 			//we make the installed_themes look like the installed_plugins
@@ -905,6 +914,7 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
 				//we walk through the components array
 
 				$this->workable_plugins[ $key ] = $plugin;
+
 			}
 		}
 
