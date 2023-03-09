@@ -38,7 +38,7 @@ function scssPluginTask(cb) {
 exports.scss = scssPluginTask
 
 gulp.task('default', function () {
-	return
+    return
 });
 function jsTask(cb) {
   // compile js and minify
@@ -55,7 +55,7 @@ exports.js = jsTask
 
 function defaultTask(cb) {
   gulp.watch('./assets/css/**/*.scss', { ignoreInitial: false }, scssTask);
-    gulp.watch('./assets/css/**/*.scss', { ignoreInitial: false }, scssPluginTask);
+  gulp.watch('./assets/css/**/*.scss', { ignoreInitial: false }, scssPluginTask);
 //   gulp.watch('./assets/js/**/*.js', { ignoreInitial: false }, jsTask);
   spawn('npm', ['start'], { cwd: 'settings', stdio: 'inherit' })
   cb();

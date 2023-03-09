@@ -326,29 +326,6 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
 							echo '<a class="btn-vulnerable">' . __( 'Low-Risk', 'really-simple-ssl' ) . '</a>';
 							break;
 					}
-				} else {
-					include_once ABSPATH . 'wp-admin/includes/plugin-install.php';
-					//now we get the correct slug for the plugin
-					$plugin_data = get_plugin_data( WP_PLUGIN_DIR . '/' . $plugin_file );
-					$plugin_slug = $plugin_data['TextDomain'];
-
-					//we fetch the data from plugins api
-					$plugin_data = plugins_api( 'plugin_information', array( 'slug' => $plugin_slug ) ); //TODO: replace with security_api last_updated
-					if ( ! is_wp_error( $plugin_data ) ) {
-						if ( property_exists( $plugin_data, 'last_updated' ) && $plugin_data->last_updated !== '' ) {
-							//we calculate the time difference between now and the last update
-							$time_diff = time() - strtotime( $plugin_data->last_updated );
-							echo '<a>' . sprintf( __( 'Last update: %s days ago', 'really-simple-ssl' ), round( $time_diff / 86400 ) ) . '</a>';
-						} else {
-							//we show how long the plugin has been installed
-							$time_diff = time() - filemtime( WP_PLUGIN_DIR . '/' . $plugin_file );
-							echo '<a>' . sprintf( __( 'installed %s days ago', 'really-simple-ssl' ), round( $time_diff / 86400 ) ) . '</a>';
-						}
-					} else {
-						//we show how long the plugin has been installed
-						$time_diff = time() - filemtime( WP_PLUGIN_DIR . '/' . $plugin_file );
-						echo '<a>' . sprintf( __( 'installed %s days ago', 'really-simple-ssl' ), round( $time_diff / 86400 ) ) . '</a>';
-					}
 				}
 			}
 		}
