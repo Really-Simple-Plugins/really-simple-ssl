@@ -529,3 +529,37 @@ if ( !function_exists('rsssl_generated_by_rsssl')) {
 		return get_option( 'rsssl_le_certificate_generated_by_rsssl' );
 	}
 }
+
+/**
+ * Checks if a CAA DNS record is preventing the use of Let's Encrypt for the current site.
+ *
+ * @return bool Returns true if a CAA DNS record exists and does not allow Let's Encrypt, false otherwise.
+ */
+if ( ! function_exists( 'rsssl_caa_record_prevents_le' ) ) {
+	function rsssl_caa_record_prevents_le(): bool {
+		// Get DNS CAA records for site_url()
+		$caa_records = dns_get_record( parse_url( site_url(), PHP_URL_HOST ), DNS_CAA );
+
+		// If no CAA records found, return false
+		if ( empty( $caa_records ) ) {
+			return false;
+		}
+
+		// Check if the CAA record contains letsencrypt.org
+		$caa_contains_le = false;
+		foreach ( $caa_records as $caa_record ) {
+			if ( strpos( $caa_record['value'], 'letsencrypt.org' ) !== false ) {
+				$caa_contains_le = true;
+				break;
+			}
+		}
+
+		// If the CAA record is set, but does not contain letsencrypt.org, return true;
+		if ( ! $caa_contains_le ) {
+			return true;
+		}
+
+		// CAA record contains Let's Encrypt, generation allowed
+		return false;
+	}
+}
