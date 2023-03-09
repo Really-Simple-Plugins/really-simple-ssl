@@ -97,7 +97,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 
 == Changelog ==
 = 6.2.2 =
-* Fix: capability mismatch for a non administrator in multisite admin
+* Fix: capability mismatch for a non administrator in multisite admin, props @jg-visual
 
 = 6.2.1 =
 * Fix: race condition when activating SSL through wp-cli, because of upgrade script
