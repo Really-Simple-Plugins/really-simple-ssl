@@ -6,6 +6,7 @@ defined( 'ABSPATH' ) or die();
 
 //including the file storage class
 require_once( rsssl_path . 'library/FileStorage.php' );
+require_once( rsssl_path . 'library/VulnerabilityDataHandler.php' );
 
 /**
  * @package Really Simple SSL
@@ -104,16 +105,16 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
 				//if we are not in the SSL admin page, we add the admin notices.
 				add_action( 'current_screen', array( $self, 'show_admin_notices' ) );
 
-                //if a theme is installed, we force the components to be updated.
-                //we check if upgrader_process_complete is called, so we can reload the files.
-                add_action('upgrader_process_complete', array($self, 'reload_files_on_update'), 10, 2);
-                //After activation, we need to reload the files.
-                add_action('activate_plugin', array($self, 'reload_files_on_update'), 10, 2);
+				//if a theme is installed, we force the components to be updated.
+				//we check if upgrader_process_complete is called, so we can reload the files.
+				add_action( 'upgrader_process_complete', array( $self, 'reload_files_on_update' ), 10, 2 );
+				//After activation, we need to reload the files.
+				add_action( 'activate_plugin', array( $self, 'reload_files_on_update' ), 10, 2 );
 
-                //same goes for themes.
-                add_action('after_setup_theme', array($self, 'reload_files_on_update'), 10, 2);
+				//same goes for themes.
+				add_action( 'after_setup_theme', array( $self, 'reload_files_on_update' ), 10, 2 );
 
-                add_action('current_screen', array($self, 'show_inline_code'));
+				add_action( 'current_screen', array( $self, 'show_inline_code' ) );
 
 			}
 		}
@@ -413,8 +414,7 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
 					return;
 				}
 				$this->download_manifest();
-			}
-
+			};
 			//We check the core vulnerabilities and validate age and existence
 			if ( ! $this->validate_local_file( true ) ) {
 				//if the file is younger than 24 hours, we don't download it again.
@@ -434,15 +434,14 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
 			$this->cache_installed_plugins();
 		}
 
-        public function reload_files_on_update()
-        {
-            //if the file is not older than 10 minutes, we don't download it again.
-            if ( $this->get_file_stored_info( false, false ) > time() - 600 ) {
-                return;
-            }
-            $this->download_plugin_vulnerabilities();
-            $this->cache_installed_plugins();
-        }
+		public function reload_files_on_update() {
+			//if the file is not older than 10 minutes, we don't download it again.
+			if ( $this->get_file_stored_info( false, false ) > time() - 600 ) {
+				return;
+			}
+			$this->download_plugin_vulnerabilities();
+			$this->cache_installed_plugins();
+		}
 
 
 		/**
@@ -614,12 +613,14 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
 			foreach ( $installed_themes as $theme ) {
 				$theme = $theme->get( 'TextDomain' );
 				$url   = self::RSS_SECURITY_API . 'theme/' . $theme . '.json';
+
 				//if the plugin is not in the manifest, we skip it
 				if ( ! in_array( $theme, (array) $manifest ) ) {
 					continue;
 				}
 
 				$data = $this->download( $url );
+
 				if ( $data !== null ) {
 					$vulnerabilities[] = $data;
 				}
@@ -628,15 +629,15 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
 			//we make the installed_themes look like the installed_plugins
 			$installed_themes = array_map( function ( $theme ) {
 				return [
-					'Name' => $theme->get( 'Name' ),
-					'Slug' => $theme->get( 'TextDomain' ),
+					'Name'        => $theme->get( 'Name' ),
+					'Slug'        => $theme->get( 'TextDomain' ),
 					'description' => $theme->get( 'Description' ),
-					'Version' => $theme->get( 'Version' ),
-					'Author' => $theme->get( 'Author' ),
-					'AuthorURI' => $theme->get( 'AuthorURI' ),
-					'PluginURI' => $theme->get( 'ThemeURI' ),
-					'TextDomain' => $theme->get( 'TextDomain' ),
-					'RequiresWP' => $theme->get( 'RequiresWP' ),
+					'Version'     => $theme->get( 'Version' ),
+					'Author'      => $theme->get( 'Author' ),
+					'AuthorURI'   => $theme->get( 'AuthorURI' ),
+					'PluginURI'   => $theme->get( 'ThemeURI' ),
+					'TextDomain'  => $theme->get( 'TextDomain' ),
+					'RequiresWP'  => $theme->get( 'RequiresWP' ),
 					'RequiresPHP' => $theme->get( 'RequiresPHP' ),
 				];
 			}, $installed_themes );
@@ -673,107 +674,49 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
 
 		public function enable_feedback_in_theme() {
 			//Logic here for theme warning Create Callback and functions for these steps
-			# 1. Check if the theme is in the manifest
-			$theme    = wp_get_theme();
-			$manifest = $this->getManifest();
-			if ( ! in_array( $theme->get( 'TextDomain' ), (array) $manifest ) ) {
-				#end of the line if the theme is not in the manifest
-				return false;
-			}
-			# 2. Check if the theme is vulnerable
-			$components = $this->get_components();
-
-			$theme      = $theme->get( 'TextDomain' );
-
-			$vulnerable = false;
-			$closed    = false;
-
-
-			foreach ( $components as $component ) {
-				if ( $component->slug === $theme ) {
-					if ( count( $component->vulnerabilities ) > 0 ) {
-						$vulnerable = true;
-					}
-					if ( $component->closed ) {
-						$closed = true;
-					}
-				}
-			}
-			if ( ! $vulnerable && ! $closed) {
-				//well nothing is wrong with the theme so we can return false
-				return false;
-			}
-
-			# 5. If the theme is vulnerable and not closed, show the warning
-			if ( $vulnerable && ! $closed ) {
-				//we show the warning
-				add_action( 'current_screen', [ $this, 'show_theme_warning' ] );
-				return;
-			}
-
-			# 6. If the theme is closed, show the closed message
-			if ( $closed ) {
-				//we show the warning
-				add_action( 'current_screen', [ $this, 'show_theme_closed' ] );
-				return;
-			}
-
-			# 7. If the theme is vulnerable and closed, show the closed message
-			if ( $vulnerable && $closed ) {
-				//we show the warning
-				add_action( 'current_screen', [ $this, 'show_theme_closed' ] );
-				return;
-			}
-
+			//we only display the warning for the theme page
+			add_action( 'current_screen', [ $this, 'show_theme_warning' ] );
 		}
 
-		public function show_theme_warning() {
+		public function show_theme_warning( $hook ) {
 			$screen = get_current_screen();
-			$theme = wp_get_theme();
-			if ( $screen->id !== 'settings_page_really-simple-security' ) {
-				add_action( 'admin_notices', function() use ($theme) {
-					?>
-					<div class="notice notice-warning is-dismissible">
-						<p><?php echo sprintf( __( 'The theme %s is vulnerable to security issues. Please update the theme as soon as possible.', 'rss-security' ), $theme->get( 'Name' ) ); ?></p>
-					</div>
-					<?php
-				});
+
+			if ( $screen->id !== 'themes' ) {
+				return;
 			}
-            //we add warning scripts to themes
-            add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_theme_warning_scripts' ] );
+
+			//we add warning scripts to themes
+			add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_theme_warning_scripts' ] );
 
 		}
 
-        public function show_inline_code($hook)
-        {
-            if ( $hook !== 'themes.php' ) {
-                return;
-            }
-            //we add warning scripts to themes
-            add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_theme_warning_scripts' ] );
-        }
+		public function show_inline_code( $hook ) {
+			if ( $hook !== 'themes.php' ) {
+				return;
+			}
+			//we add warning scripts to themes
+			add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_theme_warning_scripts' ] );
+		}
 
-        public function enqueue_theme_warning_scripts($hook) {
-            if ( $hook !== 'themes.php' ) {
-                return;
-            }
-            //we get all components with vulnerabilities
-            $components = $this->get_components();
-            wp_enqueue_script( 'my-script', plugins_url( '../../scripts.js', __FILE__ ), array(), '1.0.0', true );
-            $inline_script = "
+		public function enqueue_theme_warning_scripts( $hook ) {
+			//we get all components with vulnerabilities
+			$components = $this->get_components();
+			wp_enqueue_script( 'my-script', plugins_url( '../../scripts.js', __FILE__ ), array(), '1.0.0', true );
+			$inline_script = "
                 jQuery(document).ready(function($) {
                     let style = document.createElement('style');
-                    let vulnerable_components = [".implode(',', array_map(function($component) {
-                       //we return slug and risk
-                        return "{slug: '".$component->slug."', risk: '".$this->get_highest_vulnerability($component->vulnerabilities)."'}";
-                    }, $components))."];
+                    let vulnerable_components = [" . implode( ',', array_map( function ( $component ) {
+					//we return slug and risk
+					return "{slug: '" . $component->slug . "', risk: '" . $this->get_highest_vulnerability( $component->vulnerabilities ) . "'}";
+				}, $components ) ) . "];
+                    console.log(vulnerable_components);
                     //we create the style for warning
                     style.innerHTML = '.rss-theme-notice-warning {background-color: #FFF6CE; border-left: 4px solid #ffb900; box-shadow: 0 1px 1px 0 rgba(0,0,0,.1); position:relative; z-index:50; margin-bottom: -48px; padding: 1px 12px;}';
                     //we create the style for danger
                     style.innerHTML += '.rss-theme-notice-danger {background-color: #FFCECE; border-left: 4px solid #dc3232; box-shadow: 0 1px 1px 0 rgba(0,0,0,.1); position:relative; z-index:50; margin-bottom: -48px; padding: 1px 12px;}';
                     //we create the style for closed
                     style.innerHTML += '.rss-theme-notice-closed {background-color: #fff; border-left: 4px solid #dc3232; box-shadow: 0 1px 1px 0 rgba(0,0,0,.1); margin: 0; padding: 1px 12px;}';
-                    let levels = ".json_encode($this->risk_naming).";
+                    let levels = " . json_encode( $this->risk_naming ) . ";
        
                     //we add the style to the head       
                     document.head.appendChild(style);
@@ -786,7 +729,7 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
                         if (theme_element.length > 0) {
                             //we check the risk
                             let level = levels[component.risk];
-                            let text = '".__('Security: <-level->', 'really-simple-ssl')."';
+                            let text = '" . __( 'Security: <-level->', 'really-simple-ssl' ) . "';
                             text = text.replace('<-level->', level);
         
                             if (component.risk === 'h' || component.risk === 'c') {
@@ -800,19 +743,20 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
                         });
                 });
             ";
-            wp_add_inline_script( 'my-script', $inline_script );
-        }
+			wp_add_inline_script( 'my-script', $inline_script );
+		}
+
 		public function show_theme_closed() {
 			$screen = get_current_screen();
-			$theme = wp_get_theme();
+			$theme  = wp_get_theme();
 			if ( $screen->id !== 'settings_page_really-simple-security' ) {
-				add_action( 'admin_notices', function() use ($theme) {
+				add_action( 'admin_notices', function () use ( $theme ) {
 					?>
 					<div class="notice notice-error is-dismissible">
 						<p><?php echo sprintf( __( 'The theme %s is closed for security issues. Please update the theme as soon as possible.', 'rss-security' ), $theme->get( 'Name' ) ); ?></p>
 					</div>
 					<?php
-				});
+				} );
 			}
 
 		}
@@ -835,6 +779,7 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
 			$active_components = [];
 			foreach ( $components as $component ) {
 				foreach ( $active_plugins as $active_plugin ) {
+
 					if ( $component->slug === $active_plugin['TextDomain'] ) {
 						//if the vulnerabilities are empty, we skip this component
 						if ( count( $component->vulnerabilities ) === 0 ) {
@@ -852,6 +797,7 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
 							}
 							//if the max_version is lower than the current version, we skip this vulnerability
 							if ( version_compare( $vulnerability->max_version, $active_plugin['Version'], '<' ) ) {
+
 								unset( $component->vulnerabilities[ $index ] );
 							}
 							//if the min_version is not null we check the following
@@ -880,11 +826,11 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
 		private function get_highest_vulnerability( $vulnerabilities ): string {
 			//we loop through the vulnerabilities and get the highest risk level
 			$highest_risk_level = 0;
+
 			foreach ( $vulnerabilities as $vulnerability ) {
 				if ( $vulnerability->rss_severity === null ) {
 					continue;
 				}
-
 				if ( ! isset( $this->risk_levels[ $vulnerability->rss_severity ] ) ) {
 					continue;
 				}
@@ -915,9 +861,45 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
 		public function cache_installed_plugins(): void {
 			//first we get all installed plugins
 			$installed_plugins = get_plugins();
+			$installed_themes  = wp_get_themes();
+
+			//we flatten the array
+
+			//we make the installed_themes look like the installed_plugins
+			$installed_themes = array_map( function ( $theme ) {
+				return [
+					'Name'        => $theme->get( 'Name' ),
+					'Slug'        => $theme->get( 'TextDomain' ),
+					'description' => $theme->get( 'Description' ),
+					'Version'     => $theme->get( 'Version' ),
+					'Author'      => $theme->get( 'Author' ),
+					'AuthorURI'   => $theme->get( 'AuthorURI' ),
+					'PluginURI'   => $theme->get( 'ThemeURI' ),
+					'TextDomain'  => $theme->get( 'TextDomain' ),
+					'RequiresWP'  => $theme->get( 'RequiresWP' ),
+					'RequiresPHP' => $theme->get( 'RequiresPHP' ),
+				];
+			}, $installed_themes );
+
+			//we add a column type to all values in the array
+			$installed_themes = array_map( function ( $theme ) {
+				$theme['type'] = 'theme';
+
+				return $theme;
+			}, $installed_themes );
+
+			//we add a column type to all values in the array
+			$installed_plugins = array_map( function ( $plugin ) {
+				$plugin['type'] = 'plugin';
+
+				return $plugin;
+			}, $installed_plugins );
+
+			//we merge the two arrays
+			$installed_plugins = array_merge( $installed_plugins, $installed_themes );
+
 			//now we get the components from the file
 			$components = $this->get_components();
-
 
 			//We loop through plugins and check if they are in the components array
 			foreach ( $installed_plugins as $key => $plugin ) {
@@ -947,7 +929,6 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
 
 				$this->workable_plugins[ $key ] = $plugin;
 			}
-
 		}
 
 
