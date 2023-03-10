@@ -7,8 +7,6 @@ import useFields from "../../Settings/FieldsData";
 const WPVul = (props) => {
     const {
         vulnerabilities,
-        HighestRisk,
-        lastChecked,
         vulnerabilityScore,
         vulEnabled,
         updates,
@@ -19,7 +17,6 @@ const WPVul = (props) => {
     let featuredFields = fields.filter(field => field.new_features_block);
     useEffect(() => {
         fetchVulnerabilities().then(r => {
-            console.log(r);
         });
     }, []);
 
@@ -30,7 +27,8 @@ const WPVul = (props) => {
     }
     const hardening = featuredFields.filter(field => field.value === 0);
     let vulClass = 'rsssl-inactive';
-    let badgeVulStyle, badgeUpdateStyle = 'rsp-default';
+    let badgeVulStyle = 'rsp-default';
+    let badgeUpdateStyle = 'rsp-default';
     if (vulEnabled) {
         //now we calculate the score
         let score = vulnerabilityScore();
@@ -63,11 +61,7 @@ const WPVul = (props) => {
             vulClass = 'rsssl-error';
         }
 
-
-
     }
-
-
 
     const getStyles = () => {
         let progress = 0;
@@ -105,17 +99,18 @@ const WPVul = (props) => {
     }
 
     const checkUpdates = () => {
+        let icon = 'circle-check';
+        let iconColor = 'green';
+        if (updates > 0) {
+            icon = 'info';
+            iconColor = 'yellow';
+        }
+        if (updates > 5) {
+            icon = 'circle-times';
+            iconColor = 'red';
+        }
         if (updates) {
-            let icon = 'circle-check';
-            let iconColor = 'green';
-            if (updates > 0) {
-                icon = 'info';
-                iconColor = 'yellow';
-            }
-            if (updates > 5) {
-                icon = 'circle-times';
-                iconColor = 'red';
-            }
+
             return (
                 <>
                     <div className="rsssl-details">
@@ -127,15 +122,37 @@ const WPVul = (props) => {
                     </div>
                 </>
             )
+        } else {
+            return (
+                <>
+                    <div className="rsssl-details">
+                        <div className="rsssl-detail-icon"><Icon name={icon} color={iconColor}/></div>
+                        <div className="rsssl-detail">
+                            {__("You have %s updates pending", "really-simple-ssl").replace("%s", updates)}
+                        </div>
+                    </div>
+                </>
+            )
+
         }
     }
 
     const checkVul = () => {
+        let icon = 'circle-check';
+        let iconColor = 'green';
+        if (updates > 0) {
+            icon = 'info';
+            iconColor = 'yellow';
+        }
+        if (updates > 5) {
+            icon = 'circle-times';
+            iconColor = 'red';
+        }
         if (vulnerabilities) {
             return (
                 <>
                     <div className="rsssl-details">
-                        <div className="rsssl-detail-icon"><Icon name="circle-times" color='red'/></div>
+                        <div className="rsssl-detail-icon"><Icon name={icon} color={iconColor}/></div>
                         <div className="rsssl-detail">
                             <p>{__("You have %s vulnerabilities", "really-simple-ssl").replace("%s", vulnerabilities)}
                                 <a style={linkStyle} href={'#'}
@@ -145,7 +162,19 @@ const WPVul = (props) => {
                     </div>
                 </>
             )
+        } else {
+            return (
+                <>
+                    <div className="rsssl-details">
+                        <div className="rsssl-detail-icon"><Icon name="circle-check" color='green'/></div>
+                        <div className="rsssl-detail">
+                            {__("You have %s vulnerabilities", "really-simple-ssl").replace("%s", vulnerabilities)}
+                        </div>
+                    </div>
+                </>
+            )
         }
+
     }
 
     const linkStyle = {
@@ -153,7 +182,7 @@ const WPVul = (props) => {
     }
     const checkHardening = () => {
         //
-        if (!hardening.length) {
+        if (hardening.length) {
             let icon = 'circle-check';
             let iconColor = 'green';
             if (hardening.length > 0) {
@@ -195,7 +224,8 @@ const WPVul = (props) => {
                         {<span><Icon color={'red'} name="file-search"></Icon></span>}
                         <span>
                             <h2 className={"rsssl-number"}>{vulEnabled ? vulnerabilities : '-'}</h2>
-                        <span className={"rsssl-badge " + badgeVulStyle}>{__('Vulnerabilities', 'really-simple-ssl')}</span>
+                        <span
+                            className={"rsssl-badge " + badgeVulStyle}>{__('Vulnerabilities', 'really-simple-ssl')}</span>
                         </span>
                     </div>
                     <div className={"rsssl-ssl-test-information"}>

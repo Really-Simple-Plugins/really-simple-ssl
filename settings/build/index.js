@@ -16454,8 +16454,6 @@ __webpack_require__.r(__webpack_exports__);
 const WPVul = props => {
   const {
     vulnerabilities,
-    HighestRisk,
-    lastChecked,
     vulnerabilityScore,
     vulEnabled,
     updates,
@@ -16468,9 +16466,7 @@ const WPVul = props => {
   } = (0,_Settings_FieldsData__WEBPACK_IMPORTED_MODULE_5__["default"])();
   let featuredFields = fields.filter(field => field.new_features_block);
   (0,react__WEBPACK_IMPORTED_MODULE_4__.useEffect)(() => {
-    fetchVulnerabilities().then(r => {
-      console.log(r);
-    });
+    fetchVulnerabilities().then(r => {});
   }, []);
   if (!dataLoaded) {
     //we do not have the data yet, so we return null
@@ -16478,8 +16474,8 @@ const WPVul = props => {
   }
   const hardening = featuredFields.filter(field => field.value === 0);
   let vulClass = 'rsssl-inactive';
-  let badgeVulStyle,
-    badgeUpdateStyle = 'rsp-default';
+  let badgeVulStyle = 'rsp-default';
+  let badgeUpdateStyle = 'rsp-default';
   if (vulEnabled) {
     //now we calculate the score
     let score = vulnerabilityScore();
@@ -16537,17 +16533,17 @@ const WPVul = props => {
     }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Enable vulnerability scanning for more information", "really-simple-ssl"))));
   };
   const checkUpdates = () => {
+    let icon = 'circle-check';
+    let iconColor = 'green';
+    if (updates > 0) {
+      icon = 'info';
+      iconColor = 'yellow';
+    }
+    if (updates > 5) {
+      icon = 'circle-times';
+      iconColor = 'red';
+    }
     if (updates) {
-      let icon = 'circle-check';
-      let iconColor = 'green';
-      if (updates > 0) {
-        icon = 'info';
-        iconColor = 'yellow';
-      }
-      if (updates > 5) {
-        icon = 'circle-times';
-        iconColor = 'red';
-      }
       return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
         className: "rsssl-details"
       }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -16561,17 +16557,38 @@ const WPVul = props => {
         href: "#",
         style: linkStyle
       }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Update now', 'really-simple-ssl')))));
+    } else {
+      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+        className: "rsssl-details"
+      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+        className: "rsssl-detail-icon"
+      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_1__["default"], {
+        name: icon,
+        color: iconColor
+      })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+        className: "rsssl-detail"
+      }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("You have %s updates pending", "really-simple-ssl").replace("%s", updates))));
     }
   };
   const checkVul = () => {
+    let icon = 'circle-check';
+    let iconColor = 'green';
+    if (updates > 0) {
+      icon = 'info';
+      iconColor = 'yellow';
+    }
+    if (updates > 5) {
+      icon = 'circle-times';
+      iconColor = 'red';
+    }
     if (vulnerabilities) {
       return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
         className: "rsssl-details"
       }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
         className: "rsssl-detail-icon"
       }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_1__["default"], {
-        name: "circle-times",
-        color: "red"
+        name: icon,
+        color: iconColor
       })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
         className: "rsssl-detail"
       }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("You have %s vulnerabilities", "really-simple-ssl").replace("%s", vulnerabilities), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
@@ -16579,6 +16596,17 @@ const WPVul = props => {
         href: '#',
         target: "_blank"
       }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Read more', 'really-simple-ssl'))))));
+    } else {
+      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+        className: "rsssl-details"
+      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+        className: "rsssl-detail-icon"
+      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_1__["default"], {
+        name: "circle-check",
+        color: "green"
+      })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+        className: "rsssl-detail"
+      }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("You have %s vulnerabilities", "really-simple-ssl").replace("%s", vulnerabilities))));
     }
   };
   const linkStyle = {
@@ -16586,7 +16614,7 @@ const WPVul = props => {
   };
   const checkHardening = () => {
     //
-    if (!hardening.length) {
+    if (hardening.length) {
       let icon = 'circle-check';
       let iconColor = 'green';
       if (hardening.length > 0) {
