@@ -1379,11 +1379,13 @@ function rsssl_blocks() {
 		],
         [
             'id'       => 'wpvul',
-            'controls' => [
-                'type' => 'html',
-                'data' => __( "Powered by WPVulnerability", 'really-simple-ssl' ),
-            ],
-            'title'    => __( "Vulnerabilities", 'really-simple-ssl' ),
+//            'controls' => [
+//                'type' => 'html',
+//                'data' => __( "Powered by WPVulnerability", 'really-simple-ssl' ),
+//            ],
+            'title'    => rsssl_get_option('enable_vulnerability_scanner')?
+                __( "Vulnerabilities", 'really-simple-ssl' )
+                : __( "Hardening", 'really-simple-ssl' ),
             'content'  => [ 'type' => 'react', 'data' => 'WPVul' ],
             'footer'   => [ 'type' => 'react', 'data' => 'WPVulFooter' ],
             'class'    => '',

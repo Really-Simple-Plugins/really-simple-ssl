@@ -35,6 +35,8 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
 
 		private $notices = [];
 
+        public $update_count = 0;
+
 		private $admin_notices = [];
 		private $risk_naming = [
 			'l' => 'Low-Risk',
@@ -204,28 +206,35 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
 		 */
 		public static function get_stats( $data ): array {
 			$self = new self();
+            $vulEnabled = false;
+
 
 			$vulEnabled = rsssl_get_option( 'enable_vulnerability_scanner' );
-			$self->cache_installed_plugins();
+            $updates = 0;
+            $vulnerabilities = [];
+            if ( $vulEnabled ) {
+                $self->cache_installed_plugins();
+                //now we only get the data we need.
+                $vulnerabilities = array_filter( $self->workable_plugins, function ( $plugin ) {
+                    if ( isset( $plugin['vulnerable'] ) && $plugin['vulnerable'] ) {
+                        return $plugin;
+                    }
+                } );
 
-			//now we only get the data we need.
-			$vulnerabilities = array_filter( $self->workable_plugins, function ( $plugin ) {
-				if ( isset( $plugin['vulnerable'] ) && $plugin['vulnerable'] ) {
-					return $plugin;
-				}
-			} );
 
-			$updates = 0;
-			//now we fetch all plugins that have an update available.
-			foreach ( $self->workable_plugins as $plugin ) {
-				if ( isset( $plugin['update_available'] ) && $plugin['update_available'] ) {
-					$updates ++;
-				}
-			}
+                //now we fetch all plugins that have an update available.
+                foreach ( $self->workable_plugins as $plugin ) {
+                    if ( isset( $plugin['update_available'] ) && $plugin['update_available'] ) {
+                        $updates ++;
+                    }
+                }
+            }
+
 
 			$stats = [
-				'vulnerabilities' => count( $vulnerabilities ),
-				'updates'         => $updates,
+				'vulnerabilities' => count($vulnerabilities),
+                'vulList'         => $vulnerabilities,
+				'updates'         => $self->getAllUpdatesCount(),
 				'lastChecked'     => date( 'd / m / Y @ H:i', $self->get_file_stored_info() ),
 				'vulEnabled'      => $vulEnabled,
 			];
@@ -992,11 +1001,11 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
 		/* Private section for API's */
 
 		public function getAllUpdatesCount(): int {
-			$updates = get_plugin_updates();
-			$updates = array_merge( $updates, get_theme_updates() );
-			$updates = array_merge( $updates, get_core_updates() );
+			$updates = wp_get_update_data();
+            //we only want core, plugins and themes
+            $updates = array_slice( $updates, 0, 3 );
 
-			return count( $updates );
+			return array_sum( $updates );
 		}
 
 
@@ -1037,7 +1046,7 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
 
 			return FileStorage::GetFile( $file );
 		}
-	}
+    }
 
 	//we initialize the class
 	add_action( 'admin_init', array( rsssl_vulnerabilities::class, 'init' ) );
