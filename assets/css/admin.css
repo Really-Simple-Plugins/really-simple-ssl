@@ -781,7 +781,7 @@
 
 .rsssl .rsssl-bullet.rsp-blue-yellow {
     background: var(--rsp-blue);
-    background: linear-gradient(77deg, rgb(41, 182, 246) 0%, rgb(41, 182, 246) 30%, rgb(244, 191, 62) 70%, rgb(244, 191, 62) 100%);
+    background: linear-gradient(77deg, rgb(0,159,255) 0%, rgb(0,159,255) 30%, rgb(244, 191, 62) 70%, rgb(244, 191, 62) 100%);
     animation: gradient 2s ease infinite;
     background-size: 200% 200%;
 }

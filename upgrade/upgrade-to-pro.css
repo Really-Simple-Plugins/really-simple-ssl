@@ -27,8 +27,8 @@
   --rsp-pink: #E35899;
   --rsp-orange: #f39c12;
   --rsp-yellow-faded: rgba(244, 191, 62, 0.1);
-  --rsp-blue-faded: rgba(41, 182, 246, 0.1);
-  --rsp-dark-blue-faded: rgba(41, 182, 246, 0.1);
+  --rsp-blue-faded: rgba(0,159,255, 0.1);
+  --rsp-dark-blue-faded: rgba(0,159,255, 0.1);
   --rsp-green-faded: rgba(46, 138, 55, 0.1);
   --rsp-red-faded: rgba(215, 38, 61, 0.1);
   --rsp-pink-faded: rgba(227, 88, 153, 0.1);

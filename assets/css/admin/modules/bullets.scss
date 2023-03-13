@@ -28,7 +28,7 @@
 	}
 	&.rsp-blue-yellow {
 	  background: var(--rsp-blue);
-	  background: linear-gradient(77deg, rgba(41, 182, 246, 1) 0%, rgba(41, 182, 246, 1) 30%, rgba(244, 191, 62, 1) 70%, rgba(244, 191, 62, 1) 100%);
+	  background: linear-gradient(77deg, rgba(0,159,255, 1) 0%, rgba(0,159,255, 1) 30%, rgba(244, 191, 62, 1) 70%, rgba(244, 191, 62, 1) 100%);
 	  animation: gradient 2s ease infinite;
 	  background-size: 200% 200%;
 	}
