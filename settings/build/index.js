@@ -16573,13 +16573,16 @@ const WPVul = props => {
   const checkVul = () => {
     let icon = 'circle-check';
     let iconColor = 'green';
-    if (updates > 0) {
+    if (vulnerabilityScore() > 0) {
       icon = 'info';
       iconColor = 'yellow';
     }
-    if (updates > 5) {
+    if (vulnerabilityScore() >= 5) {
       icon = 'circle-times';
       iconColor = 'red';
+    }
+    if (!vulEnabled) {
+      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null);
     }
     if (vulnerabilities) {
       return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {

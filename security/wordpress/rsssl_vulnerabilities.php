@@ -95,6 +95,7 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
 				//we cache the plugins in the class. Since we need quite some info from the plugins.
 				$self->cache_installed_plugins();
 
+
 				//we check the rsssl options if the enable_feedback_in_plugin is set to true
 				if ( rsssl_get_option( 'enable_feedback_in_plugin' ) ) {
 					// we enable the feedback in the plugin
@@ -334,6 +335,29 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
 						default:
 							echo '<a class="btn-vulnerable">' . __( 'Low-Risk', 'really-simple-ssl' ) . '</a>';
 							break;
+					}
+				} else {
+					include_once ABSPATH . 'wp-admin/includes/plugin-install.php';
+					//now we get the correct slug for the plugin
+					$plugin_data = get_plugin_data( WP_PLUGIN_DIR . '/' . $plugin_file );
+					$plugin_slug = $plugin_data['TextDomain'];
+
+					//we fetch the data from plugins api
+					$plugin_data = plugins_api( 'plugin_information', array( 'slug' => $plugin_slug ) ); //TODO: replace with security_api last_updated
+					if ( ! is_wp_error( $plugin_data ) ) {
+						if ( property_exists( $plugin_data, 'last_updated' ) && $plugin_data->last_updated !== '' ) {
+							//we calculate the time difference between now and the last update
+							$time_diff = time() - strtotime( $plugin_data->last_updated );
+							echo '<a>' . sprintf( __( 'Last update: %s days ago', 'really-simple-ssl' ), round( $time_diff / 86400 ) ) . '</a>';
+						} else {
+							//we show how long the plugin has been installed
+							$time_diff = time() - filemtime( WP_PLUGIN_DIR . '/' . $plugin_file );
+							echo '<a>' . sprintf( __( 'installed %s days ago', 'really-simple-ssl' ), round( $time_diff / 86400 ) ) . '</a>';
+						}
+					} else {
+						//we show how long the plugin has been installed
+						$time_diff = time() - filemtime( WP_PLUGIN_DIR . '/' . $plugin_file );
+						echo '<a>' . sprintf( __( 'installed %s days ago', 'really-simple-ssl' ), round( $time_diff / 86400 ) ) . '</a>';
 					}
 				}
 			}
@@ -586,14 +610,14 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
 				$url    = self::RSS_SECURITY_API . 'plugin/' . $plugin . '.json';
 				//if the plugin is not in the manifest, we skip it
 				if ( ! in_array( $plugin, (array) $manifest ) ) {
-					continue;
+                    continue;
 				}
-
 				$data = $this->download( $url );
 				if ( $data !== null ) {
 					$vulnerabilities[] = $data;
 				}
 			}
+
 			//we also do it for all the installed themes
 			$installed_themes = wp_get_themes();
 			foreach ( $installed_themes as $theme ) {
@@ -900,6 +924,9 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
 				if ( ! empty( $components ) ) {
 					foreach ( $components as $component ) {
 						if ( $plugin['TextDomain'] === $component->slug ) {
+                            if ($component->slug === 'test-plugin-c') {
+                                dd($plugin, $component);
+                            }
 							if ( ! empty( $component->vulnerabilities ) ) {
 								$plugin['vulnerable']   = true;
 								$plugin['risk_level']   = $this->get_highest_vulnerability( $component->vulnerabilities );
@@ -1043,7 +1070,6 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
 			if ( ! file_exists( $file ) ) {
 				return false;
 			}
-
 			return FileStorage::GetFile( $file );
 		}
     }

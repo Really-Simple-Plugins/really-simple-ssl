@@ -140,13 +140,19 @@ const WPVul = (props) => {
     const checkVul = () => {
         let icon = 'circle-check';
         let iconColor = 'green';
-        if (updates > 0) {
+        if (vulnerabilityScore() > 0) {
             icon = 'info';
             iconColor = 'yellow';
         }
-        if (updates > 5) {
+        if (vulnerabilityScore() >= 5) {
             icon = 'circle-times';
             iconColor = 'red';
+        }
+        if(!vulEnabled) {
+            return (
+                <>
+                    </>
+            )
         }
         if (vulnerabilities) {
             return (
