@@ -21076,17 +21076,27 @@ const RiskComponent = props => {
   const {
     riskData,
     dataLoaded,
+    dataVulLoaded,
+    vulnerabilities,
     fetchRiskData,
+    fetchVulnerabilities,
     setData,
     updateRiskData
   } = (0,_RiskData__WEBPACK_IMPORTED_MODULE_2__["default"])();
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     fetchRiskData();
+    fetchVulnerabilities();
   }, []);
 
   //we only proceed if the data is loaded
   if (!dataLoaded) {
     return null;
+  }
+  if (dataVulLoaded) {
+    //we add a help on the left side
+    (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_6__.dispatch)('core/notices').createNotice('info', 'This is a test', {
+      isDismissible: true
+    });
   }
 
   //we create the columns
@@ -21180,6 +21190,8 @@ __webpack_require__.r(__webpack_exports__);
 
 const UseRiskData = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, get) => ({
   riskData: [],
+  vulnerabilities: [],
+  dataVulLoaded: false,
   dataLoaded: false,
   setData: data => set({
     riskData: data,
@@ -21210,6 +21222,24 @@ const UseRiskData = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, get) =
       set({
         riskData: riskData,
         dataLoaded: true
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  },
+  //we fetch the vulnerability data
+  /*
+  * Functions
+   */
+  fetchVulnerabilities: async () => {
+    let data = {};
+    data.action = 'get';
+    try {
+      const fetched = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.vulGetAction('api_call_listener', data);
+      set({
+        vulnerabilities: fetched.data.vulList,
+        dataVulLoaded: true,
+        vulEnabled: fetched.data.vulEnabled
       });
     } catch (e) {
       console.error(e);

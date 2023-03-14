@@ -8,15 +8,26 @@ import {__} from "@wordpress/i18n";
 
 const RiskComponent = (props) => {
     //first we put the data in a state
-    const {riskData, dataLoaded, fetchRiskData, setData, updateRiskData} = UseRiskData();
-
+    const {riskData, dataLoaded, dataVulLoaded, vulnerabilities, fetchRiskData, fetchVulnerabilities, setData, updateRiskData} = UseRiskData();
     useEffect(() => {
         fetchRiskData();
+        fetchVulnerabilities();
     }, []);
 
     //we only proceed if the data is loaded
     if (!dataLoaded) {
         return null;
+    }
+    if (dataVulLoaded) {
+
+        //we add a help on the left side
+        dispatch('core/notices').createNotice(
+            'info',
+            'This is a test',
+            {
+                isDismissible: true,
+            },
+        );
     }
 
     //we create the columns
