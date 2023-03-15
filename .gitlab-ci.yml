@@ -1,7 +1,5 @@
 stages:
   - test
-rules:
-  - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
 
 # Select what we should cache
 cache:
@@ -78,6 +76,8 @@ test:php7.4:
   image: php:7.4
   script:
     - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
 
 # We test PHP7.4 with multisite
 test:php7.4:multisite:
@@ -86,12 +86,16 @@ test:php7.4:multisite:
   image: php:7.4
   script:
     - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
 
 # We test PHP8.0
 test:php8.0:
   image: php:8.0
   script:
     - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover --colors=never
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
 
 # We test PHP8 with multisite
 test:php8.0:multisite:
@@ -100,12 +104,16 @@ test:php8.0:multisite:
   image: php:8.0
   script:
     - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
 
 # We test PHP8.1
 test:php8.1:
   image: php:8.1
   script:
     - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover --colors=never
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
 
 # We test PHP8.1 with multisite
 test:php8.1:multisite:
@@ -114,3 +122,5 @@ test:php8.1:multisite:
   image: php:8.1
   script:
     - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
