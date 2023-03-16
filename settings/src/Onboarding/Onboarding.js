@@ -9,7 +9,7 @@ import useFields from "../Settings/FieldsData";
 import useOnboardingData from "./OnboardingData";
 
 const Onboarding = (props) => {
-    const { fetchFieldsData, updateField, updateFieldsData} = useFields();
+    const { fetchFieldsData, updateField, updateFieldsData, getFieldValue} = useFields();
     const {
         dismissModal,
         actionHandler,
@@ -17,6 +17,7 @@ const Onboarding = (props) => {
         error,
         certificateValid,
         networkwide,
+        sslEnabled,
         dataLoaded,
         processing,
         setProcessing,
@@ -71,6 +72,14 @@ const Onboarding = (props) => {
 
     useEffect( async () => {
         await getSteps(false);
+        if ( dataLoaded && sslEnabled && currentStepIndex===0) {
+            setCurrentStepIndex(1)
+        }
+
+        if (getFieldValue('notifications_email_address') !== '' && email==='') {
+            setEmail(getFieldValue('notifications_email_address'))
+        }
+
     }, [])
 
     //ensure all fields are updated, and progress is retrieved again
@@ -242,7 +251,7 @@ const Onboarding = (props) => {
                         { currentStep.id === 'email'&&
                             <>
                                 <div>
-                                    <input type="email" placeholder={__("Your email address", "really-simple-ssl")} onChange={(e) => setEmail(e.target.value)} />
+                                    <input type="email" value={email} placeholder={__("Your email address", "really-simple-ssl")} onChange={(e) => setEmail(e.target.value)} />
                                 </div><div>
                                 <label><input onChange={ (e) => setIncludeTips(e.target.checked)} type="checkbox" checked={includeTips} />{__("Include 6 Tips & Tricks to get started with Really Simple SSL.","really-simple-ssl")}&nbsp;<a href="https://really-simple-ssl.com" target="_blank">{__("Privacy Statement", "really-simple-ssl")}</a></label>
                                 </div><div>

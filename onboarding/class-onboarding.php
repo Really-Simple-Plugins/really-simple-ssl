@@ -102,7 +102,6 @@ class rsssl_onboarding {
 				}
 
 				$this->signup_for_mailinglist($email);
-
 				$response = [
 					'success' => true,
 				];
@@ -115,10 +114,8 @@ class rsssl_onboarding {
 					'next_action' => 'none',
 					'success' => true,
 				];
-				break;
-			default:
-				return $response;
 		}
+		$response['request_success'] = true;
 		return $response;
 	}
 
@@ -202,7 +199,7 @@ class rsssl_onboarding {
 		return [
 			"request_success" =>true,
 			"steps" => $steps,
-			"ssl_enabled" => false,//rsssl_get_option("ssl_enabled"),
+			"ssl_enabled" => rsssl_get_option("ssl_enabled"),
 			"ssl_detection_overridden" => get_option('rsssl_ssl_detection_overridden'),
 			'certificate_valid' => RSSSL()->certificate->is_valid(),
 			"networkwide" => is_multisite() && rsssl_is_networkwide_active(),
