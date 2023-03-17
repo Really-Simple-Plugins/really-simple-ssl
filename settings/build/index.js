@@ -16554,7 +16554,7 @@ const WPVul = props => {
       })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
         className: "rsssl-detail"
       }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("You have %s updates pending", "really-simple-ssl").replace("%s", updates), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-        href: "#",
+        href: "/wp-admin/plugins.php?plugin_status=upgrade",
         style: linkStyle
       }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Update now', 'really-simple-ssl')))));
     } else {

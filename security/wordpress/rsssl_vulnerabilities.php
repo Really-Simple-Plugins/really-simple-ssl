@@ -427,7 +427,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 if ($this->get_file_stored_info(true) > time() - 86400) {
                     return;
                 }
-                $this->download_core_vulnerabilities();
+               // $this->download_core_vulnerabilities();
             }
 
             //We check the plugin vulnerabilities and validate age and existence
@@ -603,6 +603,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
          */
         protected function download_plugin_vulnerabilities(): void
         {
+
             //we get all the installed plugins
             $installed_plugins = get_plugins();
             //first we get the manifest file
@@ -620,7 +621,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
                     $vulnerabilities[] = $data;
                 }
             }
-
             //we also do it for all the installed themes
             $installed_themes = wp_get_themes();
             foreach ($installed_themes as $theme) {
@@ -657,7 +657,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
             //we merge $installed_plugins and $installed_themes
             $installed_plugins = array_merge($installed_plugins, $installed_themes);
-
             //we filter the vulnerabilities
             $vulnerabilities = $this->filter_active_components($vulnerabilities, $installed_plugins);
             $this->store_file($vulnerabilities);
@@ -799,40 +798,17 @@ if (!class_exists("rsssl_vulnerabilities")) {
             $active_components = [];
             foreach ($components as $component) {
                 foreach ($active_plugins as $active_plugin) {
-
-                    if ($component->slug === $active_plugin['TextDomain']) {
-                        //if the vulnerabilities are empty, we skip this component
-                        if (count($component->vulnerabilities) === 0) {
-                            //first we check if the component is closed.
-                            if ($component->closed !== true) {
-                                //nothing is closed, we skip this component
-                                continue;
-                            }
+                    // new rework for logic
+                    if (isset($component->slug) && $component->slug === $active_plugin['TextDomain']) {
+                        //now we filter out the relevant vulnerabilities
+                        $component->vulnerabilities = $this->filter_vulnerabilities($component->vulnerabilities, $active_plugin['Version']);
+                        //if we have vulnerabilities, we add the component to the active components or when the plugin is closed
+                        if (count($component->vulnerabilities) > 0 || $component->status === 'closed') {
+                            $active_components[] = $component;
                         }
-                        //now we loop through the vulnerabilities of the component
-                        foreach ($component->vulnerabilities as $index => $vulnerability) {
-                            //if the max_version is null, we skip this vulnerability
-                            if ($vulnerability->max_version === null) {
-                                unset($component->vulnerabilities[$index]);
-                            }
-                            //if the max_version is lower than the current version, we skip this vulnerability
-                            if (version_compare($vulnerability->max_version, $active_plugin['Version'], '<')) {
-
-                                unset($component->vulnerabilities[$index]);
-                            }
-                            //if the min_version is not null we check the following
-                            if ($vulnerability->min_version !== null) {
-                                //if the min_version is higher than the current version, we skip this vulnerability
-                                if (version_compare($vulnerability->min_version, $active_plugin['Version'], '>')) {
-                                    unset($component->vulnerabilities[$index]);
-                                }
-                            }
-                        }
-                        $active_components[] = $component;
                     }
                 }
             }
-
             return $active_components;
         }
 
@@ -849,14 +825,14 @@ if (!class_exists("rsssl_vulnerabilities")) {
             $highest_risk_level = 0;
 
             foreach ($vulnerabilities as $vulnerability) {
-                if ($vulnerability->rss_severity === null) {
+                if ($vulnerability->severity === null) {
                     continue;
                 }
-                if (!isset($this->risk_levels[$vulnerability->rss_severity])) {
+                if (!isset($this->risk_levels[$vulnerability->severity])) {
                     continue;
                 }
-                if ($this->risk_levels[$vulnerability->rss_severity] > $highest_risk_level) {
-                    $highest_risk_level = $this->risk_levels[$vulnerability->rss_severity];
+                if ($this->risk_levels[$vulnerability->severity] > $highest_risk_level) {
+                    $highest_risk_level = $this->risk_levels[$vulnerability->severity];
                 }
             }
             //we now loop through the risk levels and return the highest one
@@ -936,15 +912,9 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 if (!empty($components)) {
                     foreach ($components as $component) {
                         if ($plugin['TextDomain'] === $component->slug) {
-                            if ($component->slug === 'test-plugin-c') {
-                                dd($plugin, $component);
-                            }
                             if (!empty($component->vulnerabilities)) {
                                 $plugin['vulnerable'] = true;
                                 $plugin['risk_level'] = $this->get_highest_vulnerability($component->vulnerabilities);
-                                $plugin['closed'] = $component->closed;
-                                $plugin['quarantine'] = $component->quarantine;
-                                $plugin['force_update'] = $component->force_update;
                                 $plugin['file'] = $key;
                             }
                         }
@@ -1089,6 +1059,31 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 return false;
             }
             return FileStorage::GetFile($file);
+        }
+
+        private function filter_vulnerabilities($vulnerabilities, $Version): array
+        {
+            $filtered_vulnerabilities = array();
+            foreach ($vulnerabilities as $vulnerability) {
+                //if fixed_in value is Not fixed we
+                if ($vulnerability->fixed_in !== 'not fixed') {
+                    if (version_compare($Version, $vulnerability->fixed_in, '<')) {
+                        $filtered_vulnerabilities[] = $vulnerability;
+                    }
+                } else {
+                    //we have the fields version_from and version_to and their needed operators
+                    $version_from = $vulnerability->version_from;
+                    $version_to = $vulnerability->version_to;
+                    $operator_from = $vulnerability->operator_from;
+                    $operator_to = $vulnerability->operator_to;
+                    //we now check if the version is between the two versions
+                    if (version_compare($Version, $version_from, $operator_from) && version_compare($Version, $version_to, $operator_to)) {
+                        $filtered_vulnerabilities[] = $vulnerability;
+                    }
+                }
+
+            }
+            return $filtered_vulnerabilities;
         }
     }
 

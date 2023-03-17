@@ -117,7 +117,7 @@ const WPVul = (props) => {
                         <div className="rsssl-detail-icon"><Icon name={icon} color={iconColor}/></div>
                         <div className="rsssl-detail">
                             {__("You have %s updates pending", "really-simple-ssl").replace("%s", updates)}
-                            <a href={"#"} style={linkStyle}>{__('Update now', 'really-simple-ssl')}</a>
+                            <a href={"/wp-admin/plugins.php?plugin_status=upgrade"} style={linkStyle}>{__('Update now', 'really-simple-ssl')}</a>
                         </div>
                     </div>
                 </>
