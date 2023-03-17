@@ -765,7 +765,7 @@ function rsssl_fields( $load_values = true ) {
                 'label' => 'default',
                 'url'   => 'https://really-simple-ssl.com/definition/what-are-hardening-features/',
                 'title' => __( "About Vulnerabilities", 'really-simple-ssl' ),
-                'text'  => __( 'Really Simple SSL will collect information about vulnerable software components from our central database (Powered by WPVulnerability [link: https:://vulnerability.wpsysadmin.com]) Anonymous information about vulnerable components (that cannot be linked to your website) will be transmitted to Really Simple SSL for the purpose of statistical analysis. For more information read the Privacy Statement.', 'really-simple-ssl' ),
+                'text'  => __( 'Really Simple SSL will collect information about vulnerable software components from our central database ( <strong><a target="_blank" href="https:://vulnerability.wpsysadmin.com">Powered by WPVulnerability</a></strong>  ) Anonymous information about vulnerable components (that cannot be linked to your website) will be transmitted to Really Simple SSL for the purpose of statistical analysis. For more information read the Privacy Statement.', 'really-simple-ssl' ),
             ],
         ],
         [

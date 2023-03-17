@@ -129,7 +129,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
         /**
          * Callback to display admin notices.
-         * TODO: mimplement logic suggested by rogier
+         * TODO: implement logic suggested by rogier
          * @return void
          */
         public function show_admin_notices()
@@ -154,15 +154,19 @@ if (!class_exists("rsssl_vulnerabilities")) {
         public static function testGenerator(): array
         {
             $self = new self();
-            //Step one we add the test messages
 
-            //step two we remove the messages after a certain time.
+            if ($self->send_warning_email(true) && $self->make_test_notifications()) {
+                return [
+                    'success' => true,
+                    'message' => __('A test email was sent.', "really-simple-ssl")
+                ];
+            } else {
+                return [
+                    'success' => false,
+                    'message' => __('A test email could not be sent.', "really-simple-ssl")
+                ];
+            }
 
-
-            return [
-                'success' => true,
-                'message' => __('A set of test plugins were created.', "really-simple-ssl")
-            ];
         }
 
 
@@ -947,44 +951,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
             add_action('manage_plugins_custom_column', array($this, 'add_vulnerability_field'), 10, 3);
         }
 
-
-        /**
-         * This function adds a notice for the dashboard
-         *
-         * @param $plugin
-         */
-        protected function add_notice($plugin): void
-        {
-            $riskSetting = rsssl_get_option('vulnerability_notification_dashboard');
-            if (!$riskSetting) {
-                $risk = 'low';
-            } else {
-                if ($plugin['risk_level'] === '') {
-                    $risk = 'medium';
-                } else {
-                    $risk = $this->risk_naming[$plugin['risk_level']];
-                }
-
-            }
-
-            //we then build the notice
-            $this->notices[$plugin['TextDomain'] . '-' . $plugin['Version']] = array(
-                'callback' => 'rsssl_vulnerabilities_enabled',
-                'score' => 1,
-                'output' => array(
-                    'true' => array(
-                        'msg' => '<span class="rsssl-badge rsp-' . $risk . '">' . __($risk, "really-simple-ssl") .
-                            '</span><span class="rsssl-badge rsp-dark">' . $plugin['Name'] . '</span>' . __("has vulnerabilities.", "really-simple-ssl"),
-                        'icon' => 'open',
-                        'url' => 'https://really-simple-ssl.com/vulnerabilities/here_someUniqueKeyForPost',
-                        //TODO: add link to vulnerability page
-                        'dismissible' => true,
-                    ),
-                ),
-            );
-        }
-
-
         /**
          * This functions adds a notice for the admin page
          */
@@ -1084,6 +1050,36 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
             }
             return $filtered_vulnerabilities;
+        }
+
+        private function send_warning_email()
+        {
+            $mailer = new rsssl_mailer();
+            $mailer->subject = __("Feature enabled","really-simple-ssl");
+            $mailer->message = __("This is a test email to see if notifications about notifications can be send through email.","really-simple-ssl");
+            $mailer->send_mail();
+        }
+
+        private function make_test_notifications()
+        {
+            //we store a session for three minutes to display the notification
+            $this->store_session('test_notification_vulnerability', true, 180);
+        }
+
+        private function store_session(string $string, bool $true, int $int)
+        {
+            //we store a session for three minutes to display the notification
+            $_SESSION[$string] = $true;
+            $_SESSION['expire_time'] = time() + $int;
+        }
+
+        private function check_session(string $string): bool
+        {
+            if (isset($_SESSION[$string]) && $_SESSION['expire_time'] >= time()) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 
