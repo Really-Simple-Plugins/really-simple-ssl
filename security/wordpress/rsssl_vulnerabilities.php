@@ -110,10 +110,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 //we add the notices to the notices array.
                 $self->get_vulnerabilities();
 
-                //if we are not in the SSL admin page, we add the admin notices.
-                add_action('current_screen', array($self, 'show_admin_notices'));
-
-                //if a theme is installed, we force the components to be updated.
                 //we check if upgrader_process_complete is called, so we can reload the files.
                 add_action('upgrader_process_complete', array($self, 'reload_files_on_update'), 10, 2);
                 //After activation, we need to reload the files.
@@ -129,48 +125,32 @@ if (!class_exists("rsssl_vulnerabilities")) {
             //we add the help notices.
         }
 
-        /**
-         * Callback to display admin notices.
-         * TODO: implement logic suggested by rogier
-         * @return void
-         */
-        public function show_admin_notices()
-        {
-            $screen = get_current_screen();
-
-            if ($screen->id !== 'settings_page_really-simple-security') {
-                foreach ($this->admin_notices as $notice) {
-                    add_action('admin_notices', function () use ($notice) {
-                        echo $notice;
-                    });
-                }
-            }
-        }
-
         public function show_help_notices($notices)
         {
             $this->cache_installed_plugins();
             $risks = $this->count_risk_levels();
             foreach ($this->risk_levels as $key => $value) {
-                if(!isset($risks[$key])) continue;
+                if (!isset($risks[$key])) continue;
                 $count = $risks[$key];
-                $notices['risk_level_' . $key] = [
+                $notice = [
                     'callback' => '_true_',
                     'score' => 1,
                     'show_with_options' => ['enable_vulnerability_scanner'],
                     'output' => [
-                            'true' => [
-                                'title' => 'Vulnerability Risk Level ' . $this->risk_naming[$key],
-                                'msg' => __('You have ' . $count . ' vulnerabilities with a risk level of ' . $this->risk_naming[$key] . '. Please update your plugins and themes to the latest version.', 'really-simple-ssl'),
-                                'link' => 'https://really-simple-ssl.com/knowledge-base/vulnerability-scanner/',
-                                'icon' => 'warning',
-                                'type' => 'warning',
-                                'dismissible' => true,
-                                'admin_notice' => true,
-                            ]
+                        'true' => [
+                            'title' => 'Vulnerability Risk Level ' . $this->risk_naming[$key],
+                            'msg' => __('You have ' . $count . ' vulnerabilities with a risk level of ' . $this->risk_naming[$key] . '. Please update your plugins and themes to the latest version.', 'really-simple-ssl'),
+                            'link' => 'https://really-simple-ssl.com/knowledge-base/vulnerability-scanner/',
+                            'icon' => 'warning',
+                            'type' => 'warning',
+                            'dismissible' => true,
+                            'admin_notice' => true,
+                        ]
                     ]
                 ];
+                $notices['risk_level_' . $key] = $notice;
             }
+
             return $notices;
         }
 
@@ -367,16 +347,16 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 if ($this->check_vulnerability($plugin_file)) {
                     switch ($this->check_severity($plugin_file)) {
                         case 'c':
-                            echo '<a class="btn-vulnerable critical">' . __('Critical-Risk', 'really-simple-ssl') . '</a>';
+                            echo '<a class="btn-vulnerable critical" target="_blank" href="https://really-simple-ssl.com/vulnerabilities/' . $this->getIdentifier($plugin_file) . '">' . __('Critical-Risk', 'really-simple-ssl') . '</a>';
                             break;
                         case 'h':
-                            echo '<a class="btn-vulnerable high">' . __('High-Risk', 'really-simple-ssl') . '</a>';
+                            echo '<a class="btn-vulnerable high"  target="_blank" href="https://really-simple-ssl.com/vulnerabilities/' . $this->getIdentifier($plugin_file) . '">' . __('High-Risk', 'really-simple-ssl') . '</a>';
                             break;
                         case 'm':
-                            echo '<a class="btn-vulnerable medium-risk">' . __('Medium-Risk', 'really-simple-ssl') . '</a>';
+                            echo '<a class="btn-vulnerable medium-risk" target="_blank" href="https://really-simple-ssl.com/vulnerabilities/' . $this->getIdentifier($plugin_file) . '">' . __('Medium-Risk', 'really-simple-ssl') . '</a>';
                             break;
                         default:
-                            echo '<a class="btn-vulnerable">' . __('Low-Risk', 'really-simple-ssl') . '</a>';
+                            echo '<a class="btn-vulnerable" target="_blank" href="https://really-simple-ssl.com/vulnerabilities/' . $this->getIdentifier($plugin_file) . '">' . __('Low-Risk', 'really-simple-ssl') . '</a>';
                             break;
                     }
                 }
@@ -429,6 +409,10 @@ if (!class_exists("rsssl_vulnerabilities")) {
             return $this->workable_plugins[$plugin_file]['risk_level'];
         }
 
+        private function getIdentifier($plugin_file)
+        {
+            return $this->workable_plugins[$plugin_file]['rss_identifier'];
+        }
         /* End of plug-in page add-on */
 
 
@@ -943,6 +927,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
                             if (!empty($component->vulnerabilities)) {
                                 $plugin['vulnerable'] = true;
                                 $plugin['risk_level'] = $this->get_highest_vulnerability($component->vulnerabilities);
+                                $plugin['rss_identifier'] = $this->getLinkedUUID($component->vulnerabilities, $plugin['risk_level']);
                                 $plugin['file'] = $key;
                             }
                         }
@@ -1095,7 +1080,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
         private function make_test_notifications()
         {
-           return true;
+            return true;
         }
 
         private function store_session(string $string, bool $true, int $int)
@@ -1135,6 +1120,16 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
             return $risk_levels;
         }
+
+        private function getLinkedUUID($vulnerabilities, string $risk_level)
+        {
+            foreach ($vulnerabilities as $vulnerability) {
+                if ($vulnerability->severity === $risk_level) {
+                    return $vulnerability->rss_identifier;
+                }
+            }
+        }
+
     }
 
     //we initialize the class
@@ -1147,7 +1142,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
 #########################################################################################
 
 add_filter('rsssl_notices', [new rsssl_vulnerabilities(), 'show_help_notices'], 10, 1);
-
 
 
 if (!function_exists('rsssl_vulnerabilities_enabled')) {

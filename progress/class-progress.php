@@ -154,4 +154,14 @@ class rsssl_progress {
 	}
 
 
+    public function insert_task($id, $notice) {
+        $notices = get_option( 'rsssl_admin_notices' );
+        if (isset($notices[$id])) {
+            return;
+        }
+        $notices[$id] = $notice;
+        update_option('rsssl_admin_notices', $notices);
+    }
+
+
 }
