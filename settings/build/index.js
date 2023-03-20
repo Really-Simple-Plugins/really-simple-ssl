@@ -16445,6 +16445,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _Settings_FieldsData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../Settings/FieldsData */ "./src/Settings/FieldsData.js");
+/* harmony import */ var _Settings_Help__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../Settings/Help */ "./src/Settings/Help.js");
+
 
 
 
@@ -16463,7 +16465,8 @@ const WPVul = props => {
   } = (0,_WPVulData__WEBPACK_IMPORTED_MODULE_3__["default"])();
   const {
     fields,
-    fieldsLoaded
+    fieldsLoaded,
+    addHelpNotice
   } = (0,_Settings_FieldsData__WEBPACK_IMPORTED_MODULE_5__["default"])();
   let featuredFields = fields.filter(field => field.new_features_block);
   (0,react__WEBPACK_IMPORTED_MODULE_4__.useEffect)(() => {

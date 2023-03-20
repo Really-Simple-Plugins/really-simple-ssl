@@ -3,6 +3,7 @@ import {__} from "@wordpress/i18n";
 import useWPVul from "./WPVulData";
 import {useEffect} from "react";
 import useFields from "../../Settings/FieldsData";
+import Help from "../../Settings/Help";
 
 const WPVul = (props) => {
     const {
@@ -14,7 +15,7 @@ const WPVul = (props) => {
         vulnerabilityCount,
         fetchVulnerabilities
     } = useWPVul();
-    const {fields, fieldsLoaded} = useFields();
+    const {fields, fieldsLoaded, addHelpNotice} = useFields();
     let featuredFields = fields.filter(field => field.new_features_block);
     useEffect(() => {
         fetchVulnerabilities().then(r => {
@@ -27,6 +28,7 @@ const WPVul = (props) => {
         return null;
     }
     let risks = vulnerabilityCount();
+
     const hardening = featuredFields.filter(field => field.value === 0);
     let vulClass = 'rsssl-inactive';
     let badgeVulStyle = 'rsp-default';

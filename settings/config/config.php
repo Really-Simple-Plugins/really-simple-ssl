@@ -43,7 +43,7 @@ function rsssl_menu() {
 				[
 					'id'       => 'hardening',
 					'title'    => __( 'Hardening', 'really-simple-ssl' ),
-					'featured' => true,
+					'featured' => false,
 					'groups'   => [
 						[
 							'id'       => 'hardening_basic',

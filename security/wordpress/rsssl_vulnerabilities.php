@@ -123,6 +123,9 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
                 add_action('current_screen', array($self, 'show_inline_code'));
 
+                //if we are on the settings page we want to display the notices.
+               // add_filter('rsssl_notices', );
+
 
             }
         }
@@ -143,6 +146,10 @@ if (!class_exists("rsssl_vulnerabilities")) {
                     });
                 }
             }
+        }
+
+        public function show_help_notices(){
+            rsssl_general_security_notices();
         }
 
 
