@@ -138,6 +138,5 @@ if ( !class_exists('rsssl_mailer') ) {
             }
             return ['success' => false, 'message' => $this->error];
 		}
-
 	}
 }
