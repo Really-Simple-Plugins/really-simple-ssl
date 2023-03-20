@@ -87,7 +87,8 @@ if (!class_exists("rsssl_vulnerabilities")) {
             $self = new self();
             //we check if the vulnerability scanner is enabled and then the fun happens.
             if (rsssl_get_option('enable_vulnerability_scanner')) {
-
+                //we clear all cache
+                $self->clear_cache();
                 //we check if the files are up-to-date. if we make them up to date.
                 $self->check_files();
 
@@ -123,11 +124,9 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
                 add_action('current_screen', array($self, 'show_inline_code'));
 
-                //if we are on the settings page we want to display the notices.
-               // add_filter('rsssl_notices', );
-
-
             }
+
+            //we add the help notices.
         }
 
         /**
@@ -148,8 +147,31 @@ if (!class_exists("rsssl_vulnerabilities")) {
             }
         }
 
-        public function show_help_notices(){
-            rsssl_general_security_notices();
+        public function show_help_notices($notices)
+        {
+            $this->cache_installed_plugins();
+            $risks = $this->count_risk_levels();
+            foreach ($this->risk_levels as $key => $value) {
+                if(!isset($risks[$key])) continue;
+                $count = $risks[$key];
+                $notices['risk_level_' . $key] = [
+                    'callback' => '_true_',
+                    'score' => 1,
+                    'show_with_options' => ['enable_vulnerability_scanner'],
+                    'output' => [
+                            'true' => [
+                                'title' => 'Vulnerability Risk Level ' . $this->risk_naming[$key],
+                                'msg' => __('You have ' . $count . ' vulnerabilities with a risk level of ' . $this->risk_naming[$key] . '. Please update your plugins and themes to the latest version.', 'really-simple-ssl'),
+                                'link' => 'https://really-simple-ssl.com/knowledge-base/vulnerability-scanner/',
+                                'icon' => 'warning',
+                                'type' => 'warning',
+                                'dismissible' => true,
+                                'admin_notice' => true,
+                            ]
+                    ]
+                ];
+            }
+            return $notices;
         }
 
 
@@ -163,7 +185,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
             $self = new self();
             $response = $self->make_test_notifications();
 
-            if($response['success']){
+            if ($response['success']) {
                 return $self->send_warning_email();
             }
 
@@ -433,7 +455,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 if ($this->get_file_stored_info(true) > time() - 86400) {
                     return;
                 }
-               // $this->download_core_vulnerabilities();
+                // $this->download_core_vulnerabilities();
             }
 
             //We check the plugin vulnerabilities and validate age and existence
@@ -1064,8 +1086,8 @@ if (!class_exists("rsssl_vulnerabilities")) {
         private function send_warning_email()
         {
             $mailer = new rsssl_mailer();
-            $mailer->subject = __("Feature enabled","really-simple-ssl");
-            $mailer->message = __("This is a test email to see if notifications about notifications can be send through email.","really-simple-ssl");
+            $mailer->subject = __("Feature enabled", "really-simple-ssl");
+            $mailer->message = __("This is a test email to see if notifications about notifications can be send through email.", "really-simple-ssl");
             $mailer->to = get_option('admin_email');
 
             return $mailer->send_mail();
@@ -1073,14 +1095,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
         private function make_test_notifications()
         {
-            //we store a session for three minutes to display the notification
-            $this->store_session('test_notification_vulnerability', true, 180);
-            //here comes a check if the notification was succesfull.
-
-            return [
-                'success' => true,
-                'message' => __("Test notification added","really-simple-ssl")
-            ];
+           return true;
         }
 
         private function store_session(string $string, bool $true, int $int)
@@ -1098,6 +1113,28 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 return false;
             }
         }
+
+        private function clear_cache()
+        {
+            rsssl_cache::this()->flush();
+        }
+
+        public function count_risk_levels()
+        {
+            $plugins = $this->workable_plugins;
+            $risk_levels = array();
+            foreach ($plugins as $plugin) {
+                if (isset($plugin['risk_level'])) {
+                    if (isset($risk_levels[$plugin['risk_level']])) {
+                        $risk_levels[$plugin['risk_level']]++;
+                    } else {
+                        $risk_levels[$plugin['risk_level']] = 1;
+                    }
+                }
+            }
+
+            return $risk_levels;
+        }
     }
 
     //we initialize the class
@@ -1109,10 +1146,9 @@ if (!class_exists("rsssl_vulnerabilities")) {
 # These functions are used in the vulnerability scanner like the notices and the api's  #
 #########################################################################################
 
+add_filter('rsssl_notices', [new rsssl_vulnerabilities(), 'show_help_notices'], 10, 1);
 
-//we now check add notifications onboarding and vulnerability TODO: check if this is the best place for this please convey with Mark, Rogier.
-//add_filter('rsssl_notices', array(rsssl_vulnerabilities::class, 'add_startup_notices'));
-//add_filter('rsssl_notices', array(rsssl_vulnerabilities::class, 'add_plugin_notices'));
+
 
 if (!function_exists('rsssl_vulnerabilities_enabled')) {
     /**
@@ -1145,24 +1181,3 @@ add_action('rest_api_init', function () {
 });
 
 /* End of Routing and API's */
-
-
-/* Helper functions */
-
-/**
- * function die and dump
- * TODO: DELETE THIS FUNCTION AND USE THE ONE FROM THE CORE
- *
- * @param $data
- */
-function dd(...$data)
-{
-    //if only one variable is passed, we do not need to use the array
-    if (count($data) === 1) {
-        $data = $data[0];
-    }
-    echo '<pre>';
-    var_dump($data);
-    echo '</pre>';
-    die();
-}
