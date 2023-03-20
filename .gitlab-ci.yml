@@ -1,5 +1,5 @@
 stages:
-- test
+  - test
 
 # Select what we should cache
 cache:
@@ -34,34 +34,34 @@ before_script:
   # Install composer
   - curl -sS https://getcomposer.org/installer | php
 
-  # Install all project dependencies
+  # Install project dependencies
   - php composer.phar install --ignore-platform-reqs
   - php composer.phar update
-  # Set up WP test environment
+  # Set up WordPress test environment
   - bash bin/install-wp-tests.sh wordpress_test root mysql mysql $WP_VERSION
 
-  # Install WP-CLI
+  # Install WP-CLI and configure a WordPress installation
   - curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
   - chmod +x wp-cli.phar
   - mv wp-cli.phar /usr/local/bin/wp
   - wp core download --allow-root
-  - wp core config --dbhost=mysql --dbname=wordpress_tests --dbuser=root --dbpass=mysql --allow-root
+  - wp core config --dbhost=mysql --dbname=$DB_NAME --dbuser=$DB_USER --dbpass=$DB_PASS --allow-root
   - wp config list --allow-root
-  - wp core install --url=http://localhost --title=Example --admin_user=supervisor --admin_password=strongpassword --admin_email=info@example.com --allow-root
+  - wp core install --url=http://localhost --title=Example --admin_user=$ADMIN_USER --admin_password=$ADMIN_PASSWORD --admin_email=$ADMIN_EMAIL --allow-root
 
-  # Zip current plugin to allow it to be installed using wp-cli
+  # Zip current branch to allow it to be installed using wp-cli
   - zip -r really-simple-ssl.zip .
-  # Install the new plugin in our WP installation
+  # Install, activate, deactivate and uninstall the current branch in our WordPress installation
   - wp plugin install really-simple-ssl.zip --allow-root --force
   - wp plugin activate really-simple-ssl --allow-root
   - wp plugin deactivate really-simple-ssl --allow-root
   - wp plugin uninstall really-simple-ssl --allow-root
   # Now test an upgrade
+  # As this is a free plugin, we can grab the current live version directly from the WordPress plugin repo using WP CLI
   - wp plugin install really-simple-ssl --allow-root
   - wp plugin activate really-simple-ssl --allow-root
   - wp plugin install really-simple-ssl.zip --allow-root --force
   - wp plugin deactivate really-simple-ssl --allow-root
-  # WP plugin uninstall because otherwise uninstall.php won't run!
   - wp plugin uninstall really-simple-ssl --allow-root
 
 variables:
@@ -76,6 +76,8 @@ test:php7.4:
   image: php:7.4
   script:
     - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
 
 # We test PHP7.4 with multisite
 test:php7.4:multisite:
@@ -84,12 +86,16 @@ test:php7.4:multisite:
   image: php:7.4
   script:
     - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
 
-# We test PHP8
+# We test PHP8.0
 test:php8.0:
   image: php:8.0
   script:
     - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover --colors=never
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
 
 # We test PHP8 with multisite
 test:php8.0:multisite:
@@ -98,12 +104,16 @@ test:php8.0:multisite:
   image: php:8.0
   script:
     - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
 
 # We test PHP8.1
 test:php8.1:
   image: php:8.1
   script:
     - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover --colors=never
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
 
 # We test PHP8.1 with multisite
 test:php8.1:multisite:
@@ -112,3 +122,5 @@ test:php8.1:multisite:
   image: php:8.1
   script:
     - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'

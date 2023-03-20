@@ -10,12 +10,14 @@ const CheckboxControl = (props) => {
 
     let field = props.field;
     let is_checked = field.value ? 'is-checked' : '';
+    let is_disabled = field.disabled ? 'is-disabled' : '';
+
     return (
         <>
             <div className="components-base-control components-toggle-control">
                 <div className="components-base-control__field">
                     <div data-wp-component="HStack" className="components-flex components-h-stack">
-                        <span className={ "components-form-toggle "+is_checked}>
+                        <span className={ "components-form-toggle "+is_checked + ' ' +is_disabled}>
                             <input
                             checked={field.value}
                             className="components-form-toggle__input"

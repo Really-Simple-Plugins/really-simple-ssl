@@ -179,6 +179,7 @@ const Field = (props) => {
                   help={ field.comment }
                   value= { fieldValue }
                   onChange={ ( fieldValue ) => onChangeHandler(fieldValue) }
+                  disabled={ field.disabled }
               />
             </div>
         );
