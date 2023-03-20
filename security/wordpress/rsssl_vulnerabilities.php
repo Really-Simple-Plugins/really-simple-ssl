@@ -88,7 +88,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
             //we check if the vulnerability scanner is enabled and then the fun happens.
             if (rsssl_get_option('enable_vulnerability_scanner')) {
 
-                //we check if the files are up to date. if we make them up to date.
+                //we check if the files are up-to-date. if we make them up to date.
                 $self->check_files();
 
 
@@ -154,18 +154,13 @@ if (!class_exists("rsssl_vulnerabilities")) {
         public static function testGenerator(): array
         {
             $self = new self();
+            $response = $self->make_test_notifications();
 
-            if ($self->send_warning_email(true) && $self->make_test_notifications()) {
-                return [
-                    'success' => true,
-                    'message' => __('A test email was sent.', "really-simple-ssl")
-                ];
-            } else {
-                return [
-                    'success' => false,
-                    'message' => __('A test email could not be sent.', "really-simple-ssl")
-                ];
+            if($response['success']){
+                return $self->send_warning_email();
             }
+
+            return $response;
 
         }
 
@@ -1057,13 +1052,22 @@ if (!class_exists("rsssl_vulnerabilities")) {
             $mailer = new rsssl_mailer();
             $mailer->subject = __("Feature enabled","really-simple-ssl");
             $mailer->message = __("This is a test email to see if notifications about notifications can be send through email.","really-simple-ssl");
-            $mailer->send_mail();
+            $mailer->to = 'marcel@really-simple-plugins.com';
+            $mailer->from_name = get_option('Pietje');
+
+            return $mailer->send_mail();
         }
 
         private function make_test_notifications()
         {
             //we store a session for three minutes to display the notification
             $this->store_session('test_notification_vulnerability', true, 180);
+            //here comes a check if the notification was succesfull.
+
+            return [
+                'success' => true,
+                'message' => __("Test notification added","really-simple-ssl")
+            ];
         }
 
         private function store_session(string $string, bool $true, int $int)
