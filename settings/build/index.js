@@ -16458,6 +16458,7 @@ const WPVul = props => {
     vulEnabled,
     updates,
     dataLoaded,
+    vulnerabilityCount,
     fetchVulnerabilities
   } = (0,_WPVulData__WEBPACK_IMPORTED_MODULE_3__["default"])();
   const {
@@ -16472,6 +16473,7 @@ const WPVul = props => {
     //we do not have the data yet, so we return null
     return null;
   }
+  let risks = vulnerabilityCount();
   const hardening = featuredFields.filter(field => field.value === 0);
   let vulClass = 'rsssl-inactive';
   let badgeVulStyle = 'rsp-default';
@@ -16532,6 +16534,35 @@ const WPVul = props => {
       className: "rsssl-detail"
     }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Enable vulnerability scanning for more information", "really-simple-ssl"))));
   };
+  const getHighestRiskVulnerability = () => {
+    //we have an array of risks the order in which we check is important so c, h, m, l
+    let highestRiskVulnerability = {
+      name: 'critical',
+      count: 0
+    };
+    //we loop through the risks
+    for (let i = 0; i < risks.length; i++) {
+      //if we have a higher risk, we set the highest risk to this risk
+      if (risks[i].level === 'c') {
+        risks[i].name = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('critical', 'really-simple-ssl');
+        highestRiskVulnerability = risks[i];
+        break;
+      } else if (risks[i].level === 'h') {
+        risks[i].name = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('high', 'really-simple-ssl');
+        highestRiskVulnerability = risks[i];
+        break;
+      } else if (risks[i].level === 'm') {
+        risks[i].name = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('medium', 'really-simple-ssl');
+        highestRiskVulnerability = risks[i];
+        break;
+      } else if (risks[i].level === 'l') {
+        risks[i].name = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('low', 'really-simple-ssl');
+        highestRiskVulnerability = risks[i];
+        break;
+      }
+    }
+    return highestRiskVulnerability;
+  };
   const checkUpdates = () => {
     let icon = 'circle-check';
     let iconColor = 'green';
@@ -16554,7 +16585,7 @@ const WPVul = props => {
       })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
         className: "rsssl-detail"
       }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("You have %s updates pending", "really-simple-ssl").replace("%s", updates), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-        href: "/wp-admin/plugins.php?plugin_status=upgrade",
+        href: "/wp-admin/update-core.php",
         style: linkStyle
       }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Update now', 'really-simple-ssl')))));
     } else {
@@ -16585,6 +16616,7 @@ const WPVul = props => {
       return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null);
     }
     if (vulnerabilities) {
+      let highestRiskVulnerability = getHighestRiskVulnerability();
       return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
         className: "rsssl-details"
       }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -16594,7 +16626,7 @@ const WPVul = props => {
         color: iconColor
       })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
         className: "rsssl-detail"
-      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("You have %s vulnerabilities", "really-simple-ssl").replace("%s", vulnerabilities), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("You have %s %name vulnerabilities", "really-simple-ssl").replace("%s", highestRiskVulnerability.count).replace("%name", highestRiskVulnerability.name), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
         style: linkStyle,
         href: '#',
         target: "_blank"
@@ -16720,16 +16752,6 @@ const useWPVul = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, get) => (
   //for storing the list of vulnerabilities
 
   /*
-  * Setters
-   */
-  // setData: (data) =>
-  //     set({
-  //         updates: data.updates,
-  //         vulnerabilities: data.vulnerabilities,
-  //         dataLoaded: true,
-  //     }),
-
-  /*
   * Getters
    */
   getVulnerabilities: () => {
@@ -16754,6 +16776,25 @@ const useWPVul = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, get) => (
     } catch (e) {
       console.error(e);
     }
+  },
+  vulnerabilityCount: () => {
+    let vuls = get().vulList;
+    //we group the data by risk level
+    //first we make vuls an array
+    let vulsArray = [];
+    Object.keys(vuls).forEach(function (key) {
+      vulsArray.push(vuls[key]);
+    });
+    let riskLevels = ['c', 'h', 'm', 'l'];
+    //we count the amount of vulnerabilities per risk level
+    return riskLevels.map(function (level) {
+      return {
+        level: level,
+        count: vulsArray.filter(function (vul) {
+          return vul.risk_level === level;
+        }).length
+      };
+    });
   },
   vulnerabilityScore: () => {
     let score = 0;

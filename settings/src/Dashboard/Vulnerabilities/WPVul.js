@@ -11,6 +11,7 @@ const WPVul = (props) => {
         vulEnabled,
         updates,
         dataLoaded,
+        vulnerabilityCount,
         fetchVulnerabilities
     } = useWPVul();
     const {fields, fieldsLoaded} = useFields();
@@ -25,6 +26,7 @@ const WPVul = (props) => {
         //we do not have the data yet, so we return null
         return null;
     }
+    let risks = vulnerabilityCount();
     const hardening = featuredFields.filter(field => field.value === 0);
     let vulClass = 'rsssl-inactive';
     let badgeVulStyle = 'rsp-default';
@@ -98,6 +100,36 @@ const WPVul = (props) => {
         )
     }
 
+    const getHighestRiskVulnerability = () => {
+        //we have an array of risks the order in which we check is important so c, h, m, l
+        let highestRiskVulnerability = {
+            name: 'critical',
+            count: 0
+        };
+        //we loop through the risks
+        for (let i = 0; i < risks.length; i++) {
+            //if we have a higher risk, we set the highest risk to this risk
+            if (risks[i].level === 'c') {
+                risks[i].name = __('critical', 'really-simple-ssl');
+                highestRiskVulnerability = risks[i];
+                break;
+            } else if (risks[i].level === 'h') {
+                risks[i].name = __('high', 'really-simple-ssl');
+                highestRiskVulnerability = risks[i];
+                break;
+            } else if (risks[i].level === 'm') {
+                risks[i].name = __('medium', 'really-simple-ssl');
+                highestRiskVulnerability = risks[i];
+                break;
+            } else if (risks[i].level === 'l') {
+                risks[i].name = __('low', 'really-simple-ssl');
+                highestRiskVulnerability = risks[i];
+                break;
+            }
+        }
+        return highestRiskVulnerability;
+    }
+
     const checkUpdates = () => {
         let icon = 'circle-check';
         let iconColor = 'green';
@@ -117,7 +149,7 @@ const WPVul = (props) => {
                         <div className="rsssl-detail-icon"><Icon name={icon} color={iconColor}/></div>
                         <div className="rsssl-detail">
                             {__("You have %s updates pending", "really-simple-ssl").replace("%s", updates)}
-                            <a href={"/wp-admin/plugins.php?plugin_status=upgrade"} style={linkStyle}>{__('Update now', 'really-simple-ssl')}</a>
+                            <a href={"/wp-admin/update-core.php"} style={linkStyle}>{__('Update now', 'really-simple-ssl')}</a>
                         </div>
                     </div>
                 </>
@@ -155,12 +187,14 @@ const WPVul = (props) => {
             )
         }
         if (vulnerabilities) {
+            let highestRiskVulnerability = getHighestRiskVulnerability();
             return (
                 <>
                     <div className="rsssl-details">
                         <div className="rsssl-detail-icon"><Icon name={icon} color={iconColor}/></div>
                         <div className="rsssl-detail">
-                            <p>{__("You have %s vulnerabilities", "really-simple-ssl").replace("%s", vulnerabilities)}
+                            <p>{__("You have %s %name vulnerabilities", "really-simple-ssl").replace("%s", highestRiskVulnerability.count)
+                                .replace("%name", highestRiskVulnerability.name)}
                                 <a style={linkStyle} href={'#'}
                                    target="_blank">{__('Read more', 'really-simple-ssl')}</a>
                             </p>

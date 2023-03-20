@@ -12,16 +12,6 @@ const useWPVul = create((set, get) => ({
     vulList: [], //for storing the list of vulnerabilities
 
     /*
-    * Setters
-     */
-    // setData: (data) =>
-    //     set({
-    //         updates: data.updates,
-    //         vulnerabilities: data.vulnerabilities,
-    //         dataLoaded: true,
-    //     }),
-
-    /*
     * Getters
      */
     getVulnerabilities: () => {
@@ -47,6 +37,26 @@ const useWPVul = create((set, get) => ({
         } catch (e) {
             console.error(e);
         }
+    },
+
+    vulnerabilityCount: () => {
+        let vuls = get().vulList;
+        //we group the data by risk level
+       //first we make vuls an array
+        let vulsArray = [];
+        Object.keys(vuls).forEach(function (key) {
+            vulsArray.push(vuls[key]);
+        });
+        let riskLevels = ['c', 'h', 'm', 'l'];
+        //we count the amount of vulnerabilities per risk level
+        return riskLevels.map(function (level) {
+            return {
+                level: level,
+                count: vulsArray.filter(function (vul) {
+                    return vul.risk_level === level;
+                }).length
+            };
+        });
     },
 
     vulnerabilityScore: () => {

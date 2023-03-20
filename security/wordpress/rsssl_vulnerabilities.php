@@ -1047,13 +1047,19 @@ if (!class_exists("rsssl_vulnerabilities")) {
             return $filtered_vulnerabilities;
         }
 
+        /**
+         * This function sends a test email.
+         * It is used to check if the email is working.
+         * It is also used to check if the notification is working.
+         *
+         * @return array
+         */
         private function send_warning_email()
         {
             $mailer = new rsssl_mailer();
             $mailer->subject = __("Feature enabled","really-simple-ssl");
             $mailer->message = __("This is a test email to see if notifications about notifications can be send through email.","really-simple-ssl");
-            $mailer->to = 'marcel@really-simple-plugins.com';
-            $mailer->from_name = get_option('Pietje');
+            $mailer->to = get_option('admin_email');
 
             return $mailer->send_mail();
         }
