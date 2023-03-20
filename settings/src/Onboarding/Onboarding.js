@@ -110,7 +110,8 @@ const Onboarding = (props) => {
 
     const parseStepItems = (items) => {
         return items && items.map( (item, index) => {
-            let { title, current_action, action, status, button, id } = item
+            let { title, description, current_action, action, status, button, id, read_more } = item
+
             if ( id==='ssl_enabled' && networkwide ) {
                 if ( networkProgress>=100) {
                     status = 'success';
@@ -141,21 +142,23 @@ const Onboarding = (props) => {
                 }
             }
             let showLink = (button && button===buttonTitle);
-            let isPluginClass = item.status!=='success' && item.is_plugin && item.current_action === 'none' ? 'rsssl-is-plugin' : '';
-
+            let showAsPlugin = item.status!=='success' && item.is_plugin && item.current_action === 'none';
+            let isPluginClass = showAsPlugin ? 'rsssl-is-plugin' : '';
+            title = showAsPlugin ? <b>{title}</b> : title;
             return (
                 <li key={index} className={isPluginClass}>
                     <Icon name = {statusIcon} color = {statusColor} />
-                    {title}
+                    {title}{description && <>&nbsp;-&nbsp;{description}</>}
                     {id==='ssl_enabled' && networkwide && networkActivationStatus==='main_site_activated' && <>
                         &nbsp;-&nbsp;
                         {networkProgress<100 && <>{__("working", "really-simple-ssl")}&nbsp;{networkProgress}%</>}
                         {networkProgress>=100 && __("completed", "really-simple-ssl") }
                         </>}
                     {button && <>&nbsp;-&nbsp;
-                    {showLink && <Button isLink={true} onClick={(e) => actionHandler(id, action, e)}>{buttonTitle}</Button>}
-                    {!showLink && <>{buttonTitle}</>}
+                        {showLink && <Button isLink={true} onClick={(e) => actionHandler(id, action, e)}>{buttonTitle}</Button>}
+                        {!showLink && <>{buttonTitle}</>}
                     </>}
+                    {showAsPlugin && read_more && <a target="_blank" href={read_more} className="button button-default rsssl-read-more">{__("Read More", "really-simple-ssl")}</a>}
                 </li>
             )
         })

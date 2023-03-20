@@ -173,21 +173,17 @@ class rsssl_onboarding {
 				"subtitle" => __("Before you migrate, please check for:", "really-simple-ssl"),
 				"items" => $this->first_step(),
 				"info_text" => $info,
-				"visible" => true
 			],
 			[
 				"id" => 'email',
 				"title" => __( "Get notified!", 'really-simple-ssl' ),
 				"subtitle" => __("We use email notification to explain important updates in plugin settings.", "really-simple-ssl").' '.__("Add your email address below.", "really-simple-ssl"),
-				"visible" => true
 			],
 			[
 				"id" => 'onboarding',
 				"title" => get_option('rsssl_show_onboarding') ? __( "Thanks for updating!", 'really-simple-ssl' ) : __( "Congratulations!", 'really-simple-ssl' ),
 				"subtitle" => __("Now have a look at our new features.", "really-simple-ssl"),
 				"items" => $this->second_step(),
-				"info_text" => __("Want to know more about our features and plugins?", "really-simple-ssl").' '.sprintf(__("Please read this %sarticle%s.", 'really-simple-ssl'), '<a target="_blank" href="https://really-simple-ssl.com/meet-really-simple-ssl-6/">', '</a>'),
-				"visible" => true
 			],
 
 		];
@@ -257,13 +253,15 @@ class rsssl_onboarding {
 				"slug" => "burst-statistics",
 				'constant_premium' => false,
 				"title" => "Burst Statistics",
-				"description" => __("Burst Statistics - Self-hosted, Privacy-friendly analytics tool", "really-simple-ssl"),
+				"description" => __("Self-hosted, Privacy-friendly analytics tool", "really-simple-ssl"),
+				'read_more' => 'https://really-simple-plugins.com',//we only want one button, show we show it with the first plugin, then position it in the middle
 			],
 			[
 				"slug" => "complianz-gdpr",
 				'constant_premium' => 'cmplz_premium',
 				"title" => "Complianz",
-				"description" => __("Complianz - Cookie Consent Management as it should be", "really-simple-ssl"),
+				"description" => __("Cookie Consent Management as it should be", "really-simple-ssl"),
+				'read_more' => false,
 			]
 		];
 
@@ -313,7 +311,9 @@ class rsssl_onboarding {
 				$items[] = [
 					"id" => $plugin_info['slug'],
 					"is_plugin" => true,
-					"title" => $plugin_info["description"],
+					"title" => $plugin_info["title"],
+					"description" => $plugin_info["description"],
+					"read_more" => $plugin_info["read_more"],
 					"action" => "install_plugin",
 					"current_action" => "none",
 					"status" => "warning",

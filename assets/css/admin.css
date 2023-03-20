@@ -846,6 +846,7 @@
 .rsssl-modal.rsssl-onboarding .rsssl-modal-content-step {
     display: flex;
     flex-direction: column;
+    width: 100%;
 }
 
 .rsssl-modal.rsssl-onboarding .rsssl-modal-content-step-footer {
@@ -886,6 +887,14 @@
     background-color: var(--rsp-grey-100);
     padding: 2px 0;
     margin-bottom: 0;
+    position: relative;
+}
+
+.rsssl-modal.rsssl-onboarding .rsssl-modal-content ul li.rsssl-is-plugin a.button-default.rsssl-read-more {
+    position: absolute;
+    top: 17px;
+    right: 45px;
+    z-index: 5;
 }
 
 .rsssl-modal.rsssl-onboarding .rsssl-modal-content ul li .rsssl-icon {
@@ -1436,59 +1445,59 @@
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(1) {
-    width: 78%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(2) {
-    width: 93%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(3) {
-    width: 80%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(4) {
-    width: 88%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(5) {
-    width: 64%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(6) {
-    width: 68%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(7) {
-    width: 62%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
-    width: 91%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
-    width: 95%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
     width: 99%;
 }
 
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(2) {
+    width: 70%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(3) {
+    width: 78%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(4) {
+    width: 95%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(5) {
+    width: 92%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(6) {
+    width: 64%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(7) {
+    width: 88%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
+    width: 80%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
+    width: 88%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
+    width: 68%;
+}
+
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
-    width: 79%;
+    width: 94%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
-    width: 84%;
+    width: 75%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
-    width: 72%;
+    width: 93%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(14) {
-    width: 95%;
+    width: 84%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
@@ -1496,19 +1505,19 @@
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(16) {
-    width: 77%;
+    width: 84%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(17) {
-    width: 99%;
+    width: 80%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(18) {
-    width: 81%;
+    width: 82%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(19) {
-    width: 87%;
+    width: 66%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(20) {

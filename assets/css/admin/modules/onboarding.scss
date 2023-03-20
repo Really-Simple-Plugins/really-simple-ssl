@@ -11,6 +11,7 @@
     &-step {
       display:flex;
       flex-direction: column;
+      width:100%;
     }
     &-step-footer{
       display:flex;
@@ -44,6 +45,18 @@
           background-color:var(--rsp-grey-100);
           padding:2px 0;
           margin-bottom:0;
+          position:relative;
+          a.button-default.rsssl-read-more{
+            position:absolute;
+            top:17px;
+            right:20px;
+            z-index:5;
+            @media(max-width: 620px) {
+              position:relative;
+              margin-left:20px;
+              z-index:5;
+            }
+          }
         }
         .rsssl-icon{
           margin-top: 7px;
