@@ -441,10 +441,6 @@ function rsssl_fields( $load_values = true ) {
 			'group_id' => 'support',
 			'type'     => 'support',
 			'label'    => __( "Premium support", 'really-simple-ssl' ),
-			// 'help'        => [
-			// 	'label' => 'default',
-			// 	'placeholder' => __( "If enabled, all the Really Simple SSL pages within the WordPress admin will be in high contrast", 'really-simple-ssl' ),
-			// ],
 			'disabled' => false,
 			'default'  => false,
 		],
