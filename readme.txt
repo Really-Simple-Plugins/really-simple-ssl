@@ -4,7 +4,7 @@ Donate link: https://www.paypal.me/reallysimplessl
 Tags: SSL, https, force SSL, mixed content, insecure content, secure website, website security, TLS, security, secure socket layers, HSTS
 Requires at least: 5.7
 License: GPL2
-Tested up to: 6.1
+Tested up to: 6.2
 Requires PHP: 7.2
 Stable tag: 6.2.3
 
@@ -100,6 +100,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 * Improvement: Complianz branding update
 * Improvement: Changed Back-end react to functional components
 * Improvement: multisite notice should link to network admin page
+* Improvement: tested up to wp 6.2
 
 = 6.2.2 =
 * Fix: capability mismatch for a non administrator in multisite admin, props @jg-visual
