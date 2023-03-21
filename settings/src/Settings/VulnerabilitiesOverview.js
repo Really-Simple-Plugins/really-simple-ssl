@@ -3,6 +3,7 @@ import useVulnerabilityData from "../Dashboard/Vulnerabilities/VulnerabilityData
 import React, {useEffect} from 'react';
 import DataTable from "react-data-table-component";
 import Icon from "../utils/Icon";
+import {Button} from "@wordpress/components";
 
 const VulnerabilitiesOverview = (props) => {
     const {
@@ -21,6 +22,7 @@ const VulnerabilitiesOverview = (props) => {
             name: column.name,
             sortable: column.sortable,
             width: column.width,
+            visible: column.visible,
             selector: row => row[column.column],
         };
     }
@@ -64,11 +66,23 @@ const VulnerabilitiesOverview = (props) => {
 
     let data = vulList;
 
+    //we need to add a key to the data called action wich produces the action buttons
+
+
     if (typeof data === 'object') {
         //we make it an array
         data = Object.values(data);
     }
+    const btnStyle = {
+        marginLeft: '10px'
+    }
+    data.forEach(function (item, i) {
+        item.vulnerability_action = <div className="rsssl-vulnerability-action">
+            <Button variant="secondary">{ __("Details", "really-simple-ssl") }</Button>
+            <Button variant="primary" style={btnStyle}>{ __("View", "really-simple-ssl") }</Button>
+        </div>
 
+    });
     return (
         <DataTable
             columns={columns}

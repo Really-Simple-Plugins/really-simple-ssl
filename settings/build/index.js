@@ -47687,6 +47687,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var react_data_table_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-data-table-component */ "./node_modules/react-data-table-component/dist/index.cjs.js");
 /* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils/Icon */ "./src/utils/Icon.js");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__);
+
 
 
 
@@ -47709,6 +47712,7 @@ const VulnerabilitiesOverview = props => {
       name: column.name,
       sortable: column.sortable,
       width: column.width,
+      visible: column.visible,
       selector: row => row[column.column]
     };
   }
@@ -47748,10 +47752,26 @@ const VulnerabilitiesOverview = props => {
     }
   };
   let data = vulList;
+
+  //we need to add a key to the data called action wich produces the action buttons
+
   if (typeof data === 'object') {
     //we make it an array
     data = Object.values(data);
   }
+  const btnStyle = {
+    marginLeft: '10px'
+  };
+  data.forEach(function (item, i) {
+    item.vulnerability_action = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-vulnerability-action"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
+      variant: "secondary"
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Details", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
+      variant: "primary",
+      style: btnStyle
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("View", "really-simple-ssl")));
+  });
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_4__["default"], {
     columns: columns,
     data: data,

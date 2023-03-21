@@ -906,7 +906,7 @@ function rsssl_fields( $load_values = true ) {
                     'name'     => __( 'Action', 'really-simple-ssl' ),
                     'sortable' => false,
                     'column'   => 'vulnerability_action',
-                ],
+                ],[]
 
             ]
         ],
