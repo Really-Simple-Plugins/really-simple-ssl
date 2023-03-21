@@ -97,7 +97,6 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 
 == Changelog ==
 = 6.2.3 =
-* Improvement: Complianz branding update
 * Improvement: Changed Back-end react to functional components
 * Improvement: multisite notice should link to network admin page
 * Improvement: tested up to wp 6.2

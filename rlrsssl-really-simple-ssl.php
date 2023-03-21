@@ -105,7 +105,7 @@ class REALLY_SIMPLE_SSL
 		define('rsssl_path', trailingslashit(plugin_dir_path(__FILE__)));
         define('rsssl_template_path', trailingslashit(plugin_dir_path(__FILE__)).'grid/templates/');
         define('rsssl_plugin', plugin_basename(__FILE__));
-        define('rsssl_add_on_version_requirement', '6.2');
+        define('rsssl_add_on_version_requirement', '6.2.4');
         if (!defined('rsssl_file') ){
             define('rsssl_file', __FILE__);
         }
