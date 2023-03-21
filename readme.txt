@@ -99,6 +99,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 = 6.2.3 =
 * Improvement: Complianz branding update
 * Improvement: Changed Back-end react to functional components
+* Improvement: multisite notice should link to network admin page
 
 = 6.2.2 =
 * Fix: capability mismatch for a non administrator in multisite admin, props @jg-visual
