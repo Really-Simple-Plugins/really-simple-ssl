@@ -1,4 +1,4 @@
-import TaskElement from "../../DashBoard/TaskElement";
+import TaskElement from "../../Dashboard/TaskElement";
 import Placeholder from '../../Placeholder/Placeholder';
 import * as rsssl_api from "../../utils/api";
 import { __ } from '@wordpress/i18n';
