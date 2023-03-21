@@ -151,7 +151,7 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 
 			if ( $plugin_to_be_installed === 'really-simple-ssl' ){
 				$suggestion = [
-					'icon_url' => $dir_url.'complianz-gdpr.gif',
+					'icon_url' => $dir_url.'complianz-gdpr.png',
 					'constant' => 'cmplz_version',
 					'title' => 'Complianz GDPR/CCPA',
 					'description_short' => __('GDPR/CCPA Privacy Suite', "really-simple-ssl"),
