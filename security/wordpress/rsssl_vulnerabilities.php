@@ -132,6 +132,8 @@ if (!class_exists("rsssl_vulnerabilities")) {
             foreach ($this->risk_levels as $key => $value) {
                 if (!isset($risks[$key])) continue;
                 $count = $risks[$key];
+                $count_label = _n('vulnerability', 'vulnerabilities', $count, 'really-simple-ssl');
+                $count_suffix = _n('a', '', $count, 'really-simple-ssl');
                 $notice = [
                     'callback' => '_true_',
                     'score' => 1,
@@ -139,9 +141,9 @@ if (!class_exists("rsssl_vulnerabilities")) {
                     'output' => [
                         'true' => [
                             'title' => 'Vulnerability Risk Level ' . $this->risk_naming[$key],
-                            'msg' => __('You have ' . $count . ' vulnerabilities with a risk level of ' . $this->risk_naming[$key] . '. Please update your plugins and themes to the latest version.', 'really-simple-ssl'),
+                            'msg' => sprintf(__('You have %s %s %s, Please take appropriate action. For more information please read more <a>here</a>', 'really-simple-ssl'), $count, $this->risk_naming[$key], $count_label ),
                             'link' => 'https://really-simple-ssl.com/knowledge-base/vulnerability-scanner/',
-                            'icon' => 'warning',
+                            'icon' => ($key === 'c') ? 'warning':'open',
                             'type' => 'warning',
                             'dismissible' => true,
                             'admin_notice' => true,
@@ -149,7 +151,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
                     ]
                 ];
                 $notices['risk_level_' . $key] = $notice;
-
+//                RSSSL()->progress->insert_task('risk_level_' . $key, $notice);
             }
 
             return $notices;

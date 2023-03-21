@@ -1831,6 +1831,7 @@ class rsssl_admin
 
 	    if ( $cache_admin_notices ) {
 		    $cached_notices = get_option('rsssl_admin_notices');
+            $cached_notices = false;
             if ( $cached_notices === 'empty') {
                 return [];
             }
