@@ -19,7 +19,7 @@ const License = (props) => {
         });
     }
 
-    useEffect(async () => {
+    useEffect( () => {
         getLicenseNotices().then(( response ) => {
             setLicenseStatus(response.licenseStatus);
             setNotices(response.notices);

@@ -60,19 +60,21 @@ const LearningMode = (props) => {
     /**
      * Initialize
      */
-    useEffect(async () => {
-        await fetchLearningModeData(props.field.id);
+    useEffect(() => {
+        const run = async () => {
+            await fetchLearningModeData(props.field.id);
+            let controlField = getField(props.field.control_field );
+            let enforced_by_thirdparty = controlField.value === 'enforced-by-thirdparty';
+            let enforce = enforced_by_thirdparty || controlField.value === 'enforce';
 
-        let controlField = getField(props.field.control_field );
-        let enforced_by_thirdparty = controlField.value === 'enforced-by-thirdparty';
-        let enforce = enforced_by_thirdparty || controlField.value === 'enforce';
-
-        setControlField(controlField);
-        setEnforcedByThirdparty(enforced_by_thirdparty);
-        setLearningModeCompleted(controlField.value==='completed');
-        setLmEnabledOnce(getFieldValue(props.field.control_field+'_lm_enabled_once'))
-        setEnforce(enforce);
-        setLearningMode(controlField.value === 'learning_mode');
+            setControlField(controlField);
+            setEnforcedByThirdparty(enforced_by_thirdparty);
+            setLearningModeCompleted(controlField.value==='completed');
+            setLmEnabledOnce(getFieldValue(props.field.control_field+'_lm_enabled_once'))
+            setEnforce(enforce);
+            setLearningMode(controlField.value === 'learning_mode');
+        }
+        run();
     }, [] );
 
     const toggleEnforce = (e, enforce) => {
