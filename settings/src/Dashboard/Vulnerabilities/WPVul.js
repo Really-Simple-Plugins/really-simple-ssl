@@ -1,6 +1,6 @@
 import Icon from "../../utils/Icon";
 import {__} from "@wordpress/i18n";
-import useWPVul from "./WPVulData";
+import useVulnerabilityData from "./VulnerabilityData";
 import {useEffect} from "react";
 import useFields from "../../Settings/FieldsData";
 import Help from "../../Settings/Help";
@@ -14,8 +14,8 @@ const WPVul = (props) => {
         dataLoaded,
         vulnerabilityCount,
         fetchVulnerabilities
-    } = useWPVul();
-    const {fields, fieldsLoaded, addHelpNotice} = useFields();
+    } = useVulnerabilityData();
+    const {fields} = useFields();
     let featuredFields = fields.filter(field => field.new_features_block);
     useEffect(() => {
         fetchVulnerabilities().then(r => {

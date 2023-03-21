@@ -18,6 +18,7 @@ import CheckboxControl from "./CheckboxControl";
 import Support from "./Support";
 import LearningMode from "./LearningMode/LearningMode";
 import RiskComponent from "./RiskConfiguration/RiskComponent";
+import VulnerabilitiesOverview from "./vulnerabilitiesOverview";
 import Button from "./Button";
 import Icon from "../utils/Icon";
 import { useEffect} from "@wordpress/element";
@@ -278,6 +279,14 @@ const Field = (props) => {
         return (
             <div className={highLightClass} ref={scrollAnchor}>
               <MixedContentScan field={props.field}/>
+            </div>
+        )
+    }
+
+    if (field.type === 'vulnerabilitiestable') {
+        return (
+            <div className={highLightClass} ref={scrollAnchor}>
+              <VulnerabilitiesOverview field={props.field} />
             </div>
         )
     }

@@ -15122,9 +15122,9 @@ module.exports = {
 
 /***/ }),
 
-/***/ "./src/DashBoard/DashboardPage.js":
+/***/ "./src/Dashboard/DashboardPage.js":
 /*!****************************************!*\
-  !*** ./src/DashBoard/DashboardPage.js ***!
+  !*** ./src/Dashboard/DashboardPage.js ***!
   \****************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -15135,7 +15135,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _GridBlock__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./GridBlock */ "./src/DashBoard/GridBlock.js");
+/* harmony import */ var _GridBlock__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./GridBlock */ "./src/Dashboard/GridBlock.js");
 
 
 const DashboardPage = props => {
@@ -15149,9 +15149,9 @@ const DashboardPage = props => {
 
 /***/ }),
 
-/***/ "./src/DashBoard/GridBlock.js":
+/***/ "./src/Dashboard/GridBlock.js":
 /*!************************************!*\
-  !*** ./src/DashBoard/GridBlock.js ***!
+  !*** ./src/Dashboard/GridBlock.js ***!
   \************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -15164,17 +15164,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _Progress_ProgressBlock__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Progress/ProgressBlock */ "./src/DashBoard/Progress/ProgressBlock.js");
-/* harmony import */ var _Progress_ProgressBlockHeader__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Progress/ProgressBlockHeader */ "./src/DashBoard/Progress/ProgressBlockHeader.js");
-/* harmony import */ var _Progress_ProgressFooter__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Progress/ProgressFooter */ "./src/DashBoard/Progress/ProgressFooter.js");
-/* harmony import */ var _SslLabs_SslLabs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./SslLabs/SslLabs */ "./src/DashBoard/SslLabs/SslLabs.js");
-/* harmony import */ var _SslLabs_SslLabsFooter__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./SslLabs/SslLabsFooter */ "./src/DashBoard/SslLabs/SslLabsFooter.js");
-/* harmony import */ var _Vulnerabilities_WPVul__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Vulnerabilities/WPVul */ "./src/DashBoard/Vulnerabilities/WPVul.js");
-/* harmony import */ var _Vulnerabilities_WPVulFooter__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./Vulnerabilities/WPVulFooter */ "./src/DashBoard/Vulnerabilities/WPVulFooter.js");
+/* harmony import */ var _Progress_ProgressBlock__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Progress/ProgressBlock */ "./src/Dashboard/Progress/ProgressBlock.js");
+/* harmony import */ var _Progress_ProgressBlockHeader__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Progress/ProgressBlockHeader */ "./src/Dashboard/Progress/ProgressBlockHeader.js");
+/* harmony import */ var _Progress_ProgressFooter__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Progress/ProgressFooter */ "./src/Dashboard/Progress/ProgressFooter.js");
+/* harmony import */ var _SslLabs_SslLabs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./SslLabs/SslLabs */ "./src/Dashboard/SslLabs/SslLabs.js");
+/* harmony import */ var _SslLabs_SslLabsFooter__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./SslLabs/SslLabsFooter */ "./src/Dashboard/SslLabs/SslLabsFooter.js");
+/* harmony import */ var _Vulnerabilities_WPVul__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Vulnerabilities/WPVul */ "./src/Dashboard/Vulnerabilities/WPVul.js");
+/* harmony import */ var _Vulnerabilities_WPVulFooter__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./Vulnerabilities/WPVulFooter */ "./src/Dashboard/Vulnerabilities/WPVulFooter.js");
 /* harmony import */ var _Settings_FieldsData__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../Settings/FieldsData */ "./src/Settings/FieldsData.js");
-/* harmony import */ var _OtherPlugins__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./OtherPlugins */ "./src/DashBoard/OtherPlugins.js");
-/* harmony import */ var _SecurityFeaturesBlock_SecurityFeaturesBlock__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./SecurityFeaturesBlock/SecurityFeaturesBlock */ "./src/DashBoard/SecurityFeaturesBlock/SecurityFeaturesBlock.js");
-/* harmony import */ var _SecurityFeaturesBlock_SecurityFeaturesFooter__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./SecurityFeaturesBlock/SecurityFeaturesFooter */ "./src/DashBoard/SecurityFeaturesBlock/SecurityFeaturesFooter.js");
+/* harmony import */ var _OtherPlugins__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./OtherPlugins */ "./src/Dashboard/OtherPlugins.js");
+/* harmony import */ var _SecurityFeaturesBlock_SecurityFeaturesBlock__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./SecurityFeaturesBlock/SecurityFeaturesBlock */ "./src/Dashboard/SecurityFeaturesBlock/SecurityFeaturesBlock.js");
+/* harmony import */ var _SecurityFeaturesBlock_SecurityFeaturesFooter__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./SecurityFeaturesBlock/SecurityFeaturesFooter */ "./src/Dashboard/SecurityFeaturesBlock/SecurityFeaturesFooter.js");
 /* harmony import */ var _Onboarding_OnboardingData__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../Onboarding/OnboardingData */ "./src/Onboarding/OnboardingData.js");
 
 
@@ -15267,9 +15267,9 @@ const GridBlock = props => {
 
 /***/ }),
 
-/***/ "./src/DashBoard/OtherPlugins.js":
+/***/ "./src/Dashboard/OtherPlugins.js":
 /*!***************************************!*\
-  !*** ./src/DashBoard/OtherPlugins.js ***!
+  !*** ./src/Dashboard/OtherPlugins.js ***!
   \***************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -15393,9 +15393,9 @@ const OtherPlugins = props => {
 
 /***/ }),
 
-/***/ "./src/DashBoard/Progress/ProgressBlock.js":
+/***/ "./src/Dashboard/Progress/ProgressBlock.js":
 /*!*************************************************!*\
-  !*** ./src/DashBoard/Progress/ProgressBlock.js ***!
+  !*** ./src/Dashboard/Progress/ProgressBlock.js ***!
   \*************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -15407,9 +15407,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../utils/api */ "./src/utils/api.js");
-/* harmony import */ var _TaskElement__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./../TaskElement */ "./src/DashBoard/TaskElement.js");
+/* harmony import */ var _TaskElement__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./../TaskElement */ "./src/Dashboard/TaskElement.js");
 /* harmony import */ var _Placeholder_Placeholder__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../Placeholder/Placeholder */ "./src/Placeholder/Placeholder.js");
-/* harmony import */ var _ProgressData__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ProgressData */ "./src/DashBoard/Progress/ProgressData.js");
+/* harmony import */ var _ProgressData__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ProgressData */ "./src/Dashboard/Progress/ProgressData.js");
 /* harmony import */ var _Settings_FieldsData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../Settings/FieldsData */ "./src/Settings/FieldsData.js");
 
 
@@ -15478,9 +15478,9 @@ const ProgressBlock = props => {
 
 /***/ }),
 
-/***/ "./src/DashBoard/Progress/ProgressBlockHeader.js":
+/***/ "./src/Dashboard/Progress/ProgressBlockHeader.js":
 /*!*******************************************************!*\
-  !*** ./src/DashBoard/Progress/ProgressBlockHeader.js ***!
+  !*** ./src/Dashboard/Progress/ProgressBlockHeader.js ***!
   \*******************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -15493,7 +15493,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _ProgressData__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ProgressData */ "./src/DashBoard/Progress/ProgressData.js");
+/* harmony import */ var _ProgressData__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ProgressData */ "./src/Dashboard/Progress/ProgressData.js");
 
 
 
@@ -15543,9 +15543,9 @@ const ProgressHeader = props => {
 
 /***/ }),
 
-/***/ "./src/DashBoard/Progress/ProgressData.js":
+/***/ "./src/Dashboard/Progress/ProgressData.js":
 /*!************************************************!*\
-  !*** ./src/DashBoard/Progress/ProgressData.js ***!
+  !*** ./src/Dashboard/Progress/ProgressData.js ***!
   \************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -15629,9 +15629,9 @@ const useProgress = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, get) =
 
 /***/ }),
 
-/***/ "./src/DashBoard/Progress/ProgressFooter.js":
+/***/ "./src/Dashboard/Progress/ProgressFooter.js":
 /*!**************************************************!*\
-  !*** ./src/DashBoard/Progress/ProgressFooter.js ***!
+  !*** ./src/Dashboard/Progress/ProgressFooter.js ***!
   \**************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -15705,9 +15705,9 @@ const ProgressFooter = props => {
 
 /***/ }),
 
-/***/ "./src/DashBoard/SecurityFeaturesBlock/SecurityFeatureBullet.js":
+/***/ "./src/Dashboard/SecurityFeaturesBlock/SecurityFeatureBullet.js":
 /*!**********************************************************************!*\
-  !*** ./src/DashBoard/SecurityFeaturesBlock/SecurityFeatureBullet.js ***!
+  !*** ./src/Dashboard/SecurityFeaturesBlock/SecurityFeatureBullet.js ***!
   \**********************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -15748,9 +15748,9 @@ const SecurityFeatureBullet = props => {
 
 /***/ }),
 
-/***/ "./src/DashBoard/SecurityFeaturesBlock/SecurityFeaturesBlock.js":
+/***/ "./src/Dashboard/SecurityFeaturesBlock/SecurityFeaturesBlock.js":
 /*!**********************************************************************!*\
-  !*** ./src/DashBoard/SecurityFeaturesBlock/SecurityFeaturesBlock.js ***!
+  !*** ./src/Dashboard/SecurityFeaturesBlock/SecurityFeaturesBlock.js ***!
   \**********************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -15761,7 +15761,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _SecurityFeatureBullet__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SecurityFeatureBullet */ "./src/DashBoard/SecurityFeaturesBlock/SecurityFeatureBullet.js");
+/* harmony import */ var _SecurityFeatureBullet__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SecurityFeatureBullet */ "./src/Dashboard/SecurityFeaturesBlock/SecurityFeatureBullet.js");
 /* harmony import */ var _Placeholder_Placeholder__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../Placeholder/Placeholder */ "./src/Placeholder/Placeholder.js");
 /* harmony import */ var _utils_Hyperlink__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../utils/Hyperlink */ "./src/utils/Hyperlink.js");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
@@ -15804,9 +15804,9 @@ const SecurityFeaturesBlock = props => {
 
 /***/ }),
 
-/***/ "./src/DashBoard/SecurityFeaturesBlock/SecurityFeaturesFooter.js":
+/***/ "./src/Dashboard/SecurityFeaturesBlock/SecurityFeaturesFooter.js":
 /*!***********************************************************************!*\
-  !*** ./src/DashBoard/SecurityFeaturesBlock/SecurityFeaturesFooter.js ***!
+  !*** ./src/Dashboard/SecurityFeaturesBlock/SecurityFeaturesFooter.js ***!
   \***********************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -15840,9 +15840,9 @@ class SecurityFeaturesFooter extends _wordpress_element__WEBPACK_IMPORTED_MODULE
 
 /***/ }),
 
-/***/ "./src/DashBoard/SslLabs/SslLabs.js":
+/***/ "./src/Dashboard/SslLabs/SslLabs.js":
 /*!******************************************!*\
-  !*** ./src/DashBoard/SslLabs/SslLabs.js ***!
+  !*** ./src/Dashboard/SslLabs/SslLabs.js ***!
   \******************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -15857,7 +15857,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../utils/Icon */ "./src/utils/Icon.js");
-/* harmony import */ var _SslLabsData__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./SslLabsData */ "./src/DashBoard/SslLabs/SslLabsData.js");
+/* harmony import */ var _SslLabsData__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./SslLabsData */ "./src/Dashboard/SslLabs/SslLabsData.js");
 
 
 
@@ -16249,9 +16249,9 @@ const SslLabs = props => {
 
 /***/ }),
 
-/***/ "./src/DashBoard/SslLabs/SslLabsData.js":
+/***/ "./src/Dashboard/SslLabs/SslLabsData.js":
 /*!**********************************************!*\
-  !*** ./src/DashBoard/SslLabs/SslLabsData.js ***!
+  !*** ./src/Dashboard/SslLabs/SslLabsData.js ***!
   \**********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -16282,9 +16282,9 @@ const useSslLabs = (0,zustand__WEBPACK_IMPORTED_MODULE_0__.create)((set, get) =>
 
 /***/ }),
 
-/***/ "./src/DashBoard/SslLabs/SslLabsFooter.js":
+/***/ "./src/Dashboard/SslLabs/SslLabsFooter.js":
 /*!************************************************!*\
-  !*** ./src/DashBoard/SslLabs/SslLabsFooter.js ***!
+  !*** ./src/Dashboard/SslLabs/SslLabsFooter.js ***!
   \************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -16297,7 +16297,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _SslLabsData__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./SslLabsData */ "./src/DashBoard/SslLabs/SslLabsData.js");
+/* harmony import */ var _SslLabsData__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./SslLabsData */ "./src/Dashboard/SslLabs/SslLabsData.js");
 
 
 
@@ -16321,9 +16321,9 @@ const SslLabsFooter = () => {
 
 /***/ }),
 
-/***/ "./src/DashBoard/TaskElement.js":
+/***/ "./src/Dashboard/TaskElement.js":
 /*!**************************************!*\
-  !*** ./src/DashBoard/TaskElement.js ***!
+  !*** ./src/Dashboard/TaskElement.js ***!
   \**************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -16342,7 +16342,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/api */ "./src/utils/api.js");
 /* harmony import */ var _utils_sleeper__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils/sleeper */ "./src/utils/sleeper.js");
 /* harmony import */ var _Settings_FieldsData__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Settings/FieldsData */ "./src/Settings/FieldsData.js");
-/* harmony import */ var _Progress_ProgressData__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Progress/ProgressData */ "./src/DashBoard/Progress/ProgressData.js");
+/* harmony import */ var _Progress_ProgressData__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Progress/ProgressData */ "./src/Dashboard/Progress/ProgressData.js");
 /* harmony import */ var _Menu_MenuData__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../Menu/MenuData */ "./src/Menu/MenuData.js");
 
 
@@ -16425,9 +16425,112 @@ const TaskElement = props => {
 
 /***/ }),
 
-/***/ "./src/DashBoard/Vulnerabilities/WPVul.js":
+/***/ "./src/Dashboard/Vulnerabilities/VulnerabilityData.js":
+/*!************************************************************!*\
+  !*** ./src/Dashboard/Vulnerabilities/VulnerabilityData.js ***!
+  \************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/index.mjs");
+/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils/api */ "./src/utils/api.js");
+
+
+const useVulnerabilityData = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, get) => ({
+  // Stuff we need for the WPVulData component
+  updates: 0,
+  //for letting the component know if there are updates available
+  vulnerabilities: 0,
+  //for storing the data
+  HighestRisk: false,
+  //for storing the highest risk
+  dataLoaded: false,
+  //for letting the component know if the data is loaded
+  lastChecked: 'never',
+  //for storing the last time the data was checked
+  vulEnabled: false,
+  //for storing the status of the vulnerability scan
+  vulList: [],
+  //for storing the list of vulnerabilities
+
+  /*
+  * Getters
+   */
+  getVulnerabilities: () => {
+    return get().vulnerabilities;
+  },
+  /*
+  * Functions
+   */
+  fetchVulnerabilities: async () => {
+    let data = {};
+    data.action = 'get';
+    try {
+      const fetched = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.vulGetAction('api_call_listener', data);
+      set({
+        vulnerabilities: fetched.data.vulnerabilities,
+        updates: fetched.data.updates,
+        vulList: fetched.data.vulList,
+        dataLoaded: true,
+        lastChecked: fetched.data.lastChecked,
+        vulEnabled: fetched.data.vulEnabled
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  },
+  vulnerabilityCount: () => {
+    let vuls = get().vulList;
+    //we group the data by risk level
+    //first we make vuls an array
+    let vulsArray = [];
+    Object.keys(vuls).forEach(function (key) {
+      vulsArray.push(vuls[key]);
+    });
+    let riskLevels = ['c', 'h', 'm', 'l'];
+    //we count the amount of vulnerabilities per risk level
+    return riskLevels.map(function (level) {
+      return {
+        level: level,
+        count: vulsArray.filter(function (vul) {
+          return vul.risk_level === level;
+        }).length
+      };
+    });
+  },
+  vulnerabilityScore: () => {
+    let score = 0;
+    let vuls = get().vulList;
+    Object.keys(vuls).forEach(function (key) {
+      //if there are vulnerabilities with critical severity, score is 5
+      if (vuls[key].risk_level === 'c') {
+        score = 5;
+      } else if (score < 1) {
+        score = 1;
+      }
+    });
+    return score;
+  },
+  hardeningScore: () => {
+    let score = 0;
+    let vuls = get().vulnerabilities;
+    for (let i = 0; i < vuls.length; i++) {
+      score += vuls[i].hardening_score;
+    }
+    return score;
+  }
+}));
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useVulnerabilityData);
+
+/***/ }),
+
+/***/ "./src/Dashboard/Vulnerabilities/WPVul.js":
 /*!************************************************!*\
-  !*** ./src/DashBoard/Vulnerabilities/WPVul.js ***!
+  !*** ./src/Dashboard/Vulnerabilities/WPVul.js ***!
   \************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -16441,7 +16544,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../utils/Icon */ "./src/utils/Icon.js");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _WPVulData__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./WPVulData */ "./src/DashBoard/Vulnerabilities/WPVulData.js");
+/* harmony import */ var _VulnerabilityData__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./VulnerabilityData */ "./src/Dashboard/Vulnerabilities/VulnerabilityData.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _Settings_FieldsData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../Settings/FieldsData */ "./src/Settings/FieldsData.js");
@@ -16462,11 +16565,9 @@ const WPVul = props => {
     dataLoaded,
     vulnerabilityCount,
     fetchVulnerabilities
-  } = (0,_WPVulData__WEBPACK_IMPORTED_MODULE_3__["default"])();
+  } = (0,_VulnerabilityData__WEBPACK_IMPORTED_MODULE_3__["default"])();
   const {
-    fields,
-    fieldsLoaded,
-    addHelpNotice
+    fields
   } = (0,_Settings_FieldsData__WEBPACK_IMPORTED_MODULE_5__["default"])();
   let featuredFields = fields.filter(field => field.new_features_block);
   (0,react__WEBPACK_IMPORTED_MODULE_4__.useEffect)(() => {
@@ -16722,112 +16823,9 @@ const WPVul = props => {
 
 /***/ }),
 
-/***/ "./src/DashBoard/Vulnerabilities/WPVulData.js":
-/*!****************************************************!*\
-  !*** ./src/DashBoard/Vulnerabilities/WPVulData.js ***!
-  \****************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/index.mjs");
-/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils/api */ "./src/utils/api.js");
-
-
-const useWPVul = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, get) => ({
-  // Stuff we need for the WPVulData component
-  updates: 0,
-  //for letting the component know if there are updates available
-  vulnerabilities: 0,
-  //for storing the data
-  HighestRisk: false,
-  //for storing the highest risk
-  dataLoaded: false,
-  //for letting the component know if the data is loaded
-  lastChecked: 'never',
-  //for storing the last time the data was checked
-  vulEnabled: false,
-  //for storing the status of the vulnerability scan
-  vulList: [],
-  //for storing the list of vulnerabilities
-
-  /*
-  * Getters
-   */
-  getVulnerabilities: () => {
-    return get().vulnerabilities;
-  },
-  /*
-  * Functions
-   */
-  fetchVulnerabilities: async () => {
-    let data = {};
-    data.action = 'get';
-    try {
-      const fetched = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.vulGetAction('api_call_listener', data);
-      set({
-        vulnerabilities: fetched.data.vulnerabilities,
-        updates: fetched.data.updates,
-        vulList: fetched.data.vulList,
-        dataLoaded: true,
-        lastChecked: fetched.data.lastChecked,
-        vulEnabled: fetched.data.vulEnabled
-      });
-    } catch (e) {
-      console.error(e);
-    }
-  },
-  vulnerabilityCount: () => {
-    let vuls = get().vulList;
-    //we group the data by risk level
-    //first we make vuls an array
-    let vulsArray = [];
-    Object.keys(vuls).forEach(function (key) {
-      vulsArray.push(vuls[key]);
-    });
-    let riskLevels = ['c', 'h', 'm', 'l'];
-    //we count the amount of vulnerabilities per risk level
-    return riskLevels.map(function (level) {
-      return {
-        level: level,
-        count: vulsArray.filter(function (vul) {
-          return vul.risk_level === level;
-        }).length
-      };
-    });
-  },
-  vulnerabilityScore: () => {
-    let score = 0;
-    let vuls = get().vulList;
-    Object.keys(vuls).forEach(function (key) {
-      //if there are vulnerabilities with critical severity, score is 5
-      if (vuls[key].risk_level === 'c') {
-        score = 5;
-      } else if (score < 1) {
-        score = 1;
-      }
-    });
-    return score;
-  },
-  hardeningScore: () => {
-    let score = 0;
-    let vuls = get().vulnerabilities;
-    for (let i = 0; i < vuls.length; i++) {
-      score += vuls[i].hardening_score;
-    }
-    return score;
-  }
-}));
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useWPVul);
-
-/***/ }),
-
-/***/ "./src/DashBoard/Vulnerabilities/WPVulFooter.js":
+/***/ "./src/Dashboard/Vulnerabilities/WPVulFooter.js":
 /*!******************************************************!*\
-  !*** ./src/DashBoard/Vulnerabilities/WPVulFooter.js ***!
+  !*** ./src/Dashboard/Vulnerabilities/WPVulFooter.js ***!
   \******************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -16842,7 +16840,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _WPVulData__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./WPVulData */ "./src/DashBoard/Vulnerabilities/WPVulData.js");
+/* harmony import */ var _VulnerabilityData__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./VulnerabilityData */ "./src/Dashboard/Vulnerabilities/VulnerabilityData.js");
 
 
 
@@ -16850,7 +16848,7 @@ __webpack_require__.r(__webpack_exports__);
 const WPVulFooter = props => {
   const {
     lastChecked
-  } = (0,_WPVulData__WEBPACK_IMPORTED_MODULE_3__["default"])();
+  } = (0,_VulnerabilityData__WEBPACK_IMPORTED_MODULE_3__["default"])();
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: 'rsssl-wpvul'
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
@@ -18873,7 +18871,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _Header__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Header */ "./src/Header.js");
-/* harmony import */ var _DashBoard_DashboardPage__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./DashBoard/DashboardPage */ "./src/DashBoard/DashboardPage.js");
+/* harmony import */ var _Dashboard_DashboardPage__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Dashboard/DashboardPage */ "./src/Dashboard/DashboardPage.js");
 /* harmony import */ var _Menu_Menu__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Menu/Menu */ "./src/Menu/Menu.js");
 /* harmony import */ var _Settings_Settings__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Settings/Settings */ "./src/Settings/Settings.js");
 /* harmony import */ var _Settings_Notices__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Settings/Notices */ "./src/Settings/Notices.js");
@@ -18937,7 +18935,7 @@ const Page = props => {
     className: "rsssl-content-area rsssl-grid rsssl-" + selectedMainMenuItem
   }, selectedMainMenuItem !== 'dashboard' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Menu_Menu__WEBPACK_IMPORTED_MODULE_3__["default"], null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Settings_Settings__WEBPACK_IMPORTED_MODULE_4__["default"], null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Settings_Notices__WEBPACK_IMPORTED_MODULE_5__["default"], {
     className: "rsssl-wizard-notices"
-  })), selectedMainMenuItem === 'dashboard' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_DashBoard_DashboardPage__WEBPACK_IMPORTED_MODULE_2__["default"], null))));
+  })), selectedMainMenuItem === 'dashboard' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Dashboard_DashboardPage__WEBPACK_IMPORTED_MODULE_2__["default"], null))));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Page);
 
@@ -19163,9 +19161,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Support__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./Support */ "./src/Settings/Support.js");
 /* harmony import */ var _LearningMode_LearningMode__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./LearningMode/LearningMode */ "./src/Settings/LearningMode/LearningMode.js");
 /* harmony import */ var _RiskConfiguration_RiskComponent__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./RiskConfiguration/RiskComponent */ "./src/Settings/RiskConfiguration/RiskComponent.js");
-/* harmony import */ var _Button__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./Button */ "./src/Settings/Button.js");
-/* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../utils/Icon */ "./src/utils/Icon.js");
-/* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./FieldsData */ "./src/Settings/FieldsData.js");
+/* harmony import */ var _vulnerabilitiesOverview__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./vulnerabilitiesOverview */ "./src/Settings/vulnerabilitiesOverview.js");
+/* harmony import */ var _Button__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./Button */ "./src/Settings/Button.js");
+/* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../utils/Icon */ "./src/utils/Icon.js");
+/* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./FieldsData */ "./src/Settings/FieldsData.js");
+
 
 
 
@@ -19191,7 +19191,7 @@ const Field = props => {
     updateField,
     setChangedField,
     highLightField
-  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_17__["default"])();
+  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_18__["default"])();
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     if (highLightField === props.field.id && scrollAnchor.current) {
       scrollAnchor.current.scrollIntoView({
@@ -19222,7 +19222,7 @@ const Field = props => {
     let tooltipColor = field.warning ? 'red' : 'black';
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "cmplz-label-text"
-    }, field.label), field.tooltip && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_16__["default"], {
+    }, field.label), field.tooltip && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_17__["default"], {
       name: "info-open",
       tooltip: field.tooltip,
       color: tooltipColor
@@ -19312,7 +19312,7 @@ const Field = props => {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: 'rsssl-field-button ' + highLightClass,
       ref: scrollAnchor
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, field.label), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Button__WEBPACK_IMPORTED_MODULE_15__["default"], {
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, field.label), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Button__WEBPACK_IMPORTED_MODULE_16__["default"], {
       field: field
     }));
   }
@@ -19431,6 +19431,14 @@ const Field = props => {
       className: highLightClass,
       ref: scrollAnchor
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_MixedContentScan_MixedContentScan__WEBPACK_IMPORTED_MODULE_9__["default"], {
+      field: props.field
+    }));
+  }
+  if (field.type === 'vulnerabilitiestable') {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: highLightClass,
+      ref: scrollAnchor
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_vulnerabilitiesOverview__WEBPACK_IMPORTED_MODULE_15__["default"], {
       field: props.field
     }));
   }
@@ -20359,7 +20367,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _DashBoard_TaskElement__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../DashBoard/TaskElement */ "./src/DashBoard/TaskElement.js");
+/* harmony import */ var _Dashboard_TaskElement__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../Dashboard/TaskElement */ "./src/Dashboard/TaskElement.js");
 /* harmony import */ var _Placeholder_Placeholder__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../Placeholder/Placeholder */ "./src/Placeholder/Placeholder.js");
 /* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../utils/api */ "./src/utils/api.js");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
@@ -20443,7 +20451,7 @@ const License = props => {
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
     className: "button button-default",
     onClick: () => toggleActivation()
-  }, licenseStatus === 'valid' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Deactivate", "really-simple-ssl")), licenseStatus !== 'valid' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Activate", "really-simple-ssl"))))), !noticesLoaded && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Placeholder_Placeholder__WEBPACK_IMPORTED_MODULE_2__["default"], null), noticesLoaded && notices.map((notice, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_DashBoard_TaskElement__WEBPACK_IMPORTED_MODULE_1__["default"], {
+  }, licenseStatus === 'valid' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Deactivate", "really-simple-ssl")), licenseStatus !== 'valid' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Activate", "really-simple-ssl"))))), !noticesLoaded && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Placeholder_Placeholder__WEBPACK_IMPORTED_MODULE_2__["default"], null), noticesLoaded && notices.map((notice, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Dashboard_TaskElement__WEBPACK_IMPORTED_MODULE_1__["default"], {
     key: i,
     index: i,
     notice: notice,
@@ -21693,6 +21701,98 @@ const Support = () => {
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Send', 'really-simple-ssl')));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Support);
+
+/***/ }),
+
+/***/ "./src/Settings/vulnerabilitiesOverview.js":
+/*!*************************************************!*\
+  !*** ./src/Settings/vulnerabilitiesOverview.js ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _Dashboard_Vulnerabilities_VulnerabilityData__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Dashboard/Vulnerabilities/VulnerabilityData */ "./src/Dashboard/Vulnerabilities/VulnerabilityData.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var react_data_table_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-data-table-component */ "./node_modules/react-data-table-component/dist/index.cjs.js");
+
+
+
+
+
+const VulnerabilitiesOverview = props => {
+  const {
+    dataLoaded,
+    vulList,
+    fetchVulnerabilities
+  } = (0,_Dashboard_Vulnerabilities_VulnerabilityData__WEBPACK_IMPORTED_MODULE_2__["default"])();
+
+  //we create the columns
+  let columns = [];
+  //getting the fields from the props
+  let field = props.field;
+  function buildColumn(column) {
+    return {
+      name: column.name,
+      sortable: column.sortable,
+      width: column.width,
+      selector: row => row[column.column]
+    };
+  }
+  field.columns.forEach(function (item, i) {
+    let newItem = buildColumn(item);
+    columns.push(newItem);
+  });
+  (0,react__WEBPACK_IMPORTED_MODULE_3__.useEffect)(() => {
+    fetchVulnerabilities().then(r => {});
+  }, []);
+  if (!dataLoaded) {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null);
+  }
+  console.log(vulList);
+  /**
+   * Styling
+   */
+  const customStyles = {
+    headCells: {
+      style: {
+        paddingLeft: '0',
+        // override the cell padding for head cells
+        paddingRight: '0'
+      }
+    },
+    cells: {
+      style: {
+        paddingLeft: '0',
+        // override the cell padding for data cells
+        paddingRight: '0'
+      }
+    }
+  };
+  let data = vulList;
+  if (typeof data === 'object') {
+    //we make it an array
+    data = Object.values(data);
+  }
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_4__["default"], {
+    columns: columns,
+    data: data,
+    dense: true,
+    pagination: true,
+    noDataComponent: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("No results", "really-simple-ssl"),
+    persistTableHead: true,
+    customStyles: customStyles
+  });
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (VulnerabilitiesOverview);
 
 /***/ }),
 

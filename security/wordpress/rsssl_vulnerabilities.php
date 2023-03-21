@@ -149,6 +149,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
                     ]
                 ];
                 $notices['risk_level_' . $key] = $notice;
+
             }
 
             return $notices;

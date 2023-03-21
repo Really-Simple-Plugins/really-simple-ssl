@@ -84,6 +84,11 @@ function rsssl_menu() {
                             'title'    => __( 'Notifications', 'really-simple-ssl' ),
                         ],
                         [
+                            'id'       => 'vulnerabilities_overview',
+                            'helpLink' => 'https://really-simple-ssl.com/instructions/about-vulnerabilities#components',
+                            'title'    => __( 'Infected components', 'really-simple-ssl' ),
+                        ],
+                        [
                             'id'           => 'vulnerabilities_measures',
                             'premium'      => true,
                             'helpLink'     => 'https://really-simple-ssl.com/instructions/about-vulnerabilities#measures',
@@ -833,6 +838,37 @@ function rsssl_fields( $load_values = true ) {
             'disabled' => !rsssl_get_option('enable_vulnerability_scanner'),
             'button_text' => __( "Test notifications", "really-simple-ssl" ),
             'default'     => false,
+        ],
+        [
+            'id'    => 'vulnerabilities_list',
+            'menu_id' => 'vulnerabilities',
+            'group_id' => 'vulnerabilities_overview',
+            'type' => 'vulnerabilitiestable',
+            'label' => __('Vulnerabilities Overview', 'really-simple-ssl'),
+            'disabled' => !rsssl_get_option('enable_vulnerability_scanner'),
+            'columns' => [
+                [
+                    'name'     => __( 'Component', 'really-simple-ssl' ),
+                    'sortable' => false,
+                    'column'   => 'Name',
+                ],
+                [
+                    'name'     => __( 'Risk', 'really-simple-ssl' ),
+                    'sortable' => false,
+                    'column'   => 'risk_level',
+                ],
+                [
+                    'name'     => __( 'Date', 'really-simple-ssl' ),
+                    'sortable' => false,
+                    'column'   => 'date',
+                ],
+                [
+                    'name'     => __( 'Action', 'really-simple-ssl' ),
+                    'sortable' => false,
+                    'column'   => 'vulnerability_action',
+                ],
+
+            ]
         ],
 		/* Measures Setting Premium Only */
 //        [
