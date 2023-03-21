@@ -72,6 +72,9 @@
   height: fit-content;
   background-color: var(--rsp-dark-blue-faded);
   &.rsssl-warning {
+    background-color: var(--rsp-red-faded);
+  }
+  &.rsssl-open {
     background-color: var(--rsp-yellow-faded);
   }
   summary, p{

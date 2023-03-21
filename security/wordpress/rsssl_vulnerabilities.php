@@ -929,6 +929,8 @@ if (!class_exists("rsssl_vulnerabilities")) {
                                 $plugin['vulnerable'] = true;
                                 $plugin['risk_level'] = $this->get_highest_vulnerability($component->vulnerabilities);
                                 $plugin['rss_identifier'] = $this->getLinkedUUID($component->vulnerabilities, $plugin['risk_level']);
+                                $plugin['risk_name'] = $this->risk_naming[$plugin['risk_level']];
+                                $plugin['date'] = $this->getLinkedDate($component->vulnerabilities, $plugin['risk_level']);
                                 $plugin['file'] = $key;
                             }
                         }
@@ -1127,6 +1129,16 @@ if (!class_exists("rsssl_vulnerabilities")) {
             foreach ($vulnerabilities as $vulnerability) {
                 if ($vulnerability->severity === $risk_level) {
                     return $vulnerability->rss_identifier;
+                }
+            }
+        }
+
+        private function getLinkedDate($vulnerabilities, string $risk_level)
+        {
+            foreach ($vulnerabilities as $vulnerability) {
+                if ($vulnerability->severity === $risk_level) {
+                    //we return the date in a readable format
+                    return date('d-m-Y', strtotime($vulnerability->published_date));
                 }
             }
         }

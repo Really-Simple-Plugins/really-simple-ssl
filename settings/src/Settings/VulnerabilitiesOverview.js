@@ -2,6 +2,7 @@ import {__} from '@wordpress/i18n';
 import useVulnerabilityData from "../Dashboard/Vulnerabilities/VulnerabilityData";
 import React, {useEffect} from 'react';
 import DataTable from "react-data-table-component";
+import Icon from "../utils/Icon";
 
 const VulnerabilitiesOverview = (props) => {
     const {
@@ -30,16 +31,19 @@ const VulnerabilitiesOverview = (props) => {
     });
 
     useEffect(() => {
-        fetchVulnerabilities().then(r => {
-        });
+        fetchVulnerabilities();
     }, []);
 
-    if(!dataLoaded) {
+    if(!dataLoaded || vulList.length === 0 ) {
         return (
-            <></>
+            <>
+                <div className="rsssl-shield-overlay">
+                    <Icon name = "shield"  size="80px"/>
+                </div>
+            </>
         )
     }
-    console.log(vulList);
+
     /**
      * Styling
      */

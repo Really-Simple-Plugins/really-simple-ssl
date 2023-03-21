@@ -69,7 +69,7 @@ const Settings = () => {
         let noticeIsLinkedToField = false;
 
         //notices that are linked to a field. Only in case of warnings.
-        if ( notice.show_with_options && notice.output.icon === 'warning') {
+        if ( notice.show_with_options) {
             let noticeFields = selectedFields.filter(field => notice.show_with_options.includes(field.id));
             noticeIsLinkedToField = noticeFields.length>0;
         }

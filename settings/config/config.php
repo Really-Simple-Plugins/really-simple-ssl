@@ -86,7 +86,7 @@ function rsssl_menu() {
                         [
                             'id'       => 'vulnerabilities_overview',
                             'helpLink' => 'https://really-simple-ssl.com/instructions/about-vulnerabilities#components',
-                            'title'    => __( 'Infected components', 'really-simple-ssl' ),
+                            'title'    => __( 'Vulnerabilities', 'really-simple-ssl' ),
                         ],
                         [
                             'id'           => 'vulnerabilities_measures',
@@ -137,7 +137,7 @@ function rsssl_menu() {
 							'premium'              => true,
 							'premium_text'         => __( "Get Recommended Security Headers with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
 							'upgrade'              => 'https://really-simple-ssl.com/pro/?mtm_campaign=recommendedheaders&mtm_source=free&mtm_content=upgrade',
-							'title'                => __( 'Recommended Security Headers ', 'really-simple-ssl' ),
+							'title'                => __( 'Recommended Security Headers', 'really-simple-ssl' ),
 							'helpLink'             => 'https://really-simple-ssl.com/instructions/about-recommended-security-headers/?mtm_campaign=instructions&mtm_source=free',
 						],
 					],
@@ -475,10 +475,6 @@ function rsssl_fields( $load_values = true ) {
 			'group_id' => 'support',
 			'type'     => 'support',
 			'label'    => __( "Premium support", 'really-simple-ssl' ),
-			// 'help'        => [
-			// 	'label' => 'default',
-			// 	'placeholder' => __( "If enabled, all the Really Simple SSL pages within the WordPress admin will be in high contrast", 'really-simple-ssl' ),
-			// ],
 			'disabled' => false,
 			'default'  => false,
 		],
@@ -696,6 +692,50 @@ function rsssl_fields( $load_values = true ) {
 			'disabled' => false,
 			'default'  => false,
 		],
+        [
+            'id'       => 'change_login_url_enabled',
+            'menu_id'  => 'hardening',
+            'group_id' => 'hardening_extended',
+            'type'     => 'checkbox',
+            'tooltip'  => __( "Allows you to enter a custom login URL.", 'really-simple-ssl' ),
+            'label'    => __( "Enable Custom login URL", 'really-simple-ssl' ),
+            'disabled' => false,
+            'default'  => false,
+        ],
+        [
+            'id'       => 'change_login_url',
+            'menu_id'  => 'hardening',
+            'group_id' => 'hardening_extended',
+            'type'     => 'text',
+            'tooltip'  => __( "Enter a custom login URL. This allows you to log in via this custom URL instead of /wp-admin or /wp-login.php", 'really-simple-ssl' ),
+            'label'    => __( "Custom login URL", 'really-simple-ssl' ),
+            'disabled' => false,
+            'default'  => false,
+            'condition_action'   => 'hide',
+            'react_conditions' => [
+                'relation' => 'AND',
+                [
+                    'change_login_url_enabled' => 1,
+                ]
+            ],
+        ],
+        [
+            'id'       => 'change_login_url_failure_url',
+            'menu_id'  => 'hardening',
+            'group_id' => 'hardening_extended',
+            'type'     => 'postdropdown',
+            'tooltip'  => __( "Users trying to enter via /wp-admin or /wp-login.php will be redirected to this URL.", 'really-simple-ssl' ),
+            'label'    => '',
+            'disabled' => false,
+            'default'  => '404_default',
+            'condition_action'   => 'hide',
+            'react_conditions' => [
+                'relation' => 'AND',
+                [
+                    'change_login_url_enabled' => 1,
+                ]
+            ],
+        ],
 		[
 			'id'       => 'xmlrpc_status',
 			'menu_id'  => 'hardening',
@@ -855,7 +895,7 @@ function rsssl_fields( $load_values = true ) {
                 [
                     'name'     => __( 'Risk', 'really-simple-ssl' ),
                     'sortable' => false,
-                    'column'   => 'risk_level',
+                    'column'   => 'risk_name',
                 ],
                 [
                     'name'     => __( 'Date', 'really-simple-ssl' ),

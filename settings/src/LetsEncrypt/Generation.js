@@ -21,7 +21,7 @@ const Generation = (props) => {
             props.restartTests();
             const notice = dispatch('core/notices').createNotice(
                 'success',
-                __( 'Skip DNS verification ', 'really-simple-ssl' ),
+                __( 'Skip DNS verification', 'really-simple-ssl' ),
                 {
                     __unstableHTML: true,
                     id: 'rsssl_skip_dns',

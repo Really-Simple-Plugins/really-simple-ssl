@@ -23,7 +23,7 @@ import Button from "./Button";
 import Icon from "../utils/Icon";
 import { useEffect} from "@wordpress/element";
 import useFields from "./FieldsData";
-
+import PostDropdown from "./PostDropDown";
 
 const Field = (props) => {
     let scrollAnchor = React.createRef();
@@ -38,6 +38,7 @@ const Field = (props) => {
     const onChangeHandler = (fieldValue) => {
         let field = props.field;
         updateField(field.id, fieldValue);
+
         //we can configure other fields if a field is enabled, or set to a certain value.
         let configureFieldCondition = false;
         if ( field.configure_on_activation ) {
@@ -96,6 +97,7 @@ const Field = (props) => {
     if ( field.conditionallyDisabled ) {
         disabled = true;
     }
+
     if ( !field.visible ) {
         return (
             <></>
@@ -250,6 +252,14 @@ const Field = (props) => {
         return (
             <div className={highLightClass} ref={scrollAnchor}>
               <Support/>
+            </div>
+        )
+    }
+
+    if ( field.type==='postdropdown' ) {
+        return (
+            <div className={highLightClass} ref={scrollAnchor}>
+              <PostDropdown field={props.field}/>
             </div>
         )
     }

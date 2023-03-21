@@ -268,7 +268,7 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
 				'id'          => 4,
 				'ignored'     => false,
 				'type'        => 'posts',
-				'description' => __( "Mixed content in post: ", "really-simple-ssl" ) . 'Hello World',
+				'description' => sprintf(__( "Mixed content in post: %s", "really-simple-ssl" ), 'Hello World'),
 				'blocked_url' => '#',
 				'location'    => site_url(),
 				'details'     => [
