@@ -1,88 +1,73 @@
-import {Component} from "@wordpress/element";
 import { __ } from '@wordpress/i18n';
 import * as rsssl_api from "../utils/api";
 import Icon from "../utils/Icon";
+import useModal from "./ModalData";
+import {useState} from '@wordpress/element';
 
-class Modal extends Component {
-    constructor() {
-        super( ...arguments );
-        this.state = {
-            data:[],
-            buttonsDisabled:false,
+const Modal = (props) => {
+    const {handleModal, modalData, setModalData, showModal, setIgnoredItemId, setFixedItemId, item} = useModal();
+    const [buttonsDisabled, setButtonsDisabled] = useState(false);
 
-        };
+    const dismissModal = () => {
+        handleModal(false, null, null);
     }
 
-    dismissModal(dropItem){
-        this.props.handleModal(false, null, dropItem);
-    }
-    componentDidMount() {
-        this.setState({
-            data:this.props.data,
-            buttonsDisabled:false,
-        });
-    }
-
-    handleFix(e){
+    const handleFix = (e, type) => {
         //set to disabled
-        let action = this.props.data.action;
-        this.setState({
-            buttonsDisabled:true
-        });
-        rsssl_api.runTest(action, 'refresh', this.props.data ).then( ( response ) => {
-
-            let {
-                data,
-            } = this.state;
+        let action = modalData.action;
+        setButtonsDisabled(true);
+        rsssl_api.runTest(action, 'refresh', modalData ).then( ( response ) => {
+            let data = {...modalData};
             data.description = response.msg;
             data.subtitle = '';
-            this.setState({
-                data: data,
-            });
-            let item = this.props.data;
+            setModalData(data);
+            setButtonsDisabled(false);
             if (response.success) {
-                this.dismissModal(this.props.data);
+                if (type==='ignore' && item !==false ) {
+                    setIgnoredItemId(item.id);
+                } else {
+                    setFixedItemId(item.id);
+                }
+                handleModal(false, null);
             }
         });
     }
 
-    render(){
-        const {
-            data,
-            buttonsDisabled,
-        } = this.state;
-        let disabled = buttonsDisabled ? 'disabled' : '';
-        let description = data.description;
-        if ( !Array.isArray(description) ) {
-            description = [description];
-        }
+    if (!showModal) {
+        return (<></>);
+    }
 
-        return (
-            <div>
-                <div className="rsssl-modal-backdrop" onClick={ (e) => this.dismissModal(e) }>&nbsp;</div>
-                <div className="rsssl-modal" id="{id}">
-                    <div className="rsssl-modal-header">
-                        <h2 className="modal-title">
-                            {data.title}
-                        </h2>
-                        <button type="button" className="rsssl-modal-close" data-dismiss="modal" aria-label="Close" onClick={ (e) => this.dismissModal(e) }>
-                            <Icon name='times' />
-                        </button>
-                    </div>
-                    <div className="rsssl-modal-content">
-                        { data.subtitle && <div className="rsssl-modal-subtitle">{data.subtitle}</div>}
-                        { Array.isArray(description) && description.map((s, i) => <div key={i} className="rsssl-modal-description">{s}</div>) }
-                    </div>
-                    <div className="rsssl-modal-footer">
-                        { data.edit && <a href={data.edit} target="_blank" className="button button-secondary">{__("Edit", "really-simple-ssl")}</a>}
-                        { data.help && <a href={data.help} target="_blank"  className="button rsssl-button-help">{__("Help", "really-simple-ssl")}</a>}
-                        { (!data.ignored && data.action==='ignore_url') && <button disabled={disabled} className="button button-primary" onClick={ (e) => this.handleFix(e) }>{ __("Ignore", "really-simple-ssl")}</button>}
-                        { data.action!=='ignore_url' &&  <button disabled={disabled} className="button button-primary" onClick={ (e) => this.handleFix(e) }>{__("Fix", "really-simple-ssl")}</button> }
-                    </div>
+    let disabled = buttonsDisabled ? 'disabled' : '';
+    let description = modalData.description;
+    if ( !Array.isArray(description) ) {
+        description = [description];
+    }
+
+    return (
+        <div>
+            <div className="rsssl-modal-backdrop" onClick={ (e) => dismissModal(e) }>&nbsp;</div>
+            <div className="rsssl-modal" id="{id}">
+                <div className="rsssl-modal-header">
+                    <h2 className="modal-title">
+                        {modalData.title}
+                    </h2>
+                    <button type="button" className="rsssl-modal-close" data-dismiss="modal" aria-label="Close" onClick={ (e) => dismissModal(e) }>
+                        <Icon name='times' />
+                    </button>
+                </div>
+                <div className="rsssl-modal-content">
+                    { modalData.subtitle && <div className="rsssl-modal-subtitle">{modalData.subtitle}</div>}
+                    { Array.isArray(description) && description.map((s, i) => <div key={i} className="rsssl-modal-description">{s}</div>) }
+                </div>
+                <div className="rsssl-modal-footer">
+                    { modalData.edit && <a href={modalData.edit} target="_blank" className="button button-secondary">{__("Edit", "really-simple-ssl")}</a>}
+                    { modalData.help && <a href={modalData.help} target="_blank"  className="button rsssl-button-help">{__("Help", "really-simple-ssl")}</a>}
+                    { (!modalData.ignored && modalData.action==='ignore_url') && <button disabled={disabled} className="button button-primary" onClick={ (e) => handleFix(e, 'ignore') }>{ __("Ignore", "really-simple-ssl")}</button>}
+                    { modalData.action!=='ignore_url' &&  <button disabled={disabled} className="button button-primary" onClick={ (e) => handleFix(e, 'fix') }>{__("Fix", "really-simple-ssl")}</button> }
                 </div>
             </div>
-        )
-    }
+        </div>
+    )
 }
 
 export default Modal;

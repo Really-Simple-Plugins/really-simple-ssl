@@ -4,7 +4,6 @@ defined('ABSPATH') or die();
  *  Only functions also required on front-end here
  */
 
-
 /**
  * Get a Really Simple SSL option by name
  *

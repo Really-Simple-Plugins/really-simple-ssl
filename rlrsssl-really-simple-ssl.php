@@ -138,8 +138,8 @@ class REALLY_SIMPLE_SSL
             require_once( rsssl_path . 'progress/class-progress.php');
 			require_once( rsssl_path . 'class-certificate.php');
 			require_once( rsssl_path . 'class-site-health.php');
-			require_once( rsssl_path . 'lets-encrypt/letsencrypt.php' );
 			require_once( rsssl_path . 'mailer/class-mail.php');
+			require_once( rsssl_path . 'lets-encrypt/letsencrypt.php' );
 			if ( isset($_GET['install_pro'])) {
 				require_once( rsssl_path . 'upgrade/upgrade-to-pro.php');
 			}

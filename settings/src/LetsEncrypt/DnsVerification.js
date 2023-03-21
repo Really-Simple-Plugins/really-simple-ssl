@@ -1,23 +1,25 @@
 import {useState, useEffect} from "@wordpress/element";
 import { __ } from '@wordpress/i18n';
-import * as rsssl_api from "../utils/api";
-import {dispatch,} from '@wordpress/data';
-import Notices from "../Settings/Notices";
-import update from 'immutability-helper';
 import Hyperlink from "../utils/Hyperlink";
 import {useUpdateEffect} from 'react-use';
-import sleeper from "../utils/sleeper";
 import {
     Button,
 } from '@wordpress/components';
+import useFields from "../Settings/FieldsData";
+import useMenu from "../Menu/MenuData";
 
 const DnsVerification = (props) => {
-    const action = props.action;
+    const {fields, addHelpNotice, updateField, setChangedField, saveFields, fetchFieldsData, getFieldValue} = useFields();
+    const {selectedSubMenuItem} = useMenu();
     const [tokens, setTokens] = useState(false);
-     useUpdateEffect(()=> {
+    let action = props.action;
 
+    // useEffect(() => {
+    //
+    // }, [fields])
+     useUpdateEffect(()=> {
         if (action && action.action==='challenge_directory_reachable' && action.status==='error') {
-            props.addHelp(
+            addHelpNotice(
                 props.field.id,
                  'default',
                 __("The challenge directory is used to verify the domain ownership.", "really-simple-ssl"),
@@ -32,23 +34,15 @@ const DnsVerification = (props) => {
          }
      });
 
-    const handleSwitchToDir = () => {
-        props.updateField('verification_type', 'dir');
-        return rsssl_api.runLetsEncryptTest('update_verification_type', 'dir').then( ( response ) => {
-            props.selectMenu('le-directories');
-            const notice = dispatch('core/notices').createNotice(
-                'success',
-                __( 'Switched to directory', 'really-simple-ssl' ),
-                {
-                    __unstableHTML: true,
-                    id: 'rsssl_switched_to_dns',
-                    type: 'snackbar',
-                    isDismissible: true,
-                }
-            ).then(sleeper(3000)).then(( response ) => {
-                dispatch('core/notices').removeNotice('rsssl_switched_to_dns');
-            });
-        });
+    const handleSwitchToDir = async () => {
+        updateField('verification_type', 'dir');
+        setChangedField('verification_type', 'dir');
+        await saveFields(true, true);
+        await fetchFieldsData(selectedSubMenuItem);
+    }
+    let verificationType = getFieldValue('verification_type');
+    if (verificationType==='dir') {
+        return (<></>);
     }
 
     return (

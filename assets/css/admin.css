@@ -517,7 +517,7 @@
     background-color: rgba(0, 0, 0, 0.6);
     width: 100%;
     height: 100%;
-    z-index: 2;
+    z-index: 12;
 }
 
 .rsssl-modal {
@@ -781,7 +781,7 @@
 
 .rsssl .rsssl-bullet.rsp-blue-yellow {
     background: var(--rsp-blue);
-    background: linear-gradient(77deg, rgb(0,159,255) 0%, rgb(0,159,255) 30%, rgb(244, 191, 62) 70%, rgb(244, 191, 62) 100%);
+    background: linear-gradient(77deg, rgb(0, 159, 255) 0%, rgb(0, 159, 255) 30%, rgb(244, 191, 62) 70%, rgb(244, 191, 62) 100%);
     animation: gradient 2s ease infinite;
     background-size: 200% 200%;
 }
@@ -833,8 +833,10 @@
 }
 
 .rsssl-modal.rsssl-onboarding .rsssl-modal-content {
+    min-height: 375px;
     padding-top: var(--rsp-spacing-xs);
     line-height: 2.2;
+    min-height: 375px;
 }
 
 .rsssl-modal.rsssl-onboarding .rsssl-modal-content ul {
@@ -850,6 +852,10 @@
 .rsssl-modal.rsssl-onboarding .rsssl-modal-content ul li .rsssl-icon {
     margin-top: 7px;
     margin-right: 7px;
+}
+
+.rsssl-modal.rsssl-onboarding .rsssl-modal-content ul li .components-button.is-link {
+    padding: 5px 0;
 }
 
 .rsssl-modal.rsssl-onboarding .rsssl-modal-content-step-footer {
@@ -1406,43 +1412,43 @@
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(1) {
-    width: 89%;
+    width: 79%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(2) {
-    width: 97%;
+    width: 82%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(3) {
-    width: 87%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(4) {
-    width: 90%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(5) {
-    width: 96%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(6) {
-    width: 73%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(7) {
-    width: 81%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
-    width: 83%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
     width: 75%;
 }
 
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(4) {
+    width: 91%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(5) {
+    width: 65%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(6) {
+    width: 78%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(7) {
+    width: 70%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
+    width: 76%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
+    width: 100%;
+}
+
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
-    width: 98%;
+    width: 73%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
@@ -1450,19 +1456,19 @@
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
-    width: 90%;
+    width: 75%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
-    width: 65%;
+    width: 84%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(14) {
-    width: 62%;
+    width: 91%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
-    width: 77%;
+    width: 63%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(16) {
@@ -1470,19 +1476,19 @@
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(17) {
-    width: 71%;
+    width: 72%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(18) {
-    width: 74%;
+    width: 97%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(19) {
-    width: 86%;
+    width: 98%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(20) {
-    width: 99%;
+    width: 84%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line ~ .rsssl-placeholder-line {
@@ -2015,6 +2021,11 @@ html {
     background-color: var(--rsp-dark-blue);
 }
 
+.rsssl div[class^=rsssl-wizard-] input.components-form-toggle__input[type=checkbox]:disabled {
+    background: var(--rsp-grey-100);
+    opacity: 0.7;
+}
+
 .rsssl div[class^=rsssl-wizard-] .rsssl-grid-item .rsssl-grid-item-content {
     padding: var(--rsp-spacing-xs) 0;
 }
@@ -2057,6 +2068,8 @@ html {
     border-left: 4px solid var(--rsp-green);
     -o-animation: fadeIt 3s ease-in-out;
     animation: fadeIt 3s ease-in-out;
+    scroll-margin-top: 100px;
+    scroll-padding-top: 100px;
 }
 
 @-o-keyframes fadeIt {

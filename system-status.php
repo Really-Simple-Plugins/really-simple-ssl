@@ -20,10 +20,6 @@ require_once( ABSPATH . 'wp-admin/includes/plugin.php');
 delete_transient('rsssl_testpage');
 function rsssl_get_system_status(){
 	$output = '';
-	if ( defined( 'RSSSL_SAFE_MODE' ) && RSSSL_SAFE_MODE ) {
-		$output .=  "SAFE MODE\n";
-	}
-
 	global $wp_version;
 
 	$output .=  "General\n";
@@ -163,9 +159,7 @@ function rsssl_get_system_status(){
 	if ( defined( 'RSSSL_DISMISS_ACTIVATE_SSL_NOTICE' ) ) {
 		$output .=  "RSSSL_DISMISS_ACTIVATE_SSL_NOTICE defined\n";
 	}
-	if ( defined( 'RLRSSSL_DO_NOT_EDIT_HTACCESS' ) ) {
-		$output .=  "RLRSSSL_DO_NOT_EDIT_HTACCESS defined\n";
-	}
+
 	if ( defined( 'RSSSL_SAFE_MODE' ) ) {
 		$output .=  "RSSSL_SAFE_MODE defined\n";
 	}
@@ -176,7 +170,6 @@ function rsssl_get_system_status(){
 	if ( ! defined( 'RSSSL_FORCE_ACTIVATE' )
 	     && ! defined( 'RSSSL_NO_FLUSH' )
 	     && ! defined( 'RSSSL_DISMISS_ACTIVATE_SSL_NOTICE' )
-	     && ! defined( 'RLRSSSL_DO_NOT_EDIT_HTACCESS' )
 	     && ! defined( 'RSSSL_SAFE_MODE' )
 	     && ! defined( "RSSSL_SERVER_OVERRIDE" )
 	) {
