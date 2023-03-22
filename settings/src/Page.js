@@ -1,6 +1,6 @@
 import {useEffect} from "@wordpress/element";
 import Header from "./Header";
-import DashboardPage from "./DashBoard/DashboardPage";
+import DashboardPage from "./Dashboard/DashboardPage";
 import Menu from "./Menu/Menu";
 import Settings from "./Settings/Settings";
 import Notices from "./Settings/Notices";

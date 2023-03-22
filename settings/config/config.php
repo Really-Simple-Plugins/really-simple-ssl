@@ -43,7 +43,7 @@ function rsssl_menu() {
 				[
 					'id'       => 'hardening',
 					'title'    => __( 'Hardening', 'really-simple-ssl' ),
-					'featured' => true,
+					'featured' => false,
 					'groups'   => [
 						[
 							'id'       => 'hardening_basic',
@@ -82,6 +82,11 @@ function rsssl_menu() {
                             'id'       => 'vulnerabilities_notifi',
                             'helpLink' => 'https://really-simple-ssl.com/instructions/about-vulnerabilities#notifications',
                             'title'    => __( 'Notifications', 'really-simple-ssl' ),
+                        ],
+                        [
+                            'id'       => 'vulnerabilities_overview',
+                            'helpLink' => 'https://really-simple-ssl.com/instructions/about-vulnerabilities#components',
+                            'title'    => __( 'Vulnerabilities', 'really-simple-ssl' ),
                         ],
                         [
                             'id'           => 'vulnerabilities_measures',
@@ -132,7 +137,7 @@ function rsssl_menu() {
 							'premium'              => true,
 							'premium_text'         => __( "Get Recommended Security Headers with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
 							'upgrade'              => 'https://really-simple-ssl.com/pro/?mtm_campaign=recommendedheaders&mtm_source=free&mtm_content=upgrade',
-							'title'                => __( 'Recommended Security Headers ', 'really-simple-ssl' ),
+							'title'                => __( 'Recommended Security Headers', 'really-simple-ssl' ),
 							'helpLink'             => 'https://really-simple-ssl.com/instructions/about-recommended-security-headers/?mtm_campaign=instructions&mtm_source=free',
 						],
 					],
@@ -470,10 +475,6 @@ function rsssl_fields( $load_values = true ) {
 			'group_id' => 'support',
 			'type'     => 'support',
 			'label'    => __( "Premium support", 'really-simple-ssl' ),
-			// 'help'        => [
-			// 	'label' => 'default',
-			// 	'placeholder' => __( "If enabled, all the Really Simple SSL pages within the WordPress admin will be in high contrast", 'really-simple-ssl' ),
-			// ],
 			'disabled' => false,
 			'default'  => false,
 		],
@@ -691,6 +692,50 @@ function rsssl_fields( $load_values = true ) {
 			'disabled' => false,
 			'default'  => false,
 		],
+        [
+            'id'       => 'change_login_url_enabled',
+            'menu_id'  => 'hardening',
+            'group_id' => 'hardening_extended',
+            'type'     => 'checkbox',
+            'tooltip'  => __( "Allows you to enter a custom login URL.", 'really-simple-ssl' ),
+            'label'    => __( "Enable Custom login URL", 'really-simple-ssl' ),
+            'disabled' => false,
+            'default'  => false,
+        ],
+        [
+            'id'       => 'change_login_url',
+            'menu_id'  => 'hardening',
+            'group_id' => 'hardening_extended',
+            'type'     => 'text',
+            'tooltip'  => __( "Enter a custom login URL. This allows you to log in via this custom URL instead of /wp-admin or /wp-login.php", 'really-simple-ssl' ),
+            'label'    => __( "Custom login URL", 'really-simple-ssl' ),
+            'disabled' => false,
+            'default'  => false,
+            'condition_action'   => 'hide',
+            'react_conditions' => [
+                'relation' => 'AND',
+                [
+                    'change_login_url_enabled' => 1,
+                ]
+            ],
+        ],
+        [
+            'id'       => 'change_login_url_failure_url',
+            'menu_id'  => 'hardening',
+            'group_id' => 'hardening_extended',
+            'type'     => 'postdropdown',
+            'tooltip'  => __( "Users trying to enter via /wp-admin or /wp-login.php will be redirected to this URL.", 'really-simple-ssl' ),
+            'label'    => '',
+            'disabled' => false,
+            'default'  => '404_default',
+            'condition_action'   => 'hide',
+            'react_conditions' => [
+                'relation' => 'AND',
+                [
+                    'change_login_url_enabled' => 1,
+                ]
+            ],
+        ],
 		[
 			'id'       => 'xmlrpc_status',
 			'menu_id'  => 'hardening',
@@ -765,7 +810,7 @@ function rsssl_fields( $load_values = true ) {
                 'label' => 'default',
                 'url'   => 'https://really-simple-ssl.com/definition/what-are-hardening-features/',
                 'title' => __( "About Vulnerabilities", 'really-simple-ssl' ),
-                'text'  => __( 'Really Simple SSL will collect information about vulnerable software components from our central database (Powered by WPVulnerability [link: https:://vulnerability.wpsysadmin.com]) Anonymous information about vulnerable components (that cannot be linked to your website) will be transmitted to Really Simple SSL for the purpose of statistical analysis. For more information read the Privacy Statement.', 'really-simple-ssl' ),
+                'text'  => __( 'Really Simple SSL will collect information about vulnerable software components from our central database ( <strong><a target="_blank" href="https:://vulnerability.wpsysadmin.com">Powered by WPVulnerability</a></strong>  ) Anonymous information about vulnerable components (that cannot be linked to your website) will be transmitted to Really Simple SSL for the purpose of statistical analysis. For more information read the Privacy Statement.', 'really-simple-ssl' ),
             ],
         ],
         [
@@ -833,6 +878,37 @@ function rsssl_fields( $load_values = true ) {
             'disabled' => !rsssl_get_option('enable_vulnerability_scanner'),
             'button_text' => __( "Test notifications", "really-simple-ssl" ),
             'default'     => false,
+        ],
+        [
+            'id'    => 'vulnerabilities_list',
+            'menu_id' => 'vulnerabilities',
+            'group_id' => 'vulnerabilities_overview',
+            'type' => 'vulnerabilitiestable',
+            'label' => __('Vulnerabilities Overview', 'really-simple-ssl'),
+            'disabled' => !rsssl_get_option('enable_vulnerability_scanner'),
+            'columns' => [
+                [
+                    'name'     => __( 'Component', 'really-simple-ssl' ),
+                    'sortable' => false,
+                    'column'   => 'Name',
+                ],
+                [
+                    'name'     => __( 'Risk', 'really-simple-ssl' ),
+                    'sortable' => false,
+                    'column'   => 'risk_name',
+                ],
+                [
+                    'name'     => __( 'Date', 'really-simple-ssl' ),
+                    'sortable' => false,
+                    'column'   => 'date',
+                ],
+                [
+                    'name'     => __( 'Action', 'really-simple-ssl' ),
+                    'sortable' => false,
+                    'column'   => 'vulnerability_action',
+                ],[]
+
+            ]
         ],
 		/* Measures Setting Premium Only */
 //        [
@@ -1379,11 +1455,13 @@ function rsssl_blocks() {
 		],
         [
             'id'       => 'wpvul',
-            'controls' => [
-                'type' => 'html',
-                'data' => __( "Powered by WPVulnerability", 'really-simple-ssl' ),
-            ],
-            'title'    => __( "Vulnerabilities", 'really-simple-ssl' ),
+//            'controls' => [
+//                'type' => 'html',
+//                'data' => __( "Powered by WPVulnerability", 'really-simple-ssl' ),
+//            ],
+            'title'    => rsssl_get_option('enable_vulnerability_scanner')?
+                __( "Vulnerabilities", 'really-simple-ssl' )
+                : __( "Hardening", 'really-simple-ssl' ),
             'content'  => [ 'type' => 'react', 'data' => 'WPVul' ],
             'footer'   => [ 'type' => 'react', 'data' => 'WPVulFooter' ],
             'class'    => '',

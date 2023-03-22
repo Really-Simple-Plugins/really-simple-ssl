@@ -15,10 +15,10 @@ const SslLabs = (props) => {
     const intervalId = useRef(false);
 
     useEffect(()=>{
-        if (!dataLoaded) {
+        if ( !dataLoaded ) {
             rsssl_api.doAction('ssltest_get').then( ( response ) => {
-                if (response.hasOwnProperty('host') )  {
-                    let data = processSslData(response);
+                if (response.data.hasOwnProperty('host') )  {
+                    let data = processSslData(response.data);
                     setSslData(data);
                     setEndpointData(data.endpointData);
                     setDataLoaded(true);
@@ -171,7 +171,9 @@ const SslLabs = (props) => {
         let data = {};
         data.url = url;
         return rsssl_api.doAction('ssltest_run', data).then( ( response ) => {
-            return JSON.parse(response);
+            if ( response && !response.errors) {
+                return JSON.parse(response);
+            }
         })
     }
 
@@ -185,9 +187,12 @@ const SslLabs = (props) => {
         const url = "https://api.ssllabs.com/api/v3/analyze?host="+host()+clearCacheUrl;
         let data = {};
         data.url = url;
-
         return rsssl_api.doAction('ssltest_run', data).then( ( response ) => {
-            return JSON.parse(response);
+            if ( response && !response.errors) {
+                return JSON.parse(response);
+            } else {
+                return false;
+            }
         })
     }
 

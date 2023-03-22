@@ -1,9 +1,9 @@
 import React from 'react';
 import {__} from '@wordpress/i18n';
-import useWPVul from "./WPVulData";
+import useVulnerabilityData from "./VulnerabilityData";
 
 const WPVulFooter = (props) => {
-    const {lastChecked} = useWPVul();
+    const {lastChecked} = useVulnerabilityData();
     return (
         <div className={'rsssl-wpvul'}>
             <a href="#settings/vulnerabilities"

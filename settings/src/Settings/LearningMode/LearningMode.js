@@ -212,7 +212,7 @@ const LearningMode = (props) => {
                 </div> }
                 { rsssl_settings.pro_plugin_active && props.disabled && <div className="rsssl-locked">
                     <div className="rsssl-locked-overlay">
-                        { !enforcedByThirdparty && <span className="rsssl-progress-status rsssl-disabled">{__("Disabled ","really-simple-ssl")}</span> }
+                        { !enforcedByThirdparty && <span className="rsssl-progress-status rsssl-disabled">{__("Disabled","really-simple-ssl")}</span> }
                         { enforcedByThirdparty && <span className="rsssl-progress-status rsssl-learning-mode-enforced">{__("Enforced","really-simple-ssl")}</span> }
                         { disabledString }
                     </div>

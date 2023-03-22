@@ -20,19 +20,16 @@ const useProgress = create(( set, get ) => ({
         }
     },
     getProgressData: async () => {
-        const {error, percentage, progressText, notices} = await rsssl_api.runTest('progressData', 'refresh').then( ( response ) => {
+        const {percentage, text, notices} = await rsssl_api.runTest('progressData', 'refresh').then( ( response ) => {
             return response;
         });
-        if ( error ) {
-            set(state => ({ error:error }))
-        } else {
-            set(state => ({
-                notices:notices,
-                percentageCompleted:percentage,
-                progressText:progressText,
-                progressLoaded:true,
-            }))
-        }
+
+        set(state => ({
+            notices:notices,
+            percentageCompleted:percentage,
+            progressText:text,
+            progressLoaded:true,
+        }))
     },
     dismissNotice: async (noticeId) => {
         let notices = get().notices;
@@ -40,15 +37,8 @@ const useProgress = create(( set, get ) => ({
             return notice.id !== noticeId;
         });
         set(state => ({ notices:notices }))
-
-        const {error, percentageCompleted} = await rsssl_api.runTest('dismiss_task', noticeId).then(( response ) => {
-            if ( error ) {
-                set(state => ({ error:error }))
-            } else {
-                set(state => ({ percentage:percentageCompleted }))
-
-            }
-        });
+        const {percentage} = await rsssl_api.runTest('dismiss_task', noticeId);
+        set({ percentageCompleted:percentage })
     }
 }));
 

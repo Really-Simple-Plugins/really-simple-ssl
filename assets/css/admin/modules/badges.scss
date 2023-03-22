@@ -1,11 +1,10 @@
 .rsssl {
   .rsssl-badge {
-    padding: 2px 5px;
+    padding: 4px 7px;
     border-radius: 3px;
     color: var(--rsp-white);
-    margin: 3px;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
-    width: auto;
+    display: table;
+    margin: 0 auto;
 
     &.rsp-dark {
       background-color: var(--rsp-black);
@@ -25,10 +24,11 @@
 
     &.rsp-critical {
       background-color: var(--rsp-red);
+      color: var(--rsp-white);
     }
 
     &.rsp-default {
-      background-color: #d9d3d3;
+      background-color: var(--rsp-grey-200);
       color:black;
     }
   }

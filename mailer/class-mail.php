@@ -51,17 +51,7 @@ if ( !class_exists('rsssl_mailer') ) {
 					'url' => 'https://really-simple-ssl.com/email-notifications/',
 				]
 			];
-			$success = $this->send_mail(true);
-			if ($success) {
-				return ['success' => true, 'message' => __('Email sent! Please check your mail', "really-simple-ssl")];
-			}
-
-			if (empty($this->error)) {
-				$this->error = __('Email could not be sent.', "really-simple-ssl");
-			} else {
-				$this->error = __('An error occurred:', "really-simple-ssl").'<br>'.$this->error;
-			}
-			return ['success' => false, 'message' => $this->error];
+			return $this->send_mail(true);
 		}
 
 		public function log_mailer_errors( $wp_error ){
@@ -74,11 +64,11 @@ if ( !class_exists('rsssl_mailer') ) {
 		 *
 		 * @param bool $override_rate_limit
 		 *
-		 * @return bool
+		 * @return array
 		 */
 		public function send_mail($override_rate_limit = false) {
 			if ( empty($this->message) || empty($this->subject) ) {
-				return false;
+				$this->error = __("Email could not be sent. No message or subject set.", "really-simple-ssl");
 			}
 
 			if (empty($this->title)) {
@@ -87,12 +77,12 @@ if ( !class_exists('rsssl_mailer') ) {
 
 			$this->to = rsssl_get_option('notifications_email_address', get_bloginfo('admin_email') );
 			if ( !is_email($this->to) ){
-				return false;
+				$this->error = __("Email address not valid", "really-simple-ssl");
 			}
 
 			// Prevent spam
 			if ( !$override_rate_limit && get_transient('rsssl_email_recently_sent') ) {
-				return false;
+				$this->error = __("Email could not be sent. Please wait a few minutes before trying again.", "really-simple-ssl");
 			}
 
 			$template = file_get_contents(__DIR__.'/templates/email.html');
@@ -137,8 +127,16 @@ if ( !class_exists('rsssl_mailer') ) {
 				], $template );
 			$success = wp_mail( $this->to, sanitize_text_field($this->subject), $body, array('Content-Type: text/html; charset=UTF-8') );
 			set_transient('rsssl_email_recently_sent', true, 5 * MINUTE_IN_SECONDS );
-			return $success;
-		}
+            if ($success) {
+                return ['success' => true, 'message' => __('Email sent! Please check your mail', "really-simple-ssl")];
+            }
 
+            if (empty($this->error)) {
+                $this->error = __('Email could not be sent.', "really-simple-ssl");
+            } else {
+                $this->error = __('An error occurred:', "really-simple-ssl").'<br>'.$this->error;
+            }
+            return ['success' => false, 'message' => $this->error];
+		}
 	}
 }

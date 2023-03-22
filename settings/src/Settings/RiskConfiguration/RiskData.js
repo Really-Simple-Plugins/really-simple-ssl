@@ -4,6 +4,8 @@ import * as rsssl_api from "../../utils/api";
 
 const UseRiskData = create((set, get) => ({
     riskData: [],
+    vulnerabilities: [],
+    dataVulLoaded: false,
     dataLoaded: false,
     setData: (data) => set({riskData: data, dataLoaded: true}),
     //fetch Risk Data
@@ -29,7 +31,26 @@ const UseRiskData = create((set, get) => ({
         } catch (e) {
             console.error(e);
         }
-    }
+    },
+
+    //we fetch the vulnerability data
+    /*
+    * Functions
+     */
+    fetchVulnerabilities: async () => {
+        let data = {};
+        data.action = 'get';
+        try {
+            const fetched = await rsssl_api.vulGetAction('api_call_listener', data);
+            set({
+                vulnerabilities: fetched.data.vulList,
+                dataVulLoaded: true,
+                vulEnabled: fetched.data.vulEnabled,
+            });
+        } catch (e) {
+            console.error(e);
+        }
+    },
 }));
 
 export default UseRiskData;
