@@ -460,6 +460,9 @@ class rsssl_admin
                 #rsssl-message.error{
                     border-left-color:#d7263d;
                 }
+                #rsssl-message.warning{
+                    border-left-color:#ffb900;
+                }
                 .rsssl-notice {
                     display:flex;
                     margin:15px;
@@ -1712,6 +1715,8 @@ class rsssl_admin
 	        foreach ( $notices as $id => $notice ){
 		        $notice = $notice['output'];
 		        $class = ( $notice['status'] !== 'completed' ) ? 'error' : 'updated';
+				//if there is an open status, we change error to warning.
+		        $class = ( $notice['status'] === 'open' )? 'warning':'error';
 		        $more_info = $notice['url'] ?? false;
 		        $dismiss_id = isset($notice['dismissible']) && $notice['dismissible'] ? $id : false;
 		        echo $this->notice_html( $class.' '.$id, $notice['msg'], $more_info, $dismiss_id);
