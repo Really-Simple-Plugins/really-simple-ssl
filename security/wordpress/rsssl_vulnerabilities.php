@@ -36,12 +36,7 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
 		public $update_count = 0;
 
 		private $admin_notices = [];
-		private $risk_naming = [
-			'l' => 'Low',
-			'm' => 'Medium',
-			'h' => 'High',
-			'c' => 'Critical',
-		];
+		private $risk_naming = [];
 
 		/**
 		 * @var array|int[]
@@ -55,6 +50,12 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
 
 
 		public function __construct() {
+            $this->risk_naming = [
+                'l' => __('Low', 'really-simple-ssl'),
+                'm' => __('Medium', 'really-simple-ssl'),
+                'h' => __('High', 'really-simple-ssl'),
+                'c' => __('Critical', 'really-simple-ssl'),
+            ];
 		}
 
 		/**
@@ -147,7 +148,7 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
 						'true' => [
 							'title'        => sprintf(__( 'You have %s %s %s', 'really-simple-ssl' ), $count, $this->risk_naming[ $key ], $count_label),
 							'msg'          => sprintf(__( 'You have %s %s highest level %s. Please take appropiate action. For more information about these vulnereabilities, please read more <a href="/wp-admin/options-general.php?page=really-simple-security#settings/vulnerabilities">here</a>', 'really-simple-ssl' ), $count, $count_label, $this->risk_naming[ $key ]),
-							'link'         => 'https://really-simple-ssl.com/knowledge-base/vulnerability-scanner/',
+							'url'         => 'https://really-simple-ssl.com/knowledge-base/vulnerability-scanner/',
 							'icon'         => ($key === 'c')? 'warning':'open',
 							'type'         => 'warning',
 							'dismissible'  => true,
@@ -1130,28 +1131,37 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
 
 			$blocks = [];
             foreach ($risk_levels as $key => $value) {
-				$blocks[] = $this->createBlock($key, $value);
-				$total = $total + $value;
+
+                if (!($this->risk_levels[$key] < $this->risk_levels[rsssl_get_option('vulnerability_notification_email_admin')])) {
+                    $blocks[] = $this->createBlock($key, $value);
+                    $total = $total + $value;
+                }
+
             }
+            //date format is named month day year
+            $date = date('F j, Y');
 			$domain = get_site_url();
 			$mailer = new rsssl_mailer();
 			$mailer->subject = sprintf(__("Vulnerability Alert: %s", "really-simple-ssl"), $domain);
-			$mailer->title = sprintf(__("Vulnerability total: %s vulnerabilities found", "really-simple-ssl"), $total);
-			$message = __("This is a vulnerability alert from Really Simple SSL for /domain/. We encourage to take appropriate action. To know more about handling vulnerabilities with Really Simple SSL, please 
-			<a href='https://really-simple-plugins.com/instructions/about-vulnerabilities/'>read this article</a>.", "really-simple-ssl");
+			$mailer->title = sprintf(__("%s: %s vulnerabilities found", "really-simple-ssl"), $date, $total);
+			$message = sprintf(__("This is a vulnerability alert from Really Simple SSL for %s. We encourage to take appropriate action. To know more about handling vulnerabilities with Really Simple SSL, please 
+			<a href='https://really-simple-plugins.com/instructions/about-vulnerabilities/'>read this article</a>.", "really-simple-ssl"), $domain);
 			$mailer->message =$message;
 			$mailer->to = get_option('admin_email');
 			$mailer->warning_blocks = $blocks;
-			$mailer->send_mail(true);
+            if ($total > 0) {
+                //if for some reason the total is 0, we don't send an email
+                $mailer->send_mail(true);
+            }
         }
 
         private function createBlock($severity, $count)
         {
 			$vulnerability = _n( 'vulnerability', 'vulnerabilities', $count, 'really-simple-ssl' );
 			$risk = $this->risk_naming[$severity];
-			$domain = 'https://really-simple-ssl.com';
+			$domain = get_site_url();
 			$messagePrefix = '';
-			$messafeSuffix = sprintf(__('Get more information from the Really Simple SSL dashboard on %s about all vulnerabilities'), $domain);
+			$messageSuffix = sprintf(__('Get more information from the Really Simple SSL dashboard on %s about all vulnerabilities'), $domain);
 			switch ($severity) {
 				case 'c':
 					$messagePrefix = __("Critical vulnerabilities require immediate action.","really-simple-ssl");
@@ -1169,7 +1179,7 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
 
 		        return [
 			        'title' => sprintf(__("You have %s %s %s","really-simple-ssl"), $count, $vulnerability, $risk),
-			        'message' => $messagePrefix . ' ' . $messafeSuffix,
+			        'message' => $messagePrefix . ' ' . $messageSuffix,
 			        'url' => 'https://really-simple-ssl.com/vulnerabilities/',
 		        ];
 
