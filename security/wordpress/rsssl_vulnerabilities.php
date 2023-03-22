@@ -82,17 +82,16 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
 			//we check if the vulnerability scanner is enabled and then the fun happens.
 			if ( rsssl_get_option( 'enable_vulnerability_scanner' ) ) {
 				//we clear all cache
-				// $self->clear_cache();
-				//we check if the files are up-to-date. if we make them up to date.
 
-				$self->check_files();
+				$mailTrigger = $self->check_files();
+
+                if ($mailTrigger) {
+                    //we send the mail to the admin
+                    $self->send_vulnerability_mail();
+                }
 
 				//first we need to make sure we update the files every day. So we add a daily cron.
 				add_filter( 'rsssl_daily_cron', array( $self, 'daily_cron' ) );
-
-
-				//we cache the plugins in the class. Since we need quite some info from the plugins.
-				$self->cache_installed_plugins();
 
 				//we check the rsssl options if the enable_feedback_in_plugin is set to true
 				if ( rsssl_get_option( 'enable_feedback_in_plugin' ) ) {
@@ -134,7 +133,6 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
 				if ( rsssl_get_option( 'vulnerability_notification_dashboard' )  ) {
 					if ($value < $this->risk_levels[rsssl_get_option( 'vulnerability_notification_dashboard' )]) {
 						//we skip this one.
-						die('what?');
 						$siteWide = false;
 					}
 				}
@@ -173,7 +171,6 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
 		 */
 		public static function testGenerator(): array {
 			$self     = new self();
-			make_test_notifications();
 			return $self->send_warning_email();
 		}
 
@@ -361,16 +358,19 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
 		/**
 		 * Checks the files on age and downloads if needed.
 		 *
-		 * @return void
+		 * @return bool
 		 */
-		public function check_files() {
+		public function check_files(): bool {
+            $trigger = false;
 			//we download the manifest file if it doesn't exist or is older than 24 hours
 			if ( $this->validate_local_file( false, true ) ) {
 				if (! $this->get_file_stored_info( false, true ) > time() - 86400 ) {
 					$this->download_manifest();
+                    $trigger = true;
 				}
 			}else {
 				$this->download_manifest();
+                $trigger    = true;
 			}
 
 			//We check the core vulnerabilities and validate age and existence
@@ -378,21 +378,26 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
 				//if the file is younger than 24 hours, we don't download it again.
 				if (! $this->get_file_stored_info( true ) > time() - 86400 ) {
 					$this->download_core_vulnerabilities();
+                    $trigger = true;
 				}
 
 			} else {
 				$this->download_core_vulnerabilities();
+                $trigger = true;
 			}
 
 			//We check the plugin vulnerabilities and validate age and existence
 			if ( $this->validate_local_file() ) {
 				if ( !$this->get_file_stored_info() > time() - 86400 ) {
 					$this->download_plugin_vulnerabilities();
+                    $trigger = true;
 				}
 			} else {
 				$this->download_plugin_vulnerabilities();
+                $trigger = true;
 			}
 			$this->cache_installed_plugins();
+            return $trigger;
 		}
 
 		public function reload_files_on_update() {
@@ -1107,7 +1112,38 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
 			}
 		}
 
-	}
+        public function send_vulnerability_mail()
+        {
+            //first we check if the user wants to receive emails
+            if (!rsssl_get_option('send_notifications_email')) {
+                return;
+            }
+
+            if (!rsssl_get_option('vulnerability_notification_email_admin')) {
+                return;
+            }
+
+            //now based on the risk level we send a different email
+            $risk_levels = $this->count_risk_levels();
+            foreach ($risk_levels as $key => $value) {
+                    if ($value < $this->risk_levels[rsssl_get_option('vulnerability_notification_email_admin')]) {
+                        $this->send_vulnerability_mail_by_risk_level($key , $value);
+                    }
+
+
+            }
+        }
+
+        private function send_vulnerability_mail_by_risk_level($severity, $count)
+        {
+            $mailer = new rsssl_mailer();
+            $mailer->subject = __("Vulnerability found", "really-simple-ssl");
+            $mailer->message = sprintf(__("A vulnerability has been found in your website. Please check the dashboard for more information. The severity of the vulnerability is %s and the number of plugins with this vulnerability is %s.", "really-simple-ssl"), $severity, $count);
+            $mailer->to = get_option('admin_email');
+            $mailer->send_mail();
+        }
+
+    }
 
 	//we initialize the class
 	add_action( 'admin_init', array( rsssl_vulnerabilities::class, 'init' ) );
@@ -1157,6 +1193,7 @@ add_action( 'rest_api_init', function () {
 
 if ( function_exists( 'make_test_notifications')) {
 	function make_test_notifications() {
+        $notices = get_option( 'rsssl_admin_notices' );
 			$notice                          = [
 				'callback'          => '_true_',
 				'score'             => 1,
@@ -1166,16 +1203,15 @@ if ( function_exists( 'make_test_notifications')) {
 						'title'        => __( 'Test notification', 'really-simple-ssl' ),
 						'msg'          => __( "This is a 'Dashboard' notification test by Really Simple SSL. You can safely ignore this message. (x)", "really-simple-ssl" ),
 						'link'         => 'https://really-simple-ssl.com/knowledge-base/vulnerability-scanner/',
-						'icon'         => ($key === 'c')? 'warning':'open',
+						'icon'         => 'warning',
 						'type'         => 'warning',
 						'dismissible'  => true,
 						'admin_notice' => true,
 					]
 				]
 			];
+            $notices['test_vulnerability_notice'] = $notice;
 			//we store the notice in the notices array
 			update_option('rsssl_admin_notices', $notices);
-			//reloading the page
-			wp_redirect( admin_url( 'admin.php?page=rlrsssl_really_simple_ssl' ) );
 	}
 }
