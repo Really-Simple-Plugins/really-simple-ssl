@@ -92,7 +92,7 @@ if ( !class_exists('rsssl_mailer') ) {
 
 			// Prevent spam
 			if ( !$override_rate_limit && get_transient('rsssl_email_recently_sent') ) {
-				return false;
+				//return false;
 			}
 
 			$template = file_get_contents(__DIR__.'/templates/email.html');
