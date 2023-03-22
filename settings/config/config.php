@@ -682,8 +682,6 @@ function rsssl_fields( $load_values = true ) {
             'disabled' => false,
             'default'  => false,
         ],
-
-
         [
             'id'       => 'change_login_url',
             'menu_id'  => 'hardening',
