@@ -1123,24 +1123,59 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
                 return;
             }
 
+
             //now based on the risk level we send a different email
             $risk_levels = $this->count_risk_levels();
+		    $total = array_sum($risk_levels);
+
+			echo "<pre>";
+			print_r($risk_levels);
+			echo "</pre>";
+			die;
+			$blocks = [];
             foreach ($risk_levels as $key => $value) {
-                    if ($value < $this->risk_levels[rsssl_get_option('vulnerability_notification_email_admin')]) {
-                        $this->send_vulnerability_mail_by_risk_level($key , $value);
-                    }
-
-
+				$blocks[] = $this->createBlock($key, $value);
             }
+			$domain = get_site_url();
+			$mailer = new rsssl_mailer();
+			$mailer->subject = sprintf(__("Vulnerability Alert: %s", "really-simple-ssl"), $domain);
+			$mailer->title = sprintf(__("Vulnerability total: %s vulnerabilities found", "really-simple-ssl"), $total);
+			$message = __("This is a vulnerability alert from Really Simple SSL for /domain/. We encourage to take appropriate action. To know more about handling vulnerabilities with Really Simple SSL, please 
+			<a href='https://really-simple-plugins.com/instructions/about-vulnerabilities/'>read this article</a>.", "really-simple-ssl");
+			$mailer->message =$message;
+			$mailer->to = get_option('admin_email');
+			$mailer->warning_blocks = $blocks;
+			$mailer->send_mail(true);
         }
 
-        private function send_vulnerability_mail_by_risk_level($severity, $count)
+        private function createBlock($severity, $count)
         {
-            $mailer = new rsssl_mailer();
-            $mailer->subject = __("Vulnerability found", "really-simple-ssl");
-            $mailer->message = sprintf(__("A vulnerability has been found in your website. Please check the dashboard for more information. The severity of the vulnerability is %s and the number of plugins with this vulnerability is %s.", "really-simple-ssl"), $severity, $count);
-            $mailer->to = get_option('admin_email');
-            $mailer->send_mail();
+			$vulnerability = _n( 'vulnerability', 'vulnerabilities', $count, 'really-simple-ssl' );
+			$risk = $this->risk_naming[$severity];
+			$domain = 'https://really-simple-ssl.com';
+			$messagePrefix = '';
+			$messafeSuffix = sprintf(__('Get more information from the Really Simple SSL dashboard on %s about all vulnerabilities'), $domain);
+			switch ($severity) {
+				case 'c':
+					$messagePrefix = __("Critical vulnerabilities require immediate action.","really-simple-ssl");
+					break;
+				case 'h':
+					$messagePrefix = __("High vulnerabilities require immediate action.","really-simple-ssl");
+					break;
+				case 'm':
+					$messagePrefix = __("Medium vulnerabilities require your action.","really-simple-ssl");
+					break;
+				case 'l':
+					$messagePrefix = __("Low vulnerabilities require your action.","really-simple-ssl");
+					break;
+			}
+
+		        return [
+			        'title' => sprintf(__("You have %s %s %s","really-simple-ssl"), $count, $vulnerability, $risk),
+			        'message' => __("Critical vulnerabilities require immediate action. Get more information from the Really Simple SSL dashboard on /domain/ about all vulnerabilities","really-simple-ssl"),
+			        'url' => 'https://really-simple-ssl.com/vulnerabilities/',
+		        ];
+
         }
 
     }
