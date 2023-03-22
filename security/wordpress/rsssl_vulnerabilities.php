@@ -1126,7 +1126,7 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
 
             //now based on the risk level we send a different email
             $risk_levels = $this->count_risk_levels();
-		    $total = array_sum($risk_levels);
+		    $total = 0;
 
 			echo "<pre>";
 			print_r($risk_levels);
@@ -1135,6 +1135,7 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
 			$blocks = [];
             foreach ($risk_levels as $key => $value) {
 				$blocks[] = $this->createBlock($key, $value);
+				$total = $total + $value;
             }
 			$domain = get_site_url();
 			$mailer = new rsssl_mailer();
