@@ -31,7 +31,7 @@ const Field = (props) => {
         if ( highLightField===props.field.id && scrollAnchor.current ) {
             scrollAnchor.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
-    });
+    },[]);
 
     const onChangeHandler = (fieldValue) => {
         let field = props.field;

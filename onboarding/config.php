@@ -8,6 +8,7 @@
  */
 
 function rsssl_rest_api_onboarding($request) {
+	error_log("rest api onboarding");
 	$is_upgrade = get_option('rsssl_show_onboarding');
 	// "warning", // yellow dot
 	// "error", // red dot

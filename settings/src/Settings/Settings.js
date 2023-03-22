@@ -55,7 +55,6 @@ const Settings = () => {
     }
 
     let selectedFields = fields.filter(field => field.menu_id === selectedSubMenuItem);
-
     let groups = [];
     for (const selectedField of selectedFields){
         if ( !in_array(selectedField.group_id, groups) ){

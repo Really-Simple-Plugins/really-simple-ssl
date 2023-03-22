@@ -674,6 +674,11 @@ function rsssl_fields( $load_values = true ) {
             'type'     => 'checkbox',
             'tooltip'  => __( "Allows you to enter a custom login URL.", 'really-simple-ssl' ),
             'label'    => __( "Enable Custom login URL", 'really-simple-ssl' ),
+            'email'            => [
+                'title'   => __( "You have changed your login URL", 'really-simple-ssl' ),
+                'message' => __( "Your login URL has changed to {login_url} to prevent common bot attacks on standard login URLs. Learn more about this feature, common questions and measures to prevent any issues.", 'really-simple-ssl' ),
+                'url'     => 'https://really-simple-ssl.com/instructions/login-url-changed',
+            ],
             'disabled' => false,
             'default'  => false,
         ],

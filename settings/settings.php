@@ -266,6 +266,7 @@ function rsssl_do_action($request, $ajax_data=false){
     }
 	$action = sanitize_title($request->get_param('action'));
 	$data = $ajax_data!==false ? $ajax_data  : $request->get_params();
+	error_log("do action ".$action);
 
 	$nonce = $data['nonce'];
 	if ( !wp_verify_nonce($nonce, 'rsssl_nonce') ) {
@@ -374,7 +375,9 @@ function rsssl_run_test($request, $ajax_data=false){
 	}
 	$data = $ajax_data!==false ? $ajax_data : $request->get_params();
 	$test = sanitize_title($request->get_param('test'));
-    $state = $request->get_param('state');
+	error_log("run test ".$test);
+
+	$state = $request->get_param('state');
 	$state =  $state !== 'undefined' && $state !== 'false' ? $state : false;
 	switch($test){
         case 'progressdata':
@@ -499,6 +502,8 @@ function rsssl_rest_api_fields_set( WP_REST_Request $request, $ajax_data = false
     if ( !rsssl_user_can_manage()) {
         return [];
     }
+	error_log("fields get");
+
 	$fields = $ajax_data?: $request->get_json_params();
 	//get the nonce
 	$nonce = false;
@@ -641,7 +646,7 @@ function rsssl_rest_api_fields_get(){
 	if ( !rsssl_user_can_manage() ) {
 		return [];
 	}
-
+    error_log("fields get");
 	$output = array();
 	$fields = rsssl_fields();
 	foreach ( $fields as $index => $field ) {
