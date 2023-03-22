@@ -676,7 +676,7 @@ function rsssl_fields( $load_values = true ) {
             'label'    => __( "Enable Custom login URL", 'really-simple-ssl' ),
             'email'            => [
                 'title'   => __( "Settings update: Custom login URL enabled", 'really-simple-ssl' ),
-                'message' => __( "From now on you won't be able to access the site via /wp-admin or /wp-login.php, but via your custom login URL", 'really-simple-ssl' ),
+                'message' => __( "From now on you won't be able to access the site via /wp-admin or /wp-login.php, but via your custom login URL. Or you can use ?rssslgetlogin", 'really-simple-ssl' ),
                 'url'     => 'https://really-simple-ssl.com/instructions/login-url-changed',
             ],
             'disabled' => false,
