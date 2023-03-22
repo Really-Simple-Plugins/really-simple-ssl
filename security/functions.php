@@ -52,7 +52,7 @@ if ( !function_exists('rsssl_admin_url')) {
 	 * @return string|null
 	 */
 	function rsssl_admin_url(){
-		return is_multisite() && is_network_admin() ? network_admin_url('settings.php') : admin_url("options-general.php");
+		return is_multisite() ? network_admin_url('settings.php') : admin_url("options-general.php");
 	}
 }
 

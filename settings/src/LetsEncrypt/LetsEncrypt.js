@@ -1,4 +1,4 @@
-import {useState, useEffect, useRef} from "@wordpress/element";
+import {useEffect, useRef} from "@wordpress/element";
 import * as rsssl_api from "../utils/api";
 import sleeper from "../utils/sleeper";
 import Directories from "./Directories";
@@ -7,67 +7,127 @@ import Generation from "./Generation";
 import Activate from "./Activate";
 import Installation from "./Installation";
 import { __ } from '@wordpress/i18n';
-import {useUpdateEffect} from 'react-use';
 import Icon from "../utils/Icon";
+import useFields from "../Settings/FieldsData";
+import useLetsEncryptData from "./letsEncryptData";
 
 const LetsEncrypt = (props) => {
-    const [id, setId] = useState(props.field.id);
-    const [actionUpdated, setActionUpdated] = useState(false);
-    const [progress, setProgress] = useState(0);
-    const actionIndex = useRef(0);
+    const {handleNextButtonDisabled, getFieldValue} = useFields();
+    const {attemptCount, setAttemptCount, progress, setProgress, maxAttempts, setMaxAttempts, refreshTests, setRefreshTests} = useLetsEncryptData();
     const sleep = useRef(1500);
-    const maxAttempts = useRef(1);
     const intervalId = useRef(false);
     const lastActionStatus = useRef('');
-    // const previousProgress = useRef(0);
+    const actionIndex = useRef(0);
+    const action = useRef(false);
     const previousActionIndex = useRef(-1);
+    const startedTests = useRef([]);
+    const actionsList = useRef([]);
+    const maxIndex = useRef(1);
+    const refProgress = useRef(0);
 
     useEffect(() => {
-        props.handleNextButtonDisabled(true);
-        runTest(0);
-        intervalId.current = setInterval(() => setProgress((progress) => progress + 0.2), 100);
-       }, [])
+        reset();
+   }, [props.field])
 
-    const restartTests = () => {
-        //clear statuses to ensure the bullets are grey
-        let actions = props.field.actions;
-        for ( const action of actions ) {
-            action.status='inactive';
+    const getActions = () => {
+        let propActions = props.field.actions;
+        if ( props.field.id==='generation' ) {
+            propActions = adjustActionsForDNS(propActions);
         }
-        props.field.actions = actions;
-        actionIndex.current = 0;
-        previousActionIndex.current =-1;
-        lastActionStatus.current = '';
-        setProgress(0);
-        runTest(0);
-     }
 
-    const getAction = () => {
-        let newActions = props.field.actions;
-        return newActions[actionIndex.current];
+        maxIndex.current = propActions.length;
+        return propActions;
     }
 
-    useUpdateEffect(()=> {
-        let maxIndex = props.field.actions.length-1;
-        if (actionIndex.current>previousActionIndex.current) {
+    useEffect(() => {
+        if ( !action.current && actionsList.length>0){
+            // action.current = actions[0];
+            actionIndex.current = 0;
+        }
+    }, [actionsList.current])
+
+    useEffect(() => {
+        if ( actionIndex.current===0 ) {
+            runTest();
+        }
+    }, [actionIndex.current])
+
+    useEffect(() => {
+        action.current = actionsList.current[actionIndex.current];
+        intervalId.current = setInterval(() => {
+            setProgress(refProgress.current + 0.2);
+        }, 100);
+    }, [actionIndex.current])
+
+    useEffect(() => {
+        if ( actionIndex.current>previousActionIndex.current ) {
             previousActionIndex.current = actionIndex.current;
-            setProgress( ( 100 / maxIndex ) * actionIndex.current);
+            setProgress( ( 100 / maxIndex.current ) * (actionIndex.current));
         }
 
         //ensure that progress does not get to 100 when retries are still running
-        let currentAction = getAction();
-        if ( currentAction && currentAction.do==='retry' && currentAction.attemptCount>1 ){
+        action.current = actionsList.current[actionIndex.current];
+        if ( action.current && action.current.do==='retry' && attemptCount>1 ){
             setProgress(90);
         }
-        if ( props.refreshTests ){
-            props.resetRefreshTests();
-            restartTests();
+
+       }, [actionIndex.current, refreshTests ])
+
+
+    useEffect(() => {
+        if ( refreshTests ){
+            setRefreshTests(false);
+            reset();
+            actionsList.current.forEach(function(action,i){
+                actionsList.current[i]['status'] = 'inactive';
+            });
         }
-    })
+    }, [refreshTests ])
+
+    const updateActionProperty = (index, property, value) => {
+        let currentActions = actionsList.current;
+        if (currentActions.hasOwnProperty(index) && currentActions[index].hasOwnProperty(property)) {
+            currentActions[index][property] = value;
+        }
+        actionsList.current = currentActions;
+    }
+
+
+    const statuses = {
+        'inactive': {
+            'icon': 'circle-times',
+            'color': 'grey',
+        },
+        'warning': {
+            'icon': 'circle-times',
+            'color': 'orange',
+        },
+        'error': {
+            'icon': 'circle-times',
+            'color': 'red',
+        },
+        'success': {
+            'icon': 'circle-check',
+            'color': 'green',
+        },
+    };
+
+    const reset = () => {
+        handleNextButtonDisabled(true);
+        actionsList.current = getActions();
+        setProgress(0);
+        refProgress.current = 0;
+        startedTests.current = [];
+        actionIndex.current = 0;
+        action.current = false;
+        previousActionIndex.current = -1;
+        lastActionStatus.current = '';
+
+     }
 
     const adjustActionsForDNS = (actions) => {
         //find verification_type
-        let verification_type = props.getFieldValue('verification_type');
+        let verification_type = getFieldValue('verification_type');
         if ( !verification_type ) verification_type = 'dir';
 
         if ( verification_type==='dns' ) {
@@ -103,89 +163,92 @@ const LetsEncrypt = (props) => {
     }
 
     const processTestResult = (action) => {
+        clearInterval(intervalId.current);
         lastActionStatus.current = action.status;
-        let maxIndex = props.field.actions.length-1;
-        if (action.status==='success') {
-            action.attemptCount = 0;
+        if ( action.status==='success' ) {
+            setAttemptCount(0);
         } else {
             if (!Number.isInteger(action.attemptCount)) {
-                action.attemptCount = 0;
+                setAttemptCount(0);
             }
-            action.attemptCount +=1;
+            setAttemptCount(attemptCount+1);
         }
-        setActionUpdated(true);
 
         //used for dns verification actions
-        var event = new CustomEvent('rsssl_le_response', { detail: action });
+        let event = new CustomEvent('rsssl_le_response', { detail: action });
         document.dispatchEvent(event);
         //if all tests are finished with success
 
         //finalize happens when halfway through our tests it's finished. We can skip all others.
         if ( action.do === 'finalize' ) {
-            clearInterval(intervalId.current);
-            props.field.actions.forEach(function(action,i){
+            actionsList.current.forEach(function(action,i){
                 if (i>actionIndex.current) {
-                    action.hide=true;
+                    updateActionProperty(i, 'hide', true);
                 }
             });
-            actionIndex.current = maxIndex;
-            props.handleNextButtonDisabled(false);
-        } else if (action.do === 'continue' || action.do === 'skip' ) {
+
+            actionIndex.current = maxIndex.current+1;
+            handleNextButtonDisabled(false);
+        } else if ( action.do === 'continue' || action.do === 'skip' ) {
             //new action, so reset the attempts count
-            action.attemptCount=1;
+            setAttemptCount(1);
             //skip:  drop previous completely, skip to next.
             if ( action.do === 'skip' ) {
-                action.hide = true;
+                actionsList.current[actionIndex.current]['hide'] = true;
             }
             //move to next action, but not if we're already on the max
-            if ( maxIndex > actionIndex.current ) {
+            if ( maxIndex.current-1 > actionIndex.current) {
+                let next =actionIndex.current+1;
                 actionIndex.current = actionIndex.current+1;
-                runTest(actionIndex.current);
+                runTest();
             } else {
-                actionIndex.current = maxIndex;
-                props.handleNextButtonDisabled(false);
-                clearInterval(intervalId.current);
+                handleNextButtonDisabled(false);
+                actionIndex.current = actionIndex.current+1;
             }
         } else if (action.do === 'retry' ) {
-            if ( action.attemptCount >= maxAttempts.current ) {
-                actionIndex.current = maxIndex;
-                clearInterval(intervalId.current);
+            if ( attemptCount >= maxAttempts ) {
+                actionIndex.current = maxIndex.current;
             } else {
-                // clearInterval(intervalId.current);
-                runTest(actionIndex.current);
+                runTest();
             }
         } else if ( action.do === 'stop' ){
-            clearInterval(intervalId.current);
+            actionIndex.current = maxIndex.current;
         }
-
-
     }
 
     const runTest = () => {
-        setActionUpdated(false);
-        if ( props.field.id==='generation' ) {
-            props.field.actions = adjustActionsForDNS(props.field.actions);
+        if (refProgress.current>=100) {
+            return;
         }
-        let action = getAction();
-        let  test = action.action;
+        let currentAction = {...actionsList.current[actionIndex.current]};
+        if (!currentAction) return;
+        let  test = currentAction.action;
+
+        if (startedTests.current.includes(test)) {
+            return;
+        }
+        startedTests.current.push(test);
+
         const startTime = new Date();
-        maxAttempts.current = action.attempts;
+        setMaxAttempts( currentAction.attempts );
         rsssl_api.runLetsEncryptTest(test, props.field.id ).then( ( response ) => {
             const endTime = new Date();
             let timeDiff = endTime - startTime; //in ms
             const elapsedTime = Math.round(timeDiff);
-            let action = getAction();
-            action.status = response.status ? response.status : 'inactive';
-            action.hide = false;
-            action.description = response.message;
-            action.do = response.action;
-            action.output = response.output ? response.output : false;
+
+            currentAction.status = response.status ? response.status : 'inactive';
+            currentAction.hide = false;
+            currentAction.description = response.message;
+            currentAction.do = response.action;
+            currentAction.output = response.output ? response.output : false;
             sleep.current = 500;
             if (elapsedTime<1500) {
                sleep.current = 1500-elapsedTime;
             }
+            action.current = currentAction;
+            actionsList.current[actionIndex.current] = currentAction;
         }).then(sleeper(sleep.current)).then(() => {
-            processTestResult(action);
+            processTestResult(currentAction);
       });
 
     }
@@ -196,6 +259,7 @@ const LetsEncrypt = (props) => {
             {width: progress+"%"},
         );
     }
+
     const getStatusIcon = (action) => {
         if (!statuses.hasOwnProperty(action.status)) {
             return statuses['inactive'].icon;
@@ -214,39 +278,24 @@ const LetsEncrypt = (props) => {
     if ( !props.field.actions ) {
         return (<></>);
     }
-    // keep current action, before it is filtered. The actionindex doesn't match anymore after filtering
-    let currentAction = props.field.actions[actionIndex.current];
-    //filter out skipped actions
-    let actions = props.field.actions.filter(action => action.hide !== true);
-    const statuses = {
-        'inactive': {
-            'icon': 'circle-times',
-            'color': 'grey',
-        },
-        'warning': {
-            'icon': 'circle-times',
-            'color': 'orange',
-        },
-        'error': {
-            'icon': 'circle-times',
-            'color': 'red',
-        },
-        'success': {
-            'icon': 'circle-check',
-            'color': 'green',
-        },
-    };
 
+    //filter out skipped actions
+    let actionsOutput = actionsList.current.filter(action => action.hide !== true);
+    refProgress.current = progress;
+    if (maxIndex.current === actionIndex.current+1 ){
+        refProgress.current = 100;
+    }
     return (
         <>
             <div className="rsssl-lets-encrypt-tests">
                 <div className="rsssl-progress-bar"><div className="rsssl-progress"><div className={'rsssl-bar ' + progressBarColor} style={getStyles()}></div></div></div>
                 <div className="rsssl_letsencrypt_container rsssl-progress-container field-group">
                     <ul>
-                       {actions.map((action, i) =>
+                       {actionsOutput.map((action, i) =>
                               <li key={i}>
                                   <Icon name = {getStatusIcon(action)} color = {getStatusColor(action)} />
-                                        {action.do==='retry' && action.attemptCount >=1 && <>{__("Attempt %s.", "really-simple-ssl").replace('%s', action.attemptCount)} </>}
+                                        {action.do==='retry' && attemptCount >=1 && <>{__("Attempt %s.", "really-simple-ssl").replace('%s', attemptCount)} </>}
+                                        &nbsp;
                                         <span dangerouslySetInnerHTML={{__html:action.description}}></span>
                                     </li>
 
@@ -254,11 +303,11 @@ const LetsEncrypt = (props) => {
                         }
                     </ul>
                 </div>
-                {props.field.id === 'directories' && <Directories save={props.save} selectMenu={props.selectMenu} field={props.field} updateField={props.updateField} addHelp={props.addHelp} progress={progress} action={currentAction}/> }
-                {props.field.id === 'dns-verification' && <DnsVerification save={props.save} selectMenu={props.selectMenu} field={props.field} updateField={props.updateField} addHelp={props.addHelp} progress={progress} action={currentAction}/> }
-                {props.field.id === 'generation' && <Generation restartTests={restartTests} save={props.save} selectMenu={props.selectMenu} field={props.field} updateField={props.updateField} addHelp={props.addHelp} progress={progress} action={currentAction}/> }
-                {props.field.id === 'installation' && <Installation restartTests={restartTests} save={props.save} selectMenu={props.selectMenu} field={props.field} updateField={props.updateField} addHelp={props.addHelp} progress={progress} action={currentAction}/> }
-                {props.field.id === 'activate' && <Activate restartTests={restartTests} save={props.save} selectMainMenu={props.selectMainMenu} selectMenu={props.selectMenu} field={props.field} updateField={props.updateField} addHelp={props.addHelp} progress={progress} action={currentAction}/> }
+                {props.field.id === 'directories' && <Directories field={props.field} action={actionsList.current[actionIndex.current]}/> }
+                {props.field.id === 'dns-verification' && <DnsVerification field={props.field} action={actionsList.current[actionIndex.current]}/> }
+                {props.field.id === 'generation' && <Generation field={props.field} action={actionsList.current[actionIndex.current]}/> }
+                {props.field.id === 'installation' && <Installation field={props.field} action={actionsList.current[actionIndex.current]}/> }
+                {props.field.id === 'activate' && <Activate field={props.field} action={actionsList.current[actionIndex.current]}/> }
             </div>
         </>
     )

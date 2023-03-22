@@ -212,6 +212,10 @@ if (!class_exists('rsssl_multisite')) {
 	     */
 
 	    public function plugin_settings_link(array $links): array {
+		    if ( !rsssl_user_can_manage() ) {
+			    return $links;
+		    }
+
 		    $url = add_query_arg(array('page' => 'really-simple-security'), network_admin_url('settings.php') );
 		    $settings_link = '<a href="' . $url . '">' . __("Settings", "really-simple-ssl") . '</a>';
 		    array_unshift($links, $settings_link);
@@ -274,6 +278,10 @@ if (!class_exists('rsssl_multisite')) {
             if ( !is_multisite() || !rsssl_is_networkwide_active() ) {
 				return;
             }
+
+	        if ( !rsssl_user_can_manage() ) {
+		        return;
+	        }
 	        $count = RSSSL()->admin->count_plusones();
 	        $update_count = $count > 0 ? "<span class='update-plugins rsssl-update-count'><span class='update-count'>$count</span></span>" : "";
 
@@ -344,7 +352,7 @@ if (!class_exists('rsssl_multisite')) {
 				$percentage = 100;
             }
 
-            return intval($percentage);
+            return (int) $percentage;
         }
 
 	    /**

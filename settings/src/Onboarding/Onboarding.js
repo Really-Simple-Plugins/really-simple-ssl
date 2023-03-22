@@ -2,22 +2,25 @@ import {useState, useEffect} from "@wordpress/element";
 import { Button, ToggleControl } from '@wordpress/components';
 import * as rsssl_api from "../utils/api";
 import { __ } from '@wordpress/i18n';
-import update from 'immutability-helper';
 import {useUpdateEffect} from 'react-use';
 import Icon from "../utils/Icon";
 import Placeholder from '../Placeholder/Placeholder';
+import useMenu from "../Menu/MenuData";
+import useFields from "../Settings/FieldsData";
+import useOnboardingData from "./OnboardingData";
 
 const Onboarding = (props) => {
-const [steps, setSteps] = useState([]);
-const [error, setError] = useState(false);
-const [overrideSSL, setOverrideSSL] = useState(false);
-const [certificateValid, setCertificateValid] = useState(false);
-const [sslActivated, setsslActivated] = useState(false);
-const [activateSSLDisabled, setActivateSSLDisabled] = useState(true);
-const [stepsChanged, setStepsChanged] = useState('');
-const [networkwide, setNetworkwide] = useState(false);
-const [networkActivationStatus, setNetworkActivationStatus] = useState(false);
-const [networkProgress, setNetworkProgress] = useState(0);
+    const { fetchFieldsData, updateField, saveFields, setChangedField} = useFields();
+    const {dismissModal} = useOnboardingData();
+    const {setSelectedMainMenuItem} = useMenu();
+    const [steps, setSteps] = useState([]);
+    const [error, setError] = useState(false);
+    const [overrideSSL, setOverrideSSL] = useState(false);
+    const [certificateValid, setCertificateValid] = useState(false);
+    const [stepsChanged, setStepsChanged] = useState('');
+    const [networkwide, setNetworkwide] = useState(false);
+    const [networkActivationStatus, setNetworkActivationStatus] = useState(false);
+    const [networkProgress, setNetworkProgress] = useState(0);
 
     useUpdateEffect(()=> {
         if ( networkProgress<100 && networkwide && networkActivationStatus==='main_site_activated' ){
@@ -44,9 +47,7 @@ const [networkProgress, setNetworkProgress] = useState(0);
                 let steps = response.steps;
                 setNetworkwide(response.networkwide);
                 setOverrideSSL(response.ssl_detection_overridden);
-                setActivateSSLDisabled(!response.ssl_detection_overridden);
                 setCertificateValid(response.certificate_valid);
-                setsslActivated(response.ssl_enabled);
                 steps[0].visible = true;
                 //if ssl is already enabled, the server will send only one step. In that case we can skip the below.
                 //it's only needed when SSL is activated just now, client side.
@@ -61,7 +62,6 @@ const [networkProgress, setNetworkProgress] = useState(0);
                 setSteps(steps);
                 setStepsChanged('initial');
             }
-
         });
     }
 
@@ -87,20 +87,19 @@ const [networkProgress, setNetworkProgress] = useState(0);
 
     const activateSSL = () => {
         setStepsChanged(false);
-        let sslUrl = window.location.href.replace("http://", "https://");
-        rsssl_api.runTest('activate_ssl' ).then( ( response ) => {
+        rsssl_api.runTest('activate_ssl' ).then( async ( response ) => {
             steps[0].visible = false;
             steps[1].visible = true;
             //change url to https, after final check
             if ( response.success ) {
                 setSteps(steps);
                 setStepsChanged(true);
-                setsslActivated(response.success);
-                props.updateField('ssl_enabled', true);
+                updateField('ssl_enabled', true);
+                setChangedField('ssl_enabled', true);
+                await saveFields(true, false);
                 if (response.site_url_changed) {
                     window.location.reload();
                 } else {
-                    props.getFields();
                     if ( networkwide ) {
                         setNetworkActivationStatus('main_site_activated');
                     }
@@ -131,11 +130,11 @@ const [networkProgress, setNetworkProgress] = useState(0);
         let data={};
         data.id = id;
         updateActionForItem(id, action, false);
-        rsssl_api.doAction(action, data).then( ( response ) => {
+        rsssl_api.doAction(action, data).then( async ( response ) => {
             if ( response.success ){
                 if (action==='activate_setting'){
                     //ensure all fields are updated, and progress is retrieved again
-                    props.getFields();
+                    await fetchFieldsData('general');
                 }
                 let nextAction = response.next_action;
                 if ( nextAction!=='none' && nextAction!=='completed') {
@@ -175,7 +174,7 @@ const [networkProgress, setNetworkProgress] = useState(0);
             const statuses = {
                 'inactive': {
                     'icon': 'info',
-                    'color': 'grey',
+                    'color': 'orange',
                 },
                 'warning': {
                     'icon': 'circle-times',
@@ -226,7 +225,7 @@ const [networkProgress, setNetworkProgress] = useState(0);
                         {networkProgress>=100 && __("completed", "really-simple-ssl") }
                         </>}
                     {button && <>&nbsp;-&nbsp;
-                    {showLink && <Button className={"button button-secondary"} isLink={true} onClick={() => itemButtonHandler(id, action)}>{buttonTitle}</Button>}
+                    {showLink && <Button isLink={true} onClick={() => itemButtonHandler(id, action)}>{buttonTitle}</Button>}
                     {!showLink && <>{buttonTitle}</>}
                     </>}
                 </li>
@@ -235,13 +234,13 @@ const [networkProgress, setNetworkProgress] = useState(0);
     }
 
     const goToDashboard = () => {
-        if ( props.isModal ) props.dismissModal();
-        props.selectMainMenu('dashboard');
+        if ( props.isModal ) dismissModal();
+        setSelectedMainMenuItem('dashboard');
     }
 
     const goToLetsEncrypt = () => {
-         if (props.isModal) props.dismissModal();
-        window.location.href=rsssl_settings.letsencrypt_url;
+         if (props.isModal) dismissModal();
+          window.location.href=rsssl_settings.letsencrypt_url;
     }
 
     const controlButtons = () => {
@@ -259,10 +258,8 @@ const [networkProgress, setNetworkProgress] = useState(0);
                         setOverrideSSL(value);
                         let data = {};
                         data.overrideSSL = value;
-                        rsssl_api.doAction('override_ssl_detection',data ).then( ( response ) => {
-                            setActivateSSLDisabled(!value)
-                        });
-                       }}
+                        rsssl_api.doAction('override_ssl_detection',data );
+                   }}
                 />}
                 </>
             );
@@ -271,8 +268,8 @@ const [networkProgress, setNetworkProgress] = useState(0);
         if ( ( steps.length>1 && steps[1].visible ) || steps[0].visible){
             return (
                 <>
-                <button className="button button-primary" onClick={() => {goToDashboard()}}>{__('Go to Dashboard', 'really-simple-ssl')}</button>
-                <button className="button button-default" onClick={() => {props.dismissModal()}}>{__('Dismiss', 'really-simple-ssl')}</button>
+                    <button className="button button-primary" onClick={() => {goToDashboard()}}>{__('Go to Dashboard', 'really-simple-ssl')}</button>
+                    <button className="button button-default" onClick={() => dismissModal()}>{__('Dismiss', 'really-simple-ssl')}</button>
                 </>
             );
         }
@@ -280,12 +277,17 @@ const [networkProgress, setNetworkProgress] = useState(0);
 
     if (error){
         return (
-            <Placeholder lines="12" error={error}></Placeholder>
+            <Placeholder lines="3" error={error}></Placeholder>
         )
     }
     return (
         <>
-            { !stepsChanged && <Placeholder lines="12"></Placeholder>}
+            { !stepsChanged && <>
+                <ul>
+                    <li><Icon name = "file-download" color = 'grey' />{__("Fetching next step...", "really-simple-ssl")}</li>
+                </ul>
+                <Placeholder lines="3" ></Placeholder></>}
+
             {
                 stepsChanged && steps.map((step, index) => {
                     const {title, subtitle, items, info_text: infoText, visible} = step;

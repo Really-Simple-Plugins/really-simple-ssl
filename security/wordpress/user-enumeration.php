@@ -7,7 +7,7 @@ defined('ABSPATH') or die();
 function rsssl_check_user_enumeration() {
 	if ( ! is_user_logged_in() && isset( $_REQUEST['author'] ) ) {
 		if ( preg_match( '/\\d/', $_REQUEST['author'] ) > 0 ) {
-			wp_die( esc_html__( 'forbidden - number in author name not allowed = ', 'really-simple-ssl' ) . esc_html( $_REQUEST['author'] ) );
+			wp_die( sprintf(__( 'forbidden - number in author name not allowed = %s', 'really-simple-ssl' ), esc_html( $_REQUEST['author'] ) ) );
 		}
 	}
 }

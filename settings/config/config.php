@@ -108,7 +108,7 @@ function rsssl_menu() {
 							'premium'              => true,
 							'premium_text'         => __( "Get Recommended Security Headers with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
 							'upgrade'              => 'https://really-simple-ssl.com/pro/?mtm_campaign=recommendedheaders&mtm_source=free&mtm_content=upgrade',
-							'title'                => __( 'Recommended Security Headers ', 'really-simple-ssl' ),
+							'title'                => __( 'Recommended Security Headers', 'really-simple-ssl' ),
 							'helpLink'             => 'https://really-simple-ssl.com/instructions/about-recommended-security-headers/?mtm_campaign=instructions&mtm_source=free',
 						],
 					],
@@ -297,8 +297,6 @@ function rsssl_fields( $load_values = true ) {
 				'wp_redirect' => __( "301 PHP redirect", "really-simple-ssl" ),
 				'htaccess'    => __( "301 .htaccess redirect (read instructions first)", "really-simple-ssl" ),
 			],
-			'warning' => true,
-			'tooltip' => __('Redirects all requests over HTTP to HTTPS.', 'really-simple-ssl'),
 			'help'             => [
 				'label' => 'default',
 				'title' => __( "Redirect method", 'really-simple-ssl' ),
@@ -318,10 +316,6 @@ function rsssl_fields( $load_values = true ) {
 			'group_id' => 'general',
 			'type'     => 'checkbox',
 			'label'    => __( "Mixed content fixer", 'really-simple-ssl' ),
-			// 'help'        => [
-			// 	'label' => 'default',
-			// 	'text' => __( 'In most cases you need to leave this enabled, to prevent mixed content issues on your site.', 'really-simple-ssl' ),
-			// ],
 			'disabled' => false,
 			'default'  => true,
 		],
@@ -749,7 +743,6 @@ function rsssl_fields( $load_values = true ) {
 			'label'            => __( "XML-RPC", 'really-simple-ssl' ),
 			'disabled'         => false,
 			'default'          => false,
-			'data_source'      => [ 'RSSSL', 'placeholder', 'xml_data' ],
 			'react_conditions' => [
 				'relation' => 'AND',
 				[
@@ -880,13 +873,13 @@ function rsssl_fields( $load_values = true ) {
 			'react_conditions' => [
 				'relation' => 'AND',
 				[
-					'hsts' => 1,
+					'hsts' => true,
 				]
 			],
 			'configure_on_activation' => [
 				'condition' => 1,
 				[
-					'hsts_subdomains' => 1,
+					'hsts_subdomains' => true,
 					'hsts_max_age' => 63072000,
 				]
 			],
@@ -902,7 +895,7 @@ function rsssl_fields( $load_values = true ) {
 			'react_conditions' => [
 				'relation' => 'AND',
 				[
-					'hsts' => 1,
+					'hsts' => true,
 				]
 			],
 			'disabled'         => false,
@@ -922,7 +915,7 @@ function rsssl_fields( $load_values = true ) {
 			'react_conditions' => [
 				'relation' => 'AND',
 				[
-					'hsts' => 1,
+					'hsts' => true,
 				]
 			],
 			'disabled'         => false,
@@ -986,7 +979,6 @@ function rsssl_fields( $load_values = true ) {
 			'group_id'    => 'mixedcontentscan',
 			'type'        => 'mixedcontentscan',
 			'label'       => __( "Mixed content scan", "really-simple-ssl-pro" ),
-			'data_source' => [ 'RSSSL', 'placeholder', 'mixed_content_data' ],
 			'help'        => [
 				'label' => 'default',
 				'url' => 'https://really-simple-ssl.com/definition/what-is-mixed-content/?mtm_campaign=definition&mtm_source=free',
@@ -1199,7 +1191,6 @@ function rsssl_fields( $load_values = true ) {
 			'label'         => "Content Security Policy",
 			'disabled'      => false,
 			'default'       => false,
-			'data_source'   => [ 'RSSSL', 'placeholder', 'csp_data' ],
 			'columns'       => [
 				[
 					'name'     => __( 'Location', 'really-simple-ssl' ),

@@ -2,162 +2,130 @@ import {
     SelectControl,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import {
-    Component,
-} from '@wordpress/element';
-import ChangeStatus from "./ChangeStatus";
+import {useState,useEffect} from '@wordpress/element';
 import DataTable, {createTheme} from 'react-data-table-component';
-import * as rsssl_api from "../utils/api";
 import Icon from "../utils/Icon";
+import useFields from "./FieldsData";
 
-class PermissionsPolicy extends Component {
-    constructor() {
-        super( ...arguments );
-        this.state = {
-            enable_permissions_policy: 0,
-        };
-    }
+const PermissionsPolicy = (props) => {
+    const {fields, updateField, updateSubField, setChangedField, saveFields} = useFields();
+    const [enablePermissionsPolicy, setEnablePermissionsPolicy] = useState(0);
 
-    componentDidMount() {
-        this.togglePermissionsPolicyStatus = this.togglePermissionsPolicyStatus.bind(this);
-        this.onChangeHandler = this.onChangeHandler.bind(this);
-        let field = this.props.fields.filter(field => field.id === 'enable_permissions_policy')[0];
-        this.setState({
-            enable_permissions_policy :field.value
-        });
-    }
+    useEffect( () => {
+        let field = fields.filter(field => field.id === 'enable_permissions_policy')[0];
+        setEnablePermissionsPolicy(field.value);
+    }, [] );
 
-    onChangeHandler(value, clickedItem ) {
-        let field=this.props.field;
+    const onChangeHandler = (value, clickedItem ) => {
+        let field= props.field;
         if (typeof field.value === 'object') {
-            field.value = Object.values(field.value);
+            updateField(field.id, Object.values(field.value))
         }
-        //find this item in the field list
-        for (const item of field.value){
-            if (item.id === clickedItem.id) {
-                item['value'] = value;
-            }
-            delete item.valueControl;
-            delete item.statusControl;
-            delete item.deleteControl;
-        }
+
         //the updateItemId allows us to update one specific item in a field set.
-        field.updateItemId = clickedItem.id;
-        let saveFields = [];
-        saveFields.push(field);
-        this.props.updateField(field.id, field.value);
-        rsssl_api.setFields(saveFields).then(( response ) => {
-            //this.props.showSavedSettingsNotice();
-        });
+        updateSubField(field.id, clickedItem.id, value);
+        setChangedField(field.id, value);
+        saveFields(true, false);
     }
 
-    togglePermissionsPolicyStatus(e, enforce){
+    const togglePermissionsPolicyStatus = (e, enforce) => {
          e.preventDefault();
-        let fields = this.props.fields;
         //look up permissions policy enable field //enable_permissions_policy
         let field = fields.filter(field => field.id === 'enable_permissions_policy')[0];
-        //enforce this setting
-        field.value=enforce;
-        this.setState({
-            enable_permissions_policy :enforce
-        });
-        let saveFields = [];
-        saveFields.push(field);
-        this.props.updateField(field.id, field.value);
-        rsssl_api.setFields(saveFields).then(( response ) => {
-            //this.props.showSavedSettingsNotice();
-        });
+        //enforce setting
+        setEnablePermissionsPolicy(enforce);
+        updateField(field.id, enforce);
+        setChangedField(field.id, field.value);
+        saveFields(true, false);
     }
 
-    render(){
-        let field = this.props.field;
-        let fieldValue = field.value;
-        let options = this.props.options;
-        const {
-            enable_permissions_policy,
-        } = this.state;
+    let field = props.field;
+    let fieldValue = field.value;
+    let options = props.options;
 
-        columns = [];
-        field.columns.forEach(function(item, i) {
-            let newItem = {
-                name: item.name,
-                sortable: item.sortable,
-                width: item.width,
-                selector: row => row[item.column],
-            }
-            columns.push(newItem);
-        });
-        let data = field.value;
-        if (typeof data === 'object') {
-            data = Object.values(data);
+    columns = [];
+    field.columns.forEach(function(item, i) {
+        let newItem = {
+            name: item.name,
+            sortable: item.sortable,
+            width: item.width,
+            selector: row => row[item.column],
         }
-        if (!Array.isArray(data) ) {
-            data = [];
-        }
-        let disabled = false;
-        for (const item of data){
-            item.valueControl = <SelectControl
-                help=''
-                value={item.value}
-                disabled={disabled}
-                options={options}
-                label=''
-                onChange={ ( fieldValue ) => this.onChangeHandler( fieldValue, item, 'value' ) }
-            />
-        }
-
-        const customStyles = {
-            headCells: {
-                style: {
-                    paddingLeft: '0', // override the cell padding for head cells
-                    paddingRight: '0',
-                },
-            },
-            cells: {
-                style: {
-                    paddingLeft: '0', // override the cell padding for data cells
-                    paddingRight: '0',
-                },
-            },
-        };
-
-        createTheme('really-simple-plugins', {
-            divider: {
-                default: 'transparent',
-            },
-        }, 'light');
-
-        return (
-            <div className={ this.props.highLightClass}>
-                    <DataTable
-                        columns={columns}
-                        data={data}
-                        dense
-                        pagination={false}
-                        customStyles={customStyles}
-                        theme="really-simple-plugins"
-                    />
-                    { enable_permissions_policy!=1 && <button className="button button-primary" onClick={ (e) => this.togglePermissionsPolicyStatus(e, true ) }>{__("Enforce","really-simple-ssl")}</button> }
-                    { enable_permissions_policy==1 && <div className="rsssl-locked">
-                        <div className="rsssl-shield-overlay">
-                            <Icon name = "shield"  size="80px"/>
-                        </div>
-                        <div className="rsssl-locked-overlay">
-                            <span className="rsssl-progress-status rsssl-learning-mode-enforced">{__("Enforced","really-simple-ssl")}</span>
-                            { this.props.disabled && <>{ __("Permissions Policy is set outside Really Simple SSL.", "really-simple-ssl")}&nbsp;</>}
-                            { !this.props.disabled && <>{__("Permissions Policy is enforced.", "really-simple-ssl")}&nbsp;</>}
-                            { !this.props.disabled && <a className="rsssl-learning-mode-link" href="#" onClick={ (e) => this.togglePermissionsPolicyStatus(e, false) }>{__("Disable", "really-simple-ssl") }</a> }
-                        </div>
-                    </div>}
-                    { this.props.disabled && enable_permissions_policy!=1 && <div className="rsssl-locked">
-                        <div className="rsssl-locked-overlay">
-                            <span className="rsssl-progress-status rsssl-disabled">{__("Disabled ","really-simple-ssl")}</span>
-                            {__("The Permissions Policy has been disabled.", "really-simple-ssl")}
-                        </div>
-                    </div>}
-            </div>
-        )
+        columns.push(newItem);
+    });
+    let data = field.value;
+    if (typeof data === 'object') {
+        data = Object.values(data);
     }
+    if (!Array.isArray(data) ) {
+        data = [];
+    }
+    let disabled = false;
+    let outputData = [];
+    for (const item of data){
+        let itemCopy = {...item};
+        itemCopy.valueControl = <SelectControl
+            help=''
+            value={item.value}
+            disabled={disabled}
+            options={options}
+            label=''
+            onChange={ ( fieldValue ) => onChangeHandler( fieldValue, item, 'value' ) }
+        />
+        outputData.push(itemCopy);
+    }
+
+    const customStyles = {
+        headCells: {
+            style: {
+                paddingLeft: '0', // override the cell padding for head cells
+                paddingRight: '0',
+            },
+        },
+        cells: {
+            style: {
+                paddingLeft: '0', // override the cell padding for data cells
+                paddingRight: '0',
+            },
+        },
+    };
+
+    createTheme('really-simple-plugins', {
+        divider: {
+            default: 'transparent',
+        },
+    }, 'light');
+
+    return (
+        <div className={ props.highLightClass}>
+                <DataTable
+                    columns={columns}
+                    data={outputData}
+                    dense
+                    pagination={false}
+                    customStyles={customStyles}
+                    theme="really-simple-plugins"
+                />
+                { enablePermissionsPolicy!=1 && <button className="button button-primary" onClick={ (e) => togglePermissionsPolicyStatus(e, true ) }>{__("Enforce","really-simple-ssl")}</button> }
+                { enablePermissionsPolicy==1 && <div className="rsssl-locked">
+                    <div className="rsssl-shield-overlay">
+                        <Icon name = "shield"  size="80px"/>
+                    </div>
+                    <div className="rsssl-locked-overlay">
+                        <span className="rsssl-progress-status rsssl-learning-mode-enforced">{__("Enforced","really-simple-ssl")}</span>
+                        { props.disabled && <>{ __("Permissions Policy is set outside Really Simple SSL.", "really-simple-ssl")}&nbsp;</>}
+                        { !props.disabled && <>{__("Permissions Policy is enforced.", "really-simple-ssl")}&nbsp;</>}
+                        { !props.disabled && <a className="rsssl-learning-mode-link" href="#" onClick={ (e) => togglePermissionsPolicyStatus(e, false) }>{__("Disable", "really-simple-ssl") }</a> }
+                    </div>
+                </div>}
+                { props.disabled && enablePermissionsPolicy!=1 && <div className="rsssl-locked">
+                    <div className="rsssl-locked-overlay">
+                        <span className="rsssl-progress-status rsssl-disabled">{__("Disabled","really-simple-ssl")}</span>
+                        {__("The Permissions Policy has been disabled.", "really-simple-ssl")}
+                    </div>
+                </div>}
+        </div>
+    )
 }
 
 

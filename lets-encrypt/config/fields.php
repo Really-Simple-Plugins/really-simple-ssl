@@ -43,6 +43,7 @@ function rsssl_le_add_fields($fields) {
 			[
 				'id'      => 'system-status',
 				'menu_id' => 'le-system-status',
+				'group_id' => 'le-system-status',
 				"intro"   => __( "Detected status of your setup.", "really-simple-ssl" ),
 				'type'    => 'letsencrypt',
 				'default' => false,
@@ -82,11 +83,13 @@ function rsssl_le_add_fields($fields) {
 			[
 				'id' => 'verification_type',
 				'menu_id' => 'le-general',
+				'group_id' => 'le-general',
 				'type' =>  'hidden',
 			],
 			[
 				'id'       => 'email_address',
 				'menu_id'  => 'le-general',
+				'group_id'  => 'le-general',
 				'type'     => 'email',
 				'label'    => __( "Email address", 'really-simple-ssl' ),
 				'help'     => [
@@ -100,6 +103,7 @@ function rsssl_le_add_fields($fields) {
 			[
 				'id'       => 'accept_le_terms',
 				'menu_id'  => 'le-general',
+				'group_id'  => 'le-general',
 				'type'     => 'checkbox',
 				'default'  => false,
 				'required' => true,
@@ -109,6 +113,7 @@ function rsssl_le_add_fields($fields) {
 			[
 				'id'      => 'disable_ocsp',
 				'menu_id' => 'le-general',
+				'group_id' => 'le-general',
 				'required'=> false,
 				'type'    => 'checkbox',
 				'default' => false,
@@ -123,6 +128,7 @@ function rsssl_le_add_fields($fields) {
 			[
 				'id'       => 'domain',
 				'menu_id'  => 'le-general',
+				'group_id'  => 'le-general',
 				'type'     => 'text',
 				'default'  => rsssl_get_domain(),
 				'label'    => __( "Domain", 'really-simple-ssl' ),
@@ -133,6 +139,7 @@ function rsssl_le_add_fields($fields) {
 			[
 				'id'                => 'include_alias',
 				'menu_id'           => 'le-general',
+				'group_id'           => 'le-general',
 				'type'              => 'checkbox',
 				'default'           => '',
 				'label'    => __( "Include alias", 'really-simple-ssl' ),
@@ -153,6 +160,7 @@ function rsssl_le_add_fields($fields) {
 			[
 				'id'       => 'other_host_type',
 				'menu_id'  => 'le-hosting',
+				'group_id'  => 'le-hosting',
 				'type'     => 'host',
 				'options'  => RSSSL_LE()->hosts->supported_hosts,
 				'help'     => [
@@ -171,6 +179,7 @@ function rsssl_le_add_fields($fields) {
 			[
 				'id'                => 'cpanel_host',
 				'menu_id'           => 'le-hosting',
+				'group_id'           => 'le-hosting',
 				'type'              => 'text',
 				'default'           => '',
 				'label'             => __( "CPanel host", 'really-simple-ssl' ),
@@ -194,6 +203,7 @@ function rsssl_le_add_fields($fields) {
 			[
 				'id'                => 'cpanel_username',
 				'menu_id'           => 'le-hosting',
+				'group_id'           => 'le-hosting',
 				'type'              => 'text',
 				'default'           => '',
 				'label'             => __( "CPanel username", 'really-simple-ssl' ),
@@ -212,6 +222,7 @@ function rsssl_le_add_fields($fields) {
 			[
 				'id'                => 'cpanel_password',
 				'menu_id'           => 'le-hosting',
+				'group_id'           => 'le-hosting',
 				'type'              => 'password',
 				'default'           => '',
 				'label'             => __( "CPanel password", 'really-simple-ssl' ),
@@ -230,6 +241,7 @@ function rsssl_le_add_fields($fields) {
 			[
 				'id'                => 'directadmin_host',
 				'menu_id'           => 'le-hosting',
+				'group_id'           => 'le-hosting',
 				'type'              => 'text',
 				'default'           => '',
 				'label'             => __( "DirectAdmin host", 'really-simple-ssl' ),
@@ -253,6 +265,7 @@ function rsssl_le_add_fields($fields) {
 			[
 				'id'                => 'directadmin_username',
 				'menu_id'           => 'le-hosting',
+				'group_id'           => 'le-hosting',
 				'type'              => 'text',
 				'default'           => '',
 				'label'             => __( "DirectAdmin username", 'really-simple-ssl' ),
@@ -271,6 +284,7 @@ function rsssl_le_add_fields($fields) {
 			[
 				'id'                => 'directadmin_password',
 				'menu_id'           => 'le-hosting',
+				'group_id'           => 'le-hosting',
 				'type'              => 'password',
 				'default'           => '',
 				'label'             => __( "DirectAdmin password", 'really-simple-ssl' ),
@@ -289,6 +303,7 @@ function rsssl_le_add_fields($fields) {
 			[
 				'id'                => 'cloudways_user_email',
 				'menu_id'           => 'le-hosting',
+				'group_id'           => 'le-hosting',
 				'type'              => 'text',
 				'default'           => '',
 				'placeholder'       => 'email@email.com',
@@ -305,6 +320,7 @@ function rsssl_le_add_fields($fields) {
 			[
 				'id'                => 'cloudways_api_key',
 				'menu_id'           => 'le-hosting',
+				'group_id'           => 'le-hosting',
 				'type'              => 'password',
 				'default'           => '',
 				'label'             => __( "CloudWays api key", 'really-simple-ssl' ),
@@ -326,6 +342,7 @@ function rsssl_le_add_fields($fields) {
 			[
 				'id'                => 'plesk_host',
 				'menu_id'           => 'le-hosting',
+				'group_id'           => 'le-hosting',
 				'type'              => 'text',
 				'default'           => '',
 				'label'             => __( "Plesk host", 'really-simple-ssl' ),
@@ -349,6 +366,7 @@ function rsssl_le_add_fields($fields) {
 			[
 				'id'                => 'plesk_username',
 				'menu_id'           => 'le-hosting',
+				'group_id'           => 'le-hosting',
 				'type'              => 'text',
 				'default'           => '',
 				'label'             => __( "Plesk username", 'really-simple-ssl' ),
@@ -372,6 +390,7 @@ function rsssl_le_add_fields($fields) {
 			[
 				'id'                => 'plesk_password',
 				'menu_id'           => 'le-hosting',
+				'group_id'           => 'le-hosting',
 				'type'              => 'password',
 				'default'           => '',
 				'label'             => __( "Plesk password", 'really-simple-ssl' ),
@@ -390,6 +409,7 @@ function rsssl_le_add_fields($fields) {
 			[
 				'id'                => 'store_credentials',
 				'menu_id'           => 'le-hosting',
+				'group_id'           => 'le-hosting',
 				'type'              => 'checkbox',
 				'default'           => '',
 				'label'             => __( "Do you want to store these credentials for renewal purposes?", 'really-simple-ssl' ),
@@ -422,6 +442,8 @@ function rsssl_le_add_fields($fields) {
 			[
 				'id'                 => 'directories',
 				'menu_id'            => 'le-directories',
+				'group_id'            => 'le-directories',
+				'condition_action'   => 'hide',
 				'type'               => 'letsencrypt',
 				'actions'            => [
 					[
@@ -470,9 +492,11 @@ function rsssl_le_add_fields($fields) {
 				],
 			],
 			[
-				'id'                 => 'dns-verification',
-				'menu_id'            => 'le-dns-verification',
-				'type'               => 'letsencrypt',
+				'id'       => 'dns-verification',
+				'menu_id'  => 'le-dns-verification',
+				'group_id' => 'le-dns-verification',
+				'type'     => 'letsencrypt',
+				'condition_action'   => 'hide',
 				'actions' => [
 					[
 						'description' => __("Creating account...", "really-simple-ssl"),
@@ -497,6 +521,7 @@ function rsssl_le_add_fields($fields) {
 			[
 				'id'                 => 'generation',
 				'menu_id'            => 'le-generation',
+				'group_id'            => 'le-generation',
 				'type'               => 'letsencrypt',
 //				'server_conditions' => [
 //					'relation' => 'AND',
@@ -528,6 +553,7 @@ function rsssl_le_add_fields($fields) {
 			[
 				'id'       => 'installation',
 				'menu_id'  => 'le-installation',
+				'group_id'  => 'le-installation',
 				'type'     => 'letsencrypt',
 				'actions' => [
 					[
@@ -541,6 +567,7 @@ function rsssl_le_add_fields($fields) {
 			[
 				'id'       => 'activate_ssl',
 				'menu_id'  => 'le-activate_ssl',
+				'group_id'  => 'le-activate_ssl',
 				'type'     => 'activate',
 			],
 		]);

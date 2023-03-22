@@ -31,7 +31,7 @@ class rsssl_onboarding {
 
 	public function handle_onboarding_request($response, $test, $data){
 		if ( ! rsssl_user_can_manage() ) {
-			return false;
+			return [];
 		}
 //		delete_option('rsssl_network_activation_status');
 //		delete_option("rsssl_onboarding_dismissed");
@@ -157,11 +157,10 @@ class rsssl_onboarding {
 	 * Update SSL detection overridden option
 	 */
 
-	public function override_ssl_detection($request) {
+	public function override_ssl_detection($data) {
 		if ( ! rsssl_user_can_manage() ) {
 			return false;
 		}
-		$data = $request->get_params();
 		$override_ssl = isset($data['overrideSSL']) ? $data['overrideSSL']===true : false;
 		if ($override_ssl) {
 			update_option('rsssl_ssl_detection_overridden', true, false );

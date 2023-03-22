@@ -1693,7 +1693,7 @@ class rsssl_letsencrypt_handler {
 		$server = isset($data[0]) ? $data[0] : false;
 		$type = isset($data[1]) ? $data[1] : false;
 
-		$attempt_count = intval(get_transient('rsssl_le_install_attempt_count'));
+		$attempt_count = (int) get_transient( 'rsssl_le_install_attempt_count' );
 		$attempt_count++;
 		set_transient('rsssl_le_install_attempt_count', $attempt_count, DAY_IN_SECONDS);
 		if ( $attempt_count>10 ){
@@ -1709,8 +1709,12 @@ class rsssl_letsencrypt_handler {
 				if ( $server === 'cpanel' ) {
 					if ($type==='default') {
 						$response = rsssl_install_cpanel_default();
-					} else if ( function_exists('rsssl_install_cpanel_shell') ) {
-						$response = rsssl_install_cpanel_shell();
+					} else if ( function_exists('rsssl_shell_installSSL') ) {
+						$response = rsssl_shell_installSSL();
+					} else {
+						//in case of auto ssl.
+						$response = new RSSSL_RESPONSE('error', 'stop', '');
+						delete_option( "rsssl_le_start_installation" );
 					}
 
 					if ( $response->status === 'success' ) {

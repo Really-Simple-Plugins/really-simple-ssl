@@ -1,9 +1,6 @@
-import {useState, useEffect} from "@wordpress/element";
-import { __ } from '@wordpress/i18n';
+import {__} from '@wordpress/i18n';
 import * as rsssl_api from "../utils/api";
 import {dispatch,} from '@wordpress/data';
-import Notices from "../Settings/Notices";
-import update from 'immutability-helper';
 import {useUpdateEffect} from 'react-use';
 import sleeper from "../utils/sleeper";
 import Hyperlink from "../utils/Hyperlink";
@@ -11,55 +8,59 @@ import Hyperlink from "../utils/Hyperlink";
 import {
     Button,
 } from '@wordpress/components';
+import useLetsEncryptData from "./letsEncryptData";
+import useFields from "../Settings/FieldsData";
 
 const Directories = (props) => {
-    const action = props.action;
-     useUpdateEffect(()=> {
-        if ((action.action==='challenge_directory_reachable' && action.status==='error')) {
-            props.addHelp(
+    const {addHelpNotice} = useFields();
+
+    let action = props.action;
+
+    useUpdateEffect(() => {
+        if ((action && action.action === 'challenge_directory_reachable' && action.status === 'error')) {
+            addHelpNotice(
                 props.field.id,
-                 'default',
+                'default',
                 __("The challenge directory is used to verify the domain ownership.", "really-simple-ssl"),
             );
         }
 
-        if ((action.action==='check_key_directory' && action.status==='error')) {
-            props.addHelp(
-             props.field.id,
-              'default',
-             __("The key directory is needed to store the generated keys.","really-simple-ssl")+' '+__("By placing it outside the root folder, it is not publicly accessible.", "really-simple-ssl"),
+        if ((action && action.action === 'check_key_directory' && action.status === 'error')) {
+            addHelpNotice(
+                props.field.id,
+                'default',
+                __("The key directory is needed to store the generated keys.", "really-simple-ssl") + ' ' + __("By placing it outside the root folder, it is not publicly accessible.", "really-simple-ssl"),
             );
         }
 
-        if ((action.action==='check_certs_directory' && action.status==='error')) {
-            props.addHelp(
-             props.field.id,
-              'default',
-             __("The certificate will get stored in this directory.", "really-simple-ssl")+' '+__("By placing it outside the root folder, it is not publicly accessible.", "really-simple-ssl"),
+        if ((action && action.action === 'check_certs_directory' && action.status === 'error')) {
+            addHelpNotice(
+                props.field.id,
+                'default',
+                __("The certificate will get stored in this directory.", "really-simple-ssl") + ' ' + __("By placing it outside the root folder, it is not publicly accessible.", "really-simple-ssl"),
             );
         }
-     });
+    });
 
 
-
-    if (!action) {
+    if ( !action ) {
         return (<></>);
     }
 
     const handleSwitchToDNS = () => {
         props.updateField('verification_type', 'dns');
-        return rsssl_api.runLetsEncryptTest('update_verification_type', 'dns').then( ( response ) => {
+        return rsssl_api.runLetsEncryptTest('update_verification_type', 'dns').then((response) => {
             props.selectMenu('le-dns-verification');
             const notice = dispatch('core/notices').createNotice(
                 'success',
-                __( 'Switched to DNS', 'really-simple-ssl' ),
+                __('Switched to DNS', 'really-simple-ssl'),
                 {
                     __unstableHTML: true,
                     id: 'rsssl_switched_to_dns',
                     type: 'snackbar',
                     isDismissible: true,
                 }
-            ).then(sleeper(3000)).then(( response ) => {
+            ).then(sleeper(3000)).then((response) => {
                 dispatch('core/notices').removeNotice('rsssl_switched_to_dns');
             });
         });
@@ -67,108 +68,109 @@ const Directories = (props) => {
 
     return (
         <div className="rsssl-test-results">
-            {action.status === 'error' && <h4>{ __("Next step", "really-simple-ssl") }</h4> }
+            {action.status === 'error' && <h4>{__("Next step", "really-simple-ssl")}</h4>}
 
-            { (action.status === 'error' && action.action==='challenge_directory_reachable') &&
+            {(action.status === 'error' && action.action === 'challenge_directory_reachable') &&
                 <div>
                     <p>
-                    { __("If the challenge directory cannot be created, or is not reachable, you can either remove the server limitation, or change to DNS verification.", "really-simple-ssl")}
+                        {__("If the challenge directory cannot be created, or is not reachable, you can either remove the server limitation, or change to DNS verification.", "really-simple-ssl")}
                     </p>
                     <Button
                         variant="secondary"
                         onClick={() => handleSwitchToDNS()}
-                        >
-                        { __( 'Switch to DNS verification', 'really-simple-ssl' ) }
+                    >
+                        {__('Switch to DNS verification', 'really-simple-ssl')}
                     </Button>
                 </div>
-             }
-             { action.status !== 'error' && rsssl_settings.hosting_dashboard === 'cpanel' &&
-                     <><p>
-                        <Hyperlink target="_blank" text={__("If you also want to secure subdomains like mail.domain.com, cpanel.domain.com, you have to use the %sDNS%s challenge.","really-simple-ssl")}
-                        url="https://really-simple-ssl.com/lets-encrypt-authorization-with-dns"/>
-                        &nbsp;{__("Please note that auto-renewal with a DNS challenge might not be possible.","really-simple-ssl")}
-                    </p>
-                     <Button
-                         variant="secondary"
-                         onClick={() => handleSwitchToDNS()}
-                     >{ __( 'Switch to DNS verification', 'really-simple-ssl' ) }</Button></>
-             }
-             { (action.status === 'error' && action.action==='check_challenge_directory' ) &&
-                 <div>
-                     <h4>
-             			{__("Create a challenge directory", "really-simple-ssl") }
-                     </h4>
-                     <p>
-             			{ __("Navigate in FTP or File Manager to the root of your WordPress installation:", "really-simple-ssl")}
-                     </p>
-                     <ul>
-                         <li className="rsssl-tooltip-icon dashicons-before rsssl-icon arrow-right-alt2 dashicons-arrow-right-alt2">
-             				{ __('Create a folder called “.well-known”', 'really-simple-ssl')}
-                         </li>
-                         <li className="rsssl-tooltip-icon dashicons-before rsssl-icon arrow-right-alt2 dashicons-arrow-right-alt2">
-             				{ __('Inside the folder called “.well-known” create a new folder called “acme-challenge”, with 644 writing permissions.', 'really-simple-ssl')}
-                         </li>
-                         <li className="rsssl-tooltip-icon dashicons-before rsssl-icon arrow-right-alt2 dashicons-arrow-right-alt2">
-             				{ __('Click the refresh button.', 'really-simple-ssl')}
-                         </li>
-                     </ul>
-                     <h4>
-             		    { __("Or you can switch to DNS verification", "really-simple-ssl")}
-                     </h4>
-                     <p>{ __("If the challenge directory cannot be created, you can either remove the server limitation, or change to DNS verification.", "really-simple-ssl")}</p>
+            }
+            {action.status !== 'error' && rsssl_settings.hosting_dashboard === 'cpanel' &&
+                <><p>
+                    <Hyperlink target="_blank"
+                               text={__("If you also want to secure subdomains like mail.domain.com, cpanel.domain.com, you have to use the %sDNS%s challenge.", "really-simple-ssl")}
+                               url="https://really-simple-ssl.com/lets-encrypt-authorization-with-dns"/>
+                    &nbsp;{__("Please note that auto-renewal with a DNS challenge might not be possible.", "really-simple-ssl")}
+                </p>
                     <Button
                         variant="secondary"
                         onClick={() => handleSwitchToDNS()}
-                        >
-                        { __( 'Switch to DNS verification', 'really-simple-ssl' ) }
+                    >{__('Switch to DNS verification', 'really-simple-ssl')}</Button></>
+            }
+            {(action.status === 'error' && action.action === 'check_challenge_directory') &&
+                <div>
+                    <h4>
+                        {__("Create a challenge directory", "really-simple-ssl")}
+                    </h4>
+                    <p>
+                        {__("Navigate in FTP or File Manager to the root of your WordPress installation:", "really-simple-ssl")}
+                    </p>
+                    <ul>
+                        <li className="rsssl-tooltip-icon dashicons-before rsssl-icon arrow-right-alt2 dashicons-arrow-right-alt2">
+                            {__('Create a folder called “.well-known”', 'really-simple-ssl')}
+                        </li>
+                        <li className="rsssl-tooltip-icon dashicons-before rsssl-icon arrow-right-alt2 dashicons-arrow-right-alt2">
+                            {__('Inside the folder called “.well-known” create a new folder called “acme-challenge”, with 644 writing permissions.', 'really-simple-ssl')}
+                        </li>
+                        <li className="rsssl-tooltip-icon dashicons-before rsssl-icon arrow-right-alt2 dashicons-arrow-right-alt2">
+                            {__('Click the refresh button.', 'really-simple-ssl')}
+                        </li>
+                    </ul>
+                    <h4>
+                        {__("Or you can switch to DNS verification", "really-simple-ssl")}
+                    </h4>
+                    <p>{__("If the challenge directory cannot be created, you can either remove the server limitation, or change to DNS verification.", "really-simple-ssl")}</p>
+                    <Button
+                        variant="secondary"
+                        onClick={() => handleSwitchToDNS()}
+                    >
+                        {__('Switch to DNS verification', 'really-simple-ssl')}
                     </Button>
-                 </div>
-                 }
+                </div>
+            }
 
-                 { (action.status === 'error' && action.action==='check_key_directory' ) &&
-                     <div>
-                         <h4>
-                 			{ __("Create a key directory", "really-simple-ssl")}
-                         </h4>
-                         <p>
-                 			{ __("Navigate in FTP or File Manager to one level above the root of your WordPress installation:", "really-simple-ssl")}
-                         </p>
-                         <ul>
-                             <li className="rsssl-tooltip-icon dashicons-before rsssl-icon arrow-right-alt2 dashicons-arrow-right-alt2">
-                 				{ __('Create a folder called “ssl”', 'really-simple-ssl')}
-                             </li>
-                             <li className="rsssl-tooltip-icon dashicons-before rsssl-icon arrow-right-alt2 dashicons-arrow-right-alt2">
-                 				{ __('Inside the folder called “ssl” create a new folder called “keys”, with 644 writing permissions.', 'really-simple-ssl')}
-                             </li>
-                             <li className="rsssl-tooltip-icon dashicons-before rsssl-icon arrow-right-alt2 dashicons-arrow-right-alt2">
-                 				{ __('Click the refresh button.', 'really-simple-ssl')}
-                             </li>
-                         </ul>
-                     </div>
-                 }
+            {(action.status === 'error' && action.action === 'check_key_directory') &&
+                <div>
+                    <h4>
+                        {__("Create a key directory", "really-simple-ssl")}
+                    </h4>
+                    <p>
+                        {__("Navigate in FTP or File Manager to one level above the root of your WordPress installation:", "really-simple-ssl")}
+                    </p>
+                    <ul>
+                        <li className="rsssl-tooltip-icon dashicons-before rsssl-icon arrow-right-alt2 dashicons-arrow-right-alt2">
+                            {__('Create a folder called “ssl”', 'really-simple-ssl')}
+                        </li>
+                        <li className="rsssl-tooltip-icon dashicons-before rsssl-icon arrow-right-alt2 dashicons-arrow-right-alt2">
+                            {__('Inside the folder called “ssl” create a new folder called “keys”, with 644 writing permissions.', 'really-simple-ssl')}
+                        </li>
+                        <li className="rsssl-tooltip-icon dashicons-before rsssl-icon arrow-right-alt2 dashicons-arrow-right-alt2">
+                            {__('Click the refresh button.', 'really-simple-ssl')}
+                        </li>
+                    </ul>
+                </div>
+            }
 
-                 { (action.status === 'error' && action.action==='check_certs_directory' ) &&
-                     <div>
-                         <h4>
-                 			{ __("Create a certs directory", "really-simple-ssl")}
-                         </h4>
-                         <p>
-                 			{ __("Navigate in FTP or File Manager to one level above the root of your WordPress installation:", "really-simple-ssl")}
-                         </p>
-                         <ul>
-                             <li className="rsssl-tooltip-icon dashicons-before rsssl-icon arrow-right-alt2 dashicons-arrow-right-alt2">
-                 				{ __('Create a folder called “ssl”', 'really-simple-ssl')}
-                             </li>
-                             <li className="rsssl-tooltip-icon dashicons-before rsssl-icon arrow-right-alt2 dashicons-arrow-right-alt2">
-                 				{ __('Inside the folder called “ssl” create a new folder called “certs”, with 644 writing permissions.', 'really-simple-ssl')}
-                             </li>
-                             <li className="rsssl-tooltip-icon dashicons-before rsssl-icon arrow-right-alt2 dashicons-arrow-right-alt2">
-                 				{ __('Click the refresh button.', 'really-simple-ssl')}
-                             </li>
-                         </ul>
-                     </div>
-                 }
-             </div>
+            {(action.status === 'error' && action.action === 'check_certs_directory') &&
+                <div>
+                    <h4>
+                        {__("Create a certs directory", "really-simple-ssl")}
+                    </h4>
+                    <p>
+                        {__("Navigate in FTP or File Manager to one level above the root of your WordPress installation:", "really-simple-ssl")}
+                    </p>
+                    <ul>
+                        <li className="rsssl-tooltip-icon dashicons-before rsssl-icon arrow-right-alt2 dashicons-arrow-right-alt2">
+                            {__('Create a folder called “ssl”', 'really-simple-ssl')}
+                        </li>
+                        <li className="rsssl-tooltip-icon dashicons-before rsssl-icon arrow-right-alt2 dashicons-arrow-right-alt2">
+                            {__('Inside the folder called “ssl” create a new folder called “certs”, with 644 writing permissions.', 'really-simple-ssl')}
+                        </li>
+                        <li className="rsssl-tooltip-icon dashicons-before rsssl-icon arrow-right-alt2 dashicons-arrow-right-alt2">
+                            {__('Click the refresh button.', 'really-simple-ssl')}
+                        </li>
+                    </ul>
+                </div>
+            }
+        </div>
     )
 }
 
