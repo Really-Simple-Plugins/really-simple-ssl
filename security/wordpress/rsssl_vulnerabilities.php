@@ -1175,23 +1175,3 @@ if ( function_exists( 'make_test_notifications')) {
 		});
 	}
 }
-
-
-/* Helper functions */
-
-/**
- * function die and dump
- * TODO: DELETE THIS FUNCTION AND USE THE ONE FROM THE CORE
- *
- * @param $data
- */
-function dd( ...$data ) {
-	//if only one variable is passed, we do not need to use the array
-	if ( count( $data ) === 1 ) {
-		$data = $data[0];
-	}
-	echo '<pre>';
-	var_dump( $data );
-	echo '</pre>';
-	die();
-}
