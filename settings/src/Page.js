@@ -14,20 +14,27 @@ import useMenu from "./Menu/MenuData";
 const Page = (props) => {
     const {error, fields, changedFields, fetchFieldsData, updateFieldsData, fieldsLoaded} = useFields();
     const {selectedMainMenuItem, fetchMenuData } = useMenu();
-    window.addEventListener('hashchange', (e) => {
-        fetchMenuData(fields, e.newURL);
-    });
+
 
     useEffect( () => {
         if ( fieldsLoaded ) {
+
+            console.log("fetch menu data in use effect");
             fetchMenuData(fields);
+            window.addEventListener('hashchange', (e) => {
+                console.log("fields length");
+                console.log(fields.length);
+                fetchMenuData(fields);
+            });
         }
+
 
     }, [fields] );
 
     useEffect( () => {
         let subMenuItem = getAnchor('menu');
         const run = async () => {
+            console.log("update fields data in use effect");
             await updateFieldsData(subMenuItem);
         }
         run();
@@ -36,6 +43,8 @@ const Page = (props) => {
     useEffect( () => {
         let subMenuItem = getAnchor('menu');
         const run = async () => {
+            console.log("fetch fields data in useeffect");
+
             await fetchFieldsData(subMenuItem);
         }
         run();

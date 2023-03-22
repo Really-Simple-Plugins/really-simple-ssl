@@ -25,7 +25,7 @@ const SslLabs = (props) => {
                 }
             })
         }
-    })
+    } , [])
 
     const neverScannedYet = () => {
         return !sslData;
