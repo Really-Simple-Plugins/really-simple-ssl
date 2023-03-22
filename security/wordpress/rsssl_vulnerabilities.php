@@ -1169,7 +1169,7 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
 
 		        return [
 			        'title' => sprintf(__("You have %s %s %s","really-simple-ssl"), $count, $vulnerability, $risk),
-			        'message' => __("Critical vulnerabilities require immediate action. Get more information from the Really Simple SSL dashboard on /domain/ about all vulnerabilities","really-simple-ssl"),
+			        'message' => $messagePrefix . ' ' . $messafeSuffix,
 			        'url' => 'https://really-simple-ssl.com/vulnerabilities/',
 		        ];
 
