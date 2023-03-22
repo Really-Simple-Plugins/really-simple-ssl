@@ -1128,10 +1128,6 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
             $risk_levels = $this->count_risk_levels();
 		    $total = 0;
 
-			echo "<pre>";
-			print_r($risk_levels);
-			echo "</pre>";
-			die;
 			$blocks = [];
             foreach ($risk_levels as $key => $value) {
 				$blocks[] = $this->createBlock($key, $value);
