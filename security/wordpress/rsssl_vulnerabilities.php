@@ -124,7 +124,7 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
 					continue;
 				}
 				//this is shown bases on the config of vulnerability_notification_dashboard
-				$siteWide = false;
+				$siteWide = true;
 				if ( rsssl_get_option( 'vulnerability_notification_dashboard' )  ) {
 					if ($value < $this->risk_levels[rsssl_get_option( 'vulnerability_notification_dashboard' )]) {
 						//we skip this one.
@@ -134,6 +134,7 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
 				if ( rsssl_get_option( 'vulnerability_notification_dashboard' )  ) {
 					if ($value < $this->risk_levels[rsssl_get_option( 'vulnerability_notification_dashboard' )]) {
 						//we skip this one.
+						die('what?');
 						$siteWide = false;
 					}
 				}
@@ -159,6 +160,7 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
 				$notices[ 'risk_level_' . $key ] = $notice;
 
 			}
+			update_option('rsssl_admin_notices', $notices);
 
 			return $notices;
 		}
@@ -1115,6 +1117,7 @@ if ( ! class_exists( "rsssl_vulnerabilities" ) ) {
 # Functions for the vulnerability scanner   									        #
 # These functions are used in the vulnerability scanner like the notices and the api's  #
 #########################################################################################
+//we clear all the cache when the vulnerability scanner is enabled
 
 add_filter( 'rsssl_notices', [ new rsssl_vulnerabilities(), 'show_help_notices' ], 10, 1 );
 
@@ -1154,24 +1157,25 @@ add_action( 'rest_api_init', function () {
 
 if ( function_exists( 'make_test_notifications')) {
 	function make_test_notifications() {
-		add_filter('rsssl_notices' , function ($notices) {
 			$notice                          = [
 				'callback'          => '_true_',
 				'score'             => 1,
 				'show_with_options' => [ 'enable_vulnerability_scanner' ],
 				'output'            => [
 					'true' => [
-						'title'        => sprintf(__( 'Test notification', 'really-simple-ssl' ), $count, $this->risk_naming[ $key ], $count_label),
-						'msg'          => sprintf(__( "This is a 'Dashboard' notification test by Really Simple SSL. You can safely ignore this message. (x)", "really-simple-ssl" ), $count, $count_label, $this->risk_naming[ $key ]),
+						'title'        => __( 'Test notification', 'really-simple-ssl' ),
+						'msg'          => __( "This is a 'Dashboard' notification test by Really Simple SSL. You can safely ignore this message. (x)", "really-simple-ssl" ),
 						'link'         => 'https://really-simple-ssl.com/knowledge-base/vulnerability-scanner/',
 						'icon'         => ($key === 'c')? 'warning':'open',
 						'type'         => 'warning',
 						'dismissible'  => true,
-						'admin_notice' => $siteWide,
+						'admin_notice' => true,
 					]
 				]
 			];
-			return $notices;
-		});
+			//we store the notice in the notices array
+			update_option('rsssl_admin_notices', $notices);
+			//reloading the page
+			wp_redirect( admin_url( 'admin.php?page=rlrsssl_really_simple_ssl' ) );
 	}
 }

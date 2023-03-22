@@ -295,6 +295,7 @@ function rsssl_do_action($request, $ajax_data=false){
 			break;
         case 'test_vulnerability_notification':
             require_once( rsssl_path . 'security/wordpress/rsssl_vulnerabilities.php' );
+
             $response = rsssl_vulnerabilities::testGenerator();
             break;
 		default:
