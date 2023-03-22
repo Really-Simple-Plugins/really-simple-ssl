@@ -108,6 +108,7 @@ if ( !class_exists('rsssl_mailer') ) {
 				}
 			}
 			$username = rsssl_get_option('new_admin_user_login');
+			$login_url = wp_login_url();
 			$body = str_replace(
 				[
 					'{title}',
@@ -116,6 +117,7 @@ if ( !class_exists('rsssl_mailer') ) {
 					'{email-address}',
 					'{learn-more}',
 					'{site_url}',
+					'{login_url}',
 					'{username}',
                     '{change_text}',
                     '{what_now}',
@@ -129,6 +131,7 @@ if ( !class_exists('rsssl_mailer') ) {
 					$this->to,
 					__( "Learn more", 'really-simple-ssl' ),
 					site_url(),
+					$login_url,
 					$username,
                     $this->change_text,
                     $this->what_now_text,
