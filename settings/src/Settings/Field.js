@@ -141,6 +141,7 @@ const Field = (props) => {
             <div className={highLightClass} ref={scrollAnchor}>
               <TextControl
                   required={ field.required }
+                  placeholder={ field.placeholder }
                   disabled={ disabled }
                   help={ field.comment }
                   label={labelWrap(field)}
