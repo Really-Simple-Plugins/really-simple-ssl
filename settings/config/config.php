@@ -359,7 +359,7 @@ function rsssl_fields( $load_values = true ) {
 			'label'    => __( "Notifications by email", 'really-simple-ssl' ),
 			'tooltip'  => __( "Get notified of important changes, updates and settings. Recommended when using security features.", 'really-simple-ssl' ),
 			'disabled' => false,
-			'default'  => true,
+			'default'  => false,
 		],
 		[
 			'id'       => 'notifications_email_address',
