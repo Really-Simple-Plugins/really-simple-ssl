@@ -99,6 +99,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 = 6.2.3 =
 * Improvement: Changed Back-end react to functional components
 * Improvement: multisite notice should link to network admin page
+* Improvement: detect existing CAA records to check Let's Encrypt compatibility
 * Improvement: tested up to wp 6.2
 
 = 6.2.2 =
