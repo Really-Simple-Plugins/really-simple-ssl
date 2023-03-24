@@ -97,11 +97,8 @@ class rsssl_admin
 		    //clear the option
 		    delete_option('rsssl_email_warning_fields', []);
 		    delete_option('rsssl_email_warning_fields_saved');
-		    $domain = '<a href="'.site_url().'">'.site_url().'</a>';
 		    $mailer = new rsssl_mailer();
-		    $mailer->subject = __("Feature enabled","really-simple-ssl");
-		    $mailer->message = sprintf(__("You have enabled a feature on %s. We think it's important to let you know a little bit more about this feature so you can use it without worries.","really-simple-ssl"), $domain);
-		    $mailer->warning_blocks = $warning_blocks;
+            $mailer->warning_blocks = $warning_blocks;
 		    $mailer->send_mail();
 	    }
     }
