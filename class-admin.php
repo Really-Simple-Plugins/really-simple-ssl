@@ -443,10 +443,16 @@ class rsssl_admin
 	 */
 
 	public function notice_html( string $class, string $content, $more_info=false, $dismiss_id=false ) {
+        if (!rsssl_user_can_manage() ) {
+            return '';
+        }
 		$class .= ' notice ';
         $target = strpos($more_info, 'really-simple-ssl.com')!==false ? 'target="_blank"' : '';
         $url = is_ssl() ? "https://" : "http://";
-		$url .= $_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"];
+		$domain = site_url();
+		$parse = parse_url($domain);
+		$root = $parse['host'] ?? false;
+		$url .= trailingslashit($root).$_SERVER["REQUEST_URI"];
         $url = esc_url_raw($url);
 		ob_start();?>
             <style>
