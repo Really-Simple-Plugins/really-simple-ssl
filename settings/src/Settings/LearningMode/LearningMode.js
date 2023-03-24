@@ -6,8 +6,10 @@ import DataTable, {createTheme} from 'react-data-table-component';
 import Icon from "../../utils/Icon";
 import useFields from "./../FieldsData";
 import useLearningMode from "./LearningModeData";
+import useProgress from "../../Dashboard/Progress/ProgressData";
 
 const LearningMode = (props) => {
+    const {getProgressData} = useProgress();
     const {updateField, getFieldValue, getField, setChangedField, highLightField, saveFields} = useFields();
     const {fetchLearningModeData, learningModeData, dataLoaded} = useLearningMode();
     //used to show if a feature is already enforced by a third party
@@ -86,6 +88,7 @@ const LearningMode = (props) => {
         setChangedField(controlField.id, controlFieldValue);
         updateField(controlField.id, controlFieldValue);
         saveFields(true, false);
+        getProgressData();
     }
 
     const toggleLearningMode = async (e) => {
@@ -110,6 +113,7 @@ const LearningMode = (props) => {
         setChangedField(lmEnabledOnceField.id, lmEnabledOnceField.value);
         updateField(lmEnabledOnceField, lmEnabledOnceField.value);
         await saveFields(true, false);
+        getProgressData();
     }
 
     const Filter = () => (
@@ -224,7 +228,6 @@ const LearningMode = (props) => {
             </div>
         </>
     )
-
 }
 
 export default LearningMode
