@@ -92,7 +92,6 @@ const LearningMode = (props) => {
         updateField(controlField.id, controlFieldValue);
         saveFields(true, false);
         fetchLearningModeData();
-       // getProgressData();
     }
 
 
@@ -118,7 +117,6 @@ const LearningMode = (props) => {
         setChangedField(lmEnabledOnceField.id, lmEnabledOnceField.value);
         updateField(lmEnabledOnceField, lmEnabledOnceField.value);
         await saveFields(true, false);
-        //getProgressData();
     }
 
     const Filter = () => (
