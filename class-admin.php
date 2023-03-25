@@ -449,11 +449,10 @@ class rsssl_admin
 		$class .= ' notice ';
         $target = strpos($more_info, 'really-simple-ssl.com')!==false ? 'target="_blank"' : '';
         $url = is_ssl() ? "https://" : "http://";
-		$domain = site_url();
-		$parse = parse_url($domain);
-		$root = $parse['host'] ?? false;
-		$url .= trailingslashit($root).$_SERVER["REQUEST_URI"];
-        $url = esc_url_raw($url);
+		$url .= $_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"];
+		$url = wp_validate_redirect( $url, apply_filters( 'wp_safe_redirect_fallback', admin_url(), 302 ) );
+
+		$url = esc_url_raw($url);
 		ob_start();?>
             <style>
                 #rsssl-message {
