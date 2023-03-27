@@ -3,13 +3,33 @@
 require( 'class-installer.php' );
 
 class RssslInstallerTest extends WP_UnitTestCase {
+	/**
+	 * @throws Exception
+	 */
 	public function setUp(): void {
 		// Load WordPress environment
-		require_once( dirname( __FILE__, 4 ) . '/wp-load.php' );
+		// Make it suitable for localhost and pipeline
+
+		$max_dirs = 10;
+		$found_wp_load = false;
+
+		for ($i = 1; $i <= $max_dirs; $i++) {
+			$path = dirname(__FILE__, $i) . '/wp-load.php';
+			if (file_exists($path)) {
+				require_once($path);
+				$found_wp_load = true;
+				break;
+			}
+		}
+
+		if (!$found_wp_load) {
+			throw new Exception('Unable to locate wp-load.php in the directory hierarchy');
+		}
+
 		// Set an active user, otherwise capability checks will fail
-		wp_set_current_user( 1 );
+		wp_set_current_user(1);
 		// Activate any required plugins
-		activate_plugin( 'rlrsssl-really-simple-ssl.php' );
+		activate_plugin('rlrsssl-really-simple-ssl.php');
 	}
 
 	public function test_plugin_installation() {
