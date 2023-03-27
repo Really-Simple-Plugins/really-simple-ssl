@@ -91,7 +91,7 @@ class rsssl_admin
             return;
         }
 
-	    $thirty_minutes_ago = $time_saved < strtotime("-10 seconds");
+	    $thirty_minutes_ago = $time_saved < strtotime("-10 minutes");
 	    $warning_blocks = array_column($fields, 'email');
 	    if ( $thirty_minutes_ago && count($warning_blocks)>0 ) {
 		    //clear the option
