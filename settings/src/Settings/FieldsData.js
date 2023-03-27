@@ -145,7 +145,6 @@ const useFields = create(( set, get ) => ({
 
         //if no fields were changed, do nothing.
         if ( saveFields.length>0 ) {
-            console.log("get fields over api");
             rsssl_api.setFields(saveFields).then(( response ) => {
                 progress = response.progress;
                 fields = response.fields;

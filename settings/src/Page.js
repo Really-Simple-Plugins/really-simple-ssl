@@ -18,12 +18,8 @@ const Page = (props) => {
 
     useEffect( () => {
         if ( fieldsLoaded ) {
-
-            console.log("fetch menu data in use effect");
             fetchMenuData(fields);
             window.addEventListener('hashchange', (e) => {
-                console.log("fields length");
-                console.log(fields.length);
                 fetchMenuData(fields);
             });
         }
@@ -34,7 +30,6 @@ const Page = (props) => {
     useEffect( () => {
         let subMenuItem = getAnchor('menu');
         const run = async () => {
-            console.log("update fields data in use effect");
             await updateFieldsData(subMenuItem);
         }
         run();
@@ -43,8 +38,6 @@ const Page = (props) => {
     useEffect( () => {
         let subMenuItem = getAnchor('menu');
         const run = async () => {
-            console.log("fetch fields data in useeffect");
-
             await fetchFieldsData(subMenuItem);
         }
         run();
