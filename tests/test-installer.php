@@ -9,16 +9,17 @@ class RssslInstallerTest extends WP_UnitTestCase {
 	public function setUp(): void {
 		// Load WordPress environment
 		// Make it suitable for localhost and pipeline
-
 		$max_dirs = 10;
-		$found_wp_load = false;
+		$found_wp_load = defined('WPINC');
 
-		for ($i = 1; $i <= $max_dirs; $i++) {
-			$path = dirname(__FILE__, $i) . '/wp-load.php';
-			if (file_exists($path)) {
-				require_once($path);
-				$found_wp_load = true;
-				break;
+		if ( ! $found_wp_load ) {
+			for ($i = 1; $i <= $max_dirs; $i++) {
+				$path = dirname(__FILE__, $i) . '/wp-load.php';
+				if ( file_exists( $path ) ) {
+					require_once($path);
+					$found_wp_load = true;
+					break;
+				}
 			}
 		}
 
