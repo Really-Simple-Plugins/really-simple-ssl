@@ -77,9 +77,10 @@ const VulnerabilitiesOverview = (props) => {
         marginLeft: '10px'
     }
     data.forEach(function (item, i) {
+        let rsssid = item.rss_identifier;
         item.vulnerability_action = <div className="rsssl-vulnerability-action">
-            <Button variant="secondary">{ __("Details", "really-simple-ssl") }</Button>
-            <Button variant="primary" style={btnStyle}>{ __("View", "really-simple-ssl") }</Button>
+            <a className="button" href={"https://really-simple-ssl.com/vulnerabilities/"+rsssid} target={"_blank"}>{ __("Details", "really-simple-ssl") }</a>
+            <a target={"_blank"} href="/wp-admin/plugins.php?plugin_status=upgrade" className="button button-primary" style={btnStyle}>{ __("View", "really-simple-ssl") }</a>
         </div>
 
     });

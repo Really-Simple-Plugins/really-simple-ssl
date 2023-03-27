@@ -11,7 +11,6 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
 
 			add_filter( "rsssl_run_test", array( $this, 'mixed_content_scan' ), 9, 3 );
 			add_filter( 'rsssl_do_action', array( $this, 'learningmode_table_data' ), 10, 3 );
-			add_filter( 'rsssl_do_action', array( $this, 'risk_vulnerabilities_data' ), 10, 3 );
 			self::$_this = $this;
 
 		}
@@ -56,39 +55,6 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
 			}
 			return $response;
 		}
-
-        /**
-         * Sets Data for Risk_vulnerabilities_data
-         */
-        public function risk_vulnerabilities_data(array $response, string $action, $data): array {
-            if (!rsssl_user_can_manage()) {
-                return $response;
-            }
-
-            if ($action === 'risk_vulnerabilities_data') {
-                return $this->measures_data();
-            }
-            if ($action === 'risk_vulnerabilities_data_save') {
-                // Saving options for rsssl
-                switch ($data['field']) {
-                    case 'low_risk':
-                        //storing the update value
-                        rsssl_update_option('low_risk_measure', $data['value']);
-                        break;
-                    case 'medium_risk':
-                        rsssl_update_option('medium_risk_measure', $data['value']);
-                        break;
-                    case 'high_risk':
-                        rsssl_update_option('high_risk_measure', $data['value']);
-                        break;
-                    case 'critical_risk':
-                        rsssl_update_option('critical_risk_measure', $data['value']);
-                        break;
-                }
-                return $this->measures_data();
-            }
-            return $response;
-        }
 
 		/**
 		 * Set some placeholder data for CSP
@@ -139,36 +105,6 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
 
 			return $output;
 		}
-
-        public function measures_data(): array
-        {
-            $data[] = [
-                'id' => 'low_risk',
-                'risk' => __('Low-risk', 'really-simple-ssl'),
-                'value' => rsssl_get_option('low_risk_measure'),
-                'description' => __('Low risk vulnerabilities', 'really-simple-ssl'),
-            ];
-            $data[] = [
-                'id' => 'medium_risk',
-                'risk' => __('Medium-risk', 'really-simple-ssl'),
-                'value' => rsssl_get_option('medium_risk_measure'),
-                'description' => __('Medium risk vulnerabilities', 'really-simple-ssl'),
-            ];
-            $data[] = [
-                'id' => 'high_risk',
-                'risk' => __('High-risk', 'really-simple-ssl'),
-                'value' => rsssl_get_option('high_risk_measure'),
-                'description' => __('High risk vulnerabilities', 'really-simple-ssl'),
-            ];
-            $data[] = [
-                'id' => 'critical_risk',
-                'risk' => __('Critical-risk', 'really-simple-ssl'),
-                'value' => rsssl_get_option('critical_risk_measure'),
-                'description' => __('Critical risk vulnerabilities', 'really-simple-ssl'),
-            ];
-            return $data;
-        }
-
 
         public function xml_data() {
 			$data = [

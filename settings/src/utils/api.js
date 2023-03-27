@@ -225,7 +225,6 @@ export const getOnboarding = (forceRefresh) => {
 
 export const vulPostAction = (action, data) => {
     if (typeof data === 'undefined') data = {};
-    console.log(action);
     data.nonce = rsssl_settings.rsssl_nonce;
     return apiPost('reallysimplessl/v1/vulnerabilities/'+action, data);
 }
@@ -235,3 +234,15 @@ export const vulGetAction = (action, data) => {
     data.nonce = rsssl_settings.rsssl_nonce;
     return apiGet('reallysimplessl/v1/vulnerabilities');
 }
+
+export const getMeasuresConfigData = (action, data) => {
+    if (typeof data === 'undefined') data = {};
+    data.nonce = rsssl_settings.rsssl_nonce;
+    return apiGet('reallysimplessl/v1/measures');
+}
+
+export const measuresPostAction = (action, data) => {
+    if (typeof data === 'undefined') data = {};
+    return apiPost('reallysimplessl/v1/measures/set', data);
+}
+

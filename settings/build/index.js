@@ -42239,6 +42239,8 @@ const useVulnerabilityData = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((se
   //for storing the last time the data was checked
   vulEnabled: false,
   //for storing the status of the vulnerability scan
+  riskNaming: {},
+  //for storing the risk naming
   vulList: [],
   //for storing the list of vulnerabilities
 
@@ -42261,6 +42263,7 @@ const useVulnerabilityData = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((se
         updates: fetched.data.updates,
         vulList: fetched.data.vulList,
         dataLoaded: true,
+        riskNaming: fetched.data.riskNaming,
         lastChecked: fetched.data.lastChecked,
         vulEnabled: fetched.data.vulEnabled
       });
@@ -42348,6 +42351,7 @@ const WPVul = props => {
     vulEnabled,
     updates,
     dataLoaded,
+    riskNaming,
     vulnerabilityCount,
     fetchVulnerabilities
   } = (0,_VulnerabilityData__WEBPACK_IMPORTED_MODULE_3__["default"])();
@@ -42432,23 +42436,8 @@ const WPVul = props => {
     //we loop through the risks
     for (let i = 0; i < risks.length; i++) {
       //if we have a higher risk, we set the highest risk to this risk
-      if (risks[i].level === 'c') {
-        risks[i].name = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('critical', 'really-simple-ssl');
-        highestRiskVulnerability = risks[i];
-        break;
-      } else if (risks[i].level === 'h') {
-        risks[i].name = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('high', 'really-simple-ssl');
-        highestRiskVulnerability = risks[i];
-        break;
-      } else if (risks[i].level === 'm') {
-        risks[i].name = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('medium', 'really-simple-ssl');
-        highestRiskVulnerability = risks[i];
-        break;
-      } else if (risks[i].level === 'l') {
-        risks[i].name = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('low', 'really-simple-ssl');
-        highestRiskVulnerability = risks[i];
-        break;
-      }
+      risks[i].name = riskNaming[i];
+      highestRiskVulnerability = risks[i];
     }
     return highestRiskVulnerability;
   };
@@ -47203,6 +47192,7 @@ __webpack_require__.r(__webpack_exports__);
 /* Creates A Store For Risk Data using Zustand */
 
 
+
 const UseRiskData = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, get) => ({
   riskData: [],
   vulnerabilities: [],
@@ -47217,12 +47207,13 @@ const UseRiskData = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, get) =
     let data = {};
     data.risk_action = 'get';
     try {
-      const riskData = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('risk_vulnerabilities_data', data);
+      const riskData = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.getMeasuresConfigData('api_call_listener', data);
       //we convert the data to an array
       set({
-        riskData: riskData,
+        riskData: riskData.data,
         dataLoaded: true
       });
+      console.log(riskData.data);
     } catch (e) {
       console.error(e);
     }
@@ -47230,16 +47221,16 @@ const UseRiskData = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, get) =
   //update Risk Data
   updateRiskData: async (field, value) => {
     try {
-      const riskData = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('risk_vulnerabilities_data_save', {
+      const riskData = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.measuresPostAction('api_call_listener', {
         field: field,
         value: value
       });
       set({
-        riskData: riskData,
+        riskData: riskData.data,
         dataLoaded: true
       });
     } catch (e) {
-      console.error(e);
+      console.log(e);
     }
   },
   //we fetch the vulnerability data
@@ -47763,12 +47754,17 @@ const VulnerabilitiesOverview = props => {
     marginLeft: '10px'
   };
   data.forEach(function (item, i) {
+    let rsssid = item.rss_identifier;
     item.vulnerability_action = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-vulnerability-action"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
-      variant: "secondary"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Details", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
-      variant: "primary",
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+      className: "button",
+      href: "https://really-simple-ssl.com/vulnerabilities/" + rsssid,
+      target: "_blank"
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Details", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+      target: "_blank",
+      href: "/wp-admin/plugins.php?plugin_status=upgrade",
+      className: "button button-primary",
       style: btnStyle
     }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("View", "really-simple-ssl")));
   });
@@ -48463,8 +48459,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "doAction": () => (/* binding */ doAction),
 /* harmony export */   "getFields": () => (/* binding */ getFields),
+/* harmony export */   "getMeasuresConfigData": () => (/* binding */ getMeasuresConfigData),
 /* harmony export */   "getNonce": () => (/* binding */ getNonce),
 /* harmony export */   "getOnboarding": () => (/* binding */ getOnboarding),
+/* harmony export */   "measuresPostAction": () => (/* binding */ measuresPostAction),
 /* harmony export */   "runLetsEncryptTest": () => (/* binding */ runLetsEncryptTest),
 /* harmony export */   "runTest": () => (/* binding */ runTest),
 /* harmony export */   "setFields": () => (/* binding */ setFields),
@@ -48691,7 +48689,6 @@ const getOnboarding = forceRefresh => {
 };
 const vulPostAction = (action, data) => {
   if (typeof data === 'undefined') data = {};
-  console.log(action);
   data.nonce = rsssl_settings.rsssl_nonce;
   return apiPost('reallysimplessl/v1/vulnerabilities/' + action, data);
 };
@@ -48699,6 +48696,15 @@ const vulGetAction = (action, data) => {
   if (typeof data === 'undefined') data = {};
   data.nonce = rsssl_settings.rsssl_nonce;
   return apiGet('reallysimplessl/v1/vulnerabilities');
+};
+const getMeasuresConfigData = (action, data) => {
+  if (typeof data === 'undefined') data = {};
+  data.nonce = rsssl_settings.rsssl_nonce;
+  return apiGet('reallysimplessl/v1/measures');
+};
+const measuresPostAction = (action, data) => {
+  if (typeof data === 'undefined') data = {};
+  return apiPost('reallysimplessl/v1/measures/set', data);
 };
 
 /***/ }),

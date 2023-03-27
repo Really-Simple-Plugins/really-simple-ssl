@@ -30,9 +30,9 @@ if (!class_exists("rsssl_vulnerabilities")) {
         public $workable_plugins = [];
 
         /**
-         * interval every 24 hours
+         * interval every 12 hours
          */
-        public $interval = 86400;
+        public $interval = 43200;
 
         public $update_count = 0;
 
@@ -58,7 +58,16 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 'h' => __('high-risk', 'really-simple-ssl'),
                 'c' => __('critical', 'really-simple-ssl'),
             ];
-		}
+        }
+
+        public static function riskNaming($risk = null)
+        {
+            $instance = self::instance();
+            if (is_null($risk)) {
+                return $instance->risk_naming;
+            }
+            return $instance->risk_naming[$risk];
+        }
 
         /**
          * Instantiates the class
@@ -70,8 +79,18 @@ if (!class_exists("rsssl_vulnerabilities")) {
             static $instance = false;
             if (!$instance) {
                 $instance = new rsssl_vulnerabilities();
+                //if the pro version is active, we use the pro version.
+                //we check if the function RSSSL_PRO exists, if it does, we check if the license is valid.
+                if (function_exists('RSSSL_PRO') && RSSSL_PRO()->licensing->license_is_valid()) {
+                    //if the file exists, we include it.
+                    if (file_exists(rsssl_pro_path . 'security/wordpress/rsssl_vulnerabilities_pro.php')) {
+                        require_once(rsssl_pro_path . 'security/wordpress/rsssl_vulnerabilities_pro.php');
+                        $instance = new rsssl_vulnerabilities_pro();
+                    }
+                    //if the file does not exist, we use the free version.
+                }
             }
-
+            $instance->init();
             return $instance;
         }
 
@@ -81,39 +100,37 @@ if (!class_exists("rsssl_vulnerabilities")) {
          *
          * @return void
          */
-        public static function init()
+        public function init()
         {
-            $self = new self();
             //we check if the vulnerability scanner is enabled and then the fun happens.
             if (rsssl_get_option('enable_vulnerability_scanner')) {
                 //we clear all cache
-
-                $mailTrigger = $self->check_files();
+                $mailTrigger = $this->check_files();
 
                 if ($mailTrigger) {
                     //we send the mail to the admin
-                    $self->send_vulnerability_mail();
+                    $this->send_vulnerability_mail();
                 }
 
                 //first we need to make sure we update the files every day. So we add a daily cron.
-                add_filter('rsssl_daily_cron', array($self, 'daily_cron'));
+                add_filter('rsssl_daily_cron', array($this, 'daily_cron'));
 
                 //we check the rsssl options if the enable_feedback_in_plugin is set to true
                 if (rsssl_get_option('enable_feedback_in_plugin')) {
                     // we enable the feedback in the plugin
-                    $self->enable_feedback_in_plugin();
-                    $self->enable_feedback_in_theme();
+                    $this->enable_feedback_in_plugin();
+                    $this->enable_feedback_in_theme();
                 }
 
                 //we check if upgrader_process_complete is called, so we can reload the files.
-                add_action('upgrader_process_complete', array($self, 'reload_files_on_update'), 10, 2);
+                add_action('upgrader_process_complete', array($this, 'reload_files_on_update'), 10, 2);
                 //After activation, we need to reload the files.
-                add_action('activate_plugin', array($self, 'reload_files_on_update'), 10, 2);
+                add_action('activate_plugin', array($this, 'reload_files_on_update'), 10, 2);
 
                 //same goes for themes.
-                add_action('after_setup_theme', array($self, 'reload_files_on_update'), 10, 2);
+                add_action('after_setup_theme', array($this, 'reload_files_on_update'), 10, 2);
 
-                add_action('current_screen', array($self, 'show_inline_code'));
+                add_action('current_screen', array($this, 'show_inline_code'));
 
             }
 
@@ -222,6 +239,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 'vulList' => $vulnerabilities,
                 'updates' => $self->getAllUpdatesCount(),
                 'lastChecked' => date('d / m / Y @ H:i', $self->get_file_stored_info()),
+                'riskNaming'   => $self->risk_naming,
                 'vulEnabled' => $vulEnabled,
             ];
 
@@ -287,6 +305,82 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
             return $columns;
         }
+
+        /**
+         * Get the data for the risk vulnerabilities table
+         * @param $data
+         * @return array
+         */
+        public static function measures_data(): array
+        {
+            $measures = [];
+            $measures[] = [
+                'id' => 'low_risk',
+                'risk' => self::riskNaming('l'),
+                'value' => get_option('rsssl_low_risk'),
+                'description' => sprintf(__('%s vulnerabilities', 'really-simple-ssl'), self::riskNaming('l')),
+            ];
+            $measures[] = [
+                'id' => 'medium_risk',
+                'risk' => self::riskNaming('m'),
+                'value' => get_option('rsssl_medium_risk'),
+                'description' => sprintf(__('%s vulnerabilities', 'really-simple-ssl'), self::riskNaming('m')),
+            ];
+            $measures[] = [
+                'id' => 'high_risk',
+                'risk' => self::riskNaming('h'),
+                'value' => get_option('rsssl_high_risk'),
+                'description' => sprintf(__('%s vulnerabilities', 'really-simple-ssl'), self::riskNaming('h')),
+            ];
+            $measures[] = [
+                'id' => 'critical_risk',
+                'risk' => self::riskNaming('c'),
+                'value' => get_option('rsssl_critical_risk'),
+                'description' => sprintf(__('%s vulnerabilities', 'really-simple-ssl'), self::riskNaming('c')),
+            ];
+
+            return [
+                "request_success" => true,
+                'data' => $measures
+            ];
+        }
+
+        /**
+         * Sets Data for Risk_vulnerabilities_data
+         */
+        public static function risk_vulnerabilities_data(array $response, string $action, $data): array
+        {
+            return [
+                "request_success" => false,
+                'data' => []
+            ];
+            $self = new self();
+            if (!rsssl_user_can_manage()) {
+                return $response;
+            }
+
+            if ($action === 'risk_vulnerabilities_data_save') {
+                // Saving options for rsssl
+                switch ($data['field']) {
+                    case 'low_risk':
+                        //storing the update value
+                        rsssl_update_option('low_risk_measure', $data['value']);
+                        break;
+                    case 'medium_risk':
+                        rsssl_update_option('medium_risk_measure', $data['value']);
+                        break;
+                    case 'high_risk':
+                        rsssl_update_option('high_risk_measure', $data['value']);
+                        break;
+                    case 'critical_risk':
+                        rsssl_update_option('critical_risk_measure', $data['value']);
+                        break;
+                }
+            }
+
+            return self::measures_data();
+        }
+
 
         /**
          * Callback for the manage_plugins_custom_column hook to add the vulnerability field
@@ -379,9 +473,9 @@ if (!class_exists("rsssl_vulnerabilities")) {
         public function check_files(): bool
         {
             $trigger = false;
-            //we download the manifest file if it doesn't exist or is older than 24 hours
+            //we download the manifest file if it doesn't exist or is older than 12 hours
             if ($this->validate_local_file(false, true)) {
-                if (!$this->get_file_stored_info(false, true) > time() - 86400) {
+                if (!$this->get_file_stored_info(false, true) > time() - $this->interval) {
                     $this->download_manifest();
                     $trigger = true;
                 }
@@ -392,8 +486,8 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
             //We check the core vulnerabilities and validate age and existence
             if ($this->validate_local_file(true, false)) {
-                //if the file is younger than 24 hours, we don't download it again.
-                if (!$this->get_file_stored_info(true) > time() - 86400) {
+                //if the file is younger than 12 hours, we don't download it again.
+                if (!$this->get_file_stored_info(true) > time() - $this->interval) {
                     $this->download_core_vulnerabilities();
                     $trigger = true;
                 }
@@ -405,7 +499,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
             //We check the plugin vulnerabilities and validate age and existence
             if ($this->validate_local_file()) {
-                if (!$this->get_file_stored_info() > time() - 86400) {
+                if (!$this->get_file_stored_info() > time() - $this->interval) {
                     $this->download_plugin_vulnerabilities();
                     $trigger = true;
                 }
@@ -444,7 +538,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
             } else {
                 $file = 'manifest.json';
             }
-
 
             $upload_dir = wp_upload_dir();
             $upload_dir = $upload_dir['basedir'];
@@ -1235,7 +1328,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
     }
 
     //we initialize the class
-    add_action('admin_init', array(rsssl_vulnerabilities::class, 'init'));
+    add_action('admin_init', array(rsssl_vulnerabilities::class, 'instance'));
 }
 
 #########################################################################################
@@ -1270,13 +1363,34 @@ add_action('rest_api_init', function () {
         'callback' => array(rsssl_vulnerabilities::class, 'get_stats'),
     ));
 
-    //the post route
-    register_rest_route('reallysimplessl/v1', '/vulnerabilities/', array(
-        'methods' => 'POST',
-        'callback' => array(rsssl_vulnerabilities::class, 'post_vulnerabilities'),
+    register_rest_route('reallysimplessl/v1', '/measures/', array(
+        'methods' => 'GET',
+        'callback' => array(rsssl_vulnerabilities::class, 'measures_data'),
     ));
+    #---------------------------------------------#
 
+    register_rest_route('reallysimplessl/v1', 'measures/set', array(
+        'methods' => 'POST',
+        'callback' => 'store_measures',
+    ));
 });
+
+
+if (!function_exists('rsssl_vulnerabilities_get_stats')) {
+    /**
+     * This function is used to get the stats of the vulnerability scanner
+     *
+     * @return array
+     */
+    function store_measures($data): array
+    {
+      //  $data = $data->get_params();
+
+        update_option('rsssl_'.$data['field'], $data['value']);
+
+        return rsssl_vulnerabilities::measures_data();
+    }
+}
 
 
 /* End of Routing and API's */

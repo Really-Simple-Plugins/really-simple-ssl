@@ -12,6 +12,7 @@ const WPVul = (props) => {
         vulEnabled,
         updates,
         dataLoaded,
+        riskNaming,
         vulnerabilityCount,
         fetchVulnerabilities
     } = useVulnerabilityData();
@@ -111,23 +112,8 @@ const WPVul = (props) => {
         //we loop through the risks
         for (let i = 0; i < risks.length; i++) {
             //if we have a higher risk, we set the highest risk to this risk
-            if (risks[i].level === 'c') {
-                risks[i].name = __('critical', 'really-simple-ssl');
-                highestRiskVulnerability = risks[i];
-                break;
-            } else if (risks[i].level === 'h') {
-                risks[i].name = __('high', 'really-simple-ssl');
-                highestRiskVulnerability = risks[i];
-                break;
-            } else if (risks[i].level === 'm') {
-                risks[i].name = __('medium', 'really-simple-ssl');
-                highestRiskVulnerability = risks[i];
-                break;
-            } else if (risks[i].level === 'l') {
-                risks[i].name = __('low', 'really-simple-ssl');
-                highestRiskVulnerability = risks[i];
-                break;
-            }
+            risks[i].name = riskNaming[i];
+            highestRiskVulnerability = risks[i];
         }
         return highestRiskVulnerability;
     }
