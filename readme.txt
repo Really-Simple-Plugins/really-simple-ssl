@@ -101,6 +101,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 * Improvement: multisite notice should link to network admin page
 * Improvement: detect existing CAA records to check Let's Encrypt compatibility
 * Improvement: tested up to wp 6.2
+* Improvement: UX improvement learning mode
 
 = 6.2.2 =
 * Fix: capability mismatch for a non administrator in multisite admin, props @jg-visual
