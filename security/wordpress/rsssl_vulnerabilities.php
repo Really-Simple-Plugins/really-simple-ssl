@@ -37,7 +37,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
         public $update_count = 0;
 
         private $admin_notices = [];
-        private $risk_naming = [];
+        protected $risk_naming = [];
 
         /**
          * @var array|int[]
@@ -48,6 +48,9 @@ if (!class_exists("rsssl_vulnerabilities")) {
             'h' => 3,
             'c' => 4,
         ];
+        public $trigger = false;
+
+        protected $boot = true;
 
 
         public function __construct()
@@ -104,37 +107,40 @@ if (!class_exists("rsssl_vulnerabilities")) {
         {
             //we check if the vulnerability scanner is enabled and then the fun happens.
             if (rsssl_get_option('enable_vulnerability_scanner')) {
-                //we clear all cache
-                $mailTrigger = $this->check_files();
-
-                if ($mailTrigger) {
-                    //we send the mail to the admin
-                    $this->send_vulnerability_mail();
+                $this->check_files();
+                $this->cache_installed_plugins();
+                if ($this->boot) {
+                    $this->run();
                 }
+            }
+        }
 
-                //first we need to make sure we update the files every day. So we add a daily cron.
-                add_filter('rsssl_daily_cron', array($this, 'daily_cron'));
+        public function run()
+        {
+            //we check if the vulnerability scanner is enabled and then the fun happens.
+            //first we need to make sure we update the files every day. So we add a daily cron.
+            add_filter('rsssl_daily_cron', array($this, 'daily_cron'));
 
-                //we check the rsssl options if the enable_feedback_in_plugin is set to true
-                if (rsssl_get_option('enable_feedback_in_plugin')) {
-                    // we enable the feedback in the plugin
-                    $this->enable_feedback_in_plugin();
-                    $this->enable_feedback_in_theme();
-                }
-
-                //we check if upgrader_process_complete is called, so we can reload the files.
-                add_action('upgrader_process_complete', array($this, 'reload_files_on_update'), 10, 2);
-                //After activation, we need to reload the files.
-                add_action('activate_plugin', array($this, 'reload_files_on_update'), 10, 2);
-
-                //same goes for themes.
-                add_action('after_setup_theme', array($this, 'reload_files_on_update'), 10, 2);
-
-                add_action('current_screen', array($this, 'show_inline_code'));
-
+            //we check the rsssl options if the enable_feedback_in_plugin is set to true
+            if (rsssl_get_option('enable_feedback_in_plugin')) {
+                // we enable the feedback in the plugin
+                $this->enable_feedback_in_plugin();
+                $this->enable_feedback_in_theme();
             }
 
-            //we add the help notices.
+            //we check if upgrader_process_complete is called, so we can reload the files.
+            add_action('upgrader_process_complete', array($this, 'reload_files_on_update'), 10, 2);
+            //After activation, we need to reload the files.
+            add_action('activate_plugin', array($this, 'reload_files_on_update'), 10, 2);
+
+            //same goes for themes.
+            add_action('after_setup_theme', array($this, 'reload_files_on_update'), 10, 2);
+
+            add_action('current_screen', array($this, 'show_inline_code'));
+
+            if($this->trigger) {
+                $this->send_vulnerability_mail();
+            }
         }
 
         public function show_help_notices($notices)
@@ -468,47 +474,39 @@ if (!class_exists("rsssl_vulnerabilities")) {
         /**
          * Checks the files on age and downloads if needed.
          *
-         * @return bool
+         * @return void
          */
-        public function check_files(): bool
+        public function check_files(): void
         {
             $trigger = false;
             //we download the manifest file if it doesn't exist or is older than 12 hours
             if ($this->validate_local_file(false, true)) {
                 if (!$this->get_file_stored_info(false, true) > time() - $this->interval) {
                     $this->download_manifest();
-                    $trigger = true;
                 }
             } else {
                 $this->download_manifest();
-                $trigger = true;
             }
-
             //We check the core vulnerabilities and validate age and existence
             if ($this->validate_local_file(true, false)) {
+
                 //if the file is younger than 12 hours, we don't download it again.
                 if (!$this->get_file_stored_info(true) > time() - $this->interval) {
                     $this->download_core_vulnerabilities();
-                    $trigger = true;
                 }
 
             } else {
                 $this->download_core_vulnerabilities();
-                $trigger = true;
             }
 
             //We check the plugin vulnerabilities and validate age and existence
             if ($this->validate_local_file()) {
                 if (!$this->get_file_stored_info() > time() - $this->interval) {
                     $this->download_plugin_vulnerabilities();
-                    $trigger = true;
                 }
             } else {
                 $this->download_plugin_vulnerabilities();
-                $trigger = true;
             }
-            $this->cache_installed_plugins();
-            return $trigger;
         }
 
         public function reload_files_on_update()
@@ -518,7 +516,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 return;
             }
             $this->download_plugin_vulnerabilities();
-            $this->cache_installed_plugins();
+            $this->download_core_vulnerabilities();
         }
 
 
@@ -618,6 +616,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
             }
 
             FileStorage::StoreFile($file, $data);
+            $this->trigger = true;
         }
 
         public function get_file_stored_info($isCore = false, $manifest = false)
@@ -1017,6 +1016,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
             //now we get the core information
             $core = $this->get_core();
+
             //we create a plugin like entry for core to add to the workable_plugins array
             $core_plugin = [
                 'Name' => 'WordPress',
@@ -1127,7 +1127,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
             //first we store this as a json file in the uploads folder
             $this->store_file($data, true, true);
-
         }
 
         /**
@@ -1295,7 +1294,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
             }
         }
 
-        private function createBlock($severity, $count)
+        protected function createBlock($severity, $count): array
         {
             $vulnerability = _n('vulnerability', 'vulnerabilities', $count, 'really-simple-ssl');
             $risk = $this->risk_naming[$severity];
@@ -1380,12 +1379,11 @@ if (!function_exists('rsssl_vulnerabilities_get_stats')) {
     /**
      * This function is used to get the stats of the vulnerability scanner
      *
+     * @param $data
      * @return array
      */
     function store_measures($data): array
     {
-      //  $data = $data->get_params();
-
         update_option('rsssl_'.$data['field'], $data['value']);
 
         return rsssl_vulnerabilities::measures_data();
