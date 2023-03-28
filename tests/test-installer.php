@@ -66,6 +66,16 @@ class RssslInstallerTest extends WP_UnitTestCase {
 		$this->assertTrue( $complianz_gdpr_installer->plugin_is_downloaded(), 'complianz-gdpr plugin is not downloaded.' );
 		$this->assertTrue( $complianz_terms_installer->plugin_is_downloaded(), 'complianz-terms-conditions plugin is not downloaded.' );
 
+        $starting_directory = WP_PLUGIN_DIR; // Start searching from the plugins directory
+        $filename = 'burst.php';
+        $burst_file_path = $this->find_file($starting_directory, $filename);
+
+        if ($burst_file_path) {
+            echo "burst.php found at: " . $burst_file_path . PHP_EOL;
+        } else {
+            echo "burst.php not found" . PHP_EOL;
+        }
+
 		$this->assertTrue( $burst_installer->activate_plugin(), 'Activation of burst-statistics plugin failed.' );
 		$this->assertTrue( $complianz_gdpr_installer->activate_plugin(), 'Activation of complianz-gdpr plugin failed.' );
 		$this->assertTrue( $complianz_terms_installer->activate_plugin(), 'Activation of complianz-terms-conditions plugin failed.' );
@@ -75,4 +85,27 @@ class RssslInstallerTest extends WP_UnitTestCase {
 		$this->assertTrue( $complianz_terms_installer->plugin_is_activated(), 'complianz-terms-conditions plugin is not activated.' );
 
 	}
+
+    private function find_file($directory, $filename) {
+        $iterator = new DirectoryIterator($directory);
+
+        foreach ($iterator as $fileinfo) {
+            if ($fileinfo->isDot()) {
+                continue;
+            }
+
+            if ($fileinfo->isDir()) {
+                $path = $this->find_file($fileinfo->getPathname(), $filename);
+                if ($path) {
+                    return $path;
+                }
+            } else {
+                if ($fileinfo->getFilename() === $filename) {
+                    return $fileinfo->getPathname();
+                }
+            }
+        }
+
+        return false;
+    }
 }
