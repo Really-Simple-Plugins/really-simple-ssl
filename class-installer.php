@@ -22,6 +22,8 @@ if ( !class_exists('rsssl_installer') ){
          */
 
         public function plugin_is_downloaded(){
+            error_log(trailingslashit (WP_PLUGIN_DIR).$this->get_activation_slug() );
+            error_log(file_exists(trailingslashit (WP_PLUGIN_DIR).$this->get_activation_slug() ));
             return file_exists(trailingslashit (WP_PLUGIN_DIR).$this->get_activation_slug() );
         }
         /**
@@ -115,7 +117,7 @@ if ( !class_exists('rsssl_installer') ){
 
             return true;
         }
-        
+
         /**
          * Activate the plugin
          *
