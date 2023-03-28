@@ -348,9 +348,11 @@ function rsssl_gather_warning_blocks_for_mail( array $changed_fields ){
 		return;
 	}
 
-	$fields = array_filter($changed_fields, static function($field) {
-		return isset( $field['email']['message'] ) && $field['value'];
-	});
+    $fields = array_filter($changed_fields, static function($field) {
+        // Check if email_condition exists and call the function, else assume true
+        $email_condition_result = ! isset($field['email_condition']) || call_user_func($field['email_condition']);
+        return isset($field['email']['message']) && $field['value'] && $email_condition_result;
+    });
 
 	if ( count($fields)===0 ) {
 		return;
@@ -481,4 +483,14 @@ function rsssl_list_users_where_display_name_is_login_name() {
 	}
 
 	return '';
+}
+
+/**
+ * @return bool
+ *
+ * Check if the .htaccess redirect option is enabled
+ */
+function rsssl_uses_htaccess_redirect(): bool
+{
+    return rsssl_get_option('redirect') === 'htaccess';
 }
