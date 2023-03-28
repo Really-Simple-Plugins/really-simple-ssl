@@ -47,34 +47,9 @@ class RssslInstallerTest extends WP_UnitTestCase {
 		$this->assertTrue( $complianz_terms_installer->download_plugin(), 'Download of complianz-terms-conditions plugin failed.' );
 		ob_get_clean();
 
-
-		echo "Checking if burst-statistics plugin is downloaded...\n";
-		$plugin_file_path = trailingslashit(WP_PLUGIN_DIR) . $burst_installer->get_activation_slug();
-		if (file_exists($plugin_file_path)) {
-			echo "Plugin file found: {$plugin_file_path}\n";
-		} else {
-			echo "Plugin file not found: {$plugin_file_path}\n";
-		}
-
-		if (is_writable(WP_PLUGIN_DIR)) {
-			echo "Plugin directory is writable.\n";
-		} else {
-			echo "Plugin directory is not writable.\n";
-		}
-		
 		$this->assertTrue( $burst_installer->plugin_is_downloaded(), 'burst-statistics plugin is not downloaded.' );
 		$this->assertTrue( $complianz_gdpr_installer->plugin_is_downloaded(), 'complianz-gdpr plugin is not downloaded.' );
 		$this->assertTrue( $complianz_terms_installer->plugin_is_downloaded(), 'complianz-terms-conditions plugin is not downloaded.' );
-
-        $starting_directory = WP_PLUGIN_DIR; // Start searching from the plugins directory
-        $filename = 'burst.php';
-        $burst_file_path = $this->find_file($starting_directory, $filename);
-
-        if ($burst_file_path) {
-            echo "burst.php found at: " . $burst_file_path . PHP_EOL;
-        } else {
-            echo "burst.php not found" . PHP_EOL;
-        }
 
 		$this->assertTrue( $burst_installer->activate_plugin(), 'Activation of burst-statistics plugin failed.' );
 		$this->assertTrue( $complianz_gdpr_installer->activate_plugin(), 'Activation of complianz-gdpr plugin failed.' );
@@ -85,27 +60,4 @@ class RssslInstallerTest extends WP_UnitTestCase {
 		$this->assertTrue( $complianz_terms_installer->plugin_is_activated(), 'complianz-terms-conditions plugin is not activated.' );
 
 	}
-
-    private function find_file($directory, $filename) {
-        $iterator = new DirectoryIterator($directory);
-
-        foreach ($iterator as $fileinfo) {
-            if ($fileinfo->isDot()) {
-                continue;
-            }
-
-            if ($fileinfo->isDir()) {
-                $path = $this->find_file($fileinfo->getPathname(), $filename);
-                if ($path) {
-                    return $path;
-                }
-            } else {
-                if ($fileinfo->getFilename() === $filename) {
-                    return $fileinfo->getPathname();
-                }
-            }
-        }
-
-        return false;
-    }
 }
