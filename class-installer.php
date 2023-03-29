@@ -22,7 +22,9 @@ if ( !class_exists('rsssl_installer') ){
          */
 
         public function plugin_is_downloaded(){
+			error_log("1");
             error_log(trailingslashit (WP_PLUGIN_DIR).$this->get_activation_slug() );
+			error_log("2 --> returning this");
             error_log(file_exists(trailingslashit (WP_PLUGIN_DIR).$this->get_activation_slug() ));
             return file_exists(trailingslashit (WP_PLUGIN_DIR).$this->get_activation_slug() );
         }
