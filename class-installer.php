@@ -94,20 +94,20 @@ if ( !class_exists('rsssl_installer') ){
 	    public function download_plugin() {
 		    error_log("Entering download_plugin function");
 
-		    if ( !current_user_can('install_plugins') ) {
+		    if (!current_user_can('install_plugins')) {
 			    error_log("User doesn't have permission to install plugins");
 			    return false;
 		    }
 
-		    if ( get_transient("rsssl_plugin_download_active") !== $this->slug ) {
-			    set_transient("rsssl_plugin_download_active", $this->slug, MINUTE_IN_SECONDS );
+		    if (get_transient("rsssl_plugin_download_active") !== $this->slug) {
+			    set_transient("rsssl_plugin_download_active", $this->slug, MINUTE_IN_SECONDS);
 			    $info = $this->get_plugin_info();
 
 			    if (!$info) {
 				    error_log("Failed to get plugin info");
 			    }
 
-			    $download_link = esc_url_raw( $info->versions['trunk'] );
+			    $download_link = esc_url_raw($info->versions['trunk']);
 			    error_log("Download link: " . $download_link);
 
 			    require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
@@ -120,8 +120,13 @@ if ( !class_exists('rsssl_installer') ){
 			    }
 
 			    $skin = new WP_Ajax_Upgrader_Skin();
-			    $upgrader = new Plugin_Upgrader( $skin );
-			    $result = $upgrader->install( $download_link );
+			    $upgrader = new Plugin_Upgrader($skin);
+
+			    // Add the upgrader_post_install filter
+			    add_filter('upgrader_post_install', array( $this, 'my_upgrader_post_install', 10, 3) );
+			    $result = $upgrader->install($download_link);
+			    // Remove the filter after installation
+			    add_filter('upgrader_post_install', array( $this, 'my_upgrader_post_install', 10, 3) );
 
 			    if (is_wp_error($result)) {
 				    error_log("Plugin installation failed: " . $result->get_error_message());
@@ -131,26 +136,25 @@ if ( !class_exists('rsssl_installer') ){
 			    delete_transient("rsssl_plugin_download_active");
 		    }
 
-		    // Log the downloaded plugin path
 		    $downloaded_plugin_path = trailingslashit(WP_PLUGIN_DIR) . $upgrader->plugin_info();
 		    error_log("Plugin download successful, located at: " . $downloaded_plugin_path);
 
-		    // Log the plugin directory after installation
 		    $plugin_directory = scandir(WP_PLUGIN_DIR);
 		    error_log("Plugin directory after installation: " . print_r($plugin_directory, true));
-
-		    // Log the temporary folder used by the WP_Upgrader class
-		    $tmp_folder = $upgrader->packager->result['destination'];
-		    error_log("Temporary folder used by WP_Upgrader: " . $tmp_folder);
-
-		    // Log the content of the temporary folder
-		    $tmp_folder_content = scandir($tmp_folder);
-		    error_log("Content of the temporary folder: " . print_r($tmp_folder_content, true));
 
 		    return true;
 	    }
 
+	    public function my_upgrader_post_install($response, $hook_extra, $result) {
+		    // Log the temporary folder path
+		    error_log("Temporary folder used by WP_Upgrader: " . $result['destination']);
 
+		    // Log the content of the temporary folder
+		    $tmp_folder_content = scandir($result['destination']);
+		    error_log("Content of the temporary folder: " . print_r($tmp_folder_content, true));
+
+		    return $response;
+	    }
 
         /**
          * Activate the plugin
