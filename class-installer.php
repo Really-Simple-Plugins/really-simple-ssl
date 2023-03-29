@@ -91,44 +91,58 @@ if ( !class_exists('rsssl_installer') ){
          * @return bool
          * @todo restore
          */
-        public function download_plugin() {
-            error_log("Entering download_plugin function"); // Log entry point
-            if ( !current_user_can('install_plugins') ) {
-                error_log("User doesn't have permission to install plugins"); // Log user permission issue
-                return false;
-            }
-            if ( get_transient("rsssl_plugin_download_active")!==$this->slug ) {
-                set_transient("rsssl_plugin_download_active", $this->slug, MINUTE_IN_SECONDS );
-                $info = $this->get_plugin_info();
-                if (!$info) {
-                    error_log("Failed to get plugin info"); // Log plugin info retrieval failure
-                }
-                $download_link = esc_url_raw( $info->versions['trunk'] );
-                require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
-                require_once ABSPATH . 'wp-admin/includes/file.php';
-                include_once ABSPATH . 'wp-admin/includes/plugin-install.php';
-				error_log("WP plugin dir 1");
-				error_log(WP_PLUGIN_DIR);
-                $skin = new WP_Ajax_Upgrader_Skin();
-                $upgrader = new Plugin_Upgrader( $skin );
-				error_log("DL link");
-				error_log($download_link);
-                $result = $upgrader->install( $download_link );
-				error_log("===== result =====");
-				error_log(print_r($result, true));
-                if (is_wp_error($result)) {
-                    error_log("Plugin installation failed: " . $result->get_error_message()); // Log installation failure
-                    return false;
-                }
-                delete_transient("rsssl_plugin_download_active");
-            }
+	    public function download_plugin() {
+		    error_log("Entering download_plugin function");
 
-            // Log the downloaded plugin path
-            $downloaded_plugin_path = trailingslashit(WP_PLUGIN_DIR) . $upgrader->plugin_info();
-            error_log("Plugin download successful, located at: " . $downloaded_plugin_path);
+		    if ( !current_user_can('install_plugins') ) {
+			    error_log("User doesn't have permission to install plugins");
+			    return false;
+		    }
 
-            return true;
-        }
+		    if ( get_transient("rsssl_plugin_download_active") !== $this->slug ) {
+			    set_transient("rsssl_plugin_download_active", $this->slug, MINUTE_IN_SECONDS );
+			    $info = $this->get_plugin_info();
+
+			    if (!$info) {
+				    error_log("Failed to get plugin info");
+			    }
+
+			    $download_link = esc_url_raw( $info->versions['trunk'] );
+			    error_log("Download link: " . $download_link);
+
+			    require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+			    require_once ABSPATH . 'wp-admin/includes/file.php';
+			    include_once ABSPATH . 'wp-admin/includes/plugin-install.php';
+
+			    // Check if the plugin directory is writable
+			    if (!is_writable(WP_PLUGIN_DIR)) {
+				    error_log("Plugin directory is not writable");
+				    return false;
+			    }
+
+			    $skin = new WP_Ajax_Upgrader_Skin();
+			    $upgrader = new Plugin_Upgrader( $skin );
+			    $result = $upgrader->install( $download_link );
+
+			    if (is_wp_error($result)) {
+				    error_log("Plugin installation failed: " . $result->get_error_message());
+				    return false;
+			    }
+
+			    delete_transient("rsssl_plugin_download_active");
+		    }
+
+		    // Log the downloaded plugin path
+		    $downloaded_plugin_path = trailingslashit(WP_PLUGIN_DIR) . $upgrader->plugin_info();
+		    error_log("Plugin download successful, located at: " . $downloaded_plugin_path);
+
+		    // Log the plugin directory after installation
+		    $plugin_directory = scandir(WP_PLUGIN_DIR);
+		    error_log("Plugin directory after installation: " . print_r($plugin_directory, true));
+
+		    return true;
+	    }
+
 
         /**
          * Activate the plugin
