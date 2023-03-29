@@ -111,6 +111,8 @@ if ( !class_exists('rsssl_installer') ){
 				error_log(WP_PLUGIN_DIR);
                 $skin = new WP_Ajax_Upgrader_Skin();
                 $upgrader = new Plugin_Upgrader( $skin );
+				error_log("DL link");
+				error_log($download_link);
                 $result = $upgrader->install( $download_link );
 				error_log("===== result =====");
 				error_log(print_r($result, true));
