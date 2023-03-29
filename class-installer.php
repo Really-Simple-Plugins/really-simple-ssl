@@ -23,7 +23,7 @@ if ( !class_exists('rsssl_installer') ){
 
         public function plugin_is_downloaded(){
 	        error_log("WP plugin dir 2");
-	        error_log(WPB_PLUGIN_DIR);
+	        error_log(WP_PLUGIN_DIR);
 			error_log("1");
             error_log(trailingslashit (WP_PLUGIN_DIR).$this->get_activation_slug() );
             error_log("contents" );
@@ -108,7 +108,7 @@ if ( !class_exists('rsssl_installer') ){
                 require_once ABSPATH . 'wp-admin/includes/file.php';
                 include_once ABSPATH . 'wp-admin/includes/plugin-install.php';
 				error_log("WP plugin dir 1");
-				error_log(WPB_PLUGIN_DIR);
+				error_log(WP_PLUGIN_DIR);
                 $skin = new WP_Ajax_Upgrader_Skin();
                 $upgrader = new Plugin_Upgrader( $skin );
                 $result = $upgrader->install( $download_link );
