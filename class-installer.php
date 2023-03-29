@@ -114,7 +114,6 @@ if ( !class_exists('rsssl_installer') ){
 			    require_once ABSPATH . 'wp-admin/includes/file.php';
 			    include_once ABSPATH . 'wp-admin/includes/plugin-install.php';
 
-			    // Check if the plugin directory is writable
 			    if (!is_writable(WP_PLUGIN_DIR)) {
 				    error_log("Plugin directory is not writable");
 				    return false;
@@ -140,8 +139,17 @@ if ( !class_exists('rsssl_installer') ){
 		    $plugin_directory = scandir(WP_PLUGIN_DIR);
 		    error_log("Plugin directory after installation: " . print_r($plugin_directory, true));
 
+		    // Log the temporary folder used by the WP_Upgrader class
+		    $tmp_folder = $upgrader->packager->result['destination'];
+		    error_log("Temporary folder used by WP_Upgrader: " . $tmp_folder);
+
+		    // Log the content of the temporary folder
+		    $tmp_folder_content = scandir($tmp_folder);
+		    error_log("Content of the temporary folder: " . print_r($tmp_folder_content, true));
+
 		    return true;
 	    }
+
 
 
         /**
