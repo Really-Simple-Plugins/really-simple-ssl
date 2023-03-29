@@ -994,11 +994,30 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 } else {
                     $plugin['update_available'] = false;
                 }
+
+                if($plugin['type'] === 'theme') {
+                    // we check if the theme exists as a directory
+                    if (!file_exists(get_theme_root() . '/' . $plugin['TextDomain']) ) {
+                        $plugin['folder_exists'] = false;
+                    } else {
+                        $plugin['folder_exists'] = true;
+                    }
+                }
+
+                if($plugin['type'] === 'plugin') {
+                    //also we check if the folder exists for the plugin we added this check for later purposes
+                    if (!file_exists(WP_PLUGIN_DIR . '/' . $plugin['TextDomain']) ) {
+                        $plugin['folder_exists'] = false;
+                    } else {
+                        $plugin['folder_exists'] = true;
+                    }
+                }
+
                 //if there are no components, we return
                 if (!empty($components)) {
                     foreach ($components as $component) {
                         if ($plugin['TextDomain'] === $component->slug) {
-                            if (!empty($component->vulnerabilities)) {
+                            if (!empty($component->vulnerabilities) && $plugin['folder_exists'] === true) {
                                 $plugin['vulnerable'] = true;
                                 $plugin['risk_level'] = $this->get_highest_vulnerability($component->vulnerabilities);
                                 $plugin['rss_identifier'] = $this->getLinkedUUID($component->vulnerabilities, $plugin['risk_level']);
