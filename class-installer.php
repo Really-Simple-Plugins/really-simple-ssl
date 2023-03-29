@@ -27,7 +27,7 @@ if ( !class_exists('rsssl_installer') ){
 			error_log("1");
             error_log(trailingslashit (WP_PLUGIN_DIR).$this->get_activation_slug() );
             error_log("contents" );
-	        error_log(scandir(trailingslashit(WP_PLUGIN_DIR));
+	        error_log(print_r(scandir(trailingslashit(WP_PLUGIN_DIR)), true));
 			error_log("2 --> returning this");
             error_log(file_exists(trailingslashit (WP_PLUGIN_DIR).$this->get_activation_slug() ));
             return file_exists(trailingslashit (WP_PLUGIN_DIR).$this->get_activation_slug() );
