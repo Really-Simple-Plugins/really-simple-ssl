@@ -47771,16 +47771,18 @@ const VulnerabilitiesOverview = props => {
   (0,react__WEBPACK_IMPORTED_MODULE_3__.useEffect)(() => {
     const run = async () => {
       await fetchVulnerabilities();
+      await checkEnabled();
     };
     run();
   }, []);
   let enabled = false;
-  fields.forEach(function (item, i) {
-    if (item.id === 'enable_vulnerability_scanner') {
-      enabled = item.value;
-    }
-  });
-  console.log(enabled, 'is it');
+  function checkEnabled() {
+    changedFields.forEach(function (item, i) {
+      if (item.id === 'enable_vulnerability_scanner') {
+        enabled = item.value;
+      }
+    });
+  }
   if (!dataLoaded || vulList.length === 0 || !enabled) {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-shield-overlay"
@@ -47789,7 +47791,6 @@ const VulnerabilitiesOverview = props => {
       size: "80px"
     })));
   }
-  console.log(enabled, 'is it');
 
   /**
    * Styling

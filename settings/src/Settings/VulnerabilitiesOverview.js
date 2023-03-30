@@ -66,8 +66,6 @@ const VulnerabilitiesOverview = (props) => {
         )
     }
 
-    console.log(enabled, 'is it')
-
     /**
      * Styling
      */
