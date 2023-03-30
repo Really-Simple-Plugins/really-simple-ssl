@@ -15,24 +15,32 @@ const Page = (props) => {
     const {error, fields, changedFields, fetchFieldsData, updateFieldsData, fieldsLoaded} = useFields();
     const {selectedMainMenuItem, fetchMenuData } = useMenu();
 
-    useEffect(async () => {
+
+    useEffect( () => {
         if ( fieldsLoaded ) {
             fetchMenuData(fields);
+            window.addEventListener('hashchange', (e) => {
+                fetchMenuData(fields);
+            });
         }
-        window.addEventListener('hashchange', () => {
-            console.log("fetch menu data on hash change");
-            fetchMenuData(fields);
-        });
+
+
     }, [fields] );
 
-    useEffect(async () => {
+    useEffect( () => {
         let subMenuItem = getAnchor('menu');
-        await updateFieldsData(subMenuItem);
+        const run = async () => {
+            await updateFieldsData(subMenuItem);
+        }
+        run();
     }, [changedFields] );
 
-    useEffect(async () => {
+    useEffect( () => {
         let subMenuItem = getAnchor('menu');
-        await fetchFieldsData(subMenuItem);
+        const run = async () => {
+            await fetchFieldsData(subMenuItem);
+        }
+        run();
     }, [] );
 
 

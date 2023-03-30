@@ -380,7 +380,7 @@ function rsssl_run_test($request, $ajax_data=false){
 	}
 	$data = $ajax_data!==false ? $ajax_data : $request->get_params();
 	$test = sanitize_title($request->get_param('test'));
-    $state = $request->get_param('state');
+	$state = $request->get_param('state');
 	$state =  $state !== 'undefined' && $state !== 'false' ? $state : false;
 	switch($test){
         case 'progressdata':
@@ -506,6 +506,7 @@ function rsssl_rest_api_fields_set( WP_REST_Request $request, $ajax_data = false
     if ( !rsssl_user_can_manage()) {
         return [];
     }
+
 	$fields = $ajax_data?: $request->get_json_params();
 	//get the nonce
 	$nonce = false;
@@ -648,7 +649,6 @@ function rsssl_rest_api_fields_get(){
 	if ( !rsssl_user_can_manage() ) {
 		return [];
 	}
-
 	$output = array();
 	$fields = rsssl_fields();
 	foreach ( $fields as $index => $field ) {

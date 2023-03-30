@@ -83,8 +83,8 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 $instance = new rsssl_vulnerabilities();
                 //if the pro version is active, we use the pro version.
                     //if the file exists, we include it.
-                    if (file_exists(rsssl_pro_path . 'security/wordpress/rsssl_vulnerabilities_pro.php')) {
-                        require_once(rsssl_pro_path . 'security/wordpress/rsssl_vulnerabilities_pro.php');
+                    if (file_exists(WP_PLUGIN_DIR . 'really-simple-ssl-pro/security/wordpress/rsssl_vulnerabilities_pro.php')) {
+                        require_once(WP_PLUGIN_DIR . 'really-simple-ssl-pro/security/wordpress/rsssl_vulnerabilities_pro.php');
                         $instance = new rsssl_vulnerabilities_pro();
                     }
             }

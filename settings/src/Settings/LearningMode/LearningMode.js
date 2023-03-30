@@ -6,8 +6,10 @@ import DataTable, {createTheme} from 'react-data-table-component';
 import Icon from "../../utils/Icon";
 import useFields from "./../FieldsData";
 import useLearningMode from "./LearningModeData";
+import useProgress from "../../Dashboard/Progress/ProgressData";
 
 const LearningMode = (props) => {
+    const {getProgressData} = useProgress();
     const {updateField, getFieldValue, getField, setChangedField, highLightField, saveFields} = useFields();
     const {fetchLearningModeData, learningModeData, dataLoaded} = useLearningMode();
     //used to show if a feature is already enforced by a third party
@@ -18,6 +20,7 @@ const LearningMode = (props) => {
     const [learningMode, setLearningMode] = useState(0);
     //set learning mode to completed
     const [learningModeCompleted, setLearningModeCompleted] = useState(0);
+    const [hasError, setHasError] = useState(false);
     //check if learningmode has been enabled at least once
     const [lmEnabledOnce, setLmEnabledOnce] = useState(0);
     //filter the data
@@ -60,31 +63,37 @@ const LearningMode = (props) => {
     /**
      * Initialize
      */
-    useEffect(async () => {
-        await fetchLearningModeData(props.field.id);
+    useEffect(() => {
+        const run = async () => {
+            await fetchLearningModeData(props.field.id);
+            let controlField = getField(props.field.control_field );
+            let enforced_by_thirdparty = controlField.value === 'enforced-by-thirdparty';
+            let enforce = enforced_by_thirdparty || controlField.value === 'enforce';
 
-        let controlField = getField(props.field.control_field );
-        let enforced_by_thirdparty = controlField.value === 'enforced-by-thirdparty';
-        let enforce = enforced_by_thirdparty || controlField.value === 'enforce';
+            setControlField(controlField);
+            setEnforcedByThirdparty(enforced_by_thirdparty);
+            setLearningModeCompleted(controlField.value==='completed');
+            setHasError(controlField.value==='error');
+            setLmEnabledOnce(getFieldValue(props.field.control_field+'_lm_enabled_once'))
+            setEnforce(enforce);
+            setLearningMode(controlField.value === 'learning_mode');
+        }
+        run();
+    }, [enforce, learningMode] );
 
-        setControlField(controlField);
-        setEnforcedByThirdparty(enforced_by_thirdparty);
-        setLearningModeCompleted(controlField.value==='completed');
-        setLmEnabledOnce(getFieldValue(props.field.control_field+'_lm_enabled_once'))
-        setEnforce(enforce);
-        setLearningMode(controlField.value === 'learning_mode');
-    }, [] );
-
-    const toggleEnforce = (e, enforce) => {
+    const toggleEnforce = (e, enforceValue) => {
         e.preventDefault();
         //enforce this setting
-        let controlFieldValue = enforce==1 ? 'enforce' : 'disabled';
-        setEnforce(enforce);
+        let controlFieldValue = enforceValue==1 ? 'enforce' : 'disabled';
+        setEnforce(enforceValue);
         setLearningModeCompleted(0);
+        setLearningMode(0);
         setChangedField(controlField.id, controlFieldValue);
         updateField(controlField.id, controlFieldValue);
         saveFields(true, false);
+        fetchLearningModeData();
     }
+
 
     const toggleLearningMode = async (e) => {
          e.preventDefault();
@@ -152,10 +161,9 @@ const LearningMode = (props) => {
         item.statusControl = <ChangeStatus item={item} field={props.field} />;
         item.deleteControl = <Delete item={item} field={props.field}/>;
     }
-
      return (
         <>
-            <div className={ highLightClass}>
+            <div key="1" className={ highLightClass}>
                 {!dataLoaded || data.length==0 && <>
                     <div className="rsssl-learningmode-placeholder">
                         <div></div><div></div><div></div><div></div>
@@ -174,55 +182,65 @@ const LearningMode = (props) => {
                         conditionalRowStyles={conditionalRowStyles}
                     /></>
                 }
-              <div className="rsssl-learning-mode-footer">
-                  { enforce!=1 && <button disabled={enforceDisabled} className="button button-primary" onClick={ (e) => toggleEnforce(e, true ) }>{__("Enforce","really-simple-ssl")}</button> }
-                  { !enforcedByThirdparty && enforce==1 && <button className="button" onClick={ (e) => toggleEnforce(e, false ) }>{__("Disable","really-simple-ssl")}</button> }
-                  <label>
-                      <input type="checkbox"
-                          disabled = {enforce}
-                          checked ={learningMode==1}
-                          value = {learningMode}
-                          onChange={ ( e ) => toggleLearningMode(e) }
-                      />
-                      {__("Enable Learning Mode to configure automatically","really-simple-ssl")}
-                  </label>
-                { enforce==1 && <div className="rsssl-locked">
-                    <div className="rsssl-shield-overlay">
-                          <Icon name = "shield"  size="80px"/>
-                    </div>
-                    <div className="rsssl-locked-overlay">
-                        <span className="rsssl-progress-status rsssl-learning-mode-enforced">{__("Enforced","really-simple-ssl")}</span>
-                        {enforcedString}&nbsp;
-                        <a className="rsssl-learning-mode-link" href="#" onClick={ (e) => toggleEnforce(e) }>{__("Disable to configure", "really-simple-ssl") }</a>
-                    </div>
-                </div>}
-                {learningMode==1 && <div className="rsssl-locked">
-                    <div className="rsssl-locked-overlay">
-                        <span className="rsssl-progress-status rsssl-learning-mode">{__("Learning Mode","really-simple-ssl")}</span>
-                        {configuringString}&nbsp;
-                        <a className="rsssl-learning-mode-link" href="#" onClick={ (e) => toggleLearningMode(e) }>{__("Exit", "really-simple-ssl") }</a>
-                    </div>
-                </div>}
-                { learningModeCompleted==1 && <div className="rsssl-locked">
-                    <div className="rsssl-locked-overlay">
-                        <span className="rsssl-progress-status rsssl-learning-mode-completed">{__("Learning Mode","really-simple-ssl")}</span>
-                        {__("We finished the configuration.", "really-simple-ssl")}&nbsp;
-                        <a className="rsssl-learning-mode-link" href="#" onClick={ (e) => toggleLearningMode(e) }>{__("Review the settings and enforce the policy", "really-simple-ssl") }</a>
-                    </div>
-                </div> }
-                { rsssl_settings.pro_plugin_active && props.disabled && <div className="rsssl-locked">
-                    <div className="rsssl-locked-overlay">
-                        { !enforcedByThirdparty && <span className="rsssl-progress-status rsssl-disabled">{__("Disabled","really-simple-ssl")}</span> }
-                        { enforcedByThirdparty && <span className="rsssl-progress-status rsssl-learning-mode-enforced">{__("Enforced","really-simple-ssl")}</span> }
-                        { disabledString }
-                    </div>
-                </div>}
+              <div key="2" className={"rsssl-learning-mode-footer "}>
+                  {hasError && <div className="rsssl-locked">
+                          <div className="rsssl-locked-overlay">
+                              <span className="rsssl-progress-status rsssl-learning-mode-error">{__("Error detected","really-simple-ssl")}</span>
+                              {__("%s cannot be implemented due to server limitations. Check your notices for the detected issue.", "really-simple-ssl").replace('%s', field.label)}&nbsp;
+                              <a className="rsssl-learning-mode-link" href="#" onClick={ (e) => toggleEnforce(e, false ) }>{__("Disable", "really-simple-ssl") }</a>
+                          </div>
+                      </div>
+                  }
+                  {!hasError && <>
+                      { enforce!=1 && <button disabled={enforceDisabled} className="button button-primary" onClick={ (e) => toggleEnforce(e, true ) }>{__("Enforce","really-simple-ssl")}</button> }
+                      { !enforcedByThirdparty && enforce==1 && <button className="button" onClick={ (e) => toggleEnforce(e, false ) }>{__("Disable","really-simple-ssl")}</button> }
+                      <label>
+                          <input type="checkbox"
+                              disabled = {enforce}
+                              checked ={learningMode==1}
+                              value = {learningMode}
+                              onChange={ ( e ) => toggleLearningMode(e) }
+                          />
+                          {__("Enable Learning Mode to configure automatically","really-simple-ssl")}
+                      </label>
+                    { enforce==1 && <div className="rsssl-locked">
+                        <div className="rsssl-shield-overlay">
+                              <Icon name = "shield"  size="80px"/>
+                        </div>
+                        <div className="rsssl-locked-overlay">
+                            <span className="rsssl-progress-status rsssl-learning-mode-enforced">{__("Enforced","really-simple-ssl")}</span>
+                            {enforcedString}&nbsp;
+                            <a className="rsssl-learning-mode-link" href="#" onClick={ (e) => toggleEnforce(e) }>{__("Disable to configure", "really-simple-ssl") }</a>
+                        </div>
+                    </div>}
+                    {learningMode==1 && <div className="rsssl-locked">
+                        <div className="rsssl-locked-overlay">
+                            <span className="rsssl-progress-status rsssl-learning-mode">{__("Learning Mode","really-simple-ssl")}</span>
+                            {configuringString}&nbsp;
+                            <a className="rsssl-learning-mode-link" href="#" onClick={ (e) => toggleLearningMode(e) }>{__("Exit", "really-simple-ssl") }</a>
+                        </div>
+                    </div>}
+                    { learningModeCompleted==1 && <div className="rsssl-locked">
+                        <div className="rsssl-locked-overlay">
+                            <span className="rsssl-progress-status rsssl-learning-mode-completed">{__("Learning Mode","really-simple-ssl")}</span>
+                            {__("We finished the configuration.", "really-simple-ssl")}&nbsp;
+                            <a className="rsssl-learning-mode-link" href="#" onClick={ (e) => toggleLearningMode(e) }>{__("Review the settings and enforce the policy", "really-simple-ssl") }</a>
+                        </div>
+                    </div> }
+                    { rsssl_settings.pro_plugin_active && props.disabled && <div className="rsssl-locked ">
+                        <div className="rsssl-locked-overlay">
+                            { !enforcedByThirdparty && <span className="rsssl-progress-status rsssl-disabled">{__("Disabled","really-simple-ssl")}</span> }
+                            { enforcedByThirdparty && <span className="rsssl-progress-status rsssl-learning-mode-enforced">{__("Enforced","really-simple-ssl")}</span> }
+                            { disabledString }
+                        </div>
+                    </div>}
+                  </>
+                  }
                 <Filter />
             </div>
             </div>
         </>
     )
-
 }
 
 export default LearningMode

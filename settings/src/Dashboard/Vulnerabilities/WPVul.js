@@ -19,8 +19,10 @@ const WPVul = (props) => {
     const {fields} = useFields();
     let featuredFields = fields.filter(field => field.new_features_block);
     useEffect(() => {
-        fetchVulnerabilities().then(r => {
-        });
+        const run = async () => {
+            await fetchVulnerabilities();
+        }
+        run();
     }, []);
 
 
@@ -137,7 +139,8 @@ const WPVul = (props) => {
                         <div className="rsssl-detail-icon"><Icon name={icon} color={iconColor}/></div>
                         <div className="rsssl-detail">
                             {__("You have %s updates pending", "really-simple-ssl").replace("%s", updates)}
-                            <a href={"/wp-admin/update-core.php"} style={linkStyle}>{__('Update now', 'really-simple-ssl')}</a>
+                            <a href={"/wp-admin/update-core.php"}
+                               style={linkStyle}>{__('Update now', 'really-simple-ssl')}</a>
                         </div>
                     </div>
                 </>
@@ -168,10 +171,10 @@ const WPVul = (props) => {
             icon = 'circle-times';
             iconColor = 'red';
         }
-        if(!vulEnabled) {
+        if (!vulEnabled) {
             return (
                 <>
-                    </>
+                </>
             )
         }
         if (vulnerabilities) {

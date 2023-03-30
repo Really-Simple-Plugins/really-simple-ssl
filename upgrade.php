@@ -167,6 +167,10 @@ function rsssl_upgrade() {
 		update_option('rsssl_plusone_count', $plus_ones);
 	}
 
+	if ( version_compare( $prev_version, '6.2.3', '<' ) ) {
+		rsssl_update_option('send_notifications_email', 1 );
+	}
+
 	//delete in future upgrade. We want to check the review notice dismissed as fallback still.
 	//delete_option( 'rlrsssl_options' );
 	//delete_site_option( 'rlrsssl_network_options' );

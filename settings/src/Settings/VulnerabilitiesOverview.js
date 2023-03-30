@@ -33,7 +33,10 @@ const VulnerabilitiesOverview = (props) => {
     });
 
     useEffect(() => {
-        fetchVulnerabilities();
+        const run = async () => {
+            await fetchVulnerabilities();
+        }
+        run();
     }, []);
 
     if(!dataLoaded || vulList.length === 0 ) {

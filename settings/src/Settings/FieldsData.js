@@ -127,7 +127,7 @@ const useFields = create(( set, get ) => ({
         }
         return false;
     },
-    saveFields: async (skipRefreshTests, showSavedNotice) => {
+    saveFields: (skipRefreshTests, showSavedNotice) => {
         let refreshTests = typeof skipRefreshTests !=='undefined' ? skipRefreshTests : true;
         showSavedNotice = typeof showSavedNotice !=='undefined' ? showSavedNotice : true;
         let fields = get().fields;
@@ -164,7 +164,7 @@ const useFields = create(( set, get ) => ({
 
     },
 
-    updateFieldsData: async (selectedSubMenuItem) => {
+    updateFieldsData: (selectedSubMenuItem) => {
         let fields = get().fields;
         fields = updateFieldsListWithConditions(fields);
         const nextButtonDisabled = isNextButtonDisabled(fields, selectedSubMenuItem);

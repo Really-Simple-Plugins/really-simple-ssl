@@ -10,8 +10,11 @@ const RiskComponent = (props) => {
     //first we put the data in a state
     const {riskData, dataLoaded, dataVulLoaded, vulnerabilities, fetchRiskData, fetchVulnerabilities, setData, updateRiskData} = UseRiskData();
     useEffect(() => {
-        fetchRiskData();
-        fetchVulnerabilities();
+        const run = async () => {
+            await fetchRiskData();
+            await fetchVulnerabilities();
+        }
+        run();
     }, []);
 
     //we only proceed if the data is loaded
@@ -101,13 +104,26 @@ const RiskComponent = (props) => {
     }
 
     function onChangeHandler(fieldValue, item) {
-        updateRiskData(item.id, fieldValue).then((response) => {
-            dispachNotification(item.risk, 'success');
-        })
-            .then((response) => {
-                dispachNotification(item.risk, 'error');
+        function update () {
+            return new Promise((resolve, reject) => {
+                updateRiskData(item.id, fieldValue).then((response) => {
+                    dispachNotification(item.risk, 'success');
+                    resolve();
+                })
+                    .catch((response) => {
+                        dispachNotification(item.risk, 'error');
+                        reject();
+                    });
             });
-        ;
+        }
+        update();
+        // updateRiskData(item.id, fieldValue).then((response) => {
+        //     dispachNotification(item.risk, 'success');
+        // })
+        //     .then((response) => {
+        //         dispachNotification(item.risk, 'error');
+        //     });
+        // ;
     }
 
 }

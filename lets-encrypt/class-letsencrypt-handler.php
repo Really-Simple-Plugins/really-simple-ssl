@@ -200,6 +200,10 @@ class rsssl_letsencrypt_handler {
 		    $action = 'stop';
 		    $status = 'error';
 		    $message = __("It is not possible to install Let's Encrypt on a subfolder configuration.", "really-simple-ssl" ).rsssl_le_read_more('https://really-simple-ssl.com/install-ssl-on-subfolders');
+	    } elseif ( rsssl_caa_record_prevents_le() ) {
+		    $action = 'stop';
+		    $status = 'error';
+		    $message = __("Please adjust the CAA records via your DNS provider to allow Let’s Encrypt SSL certificates", "really-simple-ssl" ).rsssl_le_read_more('https://really-simple-ssl.com/instructions/edit-dns-caa-records-to-allow-lets-encrypt-ssl-certificates/');
 	    } else {
 		    $action = 'continue';
 		    $status = 'success';
