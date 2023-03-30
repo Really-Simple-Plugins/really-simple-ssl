@@ -1,12 +1,11 @@
 <?php /** @noinspection PhpComposerExtensionStubsInspection */
 
-use library\FileStorage;
+use security\wordpress\vulnerabilities\FileStorage;
 
 defined('ABSPATH') or die();
 
 //including the file storage class
-require_once(rsssl_path . 'library/FileStorage.php');
-require_once(rsssl_path . 'library/VulnerabilityDataHandler.php');
+require_once(rsssl_path . 'security/wordpress/vulnerabilities/FileStorage.php');
 
 /**
  * @package Really Simple SSL
@@ -83,15 +82,11 @@ if (!class_exists("rsssl_vulnerabilities")) {
             if (!$instance) {
                 $instance = new rsssl_vulnerabilities();
                 //if the pro version is active, we use the pro version.
-                //we check if the function RSSSL_PRO exists, if it does, we check if the license is valid.
-                if (function_exists('RSSSL_PRO') && RSSSL_PRO()->licensing->license_is_valid()) {
                     //if the file exists, we include it.
                     if (file_exists(rsssl_pro_path . 'security/wordpress/rsssl_vulnerabilities_pro.php')) {
                         require_once(rsssl_pro_path . 'security/wordpress/rsssl_vulnerabilities_pro.php');
                         $instance = new rsssl_vulnerabilities_pro();
                     }
-                    //if the file does not exist, we use the free version.
-                }
             }
             $instance->init();
             return $instance;
@@ -400,16 +395,16 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 if ($this->check_vulnerability($plugin_file)) {
                     switch ($this->check_severity($plugin_file)) {
                         case 'c':
-                            echo '<a class="btn-vulnerable critical" target="_blank" href="https://really-simple-ssl.com/vulnerabilities/' . $this->getIdentifier($plugin_file) . '">' . __($this->risk_naming['c'], 'really-simple-ssl') . '</a>';
+                            echo sprintf('<a class="btn-vulnerable critical" target="_blank" href="%s">%s</a>', 'https://really-simple-ssl.com/vulnerabilities/'.$this->getIdentifier($plugin_file), $this->risk_naming['c']);
                             break;
                         case 'h':
-                            echo '<a class="btn-vulnerable high"  target="_blank" href="https://really-simple-ssl.com/vulnerabilities/' . $this->getIdentifier($plugin_file) . '">' . __($this->risk_naming['h'], 'really-simple-ssl') . '</a>';
+                            echo sprintf('<a class="btn-vulnerable high" target="_blank" href="%s">%s</a>', 'https://really-simple-ssl.com/vulnerabilities/'.$this->getIdentifier($plugin_file), $this->risk_naming['h']);
                             break;
                         case 'm':
-                            echo '<a class="btn-vulnerable medium-risk" target="_blank" href="https://really-simple-ssl.com/vulnerabilities/' . $this->getIdentifier($plugin_file) . '">' . __($this->risk_naming['m'], 'really-simple-ssl') . '</a>';
+                            echo sprintf('<a class="btn-vulnerable medium-risk" target="_blank" href="%s">%s</a>', 'https://really-simple-ssl.com/vulnerabilities/'.$this->getIdentifier($plugin_file), $this->risk_naming['m']);
                             break;
                         default:
-                            echo '<a class="btn-vulnerable" target="_blank" href="https://really-simple-ssl.com/vulnerabilities/' . $this->getIdentifier($plugin_file) . '">' . __($this->risk_naming['l'], 'really-simple-ssl') . '</a>';
+                            echo sprintf('<a class="btn-vulnerable low" target="_blank" href="%s">%s</a>', 'https://really-simple-ssl.com/vulnerabilities/'.$this->getIdentifier($plugin_file), $this->risk_naming['l']);
                             break;
                     }
                 }
@@ -802,15 +797,15 @@ if (!class_exists("rsssl_vulnerabilities")) {
         {
             //we get all components with vulnerabilities
             $components = $this->get_components();
-            wp_enqueue_script('my-script', plugins_url('../../scripts.js', __FILE__), array(), '1.0.0', true);
+            wp_enqueue_script('rsssl_vulnerabilities', plugins_url('../../scripts.js', __FILE__), array(), '1.0.0', true);
             $inline_script = "
                 jQuery(document).ready(function($) {
                     let style = document.createElement('style');
                     let vulnerable_components = [" . implode(',', array_map(function ($component) {
                     //we return slug and risk
-                    return "{slug: '" . $component->slug . "', risk: '" . $this->get_highest_vulnerability($component->vulnerabilities) . "'}";
+                    return "{slug: '" . esc_attr($component->slug) . "', risk: '" . esc_attr($this->get_highest_vulnerability($component->vulnerabilities)) . "'}";
                 }, $components)) . "];
-                    console.log(vulnerable_components);
+                 
                     //we create the style for warning
                     style.innerHTML = '.rss-theme-notice-warning {background-color: #FFF6CE; border-left: 4px solid #ffb900; box-shadow: 0 1px 1px 0 rgba(0,0,0,.1); position:relative; z-index:50; margin-bottom: -48px; padding: 1px 12px;}';
                     //we create the style for danger
@@ -830,7 +825,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
                         if (theme_element.length > 0) {
                             //we check the risk
                             let level = levels[component.risk];
-                            let text = '" . __('Security: <-level->', 'really-simple-ssl') . "';
+                            let text = '" . esc_attr(__('Security: <-level->', 'really-simple-ssl')) . "';
                             text = text.replace('<-level->', level);
         
                             if (component.risk === 'h' || component.risk === 'c') {
@@ -844,7 +839,8 @@ if (!class_exists("rsssl_vulnerabilities")) {
                         });
                 });
             ";
-            wp_add_inline_script('my-script', $inline_script);
+
+            wp_add_inline_script('rsssl_vulnerabilities', $inline_script);
         }
 
         public function show_theme_closed()
@@ -855,7 +851,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 add_action('admin_notices', function () use ($theme) {
                     ?>
                     <div class="notice notice-error is-dismissible">
-                        <p><?php echo sprintf(__('The theme %s is closed for security issues. Please update the theme as soon as possible.', 'rss-security'), $theme->get('Name')); ?></p>
+                        <p><?php echo sprintf(__(esc_attr('The theme %s is closed for security issues. Please update the theme as soon as possible.'), 'rss-security'), $theme->get('Name')); ?></p>
                     </div>
                     <?php
                 });

@@ -1,7 +1,7 @@
 <?php
 
-namespace library;
-
+namespace security\wordpress\vulnerabilities;
+defined('ABSPATH') or die();
 class FileStorage
 {
     private $hash;
@@ -79,11 +79,11 @@ class FileStorage
      */
     private function generateHashKey(): void
     {
-        if (rsssl_get_option('hashkey') && rsssl_get_option('hashkey') !== "") {
-            $this->hash = rsssl_get_option('hashkey');
+        if (get_option('rsssl_hashkey') && get_option('rsssl_hashkey') !== "") {
+            $this->hash = get_option('rsssl_hashkey');
         } else {
             $this->hash = md5(uniqid(rand(), true));
-            rsssl_update_option('hashkey', $this->hash);
+            update_option('rsssl_hashkey', $this->hash);
         }
     }
 
