@@ -125,8 +125,10 @@ if ( !class_exists('rsssl_installer') ){
 
                 if (is_wp_error($result)) {
                     error_log("Plugin installation failed: " . $result->get_error_message());
+                    error_log("Error data: " . print_r($result->get_error_data(), true));
                     return false;
                 }
+
 
                 // Check if $result is an array before attempting to access its elements
                 if (is_array($result)) {
@@ -137,10 +139,14 @@ if ( !class_exists('rsssl_installer') ){
                     // Log the content of the temporary folder after the plugin is extracted
                     $temp_plugin_folder = $result['remote_destination'];
                     error_log("Temporary plugin folder content: " . print_r(scandir($temp_plugin_folder), true));
+                } elseif (is_bool($result) && !$result) {
+                    error_log("Plugin installation returned false with no error data.");
+                    return false;
                 } else {
                     error_log("Unexpected result type: " . gettype($result));
                     return false;
                 }
+
 
 
                 // Log the content of the temporary file created during the plugin installation
