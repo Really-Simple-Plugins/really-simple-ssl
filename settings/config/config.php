@@ -914,7 +914,13 @@ function rsssl_fields( $load_values = true ) {
             'group_id' => 'vulnerabilities_overview',
             'type' => 'vulnerabilitiestable',
             'label' => __('Vulnerabilities Overview', 'really-simple-ssl'),
-            'disabled' => !rsssl_get_option('enable_vulnerability_scanner'),
+            'disabled' => false,
+            'react_conditions' => [
+                'relation' => 'AND',
+                [
+                    'enable_vulnerability_scanner' => 1,
+                ]
+            ],
             'columns' => [
                 [
                     'name'     => __( 'Component', 'really-simple-ssl' ),
