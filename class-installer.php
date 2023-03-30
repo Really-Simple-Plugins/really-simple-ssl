@@ -114,7 +114,14 @@ if ( !class_exists('rsssl_installer') ){
                 $skin = new WP_Ajax_Upgrader_Skin();
                 $upgrader = new Plugin_Upgrader($skin);
 
-                $result = $upgrader->install($download_link);
+                // Run the installation and store the result
+                $result = $upgrader->run(array(
+                    'package' => $download_link,
+                    'destination' => WP_PLUGIN_DIR,
+                    'clear_destination' => false, // Do not overwrite an existing plugin
+                    'clear_working' => true, // Remove the temporary files after installation
+                    'hook_extra' => array()
+                ));
 
                 if (is_wp_error($result)) {
                     error_log("Plugin installation failed: " . $result->get_error_message());
@@ -122,11 +129,11 @@ if ( !class_exists('rsssl_installer') ){
                 }
 
                 // Log the content of the temporary file created during the plugin installation
-                $temp_package = $upgrader->result['destination'];
+                $temp_package = $result['source_files'][0];
                 error_log("Temporary package content: " . file_get_contents($temp_package));
 
                 // Log the content of the temporary folder after the plugin is extracted
-                $temp_plugin_folder = $upgrader->result['remote_destination'];
+                $temp_plugin_folder = $result['remote_destination'];
                 error_log("Temporary plugin folder content: " . print_r(scandir($temp_plugin_folder), true));
 
                 delete_transient("rsssl_plugin_download_active");
@@ -140,6 +147,7 @@ if ( !class_exists('rsssl_installer') ){
 
             return true;
         }
+
 
 
         /**
