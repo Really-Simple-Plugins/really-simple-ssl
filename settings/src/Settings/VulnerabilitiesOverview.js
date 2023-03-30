@@ -3,6 +3,7 @@ import useVulnerabilityData from "../Dashboard/Vulnerabilities/VulnerabilityData
 import React, {useEffect} from 'react';
 import DataTable from "react-data-table-component";
 import Icon from "../utils/Icon";
+import useFields from "./FieldsData";
 import {Button} from "@wordpress/components";
 
 const VulnerabilitiesOverview = (props) => {
@@ -12,10 +13,16 @@ const VulnerabilitiesOverview = (props) => {
         fetchVulnerabilities
     } = useVulnerabilityData();
 
+    const {
+        changedFields,
+        fields,
+    } = useFields();
+
     //we create the columns
     let columns = [];
     //getting the fields from the props
     let field = props.field;
+
 
     function buildColumn(column) {
         return {
@@ -35,11 +42,21 @@ const VulnerabilitiesOverview = (props) => {
     useEffect(() => {
         const run = async () => {
             await fetchVulnerabilities();
+            await checkEnabled();
         }
         run();
     }, []);
 
-    if(!dataLoaded || vulList.length === 0 ) {
+    let enabled = false;
+    function checkEnabled() {
+        changedFields.forEach(function (item, i) {
+            if (item.id === 'enable_vulnerability_scanner') {
+                enabled = item.value;
+            }
+        });
+    }
+
+    if(!dataLoaded || vulList.length === 0 || !enabled) {
         return (
             <>
                 <div className="rsssl-shield-overlay">
@@ -48,6 +65,8 @@ const VulnerabilitiesOverview = (props) => {
             </>
         )
     }
+
+    console.log(enabled, 'is it')
 
     /**
      * Styling

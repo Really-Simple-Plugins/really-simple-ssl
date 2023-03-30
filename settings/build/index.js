@@ -47265,7 +47265,6 @@ const UseRiskData = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, get) =
         riskData: riskData.data,
         dataLoaded: true
       });
-      console.log(riskData.data);
     } catch (e) {
       console.error(e);
     }
@@ -47730,8 +47729,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var react_data_table_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-data-table-component */ "./node_modules/react-data-table-component/dist/index.cjs.js");
 /* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils/Icon */ "./src/utils/Icon.js");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./FieldsData */ "./src/Settings/FieldsData.js");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__);
+
 
 
 
@@ -47745,6 +47746,10 @@ const VulnerabilitiesOverview = props => {
     vulList,
     fetchVulnerabilities
   } = (0,_Dashboard_Vulnerabilities_VulnerabilityData__WEBPACK_IMPORTED_MODULE_2__["default"])();
+  const {
+    changedFields,
+    fields
+  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_6__["default"])();
 
   //we create the columns
   let columns = [];
@@ -47769,7 +47774,14 @@ const VulnerabilitiesOverview = props => {
     };
     run();
   }, []);
-  if (!dataLoaded || vulList.length === 0) {
+  let enabled = false;
+  fields.forEach(function (item, i) {
+    if (item.id === 'enable_vulnerability_scanner') {
+      enabled = item.value;
+    }
+  });
+  console.log(enabled, 'is it');
+  if (!dataLoaded || vulList.length === 0 || !enabled) {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-shield-overlay"
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_5__["default"], {
@@ -47777,6 +47789,7 @@ const VulnerabilitiesOverview = props => {
       size: "80px"
     })));
   }
+  console.log(enabled, 'is it');
 
   /**
    * Styling

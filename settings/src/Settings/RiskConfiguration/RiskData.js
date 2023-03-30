@@ -17,7 +17,6 @@ const UseRiskData = create((set, get) => ({
             const riskData = await rsssl_api.getMeasuresConfigData('api_call_listener', data);
             //we convert the data to an array
             set({riskData: riskData.data, dataLoaded: true});
-            console.log(riskData.data);
         } catch (e) {
             console.error(e);
         }
