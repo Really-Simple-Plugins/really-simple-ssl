@@ -842,8 +842,14 @@ function rsssl_fields( $load_values = true ) {
                 'c' => __('critical', 'really-simple-ssl'),
             ],
             'label' => __('Dashboard', 'really-simple-ssl'),
-            'disabled' => !rsssl_get_option('enable_vulnerability_scanner'),
+            'disabled' => false,
             'default' => 'low_risk',
+            'react_conditions' => [
+                'relation' => 'AND',
+                [
+                    'enable_vulnerability_scanner' => 1,
+                ]
+            ],
         ],
         [
             'id' => 'vulnerability_notification_sitewide',
@@ -857,8 +863,15 @@ function rsssl_fields( $load_values = true ) {
                 'c' => __('critical', 'really-simple-ssl'),
             ],
             'label' => __('Site-wide notification', 'really-simple-ssl'),
-            'disabled' => !rsssl_get_option('enable_vulnerability_scanner'),
+            'disabled' => false,
             'default' => 'high_risk',
+            'react_conditions' => [
+                'relation' => 'AND',
+                [
+                    'enable_vulnerability_scanner' => 1,
+                ]
+            ],
+
         ],
         [
             'id' => 'vulnerability_notification_email_admin',
@@ -872,8 +885,17 @@ function rsssl_fields( $load_values = true ) {
                 'c' => __('critical', 'really-simple-ssl'),
             ],
             'label' => __('Email admin', 'really-simple-ssl'),
-            'disabled' => (!rsssl_get_option('enable_vulnerability_scanner') || !rsssl_get_option('send_notifications_email')),
+            'disabled' => false,
             'default' => 'critical_risk',
+            'react_conditions' => [
+                'relation' => 'AND',
+                [
+                    'enable_vulnerability_scanner' => 1,
+                ],
+                [
+                    'send_notifications_email' => 1,
+                ]
+            ],
         ],
         [
             'id' => 'vulnerabilities_test',

@@ -47764,7 +47764,10 @@ const VulnerabilitiesOverview = props => {
     columns.push(newItem);
   });
   (0,react__WEBPACK_IMPORTED_MODULE_3__.useEffect)(() => {
-    fetchVulnerabilities();
+    const run = async () => {
+      await fetchVulnerabilities();
+    };
+    run();
   }, []);
   if (!dataLoaded || vulList.length === 0) {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
