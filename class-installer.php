@@ -128,6 +128,21 @@ if ( !class_exists('rsssl_installer') ){
                     return false;
                 }
 
+                // Check if $result is an array before attempting to access its elements
+                if (is_array($result)) {
+                    // Log the content of the temporary file created during the plugin installation
+                    $temp_package = $result['source_files'][0];
+                    error_log("Temporary package content: " . file_get_contents($temp_package));
+
+                    // Log the content of the temporary folder after the plugin is extracted
+                    $temp_plugin_folder = $result['remote_destination'];
+                    error_log("Temporary plugin folder content: " . print_r(scandir($temp_plugin_folder), true));
+                } else {
+                    error_log("Unexpected result type: " . gettype($result));
+                    return false;
+                }
+
+
                 // Log the content of the temporary file created during the plugin installation
                 $temp_package = $result['source_files'][0];
                 error_log("Temporary package content: " . file_get_contents($temp_package));
