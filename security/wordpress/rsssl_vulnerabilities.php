@@ -426,8 +426,8 @@ if (!class_exists("rsssl_vulnerabilities")) {
             //only on settings page
             $min = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? '' : '.min';
             $rtl = is_rtl() ? 'rtl/' : '';
-            $url = trailingslashit(rsssl_url) . "assets/css/{$rtl}plugin$min.css";
-            $path = trailingslashit(rsssl_path) . "assets/css/{$rtl}plugin$min.css";
+            $url = trailingslashit(rsssl_url) . "assets/css/{$rtl}plugin.min.css";
+            $path = trailingslashit(rsssl_path) . "assets/css/{$rtl}plugin.min.css";
             if (file_exists($path)) {
                 wp_enqueue_style('rsssl-plugin', $url, array(), rsssl_version);
             }
