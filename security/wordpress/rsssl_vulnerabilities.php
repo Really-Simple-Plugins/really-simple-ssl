@@ -170,12 +170,13 @@ if (!class_exists("rsssl_vulnerabilities")) {
                     'output' => [
                         'true' => [
                             'title' => sprintf(__('You have %s %s %s', 'really-simple-ssl'), $count, $this->risk_naming[$key], $count_label),
-                            'msg' => sprintf(__('You have %s %s level %s. Please take appropriate action. For more information about these vulnerabilities, please read more <a href="/wp-admin/options-general.php?page=really-simple-security#settings/vulnerabilities">here</a>', 'really-simple-ssl'), $count, $count_label, $this->risk_naming[$key]),
+                            'msg' => sprintf(__('You have %s %s %s. Please take appropriate action. For more information about these vulnerabilities, please read more <a href="/wp-admin/options-general.php?page=really-simple-security#settings/vulnerabilities">here</a>', 'really-simple-ssl'), $count, $this->risk_naming[$key],$count_label ),
                             'url' => 'https://really-simple-ssl.com/knowledge-base/vulnerability-scanner/',
                             'icon' => ($key === 'c') ? 'warning' : 'open',
                             'type' => 'warning',
                             'dismissible' => true,
                             'admin_notice' => $siteWide,
+                            'plus_one' => true,
                         ]
                     ]
                 ];
@@ -1331,7 +1332,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
             }
 
             return [
-                'title' => sprintf(__("You have %s %s %s", "really-simple-ssl"), $count, $vulnerability, $risk),
+                'title' => sprintf(__("You have %s %s %s", "really-simple-ssl"), $count, $risk, $vulnerability),
                 'message' => $messagePrefix . ' ' . $messageSuffix,
                 'url' => 'https://really-simple-ssl.com/vulnerabilities/',
             ];

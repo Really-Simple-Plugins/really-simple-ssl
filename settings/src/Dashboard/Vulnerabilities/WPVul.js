@@ -14,6 +14,7 @@ const WPVul = (props) => {
         dataLoaded,
         riskNaming,
         vulnerabilityCount,
+        capitalizeFirstLetter,
         fetchVulnerabilities
     } = useVulnerabilityData();
     const {fields} = useFields();
@@ -102,7 +103,7 @@ const WPVul = (props) => {
                 <div className="rsssl-details">
                     <div className="rsssl-detail-icon"><Icon name="info" color='yellow'/></div>
                     <div className="rsssl-detail">
-                        {__("Enable vulnerability scanning for more information", "really-simple-ssl")}
+                        {capitalizeFirstLetter(__("Enable vulnerability scanning for more information", "really-simple-ssl"))}
                     </div>
                 </div>
             </>
@@ -165,9 +166,9 @@ const WPVul = (props) => {
                     <div className="rsssl-details">
                         <div className="rsssl-detail-icon"><Icon name={icon} color={iconColor}/></div>
                         <div className="rsssl-detail">
-                            {__("You have %s updates pending", "really-simple-ssl").replace("%s", updates)}
+                            {capitalizeFirstLetter(__("You have %s %word pending", "really-simple-ssl").replace("%s", updates).replace("%word", updateWord))}
                             <a href={"/wp-admin/update-core.php"}
-                               style={linkStyle}>{__('Update', 'really-simple-ssl')}</a>
+                               style={linkStyle}>{capitalizeFirstLetter(__('%word', 'really-simple-ssl').replace('%word', updateWord))}</a>
                         </div>
                     </div>
                 </>
@@ -178,7 +179,7 @@ const WPVul = (props) => {
                     <div className="rsssl-details">
                         <div className="rsssl-detail-icon"><Icon name={icon} color={iconColor}/></div>
                         <div className="rsssl-detail">
-                            {__("You have %s updates pending", "really-simple-ssl").replace("%s", updates)}
+                            {capitalizeFirstLetter(__("You have %s updates pending", "really-simple-ssl").replace("%s", updates).replace("%word", updateWord))}
                         </div>
                     </div>
                 </>
@@ -211,13 +212,12 @@ const WPVul = (props) => {
                     <div className="rsssl-details">
                         <div className="rsssl-detail-icon"><Icon name={icon} color={iconColor}/></div>
                         <div className="rsssl-detail">
-                            <p>{__("You have %s %name %word", "really-simple-ssl")
-                                .replace("%s", highestRiskVulnerability.count)
-                                .replace("%word", vulnerabilityWord)
-                                .replace("%name", highestRiskVulnerability.name)
+                            <p>{capitalizeFirstLetter(__("You have %s %word", "really-simple-ssl")
+                                .replace("%s", vulnerabilities)
+                                .replace("%word", vulnerabilityWord))
                             }
                                 <a style={linkStyle} href={'#'}
-                                   target="_blank">{__('Read more', 'really-simple-ssl')}</a>
+                                   target="_blank">{capitalizeFirstLetter(__('Read more', 'really-simple-ssl'))}</a>
                             </p>
                         </div>
                     </div>
@@ -229,7 +229,7 @@ const WPVul = (props) => {
                     <div className="rsssl-details">
                         <div className="rsssl-detail-icon"><Icon name="circle-check" color='green'/></div>
                         <div className="rsssl-detail">
-                            {__("You have %s %word", "really-simple-ssl").replace("%s", vulnerabilities, "%word", vulnerabilityWord)}
+                            {capitalizeFirstLetter(__("You have %s %word", "really-simple-ssl").replace("%s", vulnerabilities, "%word", vulnerabilityWord))}
                         </div>
                     </div>
                 </>
@@ -259,7 +259,7 @@ const WPVul = (props) => {
                     <div className="rsssl-details">
                         <div className="rsssl-detail-icon"><Icon name={icon} color={iconColor}/></div>
                         <div className="rsssl-detail">
-                            {__("You have %s open hardening features", "really-simple-ssl").replace("%s", hardening.length)}
+                            {capitalizeFirstLetter(__("You have %s open hardening features", "really-simple-ssl").replace("%s", hardening.length))}
                         </div>
                     </div>
                 </>
@@ -268,9 +268,9 @@ const WPVul = (props) => {
             return (<>
                 <div className="rsssl-details">
                     <div className="rsssl-detail-icon"><Icon name="circle-check" color='green'/></div>
-                    <div className="rsssl-detail"><p>{__("Hardening features are configured", "really-simple-ssl")}
+                    <div className="rsssl-detail"><p>{capitalizeFirstLetter(__("Hardening features are configured", "really-simple-ssl"))}
                         <a style={linkStyle} href={'#'}
-                           target="_blank">{__('What now', 'really-simple-ssl')}?</a></p>
+                           target="_blank">{capitalizeFirstLetter(__('What now', 'really-simple-ssl'))}?</a></p>
                     </div>
                 </div>
             </>)
@@ -286,7 +286,7 @@ const WPVul = (props) => {
                         <span>
                             <h2 className={"rsssl-number"}>{vulEnabled ? vulnerabilities : '-'}</h2>
                         <span
-                            className={"rsssl-badge " + badgeVulStyle}>{vulnerabilityWord}</span>
+                            className={"rsssl-badge " + badgeVulStyle}>{capitalizeFirstLetter(vulnerabilityWord)}</span>
                         </span>
                     </div>
                     <div className={"rsssl-ssl-test-information"}>
@@ -294,7 +294,7 @@ const WPVul = (props) => {
                         </span>}
                         <span>
                             <h2 className={"rsssl-number"}>{updates}</h2>
-                        <span className={"rsssl-badge " + badgeUpdateStyle}>{updateWord}</span>
+                        <span className={"rsssl-badge " + badgeUpdateStyle}>{capitalizeFirstLetter(updateWord)}</span>
                         </span>
                     </div>
                 </div>

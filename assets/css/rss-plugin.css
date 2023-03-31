@@ -12,6 +12,7 @@
     --rsp-grid-gap: var(--rsp-spacing-m);
     --rsp-border-radius: 12px;
     --rsp-border-radius-s: 8px;
+    --rsp-border-radius-xs: 3px;
     --rsp-border: 1px solid var(--rsp-border-color);
     --rsp-box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
     --rsp-box-shadow-dark: rgba(0, 0, 0, 0.2) 0px 4px 6px -1px, rgba(0, 0, 0, 0.12) 1px 0px 4px 1px;
@@ -80,17 +81,17 @@
 .btn-vulnerable {
     display: inline-block;
     text-decoration: none;
-    font-size: 13px;
+    font-size: var(--rsp-fs-100);
     line-height: 2.15384615;
     min-height: 30px;
     margin: 0;
-    padding: 0 10px;
+    padding: 4px 8px;
+    min-width: 100px;
+    text-align: center;
     cursor: pointer;
-    font-weight: bold;
-    border-width: 4px;
-    border-style: solid;
+    font-weight: 600;
     -webkit-appearance: none;
-    border-radius: 15px;
+    border-radius: var(--rsp-border-radius-xs);
     white-space: nowrap;
     box-sizing: border-box;
     background-color: var(--rsp-yellow-faded);
@@ -99,8 +100,7 @@
 }
 
 .btn-vulnerable:hover {
-    background-color: var(--rsp-yellow);
-    color: var(--rsp-white);
+    text-decoration: underline;
 }
 
 .btn-vulnerable.critical {
@@ -109,30 +109,14 @@
     border-color: var(--rsp-red);
 }
 
-.btn-vulnerable.critical:hover {
-    background-color: var(--rsp-red);
-    color: var(--rsp-white);
-}
-
 .btn-vulnerable.high {
     background-color: var(--rsp-red-faded);
     color: var(--rsp-black);
     border-color: var(--rsp-red);
 }
 
-.btn-vulnerable.high:hover {
-    background-color: var(--rsp-red);
-    color: var(--rsp-white);
-}
-
 .btn-vulnerable.medium-risk {
     border-color: var(--rsp-yellow);
     color: var(--rsp-black);
     background-color: var(--rsp-yellow);
-}
-
-.btn-vulnerable.medium-risk:hover {
-    background-color: var(--rsp-dark-yellow);
-    border-color: var(--rsp-dark-yellow);
-    color: var(--rsp-white);
 }

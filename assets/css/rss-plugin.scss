@@ -6,59 +6,42 @@
 .btn-vulnerable {
   display: inline-block;
   text-decoration: none;
-  font-size: 13px;
+  font-size: var(--rsp-fs-100);
   line-height: 2.15384615;
   min-height: 30px;
   margin: 0;
-  padding: 0 10px;
+  padding: 4px 8px;
+  min-width: 100px;
+    text-align: center;
   cursor: pointer;
-  font-weight: bold;
-  border-width: 4px;
-  border-style: solid;
+  font-weight: 600;
   -webkit-appearance: none;
-  border-radius: 15px;
+  border-radius: var(--rsp-border-radius-xs);
   white-space: nowrap;
   box-sizing: border-box;
   background-color: var(--rsp-yellow-faded);
   color: var(--rsp-black);
   border-color: var(--rsp-yellow);
   &:hover {
-    background-color: var(--rsp-yellow);
-    color: var(--rsp-white);
+    text-decoration: underline;
   }
 
   &.critical {
     background-color: var(--rsp-red-faded);
     color: var(--rsp-white);
     border-color: var(--rsp-red);
-
-    &:hover {
-      background-color: var(--rsp-red);
-      color: var(--rsp-white);
-    }
   }
 
   &.high {
     background-color: var(--rsp-red-faded);
     color: var(--rsp-black);
     border-color: var(--rsp-red);
-
-    &:hover {
-      background-color: var(--rsp-red);
-      color: var(--rsp-white);
-    }
   }
 
   &.medium-risk {
     border-color: var(--rsp-yellow);
     color: var(--rsp-black);
     background-color: var(--rsp-yellow);
-
-    &:hover {
-      background-color: var(--rsp-dark-yellow);
-      border-color: var(--rsp-dark-yellow);
-      color: var(--rsp-white);
-    }
   }
 }
 

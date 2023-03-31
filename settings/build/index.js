@@ -42250,6 +42250,9 @@ const useVulnerabilityData = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((se
   getVulnerabilities: () => {
     return get().vulnerabilities;
   },
+  capitalizeFirstLetter: str => {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  },
   /*
   * Functions
    */
@@ -42353,6 +42356,7 @@ const WPVul = props => {
     dataLoaded,
     riskNaming,
     vulnerabilityCount,
+    capitalizeFirstLetter,
     fetchVulnerabilities
   } = (0,_VulnerabilityData__WEBPACK_IMPORTED_MODULE_3__["default"])();
   const {
@@ -42432,7 +42436,7 @@ const WPVul = props => {
       color: "yellow"
     })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-detail"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Enable vulnerability scanning for more information", "really-simple-ssl"))));
+    }, capitalizeFirstLetter((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Enable vulnerability scanning for more information", "really-simple-ssl")))));
   };
   const getHighestRiskVulnerability = () => {
     //we have an array of risks the order in which we check is important so c, h, m, l
@@ -42492,10 +42496,10 @@ const WPVul = props => {
         color: iconColor
       })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
         className: "rsssl-detail"
-      }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("You have %s updates pending", "really-simple-ssl").replace("%s", updates), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+      }, capitalizeFirstLetter((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("You have %s %word pending", "really-simple-ssl").replace("%s", updates).replace("%word", updateWord)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
         href: "/wp-admin/update-core.php",
         style: linkStyle
-      }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Update', 'really-simple-ssl')))));
+      }, capitalizeFirstLetter((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('%word', 'really-simple-ssl').replace('%word', updateWord))))));
     } else {
       return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
         className: "rsssl-details"
@@ -42506,7 +42510,7 @@ const WPVul = props => {
         color: iconColor
       })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
         className: "rsssl-detail"
-      }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("You have %s updates pending", "really-simple-ssl").replace("%s", updates))));
+      }, capitalizeFirstLetter((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("You have %s updates pending", "really-simple-ssl").replace("%s", updates).replace("%word", updateWord)))));
     }
   };
   const checkVul = () => {
@@ -42534,11 +42538,11 @@ const WPVul = props => {
         color: iconColor
       })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
         className: "rsssl-detail"
-      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("You have %s %name %word", "really-simple-ssl").replace("%s", highestRiskVulnerability.count).replace("%word", vulnerabilityWord).replace("%name", highestRiskVulnerability.name), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, capitalizeFirstLetter((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("You have %s %word", "really-simple-ssl").replace("%s", vulnerabilities).replace("%word", vulnerabilityWord)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
         style: linkStyle,
         href: '#',
         target: "_blank"
-      }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Read more', 'really-simple-ssl'))))));
+      }, capitalizeFirstLetter((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Read more', 'really-simple-ssl')))))));
     } else {
       return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
         className: "rsssl-details"
@@ -42549,7 +42553,7 @@ const WPVul = props => {
         color: "green"
       })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
         className: "rsssl-detail"
-      }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("You have %s %word", "really-simple-ssl").replace("%s", vulnerabilities, "%word", vulnerabilityWord))));
+      }, capitalizeFirstLetter((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("You have %s %word", "really-simple-ssl").replace("%s", vulnerabilities, "%word", vulnerabilityWord)))));
     }
   };
   const linkStyle = {
@@ -42577,7 +42581,7 @@ const WPVul = props => {
         color: iconColor
       })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
         className: "rsssl-detail"
-      }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("You have %s open hardening features", "really-simple-ssl").replace("%s", hardening.length))));
+      }, capitalizeFirstLetter((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("You have %s open hardening features", "really-simple-ssl").replace("%s", hardening.length)))));
     } else {
       return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
         className: "rsssl-details"
@@ -42588,11 +42592,11 @@ const WPVul = props => {
         color: "green"
       })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
         className: "rsssl-detail"
-      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Hardening features are configured", "really-simple-ssl"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, capitalizeFirstLetter((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Hardening features are configured", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
         style: linkStyle,
         href: '#',
         target: "_blank"
-      }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('What now', 'really-simple-ssl'), "?")))));
+      }, capitalizeFirstLetter((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('What now', 'really-simple-ssl')), "?")))));
     }
   };
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -42610,7 +42614,7 @@ const WPVul = props => {
     className: "rsssl-number"
   }, vulEnabled ? vulnerabilities : '-'), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     className: "rsssl-badge " + badgeVulStyle
-  }, vulnerabilityWord))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, capitalizeFirstLetter(vulnerabilityWord)))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-ssl-test-information"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_1__["default"], {
     color: 'red',
@@ -42619,7 +42623,7 @@ const WPVul = props => {
     className: "rsssl-number"
   }, updates), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     className: "rsssl-badge " + badgeUpdateStyle
-  }, updateWord))))), checkHardening(), checkVulActive(), checkVul(), checkUpdates(), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, capitalizeFirstLetter(updateWord)))))), checkHardening(), checkVulActive(), checkVul(), checkUpdates(), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-details"
   }));
 };
@@ -43626,7 +43630,7 @@ const Menu = props => {
     target: "_blank",
     href: rsssl_settings.upgrade_link,
     className: "button button-black"
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('Go Pro', 'really-simple-ssl')))))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('Upgrade', 'really-simple-ssl')))))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-grid-item-footer"
   }));
 };
