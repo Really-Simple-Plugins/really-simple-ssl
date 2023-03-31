@@ -22,6 +22,7 @@ const VulnerabilitiesOverview = (props) => {
     let columns = [];
     //getting the fields from the props
     let field = props.field;
+    let enabled = false;
 
 
     function buildColumn(column) {
@@ -42,19 +43,15 @@ const VulnerabilitiesOverview = (props) => {
     useEffect(() => {
         const run = async () => {
             await fetchVulnerabilities();
-            await checkEnabled();
         }
         run();
     }, []);
 
-    let enabled = false;
-    function checkEnabled() {
-        changedFields.forEach(function (item, i) {
-            if (item.id === 'enable_vulnerability_scanner') {
-                enabled = item.value;
-            }
-        });
-    }
+    fields.forEach(function (item, i) {
+        if (item.id === 'enable_vulnerability_scanner') {
+            enabled = item.value;
+        }
+    });
 
     if(!dataLoaded || vulList.length === 0 || !enabled) {
         return (

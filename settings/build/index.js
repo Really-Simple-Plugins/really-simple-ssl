@@ -47755,6 +47755,7 @@ const VulnerabilitiesOverview = props => {
   let columns = [];
   //getting the fields from the props
   let field = props.field;
+  let enabled = false;
   function buildColumn(column) {
     return {
       name: column.name,
@@ -47771,18 +47772,14 @@ const VulnerabilitiesOverview = props => {
   (0,react__WEBPACK_IMPORTED_MODULE_3__.useEffect)(() => {
     const run = async () => {
       await fetchVulnerabilities();
-      await checkEnabled();
     };
     run();
   }, []);
-  let enabled = false;
-  function checkEnabled() {
-    changedFields.forEach(function (item, i) {
-      if (item.id === 'enable_vulnerability_scanner') {
-        enabled = item.value;
-      }
-    });
-  }
+  fields.forEach(function (item, i) {
+    if (item.id === 'enable_vulnerability_scanner') {
+      enabled = item.value;
+    }
+  });
   if (!dataLoaded || vulList.length === 0 || !enabled) {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-shield-overlay"
