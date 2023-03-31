@@ -7,6 +7,12 @@ class RssslInstallerTest extends WP_UnitTestCase {
 	 * @throws Exception
 	 */
 	public function setUp(): void {
+		if (!defined('FS_METHOD')) {
+			error_log("FS method not defined");
+			define('FS_METHOD', 'direct');
+		} else {
+			error_log("FS was defined");
+		}
 		// Load WordPress environment
 		// Make it suitable for localhost and pipeline
 		$max_dirs = 10;
