@@ -84,10 +84,7 @@ if ( !class_exists('rsssl_installer') ){
          * @todo restore
          */
 	    public function download_plugin() {
-		    error_log("Entering download_plugin function");
-
 		    if (!current_user_can('install_plugins')) {
-			    error_log("User doesn't have permission to install plugins");
 			    return false;
 		    }
 
@@ -95,19 +92,13 @@ if ( !class_exists('rsssl_installer') ){
 			    set_transient("rsssl_plugin_download_active", $this->slug, MINUTE_IN_SECONDS);
 			    $info = $this->get_plugin_info();
 
-			    if (!$info) {
-				    error_log("Failed to get plugin info");
-			    }
-
 			    $download_link = esc_url_raw($info->versions['trunk']);
-			    error_log("Download link: " . $download_link);
 
 			    require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
 			    require_once ABSPATH . 'wp-admin/includes/file.php';
 			    include_once ABSPATH . 'wp-admin/includes/plugin-install.php';
 
-			    if (!is_writable(WP_PLUGIN_DIR)) {
-				    error_log("Plugin directory is not writable");
+			    if ( ! is_writable(WP_PLUGIN_DIR ) ) {
 				    return false;
 			    }
 
@@ -117,22 +108,12 @@ if ( !class_exists('rsssl_installer') ){
 			    $result = $upgrader->install($download_link);
 
 			    if (is_wp_error($result)) {
-				    error_log("Plugin installation failed: " . $result->get_error_message());
 				    return false;
 			    }
 
 			    delete_transient("rsssl_plugin_download_active");
 		    }
-
-		    $downloaded_plugin_path = trailingslashit(WP_PLUGIN_DIR) . $upgrader->plugin_info();
-		    error_log("Plugin download successful, located at: " . $downloaded_plugin_path);
-
-		    $plugin_directory = scandir(WP_PLUGIN_DIR);
-		    error_log("Plugin directory after installation: " . print_r($plugin_directory, true));
-
-		    // Log the upgrader object for more information
-		    error_log("Upgrader object: " . print_r($upgrader, true));
-
+			
 		    return true;
 	    }
 
