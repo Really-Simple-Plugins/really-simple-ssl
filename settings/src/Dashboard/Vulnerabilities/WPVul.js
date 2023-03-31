@@ -41,20 +41,26 @@ const WPVul = (props) => {
     let vulClass = 'rsssl-inactive';
     let badgeVulStyle = 'rsp-default';
     let badgeUpdateStyle = 'rsp-default';
+    let iconVulColor = 'black';
+    let iconUpdateColor = 'black';
     if (vulEnabled) {
         //now we calculate the score
         let score = vulnerabilityScore();
         //we create correct badge style
         if (score >= 5) {
             badgeVulStyle = 'rsp-critical';
+            iconVulColor =  'red';
         } else if (score < 4 && score > 0) {
             badgeVulStyle = 'rsp-low';
+            iconVulColor = 'yellow';
         }
 
         if (updates >= 5) {
             badgeUpdateStyle = 'rsp-critical';
+            iconUpdateColor =  'red';
         } else if (score < 5 && score > 0) {
             badgeUpdateStyle = 'rsp-low';
+            iconUpdateColor = 'yellow';
         }
 
         if (score < hardening.length) {
@@ -282,7 +288,10 @@ const WPVul = (props) => {
             <div className={"rsssl-ssl-test-container " + vulClass}>
                 <div className="rsssl-ssl-test ">
                     <div className="rsssl-ssl-test-information">
-                        {<span><Icon color={'red'} name="file-search"></Icon></span>}
+                        <span>
+                            {vulEnabled ? <Icon color={iconVulColor} name="radar-duotone"></Icon> : <Icon color={'#000'} name="satellite-dish"></Icon>}
+
+                        </span>
                         <span>
                             <h2 className={"rsssl-number"}>{vulEnabled ? vulnerabilities : '-'}</h2>
                         <span
@@ -290,8 +299,8 @@ const WPVul = (props) => {
                         </span>
                     </div>
                     <div className={"rsssl-ssl-test-information"}>
-                        {<span><Icon color={'red'} name="download"></Icon>
-                        </span>}
+                        <span>{ updates ? <Icon color={iconUpdateColor} name="rotate-exclamation-light"></Icon> : <Icon color={'#000'} name="rotate-light"></Icon>}
+                        </span>
                         <span>
                             <h2 className={"rsssl-number"}>{updates}</h2>
                         <span className={"rsssl-badge " + badgeUpdateStyle}>{capitalizeFirstLetter(updateWord)}</span>
