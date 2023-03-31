@@ -239,7 +239,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 'vulnerabilities' => count($vulnerabilities),
                 'vulList' => $vulnerabilities,
                 'updates' => $self->getAllUpdatesCount(),
-                'lastChecked' => date('d / m / Y @ H:i', $self->get_file_stored_info()),
+                'lastChecked' => date('d / m / Y @ H:i', $self->get_file_stored_info(true)),
                 'riskNaming'   => $self->risk_naming,
                 'vulEnabled' => $vulEnabled,
             ];

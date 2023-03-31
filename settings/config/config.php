@@ -817,7 +817,7 @@ function rsssl_fields( $load_values = true ) {
                 'label' => 'default',
                 'url'   => 'https://really-simple-ssl.com/instructions/about-vulnerabilities/',
                 'title' => __( "About Vulnerabilities", 'really-simple-ssl' ),
-                'text'  => __( 'Really Simple SSL will collect information about vulnerable software components from our central database ( <strong><a target="_blank" href="https://vulnerability.wpsysadmin.com/">Powered by WPVulnerability</a></strong>  ) Anonymous information about vulnerable components (that cannot be linked to your website) will be transmitted to Really Simple SSL for the purpose of statistical analysis. For more information read the Privacy Statement.', 'really-simple-ssl' ),
+                'text'  => __( 'Really Simple SSL will collect information about vulnerable software components from our central database powered by WPVulnerability. Anonymous information about vulnerable components, that cannot be linked to your website, will be send to Really Simple SSL for statistical analysis. For more information read the Privacy Statement.', 'really-simple-ssl' ),
             ],
         ],
         [

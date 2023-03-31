@@ -42495,7 +42495,7 @@ const WPVul = props => {
       }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("You have %s updates pending", "really-simple-ssl").replace("%s", updates), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
         href: "/wp-admin/update-core.php",
         style: linkStyle
-      }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Update now', 'really-simple-ssl')))));
+      }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Update', 'really-simple-ssl')))));
     } else {
       return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
         className: "rsssl-details"
@@ -42660,7 +42660,7 @@ const WPVulFooter = props => {
     className: 'button button-default alignleft'
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Settings', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("small", {
     className: 'alignright'
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Last checked on', 'really-simple-ssl'), ": ", lastChecked));
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Last check:', 'really-simple-ssl'), ": ", lastChecked));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (WPVulFooter);
 

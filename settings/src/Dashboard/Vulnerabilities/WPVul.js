@@ -167,7 +167,7 @@ const WPVul = (props) => {
                         <div className="rsssl-detail">
                             {__("You have %s updates pending", "really-simple-ssl").replace("%s", updates)}
                             <a href={"/wp-admin/update-core.php"}
-                               style={linkStyle}>{__('Update now', 'really-simple-ssl')}</a>
+                               style={linkStyle}>{__('Update', 'really-simple-ssl')}</a>
                         </div>
                     </div>
                 </>

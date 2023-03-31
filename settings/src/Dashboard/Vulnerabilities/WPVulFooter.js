@@ -8,7 +8,7 @@ const WPVulFooter = (props) => {
         <div className={'rsssl-wpvul'}>
             <a href="#settings/vulnerabilities"
                className={'button button-default alignleft'}>{__('Settings', 'really-simple-ssl')}</a>
-            <small className={'alignright'}>{__('Last checked on', 'really-simple-ssl')}: {lastChecked}</small>
+            <small className={'alignright'}>{__('Last check:', 'really-simple-ssl')}: {lastChecked}</small>
         </div>
     )
 }
