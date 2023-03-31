@@ -87,6 +87,7 @@ function rsssl_menu() {
                             'id'       => 'vulnerabilities_overview',
                             'helpLink' => 'https://really-simple-ssl.com/instructions/about-vulnerabilities#components',
                             'title'    => __( 'Vulnerabilities', 'really-simple-ssl' ),
+                            'intro'    => __( 'TLorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sed magna a turpis bibendum blandit eu id mi. Nunc varius, odio nec consectetur dignissim, tortor augue vestibulum risus, sit amet rhoncus enim nunc quis augue. Vestibulum vitae augue nec libero lobortis sollicitudin. Duis dictum tortor vel magna rhoncus, nec bibendum mi bibendum. Sed lobortis ex et metus scelerisque, vel congue leo pretium. Quisque vel metus et lacus consequat lobortis eu sed velit. Aliquam erat volutpat. Sed commodo dui at tortor commodo, nec bibendum massa imperdiet. Donec commodo consectetur arcu a pulvinar. Sed et justo id lacus varius congue.', 'really-simple-ssl' ),
                         ],
                         [
                             'id'           => 'vulnerabilities_measures',
@@ -811,8 +812,10 @@ function rsssl_fields( $load_values = true ) {
             'group_id' => 'vulnerabilities_basic',
             'type' => 'checkbox',
             'label' => __('Enable vulnerability scanning', 'really-simple-ssl'),
+            'tooltip'  => __( "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam accumsan risus nec tellus tristique, in consequat neque fermentum.", 'really-simple-ssl' ),
             'disabled' => false,
             'default' => false,
+            'warning' => true,
             'help'               => [
                 'label' => 'default',
                 'url'   => 'https://really-simple-ssl.com/instructions/about-vulnerabilities/',
@@ -824,6 +827,8 @@ function rsssl_fields( $load_values = true ) {
             'id' => 'enable_feedback_in_plugin',
             'menu_id' => 'vulnerabilities',
             'group_id' => 'vulnerabilities_basic',
+            'tooltip'  => __( "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam accumsan risus nec tellus tristique, in consequat neque fermentum.", 'really-simple-ssl' ),
+            'warning' => false,
             'type' => 'checkbox',
             'label' => __('Feedback in plugin overview', 'really-simple-ssl'),
             'disabled' => false,
@@ -836,14 +841,14 @@ function rsssl_fields( $load_values = true ) {
             'group_id' => 'vulnerabilities_notifi',
             'type' => 'select',
             'options' => [
-                'l' => __('low-risk', 'really-simple-ssl'),
-                'm' => __('medium-risk', 'really-simple-ssl'),
-                'h' => __('high-risk', 'really-simple-ssl'),
-                'c' => __('critical', 'really-simple-ssl'),
+                'l' => ucfirst(__('low-risk (default)', 'really-simple-ssl')),
+                'm' => ucfirst(__('medium-risk', 'really-simple-ssl')),
+                'h' => ucfirst(__('high-risk', 'really-simple-ssl')),
+                'c' => ucfirst(__('critical', 'really-simple-ssl')),
             ],
             'label' => __('Dashboard', 'really-simple-ssl'),
             'disabled' => false,
-            'default' => 'low_risk',
+            'default' => 'l',
             'react_conditions' => [
                 'relation' => 'AND',
                 [
@@ -857,14 +862,14 @@ function rsssl_fields( $load_values = true ) {
             'group_id' => 'vulnerabilities_notifi',
             'type' => 'select',
             'options' => [
-                'l' => __('low-risk', 'really-simple-ssl'),
-                'm' => __('medium-risk', 'really-simple-ssl'),
-                'h' => __('high-risk', 'really-simple-ssl'),
-                'c' => __('critical', 'really-simple-ssl'),
+                'l' => ucfirst(__('low-risk (default)', 'really-simple-ssl')),
+                'm' => ucfirst(__('medium-risk', 'really-simple-ssl')),
+                'h' => ucfirst(__('high-risk', 'really-simple-ssl')),
+                'c' => ucfirst(__('critical', 'really-simple-ssl')),
             ],
             'label' => __('Site-wide notification', 'really-simple-ssl'),
             'disabled' => false,
-            'default' => 'high_risk',
+            'default' => 'l',
             'react_conditions' => [
                 'relation' => 'AND',
                 [
@@ -879,14 +884,16 @@ function rsssl_fields( $load_values = true ) {
             'group_id' => 'vulnerabilities_notifi',
             'type' => 'select',
             'options' => [
-                'l' => __('low-risk', 'really-simple-ssl'),
-                'm' => __('medium-risk', 'really-simple-ssl'),
-                'h' => __('high-risk', 'really-simple-ssl'),
-                'c' => __('critical', 'really-simple-ssl'),
+                'l' => ucfirst(__('low-risk (default)', 'really-simple-ssl')),
+                'm' => ucfirst(__('medium-risk', 'really-simple-ssl')),
+                'h' => ucfirst(__('high-risk', 'really-simple-ssl')),
+                'c' => ucfirst(__('critical', 'really-simple-ssl')),
             ],
             'label' => __('Email admin', 'really-simple-ssl'),
+            'tooltip'  => __( "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam accumsan risus nec tellus tristique, in consequat neque fermentum.", 'really-simple-ssl' ),
+            'warning' => true,
             'disabled' => false,
-            'default' => 'critical_risk',
+            'default' => 'l',
             'react_conditions' => [
                 'relation' => 'AND',
                 [
@@ -913,6 +920,7 @@ function rsssl_fields( $load_values = true ) {
             'menu_id' => 'vulnerabilities',
             'group_id' => 'vulnerabilities_overview',
             'type' => 'vulnerabilitiestable',
+
             'label' => __('Vulnerabilities Overview', 'really-simple-ssl'),
             'disabled' => false,
             'react_conditions' => [
