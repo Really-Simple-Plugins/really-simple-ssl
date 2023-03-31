@@ -83,93 +83,70 @@ if ( !class_exists('rsssl_installer') ){
          * @return bool
          * @todo restore
          */
-        public function download_plugin() {
-            error_log("Entering download_plugin function");
+	    public function download_plugin() {
+		    error_log("Entering download_plugin function");
 
-            if (!current_user_can('install_plugins')) {
-                error_log("User doesn't have permission to install plugins");
-                return false;
-            }
+		    if (!current_user_can('install_plugins')) {
+			    error_log("User doesn't have permission to install plugins");
+			    return false;
+		    }
 
-            if (get_transient("rsssl_plugin_download_active") !== $this->slug) {
-                set_transient("rsssl_plugin_download_active", $this->slug, MINUTE_IN_SECONDS);
-                $info = $this->get_plugin_info();
+		    if (get_transient("rsssl_plugin_download_active") !== $this->slug) {
+			    set_transient("rsssl_plugin_download_active", $this->slug, MINUTE_IN_SECONDS);
+			    $info = $this->get_plugin_info();
 
-                if (!$info) {
-                    error_log("Failed to get plugin info");
-                }
+			    if (!$info) {
+				    error_log("Failed to get plugin info");
+			    }
 
-                $download_link = esc_url_raw($info->versions['trunk']);
-                error_log("Download link: " . $download_link);
+			    $download_link = esc_url_raw($info->versions['trunk']);
+			    error_log("Download link: " . $download_link);
 
-                require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
-                require_once ABSPATH . 'wp-admin/includes/file.php';
-                include_once ABSPATH . 'wp-admin/includes/plugin-install.php';
+			    require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+			    require_once ABSPATH . 'wp-admin/includes/file.php';
+			    include_once ABSPATH . 'wp-admin/includes/plugin-install.php';
 
-                if (!is_writable(WP_PLUGIN_DIR)) {
-                    error_log("Plugin directory is not writable");
-                    return false;
-                }
+			    if (!$this->is_path_writable(WP_PLUGIN_DIR)) {
+				    error_log("Plugin directory is not writable");
+				    return false;
+			    }
 
-                $skin = new WP_Ajax_Upgrader_Skin();
-                $upgrader = new Plugin_Upgrader($skin);
+			    $skin = new WP_Ajax_Upgrader_Skin();
+			    $upgrader = new Plugin_Upgrader($skin);
 
-                // Run the installation and store the result
-                $result = $upgrader->run(array(
-                    'package' => $download_link,
-                    'destination' => WP_PLUGIN_DIR,
-                    'clear_destination' => false, // Do not overwrite an existing plugin
-                    'clear_working' => true, // Remove the temporary files after installation
-                    'hook_extra' => array()
-                ));
+			    // Add the upgrader_post_install filter
+			    add_filter('upgrader_post_install', array( $this, 'my_upgrader_post_install', 10, 3) );
+			    $result = $upgrader->install($download_link);
+			    // Remove the filter after installation
+			    remove_filter('upgrader_post_install', array( $this, 'my_upgrader_post_install', 10, 3) );
 
-                if (is_wp_error($result)) {
-                    error_log("Plugin installation failed: " . $result->get_error_message());
-                    error_log("Error data: " . print_r($result->get_error_data(), true));
-                    return false;
-                }
+			    if (is_wp_error($result)) {
+				    error_log("Plugin installation failed: " . $result->get_error_message());
+				    return false;
+			    }
 
+			    delete_transient("rsssl_plugin_download_active");
+		    }
 
-                // Check if $result is an array before attempting to access its elements
-                if (is_array($result)) {
-                    // Log the content of the temporary file created during the plugin installation
-                    $temp_package = $result['source_files'][0];
-                    error_log("Temporary package content: " . file_get_contents($temp_package));
+		    $downloaded_plugin_path = trailingslashit(WP_PLUGIN_DIR) . $upgrader->plugin_info();
+		    error_log("Plugin download successful, located at: " . $downloaded_plugin_path);
 
-                    // Log the content of the temporary folder after the plugin is extracted
-                    $temp_plugin_folder = $result['remote_destination'];
-                    error_log("Temporary plugin folder content: " . print_r(scandir($temp_plugin_folder), true));
-                } elseif (is_bool($result) && !$result) {
-                    error_log("Plugin installation returned false with no error data.");
-                    return false;
-                } else {
-                    error_log("Unexpected result type: " . gettype($result));
-                    return false;
-                }
+		    $plugin_directory = scandir(WP_PLUGIN_DIR);
+		    error_log("Plugin directory after installation: " . print_r($plugin_directory, true));
+
+		    return true;
+	    }
 
 
+	    public function is_path_writable($path) {
+		    $temp_file = @tempnam($path, 'test_writable_');
+		    if ($temp_file === false) {
+			    return false;
+		    }
 
-                // Log the content of the temporary file created during the plugin installation
-                $temp_package = $result['source_files'][0];
-                error_log("Temporary package content: " . file_get_contents($temp_package));
-
-                // Log the content of the temporary folder after the plugin is extracted
-                $temp_plugin_folder = $result['remote_destination'];
-                error_log("Temporary plugin folder content: " . print_r(scandir($temp_plugin_folder), true));
-
-                delete_transient("rsssl_plugin_download_active");
-            }
-
-            $downloaded_plugin_path = trailingslashit(WP_PLUGIN_DIR) . $upgrader->plugin_info();
-            error_log("Plugin download successful, located at: " . $downloaded_plugin_path);
-
-            $plugin_directory = scandir(WP_PLUGIN_DIR);
-            error_log("Plugin directory after installation: " . print_r($plugin_directory, true));
-
-            return true;
-        }
-
-
+		    @unlink($temp_file);
+		    return true;
+	    }
 
         /**
          * Activate the plugin
