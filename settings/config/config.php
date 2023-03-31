@@ -862,14 +862,14 @@ function rsssl_fields( $load_values = true ) {
             'group_id' => 'vulnerabilities_notifi',
             'type' => 'select',
             'options' => [
-                'l' => ucfirst(__('low-risk (default)', 'really-simple-ssl')),
+                'l' => ucfirst(__('low-risk ', 'really-simple-ssl')),
                 'm' => ucfirst(__('medium-risk', 'really-simple-ssl')),
-                'h' => ucfirst(__('high-risk', 'really-simple-ssl')),
+                'h' => ucfirst(__('high-risk (default)', 'really-simple-ssl')),
                 'c' => ucfirst(__('critical', 'really-simple-ssl')),
             ],
             'label' => __('Site-wide notification', 'really-simple-ssl'),
             'disabled' => false,
-            'default' => 'l',
+            'default' => 'h',
             'react_conditions' => [
                 'relation' => 'AND',
                 [
@@ -884,16 +884,16 @@ function rsssl_fields( $load_values = true ) {
             'group_id' => 'vulnerabilities_notifi',
             'type' => 'select',
             'options' => [
-                'l' => ucfirst(__('low-risk (default)', 'really-simple-ssl')),
+                'l' => ucfirst(__('low-risk', 'really-simple-ssl')),
                 'm' => ucfirst(__('medium-risk', 'really-simple-ssl')),
                 'h' => ucfirst(__('high-risk', 'really-simple-ssl')),
-                'c' => ucfirst(__('critical', 'really-simple-ssl')),
+                'c' => ucfirst(__('critical (default)', 'really-simple-ssl')),
             ],
             'label' => __('Email admin', 'really-simple-ssl'),
             'tooltip'  => __( "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam accumsan risus nec tellus tristique, in consequat neque fermentum.", 'really-simple-ssl' ),
             'warning' => true,
             'disabled' => false,
-            'default' => 'l',
+            'default' => 'c',
             'react_conditions' => [
                 'relation' => 'AND',
                 [

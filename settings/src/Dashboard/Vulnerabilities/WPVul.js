@@ -26,12 +26,6 @@ const WPVul = (props) => {
         run();
     }, []);
 
-
-    if (!dataLoaded) {
-        //we do not have the data yet, so we return null
-        return null;
-    }
-
     //singular or plural of the word vulnerability
     const vulnerabilityWord = (vulnerabilities.length === 1) ? __("vulnerability", "really-simple-ssl") : __("vulnerabilities", "really-simple-ssl");
     const updateWord = (updates === 1) ? __("update", "really-simple-ssl") : __("updates", "really-simple-ssl");
@@ -309,10 +303,15 @@ const WPVul = (props) => {
                 </div>
 
             </div>
-            {checkHardening()}
-            {checkVulActive()}
-            {checkVul()}
-            {checkUpdates()}
+            {dataLoaded? <>
+                {checkHardening()}
+                {checkVulActive()}
+                {checkVul()}
+                {checkUpdates()}</>:<>
+                <div className="rsssl-learningmode-placeholder">
+                <div></div><div></div><div></div><div></div>
+                </div>
+                </>}
             <div className="rsssl-details">
             </div>
 

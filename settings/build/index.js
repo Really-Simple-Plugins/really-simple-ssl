@@ -42369,10 +42369,6 @@ const WPVul = props => {
     };
     run();
   }, []);
-  if (!dataLoaded) {
-    //we do not have the data yet, so we return null
-    return null;
-  }
 
   //singular or plural of the word vulnerability
   const vulnerabilityWord = vulnerabilities.length === 1 ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("vulnerability", "really-simple-ssl") : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("vulnerabilities", "really-simple-ssl");
@@ -42635,7 +42631,9 @@ const WPVul = props => {
     className: "rsssl-number"
   }, updates), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     className: "rsssl-badge " + badgeUpdateStyle
-  }, capitalizeFirstLetter(updateWord)))))), checkHardening(), checkVulActive(), checkVul(), checkUpdates(), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, capitalizeFirstLetter(updateWord)))))), dataLoaded ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, checkHardening(), checkVulActive(), checkVul(), checkUpdates()) : (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-learningmode-placeholder"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-details"
   }));
 };
