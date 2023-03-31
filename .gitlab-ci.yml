@@ -1,5 +1,6 @@
 stages:
   - test
+  - build
 
 # Select what we should cache
 cache:
@@ -8,6 +9,28 @@ cache:
 
 services:
   - mysql
+
+build-release-zip:
+  stage: build
+  image: alpine:latest
+  script:
+    - apk add --no-cache zip nodejs npm
+    - mkdir -p releases
+    - VERSION=$(node -p "require('./composer.json').version")
+    - FILENAME=releases/really-simple-ssl-$VERSION.zip
+    - if [ ! -f "$FILENAME" ]; then
+      echo "Release zip for version $VERSION not found, creating a new one"
+      zip -r9 $FILENAME really-simple-ssl -x *.min.min.* .DS_Store *.git* *.eslint* *node_modules* *composer.phar* *composer.lock* *package.json* *package-lock.json* *.editorconfig* "__MACOSX"
+      else
+      echo "Release zip for version $VERSION already exists, skipping build"
+      exit 1
+      fi
+  only:
+    - master
+  artifacts:
+    paths:
+      - releases/really-simple-ssl-$VERSION.zip
+    expire_in: never
 
 # before_script will run on ALL PHP versions listed in test
 before_script:
@@ -79,48 +102,48 @@ test:php7.4:
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
 
-## We test PHP7.4 with multisite
-#test:php7.4:multisite:
-#  variables:
-#    WP_MULTISITE: "1"
-#  image: php:7.4
-#  script:
-#    - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
-#  rules:
-#    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-#
-## We test PHP8.0
-#test:php8.0:
-#  image: php:8.0
-#  script:
-#    - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover --colors=never
-#  rules:
-#    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-#
-## We test PHP8 with multisite
-#test:php8.0:multisite:
-#  variables:
-#    WP_MULTISITE: "1"
-#  image: php:8.0
-#  script:
-#    - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
-#  rules:
-#    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-#
-## We test PHP8.1
-#test:php8.1:
-#  image: php:8.1
-#  script:
-#    - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover --colors=never
-#  rules:
-#    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-#
-## We test PHP8.1 with multisite
-#test:php8.1:multisite:
-#  variables:
-#    WP_MULTISITE: "1"
-#  image: php:8.1
-#  script:
-#    - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
-#  rules:
-#    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+# We test PHP7.4 with multisite
+test:php7.4:multisite:
+  variables:
+    WP_MULTISITE: "1"
+  image: php:7.4
+  script:
+    - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+
+# We test PHP8.0
+test:php8.0:
+  image: php:8.0
+  script:
+    - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover --colors=never
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+
+# We test PHP8 with multisite
+test:php8.0:multisite:
+  variables:
+    WP_MULTISITE: "1"
+  image: php:8.0
+  script:
+    - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+
+# We test PHP8.1
+test:php8.1:
+  image: php:8.1
+  script:
+    - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover --colors=never
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+
+# We test PHP8.1 with multisite
+test:php8.1:multisite:
+  variables:
+    WP_MULTISITE: "1"
+  image: php:8.1
+  script:
+    - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
