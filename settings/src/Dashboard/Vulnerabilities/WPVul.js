@@ -46,10 +46,10 @@ const WPVul = (props) => {
             badgeVulStyle = 'rsp-low';
         }
 
-        if (updates > 0) {
-            badgeUpdateStyle = 'rsp-low';
-        } else if (score > 5) {
+        if (updates >= 5) {
             badgeUpdateStyle = 'rsp-critical';
+        } else if (score < 5 && score > 0) {
+            badgeUpdateStyle = 'rsp-low';
         }
 
         if (score < hardening.length) {
