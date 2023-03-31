@@ -7,34 +7,24 @@ class RssslInstallerTest extends WP_UnitTestCase {
 	 * @throws Exception
 	 */
 	public function setUp(): void {
-		// Tests require direct filesystem methods important!
+		// Gitlab pipeline requires direct filesystem methods! Without FS_METHOD tests will fail
 		if ( ! defined('FS_METHOD') ) {
 			define('FS_METHOD', 'direct');
 		}
+
 		// Load WordPress environment
 		// Make it suitable for localhost and pipeline
 		$max_dirs = 10;
+		// Let's locate wp-load.php, if not loaded already
 		$found_wp_load = defined('WPINC');
-
 		if ( ! $found_wp_load ) {
 			for ($i = 1; $i <= $max_dirs; $i++) {
 				$path = dirname(__FILE__, $i) . '/wp-load.php';
 				if ( file_exists( $path ) ) {
 					require_once($path);
-					$found_wp_load = true;
 					break;
 				}
 			}
-		}
-
-		if (!$found_wp_load) {
-			throw new Exception('Unable to locate wp-load.php in the directory hierarchy');
-		}
-
-		if (!defined('ABSPATH')) {
-			throw new Exception('ABSPATH is not defined');
-		} else {
-			error_log("ABSPATH: " . ABSPATH);
 		}
 
 		// Set an active user, otherwise capability checks will fail

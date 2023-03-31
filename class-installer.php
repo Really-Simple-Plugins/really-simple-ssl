@@ -122,35 +122,48 @@ if ( !class_exists('rsssl_installer') ){
          *
          * @return bool
          */
-        public function activate_plugin() {
-            if (!current_user_can('install_plugins')) {
-                return false;
-            }
+	    public function activate_plugin() {
+		    error_log("Entering activate_plugin function");
 
-            $slug = $this->get_activation_slug();
-            $plugin_file_path = trailingslashit(WP_PLUGIN_DIR) . $slug;
+		    if (!current_user_can('install_plugins')) {
+			    error_log("Current user cannot install plugins");
+			    return false;
+		    }
 
-            // Make sure the plugin file exists before trying to activate it
-            if (!file_exists($plugin_file_path)) {
-                return false;
-            }
+		    $slug = $this->get_activation_slug();
+		    error_log("Slug: " . $slug);
 
-            // Use plugin_basename to generate the correct slug, considering the WP_PLUGIN_DIR
-            $plugin_slug = plugin_basename($plugin_file_path);
+		    $plugin_file_path = trailingslashit(WP_PLUGIN_DIR) . $slug;
+		    error_log("Plugin file path: " . $plugin_file_path);
 
-            $networkwide = is_multisite() && rsssl_is_networkwide_active();
-            if (!defined('DOING_CRON')) {
-                define('DOING_CRON', true);
-            }
+		    // Make sure the plugin file exists before trying to activate it
+		    if (!file_exists($plugin_file_path)) {
+			    error_log("Plugin file does not exist");
+			    return false;
+		    }
 
-            $result = activate_plugin($plugin_slug, '', $networkwide);
-            if (is_wp_error($result)) {
-                return false;
-            }
+		    // Use plugin_basename to generate the correct slug, considering the WP_PLUGIN_DIR
+		    $plugin_slug = plugin_basename($plugin_file_path);
+		    error_log("Plugin slug: " . $plugin_slug);
 
-            $this->cancel_tour();
-            return true;
-        }
+		    $networkwide = is_multisite() && rsssl_is_networkwide_active();
+		    error_log("Networkwide: " . ($networkwide ? 'true' : 'false'));
+
+		    if (!defined('DOING_CRON')) {
+			    define('DOING_CRON', true);
+		    }
+
+		    $result = activate_plugin($plugin_slug, '', $networkwide);
+		    if (is_wp_error($result)) {
+			    error_log("Plugin activation error: " . $result->get_error_message());
+			    return false;
+		    }
+
+		    $this->cancel_tour();
+		    error_log("Plugin activation successful");
+		    return true;
+	    }
+
 
         /**
          * Get plugin info
