@@ -127,7 +127,7 @@ const WPVul = (props) => {
             icon = 'info';
             iconColor = 'yellow';
         }
-        if (updates > 5) {
+        if (updates >= 5) {
             icon = 'circle-times';
             iconColor = 'red';
         }
