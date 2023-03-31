@@ -42369,6 +42369,10 @@ const WPVul = props => {
     //we do not have the data yet, so we return null
     return null;
   }
+
+  //singular or plural of the word vulnerability
+  const vulnerabilityWord = vulnerabilities.length === 1 ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("vulnerability", "really-simple-ssl") : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("vulnerabilities", "really-simple-ssl");
+  const updateWord = updates === 1 ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("update", "really-simple-ssl") : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("updates", "really-simple-ssl");
   let risks = vulnerabilityCount();
   const hardening = featuredFields.filter(field => field.value === 0);
   let vulClass = 'rsssl-inactive';
@@ -42433,14 +42437,37 @@ const WPVul = props => {
   const getHighestRiskVulnerability = () => {
     //we have an array of risks the order in which we check is important so c, h, m, l
     let highestRiskVulnerability = {
-      name: 'critical',
+      name: riskNaming[risks[1].level],
       count: 0
     };
-    //we loop through the risks
+
+    //we get the highest risk based where c is highest, followed by h and then m and l is lowest
     for (let i = 0; i < risks.length; i++) {
-      //if we have a higher risk, we set the highest risk to this risk
-      risks[i].name = riskNaming[i];
-      highestRiskVulnerability = risks[i];
+      if (risks[i].level === 'c') {
+        highestRiskVulnerability = {
+          name: riskNaming[risks[i].level],
+          count: risks[i].count
+        };
+        break;
+      }
+      if (risks[i].level === 'h') {
+        highestRiskVulnerability = {
+          name: riskNaming[risks[i].level],
+          count: risks[i].count
+        };
+      }
+      if (risks[i].level === 'm') {
+        highestRiskVulnerability = {
+          name: riskNaming[risks[i].level],
+          count: risks[i].count
+        };
+      }
+      if (risks[i].level === 'l') {
+        highestRiskVulnerability = {
+          name: riskNaming[risks[i].level],
+          count: risks[i].count
+        };
+      }
     }
     return highestRiskVulnerability;
   };
@@ -42507,7 +42534,7 @@ const WPVul = props => {
         color: iconColor
       })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
         className: "rsssl-detail"
-      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("You have %s %name vulnerabilities", "really-simple-ssl").replace("%s", highestRiskVulnerability.count).replace("%name", highestRiskVulnerability.name), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("You have %s %name %word", "really-simple-ssl").replace("%s", highestRiskVulnerability.count).replace("%word", vulnerabilityWord).replace("%name", highestRiskVulnerability.name), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
         style: linkStyle,
         href: '#',
         target: "_blank"
@@ -42522,7 +42549,7 @@ const WPVul = props => {
         color: "green"
       })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
         className: "rsssl-detail"
-      }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("You have %s vulnerabilities", "really-simple-ssl").replace("%s", vulnerabilities))));
+      }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("You have %s %word", "really-simple-ssl").replace("%s", vulnerabilities, "%word", vulnerabilityWord))));
     }
   };
   const linkStyle = {
@@ -42583,7 +42610,7 @@ const WPVul = props => {
     className: "rsssl-number"
   }, vulEnabled ? vulnerabilities : '-'), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     className: "rsssl-badge " + badgeVulStyle
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Vulnerabilities', 'really-simple-ssl')))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, vulnerabilityWord))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-ssl-test-information"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_1__["default"], {
     color: 'red',
@@ -42592,7 +42619,7 @@ const WPVul = props => {
     className: "rsssl-number"
   }, updates), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     className: "rsssl-badge " + badgeUpdateStyle
-  }, "Updates"))))), checkHardening(), checkVulActive(), checkVul(), checkUpdates(), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, updateWord))))), checkHardening(), checkVulActive(), checkVul(), checkUpdates(), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-details"
   }));
 };

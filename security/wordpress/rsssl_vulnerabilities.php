@@ -170,7 +170,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
                     'output' => [
                         'true' => [
                             'title' => sprintf(__('You have %s %s %s', 'really-simple-ssl'), $count, $this->risk_naming[$key], $count_label),
-                            'msg' => sprintf(__('You have %s %s highest level %s. Please take appropiate action. For more information about these vulnereabilities, please read more <a href="/wp-admin/options-general.php?page=really-simple-security#settings/vulnerabilities">here</a>', 'really-simple-ssl'), $count, $count_label, $this->risk_naming[$key]),
+                            'msg' => sprintf(__('You have %s %s level %s. Please take appropriate action. For more information about these vulnerabilities, please read more <a href="/wp-admin/options-general.php?page=really-simple-security#settings/vulnerabilities">here</a>', 'really-simple-ssl'), $count, $count_label, $this->risk_naming[$key]),
                             'url' => 'https://really-simple-ssl.com/knowledge-base/vulnerability-scanner/',
                             'icon' => ($key === 'c') ? 'warning' : 'open',
                             'type' => 'warning',
@@ -1036,7 +1036,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
             $core_plugin = [
                 'Name' => 'WordPress',
                 'Slug' => 'wordpress',
-                'description' => 'WordPress is web software you can use to create a beautiful website or blog. We like to say that WordPress is both free and priceless at the same time.',
                 'Version' => $core->version,
                 'Author' => 'WordPress',
                 'AuthorURI' => 'https://wordpress.org/',

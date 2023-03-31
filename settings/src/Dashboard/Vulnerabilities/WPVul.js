@@ -30,8 +30,12 @@ const WPVul = (props) => {
         //we do not have the data yet, so we return null
         return null;
     }
-    let risks = vulnerabilityCount();
 
+    //singular or plural of the word vulnerability
+    const vulnerabilityWord = (vulnerabilities.length === 1) ? __("vulnerability", "really-simple-ssl") : __("vulnerabilities", "really-simple-ssl");
+    const updateWord = (updates === 1) ? __("update", "really-simple-ssl") : __("updates", "really-simple-ssl");
+
+    let risks = vulnerabilityCount();
     const hardening = featuredFields.filter(field => field.value === 0);
     let vulClass = 'rsssl-inactive';
     let badgeVulStyle = 'rsp-default';
@@ -108,14 +112,37 @@ const WPVul = (props) => {
     const getHighestRiskVulnerability = () => {
         //we have an array of risks the order in which we check is important so c, h, m, l
         let highestRiskVulnerability = {
-            name: 'critical',
+            name: riskNaming[risks[1].level],
             count: 0
         };
-        //we loop through the risks
+
+        //we get the highest risk based where c is highest, followed by h and then m and l is lowest
         for (let i = 0; i < risks.length; i++) {
-            //if we have a higher risk, we set the highest risk to this risk
-            risks[i].name = riskNaming[i];
-            highestRiskVulnerability = risks[i];
+            if (risks[i].level === 'c') {
+                highestRiskVulnerability = {
+                    name: riskNaming[risks[i].level],
+                    count: risks[i].count
+                };
+                break;
+            }
+            if (risks[i].level === 'h') {
+                highestRiskVulnerability = {
+                    name: riskNaming[risks[i].level],
+                    count: risks[i].count
+                };
+            }
+            if (risks[i].level === 'm') {
+                highestRiskVulnerability = {
+                    name: riskNaming[risks[i].level],
+                    count: risks[i].count
+                };
+            }
+            if (risks[i].level === 'l') {
+                highestRiskVulnerability = {
+                    name: riskNaming[risks[i].level],
+                    count: risks[i].count
+                };
+            }
         }
         return highestRiskVulnerability;
     }
@@ -184,8 +211,11 @@ const WPVul = (props) => {
                     <div className="rsssl-details">
                         <div className="rsssl-detail-icon"><Icon name={icon} color={iconColor}/></div>
                         <div className="rsssl-detail">
-                            <p>{__("You have %s %name vulnerabilities", "really-simple-ssl").replace("%s", highestRiskVulnerability.count)
-                                .replace("%name", highestRiskVulnerability.name)}
+                            <p>{__("You have %s %name %word", "really-simple-ssl")
+                                .replace("%s", highestRiskVulnerability.count)
+                                .replace("%word", vulnerabilityWord)
+                                .replace("%name", highestRiskVulnerability.name)
+                            }
                                 <a style={linkStyle} href={'#'}
                                    target="_blank">{__('Read more', 'really-simple-ssl')}</a>
                             </p>
@@ -199,7 +229,7 @@ const WPVul = (props) => {
                     <div className="rsssl-details">
                         <div className="rsssl-detail-icon"><Icon name="circle-check" color='green'/></div>
                         <div className="rsssl-detail">
-                            {__("You have %s vulnerabilities", "really-simple-ssl").replace("%s", vulnerabilities)}
+                            {__("You have %s %word", "really-simple-ssl").replace("%s", vulnerabilities, "%word", vulnerabilityWord)}
                         </div>
                     </div>
                 </>
@@ -256,7 +286,7 @@ const WPVul = (props) => {
                         <span>
                             <h2 className={"rsssl-number"}>{vulEnabled ? vulnerabilities : '-'}</h2>
                         <span
-                            className={"rsssl-badge " + badgeVulStyle}>{__('Vulnerabilities', 'really-simple-ssl')}</span>
+                            className={"rsssl-badge " + badgeVulStyle}>{vulnerabilityWord}</span>
                         </span>
                     </div>
                     <div className={"rsssl-ssl-test-information"}>
@@ -264,7 +294,7 @@ const WPVul = (props) => {
                         </span>}
                         <span>
                             <h2 className={"rsssl-number"}>{updates}</h2>
-                        <span className={"rsssl-badge " + badgeUpdateStyle}>Updates</span>
+                        <span className={"rsssl-badge " + badgeUpdateStyle}>{updateWord}</span>
                         </span>
                     </div>
                 </div>
