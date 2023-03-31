@@ -106,7 +106,7 @@ if ( !class_exists('rsssl_installer') ){
 			    require_once ABSPATH . 'wp-admin/includes/file.php';
 			    include_once ABSPATH . 'wp-admin/includes/plugin-install.php';
 
-			    if (!$this->is_path_writable(WP_PLUGIN_DIR)) {
+			    if (!is_writable(WP_PLUGIN_DIR)) {
 				    error_log("Plugin directory is not writable");
 				    return false;
 			    }
@@ -114,11 +114,7 @@ if ( !class_exists('rsssl_installer') ){
 			    $skin = new WP_Ajax_Upgrader_Skin();
 			    $upgrader = new Plugin_Upgrader($skin);
 
-			    // Add the upgrader_post_install filter
-			    add_filter('upgrader_post_install', array( $this, 'my_upgrader_post_install', 10, 3) );
 			    $result = $upgrader->install($download_link);
-			    // Remove the filter after installation
-			    remove_filter('upgrader_post_install', array( $this, 'my_upgrader_post_install', 10, 3) );
 
 			    if (is_wp_error($result)) {
 				    error_log("Plugin installation failed: " . $result->get_error_message());
@@ -134,17 +130,9 @@ if ( !class_exists('rsssl_installer') ){
 		    $plugin_directory = scandir(WP_PLUGIN_DIR);
 		    error_log("Plugin directory after installation: " . print_r($plugin_directory, true));
 
-		    return true;
-	    }
+		    // Log the upgrader object for more information
+		    error_log("Upgrader object: " . print_r($upgrader, true));
 
-
-	    public function is_path_writable($path) {
-		    $temp_file = @tempnam($path, 'test_writable_');
-		    if ($temp_file === false) {
-			    return false;
-		    }
-
-		    @unlink($temp_file);
 		    return true;
 	    }
 
