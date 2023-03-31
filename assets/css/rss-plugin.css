@@ -93,38 +93,35 @@
     border-radius: 15px;
     white-space: nowrap;
     box-sizing: border-box;
-    background-color: #fae4b5;
+    background-color: var(--rsp-yellow-faded);
     color: var(--rsp-black);
     border-color: var(--rsp-yellow);
 }
 
 .btn-vulnerable:hover {
-    background-color: var(--rsp-dark-yellow);
-    border-color: var(--rsp-dark-yellow);
+    background-color: var(--rsp-yellow);
     color: var(--rsp-white);
 }
 
 .btn-vulnerable.critical {
-    background-color: var(--rsp-red);
+    background-color: var(--rsp-red-faded);
     color: var(--rsp-white);
     border-color: var(--rsp-red);
 }
 
 .btn-vulnerable.critical:hover {
-    background-color: var(--rsp-dark-red);
-    border-color: var(--rsp-dark-red);
+    background-color: var(--rsp-red);
     color: var(--rsp-white);
 }
 
 .btn-vulnerable.high {
-    background-color: #fdcece;
+    background-color: var(--rsp-red-faded);
     color: var(--rsp-black);
     border-color: var(--rsp-red);
 }
 
 .btn-vulnerable.high:hover {
-    background-color: var(--rsp-dark-orange);
-    border-color: var(--rsp-dark-orange);
+    background-color: var(--rsp-red);
     color: var(--rsp-white);
 }
 
