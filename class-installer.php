@@ -113,7 +113,7 @@ if ( !class_exists('rsssl_installer') ){
 
 			    delete_transient("rsssl_plugin_download_active");
 		    }
-			
+
 		    return true;
 	    }
 
@@ -140,7 +140,6 @@ if ( !class_exists('rsssl_installer') ){
 
             $networkwide = is_multisite() && rsssl_is_networkwide_active();
             if (!defined('DOING_CRON')) {
-                define('DOING_CRON', true);
                 define('DOING_CRON', true);
             }
 
