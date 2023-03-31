@@ -27,6 +27,12 @@ class RssslInstallerTest extends WP_UnitTestCase {
 			throw new Exception('Unable to locate wp-load.php in the directory hierarchy');
 		}
 
+		if (!defined('ABSPATH')) {
+			throw new Exception('ABSPATH is not defined');
+		} else {
+			error_log("ABSPATH: " . ABSPATH);
+		}
+
 		// Set an active user, otherwise capability checks will fail
 		wp_set_current_user(1);
 		// Activate any required plugins
