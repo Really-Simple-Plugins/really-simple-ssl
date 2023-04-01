@@ -2486,16 +2486,18 @@ class rsssl_admin
 		if ( !$cache || ($count === false) ) {
 			$count = 0;
 			$notices = $this->get_notices_list();
-			foreach ( $notices as $id => $notice ) {
-                $success = ( isset( $notice['output']['icon'] ) && ( $notice['output']['icon'] === 'success' ) ) ? true : false;
-                if ( ! $success
-                     && isset( $notice['output']['plusone'] )
-                     && $notice['output']['plusone']
-                ) {
-                    $count++;
-                }
+			if ( is_array($notices) ) {
+				foreach ( $notices as $id => $notice ) {
+					$success = ( isset( $notice['output']['icon'] ) && ( $notice['output']['icon'] === 'success' ) ) ? true : false;
+					if ( ! $success
+					     && isset( $notice['output']['plusone'] )
+					     && $notice['output']['plusone']
+					) {
+						$count ++;
+					}
+				}
 			}
-            if ( $count==0) {
+            if ( $count===0) {
                 $count = 'empty';
             }
 			update_option( 'rsssl_plusone_count', $count );
