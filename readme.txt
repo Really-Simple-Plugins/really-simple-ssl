@@ -96,6 +96,10 @@ The plugin checks your certificate before enabling, but if, for example, you mig
 If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions](https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/) instead.
 
 == Changelog ==
+= 6.2.4 =
+* Fix: catch non array value from notices array, props @kenrichman
+* Fix: typo in documenation link, props (@bookman53
+
 = 6.2.3 =
 * Improvement: Changed Back-end react to functional components
 * Improvement: multisite notice should link to network admin page
