@@ -2440,15 +2440,12 @@ class rsssl_admin
 		$previous_version = get_option('rsssl_previous_version');
 		//if there's no first version yet, we assume it's not upgraded
 		if ( !$previous_version ) {
-            error_log("no previous version");
 			return false;
 		}
 		//if the previous version is below current, we just upgraded.
 		if ( version_compare($previous_version,rsssl_version ,'<') ){
-            error_log("is previous version");
 			return true;
 		}
-        error_log("not upgraded");
 		return false;
 	}
 
