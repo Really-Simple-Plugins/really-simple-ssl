@@ -2306,7 +2306,7 @@ class rsssl_admin
 		        'callback' => '_true_',
 		        'output' => array(
 			        'true' => array(
-				        'msg' => __( "Our vulnerability reporting is in beta. Signup for the beta!", 'really-simple-ssl' ),
+				        'msg' => __( "Our vulnerability reporting is in beta. Signup for the beta to discover the new features!", 'really-simple-ssl' ),
 				        'icon' => 'open',
 				        'admin_notice' => true,
 				        'url' => 'https://really-simple-ssl.com/vulnerability-reporting/',
