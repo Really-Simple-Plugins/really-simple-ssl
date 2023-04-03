@@ -53,15 +53,30 @@ const VulnerabilitiesOverview = (props) => {
         }
     });
 
-    if(!dataLoaded || vulList.length === 0 || !enabled) {
+    if (!dataLoaded || vulList.length === 0 || !enabled) {
         return (
+            //If there is no data or vulnerabilities scanner is disabled we show some dummy data behind a mask
             <>
-                <div className="rsssl-shield-overlay">
-                    <Icon name = "shield"  size="80px"/>
+                <DataTable
+                    columns={columns}
+                    //  data={dummyData}
+                    dense
+                    pagination
+                    noDataComponent={__("No results", "really-simple-ssl")}
+                    persistTableHead
+                    //     customStyles={customStyles}
+                >
+                </DataTable>
+                <div className="rsssl-locked">
+                    <div className="rsssl-locked-overlay"><span
+                        className="rsssl-task-status rsssl-open">Activate</span><span>Activate vulnerabilities to see if there are any.</span>
+                    </div>
                 </div>
             </>
         )
     }
+
+    console.log(vulList);
 
     /**
      * Styling
@@ -96,8 +111,10 @@ const VulnerabilitiesOverview = (props) => {
     data.forEach(function (item, i) {
         let rsssid = item.rss_identifier;
         item.vulnerability_action = <div className="rsssl-vulnerability-action">
-            <a className="button" href={"https://really-simple-ssl.com/vulnerabilities/"+rsssid} target={"_blank"}>{ __("Details", "really-simple-ssl") }</a>
-            <a target={"_blank"} href="/wp-admin/plugins.php?plugin_status=upgrade" className="button button-primary" style={btnStyle}>{ __("View", "really-simple-ssl") }</a>
+            <a className="button" href={"https://really-simple-ssl.com/vulnerabilities/" + rsssid}
+               target={"_blank"}>{__("Details", "really-simple-ssl")}</a>
+            <a target={"_blank"} href="/wp-admin/plugins.php?plugin_status=upgrade" className="button button-primary"
+               style={btnStyle}>{__("View", "really-simple-ssl")}</a>
         </div>
 
     });
@@ -110,7 +127,7 @@ const VulnerabilitiesOverview = (props) => {
             noDataComponent={__("No results", "really-simple-ssl")}
             persistTableHead
             customStyles={customStyles}
-            >
+        >
         </DataTable>
     )
 }

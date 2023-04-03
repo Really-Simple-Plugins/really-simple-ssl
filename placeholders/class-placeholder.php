@@ -141,6 +141,17 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
 			return $data;
 		}
 
+        public function demo_vulnerabilities_data() {
+            $data[] = [
+                'id'          => 1,
+                'component'   => 'wordpress',
+                'risk'        => 'high',
+                'date'        => '2020-01-01',
+
+                ];
+
+        }
+
 		public function mixed_content_data() {
 			$data[] = [
 				'id'          => 1,

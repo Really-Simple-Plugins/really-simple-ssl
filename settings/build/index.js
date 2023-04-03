@@ -42295,10 +42295,10 @@ const useVulnerabilityData = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((se
   },
   vulnerabilityScore: () => {
     let score = 0;
-    let vuls = get().vulList;
-    Object.keys(vuls).forEach(function (key) {
+    let vulnerabiltiesList = get().vulList;
+    Object.keys(vulnerabiltiesList).forEach(function (key) {
       //if there are vulnerabilities with critical severity, score is 5
-      if (vuls[key].risk_level === 'c') {
+      if (vulnerabiltiesList[key].risk_level === 'c') {
         score = 5;
       } else if (score < 1) {
         score = 1;
@@ -42308,9 +42308,9 @@ const useVulnerabilityData = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((se
   },
   hardeningScore: () => {
     let score = 0;
-    let vuls = get().vulnerabilities;
-    for (let i = 0; i < vuls.length; i++) {
-      score += vuls[i].hardening_score;
+    let vulnerabiltiesList = get().vulnerabilities;
+    for (let i = 0; i < vulnerabiltiesList.length; i++) {
+      score += vulnerabiltiesList[i].hardening_score;
     }
     return score;
   }
@@ -47822,13 +47822,27 @@ const VulnerabilitiesOverview = props => {
     }
   });
   if (!dataLoaded || vulList.length === 0 || !enabled) {
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-shield-overlay"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_5__["default"], {
-      name: "shield",
-      size: "80px"
-    })));
+    return (
+      //If there is no data or vulnerabilities scanner is disabled we show some dummy data behind a mask
+      (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        columns: columns
+        //  data={dummyData}
+        ,
+        dense: true,
+        pagination: true,
+        noDataComponent: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("No results", "really-simple-ssl"),
+        persistTableHead: true
+        //     customStyles={customStyles}
+      }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+        className: "rsssl-locked"
+      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+        className: "rsssl-locked-overlay"
+      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+        className: "rsssl-task-status rsssl-open"
+      }, "Activate"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, "Activate vulnerabilities to see if there are any."))))
+    );
   }
+  console.log(vulList);
 
   /**
    * Styling

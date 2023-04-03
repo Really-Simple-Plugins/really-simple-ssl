@@ -60,11 +60,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 'h' => __('high-risk', 'really-simple-ssl'),
                 'c' => __('critical', 'really-simple-ssl'),
             ];
-
-            //remove rsssl_options vulnerability_notification_email_admin
-            rsssl_update_option('vulnerability_notification_sitewide', false);
-            rsssl_update_option('vulnerability_notification_email_admin', false);
-            rsssl_update_option('vulnerability_notification_dashboard', false);
         }
 
         public static function riskNaming($risk = null)
