@@ -57,7 +57,6 @@ if (isset($settings['delete_data_on_uninstall']) && $settings['delete_data_on_un
 		"rsssl_htaccess_rules",
 		"rsssl_options",
 		"rsssl_key",
-		"rsssl_6_upgrade_completed",
 	];
 	foreach ( $options as $option_name ) {
 		delete_option( $option_name );
