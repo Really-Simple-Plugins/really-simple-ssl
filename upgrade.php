@@ -10,7 +10,7 @@ function rsssl_upgrade() {
 
 	$prev_version = get_option( 'rsssl_current_version', false );
 	//no version change, skip upgrade.
-	if ( get_option('rsssl_6_upgrade_completed') && ($prev_version && version_compare( $prev_version, rsssl_version, '==' )) ){
+	if ( ($prev_version && version_compare( $prev_version, rsssl_version, '==' )) && (version_compare( $prev_version, '6.1', '>' ) ||  get_option('rsssl_6_upgrade_completed')) ){
 		return;
 	}
 	//dismiss notices that should be dismissed on plugin upgrade
@@ -46,9 +46,9 @@ function rsssl_upgrade() {
 	}
 
 	if (
-		!get_option('rsssl_6_upgrade_completed') || ( $prev_version && version_compare( $prev_version, '6.0.0', '<' ) )
+		( $prev_version && version_compare( $prev_version, '6.0.0', '<' ) ) || !get_option('rsssl_6_upgrade_completed')
 	) {
-		delete_transient('rsssl_admin_notices');
+		delete_option('rsssl_admin_notices');
 		update_option('rsssl_show_onboarding', true, false);
 		//upgrade both site and network settings
 		$options = get_option( 'rlrsssl_options' );
@@ -150,7 +150,7 @@ function rsssl_upgrade() {
 	#clear notices cache for multisite on upgrade, for the subsite notice
 	if ( version_compare( $prev_version, '6.0.9', '<' ) ) {
 		if ( is_multisite() ) {
-			delete_transient('rsssl_admin_notices' );
+			delete_option('rsssl_admin_notices' );
 		}
 	}
 
@@ -171,11 +171,13 @@ function rsssl_upgrade() {
 		rsssl_update_option('send_notifications_email', 1 );
 	}
 
+	RSSSL()->admin->clear_admin_notices_cache();
+
 	//delete in future upgrade. We want to check the review notice dismissed as fallback still.
 	//delete_option( 'rlrsssl_options' );
 	//delete_site_option( 'rlrsssl_network_options' );
 	//delete_option( 'rsssl_options_lets-encrypt' );
-
+	update_option('rsssl_previous_version', $prev_version, false);
 	do_action("rsssl_upgrade", $prev_version);
 	update_option( 'rsssl_current_version', rsssl_version, false );
 }

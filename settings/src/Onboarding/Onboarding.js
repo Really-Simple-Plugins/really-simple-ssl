@@ -64,28 +64,30 @@ const Onboarding = (props) => {
         },
     };
 
-    useEffect( async () => {
+    useEffect( () => {
         if (networkwide && networkActivationStatus==='main_site_activated') {
-            await activateSSLNetworkWide();
+            activateSSLNetworkWide();
         }
     }, [networkActivationStatus, networkProgress])
 
-    useEffect( async () => {
-        await getSteps(false);
-        if ( dataLoaded && sslEnabled && currentStepIndex===0) {
-            setCurrentStepIndex(1)
-        }
+    useEffect( () => {
+        const run = async () => {
+            getSteps(false);
+            if ( dataLoaded && sslEnabled && currentStepIndex===0) {
+                setCurrentStepIndex(1)
+            }
 
-        if (getFieldValue('notifications_email_address') !== '' && email==='') {
-            setEmail(getFieldValue('notifications_email_address'))
+            if (getFieldValue('notifications_email_address') !== '' && email==='') {
+                setEmail(getFieldValue('notifications_email_address'))
+            }
         }
-
+        run();
     }, [])
 
     //ensure all fields are updated, and progress is retrieved again
-    useEffect( async () => {
+    useEffect( () => {
         if ( dataLoaded && currentStep.action === 'activate_setting' ){
-            await fetchFieldsData('general');
+            fetchFieldsData('general');
         }
     }, [currentStep])
 

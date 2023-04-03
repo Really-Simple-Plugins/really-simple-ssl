@@ -44,11 +44,14 @@ class RSSSL_LETSENCRYPT {
 
 	public static function instance() {
 		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof RSSSL_LETSENCRYPT ) ) {
+			error_log("load Le instance");
 			self::$instance = new RSSSL_LETSENCRYPT;
 			self::$instance->setup_constants();
 			self::$instance->includes();
-			self::$instance->hosts = new rsssl_le_hosts();
 			if (rsssl_letsencrypt_generation_allowed() ) {
+				error_log("generation allowed instance");
+				self::$instance->hosts = new rsssl_le_hosts();
+
 				self::$instance->letsencrypt_handler = new rsssl_letsencrypt_handler();
 				self::$instance->le_restapi = new rsssl_le_restapi();
 			}
@@ -63,11 +66,11 @@ class RSSSL_LETSENCRYPT {
 	}
 
 	private function includes() {
-		require_once( rsssl_le_path . 'config/class-hosts.php' );
 		require_once( rsssl_le_path . 'functions.php');
-		require_once( rsssl_le_path . 'config/fields.php');
 
 		if ( rsssl_letsencrypt_generation_allowed() ) {
+			require_once( rsssl_le_path . 'config/class-hosts.php' );
+			require_once( rsssl_le_path . 'config/fields.php');
 			require_once( rsssl_le_path . 'class-le-restapi.php' );
 			require_once( rsssl_le_path . 'class-letsencrypt-handler.php' );
 			require_once( rsssl_le_path . 'integrations/integrations.php' );

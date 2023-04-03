@@ -14,10 +14,13 @@ const OnboardingModal = (props) => {
 
     useEffect(() => {
         if ( !modalLoaded ) {
-            rsssl_api.doAction('get_modal_status' ).then( ( response ) => {
-                setModalLoaded(true);
-                setShowOnBoardingModal(!response.dismissed);
-            });
+            const run = async () => {
+                rsssl_api.doAction('get_modal_status').then((response) => {
+                    setModalLoaded(true);
+                    setShowOnBoardingModal(!response.dismissed);
+                });
+            }
+            run();
         }
     }, []);
 
@@ -25,7 +28,7 @@ const OnboardingModal = (props) => {
         if (showOnboardingModal===true) {
             let data={};
             data.dismiss = false;
-            rsssl_api.doAction('dismiss_modal', data).then(( response ) => {});
+            rsssl_api.doAction('dismiss_modal', data);
         }
     });
 
