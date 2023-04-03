@@ -5,6 +5,7 @@ import DataTable from "react-data-table-component";
 import Icon from "../utils/Icon";
 import useFields from "./FieldsData";
 import {Button} from "@wordpress/components";
+import VulnerabilitiesIntro from "./VulnerabilitiesIntro";
 
 const VulnerabilitiesOverview = (props) => {
     const {
@@ -53,6 +54,11 @@ const VulnerabilitiesOverview = (props) => {
         }
     });
 
+    if (enabled) {
+        //we display the wow factor
+        return (<VulnerabilitiesIntro/>);
+    }
+
     if (!dataLoaded || vulList.length === 0 || !enabled) {
         return (
             //If there is no data or vulnerabilities scanner is disabled we show some dummy data behind a mask
@@ -75,8 +81,6 @@ const VulnerabilitiesOverview = (props) => {
             </>
         )
     }
-
-    console.log(vulList);
 
     /**
      * Styling

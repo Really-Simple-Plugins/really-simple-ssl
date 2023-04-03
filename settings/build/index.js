@@ -47348,6 +47348,98 @@ const UseRiskData = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, get) =
 
 /***/ }),
 
+/***/ "./src/Settings/RiskConfiguration/Runner.js":
+/*!**************************************************!*\
+  !*** ./src/Settings/RiskConfiguration/Runner.js ***!
+  \**************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../utils/Icon */ "./src/utils/Icon.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
+
+
+
+const Runner = props => {
+  //let us make a state for the loading
+  const [loadingState, setLoadingState] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(props.loading);
+  let title = props.title;
+  const [delayState, setDelayState] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(true);
+  let spin = loadingState && !delayState ? "icon-spin" : "";
+  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
+    const run = async () => {
+      setTimeout(function () {
+        setTimeout(function () {
+          //we set the loading state to true
+          setLoadingState(false);
+        }, props.time);
+        setDelayState(false);
+      }, props.delay);
+    };
+    run();
+  }, []);
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-details"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-detail-icon " + spin
+  }, delayState ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    name: "circle-check",
+    color: "red"
+  }) : loadingState ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    name: "spinner"
+  }) : (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    name: "circle-check",
+    color: "green"
+  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-detail"
+  }, title));
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Runner);
+
+/***/ }),
+
+/***/ "./src/Settings/RiskConfiguration/RunnerData.js":
+/*!******************************************************!*\
+  !*** ./src/Settings/RiskConfiguration/RunnerData.js ***!
+  \******************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/index.mjs");
+
+const useRunnerData = (0,zustand__WEBPACK_IMPORTED_MODULE_0__.create)((set, get) => ({
+  loadingState: false,
+  setLoadingState: state => set({
+    loadingState: state
+  }),
+  title: '',
+  setTitle: title => set({
+    title: title
+  }),
+  time: 0,
+  setTime: time => set({
+    time: time
+  }),
+  delay: 0,
+  setDelay: delay => set({
+    delay: delay
+  })
+}));
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useRunnerData);
+
+/***/ }),
+
 /***/ "./src/Settings/Settings.js":
 /*!**********************************!*\
   !*** ./src/Settings/Settings.js ***!
@@ -47750,6 +47842,86 @@ const Support = () => {
 
 /***/ }),
 
+/***/ "./src/Settings/VulnerabilitiesIntro.js":
+/*!**********************************************!*\
+  !*** ./src/Settings/VulnerabilitiesIntro.js ***!
+  \**********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/Icon */ "./src/utils/Icon.js");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _RiskConfiguration_Runner__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./RiskConfiguration/Runner */ "./src/Settings/RiskConfiguration/Runner.js");
+/* harmony import */ var _RiskConfiguration_RunnerData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./RiskConfiguration/RunnerData */ "./src/Settings/RiskConfiguration/RunnerData.js");
+
+
+
+
+
+
+
+const VulnerabilitiesIntro = props => {
+  //first we define a state for the steps
+
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.Modal, {
+    title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Introducing vulnerabilities', 'really-simple-ssl'),
+    className: "rsssl-modal",
+    onRequestClose: props.onClose,
+    shouldCloseOnClickOutside: false,
+    shouldCloseOnEsc: false,
+    overlayClassName: "rsssl-modal-overlay"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-header-extension"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("orem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
+    className: "rsssl-intro-logo",
+    src: '/wp-content/plugins/really-simple-ssl/assets/img/really-simple-ssl-intro.svg'
+  }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-ssl-intro-container"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_RiskConfiguration_Runner__WEBPACK_IMPORTED_MODULE_4__["default"], {
+    title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Downloading files", "really-simple-ssl"),
+    loading: true,
+    time: 1000,
+    delay: 1000
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_RiskConfiguration_Runner__WEBPACK_IMPORTED_MODULE_4__["default"], {
+    title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Scanning Plugins, themes and core", "really-simple-ssl"),
+    loading: true,
+    time: 2000,
+    delay: 1000
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_RiskConfiguration_Runner__WEBPACK_IMPORTED_MODULE_4__["default"], {
+    title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Scanning Components", "really-simple-ssl"),
+    loading: true,
+    time: 1000,
+    delay: 2000
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_RiskConfiguration_Runner__WEBPACK_IMPORTED_MODULE_4__["default"], {
+    title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Returning results", "really-simple-ssl"),
+    loading: true,
+    time: 1000,
+    delay: 3000
+  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: 'rsssl-modal-footer'
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    className: 'button button-primary',
+    href: 'https://really-simple-ssl.com/',
+    target: '_blank'
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('DashBoard', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    className: 'button button-secondary',
+    href: 'https://really-simple-ssl.com/',
+    target: '_blank'
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Dismiss', 'really-simple-ssl')))));
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (VulnerabilitiesIntro);
+
+/***/ }),
+
 /***/ "./src/Settings/vulnerabilitiesOverview.js":
 /*!*************************************************!*\
   !*** ./src/Settings/vulnerabilitiesOverview.js ***!
@@ -47773,6 +47945,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./FieldsData */ "./src/Settings/FieldsData.js");
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _VulnerabilitiesIntro__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./VulnerabilitiesIntro */ "./src/Settings/VulnerabilitiesIntro.js");
+
 
 
 
@@ -47821,6 +47995,10 @@ const VulnerabilitiesOverview = props => {
       enabled = item.value;
     }
   });
+  if (enabled) {
+    //we display the wow factor
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_VulnerabilitiesIntro__WEBPACK_IMPORTED_MODULE_8__["default"], null);
+  }
   if (!dataLoaded || vulList.length === 0 || !enabled) {
     return (
       //If there is no data or vulnerabilities scanner is disabled we show some dummy data behind a mask
@@ -47842,7 +48020,6 @@ const VulnerabilitiesOverview = props => {
       }, "Activate"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, "Activate vulnerabilities to see if there are any."))))
     );
   }
-  console.log(vulList);
 
   /**
    * Styling
@@ -48588,17 +48765,33 @@ const Icon = props => {
         viewBox: "0 0 512 512",
         width: "24",
         height: "24"
-      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("defs", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("style", null, `
-            .fa-secondary {
-              opacity: 0.4;
-              color: ${iconColors[iconColor]};
-            }
-          `)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("path", {
+      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("defs", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("style", null)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("path", {
         className: "fa-primary",
         d: "M497 49c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-182 182c-7.7-3.3-16.1-5.1-25-5.1c-35.3 0-64 28.7-64 64s28.7 64 64 64s64-28.7 64-64c0-8.9-1.8-17.3-5.1-25L497 49z"
       }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("path", {
         className: "fa-secondary",
         d: "M350.9 127.2l-46.1 46.1c-14.3-8.4-31-13.3-48.8-13.3c-53 0-96 43-96 96s43 96 96 96s96-43 96-96h64c0 73.5-49.6 135.5-117.2 154.2C290.8 394.7 274.7 384 256 384s-34.8 10.7-42.8 26.2c-51.7-14.3-92.8-53.9-109.4-104.6c14.4-8.3 24.1-23.8 24.1-41.7c0-19.4-11.5-36.1-28-43.7C116.2 149.1 179.9 96 256 96c35.5 0 68.3 11.6 94.9 31.2zm22.8-22.8C341.2 79 300.4 64 256 64C163.1 64 85.7 129.9 67.9 217.6C47.2 222.9 32 241.7 32 264c0 23.8 17.3 43.6 40.1 47.4c19.3 64.3 71.5 114.4 137 130.9C213.8 463.8 233 480 256 480s42.2-16.2 46.9-37.8C386.3 421.3 448 345.9 448 256h64c0 141.4-114.6 256-256 256S0 397.4 0 256S114.6 0 256 0c62.1 0 118.9 22.1 163.3 58.8l-45.5 45.5z"
+      })),
+      viewBox: '0 0 24 24'
+    };
+  }
+  if (iconName === 'spinner') {
+    renderedIcon = {
+      html: (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("svg", {
+        xmlns: "http://www.w3.org/2000/svg",
+        viewBox: "0 0 512 512",
+        width: "24",
+        height: "24"
+      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("defs", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("style", null, `
+            .fa-secondary {
+              opacity: 0.4;
+            }
+          `)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("path", {
+        className: "fa-primary",
+        d: "M304 48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM96 256A48 48 0 1 0 0 256a48 48 0 1 0 96 0zM75 142.9A48 48 0 1 0 142.9 75 48 48 0 1 0 75 142.9z"
+      }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("path", {
+        className: "fa-secondary",
+        d: "M369.1 75A48 48 0 1 1 437 142.9 48 48 0 1 1 369.1 75zM416 256a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zM208 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zM75 369.1A48 48 0 1 1 142.9 437 48 48 0 1 1 75 369.1zm294.2 0A48 48 0 1 1 437 437a48 48 0 1 1 -67.9-67.9z"
       })),
       viewBox: '0 0 24 24'
     };
