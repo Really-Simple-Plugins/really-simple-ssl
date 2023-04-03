@@ -47872,6 +47872,11 @@ __webpack_require__.r(__webpack_exports__);
 const VulnerabilitiesIntro = props => {
   //first we define a state for the steps
 
+  function goToDashboard() {
+    props.onClose();
+    //We fire a save event to change an option
+  }
+
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.Modal, {
     title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Introducing vulnerabilities', 'really-simple-ssl'),
     className: "rsssl-modal",
@@ -47908,14 +47913,12 @@ const VulnerabilitiesIntro = props => {
     delay: 3000
   })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: 'rsssl-modal-footer'
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-    className: 'button button-primary',
-    href: 'https://really-simple-ssl.com/',
-    target: '_blank'
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('DashBoard', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-    className: 'button button-secondary',
-    href: 'https://really-simple-ssl.com/',
-    target: '_blank'
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.Button, {
+    isPrimary: true,
+    onClick: props.onClose
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('DashBoard', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.Button, {
+    isSecondary: true,
+    onClick: props.onClose
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Dismiss', 'really-simple-ssl')))));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (VulnerabilitiesIntro);
@@ -48780,8 +48783,8 @@ const Icon = props => {
       html: (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("svg", {
         xmlns: "http://www.w3.org/2000/svg",
         viewBox: "0 0 512 512",
-        width: "24",
-        height: "24"
+        width: "20",
+        height: "20"
       }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("defs", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("style", null, `
             .fa-secondary {
               opacity: 0.4;
@@ -48793,7 +48796,7 @@ const Icon = props => {
         className: "fa-secondary",
         d: "M369.1 75A48 48 0 1 1 437 142.9 48 48 0 1 1 369.1 75zM416 256a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zM208 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zM75 369.1A48 48 0 1 1 142.9 437 48 48 0 1 1 75 369.1zm294.2 0A48 48 0 1 1 437 437a48 48 0 1 1 -67.9-67.9z"
       })),
-      viewBox: '0 0 24 24'
+      viewBox: '0 0 22 22'
     };
   }
   const StyledTooltip = (0,_mui_material_styles__WEBPACK_IMPORTED_MODULE_3__["default"])(_ref => {

@@ -474,7 +474,7 @@ const Icon = (props) => {
         renderedIcon = {
             html: <svg xmlns="http://www.w3.org/2000/svg"
                        viewBox="0 0 512 512"
-                       width="24" height="24">
+                       width="20" height="20">
                 <defs>
                     <style>
                         {`
@@ -489,7 +489,7 @@ const Icon = (props) => {
                 <path className="fa-secondary"
                       d="M369.1 75A48 48 0 1 1 437 142.9 48 48 0 1 1 369.1 75zM416 256a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zM208 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zM75 369.1A48 48 0 1 1 142.9 437 48 48 0 1 1 75 369.1zm294.2 0A48 48 0 1 1 437 437a48 48 0 1 1 -67.9-67.9z"/>
             </svg>,
-            viewBox: '0 0 24 24'
+            viewBox: '0 0 22 22'
         }
     }
 

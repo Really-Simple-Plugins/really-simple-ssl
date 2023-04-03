@@ -1,6 +1,7 @@
 import Icon from "../utils/Icon";
 import {__} from "@wordpress/i18n";
-import {Modal} from "@wordpress/components";
+import {Button, Modal} from "@wordpress/components";
+
 import {useState} from '@wordpress/element';
 import Runner from "./RiskConfiguration/Runner";
 import useRunnerData from "./RiskConfiguration/RunnerData";
@@ -8,6 +9,13 @@ import useRunnerData from "./RiskConfiguration/RunnerData";
 
 const VulnerabilitiesIntro = (props) => {
     //first we define a state for the steps
+
+
+    function goToDashboard() {
+        props.onClose();
+        //We fire a save event to change an option
+
+    }
 
     return (
         <>
@@ -57,12 +65,12 @@ const VulnerabilitiesIntro = (props) => {
                     />
                 </div>
                 <div className={'rsssl-modal-footer'}>
-                    <a className={'button button-primary'} href={'https://really-simple-ssl.com/'} target={'_blank'}>
+                    <Button isPrimary onClick={props.onClose}>
                         {__('DashBoard', 'really-simple-ssl')}
-                    </a>
-                    <a className={'button button-secondary'} href={'https://really-simple-ssl.com/'} target={'_blank'}>
+                    </Button>
+                    <Button isSecondary onClick={props.onClose}>
                         {__('Dismiss', 'really-simple-ssl')}
-                    </a>
+                    </Button>
                 </div>
             </Modal>
         </>
