@@ -7,9 +7,16 @@ const Header = (props) => {
     const {menu, selectedMainMenuItem, fetchMenuData} = useMenu();
     let plugin_url = rsssl_settings.plugin_url;
 
-    useEffect(async () => {
+    useEffect( () => {
         fetchMenuData();
+
     }, [] );
+    useEffect(() => {
+        const run = async () => {
+            await fetchMenuData();
+        }
+        run();
+    }, []);
 
 
     let menuItems = menu.filter( item => item!==null );

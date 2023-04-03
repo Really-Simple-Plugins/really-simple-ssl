@@ -21,6 +21,15 @@ if ( !class_exists('rsssl_mailer') ) {
 		public $error = '';
 
 		public function __construct() {
+			$this->sent_by_text = __("This email is part of the Really Simple SSL Notification System", "really-simple-ssl");
+			$this->subject = __("Notification by Really Simple SSL", "really-simple-ssl");
+			$this->title = __("Learn more about our features!", "really-simple-ssl");
+			$this->sent_to_text = __("This email was sent to", "really-simple-ssl");
+			$this->what_now_text = __( "What now?", "really-simple-ssl");
+			$this->change_text = __("I didn't change any settings in the plugin.", "really-simple-ssl");
+			$domain = '<a href="'.site_url().'">'.site_url().'</a>';
+			$this->message = sprintf(__("You have enabled a feature on %s. We think it's important to let you know a little bit more about this feature so you can use it without worries.","really-simple-ssl"), $domain);
+
 			add_action('wp_mail_failed', array($this, 'log_mailer_errors'), 10, 1);
 		}
 
@@ -38,11 +47,6 @@ if ( !class_exists('rsssl_mailer') ) {
 			}
 			$this->title = __("Really Simple SSL - Notification Test", "really-simple-ssl");
 			$this->message = __("This email is confirmation that any security notices are likely to reach your inbox.", "really-simple-ssl");
-			$this->subject = __("Notification by Really Simple SSL", "really-simple-ssl");
-            $this->change_text = __("I didn't change any settings in the plugin.", "really-simple-ssl");
-            $this->sent_to_text = __("This email was sent to", "really-simple-ssl");
-            $this->what_now_text = __("What now?", "really-simple-ssl");
-            $this->sent_by_text = __("This email is part of the Really Simple SSL Notification System", "really-simple-ssl");
 
 			$this->warning_blocks = [
 				[
@@ -81,22 +85,12 @@ if ( !class_exists('rsssl_mailer') ) {
 				return false;
 			}
 
-			if (empty($this->title)) {
-				$this->title = __("Learn more about our features!", "really-simple-ssl");
-			}
-
 			$this->to = rsssl_get_option('notifications_email_address', get_bloginfo('admin_email') );
 			if ( !is_email($this->to) ){
 				return false;
 			}
 
-			// Prevent spam
-			if ( !$override_rate_limit && get_transient('rsssl_email_recently_sent') ) {
-				return false;
-			}
-
 			$template = file_get_contents(__DIR__.'/templates/email.html');
-
 			$block_html = '';
 			if (is_array($this->warning_blocks) && count($this->warning_blocks)>0) {
 				$block_template = file_get_contents(__DIR__.'/templates/block.html');
@@ -108,6 +102,7 @@ if ( !class_exists('rsssl_mailer') ) {
 				}
 			}
 			$username = rsssl_get_option('new_admin_user_login');
+			$login_url = wp_login_url();
 			$body = str_replace(
 				[
 					'{title}',
@@ -116,6 +111,7 @@ if ( !class_exists('rsssl_mailer') ) {
 					'{email-address}',
 					'{learn-more}',
 					'{site_url}',
+					'{login_url}',
 					'{username}',
                     '{change_text}',
                     '{what_now}',
@@ -129,6 +125,7 @@ if ( !class_exists('rsssl_mailer') ) {
 					$this->to,
 					__( "Learn more", 'really-simple-ssl' ),
 					site_url(),
+					$login_url,
 					$username,
                     $this->change_text,
                     $this->what_now_text,

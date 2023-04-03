@@ -11,7 +11,7 @@ const PermissionsPolicy = (props) => {
     const {fields, updateField, updateSubField, setChangedField, saveFields} = useFields();
     const [enablePermissionsPolicy, setEnablePermissionsPolicy] = useState(0);
 
-    useEffect(async () => {
+    useEffect( () => {
         let field = fields.filter(field => field.id === 'enable_permissions_policy')[0];
         setEnablePermissionsPolicy(field.value);
     }, [] );

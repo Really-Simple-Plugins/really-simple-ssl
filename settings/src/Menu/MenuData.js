@@ -38,11 +38,9 @@ const useMenu = create(( set, get ) => ({
             let subMenu = getSubMenu(menu, selectedMainMenuItem);
             const selectedSubMenuItem = getSelectedSubMenuItem(subMenu, fields);
             subMenu.menu_items = dropEmptyMenuItems(subMenu.menu_items, fields, selectedSubMenuItem);
-
             const { nextMenuItem, previousMenuItem }  = getPreviousAndNextMenuItems(menu, selectedSubMenuItem, fields);
             const hasPremiumItems =  subMenu.menu_items.filter((item) => {return (item.premium===true)}).length>0;
             set((state) => ({subMenuLoaded:true, menu: menu, nextMenuItem:nextMenuItem, previousMenuItem:previousMenuItem, selectedMainMenuItem: selectedMainMenuItem, selectedSubMenuItem:selectedSubMenuItem, subMenu: subMenu, hasPremiumItems: hasPremiumItems}));
-
         } else {
             set((state) => ({menu: menu, selectedMainMenuItem: selectedMainMenuItem}));
 

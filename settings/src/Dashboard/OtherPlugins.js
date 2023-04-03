@@ -11,7 +11,6 @@ const OtherPlugins = (props) => {
 
     useEffect(() => {
         if (!dataLoaded) {
-
             rsssl_api.runTest('otherpluginsdata').then((response) => {
                 let responseData = [];
                 if (response.error) {
@@ -26,7 +25,7 @@ const OtherPlugins = (props) => {
                 setDataLoaded(true);
             })
         }
-    })
+    }, [] )
 
     const PluginActions = (slug, pluginAction, e) => {
         if (e) e.preventDefault();

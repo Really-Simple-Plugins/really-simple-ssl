@@ -11,7 +11,6 @@ const CheckboxControl = (props) => {
     let field = props.field;
     let is_checked = field.value ? 'is-checked' : '';
     let is_disabled = field.disabled ? 'is-disabled' : '';
-
     return (
         <>
             <div className="components-base-control components-toggle-control">

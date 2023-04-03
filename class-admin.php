@@ -91,17 +91,14 @@ class rsssl_admin
             return;
         }
 
-	    $thirty_minutes_ago = $time_saved < strtotime("-10 minute");
+	    $thirty_minutes_ago = $time_saved < strtotime("-10 minutes");
 	    $warning_blocks = array_column($fields, 'email');
 	    if ( $thirty_minutes_ago && count($warning_blocks)>0 ) {
 		    //clear the option
 		    delete_option('rsssl_email_warning_fields', []);
 		    delete_option('rsssl_email_warning_fields_saved');
-		    $domain = '<a href="'.site_url().'">'.site_url().'</a>';
 		    $mailer = new rsssl_mailer();
-		    $mailer->subject = __("Feature enabled","really-simple-ssl");
-		    $mailer->message = sprintf(__("You have enabled a feature on %s. We think it's important to let you know a little bit more about this feature so you can use it without worries.","really-simple-ssl"), $domain);
-		    $mailer->warning_blocks = $warning_blocks;
+            $mailer->warning_blocks = $warning_blocks;
 		    $mailer->send_mail();
 	    }
     }
@@ -2491,16 +2488,18 @@ class rsssl_admin
 		if ( !$cache || ($count === false) ) {
 			$count = 0;
 			$notices = $this->get_notices_list();
-			foreach ( $notices as $id => $notice ) {
-                $success = ( isset( $notice['output']['icon'] ) && ( $notice['output']['icon'] === 'success' ) ) ? true : false;
-                if ( ! $success
-                     && isset( $notice['output']['plusone'] )
-                     && $notice['output']['plusone']
-                ) {
-                    $count++;
-                }
+			if ( is_array($notices) ) {
+				foreach ( $notices as $id => $notice ) {
+					$success = ( isset( $notice['output']['icon'] ) && ( $notice['output']['icon'] === 'success' ) ) ? true : false;
+					if ( ! $success
+					     && isset( $notice['output']['plusone'] )
+					     && $notice['output']['plusone']
+					) {
+						$count ++;
+					}
+				}
 			}
-            if ( $count==0) {
+            if ( $count===0) {
                 $count = 'empty';
             }
 			update_option( 'rsssl_plusone_count', $count );

@@ -19,11 +19,11 @@ function rsssl_remove_fields($fields){
 			'text'  => __( 'Enable .htaccess only if you know how to regain access in case of issues.', 'really-simple-ssl' ).' '.__( 'Redirects your site to https with a SEO friendly 301 redirect if it is requested over http.', 'really-simple-ssl' ),
 			'url'  => 'https://really-simple-ssl.com/remove-htaccess-redirect-site-lockout/',
 		];
-		$fields[$redirect_index]['email'] = [
-			'title'   => __( ".htaccess redirect", 'really-simple-ssl' ),
-			'message' => __( "The .htaccess redirect has been enabled on your site. If the server configuration is non-standard, this might cause issues. Please check if all pages on your site are functioning properly. .", 'really-simple-ssl' ),
-			'url'     => 'https://really-simple-ssl.com/remove-htaccess-redirect-site-lockout/',
-		];
+//		$fields[$redirect_index]['email'] = [
+//			'title'   => __( ".htaccess redirect", 'really-simple-ssl' ),
+//			'message' => __( "The .htaccess redirect has been enabled on your site. If the server configuration is non-standard, this might cause issues. Please check if all pages on your site are functioning properly.", 'really-simple-ssl' ),
+//			'url'     => 'https://really-simple-ssl.com/remove-htaccess-redirect-site-lockout/',
+//		];
 	}
 
 	if ( is_multisite() && !rsssl_is_networkwide_active() ){

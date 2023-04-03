@@ -30,6 +30,11 @@
       background-color: var(--rsp-color-open);
 
     }
+    &.rsssl-learning-mode-error {
+      background-color: var(--rsp-color-error);
+      color:#fff;
+
+    }
     &.rsssl-disabled, &.rsssl-learning-mode-disabled {
       background-color: var(--rsp-color-disabled);
     }

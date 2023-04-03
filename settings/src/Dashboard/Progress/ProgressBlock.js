@@ -11,8 +11,11 @@ import useFields from "../../Settings/FieldsData";
 const ProgressBlock = (props) => {
     const {percentageCompleted, progressText, filter, notices, progressLoaded, getProgressData, error} = useProgress();
 
-    useEffect(async () => {
-        await getProgressData();
+    useEffect( () => {
+        const run = async () => {
+            await getProgressData();
+        }
+        run();
     }, [] );
 
     const getStyles = () => {

@@ -43,7 +43,7 @@
     --rsp-black: #333;
     --rsp-white: #fff;
     --rsp-yellow: #f4bf3e;
-    --rsp-blue: #29b6f6;
+    --rsp-blue: #009fff;
     --rsp-dark-blue: #1E73BE;
     --rsp-green: #2e8a37;
     --rsp-red: #D7263D;
@@ -781,7 +781,7 @@
 
 .rsssl .rsssl-bullet.rsp-blue-yellow {
     background: var(--rsp-blue);
-    background: linear-gradient(77deg, rgb(41, 182, 246) 0%, rgb(41, 182, 246) 30%, rgb(244, 191, 62) 70%, rgb(244, 191, 62) 100%);
+    background: linear-gradient(77deg, rgb(0, 159, 255) 0%, rgb(0, 159, 255) 30%, rgb(244, 191, 62) 70%, rgb(244, 191, 62) 100%);
     animation: gradient 2s ease infinite;
     background-size: 200% 200%;
 }
@@ -837,6 +837,8 @@
     padding-top: var(--rsp-spacing-xs);
     line-height: 2.2;
     min-height: 375px;
+    padding-top: var(--rsp-spacing-xs);
+    line-height: 2.2;
 }
 
 .rsssl-modal.rsssl-onboarding .rsssl-modal-content .rsssl-onboarding-placeholder {
@@ -893,8 +895,16 @@
 .rsssl-modal.rsssl-onboarding .rsssl-modal-content ul li.rsssl-is-plugin a.button-default.rsssl-read-more {
     position: absolute;
     top: 17px;
-    right: 45px;
+    right: 20px;
     z-index: 5;
+}
+
+@media (max-width: 620px) {
+    .rsssl-modal.rsssl-onboarding .rsssl-modal-content ul li.rsssl-is-plugin a.button-default.rsssl-read-more {
+        position: relative;
+        margin-left: 20px;
+        z-index: 5;
+    }
 }
 
 .rsssl-modal.rsssl-onboarding .rsssl-modal-content ul li .rsssl-icon {
@@ -1445,27 +1455,27 @@
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(1) {
-    width: 99%;
+    width: 83%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(2) {
-    width: 70%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(3) {
     width: 78%;
 }
 
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(3) {
+    width: 96%;
+}
+
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(4) {
-    width: 95%;
+    width: 67%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(5) {
-    width: 92%;
+    width: 94%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(6) {
-    width: 64%;
+    width: 67%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(7) {
@@ -1473,19 +1483,19 @@
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
-    width: 80%;
+    width: 81%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
-    width: 88%;
+    width: 62%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
-    width: 68%;
+    width: 76%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
-    width: 94%;
+    width: 74%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
@@ -1493,35 +1503,35 @@
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
-    width: 93%;
+    width: 63%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(14) {
-    width: 84%;
+    width: 81%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
-    width: 92%;
+    width: 65%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(16) {
-    width: 84%;
+    width: 77%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(17) {
-    width: 80%;
+    width: 62%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(18) {
-    width: 82%;
+    width: 84%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(19) {
-    width: 66%;
+    width: 65%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(20) {
-    width: 66%;
+    width: 73%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line ~ .rsssl-placeholder-line {
@@ -2246,6 +2256,11 @@ html {
 
 .rsssl-locked-overlay .rsssl-progress-status.rsssl-learning-mode {
     background-color: var(--rsp-color-open);
+}
+
+.rsssl-locked-overlay .rsssl-progress-status.rsssl-learning-mode-error {
+    background-color: var(--rsp-color-error);
+    color: #fff;
 }
 
 .rsssl-locked-overlay .rsssl-progress-status.rsssl-disabled, .rsssl-locked-overlay .rsssl-progress-status.rsssl-learning-mode-disabled {

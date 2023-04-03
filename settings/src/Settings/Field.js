@@ -31,7 +31,7 @@ const Field = (props) => {
         if ( highLightField===props.field.id && scrollAnchor.current ) {
             scrollAnchor.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
-    });
+    },[]);
 
     const onChangeHandler = (fieldValue) => {
         let field = props.field;
@@ -141,6 +141,7 @@ const Field = (props) => {
             <div className={highLightClass} ref={scrollAnchor}>
               <TextControl
                   required={ field.required }
+                  placeholder={ field.placeholder }
                   disabled={ disabled }
                   help={ field.comment }
                   label={labelWrap(field)}
