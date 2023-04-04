@@ -61,7 +61,7 @@ const VulnerabilitiesOverview = (props) => {
         return (<VulnerabilitiesIntro/>);
     }
 
-    if (!dataLoaded || vulList.length === 0 || !enabled) {
+    if (!dataLoaded || !enabled) {
         return (
             //If there is no data or vulnerabilities scanner is disabled we show some dummy data behind a mask
             <>

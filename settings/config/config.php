@@ -87,7 +87,7 @@ function rsssl_menu() {
                             'id'       => 'vulnerabilities_overview',
                             'helpLink' => 'https://really-simple-ssl.com/instructions/about-vulnerabilities#components',
                             'title'    => __( 'Vulnerabilities', 'really-simple-ssl' ),
-                            'intro'    => __( 'TLorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sed magna a turpis bibendum blandit eu id mi. Nunc varius, odio nec consectetur dignissim, tortor augue vestibulum risus, sit amet rhoncus enim nunc quis augue. Vestibulum vitae augue nec libero lobortis sollicitudin. Duis dictum tortor vel magna rhoncus, nec bibendum mi bibendum. Sed lobortis ex et metus scelerisque, vel congue leo pretium. Quisque vel metus et lacus consequat lobortis eu sed velit. Aliquam erat volutpat. Sed commodo dui at tortor commodo, nec bibendum massa imperdiet. Donec commodo consectetur arcu a pulvinar. Sed et justo id lacus varius congue.', 'really-simple-ssl' ),
+                            'intro'    => __( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sed magna a turpis bibendum blandit eu id mi. Nunc varius, odio nec consectetur dignissim, tortor augue vestibulum risus, sit amet rhoncus enim nunc quis augue. Vestibulum vitae augue nec libero lobortis sollicitudin. Duis dictum tortor vel magna rhoncus, nec bibendum mi bibendum. Sed lobortis ex et metus scelerisque, vel congue leo pretium. Quisque vel metus et lacus consequat lobortis eu sed velit.', 'really-simple-ssl' ),
                         ],
                         [
                             'id'           => 'vulnerabilities_measures',

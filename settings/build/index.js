@@ -47918,7 +47918,7 @@ const VulnerabilitiesIntro = props => {
       overlayClassName: "rsssl-modal-overlay"
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-header-extension"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("orem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("You have enabled vulnerability scanning! In short, Really Simple SSL will check your plugins, themes and WordPress core daily and report if any vulnerabilities are present..", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
       className: "rsssl-intro-logo",
       src: '/wp-content/plugins/really-simple-ssl/assets/img/really-simple-ssl-intro.svg'
     }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -48048,7 +48048,7 @@ const VulnerabilitiesOverview = props => {
     //we display the wow factor
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_VulnerabilitiesIntro__WEBPACK_IMPORTED_MODULE_8__["default"], null);
   }
-  if (!dataLoaded || vulList.length === 0 || !enabled) {
+  if (!dataLoaded || !enabled) {
     return (
       //If there is no data or vulnerabilities scanner is disabled we show some dummy data behind a mask
       (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_4__["default"], {
