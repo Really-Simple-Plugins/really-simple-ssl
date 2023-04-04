@@ -28,6 +28,11 @@
       color: var(--rsp-white);
     }
 
+    &.rsp-success {
+      background-color: var(--rsp-color-success);
+      color: var(--rsp-white);
+    }
+
     &.rsp-default {
       background-color: var(--rsp-grey-200);
       color:black;

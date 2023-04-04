@@ -71,7 +71,7 @@ function rsssl_menu() {
                 [
                     'id'      => 'vulnerabilities',
                     'title'   => __( 'Vulnerabilities', 'really-simple-ssl' ),
-                    'featured' => true,
+                    'featured' => rsssl_get_option('rsssl_vulnerabilities_enabled'),
                     'groups'  => [
                         [
                             'id'       => 'vulnerabilities_basic',
@@ -841,6 +841,7 @@ function rsssl_fields( $load_values = true ) {
             'group_id' => 'vulnerabilities_notifi',
             'type' => 'select',
             'options' => [
+                '*' => ucfirst(__('none', 'really-simple-ssl')),
                 'l' => ucfirst(__('low-risk (default)', 'really-simple-ssl')),
                 'm' => ucfirst(__('medium-risk', 'really-simple-ssl')),
                 'h' => ucfirst(__('high-risk', 'really-simple-ssl')),
@@ -862,6 +863,7 @@ function rsssl_fields( $load_values = true ) {
             'group_id' => 'vulnerabilities_notifi',
             'type' => 'select',
             'options' => [
+                '*' => ucfirst(__('none', 'really-simple-ssl')),
                 'l' => ucfirst(__('low-risk ', 'really-simple-ssl')),
                 'm' => ucfirst(__('medium-risk', 'really-simple-ssl')),
                 'h' => ucfirst(__('high-risk (default)', 'really-simple-ssl')),
@@ -884,6 +886,7 @@ function rsssl_fields( $load_values = true ) {
             'group_id' => 'vulnerabilities_notifi',
             'type' => 'select',
             'options' => [
+                '*' => ucfirst(__('none', 'really-simple-ssl')),
                 'l' => ucfirst(__('low-risk', 'really-simple-ssl')),
                 'm' => ucfirst(__('medium-risk', 'really-simple-ssl')),
                 'h' => ucfirst(__('high-risk', 'really-simple-ssl')),
@@ -911,9 +914,14 @@ function rsssl_fields( $load_values = true ) {
             'type' => 'button',
             'action' => 'test_vulnerability_notification',
             'label' => __('Preview', 'really-simple-ssl'),
-            'disabled' => !rsssl_get_option('enable_vulnerability_scanner'),
+            'disabled' => false,
             'button_text' => __( "Test notifications", "really-simple-ssl" ),
-            'default'     => false,
+            'react_conditions' => [
+                'relation' => 'AND',
+                [
+                    'enable_vulnerability_scanner' => 1,
+                ]
+            ],
         ],
         [
             'id'    => 'vulnerabilities_list',

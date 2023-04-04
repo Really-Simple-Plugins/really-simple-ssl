@@ -42380,9 +42380,9 @@ const WPVul = props => {
   let risks = vulnerabilityCount();
   const hardening = featuredFields.filter(field => field.value === 0);
   let vulClass = 'rsssl-inactive';
-  let badgeVulStyle = 'rsp-default';
-  let badgeUpdateStyle = 'rsp-default';
-  let iconVulColor = 'black';
+  let badgeVulStyle = vulEnabled ? 'rsp-success' : 'rsp-default';
+  let badgeUpdateStyle = 'rsp-success';
+  let iconVulColor = 'green';
   let iconVulEnabledColor = 'red';
   let iconUpdateColor = 'black';
   if (vulEnabled) {
@@ -42561,7 +42561,7 @@ const WPVul = props => {
         color: "green"
       })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
         className: "rsssl-detail"
-      }, capitalizeFirstLetter((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("You have %s %word", "really-simple-ssl").replace("%s", vulnerabilities, "%word", vulnerabilityWord)))));
+      }, capitalizeFirstLetter((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("You have %s %word", "really-simple-ssl").replace("%word", vulnerabilityWord).replace("%s", vulnerabilities)))));
     }
   };
   const linkStyle = {
@@ -48066,7 +48066,7 @@ const VulnerabilitiesOverview = props => {
         className: "rsssl-locked-overlay"
       }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
         className: "rsssl-task-status rsssl-open"
-      }, "Activate"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, "Activate vulnerabilities to see if there are any."))))
+      }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Disabled', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Activate vulnerability scanning to enable this block.', 'really-simple-ssl')))))
     );
   }
 
@@ -48815,7 +48815,11 @@ const Icon = props => {
         viewBox: "0 0 512 512",
         width: "24",
         height: "24"
-      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("defs", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("style", null)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("path", {
+      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("defs", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("style", null, `
+            .fa-secondary {
+              color: ${iconColors[iconColor]} !important;
+            }        
+          `)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("path", {
         className: "fa-primary",
         d: "M497 49c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-182 182c-7.7-3.3-16.1-5.1-25-5.1c-35.3 0-64 28.7-64 64s28.7 64 64 64s64-28.7 64-64c0-8.9-1.8-17.3-5.1-25L497 49z"
       }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("path", {

@@ -458,9 +458,11 @@ const Icon = (props) => {
                        viewBox="0 0 512 512"
                        width="24" height="24">
                 <defs>
-                    <style>
-
-                    </style>
+                    <style>{`
+            .fa-secondary {
+              color: ${iconColors[iconColor]} !important;
+            }        
+          `}</style>
                 </defs>
                 <path className="fa-primary"
                       d="M497 49c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-182 182c-7.7-3.3-16.1-5.1-25-5.1c-35.3 0-64 28.7-64 64s28.7 64 64 64s64-28.7 64-64c0-8.9-1.8-17.3-5.1-25L497 49z"/>

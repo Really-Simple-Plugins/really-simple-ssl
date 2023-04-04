@@ -77,7 +77,7 @@ const VulnerabilitiesOverview = (props) => {
                 </DataTable>
                 <div className="rsssl-locked">
                     <div className="rsssl-locked-overlay"><span
-                        className="rsssl-task-status rsssl-open">Activate</span><span>Activate vulnerabilities to see if there are any.</span>
+                        className="rsssl-task-status rsssl-open">{__('Disabled', 'really-simple-ssl')}</span><span>{__('Activate vulnerability scanning to enable this block.', 'really-simple-ssl')}</span>
                     </div>
                 </div>
             </>

@@ -320,7 +320,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
          */
         public function add_vulnerability_column($columns)
         {
-            $columns['vulnerability'] = __('Notifications', 'really-simple-ssl');
+            $columns['vulnerability'] = __('Vulnerabilities', 'really-simple-ssl');
 
             return $columns;
         }

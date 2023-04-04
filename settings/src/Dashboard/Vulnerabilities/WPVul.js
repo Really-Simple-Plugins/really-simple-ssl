@@ -33,9 +33,9 @@ const WPVul = (props) => {
     let risks = vulnerabilityCount();
     const hardening = featuredFields.filter(field => field.value === 0);
     let vulClass = 'rsssl-inactive';
-    let badgeVulStyle = 'rsp-default';
-    let badgeUpdateStyle = 'rsp-default';
-    let iconVulColor = 'black';
+    let badgeVulStyle = vulEnabled?'rsp-success':'rsp-default';
+    let badgeUpdateStyle = 'rsp-success';
+    let iconVulColor = 'green';
     let iconVulEnabledColor = 'red';
     let iconUpdateColor = 'black';
     if (vulEnabled) {
@@ -231,7 +231,10 @@ const WPVul = (props) => {
                     <div className="rsssl-details">
                         <div className="rsssl-detail-icon"><Icon name="circle-check" color='green'/></div>
                         <div className="rsssl-detail">
-                            {capitalizeFirstLetter(__("You have %s %word", "really-simple-ssl").replace("%s", vulnerabilities, "%word", vulnerabilityWord))}
+                            {capitalizeFirstLetter(__("You have %s %word", "really-simple-ssl")
+                                .replace("%word", vulnerabilityWord)
+                                .replace("%s", vulnerabilities)
+                            )}
                         </div>
                     </div>
                 </>
