@@ -235,6 +235,23 @@ if (!class_exists("rsssl_vulnerabilities")) {
                         ]
                     ]
                 ];
+                $notices['test_vulnerability_sitewide_'.get_option('test_vulnerability_tester')] = [
+                    'callback' => '_true_',
+                    'score' => 1,
+                    'show_with_options' => ['enable_vulnerability_scanner'],
+                    'output' => [
+                        'true' => [
+                            'title' => __('Test Vulnerability Dashboard', 'really-simple-ssl'),
+                            'msg' => __('This is a test notice to check if the vulnerability dashboard is working. If you see this, it is working.', 'really-simple-ssl'),
+                            'url' => 'https://really-simple-ssl.com/knowledge-base/vulnerability-scanner/',
+                            'icon' => 'warning',
+                            'type' => 'warning',
+                            'dismissible' => true,
+                            'admin_notice' => true,
+                            'plusone' => true,
+                        ]
+                    ]
+                ];
             }
 
 
