@@ -71,7 +71,7 @@ function rsssl_menu() {
                 [
                     'id'      => 'vulnerabilities',
                     'title'   => __( 'Vulnerabilities', 'really-simple-ssl' ),
-                    'featured' => rsssl_get_option('rsssl_vulnerabilities_enabled'),
+                    'featured' => !get_option('rsssl_vulnerabilities_first_run'),
                     'groups'  => [
                         [
                             'id'       => 'vulnerabilities_basic',
