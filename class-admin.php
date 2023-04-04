@@ -2099,6 +2099,7 @@ class rsssl_admin
                     ),
                     'wp-redirect-to-htaccess' => array(
                         'highlight_field_id' => 'redirect',
+                        'title' => __('301 .htaccess redirect', 'really-simple-ssl'),
                         'msg' => __('WordPress 301 redirect enabled. We recommend to enable a 301 .htaccess redirect.', 'really-simple-ssl'),
                         'icon' => 'open',
                         'plusone' => RSSSL()->server->uses_htaccess(),
