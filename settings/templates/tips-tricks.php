@@ -13,8 +13,8 @@ $items = array(
 		'link'    => 'https://really-simple-ssl.com/instructions/about-hsts/',
 	),
 	4 => array(
-		'content' => "Improve Security: Advanced Hardening",
-		'link'    => 'https://really-simple-ssl.com/instructions/about-hardening-features#advanced',
+		'content' => "Improve Security: About vulnerabilities",
+		'link'    => 'https://really-simple-ssl.com/instructions/about-vulnerabilties',
 	),
 	5 => array(
 		'content' => "Instructions: Debugging with Really Simple SSL",

@@ -15,7 +15,7 @@
     }
     .rsssl-ssl-test > div {
         background: var(--rsp-grey-300);
-        box-shadow: var(--rsp-box-shadow);
+        //box-shadow: var(--rsp-box-shadow);
       }
     .rsssl-details {
       &:last-of-type {
@@ -51,7 +51,6 @@
     > div {
       flex: 1;
       background-color: #fff;
-        box-shadow: var(--rsp-box-shadow);
       @media only screen and (max-width: $rsp-break-xxl) and (min-width: $rsp-break-m)  {
         background-color:transparent
       }
