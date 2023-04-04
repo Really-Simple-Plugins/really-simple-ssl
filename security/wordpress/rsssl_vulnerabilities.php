@@ -148,6 +148,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
             $instance = self::instance();
 
             update_option('rsssl_vulnerabilities_first_run', '1');
+            rsssl_update_option('enable_vulnerability_scanner', '1');
             return $instance->assemble_first_run();
         }
 
