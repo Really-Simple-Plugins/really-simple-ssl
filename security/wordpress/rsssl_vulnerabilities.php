@@ -197,6 +197,47 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 $notices['risk_level_' . $key] = $notice;
 
             }
+            //now we add the test notices for admin and dahboard.
+
+            //if the option is filled, we add the test notice.
+            if(get_option('test_vulnerability_tester')) {
+                $notices['test_vulnerability_email'] = [
+                    'callback' => '_true_',
+                    'score' => 1,
+                    'show_with_options' => ['enable_vulnerability_scanner_'.get_option('test_vulnerability_tester')],
+                    'output' => [
+                        'true' => [
+                            'title' => __('Test Vulnerability Sidewide and admin notice', 'really-simple-ssl'),
+                            'msg' => __('This is a test email to check if the vulnerability email is working. If you see this, it is working.', 'really-simple-ssl'),
+                            'url' => 'https://really-simple-ssl.com/knowledge-base/vulnerability-scanner/',
+                            'icon' => 'warning',
+                            'type' => 'warning',
+                            'dismissible' => true,
+                            'admin_notice' => true,
+                            'plusone' => true,
+                        ]
+                    ]
+                ];
+                $notices['test_vulnerability_dashboard_'.get_option('test_vulnerability_tester')] = [
+                    'callback' => '_true_',
+                    'score' => 1,
+                    'show_with_options' => ['enable_vulnerability_scanner'],
+                    'output' => [
+                        'true' => [
+                            'title' => __('Test Vulnerability Dashboard', 'really-simple-ssl'),
+                            'msg' => __('This is a test notice to check if the vulnerability dashboard is working. If you see this, it is working.', 'really-simple-ssl'),
+                            'url' => 'https://really-simple-ssl.com/knowledge-base/vulnerability-scanner/',
+                            'icon' => 'warning',
+                            'type' => 'warning',
+                            'dismissible' => true,
+                            'admin_notice' => false,
+                            'plusone' => true,
+                        ]
+                    ]
+                ];
+            }
+
+
             update_option('rsssl_admin_notices', $notices);
 
             return $notices;
@@ -208,10 +249,22 @@ if (!class_exists("rsssl_vulnerabilities")) {
          *
          * @return array
          */
-        public static function testGenerator(): array
+        public static function testGenerator(
+                bool $email = true,
+                bool $sitewide = false,
+            bool $dashboard = false
+        ): array
         {
             $self = new self();
-            return $self->send_warning_email();
+            if($email) {
+                return $self->send_warning_email();
+            }
+            if($sitewide) {
+                return $self->site_wide_example();
+            }
+            if($dashboard) {
+                return $self->dashboard_example();
+            }
         }
 
 
@@ -1365,6 +1418,20 @@ if (!class_exists("rsssl_vulnerabilities")) {
                     'request_success' => true,
                 'data' =>   $this->workable_plugins
             ];
+        }
+
+        public function site_wide_example()
+        {
+            //we create a notice
+            return [
+                'request_success' => true,
+                'data' => [
+                    'title' => __("Site wide example", "really-simple-ssl"),
+                    'message' => __("This is an example of a site wide notice", "really-simple-ssl"),
+                    'url' => 'https://really-simple-ssl.com/vulnerabilities/',
+                ]
+            ];
+
         }
 
     }

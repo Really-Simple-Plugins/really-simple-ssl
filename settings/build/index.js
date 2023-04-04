@@ -44997,6 +44997,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../utils/Icon */ "./src/utils/Icon.js");
 /* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./FieldsData */ "./src/Settings/FieldsData.js");
 /* harmony import */ var _PostDropDown__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./PostDropDown */ "./src/Settings/PostDropDown.js");
+/* harmony import */ var _RiskConfiguration_NotificationTester__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./RiskConfiguration/NotificationTester */ "./src/Settings/RiskConfiguration/NotificationTester.js");
+
 
 
 
@@ -45282,6 +45284,14 @@ const Field = props => {
       className: highLightClass,
       ref: scrollAnchor
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_vulnerabilitiesOverview__WEBPACK_IMPORTED_MODULE_15__["default"], {
+      field: props.field
+    }));
+  }
+  if (field.type === 'notificationtester') {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: highLightClass,
+      ref: scrollAnchor
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_RiskConfiguration_NotificationTester__WEBPACK_IMPORTED_MODULE_20__["default"], {
       field: props.field
     }));
   }
@@ -47122,6 +47132,67 @@ const PostDropdown = _ref => {
   })));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (PostDropdown);
+
+/***/ }),
+
+/***/ "./src/Settings/RiskConfiguration/NotificationTester.js":
+/*!**************************************************************!*\
+  !*** ./src/Settings/RiskConfiguration/NotificationTester.js ***!
+  \**************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../utils/api */ "./src/utils/api.js");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../utils/Icon */ "./src/utils/Icon.js");
+/* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../FieldsData */ "./src/Settings/FieldsData.js");
+
+
+
+
+
+const NotificationTester = props => {
+  const {
+    field,
+    disabled
+  } = props;
+  const {
+    addHelpNotice
+  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_4__["default"])();
+  function doTestNotification() {
+    //Test one the email notification
+    _utils_api__WEBPACK_IMPORTED_MODULE_1__.doAction('rsssl_test_notification').then(response => {
+      addHelpNotice('notification_succeeded_unique', 'success', 'All notifications are triggered successfully, please check your email to double-check if you can receive emails.', 'Test notifications', false);
+    });
+  }
+  function labelWrap(field) {
+    let tooltipColor = field.warning ? 'red' : 'black';
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "cmplz-label-text"
+    }, field.label), field.tooltip && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      name: "info-open",
+      tooltip: field.tooltip,
+      color: tooltipColor
+    }));
+  }
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
+    isPrimary: true,
+    required: field.required,
+    placeholder: field.placeholder,
+    disabled: disabled,
+    help: field.comment,
+    text: field.button_text,
+    onClick: () => doTestNotification()
+  }));
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (NotificationTester);
 
 /***/ }),
 

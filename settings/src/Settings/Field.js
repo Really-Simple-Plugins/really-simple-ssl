@@ -24,6 +24,7 @@ import Icon from "../utils/Icon";
 import { useEffect} from "@wordpress/element";
 import useFields from "./FieldsData";
 import PostDropdown from "./PostDropDown";
+import NotificationTester from "./RiskConfiguration/NotificationTester";
 
 const Field = (props) => {
     let scrollAnchor = React.createRef();
@@ -298,6 +299,14 @@ const Field = (props) => {
         return (
             <div className={highLightClass} ref={scrollAnchor}>
               <VulnerabilitiesOverview field={props.field} />
+            </div>
+        )
+    }
+
+    if(field.type === 'notificationtester') {
+        return (
+            <div className={highLightClass} ref={scrollAnchor}>
+              <NotificationTester field={props.field} />
             </div>
         )
     }

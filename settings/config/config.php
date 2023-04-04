@@ -71,7 +71,7 @@ function rsssl_menu() {
                 [
                     'id'      => 'vulnerabilities',
                     'title'   => __( 'Vulnerabilities', 'really-simple-ssl' ),
-                    'featured' => !get_option('rsssl_vulnerabilities_first_run'),
+                    'featured' => true,//!get_option('rsssl_vulnerabilities_first_run'), TODO: enable this when we have a vulnerability scan
                     'groups'  => [
                         [
                             'id'       => 'vulnerabilities_basic',
@@ -911,7 +911,7 @@ function rsssl_fields( $load_values = true ) {
             'id' => 'vulnerabilities_test',
             'menu_id' => 'vulnerabilities',
             'group_id' => 'vulnerabilities_notifi',
-            'type' => 'button',
+            'type' => 'notificationtester',
             'action' => 'test_vulnerability_notification',
             'label' => __('Preview', 'really-simple-ssl'),
             'disabled' => false,
