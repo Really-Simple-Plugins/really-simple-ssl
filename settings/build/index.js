@@ -47922,29 +47922,29 @@ const VulnerabilitiesIntro = props => {
     }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-ssl-intro-container"
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_RiskConfiguration_Runner__WEBPACK_IMPORTED_MODULE_4__["default"], {
-      title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Downloading files", "really-simple-ssl"),
+      title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Preparing vulnerability scanning", "really-simple-ssl"),
       name: "first_runner",
       loading: true,
       time: 1000,
       delay: 1000
     }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_RiskConfiguration_Runner__WEBPACK_IMPORTED_MODULE_4__["default"], {
-      title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Scanning Plugins, themes and core", "really-simple-ssl"),
+      title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Collecting plugin, theme and WordPress core data", "really-simple-ssl"),
       name: "second_runner",
       loading: true,
       time: 2000,
-      delay: 1000
-    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_RiskConfiguration_Runner__WEBPACK_IMPORTED_MODULE_4__["default"], {
-      title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Scanning Components", "really-simple-ssl"),
-      name: "third_runner",
-      loading: true,
-      time: 1000,
       delay: 2000
     }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_RiskConfiguration_Runner__WEBPACK_IMPORTED_MODULE_4__["default"], {
-      title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Returning results", "really-simple-ssl"),
+      title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Scanning all components", "really-simple-ssl"),
+      name: "third_runner",
+      loading: true,
+      time: 3000,
+      delay: 3000
+    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_RiskConfiguration_Runner__WEBPACK_IMPORTED_MODULE_4__["default"], {
+      title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Reporting enabled", "really-simple-ssl"),
       name: "fourth_runner",
       loading: true,
-      time: 1000,
-      delay: 3000
+      time: 4000,
+      delay: 4000
     })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: 'rsssl-modal-footer'
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.Button, {

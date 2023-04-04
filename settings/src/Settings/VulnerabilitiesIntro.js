@@ -38,32 +38,32 @@ const VulnerabilitiesIntro = (props) => {
                     </div>
                     <div className="rsssl-ssl-intro-container">
                         <Runner
-                            title={__("Downloading files", "really-simple-ssl")}
+                            title={__("Preparing vulnerability scanning", "really-simple-ssl")}
                             name={"first_runner"}
                             loading={true}
                             time={1000}
                             delay={1000}
                         />
                         <Runner
-                            title={__("Scanning Plugins, themes and core", "really-simple-ssl")}
+                            title={__("Collecting plugin, theme and WordPress core data", "really-simple-ssl")}
                             name={"second_runner"}
                             loading={true}
                             time={2000}
-                            delay={1000}
-                        />
-                        <Runner
-                            title={__("Scanning Components", "really-simple-ssl")}
-                            name={"third_runner"}
-                            loading={true}
-                            time={1000}
                             delay={2000}
                         />
                         <Runner
-                            title={__("Returning results", "really-simple-ssl")}
+                            title={__("Scanning all components", "really-simple-ssl")}
+                            name={"third_runner"}
+                            loading={true}
+                            time={3000}
+                            delay={3000}
+                        />
+                        <Runner
+                            title={__("Reporting enabled", "really-simple-ssl")}
                             name={"fourth_runner"}
                             loading={true}
-                            time={1000}
-                            delay={3000}
+                            time={4000}
+                            delay={4000}
                         />
                     </div>
                     <div className={'rsssl-modal-footer'}>
