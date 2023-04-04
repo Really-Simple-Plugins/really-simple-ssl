@@ -42383,6 +42383,7 @@ const WPVul = props => {
   let badgeVulStyle = 'rsp-default';
   let badgeUpdateStyle = 'rsp-default';
   let iconVulColor = 'black';
+  let iconVulEnabledColor = 'red';
   let iconUpdateColor = 'black';
   if (vulEnabled) {
     //now we calculate the score
@@ -42431,6 +42432,7 @@ const WPVul = props => {
   let gradeClass = neverScannedYet() ? 'inactive' : '?';
   const checkVulActive = () => {
     if (vulEnabled) {
+      // iconVulEnabledColor = 'green';
       return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null);
     }
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -42617,8 +42619,8 @@ const WPVul = props => {
     color: iconVulColor,
     name: "radar-duotone"
   }) : (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_1__["default"], {
-    color: '#000',
-    name: "satellite-dish"
+    color: iconVulEnabledColor,
+    name: "satellite-dish-duotone"
   })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
     className: "rsssl-number"
   }, vulEnabled ? vulnerabilities : '-'), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
@@ -48261,7 +48263,8 @@ const Icon = props => {
     'yellow': 'var(--rsp-yellow)',
     'orange': 'var(--rsp-yellow)',
     'red': 'var(--rsp-red)',
-    'grey': 'var(--rsp-grey-400)'
+    'grey': 'var(--rsp-grey-400)',
+    'red-warning': 'var(--rsp-red-faded)'
   };
   let renderedIcon = '';
   if (iconName === 'bullet') {
@@ -48818,6 +48821,27 @@ const Icon = props => {
       }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("path", {
         className: "fa-secondary",
         d: "M350.9 127.2l-46.1 46.1c-14.3-8.4-31-13.3-48.8-13.3c-53 0-96 43-96 96s43 96 96 96s96-43 96-96h64c0 73.5-49.6 135.5-117.2 154.2C290.8 394.7 274.7 384 256 384s-34.8 10.7-42.8 26.2c-51.7-14.3-92.8-53.9-109.4-104.6c14.4-8.3 24.1-23.8 24.1-41.7c0-19.4-11.5-36.1-28-43.7C116.2 149.1 179.9 96 256 96c35.5 0 68.3 11.6 94.9 31.2zm22.8-22.8C341.2 79 300.4 64 256 64C163.1 64 85.7 129.9 67.9 217.6C47.2 222.9 32 241.7 32 264c0 23.8 17.3 43.6 40.1 47.4c19.3 64.3 71.5 114.4 137 130.9C213.8 463.8 233 480 256 480s42.2-16.2 46.9-37.8C386.3 421.3 448 345.9 448 256h64c0 141.4-114.6 256-256 256S0 397.4 0 256S114.6 0 256 0c62.1 0 118.9 22.1 163.3 58.8l-45.5 45.5z"
+      })),
+      viewBox: '0 0 24 24'
+    };
+  }
+  if (iconName === 'satellite-dish-duotone') {
+    renderedIcon = {
+      html: (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("svg", {
+        xmlns: "http://www.w3.org/2000/svg",
+        viewBox: "0 0 512 512",
+        width: "24",
+        height: "24"
+      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("defs", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("style", null, `
+            .fa-secondary {
+              color: ${iconColors[iconColor]} !important;
+            }        
+          `)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("path", {
+        className: "fa-primary",
+        d: "M60.6 220.6c-14.5-14.5-38.8-11.8-46.3 7.3C5.1 251.5 0 277.1 0 304C0 418.9 93.1 512 208 512c26.9 0 52.5-5.1 76.1-14.4c19-7.5 21.8-31.8 7.3-46.3L187.3 347.3l28.4-28.4c2.6 .7 5.4 1.1 8.3 1.1c17.7 0 32-14.3 32-32s-14.3-32-32-32s-32 14.3-32 32c0 2.9 .4 5.6 1.1 8.3l-28.4 28.4L60.6 220.6z"
+      }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("path", {
+        className: "fa-secondary",
+        d: "M224 0c-17.7 0-32 14.3-32 32s14.3 32 32 32c123.7 0 224 100.3 224 224c0 17.7 14.3 32 32 32s32-14.3 32-32C512 128.9 383.1 0 224 0zm0 96c-17.7 0-32 14.3-32 32s14.3 32 32 32c70.7 0 128 57.3 128 128c0 17.7 14.3 32 32 32s32-14.3 32-32c0-106-86-192-192-192z"
       })),
       viewBox: '0 0 24 24'
     };

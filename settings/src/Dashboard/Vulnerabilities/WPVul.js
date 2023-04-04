@@ -36,6 +36,7 @@ const WPVul = (props) => {
     let badgeVulStyle = 'rsp-default';
     let badgeUpdateStyle = 'rsp-default';
     let iconVulColor = 'black';
+    let iconVulEnabledColor = 'red';
     let iconUpdateColor = 'black';
     if (vulEnabled) {
         //now we calculate the score
@@ -95,6 +96,7 @@ const WPVul = (props) => {
 
     const checkVulActive = () => {
         if (vulEnabled) {
+            // iconVulEnabledColor = 'green';
             return (<></>)
         }
 
@@ -283,7 +285,7 @@ const WPVul = (props) => {
                 <div className="rsssl-ssl-test ">
                     <div className="rsssl-ssl-test-information">
                         <span>
-                            {vulEnabled ? <Icon color={iconVulColor} name="radar-duotone"></Icon> : <Icon color={'#000'} name="satellite-dish"></Icon>}
+                            {vulEnabled ? <Icon color={iconVulColor} name="radar-duotone"></Icon> : <Icon color={iconVulEnabledColor} name="satellite-dish-duotone"></Icon>}
 
                         </span>
                         <span>
