@@ -47168,9 +47168,8 @@ const NotificationTester = props => {
   } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_4__["default"])();
   function doTestNotification() {
     //Test one the email notification
-    _utils_api__WEBPACK_IMPORTED_MODULE_1__.doAction('rsssl_test_notification').then(response => {
-      addHelpNotice('notification_succeeded_unique', 'success', 'All notifications are triggered successfully, please check your email to double-check if you can receive emails.', 'Test notifications', false);
-    });
+    _utils_api__WEBPACK_IMPORTED_MODULE_1__.doAction('rsssl_test_notification').then(response => {});
+    addHelpNotice(field.id, 'success', 'All notifications are triggered successfully, please check your email to double-check if you can receive emails.', 'Test notifications', false);
   }
   function labelWrap(field) {
     let tooltipColor = field.warning ? 'red' : 'black';

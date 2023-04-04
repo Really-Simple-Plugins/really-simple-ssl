@@ -249,22 +249,10 @@ if (!class_exists("rsssl_vulnerabilities")) {
          *
          * @return array
          */
-        public static function testGenerator(
-                bool $email = true,
-                bool $sitewide = false,
-            bool $dashboard = false
-        ): array
+        public static function testGenerator(): array
         {
             $self = new self();
-            if($email) {
-                return $self->send_warning_email();
-            }
-            if($sitewide) {
-                return $self->site_wide_example();
-            }
-            if($dashboard) {
-                return $self->dashboard_example();
-            }
+            return $self->send_warning_email();
         }
 
 

@@ -305,6 +305,7 @@ function rsssl_do_action($request, $ajax_data = false)
             $response = rsssl_clear_test_caches($data);
             break;
         case 'rsssl_test_notification':
+            require_once(rsssl_path . 'security/wordpress/rsssl_vulnerabilities.php');
             //creating a random string based on time.
             $random_string = md5(time());
             update_option('test_vulnerability_tester', $random_string);

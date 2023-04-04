@@ -14,14 +14,15 @@ const NotificationTester = (props) => {
         //Test one the email notification
         rsssl_api.doAction( 'rsssl_test_notification' ).then
         ( ( response ) => {
-            addHelpNotice(
-                'notification_succeeded_unique',
-                'success',
-                'All notifications are triggered successfully, please check your email to double-check if you can receive emails.',
-                'Test notifications',
-                false
-            );
+
         });
+        addHelpNotice(
+            field.id,
+            'success',
+            'All notifications are triggered successfully, please check your email to double-check if you can receive emails.',
+            'Test notifications',
+            false
+        );
     }
 
     function labelWrap(field) {
