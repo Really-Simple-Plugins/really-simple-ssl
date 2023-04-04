@@ -42241,6 +42241,8 @@ const useVulnerabilityData = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((se
   //for storing the status of the vulnerability scan
   riskNaming: {},
   //for storing the risk naming
+  firstrun: false,
+  //for storing the status of the first run
   vulList: [],
   //for storing the list of vulnerabilities
 
@@ -42268,8 +42270,10 @@ const useVulnerabilityData = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((se
         dataLoaded: true,
         riskNaming: fetched.data.riskNaming,
         lastChecked: fetched.data.lastChecked,
-        vulEnabled: fetched.data.vulEnabled
+        vulEnabled: fetched.data.vulEnabled,
+        firstRun: fetched.data.firstRun
       });
+      console.log("fetched", fetched);
     } catch (e) {
       console.error(e);
     }
@@ -47376,14 +47380,12 @@ const Runner = props => {
   const [delayState, setDelayState] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(true);
   let spin = loadingState && !delayState ? "icon-spin" : "";
   let name = props.name;
-  console.log(props.name);
   if (props.name === "first_runner") {
     (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
       const firstRunner = async () => {
         setDelayState(false);
         setLoadingState(true);
         let response = await _utils_api__WEBPACK_IMPORTED_MODULE_3__.doAction('rsssl_scan_files');
-        console.log(response);
         if (response.request_success) {
           setLoadingState(false);
           spin = "";
@@ -47887,6 +47889,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _RiskConfiguration_Runner__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./RiskConfiguration/Runner */ "./src/Settings/RiskConfiguration/Runner.js");
 /* harmony import */ var _RiskConfiguration_RunnerData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./RiskConfiguration/RunnerData */ "./src/Settings/RiskConfiguration/RunnerData.js");
+/* harmony import */ var _Dashboard_Vulnerabilities_VulnerabilityData__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Dashboard/Vulnerabilities/VulnerabilityData */ "./src/Dashboard/Vulnerabilities/VulnerabilityData.js");
+
 
 
 
@@ -47897,6 +47901,9 @@ __webpack_require__.r(__webpack_exports__);
 const VulnerabilitiesIntro = props => {
   //first we define a state for the steps
   const [isOpen, setOpen] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  const {
+    firstrun
+  } = (0,_Dashboard_Vulnerabilities_VulnerabilityData__WEBPACK_IMPORTED_MODULE_6__["default"])();
 
   //this function closes the modal when onClick is activated
   if (!isOpen) {
@@ -47996,6 +48003,7 @@ const VulnerabilitiesOverview = props => {
   const {
     dataLoaded,
     vulList,
+    firstRun,
     fetchVulnerabilities
   } = (0,_Dashboard_Vulnerabilities_VulnerabilityData__WEBPACK_IMPORTED_MODULE_2__["default"])();
   const {
@@ -48032,8 +48040,9 @@ const VulnerabilitiesOverview = props => {
       enabled = item.value;
     }
   });
-  let firstRun = false;
-  if (enabled && !firstRun) {
+
+  //we run this only once
+  if (dataLoaded && !firstRun && enabled) {
     //we display the wow factor
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_VulnerabilitiesIntro__WEBPACK_IMPORTED_MODULE_8__["default"], null);
   }

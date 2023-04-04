@@ -10,14 +10,12 @@ const Runner = (props) => {
     const [delayState, setDelayState] = useState(true);
     let spin = (loadingState && !delayState)? "icon-spin" : "";
     let name = props.name;
-    console.log(props.name);
     if(props.name === "first_runner") {
         useEffect(() => {
             const firstRunner = async () => {
                 setDelayState(false);
                 setLoadingState(true);
                 let response = await rsssl_api.doAction('rsssl_scan_files');
-                console.log(response);
                 if (response.request_success) {
                     setLoadingState(false);
                     spin = "";

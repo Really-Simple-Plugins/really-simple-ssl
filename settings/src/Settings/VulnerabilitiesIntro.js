@@ -5,11 +5,13 @@ import {Button, Modal} from "@wordpress/components";
 import {useState} from '@wordpress/element';
 import Runner from "./RiskConfiguration/Runner";
 import useRunnerData from "./RiskConfiguration/RunnerData";
+import useVulnerabilityData from "../Dashboard/Vulnerabilities/VulnerabilityData";
 
 
 const VulnerabilitiesIntro = (props) => {
     //first we define a state for the steps
     const [ isOpen, setOpen ] = useState( false );
+    const {firstrun} = useVulnerabilityData();
 
     //this function closes the modal when onClick is activated
     if(!isOpen) {

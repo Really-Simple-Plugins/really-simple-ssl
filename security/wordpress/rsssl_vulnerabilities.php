@@ -147,7 +147,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
         {
             $instance = self::instance();
 
-            update_option('rsssl_vulnerabilities_first_run', '1');
+            update_option('rsssl_vulnerabilities_first_run', true);
             rsssl_update_option('enable_vulnerability_scanner', '1');
             return $instance->assemble_first_run();
         }
@@ -229,6 +229,8 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
 
             $vulEnabled = rsssl_get_option('enable_vulnerability_scanner');
+            $firstRun = get_option('rsssl_vulnerabilities_first_run');
+
             $updates = 0;
             $vulnerabilities = [];
             if ($vulEnabled) {
@@ -257,6 +259,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 'lastChecked' => date('d / m / Y @ H:i', $self->get_file_stored_info(true)),
                 'riskNaming'   => $self->risk_naming,
                 'vulEnabled' => $vulEnabled,
+                'firstRun' => $firstRun
             ];
 
             return [

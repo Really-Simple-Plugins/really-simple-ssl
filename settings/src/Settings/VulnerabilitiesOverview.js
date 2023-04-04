@@ -11,6 +11,7 @@ const VulnerabilitiesOverview = (props) => {
     const {
         dataLoaded,
         vulList,
+        firstRun,
         fetchVulnerabilities
     } = useVulnerabilityData();
 
@@ -53,8 +54,9 @@ const VulnerabilitiesOverview = (props) => {
             enabled = item.value;
         }
     });
-    let firstRun = false;
-    if (enabled && !firstRun) {
+
+    //we run this only once
+    if (dataLoaded && !firstRun && enabled) {
         //we display the wow factor
         return (<VulnerabilitiesIntro/>);
     }
