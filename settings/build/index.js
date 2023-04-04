@@ -47364,6 +47364,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../utils/Icon */ "./src/utils/Icon.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../utils/api */ "./src/utils/api.js");
+
 
 
 
@@ -47373,18 +47375,41 @@ const Runner = props => {
   let title = props.title;
   const [delayState, setDelayState] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(true);
   let spin = loadingState && !delayState ? "icon-spin" : "";
-  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
-    const run = async () => {
-      setTimeout(function () {
-        setTimeout(function () {
-          //we set the loading state to true
-          setLoadingState(false);
-        }, props.time);
+  let name = props.name;
+  console.log(props.name);
+  if (props.name === "first_runner") {
+    (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
+      const firstRunner = async () => {
         setDelayState(false);
-      }, props.delay);
-    };
-    run();
-  }, []);
+        setLoadingState(true);
+        let response = await _utils_api__WEBPACK_IMPORTED_MODULE_3__.doAction('rsssl_scan_files');
+        console.log(response);
+        if (response.request_success) {
+          setLoadingState(false);
+          spin = "";
+        }
+      };
+      firstRunner();
+    }, []);
+  } else {
+    (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
+      const run = async () => {
+        setTimeout(function () {
+          setTimeout(function () {
+            //we set the loading state to true
+            setLoadingState(false);
+          }, props.time);
+          setDelayState(false);
+        }, props.delay);
+      };
+      run();
+    }, []);
+  }
+  function displayTitle(name) {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-detail-title"
+    }, title);
+  }
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-details"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -47399,7 +47424,7 @@ const Runner = props => {
     color: "green"
   })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-detail"
-  }, title));
+  }, displayTitle(name)));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Runner);
 
@@ -47871,16 +47896,14 @@ __webpack_require__.r(__webpack_exports__);
 
 const VulnerabilitiesIntro = props => {
   //first we define a state for the steps
+  const [isOpen, setOpen] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
 
-  function goToDashboard() {
-    props.onClose();
-    //We fire a save event to change an option
-  }
+  //this function closes the modal when onClick is activated
 
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.Modal, {
     title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Introducing vulnerabilities', 'really-simple-ssl'),
     className: "rsssl-modal",
-    onRequestClose: props.onClose,
+    onRequestClose: false,
     shouldCloseOnClickOutside: false,
     shouldCloseOnEsc: false,
     overlayClassName: "rsssl-modal-overlay"
@@ -47893,32 +47916,34 @@ const VulnerabilitiesIntro = props => {
     className: "rsssl-ssl-intro-container"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_RiskConfiguration_Runner__WEBPACK_IMPORTED_MODULE_4__["default"], {
     title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Downloading files", "really-simple-ssl"),
+    name: "first_runner",
     loading: true,
     time: 1000,
     delay: 1000
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_RiskConfiguration_Runner__WEBPACK_IMPORTED_MODULE_4__["default"], {
     title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Scanning Plugins, themes and core", "really-simple-ssl"),
+    name: "second_runner",
     loading: true,
     time: 2000,
     delay: 1000
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_RiskConfiguration_Runner__WEBPACK_IMPORTED_MODULE_4__["default"], {
     title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Scanning Components", "really-simple-ssl"),
+    name: "third_runner",
     loading: true,
     time: 1000,
     delay: 2000
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_RiskConfiguration_Runner__WEBPACK_IMPORTED_MODULE_4__["default"], {
     title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Returning results", "really-simple-ssl"),
+    name: "fourth_runner",
     loading: true,
     time: 1000,
     delay: 3000
   })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: 'rsssl-modal-footer'
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.Button, {
-    isPrimary: true,
-    onClick: props.onClose
+    isPrimary: true
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('DashBoard', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.Button, {
-    isSecondary: true,
-    onClick: props.onClose
+    isSecondary: true
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Dismiss', 'really-simple-ssl')))));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (VulnerabilitiesIntro);
@@ -47998,7 +48023,8 @@ const VulnerabilitiesOverview = props => {
       enabled = item.value;
     }
   });
-  if (enabled) {
+  let firstRun = false;
+  if (enabled && !firstRun) {
     //we display the wow factor
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_VulnerabilitiesIntro__WEBPACK_IMPORTED_MODULE_8__["default"], null);
   }

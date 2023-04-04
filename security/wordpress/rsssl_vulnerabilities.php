@@ -138,6 +138,19 @@ if (!class_exists("rsssl_vulnerabilities")) {
             }
         }
 
+        /**
+         * Function used for first run of the plugin.
+         *
+         * @return array
+         */
+        public static function firstRun(): array
+        {
+            $instance = self::instance();
+
+            update_option('rsssl_vulnerabilities_first_run', '1');
+            return $instance->assemble_first_run();
+        }
+
         public function show_help_notices($notices)
         {
             $this->cache_installed_plugins();
@@ -1037,7 +1050,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
             $core_plugin = [
                 'Name' => 'WordPress',
                 'Slug' => 'wordpress',
-                'Version' => $core->version,
+                'Version' => $core->version?? '',
                 'Author' => 'WordPress',
                 'AuthorURI' => 'https://wordpress.org/',
                 'PluginURI' => 'https://wordpress.org/',
@@ -1337,6 +1350,17 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 'url' => 'https://really-simple-ssl.com/vulnerabilities/',
             ];
 
+        }
+
+        private function assemble_first_run()
+        {
+            $this->check_files();
+            $this->cache_installed_plugins();
+
+            return [
+                    'request_success' => true,
+                'data' =>   $this->workable_plugins
+            ];
         }
 
     }

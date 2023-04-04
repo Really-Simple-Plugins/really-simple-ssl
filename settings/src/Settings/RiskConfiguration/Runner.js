@@ -1,5 +1,7 @@
 import Icon from "../../utils/Icon";
 import {useEffect, useState} from "react";
+import * as rsssl_api from "../../utils/api";
+
 
 const Runner = (props) => {
     //let us make a state for the loading
@@ -7,19 +9,44 @@ const Runner = (props) => {
     let title = props.title;
     const [delayState, setDelayState] = useState(true);
     let spin = (loadingState && !delayState)? "icon-spin" : "";
-
-    useEffect(() => {
-        const run = async () => {
+    let name = props.name;
+    console.log(props.name);
+    if(props.name === "first_runner") {
+        useEffect(() => {
+            const firstRunner = async () => {
+                setDelayState(false);
+                setLoadingState(true);
+                let response = await rsssl_api.doAction('rsssl_scan_files');
+                console.log(response);
+                if (response.request_success) {
+                    setLoadingState(false);
+                    spin = "";
+                }
+            }
+            firstRunner();
+        }, []);
+    } else {
+        useEffect(() => {
+            const run = async () => {
                 setTimeout(function () {
                     setTimeout(function () {
                         //we set the loading state to true
                         setLoadingState(false);
                     }, props.time);
                     setDelayState(false);
-            }, props.delay);
-        }
-        run();
-    }, []);
+                }, props.delay);
+            }
+            run();
+       }, []);
+    }
+
+    function displayTitle(name) {
+        return (
+            <div className="rsssl-detail-title">
+                {title}
+            </div>
+        )
+    }
 
     return (
         <div className="rsssl-details">
@@ -27,7 +54,7 @@ const Runner = (props) => {
                 {delayState?  <Icon name="circle-check" color="red"/> : loadingState? <Icon name="spinner" />:<Icon name="circle-check" color="green"/>}
             </div>
             <div className="rsssl-detail">
-                {title}
+                {displayTitle(name)}
             </div>
         </div>
     )

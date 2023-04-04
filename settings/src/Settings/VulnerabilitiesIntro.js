@@ -9,20 +9,16 @@ import useRunnerData from "./RiskConfiguration/RunnerData";
 
 const VulnerabilitiesIntro = (props) => {
     //first we define a state for the steps
+    const [ isOpen, setOpen ] = useState( false );
 
-
-    function goToDashboard() {
-        props.onClose();
-        //We fire a save event to change an option
-
-    }
+    //this function closes the modal when onClick is activated
 
     return (
         <>
             <Modal
                 title={__('Introducing vulnerabilities', 'really-simple-ssl')}
                 className="rsssl-modal"
-                onRequestClose={props.onClose}
+                onRequestClose={false}
                 shouldCloseOnClickOutside={false}
                 shouldCloseOnEsc={false}
                 overlayClassName="rsssl-modal-overlay"
@@ -41,34 +37,38 @@ const VulnerabilitiesIntro = (props) => {
                 <div className="rsssl-ssl-intro-container">
                     <Runner
                         title={__("Downloading files", "really-simple-ssl")}
+                        name = {"first_runner"}
                         loading={true}
                         time={1000}
                         delay={1000}
                     />
                     <Runner
                         title={__("Scanning Plugins, themes and core", "really-simple-ssl")}
+                        name = {"second_runner"}
                         loading={true}
                         time={2000}
                         delay={1000}
                     />
                     <Runner
                         title={__("Scanning Components", "really-simple-ssl")}
+                        name = {"third_runner"}
                         loading={true}
                         time={1000}
                         delay={2000}
                     />
                     <Runner
                         title={__("Returning results", "really-simple-ssl")}
+                        name = {"fourth_runner"}
                         loading={true}
                         time={1000}
                         delay={3000}
                     />
                 </div>
                 <div className={'rsssl-modal-footer'}>
-                    <Button isPrimary onClick={props.onClose}>
+                    <Button isPrimary >
                         {__('DashBoard', 'really-simple-ssl')}
                     </Button>
-                    <Button isSecondary onClick={props.onClose}>
+                    <Button isSecondary >
                         {__('Dismiss', 'really-simple-ssl')}
                     </Button>
                 </div>

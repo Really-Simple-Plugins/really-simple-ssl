@@ -298,6 +298,10 @@ function rsssl_do_action($request, $ajax_data=false){
 
             $response = rsssl_vulnerabilities::testGenerator();
             break;
+        case 'rsssl_scan_files':
+            require_once( rsssl_path . 'security/wordpress/rsssl_vulnerabilities.php' );
+            $response = rsssl_vulnerabilities::firstRun();
+            break;
 		default:
 			$response = apply_filters("rsssl_do_action", [], $action, $data);
 	}

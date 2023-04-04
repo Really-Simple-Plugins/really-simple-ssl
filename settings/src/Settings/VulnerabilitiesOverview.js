@@ -53,8 +53,8 @@ const VulnerabilitiesOverview = (props) => {
             enabled = item.value;
         }
     });
-
-    if (enabled) {
+    let firstRun = false;
+    if (enabled && !firstRun) {
         //we display the wow factor
         return (<VulnerabilitiesIntro/>);
     }
