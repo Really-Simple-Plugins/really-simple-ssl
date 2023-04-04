@@ -1,6 +1,7 @@
 .rsssl-modal {
   .components-modal__header {
     background-color: var(--rsp-yellow-faded);
+    padding: var(--rsp-spacing-m) var(--rsp-spacing-m)!important;
   }
 
   .components-modal__content {
@@ -10,8 +11,11 @@
   .rsssl-header-extension {
     background-color: var(--rsp-yellow-faded);
     margin: 0;
-    padding: var(--rsp-spacing-m) var(--rsp-spacing-m);
+    padding: 0 var(--rsp-spacing-m);
     p {
+      margin: 0;
+      padding: var(--rsp-spacing-m) 0;
+      padding-top: 0;
       width: 75%;
     }
   }
@@ -28,7 +32,7 @@
 
   .rsssl-ssl-intro-container {
     .rsssl-details {
-      padding: var(--rsp-spacing-m) var(--rsp-spacing-m);
+      padding: var(--rsp-spacing-m) 0;
 
       > div {
         float: left;
