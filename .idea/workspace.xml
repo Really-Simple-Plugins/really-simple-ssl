@@ -5,16 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0f0d1ec8-2b48-488d-aa69-e5f1005f7b78" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/css/admin.css" beforeDir="false" afterPath="$PROJECT_DIR$/assets/css/admin.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/css/admin.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/assets/css/admin.min.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/css/admin.scss" beforeDir="false" afterPath="$PROJECT_DIR$/assets/css/admin.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/css/rtl/admin.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/assets/css/rtl/admin.min.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings/build/index.asset.php" beforeDir="false" afterPath="$PROJECT_DIR$/settings/build/index.asset.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings/build/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/settings/build/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings/src/Onboarding/Onboarding.js" beforeDir="false" afterPath="$PROJECT_DIR$/settings/src/Onboarding/Onboarding.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/settings/src/Onboarding/OnboardingData.js" beforeDir="false" afterPath="$PROJECT_DIR$/settings/src/Onboarding/OnboardingData.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings/src/Onboarding/OnboardingModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/settings/src/Onboarding/OnboardingModal.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

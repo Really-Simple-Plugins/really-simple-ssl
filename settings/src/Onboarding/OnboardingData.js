@@ -14,7 +14,7 @@ const useOnboardingData = create(( set, get ) => ({
     networkwide: false,
     sslEnabled: false,
     overrideSSL: false,
-    showOnboardingModal: true,
+    showOnboardingModal: false,
     dataLoaded: false,
     processing: false,
     email: '',
