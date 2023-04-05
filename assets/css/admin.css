@@ -834,11 +834,9 @@
 
 .rsssl-modal.rsssl-onboarding .rsssl-modal-content {
     display: flex;
-    padding-top: var(--rsp-spacing-xs);
+    padding-top: var(--rsp-spacing-m);
     line-height: 2.2;
-    min-height: 375px;
-    padding-top: var(--rsp-spacing-xs);
-    line-height: 2.2;
+    min-height: 275px;
 }
 
 .rsssl-modal.rsssl-onboarding .rsssl-modal-content .rsssl-onboarding-placeholder {
@@ -873,6 +871,9 @@
 .rsssl-modal.rsssl-onboarding .rsssl-modal-content input[type=email] {
     width: 100%;
     margin-bottom: var(--rsp-spacing-m);
+    border: 2px solid;
+    height: 50px;
+    border-color: var(--rsp-grey-300);
 }
 
 .rsssl-modal.rsssl-onboarding .rsssl-modal-content ul {
@@ -887,13 +888,15 @@
 
 .rsssl-modal.rsssl-onboarding .rsssl-modal-content ul li.rsssl-is-plugin {
     background-color: var(--rsp-grey-100);
+    border: none;
+    margin: 10px 0 0 0;
     padding: 2px 0;
-    margin-bottom: 0;
     position: relative;
 }
 
 .rsssl-modal.rsssl-onboarding .rsssl-modal-content ul li.rsssl-is-plugin a.button-default.rsssl-read-more {
     position: absolute;
+    display: none;
     top: 17px;
     right: 20px;
     z-index: 5;
@@ -1455,83 +1458,83 @@
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(1) {
-    width: 83%;
+    width: 65%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(2) {
-    width: 78%;
+    width: 85%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(3) {
-    width: 96%;
+    width: 95%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(4) {
-    width: 67%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(5) {
-    width: 94%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(6) {
-    width: 67%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(7) {
-    width: 88%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
-    width: 81%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
-    width: 62%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
-    width: 76%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
     width: 74%;
 }
 
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(5) {
+    width: 71%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(6) {
+    width: 61%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(7) {
+    width: 73%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
+    width: 65%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
+    width: 76%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
+    width: 90%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
+    width: 96%;
+}
+
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
-    width: 75%;
+    width: 80%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
-    width: 63%;
+    width: 87%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(14) {
-    width: 81%;
+    width: 66%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
-    width: 65%;
+    width: 100%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(16) {
-    width: 77%;
+    width: 96%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(17) {
-    width: 62%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(18) {
-    width: 84%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(19) {
     width: 65%;
 }
 
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(18) {
+    width: 67%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(19) {
+    width: 82%;
+}
+
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(20) {
-    width: 73%;
+    width: 89%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line ~ .rsssl-placeholder-line {
@@ -2527,6 +2530,77 @@ nav.rdt_Pagination > div > svg {
 
 .rsssl .rsssl-new-feature .rsssl-new-feature-desc p {
     font-size: var(--rsp-fs-300);
+}
+
+.rsssl-modal {
+    border-radius: 0;
+  /* spinner for React Icons */
+}
+
+.rsssl-modal .rsssl-modal-header, .rsssl-modal .components-modal__header {
+    background-color: var(--rsp-yellow-faded);
+    padding: var(--rsp-spacing-m) var(--rsp-spacing-m) !important;
+    border-radius: 0;
+}
+
+.rsssl-modal .components-modal__content {
+    padding: 0;
+}
+
+.rsssl-modal .rsssl-header-extension {
+    background-color: var(--rsp-yellow-faded);
+    margin: 0;
+    padding: 0 var(--rsp-spacing-m);
+}
+
+.rsssl-modal .rsssl-header-extension p {
+    margin: 0;
+    padding: var(--rsp-spacing-m) 0;
+    padding-top: 0;
+}
+
+.rsssl-modal .rsssl-intro-logo {
+    width: 7em;
+    position: absolute;
+    right: 1em;
+    top: 7em;
+    height: auto;
+    margin: 0;
+    padding: 0;
+}
+
+.rsssl-modal .rsssl-ssl-intro-container .rsssl-details {
+    padding: var(--rsp-spacing-m) 0;
+}
+
+.rsssl-modal .rsssl-ssl-intro-container .rsssl-details > div {
+    float: left;
+}
+
+.rsssl-modal .rsssl-ssl-intro-container .rsssl-details .rsssl-detail-icon {
+    width: 10%;
+}
+
+.rsssl-modal .rsssl-ssl-intro-container .rsssl-details .rsssl-detail {
+    width: 90%;
+}
+
+.rsssl-modal .rsssl-modal-footer {
+    padding: var(--rsp-spacing-m) var(--rsp-spacing-m);
+}
+
+.rsssl-modal .icon-spin {
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 .rsssl div[class^=rsssl-wizard-] .rsssl-field-wrap .MuiTooltip-popper {
