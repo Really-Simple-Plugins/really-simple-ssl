@@ -25,18 +25,19 @@
       }
       margin-top:auto;
     }
-    padding-top: var(--rsp-spacing-xs);
+    padding-top: var(--rsp-spacing-m);
     line-height: 2.2;
-    min-height:375px;
+    min-height:275px;
     .rsssl-processing {
       opacity:0.5;
     }
     input[type="email"]{
       width: 100%;
       margin-bottom: var(--rsp-spacing-m);
+      border: 2px solid;
+      height: 50px;
+      border-color: var(--rsp-grey-300);
     }
-    padding-top: var(--rsp-spacing-xs);
-    line-height: 2.2;
     ul{
       margin-bottom: var(--rsp-spacing-m);
       li {
