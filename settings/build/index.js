@@ -42688,7 +42688,7 @@ const WPVulFooter = props => {
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Last check:', 'really-simple-ssl'), ": ", lastChecked) : (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("small", {
     className: 'alignright',
     style: styleFooter
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Vulnerability check is disabled.', 'really-simple-ssl')));
+  }));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (WPVulFooter);
 

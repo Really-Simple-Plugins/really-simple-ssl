@@ -29,6 +29,7 @@
       }
     }
     &.rsssl-featured{
+
       &.rsssl-active {
         .rsssl-menu-item-beta-pill {
           color: var(--rsp-text-color-white);
@@ -36,7 +37,6 @@
       }
       a{
         padding-block: var(--rsp-spacing-m);
-        background: var(--rsp-dark-blue-faded);
         font-weight: 600;
         flex-wrap: wrap;
         .rsssl-menu-item-featured-pill{
