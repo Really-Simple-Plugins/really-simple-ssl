@@ -42273,7 +42273,6 @@ const useVulnerabilityData = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((se
         vulEnabled: fetched.data.vulEnabled,
         firstRun: fetched.data.firstRun
       });
-      console.log("fetched", fetched);
     } catch (e) {
       console.error(e);
     }
@@ -42385,7 +42384,7 @@ const WPVul = props => {
   let iconVulColor = 'green';
   let iconVulEnabledColor = 'red';
   let iconUpdateColor = 'black';
-  if (vulEnabled) {
+  if (vulEnabled || hardening.length > 0 || updates > 0) {
     //now we calculate the score
     let score = vulnerabilityScore();
     //we create correct badge style
@@ -42671,16 +42670,25 @@ __webpack_require__.r(__webpack_exports__);
 
 const WPVulFooter = props => {
   const {
-    lastChecked
+    lastChecked,
+    vulEnabled
   } = (0,_VulnerabilityData__WEBPACK_IMPORTED_MODULE_3__["default"])();
+  const styleFooter = {
+    textAlign: 'right',
+    position: 'relative',
+    right: '0'
+  };
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: 'rsssl-wpvul'
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
     href: "#settings/vulnerabilities",
     className: 'button button-default alignleft'
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Settings', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("small", {
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Settings', 'really-simple-ssl')), vulEnabled ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("small", {
     className: 'alignright'
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Last check:', 'really-simple-ssl'), ": ", lastChecked));
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Last check:', 'really-simple-ssl'), ": ", lastChecked) : (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("small", {
+    className: 'alignright',
+    style: styleFooter
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Vulnerability check is disabled.', 'really-simple-ssl')));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (WPVulFooter);
 

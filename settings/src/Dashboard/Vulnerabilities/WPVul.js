@@ -38,7 +38,7 @@ const WPVul = (props) => {
     let iconVulColor = 'green';
     let iconVulEnabledColor = 'red';
     let iconUpdateColor = 'black';
-    if (vulEnabled) {
+    if (vulEnabled || hardening.length > 0 || updates > 0) {
         //now we calculate the score
         let score = vulnerabilityScore();
         //we create correct badge style
