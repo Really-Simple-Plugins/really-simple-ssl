@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="0f0d1ec8-2b48-488d-aa69-e5f1005f7b78" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/css/admin.css" beforeDir="false" afterPath="$PROJECT_DIR$/assets/css/admin.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/css/admin.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/assets/css/admin.min.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/css/admin.scss" beforeDir="false" afterPath="$PROJECT_DIR$/assets/css/admin.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/css/rtl/admin.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/assets/css/rtl/admin.min.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/settings/build/index.asset.php" beforeDir="false" afterPath="$PROJECT_DIR$/settings/build/index.asset.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/settings/build/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/settings/build/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings/build/index.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/settings/build/index.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings/src/Settings/FieldsData.js" beforeDir="false" afterPath="$PROJECT_DIR$/settings/src/Settings/FieldsData.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings/src/Settings/PermissionsPolicy.js" beforeDir="false" afterPath="$PROJECT_DIR$/settings/src/Settings/PermissionsPolicy.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings/src/Onboarding/Onboarding.js" beforeDir="false" afterPath="$PROJECT_DIR$/settings/src/Onboarding/Onboarding.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings/src/Onboarding/OnboardingData.js" beforeDir="false" afterPath="$PROJECT_DIR$/settings/src/Onboarding/OnboardingData.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings/src/Onboarding/OnboardingModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/settings/src/Onboarding/OnboardingModal.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,14 +38,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "/Users/marcelsanting/PhpstormProjects/wordpress-docker-compose/wp-app/wp-content/plugins/really-simple-ssl/assets/css/admin/modules",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "ts.external.directory.path": "/Users/marcelsanting/Library/Application Support/JetBrains/Toolbox/apps/PhpStorm/ch-0/223.8214.64/PhpStorm.app/Contents/plugins/javascript-impl/jsLanguageServicesImpl/external",
+    "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql"
+    ]
   }
-}</component>
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/assets/css/admin/modules" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="phpunit.xml.dist" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
       <TestRunner scope="XML" />
@@ -59,5 +80,9 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

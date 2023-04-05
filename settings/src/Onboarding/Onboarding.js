@@ -248,8 +248,6 @@ const Onboarding = (props) => {
             {
                 dataLoaded &&
                     <div className={ "rsssl-modal-content-step "+processingClass }>
-                        {step.title && <h2 className="rsssl-modal-subtitle">{step.title}</h2>}
-                        {step.subtitle && <div className="rsssl-modal-description">{step.subtitle}</div>}
                         <ul>
                             { parseStepItems(step.items) }
                         </ul>

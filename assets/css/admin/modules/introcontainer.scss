@@ -1,0 +1,66 @@
+.rsssl-modal {
+  border-radius: 0;
+  .rsssl-modal-header, .components-modal__header {
+    background-color: var(--rsp-yellow-faded);
+    padding: var(--rsp-spacing-m) var(--rsp-spacing-m)!important;
+    //no border radius on bottom
+    border-radius: 0;
+  }
+
+  .components-modal__content {
+    padding: 0;
+  }
+
+  .rsssl-header-extension {
+    background-color: var(--rsp-yellow-faded);
+    margin: 0;
+    padding: 0 var(--rsp-spacing-m);
+    p {
+      margin: 0;
+      padding: var(--rsp-spacing-m) 0;
+      padding-top: 0;
+    }
+  }
+
+  .rsssl-intro-logo {
+    width: 7em;
+    position: absolute;
+    right: 1em;
+    top: 7em;
+    height: auto;
+    margin: 0;
+    padding: 0;
+  }
+
+  .rsssl-ssl-intro-container {
+    .rsssl-details {
+      padding: var(--rsp-spacing-m) 0;
+
+      > div {
+        float: left;
+      }
+
+      .rsssl-detail-icon {
+        width: 10%;
+      }
+
+      .rsssl-detail {
+        width: 90%;
+      }
+    }
+  }
+
+  .rsssl-modal-footer {
+    padding: var(--rsp-spacing-m) var(--rsp-spacing-m);
+  }
+
+  /* spinner for React Icons */
+  .icon-spin {
+    animation: spin 2s linear infinite;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+}
