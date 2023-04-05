@@ -50,7 +50,6 @@ const RiskComponent = (props) => {
     options = Object.entries(options).map((item) => {
         return {label: item[1], value: item[0]};
     });
-
     //we check if the property request_success exists if so we remove it
     if (riskData.hasOwnProperty('request_success')) {
         delete riskData.request_success;
@@ -60,6 +59,7 @@ const RiskComponent = (props) => {
     Object.keys(riskData).forEach((item) => {
         riskData[item].riskSelection = <SelectControl
             id={riskData[item].id}
+            name={riskData[item].name}
             value={riskData[item].value}
             options={options}
             label=''

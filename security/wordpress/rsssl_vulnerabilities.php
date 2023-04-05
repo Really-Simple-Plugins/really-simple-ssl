@@ -81,10 +81,9 @@ if (!class_exists("rsssl_vulnerabilities")) {
             static $instance = false;
             if (!$instance) {
                 $instance = new rsssl_vulnerabilities();
-                //if the pro version is active, we use the pro version.
                     //if the file exists, we include it.
-                    if (file_exists(WP_PLUGIN_DIR . 'really-simple-ssl-pro/security/wordpress/rsssl_vulnerabilities_pro.php')) {
-                        require_once(WP_PLUGIN_DIR . 'really-simple-ssl-pro/security/wordpress/rsssl_vulnerabilities_pro.php');
+                    if (file_exists(WP_PLUGIN_DIR . '/really-simple-ssl-pro/security/wordpress/rsssl_vulnerabilities_pro.php')) {
+                        require_once(WP_PLUGIN_DIR . '/really-simple-ssl-pro/security/wordpress/rsssl_vulnerabilities_pro.php');
                         $instance = new rsssl_vulnerabilities_pro();
                     }
             }
@@ -162,13 +161,13 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 }
                 //this is shown bases on the config of vulnerability_notification_dashboard
                 $siteWide = true;
-                if (rsssl_get_option('vulnerability_notification_dashboard')) {
+                if (rsssl_get_option('vulnerability_notification_dashboard') && rsssl_get_option('vulnerability_notification_dashboard') !== '*') {
                     if ($value < $this->risk_levels[rsssl_get_option('vulnerability_notification_dashboard')]) {
                         //we skip this one.
                         continue;
                     }
                 }
-                if (rsssl_get_option('vulnerability_notification_dashboard')) {
+                if (rsssl_get_option('vulnerability_notification_dashboard') && rsssl_get_option('vulnerability_notification_dashboard') !== '*') {
                     if ($value < $this->risk_levels[rsssl_get_option('vulnerability_notification_dashboard')]) {
                         //we skip this one.
                         $siteWide = false;
@@ -392,29 +391,18 @@ if (!class_exists("rsssl_vulnerabilities")) {
         {
             $measures = [];
             $measures[] = [
-                'id' => 'low_risk',
-                'risk' => self::riskNaming('l'),
-                'value' => get_option('rsssl_low_risk'),
-                'description' => sprintf(__('%s vulnerabilities', 'really-simple-ssl'), self::riskNaming('l')),
+                'id' => 'force_update',
+                'name' => __('Force update', 'really-simple-ssl'),
+                'value' => get_option('rsssl_force_update'),
+                'description' => sprintf(__('Forcefully update the plugin or theme with this option.', 'really-simple-ssl'), self::riskNaming('l')),
             ];
             $measures[] = [
-                'id' => 'medium_risk',
-                'risk' => self::riskNaming('m'),
-                'value' => get_option('rsssl_medium_risk'),
-                'description' => sprintf(__('%s vulnerabilities', 'really-simple-ssl'), self::riskNaming('m')),
+                'id' => 'quarantine',
+                'name' => __('Quarantine', 'really-simple-ssl'),
+                'value' => get_option('rsssl_quarantine'),
+                'description' => sprintf(__('Isolates the plugin or theme if no update can be performed', 'really-simple-ssl'), self::riskNaming('m')),
             ];
-            $measures[] = [
-                'id' => 'high_risk',
-                'risk' => self::riskNaming('h'),
-                'value' => get_option('rsssl_high_risk'),
-                'description' => sprintf(__('%s vulnerabilities', 'really-simple-ssl'), self::riskNaming('h')),
-            ];
-            $measures[] = [
-                'id' => 'critical_risk',
-                'risk' => self::riskNaming('c'),
-                'value' => get_option('rsssl_critical_risk'),
-                'description' => sprintf(__('%s vulnerabilities', 'really-simple-ssl'), self::riskNaming('c')),
-            ];
+
 
             return [
                 "request_success" => true,
@@ -1360,10 +1348,11 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
             $blocks = [];
             foreach ($risk_levels as $key => $value) {
-
-                if (!($this->risk_levels[$key] < $this->risk_levels[rsssl_get_option('vulnerability_notification_email_admin')])) {
-                    $blocks[] = $this->createBlock($key, $value);
-                    $total = $total + $value;
+                if(rsssl_get_option('vulnerability_notification_email_admin') !== '*') {
+                    if (!($this->risk_levels[$key] < $this->risk_levels[rsssl_get_option('vulnerability_notification_email_admin')])) {
+                        $blocks[] = $this->createBlock($key, $value);
+                        $total = $total + $value;
+                    }
                 }
 
             }

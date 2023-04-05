@@ -47286,7 +47286,6 @@ const RiskComponent = props => {
       value: item[0]
     };
   });
-
   //we check if the property request_success exists if so we remove it
   if (riskData.hasOwnProperty('request_success')) {
     delete riskData.request_success;
@@ -47296,6 +47295,7 @@ const RiskComponent = props => {
   Object.keys(riskData).forEach(item => {
     riskData[item].riskSelection = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.SelectControl, {
       id: riskData[item].id,
+      name: riskData[item].name,
       value: riskData[item].value,
       options: options,
       label: "",
