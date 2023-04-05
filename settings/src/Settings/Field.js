@@ -305,8 +305,9 @@ const Field = (props) => {
 
     if(field.type === 'notificationtester') {
         return (
-            <div className={highLightClass} ref={scrollAnchor}>
-              <NotificationTester field={props.field} />
+            <div className={'rsssl-field-button ' + highLightClass} ref={scrollAnchor}>
+                <label>{field.label}</label>
+                <NotificationTester field={props.field} />
             </div>
         )
     }

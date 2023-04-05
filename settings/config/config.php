@@ -71,7 +71,7 @@ function rsssl_menu() {
                 [
                     'id'      => 'vulnerabilities',
                     'title'   => __( 'Vulnerabilities', 'really-simple-ssl' ),
-                    'featured' => true,//!get_option('rsssl_vulnerabilities_first_run'), TODO: enable this when we have a vulnerability scan
+                    'featured' => true,//!get_option('rsssl_vulnerabilities_first_run'), TODO: change this after beta
                     'groups'  => [
                         [
                             'id'       => 'vulnerabilities_basic',
