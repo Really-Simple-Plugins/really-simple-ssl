@@ -306,8 +306,8 @@ function rsssl_fields( $load_values = true ) {
                 'title'   => __( "Settings update: .htaccess redirect", 'really-simple-ssl' ),
                 'message' => __( "The .htaccess redirect has been enabled on your site. If the server configuration is non-standard, this might cause issues. Please check if all pages on your site are functioning properly.", 'really-simple-ssl' ),
                 'url'     => 'https://really-simple-ssl.com/remove-htaccess-redirect-site-lockout/',
+                'condition'  => ['redirect' => 'htaccess']
             ],
-            'email_condition'  => 'rsssl_uses_htaccess_redirect',
 			'react_conditions' => [
 				'relation' => 'AND',
 				[
@@ -565,8 +565,8 @@ function rsssl_fields( $load_values = true ) {
 				'title'   => __( "Settings update: Username 'admin' renamed", 'really-simple-ssl' ),
 				'message' => sprintf(__( "As a security precaution, the username ‘admin’ has been changed on %s. From now on, you can login with '%s' or an email address.", 'really-simple-ssl' ), '{site_url}','{username}'),
 				'url'     => 'https://really-simple-ssl.com/instructions/locked-our-after-renaming-the-admin-username/',
+				'condition'    => 'rsssl_username_admin_changed',
 			],
-            'email_condition'    => 'rsssl_username_admin_changed',
 			'tooltip'            => __( "If the username 'admin' currently exists, you can rename it here. Please note that you can no longer use this username, and should use the new username or an email address",
 				'really-simple-ssl' ),
 			'disabled'           => false,
