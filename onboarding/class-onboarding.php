@@ -93,15 +93,18 @@ class rsssl_onboarding {
 				break;
 			case 'update_email':
 				$email = sanitize_email($data['email']);
-				rsssl_update_option('notifications_email_address', $email );
-				rsssl_update_option('send_notifications_email', 1 );
-
-				if ( $data['sendTestEmail'] ) {
-					$mailer = new rsssl_mailer();
-					$mailer->send_test_mail();
+				if  (is_email($email )) {
+					rsssl_update_option('notifications_email_address', $email );
+					rsssl_update_option('send_notifications_email', 1 );
+					if ( $data['sendTestEmail'] ) {
+						$mailer = new rsssl_mailer();
+						$mailer->send_test_mail();
+					}
+					if ( $data['includeTips'] ) {
+						$this->signup_for_mailinglist( $email );
+					}
 				}
 
-				$this->signup_for_mailinglist($email);
 				$response = [
 					'success' => true,
 				];
