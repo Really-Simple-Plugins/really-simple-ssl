@@ -100,7 +100,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 * Improvement: optionally enable notification emails in onboarding wizard
 * Improvement: onboarding styling
 * Fix: catch non array value from notices array, props @kenrichman
-* Fix: typo in documenation link, props (@bookman53
+* Fix: typo in documenation link, props @bookman53
 
 = 6.2.3 =
 * Improvement: Changed Back-end react to functional components

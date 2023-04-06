@@ -31,7 +31,6 @@ const OnboardingModal = (props) => {
             rsssl_api.doAction('dismiss_modal', data);
         }
     });
-    console.log(currentStep);
     return (
         <>
             { (showOnboardingModal) && <>
