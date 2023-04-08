@@ -571,7 +571,7 @@ class rsssl_admin
      * @since  2.1
      *
      * @access public
-     * @return string|null
+     * @return string|false
      *
      */
 
@@ -584,7 +584,7 @@ class rsssl_admin
 	    $location_of_wp_config = trailingslashit( $location_of_wp_config );
         $wpconfig_path = $location_of_wp_config . 'wp-config.php';
         if ( file_exists( $wpconfig_path ) ) {
-            return $wpconfig_path;
+	        return $wpconfig_path;
         }
         return false;
     }
