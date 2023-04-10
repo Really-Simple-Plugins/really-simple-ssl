@@ -31,41 +31,11 @@
     .rsssl-processing {
       opacity:0.5;
     }
-    input[type="email"]{
-      width: 100%;
-      margin-bottom: var(--rsp-spacing-m);
-      border: 2px solid;
-      height: 50px;
-      border-color: var(--rsp-grey-300);
-    }
+
     ul{
-      margin-bottom: var(--rsp-spacing-m);
       li {
-        display: flex;
-        align-items: flex-start;
-        margin-bottom: var(--rsp-spacing-xxs);
-        &.rsssl-is-plugin{
-          background-color: var(--rsp-grey-100);
-          border: none;
-          margin: 10px 0 0 0;
-          padding:2px 0;
-          position:relative;
-          a.button-default.rsssl-read-more{
-            position:absolute;
-            display:none;
-            top:17px;
-            right:20px;
-            z-index:5;
-            @media(max-width: 620px) {
-              position:relative;
-              margin-left:20px;
-              z-index:5;
-            }
-          }
-        }
         .rsssl-icon{
           margin-top: 7px;
-          margin-right:7px;
         }
         .components-button.is-link {
           padding:5px 0;
