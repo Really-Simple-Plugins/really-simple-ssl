@@ -185,7 +185,6 @@ const Onboarding = (props) => {
     }
 
     const controlButtons = () => {
-
         let ActivateSSLText = networkwide ? __("Activate SSL networkwide", "really-simple-ssl") : __("Activate SSL", "really-simple-ssl");
         if ( currentStepIndex === 0 ) {
            return (
@@ -221,7 +220,7 @@ const Onboarding = (props) => {
             return (
                 <>
                     <button className="button button-primary" onClick={() => {goToDashboard()}}>{__('Go to Dashboard', 'really-simple-ssl')}</button>
-                    {props.isModal && <button className="button button-default" onClick={() => dismissModal()}>{__('Dismiss', 'really-simple-ssl')}</button>}
+                    { !!props.isModal && <button className="button button-default" onClick={() => dismissModal()}>{__('Dismiss', 'really-simple-ssl')}</button>}
                 </>
             );
         }
