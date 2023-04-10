@@ -4,9 +4,7 @@ import produce from 'immer';
 const useLetsEncryptData = create(( set, get ) => ({
     actionIndex:-1,
     progress:0,
-    maxIndex:1,
     attemptCount:0,
-    maxAttempts:1,
     refreshTests:false,
     actionsList:[],
     setAttemptCount: (attemptCount) => {set(state => ({ attemptCount }))},
@@ -28,7 +26,6 @@ const useLetsEncryptData = create(( set, get ) => ({
     },
     setRefreshTests: (refreshTests) => {set(state => ({ refreshTests }))},
     setActionIndex: (actionIndex) => {set(state => ({ actionIndex }))},
-    setMaxAttempts: (maxAttempts) => {set(state => ({ maxAttempts }))},
 }));
 export default useLetsEncryptData;
 

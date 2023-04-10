@@ -13,14 +13,10 @@ import useLetsEncryptData from "./letsEncryptData";
 
 const LetsEncrypt = (props) => {
     const {handleNextButtonDisabled, getFieldValue} = useFields();
-    const {actionsList, setActionsList, setActionsListItem, setActionsListProperty, actionIndex, setActionIndex, attemptCount, setAttemptCount, progress, setProgress, maxAttempts, setMaxAttempts, refreshTests, setRefreshTests} = useLetsEncryptData();
-    const sleep = useRef(1500);
+    const {actionsList, setActionsList, setActionsListItem, setActionsListProperty, actionIndex, setActionIndex, attemptCount, setAttemptCount, progress, setProgress, refreshTests, setRefreshTests} = useLetsEncryptData();
+    const sleep = useRef(1000);
     const intervalId = useRef(false);
-    const lastActionStatus = useRef('');
-    //const actionIndex = useRef(0);
     const previousActionIndex = useRef(-1);
-    const startedTests = useRef([]);
-    // const actionsList = useRef([]);
     const maxIndex = useRef(1);
     const refProgress = useRef(0);
     const lastAction = useRef({});
@@ -42,21 +38,21 @@ const LetsEncrypt = (props) => {
     useEffect(() => {
         if ( actionsList.length>0 && actionIndex===-1){
             setActionIndex(0);
-            runTest(0);
+            runTest(0, 0);
         }
     }, [actionsList])
 
     useEffect(() => {
         intervalId.current = setInterval(() => {
-            setProgress(refProgress.current + 0.2);
+            if (refProgress.current<100) {
+                setProgress(refProgress.current + 0.2);
+            }
         }, 100);
-    }, [actionIndex])
+    }, [])
 
     useEffect(() => {
-        if ( actionIndex>previousActionIndex.current ) {
-            previousActionIndex.current = actionIndex;
-            setProgress( ( 100 / maxIndex.current ) * (actionIndex));
-        }
+        previousActionIndex.current = actionIndex;
+        setProgress( ( 100 / maxIndex.current ) * (actionIndex));
 
         //ensure that progress does not get to 100 when retries are still running
         let currentAction = actionsList[actionIndex];
@@ -64,8 +60,11 @@ const LetsEncrypt = (props) => {
             setProgress(90);
         }
 
-       }, [actionIndex, refreshTests ])
+       }, [actionIndex ])
 
+    useEffect (() => {
+        refProgress.current = progress;
+    },[progress])
 
     useEffect(() => {
         if ( refreshTests ){
@@ -97,16 +96,13 @@ const LetsEncrypt = (props) => {
     };
 
     const reset = () => {
+        clearInterval(intervalId.current);
         handleNextButtonDisabled(true);
         setActionsList(getActions());
         setProgress(0);
         refProgress.current = 0;
-        startedTests.current = [];
-        // actionIndex.current = 0;
         setActionIndex(-1);
         previousActionIndex.current = -1;
-        lastActionStatus.current = '';
-
      }
 
     const adjustActionsForDNS = (actions) => {
@@ -147,8 +143,7 @@ const LetsEncrypt = (props) => {
     }
 
     const processTestResult = (action, newActionIndex) => {
-        clearInterval(intervalId.current);
-        lastActionStatus.current = action.status;
+        // clearInterval(intervalId.current);
         if ( action.status==='success' ) {
             setAttemptCount(0);
         } else {
@@ -169,8 +164,6 @@ const LetsEncrypt = (props) => {
                     setActionsListProperty(i, 'hide', true);
                 }
             });
-
-            // actionIndex.current = maxIndex.current+1;
             setActionIndex(maxIndex.current+1);
             handleNextButtonDisabled(false);
         } else if ( action.do === 'continue' || action.do === 'skip' ) {
@@ -190,13 +183,11 @@ const LetsEncrypt = (props) => {
 
             }
         } else if (action.do === 'retry' ) {
-            if ( attemptCount >= maxAttempts ) {
-                // actionIndex.current = maxIndex.current;
+            if ( attemptCount >= action.attempts ) {
                 setActionIndex(maxIndex.current);
             } else {
-                // actionIndex.current = actionIndex.current+1;
-                setActionIndex(actionIndex+1);
-                runTest(actionIndex+1);
+                setActionIndex(newActionIndex);
+                runTest(newActionIndex);
             }
         } else if ( action.do === 'stop' ){
             setActionIndex(maxIndex.current);
@@ -207,14 +198,7 @@ const LetsEncrypt = (props) => {
         let currentAction = {...actionsList[newActionIndex]};
         if (!currentAction) return;
         let  test = currentAction.action;
-
-        if ( startedTests.current.includes(test) ) {
-            return;
-        }
-        startedTests.current.push(test);
-
         const startTime = new Date();
-        setMaxAttempts( currentAction.attempts );
         rsssl_api.runLetsEncryptTest(test, props.field.id ).then( ( response ) => {
             const endTime = new Date();
             let timeDiff = endTime - startTime; //in ms
@@ -232,13 +216,12 @@ const LetsEncrypt = (props) => {
         }).then(sleeper(sleep.current)).then(() => {
             processTestResult(currentAction, newActionIndex);
       });
-
     }
 
-    const getStyles = () => {
+    const getStyles = (newProgress) => {
         return Object.assign(
             {},
-            {width: progress+"%"},
+            {width: newProgress+"%"},
         );
     }
 
@@ -256,18 +239,17 @@ const LetsEncrypt = (props) => {
         return statuses[action.status].color;
     }
 
-    let progressBarColor = lastActionStatus.current ==='error' ? 'rsssl-orange' : '';
     if ( !props.field.actions ) {
         return (<></>);
     }
 
-    //filter out skipped actions
-    let actionsOutput = actionsList.filter(action => action.hide !== true);
-    refProgress.current = progress;
+    let progressCopy = progress;
     if (maxIndex.current === actionIndex+1 ){
-        refProgress.current = 100;
+        progressCopy = 100;
     }
 
+    //filter out skipped actions
+    let actionsOutput = actionsList.filter(action => action.hide !== true);
     //ensure the sub components have an action to look at, also if the action has been dropped after last test.
     let action = actionsList[actionIndex];
     if (action){
@@ -275,12 +257,11 @@ const LetsEncrypt = (props) => {
     } else {
         action = lastAction.current;
     }
-
-
+    let progressBarColor = action.status==='error' ? 'rsssl-orange' : '';
     return (
         <>
             <div className="rsssl-lets-encrypt-tests">
-                <div className="rsssl-progress-bar"><div className="rsssl-progress"><div className={'rsssl-bar ' + progressBarColor} style={getStyles()}></div></div></div>
+                <div className="rsssl-progress-bar"><div className="rsssl-progress"><div className={'rsssl-bar ' + progressBarColor} style={getStyles(progressCopy)}></div></div></div>
                 <div className="rsssl_letsencrypt_container rsssl-progress-container field-group">
                     <ul>
                        {actionsOutput.map((action, i) =>
