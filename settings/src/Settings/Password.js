@@ -1,7 +1,11 @@
+import useFields from "./FieldsData";
+
 const Password = (props) => {
+    const {updateField, setChangedField} = useFields();
+
     const onChangeHandler = (fieldValue) => {
-        props.fields[props.index]['value'] = fieldValue;
-        props.saveChangedFields( props.field.id )
+        updateField( props.field.id, fieldValue );
+        setChangedField( props.field.id, fieldValue );
     }
 
     /**

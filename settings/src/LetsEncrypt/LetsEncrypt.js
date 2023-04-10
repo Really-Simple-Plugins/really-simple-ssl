@@ -13,15 +13,14 @@ import useLetsEncryptData from "./letsEncryptData";
 
 const LetsEncrypt = (props) => {
     const {handleNextButtonDisabled, getFieldValue} = useFields();
-    const {attemptCount, setAttemptCount, progress, setProgress, maxAttempts, setMaxAttempts, refreshTests, setRefreshTests} = useLetsEncryptData();
+    const {actionsList, setActionsList, setActionsListItem, setActionsListProperty, actionIndex, setActionIndex, attemptCount, setAttemptCount, progress, setProgress, maxAttempts, setMaxAttempts, refreshTests, setRefreshTests} = useLetsEncryptData();
     const sleep = useRef(1500);
     const intervalId = useRef(false);
     const lastActionStatus = useRef('');
-    const actionIndex = useRef(0);
-    const action = useRef(false);
+    //const actionIndex = useRef(0);
     const previousActionIndex = useRef(-1);
     const startedTests = useRef([]);
-    const actionsList = useRef([]);
+    // const actionsList = useRef([]);
     const maxIndex = useRef(1);
     const refProgress = useRef(0);
 
@@ -40,58 +39,42 @@ const LetsEncrypt = (props) => {
     }
 
     useEffect(() => {
-        if ( !action.current && actionsList.length>0){
-            // action.current = actions[0];
-            actionIndex.current = 0;
+        if ( actionsList.length>0 && actionIndex===-1){
+            setActionIndex(0);
+            runTest(0);
         }
-    }, [actionsList.current])
+    }, [actionsList])
 
     useEffect(() => {
-        if ( actionIndex.current===0 ) {
-            runTest();
-        }
-    }, [actionIndex.current])
-
-    useEffect(() => {
-        action.current = actionsList.current[actionIndex.current];
         intervalId.current = setInterval(() => {
             setProgress(refProgress.current + 0.2);
         }, 100);
-    }, [actionIndex.current])
+    }, [actionIndex])
 
     useEffect(() => {
-        if ( actionIndex.current>previousActionIndex.current ) {
-            previousActionIndex.current = actionIndex.current;
-            setProgress( ( 100 / maxIndex.current ) * (actionIndex.current));
+        if ( actionIndex>previousActionIndex.current ) {
+            previousActionIndex.current = actionIndex;
+            setProgress( ( 100 / maxIndex.current ) * (actionIndex));
         }
 
         //ensure that progress does not get to 100 when retries are still running
-        action.current = actionsList.current[actionIndex.current];
-        if ( action.current && action.current.do==='retry' && attemptCount>1 ){
+        let currentAction = actionsList[actionIndex];
+        if ( currentAction && currentAction.do==='retry' && attemptCount>1 ){
             setProgress(90);
         }
 
-       }, [actionIndex.current, refreshTests ])
+       }, [actionIndex, refreshTests ])
 
 
     useEffect(() => {
         if ( refreshTests ){
             setRefreshTests(false);
             reset();
-            actionsList.current.forEach(function(action,i){
-                actionsList.current[i]['status'] = 'inactive';
+            actionsList.forEach(function(action,i){
+                setActionsListProperty(i, 'status', 'inactive');
             });
         }
     }, [refreshTests ])
-
-    const updateActionProperty = (index, property, value) => {
-        let currentActions = actionsList.current;
-        if (currentActions.hasOwnProperty(index) && currentActions[index].hasOwnProperty(property)) {
-            currentActions[index][property] = value;
-        }
-        actionsList.current = currentActions;
-    }
-
 
     const statuses = {
         'inactive': {
@@ -114,12 +97,12 @@ const LetsEncrypt = (props) => {
 
     const reset = () => {
         handleNextButtonDisabled(true);
-        actionsList.current = getActions();
+        setActionsList(getActions());
         setProgress(0);
         refProgress.current = 0;
         startedTests.current = [];
-        actionIndex.current = 0;
-        action.current = false;
+        // actionIndex.current = 0;
+        setActionIndex(-1);
         previousActionIndex.current = -1;
         lastActionStatus.current = '';
 
@@ -162,7 +145,7 @@ const LetsEncrypt = (props) => {
         return actions;
     }
 
-    const processTestResult = (action) => {
+    const processTestResult = (action, newActionIndex) => {
         clearInterval(intervalId.current);
         lastActionStatus.current = action.status;
         if ( action.status==='success' ) {
@@ -178,53 +161,53 @@ const LetsEncrypt = (props) => {
         let event = new CustomEvent('rsssl_le_response', { detail: action });
         document.dispatchEvent(event);
         //if all tests are finished with success
-
         //finalize happens when halfway through our tests it's finished. We can skip all others.
         if ( action.do === 'finalize' ) {
-            actionsList.current.forEach(function(action,i){
-                if (i>actionIndex.current) {
-                    updateActionProperty(i, 'hide', true);
+            actionsList.forEach(function(action,i){
+                if (i>newActionIndex) {
+                    setActionsListProperty(i, 'hide', true);
                 }
             });
 
-            actionIndex.current = maxIndex.current+1;
+            // actionIndex.current = maxIndex.current+1;
+            setActionIndex(maxIndex.current+1);
             handleNextButtonDisabled(false);
         } else if ( action.do === 'continue' || action.do === 'skip' ) {
             //new action, so reset the attempts count
             setAttemptCount(1);
             //skip:  drop previous completely, skip to next.
             if ( action.do === 'skip' ) {
-                actionsList.current[actionIndex.current]['hide'] = true;
+                setActionsListProperty(newActionIndex, 'hide', true);
             }
             //move to next action, but not if we're already on the max
-            if ( maxIndex.current-1 > actionIndex.current) {
-                let next =actionIndex.current+1;
-                actionIndex.current = actionIndex.current+1;
-                runTest();
+            if ( maxIndex.current-1 > newActionIndex) {
+                setActionIndex(newActionIndex+1);
+                runTest(newActionIndex+1);
             } else {
+                setActionIndex(newActionIndex+1);
                 handleNextButtonDisabled(false);
-                actionIndex.current = actionIndex.current+1;
+
             }
         } else if (action.do === 'retry' ) {
             if ( attemptCount >= maxAttempts ) {
-                actionIndex.current = maxIndex.current;
+                // actionIndex.current = maxIndex.current;
+                setActionIndex(maxIndex.current);
             } else {
-                runTest();
+                // actionIndex.current = actionIndex.current+1;
+                setActionIndex(actionIndex+1);
+                runTest(actionIndex+1);
             }
         } else if ( action.do === 'stop' ){
-            actionIndex.current = maxIndex.current;
+            setActionIndex(maxIndex.current);
         }
     }
 
-    const runTest = () => {
-        if (refProgress.current>=100) {
-            return;
-        }
-        let currentAction = {...actionsList.current[actionIndex.current]};
+    const runTest = (newActionIndex) => {
+        let currentAction = {...actionsList[newActionIndex]};
         if (!currentAction) return;
         let  test = currentAction.action;
 
-        if (startedTests.current.includes(test)) {
+        if ( startedTests.current.includes(test) ) {
             return;
         }
         startedTests.current.push(test);
@@ -235,7 +218,6 @@ const LetsEncrypt = (props) => {
             const endTime = new Date();
             let timeDiff = endTime - startTime; //in ms
             const elapsedTime = Math.round(timeDiff);
-
             currentAction.status = response.status ? response.status : 'inactive';
             currentAction.hide = false;
             currentAction.description = response.message;
@@ -245,10 +227,9 @@ const LetsEncrypt = (props) => {
             if (elapsedTime<1500) {
                sleep.current = 1500-elapsedTime;
             }
-            action.current = currentAction;
-            actionsList.current[actionIndex.current] = currentAction;
+            setActionsListItem(newActionIndex, currentAction);
         }).then(sleeper(sleep.current)).then(() => {
-            processTestResult(currentAction);
+            processTestResult(currentAction, newActionIndex);
       });
 
     }
@@ -280,9 +261,9 @@ const LetsEncrypt = (props) => {
     }
 
     //filter out skipped actions
-    let actionsOutput = actionsList.current.filter(action => action.hide !== true);
+    let actionsOutput = actionsList.filter(action => action.hide !== true);
     refProgress.current = progress;
-    if (maxIndex.current === actionIndex.current+1 ){
+    if (maxIndex.current === actionIndex+1 ){
         refProgress.current = 100;
     }
     return (
@@ -303,11 +284,11 @@ const LetsEncrypt = (props) => {
                         }
                     </ul>
                 </div>
-                {props.field.id === 'directories' && <Directories field={props.field} action={actionsList.current[actionIndex.current]}/> }
-                {props.field.id === 'dns-verification' && <DnsVerification field={props.field} action={actionsList.current[actionIndex.current]}/> }
-                {props.field.id === 'generation' && <Generation field={props.field} action={actionsList.current[actionIndex.current]}/> }
-                {props.field.id === 'installation' && <Installation field={props.field} action={actionsList.current[actionIndex.current]}/> }
-                {props.field.id === 'activate' && <Activate field={props.field} action={actionsList.current[actionIndex.current]}/> }
+                {props.field.id === 'directories' && <Directories field={props.field} action={actionsList[actionIndex]}/> }
+                {props.field.id === 'dns-verification' && <DnsVerification field={props.field} action={actionsList[actionIndex]}/> }
+                {props.field.id === 'generation' && <Generation field={props.field} action={actionsList[actionIndex]}/> }
+                {props.field.id === 'installation' && <Installation field={props.field} action={actionsList[actionIndex]}/> }
+                {props.field.id === 'activate' && <Activate field={props.field} action={actionsList[actionIndex]}/> }
             </div>
         </>
     )
