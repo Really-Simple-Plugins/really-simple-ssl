@@ -23,6 +23,7 @@ const LetsEncrypt = (props) => {
     // const actionsList = useRef([]);
     const maxIndex = useRef(1);
     const refProgress = useRef(0);
+    const lastAction = useRef({});
 
     useEffect(() => {
         reset();
@@ -266,6 +267,16 @@ const LetsEncrypt = (props) => {
     if (maxIndex.current === actionIndex+1 ){
         refProgress.current = 100;
     }
+
+    //ensure the sub components have an action to look at, also if the action has been dropped after last test.
+    let action = actionsList[actionIndex];
+    if (action){
+        lastAction.current = action;
+    } else {
+        action = lastAction.current;
+    }
+
+
     return (
         <>
             <div className="rsssl-lets-encrypt-tests">
@@ -284,11 +295,11 @@ const LetsEncrypt = (props) => {
                         }
                     </ul>
                 </div>
-                {props.field.id === 'directories' && <Directories field={props.field} action={actionsList[actionIndex]}/> }
-                {props.field.id === 'dns-verification' && <DnsVerification field={props.field} action={actionsList[actionIndex]}/> }
-                {props.field.id === 'generation' && <Generation field={props.field} action={actionsList[actionIndex]}/> }
-                {props.field.id === 'installation' && <Installation field={props.field} action={actionsList[actionIndex]}/> }
-                {props.field.id === 'activate' && <Activate field={props.field} action={actionsList[actionIndex]}/> }
+                {props.field.id === 'directories' && <Directories field={props.field} action={action}/> }
+                {props.field.id === 'dns-verification' && <DnsVerification field={props.field} action={action}/> }
+                {props.field.id === 'generation' && <Generation field={props.field} action={action}/> }
+                {props.field.id === 'installation' && <Installation field={props.field} action={action}/> }
+                {props.field.id === 'activate' && <Activate field={props.field} action={action}/> }
             </div>
         </>
     )
