@@ -42316,6 +42316,33 @@ const useVulnerabilityData = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((se
       score += vulnerabiltiesList[i].hardening_score;
     }
     return score;
+  },
+  deactivateVulnerabilityScanner: async () => {
+    let data = {};
+    data.action = 'deactivate';
+    try {
+      const fetched = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('deactivate_vulnerability_scanner');
+      set({
+        vulEnabled: false
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  },
+  activateVulnerabilityScanner: async () => {
+    let data = {};
+    try {
+      const fetched = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('rsssl_scan_files');
+      if (fetched.request_success) {
+        //we get the data again
+        const run = async () => {
+          await get().fetchVulnerabilities();
+        };
+        run();
+      }
+    } catch (e) {
+      console.error(e);
+    }
   }
 }));
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useVulnerabilityData);
@@ -48303,19 +48330,21 @@ const VulnerabilitiesOverview = props => {
   const {
     dataLoaded,
     vulList,
+    vulEnabled,
     firstRun,
-    fetchVulnerabilities
+    fetchVulnerabilities,
+    deactivateVulnerabilityScanner,
+    activateVulnerabilityScanner
   } = (0,_Dashboard_Vulnerabilities_VulnerabilityData__WEBPACK_IMPORTED_MODULE_2__["default"])();
   const {
-    changedFields,
-    fields
+    fields,
+    changedFields
   } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_6__["default"])();
 
   //we create the columns
   let columns = [];
   //getting the fields from the props
   let field = props.field;
-  let enabled = false;
   function buildColumn(column) {
     return {
       name: column.name,
@@ -48335,18 +48364,30 @@ const VulnerabilitiesOverview = props => {
     };
     run();
   }, []);
-  fields.forEach(function (item, i) {
-    if (item.id === 'enable_vulnerability_scanner') {
-      enabled = item.value;
-    }
-  });
+  (0,react__WEBPACK_IMPORTED_MODULE_3__.useEffect)(() => {
+    //we loop through the changed fields and check if the vulnerability scanner is disabled
+    changedFields.forEach(function (item, i) {
+      if (item.id === 'enable_vulnerability_scanner' && item.value === false) {
+        const deactivate = async () => {
+          await deactivateVulnerabilityScanner();
+        };
+        deactivate();
+      } else if (item.id === 'enable_vulnerability_scanner' && item.value === true) {
+        //we activate the vulnerability scanner
+        const run = async () => {
+          await activateVulnerabilityScanner();
+        };
+        run();
+      }
+    });
+  }, [changedFields]);
 
   //we run this only once
-  if (dataLoaded && !firstRun && enabled) {
+  if (!firstRun && vulEnabled) {
     //we display the wow factor
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_VulnerabilitiesIntro__WEBPACK_IMPORTED_MODULE_8__["default"], null);
   }
-  if (!dataLoaded || !enabled) {
+  if (!dataLoaded || !vulEnabled) {
     return (
       //If there is no data or vulnerabilities scanner is disabled we show some dummy data behind a mask
       (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_4__["default"], {

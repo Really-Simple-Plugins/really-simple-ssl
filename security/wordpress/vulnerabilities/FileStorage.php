@@ -94,4 +94,23 @@ class FileStorage
         }
         return false;
     }
+
+    public static function DeleteAll()
+    {
+        //we get the upload folder
+        $upload_dir = wp_upload_dir();
+
+        //we get the really-simple-ssl folder
+        $rsssl_dir = $upload_dir['basedir'] . '/really-simple-ssl';
+
+        //then we delete the following files from that folder: manifest.json, components.json and core.json
+        $files = array('manifest.json', 'components.json', 'core.json');
+        foreach ($files as $file) {
+            //we delete the file
+            $file = $rsssl_dir . '/' . $file;
+            if (file_exists($file)) {
+                unlink($file);
+            }
+        }
+    }
 }

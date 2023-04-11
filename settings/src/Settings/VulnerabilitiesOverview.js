@@ -1,6 +1,6 @@
 import {__} from '@wordpress/i18n';
 import useVulnerabilityData from "../Dashboard/Vulnerabilities/VulnerabilityData";
-import React, {useEffect} from 'react';
+import React, {useEffect, useContext} from 'react';
 import DataTable from "react-data-table-component";
 import Icon from "../utils/Icon";
 import useFields from "./FieldsData";
@@ -11,20 +11,22 @@ const VulnerabilitiesOverview = (props) => {
     const {
         dataLoaded,
         vulList,
+        vulEnabled,
         firstRun,
-        fetchVulnerabilities
+        fetchVulnerabilities,
+        deactivateVulnerabilityScanner,
+        activateVulnerabilityScanner,
     } = useVulnerabilityData();
 
     const {
-        changedFields,
         fields,
+        changedFields,
     } = useFields();
 
     //we create the columns
     let columns = [];
     //getting the fields from the props
     let field = props.field;
-    let enabled = false;
 
 
     function buildColumn(column) {
@@ -49,19 +51,32 @@ const VulnerabilitiesOverview = (props) => {
         run();
     }, []);
 
-    fields.forEach(function (item, i) {
-        if (item.id === 'enable_vulnerability_scanner') {
-            enabled = item.value;
-        }
-    });
+    useEffect(() => {
+        //we loop through the changed fields and check if the vulnerability scanner is disabled
+        changedFields.forEach(function (item, i) {
+            if (item.id === 'enable_vulnerability_scanner' && item.value === false) {
+                const deactivate = async () => {
+                    await deactivateVulnerabilityScanner();
+                }
+                deactivate();
+
+            } else if (item.id === 'enable_vulnerability_scanner' && item.value === true ) {
+                //we activate the vulnerability scanner
+                const run = async () => {
+                    await activateVulnerabilityScanner();
+                }
+                run();
+            }
+        });
+    }, [changedFields]);
 
     //we run this only once
-    if (dataLoaded && !firstRun && enabled) {
+    if (!firstRun && vulEnabled) {
         //we display the wow factor
         return (<VulnerabilitiesIntro/>);
     }
 
-    if (!dataLoaded || !enabled) {
+    if (!dataLoaded || !vulEnabled) {
         return (
             //If there is no data or vulnerabilities scanner is disabled we show some dummy data behind a mask
             <>

@@ -31,7 +31,9 @@ if (!class_exists("rsssl_vulnerabilities")) {
         /**
          * interval every 12 hours
          */
-        public $interval = 43200;
+        public $interval = 44800;
+
+        public $schedule = 'twicedaily'; //set for twice a day. so every 12 hours.
 
         public $update_count = 0;
 
@@ -109,6 +111,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
             }
         }
 
+
         public function run()
         {
             //we check if the vulnerability scanner is enabled and then the fun happens.
@@ -148,7 +151,17 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
             update_option('rsssl_vulnerabilities_first_run', true);
             rsssl_update_option('enable_vulnerability_scanner', '1');
+            //we check if the schedule already exists, if not, we add it.
+            if (!wp_next_scheduled('rsssl_vulnerabilities_cron')) {
+                wp_schedule_event(time(), $instance->schedule, 'rsssl_vulnerabilities_cron');
+            }
             return $instance->assemble_first_run();
+        }
+
+        public static function deactivateScan ()
+        {
+            $instance = self::instance();
+            return $instance->deactivate();
         }
 
         public function show_help_notices($notices)
@@ -259,6 +272,34 @@ if (!class_exists("rsssl_vulnerabilities")) {
             return $notices;
         }
 
+        public function schedule_cron_job() {
+            // Get the current timestamp
+            $timestamp = time();
+
+            // Calculate the interval in seconds based on the value of $schedule
+            $interval = $this->get_interval_from_schedule( $this->schedule );
+
+            // Schedule the cron job using wp_schedule_event()
+            wp_schedule_event( $timestamp, $interval, 'rsssl_security_cron' );
+        }
+
+        private function get_interval_from_schedule( $schedule ) {
+            switch ( $schedule ) {
+                case 'hourly':
+                    return HOUR_IN_SECONDS;
+                case 'twicedaily':
+                    return 12 * HOUR_IN_SECONDS;
+                case 'daily':
+                    return DAY_IN_SECONDS;
+                case 'weekly':
+                    return WEEK_IN_SECONDS;
+                case 'monthly':
+                    return MONTH_IN_SECONDS;
+                default:
+                    // If $schedule is not a valid value, default to every 12 hours
+                    return 12 * HOUR_IN_SECONDS;
+            }
+        }
 
         /**
          * Generate plugin files for testing purposes.
@@ -358,15 +399,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
             //we now check for vulnerabilities in the core, plugins and themes. and add a notice if there are any.
             return $notices;
-        }
-
-        /**
-         * Callback for the daily cron to check the files.
-         */
-        public function daily_cron()
-        {
-            //we check the files on age and download if needed.
-            $this->check_files();
         }
 
         /* Public Section 3: The plugin page add-on */
@@ -1428,6 +1460,27 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
         }
 
+        public function deactivate(): array
+        {
+            //first we disable the vulnerability scanner
+            rsssl_update_option('enable_vulnerability_scanner', false);
+
+            //then we delete the cronjob
+            wp_clear_scheduled_hook('rsssl_vulnerabilities_cron');
+
+            FileStorage::DeleteAll();
+
+            return [
+                'request_success' => true,
+                'data' => [
+                    'title' => __("Vulnerability scanner deactivated", "really-simple-ssl"),
+                    'message' => __("The vulnerability scanner has been deactivated", "really-simple-ssl"),
+                    'url' => 'https://really-simple-ssl.com/vulnerabilities/',
+                ]
+            ];
+
+        }
+
     }
 
     //we initialize the class
@@ -1454,7 +1507,6 @@ if (!function_exists('rsssl_vulnerabilities_enabled')) {
         return rsssl_get_option('enable_vulnerability_scanner');
     }
 }
-
 
 /* Routing and API's */
 

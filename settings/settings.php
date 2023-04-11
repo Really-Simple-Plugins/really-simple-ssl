@@ -315,6 +315,10 @@ function rsssl_do_action($request, $ajax_data = false)
             require_once(rsssl_path . 'security/wordpress/rsssl_vulnerabilities.php');
             $response = rsssl_vulnerabilities::firstRun();
             break;
+        case 'deactivate_vulnerability_scanner':
+            require_once(rsssl_path . 'security/wordpress/rsssl_vulnerabilities.php');
+            $response = rsssl_vulnerabilities::deactivateScan();
+            break;
         default:
             $response = apply_filters("rsssl_do_action", [], $action, $data);
     }
