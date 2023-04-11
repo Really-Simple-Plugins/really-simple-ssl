@@ -154,6 +154,7 @@ const Onboarding = (props) => {
             let showAsPlugin = item.status!=='success' && item.is_plugin && item.current_action === 'none';
             let isPluginClass = showAsPlugin ? 'rsssl-is-plugin' : '';
             title = showAsPlugin ? <b>{title}</b> : title;
+            let completed = status==='success' && (current_action==='completed' || current_action==='none');
             return (
                 <li key={index} className={isPluginClass}>
                     <Icon name = {statusIcon} color = {statusColor} />
@@ -164,8 +165,11 @@ const Onboarding = (props) => {
                         {networkProgress>=100 && __("completed", "really-simple-ssl") }
                         </>}
                     {button && <>&nbsp;-&nbsp;
-                        {showLink && <Button isLink={true} onClick={(e) => actionHandler(id, action, e)}>{buttonTitle}</Button>}
-                        {!showLink && <>{buttonTitle}</>}
+                        {!completed && <>
+                            {showLink && <Button isLink={true} onClick={(e) => actionHandler(id, action, e)}>{buttonTitle}</Button>}
+                            {!showLink && <>{buttonTitle}</>}
+                        </>}
+                        {completed && <>{__("Completed", "really-simple-ssl")}</>}
                     </>}
                     {showAsPlugin && read_more && <a target="_blank" href={read_more} className="button button-default rsssl-read-more">{__("Read More", "really-simple-ssl")}</a>}
                 </li>
