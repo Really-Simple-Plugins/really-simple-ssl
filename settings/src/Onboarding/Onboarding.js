@@ -65,23 +65,16 @@ const Onboarding = (props) => {
     };
 
     useEffect( () => {
-        if (networkwide && networkActivationStatus === 'main_site_activated') {
+        if (networkwide && networkActivationStatus === 'main_site_activated' && currentStepIndex===2 ) {
             activateSSLNetworkWide();
         }
-    }, [networkActivationStatus, networkProgress])
+    }, [networkActivationStatus, networkProgress, currentStepIndex])
 
     useEffect( () => {
         const run = async () => {
-            getSteps(false);
+            await getSteps(false);
             if ( dataLoaded && sslEnabled && currentStepIndex===0) {
-                if (!!props.isModal ) {
-                    console.log("set step index to 1")
-
-                    setCurrentStepIndex(1)
-                } else {
-                    console.log("set step index to 2")
-                    setCurrentStepIndex(2)
-                }
+                setCurrentStepIndex(1)
             }
 
             if (getFieldValue('notifications_email_address') !== '' && email==='') {
@@ -105,13 +98,11 @@ const Onboarding = (props) => {
             setCurrentStepIndex(currentStepIndex+1);
             //change url to https, after final check
             if ( response.success ) {
-
+                if ( networkwide ) {
+                    setNetworkActivationStatus('main_site_activated');
+                }
                 if ( response.site_url_changed ) {
-                    window.location.reload();
-                } else {
-                    if ( networkwide ) {
-                        setNetworkActivationStatus('main_site_activated');
-                    }
+                   window.location.reload();
                 }
             }
         }).then( async () => { await fetchFieldsData(selectedMainMenuItem ) } );
