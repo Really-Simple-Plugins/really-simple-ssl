@@ -115,8 +115,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
         public function run()
         {
             //we check if the vulnerability scanner is enabled and then the fun happens.
-            //first we need to make sure we update the files every day. So we add a daily cron.
-            add_filter('rsssl_daily_cron', array($this, 'daily_cron'));
 
             //we check the rsssl options if the enable_feedback_in_plugin is set to true
             if (rsssl_get_option('enable_feedback_in_plugin')) {
@@ -154,6 +152,8 @@ if (!class_exists("rsssl_vulnerabilities")) {
             //we check if the schedule already exists, if not, we add it.
             if (!wp_next_scheduled('rsssl_vulnerabilities_cron')) {
                 wp_schedule_event(time(), $instance->schedule, 'rsssl_vulnerabilities_cron');
+                //now we add the action to the cron.
+                add_action('rsssl_vulnerabilities_cron', array($instance, 'run'));
             }
             return $instance->assemble_first_run();
         }
