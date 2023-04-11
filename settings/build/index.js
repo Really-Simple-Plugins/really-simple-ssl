@@ -44224,7 +44224,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/api */ "./src/utils/api.js");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var react_use__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-use */ "./node_modules/react-use/esm/useUpdateEffect.js");
 /* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/Icon */ "./src/utils/Icon.js");
 /* harmony import */ var _Placeholder_Placeholder__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Placeholder/Placeholder */ "./src/Placeholder/Placeholder.js");
 /* harmony import */ var _Menu_MenuData__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Menu/MenuData */ "./src/Menu/MenuData.js");
@@ -44240,99 +44239,100 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
 const Onboarding = props => {
   const {
     fetchFieldsData,
     updateField,
-    saveFields,
-    setChangedField
+    updateFieldsData,
+    getFieldValue
   } = (0,_Settings_FieldsData__WEBPACK_IMPORTED_MODULE_7__["default"])();
   const {
-    dismissModal
+    dismissModal,
+    actionHandler,
+    getSteps,
+    error,
+    certificateValid,
+    networkwide,
+    sslEnabled,
+    dataLoaded,
+    processing,
+    setProcessing,
+    steps,
+    currentStep,
+    currentStepIndex,
+    setCurrentStepIndex,
+    overrideSSL,
+    setOverrideSSL,
+    networkActivationStatus,
+    setNetworkActivationStatus,
+    networkProgress,
+    refreshSSLStatus,
+    activateSSLNetworkWide,
+    email,
+    setEmail,
+    saveEmail,
+    includeTips,
+    setIncludeTips,
+    sendTestEmail,
+    setSendTestEmail
   } = (0,_OnboardingData__WEBPACK_IMPORTED_MODULE_8__["default"])();
   const {
-    setSelectedMainMenuItem
+    setSelectedMainMenuItem,
+    selectedMainMenuItem
   } = (0,_Menu_MenuData__WEBPACK_IMPORTED_MODULE_6__["default"])();
-  const [steps, setSteps] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
-  const [error, setError] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
-  const [overrideSSL, setOverrideSSL] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
-  const [certificateValid, setCertificateValid] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
-  const [stepsChanged, setStepsChanged] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)('');
-  const [networkwide, setNetworkwide] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
-  const [networkActivationStatus, setNetworkActivationStatus] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
-  const [networkProgress, setNetworkProgress] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(0);
-  (0,react_use__WEBPACK_IMPORTED_MODULE_9__["default"])(() => {
-    if (networkProgress < 100 && networkwide && networkActivationStatus === 'main_site_activated') {
-      _utils_api__WEBPACK_IMPORTED_MODULE_2__.runTest('activate_ssl_networkwide').then(response => {
-        if (response.success) {
-          setNetworkProgress(response.progress);
-          if (response.progress >= 100) {
-            updateActionForItem('ssl_enabled', '', 'success');
-          }
-        }
-      });
+  const statuses = {
+    'inactive': {
+      'icon': 'info',
+      'color': 'orange'
+    },
+    'warning': {
+      'icon': 'circle-times',
+      'color': 'orange'
+    },
+    'error': {
+      'icon': 'circle-times',
+      'color': 'red'
+    },
+    'success': {
+      'icon': 'circle-check',
+      'color': 'green'
+    },
+    'processing': {
+      'icon': 'file-download',
+      'color': 'red'
     }
-  });
+  };
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-    updateOnBoardingData(false);
+    if (networkwide && networkActivationStatus === 'main_site_activated') {
+      activateSSLNetworkWide();
+    }
+  }, [networkActivationStatus, networkProgress]);
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    const run = async () => {
+      getSteps(false);
+      if (dataLoaded && sslEnabled && currentStepIndex === 0) {
+        setCurrentStepIndex(1);
+      }
+      if (getFieldValue('notifications_email_address') !== '' && email === '') {
+        setEmail(getFieldValue('notifications_email_address'));
+      }
+    };
+    run();
   }, []);
-  const updateOnBoardingData = forceRefresh => {
-    _utils_api__WEBPACK_IMPORTED_MODULE_2__.getOnboarding(forceRefresh).then(response => {
-      if (response.error) {
-        setError(response.error);
-      } else {
-        let steps = response.steps;
-        setNetworkwide(response.networkwide);
-        setOverrideSSL(response.ssl_detection_overridden);
-        setCertificateValid(response.certificate_valid);
-        steps[0].visible = true;
-        //if ssl is already enabled, the server will send only one step. In that case we can skip the below.
-        //it's only needed when SSL is activated just now, client side.
-        if (response.ssl_enabled && steps.length > 1) {
-          steps[0].visible = false;
-          steps[1].visible = true;
-        }
-        setNetworkActivationStatus(response.network_activation_status);
-        if (response.network_activation_status === 'completed') {
-          setNetworkProgress(100);
-        }
-        setSteps(steps);
-        setStepsChanged('initial');
-      }
-    });
-  };
-  const refreshSSLStatus = e => {
-    e.preventDefault();
-    steps.forEach(function (step, i) {
-      if (step.id === 'activate_ssl') {
-        step.items.forEach(function (item, j) {
-          if (item.status === 'error') {
-            steps[i].items[j].status = 'processing';
-            steps[i].items[j].title = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Re-checking SSL certificate, please wait...", "really-simple-ssl");
-          }
-        });
-      }
-    });
-    setSteps(steps);
-    setStepsChanged(true);
-    setTimeout(function () {
-      updateOnBoardingData(true);
-    }, 1000); //add a delay, otherwise it's so fast the user may not trust it.
-  };
 
+  //ensure all fields are updated, and progress is retrieved again
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    if (dataLoaded && currentStep.action === 'activate_setting') {
+      fetchFieldsData('general');
+    }
+  }, [currentStep]);
   const activateSSL = () => {
-    setStepsChanged(false);
+    setProcessing(true);
     _utils_api__WEBPACK_IMPORTED_MODULE_2__.runTest('activate_ssl').then(async response => {
-      steps[0].visible = false;
-      steps[1].visible = true;
+      setProcessing(false);
+      setCurrentStepIndex(currentStepIndex + 1);
       //change url to https, after final check
       if (response.success) {
-        setSteps(steps);
-        setStepsChanged(true);
-        updateField('ssl_enabled', true);
-        setChangedField('ssl_enabled', true);
-        await saveFields(true, false);
         if (response.site_url_changed) {
           window.location.reload();
         } else {
@@ -44341,66 +44341,21 @@ const Onboarding = props => {
           }
         }
       }
-    });
-  };
-  const updateActionForItem = (findItem, newAction, newStatus) => {
-    let stepsCopy = steps;
-    stepsCopy.forEach(function (step, i) {
-      stepsCopy[i].items.forEach(function (item, j) {
-        if (item.id === findItem) {
-          let itemCopy = stepsCopy[i].items[j];
-          itemCopy.current_action = newAction;
-          if (newStatus) {
-            itemCopy.status = newStatus;
-          }
-          stepsCopy[i].items[j] = itemCopy;
-        }
-      });
-    });
-    setSteps(stepsCopy);
-    setStepsChanged(findItem + newAction + newStatus);
-  };
-  const itemButtonHandler = (id, action) => {
-    let data = {};
-    data.id = id;
-    updateActionForItem(id, action, false);
-    _utils_api__WEBPACK_IMPORTED_MODULE_2__.doAction(action, data).then(async response => {
-      if (response.success) {
-        if (action === 'activate_setting') {
-          //ensure all fields are updated, and progress is retrieved again
-          await fetchFieldsData('general');
-        }
-        let nextAction = response.next_action;
-        if (nextAction !== 'none' && nextAction !== 'completed') {
-          updateActionForItem(id, nextAction, false);
-          _utils_api__WEBPACK_IMPORTED_MODULE_2__.doAction(nextAction, data).then(response => {
-            if (response.success) {
-              updateActionForItem(id, 'completed', 'success');
-            } else {
-              updateActionForItem(id, 'failed', 'error');
-            }
-          }).catch(error => {
-            updateActionForItem(id, 'failed', 'error');
-          });
-        } else {
-          updateActionForItem(id, 'completed', 'success');
-        }
-      } else {
-        updateActionForItem(id, 'failed', 'error');
-      }
-    }).catch(error => {
-      updateActionForItem(id, 'failed', 'error');
+    }).then(async () => {
+      await fetchFieldsData(selectedMainMenuItem);
     });
   };
   const parseStepItems = items => {
-    return items.map((item, index) => {
+    return items && items.map((item, index) => {
       let {
         title,
+        description,
         current_action,
         action,
         status,
         button,
-        id
+        id,
+        read_more
       } = item;
       if (id === 'ssl_enabled' && networkwide) {
         if (networkProgress >= 100) {
@@ -44411,29 +44366,7 @@ const Onboarding = props => {
           title = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Processing activation of subsites networkwide", "really-simple-ssl");
         }
       }
-      const statuses = {
-        'inactive': {
-          'icon': 'info',
-          'color': 'orange'
-        },
-        'warning': {
-          'icon': 'circle-times',
-          'color': 'orange'
-        },
-        'error': {
-          'icon': 'circle-times',
-          'color': 'red'
-        },
-        'success': {
-          'icon': 'circle-check',
-          'color': 'green'
-        },
-        'processing': {
-          'icon': 'file-download',
-          'color': 'red'
-        }
-      };
-      const statusIcon = statuses[status].icon;
+      const statusIcon = item.status !== 'success' && item.is_plugin && item.current_action === 'none' ? 'empty' : statuses[status].icon;
       const statusColor = statuses[status].color;
       const currentActions = {
         'activate_setting': (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('Activating...', "really-simple-ssl"),
@@ -44453,15 +44386,23 @@ const Onboarding = props => {
         }
       }
       let showLink = button && button === buttonTitle;
+      let showAsPlugin = item.status !== 'success' && item.is_plugin && item.current_action === 'none';
+      let isPluginClass = showAsPlugin ? 'rsssl-is-plugin' : '';
+      title = showAsPlugin ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("b", null, title) : title;
       return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", {
-        key: index
+        key: index,
+        className: isPluginClass
       }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_4__["default"], {
         name: statusIcon,
         color: statusColor
-      }), title, id === 'ssl_enabled' && networkwide && networkActivationStatus === 'main_site_activated' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, "\xA0-\xA0", networkProgress < 100 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("working", "really-simple-ssl"), "\xA0", networkProgress, "%"), networkProgress >= 100 && (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("completed", "really-simple-ssl")), button && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, "\xA0-\xA0", showLink && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+      }), title, description && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, "\xA0-\xA0", description), id === 'ssl_enabled' && networkwide && networkActivationStatus === 'main_site_activated' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, "\xA0-\xA0", networkProgress < 100 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("working", "really-simple-ssl"), "\xA0", networkProgress, "%"), networkProgress >= 100 && (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("completed", "really-simple-ssl")), button && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, "\xA0-\xA0", showLink && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
         isLink: true,
-        onClick: () => itemButtonHandler(id, action)
-      }, buttonTitle), !showLink && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, buttonTitle)));
+        onClick: e => actionHandler(id, action, e)
+      }, buttonTitle), !showLink && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, buttonTitle)), showAsPlugin && read_more && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+        target: "_blank",
+        href: read_more,
+        className: "button button-default rsssl-read-more"
+      }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Read More", "really-simple-ssl")));
     });
   };
   const goToDashboard = () => {
@@ -44472,11 +44413,17 @@ const Onboarding = props => {
     if (props.isModal) dismissModal();
     window.location.href = rsssl_settings.letsencrypt_url;
   };
+  const saveEmailAndUpdateFields = async () => {
+    await saveEmail();
+    updateField('send_notifications_email', true);
+    updateField('notifications_email_address', email);
+    updateFieldsData();
+  };
   const controlButtons = () => {
     let ActivateSSLText = networkwide ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Activate SSL networkwide", "really-simple-ssl") : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Activate SSL", "really-simple-ssl");
-    if (steps[0].visible && steps.length > 1) {
+    if (currentStepIndex === 0) {
       return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-        disabled: !certificateValid && !overrideSSL,
+        disabled: processing || !certificateValid && !overrideSSL,
         className: "button button-primary",
         onClick: () => {
           activateSSL();
@@ -44501,7 +44448,22 @@ const Onboarding = props => {
         }
       }));
     }
-    if (steps.length > 1 && steps[1].visible || steps[0].visible) {
+    if (currentStepIndex > 0 && currentStepIndex < steps.length - 1) {
+      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+        disabled: processing,
+        className: "button button-primary",
+        onClick: () => saveEmailAndUpdateFields()
+      }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('Save and continue', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+        disabled: processing,
+        className: "button button-default",
+        onClick: () => {
+          setCurrentStepIndex(currentStepIndex + 1);
+        }
+      }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('Skip', 'really-simple-ssl')));
+    }
+
+    //for last step only
+    if (steps.length - 1 === currentStepIndex) {
       return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
         className: "button button-primary",
         onClick: () => {
@@ -44519,43 +44481,46 @@ const Onboarding = props => {
       error: error
     });
   }
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, !stepsChanged && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_4__["default"], {
+  let step = currentStep;
+  let processingClass = processing ? 'rsssl-processing' : '';
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, !dataLoaded && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-onboarding-placeholder"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_4__["default"], {
     name: "file-download",
     color: "grey"
   }), (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Fetching next step...", "really-simple-ssl"))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Placeholder_Placeholder__WEBPACK_IMPORTED_MODULE_5__["default"], {
     lines: "3"
-  })), stepsChanged && steps.map((step, index) => {
-    const {
-      title,
-      subtitle,
-      items,
-      info_text: infoText,
-      visible
-    } = step;
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-modal-content-step",
-      key: index,
-      style: {
-        display: visible ? 'block' : 'none'
-      }
-    }, title && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
-      className: "rsssl-modal-subtitle"
-    }, title), subtitle && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-modal-description"
-    }, subtitle), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", null, parseStepItems(items)), certificateValid && infoText && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-modal-description",
-      dangerouslySetInnerHTML: {
-        __html: infoText
-      }
-    }), !certificateValid && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-modal-description"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-      href: "#",
-      onClick: e => refreshSSLStatus(e)
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Refresh SSL status", "really-simple-ssl")), "\xA0", (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("The SSL detection method is not 100% accurate.", "really-simple-ssl"), "\xA0", (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("If you’re certain an SSL certificate is present, and refresh SSL status does not work, please check “Override SSL detection” to continue activating SSL.", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-modal-content-step-footer"
-    }, controlButtons()));
-  }));
+  }))), dataLoaded && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-modal-content-step " + processingClass
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", null, parseStepItems(step.items)), currentStep.id === 'email' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "email",
+    value: email,
+    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Your email address", "really-simple-ssl"),
+    onChange: e => setEmail(e.target.value)
+  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    onChange: e => setIncludeTips(e.target.checked),
+    type: "checkbox",
+    checked: includeTips
+  }), (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Include 6 Tips & Tricks to get started with Really Simple SSL.", "really-simple-ssl"), "\xA0", (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    href: "https://really-simple-ssl.com/legal/privacy-statement/",
+    target: "_blank"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Privacy Statement", "really-simple-ssl")))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    onChange: e => setSendTestEmail(e.target.checked),
+    type: "checkbox",
+    checked: sendTestEmail
+  }), (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Send a notification test email - Notification emails are sent from your server.", "really-simple-ssl")))), certificateValid && step.info_text && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-modal-description",
+    dangerouslySetInnerHTML: {
+      __html: step.info_text
+    }
+  }), currentStepIndex === 0 && !certificateValid && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-modal-description"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    href: "#",
+    onClick: e => refreshSSLStatus(e)
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Refresh SSL status", "really-simple-ssl")), "\xA0", (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("The SSL detection method is not 100% accurate.", "really-simple-ssl"), "\xA0", (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("If you’re certain an SSL certificate is present, and refresh SSL status does not work, please check “Override SSL detection” to continue activating SSL.", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-modal-content-step-footer"
+  }, controlButtons())));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Onboarding);
 
@@ -44572,12 +44537,74 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/index.mjs");
+/* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/index.mjs");
+/* harmony import */ var immer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! immer */ "./node_modules/immer/dist/immer.esm.mjs");
 /* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/api */ "./src/utils/api.js");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
 
 
-const useOnboardingData = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, get) => ({
+
+
+const useOnboardingData = (0,zustand__WEBPACK_IMPORTED_MODULE_2__.create)((set, get) => ({
+  steps: [],
+  currentStepIndex: 0,
+  currentStep: {},
+  error: false,
+  networkProgress: 0,
+  networkActivationStatus: '',
+  certificateValid: '',
+  networkwide: false,
+  sslEnabled: false,
+  overrideSSL: false,
   showOnboardingModal: false,
+  dataLoaded: false,
+  processing: false,
+  email: '',
+  includeTips: false,
+  sendTestEmail: true,
+  setIncludeTips: includeTips => {
+    set(state => ({
+      includeTips
+    }));
+  },
+  setSendTestEmail: sendTestEmail => {
+    set(state => ({
+      sendTestEmail
+    }));
+  },
+  setEmail: email => {
+    set(state => ({
+      email
+    }));
+  },
+  setShowOnboardingModal: showOnboardingModal => {
+    set(state => ({
+      showOnboardingModal
+    }));
+  },
+  setProcessing: processing => {
+    set(state => ({
+      processing
+    }));
+  },
+  setOverrideSSL: overrideSSL => {
+    set(state => ({
+      overrideSSL
+    }));
+  },
+  setNetworkActivationStatus: networkActivationStatus => {
+    set(state => ({
+      networkActivationStatus
+    }));
+  },
+  setCurrentStepIndex: currentStepIndex => {
+    const currentStep = get().steps[currentStepIndex];
+    set(state => ({
+      currentStepIndex,
+      currentStep
+    }));
+  },
   dismissModal: () => {
     let data = {};
     data.dismiss = true;
@@ -44586,10 +44613,203 @@ const useOnboardingData = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, 
     }));
     _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('dismiss_modal', data).then(response => {});
   },
+  saveEmail: () => {
+    let data = {};
+    data.email = get().email;
+    data.includeTips = get().includeTips;
+    data.sendTestEmail = get().sendTestEmail;
+    set(state => ({
+      processing: true
+    }));
+    _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('update_email', data).then(response => {
+      set(state => ({
+        processing: false
+      }));
+      get().setCurrentStepIndex(get().currentStepIndex + 1);
+    });
+  },
+  updateItemStatus: (action, status, id) => {
+    const currentStepIndex = get().currentStepIndex;
+    const itemIndex = get().steps[currentStepIndex].items.findIndex(item => {
+      return item.id === id;
+    });
+    set((0,immer__WEBPACK_IMPORTED_MODULE_3__.produce)(state => {
+      let step = get().currentStep;
+      let stepCopy = {
+        ...step
+      };
+      let itemsCopy = [...step.items];
+      let itemCopy = {
+        ...step.items[itemIndex]
+      };
+      itemCopy.status = status;
+      itemCopy.current_action = action;
+      itemsCopy[itemIndex] = itemCopy;
+      stepCopy.items = itemsCopy;
+      state.steps[currentStepIndex] = stepCopy;
+      state.currentStep = state.steps[currentStepIndex];
+    }));
+  },
   setShowOnBoardingModal: showOnboardingModal => set(state => ({
     showOnboardingModal
-  }))
+  })),
+  actionHandler: async (id, action, event) => {
+    event.preventDefault();
+    get().updateItemStatus(action, 'processing', id);
+    let next = await processAction(action, id);
+    get().updateItemStatus(next.action, next.status, id);
+    if (next.action !== 'none' && next.action !== 'completed') {
+      next = await processAction(next.action, id);
+      get().updateItemStatus(next.action, next.status, id);
+    }
+  },
+  getSteps: async forceRefresh => {
+    const {
+      steps,
+      networkActivationStatus,
+      certificateValid,
+      networkProgress,
+      networkwide,
+      overrideSSL,
+      error,
+      sslEnabled
+    } = await retrieveSteps(forceRefresh);
+    //if ssl is already enabled, the server will send only one step. In that case we can skip the below.
+    //it's only needed when SSL is activated just now, client side.
+    let currentStepIndex = 0;
+    if (sslEnabled || networkwide && networkActivationStatus === 'completed') {
+      currentStepIndex = 1;
+    }
+    set({
+      steps: steps,
+      currentStepIndex: currentStepIndex,
+      currentStep: steps[currentStepIndex],
+      networkActivationStatus: networkActivationStatus,
+      certificateValid: certificateValid,
+      networkProgress: networkProgress,
+      networkwide: networkwide,
+      overrideSSL: overrideSSL,
+      sslEnabled: sslEnabled,
+      dataLoaded: true,
+      error: error
+    });
+    if (networkActivationStatus === 'completed') {
+      set({
+        networkProgress: 100
+      });
+    }
+  },
+  refreshSSLStatus: e => {
+    e.preventDefault();
+    set({
+      processing: true
+    });
+    set((0,immer__WEBPACK_IMPORTED_MODULE_3__.produce)(state => {
+      const stepIndex = state.steps.findIndex(step => {
+        return step.id === 'activate_ssl';
+      });
+      const step = state.steps[stepIndex];
+      step.items.forEach(function (item, j) {
+        if (item.status === 'error') {
+          step.items[j].status = 'processing';
+          step.items[j].title = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Re-checking SSL certificate, please wait...", "really-simple-ssl");
+        }
+      });
+      state.steps[stepIndex] = step;
+    }));
+    setTimeout(async function () {
+      const {
+        steps,
+        certificateValid,
+        error
+      } = await retrieveSteps(true);
+      set({
+        steps: steps,
+        certificateValid: certificateValid,
+        processing: false,
+        error: error
+      });
+    }, 1000); //add a delay, otherwise it's so fast the user may not trust it.
+  },
+
+  activateSSLNetworkWide: () => {
+    set(state => ({
+      processing: true
+    }));
+    _utils_api__WEBPACK_IMPORTED_MODULE_0__.runTest('activate_ssl_networkwide').then(response => {
+      if (response.success) {
+        set({
+          networkProgress: response.progress
+        });
+        if (response.progress >= 100) {
+          const currentStepIndex = get().currentStepIndex;
+          const itemIndex = get().steps[currentStepIndex].items.findIndex(item => {
+            return item.id === 'ssl_enabled';
+          });
+          set((0,immer__WEBPACK_IMPORTED_MODULE_3__.produce)(state => {
+            let step = get().currentStep;
+            let stepCopy = {
+              ...step
+            };
+            let itemsCopy = [...step.items];
+            let itemCopy = {
+              ...step.items[itemIndex]
+            };
+            itemCopy.status = 'success';
+            itemCopy.current_action = '';
+            itemsCopy[itemIndex] = itemCopy;
+            stepCopy.items = itemsCopy;
+            state.steps[currentStepIndex] = stepCopy;
+            state.currentStep = state.steps[currentStepIndex];
+            state.processing = false;
+          }));
+        }
+      }
+    });
+  }
 }));
+const retrieveSteps = forceRefresh => {
+  return _utils_api__WEBPACK_IMPORTED_MODULE_0__.getOnboarding(forceRefresh).then(response => {
+    let steps = response.steps;
+    let sslEnabled = response.ssl_enabled;
+    let networkActivationStatus = response.network_activation_status;
+    let certificateValid = response.certificate_valid;
+    let networkProgress = response.network_progress;
+    let networkwide = response.networkwide;
+    let overrideSSL = response.ssl_detection_overridden;
+    let error = response.error;
+    return {
+      steps,
+      networkActivationStatus,
+      certificateValid,
+      networkProgress,
+      networkwide,
+      overrideSSL,
+      error,
+      sslEnabled
+    };
+  });
+};
+const processAction = (action, id) => {
+  let data = {};
+  data.id = id;
+  let next = {};
+  return _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction(action, data).then(async response => {
+    if (response.success) {
+      next.action = response.next_action;
+      next.status = 'success';
+      return next;
+    } else {
+      next.action = 'failed';
+      next.status = 'error';
+      return next;
+    }
+  }).catch(error => {
+    next.action = 'failed';
+    next.status = 'error';
+    return next;
+  });
+};
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useOnboardingData);
 
 /***/ }),
@@ -44633,22 +44853,26 @@ const OnboardingModal = props => {
   const {
     showOnboardingModal,
     setShowOnBoardingModal,
+    currentStep,
     dismissModal
   } = (0,_OnboardingData__WEBPACK_IMPORTED_MODULE_6__["default"])();
   const [modalLoaded, setModalLoaded] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     if (!modalLoaded) {
-      _utils_api__WEBPACK_IMPORTED_MODULE_1__.doAction('get_modal_status').then(response => {
-        setModalLoaded(true);
-        setShowOnBoardingModal(!response.dismissed);
-      });
+      const run = async () => {
+        _utils_api__WEBPACK_IMPORTED_MODULE_1__.doAction('get_modal_status').then(response => {
+          setModalLoaded(true);
+          setShowOnBoardingModal(!response.dismissed);
+        });
+      };
+      run();
     }
   }, []);
   (0,react_use__WEBPACK_IMPORTED_MODULE_8__["default"])(() => {
     if (showOnboardingModal === true) {
       let data = {};
       data.dismiss = false;
-      _utils_api__WEBPACK_IMPORTED_MODULE_1__.doAction('dismiss_modal', data).then(response => {});
+      _utils_api__WEBPACK_IMPORTED_MODULE_1__.doAction('dismiss_modal', data);
     }
   });
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, showOnboardingModal && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -44657,11 +44881,7 @@ const OnboardingModal = props => {
     className: "rsssl-modal rsssl-onboarding"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-modal-header"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
-    className: "rsssl-logo",
-    src: rsssl_settings.plugin_url + 'assets/img/really-simple-ssl-logo.svg',
-    alt: "Really Simple SSL logo"
-  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", null, currentStep.title), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
     type: "button",
     className: "rsssl-modal-close",
     "data-dismiss": "modal",
@@ -44678,6 +44898,8 @@ const OnboardingModal = props => {
     fill: "#000000",
     d: "M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"
   })))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-header-extension"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, currentStep.subtitle))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-modal-content"
   }, !fieldsLoaded && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_5__["default"], {
     name: "file-download",
@@ -45332,16 +45554,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/index.mjs");
-/* harmony import */ var immer__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! immer */ "./node_modules/immer/dist/immer.esm.mjs");
+/* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/index.mjs");
+/* harmony import */ var immer__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! immer */ "./node_modules/immer/dist/immer.esm.mjs");
 /* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/api */ "./src/utils/api.js");
 /* harmony import */ var _utils_sleeper_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/sleeper.js */ "./src/utils/sleeper.js");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/data */ "@wordpress/data");
 /* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _utils_lib__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/lib */ "./src/utils/lib.js");
-
 
 
 
@@ -45362,7 +45582,7 @@ const fetchFields = () => {
     console.error(error);
   });
 };
-const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_5__.create)((set, get) => ({
+const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, get) => ({
   fieldsLoaded: false,
   error: false,
   fields: [],
@@ -45383,7 +45603,7 @@ const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_5__.create)((set, get) => 
     nextButtonDisabled
   })),
   setChangedField: (id, value) => {
-    set((0,immer__WEBPACK_IMPORTED_MODULE_6__.produce)(state => {
+    set((0,immer__WEBPACK_IMPORTED_MODULE_5__.produce)(state => {
       //remove current reference
       const existingFieldIndex = state.changedFields.findIndex(field => {
         return field.id === id;
@@ -45403,7 +45623,7 @@ const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_5__.create)((set, get) => 
     handleShowSavedSettingsNotice(text);
   },
   updateField: (id, value) => {
-    set((0,immer__WEBPACK_IMPORTED_MODULE_6__.produce)(state => {
+    set((0,immer__WEBPACK_IMPORTED_MODULE_5__.produce)(state => {
       let index = state.fields.findIndex(fieldItem => fieldItem.id === id);
       if (index !== -1) {
         state.fields[index].value = value;
@@ -45411,7 +45631,7 @@ const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_5__.create)((set, get) => 
     }));
   },
   updateSubField: (id, subItemId, value) => {
-    set((0,immer__WEBPACK_IMPORTED_MODULE_6__.produce)(state => {
+    set((0,immer__WEBPACK_IMPORTED_MODULE_5__.produce)(state => {
       let index = state.fields.findIndex(fieldItem => fieldItem.id === id);
       let itemValue = state.fields[index].value;
       if (!Array.isArray(itemValue)) {
@@ -45497,7 +45717,7 @@ const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_5__.create)((set, get) => 
       _utils_api__WEBPACK_IMPORTED_MODULE_0__.setFields(saveFields).then(response => {
         progress = response.progress;
         fields = response.fields;
-        set((0,immer__WEBPACK_IMPORTED_MODULE_6__.produce)(state => {
+        set((0,immer__WEBPACK_IMPORTED_MODULE_5__.produce)(state => {
           state.changedFields = [];
           state.fields = fields;
           state.progress = progress;
@@ -45513,7 +45733,7 @@ const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_5__.create)((set, get) => 
     let fields = get().fields;
     fields = updateFieldsListWithConditions(fields);
     const nextButtonDisabled = isNextButtonDisabled(fields, selectedSubMenuItem);
-    set((0,immer__WEBPACK_IMPORTED_MODULE_6__.produce)(state => {
+    set((0,immer__WEBPACK_IMPORTED_MODULE_5__.produce)(state => {
       state.fields = fields;
       state.nextButtonDisabled = nextButtonDisabled;
     }));
@@ -48750,6 +48970,19 @@ const Icon = props => {
       }))
     };
   }
+  if (iconName === 'empty') {
+    renderedIcon = {
+      html: (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("svg", {
+        height: iconSize,
+        width: iconSize,
+        "aria-hidden": "true",
+        focusable: "false",
+        role: "img",
+        xmlns: "http://www.w3.org/2000/svg",
+        viewBox: "0 0 280.8 363.67"
+      })
+    };
+  }
   if (iconName === 'external-link') {
     renderedIcon = {
       html: (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("svg", {
@@ -49040,7 +49273,12 @@ const ajaxPost = (path, requestData) => {
     let xhr = new XMLHttpRequest();
     xhr.open('POST', url);
     xhr.onload = function () {
-      let response = JSON.parse(xhr.response);
+      let response;
+      try {
+        response = JSON.parse(xhr.response);
+      } catch (error) {
+        resolve(invalidDataError(xhr.response, 500, 'invalid_data'));
+      }
       if (xhr.status >= 200 && xhr.status < 300) {
         resolve(response);
       } else {

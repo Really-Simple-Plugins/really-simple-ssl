@@ -6,7 +6,7 @@ Requires at least: 5.7
 License: GPL2
 Tested up to: 6.2
 Requires PHP: 7.2
-Stable tag: 6.2.3
+Stable tag: 6.2.4
 
 The easiest way to improve security! Leverage your SSL certificate and protect your website visitors.
 
@@ -97,8 +97,10 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 
 == Changelog ==
 = 6.2.4 =
+* Improvement: optionally enable notification emails in onboarding wizard
+* Improvement: onboarding styling
 * Fix: catch non array value from notices array, props @kenrichman
-* Fix: typo in documenation link, props (@bookman53
+* Fix: typo in documenation link, props @bookman53
 
 = 6.2.3 =
 * Improvement: Changed Back-end react to functional components

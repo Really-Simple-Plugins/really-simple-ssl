@@ -602,15 +602,15 @@ function rsssl_rest_api_fields_set(WP_REST_Request $request, $ajax_data = false)
             update_option('rsssl_options', $options);
         }
     }
-    do_action('rsssl_after_saved_fields', $fields);
-    foreach ($fields as $field) {
-        do_action("rsssl_after_save_field", $field['id'], $field['value'], $prev_value, $field['type']);
+	RSSSL()->admin->clear_admin_notices_cache();
+	do_action('rsssl_after_saved_fields', $fields );
+	foreach ( $fields as $field ) {
+        do_action( "rsssl_after_save_field", $field['id'], $field['value'], $prev_value, $field['type'] );
     }
-
-    return [
-        'success' => true,
-        'progress' => RSSSL()->progress->get(),
-        'fields' => rsssl_fields(true),
+	return [
+            'success' => true,
+            'progress' => RSSSL()->progress->get(),
+            'fields' => rsssl_fields(true),
     ];
 }
 
@@ -655,15 +655,16 @@ function rsssl_update_option($name, $value)
         return;
     }
 
-    $options[$name] = $value;
-    if (is_multisite() && rsssl_is_networkwide_active()) {
-        update_site_option('rsssl_options', $options);
-    } else {
-        update_option('rsssl_options', $options);
-    }
-    $config_field['value'] = $value;
-    do_action('rsssl_after_saved_fields', [$config_field]);
-    do_action("rsssl_after_save_field", $name, $value, $prev_value, $type);
+	$options[$name] = $value;
+	if ( is_multisite() && rsssl_is_networkwide_active() ) {
+		update_site_option( 'rsssl_options', $options );
+	} else {
+		update_option( 'rsssl_options', $options );
+	}
+	$config_field['value'] = $value;
+    RSSSL()->admin->clear_admin_notices_cache();
+	do_action('rsssl_after_saved_fields',[$config_field] );
+	do_action( "rsssl_after_save_field", $name, $value, $prev_value, $type );
 }
 
 /**

@@ -1,7 +1,10 @@
 .rsssl-modal {
-  .components-modal__header {
+  border-radius: 0;
+  .rsssl-modal-header, .components-modal__header {
     background-color: var(--rsp-yellow-faded);
     padding: var(--rsp-spacing-m) var(--rsp-spacing-m)!important;
+    //no border radius on bottom
+    border-radius: 0;
   }
 
   .components-modal__content {
@@ -16,7 +19,6 @@
       margin: 0;
       padding: var(--rsp-spacing-m) 0;
       padding-top: 0;
-      width: 75%;
     }
   }
 
