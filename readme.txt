@@ -99,6 +99,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 = 6.2.4 =
 * Improvement: optionally enable notification emails in onboarding wizard
 * Improvement: onboarding styling
+* Improvement: do not send an 'admin username renamed' email if the setting has been enabled, but no username was actually renamed, props @zignorp
 * Fix: catch non array value from notices array, props @kenrichman
 * Fix: typo in documenation link, props @bookman53
 
