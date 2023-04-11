@@ -23,8 +23,6 @@ const Page = (props) => {
                 fetchMenuData(fields);
             });
         }
-
-
     }, [fields] );
 
     useEffect( () => {

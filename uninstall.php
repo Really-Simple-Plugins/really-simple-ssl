@@ -7,6 +7,7 @@ if ( !defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 $settings = get_option('rsssl_options');
 if (isset($settings['delete_data_on_uninstall']) && $settings['delete_data_on_uninstall']) {
 	$options = [
+		"rsssl_notification_email",
 		"rsssl_remaining_tasks",
 		"rsssl_activation_timestamp",
 		"rsssl_activation_timestamp",
@@ -56,7 +57,6 @@ if (isset($settings['delete_data_on_uninstall']) && $settings['delete_data_on_un
 		"rsssl_htaccess_rules",
 		"rsssl_options",
 		"rsssl_key",
-		"rsssl_6_upgrade_completed",
 	];
 	foreach ( $options as $option_name ) {
 		delete_option( $option_name );

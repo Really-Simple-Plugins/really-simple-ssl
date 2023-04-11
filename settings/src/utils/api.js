@@ -23,7 +23,12 @@ const ajaxPost = (path, requestData) => {
         let xhr = new XMLHttpRequest();
         xhr.open('POST', url );
         xhr.onload = function () {
-            let response = JSON.parse(xhr.response);
+            let response;
+            try {
+                response = JSON.parse(xhr.response);
+            } catch (error) {
+                resolve(invalidDataError(xhr.response, 500, 'invalid_data') );
+            }
             if (xhr.status >= 200 && xhr.status < 300) {
                 resolve(response);
             } else {
@@ -124,6 +129,7 @@ const invalidDataError = (apiResponse, status, code ) => {
 }
 
 const apiGet = (path) => {
+
     if ( usesPlainPermalinks() ) {
         let config = {
             headers: {

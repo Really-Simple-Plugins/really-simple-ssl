@@ -28,7 +28,6 @@ class rsssl_admin
 	    add_action( 'admin_init', array($this, 'maybe_dismiss_review_notice') );
 	    add_action( 'rsssl_weekly_cron', array($this, 'clear_admin_notices_cache') );
 
-
 	    //add the settings page for the plugin
 	    add_action('admin_enqueue_scripts', array($this, 'enqueue_assets'));
 	    add_action('admin_init', array($this, 'listen_for_deactivation'), 40);
@@ -194,14 +193,13 @@ class rsssl_admin
         $activation_time = get_option('rsssl_flush_rewrite_rules');
         $more_than_one_minute_ago = $activation_time < strtotime("-1 minute");
         $less_than_2_minutes_ago = $activation_time > strtotime("-2 minute");
-        if (get_option('rsssl_flush_rewrite_rules') && $more_than_one_minute_ago && $less_than_2_minutes_ago){
+        if ( $more_than_one_minute_ago && $less_than_2_minutes_ago && get_option('rsssl_flush_rewrite_rules')){
             delete_option('rsssl_flush_rewrite_rules');
             add_action('shutdown', 'flush_rewrite_rules');
         }
-
 	    $more_than_2_minute_ago = get_option('rsssl_flush_caches') < strtotime("-2 minute");
 	    $less_than_5_minutes_ago = get_option('rsssl_flush_caches') > strtotime("-5 minute");
-	    if (get_option('rsssl_flush_caches') && $more_than_2_minute_ago && $less_than_5_minutes_ago){
+	    if ( $more_than_2_minute_ago && $less_than_5_minutes_ago && get_option('rsssl_flush_caches')){
 		    delete_option('rsssl_flush_caches');
 		    add_action('shutdown', array( RSSSL()->cache, 'flush' )  );
 	    }
@@ -362,6 +360,7 @@ class rsssl_admin
 			    'site_url_changed' => false,
 		    ];
         }
+
 	    $safe_mode = defined('RSSSL_SAFE_MODE') && RSSSL_SAFE_MODE;
         $error = false;
 	    $is_rest_request =  isset($data['is_rest_request']);
@@ -408,6 +407,7 @@ class rsssl_admin
 	        return [
                 'success' => !$error,
                 'site_url_changed' => $site_url_changed,
+                'request_success' => true,
             ];
         }
 	    return !$error;
@@ -1817,14 +1817,13 @@ class rsssl_admin
             'status' => ['open', 'warning'], //status can be "all" (all tasks, regardless of dismissed or open), "open" (not success/completed) or "completed"
         );
         $args = wp_parse_args($args, $defaults);
-	    $cache_admin_notices = !$this->is_settings_page();
 
 	    //if we're on the settings page, we need to clear the admin notices transient, because this list won't get refreshed otherwise
 	    if ( $this->is_settings_page() && !get_option('rsssl_6_notice_dismissed')) {
             update_option('rsssl_6_notice_dismissed', true, false );
 	    }
 
-	    if ( $cache_admin_notices ) {
+	    if ( !$this->is_settings_page() ) {
 		    $cached_notices = get_option('rsssl_admin_notices');
             if ( $cached_notices === 'empty') {
                 return [];
@@ -1835,7 +1834,10 @@ class rsssl_admin
 	    }
 
         //not cached, set a default here
-	    update_option('rsssl_admin_notices', 'empty');
+        //only cache if the admin_notices are retrieved.
+        if ( $args['admin_notices'] ) {
+	        update_option( 'rsssl_admin_notices', 'empty' );
+        }
 
 	    $rules            = $this->get_redirect_rules( true );
         if ( $this->ssl_type !== "NA" ) {
@@ -2297,6 +2299,22 @@ class rsssl_admin
 		            ),
 	            ),
             ),
+	        'vul_beta' => array(
+		        'condition'  => array(
+			        'RSSSL()->admin->is_upgraded',
+		        ),
+		        'callback' => '_true_',
+		        'output' => array(
+			        'true' => array(
+				        'msg' => __( "Our vulnerability reporting is in beta. Signup for the beta to discover the new features!", 'really-simple-ssl' ),
+				        'icon' => 'open',
+				        'admin_notice' => false,
+				        'url' => 'https://really-simple-ssl.com/vulnerability-reporting/',
+				        'dismissible' => true,
+				        'plusone' => true,
+			        ),
+		        ),
+	        ),
         );
         //on multisite, don't show the notice on subsites.
         //we can't make different sets for network admin and for subsites (at least not for admin notices), as these notices are cached,
@@ -2380,7 +2398,10 @@ class rsssl_admin
             }
             //ensure an empty list is also cached
 		    $cache_notices = empty($notices) ? 'empty' : $notices;
-		    update_option('rsssl_admin_notices', $cache_notices );
+		    //only cache if the admin_notices are retrieved.
+		    if ( $args['admin_notices'] ) {
+			    update_option( 'rsssl_admin_notices', $cache_notices );
+		    }
         }
 
 	    //sort so warnings are on top
@@ -2414,6 +2435,19 @@ class rsssl_admin
     private function is_upgraded_to_6(){
         return get_option('rsssl_show_onboarding') && !get_option('rsssl_6_notice_dismissed');
     }
+
+	private function is_upgraded(){
+		$previous_version = get_option('rsssl_previous_version');
+		//if there's no first version yet, we assume it's not upgraded
+		if ( !$previous_version ) {
+			return false;
+		}
+		//if the previous version is below current, we just upgraded.
+		if ( version_compare($previous_version,rsssl_version ,'<') ){
+			return true;
+		}
+		return false;
+	}
 
 	/**
      * Get output of function, in format 'function', or 'class()->sub()->function'
@@ -2486,16 +2520,18 @@ class rsssl_admin
 		if ( !$cache || ($count === false) ) {
 			$count = 0;
 			$notices = $this->get_notices_list();
-			foreach ( $notices as $id => $notice ) {
-                $success = ( isset( $notice['output']['icon'] ) && ( $notice['output']['icon'] === 'success' ) ) ? true : false;
-                if ( ! $success
-                     && isset( $notice['output']['plusone'] )
-                     && $notice['output']['plusone']
-                ) {
-                    $count++;
-                }
+			if ( is_array($notices) ) {
+				foreach ( $notices as $id => $notice ) {
+					$success = ( isset( $notice['output']['icon'] ) && ( $notice['output']['icon'] === 'success' ) ) ? true : false;
+					if ( ! $success
+					     && isset( $notice['output']['plusone'] )
+					     && $notice['output']['plusone']
+					) {
+						$count ++;
+					}
+				}
 			}
-            if ( $count==0) {
+            if ( $count===0) {
                 $count = 'empty';
             }
 			update_option( 'rsssl_plusone_count', $count );

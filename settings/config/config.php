@@ -286,22 +286,28 @@ function rsssl_fields( $load_values = true ) {
 		],
 		[
 			'id'               => 'redirect',
-			'menu_id'          => 'general',
+            'menu_id'          => 'general',
 			'group_id'         => 'general',
 			'type'             => 'select',
 			'tooltip'  => __( "Changing redirect methods should be done with caution. Please make sure you have read our instructions beforehand at the right-hand side.", 'really-simple-ssl' ),
 			'label'            => __( "Redirect method", 'really-simple-ssl' ),
 			'warning'     			=> true,
 			'options'          => [
-				'none'        => __( "No redirect", "really-simple-ssl" ),
-				'wp_redirect' => __( "301 PHP redirect", "really-simple-ssl" ),
-				'htaccess'    => __( "301 .htaccess redirect (read instructions first)", "really-simple-ssl" ),
+				'none'         => __( "No redirect", "really-simple-ssl" ),
+				'wp_redirect'  => __( "301 PHP redirect", "really-simple-ssl" ),
+				'htaccess'     => __( "301 .htaccess redirect (read instructions first)", "really-simple-ssl" ),
 			],
 			'help'             => [
 				'label' => 'default',
 				'title' => __( "Redirect method", 'really-simple-ssl' ),
 				'text'  => __( 'Redirects your site to https with a SEO friendly 301 redirect if it is requested over http.', 'really-simple-ssl' ),
 			],
+            'email'            => [
+                'title'   => __( "Settings update: .htaccess redirect", 'really-simple-ssl' ),
+                'message' => __( "The .htaccess redirect has been enabled on your site. If the server configuration is non-standard, this might cause issues. Please check if all pages on your site are functioning properly.", 'really-simple-ssl' ),
+                'url'     => 'https://really-simple-ssl.com/remove-htaccess-redirect-site-lockout/',
+                'condition'  => ['redirect' => 'htaccess']
+            ],
 			'react_conditions' => [
 				'relation' => 'AND',
 				[
@@ -555,10 +561,11 @@ function rsssl_fields( $load_values = true ) {
 			'group_id'           => 'hardening_basic',
 			'type'               => 'checkbox',
 			'label'              => __( "Block the username 'admin'", 'really-simple-ssl' ),
-			'email'            => [
+			'email'              => [
 				'title'   => __( "Settings update: Username 'admin' renamed", 'really-simple-ssl' ),
 				'message' => sprintf(__( "As a security precaution, the username ‘admin’ has been changed on %s. From now on, you can login with '%s' or an email address.", 'really-simple-ssl' ), '{site_url}','{username}'),
 				'url'     => 'https://really-simple-ssl.com/instructions/locked-our-after-renaming-the-admin-username/',
+				'condition'    => 'rsssl_username_admin_changed',
 			],
 			'tooltip'            => __( "If the username 'admin' currently exists, you can rename it here. Please note that you can no longer use this username, and should use the new username or an email address",
 				'really-simple-ssl' ),
@@ -1227,7 +1234,8 @@ function rsssl_fields( $load_values = true ) {
 	foreach ( $fields as $key => $field ) {
 		$field = wp_parse_args( $field, [ 'default' => '', 'id' => false, 'visible' => true, 'disabled' => false, 'new_features_block' => false ] );
 		//handle server side conditions
-		if ( isset( $field['server_conditions'] ) ) {
+		//but not if outside our settings pages
+		if ( rsssl_is_logged_in_rest() && isset( $field['server_conditions'] ) ) {
 			if ( ! rsssl_conditions_apply( $field['server_conditions'] ) ) {
 				unset( $fields[ $key ] );
 				continue;

@@ -4,7 +4,6 @@ import * as rsssl_api from "../utils/api";
 import sleeper from "../utils/sleeper.js";
 import {__} from '@wordpress/i18n';
 import {dispatch} from '@wordpress/data';
-import {in_array} from "../utils/lib";
 
 const fetchFields = () => {
     return rsssl_api.getFields().then((response) => {
