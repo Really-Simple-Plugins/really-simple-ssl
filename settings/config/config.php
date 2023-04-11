@@ -1234,7 +1234,8 @@ function rsssl_fields( $load_values = true ) {
 	foreach ( $fields as $key => $field ) {
 		$field = wp_parse_args( $field, [ 'default' => '', 'id' => false, 'visible' => true, 'disabled' => false, 'new_features_block' => false ] );
 		//handle server side conditions
-		if ( isset( $field['server_conditions'] ) ) {
+		//but not if outside our settings pages
+		if ( rsssl_is_logged_in_rest() && isset( $field['server_conditions'] ) ) {
 			if ( ! rsssl_conditions_apply( $field['server_conditions'] ) ) {
 				unset( $fields[ $key ] );
 				continue;

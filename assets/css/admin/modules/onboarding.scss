@@ -4,14 +4,65 @@
     height: 26px;
   }
   .rsssl-modal-content{
-    padding-top: var(--rsp-spacing-xs);
+    display:flex;
+    .rsssl-onboarding-placeholder {
+      flex-grow:1
+    }
+    &-step {
+      display:flex;
+      flex-direction: column;
+      width:100%;
+    }
+    &-step-footer{
+      display:flex;
+      align-items: center;
+      gap: var(--rsp-spacing-m);
+      .components-toggle-control {
+        margin-top:8px;
+        .components-form-toggle{
+          margin-top:12px;
+        }
+      }
+      margin-top:auto;
+    }
+    padding-top: var(--rsp-spacing-m);
     line-height: 2.2;
+    min-height:275px;
+    .rsssl-processing {
+      opacity:0.5;
+    }
+    input[type="email"]{
+      width: 100%;
+      margin-bottom: var(--rsp-spacing-m);
+      border: 2px solid;
+      height: 50px;
+      border-color: var(--rsp-grey-300);
+    }
     ul{
       margin-bottom: var(--rsp-spacing-m);
       li {
         display: flex;
         align-items: flex-start;
         margin-bottom: var(--rsp-spacing-xxs);
+        &.rsssl-is-plugin{
+          background-color: var(--rsp-grey-100);
+          border: none;
+          margin: 10px 0 0 0;
+          padding:2px 0;
+          position:relative;
+          a.button-default.rsssl-read-more{
+            position:absolute;
+            display:none;
+            top:17px;
+            right:20px;
+            z-index:5;
+            @media(max-width: 620px) {
+              position:relative;
+              margin-left:20px;
+              z-index:5;
+            }
+          }
+        }
         .rsssl-icon{
           margin-top: 7px;
           margin-right:7px;
@@ -22,19 +73,7 @@
       }
     }
   }
-  .rsssl-modal-content-step-footer {
-    display:flex;
-    align-items: center;
-    margin-top: var(--rsp-spacing-l);
-    gap: var(--rsp-spacing-m);
-    .components-toggle-control {
-      margin-top:8px;
-      .components-form-toggle{
-        margin-top:12px;
-      }
-    }
 
-  }
 }
 
 .rsssl-modal-content-step-footer {

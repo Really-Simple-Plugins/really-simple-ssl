@@ -78,6 +78,7 @@ test:php7.4:
     - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: $CI_COMMIT_BRANCH == 'master'
 
 # We test PHP7.4 with multisite
 test:php7.4:multisite:
@@ -88,6 +89,7 @@ test:php7.4:multisite:
     - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: $CI_COMMIT_BRANCH == 'master'
 
 # We test PHP8.0
 test:php8.0:
@@ -96,6 +98,7 @@ test:php8.0:
     - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover --colors=never
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: $CI_COMMIT_BRANCH == 'master'
 
 # We test PHP8 with multisite
 test:php8.0:multisite:
@@ -106,6 +109,7 @@ test:php8.0:multisite:
     - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: $CI_COMMIT_BRANCH == 'master'
 
 # We test PHP8.1
 test:php8.1:
@@ -114,6 +118,7 @@ test:php8.1:
     - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover --colors=never
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: $CI_COMMIT_BRANCH == 'master'
 
 # We test PHP8.1 with multisite
 test:php8.1:multisite:
@@ -124,3 +129,4 @@ test:php8.1:multisite:
     - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: $CI_COMMIT_BRANCH == 'master'
