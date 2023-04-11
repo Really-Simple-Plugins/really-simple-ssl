@@ -65,7 +65,7 @@ const Onboarding = (props) => {
     };
 
     useEffect( () => {
-        if (networkwide && networkActivationStatus==='main_site_activated') {
+        if (networkwide && networkActivationStatus === 'main_site_activated') {
             activateSSLNetworkWide();
         }
     }, [networkActivationStatus, networkProgress])
@@ -74,7 +74,14 @@ const Onboarding = (props) => {
         const run = async () => {
             getSteps(false);
             if ( dataLoaded && sslEnabled && currentStepIndex===0) {
-                setCurrentStepIndex(1)
+                if (!!props.isModal ) {
+                    console.log("set step index to 1")
+
+                    setCurrentStepIndex(1)
+                } else {
+                    console.log("set step index to 2")
+                    setCurrentStepIndex(2)
+                }
             }
 
             if (getFieldValue('notifications_email_address') !== '' && email==='') {
@@ -189,7 +196,7 @@ const Onboarding = (props) => {
         if ( currentStepIndex === 0 ) {
            return (
                 <>
-                    <button disabled={processing || (!certificateValid && !overrideSSL) } className="button button-primary" onClick={() => {activateSSL()}}>{ActivateSSLText}</button>
+                    <button disabled={processing || ( !certificateValid && !overrideSSL ) } className="button button-primary" onClick={() => {activateSSL()}}>{ActivateSSLText}</button>
                     { certificateValid && !rsssl_settings.pro_plugin_active && <a target="_blank" href={rsssl_settings.upgrade_link} className="button button-default" >{__("Improve Security with PRO", "really-simple-ssl")}</a>}
                     { !certificateValid && <button className="button button-default" onClick={() => {goToLetsEncrypt()}}>{__("Install SSL", "really-simple-ssl")}</button>}
                     { !certificateValid && <ToggleControl
@@ -252,6 +259,7 @@ const Onboarding = (props) => {
                         </ul>
                         { currentStep.id === 'email'&&
                             <>
+                                {!props.isModal && <p>{__("We use email notification to explain important updates in plugin settings. Add your email address below.","really-simple-ssl")}</p>}
                                 <div>
                                     <input type="email" value={email} placeholder={__("Your email address", "really-simple-ssl")} onChange={(e) => setEmail(e.target.value)} />
                                 </div><div>
