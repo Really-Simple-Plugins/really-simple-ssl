@@ -579,7 +579,6 @@ class rsssl_admin
 
     public function find_wp_config_path()
     {
-        return false;
         //limit nr of iterations to 20
         $i = 0;
         $maxiterations = 20;
