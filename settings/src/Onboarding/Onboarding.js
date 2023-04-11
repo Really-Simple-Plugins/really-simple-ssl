@@ -65,7 +65,7 @@ const Onboarding = (props) => {
     };
 
     useEffect( () => {
-        if (networkwide && networkActivationStatus==='main_site_activated') {
+        if (networkwide && networkActivationStatus === 'main_site_activated') {
             activateSSLNetworkWide();
         }
     }, [networkActivationStatus, networkProgress])
@@ -74,7 +74,14 @@ const Onboarding = (props) => {
         const run = async () => {
             getSteps(false);
             if ( dataLoaded && sslEnabled && currentStepIndex===0) {
-                setCurrentStepIndex(1)
+                if (!!props.isModal ) {
+                    console.log("set step index to 1")
+
+                    setCurrentStepIndex(1)
+                } else {
+                    console.log("set step index to 2")
+                    setCurrentStepIndex(2)
+                }
             }
 
             if (getFieldValue('notifications_email_address') !== '' && email==='') {
@@ -147,6 +154,7 @@ const Onboarding = (props) => {
             let showAsPlugin = item.status!=='success' && item.is_plugin && item.current_action === 'none';
             let isPluginClass = showAsPlugin ? 'rsssl-is-plugin' : '';
             title = showAsPlugin ? <b>{title}</b> : title;
+            let completed = status==='success' && (current_action==='completed' || current_action==='none');
             return (
                 <li key={index} className={isPluginClass}>
                     <Icon name = {statusIcon} color = {statusColor} />
@@ -157,8 +165,11 @@ const Onboarding = (props) => {
                         {networkProgress>=100 && __("completed", "really-simple-ssl") }
                         </>}
                     {button && <>&nbsp;-&nbsp;
-                        {showLink && <Button isLink={true} onClick={(e) => actionHandler(id, action, e)}>{buttonTitle}</Button>}
-                        {!showLink && <>{buttonTitle}</>}
+                        {!completed && <>
+                            {showLink && <Button isLink={true} onClick={(e) => actionHandler(id, action, e)}>{buttonTitle}</Button>}
+                            {!showLink && <>{buttonTitle}</>}
+                        </>}
+                        {completed && <>{__("Completed", "really-simple-ssl")}</>}
                     </>}
                     {showAsPlugin && read_more && <a target="_blank" href={read_more} className="button button-default rsssl-read-more">{__("Read More", "really-simple-ssl")}</a>}
                 </li>
@@ -185,12 +196,11 @@ const Onboarding = (props) => {
     }
 
     const controlButtons = () => {
-
         let ActivateSSLText = networkwide ? __("Activate SSL networkwide", "really-simple-ssl") : __("Activate SSL", "really-simple-ssl");
         if ( currentStepIndex === 0 ) {
            return (
                 <>
-                    <button disabled={processing || (!certificateValid && !overrideSSL) } className="button button-primary" onClick={() => {activateSSL()}}>{ActivateSSLText}</button>
+                    <button disabled={processing || ( !certificateValid && !overrideSSL ) } className="button button-primary" onClick={() => {activateSSL()}}>{ActivateSSLText}</button>
                     { certificateValid && !rsssl_settings.pro_plugin_active && <a target="_blank" href={rsssl_settings.upgrade_link} className="button button-default" >{__("Improve Security with PRO", "really-simple-ssl")}</a>}
                     { !certificateValid && <button className="button button-default" onClick={() => {goToLetsEncrypt()}}>{__("Install SSL", "really-simple-ssl")}</button>}
                     { !certificateValid && <ToggleControl
@@ -221,7 +231,7 @@ const Onboarding = (props) => {
             return (
                 <>
                     <button className="button button-primary" onClick={() => {goToDashboard()}}>{__('Go to Dashboard', 'really-simple-ssl')}</button>
-                    <button className="button button-default" onClick={() => dismissModal()}>{__('Dismiss', 'really-simple-ssl')}</button>
+                    { !!props.isModal && <button className="button button-default" onClick={() => dismissModal()}>{__('Dismiss', 'really-simple-ssl')}</button>}
                 </>
             );
         }
@@ -253,6 +263,7 @@ const Onboarding = (props) => {
                         </ul>
                         { currentStep.id === 'email'&&
                             <>
+                                {!props.isModal && <p>{__("We use email notification to explain important updates in plugin settings. Add your email address below.","really-simple-ssl")}</p>}
                                 <div>
                                     <input type="email" value={email} placeholder={__("Your email address", "really-simple-ssl")} onChange={(e) => setEmail(e.target.value)} />
                                 </div><div>

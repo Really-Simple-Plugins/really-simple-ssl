@@ -12,7 +12,7 @@ import useLetsEncryptData from "./letsEncryptData";
 import useFields from "../Settings/FieldsData";
 
 const Directories = (props) => {
-    const {addHelpNotice} = useFields();
+    const {addHelpNotice, updateField, setChangedField} = useFields();
 
     let action = props.action;
 
@@ -48,7 +48,8 @@ const Directories = (props) => {
     }
 
     const handleSwitchToDNS = () => {
-        props.updateField('verification_type', 'dns');
+        updateField('verification_type', 'dns');
+        setChangedField('verification_type', 'dns');
         return rsssl_api.runLetsEncryptTest('update_verification_type', 'dns').then((response) => {
             props.selectMenu('le-dns-verification');
             const notice = dispatch('core/notices').createNotice(
