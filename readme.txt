@@ -102,7 +102,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 * Improvement: do not send an 'admin username renamed' email if the setting has been enabled, but no username was actually renamed, props @zignorp
 * Fix: catch non array value from notices array, props @kenrichman
 * Fix: typo in documentation link, props @bookman53
-* Fix: Let's Encrypt Wizard not functioning because of change to functional components
+* Fix: Let's Encrypt Wizard not functioning because of change to functional components, props @growthrankmedia
 
 = 6.2.3 =
 * Improvement: Changed Back-end react to functional components
