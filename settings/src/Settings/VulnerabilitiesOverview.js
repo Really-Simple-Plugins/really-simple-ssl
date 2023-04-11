@@ -132,7 +132,6 @@ const VulnerabilitiesOverview = (props) => {
             pagination
             noDataComponent={__("No results", "really-simple-ssl")}
             persistTableHead
-            customStyles={customStyles}
         >
         </DataTable>
     )

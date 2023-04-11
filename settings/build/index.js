@@ -48419,8 +48419,7 @@ const VulnerabilitiesOverview = props => {
     dense: true,
     pagination: true,
     noDataComponent: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("No results", "really-simple-ssl"),
-    persistTableHead: true,
-    customStyles: customStyles
+    persistTableHead: true
   });
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (VulnerabilitiesOverview);

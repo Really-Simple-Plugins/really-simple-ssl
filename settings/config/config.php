@@ -931,6 +931,7 @@ function rsssl_fields( $load_values = true ) {
 
             'label' => __('Vulnerabilities Overview', 'really-simple-ssl'),
             'disabled' => false,
+            'default' => false,
             'react_conditions' => [
                 'relation' => 'AND',
                 [
@@ -939,21 +940,26 @@ function rsssl_fields( $load_values = true ) {
             ],
             'columns' => [
                 [
+                    'id'      => 'component',
                     'name'     => __( 'Component', 'really-simple-ssl' ),
                     'sortable' => false,
                     'column'   => 'Name',
+                    'width'    => '20%',
                 ],
                 [
+                    'id'      => 'risk',
                     'name'     => __( 'Risk', 'really-simple-ssl' ),
                     'sortable' => false,
                     'column'   => 'risk_name',
                 ],
                 [
+                    'id'      => 'date',
                     'name'     => __( 'Date', 'really-simple-ssl' ),
                     'sortable' => false,
                     'column'   => 'date',
                 ],
                 [
+                    'id'      => 'action',
                     'name'     => __( 'Action', 'really-simple-ssl' ),
                     'sortable' => false,
                     'column'   => 'vulnerability_action',
