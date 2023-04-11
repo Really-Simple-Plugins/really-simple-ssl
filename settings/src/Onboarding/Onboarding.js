@@ -21,6 +21,7 @@ const Onboarding = (props) => {
         dataLoaded,
         processing,
         setProcessing,
+        actionStatus,
         steps,
         currentStep,
         currentStepIndex,
@@ -90,6 +91,12 @@ const Onboarding = (props) => {
             fetchFieldsData('general');
         }
     }, [currentStep])
+
+    useEffect( () => {
+        if (actionStatus==='completed' ) {
+            fetchFieldsData(selectedMainMenuItem );
+        }
+    },[actionStatus])
 
     const activateSSL = () => {
         setProcessing(true);

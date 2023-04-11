@@ -20,6 +20,7 @@ const useOnboardingData = create(( set, get ) => ({
     email: '',
     includeTips:false,
     sendTestEmail:true,
+    actionStatus: '',
     setIncludeTips: (includeTips) => {
         set(state => ({ includeTips }))
     },
@@ -84,6 +85,7 @@ const useOnboardingData = create(( set, get ) => ({
     },
     setShowOnBoardingModal: (showOnboardingModal) => set(state => ({ showOnboardingModal })),
     actionHandler: async (id, action, event) => {
+        set({actionStatus: 'processing'});
         event.preventDefault();
         get().updateItemStatus(action, 'processing', id);
         let next = await processAction(action, id);
@@ -91,6 +93,8 @@ const useOnboardingData = create(( set, get ) => ({
         if ( next.action!=='none' && next.action!=='completed') {
             next = await processAction(next.action, id);
             get().updateItemStatus(next.action, next.status, id);
+        } else {
+            set({actionStatus: 'completed'});
         }
     },
     getSteps: async (forceRefresh) => {
