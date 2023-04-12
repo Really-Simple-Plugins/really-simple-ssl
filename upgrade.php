@@ -157,18 +157,18 @@ function rsssl_upgrade() {
 	}
 
 	#move notices transient to option, for better persistence
-	if ( version_compare( $prev_version, '6.0.13', '<' ) ) {
+	if ( $prev_version && version_compare( $prev_version, '6.0.13', '<' ) ) {
 		$notices = get_transient('rsssl_admin_notices');
 		$plus_ones = get_transient('rsssl_plusone_count');
 		update_option('rsssl_admin_notices', $notices);
 		update_option('rsssl_plusone_count', $plus_ones);
 	}
 
-	if ( version_compare( $prev_version, '6.2.3', '<' ) ) {
+	if ( $prev_version && version_compare( $prev_version, '6.2.3', '<' ) ) {
 		rsssl_update_option('send_notifications_email', 1 );
 	}
 
-	if ( version_compare( $prev_version, '6.2.4', '<' ) ) {
+	if ( $prev_version && version_compare( $prev_version, '6.2.4', '<' ) ) {
 		delete_option('rsssl_6_upgrade_completed' );
 	}
 
