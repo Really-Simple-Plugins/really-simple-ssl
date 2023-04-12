@@ -23,7 +23,7 @@ const LetsEncrypt = (props) => {
 
     useEffect(() => {
         reset();
-   }, [props.field])
+   }, [props.field.id])
 
     const getActions = () => {
         let propActions = props.field.actions;
@@ -142,7 +142,7 @@ const LetsEncrypt = (props) => {
         return actions;
     }
 
-    const processTestResult = (action, newActionIndex) => {
+    const processTestResult = async (action, newActionIndex) => {
         // clearInterval(intervalId.current);
         if ( action.status==='success' ) {
             setAttemptCount(0);
@@ -176,7 +176,7 @@ const LetsEncrypt = (props) => {
             //move to next action, but not if we're already on the max
             if ( maxIndex.current-1 > newActionIndex) {
                 setActionIndex(newActionIndex+1);
-                runTest(newActionIndex+1);
+                await runTest(newActionIndex+1);
             } else {
                 setActionIndex(newActionIndex+1);
                 handleNextButtonDisabled(false);
@@ -187,19 +187,19 @@ const LetsEncrypt = (props) => {
                 setActionIndex(maxIndex.current);
             } else {
                 setActionIndex(newActionIndex);
-                runTest(newActionIndex);
+                await runTest(newActionIndex);
             }
         } else if ( action.do === 'stop' ){
             setActionIndex(maxIndex.current);
         }
     }
 
-    const runTest = (newActionIndex) => {
+    const runTest = async (newActionIndex) => {
         let currentAction = {...actionsList[newActionIndex]};
         if (!currentAction) return;
         let  test = currentAction.action;
         const startTime = new Date();
-        rsssl_api.runLetsEncryptTest(test, props.field.id ).then( ( response ) => {
+        await rsssl_api.runLetsEncryptTest(test, props.field.id ).then( ( response ) => {
             const endTime = new Date();
             let timeDiff = endTime - startTime; //in ms
             const elapsedTime = Math.round(timeDiff);
@@ -213,7 +213,7 @@ const LetsEncrypt = (props) => {
                sleep.current = 1500-elapsedTime;
             }
             setActionsListItem(newActionIndex, currentAction);
-        }).then(sleeper(sleep.current)).then(() => {
+        }).then(sleeper(sleep.current)).then( () => {
             processTestResult(currentAction, newActionIndex);
       });
     }
