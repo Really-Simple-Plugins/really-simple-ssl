@@ -2,11 +2,9 @@ import {
     useState, useEffect
 } from '@wordpress/element';
 
-import * as rsssl_api from "../../utils/api";
 import TaskElement from "./../TaskElement";
 import Placeholder from '../../Placeholder/Placeholder';
 import useProgress from "./ProgressData";
-import useFields from "../../Settings/FieldsData";
 
 const ProgressBlock = (props) => {
     const {percentageCompleted, progressText, filter, notices, progressLoaded, getProgressData, error} = useProgress();

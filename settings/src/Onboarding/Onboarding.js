@@ -7,6 +7,7 @@ import Placeholder from '../Placeholder/Placeholder';
 import useMenu from "../Menu/MenuData";
 import useFields from "../Settings/FieldsData";
 import useOnboardingData from "./OnboardingData";
+import useProgress from "../Dashboard/Progress/ProgressData";
 
 const Onboarding = (props) => {
     const { fetchFieldsData, updateField, updateFieldsData, getFieldValue} = useFields();
@@ -42,6 +43,8 @@ const Onboarding = (props) => {
         setSendTestEmail
     } = useOnboardingData();
     const {setSelectedMainMenuItem, selectedMainMenuItem} = useMenu();
+    const { getProgressData} = useProgress();
+
     const statuses = {
         'inactive': {
             'icon': 'info',
@@ -112,7 +115,10 @@ const Onboarding = (props) => {
                    window.location.reload();
                 }
             }
-        }).then( async () => { await fetchFieldsData(selectedMainMenuItem ) } );
+        }).then( async () => {
+            await getProgressData();
+            await fetchFieldsData(selectedMainMenuItem )
+        } );
     }
 
     const parseStepItems = (items) => {
