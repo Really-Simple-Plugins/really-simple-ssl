@@ -90,13 +90,8 @@ const Onboarding = (props) => {
 
     //ensure all fields are updated, and progress is retrieved again
     useEffect( () => {
-        if ( dataLoaded && currentStep.action === 'activate_setting' ){
-            fetchFieldsData('general');
-        }
-    }, [currentStep])
-
-    useEffect( () => {
         if (actionStatus==='completed' ) {
+            getProgressData();
             fetchFieldsData(selectedMainMenuItem );
         }
     },[actionStatus])

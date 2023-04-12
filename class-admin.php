@@ -2309,9 +2309,6 @@ class rsssl_admin
 	            ),
             ),
 	        'vul_beta' => array(
-		        'condition'  => array(
-			        'RSSSL()->admin->is_upgraded',
-		        ),
 		        'callback' => '_true_',
 		        'output' => array(
 			        'true' => array(
