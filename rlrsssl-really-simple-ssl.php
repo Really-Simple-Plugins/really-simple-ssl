@@ -26,6 +26,28 @@
 */
 defined('ABSPATH') or die("you do not have access to this page!");
 
+if (!function_exists('rsssl_activation_check')) {
+	/**
+	 * Checks if the plugin can safely be activated, at least php 5.6 and wp 4.8
+	 */
+	function rsssl_activation_check()
+	{
+		if (version_compare(PHP_VERSION, '7.2', '<')) {
+			deactivate_plugins(plugin_basename(__FILE__));
+			wp_die(__('Really Simple SSL cannot be activated. The plugin requires PHP 7.2 or higher', 'really-simple-ssl'));
+		}
+
+		global $wp_version;
+		if (version_compare($wp_version, '5.7', '<')) {
+			deactivate_plugins(plugin_basename(__FILE__));
+			wp_die(__('Really Simple SSL cannot be activated. The plugin requires WordPress 5.7 or higher', 'really-simple-ssl'));
+		}
+        update_option('rsssl_show_onboarding', true);
+        set_transient('rsssl_redirect_to_settings_page', true, HOUR_IN_SECONDS );
+    }
+	register_activation_hook( __FILE__, 'rsssl_activation_check' );
+}
+
 class REALLY_SIMPLE_SSL
 {
 	private static $instance;
