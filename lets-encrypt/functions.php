@@ -240,6 +240,23 @@ if ( !function_exists('rsssl_get_other_host') ) {
 	}
 }
 
+/**
+ * Add some information to the javascript
+ * @param array $args
+ *
+ * @return array
+ */
+function rsssl_le_localize_script($args){
+	$hosting_dashboard = 'other';
+	if ( rsssl_is_cpanel() ) $hosting_dashboard = 'cpanel';
+	if ( rsssl_is_directadmin() ) $hosting_dashboard = 'directadmin';
+	if ( rsssl_is_plesk() ) $hosting_dashboard = 'plesk';
+	$args['hosting_dashboard'] = $hosting_dashboard;
+	return $args;
+}
+add_filter("rsssl_localize_script", 'rsssl_le_localize_script', 10, 3);
+
+
 if ( !function_exists('rsssl_progress_add')) {
 	/**
 	 * @param string $item
@@ -291,6 +308,8 @@ if ( !function_exists('rsssl_is_ready_for')) {
 
  function rsssl_get_not_completed_steps($item){
 	$sequence = array_column( rsssl_le_steps(), 'id');
+	//drop first
+	array_shift($sequence);
 	//drop all statuses after $item. We only need to know if all previous ones have been completed
 	$index = array_search($item, $sequence);
 	$sequence = array_slice($sequence, 0, $index, true);
