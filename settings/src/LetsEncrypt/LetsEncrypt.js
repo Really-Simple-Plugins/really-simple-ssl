@@ -129,14 +129,16 @@ const LetsEncrypt = (props) => {
 
             if (!dnsVerificationAdded && create_bundle_index>0) {
                 //store create bundle action
-                let createBundleAction = actions[create_bundle_index];
+                let actionsCopy = [...actions];
+                let createBundleAction = actionsCopy[create_bundle_index];
                 //overwrite create bundle action
                 let newAction = {};
                 newAction.action = 'verify_dns';
                 newAction.description = __("Verifying DNS records...", "really-simple-ssl");
                 newAction.attempts = 2;
-                actions[create_bundle_index] = newAction;
-                actions.push(createBundleAction);
+                actionsCopy[create_bundle_index] = newAction;
+                actionsCopy.push(createBundleAction);
+                actions = actionsCopy;
             }
         }
         return actions;

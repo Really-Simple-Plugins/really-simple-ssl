@@ -1077,7 +1077,7 @@ class rsssl_letsencrypt_handler {
 		$steps = rsssl_le_steps();
 		foreach ($not_completed_steps as $not_completed_step ) {
 			$index = array_search($not_completed_step, array_column( $steps, 'id'));
-			$nice_names[] = $steps[$index+1]['title'];
+			$nice_names[] = $steps[$index]['title'];
 		}
 		return sprintf(__('Please complete the following step(s) first: %s', "really-simple-ssl"), implode(", ", $nice_names) );
 	}

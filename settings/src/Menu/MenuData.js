@@ -13,11 +13,13 @@ const useMenu = create(( set, get ) => ({
     setSelectedSubMenuItem: async (selectedSubMenuItem) => {
         let selectedMainMenuItem = getMainMenuForSubMenu(selectedSubMenuItem);
         set(state => ({ selectedSubMenuItem,selectedMainMenuItem }))
-        window.location.href=rsssl_settings.dashboard_url+'#'+selectedMainMenuItem+'/'+selectedSubMenuItem;
+        // window.location.href=rsssl_settings.dashboard_url+'#'+selectedMainMenuItem+'/'+selectedSubMenuItem;
+        window.location.hash = selectedMainMenuItem+'/'+selectedSubMenuItem;
     },
     setSelectedMainMenuItem: (selectedMainMenuItem) => {
         set(state => ({ selectedMainMenuItem }))
-        window.location.href=rsssl_settings.dashboard_url+'#'+selectedMainMenuItem;
+        // window.location.href=rsssl_settings.dashboard_url+'#'+selectedMainMenuItem;
+        window.location.hash = selectedMainMenuItem;
     },
     //we need to get the main menu item directly from the anchor, otherwise we have to wait for the menu to load in page.js
     fetchSelectedMainMenuItem: () => {
