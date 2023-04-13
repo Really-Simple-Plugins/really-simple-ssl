@@ -43,15 +43,21 @@ const LetsEncrypt = (props) => {
     }, [actionsList])
 
     useEffect(() => {
+        // startInterval();
+    }, [])
+
+    const startInterval = () => {
         intervalId.current = setInterval(() => {
             if (refProgress.current<100) {
                 setProgress(refProgress.current + 0.2);
             }
         }, 100);
-    }, [])
+    }
 
     useEffect(() => {
         previousActionIndex.current = actionIndex;
+        let p = ( 100 / maxIndex.current ) * (actionIndex);
+        console.log(p);
         setProgress( ( 100 / maxIndex.current ) * (actionIndex));
 
         //ensure that progress does not get to 100 when retries are still running
@@ -96,7 +102,8 @@ const LetsEncrypt = (props) => {
     };
 
     const reset = () => {
-        clearInterval(intervalId.current);
+        // clearInterval(intervalId.current);
+        // startInterval();
         handleNextButtonDisabled(true);
         setActionsList(getActions());
         setProgress(0);
@@ -146,6 +153,7 @@ const LetsEncrypt = (props) => {
 
     const processTestResult = async (action, newActionIndex) => {
         // clearInterval(intervalId.current);
+
         if ( action.status==='success' ) {
             setAttemptCount(0);
         } else {
