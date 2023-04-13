@@ -116,10 +116,9 @@ const VulnerabilitiesOverview = (props) => {
         item.vulnerability_action = <div className="rsssl-vulnerability-action">
             <a className="button" href={"https://really-simple-ssl.com/vulnerabilities/" + rsssid}
                target={"_blank"}>{__("Details", "really-simple-ssl")}</a>
-            <a target={"_blank"} href="/wp-admin/plugins.php?plugin_status=upgrade" className="button button-primary"
+            <a target={"_blank"} href={rsssl_settings.plugins_url+"?plugin_status=upgrade"} className="button button-primary"
                style={btnStyle}>{__("View", "really-simple-ssl")}</a>
         </div>
-
     });
     return (
         <DataTable

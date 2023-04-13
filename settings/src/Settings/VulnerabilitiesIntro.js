@@ -71,7 +71,7 @@ const VulnerabilitiesIntro = (props) => {
                             onClick={() => {
                                 setOpen(true);
                                 //we redirect to dashboard
-                                window.location.href = "/wp-admin/options-general.php?page=really-simple-security#dashboard";
+                                window.location.hash = "dashboard";
                             }}
                         >
                             {__('DashBoard', 'really-simple-ssl')}
