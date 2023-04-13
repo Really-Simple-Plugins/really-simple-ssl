@@ -12,7 +12,7 @@ const NotificationTester = (props) => {
 
     function doTestNotification() {
         //Test one the email notification
-        rsssl_api.doAction( 'rsssl_test_notification' ).then
+        rsssl_api.doAction( 'vulnerabilities_test_notification' ).then
         ( ( response ) => {
 
         });

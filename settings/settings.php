@@ -305,20 +305,11 @@ function rsssl_do_action($request, $ajax_data = false)
         case 'clear_cache':
             $response = rsssl_clear_test_caches($data);
             break;
-        case 'rsssl_test_notification':
-            require_once(rsssl_path . 'security/wordpress/rsssl_vulnerabilities.php');
-            //creating a random string based on time.
-            $random_string = md5(time());
-            update_option('test_vulnerability_tester', $random_string, false);
-            $response = _vulnerabilities::testGenerator();
-            break;
-        case 'rsssl_scan_files':
-            require_once(rsssl_path . 'security/wordpress/rsssl_vulnerabilities.php');
-            $response = _vulnerabilities::firstRun();
-            break;
         default:
+            error_log("apply filter rest route do $action, should be after vulsn file ");
             $response = apply_filters("rsssl_do_action", [], $action, $data);
     }
+
     if (is_array($response)) {
         $response['request_success'] = true;
     }

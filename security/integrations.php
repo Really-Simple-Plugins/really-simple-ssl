@@ -128,7 +128,6 @@ function rsssl_is_integration_enabled( $plugin, $details ) {
 function rsssl_integrations() {
 	global $rsssl_integrations_list;
 	foreach ( $rsssl_integrations_list as $plugin => $details ) {
-
 		$details = wp_parse_args($details,
 			[
 				'option_id' => false,
@@ -138,28 +137,17 @@ function rsssl_integrations() {
 			]
 		);
 
-//		if ( $details['admin_only'] && !rsssl_admin_logged_in() ) {
-//			error_log("not admin");
-//			continue;
-//		}
+		if ( $details['admin_only'] && !rsssl_admin_logged_in() ) {
+			continue;
+		}
 
 		if ( rsssl_is_integration_enabled( $plugin, $details ) ) {
 			$path = apply_filters('rsssl_integrations_path', rsssl_path, $plugin);
 			$file = $path . 'security/' . $details['folder'] . "/" . $plugin . '.php';
-
 			if ( ! file_exists( $file ) ) {
 				continue;
 			}
 			require_once( $file );
-			$risk = $details['risk'];
-			$impact = $details['impact'];
-
-			// Apply fix automatically on high risk, low impact
-			//check if already executed
-			if ( $risk === 'high' && $impact === 'low' && rsssl_user_can_manage() ) {
-				$fix = isset($details['actions']['fix']) ? $details['actions']['fix']: false;
-//				rsssl_do_fix($fix);
-			}
 		}
 	}
 }

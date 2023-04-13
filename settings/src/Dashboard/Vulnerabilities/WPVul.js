@@ -22,7 +22,9 @@ const WPVul = () => {
     const [hardeningWord, setHardeningWord] = useState('');
     const [notEnabledHardeningFields, setNotEnabledHardeningFields] = useState(0);
     useEffect(() => {
-        fetchVulnerabilities();
+        if (!dataLoaded) {
+            fetchVulnerabilities();
+        }
     }, []);
 
     useEffect(() => {

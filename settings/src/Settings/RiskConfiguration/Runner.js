@@ -15,7 +15,7 @@ const Runner = (props) => {
             const firstRunner = async () => {
                 setDelayState(false);
                 setLoadingState(true);
-                let response = await rsssl_api.doAction('rsssl_scan_files');
+                let response = await rsssl_api.doAction('vulnerabilities_scan_files');
                 if (response.request_success) {
                     setLoadingState(false);
                     spin = "";

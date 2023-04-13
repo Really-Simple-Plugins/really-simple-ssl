@@ -12,6 +12,7 @@ const VulnerabilitiesOverview = (props) => {
         firstRun,
         fetchVulnerabilities
     } = useVulnerabilityData();
+    const {fieldsLoaded, getFieldValue} = useFields();
 
     const {
         fields,
@@ -40,11 +41,10 @@ const VulnerabilitiesOverview = (props) => {
     });
 
     useEffect(() => {
-        const run = async () => {
-            await fetchVulnerabilities();
+        if (fieldsLoaded && getFieldValue('enable_vulnerability_scanner')==1) {
+            fetchVulnerabilities();
         }
-        run();
-    }, []);
+    }, [fieldsLoaded]);
 
     fields.forEach(function (item, i) {
         if (item.id === 'enable_vulnerability_scanner') {
