@@ -308,7 +308,7 @@ function rsssl_do_action($request, $ajax_data = false)
             require_once(rsssl_path . 'security/wordpress/rsssl_vulnerabilities.php');
             //creating a random string based on time.
             $random_string = md5(time());
-            update_option('test_vulnerability_tester', $random_string);
+            update_option('test_vulnerability_tester', $random_string, false);
             $response = rsssl_vulnerabilities::testGenerator();
             break;
         case 'rsssl_scan_files':

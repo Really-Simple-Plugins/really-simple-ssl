@@ -9,18 +9,22 @@
 
     &.rsp-dark {
       background-color: var(--rsp-black);
+      color: var(--rsp-white);
     }
 
     &.rsp-low {
-      background-color: var(--rsp-yellow);
+      background-color: var(--rsp-yellow-faded);
+      color: var(--rsp-black);
     }
 
     &.rsp-medium {
-      background-color: var(--rsp-orange);
+      background-color: var(--rsp-yellow);
+      color: var(--rsp-black);
     }
 
     &.rsp-high {
-      background-color: var(--rsp-dark-orange);
+      background-color: var(--rsp-red-faded);
+      color: var(--rsp-black);
     }
 
     &.rsp-critical {

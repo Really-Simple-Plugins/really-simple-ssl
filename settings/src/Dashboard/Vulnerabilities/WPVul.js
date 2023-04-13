@@ -1,11 +1,10 @@
 import Icon from "../../utils/Icon";
 import {__} from "@wordpress/i18n";
 import useVulnerabilityData from "./VulnerabilityData";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import useFields from "../../Settings/FieldsData";
-import Help from "../../Settings/Help";
 
-const WPVul = (props) => {
+const WPVul = () => {
     const {
         vulnerabilities,
         vulnerabilityScore,
@@ -18,27 +17,40 @@ const WPVul = (props) => {
         fetchVulnerabilities
     } = useVulnerabilityData();
     const {fields} = useFields();
-    let featuredFields = fields.filter(field => field.new_features_block);
+    const [vulnerabilityWord, setVulnerabilityWord] = useState('');
+    const [updateWord, setUpdateWord] = useState('');
+    const [hardeningWord, setHardeningWord] = useState('');
+    const [notEnabledHardeningFields, setNotEnabledHardeningFields] = useState(0);
     useEffect(() => {
-        const run = async () => {
-            await fetchVulnerabilities();
-        }
-        run();
+        fetchVulnerabilities();
     }, []);
 
-    //singular or plural of the word vulnerability
-    const vulnerabilityWord = (vulnerabilities.length === 1) ? __("vulnerability", "really-simple-ssl") : __("vulnerabilities", "really-simple-ssl");
-    const updateWord = (updates === 1) ? __("update", "really-simple-ssl") : __("updates", "really-simple-ssl");
+    useEffect(() => {
+        //singular or plural of the word vulnerability
+        const v = (vulnerabilities === 1) ? __("vulnerability", "really-simple-ssl") : __("vulnerabilities", "really-simple-ssl");
+        setVulnerabilityWord(v);
+        const u = (updates === 1) ? __("update", "really-simple-ssl") : __("updates", "really-simple-ssl");
+        setUpdateWord(u);
+        const h = (notEnabledHardeningFields === 1) ? __("hardening feature", "really-simple-ssl") : __("hardening features", "really-simple-ssl");
+        setHardeningWord(h);
+    },[vulnerabilities, updates, notEnabledHardeningFields])
+
+    useEffect(() => {
+        if (fields.length>0) {
+            let notEnabledFields = fields.filter(field => field.recommended);
+            notEnabledFields = notEnabledFields.filter(field => field.value !== 1);
+            setNotEnabledHardeningFields(notEnabledFields.length);
+        }
+    },[fields])
 
     let risks = vulnerabilityCount();
-    const hardening = featuredFields.filter(field => field.value === 0);
     let vulClass = 'rsssl-inactive';
     let badgeVulStyle = vulEnabled?'rsp-success':'rsp-default';
     let badgeUpdateStyle = 'rsp-success';
     let iconVulColor = 'green';
     let iconVulEnabledColor = 'red';
     let iconUpdateColor = 'black';
-    if (vulEnabled || hardening.length > 0 || updates > 0) {
+    if (vulEnabled || notEnabledHardeningFields > 0 || updates > 0) {
         //now we calculate the score
         let score = vulnerabilityScore();
         //we create correct badge style
@@ -46,7 +58,7 @@ const WPVul = (props) => {
             badgeVulStyle = 'rsp-critical';
             iconVulColor =  'red';
         } else if (score < 4 && score > 0) {
-            badgeVulStyle = 'rsp-low';
+            badgeVulStyle = 'rsp-medium';
             iconVulColor = 'yellow';
         }
 
@@ -54,12 +66,12 @@ const WPVul = (props) => {
             badgeUpdateStyle = 'rsp-critical';
             iconUpdateColor =  'red';
         } else if (score < 5 && score > 0) {
-            badgeUpdateStyle = 'rsp-low';
+            badgeUpdateStyle = 'rsp-medium';
             iconUpdateColor = 'yellow';
         }
 
-        if (score < hardening.length) {
-            score = hardening.length;
+        if (score < notEnabledHardeningFields) {
+            score = notEnabledHardeningFields;
         }
 
         if (score < updates) {
@@ -105,7 +117,7 @@ const WPVul = (props) => {
                 <div className="rsssl-details">
                     <div className="rsssl-detail-icon"><Icon name="info" color='yellow'/></div>
                     <div className="rsssl-detail">
-                        {capitalizeFirstLetter(__("Enable vulnerability scanning for more information", "really-simple-ssl"))}
+                        {__("Enable vulnerability scanning for more information", "really-simple-ssl")}
                     </div>
                 </div>
             </>
@@ -168,9 +180,9 @@ const WPVul = (props) => {
                     <div className="rsssl-details">
                         <div className="rsssl-detail-icon"><Icon name={icon} color={iconColor}/></div>
                         <div className="rsssl-detail">
-                            {capitalizeFirstLetter(__("You have %s %word pending", "really-simple-ssl").replace("%s", updates).replace("%word", updateWord))}
+                            {__("You have %s %d pending", "really-simple-ssl").replace("%s", updates).replace("%d", updateWord)}
                             <a href={"/wp-admin/update-core.php"}
-                               style={linkStyle}>{capitalizeFirstLetter(__('%word', 'really-simple-ssl').replace('%word', updateWord))}</a>
+                               style={linkStyle}>{__('%d', 'really-simple-ssl').replace('%d', updateWord)}</a>
                         </div>
                     </div>
                 </>
@@ -181,7 +193,7 @@ const WPVul = (props) => {
                     <div className="rsssl-details">
                         <div className="rsssl-detail-icon"><Icon name={icon} color={iconColor}/></div>
                         <div className="rsssl-detail">
-                            {capitalizeFirstLetter(__("You have %s updates pending", "really-simple-ssl").replace("%s", updates).replace("%word", updateWord))}
+                            {__("You have %s %d pending", "really-simple-ssl").replace("%s", updates).replace("%d", updateWord)}
                         </div>
                     </div>
                 </>
@@ -214,12 +226,12 @@ const WPVul = (props) => {
                     <div className="rsssl-details">
                         <div className="rsssl-detail-icon"><Icon name={icon} color={iconColor}/></div>
                         <div className="rsssl-detail">
-                            <p>{capitalizeFirstLetter(__("You have %s %word", "really-simple-ssl")
+                            <p>{__("You have %s %d", "really-simple-ssl")
                                 .replace("%s", vulnerabilities)
-                                .replace("%word", vulnerabilityWord))
+                                .replace("%d", vulnerabilityWord)
                             }
                                 <a style={linkStyle} href={'#'}
-                                   target="_blank">{capitalizeFirstLetter(__('Read more', 'really-simple-ssl'))}</a>
+                                   target="_blank">{__('Read more', 'really-simple-ssl')}</a>
                             </p>
                         </div>
                     </div>
@@ -231,10 +243,10 @@ const WPVul = (props) => {
                     <div className="rsssl-details">
                         <div className="rsssl-detail-icon"><Icon name="circle-check" color='green'/></div>
                         <div className="rsssl-detail">
-                            {capitalizeFirstLetter(__("You have %s %word", "really-simple-ssl")
-                                .replace("%word", vulnerabilityWord)
+                            {__("You have %s %d", "really-simple-ssl")
+                                .replace("%d", vulnerabilityWord)
                                 .replace("%s", vulnerabilities)
-                            )}
+                            }
                         </div>
                     </div>
                 </>
@@ -246,16 +258,15 @@ const WPVul = (props) => {
     const linkStyle = {
         marginLeft: '1em'
     }
-    const checkHardening = () => {
-        //
-        if (hardening.length) {
+    const checknotEnabledHardeningFields = () => {
+        if (notEnabledHardeningFields) {
             let icon = 'circle-check';
             let iconColor = 'green';
-            if (hardening.length > 0) {
+            if (notEnabledHardeningFields > 0) {
                 icon = 'info';
                 iconColor = 'yellow';
             }
-            if (hardening.length >= 5) {
+            if (notEnabledHardeningFields >= 5) {
                 icon = 'circle-times';
                 iconColor = 'red';
             }
@@ -264,7 +275,7 @@ const WPVul = (props) => {
                     <div className="rsssl-details">
                         <div className="rsssl-detail-icon"><Icon name={icon} color={iconColor}/></div>
                         <div className="rsssl-detail">
-                            {capitalizeFirstLetter(__("You have %s open hardening features", "really-simple-ssl").replace("%s", hardening.length))}
+                            {__("You have %s open %d", "really-simple-ssl").replace("%s", notEnabledHardeningFields).replace('%d',hardeningWord)}
                         </div>
                     </div>
                 </>
@@ -273,9 +284,9 @@ const WPVul = (props) => {
             return (<>
                 <div className="rsssl-details">
                     <div className="rsssl-detail-icon"><Icon name="circle-check" color='green'/></div>
-                    <div className="rsssl-detail"><p>{capitalizeFirstLetter(__("Hardening features are configured", "really-simple-ssl"))}
+                    <div className="rsssl-detail"><p>{__("Hardening features are configured", "really-simple-ssl")}
                         <a style={linkStyle} href={'#'}
-                           target="_blank">{capitalizeFirstLetter(__('What now', 'really-simple-ssl'))}?</a></p>
+                           target="_blank">{__('What now', 'really-simple-ssl')}?</a></p>
                     </div>
                 </div>
             </>)
@@ -288,7 +299,7 @@ const WPVul = (props) => {
                 <div className="rsssl-ssl-test ">
                     <div className="rsssl-ssl-test-information">
                         <span>
-                            {vulEnabled ? <Icon color={iconVulColor} name="radar-duotone"></Icon> : <Icon color={iconVulEnabledColor} name="satellite-dish-duotone"></Icon>}
+                            {vulEnabled ? <Icon color={iconVulColor} size={20} name="radar-duotone"></Icon> : <Icon size={20}  color={iconVulEnabledColor} name="satellite-dish-duotone"></Icon>}
 
                         </span>
                         <span>
@@ -298,7 +309,7 @@ const WPVul = (props) => {
                         </span>
                     </div>
                     <div className={"rsssl-ssl-test-information"}>
-                        <span>{ updates ? <Icon color={iconUpdateColor} name="rotate-exclamation-light"></Icon> : <Icon color={'#000'} name="rotate-light"></Icon>}
+                        <span>{ updates ? <Icon size={20} color={iconUpdateColor} name="rotate-exclamation-light"></Icon> : <Icon size={20} color={'#000'} name="rotate-light"></Icon>}
                         </span>
                         <span>
                             <h2 className={"rsssl-number"}>{updates}</h2>
@@ -309,7 +320,7 @@ const WPVul = (props) => {
 
             </div>
             {dataLoaded? <>
-                {checkHardening()}
+                {checknotEnabledHardeningFields()}
                 {checkVulActive()}
                 {checkVul()}
                 {checkUpdates()}</>:<>

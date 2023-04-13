@@ -2,9 +2,7 @@ import {__} from '@wordpress/i18n';
 import useVulnerabilityData from "../Dashboard/Vulnerabilities/VulnerabilityData";
 import React, {useEffect} from 'react';
 import DataTable from "react-data-table-component";
-import Icon from "../utils/Icon";
 import useFields from "./FieldsData";
-import {Button} from "@wordpress/components";
 import VulnerabilitiesIntro from "./VulnerabilitiesIntro";
 
 const VulnerabilitiesOverview = (props) => {
@@ -16,7 +14,6 @@ const VulnerabilitiesOverview = (props) => {
     } = useVulnerabilityData();
 
     const {
-        changedFields,
         fields,
     } = useFields();
 

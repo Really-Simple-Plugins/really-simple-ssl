@@ -200,57 +200,53 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
             //if the option is filled, we add the test notice.
             if(get_option('test_vulnerability_tester')) {
-                $notices['test_vulnerability_email'] = [
-                    'callback' => '_true_',
-                    'score' => 1,
-                    'show_with_options' => ['enable_vulnerability_scanner_'.get_option('test_vulnerability_tester')],
-                    'output' => [
-                        'true' => [
-                            'title' => __('Test Vulnerability Sidewide and admin notice', 'really-simple-ssl'),
-                            'msg' => __('This is a test email to check if the vulnerability email is working. If you see this, it is working.', 'really-simple-ssl'),
-                            'url' => 'https://really-simple-ssl.com/knowledge-base/vulnerability-scanner/',
-                            'icon' => 'warning',
-                            'type' => 'warning',
-                            'dismissible' => true,
-                            'admin_notice' => true,
-                            'plusone' => true,
-                        ]
-                    ]
-                ];
-                $notices['test_vulnerability_dashboard_'.get_option('test_vulnerability_tester')] = [
-                    'callback' => '_true_',
-                    'score' => 1,
-                    'show_with_options' => ['enable_vulnerability_scanner'],
-                    'output' => [
-                        'true' => [
-                            'title' => __('Test Vulnerability Dashboard', 'really-simple-ssl'),
-                            'msg' => __('This is a test notice to check if the vulnerability dashboard is working. If you see this, it is working.', 'really-simple-ssl'),
-                            'url' => 'https://really-simple-ssl.com/knowledge-base/vulnerability-scanner/',
-                            'icon' => 'warning',
-                            'type' => 'warning',
-                            'dismissible' => true,
-                            'admin_notice' => false,
-                            'plusone' => true,
-                        ]
-                    ]
-                ];
-                $notices['test_vulnerability_sitewide_'.get_option('test_vulnerability_tester')] = [
-                    'callback' => '_true_',
-                    'score' => 1,
-                    'show_with_options' => ['enable_vulnerability_scanner'],
-                    'output' => [
-                        'true' => [
-                            'title' => __('Test Vulnerability Dashboard', 'really-simple-ssl'),
-                            'msg' => __('This is a test notice to check if the vulnerability dashboard is working. If you see this, it is working.', 'really-simple-ssl'),
-                            'url' => 'https://really-simple-ssl.com/knowledge-base/vulnerability-scanner/',
-                            'icon' => 'open',
-                            'type' => 'open',
-                            'dismissible' => true,
-                            'admin_notice' => true,
-                            'plusone' => true,
-                        ]
-                    ]
-                ];
+	            $side_wide = rsssl_get_option('vulnerability_notification_dashboard');
+	            $dashboard = rsssl_get_option('vulnerability_notification_sitewide');
+
+	            $site_wide_icon = $side_wide === 'l' || $side_wide === 'm' ? 'open' : 'warning';
+	            $dashboard_icon = $dashboard === 'l' || $dashboard === 'm' ? 'open' : 'warning';
+	            if ( $dashboard === 'l' || $dashboard === 'm' || $dashboard === 'h' || $dashboard === 'c') {
+		            $notices[ 'test_vulnerability_sitewide_' . get_option( 'test_vulnerability_tester' ) ] = [
+			            'callback'          => '_true_',
+			            'score'             => 1,
+			            'show_with_options' => [ 'enable_vulnerability_scanner' ],
+			            'output'            => [
+				            'true' => [
+					            'title'        => __( 'Test Vulnerability Dashboard', 'really-simple-ssl' ),
+					            'msg'          => __( 'This is a test notice to check if the vulnerability dashboard is working. If you see this, it is working.', 'really-simple-ssl' ),
+					            'url'          => 'https://really-simple-ssl.com/knowledge-base/vulnerability-scanner/',
+					            'icon'         => $dashboard_icon,
+					            'dismissible'  => true,
+					            'admin_notice' => true,
+					            'plusone'      => true,
+				            ]
+			            ]
+		            ];
+	            }
+
+                //don't add this one if the same level
+                if ($dashboard_icon !== $site_wide_icon) {
+	                if ( $side_wide === 'l' || $side_wide === 'm' || $side_wide === 'h' || $side_wide === 'c' ) {
+		                $notices[ 'test_vulnerability_dashboard_' . get_option( 'test_vulnerability_tester' ) ] = [
+			                'callback'          => '_true_',
+			                'score'             => 1,
+			                'show_with_options' => [ 'enable_vulnerability_scanner' ],
+			                'output'            => [
+				                'true' => [
+					                'title'        => __( 'Test Vulnerability Dashboard', 'really-simple-ssl' ),
+					                'msg'          => __( 'This is a test notice to check if the vulnerability dashboard is working. If you see this, it is working.', 'really-simple-ssl' ),
+					                'url'          => 'https://really-simple-ssl.com/knowledge-base/vulnerability-scanner/',
+					                'icon'         => $site_wide_icon,
+					                'dismissible'  => true,
+					                'admin_notice' => false,
+					                'plusone'      => true,
+				                ]
+			                ]
+		                ];
+	                }
+                }
+
+
             }
 
 
@@ -268,7 +264,12 @@ if (!class_exists("rsssl_vulnerabilities")) {
         public static function testGenerator(): array
         {
             $self = new self();
-            return $self->send_warning_email();
+            $mail_notification = rsssl_get_option('vulnerability_notification_email_admin');
+            if ( $mail_notification === 'l' || $mail_notification === 'm' || $mail_notification === 'h' || $mail_notification === 'c' ) {
+	            return $self->send_warning_email();
+            }
+
+            return [];
         }
 
 
@@ -282,9 +283,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
         public static function get_stats($data): array
         {
             $self = new self();
-            $vulEnabled = false;
-
-
             $vulEnabled = rsssl_get_option('enable_vulnerability_scanner');
             $firstRun = get_option('rsssl_vulnerabilities_first_run');
 
@@ -307,16 +305,15 @@ if (!class_exists("rsssl_vulnerabilities")) {
                     }
                 }
             }
-
-
+            $time = $self->get_file_stored_info(true);
             $stats = [
                 'vulnerabilities' => count($vulnerabilities),
                 'vulList' => $vulnerabilities,
                 'updates' => $self->getAllUpdatesCount(),
-                'lastChecked' => date('d / m / Y @ H:i', $self->get_file_stored_info(true)),
+                'lastChecked' => date_i18n(get_option('date_format') . ' @ ' . get_option('time_format'), $time),
                 'riskNaming'   => $self->risk_naming,
                 'vulEnabled' => $vulEnabled,
-                'firstRun' => $firstRun
+                'firstRun' => $firstRun,
             ];
 
             return [
@@ -459,16 +456,16 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 if ($this->check_vulnerability($plugin_file)) {
                     switch ($this->check_severity($plugin_file)) {
                         case 'c':
-                            echo sprintf('<a class="btn-vulnerable critical" target="_blank" href="%s">%s</a>', 'https://really-simple-ssl.com/vulnerabilities/'.$this->getIdentifier($plugin_file), $this->risk_naming['c']);
+                            echo sprintf('<a class="btn-vulnerable critical" target="_blank" href="%s">%s</a>', 'https://really-simple-ssl.com/vulnerabilities/'.$this->getIdentifier($plugin_file), ucfirst($this->risk_naming['c']));
                             break;
                         case 'h':
-                            echo sprintf('<a class="btn-vulnerable high" target="_blank" href="%s">%s</a>', 'https://really-simple-ssl.com/vulnerabilities/'.$this->getIdentifier($plugin_file), $this->risk_naming['h']);
+                            echo sprintf('<a class="btn-vulnerable high" target="_blank" href="%s">%s</a>', 'https://really-simple-ssl.com/vulnerabilities/'.$this->getIdentifier($plugin_file), ucfirst($this->risk_naming['h']));
                             break;
                         case 'm':
-                            echo sprintf('<a class="btn-vulnerable medium-risk" target="_blank" href="%s">%s</a>', 'https://really-simple-ssl.com/vulnerabilities/'.$this->getIdentifier($plugin_file), $this->risk_naming['m']);
+                            echo sprintf('<a class="btn-vulnerable medium-risk" target="_blank" href="%s">%s</a>', 'https://really-simple-ssl.com/vulnerabilities/'.$this->getIdentifier($plugin_file), ucfirst($this->risk_naming['m']));
                             break;
                         default:
-                            echo sprintf('<a class="btn-vulnerable low" target="_blank" href="%s">%s</a>', 'https://really-simple-ssl.com/vulnerabilities/'.$this->getIdentifier($plugin_file), $this->risk_naming['l']);
+                            echo sprintf('<a class="btn-vulnerable low" target="_blank" href="%s">%s</a>', 'https://really-simple-ssl.com/vulnerabilities/'.$this->getIdentifier($plugin_file), ucfirst($this->risk_naming['l']));
                             break;
                     }
                 }

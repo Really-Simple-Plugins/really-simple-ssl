@@ -19,8 +19,8 @@ const NotificationTester = (props) => {
         addHelpNotice(
             field.id,
             'success',
-            'All notifications are triggered successfully, please check your email to double-check if you can receive emails.',
-            'Test notifications',
+            __('All notifications are triggered successfully, please check your email to double-check if you can receive emails.','really-simple-ssl'),
+            __('Test notifications','really-simple-ssl'),
             false
         );
     }
@@ -39,7 +39,7 @@ const NotificationTester = (props) => {
         <>
             {/*{labelWrap(field)}*/}
             <Button
-                isPrimary
+                isDefault
                 required={ field.required }
                 placeholder={ field.placeholder }
                 disabled={ disabled }

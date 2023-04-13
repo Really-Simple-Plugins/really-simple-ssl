@@ -32,11 +32,10 @@
 
       &.rsssl-active {
         .rsssl-menu-item-beta-pill {
-          color: var(--rsp-text-color-white);
+          color: var(--rsp-black);
         }
       }
       a{
-        padding-block: var(--rsp-spacing-m);
         font-weight: 600;
         flex-wrap: wrap;
         .rsssl-menu-item-featured-pill{
