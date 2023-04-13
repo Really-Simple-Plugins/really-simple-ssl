@@ -7,7 +7,7 @@ import SslLabsFooter from "./SslLabs/SslLabsFooter";
 import WPVul from "./Vulnerabilities/WPVul";
 import WPVulFooter from "./Vulnerabilities/WPVulFooter";
 import OtherPlugins from "./OtherPlugins";
-import {useState, useEffect} from "@wordpress/element";
+import {useState} from "@wordpress/element";
 
 /*
  * Mapping of components, for use in the config array

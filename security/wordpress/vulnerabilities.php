@@ -79,7 +79,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
         public static function instance(): self
         {
             static $instance = false;
-            if (!$instance) {
+            if ( !$instance ) {
                 $instance = new rsssl_vulnerabilities();
                     //if the file exists, we include it.
                     if (file_exists(WP_PLUGIN_DIR . '/really-simple-ssl-pro/security/wordpress/rsssl_vulnerabilities_pro.php')) {
@@ -99,6 +99,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
          */
         public function init()
         {
+
             //we check if the vulnerability scanner is enabled and then the fun happens.
             if (rsssl_get_option('enable_vulnerability_scanner')) {
                 $this->check_files();
@@ -146,7 +147,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
         {
             $instance = self::instance();
 
-            update_option('rsssl_vulnerabilities_first_run', true);
+            update_option('rsssl_vulnerabilities_first_run', true, false);
             rsssl_update_option('enable_vulnerability_scanner', '1');
             return $instance->assemble_first_run();
         }
@@ -485,7 +486,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 return;
             }
             //only on settings page
-            $min = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? '' : '.min';
             $rtl = is_rtl() ? 'rtl/' : '';
             $url = trailingslashit(rsssl_url) . "assets/css/{$rtl}plugin.min.css";
             $path = trailingslashit(rsssl_path) . "assets/css/{$rtl}plugin.min.css";
@@ -1411,20 +1411,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
             ];
         }
 
-        public function site_wide_example()
-        {
-            //we create a notice
-            return [
-                'request_success' => true,
-                'data' => [
-                    'title' => __("Site wide example", "really-simple-ssl"),
-                    'message' => __("This is an example of a site wide notice", "really-simple-ssl"),
-                    'url' => 'https://really-simple-ssl.com/vulnerabilities/',
-                ]
-            ];
-
-        }
-
     }
 
     //we initialize the class
@@ -1461,17 +1447,26 @@ add_action('rest_api_init', function () {
     register_rest_route('reallysimplessl/v1', '/vulnerabilities/', array(
         'methods' => 'GET',
         'callback' => array(rsssl_vulnerabilities::class, 'get_stats'),
+        'permission_callback' => function () {
+	        return rsssl_user_can_manage();
+        }
     ));
 
     register_rest_route('reallysimplessl/v1', '/measures/', array(
         'methods' => 'GET',
         'callback' => array(rsssl_vulnerabilities::class, 'measures_data'),
+        'permission_callback' => function () {
+	        return rsssl_user_can_manage();
+        }
     ));
     #---------------------------------------------#
 
     register_rest_route('reallysimplessl/v1', 'measures/set', array(
         'methods' => 'POST',
         'callback' => 'store_measures',
+        'permission_callback' => function () {
+	        return rsssl_user_can_manage();
+        }
     ));
 });
 
@@ -1485,7 +1480,7 @@ if (!function_exists('rsssl_vulnerabilities_get_stats')) {
      */
     function store_measures($data): array
     {
-        update_option('rsssl_'.$data['field'], $data['value']);
+        update_option('rsssl_'.$data['field'], $data['value'], false );
 
         return rsssl_vulnerabilities::measures_data();
     }

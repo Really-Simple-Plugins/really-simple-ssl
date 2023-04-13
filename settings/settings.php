@@ -310,11 +310,11 @@ function rsssl_do_action($request, $ajax_data = false)
             //creating a random string based on time.
             $random_string = md5(time());
             update_option('test_vulnerability_tester', $random_string, false);
-            $response = rsssl_vulnerabilities::testGenerator();
+            $response = _vulnerabilities::testGenerator();
             break;
         case 'rsssl_scan_files':
             require_once(rsssl_path . 'security/wordpress/rsssl_vulnerabilities.php');
-            $response = rsssl_vulnerabilities::firstRun();
+            $response = _vulnerabilities::firstRun();
             break;
         default:
             $response = apply_filters("rsssl_do_action", [], $action, $data);
