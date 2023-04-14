@@ -110,6 +110,11 @@ const useFields = create(( set, get ) => ({
             set( {fields: newFields} );
         }
     },
+    fieldAlreadyEnabled: (id) => {
+        let fieldIsChanged = get().changedFields.filter(field => field.id === id ).length>0;
+        let fieldIsEnabled = get().getFieldValue(id);
+        return !fieldIsChanged && fieldIsEnabled;
+    },
     getFieldValue : (id) => {
         let fields = get().fields;
         let fieldItem = fields.filter(field => field.id === id )[0];
@@ -137,7 +142,9 @@ const useFields = create(( set, get ) => ({
         //data_target
         for ( const field of fields ){
             let fieldIsIncluded = changedFields.filter( changedField => changedField.id===field.id ).length>0;
-            if ( fieldIsIncluded ){
+            //also check if there's no saved value yet for radio fields, by checking the never_saved attribute.
+            //a radio field looks like it's completed, but won't save if it isn't changed.
+            if ( fieldIsIncluded || field.never_saved ){
                 saveFields.push(field);
             }
         }

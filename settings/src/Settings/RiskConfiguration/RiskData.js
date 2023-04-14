@@ -1,7 +1,6 @@
 /* Creates A Store For Risk Data using Zustand */
 import {create} from 'zustand';
 import * as rsssl_api from "../../utils/api";
-import {getMeasuresConfigData, measuresPostAction} from "../../utils/api";
 
 const UseRiskData = create((set, get) => ({
     riskData: [],
@@ -12,9 +11,8 @@ const UseRiskData = create((set, get) => ({
     //fetch Risk Data
     fetchRiskData: async () => {
         let data = {};
-        data.risk_action = 'get';
         try {
-            const riskData = await rsssl_api.getMeasuresConfigData('api_call_listener', data);
+            const riskData = await rsssl_api.doAction('vulnerabilities_measures_get', data);
             //we convert the data to an array
             set({riskData: riskData.data, dataLoaded: true});
         } catch (e) {
@@ -24,7 +22,7 @@ const UseRiskData = create((set, get) => ({
     //update Risk Data
     updateRiskData: async (field, value) => {
         try {
-            const riskData = await rsssl_api.measuresPostAction('api_call_listener', {
+            const riskData = await rsssl_api.doAction('vulnerabilities_measures_set', {
                 field: field,
                 value: value,
             });
@@ -40,9 +38,8 @@ const UseRiskData = create((set, get) => ({
      */
     fetchVulnerabilities: async () => {
         let data = {};
-        data.action = 'get';
         try {
-            const fetched = await rsssl_api.vulGetAction('api_call_listener', data);
+            const fetched = await rsssl_api.doAction('vulnerabilities_stats', data);
             set({
                 vulnerabilities: fetched.data.vulList,
                 dataVulLoaded: true,

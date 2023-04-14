@@ -11,7 +11,6 @@ import useVulnerabilityData from "../Dashboard/Vulnerabilities/VulnerabilityData
 const VulnerabilitiesIntro = (props) => {
     //first we define a state for the steps
     const [ isOpen, setOpen ] = useState( false );
-    const {firstrun} = useVulnerabilityData();
 
     //this function closes the modal when onClick is activated
     if(!isOpen) {
@@ -31,7 +30,7 @@ const VulnerabilitiesIntro = (props) => {
                                 {__("You have enabled vulnerability scanning! In short, Really Simple SSL will check your plugins, themes and WordPress core daily and report if any vulnerabilities are present..", "really-simple-ssl")}
                             </p>
                             <img className="rsssl-intro-logo"
-                                 src={'/wp-content/plugins/really-simple-ssl/assets/img/really-simple-ssl-intro.svg'}>
+                                 src={rsssl_settings.plugin_url+'/assets/img/really-simple-ssl-intro.svg'}>
 
                             </img>
                         </div>
@@ -72,7 +71,7 @@ const VulnerabilitiesIntro = (props) => {
                             onClick={() => {
                                 setOpen(true);
                                 //we redirect to dashboard
-                                window.location.href = "/wp-admin/options-general.php?page=really-simple-security#dashboard";
+                                window.location.hash = "dashboard";
                             }}
                         >
                             {__('DashBoard', 'really-simple-ssl')}

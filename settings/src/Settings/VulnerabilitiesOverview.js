@@ -1,33 +1,25 @@
 import {__} from '@wordpress/i18n';
 import useVulnerabilityData from "../Dashboard/Vulnerabilities/VulnerabilityData";
-import React, {useEffect, useContext} from 'react';
+import React, {useEffect, useState} from 'react';
 import DataTable from "react-data-table-component";
-import Icon from "../utils/Icon";
 import useFields from "./FieldsData";
-import {Button} from "@wordpress/components";
 import VulnerabilitiesIntro from "./VulnerabilitiesIntro";
 
 const VulnerabilitiesOverview = (props) => {
     const {
         dataLoaded,
         vulList,
-        vulEnabled,
-        firstRun,
-        fetchVulnerabilities,
-        deactivateVulnerabilityScanner,
-        activateVulnerabilityScanner,
+        introCompleted,
+        fetchVulnerabilities
     } = useVulnerabilityData();
-
-    const {
-        fields,
-        changedFields,
-    } = useFields();
+    const {fields, getField, fieldAlreadyEnabled, getFieldValue} = useFields();
+    const [showIntro, setShowIntro] = useState(false);
 
     //we create the columns
     let columns = [];
     //getting the fields from the props
     let field = props.field;
-
+    let enabled = false;
 
     function buildColumn(column) {
         return {
@@ -44,39 +36,27 @@ const VulnerabilitiesOverview = (props) => {
         columns.push(newItem);
     });
 
+    //get data if field was already enabled, so not changed right now.
     useEffect(() => {
-        const run = async () => {
-            await fetchVulnerabilities();
-        }
-        run();
-    }, []);
-
-    useEffect(() => {
-        //we loop through the changed fields and check if the vulnerability scanner is disabled
-        changedFields.forEach(function (item, i) {
-            if (item.id === 'enable_vulnerability_scanner' && item.value === false) {
-                const deactivate = async () => {
-                    await deactivateVulnerabilityScanner();
+        if (fieldAlreadyEnabled('enable_vulnerability_scanner')) {
+            if (getFieldValue('vulnerabilities_intro_shown')!=1 ) {
+                if (!introCompleted) setShowIntro(true);
+            } else {
+                if (!dataLoaded) {
+                    fetchVulnerabilities();
                 }
-                deactivate();
-
-            } else if (item.id === 'enable_vulnerability_scanner' && item.value === true ) {
-                //we activate the vulnerability scanner
-                const run = async () => {
-                    await activateVulnerabilityScanner();
-                }
-                run();
             }
-        });
-    }, [changedFields]);
 
-    //we run this only once
-    if (!firstRun && vulEnabled) {
-        //we display the wow factor
-        return (<VulnerabilitiesIntro/>);
-    }
+        }
+    }, [fields]);
 
-    if (!dataLoaded || !vulEnabled) {
+    fields.forEach(function (item, i) {
+        if (item.id === 'enable_vulnerability_scanner') {
+            enabled = item.value;
+        }
+    });
+
+    if (!enabled) {
         return (
             //If there is no data or vulnerabilities scanner is disabled we show some dummy data behind a mask
             <>
@@ -99,57 +79,29 @@ const VulnerabilitiesOverview = (props) => {
         )
     }
 
-    /**
-     * Styling
-     */
-    const customStyles = {
-        headCells: {
-            style: {
-                paddingLeft: '0', // override the cell padding for head cells
-                paddingRight: '0',
-            },
-        },
-        cells: {
-            style: {
-                paddingLeft: '0', // override the cell padding for data cells
-                paddingRight: '0',
-            },
-        },
-    };
-
     let data = vulList;
-
     //we need to add a key to the data called action wich produces the action buttons
-
-
-    if (typeof data === 'object') {
-        //we make it an array
-        data = Object.values(data);
-    }
-    const btnStyle = {
-        marginLeft: '10px'
-    }
-    data.forEach(function (item, i) {
-        let rsssid = item.rss_identifier;
-        item.vulnerability_action = <div className="rsssl-vulnerability-action">
-            <a className="button" href={"https://really-simple-ssl.com/vulnerabilities/" + rsssid}
-               target={"_blank"}>{__("Details", "really-simple-ssl")}</a>
-            <a target={"_blank"} href="/wp-admin/plugins.php?plugin_status=upgrade" className="button button-primary"
-               style={btnStyle}>{__("View", "really-simple-ssl")}</a>
-        </div>
-
-    });
     return (
-        <DataTable
-            columns={columns}
-            data={data}
-            dense
-            pagination
-            noDataComponent={__("No results", "really-simple-ssl")}
-            persistTableHead
-        >
-        </DataTable>
+        <>
+            {data.length>0 &&
+                <DataTable
+                    columns={columns}
+                    data={data}
+                    dense
+                    pagination
+                    noDataComponent={__("No results", "really-simple-ssl")}
+                    persistTableHead
+                >
+                </DataTable>
+            }
+
+            {showIntro && <>
+                <VulnerabilitiesIntro/>
+            </>
+            }
+        </>
     )
+
 }
 
 export default VulnerabilitiesOverview;

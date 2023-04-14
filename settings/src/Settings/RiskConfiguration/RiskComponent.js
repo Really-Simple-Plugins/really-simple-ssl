@@ -5,17 +5,23 @@ import {SelectControl} from "@wordpress/components";
 import sleeper from "../../utils/sleeper";
 import {dispatch} from '@wordpress/data';
 import {__} from "@wordpress/i18n";
+import useFields from "../FieldsData";
 
 const RiskComponent = (props) => {
     //first we put the data in a state
     const {riskData, dataLoaded, dataVulLoaded, vulnerabilities, fetchRiskData, fetchVulnerabilities, setData, updateRiskData} = UseRiskData();
+    const { fields, fieldAlreadyEnabled} = useFields();
+
     useEffect(() => {
-        const run = async () => {
-            await fetchRiskData();
-            await fetchVulnerabilities();
+        if ( fieldAlreadyEnabled('enable_vulnerability_scanner')) {
+            if (!dataLoaded) {
+                fetchRiskData();
+            }
+            if (!dataVulLoaded) {
+                fetchVulnerabilities();
+            }
         }
-        run();
-    }, []);
+    }, [fields]);
 
     //we only proceed if the data is loaded
     if (!dataLoaded) {

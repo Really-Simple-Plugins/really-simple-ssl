@@ -110,7 +110,8 @@ class rsssl_onboarding {
 				];
 				break;
 			case 'activate_setting':
-				foreach ($this->hardening as $h ){
+				$recommended_ids = $this->get_hardening_fields();
+				foreach ($recommended_ids as $h ){
 					rsssl_update_option($h, true);
 				}
 				$response = [
@@ -368,12 +369,25 @@ class rsssl_onboarding {
 	 * @return bool
 	 */
 	public function all_recommended_hardening_features_enabled(){
-		foreach ($this->hardening as $h ){
+		$recommended_ids = $this->get_hardening_fields();
+		foreach ($recommended_ids as $h ){
 			if ( rsssl_get_option($h)!=1 ) {
 				return false;
 			}
 		}
 		return true;
+	}
+
+	private function get_hardening_fields(){
+		$fields = rsssl_fields(false);
+		//get all fields that are recommended
+		$recommended = array_filter($fields, function($field){
+			return isset($field['recommended']) && $field['recommended'];
+		});
+		//get all id's from this array
+		return array_map(function($field){
+			return $field['id'];
+		}, $recommended);
 	}
 
 	public function onboarding_rest_route() {

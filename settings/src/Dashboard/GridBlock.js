@@ -4,24 +4,16 @@ import ProgressHeader from "./Progress/ProgressBlockHeader";
 import ProgressFooter from "./Progress/ProgressFooter";
 import SslLabs from "./SslLabs/SslLabs";
 import SslLabsFooter from "./SslLabs/SslLabsFooter";
-
 import WPVul from "./Vulnerabilities/WPVul";
 import WPVulFooter from "./Vulnerabilities/WPVulFooter";
-
-import UseFields from "../Settings/FieldsData";
 import OtherPlugins from "./OtherPlugins";
-import SecurityFeaturesBlock from './SecurityFeaturesBlock/SecurityFeaturesBlock';
-import SecurityFeaturesFooter from './SecurityFeaturesBlock/SecurityFeaturesFooter';
-import {useState, useEffect} from "@wordpress/element";
-import useOnboardingData from "../Onboarding/OnboardingData";
+import {useState} from "@wordpress/element";
 
 /*
  * Mapping of components, for use in the config array
  * @type {{SslLabs: JSX.Element}}
  */
 var dynamicComponents = {
-    "SecurityFeaturesBlock": SecurityFeaturesBlock,
-    "SecurityFeaturesFooter": SecurityFeaturesFooter,
     "ProgressBlock": ProgressBlock,
     "ProgressHeader": ProgressHeader,
     "ProgressFooter": ProgressFooter,

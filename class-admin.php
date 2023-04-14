@@ -451,6 +451,7 @@ class rsssl_admin
 		ob_start();?>
             <style>
                 #rsssl-message {
+                    margin:10px 0;
                     padding: 0;
                     border-left-color: #333;
                 }
@@ -2316,7 +2317,7 @@ class rsssl_admin
 		        'output' => array(
 			        'true' => array(
 				        'msg' => __( "Our vulnerability reporting is in beta. Signup for the beta to discover the new features!", 'really-simple-ssl' ),
-				        'icon' => 'open',
+				        'icon' => 'urgent',
 				        'admin_notice' => false,
 				        'url' => 'https://really-simple-ssl.com/vulnerability-reporting/',
 				        'dismissible' => true,

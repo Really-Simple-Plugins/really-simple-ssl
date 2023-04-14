@@ -65,6 +65,7 @@ function rsssl_plugin_admin_scripts()
         apply_filters('rsssl_localize_script', [
             'menu' => rsssl_menu(),
             'site_url' => get_rest_url(),
+            'plugins_url' => admin_url('plugins.php'),
             'admin_ajax_url' => add_query_arg(
                 array(
                     'type' => 'errors',
@@ -304,24 +305,10 @@ function rsssl_do_action($request, $ajax_data = false)
         case 'clear_cache':
             $response = rsssl_clear_test_caches($data);
             break;
-        case 'rsssl_test_notification':
-            require_once(rsssl_path . 'security/wordpress/rsssl_vulnerabilities.php');
-            //creating a random string based on time.
-            $random_string = md5(time());
-            update_option('test_vulnerability_tester', $random_string);
-            $response = rsssl_vulnerabilities::testGenerator();
-            break;
-        case 'rsssl_scan_files':
-            require_once(rsssl_path . 'security/wordpress/rsssl_vulnerabilities.php');
-            $response = rsssl_vulnerabilities::firstRun();
-            break;
-        case 'deactivate_vulnerability_scanner':
-            require_once(rsssl_path . 'security/wordpress/rsssl_vulnerabilities.php');
-            $response = rsssl_vulnerabilities::deactivateScan();
-            break;
         default:
             $response = apply_filters("rsssl_do_action", [], $action, $data);
     }
+
     if (is_array($response)) {
         $response['request_success'] = true;
     }
