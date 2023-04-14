@@ -639,7 +639,7 @@ function rsssl_fields( $load_values = true ) {
 				'url'     => 'https://really-simple-ssl.com/locked-out-after-renaming-admin-user/',
 			],
 			'tooltip'  => __( "This will permanently change your database prefixes and you can NOT rollback this feature. Please make sure you have a back-up.", 'really-simple-ssl' ),
-			'warning'     => true,
+			'warning'  => __( "This will permanently change your database prefixes and you can NOT rollback this feature. Please make sure you have a back-up.", 'really-simple-ssl' ),
 			'type'     => 'checkbox',
 			'label'    => __( "Rename and randomize your database prefix", 'really-simple-ssl' ),
 			'disabled' => false,

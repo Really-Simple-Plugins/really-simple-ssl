@@ -1,9 +1,30 @@
 /*
 * The tooltip can't be included in the native toggleControl, so we have to build our own.
 */
+import { __experimentalConfirmDialog as ConfirmDialog } from '@wordpress/components';
+import { useState} from "@wordpress/element";
 
 const CheckboxControl = (props) => {
+    const [ isOpen, setIsOpen ] = useState( false );
+
     const onChangeHandler = (e) => {
+        if (props.field.warning && !props.field.value) {
+            setIsOpen( true );
+        } else {
+            executeAction();
+        }
+    }
+
+    const handleConfirm = async () => {
+        setIsOpen( false );
+        executeAction();
+    };
+
+    const handleCancel = () => {
+        setIsOpen( false );
+    };
+
+    const executeAction = (e) => {
         let fieldValue = !props.field.value;
         props.onChangeHandler(fieldValue)
     }
@@ -13,6 +34,13 @@ const CheckboxControl = (props) => {
     let is_disabled = field.disabled ? 'is-disabled' : '';
     return (
         <>
+            <ConfirmDialog
+                isOpen={ isOpen }
+                onConfirm={ handleConfirm }
+                onCancel={ handleCancel }
+            >
+                {field.warning}
+            </ConfirmDialog>
             <div className="components-base-control components-toggle-control">
                 <div className="components-base-control__field">
                     <div data-wp-component="HStack" className="components-flex components-h-stack">
