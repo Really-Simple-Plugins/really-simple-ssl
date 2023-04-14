@@ -21,7 +21,6 @@ const VulnerabilitiesOverview = (props) => {
     let field = props.field;
     let enabled = false;
 
-
     function buildColumn(column) {
         return {
             name: column.name,
@@ -39,9 +38,9 @@ const VulnerabilitiesOverview = (props) => {
 
     //get data if field was already enabled, so not changed right now.
     useEffect(() => {
-        if ( fieldAlreadyEnabled('enable_vulnerability_scanner') ) {
+        if (fieldAlreadyEnabled('enable_vulnerability_scanner')) {
             //if (getFieldValue('vulnerabilities_intro_shown')!=1 ) {
-                if (!introCompleted) setShowIntro(true);
+            if (!introCompleted) setShowIntro(true);
             // } else {
             //     if (!dataLoaded) {
             //         fetchVulnerabilities();
@@ -56,12 +55,6 @@ const VulnerabilitiesOverview = (props) => {
             enabled = item.value;
         }
     });
-
-    //we run this only once
-    if (showIntro) {
-        //we display the wow factor
-        return (<VulnerabilitiesIntro/>);
-    }
 
     if (!enabled) {
         return (
@@ -104,38 +97,53 @@ const VulnerabilitiesOverview = (props) => {
         },
     };
 
+    const btnStyle = {
+        marginLeft: '10px'
+    }
     let data = vulList;
-
     //we need to add a key to the data called action wich produces the action buttons
-
-
     if (typeof data === 'object') {
         //we make it an array
         data = Object.values(data);
-    }
-    const btnStyle = {
-        marginLeft: '10px'
     }
     data.forEach(function (item, i) {
         let rsssid = item.rss_identifier;
         item.vulnerability_action = <div className="rsssl-vulnerability-action">
             <a className="button" href={"https://really-simple-ssl.com/vulnerabilities/" + rsssid}
                target={"_blank"}>{__("Details", "really-simple-ssl")}</a>
-            <a target={"_blank"} href={rsssl_settings.plugins_url+"?plugin_status=upgrade"} className="button button-primary"
+            <a target={"_blank"} href={rsssl_settings.plugins_url + "?plugin_status=upgrade"}
+               className="button button-primary"
                style={btnStyle}>{__("View", "really-simple-ssl")}</a>
         </div>
     });
+    console.log("dataLoaded");
+    console.log(dataLoaded);
+    console.log("vulList");
+    console.log(vulList);
+    console.log("data");
+    console.log(data);
     return (
-        <DataTable
-            columns={columns}
-            data={data}
-            dense
-            pagination
-            noDataComponent={__("No results", "really-simple-ssl")}
-            persistTableHead
-        >
-        </DataTable>
+        <>
+            {showIntro && <>
+                    <VulnerabilitiesIntro/>
+                </>
+            }
+
+            {1==1 &&
+
+                <DataTable
+                    columns={columns}
+                    data={data}
+                    dense
+                    pagination
+                    noDataComponent={__("No results", "really-simple-ssl")}
+                    persistTableHead
+                >
+                </DataTable>
+            }
+        </>
     )
+
 }
 
 export default VulnerabilitiesOverview;

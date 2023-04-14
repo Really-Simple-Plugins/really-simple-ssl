@@ -36856,6 +36856,11 @@ const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, get) => 
       });
     }
   },
+  fieldAlreadyEnabled: id => {
+    let fieldIsChanged = get().changedFields.filter(field => field.id === id).length > 0;
+    let fieldIsEnabled = get().getFieldValue(id);
+    return !fieldIsChanged && fieldIsEnabled;
+  },
   getFieldValue: id => {
     let fields = get().fields;
     let fieldItem = fields.filter(field => field.id === id)[0];
@@ -36883,7 +36888,9 @@ const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, get) => 
     //data_target
     for (const field of fields) {
       let fieldIsIncluded = changedFields.filter(changedField => changedField.id === field.id).length > 0;
-      if (fieldIsIncluded) {
+      //also check if there's no saved value yet for radio fields, by checking the never_saved attribute.
+      //a radio field looks like it's completed, but won't save if it isn't changed.
+      if (fieldIsIncluded || field.never_saved) {
         saveFields.push(field);
       }
     }
@@ -38553,10 +38560,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../utils/api */ "./src/utils/api.js");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../utils/Icon */ "./src/utils/Icon.js");
-/* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../FieldsData */ "./src/Settings/FieldsData.js");
+/* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../utils/Icon */ "./src/utils/Icon.js");
+/* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../FieldsData */ "./src/Settings/FieldsData.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_4__);
 
 
 
@@ -38564,36 +38571,29 @@ __webpack_require__.r(__webpack_exports__);
 
 const NotificationTester = props => {
   const {
-    field,
-    disabled
+    field
   } = props;
+  const [disabled, setDisabled] = (0,react__WEBPACK_IMPORTED_MODULE_4__.useState)(true);
   const {
-    addHelpNotice
-  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_4__["default"])();
+    addHelpNotice,
+    fields,
+    getFieldValue
+  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_3__["default"])();
+  (0,react__WEBPACK_IMPORTED_MODULE_4__.useEffect)(() => {
+    if (getFieldValue('enable_vulnerability_scanner') == 1) {
+      setDisabled(false);
+    }
+  }, [fields]);
   function doTestNotification() {
     //Test one the email notification
-    _utils_api__WEBPACK_IMPORTED_MODULE_1__.doAction('rsssl_test_notification').then(response => {});
-    addHelpNotice(field.id, 'success', 'All notifications are triggered successfully, please check your email to double-check if you can receive emails.', 'Test notifications', false);
+    _utils_api__WEBPACK_IMPORTED_MODULE_1__.doAction('vulnerabilities_test_notification').then(response => {});
+    addHelpNotice(field.id, 'success', __('All notifications are triggered successfully, please check your email to double-check if you can receive emails.', 'really-simple-ssl'), __('Test notifications', 'really-simple-ssl'), false);
   }
-  function labelWrap(field) {
-    let tooltipColor = field.warning ? 'red' : 'black';
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "cmplz-label-text"
-    }, field.label), field.tooltip && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_3__["default"], {
-      name: "info-open",
-      tooltip: field.tooltip,
-      color: tooltipColor
-    }));
-  }
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
-    isPrimary: true,
-    required: field.required,
-    placeholder: field.placeholder,
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    onClick: () => doTestNotification(),
     disabled: disabled,
-    help: field.comment,
-    text: field.button_text,
-    onClick: () => doTestNotification()
-  }));
+    className: "button button-default"
+  }, field.button_text));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (NotificationTester);
 
@@ -38623,6 +38623,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_6__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../FieldsData */ "./src/Settings/FieldsData.js");
+
 
 
 
@@ -38643,13 +38645,20 @@ const RiskComponent = props => {
     setData,
     updateRiskData
   } = (0,_RiskData__WEBPACK_IMPORTED_MODULE_2__["default"])();
+  const {
+    fields,
+    fieldAlreadyEnabled
+  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_8__["default"])();
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
-    const run = async () => {
-      await fetchRiskData();
-      await fetchVulnerabilities();
-    };
-    run();
-  }, []);
+    if (fieldAlreadyEnabled('enable_vulnerability_scanner')) {
+      if (!dataLoaded) {
+        fetchRiskData();
+      }
+      if (!dataVulLoaded) {
+        fetchVulnerabilities();
+      }
+    }
+  }, [fields]);
 
   //we only proceed if the data is loaded
   if (!dataLoaded) {
@@ -38765,7 +38774,6 @@ __webpack_require__.r(__webpack_exports__);
 /* Creates A Store For Risk Data using Zustand */
 
 
-
 const UseRiskData = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, get) => ({
   riskData: [],
   vulnerabilities: [],
@@ -38778,9 +38786,8 @@ const UseRiskData = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, get) =
   //fetch Risk Data
   fetchRiskData: async () => {
     let data = {};
-    data.risk_action = 'get';
     try {
-      const riskData = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.getMeasuresConfigData('api_call_listener', data);
+      const riskData = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('vulnerabilities_measures_get', data);
       //we convert the data to an array
       set({
         riskData: riskData.data,
@@ -38793,7 +38800,7 @@ const UseRiskData = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, get) =
   //update Risk Data
   updateRiskData: async (field, value) => {
     try {
-      const riskData = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.measuresPostAction('api_call_listener', {
+      const riskData = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('vulnerabilities_measures_set', {
         field: field,
         value: value
       });
@@ -38811,9 +38818,8 @@ const UseRiskData = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, get) =
    */
   fetchVulnerabilities: async () => {
     let data = {};
-    data.action = 'get';
     try {
-      const fetched = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.vulGetAction('api_call_listener', data);
+      const fetched = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('vulnerabilities_stats', data);
       set({
         vulnerabilities: fetched.data.vulList,
         dataVulLoaded: true,
@@ -38845,6 +38851,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../utils/api */ "./src/utils/api.js");
+/* harmony import */ var _Dashboard_Vulnerabilities_VulnerabilityData__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../Dashboard/Vulnerabilities/VulnerabilityData */ "./src/Dashboard/Vulnerabilities/VulnerabilityData.js");
+/* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../FieldsData */ "./src/Settings/FieldsData.js");
+
+
 
 
 
@@ -38852,6 +38862,16 @@ __webpack_require__.r(__webpack_exports__);
 const Runner = props => {
   //let us make a state for the loading
   const [loadingState, setLoadingState] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(props.loading);
+  const {
+    setChangedField,
+    updateField,
+    saveFields
+  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_5__["default"])();
+  const {
+    dataLoaded,
+    fetchVulnerabilities,
+    setIntroCompleted
+  } = (0,_Dashboard_Vulnerabilities_VulnerabilityData__WEBPACK_IMPORTED_MODULE_4__["default"])();
   let title = props.title;
   const [delayState, setDelayState] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(true);
   let spin = loadingState && !delayState ? "icon-spin" : "";
@@ -38861,13 +38881,29 @@ const Runner = props => {
       const firstRunner = async () => {
         setDelayState(false);
         setLoadingState(true);
-        let response = await _utils_api__WEBPACK_IMPORTED_MODULE_3__.doAction('rsssl_scan_files');
+        let response = await _utils_api__WEBPACK_IMPORTED_MODULE_3__.doAction('vulnerabilities_scan_files');
         if (response.request_success) {
           setLoadingState(false);
           spin = "";
         }
       };
       firstRunner();
+    }, []);
+  } else if (props.name === "third_runner") {
+    (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
+      const thirdRunner = async () => {
+        setDelayState(false);
+        setLoadingState(true);
+        console.log("fetching vulnerabilities");
+        await fetchVulnerabilities();
+        setLoadingState(false);
+        setIntroCompleted(true);
+        spin = "";
+        setChangedField('vulnerabilities_intro_shown', true);
+        updateField('vulnerabilities_intro_shown', true);
+        await saveFields(true, false);
+      };
+      thirdRunner();
     }, []);
   } else {
     (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
@@ -39458,13 +39494,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var react_data_table_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-data-table-component */ "./node_modules/react-data-table-component/dist/index.cjs.js");
-/* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils/Icon */ "./src/utils/Icon.js");
-/* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./FieldsData */ "./src/Settings/FieldsData.js");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony import */ var _VulnerabilitiesIntro__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./VulnerabilitiesIntro */ "./src/Settings/VulnerabilitiesIntro.js");
-
-
+/* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./FieldsData */ "./src/Settings/FieldsData.js");
+/* harmony import */ var _VulnerabilitiesIntro__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./VulnerabilitiesIntro */ "./src/Settings/VulnerabilitiesIntro.js");
 
 
 
@@ -39476,30 +39507,22 @@ const VulnerabilitiesOverview = props => {
   const {
     dataLoaded,
     vulList,
-    vulEnabled,
-    firstRun,
-    fetchVulnerabilities,
-    deactivateVulnerabilityScanner,
-    activateVulnerabilityScanner,
-    loading
+    introCompleted,
+    fetchVulnerabilities
   } = (0,_Dashboard_Vulnerabilities_VulnerabilityData__WEBPACK_IMPORTED_MODULE_2__["default"])();
   const {
     fields,
-    changedFields
-  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_6__["default"])();
-
-  //first we set up the data.
-  (0,react__WEBPACK_IMPORTED_MODULE_3__.useEffect)(() => {
-    const run = async () => {
-      await fetchVulnerabilities();
-    };
-    run();
-  }, []);
+    getField,
+    fieldAlreadyEnabled,
+    getFieldValue
+  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_5__["default"])();
+  const [showIntro, setShowIntro] = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)(false);
 
   //we create the columns
   let columns = [];
   //getting the fields from the props
   let field = props.field;
+  let enabled = false;
   function buildColumn(column) {
     return {
       name: column.name,
@@ -39514,97 +39537,102 @@ const VulnerabilitiesOverview = props => {
     columns.push(newItem);
   });
 
-  //The data is loaded but we keep an eye on the changed fields
+  //get data if field was already enabled, so not changed right now.
   (0,react__WEBPACK_IMPORTED_MODULE_3__.useEffect)(() => {
-    //we loop through the changed fields and check if the vulnerability scanner is disabled
-    changedFields.forEach(function (item, i) {
-      if (item.id === 'enable_vulnerability_scanner' && item.value === false) {
-        const deactivate = async () => {
-          await deactivateVulnerabilityScanner();
-        };
-        deactivate();
-      } else if (item.id === 'enable_vulnerability_scanner' && item.value === true) {
-        //we activate the vulnerability scanner
-        const run = async () => {
-          await activateVulnerabilityScanner();
-          await fetchVulnerabilities();
-        };
-        run();
+    if (fieldAlreadyEnabled('enable_vulnerability_scanner')) {
+      //if (getFieldValue('vulnerabilities_intro_shown')!=1 ) {
+      if (!introCompleted) setShowIntro(true);
+      // } else {
+      //     if (!dataLoaded) {
+      //         fetchVulnerabilities();
+      //     }
+      // }
+    }
+  }, [fields]);
+  fields.forEach(function (item, i) {
+    if (item.id === 'enable_vulnerability_scanner') {
+      enabled = item.value;
+    }
+  });
+  if (!enabled) {
+    return (
+      //If there is no data or vulnerabilities scanner is disabled we show some dummy data behind a mask
+      (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        columns: columns
+        //  data={dummyData}
+        ,
+        dense: true,
+        pagination: true,
+        noDataComponent: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("No results", "really-simple-ssl"),
+        persistTableHead: true
+        //     customStyles={customStyles}
+      }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+        className: "rsssl-locked"
+      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+        className: "rsssl-locked-overlay"
+      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+        className: "rsssl-task-status rsssl-open"
+      }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Disabled', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Activate vulnerability scanning to enable this block.', 'really-simple-ssl')))))
+    );
+  }
+
+  /**
+   * Styling
+   */
+  const customStyles = {
+    headCells: {
+      style: {
+        paddingLeft: '0',
+        // override the cell padding for head cells
+        paddingRight: '0'
       }
-    });
-  }, [changedFields]);
-  if (dataLoaded) {
-    //We know the data is loaded, so things can go on
-    if (!vulEnabled) {
-      return (
-        //If vulnerabilities scanner is disabled we show some dummy data behind a mask
-        (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_4__["default"], {
-          columns: columns
-          //  data={dummyData}
-          ,
-          dense: true,
-          pagination: true,
-          noDataComponent: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("No results", "really-simple-ssl"),
-          persistTableHead: true
-          //     customStyles={customStyles}
-        }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-          className: "rsssl-locked"
-        }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-          className: "rsssl-locked-overlay"
-        }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-          className: "rsssl-task-status rsssl-open"
-        }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Disabled', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Activate vulnerability scanning to enable this block.', 'really-simple-ssl')))))
-      );
+    },
+    cells: {
+      style: {
+        paddingLeft: '0',
+        // override the cell padding for data cells
+        paddingRight: '0'
+      }
     }
-
-    //if the Vulnerability scanner is enabled and the first run is set to false we show the intro
-    if (vulEnabled && !firstRun) {
-      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_VulnerabilitiesIntro__WEBPACK_IMPORTED_MODULE_8__["default"], null);
-    }
-    let data = vulList;
-
-    //we need to add a key to the data called action wich produces the action buttons
-
-    if (typeof data === 'object') {
-      //we make it an array
-      data = Object.values(data);
-    }
-    const btnStyle = {
-      marginLeft: '10px'
-    };
-    data.forEach(function (item, i) {
-      let rsssid = item.rss_identifier;
-      item.vulnerability_action = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-        className: "rsssl-vulnerability-action"
-      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-        className: "button",
-        href: "https://really-simple-ssl.com/vulnerabilities/" + rsssid,
-        target: "_blank"
-      }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Details", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-        target: "_blank",
-        href: "/wp-admin/plugins.php?plugin_status=upgrade",
-        className: "button button-primary",
-        style: btnStyle
-      }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("View", "really-simple-ssl")));
-    });
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_4__["default"], {
-      columns: columns,
-      data: data,
-      dense: true,
-      pagination: true,
-      noDataComponent: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("No results", "really-simple-ssl"),
-      persistTableHead: true
-    });
+  };
+  const btnStyle = {
+    marginLeft: '10px'
+  };
+  let data = vulList;
+  //we need to add a key to the data called action wich produces the action buttons
+  if (typeof data === 'object') {
+    //we make it an array
+    data = Object.values(data);
   }
-  if (loading) {
-    //we display a text that the data is loading
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-loading"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_5__["default"], {
-      name: "loading",
-      size: "40"
-    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Loading data...', 'really-simple-ssl')));
-  }
+  data.forEach(function (item, i) {
+    let rsssid = item.rss_identifier;
+    item.vulnerability_action = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-vulnerability-action"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+      className: "button",
+      href: "https://really-simple-ssl.com/vulnerabilities/" + rsssid,
+      target: "_blank"
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Details", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+      target: "_blank",
+      href: rsssl_settings.plugins_url + "?plugin_status=upgrade",
+      className: "button button-primary",
+      style: btnStyle
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("View", "really-simple-ssl")));
+  });
+  console.log("dataLoaded");
+  console.log(dataLoaded);
+  console.log("vulList");
+  console.log(vulList);
+  console.log("data");
+  console.log(data);
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, showIntro && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_VulnerabilitiesIntro__WEBPACK_IMPORTED_MODULE_6__["default"], null)),  true && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_4__["default"], {
+    columns: columns,
+    data: data,
+    dense: true,
+    pagination: true,
+    noDataComponent: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("No results", "really-simple-ssl"),
+    persistTableHead: true
+  }));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (VulnerabilitiesOverview);
 
