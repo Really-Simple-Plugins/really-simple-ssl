@@ -33376,11 +33376,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/index.mjs");
-/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils/api */ "./src/utils/api.js");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/index.mjs");
+/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../utils/api */ "./src/utils/api.js");
+/* harmony import */ var immer__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! immer */ "./node_modules/immer/dist/immer.esm.mjs");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_3__);
 
 
-const useVulnerabilityData = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, get) => ({
+
+
+
+
+const useVulnerabilityData = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, get) => ({
   // Stuff we need for the WPVulData component
   updates: 0,
   //for letting the component know if there are updates available
@@ -33420,18 +33431,36 @@ const useVulnerabilityData = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((se
   fetchVulnerabilities: async () => {
     let data = {};
     try {
-      const fetched = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('vulnerabilities_stats', data);
+      const fetched = await _utils_api__WEBPACK_IMPORTED_MODULE_1__.doAction('vulnerabilities_stats', data);
       console.log("fetched data: ");
       console.log(fetched);
-      set({
-        vulnerabilities: fetched.data.vulnerabilities,
-        updates: fetched.data.updates,
-        vulList: fetched.data.vulList,
-        dataLoaded: true,
-        riskNaming: fetched.data.riskNaming,
-        lastChecked: fetched.data.lastChecked,
-        vulEnabled: fetched.data.vulEnabled
+      let vulList = fetched.data.vulList;
+      if (typeof vulList === 'object') {
+        //we make it an array
+        vulList = Object.values(vulList);
+      }
+      vulList.forEach(function (item, i) {
+        item.vulnerability_action = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+          className: "rsssl-vulnerability-action"
+        }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+          className: "button",
+          href: "https://really-simple-ssl.com/vulnerabilities/" + item.rss_identifier,
+          target: "_blank"
+        }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Details", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+          target: "_blank",
+          href: rsssl_settings.plugins_url + "?plugin_status=upgrade",
+          className: "button button-primary"
+        }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("View", "really-simple-ssl")));
       });
+      set((0,immer__WEBPACK_IMPORTED_MODULE_5__.produce)(state => {
+        state.vulnerabilities = fetched.data.vulnerabilities;
+        state.updates = fetched.data.updates;
+        state.vulList = vulList;
+        state.dataLoaded = true;
+        state.riskNaming = fetched.data.riskNaming;
+        state.lastChecked = fetched.data.lastChecked;
+        state.vulEnabled = fetched.data.vulEnabled;
+      }));
     } catch (e) {
       console.error(e);
     }
@@ -33679,7 +33708,7 @@ const WPVul = () => {
       }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("You have %s %d pending", "really-simple-ssl").replace("%s", updates).replace("%d", updateWord), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
         href: "/wp-admin/update-core.php",
         style: linkStyle
-      }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('%d', 'really-simple-ssl').replace('%d', updateWord)))));
+      }, capitalizeFirstLetter((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('%d', 'really-simple-ssl').replace('%d', updateWord))))));
     } else {
       return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
         className: "rsssl-details"
@@ -39540,13 +39569,13 @@ const VulnerabilitiesOverview = props => {
   //get data if field was already enabled, so not changed right now.
   (0,react__WEBPACK_IMPORTED_MODULE_3__.useEffect)(() => {
     if (fieldAlreadyEnabled('enable_vulnerability_scanner')) {
-      //if (getFieldValue('vulnerabilities_intro_shown')!=1 ) {
-      if (!introCompleted) setShowIntro(true);
-      // } else {
-      //     if (!dataLoaded) {
-      //         fetchVulnerabilities();
-      //     }
-      // }
+      if (getFieldValue('vulnerabilities_intro_shown') != 1) {
+        if (!introCompleted) setShowIntro(true);
+      } else {
+        if (!dataLoaded) {
+          fetchVulnerabilities();
+        }
+      }
     }
   }, [fields]);
   fields.forEach(function (item, i) {
@@ -39575,64 +39604,16 @@ const VulnerabilitiesOverview = props => {
       }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Disabled', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Activate vulnerability scanning to enable this block.', 'really-simple-ssl')))))
     );
   }
-
-  /**
-   * Styling
-   */
-  const customStyles = {
-    headCells: {
-      style: {
-        paddingLeft: '0',
-        // override the cell padding for head cells
-        paddingRight: '0'
-      }
-    },
-    cells: {
-      style: {
-        paddingLeft: '0',
-        // override the cell padding for data cells
-        paddingRight: '0'
-      }
-    }
-  };
-  const btnStyle = {
-    marginLeft: '10px'
-  };
   let data = vulList;
   //we need to add a key to the data called action wich produces the action buttons
-  if (typeof data === 'object') {
-    //we make it an array
-    data = Object.values(data);
-  }
-  data.forEach(function (item, i) {
-    let rsssid = item.rss_identifier;
-    item.vulnerability_action = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-vulnerability-action"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-      className: "button",
-      href: "https://really-simple-ssl.com/vulnerabilities/" + rsssid,
-      target: "_blank"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Details", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-      target: "_blank",
-      href: rsssl_settings.plugins_url + "?plugin_status=upgrade",
-      className: "button button-primary",
-      style: btnStyle
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("View", "really-simple-ssl")));
-  });
-  console.log("dataLoaded");
-  console.log(dataLoaded);
-  console.log("vulList");
-  console.log(vulList);
-  console.log("data");
-  console.log(data);
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, showIntro && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_VulnerabilitiesIntro__WEBPACK_IMPORTED_MODULE_6__["default"], null)),  true && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_4__["default"], {
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, data.length > 0 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_4__["default"], {
     columns: columns,
     data: data,
     dense: true,
     pagination: true,
     noDataComponent: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("No results", "really-simple-ssl"),
     persistTableHead: true
-  }));
+  }), showIntro && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_VulnerabilitiesIntro__WEBPACK_IMPORTED_MODULE_6__["default"], null)));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (VulnerabilitiesOverview);
 

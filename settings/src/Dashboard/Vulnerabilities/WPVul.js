@@ -186,7 +186,7 @@ const WPVul = () => {
                         <div className="rsssl-detail">
                             {__("You have %s %d pending", "really-simple-ssl").replace("%s", updates).replace("%d", updateWord)}
                             <a href={"/wp-admin/update-core.php"}
-                               style={linkStyle}>{__('%d', 'really-simple-ssl').replace('%d', updateWord)}</a>
+                               style={linkStyle}>{capitalizeFirstLetter(__('%d', 'really-simple-ssl').replace('%d', updateWord))}</a>
                         </div>
                     </div>
                 </>
