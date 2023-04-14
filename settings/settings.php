@@ -65,7 +65,7 @@ function rsssl_plugin_admin_scripts()
         apply_filters('rsssl_localize_script', [
             'menu' => rsssl_menu(),
             'site_url' => get_rest_url(),
-            'plugins_url' => admin_url('plugins.php'),
+            'plugins_url' => admin_url('update-core.php'),
             'admin_ajax_url' => add_query_arg(
                 array(
                     'type' => 'errors',

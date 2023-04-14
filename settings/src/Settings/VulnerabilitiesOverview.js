@@ -1,5 +1,5 @@
 import {__} from '@wordpress/i18n';
-import useVulnerabilityData from "../Dashboard/Vulnerabilities/VulnerabilityData";
+import useRiskData from "./RiskConfiguration/RiskData";
 import React, {useEffect, useState} from 'react';
 import DataTable from "react-data-table-component";
 import useFields from "./FieldsData";
@@ -10,8 +10,9 @@ const VulnerabilitiesOverview = (props) => {
         dataLoaded,
         vulList,
         introCompleted,
-        fetchVulnerabilities
-    } = useVulnerabilityData();
+        fetchVulnerabilities,
+        setDataLoaded
+    } = useRiskData();
     const {fields, getField, fieldAlreadyEnabled, getFieldValue} = useFields();
     const [showIntro, setShowIntro] = useState(false);
 
@@ -38,7 +39,7 @@ const VulnerabilitiesOverview = (props) => {
 
     //get data if field was already enabled, so not changed right now.
     useEffect(() => {
-        if (fieldAlreadyEnabled('enable_vulnerability_scanner')) {
+        if ( fieldAlreadyEnabled('enable_vulnerability_scanner') ) {
             if (getFieldValue('vulnerabilities_intro_shown')!=1 ) {
                 if (!introCompleted) setShowIntro(true);
             } else {
@@ -46,7 +47,10 @@ const VulnerabilitiesOverview = (props) => {
                     fetchVulnerabilities();
                 }
             }
+        }
 
+        if ( getFieldValue('enable_vulnerability_scanner')==1 && !fieldAlreadyEnabled('enable_vulnerability_scanner') ) {
+            setDataLoaded(false);
         }
     }, [fields]);
 

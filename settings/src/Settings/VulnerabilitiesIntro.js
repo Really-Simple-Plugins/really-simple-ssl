@@ -1,12 +1,7 @@
-import Icon from "../utils/Icon";
 import {__} from "@wordpress/i18n";
 import {Button, Modal} from "@wordpress/components";
-
 import {useState} from '@wordpress/element';
 import Runner from "./RiskConfiguration/Runner";
-import useRunnerData from "./RiskConfiguration/RunnerData";
-import useVulnerabilityData from "../Dashboard/Vulnerabilities/VulnerabilityData";
-
 
 const VulnerabilitiesIntro = (props) => {
     //first we define a state for the steps

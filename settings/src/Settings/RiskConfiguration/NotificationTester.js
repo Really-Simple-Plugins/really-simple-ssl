@@ -1,6 +1,6 @@
 import * as rsssl_api from "../../utils/api";
-import Icon from "../../utils/Icon";
 import useFields from "../FieldsData";
+import {__} from "@wordpress/i18n";
 import {useEffect, useState} from "react";
 
 const NotificationTester = (props) => {
@@ -13,12 +13,9 @@ const NotificationTester = (props) => {
             setDisabled(false);
         }
     },[fields])
-    function doTestNotification() {
+    const doTestNotification = async () => {
         //Test one the email notification
-        rsssl_api.doAction( 'vulnerabilities_test_notification' ).then
-        ( ( response ) => {
-
-        });
+        await rsssl_api.doAction( 'vulnerabilities_test_notification' );
         addHelpNotice(
             field.id,
             'success',

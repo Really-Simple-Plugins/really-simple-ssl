@@ -1,7 +1,7 @@
 import Icon from "../../utils/Icon";
 import {useEffect, useState} from "react";
 import * as rsssl_api from "../../utils/api";
-import useVulnerabilityData from "../../Dashboard/Vulnerabilities/VulnerabilityData";
+import useRiskData from "./RiskData";
 import useFields from "../FieldsData";
 
 
@@ -9,57 +9,51 @@ const Runner = (props) => {
     //let us make a state for the loading
     const [loadingState, setLoadingState] = useState(props.loading);
     const {setChangedField, updateField, saveFields} = useFields();
-
     const {
-        dataLoaded,
         fetchVulnerabilities,
         setIntroCompleted
-    } = useVulnerabilityData();
+    } = useRiskData();
     let title = props.title;
-    const [delayState, setDelayState] = useState(true);
-    let spin = (loadingState && !delayState)? "icon-spin" : "";
+    let spin = (loadingState)? "icon-spin" : "";
     let name = props.name;
     if(props.name === "first_runner") {
         useEffect(() => {
             const firstRunner = async () => {
-                setDelayState(false);
                 setLoadingState(true);
                 let response = await rsssl_api.doAction('vulnerabilities_scan_files');
                 if (response.request_success) {
                     setLoadingState(false);
                     spin = "";
                 }
+                setTimeout(function () {
+                    //we set the loading state to true
+                    setLoadingState(false);
+                }, props.time);
             }
             firstRunner();
         }, []);
-    } else if(props.name === "third_runner") {
+    } else if(props.name === "fourth_runner") {
         useEffect(() => {
-            const thirdRunner = async () => {
-                setDelayState(false);
-                setLoadingState(true);
-                console.log("fetching vulnerabilities");
+            const fourthRunner = async () => {
                 await fetchVulnerabilities();
-                setLoadingState(false);
                 setIntroCompleted(true);
-                spin = "";
                 setChangedField('vulnerabilities_intro_shown', true);
                 updateField('vulnerabilities_intro_shown', true);
                 await saveFields(true, false);
+                setTimeout(function () {
+                    //we set the loading state to true
+                    setLoadingState(false);
+                }, props.time);
             }
-            thirdRunner();
+            fourthRunner();
         }, []);
     } else {
         useEffect(() => {
-            const run = async () => {
-                setTimeout(function () {
-                    setTimeout(function () {
-                        //we set the loading state to true
-                        setLoadingState(false);
-                    }, props.time);
-                    setDelayState(false);
-                }, props.delay);
-            }
-            run();
+            setTimeout(function () {
+                //we set the loading state to true
+                setLoadingState(false);
+            }, props.time);
+
        }, []);
     }
 
@@ -74,7 +68,7 @@ const Runner = (props) => {
     return (
         <div className="rsssl-details">
             <div className={"rsssl-detail-icon " + spin} >
-                {delayState?  <Icon name="circle-check" color="red"/> : loadingState? <Icon name="spinner" />:<Icon name="circle-check" color="green"/>}
+                {loadingState ? <Icon name="spinner" />:<Icon name="circle-check" color="green"/>}
             </div>
             <div className="rsssl-detail">
                 {displayTitle(name)}

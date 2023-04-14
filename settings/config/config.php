@@ -70,7 +70,7 @@ function rsssl_menu() {
                 [
                     'id'      => 'vulnerabilities',
                     'title'   => __( 'Vulnerabilities', 'really-simple-ssl' ),
-                    'featured' => true,//!get_option('rsssl_vulnerabilities_first_run'), TODO: change this after beta
+                    'featured' => true,//TODO: change this after beta
                     'groups'  => [
                         [
                             'id'       => 'vulnerabilities_basic',
@@ -864,10 +864,10 @@ function rsssl_fields( $load_values = true ) {
             'group_id' => 'vulnerabilities_notifications',
             'type' => 'select',
             'options' => [
-                '*' => __('none', 'really-simple-ssl'),
-                'l' => __('low-risk', 'really-simple-ssl'),
-                'm' => __('medium-risk', 'really-simple-ssl'),
-                'h' => __('high-risk', 'really-simple-ssl'),
+                '*' => __('None', 'really-simple-ssl'),
+                'l' => __('Low-risk', 'really-simple-ssl'),
+                'm' => __('Medium-risk', 'really-simple-ssl'),
+                'h' => __('High-risk', 'really-simple-ssl'),
                 'c' => __('critical (default)', 'really-simple-ssl'),
             ],
             'label' => __('Email admin', 'really-simple-ssl'),
@@ -952,11 +952,11 @@ function rsssl_fields( $load_values = true ) {
             'group_id'         => 'vulnerabilities_measures',
             'type'             => 'riskcomponent',
             'options'          => [
-                '*' => __('none', 'really-simple-ssl'),
-                'l' => __('low-risk', 'really-simple-ssl'),
-                'm' => __('medium-risk', 'really-simple-ssl'),
-                'h' => __('high-risk', 'really-simple-ssl'),
-                'c' => __('critical', 'really-simple-ssl'),
+                '*' => __('None', 'really-simple-ssl'),
+                'l' => __('Low-risk', 'really-simple-ssl'),
+                'm' => __('Medium-risk', 'really-simple-ssl'),
+                'h' => __('High-risk', 'really-simple-ssl'),
+                'c' => __('Critical', 'really-simple-ssl'),
             ],
             'disabled'         => false,
             'default'          => false,
@@ -1433,6 +1433,7 @@ function rsssl_fields( $load_values = true ) {
 	$stored_options = get_option( 'rsssl_options' );
 
 //	unset($stored_options['enable_vulnerability_scanner']);
+//	unset($stored_options['vulnerabilities_intro_shown']);
 
 	foreach ( $fields as $key => $field ) {
 		$field = wp_parse_args( $field, [ 'default' => '', 'id' => false, 'visible' => true, 'disabled' => false, 'recommended' => false ] );
@@ -1491,21 +1492,13 @@ function rsssl_blocks() {
 //                'type' => 'html',
 //                'data' => __( "Powered by WPVulnerability", 'really-simple-ssl' ),
 //            ],
-            'title'    => rsssl_get_option('enable_vulnerability_scanner')?
+            'title'    => rsssl_get_option('enable_vulnerability_scanner') ?
                 __( "Vulnerabilities", 'really-simple-ssl' )
                 : __( "Hardening", 'really-simple-ssl' ),
             'content'  => [ 'type' => 'react', 'data' => 'WPVul' ],
             'footer'   => [ 'type' => 'react', 'data' => 'WPVulFooter' ],
             'class'    => '',
         ],
-//		[
-//			'id'       => 'new-features-block',
-//			'controls' => false,
-//			'title'    => __( "Hardening", 'really-simple-ssl' ),
-//			'content'  => [ 'type' => 'react', 'data' => 'SecurityFeaturesBlock' ],
-//			'footer'   => [ 'type' => 'react', 'data' => 'SecurityFeaturesFooter' ],
-//			'class'    => '',
-//		],
 		[
 			'id'       => 'tips_tricks',
 			'controls' => false,

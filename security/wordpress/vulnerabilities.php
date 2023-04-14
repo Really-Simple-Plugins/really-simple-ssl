@@ -62,6 +62,8 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 'h' => __('high-risk', 'really-simple-ssl'),
                 'c' => __('critical', 'really-simple-ssl'),
             ];
+
+	        add_filter('rsssl_vulnerability_data', array($this, 'get_stats'));
         }
 
         public static function riskNaming($risk = null)
@@ -157,7 +159,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	        }
             $instance = self::instance();
 
-            update_option('rsssl_vulnerabilities_first_run', true, false);
             rsssl_update_option('enable_vulnerability_scanner', '1');
             //we check if the schedule already exists, if not, we add it.
             if (!wp_next_scheduled('rsssl_vulnerabilities_cron')) {
@@ -325,51 +326,167 @@ if (!class_exists("rsssl_vulnerabilities")) {
          *
          * @return array
          */
-        public static function get_stats($data): array
+        public static function get_stats($stats): array
         {
 	        if ( ! rsssl_user_can_manage() ) {
-		        return [];
+		        return $stats;
 	        }
 
             $self = new self();
-            $vulEnabled = rsssl_get_option('enable_vulnerability_scanner');
-            $firstRun = get_option('rsssl_vulnerabilities_first_run');
-
-            $updates = 0;
-            $vulnerabilities = [];
-            if ($vulEnabled) {
-                $self->cache_installed_plugins();
-                //now we only get the data we need.
-                $vulnerabilities = array_filter($self->workable_plugins, function ($plugin) {
-                    if (isset($plugin['vulnerable']) && $plugin['vulnerable']) {
-                        return $plugin;
-                    }
-                });
-
-
-                //now we fetch all plugins that have an update available.
-                foreach ($self->workable_plugins as $plugin) {
-                    if (isset($plugin['update_available']) && $plugin['update_available']) {
-                        $updates++;
-                    }
+	        $self->cache_installed_plugins();
+            //now we only get the data we need.
+            $vulnerabilities = array_filter($self->workable_plugins, static function ($plugin) {
+                if (isset($plugin['vulnerable']) && $plugin['vulnerable']) {
+                    return $plugin;
                 }
-            }
-            $time = $self->get_file_stored_info(true);
-            $stats = [
-                'vulnerabilities' => count($vulnerabilities),
-                'vulList' => $vulnerabilities,
-                'updates' => $self->getAllUpdatesCount(),
-                'lastChecked' => date_i18n(get_option('date_format') . ' @ ' . get_option('time_format'), $time),
-                'riskNaming'   => $self->risk_naming,
-                'vulEnabled' => $vulEnabled,
-                'firstRun' => $firstRun,
-            ];
+                return false;
+            });
 
-            return [
-                "request_success" => true,
-                'data' => $stats
-            ];
+	        $time = $self->get_file_stored_info(true);
+	        $stats['vulnerabilities'] = count($vulnerabilities);
+	        $stats['vulList'] = $vulnerabilities;
+            $riskData = $self->measures_data();
+            $stats['riskData'] = $riskData['data'];
+	        $stats['lastChecked'] = date_i18n(get_option('date_format') . ' @ ' . get_option('time_format'), $time);
+            return $stats;
         }
+
+
+	    /**
+	     * This combines the vulnerabilities with the installed plugins
+	     *
+	     * And loads it into a memory cache on page load
+	     *
+	     */
+	    public function cache_installed_plugins(): void
+	    {
+		    if ( ! rsssl_user_can_manage() ) {
+			    return;
+		    }
+		    //first we get all installed plugins
+		    $installed_plugins = get_plugins();
+		    $installed_themes = wp_get_themes();
+
+		    //we flatten the array
+
+		    //we make the installed_themes look like the installed_plugins
+		    $installed_themes = array_map(function ($theme) {
+			    return [
+				    'Name' => $theme->get('Name'),
+				    'Slug' => $theme->get('TextDomain'),
+				    'description' => $theme->get('Description'),
+				    'Version' => $theme->get('Version'),
+				    'Author' => $theme->get('Author'),
+				    'AuthorURI' => $theme->get('AuthorURI'),
+				    'PluginURI' => $theme->get('ThemeURI'),
+				    'TextDomain' => $theme->get('TextDomain'),
+				    'RequiresWP' => $theme->get('RequiresWP'),
+				    'RequiresPHP' => $theme->get('RequiresPHP'),
+			    ];
+		    }, $installed_themes);
+
+		    //we add a column type to all values in the array
+		    $installed_themes = array_map(function ($theme) {
+			    $theme['type'] = 'theme';
+
+			    return $theme;
+		    }, $installed_themes);
+
+		    //we add a column type to all values in the array
+		    $installed_plugins = array_map(function ($plugin) {
+			    $plugin['type'] = 'plugin';
+
+			    return $plugin;
+		    }, $installed_plugins);
+
+		    //we merge the two arrays
+		    $installed_plugins = array_merge($installed_plugins, $installed_themes);
+
+		    //now we get the components from the file
+		    $components = $this->get_components();
+
+		    //We loop through plugins and check if they are in the components array
+		    foreach ($installed_plugins as $key => $plugin) {
+			    $plugin['vulnerable'] = false;
+			    $update = get_site_transient('update_plugins');
+			    if (isset($update->response[$key])) {
+				    $plugin['update_available'] = true;
+			    } else {
+				    $plugin['update_available'] = false;
+			    }
+
+			    if($plugin['type'] === 'theme') {
+				    // we check if the theme exists as a directory
+				    if (!file_exists(get_theme_root() . '/' . $plugin['TextDomain']) ) {
+					    $plugin['folder_exists'] = false;
+				    } else {
+					    $plugin['folder_exists'] = true;
+				    }
+			    }
+
+			    if($plugin['type'] === 'plugin') {
+				    //also we check if the folder exists for the plugin we added this check for later purposes
+				    if (!file_exists(WP_PLUGIN_DIR . '/' . $plugin['TextDomain']) ) {
+					    $plugin['folder_exists'] = false;
+				    } else {
+					    $plugin['folder_exists'] = true;
+				    }
+			    }
+
+			    //if there are no components, we return
+			    if (!empty($components)) {
+				    foreach ($components as $component) {
+					    if ($plugin['TextDomain'] === $component->slug) {
+						    if (!empty($component->vulnerabilities) && $plugin['folder_exists'] === true) {
+							    $plugin['vulnerable'] = true;
+							    $plugin['risk_level'] = $this->get_highest_vulnerability($component->vulnerabilities);
+							    $plugin['rss_identifier'] = $this->getLinkedUUID($component->vulnerabilities, $plugin['risk_level']);
+							    $plugin['risk_name'] = $this->risk_naming[$plugin['risk_level']];
+							    $plugin['date'] = $this->getLinkedDate($component->vulnerabilities, $plugin['risk_level']);
+							    $plugin['file'] = $key;
+						    }
+					    }
+				    }
+			    }
+			    //we walk through the components array
+
+			    $this->workable_plugins[$key] = $plugin;
+		    }
+
+		    //now we get the core information
+		    $core = $this->get_core();
+
+		    //we create a plugin like entry for core to add to the workable_plugins array
+		    $core_plugin = [
+			    'Name' => 'WordPress',
+			    'Slug' => 'wordpress',
+			    'Version' => $core->version?? '',
+			    'Author' => 'WordPress',
+			    'AuthorURI' => 'https://wordpress.org/',
+			    'PluginURI' => 'https://wordpress.org/',
+			    'TextDomain' => 'wordpress',
+			    'type' => 'core',
+		    ];
+		    $core_plugin['vulnerable'] = false;
+		    //we check if there is an update available
+		    $update = get_site_transient('update_core');
+		    if (isset($update->updates[0]->response) && $update->updates[0]->response === 'upgrade') {
+			    $core_plugin['update_available'] = true;
+		    } else {
+			    $core_plugin['update_available'] = false;
+		    }
+		    //if there are no components, we return
+		    if (!empty($core->vulnerabilities)) {
+			    $core_plugin['vulnerable'] = true;
+			    $core_plugin['risk_level'] = $this->get_highest_vulnerability($core->vulnerabilities);
+			    $core_plugin['rss_identifier'] = $this->getLinkedUUID($core->vulnerabilities, $core_plugin['risk_level']);
+			    $core_plugin['risk_name'] = $this->risk_naming[$core_plugin['risk_level']];
+			    $core_plugin['date'] = $this->getLinkedDate($core->vulnerabilities, $core_plugin['risk_level']);
+			    $core_plugin['file'] = 'wordpress';
+		    }
+		    //we add the core plugin to the workable_plugins array
+		    $this->workable_plugins['wordpress'] = $core_plugin;
+	    }
 
 
         /**
@@ -424,7 +541,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
          * @param $data
          * @return array
          */
-        public static function measures_data(): array
+        public function measures_data(): array
         {
             $measures = [];
             $measures[] = [
@@ -439,7 +556,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 'value' => get_option('rsssl_quarantine'),
                 'description' => sprintf(__('Isolates the plugin or theme if no update can be performed', 'really-simple-ssl'), self::riskNaming('m')),
             ];
-
 
             return [
                 "request_success" => true,
@@ -1059,144 +1175,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
         /* End of private functions | Filtering and walks */
 
-        /* Caching functions */
-
-        /**
-         * This combines the vulnerabilities with the installed plugins
-         *
-         * And loads it into a memory cache on page load
-         *
-         */
-        public function cache_installed_plugins(): void
-        {
-	        if ( ! rsssl_user_can_manage() ) {
-		        return;
-	        }
-            //first we get all installed plugins
-            $installed_plugins = get_plugins();
-            $installed_themes = wp_get_themes();
-
-            //we flatten the array
-
-            //we make the installed_themes look like the installed_plugins
-            $installed_themes = array_map(function ($theme) {
-                return [
-                    'Name' => $theme->get('Name'),
-                    'Slug' => $theme->get('TextDomain'),
-                    'description' => $theme->get('Description'),
-                    'Version' => $theme->get('Version'),
-                    'Author' => $theme->get('Author'),
-                    'AuthorURI' => $theme->get('AuthorURI'),
-                    'PluginURI' => $theme->get('ThemeURI'),
-                    'TextDomain' => $theme->get('TextDomain'),
-                    'RequiresWP' => $theme->get('RequiresWP'),
-                    'RequiresPHP' => $theme->get('RequiresPHP'),
-                ];
-            }, $installed_themes);
-
-            //we add a column type to all values in the array
-            $installed_themes = array_map(function ($theme) {
-                $theme['type'] = 'theme';
-
-                return $theme;
-            }, $installed_themes);
-
-            //we add a column type to all values in the array
-            $installed_plugins = array_map(function ($plugin) {
-                $plugin['type'] = 'plugin';
-
-                return $plugin;
-            }, $installed_plugins);
-
-            //we merge the two arrays
-            $installed_plugins = array_merge($installed_plugins, $installed_themes);
-
-            //now we get the components from the file
-            $components = $this->get_components();
-
-            //We loop through plugins and check if they are in the components array
-            foreach ($installed_plugins as $key => $plugin) {
-                $plugin['vulnerable'] = false;
-                $update = get_site_transient('update_plugins');
-                if (isset($update->response[$key])) {
-                    $plugin['update_available'] = true;
-                } else {
-                    $plugin['update_available'] = false;
-                }
-
-                if($plugin['type'] === 'theme') {
-                    // we check if the theme exists as a directory
-                    if (!file_exists(get_theme_root() . '/' . $plugin['TextDomain']) ) {
-                        $plugin['folder_exists'] = false;
-                    } else {
-                        $plugin['folder_exists'] = true;
-                    }
-                }
-
-                if($plugin['type'] === 'plugin') {
-                    //also we check if the folder exists for the plugin we added this check for later purposes
-                    if (!file_exists(WP_PLUGIN_DIR . '/' . $plugin['TextDomain']) ) {
-                        $plugin['folder_exists'] = false;
-                    } else {
-                        $plugin['folder_exists'] = true;
-                    }
-                }
-
-                //if there are no components, we return
-                if (!empty($components)) {
-                    foreach ($components as $component) {
-                        if ($plugin['TextDomain'] === $component->slug) {
-                            if (!empty($component->vulnerabilities) && $plugin['folder_exists'] === true) {
-                                $plugin['vulnerable'] = true;
-                                $plugin['risk_level'] = $this->get_highest_vulnerability($component->vulnerabilities);
-                                $plugin['rss_identifier'] = $this->getLinkedUUID($component->vulnerabilities, $plugin['risk_level']);
-                                $plugin['risk_name'] = $this->risk_naming[$plugin['risk_level']];
-                                $plugin['date'] = $this->getLinkedDate($component->vulnerabilities, $plugin['risk_level']);
-                                $plugin['file'] = $key;
-                            }
-                        }
-                    }
-                }
-                //we walk through the components array
-
-                $this->workable_plugins[$key] = $plugin;
-            }
-
-            //now we get the core information
-            $core = $this->get_core();
-
-            //we create a plugin like entry for core to add to the workable_plugins array
-            $core_plugin = [
-                'Name' => 'WordPress',
-                'Slug' => 'wordpress',
-                'Version' => $core->version?? '',
-                'Author' => 'WordPress',
-                'AuthorURI' => 'https://wordpress.org/',
-                'PluginURI' => 'https://wordpress.org/',
-                'TextDomain' => 'wordpress',
-                'type' => 'core',
-            ];
-            $core_plugin['vulnerable'] = false;
-            //we check if there is an update available
-            $update = get_site_transient('update_core');
-            if (isset($update->updates[0]->response) && $update->updates[0]->response === 'upgrade') {
-                $core_plugin['update_available'] = true;
-            } else {
-                $core_plugin['update_available'] = false;
-            }
-            //if there are no components, we return
-            if (!empty($core->vulnerabilities)) {
-                $core_plugin['vulnerable'] = true;
-                $core_plugin['risk_level'] = $this->get_highest_vulnerability($core->vulnerabilities);
-                $core_plugin['rss_identifier'] = $this->getLinkedUUID($core->vulnerabilities, $core_plugin['risk_level']);
-                $core_plugin['risk_name'] = $this->risk_naming[$core_plugin['risk_level']];
-                $core_plugin['date'] = $this->getLinkedDate($core->vulnerabilities, $core_plugin['risk_level']);
-                $core_plugin['file'] = 'wordpress';
-            }
-            //we add the core plugin to the workable_plugins array
-            $this->workable_plugins['wordpress'] = $core_plugin;
-        }
-
 
         /* Private functions | End of Filtering and walks */
 
@@ -1532,9 +1510,6 @@ function rsssl_vulnerabilities_api( array $response, string $action, $data ): ar
 		case 'vulnerabilities_scan_files':
 			$response = rsssl_vulnerabilities::firstRun();
 			break;
-		case 'vulnerabilities_stats':
-			$response = rsssl_vulnerabilities::get_stats( $data );
-			break;
 		case 'vulnerabilities_measures_get':
 			$response = rsssl_vulnerabilities::measures_data();
 			break;
@@ -1550,7 +1525,7 @@ add_filter( 'rsssl_do_action', 'rsssl_vulnerabilities_api', 10, 3 );
 /* Routing and API's */
 
 
-if (!function_exists('rsssl_vulnerabilities_get_stats')) {
+if (!function_exists('rsssl_store_measures')) {
     /**
      * This function is used to get the stats of the vulnerability scanner
      *

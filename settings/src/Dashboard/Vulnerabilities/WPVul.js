@@ -1,33 +1,36 @@
 import Icon from "../../utils/Icon";
 import {__} from "@wordpress/i18n";
-import useVulnerabilityData from "./VulnerabilityData";
 import {useEffect, useState} from "react";
 import useFields from "../../Settings/FieldsData";
+import useRiskData from "../../Settings/RiskConfiguration/RiskData";
 
 const WPVul = () => {
     const {
         vulnerabilities,
         vulnerabilityScore,
-        vulEnabled,
         updates,
         dataLoaded,
         riskNaming,
         vulnerabilityCount,
         capitalizeFirstLetter,
         fetchVulnerabilities
-    } = useVulnerabilityData();
-    const {fields, fieldAlreadyEnabled} = useFields();
+    } = useRiskData();
+    const {fields, getFieldValue} = useFields();
     const [vulnerabilityWord, setVulnerabilityWord] = useState('');
     const [updateWord, setUpdateWord] = useState('');
     const [hardeningWord, setHardeningWord] = useState('');
     const [notEnabledHardeningFields, setNotEnabledHardeningFields] = useState(0);
+    const [vulEnabled, setVulEnabled] = useState(false);
     useEffect(() => {
-        if ( fieldAlreadyEnabled('enable_vulnerability_scanner')) {
-            if (!dataLoaded) {
-                fetchVulnerabilities();
-            }
+        if (getFieldValue('enable_vulnerability_scanner')==1) {
+            setVulEnabled(true);
         }
     }, [fields]);
+    useEffect(() => {
+        if (!dataLoaded) {
+            fetchVulnerabilities();
+        }
+    }, [vulEnabled]);
 
     useEffect(() => {
         //singular or plural of the word vulnerability
@@ -90,25 +93,9 @@ const WPVul = () => {
             vulClass = 'rsssl-error';
         }
 
+        // if (!vulEnabled) vulClass = "rsssl-inactive";
+
     }
-
-    const getStyles = () => {
-        let progress = 0;
-        let vulScanStatus = 'disabled';
-        if (vulScanStatus === 'active') progress = 50;
-        if (vulScanStatus === 'paused') progress = 100;
-
-        return Object.assign(
-            {},
-            {width: progress + "%"},
-        );
-    }
-
-    function neverScannedYet() {
-        return true;
-    }
-
-    let gradeClass = neverScannedYet() ? 'inactive' : '?';
 
     const checkVulActive = () => {
         if (vulEnabled) {
@@ -178,14 +165,13 @@ const WPVul = () => {
             iconColor = 'red';
         }
         if (updates) {
-
             return (
                 <>
                     <div className="rsssl-details">
                         <div className="rsssl-detail-icon"><Icon name={icon} color={iconColor}/></div>
                         <div className="rsssl-detail">
                             {__("You have %s %d pending", "really-simple-ssl").replace("%s", updates).replace("%d", updateWord)}
-                            <a href={"/wp-admin/update-core.php"}
+                            <a href={rsssl_settings.plugins_url + "?plugin_status=upgrade"}
                                style={linkStyle}>{capitalizeFirstLetter(__('%d', 'really-simple-ssl').replace('%d', updateWord))}</a>
                         </div>
                     </div>
@@ -304,7 +290,6 @@ const WPVul = () => {
                     <div className="rsssl-ssl-test-information">
                         <span>
                             {vulEnabled ? <Icon color={iconVulColor} size={20} name="radar-duotone"></Icon> : <Icon size={20}  color={iconVulEnabledColor} name="satellite-dish-duotone"></Icon>}
-
                         </span>
                         <span>
                             <h2 className={"rsssl-number"}>{vulEnabled ? vulnerabilities : '-'}</h2>

@@ -9,15 +9,12 @@ import useFields from "../FieldsData";
 
 const RiskComponent = (props) => {
     //first we put the data in a state
-    const {riskData, dataLoaded, dataVulLoaded, vulnerabilities, fetchRiskData, fetchVulnerabilities, setData, updateRiskData} = UseRiskData();
+    const {riskData, dataLoaded, fetchVulnerabilities, updateRiskData} = UseRiskData();
     const { fields, fieldAlreadyEnabled} = useFields();
 
     useEffect(() => {
         if ( fieldAlreadyEnabled('enable_vulnerability_scanner')) {
             if (!dataLoaded) {
-                fetchRiskData();
-            }
-            if (!dataVulLoaded) {
                 fetchVulnerabilities();
             }
         }
@@ -27,17 +24,17 @@ const RiskComponent = (props) => {
     if (!dataLoaded) {
         return null;
     }
-    if (dataVulLoaded) {
-
-        //we add a help on the left side
-        dispatch('core/notices').createNotice(
-            'info',
-            'This is a test',
-            {
-                isDismissible: true,
-            },
-        );
-    }
+    // if (dataLoaded) {
+    //
+    //     //we add a help on the left side
+    //     dispatch('core/notices').createNotice(
+    //         'info',
+    //         'This is a test',
+    //         {
+    //             isDismissible: true,
+    //         },
+    //     );
+    // }
 
     //we create the columns
     let columns = [];
@@ -56,29 +53,29 @@ const RiskComponent = (props) => {
     options = Object.entries(options).map((item) => {
         return {label: item[1], value: item[0]};
     });
-    //we check if the property request_success exists if so we remove it
-    if (riskData.hasOwnProperty('request_success')) {
-        delete riskData.request_success;
-    }
 
     //and we add the select control to the data
-    Object.keys(riskData).forEach((item) => {
-        riskData[item].riskSelection = <SelectControl
-            id={riskData[item].id}
-            name={riskData[item].name}
-            value={riskData[item].value}
+
+    let data = [...riskData];
+    for (const key in data) {
+        let dataItem = {...data[key]}
+        dataItem.riskSelection = <SelectControl
+            id={dataItem.id}
+            name={dataItem.name}
+            value={dataItem.value}
             options={options}
             label=''
-            onChange={(fieldValue) => onChangeHandler(fieldValue, riskData[item])
+            onChange={(fieldValue) => onChangeHandler(fieldValue, dataItem)
             }
         />
-    });
+        data[key] = dataItem;
+    }
 
     return (
         <div>
             <DataTable
                 columns={columns}
-                data={Object.values(riskData)}
+                data={Object.values(data)}
             />
         </div>
     )
@@ -123,13 +120,6 @@ const RiskComponent = (props) => {
             });
         }
         update();
-        // updateRiskData(item.id, fieldValue).then((response) => {
-        //     dispachNotification(item.risk, 'success');
-        // })
-        //     .then((response) => {
-        //         dispachNotification(item.risk, 'error');
-        //     });
-        // ;
     }
 
 }
