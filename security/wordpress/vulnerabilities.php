@@ -868,7 +868,9 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 return [];
             }
 
-            return FileStorage::GetFile($file);
+            $components =  FileStorage::GetFile($file);
+            if (!is_array($components)) $components = [];
+            return $components;
         }
 
         /* End of plug-in files section */
