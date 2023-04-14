@@ -859,14 +859,14 @@ if (!class_exists("rsssl_vulnerabilities")) {
         private function get_components()
         {
 	        if ( ! rsssl_user_can_manage() ) {
-		        return null;
+		        return [];
 	        }
             $upload_dir = wp_upload_dir();
             $upload_dir = $upload_dir['basedir'];
             $upload_dir = $upload_dir . self::RSS_VULNERABILITIES_LOCATION;
             $file = $upload_dir . '/components.json';
             if (!file_exists($file)) {
-                return false;
+                return [];
             }
 
             return FileStorage::GetFile($file);

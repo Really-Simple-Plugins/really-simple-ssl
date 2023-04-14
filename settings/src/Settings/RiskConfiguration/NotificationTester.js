@@ -7,9 +7,9 @@ const NotificationTester = (props) => {
 
     const {field} = props;
     const [disabled, setDisabled] = useState(true);
-    const {addHelpNotice, fields, getFieldValue} = useFields();
+    const {addHelpNotice, fields, fieldAlreadyEnabled} = useFields();
     useEffect ( () => {
-        if ( getFieldValue('enable_vulnerability_scanner') == 1) {
+        if (fieldAlreadyEnabled('enable_vulnerability_scanner')) {
             setDisabled(false);
         }
     },[fields])

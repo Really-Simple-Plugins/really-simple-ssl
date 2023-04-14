@@ -33432,8 +33432,6 @@ const useVulnerabilityData = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((se
     let data = {};
     try {
       const fetched = await _utils_api__WEBPACK_IMPORTED_MODULE_1__.doAction('vulnerabilities_stats', data);
-      console.log("fetched data: ");
-      console.log(fetched);
       let vulList = fetched.data.vulList;
       if (typeof vulList === 'object') {
         //we make it an array
@@ -38633,10 +38631,10 @@ const NotificationTester = props => {
   const {
     addHelpNotice,
     fields,
-    getFieldValue
+    fieldAlreadyEnabled
   } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_3__["default"])();
   (0,react__WEBPACK_IMPORTED_MODULE_4__.useEffect)(() => {
-    if (getFieldValue('enable_vulnerability_scanner') == 1) {
+    if (fieldAlreadyEnabled('enable_vulnerability_scanner')) {
       setDisabled(false);
     }
   }, [fields]);
