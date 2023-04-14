@@ -33515,17 +33515,20 @@ const WPVul = () => {
     fetchVulnerabilities
   } = (0,_VulnerabilityData__WEBPACK_IMPORTED_MODULE_3__["default"])();
   const {
-    fields
+    fields,
+    fieldAlreadyEnabled
   } = (0,_Settings_FieldsData__WEBPACK_IMPORTED_MODULE_5__["default"])();
   const [vulnerabilityWord, setVulnerabilityWord] = (0,react__WEBPACK_IMPORTED_MODULE_4__.useState)('');
   const [updateWord, setUpdateWord] = (0,react__WEBPACK_IMPORTED_MODULE_4__.useState)('');
   const [hardeningWord, setHardeningWord] = (0,react__WEBPACK_IMPORTED_MODULE_4__.useState)('');
   const [notEnabledHardeningFields, setNotEnabledHardeningFields] = (0,react__WEBPACK_IMPORTED_MODULE_4__.useState)(0);
   (0,react__WEBPACK_IMPORTED_MODULE_4__.useEffect)(() => {
-    if (!dataLoaded) {
-      fetchVulnerabilities();
+    if (fieldAlreadyEnabled('enable_vulnerability_scanner')) {
+      if (!dataLoaded) {
+        fetchVulnerabilities();
+      }
     }
-  }, []);
+  }, [fields]);
   (0,react__WEBPACK_IMPORTED_MODULE_4__.useEffect)(() => {
     //singular or plural of the word vulnerability
     const v = vulnerabilities === 1 ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("vulnerability", "really-simple-ssl") : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("vulnerabilities", "really-simple-ssl");
@@ -36848,6 +36851,11 @@ const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, get) => 
       });
     }
   },
+  fieldAlreadyEnabled: id => {
+    let fieldIsChanged = get().changedFields.filter(field => field.id === id).length > 0;
+    let fieldIsEnabled = get().getFieldValue(id);
+    return !fieldIsChanged && fieldIsEnabled;
+  },
   getFieldValue: id => {
     let fields = get().fields;
     let fieldItem = fields.filter(field => field.id === id)[0];
@@ -38634,10 +38642,10 @@ const RiskComponent = props => {
   } = (0,_RiskData__WEBPACK_IMPORTED_MODULE_2__["default"])();
   const {
     fields,
-    getFieldValue
+    fieldAlreadyEnabled
   } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_8__["default"])();
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
-    if (getFieldValue('enable_vulnerability_scanner') == 1) {
+    if (fieldAlreadyEnabled('enable_vulnerability_scanner')) {
       if (!dataLoaded) {
         fetchRiskData();
       }
@@ -39468,11 +39476,9 @@ const VulnerabilitiesOverview = props => {
     fetchVulnerabilities
   } = (0,_Dashboard_Vulnerabilities_VulnerabilityData__WEBPACK_IMPORTED_MODULE_2__["default"])();
   const {
-    fieldsLoaded,
+    fields,
+    changedFields,
     getFieldValue
-  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_5__["default"])();
-  const {
-    fields
   } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_5__["default"])();
 
   //we create the columns
@@ -39493,11 +39499,17 @@ const VulnerabilitiesOverview = props => {
     let newItem = buildColumn(item);
     columns.push(newItem);
   });
+
+  //get data if field was already enabled, so not changed right now.
   (0,react__WEBPACK_IMPORTED_MODULE_3__.useEffect)(() => {
-    if (fieldsLoaded && getFieldValue('enable_vulnerability_scanner') == 1) {
-      fetchVulnerabilities();
+    if (getFieldValue('enable_vulnerability_scanner') == 1) {
+      //check if field with id enable_vulnerability_scanner exists in the changedFields array
+      let fieldIsChanged = changedFields.filter(field => field.id === 'enable_vulnerability_scanner').length > 0;
+      if (!fieldIsChanged && !dataLoaded) {
+        fetchVulnerabilities();
+      }
     }
-  }, [fieldsLoaded]);
+  }, [fields]);
   fields.forEach(function (item, i) {
     if (item.id === 'enable_vulnerability_scanner') {
       enabled = item.value;

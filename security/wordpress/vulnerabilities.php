@@ -152,7 +152,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
         public static function firstRun(): array
         {
 	        if ( ! rsssl_user_can_manage() ) {
-		        return;
+		        return [];
 	        }
             $instance = self::instance();
 

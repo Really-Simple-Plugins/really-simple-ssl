@@ -10,10 +10,10 @@ import useFields from "../FieldsData";
 const RiskComponent = (props) => {
     //first we put the data in a state
     const {riskData, dataLoaded, dataVulLoaded, vulnerabilities, fetchRiskData, fetchVulnerabilities, setData, updateRiskData} = UseRiskData();
-    const { fields, getFieldValue} = useFields();
+    const { fields, fieldAlreadyEnabled} = useFields();
 
     useEffect(() => {
-        if (getFieldValue('enable_vulnerability_scanner')==1) {
+        if ( fieldAlreadyEnabled('enable_vulnerability_scanner')) {
             if (!dataLoaded) {
                 fetchRiskData();
             }

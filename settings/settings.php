@@ -306,7 +306,6 @@ function rsssl_do_action($request, $ajax_data = false)
             $response = rsssl_clear_test_caches($data);
             break;
         default:
-            error_log("apply filter rest route do $action, should be after vulsn file ");
             $response = apply_filters("rsssl_do_action", [], $action, $data);
     }
 

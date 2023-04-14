@@ -110,6 +110,11 @@ const useFields = create(( set, get ) => ({
             set( {fields: newFields} );
         }
     },
+    fieldAlreadyEnabled: (id) => {
+        let fieldIsChanged = get().changedFields.filter(field => field.id === id ).length>0;
+        let fieldIsEnabled = get().getFieldValue(id);
+        return !fieldIsChanged && fieldIsEnabled;
+    },
     getFieldValue : (id) => {
         let fields = get().fields;
         let fieldItem = fields.filter(field => field.id === id )[0];

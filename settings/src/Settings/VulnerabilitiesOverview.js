@@ -12,7 +12,7 @@ const VulnerabilitiesOverview = (props) => {
         firstRun,
         fetchVulnerabilities
     } = useVulnerabilityData();
-    const {fields, changedFields, getFieldValue} = useFields();
+    const {fields, fieldAlreadyEnabled} = useFields();
 
     //we create the columns
     let columns = [];
@@ -38,8 +38,10 @@ const VulnerabilitiesOverview = (props) => {
 
     //get data if field was already enabled, so not changed right now.
     useEffect(() => {
-        if ( getFieldValue('enable_vulnerability_scanner')==1) {
-            fetchVulnerabilities();
+        if ( fieldAlreadyEnabled('enable_vulnerability_scanner')) {
+            if (!dataLoaded) {
+                fetchVulnerabilities();
+            }
         }
     }, [fields]);
 

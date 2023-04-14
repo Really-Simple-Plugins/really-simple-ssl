@@ -16,16 +16,18 @@ const WPVul = () => {
         capitalizeFirstLetter,
         fetchVulnerabilities
     } = useVulnerabilityData();
-    const {fields} = useFields();
+    const {fields, fieldAlreadyEnabled} = useFields();
     const [vulnerabilityWord, setVulnerabilityWord] = useState('');
     const [updateWord, setUpdateWord] = useState('');
     const [hardeningWord, setHardeningWord] = useState('');
     const [notEnabledHardeningFields, setNotEnabledHardeningFields] = useState(0);
     useEffect(() => {
-        if (!dataLoaded) {
-            fetchVulnerabilities();
+        if ( fieldAlreadyEnabled('enable_vulnerability_scanner')) {
+            if (!dataLoaded) {
+                fetchVulnerabilities();
+            }
         }
-    }, []);
+    }, [fields]);
 
     useEffect(() => {
         //singular or plural of the word vulnerability
