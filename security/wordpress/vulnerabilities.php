@@ -850,7 +850,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
             $this->store_file($vulnerabilities);
         }
 
-
         /**
          * Loads the info from the files Note this is also being used for the themes.
          *
