@@ -78,13 +78,12 @@ if (!class_exists("rsssl_vulnerabilities")) {
          */
         public static function instance(): self
         {
-
             static $instance = false;
             if ( !$instance ) {
                 $instance = new rsssl_vulnerabilities();
                     //if the file exists, we include it.
-                    if (file_exists(WP_PLUGIN_DIR . '/really-simple-ssl-pro/security/wordpress/rsssl_vulnerabilities_pro.php')) {
-                        require_once(WP_PLUGIN_DIR . '/really-simple-ssl-pro/security/wordpress/rsssl_vulnerabilities_pro.php');
+                    if ( defined('rsssl_pro_path') && file_exists(rsssl_pro_path . '/security/wordpress/vulnerabilities_pro.php')) {
+                        require_once(rsssl_pro_path . '/security/wordpress/vulnerabilities_pro.php');
                         $instance = new rsssl_vulnerabilities_pro();
                     }
             }
@@ -1519,19 +1518,6 @@ function rsssl_vulnerabilities_api( array $response, string $action, $data ): ar
 	return $response;
 }
 add_filter( 'rsssl_do_action', 'rsssl_vulnerabilities_api', 10, 3 );
-
-
-//function rsssl_handle_first_activation($field_id, $new_value, $prev_value, $type){
-//	if (!rsssl_user_can_manage()) {
-//		return;
-//	}
-//	if ( $field_id==='enable_vulnerabilities_scanner' && $new_value !== $prev_value && $new_value ) {
-//		if ( !rsssl_get_option('vulnerabilities_intro_shown') ) {
-//            rsssl_update_option('vulnerabilities_show_intro', true);
-//        }
-//	}
-//}
-//add_action( "rsssl_after_save_field", "rsssl_handle_first_activation", 10, 4 );
 
 /* Routing and API's */
 
