@@ -41,7 +41,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
         /**
          * @var array|int[]
          */
-        private $risk_levels = [
+        public $risk_levels = [
             'l' => 1,
             'm' => 2,
             'h' => 3,

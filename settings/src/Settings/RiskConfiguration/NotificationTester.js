@@ -1,15 +1,18 @@
 import * as rsssl_api from "../../utils/api";
-import {Button} from "@wordpress/components";
 import Icon from "../../utils/Icon";
 import useFields from "../FieldsData";
-
-
+import {useEffect, useState} from "react";
 
 const NotificationTester = (props) => {
 
-    const {field, disabled} = props;
-    const {addHelpNotice} = useFields();
-
+    const {field} = props;
+    const [disabled, setDisabled] = useState(true);
+    const {addHelpNotice, fields, getFieldValue} = useFields();
+    useEffect ( () => {
+        if ( getFieldValue('enable_vulnerability_scanner') == 1) {
+            setDisabled(false);
+        }
+    },[fields])
     function doTestNotification() {
         //Test one the email notification
         rsssl_api.doAction( 'vulnerabilities_test_notification' ).then
@@ -25,28 +28,9 @@ const NotificationTester = (props) => {
         );
     }
 
-    function labelWrap(field) {
-        let tooltipColor = field.warning ? 'red': 'black';
-        return (
-            <>
-                <div className="cmplz-label-text">{field.label}</div>
-                {field.tooltip && <Icon name = "info-open" tooltip={field.tooltip} color = {tooltipColor} />}
-            </>
-        )
-    }
-
     return (
         <>
-            {/*{labelWrap(field)}*/}
-            <Button
-                isDefault
-                required={ field.required }
-                placeholder={ field.placeholder }
-                disabled={ disabled }
-                help={ field.comment }
-                text={ field.button_text }
-                onClick={ () => doTestNotification() }
-            />
+            <button onClick={ () => doTestNotification()} disabled={ disabled } className="button button-default">{field.button_text}</button>
         </>
     )
 }

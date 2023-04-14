@@ -10,10 +10,10 @@ import useFields from "../FieldsData";
 const RiskComponent = (props) => {
     //first we put the data in a state
     const {riskData, dataLoaded, dataVulLoaded, vulnerabilities, fetchRiskData, fetchVulnerabilities, setData, updateRiskData} = UseRiskData();
-    const {fieldsLoaded, getFieldValue} = useFields();
+    const { fields, getFieldValue} = useFields();
 
     useEffect(() => {
-        if (fieldsLoaded && getFieldValue('enable_vulnerability_scanner')==1) {
+        if (getFieldValue('enable_vulnerability_scanner')==1) {
             if (!dataLoaded) {
                 fetchRiskData();
             }
@@ -21,7 +21,7 @@ const RiskComponent = (props) => {
                 fetchVulnerabilities();
             }
         }
-    }, [fieldsLoaded]);
+    }, [fields]);
 
     //we only proceed if the data is loaded
     if (!dataLoaded) {

@@ -38547,10 +38547,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../utils/api */ "./src/utils/api.js");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../utils/Icon */ "./src/utils/Icon.js");
-/* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../FieldsData */ "./src/Settings/FieldsData.js");
+/* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../utils/Icon */ "./src/utils/Icon.js");
+/* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../FieldsData */ "./src/Settings/FieldsData.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_4__);
 
 
 
@@ -38558,36 +38558,29 @@ __webpack_require__.r(__webpack_exports__);
 
 const NotificationTester = props => {
   const {
-    field,
-    disabled
+    field
   } = props;
+  const [disabled, setDisabled] = (0,react__WEBPACK_IMPORTED_MODULE_4__.useState)(true);
   const {
-    addHelpNotice
-  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_4__["default"])();
+    addHelpNotice,
+    fields,
+    getFieldValue
+  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_3__["default"])();
+  (0,react__WEBPACK_IMPORTED_MODULE_4__.useEffect)(() => {
+    if (getFieldValue('enable_vulnerability_scanner') == 1) {
+      setDisabled(false);
+    }
+  }, [fields]);
   function doTestNotification() {
     //Test one the email notification
     _utils_api__WEBPACK_IMPORTED_MODULE_1__.doAction('vulnerabilities_test_notification').then(response => {});
     addHelpNotice(field.id, 'success', __('All notifications are triggered successfully, please check your email to double-check if you can receive emails.', 'really-simple-ssl'), __('Test notifications', 'really-simple-ssl'), false);
   }
-  function labelWrap(field) {
-    let tooltipColor = field.warning ? 'red' : 'black';
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "cmplz-label-text"
-    }, field.label), field.tooltip && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_3__["default"], {
-      name: "info-open",
-      tooltip: field.tooltip,
-      color: tooltipColor
-    }));
-  }
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
-    isDefault: true,
-    required: field.required,
-    placeholder: field.placeholder,
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    onClick: () => doTestNotification(),
     disabled: disabled,
-    help: field.comment,
-    text: field.button_text,
-    onClick: () => doTestNotification()
-  }));
+    className: "button button-default"
+  }, field.button_text));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (NotificationTester);
 
@@ -38640,11 +38633,11 @@ const RiskComponent = props => {
     updateRiskData
   } = (0,_RiskData__WEBPACK_IMPORTED_MODULE_2__["default"])();
   const {
-    fieldsLoaded,
+    fields,
     getFieldValue
   } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_8__["default"])();
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
-    if (fieldsLoaded && getFieldValue('enable_vulnerability_scanner') == 1) {
+    if (getFieldValue('enable_vulnerability_scanner') == 1) {
       if (!dataLoaded) {
         fetchRiskData();
       }
@@ -38652,7 +38645,7 @@ const RiskComponent = props => {
         fetchVulnerabilities();
       }
     }
-  }, [fieldsLoaded]);
+  }, [fields]);
 
   //we only proceed if the data is loaded
   if (!dataLoaded) {
@@ -39475,6 +39468,10 @@ const VulnerabilitiesOverview = props => {
     fetchVulnerabilities
   } = (0,_Dashboard_Vulnerabilities_VulnerabilityData__WEBPACK_IMPORTED_MODULE_2__["default"])();
   const {
+    fieldsLoaded,
+    getFieldValue
+  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_5__["default"])();
+  const {
     fields
   } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_5__["default"])();
 
@@ -39497,11 +39494,10 @@ const VulnerabilitiesOverview = props => {
     columns.push(newItem);
   });
   (0,react__WEBPACK_IMPORTED_MODULE_3__.useEffect)(() => {
-    const run = async () => {
-      await fetchVulnerabilities();
-    };
-    run();
-  }, []);
+    if (fieldsLoaded && getFieldValue('enable_vulnerability_scanner') == 1) {
+      fetchVulnerabilities();
+    }
+  }, [fieldsLoaded]);
   fields.forEach(function (item, i) {
     if (item.id === 'enable_vulnerability_scanner') {
       enabled = item.value;
