@@ -33396,11 +33396,15 @@ const useVulnerabilityData = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((se
   //for storing the status of the vulnerability scan
   riskNaming: {},
   //for storing the risk naming
-  firstrun: false,
+  introCompleted: false,
   //for storing the status of the first run
   vulList: [],
   //for storing the list of vulnerabilities
-
+  setIntroCompleted: value => {
+    set({
+      introCompleted: value
+    });
+  },
   /*
   * Getters
    */
@@ -33417,6 +33421,8 @@ const useVulnerabilityData = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((se
     let data = {};
     try {
       const fetched = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('vulnerabilities_stats', data);
+      console.log("fetched data: ");
+      console.log(fetched);
       set({
         vulnerabilities: fetched.data.vulnerabilities,
         updates: fetched.data.updates,
@@ -33424,8 +33430,7 @@ const useVulnerabilityData = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((se
         dataLoaded: true,
         riskNaming: fetched.data.riskNaming,
         lastChecked: fetched.data.lastChecked,
-        vulEnabled: fetched.data.vulEnabled,
-        firstRun: fetched.data.firstRun
+        vulEnabled: fetched.data.vulEnabled
       });
     } catch (e) {
       console.error(e);
@@ -38846,6 +38851,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../utils/api */ "./src/utils/api.js");
+/* harmony import */ var _Dashboard_Vulnerabilities_VulnerabilityData__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../Dashboard/Vulnerabilities/VulnerabilityData */ "./src/Dashboard/Vulnerabilities/VulnerabilityData.js");
+/* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../FieldsData */ "./src/Settings/FieldsData.js");
+
+
 
 
 
@@ -38853,6 +38862,16 @@ __webpack_require__.r(__webpack_exports__);
 const Runner = props => {
   //let us make a state for the loading
   const [loadingState, setLoadingState] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(props.loading);
+  const {
+    setChangedField,
+    updateField,
+    saveFields
+  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_5__["default"])();
+  const {
+    dataLoaded,
+    fetchVulnerabilities,
+    setIntroCompleted
+  } = (0,_Dashboard_Vulnerabilities_VulnerabilityData__WEBPACK_IMPORTED_MODULE_4__["default"])();
   let title = props.title;
   const [delayState, setDelayState] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(true);
   let spin = loadingState && !delayState ? "icon-spin" : "";
@@ -38869,6 +38888,22 @@ const Runner = props => {
         }
       };
       firstRunner();
+    }, []);
+  } else if (props.name === "third_runner") {
+    (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
+      const thirdRunner = async () => {
+        setDelayState(false);
+        setLoadingState(true);
+        console.log("fetching vulnerabilities");
+        await fetchVulnerabilities();
+        setLoadingState(false);
+        setIntroCompleted(true);
+        spin = "";
+        setChangedField('vulnerabilities_intro_shown', true);
+        updateField('vulnerabilities_intro_shown', true);
+        await saveFields(true, false);
+      };
+      thirdRunner();
     }, []);
   } else {
     (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
@@ -39472,14 +39507,16 @@ const VulnerabilitiesOverview = props => {
   const {
     dataLoaded,
     vulList,
-    firstRun,
+    introCompleted,
     fetchVulnerabilities
   } = (0,_Dashboard_Vulnerabilities_VulnerabilityData__WEBPACK_IMPORTED_MODULE_2__["default"])();
   const {
     fields,
-    changedFields,
+    getField,
+    fieldAlreadyEnabled,
     getFieldValue
   } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_5__["default"])();
+  const [showIntro, setShowIntro] = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)(false);
 
   //we create the columns
   let columns = [];
@@ -39502,12 +39539,14 @@ const VulnerabilitiesOverview = props => {
 
   //get data if field was already enabled, so not changed right now.
   (0,react__WEBPACK_IMPORTED_MODULE_3__.useEffect)(() => {
-    if (getFieldValue('enable_vulnerability_scanner') == 1) {
-      //check if field with id enable_vulnerability_scanner exists in the changedFields array
-      let fieldIsChanged = changedFields.filter(field => field.id === 'enable_vulnerability_scanner').length > 0;
-      if (!fieldIsChanged && !dataLoaded) {
-        fetchVulnerabilities();
-      }
+    if (fieldAlreadyEnabled('enable_vulnerability_scanner')) {
+      //if (getFieldValue('vulnerabilities_intro_shown')!=1 ) {
+      if (!introCompleted) setShowIntro(true);
+      // } else {
+      //     if (!dataLoaded) {
+      //         fetchVulnerabilities();
+      //     }
+      // }
     }
   }, [fields]);
   fields.forEach(function (item, i) {
@@ -39517,7 +39556,7 @@ const VulnerabilitiesOverview = props => {
   });
 
   //we run this only once
-  if (dataLoaded && !firstRun && enabled) {
+  if (showIntro) {
     //we display the wow factor
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_VulnerabilitiesIntro__WEBPACK_IMPORTED_MODULE_6__["default"], null);
   }

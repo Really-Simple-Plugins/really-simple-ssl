@@ -793,6 +793,15 @@ function rsssl_fields( $load_values = true ) {
                 'text'  => __( 'Really Simple SSL will collect information about vulnerable software components from our central database powered by WPVulnerability. Anonymous information about vulnerable components, that cannot be linked to your website, will be send to Really Simple SSL for statistical analysis. For more information read the Privacy Statement.', 'really-simple-ssl' ),
             ],
         ],
+		[
+            'id' => 'vulnerabilities_intro_shown',
+            'menu_id' => 'vulnerabilities',
+            'group_id' => 'vulnerabilities_basic',
+            'type' => 'hidden',
+            'label' => '',
+            'disabled' => false,
+            'default' => false,
+        ],
         [
             'id' => 'enable_feedback_in_plugin',
             'menu_id' => 'vulnerabilities',
@@ -1422,7 +1431,9 @@ function rsssl_fields( $load_values = true ) {
 
 	$fields = apply_filters( 'rsssl_fields', $fields );
 	$stored_options = get_option( 'rsssl_options' );
+
 	unset($stored_options['enable_vulnerability_scanner']);
+
 	foreach ( $fields as $key => $field ) {
 		$field = wp_parse_args( $field, [ 'default' => '', 'id' => false, 'visible' => true, 'disabled' => false, 'recommended' => false ] );
 		//handle server side conditions
@@ -1437,10 +1448,6 @@ function rsssl_fields( $load_values = true ) {
 
 			$value          = rsssl_sanitize_field( rsssl_get_option( $field['id'], $field['default'] ), $field['type'], $field['id'] );
 			$field['never_saved'] = !array_key_exists( $field['id'], $stored_options );
-			if ($field['id'] ==='enable_vulnerability_scanner') {
-				x_log( "never saved:" );
-				x_log( $field['never_saved'] );
-			}
 			$field['value'] = apply_filters( 'rsssl_field_value_' . $field['id'], $value, $field );
 			$fields[ $key ] = apply_filters( 'rsssl_field', $field, $field['id'] );
 		}

@@ -1,6 +1,6 @@
 import {__} from '@wordpress/i18n';
 import useVulnerabilityData from "../Dashboard/Vulnerabilities/VulnerabilityData";
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import DataTable from "react-data-table-component";
 import useFields from "./FieldsData";
 import VulnerabilitiesIntro from "./VulnerabilitiesIntro";
@@ -9,10 +9,11 @@ const VulnerabilitiesOverview = (props) => {
     const {
         dataLoaded,
         vulList,
-        firstRun,
+        introCompleted,
         fetchVulnerabilities
     } = useVulnerabilityData();
-    const {fields, fieldAlreadyEnabled} = useFields();
+    const {fields, getField, fieldAlreadyEnabled, getFieldValue} = useFields();
+    const [showIntro, setShowIntro] = useState(false);
 
     //we create the columns
     let columns = [];
@@ -38,10 +39,15 @@ const VulnerabilitiesOverview = (props) => {
 
     //get data if field was already enabled, so not changed right now.
     useEffect(() => {
-        if ( fieldAlreadyEnabled('enable_vulnerability_scanner')) {
-            if (!dataLoaded) {
-                fetchVulnerabilities();
-            }
+        if ( fieldAlreadyEnabled('enable_vulnerability_scanner') ) {
+            //if (getFieldValue('vulnerabilities_intro_shown')!=1 ) {
+                if (!introCompleted) setShowIntro(true);
+            // } else {
+            //     if (!dataLoaded) {
+            //         fetchVulnerabilities();
+            //     }
+            // }
+
         }
     }, [fields]);
 
@@ -52,7 +58,7 @@ const VulnerabilitiesOverview = (props) => {
     });
 
     //we run this only once
-    if (dataLoaded && !firstRun && enabled) {
+    if (showIntro) {
         //we display the wow factor
         return (<VulnerabilitiesIntro/>);
     }

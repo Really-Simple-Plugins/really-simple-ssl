@@ -1,11 +1,20 @@
 import Icon from "../../utils/Icon";
 import {useEffect, useState} from "react";
 import * as rsssl_api from "../../utils/api";
+import useVulnerabilityData from "../../Dashboard/Vulnerabilities/VulnerabilityData";
+import useFields from "../FieldsData";
 
 
 const Runner = (props) => {
     //let us make a state for the loading
     const [loadingState, setLoadingState] = useState(props.loading);
+    const {setChangedField, updateField, saveFields} = useFields();
+
+    const {
+        dataLoaded,
+        fetchVulnerabilities,
+        setIntroCompleted
+    } = useVulnerabilityData();
     let title = props.title;
     const [delayState, setDelayState] = useState(true);
     let spin = (loadingState && !delayState)? "icon-spin" : "";
@@ -22,6 +31,22 @@ const Runner = (props) => {
                 }
             }
             firstRunner();
+        }, []);
+    } else if(props.name === "third_runner") {
+        useEffect(() => {
+            const thirdRunner = async () => {
+                setDelayState(false);
+                setLoadingState(true);
+                console.log("fetching vulnerabilities");
+                await fetchVulnerabilities();
+                setLoadingState(false);
+                setIntroCompleted(true);
+                spin = "";
+                setChangedField('vulnerabilities_intro_shown', true);
+                updateField('vulnerabilities_intro_shown', true);
+                await saveFields(true, false);
+            }
+            thirdRunner();
         }, []);
     } else {
         useEffect(() => {
