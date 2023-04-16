@@ -1,9 +1,6 @@
-import {useEffect} from "@wordpress/element";
+import {useEffect, useState} from "@wordpress/element";
 import Header from "./Header";
 import DashboardPage from "./Dashboard/DashboardPage";
-import Menu from "./Menu/Menu";
-import Settings from "./Settings/Settings";
-import Notices from "./Settings/Notices";
 import Modal from "./Modal/Modal";
 import PagePlaceholder from './Placeholder/PagePlaceholder';
 import OnboardingModal from "./Onboarding/OnboardingModal";
@@ -15,6 +12,22 @@ const Page = (props) => {
     const {error, fields, changedFields, fetchFieldsData, updateFieldsData, fieldsLoaded} = useFields();
     const {selectedMainMenuItem, fetchMenuData } = useMenu();
 
+    const [Settings, setSettings] = useState(null);
+    const [Notices, setNotices] = useState(null);
+    const [Menu, setMenu] = useState(null);
+    useEffect( () => {
+        if (selectedMainMenuItem !== 'dashboard' ){
+            import ("./Settings/Settings").then(({ default: Settings }) => {
+                setSettings(() => Settings);
+            });
+            import("./Settings/Notices").then(({ default: Notices }) => {
+                setNotices(() => Notices);
+            });
+            import ("./Menu/Menu").then(({ default: Menu }) => {
+                setMenu(() => Menu);
+            });
+        }
+    }, [selectedMainMenuItem]);
 
     useEffect( () => {
         if ( fieldsLoaded ) {
@@ -59,7 +72,7 @@ const Page = (props) => {
                     <>
                         <Header />
                         <div className={"rsssl-content-area rsssl-grid rsssl-" + selectedMainMenuItem}>
-                            { selectedMainMenuItem !== 'dashboard' &&
+                            { selectedMainMenuItem !== 'dashboard' && Settings && Menu && Notices &&
                                <>
                                    <Menu />
                                    <Settings/>

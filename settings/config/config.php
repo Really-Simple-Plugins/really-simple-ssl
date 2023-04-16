@@ -1488,10 +1488,6 @@ function rsssl_blocks() {
 		],
         [
             'id'       => 'wpvul',
-//            'controls' => [
-//                'type' => 'html',
-//                'data' => __( "Powered by WPVulnerability", 'really-simple-ssl' ),
-//            ],
             'title'    => rsssl_get_option('enable_vulnerability_scanner') ?
                 __( "Vulnerabilities", 'really-simple-ssl' )
                 : __( "Hardening", 'really-simple-ssl' ),
@@ -1503,8 +1499,8 @@ function rsssl_blocks() {
 			'id'       => 'tips_tricks',
 			'controls' => false,
 			'title'    => __( "Tips & Tricks", 'really-simple-ssl' ),
-			'content'  => [ 'type' => 'template', 'data' => 'tips-tricks.php' ],
-			'footer'   => [ 'type' => 'template', 'data' => 'tips-tricks-footer.php' ],
+			'content'  => [ 'type' => 'react', 'data' => 'TipsTricks' ],
+			'footer'   => [ 'type' => 'react', 'data' => 'TipsTricksFooter' ],
 			'class'    => ' rsssl-column-2',
 		],
 		[

@@ -2,16 +2,14 @@ import { __ } from '@wordpress/i18n';
 import {useState,useEffect} from '@wordpress/element';
 import ChangeStatus from "./ChangeStatus";
 import Delete from "./Delete";
-import DataTable, {createTheme} from 'react-data-table-component';
 import Icon from "../../utils/Icon";
 import useFields from "./../FieldsData";
 import useLearningMode from "./LearningModeData";
-import useProgress from "../../Dashboard/Progress/ProgressData";
 
 const LearningMode = (props) => {
-    const {getProgressData} = useProgress();
     const {updateField, getFieldValue, getField, setChangedField, highLightField, saveFields} = useFields();
     const {fetchLearningModeData, learningModeData, dataLoaded} = useLearningMode();
+
     //used to show if a feature is already enforced by a third party
     const [enforcedByThirdparty, setEnforcedByThirdparty] = useState(0);
     //toggle from enforced to not enforced
@@ -27,6 +25,20 @@ const LearningMode = (props) => {
     const [filterValue, setFilterValue] = useState(-1);
     //the value that is used to enable or disable this feature. On or of.
     const [controlField, setControlField] = useState(false);
+
+    const [DataTable, setDataTable] = useState(null);
+    const [theme, setTheme] = useState(null);
+    useEffect( () => {
+        import('react-data-table-component').then(({ default: DataTable, createTheme }) => {
+            setDataTable(() => DataTable);
+            setTheme(() => createTheme('really-simple-plugins', {
+                divider: {
+                    default: 'transparent',
+                },
+            }, 'light'));
+        });
+
+    }, []);
 
     /**
      * Styling
@@ -54,11 +66,7 @@ const LearningMode = (props) => {
     };
 
 
-    createTheme('really-simple-plugins', {
-        divider: {
-            default: 'transparent',
-        },
-    }, 'light');
+;
 
     /**
      * Initialize
@@ -164,7 +172,7 @@ const LearningMode = (props) => {
      return (
         <>
             <div key="1" className={ highLightClass}>
-                {!dataLoaded || data.length==0 && <>
+                { !dataLoaded || data.length==0 && <>
                     <div className="rsssl-learningmode-placeholder">
                         <div></div><div></div><div></div><div></div>
                     </div>
@@ -177,7 +185,7 @@ const LearningMode = (props) => {
                         pagination
                         noDataComponent={__("No results", "really-simple-ssl")}
                         persistTableHead
-                        theme="really-simple-plugins"
+                        theme={theme}
                         customStyles={customStyles}
                         conditionalRowStyles={conditionalRowStyles}
                     /></>

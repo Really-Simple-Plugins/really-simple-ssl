@@ -1,6 +1,5 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import UseRiskData from "./RiskData";
-import DataTable from 'react-data-table-component';
 import {SelectControl} from "@wordpress/components";
 import sleeper from "../../utils/sleeper";
 import {dispatch} from '@wordpress/data';
@@ -11,7 +10,13 @@ const RiskComponent = (props) => {
     //first we put the data in a state
     const {riskData, dataLoaded, fetchVulnerabilities, updateRiskData} = UseRiskData();
     const { fields, fieldAlreadyEnabled} = useFields();
+    const [DataTable, setDataTable] = useState(null);
+    useEffect( () => {
+        import('react-data-table-component').then(({ default: DataTable, createTheme }) => {
+            setDataTable(() => DataTable);
+        });
 
+    }, []);
     useEffect(() => {
         if ( fieldAlreadyEnabled('enable_vulnerability_scanner')) {
             if (!dataLoaded) {
@@ -24,17 +29,6 @@ const RiskComponent = (props) => {
     if (!dataLoaded) {
         return null;
     }
-    // if (dataLoaded) {
-    //
-    //     //we add a help on the left side
-    //     dispatch('core/notices').createNotice(
-    //         'info',
-    //         'This is a test',
-    //         {
-    //             isDismissible: true,
-    //         },
-    //     );
-    // }
 
     //we create the columns
     let columns = [];

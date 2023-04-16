@@ -28,7 +28,7 @@ const Header = (props) => {
                     <nav className="rsssl-header-menu">
                         <ul>
                             {menuItems.map((menu_item, i) =>
-                                <li key={i}><a className={ selectedMainMenuItem === menu_item.id ? 'active' : '' } href={"#" + menu_item.id.toString()} >{menu_item.title}</a></li>)}
+                                <li key={"menu-"+i}><a className={ selectedMainMenuItem === menu_item.id ? 'active' : '' } href={"#" + menu_item.id.toString()} >{menu_item.title}</a></li>)}
 
                         </ul>
                     </nav>

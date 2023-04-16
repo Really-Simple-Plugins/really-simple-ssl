@@ -1,8 +1,6 @@
 import {useState, useEffect} from "@wordpress/element";
-import DataTable, { createTheme }  from "react-data-table-component";
 import {ToggleControl} from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import * as rsssl_api from "../../utils/api";
 import ModalControl from "../../Modal/ModalControl";
 import Icon from "../../utils/Icon";
 import UseMixedContent from "./MixedContentData";
@@ -13,7 +11,19 @@ const MixedContentScan = (props) => {
     const {fetchMixedContentData, mixedContentData, runScanIteration, start, stop, dataLoaded, action, scanStatus, progress, completedStatus, nonce, removeDataItem, ignoreDataItem} = UseMixedContent();
     const [showIgnoredUrls, setShowIgnoredUrls] = useState(false);
     const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
+    const [DataTable, setDataTable] = useState(null);
+    const [theme, setTheme] = useState(null);
+    useEffect( () => {
+        import('react-data-table-component').then(({ default: DataTable, createTheme }) => {
+            setDataTable(() => DataTable);
+            setTheme(() => createTheme('really-simple-plugins', {
+                divider: {
+                    default: 'transparent',
+                },
+            }, 'light'));
+        });
 
+    }, []);
     useEffect( () => {
         fetchMixedContentData();
     }, [] );
@@ -119,13 +129,6 @@ const MixedContentScan = (props) => {
         },
     };
 
-    createTheme('really-simple-plugins', {
-        divider: {
-            default: 'transparent',
-        },
-    }, 'light');
-
-
     return (
         <>
             <div className="rsssl-progress-container">
@@ -152,7 +155,7 @@ const MixedContentScan = (props) => {
                     pagination
                     paginationResetDefaultPage={resetPaginationToggle} // optionally, a hook to reset pagination to page 1
                     noDataComponent={__("No results", "really-simple-ssl")} //or your component
-                    theme="really-simple-plugins"
+                    theme={theme}
                     customStyles={customStyles}
                 /></div>  }
             <div className="rsssl-grid-item-content-footer">

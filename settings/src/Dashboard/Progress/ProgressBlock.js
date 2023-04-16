@@ -1,16 +1,13 @@
 import {
-    useState, useEffect
+    useEffect
 } from '@wordpress/element';
 
-import * as rsssl_api from "../../utils/api";
 import TaskElement from "./../TaskElement";
 import Placeholder from '../../Placeholder/Placeholder';
 import useProgress from "./ProgressData";
-import useFields from "../../Settings/FieldsData";
 
 const ProgressBlock = (props) => {
     const {percentageCompleted, progressText, filter, notices, progressLoaded, getProgressData, error} = useProgress();
-
     useEffect( () => {
         const run = async () => {
             await getProgressData();
@@ -59,7 +56,7 @@ const ProgressBlock = (props) => {
             </div>
 
             <div className="rsssl-scroll-container">
-                {noticesOutput.map((notice, i) => <TaskElement key={i} notice={notice}/>)}
+                {noticesOutput.map((notice, i) => <TaskElement key={"task-"+i} notice={notice}/>)}
             </div>
         </div>
     );

@@ -75,7 +75,7 @@ const License = (props) => {
                  </div>
              </div>
                 {!noticesLoaded && <Placeholder></Placeholder>}
-                {noticesLoaded && notices.map((notice, i) => <TaskElement key={i} index={i} notice={notice} highLightField=""/>)}
+                {noticesLoaded && notices.map((notice, i) => <TaskElement key={"taskElement-"+i} index={i} notice={notice} highLightField=""/>)}
             </div>
     );
 }

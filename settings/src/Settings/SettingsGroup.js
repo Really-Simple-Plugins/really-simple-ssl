@@ -1,4 +1,3 @@
-import Field from "./Field";
 import Hyperlink from "../utils/Hyperlink";
 import getAnchor from "../utils/getAnchor";
 import {__} from '@wordpress/i18n';
@@ -6,6 +5,7 @@ import * as rsssl_api from "../utils/api";
 import useFields from "../Settings/FieldsData";
 import useMenu from "../Menu/MenuData";
 import useLicense from "./License/LicenseData";
+import {useEffect,useState} from '@wordpress/element';
 
 
 /**
@@ -14,8 +14,15 @@ import useLicense from "./License/LicenseData";
 const SettingsGroup = (props) => {
     const {fields} = useFields();
     const {licenseStatus} = useLicense();
-
     const {selectedSubMenuItem, subMenu} = useMenu();
+    const [Field, setField] = useState(null);
+    useEffect( () => {
+        import("./Field").then(({ default: Field }) => {
+                setField(() => Field);
+            });
+
+    }, []);
+
     let upgrade='https://really-simple-ssl.com/pro/?mtm_campaign=fallback&mtm_source=free&mtm_content=upgrade';
 
     /*
@@ -93,8 +100,8 @@ const SettingsGroup = (props) => {
             </div>}
             <div className="rsssl-grid-item-content">
                 {activeGroup.intro && <div className="rsssl-settings-block-intro">{activeGroup.intro}</div>}
-                {selectedFields.map((field, i) =>
-                    <Field key={i} index={i} field={field} fields={selectedFields}/>)}
+                {Field && selectedFields.map((field, i) =>
+                    <Field key={"selectedFields-"+i} index={i} field={field} fields={selectedFields}/>)}
             </div>
             {disabled && !networkwide_error && <div className="rsssl-locked">
                 <div className="rsssl-locked-overlay">

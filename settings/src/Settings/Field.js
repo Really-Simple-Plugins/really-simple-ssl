@@ -314,13 +314,13 @@ const Field = (props) => {
 
     if ( field.type === 'letsencrypt' ) {
             return (
-               <LetsEncrypt key={field.id} field={field} />
+               <LetsEncrypt field={field} />
             )
     }
 
     if ( field.type === 'activate' ) {
             return (
-               <Activate key={field.id} field={field}/>
+               <Activate field={field}/>
             )
     }
 

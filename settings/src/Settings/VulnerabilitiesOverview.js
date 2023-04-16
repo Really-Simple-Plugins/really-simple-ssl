@@ -1,7 +1,6 @@
 import {__} from '@wordpress/i18n';
 import useRiskData from "./RiskConfiguration/RiskData";
 import React, {useEffect, useState} from 'react';
-import DataTable from "react-data-table-component";
 import useFields from "./FieldsData";
 import VulnerabilitiesIntro from "./VulnerabilitiesIntro";
 
@@ -15,7 +14,13 @@ const VulnerabilitiesOverview = (props) => {
     } = useRiskData();
     const {fields, getField, fieldAlreadyEnabled, getFieldValue} = useFields();
     const [showIntro, setShowIntro] = useState(false);
+    const [DataTable, setDataTable] = useState(null);
+    useEffect( () => {
+        import('react-data-table-component').then(({ default: DataTable }) => {
+            setDataTable(() => DataTable);
+        });
 
+    }, []);
     //we create the columns
     let columns = [];
     //getting the fields from the props

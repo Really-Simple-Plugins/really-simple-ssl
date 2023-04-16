@@ -6,7 +6,9 @@ import SslLabs from "./SslLabs/SslLabs";
 import SslLabsFooter from "./SslLabs/SslLabsFooter";
 import WPVul from "./Vulnerabilities/WPVul";
 import WPVulFooter from "./Vulnerabilities/WPVulFooter";
-import OtherPlugins from "./OtherPlugins";
+import OtherPlugins from "./OtherPlugins/OtherPlugins";
+import TipsTricks from "./TipsTricks/TipsTricks";
+import TipsTricksFooter from "./TipsTricks/TipsTricksFooter";
 import {useState} from "@wordpress/element";
 
 /*
@@ -17,6 +19,8 @@ var dynamicComponents = {
     "ProgressBlock": ProgressBlock,
     "ProgressHeader": ProgressHeader,
     "ProgressFooter": ProgressFooter,
+    "TipsTricks": TipsTricks,
+    "TipsTricksFooter": TipsTricksFooter,
     "SslLabs": SslLabs,
     "SslLabsFooter": SslLabsFooter,
     "OtherPlugins": OtherPlugins,
