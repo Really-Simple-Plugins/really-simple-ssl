@@ -29,6 +29,7 @@ const RiskComponent = (props) => {
     if (!dataLoaded) {
         return null;
     }
+    if (!DataTable) return null;
 
     //we create the columns
     let columns = [];

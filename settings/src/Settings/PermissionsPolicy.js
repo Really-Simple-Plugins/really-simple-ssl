@@ -102,6 +102,8 @@ const PermissionsPolicy = (props) => {
         },
     };
 
+    if (!DataTable || !theme) return null;
+
     return (
         <div className={ props.highLightClass}>
                 <DataTable

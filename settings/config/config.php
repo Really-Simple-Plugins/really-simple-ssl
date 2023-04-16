@@ -1511,47 +1511,9 @@ function rsssl_blocks() {
 			],
 			'title'    => __( "Other Plugins", 'really-simple-ssl' ),
 			'content'  => [ 'type' => 'react', 'data' => 'OtherPlugins' ],
-			'footer'   => [ 'type' => 'html', 'data' => '' ],
 			'class'    => ' rsssl-column-2 no-border no-background',
 		],
 	];
 
-	$blocks = apply_filters( 'rsssl_blocks', $blocks );
-	foreach ( $blocks as $index => $block ) {
-		if ( $block['content']['type'] === 'template' ) {
-			$template                            = $block['content']['data'];
-			$blocks[ $index ]['content']['type'] = 'html';
-			$blocks[ $index ]['content']['data'] = rsssl_get_template( $template );
-		}
-		if ( $block['footer']['type'] === 'template' ) {
-			$template                           = $block['footer']['data'];
-			$blocks[ $index ]['footer']['type'] = 'html';
-			$blocks[ $index ]['footer']['data'] = rsssl_get_template( $template );
-		}
-	}
-
-	return $blocks;
-}
-
-/**
- * Render html based on template
- *
- * @param string $template
- *
- * @return string
- */
-
-function rsssl_get_template( $template ) {
-	if ( ! rsssl_user_can_manage() ) {
-		return '';
-	}
-	$html = '';
-	$file = trailingslashit( rsssl_path ) . 'settings/templates/' . $template;
-	if ( file_exists( $file ) ) {
-		ob_start();
-		require $file;
-		$html = ob_get_clean();
-	}
-
-	return $html;
+	return apply_filters( 'rsssl_blocks', $blocks );
 }

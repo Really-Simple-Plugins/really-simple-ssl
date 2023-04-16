@@ -65,18 +65,18 @@ const VulnerabilitiesOverview = (props) => {
         }
     });
 
-    if (!enabled) {
+    // if (!DataTable) return null;
+
+    if (DataTable && !enabled) {
         return (
             //If there is no data or vulnerabilities scanner is disabled we show some dummy data behind a mask
             <>
                 <DataTable
                     columns={columns}
-                    //  data={dummyData}
                     dense
                     pagination
                     noDataComponent={__("No results", "really-simple-ssl")}
                     persistTableHead
-                    //     customStyles={customStyles}
                 >
                 </DataTable>
                 <div className="rsssl-locked">
@@ -92,7 +92,7 @@ const VulnerabilitiesOverview = (props) => {
     //we need to add a key to the data called action wich produces the action buttons
     return (
         <>
-            {data.length>0 &&
+            {DataTable && data.length>0 &&
                 <DataTable
                     columns={columns}
                     data={data}

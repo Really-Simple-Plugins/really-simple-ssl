@@ -40,6 +40,7 @@ const LearningMode = (props) => {
 
     }, []);
 
+
     /**
      * Styling
      */
@@ -169,7 +170,10 @@ const LearningMode = (props) => {
         item.statusControl = <ChangeStatus item={item} field={props.field} />;
         item.deleteControl = <Delete item={item} field={props.field}/>;
     }
-     return (
+
+    if (!DataTable || !theme) return null;
+
+    return (
         <>
             <div key="1" className={ highLightClass}>
                 { !dataLoaded || data.length==0 && <>

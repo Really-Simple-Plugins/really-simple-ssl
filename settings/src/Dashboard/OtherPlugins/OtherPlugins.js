@@ -11,7 +11,6 @@ const OtherPlugins = (props) => {
         }
     }, [] )
 
-
     const otherPluginElement = (plugin, i) => {
         return (
            <div key={"plugin"+i} className={"rsssl-other-plugins-element rsssl-"+plugin.slug}>
