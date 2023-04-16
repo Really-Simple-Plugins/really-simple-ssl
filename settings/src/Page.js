@@ -42,7 +42,7 @@ const Page = (props) => {
             });
         }
 
-        }, [selectedMainMenuItem]);
+    }, [selectedMainMenuItem]);
 
     const [OnboardingModal, setOnboardingModal] = useState(null);
     useEffect( () => {

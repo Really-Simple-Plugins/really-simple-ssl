@@ -33,8 +33,8 @@ const GridBlock = (props) => {
     const controls = props.block.controls ? props.block.controls : false;
     let className = "rsssl-grid-item "+blockData.class+" rsssl-"+blockData.id;
     return (
-        <div className={className}>
-            <div className="rsssl-grid-item-header">
+        <div key={"block-"+blockData.id} className={className}>
+            <div key={"header-"+blockData.id} className="rsssl-grid-item-header">
                 <h3 className="rsssl-grid-title rsssl-h4">{ blockData.title }</h3>
                 <div className="rsssl-grid-item-controls">
                     {controls.type==='url' && <a href={controls.data}>{__("Instructions", "really-simple-ssl")}</a>}
@@ -42,7 +42,7 @@ const GridBlock = (props) => {
                     {controls.type==='react' && wp.element.createElement(dynamicComponents[controls.data])}
                 </div>
             </div>
-            { <div className="rsssl-grid-item-content">{wp.element.createElement(dynamicComponents[content])}</div>}
+            <div key={"content-"+blockData.id} className="rsssl-grid-item-content">{wp.element.createElement(dynamicComponents[content])}</div>
 
             { !footer && <div className="rsssl-grid-item-footer"></div>}
             { footer && <div className="rsssl-grid-item-footer">{wp.element.createElement(dynamicComponents[footer])}</div>}

@@ -505,15 +505,15 @@ const Icon = (props) => {
             html: <svg xmlns="http://www.w3.org/2000/svg"
                        viewBox="0 0 512 512"
                        width="20" height="20">
-                <defs>
-                    <style>
-                        {`
-            .fa-secondary {
-              opacity: 0.4;
-            }
-          `}
-                    </style>
-                </defs>
+                    <defs>
+                        <style>
+                            {`
+                            .fa-secondary {
+                              opacity: 0.4;
+                            }
+                          `}
+                        </style>
+                    </defs>
                 <path className="fa-primary"
                       d="M304 48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM96 256A48 48 0 1 0 0 256a48 48 0 1 0 96 0zM75 142.9A48 48 0 1 0 142.9 75 48 48 0 1 0 75 142.9z"/>
                 <path className="fa-secondary"
