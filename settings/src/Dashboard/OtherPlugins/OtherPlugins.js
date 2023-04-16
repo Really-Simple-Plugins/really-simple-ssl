@@ -1,10 +1,9 @@
-import {useState, useEffect} from "@wordpress/element";
+import { useEffect} from "@wordpress/element";
 import { __ } from '@wordpress/i18n';
-import * as rsssl_api from "../../utils/api";
 import Placeholder from '../../Placeholder/Placeholder';
 import useOtherPlugins  from "./OtherPluginsData";
-const OtherPlugins = (props) => {
-    const {dataLoaded, pluginData, updatePluginData, getPluginData, pluginActions, fetchOtherPluginsData, error} = useOtherPlugins();
+const OtherPlugins = () => {
+    const {dataLoaded, pluginData, pluginActions, fetchOtherPluginsData, error} = useOtherPlugins();
     useEffect(() => {
         if (!dataLoaded) {
             fetchOtherPluginsData();

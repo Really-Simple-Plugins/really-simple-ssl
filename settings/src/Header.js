@@ -3,21 +3,12 @@ import { __ } from '@wordpress/i18n';
 import Notices from "./Settings/Notices";
 import useMenu from "./Menu/MenuData";
 
-const Header = (props) => {
+const Header = () => {
     const {menu, selectedMainMenuItem, fetchMenuData} = useMenu();
     let plugin_url = rsssl_settings.plugin_url;
-
     useEffect( () => {
         fetchMenuData();
-
     }, [] );
-    useEffect(() => {
-        const run = async () => {
-            await fetchMenuData();
-        }
-        run();
-    }, []);
-
 
     let menuItems = menu.filter( item => item!==null );
     return (

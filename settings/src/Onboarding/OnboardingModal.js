@@ -7,20 +7,13 @@ import { __ } from '@wordpress/i18n';
 import Icon from "../utils/Icon";
 import useOnboardingData from "./OnboardingData";
 import useFields from "../Settings/FieldsData";
-const OnboardingModal = (props) => {
+const OnboardingModal = () => {
     const {fieldsLoaded} = useFields();
-    const {showOnboardingModal, setShowOnBoardingModal, currentStep, dismissModal} = useOnboardingData();
-    const [modalLoaded, setModalLoaded] = useState(false);
+    const {showOnboardingModal, fetchOnboardingModalStatus, modalStatusLoaded, currentStep, dismissModal} = useOnboardingData();
 
     useEffect(() => {
-        if ( !modalLoaded ) {
-            const run = async () => {
-                rsssl_api.doAction('get_modal_status').then((response) => {
-                    setModalLoaded(true);
-                    setShowOnBoardingModal(!response.dismissed);
-                });
-            }
-            run();
+        if ( !modalStatusLoaded ) {
+            fetchOnboardingModalStatus();
         }
     }, []);
 

@@ -15,6 +15,7 @@ const useOnboardingData = create(( set, get ) => ({
     sslEnabled: false,
     overrideSSL: false,
     showOnboardingModal: false,
+    modalStatusLoaded: false,
     dataLoaded: false,
     processing: false,
     email: '',
@@ -81,6 +82,14 @@ const useOnboardingData = create(( set, get ) => ({
                 state.currentStep = state.steps[currentStepIndex];
             })
         )
+    },
+    fetchOnboardingModalStatus: async () => {
+        rsssl_api.doAction('get_modal_status').then((response) => {
+            set({
+                showOnboardingModal: !response.dismissed,
+                modalStatusLoaded: true,
+            })
+        });
     },
     setShowOnBoardingModal: (showOnboardingModal) => set(state => ({ showOnboardingModal })),
     actionHandler: async (id, action, event) => {

@@ -9,12 +9,11 @@ import WPVulFooter from "./Vulnerabilities/WPVulFooter";
 import OtherPlugins from "./OtherPlugins/OtherPlugins";
 import TipsTricks from "./TipsTricks/TipsTricks";
 import TipsTricksFooter from "./TipsTricks/TipsTricksFooter";
-import {useState} from "@wordpress/element";
 
 /*
  * Mapping of components, for use in the config array
  */
-var dynamicComponents = {
+const dynamicComponents = {
     "ProgressBlock": ProgressBlock,
     "ProgressHeader": ProgressHeader,
     "ProgressFooter": ProgressFooter,

@@ -1,20 +1,29 @@
 import {useEffect, useState} from "@wordpress/element";
 import Header from "./Header";
-import DashboardPage from "./Dashboard/DashboardPage";
-import Modal from "./Modal/Modal";
 import PagePlaceholder from './Placeholder/PagePlaceholder';
-import OnboardingModal from "./Onboarding/OnboardingModal";
 import getAnchor from "./utils/getAnchor";
 import useFields from "./Settings/FieldsData";
 import useMenu from "./Menu/MenuData";
+import useOnboardingData from "./Onboarding/OnboardingData";
+import useModal from "./Modal/ModalData";
 
 const Page = (props) => {
     const {error, fields, changedFields, fetchFieldsData, updateFieldsData, fieldsLoaded} = useFields();
+    const {showOnboardingModal, fetchOnboardingModalStatus, modalStatusLoaded,} = useOnboardingData();
     const {selectedMainMenuItem, fetchMenuData } = useMenu();
+    const {showModal} = useModal();
 
     const [Settings, setSettings] = useState(null);
+    const [DashboardPage, setDashboardPage] = useState(null);
     const [Notices, setNotices] = useState(null);
     const [Menu, setMenu] = useState(null);
+
+    useEffect(() => {
+        if ( !modalStatusLoaded ) {
+            fetchOnboardingModalStatus();
+        }
+    }, []);
+
     useEffect( () => {
         if (selectedMainMenuItem !== 'dashboard' ){
             import ("./Settings/Settings").then(({ default: Settings }) => {
@@ -27,7 +36,33 @@ const Page = (props) => {
                 setMenu(() => Menu);
             });
         }
-    }, [selectedMainMenuItem]);
+        if (selectedMainMenuItem === 'dashboard' ){
+            import ( "./Dashboard/DashboardPage").then(({ default: DashboardPage }) => {
+                setDashboardPage(() => DashboardPage);
+            });
+        }
+
+        }, [selectedMainMenuItem]);
+
+    const [OnboardingModal, setOnboardingModal] = useState(null);
+    useEffect( () => {
+        if (showOnboardingModal ){
+            import ("./Onboarding/OnboardingModal").then(({ default: OnboardingModal }) => {
+                setOnboardingModal(() => OnboardingModal);
+            });
+        }
+
+    }, [showOnboardingModal]);
+
+    const [Modal, setModal] = useState(null);
+    useEffect( () => {
+        if ( showModal ){
+            import ( "./Modal/Modal").then(({ default: Modal }) => {
+                setModal(() => Modal);
+            });
+        }
+
+    }, [showModal]);
 
     useEffect( () => {
         if ( fieldsLoaded ) {
@@ -40,18 +75,12 @@ const Page = (props) => {
 
     useEffect( () => {
         let subMenuItem = getAnchor('menu');
-        const run = async () => {
-            await updateFieldsData(subMenuItem);
-        }
-        run();
+        updateFieldsData(subMenuItem);
     }, [changedFields] );
 
     useEffect( () => {
         let subMenuItem = getAnchor('menu');
-        const run = async () => {
-            await fetchFieldsData(subMenuItem);
-        }
-        run();
+        fetchFieldsData(subMenuItem);
     }, [] );
 
 
@@ -64,9 +93,9 @@ const Page = (props) => {
     }
     return (
         <div className="rsssl-wrapper">
-            <OnboardingModal />
+            {OnboardingModal && <OnboardingModal />}
             {!fieldsLoaded && <PagePlaceholder></PagePlaceholder>}
-            <Modal/>
+            {Modal && <Modal/>}
             {fieldsLoaded &&
                 (
                     <>
@@ -78,9 +107,8 @@ const Page = (props) => {
                                    <Settings/>
                                    <Notices className="rsssl-wizard-notices"/>
                                </>
-
                             }
-                            { selectedMainMenuItem === 'dashboard' &&
+                            { selectedMainMenuItem === 'dashboard' && DashboardPage &&
                                 <DashboardPage />
                             }
                         </div>

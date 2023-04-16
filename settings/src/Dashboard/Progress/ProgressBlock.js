@@ -1,7 +1,6 @@
 import {
     useEffect
 } from '@wordpress/element';
-
 import TaskElement from "./../TaskElement";
 import Placeholder from '../../Placeholder/Placeholder';
 import useProgress from "./ProgressData";
