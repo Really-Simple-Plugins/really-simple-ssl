@@ -108,7 +108,7 @@ const WPVul = () => {
                 <div className="rsssl-details">
                     <div className="rsssl-detail-icon"><Icon name="info" color='yellow'/></div>
                     <div className="rsssl-detail">
-                        {__("Enable vulnerability scanning for more information", "really-simple-ssl")}
+                        {__("Enable vulnerability detection for more information", "really-simple-ssl")}
                     </div>
                 </div>
             </>
@@ -246,7 +246,7 @@ const WPVul = () => {
     }
 
     const linkStyle = {
-        marginLeft: '1em'
+        marginLeft: '0.3em'
     }
     const checknotEnabledHardeningFields = () => {
         if (notEnabledHardeningFields) {

@@ -82,7 +82,9 @@
       padding: 10px 0;
       max-width: 50%;
       border-radius: var(--rsp-border-radius);
-
+      .rsssl-icon {
+        margin-top:5px;
+      }
       .rsssl-score-container {
         display: flex;
 

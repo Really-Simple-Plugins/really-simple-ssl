@@ -1,10 +1,12 @@
 .rsssl {
   .rsssl-badge {
-    padding: 4px 7px;
+    padding: 3px 8px;
+    min-width: 100px;
+    text-align: center;
     border-radius: var(--rsp-border-radius-xs);
     color: var(--rsp-white);
     display: table;
-    margin: 0 auto;
+    margin: 5px auto;
     font-size: var(--rsp-fs-100);
 
     &.rsp-dark {
