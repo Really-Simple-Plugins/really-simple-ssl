@@ -493,12 +493,15 @@ class rsssl_admin
                 <div class="rsssl-notice-content">
 					<?php echo $content ?>
                 </div>
-                <?php if ($more_info ) { ?>
+                <?php if ( $more_info || $dismiss_id ) { ?>
                     <div class="rsssl-admin-notice-more-info">
                         <?php if ($dismiss_id) { ?>
                             <a class="button" href="<?php echo add_query_arg(['dismiss_notice'=>$dismiss_id], $url )?>"><?php _e("Dismiss", "really-simple-ssl")?></a>
                         <?php } ?>
-                        <a class="button" <?php echo $target?> href="<?php echo esc_url_raw($more_info)?>"><?php _e("More info", "really-simple-ssl")?></a></div>
+                        <?php if ($more_info) { ?>
+                            <a class="button" <?php echo $target?> href="<?php echo esc_url_raw($more_info)?>"><?php _e("More info", "really-simple-ssl")?></a>
+                        <?php } ?>
+                    </div>
                 <?php } ?>
             </div>
         </div>
