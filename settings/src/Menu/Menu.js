@@ -6,7 +6,7 @@ import useLicense from "../Settings/License/LicenseData";
 /**
  * Menu block, rendering the entire menu
  */
-const Menu = (props) => {
+const Menu = () => {
     const {subMenu, hasPremiumItems, subMenuLoaded} = useMenu();
     const {licenseStatus} = useLicense();
 

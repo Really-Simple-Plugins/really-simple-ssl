@@ -12,14 +12,13 @@ const VulnerabilitiesOverview = (props) => {
         fetchVulnerabilities,
         setDataLoaded
     } = useRiskData();
-    const {fields, getField, fieldAlreadyEnabled, getFieldValue} = useFields();
+    const {fields, fieldAlreadyEnabled, getFieldValue} = useFields();
     const [showIntro, setShowIntro] = useState(false);
     const [DataTable, setDataTable] = useState(null);
     useEffect( () => {
         import('react-data-table-component').then(({ default: DataTable }) => {
             setDataTable(() => DataTable);
         });
-
     }, []);
     //we create the columns
     let columns = [];
