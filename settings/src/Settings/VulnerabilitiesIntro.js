@@ -22,7 +22,7 @@ const VulnerabilitiesIntro = (props) => {
                     <div className="rsssl-header-extension">
                         <div>
                             <p>
-                                {__("You have enabled vulnerability scanning! In short, Really Simple SSL will check your plugins, themes and WordPress core daily and report if any vulnerabilities are present..", "really-simple-ssl")}
+                                {__("You have enabled vulnerability detection! Really Simple SSL will check your plugins, themes and WordPress core daily and report if any known vulnerabilities are fouond.", "really-simple-ssl")}
                             </p>
                             <img className="rsssl-intro-logo"
                                  src={rsssl_settings.plugin_url+'/assets/img/really-simple-ssl-intro.svg'}>
@@ -32,21 +32,21 @@ const VulnerabilitiesIntro = (props) => {
                     </div>
                     <div className="rsssl-ssl-intro-container">
                         <Runner
-                            title={__("Preparing vulnerability scanning", "really-simple-ssl")}
+                            title={__("Preparing vulnerability detection", "really-simple-ssl")}
                             name={"first_runner"}
                             loading={true}
                             time={1000}
                             delay={1000}
                         />
                         <Runner
-                            title={__("Collecting plugin, theme and WordPress core data", "really-simple-ssl")}
+                            title={__("Collecting plugin, theme and core data", "really-simple-ssl")}
                             name={"second_runner"}
                             loading={true}
                             time={2000}
                             delay={2000}
                         />
                         <Runner
-                            title={__("Scanning all components", "really-simple-ssl")}
+                            title={__("Scanning your WordPress configuration", "really-simple-ssl")}
                             name={"third_runner"}
                             loading={true}
                             time={3000}
@@ -69,7 +69,7 @@ const VulnerabilitiesIntro = (props) => {
                                 window.location.hash = "dashboard";
                             }}
                         >
-                            {__('DashBoard', 'really-simple-ssl')}
+                            {__('Dashboard', 'really-simple-ssl')}
                         </Button>
                         <Button isSecondary
                                 onClick={() => {

@@ -192,6 +192,8 @@ if (!class_exists("rsssl_vulnerabilities")) {
                     }
                 }
 
+                // AertHulsebos - Open
+
                 $count = $risks[$key];
                 $count_label = _n('vulnerability', 'vulnerabilities', $count, 'really-simple-ssl');
                 $notice = [
@@ -202,7 +204,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
                         'true' => [
                             'title' => sprintf(__('You have %s %s %s', 'really-simple-ssl'), $count, $this->risk_naming[$key], $count_label),
                             'msg' => sprintf(__('You have %s %s %s. Please take appropriate action. For more information about these vulnerabilities, please read more <a href="/wp-admin/options-general.php?page=really-simple-security#settings/vulnerabilities">here</a>', 'really-simple-ssl'), $count, $this->risk_naming[$key],$count_label ),
-                            'url' => 'https://really-simple-ssl.com/knowledge-base/vulnerability-scanner/',
+                            // 'url' => 'https://really-simple-ssl.com/knowledge-base/vulnerability-scanner/',
                             'icon' => ($key === 'c') ? 'warning' : 'open',
                             'type' => 'warning',
                             'dismissible' => true,
@@ -230,9 +232,9 @@ if (!class_exists("rsssl_vulnerabilities")) {
 			            'show_with_options' => [ 'enable_vulnerability_scanner' ],
 			            'output'            => [
 				            'true' => [
-					            'title'        => __( 'Test Vulnerability Dashboard', 'really-simple-ssl' ),
-					            'msg'          => __( 'This is a test notice to check if the vulnerability dashboard is working. If you see this, it is working.', 'really-simple-ssl' ),
-					            'url'          => 'https://really-simple-ssl.com/knowledge-base/vulnerability-scanner/',
+					            'title'        => __( 'Dashboard - Test Notification', 'really-simple-ssl' ),
+					            'msg'          => __( 'This is a test notification from Really Simple SSL. You can safely dismiss this message.', 'really-simple-ssl' ),
+					            // 'url'          => 'https://really-simple-ssl.com/knowledge-base/vulnerability-scanner/',
 					            'icon'         => $dashboard_icon,
 					            'dismissible'  => true,
 					            'admin_notice' => true,
@@ -252,8 +254,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 			                'output'            => [
 				                'true' => [
 					                'title'        => __( 'Test Vulnerability Dashboard', 'really-simple-ssl' ),
-					                'msg'          => __( 'This is a test notice to check if the vulnerability dashboard is working. If you see this, it is working.', 'really-simple-ssl' ),
-					                'url'          => 'https://really-simple-ssl.com/knowledge-base/vulnerability-scanner/',
+					                'msg'          => __( 'This is a test notification from Really Simple SSL. You can safely dismiss this message.', 'really-simple-ssl' ),
 					                'icon'         => $site_wide_icon,
 					                'dismissible'  => true,
 					                'admin_notice' => false,
@@ -1051,7 +1052,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
                     //we return slug and risk
                     return "{slug: '" . esc_attr($component->slug) . "', risk: '" . esc_attr($this->get_highest_vulnerability($component->vulnerabilities)) . "'}";
                 }, $components)) . "];
-                 
+
                     //we create the style for warning
                     style.innerHTML = '.rss-theme-notice-warning {background-color: #FFF6CE; border-left: 4px solid #ffb900; box-shadow: 0 1px 1px 0 rgba(0,0,0,.1); position:relative; z-index:50; margin-bottom: -48px; padding: 1px 12px;}';
                     //we create the style for danger
@@ -1059,11 +1060,11 @@ if (!class_exists("rsssl_vulnerabilities")) {
                     //we create the style for closed
                     style.innerHTML += '.rss-theme-notice-closed {background-color: #fff; border-left: 4px solid #dc3232; box-shadow: 0 1px 1px 0 rgba(0,0,0,.1); margin: 0; padding: 1px 12px;}';
                     let levels = " . json_encode($this->risk_naming) . ";
-       
-                    //we add the style to the head       
+
+                    //we add the style to the head
                     document.head.appendChild(style);
                     //we loop through the components
-                   
+
                     vulnerable_components.forEach(function(component) {
                         //we get the theme element
                         let theme_element = $(\".theme[data-slug='\"+component.slug+\"']\");
@@ -1073,9 +1074,9 @@ if (!class_exists("rsssl_vulnerabilities")) {
                             let level = levels[component.risk];
                             let text = '" . esc_attr(__('Security: <-level->', 'really-simple-ssl')) . "';
                             text = text.replace('<-level->', level);
-        
+
                             if (component.risk === 'h' || component.risk === 'c') {
-                                
+
                                 //we add the danger class
                                 theme_element.prepend('<div class=\"rss-theme-notice-danger\"><p><span class=\"dashicons dashicons-no\"></span>  '+text+'</p></div>');
                             } else {
@@ -1418,7 +1419,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
             $mailer = new rsssl_mailer();
             $mailer->subject = sprintf(__("Vulnerability Alert: %s", "really-simple-ssl"), $domain);
             $mailer->title = sprintf(__("%s: %s vulnerabilities found", "really-simple-ssl"), $date, $total);
-            $message = sprintf(__("This is a vulnerability alert from Really Simple SSL for %s. We encourage to take appropriate action. To know more about handling vulnerabilities with Really Simple SSL, please 
+            $message = sprintf(__("This is a vulnerability alert from Really Simple SSL for %s. We encourage to take appropriate action. To know more about handling vulnerabilities with Really Simple SSL, please
 			<a href='https://really-simple-plugins.com/instructions/about-vulnerabilities/'>read this article</a>.", "really-simple-ssl"), $domain);
             $mailer->message = $message;
             $mailer->to = get_option('admin_email');
@@ -1554,7 +1555,7 @@ if (function_exists('make_test_notifications')) {
                 'true' => [
                     'title' => __('Test notification', 'really-simple-ssl'),
                     'msg' => __("This is a 'Dashboard' notification test by Really Simple SSL. You can safely ignore this message. (x)", "really-simple-ssl"),
-                    'link' => 'https://really-simple-ssl.com/knowledge-base/vulnerability-scanner/',
+                    // 'link' => 'https://really-simple-ssl.com/knowledge-base/vulnerability-scanner/',
                     'icon' => 'warning',
                     'type' => 'warning',
                     'dismissible' => true,

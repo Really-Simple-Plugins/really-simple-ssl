@@ -2097,7 +2097,8 @@ class rsssl_admin
 	            ],
 	            'output' => array(
                     'htaccess-redirect-set' => array(
-                        'msg' =>__('301 redirect to https set: .htaccess redirect.', 'really-simple-ssl'),
+                      'title' => __('301 .htaccess redirect', 'really-simple-ssl'),
+                        'msg' =>__('The 301 redirect with .htaccess to HTTPS is now enabled.', 'really-simple-ssl'),
                         'icon' => 'success'
                     ),
                     'wp-redirect-to-htaccess' => array(
