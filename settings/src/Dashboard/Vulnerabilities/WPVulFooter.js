@@ -20,11 +20,7 @@ const WPVulFooter = (props) => {
     }
     return (
         <div className={'rsssl-wpvul'}>
-            <a href="#settings/vulnerabilities"
-               className={'button button-default alignleft'}>{__('Settings', 'really-simple-ssl')}</a>
-
-// AertHulsebos - Open
-
+            <a href="#settings/vulnerabilities" className={'button button-default alignleft'}>{__('Settings', 'really-simple-ssl')}</a>
             {vulEnabled? <small className={'alignright'}>{__('', 'really-simple-ssl')} {lastChecked}</small>:<small className={'alignright'} style={styleFooter}></small>}
         </div>
     )
