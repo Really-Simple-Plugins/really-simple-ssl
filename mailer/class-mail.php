@@ -47,7 +47,6 @@ if ( !class_exists('rsssl_mailer') ) {
 			}
 			$this->title = __("Really Simple SSL - Notification Test", "really-simple-ssl");
 			$this->message = __("This email is confirmation that any security notices are likely to reach your inbox.", "really-simple-ssl");
-
 			$this->warning_blocks = [
 				[
 					'title' => __("About notifications","really-simple-ssl"),

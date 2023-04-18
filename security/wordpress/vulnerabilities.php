@@ -1316,36 +1316,8 @@ if (!class_exists("rsssl_vulnerabilities")) {
             $mailer = new rsssl_mailer();
             $mailer->subject = __("Feature enabled", "really-simple-ssl");
             $mailer->message = __("This is a test email to see if notifications about notifications can be send through email.", "really-simple-ssl");
-            $mailer->to = get_option('admin_email');
-
             return $mailer->send_mail();
         }
-
-//        function make_test_notifications()
-//        {
-//            return true;
-//        }
-//
-//        private function store_session(string $string, bool $true, int $int)
-//        {
-//            //we store a session for three minutes to display the notification
-//            $_SESSION[$string] = $true;
-//            $_SESSION['expire_time'] = time() + $int;
-//        }
-//
-//        private function check_session(string $string): bool
-//        {
-//            if (isset($_SESSION[$string]) && $_SESSION['expire_time'] >= time()) {
-//                return true;
-//            } else {
-//                return false;
-//            }
-//        }
-
-//        private function clear_cache()
-//        {
-//            rsssl_cache::this()->flush();
-//        }
 
         public function count_risk_levels()
         {
@@ -1422,7 +1394,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
             $message = sprintf(__("This is a vulnerability alert from Really Simple SSL for %s. We encourage to take appropriate action. To know more about handling vulnerabilities with Really Simple SSL, please
 			<a href='https://really-simple-plugins.com/instructions/about-vulnerabilities/'>read this article</a>.", "really-simple-ssl"), $domain);
             $mailer->message = $message;
-            $mailer->to = get_option('admin_email');
             $mailer->warning_blocks = $blocks;
             if ($total > 0) {
                 //if for some reason the total is 0, we don't send an email
