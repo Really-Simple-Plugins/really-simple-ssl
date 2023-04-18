@@ -317,7 +317,7 @@ const SslLabs = (props) => {
 
     const scoreSnippet = (className, content) => {
         return (
-            <div className="rsssl-score-container"><div className={"rsssl-score-snippet "+className}>{content}</div></div>
+            <div className={"rsssl-score-snippet "+className}>{content}</div>
         )
     }
 
@@ -392,47 +392,49 @@ const SslLabs = (props) => {
     }
 
     return (
-        <div className={sslClass}>
-            <div className={"rsssl-gridblock-progress-container "+sslClass}>
-                <div className="rsssl-gridblock-progress" style={getStyles()}></div>
-            </div>
-            <div className={"rsssl-ssl-test-container "+sslClass}>
-                <div className="rsssl-ssl-test ">
-                    <div className="rsssl-ssl-test-information">
-                       {supportsTlS11()}
-                       {hasHSTS()}
-                       {certificateStatus()}
-                       {cipherStrength()}
+            <div className={'rsssl-ssl-labs'}>
+                <div className="rsssl-gridblock-progress"
+                     style={getStyles()}></div>
+                <div className={"rsssl-ssl-labs-select " + sslClass}>
+                    <div className="rsssl-ssl-labs-select-item">
+                        {supportsTlS11()}
+                        {hasHSTS()}
+                        {certificateStatus()}
+                        {cipherStrength()}
                     </div>
-                    <div className={"rsssl-ssl-test-grade rsssl-grade-"+gradeClass}>
-                        {!neverScannedYet() && <span>{grade}</span>}
+                    <div className="rsssl-ssl-labs-select-item">
+                        {!neverScannedYet() && <h2>{grade}</h2>}
                         {neverScannedYet() && <div></div>}
                     </div>
                 </div>
-            </div>
-            <div className="rsssl-details">
-                <div className="rsssl-detail-icon"><Icon name = "info" color = {sslStatusColor} /></div>
-                <div className={"rsssl-detail rsssl-status-"+sslStatusColor}>
-                { hasErrors && <>{errorMessage}</>}
-                { !hasErrors && <> {__("What does my score mean?", "really-simple-ssl") }&nbsp;<a href="https://really-simple-ssl.com/instructions/about-ssl-labs/" target="_blank">{__("Read more", "really-simple-ssl")}</a></>}
+                <div className="rsssl-ssl-labs-list">
+                    <div className="rsssl-ssl-labs-list-item">
+                        <Icon name="info" color={sslStatusColor}/>
+                        <p className="rsssl-ssl-labs-list-item-text">
+                            {hasErrors && errorMessage}
+                            {!hasErrors && __('What does my score mean?', 'really-simple-ssl')}
+                        </p>
+                        <a href="https://really-simple-ssl.com/instructions/about-ssl-labs/" target="_blank">
+                            {__('Read more', 'really-simple-ssl')}
+                        </a>
+                    </div>
+                    <div className="rsssl-ssl-labs-list-item">
+                        <Icon name="list" color="black"/>
+                        <p className="rsssl-ssl-labs-list-item-text">
+                            {__('Last check:',
+                                'really-simple-ssl')}
+                        </p>
+                        <p className="rsssl-ssl-labs-list-item-number">{startTimeNice}</p>
+                    </div>
+                    <div className="rsssl-ssl-labs-list-item">
+                        <Icon name="external-link" color="black"/>
+                        <p className="rsssl-ssl-labs-list-item-text">
+                            <a href={url} target="_blank">{__('View detailed report on Qualys SSL Labs', 'really-simple-ssl')}</a>
+                        </p>
+                    </div>
                 </div>
             </div>
-            <div className="rsssl-details">
-                <div className="rsssl-detail-icon"><Icon name = "list" color = 'black' /></div>
-                <div className="rsssl-detail">
-                    {__("Last check:", "really-simple-ssl")}&nbsp;{startTimeNice}
-                </div>
-            </div>
-            <div className="rsssl-details">
-                <div className="rsssl-detail-icon"><Icon name = "external-link" color = 'black' /></div>
-                <div className="rsssl-detail">
-                    <a href={url} target="_blank">{__("View detailed report on Qualys SSL Labs", "really-simple-ssl")}</a>
-                </div>
-            </div>
-
-
-        </div>
-    )
+    );
 }
 
 export default SslLabs;

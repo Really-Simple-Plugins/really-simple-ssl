@@ -28,7 +28,7 @@
     --rsp-dark-red: #9b0212;
     --rsp-pink: #E35899;
     --rsp-wp-blue: #007cba;
-    --rsp-yellow-faded: #fef3d8;
+    --rsp-yellow-faded: #fdf4df;
     --rsp-blue-faded: #ecf8fe;
     --rsp-dark-blue-faded: #ebf2f9;
     --rsp-green-faded: #ecf4ed;
@@ -40,12 +40,13 @@
     --rsp-input-background-color: #fff;
     --rsp-input-text-color: var(--rsp-text-color);
     --rsp-input-border-color: var(--rsp-grey-400);
-    --rsp-text-color: rgba(26, 26, 26, 0.95);
-    --rsp-text-color-invert: rgba(255, 255, 255, 0.95);
-    --rsp-text-color-white: rgba(255, 255, 255, 0.95);
-    --rsp-text-color-light: rgba(69, 69, 82, 0.95);
+    --rsp-text-color: rgba(26, 26, 26, 0.9);
+    --rsp-text-color-invert: rgba(255, 255, 255, 0.9);
+    --rsp-text-color-white: rgba(255, 255, 255, 0.9);
+    --rsp-text-color-light: rgba(69, 69, 82, 0.9);
+    --rsp-text-color-hover: var(--rsp-green);
     --rsp-grey-100: #fafafa;
-    --rsp-grey-200: #f9f9f9;
+    --rsp-grey-200: #f7f7f7;
     --rsp-grey-300: #ededed;
     --rsp-grey-400: #c6c6c6;
     --rsp-grey-500: #737373;
@@ -56,7 +57,7 @@
     --rsp-color-open: var(--rsp-yellow);
     --rsp-color-disabled: var(--rsp-grey-300);
     --rsp-fs-100: 0.6875rem;
-    --rsp-fs-200: 0.8rem;
+    --rsp-fs-200: 0.75rem;
     --rsp-fs-300: 0.8125rem;
     --rsp-fs-400: 0.875rem;
     --rsp-fs-500: 1rem;
