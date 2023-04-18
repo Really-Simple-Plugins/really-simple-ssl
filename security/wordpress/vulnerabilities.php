@@ -234,7 +234,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 				            'true' => [
 					            'title'        => __( 'Dashboard - Test Notification', 'really-simple-ssl' ),
 					            'msg'          => __( 'This is a test notification from Really Simple SSL. You can safely dismiss this message.', 'really-simple-ssl' ),
-					            // 'url'          => 'https://really-simple-ssl.com/knowledge-base/vulnerability-scanner/',
+					            'url'          => 'https://really-simple-ssl.com/knowledge-base/vulnerability-scanner/',
 					            'icon'         => $dashboard_icon,
 					            'dismissible'  => true,
 					            'admin_notice' => true,
@@ -729,9 +729,9 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	        if ( ! rsssl_user_can_manage() ) {
 		        return;
 	        }
-            //if the file is not older than 10 minutes, we don't download it again.
-            if ($this->get_file_stored_info(false, false) > time() - 600) {
-                return;
+            //if the manifest is not older than 4 hours, we don't download it again.
+            if (!$this->get_file_stored_info(false, true) > time() - 14400) {
+                $this->download_manifest();
             }
             $this->download_plugin_vulnerabilities();
             $this->download_core_vulnerabilities();
