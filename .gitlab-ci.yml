@@ -10,28 +10,6 @@ cache:
 services:
   - mysql
 
-build-release-zip:
-  stage: build
-  image: alpine:latest
-  script:
-    - apk add --no-cache zip nodejs npm
-    - mkdir -p releases
-    - VERSION=$(node -p "require('./composer.json').version")
-    - FILENAME=releases/really-simple-ssl-$VERSION.zip
-    - if [ ! -f "$FILENAME" ]; then
-      echo "Release zip for version $VERSION not found, creating a new one"
-      zip -r9 $FILENAME really-simple-ssl -x *.min.min.* .DS_Store *.git* *.eslint* *node_modules* *composer.phar* *composer.lock* *package.json* *package-lock.json* *.editorconfig* "__MACOSX"
-      else
-      echo "Release zip for version $VERSION already exists, skipping build"
-      exit 1
-      fi
-  only:
-    - master
-  artifacts:
-    paths:
-      - releases/really-simple-ssl-$VERSION.zip
-    expire_in: never
-
 # before_script will run on ALL PHP versions listed in test
 before_script:
   # Install git, the php image doesn't have it installed
