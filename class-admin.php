@@ -503,7 +503,6 @@ class rsssl_admin
             </div>
         </div>
 		<?php
-
 		return ob_get_clean();
 	}
 
