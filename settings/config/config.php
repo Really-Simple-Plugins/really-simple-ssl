@@ -631,7 +631,7 @@ function rsssl_fields( $load_values = true ) {
 			'email'            => [
 				'title'   => __( "Settings update: Database prefix changed", 'really-simple-ssl' ),
 				'message' => __( "Security through obscurity. Your site is no longer using the default wp_ prefix for database tables. The process has been designed to only complete and replace the tables after all wp_ tables are successfully renamed. In the unlikely event that this does lead to database issues on your site, please navigate to our troubleshooting article.", 'really-simple-ssl' ),
-				'url'     => 'https://really-simple-ssl.com/locked-out-after-renaming-admin-user/',
+				'url'     => 'https://really-simple-ssl.com/database-issues-after-changing-prefix/',
 			],
 			'tooltip'  => __( "This will permanently change your database prefixes and you can NOT rollback this feature. Please make sure you have a back-up.", 'really-simple-ssl' ),
 			'warning'     => true,
