@@ -947,7 +947,15 @@ function rsssl_fields( $load_values = true ) {
 
             ]
         ],
-		/* Measures Setting Premium Only */
+		[
+			'id'       => 'measures_enabled',
+			'menu_id'  => 'vulnerabilities',
+			'group_id' => 'vulnerabilities_measures',
+			'type'     => 'hidden',
+			'label'    => '',
+			'disabled' => false,
+			'default'  => false,
+		],
         [
             'id'               => 'vulnerabilities_measures',
             'menu_id'          => 'vulnerabilities',

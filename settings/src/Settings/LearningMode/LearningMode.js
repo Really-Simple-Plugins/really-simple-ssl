@@ -6,10 +6,8 @@ import DataTable, {createTheme} from 'react-data-table-component';
 import Icon from "../../utils/Icon";
 import useFields from "./../FieldsData";
 import useLearningMode from "./LearningModeData";
-import useProgress from "../../Dashboard/Progress/ProgressData";
 
 const LearningMode = (props) => {
-    const {getProgressData} = useProgress();
     const {updateField, getFieldValue, getField, setChangedField, highLightField, saveFields} = useFields();
     const {fetchLearningModeData, learningModeData, dataLoaded} = useLearningMode();
     //used to show if a feature is already enforced by a third party

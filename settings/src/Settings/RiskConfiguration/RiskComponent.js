@@ -1,16 +1,15 @@
-import React, {useEffect} from 'react';
+import React, {useEffect,useState} from 'react';
 import UseRiskData from "./RiskData";
 import DataTable from 'react-data-table-component';
 import {SelectControl} from "@wordpress/components";
-import sleeper from "../../utils/sleeper";
-import {dispatch} from '@wordpress/data';
 import {__} from "@wordpress/i18n";
 import useFields from "../FieldsData";
 
 const RiskComponent = (props) => {
     //first we put the data in a state
     const {riskData, processing, dataLoaded, fetchVulnerabilities, updateRiskData} = UseRiskData();
-    const { fields, fieldAlreadyEnabled} = useFields();
+    const { fields, fieldAlreadyEnabled, getFieldValue, setChangedField, updateField, saveFields} = useFields();
+    const [measuresEnabled, setMeasuresEnabled] = useState(false);
 
     useEffect(() => {
         if ( fieldAlreadyEnabled('enable_vulnerability_scanner')) {
@@ -19,6 +18,23 @@ const RiskComponent = (props) => {
             }
         }
     }, [fields]);
+
+    const toggleMeasuresEnabled = () => {
+        let newValue = !measuresEnabled;
+        setMeasuresEnabled(newValue);
+        setChangedField('measures_enabled', newValue);
+        updateField('measures_enabled', newValue);
+        saveFields(true, false);
+    }
+
+    /**
+     * Initialize
+     */
+    useEffect(() => {
+        let enabled = getFieldValue('measures_enabled')==1;
+        setMeasuresEnabled(enabled);
+
+    }, [] );
 
     //we only proceed if the data is loaded
     if (!dataLoaded) {
@@ -63,10 +79,26 @@ const RiskComponent = (props) => {
     let processingClass = processing ? 'rsssl-processing' : '';
     return (
         <div className={processingClass}>
+            <p>{
+                __("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam lacinia, nisl nisl aliquet nisl.","really-simple-ssl")
+            }</p>
             <DataTable
                 columns={columns}
                 data={Object.values(data)}
             />
+            { !measuresEnabled && <div className="rsssl-locked">
+                <div className="rsssl-locked-overlay">
+                    <span className="rsssl-progress-status rsssl-learning-mode">{__("Enable measures","really-simple-ssl")}</span>
+                    <label>
+                        <input type="checkbox"
+                               checked ={measuresEnabled}
+                               onChange={ ( e ) => toggleMeasuresEnabled() }
+                        />
+                        {__("I have read and understood the risk to intervene with these measures","really-simple-ssl")}
+                    </label>
+                    <a className="rsssl-learning-mode-link" href="https://really-simple-ssl.com/vulnerabilities-measures" target="_blank">{__("Read more", "really-simple-ssl") }</a>
+                </div>
+            </div> }
         </div>
     )
 
