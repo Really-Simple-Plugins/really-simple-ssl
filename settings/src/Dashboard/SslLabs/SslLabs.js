@@ -3,6 +3,7 @@ import * as rsssl_api from "../../utils/api";
 import { __ } from '@wordpress/i18n';
 import Icon from "../../utils/Icon";
 import useSslLabs from "./SslLabsData";
+import {getRelativeTime} from "../../utils/formatting";
 
 const SslLabs = (props) => {
     const {sslScanStatus, setSslScanStatus, isLocalHost, host } = useSslLabs();
@@ -351,7 +352,7 @@ const SslLabs = (props) => {
     if ( startTime ) {
         let newDate = new Date();
         newDate.setTime(startTime);
-        startTimeNice = newDate.toLocaleString();
+        startTimeNice = getRelativeTime(startTime);
     } else {
         startTimeNice = __("No test started yet","really-simple-ssl")
     }
@@ -392,7 +393,11 @@ const SslLabs = (props) => {
     }
 
     return (
-            <div className={'rsssl-ssl-labs'}>
+        <>
+            {dataLoaded ? <div className={'rsssl-ssl-labs'}>
+                <div className={"rsssl-gridblock-progress-container "+sslClass}>
+                    <div className="rsssl-gridblock-progress" style={getStyles()}></div>
+                </div>
                 <div className="rsssl-gridblock-progress"
                      style={getStyles()}></div>
                 <div className={"rsssl-ssl-labs-select " + sslClass}>
@@ -403,7 +408,7 @@ const SslLabs = (props) => {
                         {cipherStrength()}
                     </div>
                     <div className="rsssl-ssl-labs-select-item">
-                        {!neverScannedYet() && <h2>{grade}</h2>}
+                        {!neverScannedYet() && <h2 className={'big-number'}>{grade}</h2>}
                         {neverScannedYet() && <div></div>}
                     </div>
                 </div>
@@ -424,16 +429,44 @@ const SslLabs = (props) => {
                             {__('Last check:',
                                 'really-simple-ssl')}
                         </p>
-                        <p className="rsssl-ssl-labs-list-item-number">{startTimeNice}</p>
+                        <p className="rsssl-ssl-labs-list-item-text">{startTimeNice}</p>
                     </div>
-                    <div className="rsssl-ssl-labs-list-item">
+                    { !hasErrors && <div className="rsssl-ssl-labs-list-item">
                         <Icon name="external-link" color="black"/>
-                        <p className="rsssl-ssl-labs-list-item-text">
-                            <a href={url} target="_blank">{__('View detailed report on Qualys SSL Labs', 'really-simple-ssl')}</a>
-                        </p>
-                    </div>
+                        <a href={url} target="_blank">{__('View detailed report on Qualys SSL Labs', 'really-simple-ssl')}</a>
+                    </div> }
                 </div>
             </div>
+                : <div className="rsssl-ssl-labs">
+                    <div className="rsssl-ssl-labs-select">
+                        <div className="rsssl-ssl-labs-select-item">
+                            <div className={"rsssl-score-snippet rsssl-test-inactive"}>{__('Loading...', 'really-simple-ssl')}</div>
+                            <div className={"rsssl-score-snippet rsssl-test-inactive"}>{__('Loading...', 'really-simple-ssl')}</div>
+                            <div className={"rsssl-score-snippet rsssl-test-inactive"}>{__('Loading...', 'really-simple-ssl')}</div>
+                            <div className={"rsssl-score-snippet rsssl-test-inactive"}>{__('Loading...', 'really-simple-ssl')}</div>
+                        </div>
+                        <div className="rsssl-ssl-labs-select-item">
+                            <h2 className={'big-number'}>?</h2>
+                        </div>
+                    </div>
+                    <div className={"rsssl-ssl-labs-list"}>
+                        <div className="rsssl-ssl-labs-list-item">
+                            <Icon name="info" color="grey"/>
+                            <p className="rsssl-ssl-labs-list-item-text">
+                                {__('Loading...', 'really-simple-ssl')}
+                            </p>
+                        </div>
+                        <div className={"rsssl-ssl-labs-list-item"}>
+                            <Icon name="list" color="grey"/>
+                            <p className="rsssl-ssl-labs-list-item-text">
+                                {__('Last check:', 'really-simple-ssl')}
+                            </p>
+                            <p className="rsssl-ssl-labs-list-item-text">{__('Loading...', 'really-simple-ssl')}</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </>
     );
 }
 

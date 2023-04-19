@@ -284,11 +284,12 @@ const WPVul = () => {
 
     return (
         <>
+            {dataLoaded ?
             <div className={'rsssl-hardening'}>
                 <div className={"rsssl-hardening-select "  + vulClass}>
                     <div className="rsssl-hardening-select-item">
                         {vulEnabled ? <Icon color={iconVulColor} size={23} name="radar-duotone"></Icon> : <Icon size={23}  color={iconVulEnabledColor} name="satellite-dish-duotone"></Icon>}
-                        <h2>{vulEnabled ? vulnerabilities : '-'}</h2>
+                        <h2>{vulEnabled ? vulnerabilities : ''}</h2>
                         <span className={"rsssl-badge " + badgeVulStyle}>{capitalizeFirstLetter(vulnerabilityWord)}</span>
                     </div>
                     <div className="rsssl-hardening-select-item">
@@ -297,21 +298,42 @@ const WPVul = () => {
                         <span className={"rsssl-badge " + badgeUpdateStyle}>{capitalizeFirstLetter(updateWord)}</span>
                     </div>
                 </div>
-
-            {dataLoaded? <>
                 <div className="rsssl-hardening-list">
                     {checknotEnabledHardeningFields()}
                     {checkVulActive()}
                     {checkVul()}
                     {checkUpdates()}
                 </div>
-            </> : <>
-                <div className="rsssl-learningmode-placeholder">
-                <div></div><div></div><div></div><div></div>
+            </div>
+                : <div className="rsssl-hardening">
+                    <div className="rsssl-hardening-select">
+                        <div className="rsssl-hardening-select-item">
+                            <Icon size={23} color={'grey'} name="radar-duotone"></Icon>
+                            <h2>0</h2>
+                            <span className={"rsssl-badge rsp-default"}>{capitalizeFirstLetter(vulnerabilityWord)}</span>
+                        </div>
+                        <div className="rsssl-hardening-select-item">
+                            <Icon size={23} color={'grey'} name="rotate-exclamation-light"></Icon>
+                            <h2>0</h2>
+                            <span className={"rsssl-badge rsp-default"}>{capitalizeFirstLetter(updateWord)}</span>
+                        </div>
+                    </div>
+                    <div className="rsssl-hardening-list">
+                        <div className="rsssl-hardening-list-item">
+                            <Icon color={'grey'} name="circle-check"></Icon>
+                            <p className={"rsssl-hardening-list-item-text"}>{__("Loading...", "really-simple-ssl")}</p>
+                        </div>
+                        <div className="rsssl-hardening-list-item">
+                            <Icon color={'grey'} name="circle-check"></Icon>
+                            <p className={"rsssl-hardening-list-item-text"}>{__("Loading...", "really-simple-ssl")}</p>
+                        </div>
+                        <div className="rsssl-hardening-list-item">
+                            <Icon color={'grey'} name="circle-check"></Icon>
+                            <p className={"rsssl-hardening-list-item-text"}>{__("Loading...", "really-simple-ssl")}</p>
+                        </div>
+                    </div>
                 </div>
-            </>
             }
-        </div>
         </>
     )
 }

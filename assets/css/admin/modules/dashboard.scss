@@ -65,6 +65,9 @@
         h2 {
           margin-top: var(--rsp-spacing-xxs);
           font-weight: 800;
+          &.big-number{
+            font-size: var(--rsp-fs-850);
+          }
         }
 
         span {
@@ -72,27 +75,6 @@
           gap: 3px;
           justify-content: center;
           font-size: var(--rsp-fs-100);
-
-          .rsssl-icon-live {
-            animation-name: pulse;
-            animation-duration: 1.5s;
-            animation-timing-function: ease-in;
-            animation-direction: alternate;
-            animation-iteration-count: infinite;
-            animation-play-state: running;
-
-            @keyframes pulse {
-              0% {
-                transform: scale(0.9);
-                opacity: 0.2;
-              }
-
-              100% {
-                transform: scale(1.0);
-                opacity: 1;
-              }
-            }
-          }
         }
       }
     }
@@ -175,6 +157,26 @@
           margin-top: var(--rsp-spacing-xxs);
         }
       }
+    }
+  }
+}
+
+.rsssl-gridblock-progress-container {
+  &.rsssl-error {
+    .rsssl-gridblock-progress {
+      background: var(--rsp-color-warning);
+    }
+  }
+
+  &.rsssl-inactive {
+    height: 4px;
+    width: 100%;
+    display: flex;
+    background: var(--rsp-grey-300);
+
+    .rsssl-gridblock-progress {
+      transition: width 1s ease-in-out;
+      background: var(--rsp-green);
     }
   }
 }
