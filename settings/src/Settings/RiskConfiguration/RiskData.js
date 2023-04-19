@@ -20,12 +20,19 @@ const UseRiskData = create((set, get) => ({
     setDataLoaded: (value) => set({dataLoaded: value}),
     //update Risk Data
     updateRiskData: async (field, value) => {
+        set({processing:true});
+        set(
+            produce((state) => {
+                let index = state.riskData.findIndex((item) => item.id === field);
+                state.riskData[index].value = value;
+            })
+        );
         try {
             const riskData = await rsssl_api.doAction('vulnerabilities_measures_set', {
                 field: field,
                 value: value,
             });
-            set({riskData: riskData.data, dataLoaded: true});
+            set({riskData: riskData.data, dataLoaded: true, processing:false});
         } catch (e) {
             console.log(e);
         }

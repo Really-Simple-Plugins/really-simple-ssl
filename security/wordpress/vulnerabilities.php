@@ -542,7 +542,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
          * @param $data
          * @return array
          */
-        public function measures_data(): array
+        public static function measures_data(): array
         {
             $measures = [];
             $measures[] = [
@@ -887,7 +887,9 @@ if (!class_exists("rsssl_vulnerabilities")) {
             global $wp_version;
             $url = self::RSS_SECURITY_API . 'core/WordPress.json';
             $data = $this->download($url);
-
+            if (!$data) {
+                return;
+            }
 
             $data->vulnerabilities = $this->filter_vulnerabilities($data->vulnerabilities, $wp_version, true);
             $data->version = $wp_version;

@@ -9,7 +9,7 @@ import useFields from "../FieldsData";
 
 const RiskComponent = (props) => {
     //first we put the data in a state
-    const {riskData, dataLoaded, fetchVulnerabilities, updateRiskData} = UseRiskData();
+    const {riskData, processing, dataLoaded, fetchVulnerabilities, updateRiskData} = UseRiskData();
     const { fields, fieldAlreadyEnabled} = useFields();
 
     useEffect(() => {
@@ -24,17 +24,6 @@ const RiskComponent = (props) => {
     if (!dataLoaded) {
         return null;
     }
-    // if (dataLoaded) {
-    //
-    //     //we add a help on the left side
-    //     dispatch('core/notices').createNotice(
-    //         'info',
-    //         'This is a test',
-    //         {
-    //             isDismissible: true,
-    //         },
-    //     );
-    // }
 
     //we create the columns
     let columns = [];
@@ -60,6 +49,7 @@ const RiskComponent = (props) => {
     for (const key in data) {
         let dataItem = {...data[key]}
         dataItem.riskSelection = <SelectControl
+            disabled={processing}
             id={dataItem.id}
             name={dataItem.name}
             value={dataItem.value}
@@ -70,9 +60,9 @@ const RiskComponent = (props) => {
         />
         data[key] = dataItem;
     }
-
+    let processingClass = processing ? 'rsssl-processing' : '';
     return (
-        <div>
+        <div className={processingClass}>
             <DataTable
                 columns={columns}
                 data={Object.values(data)}
@@ -90,36 +80,8 @@ const RiskComponent = (props) => {
         };
     }
 
-    function dispachNotification( risk, type ) {
-        let text = __( 'Measure was set for ' + risk, 'really-simple-ssl' );
-        dispatch('core/notices').createNotice(
-            type,
-            text,
-            {
-                __unstableHTML: true,
-                id: 'rsssl_settings_saved',
-                type: 'snackbar',
-                isDismissible: false,
-            }
-        ).then(sleeper(2000)).then(( response ) => {
-            dispatch('core/notices').removeNotice('rsssl_settings_saved');
-        });
-    }
-
     function onChangeHandler(fieldValue, item) {
-        function update () {
-            return new Promise((resolve, reject) => {
-                updateRiskData(item.id, fieldValue).then((response) => {
-                    dispachNotification(item.risk, 'success');
-                    resolve();
-                })
-                    .catch((response) => {
-                        dispachNotification(item.risk, 'error');
-                        reject();
-                    });
-            });
-        }
-        update();
+         updateRiskData(item.id, fieldValue);
     }
 
 }
