@@ -32576,11 +32576,13 @@ const AnimatedPercentage = _ref => {
     percentageCompleted
   } = _ref;
   const [displayedPercentage, setDisplayedPercentage] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(0);
+  // useRef previous percentageCompleted
+  const prevPercentageCompleted = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useRef)(0);
   const easeOutCubic = t => {
     return 1 - Math.pow(1 - t, 3);
   };
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-    const startPercentage = 0;
+    const startPercentage = prevPercentageCompleted.current;
     const animationDuration = 1000;
     const startTime = Date.now();
     const animatePercentage = () => {
@@ -32589,8 +32591,11 @@ const AnimatedPercentage = _ref => {
       const easedProgress = easeOutCubic(progress);
       const newPercentage = Math.min(startPercentage + (percentageCompleted - startPercentage) * easedProgress, percentageCompleted);
       if (progress < 1) {
+        // update displayedPercentage
         setDisplayedPercentage(newPercentage);
+        prevPercentageCompleted.current = percentageCompleted;
       } else {
+        // update prevPercentageCompleted to the new percentageCompleted
         clearInterval(animationInterval);
       }
     };
@@ -33183,7 +33188,7 @@ const SslLabs = props => {
     sslStatusColor = 'orange';
     errorMessage = statusMessage;
   }
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, dataLoaded ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: 'rsssl-ssl-labs'
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-gridblock-progress-container " + sslClass
@@ -33199,9 +33204,11 @@ const SslLabs = props => {
     className: "rsssl-ssl-labs-select-item"
   }, supportsTlS11(), hasHSTS(), certificateStatus(), cipherStrength()), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-ssl-labs-select-item"
-  }, !neverScannedYet() && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
+  }, !neverScannedYet() ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
     className: 'big-number'
-  }, grade), neverScannedYet() && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, grade) : (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
+    className: 'big-number'
+  }, "?"), neverScannedYet() && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-ssl-labs-list"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-ssl-labs-list-item"
@@ -33222,7 +33229,7 @@ const SslLabs = props => {
     className: "rsssl-ssl-labs-list-item-text"
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Last check:', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
     className: "rsssl-ssl-labs-list-item-text"
-  }, startTimeNice)), !hasErrors && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, startTimeNice)), !hasErrors && startTime && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-ssl-labs-list-item"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_3__["default"], {
     name: "external-link",
@@ -33230,43 +33237,7 @@ const SslLabs = props => {
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
     href: url,
     target: "_blank"
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('View detailed report on Qualys SSL Labs', 'really-simple-ssl'))))) : (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-ssl-labs"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-ssl-labs-select"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-ssl-labs-select-item"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-score-snippet rsssl-test-inactive"
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Loading...', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-score-snippet rsssl-test-inactive"
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Loading...', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-score-snippet rsssl-test-inactive"
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Loading...', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-score-snippet rsssl-test-inactive"
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Loading...', 'really-simple-ssl'))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-ssl-labs-select-item"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
-    className: 'big-number'
-  }, "?"))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-ssl-labs-list"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-ssl-labs-list-item"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_3__["default"], {
-    name: "info",
-    color: "grey"
-  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
-    className: "rsssl-ssl-labs-list-item-text"
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Loading...', 'really-simple-ssl'))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-ssl-labs-list-item"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_3__["default"], {
-    name: "list",
-    color: "grey"
-  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
-    className: "rsssl-ssl-labs-list-item-text"
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Last check:', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
-    className: "rsssl-ssl-labs-list-item-text"
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Loading...', 'really-simple-ssl'))))));
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('View detailed report on Qualys SSL Labs', 'really-simple-ssl'))))));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (SslLabs);
 
@@ -33738,7 +33709,7 @@ const WPVul = () => {
     size: 23,
     color: iconVulEnabledColor,
     name: "satellite-dish-duotone"
-  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", null, vulEnabled ? vulnerabilities : ''), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", null, vulEnabled ? vulnerabilities : '?'), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     className: "rsssl-badge " + badgeVulStyle
   }, capitalizeFirstLetter(vulnerabilityWord))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-hardening-select-item"

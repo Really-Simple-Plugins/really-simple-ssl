@@ -15,6 +15,7 @@ const SslLabs = (props) => {
     const requestActive = useRef(false);
     const intervalId = useRef(false);
 
+
     useEffect(()=>{
         if ( !dataLoaded ) {
             rsssl_api.doAction('ssltest_get').then( ( response ) => {
@@ -394,7 +395,7 @@ const SslLabs = (props) => {
 
     return (
         <>
-            {dataLoaded ? <div className={'rsssl-ssl-labs'}>
+            <div className={'rsssl-ssl-labs'}>
                 <div className={"rsssl-gridblock-progress-container "+sslClass}>
                     <div className="rsssl-gridblock-progress" style={getStyles()}></div>
                 </div>
@@ -408,7 +409,7 @@ const SslLabs = (props) => {
                         {cipherStrength()}
                     </div>
                     <div className="rsssl-ssl-labs-select-item">
-                        {!neverScannedYet() && <h2 className={'big-number'}>{grade}</h2>}
+                        {!neverScannedYet() ? <h2 className={'big-number'}>{grade}</h2> : <h2 className={'big-number'}>?</h2>}
                         {neverScannedYet() && <div></div>}
                     </div>
                 </div>
@@ -431,41 +432,12 @@ const SslLabs = (props) => {
                         </p>
                         <p className="rsssl-ssl-labs-list-item-text">{startTimeNice}</p>
                     </div>
-                    { !hasErrors && <div className="rsssl-ssl-labs-list-item">
+                    { !hasErrors && startTime && <div className="rsssl-ssl-labs-list-item">
                         <Icon name="external-link" color="black"/>
                         <a href={url} target="_blank">{__('View detailed report on Qualys SSL Labs', 'really-simple-ssl')}</a>
                     </div> }
                 </div>
             </div>
-                : <div className="rsssl-ssl-labs">
-                    <div className="rsssl-ssl-labs-select">
-                        <div className="rsssl-ssl-labs-select-item">
-                            <div className={"rsssl-score-snippet rsssl-test-inactive"}>{__('Loading...', 'really-simple-ssl')}</div>
-                            <div className={"rsssl-score-snippet rsssl-test-inactive"}>{__('Loading...', 'really-simple-ssl')}</div>
-                            <div className={"rsssl-score-snippet rsssl-test-inactive"}>{__('Loading...', 'really-simple-ssl')}</div>
-                            <div className={"rsssl-score-snippet rsssl-test-inactive"}>{__('Loading...', 'really-simple-ssl')}</div>
-                        </div>
-                        <div className="rsssl-ssl-labs-select-item">
-                            <h2 className={'big-number'}>?</h2>
-                        </div>
-                    </div>
-                    <div className={"rsssl-ssl-labs-list"}>
-                        <div className="rsssl-ssl-labs-list-item">
-                            <Icon name="info" color="grey"/>
-                            <p className="rsssl-ssl-labs-list-item-text">
-                                {__('Loading...', 'really-simple-ssl')}
-                            </p>
-                        </div>
-                        <div className={"rsssl-ssl-labs-list-item"}>
-                            <Icon name="list" color="grey"/>
-                            <p className="rsssl-ssl-labs-list-item-text">
-                                {__('Last check:', 'really-simple-ssl')}
-                            </p>
-                            <p className="rsssl-ssl-labs-list-item-text">{__('Loading...', 'really-simple-ssl')}</p>
-                        </div>
-                    </div>
-                </div>
-            }
         </>
     );
 }

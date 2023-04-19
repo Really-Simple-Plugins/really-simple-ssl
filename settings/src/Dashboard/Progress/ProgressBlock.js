@@ -1,5 +1,5 @@
 import {
-    useState, useEffect
+    useState, useEffect, useRef
 } from '@wordpress/element';
 
 import TaskElement from "./../TaskElement";
@@ -88,13 +88,14 @@ export default ProgressBlock;
 
 export const AnimatedPercentage = ({ percentageCompleted }) => {
   const [displayedPercentage, setDisplayedPercentage] = useState(0);
-
+  // useRef previous percentageCompleted
+  const prevPercentageCompleted = useRef(0);
   const easeOutCubic = (t) => {
     return 1 - Math.pow(1 - t, 3);
   };
 
   useEffect(() => {
-    const startPercentage = 0;
+    const startPercentage = prevPercentageCompleted.current;
     const animationDuration = 1000;
     const startTime = Date.now();
 
@@ -106,8 +107,11 @@ export const AnimatedPercentage = ({ percentageCompleted }) => {
       const newPercentage = Math.min(startPercentage + (percentageCompleted - startPercentage) * easedProgress, percentageCompleted);
 
       if (progress < 1) {
+        // update displayedPercentage
         setDisplayedPercentage(newPercentage);
+        prevPercentageCompleted.current = percentageCompleted;
       } else {
+        // update prevPercentageCompleted to the new percentageCompleted
         clearInterval(animationInterval);
       }
     };

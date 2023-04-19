@@ -289,7 +289,7 @@ const WPVul = () => {
                 <div className={"rsssl-hardening-select "  + vulClass}>
                     <div className="rsssl-hardening-select-item">
                         {vulEnabled ? <Icon color={iconVulColor} size={23} name="radar-duotone"></Icon> : <Icon size={23}  color={iconVulEnabledColor} name="satellite-dish-duotone"></Icon>}
-                        <h2>{vulEnabled ? vulnerabilities : ''}</h2>
+                        <h2>{vulEnabled ? vulnerabilities : '?'}</h2>
                         <span className={"rsssl-badge " + badgeVulStyle}>{capitalizeFirstLetter(vulnerabilityWord)}</span>
                     </div>
                     <div className="rsssl-hardening-select-item">
