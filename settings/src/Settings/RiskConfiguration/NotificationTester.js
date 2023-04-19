@@ -14,15 +14,19 @@ const NotificationTester = (props) => {
         }
     },[fields])
     const doTestNotification = async () => {
-        //Test one the email notification
-        await rsssl_api.doAction( 'vulnerabilities_test_notification' );
-        addHelpNotice(
-            field.id,
-            'success',
-            __('All notifications are triggered successfully, please check your email to double-check if you can receive emails.','really-simple-ssl'),
-            __('Test notifications','really-simple-ssl'),
-            false
-        );
+        //Test the notifications
+        setDisabled(true);
+        rsssl_api.doAction( 'vulnerabilities_test_notification' ).then( (response) => {
+            setDisabled(false);
+            addHelpNotice(
+                field.id,
+                'success',
+                __('All notifications are triggered successfully, please check your email to double-check if you can receive emails.','really-simple-ssl'),
+                __('Test notifications','really-simple-ssl'),
+                false
+            );
+        });
+
     }
 
     return (

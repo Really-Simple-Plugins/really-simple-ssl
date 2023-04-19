@@ -310,12 +310,11 @@ if (!class_exists("rsssl_vulnerabilities")) {
          */
         public static function testGenerator(): array
         {
-            $self = new self();
             $mail_notification = rsssl_get_option('vulnerability_notification_email_admin');
             if ( $mail_notification === 'l' || $mail_notification === 'm' || $mail_notification === 'h' || $mail_notification === 'c' ) {
-	            return $self->send_warning_email();
+                $mailer = new rsssl_mailer();
+                $mailer->send_test_mail();
             }
-
             return [];
         }
 
@@ -1304,21 +1303,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
             }
 
             return $filtered_vulnerabilities;
-        }
-
-        /**
-         * This function sends a test email.
-         * It is used to check if the email is working.
-         * It is also used to check if the notification is working.
-         *
-         * @return array
-         */
-        private function send_warning_email()
-        {
-            $mailer = new rsssl_mailer();
-            $mailer->subject = __("Feature enabled", "really-simple-ssl");
-            $mailer->message = __("This is a test email to see if notifications about notifications can be send through email.", "really-simple-ssl");
-            return $mailer->send_mail();
         }
 
         public function count_risk_levels()
