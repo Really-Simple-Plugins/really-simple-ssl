@@ -35,7 +35,15 @@ class RssslInstallerTest extends WP_UnitTestCase {
         }
 
 		// Activate any required plugins
-		activate_plugin('rlrsssl-really-simple-ssl.php');
+//		activate_plugin('rlrsssl-really-simple-ssl.php');
+
+        $result = activate_plugin('rlrsssl-really-simple-ssl.php');
+        if (is_wp_error($result)) {
+            error_log('Activation error: ');
+            error_log(print_r($result->get_error_message(), true));
+        } else {
+            error_log('Activation successful');
+        }
 	}
 
 	public function test_plugin_installation() {
