@@ -35,7 +35,7 @@ class RssslInstallerTest extends WP_UnitTestCase {
         }
 
 		// Activate any required plugins, account for multisite
-        if ( is_multisite() ) {
+        if ( ! is_multisite() ) {
             activate_plugin('rlrsssl-really-simple-ssl.php');
         } else {
             activate_plugin('rlrsssl-really-simple-ssl.php', '', true);
