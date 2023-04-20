@@ -29,6 +29,11 @@ class RssslInstallerTest extends WP_UnitTestCase {
 
 		// Set an active user, otherwise capability checks will fail
 		wp_set_current_user(1);
+        $user = wp_get_current_user();
+        if ( ! $user->has_cap('manage_burst_statistics') ) {
+            $user->add_cap('manage_burst_statistics');
+        }
+
 		// Activate any required plugins
 		activate_plugin('rlrsssl-really-simple-ssl.php');
 	}
