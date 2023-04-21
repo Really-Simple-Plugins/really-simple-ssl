@@ -347,7 +347,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	        $stats['vulList'] = $vulnerabilities;
             $riskData = $self->measures_data();
             $stats['riskData'] = $riskData['data'];
-	        $stats['lastChecked'] = date_i18n(get_option('date_format') . ' @ ' . get_option('time_format'), $time);
+	        $stats['lastChecked'] = $time;
             return $stats;
         }
 

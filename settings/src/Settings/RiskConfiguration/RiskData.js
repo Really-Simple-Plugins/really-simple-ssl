@@ -12,7 +12,7 @@ const UseRiskData = create((set, get) => ({
     // Stuff we need for the WPVulData component
     updates: 0, //for letting the component know if there are updates available
     HighestRisk: false, //for storing the highest risk
-    lastChecked: 'never', //for storing the last time the data was checked
+    lastChecked: '', //for storing the last time the data was checked
     vulEnabled: false, //for storing the status of the vulnerability scan
     riskNaming: {}, //for storing the risk naming
     introCompleted: false, //for storing the status of the first run
@@ -72,6 +72,7 @@ const UseRiskData = create((set, get) => ({
                     </div>
                 });
             }
+            console.log('fetch at: ', fetched.data.lastChecked);
             let riskData = fetched.data.riskData;
             if (!Array.isArray(riskData)) {riskData = []}
             set(

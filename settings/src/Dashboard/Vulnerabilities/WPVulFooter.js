@@ -2,9 +2,11 @@ import React, {useEffect, useState} from 'react';
 import {__} from '@wordpress/i18n';
 import useRiskData from "../../Settings/RiskConfiguration/RiskData";
 import useFields from "../../Settings/FieldsData";
+import {getRelativeTime} from '../../utils/formatting';
 
 const WPVulFooter = (props) => {
     const {lastChecked} = useRiskData();
+    console.log(lastChecked);
     const {fields, getFieldValue} = useFields();
     const [vulEnabled, setVulEnabled] = useState(false);
     useEffect(() => {
@@ -19,10 +21,10 @@ const WPVulFooter = (props) => {
         right: '0',
     }
     return (
-        <div className={'rsssl-wpvul'}>
-            <a href="#settings/vulnerabilities" className={'button button-default alignleft'}>{__('Settings', 'really-simple-ssl')}</a>
-            {vulEnabled? <small className={'alignright'}>{__('', 'really-simple-ssl')} {lastChecked}</small>:<small className={'alignright'} style={styleFooter}></small>}
-        </div>
+        <>
+            <a href="#settings/vulnerabilities" className={'button button-default'}>{__('Settings', 'really-simple-ssl')}</a>
+            {vulEnabled? <p className={'rsssl-small-text'}>{getRelativeTime(lastChecked)}</p>: null}
+        </>
     )
 }
 

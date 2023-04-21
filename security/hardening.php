@@ -52,15 +52,17 @@ class rsssl_hardening {
 
 		$stats = [
 			'updates' => $this->getAllUpdatesCount(),
-			'lastChecked' => date_i18n(get_option('date_format') . ' @ ' . get_option('time_format'), time() ),
+			'lastChecked' => time(),
 			'riskNaming'   => $this->risk_naming,
 			'vulEnabled' => $vulEnabled,
 		];
 
-		return [
+		$repsonse = [
 			"request_success" => true,
 			'data' => apply_filters('rsssl_vulnerability_data', $stats),
 		];
+		error_log('hardening data: '.print_r($repsonse, true));
+		return $repsonse;
 	}
 
 	/**
