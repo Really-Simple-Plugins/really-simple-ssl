@@ -64,6 +64,10 @@ before_script:
   - wp plugin deactivate really-simple-ssl --allow-root
   - wp plugin uninstall really-simple-ssl --allow-root
 
+phpcs:
+  script:
+    - ./vendor/bin/phpcs --standard=phpcs.xml
+
 variables:
   # Configure mysql service (https://hub.docker.com/_/mysql/)
   MYSQL_DATABASE: wordpress_tests
