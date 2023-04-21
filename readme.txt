@@ -96,6 +96,9 @@ The plugin checks your certificate before enabling, but if, for example, you mig
 If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions](https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/) instead.
 
 == Changelog ==
+= 6.2.5 =
+* Improvement: add warning alert option
+
 = 6.2.4 =
 * Improvement: optionally enable notification emails in onboarding wizard
 * Improvement: onboarding styling
