@@ -2468,6 +2468,7 @@ class rsssl_admin
 	    }
 
 	    $invert = false;
+        error_log("validate: ".$func);
 	    if (strpos($func, 'NOT ') !== FALSE ) {
 		    $func = str_replace('NOT ', '', $func);
 		    $invert = true;
