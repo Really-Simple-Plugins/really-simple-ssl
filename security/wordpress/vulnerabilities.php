@@ -62,8 +62,8 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 'h' => __('high-risk', 'really-simple-ssl'),
                 'c' => __('critical', 'really-simple-ssl'),
             ];
-
 	        add_filter('rsssl_vulnerability_data', array($this, 'get_stats'));
+	        add_action( 'rsssl_after_save_field', array( $this, 'after_save_field' ), 10, 4 );
         }
 
         public static function riskNaming($risk = null)
@@ -74,6 +74,11 @@ if (!class_exists("rsssl_vulnerabilities")) {
             }
             return $instance->risk_naming[$risk];
         }
+	    public function after_save_field( $field_id, $field_value, $prev_value, $type ) {;
+		    if ( $field_id==='enable_vulnerability_scanner' && $field_value && rsssl_get_option('vulnerabilities_intro_shown') ){
+			    $this->check_files();
+		    }
+	    }
 
         /**
          * Instantiates the class
@@ -85,11 +90,11 @@ if (!class_exists("rsssl_vulnerabilities")) {
             static $instance = false;
             if ( !$instance ) {
                 $instance = new rsssl_vulnerabilities();
-                    //if the file exists, we include it.
-                    if ( defined('rsssl_pro_path') && file_exists(rsssl_pro_path . '/security/wordpress/vulnerabilities_pro.php')) {
-                        require_once(rsssl_pro_path . '/security/wordpress/vulnerabilities_pro.php');
-                        $instance = new rsssl_vulnerabilities_pro();
-                    }
+                //if the file exists, we include it.
+                if ( defined('rsssl_pro_path') && file_exists(rsssl_pro_path . '/security/wordpress/vulnerabilities_pro.php')) {
+                    require_once(rsssl_pro_path . '/security/wordpress/vulnerabilities_pro.php');
+                    $instance = new rsssl_vulnerabilities_pro();
+                }
             }
             $instance->init();
             return $instance;
@@ -107,13 +112,11 @@ if (!class_exists("rsssl_vulnerabilities")) {
 		        return;
 	        }
             //we check if the vulnerability scanner is enabled and then the fun happens.
-            if (rsssl_get_option('enable_vulnerability_scanner')) {
-                $this->check_files();
-                $this->cache_installed_plugins();
-                if ($this->boot) {
-                    $this->run();
-                }
+            $this->cache_installed_plugins();
+            if ($this->boot) {
+                $this->run();
             }
+
         }
 
         public function run()
@@ -159,7 +162,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	        }
             $instance = self::instance();
 
-            rsssl_update_option('enable_vulnerability_scanner', '1');
             //we check if the schedule already exists, if not, we add it.
             if (!wp_next_scheduled('rsssl_vulnerabilities_cron')) {
                 wp_schedule_event(time(), $instance->schedule, 'rsssl_vulnerabilities_cron');
@@ -1419,7 +1421,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
         private function assemble_first_run()
         {
-            $this->check_files();
+	        $this->check_files();
             $this->cache_installed_plugins();
 
             return [
@@ -1451,7 +1453,7 @@ if (!function_exists('rsssl_vulnerabilities_enabled')) {
      */
     function rsssl_vulnerabilities_enabled(): bool
     {
-        return rsssl_get_option('enable_vulnerability_scanner');
+        return true; //we're here only when this is enabled.
     }
 }
 function rsssl_vulnerabilities_api( array $response, string $action, $data ): array {

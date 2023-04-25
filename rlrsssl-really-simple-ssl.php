@@ -45,7 +45,6 @@ if (!function_exists('rsssl_activation_check')) {
     }
 	register_activation_hook( __FILE__, 'rsssl_activation_check' );
 }
-error_log("#########");
 class REALLY_SIMPLE_SSL
 {
 	private static $instance;

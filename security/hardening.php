@@ -61,7 +61,6 @@ class rsssl_hardening {
 			"request_success" => true,
 			'data' => apply_filters('rsssl_vulnerability_data', $stats),
 		];
-		error_log('hardening data: '.print_r($repsonse, true));
 		return $repsonse;
 	}
 

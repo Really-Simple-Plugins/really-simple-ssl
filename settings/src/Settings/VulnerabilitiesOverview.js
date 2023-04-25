@@ -41,12 +41,19 @@ const VulnerabilitiesOverview = (props) => {
     useEffect(() => {
         if ( fieldAlreadyEnabled('enable_vulnerability_scanner') ) {
             if (getFieldValue('vulnerabilities_intro_shown')!=1 ) {
-                if (!introCompleted) setShowIntro(true);
+                if (!introCompleted) {
+                    console.log("show intro")
+                    setShowIntro(true);
+                } else {
+                    console.log("do not show intro")
+                }
             } else {
-                if (!dataLoaded) {
+                if ( !dataLoaded ) {
                     fetchVulnerabilities();
                 }
             }
+        } else {
+            console.log("not already enabled");
         }
 
         if ( getFieldValue('enable_vulnerability_scanner')==1 && !fieldAlreadyEnabled('enable_vulnerability_scanner') ) {
