@@ -50,8 +50,8 @@ if ( ! class_exists( 'Vulnerabilities' ) ) {
 				'h' => __( 'high-risk', 'really-simple-ssl' ),
 				'c' => __( 'critical', 'really-simple-ssl' ),
 			);
-
 			add_filter( 'rsssl_vulnerability_data', array( $this, 'get_stats' ) );
+
 		}
 
 		public static function risk_naming( $risk = null ) {
@@ -275,8 +275,9 @@ if ( ! class_exists( 'Vulnerabilities' ) ) {
 		// Public Section 2: DataGathering
 
 		/**
-		 * @param $data
 		 * @param mixed $stats
+		 *
+		 * @return array
 		 */
 		public static function get_stats( $stats ): array {
 			if ( ! rsssl_user_can_manage() ) {

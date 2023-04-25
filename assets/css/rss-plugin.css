@@ -104,7 +104,7 @@
 }
 
 .btn-vulnerable.critical {
-    background-color: var(--rsp-red-faded);
+    background-color: var(--rsp-red);
     color: var(--rsp-white);
     border-color: var(--rsp-red);
 }
