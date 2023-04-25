@@ -810,6 +810,12 @@ function rsssl_fields( $load_values = true ) {
             'group_id' => 'vulnerabilities_basic',
             'tooltip'  => __( "If there's a vulnerability, you will also get feedback on the themes and plugin overview.", 'really-simple-ssl' ),
             'warning' => false,
+            'react_conditions' => [
+	            'relation' => 'AND',
+	            [
+		            'enable_vulnerability_scanner' => 1,
+	            ]
+            ],
             'type' => 'checkbox',
             'label' => __('Feedback in plugin overview', 'really-simple-ssl'),
             'disabled' => false,

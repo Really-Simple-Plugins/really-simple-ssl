@@ -32,13 +32,13 @@ if ( ! class_exists( 'Vulnerabilities' ) ) {
 		/**
 		 * @var array|int[]
 		 */
-		public $risk_levels = array(
+		public $risk_levels    = array(
 			'l' => 1,
 			'm' => 2,
 			'h' => 3,
 			'c' => 4,
 		);
-		public $trigger = false;
+		public $trigger        = false;
 		protected $risk_naming = array();
 
 		protected $boot = true;
@@ -184,7 +184,6 @@ if ( ! class_exists( 'Vulnerabilities' ) ) {
 						'true' => array(
 							'title'        => sprintf( __( 'You have %s %s %s', 'really-simple-ssl' ), $count, $this->risk_naming[ $key ], $count_label ),
 							'msg'          => sprintf( __( 'You have %s %s %s. Please take appropriate action. For more information about these vulnerabilities, please read more <a href="/wp-admin/options-general.php?page=really-simple-security#settings/vulnerabilities">here</a>', 'really-simple-ssl' ), $count, $this->risk_naming[ $key ], $count_label ),
-							// 'url' => 'https://really-simple-ssl.com/knowledge-base/vulnerability-scanner/',
 							'icon'         => ( 'c' === $key ) ? 'warning' : 'open',
 							'type'         => 'warning',
 							'dismissible'  => true,
@@ -213,7 +212,6 @@ if ( ! class_exists( 'Vulnerabilities' ) ) {
 							'true' => array(
 								'title'        => __( 'Dashboard - Test Notification', 'really-simple-ssl' ),
 								'msg'          => __( 'This is a test notification from Really Simple SSL. You can safely dismiss this message.', 'really-simple-ssl' ),
-								'url'          => 'https://really-simple-ssl.com/knowledge-base/vulnerability-scanner/',
 								'icon'         => $dashboard_icon,
 								'dismissible'  => true,
 								'admin_notice' => true,
@@ -727,22 +725,22 @@ if ( ! class_exists( 'Vulnerabilities' ) ) {
                 jQuery(document).ready(function($) {
                     let style = document.createElement('style');
                     let vulnerable_components = array("
-			                 . implode(
-				                 ',',
-				                 array_map(
-					                 function ( $component ) {
-						                 //we return slug and risk
-						                 return "{slug: '" . esc_attr( $component->slug ) .
-						                        "', risk: '" . esc_attr(
-							                        $this->get_highest_vulnerability(
-								                        $component->vulnerabilities
-							                        )
-						                        ) .
-						                        "'}";
-					                 },
-					                 $components
-				                 )
-			                 )
+				. implode(
+					',',
+					array_map(
+						function ( $component ) {
+							// We return slug and risk
+							return "{slug: '" . esc_attr( $component->slug ) .
+								"', risk: '" . esc_attr(
+									$this->get_highest_vulnerability(
+										$component->vulnerabilities
+									)
+								) .
+								"'}";
+						},
+						$components
+					)
+			    )
 			                 . "
 			        );
 
