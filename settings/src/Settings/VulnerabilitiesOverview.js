@@ -4,6 +4,7 @@ import React, {useEffect, useState} from 'react';
 import DataTable from "react-data-table-component";
 import useFields from "./FieldsData";
 import VulnerabilitiesIntro from "./VulnerabilitiesIntro";
+import Icon from "../utils/Icon";
 
 const VulnerabilitiesOverview = (props) => {
     const {
@@ -13,6 +14,7 @@ const VulnerabilitiesOverview = (props) => {
         fetchSampleData,
         introCompleted,
         fetchVulnerabilities,
+        processing,
         setDataLoaded
     } = useRiskData();
     const {fields, getField, fieldAlreadyEnabled, getFieldValue} = useFields();
@@ -96,7 +98,6 @@ const VulnerabilitiesOverview = (props) => {
         fetchSampleData();
         data = sampleList;
     }
-    console.log(data);
     //we need to add a key to the data called action which produces the action buttons
     return (
         <>
@@ -108,10 +109,15 @@ const VulnerabilitiesOverview = (props) => {
                     pagination
                     noDataComponent={__("No results", "really-simple-ssl")}
                     persistTableHead
+                    loading={!processing}
                 >
                 </DataTable>
             }
-
+            {processing && <>
+                <div className="rsssl-locked">
+                    <div className="rsssl-locked-overlay"><span><Icon className={'icon-spin'} name={'spinner'}></Icon></span>
+                    </div>
+                </div></>}
             {showIntro && <>
                 <VulnerabilitiesIntro/>
             </>

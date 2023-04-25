@@ -7,7 +7,7 @@ import useFields from "../FieldsData";
 
 const RiskComponent = (props) => {
     //first we put the data in a state
-    const {riskData, processing, dataLoaded, fetchVulnerabilities, updateRiskData} = UseRiskData();
+    const {riskData, processing, vulEnabled, dataLoaded, fetchVulnerabilities, updateRiskData} = UseRiskData();
     const { fields, fieldAlreadyEnabled, getFieldValue, setChangedField, updateField, saveFields} = useFields();
     const [measuresEnabled, setMeasuresEnabled] = useState(false);
 
@@ -36,11 +36,6 @@ const RiskComponent = (props) => {
 
     }, [] );
 
-    //we only proceed if the data is loaded
-    if (!dataLoaded) {
-        return null;
-    }
-
     //we create the columns
     let columns = [];
     //getting the fields from the props
@@ -51,6 +46,7 @@ const RiskComponent = (props) => {
         columns.push(newItem);
     });
 
+
     //now we get the options for the select control
     let options = props.field.options;
 
@@ -58,6 +54,19 @@ const RiskComponent = (props) => {
     options = Object.entries(options).map((item) => {
         return {label: item[1], value: item[0]};
     });
+
+    //we only proceed if the data is loaded
+    if (!dataLoaded) {
+        return ( <><DataTable
+            columns={columns}
+            data={Object.values([])}
+        />
+            <div className="rsssl-locked-overlay"><span
+            className="rsssl-task-status rsssl-open">{__('Disabled', 'really-simple-ssl')}</span><span>{__('Activate vulnerability detection to enable this block.', 'really-simple-ssl')}</span>
+        </div></>)
+    }
+
+
 
     //and we add the select control to the data
 
@@ -77,6 +86,7 @@ const RiskComponent = (props) => {
         data[key] = dataItem;
     }
     let processingClass = processing ? 'rsssl-processing' : '';
+    console.log('riskData', riskData);
     return (
         <div className={processingClass}>
             <p>{
@@ -99,6 +109,12 @@ const RiskComponent = (props) => {
                     <a className="rsssl-learning-mode-link" href="https://really-simple-ssl.com/vulnerabilities-measures" target="_blank">{__("Read more", "really-simple-ssl") }</a>
                 </div>
             </div> }
+            { !getFieldValue('enable_vulnerability_scanner') && <div className="rsssl-locked">
+                <div className="rsssl-locked-overlay"><span
+                        className="rsssl-task-status rsssl-open">{__('Disabled', 'really-simple-ssl')}</span><span>{__('Activate vulnerability detection to enable this block.', 'really-simple-ssl')}</span>
+                </div>
+            </div>
+            }
         </div>
     )
 

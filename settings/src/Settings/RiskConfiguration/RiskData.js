@@ -28,6 +28,7 @@ const UseRiskData = create((set, get) => ({
     introCompleted: false, //for storing the status of the first run
     vulList: [], //for storing the list of vulnerabilities
     sampleList: [], //a list of sample vulnerabilities as a placeholder
+    processing: false, //for checking if we are processing an action
 
     setDataLoaded: (value) => set({dataLoaded: value}),
     //update Risk Data
@@ -61,6 +62,7 @@ const UseRiskData = create((set, get) => ({
     fetchSampleData: async () => {
         let data = {};
         try {
+
             const fetched = await rsssl_api.doAction('hardening_data_sample', data);
             let sampleList = [];
             if (fetched.data.sampleList) {
@@ -86,6 +88,7 @@ const UseRiskData = create((set, get) => ({
     fetchVulnerabilities: async () => {
         let data = {};
         try {
+            set ({processing:true});
             const fetched = await rsssl_api.doAction('hardening_data', data);
             let vulList = [];
             let vulnerabilities = 0;
@@ -114,6 +117,7 @@ const UseRiskData = create((set, get) => ({
                     state.lastChecked = fetched.data.lastChecked;
                     state.vulEnabled = fetched.data.vulEnabled;
                     state.riskData = riskData;
+                    state.processing = false;
                 })
             )
         } catch (e) {

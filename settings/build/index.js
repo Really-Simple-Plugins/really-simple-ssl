@@ -38595,6 +38595,7 @@ const RiskComponent = props => {
   const {
     riskData,
     processing,
+    vulEnabled,
     dataLoaded,
     fetchVulnerabilities,
     updateRiskData
@@ -38631,11 +38632,6 @@ const RiskComponent = props => {
     setMeasuresEnabled(enabled);
   }, []);
 
-  //we only proceed if the data is loaded
-  if (!dataLoaded) {
-    return null;
-  }
-
   //we create the columns
   let columns = [];
   //getting the fields from the props
@@ -38657,6 +38653,18 @@ const RiskComponent = props => {
     };
   });
 
+  //we only proceed if the data is loaded
+  if (!dataLoaded) {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      columns: columns,
+      data: Object.values([])
+    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-locked-overlay"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+      className: "rsssl-task-status rsssl-open"
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)('Disabled', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)('Activate vulnerability detection to enable this block.', 'really-simple-ssl'))));
+  }
+
   //and we add the select control to the data
 
   let data = [...riskData];
@@ -38676,6 +38684,7 @@ const RiskComponent = props => {
     data[key] = dataItem;
   }
   let processingClass = processing ? 'rsssl-processing' : '';
+  console.log('riskData', riskData);
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: processingClass
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam lacinia, nisl nisl aliquet nisl.", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
@@ -38695,7 +38704,13 @@ const RiskComponent = props => {
     className: "rsssl-learning-mode-link",
     href: "https://really-simple-ssl.com/vulnerabilities-measures",
     target: "_blank"
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)("Read more", "really-simple-ssl")))));
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)("Read more", "really-simple-ssl")))), !getFieldValue('enable_vulnerability_scanner') && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-locked"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-locked-overlay"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "rsssl-task-status rsssl-open"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)('Disabled', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)('Activate vulnerability detection to enable this block.', 'really-simple-ssl')))));
   function buildColumn(column) {
     return {
       name: column.name,
@@ -38775,6 +38790,8 @@ const UseRiskData = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, get) =
   //for storing the list of vulnerabilities
   sampleList: [],
   //a list of sample vulnerabilities as a placeholder
+  processing: false,
+  //for checking if we are processing an action
 
   setDataLoaded: value => set({
     dataLoaded: value
@@ -38839,6 +38856,9 @@ const UseRiskData = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, get) =
   fetchVulnerabilities: async () => {
     let data = {};
     try {
+      set({
+        processing: true
+      });
       const fetched = await _utils_api__WEBPACK_IMPORTED_MODULE_1__.doAction('hardening_data', data);
       let vulList = [];
       let vulnerabilities = 0;
@@ -38868,6 +38888,7 @@ const UseRiskData = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, get) =
         state.lastChecked = fetched.data.lastChecked;
         state.vulEnabled = fetched.data.vulEnabled;
         state.riskData = riskData;
+        state.processing = false;
       }));
     } catch (e) {
       console.error(e);
@@ -39545,6 +39566,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_data_table_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-data-table-component */ "./node_modules/react-data-table-component/dist/index.cjs.js");
 /* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./FieldsData */ "./src/Settings/FieldsData.js");
 /* harmony import */ var _VulnerabilitiesIntro__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./VulnerabilitiesIntro */ "./src/Settings/VulnerabilitiesIntro.js");
+/* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../utils/Icon */ "./src/utils/Icon.js");
+
 
 
 
@@ -39560,6 +39583,7 @@ const VulnerabilitiesOverview = props => {
     fetchSampleData,
     introCompleted,
     fetchVulnerabilities,
+    processing,
     setDataLoaded
   } = (0,_RiskConfiguration_RiskData__WEBPACK_IMPORTED_MODULE_2__["default"])();
   const {
@@ -39640,7 +39664,6 @@ const VulnerabilitiesOverview = props => {
     fetchSampleData();
     data = sampleList;
   }
-  console.log(data);
   //we need to add a key to the data called action which produces the action buttons
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, data.length > 0 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_4__["default"], {
     columns: columns,
@@ -39648,8 +39671,16 @@ const VulnerabilitiesOverview = props => {
     dense: true,
     pagination: true,
     noDataComponent: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("No results", "really-simple-ssl"),
-    persistTableHead: true
-  }), showIntro && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_VulnerabilitiesIntro__WEBPACK_IMPORTED_MODULE_6__["default"], null)));
+    persistTableHead: true,
+    loading: !processing
+  }), processing && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-locked"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-locked-overlay"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_7__["default"], {
+    className: 'icon-spin',
+    name: 'spinner'
+  }))))), showIntro && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_VulnerabilitiesIntro__WEBPACK_IMPORTED_MODULE_6__["default"], null)));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (VulnerabilitiesOverview);
 
