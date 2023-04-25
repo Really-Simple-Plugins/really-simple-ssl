@@ -38706,7 +38706,9 @@ const RiskComponent = props => {
     };
   }
   function onChangeHandler(fieldValue, item) {
-    updateRiskData(item.id, fieldValue);
+    updateRiskData(item.id, fieldValue).then(() => {
+      alert("saved");
+    });
   }
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (RiskComponent);
@@ -38740,6 +38742,18 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+function displayActionButton(item) {
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-vulnerability-action"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    className: "button",
+    href: "https://really-simple-ssl.com/vulnerabilities/" + item.rss_identifier,
+    target: "_blank"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Details", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    href: rsssl_settings.plugins_url + "?plugin_status=upgrade",
+    className: "button button-primary"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("View", "really-simple-ssl")));
+}
 const UseRiskData = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, get) => ({
   riskData: [],
   vulnerabilities: [],
@@ -38759,6 +38773,9 @@ const UseRiskData = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, get) =
   //for storing the status of the first run
   vulList: [],
   //for storing the list of vulnerabilities
+  sampleList: [],
+  //a list of sample vulnerabilities as a placeholder
+
   setDataLoaded: value => set({
     dataLoaded: value
   }),
@@ -38793,6 +38810,29 @@ const UseRiskData = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, get) =
   capitalizeFirstLetter: str => {
     return str.charAt(0).toUpperCase() + str.slice(1);
   },
+  fetchSampleData: async () => {
+    let data = {};
+    try {
+      const fetched = await _utils_api__WEBPACK_IMPORTED_MODULE_1__.doAction('hardening_data_sample', data);
+      let sampleList = [];
+      if (fetched.data.sampleList) {
+        sampleList = fetched.data.sampleList;
+        if (typeof sampleList === 'object') {
+          //we make it an array
+          sampleList = Object.values(sampleList);
+        }
+        //we add the action buttons for sampleList
+        sampleList.forEach(function (item, i) {
+          item.vulnerability_action = displayActionButton(item);
+        });
+      }
+      set({
+        sampleList: sampleList
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  },
   /*
   * Functions
    */
@@ -38809,17 +38849,9 @@ const UseRiskData = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, get) =
           //we make it an array
           vulList = Object.values(vulList);
         }
+        //we add the action buttons for vulList and sampleList
         vulList.forEach(function (item, i) {
-          item.vulnerability_action = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-            className: "rsssl-vulnerability-action"
-          }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-            className: "button",
-            href: "https://really-simple-ssl.com/vulnerabilities/" + item.rss_identifier,
-            target: "_blank"
-          }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Details", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-            href: rsssl_settings.plugins_url + "?plugin_status=upgrade",
-            className: "button button-primary"
-          }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("View", "really-simple-ssl")));
+          item.vulnerability_action = displayActionButton(item);
         });
       }
       console.log('fetch at: ', fetched.data.lastChecked);
@@ -39524,6 +39556,8 @@ const VulnerabilitiesOverview = props => {
   const {
     dataLoaded,
     vulList,
+    sampleList,
+    fetchSampleData,
     introCompleted,
     fetchVulnerabilities,
     setDataLoaded
@@ -39565,6 +39599,10 @@ const VulnerabilitiesOverview = props => {
           fetchVulnerabilities();
         }
       }
+    } else {
+      if (!dataLoaded) {
+        fetchSampleData();
+      }
     }
     if (getFieldValue('enable_vulnerability_scanner') == 1 && !fieldAlreadyEnabled('enable_vulnerability_scanner')) {
       setDataLoaded(false);
@@ -39579,9 +39617,8 @@ const VulnerabilitiesOverview = props => {
     return (
       //If there is no data or vulnerabilities scanner is disabled we show some dummy data behind a mask
       (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_4__["default"], {
-        columns: columns
-        //  data={dummyData}
-        ,
+        columns: columns,
+        data: sampleList,
         dense: true,
         pagination: true,
         noDataComponent: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("No results", "really-simple-ssl"),
@@ -39597,7 +39634,14 @@ const VulnerabilitiesOverview = props => {
     );
   }
   let data = vulList;
-  //we need to add a key to the data called action wich produces the action buttons
+
+  //if the data has no length we use the sample data
+  if (data.length === 0) {
+    fetchSampleData();
+    data = sampleList;
+  }
+  console.log(data);
+  //we need to add a key to the data called action which produces the action buttons
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, data.length > 0 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_4__["default"], {
     columns: columns,
     data: data,

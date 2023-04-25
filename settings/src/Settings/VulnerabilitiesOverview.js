@@ -9,6 +9,8 @@ const VulnerabilitiesOverview = (props) => {
     const {
         dataLoaded,
         vulList,
+        sampleList,
+        fetchSampleData,
         introCompleted,
         fetchVulnerabilities,
         setDataLoaded
@@ -47,6 +49,10 @@ const VulnerabilitiesOverview = (props) => {
                     fetchVulnerabilities();
                 }
             }
+        } else {
+            if (!dataLoaded) {
+                fetchSampleData();
+            }
         }
 
         if ( getFieldValue('enable_vulnerability_scanner')==1 && !fieldAlreadyEnabled('enable_vulnerability_scanner') ) {
@@ -66,7 +72,7 @@ const VulnerabilitiesOverview = (props) => {
             <>
                 <DataTable
                     columns={columns}
-                    //  data={dummyData}
+                    data={sampleList}
                     dense
                     pagination
                     noDataComponent={__("No results", "really-simple-ssl")}
@@ -84,7 +90,14 @@ const VulnerabilitiesOverview = (props) => {
     }
 
     let data = vulList;
-    //we need to add a key to the data called action wich produces the action buttons
+
+    //if the data has no length we use the sample data
+    if (data.length === 0) {
+        fetchSampleData();
+        data = sampleList;
+    }
+    console.log(data);
+    //we need to add a key to the data called action which produces the action buttons
     return (
         <>
             {data.length>0 &&

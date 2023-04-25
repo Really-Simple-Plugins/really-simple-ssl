@@ -113,7 +113,9 @@ const RiskComponent = (props) => {
     }
 
     function onChangeHandler(fieldValue, item) {
-         updateRiskData(item.id, fieldValue);
+         updateRiskData(item.id, fieldValue).then(() => {
+             alert("saved");
+         });
     }
 
 }

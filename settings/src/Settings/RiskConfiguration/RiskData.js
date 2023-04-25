@@ -5,6 +5,16 @@ import {__} from "@wordpress/i18n";
 import {produce} from "immer";
 import React from "react";
 
+function displayActionButton(item) {
+    return <div className="rsssl-vulnerability-action">
+        <a className="button" href={"https://really-simple-ssl.com/vulnerabilities/" + item.rss_identifier}
+           target={"_blank"}>{__("Details", "really-simple-ssl")}</a>
+        <a href={rsssl_settings.plugins_url + "?plugin_status=upgrade"}
+           className="button button-primary"
+        >{__("View", "really-simple-ssl")}</a>
+    </div>
+}
+
 const UseRiskData = create((set, get) => ({
     riskData: [],
     vulnerabilities: [],
@@ -17,6 +27,8 @@ const UseRiskData = create((set, get) => ({
     riskNaming: {}, //for storing the risk naming
     introCompleted: false, //for storing the status of the first run
     vulList: [], //for storing the list of vulnerabilities
+    sampleList: [], //a list of sample vulnerabilities as a placeholder
+
     setDataLoaded: (value) => set({dataLoaded: value}),
     //update Risk Data
     updateRiskData: async (field, value) => {
@@ -46,6 +58,28 @@ const UseRiskData = create((set, get) => ({
         return str.charAt(0).toUpperCase() + str.slice(1);
     },
 
+    fetchSampleData: async () => {
+        let data = {};
+        try {
+            const fetched = await rsssl_api.doAction('hardening_data_sample', data);
+            let sampleList = [];
+            if (fetched.data.sampleList) {
+                sampleList = fetched.data.sampleList;
+                if (typeof sampleList === 'object') {
+                    //we make it an array
+                    sampleList = Object.values(sampleList);
+                }
+                //we add the action buttons for sampleList
+                sampleList.forEach(function (item, i) {
+                    item.vulnerability_action = displayActionButton(item);
+                });
+            }
+            set({sampleList: sampleList});
+        } catch (e) {
+            console.log(e);
+        }
+    },
+
     /*
     * Functions
      */
@@ -62,14 +96,9 @@ const UseRiskData = create((set, get) => ({
                     //we make it an array
                     vulList = Object.values(vulList);
                 }
+                //we add the action buttons for vulList and sampleList
                 vulList.forEach(function (item, i) {
-                    item.vulnerability_action = <div className="rsssl-vulnerability-action">
-                        <a className="button" href={"https://really-simple-ssl.com/vulnerabilities/" + item.rss_identifier}
-                           target={"_blank"}>{__("Details", "really-simple-ssl")}</a>
-                        <a href={rsssl_settings.plugins_url + "?plugin_status=upgrade"}
-                           className="button button-primary"
-                        >{__("View", "really-simple-ssl")}</a>
-                    </div>
+                    item.vulnerability_action = displayActionButton(item);
                 });
             }
             console.log('fetch at: ', fetched.data.lastChecked);
