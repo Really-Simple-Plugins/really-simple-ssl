@@ -4,117 +4,117 @@ function rsssl_menu() {
 	if ( ! rsssl_user_can_manage() ) {
 		return [];
 	}
-	$menu_items = [
-		[
-			"id"             => "dashboard",
-			"title"          => __( "Dashboard", 'really-simple-ssl' ),
+	$menu_items = array(
+		array(
+			'id'             => 'dashboard',
+			'title'          => __( 'Dashboard', 'really-simple-ssl' ),
 			'default_hidden' => false,
-			'menu_items'     => [],
-		],
-		[
-			"id"             => "settings",
-			"title"          => __( "Settings", 'really-simple-ssl' ),
+			'menu_items'     => array(),
+		),
+		array(
+			'id'             => 'settings',
+			'title'          => __( 'Settings', 'really-simple-ssl' ),
 			'default_hidden' => false,
-			'menu_items'     => [
-				[
+			'menu_items'     => array(
+				array(
 					'id'       => 'general',
 					'group_id' => 'general',
 					'title'    => __( 'General', 'really-simple-ssl' ),
 					'helpLink' => 'https://really-simple-ssl.com/instructions/about-our-general-settings/?mtm_campaign=instructions&mtm_source=free',
-					'groups'   => [
-						[
+					'groups'   => array(
+						array(
 							'id'       => 'general',
 							'title'    => __( 'General', 'really-simple-ssl' ),
 							'helpLink' => 'https://really-simple-ssl.com/instructions/about-our-general-settings/?mtm_campaign=instructions&mtm_source=free',
-						],
-						[
-							'id' => 'support',
-							'title' => __('Premium Support', 'really-simple-ssl'),
-							'intro' => __('The following information is attached when you send this form: license key, scan results, your domain, .htaccess file, debug log and a list of active plugins.', 'really-simple-ssl'),
-							'premium' => true,
-							'premium_text' => __("Get Premium Support with %sReally Simple SSL Pro%s", 'really-simple-ssl'),
-							'helpLink'  => 'https://really-simple-ssl.com/instructions/debugging/?mtm_campaign=instructions&mtm_source=free',
-							'upgrade'     => 'https://really-simple-ssl.com/pro/?mtm_campaign=premiumsupport&mtm_source=free&mtm_content=upgrade',
-							'helpLink_text'  => __('Debugging with Really Simple SSL',"really-simple-ssl"),
-						],
-					],
-				],
-				[
+						),
+						array(
+							'id'            => 'support',
+							'title'         => __( 'Premium Support', 'really-simple-ssl' ),
+							'intro'         => __( 'The following information is attached when you send this form: license key, scan results, your domain, .htaccess file, debug log and a list of active plugins.', 'really-simple-ssl' ),
+							'premium'       => true,
+							'premium_text'  => __( 'Get Premium Support with %sReally Simple SSL Pro%s', 'really-simple-ssl' ),
+							'helpLink'      => 'https://really-simple-ssl.com/instructions/debugging/?mtm_campaign=instructions&mtm_source=free',
+							'upgrade'       => 'https://really-simple-ssl.com/pro/?mtm_campaign=premiumsupport&mtm_source=free&mtm_content=upgrade',
+							'helpLink_text' => __( 'Debugging with Really Simple SSL', 'really-simple-ssl' ),
+						),
+					),
+				),
+				array(
 					'id'       => 'hardening',
 					'title'    => __( 'Hardening', 'really-simple-ssl' ),
 					'featured' => false,
-					'groups'   => [
-						[
+					'groups'   =>  array(
+						array(
 							'id'       => 'hardening_basic',
 							'helpLink' => 'https://really-simple-ssl.com/instructions/about-hardening-features/?mtm_campaign=instructions&mtm_source=free',
 							'title'    => __( 'Hardening', 'really-simple-ssl' ),
-						],
-						[
+						),
+						array(
 							'id'           => 'hardening_extended',
 							'premium'      => true,
 							'helpLink'     => 'https://really-simple-ssl.com/instructions/about-hardening-features#advanced/?mtm_campaign=instructions&mtm_source=free',
 							'upgrade'     => 'https://really-simple-ssl.com/instructions/about-hardening-features#advanced/?mtm_campaign=upgrade&mtm_source=free',
 							'title'        => __( 'Advanced Hardening', 'really-simple-ssl' ),
 							'premium_text' => __( "Get Advanced Hardening with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
-						],
-						[
+						),
+						array(
 							'id'           => 'hardening_xml',
 							'premium'      => true,
 							'helpLink'     => 'https://really-simple-ssl.com/instructions/about-hardening-features#xml-rpc?mtm_campaign=instructions&mtm_source=free',
 							'upgrade'			 => 'https://really-simple-ssl.com/instructions/about-hardening-features#xml-rpc?mtm_campaign=upgrade&mtm_source=free',
 							'title'        => __( 'XML-RPC', 'really-simple-ssl' ),
 							'premium_text' => __( "Get XML-RPC with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
-						],
-					],
-				],
-                [
+						),
+					),
+				),
+                				array(
                     'id'      => 'vulnerabilities',
                     'title'   => __( 'Vulnerabilities', 'really-simple-ssl' ),
                     'featured' => true,//TODO: change this after beta
-                    'groups'  => [
-                        [
+                    'groups'  => array(
+                        array(
                             'id'       => 'vulnerabilities_basic',
                             'helpLink' => 'https://really-simple-ssl.com/instructions/about-vulnerabilities/',
                             'title'    => __( 'Vulnerabilities', 'really-simple-ssl' ),
 														// 'intro'    => __( '', 'really-simple-ssl' ),
-                        ],
-                        [
+                        ),
+                        array(
                             'id'       => 'vulnerabilities_notifications',
                             'helpLink' => 'https://really-simple-ssl.com/instructions/about-vulnerabilities#notifications',
                             'title'    => __( 'Notifications', 'really-simple-ssl' ),
-                        ],
-                        [
+                        ),
+                        array(
                             'id'       => 'vulnerabilities_overview',
                             'helpLink' => 'https://really-simple-ssl.com/instructions/about-vulnerabilities#components',
                             'title'    => __( 'Overview', 'really-simple-ssl' ),
                             'intro'    => __( 'This is the vulnerability overview. Here you will find current known vulnerabilities on your system. You can find more information and helpful, actionable insights for every vulnerability under details.', 'really-simple-ssl' ),
-                        ],
-                        [
+                        ),
+                        array(
                             'id'           => 'vulnerabilities_measures',
                             'premium'      => true,
                             'helpLink'     => 'https://really-simple-ssl.com/instructions/about-vulnerabilities#measures',
                             'title'        => __( 'Measures', 'really-simple-ssl' ),
                             'premium_text' => __( "Get Advanced Vulnerabilities with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
-                        ],
-                    ],
-                ],
-				[
+                        ),
+                    ),
+                ),
+				array(
 					'id'           => 'mixed_content_scan',
 					'title'        => __( 'Mixed Content Scan', 'really-simple-ssl' ),
 					'premium'      => true,
 					'upgrade'     => 'https://really-simple-ssl.com/pro/?mtm_campaign=mixedcontent&mtm_source=free&mtm_content=upgrade',
 					'helpLink'     => 'https://really-simple-ssl.com/pro/?mtm_campaign=mixedcontent&mtm_source=free&mtm_content=instructions',
 					'premium_text' => __( "Get the Mixed Content Scan with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
-					'groups'       => [
-						[
+					'groups'       => array(
+						array(
 							'id'           => 'mixedcontentscan',
 							'title'        => __( 'Mixed Content Scan', 'really-simple-ssl' ),
 							'helpLink'     => 'https://really-simple-ssl.com/pro/?mtm_campaign=mixedcontent&mtm_source=free&mtm_content=upgrade',
 							'upgrade'     => 'https://really-simple-ssl.com/pro/?mtm_campaign=mixedcontent&mtm_source=free&mtm_content=upgrade',
 							'premium'      => true,
 							'premium_text' => __( "Get the Mixed Content Scan with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
-						],
-					],
+						),
+					),
 					//example of submenu
 //						'menu_items' => [
 //							[
@@ -126,13 +126,13 @@ function rsssl_menu() {
 //								'title' => __('Sub mixed content 2', 'really-simple-ssl'),
 //							],
 //						],
-				],
-				[
+				),
+				array(
 					'id'      => 'recommended_security_headers',
 					'title'   => __( 'Recommended Security Headers', 'really-simple-ssl' ),
 					'premium' => true,
-					'groups'  => [
-						[
+					'groups'  => array(
+						array(
 							'id'                   => 'recommended_security_headers',
 							'networkwide_required' => true,
 							'premium'              => true,
@@ -140,15 +140,15 @@ function rsssl_menu() {
 							'upgrade'              => 'https://really-simple-ssl.com/pro/?mtm_campaign=recommendedheaders&mtm_source=free&mtm_content=upgrade',
 							'title'                => __( 'Recommended Security Headers', 'really-simple-ssl' ),
 							'helpLink'             => 'https://really-simple-ssl.com/instructions/about-recommended-security-headers/?mtm_campaign=instructions&mtm_source=free',
-						],
-					],
-				],
-				[
+						),
+					),
+				),
+				array(
 					'id'      => 'hsts',
 					'title'   => 'HTTP Strict Transport Security',
 					'premium' => true,
-					'groups'  => [
-						[
+					'groups'  => array(
+						array(
 							'id'                   => 'hsts',
 							'premium'              => true,
 							'networkwide_required' => true,
@@ -156,15 +156,15 @@ function rsssl_menu() {
 							'upgrade'              => 'https://really-simple-ssl.com/pro/?mtm_campaign=hsts&mtm_source=free&mtm_content=upgrade',
 							'title'                => __( 'HTTP Strict Transport Security', 'really-simple-ssl' ),
 							'helpLink'             => 'https://really-simple-ssl.com/instructions/about-hsts/?mtm_campaign=instructions&mtm_source=free',
-						],
-					],
-				],
-				[
+						),
+					),
+				),
+				array(
 					'id'      => 'permissions_policy',
 					'title'   => 'Permissions Policy',
 					'premium' => true,
-					'groups'  => [
-						[
+					'groups'  => array(
+						array(
 							'id'                   => 'permissions_policy',
 							'premium_text'         => __( "Get the Permissions Policy with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
 							'upgrade'              => 'https://really-simple-ssl.com/pro/?mtm_campaign=permissionspolicy&mtm_source=free&mtm_content=upgrade',
@@ -172,15 +172,15 @@ function rsssl_menu() {
 							'networkwide_required' => true,
 							'premium'              => true,
 							'title'                => 'Permissions Policy',
-						],
-					],
-				],
-				[
+						),
+					),
+				),
+				array(
 					'id'      => 'content_security_policy',
 					'title'   => 'Content Security Policy',
 					'premium' => true,
-					'groups'  => [
-						[
+					'groups'  => array(
+						array(
 							'id'                   => 'upgrade_insecure_requests',
 							'networkwide_required' => true,
 							'premium'              => true,
@@ -188,8 +188,8 @@ function rsssl_menu() {
 							'upgrade'              => 'https://really-simple-ssl.com/pro/?mtm_campaign=upgradeinsecurerequests&mtm_source=free&mtm_content=upgrade',
 							'helpLink'             => 'https://really-simple-ssl.com/instructions/upgrade-insecure-requests/?mtm_campaign=instructions&mtm_source=free',
 							'title'                => 'Upgrade Insecure Requests',
-						],
-						[
+						),
+						array(
 							'id'                   => 'frame_ancestors',
 							'networkwide_required' => true,
 							'premium'              => true,
@@ -197,8 +197,8 @@ function rsssl_menu() {
 							'upgrade'              => 'https://really-simple-ssl.com/pro/?mtm_campaign=frameancestors&mtm_source=free&mtm_content=upgrade',
 							'helpLink'             => 'https://really-simple-ssl.com/instructions/frame-ancestors/?mtm_campaign=instructions&mtm_source=free',
 							'title'                => 'Frame Ancestors',
-						],
-						[
+						),
+						array(
 							'id'                   => 'content_security_policy',
 							'networkwide_required' => true,
 							'helpLink'             => 'https://really-simple-ssl.com/instructions/source-directives/',
@@ -206,10 +206,10 @@ function rsssl_menu() {
 							'premium_text'         => __( "Get Source Directives with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
 							'upgrade'              => 'https://really-simple-ssl.com/pro/?mtm_campaign=csp&mtm_source=free&mtm_content=upgrade',
 							'title'                => 'Source Directives',
-						]
-					],
-				],
-				[
+						),
+					),
+				),
+				array(
 					'id'                   => 'cross_origin_policy',
 					'networkwide_required' => true,
 					'premium'              => true,
@@ -218,10 +218,10 @@ function rsssl_menu() {
 					'title'                => 'Cross Origin Policy',
 					'helpLink'             => 'https://really-simple-ssl.com/instructions/cross-origin-policies/?mtm_campaign=instructions&mtm_source=free',
 
-				],
-			],
-		],
-		[
+				),
+			),
+		),
+		array(
 			"id"             => "letsencrypt",
 			'default_hidden' => true,
 			"title"          => "Let's Encrypt",
@@ -231,53 +231,53 @@ function rsssl_menu() {
 				                    'really-simple-ssl' ), '<a target="_blank" href="https://really-simple-ssl.com/install-ssl-certificate/?mtm_campaign=instructions&mtm_source=free">', '</a>',
 				                    '<a target="_blank" href="https://wordpress.org/support/plugin/really-simple-ssl/">', '</a>' ),
 
-			'menu_items' => [
-				[
+			'menu_items' => array(
+				array(
 					'id'         => 'le-system-status',
 					'title'      => __( 'System Status', 'really-simple-ssl' ),
 					'intro'      => __( 'Letʼs Encrypt is a free, automated and open certificate authority brought to you by the nonprofit Internet Security Research Group (ISRG).',
 						'really-simple-ssl' ),
 					'helpLink'   => 'https://really-simple-ssl.com/about-lets-encrypt/?mtm_campaign=letsencrypt&mtm_source=free',
 					'tests_only' => true,
-				],
-				[
+				),
+				array(
 					'id'    => 'le-general',
 					'title' => __( 'General Settings', 'really-simple-ssl' ),
-				],
-				[
+				),
+				array(
 					'id'    => 'le-hosting',
 					'title' => __( 'Hosting', 'really-simple-ssl' ),
 					'intro' => __( 'Below you will find the instructions for different hosting environments and configurations. If you start the process with the necessary instructions and credentials the next view steps will be done in no time.',
 						'really-simple-ssl' ),
-				],
-				[
+				),
+				array(
 					'id'         => 'le-directories',
 					'title'      => __( 'Directories', 'really-simple-ssl' ),
 					'tests_only' => true,
-				],
-				[
+				),
+				array(
 					'id'         => 'le-dns-verification',
 					'title'      => __( 'DNS verification', 'really-simple-ssl' ),
 					'tests_only' => true,
-				],
-				[
+				),
+				array(
 					'id'         => 'le-generation',
 					'title'      => __( 'Generation', 'really-simple-ssl' ),
 					'tests_only' => true,
-				],
-				[
+				),
+				array(
 					'id'         => 'le-installation',
 					'title'      => __( 'Installation', 'really-simple-ssl' ),
 					'tests_only' => true,
-				],
-				[
+				),
+				array(
 					'id'         => 'le-activate_ssl',
 					'title'      => __( 'Activate', 'really-simple-ssl' ),
 					'tests_only' => true,
-				],
-			],
-		],
-	];
+				),
+			),
+		),
+	);
 
 	return apply_filters( 'rsssl_menu', $menu_items );
 }
