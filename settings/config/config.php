@@ -94,7 +94,7 @@ function rsssl_menu() {
                             'premium'      => true,
                             'helpLink'     => 'https://really-simple-ssl.com/instructions/about-vulnerabilities#measures',
                             'title'        => __( 'Measures', 'really-simple-ssl' ),
-                            'premium_text' => __( "Get Advanced Vulnerabilities with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
+                            'premium_text' => __( "Get Advanced hardening features with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
                         ],
                     ],
                 ],
@@ -115,17 +115,6 @@ function rsssl_menu() {
 							'premium_text' => __( "Get the Mixed Content Scan with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
 						],
 					],
-					//example of submenu
-//						'menu_items' => [
-//							[
-//								'id' => 'sub_mixed_content_1',
-//								'title' => __('Sub mixed content 1', 'really-simple-ssl'),
-//							],
-//							[
-//								'id' => 'sub_mixed_content_2',
-//								'title' => __('Sub mixed content 2', 'really-simple-ssl'),
-//							],
-//						],
 				],
 				[
 					'id'      => 'recommended_security_headers',
@@ -814,6 +803,12 @@ function rsssl_fields( $load_values = true ) {
             'label' => __('Feedback in plugin overview', 'really-simple-ssl'),
             'disabled' => false,
             'default' => false,
+            'react_conditions' => [
+	            'relation' => 'AND',
+	            [
+		            'enable_vulnerability_scanner' => 1,
+	            ]
+            ],
         ],
 		/* Vulnerability advanced Section */
         [
@@ -893,13 +888,15 @@ function rsssl_fields( $load_values = true ) {
             'group_id' => 'vulnerabilities_notifications',
             'type' => 'notificationtester',
             'action' => 'test_vulnerability_notification',
-            'label' => __('Preview', 'really-simple-ssl'),
+            'label' => __('Test notifications', 'really-simple-ssl'),
+            'tooltip' => __('Test notifications can be used to test email delivery and shows how vulnerabilities will be reported on your WordPress installation.', 'really-simple-ssl'),
             'disabled' => false,
             'button_text' => __( "Test notifications", "really-simple-ssl" ),
             'react_conditions' => [
                 'relation' => 'AND',
                 [
                     'enable_vulnerability_scanner' => 1,
+                    'send_notifications_email' => 1,
                 ]
             ],
         ],
@@ -947,15 +944,6 @@ function rsssl_fields( $load_values = true ) {
 
             ]
         ],
-		[
-			'id'       => 'measures_enabled',
-			'menu_id'  => 'vulnerabilities',
-			'group_id' => 'vulnerabilities_measures',
-			'type'     => 'hidden',
-			'label'    => '',
-			'disabled' => false,
-			'default'  => false,
-		],
         [
             'id'               => 'vulnerabilities_measures',
             'menu_id'          => 'vulnerabilities',
@@ -967,6 +955,12 @@ function rsssl_fields( $load_values = true ) {
                 'm' => __('Medium-risk', 'really-simple-ssl'),
                 'h' => __('High-risk', 'really-simple-ssl'),
                 'c' => __('Critical', 'really-simple-ssl'),
+            ],
+            'react_conditions' => [
+	            'relation' => 'AND',
+	            [
+		            'measures_enabled' => true,
+	            ]
             ],
             'disabled'         => false,
             'default'          => false,
@@ -994,6 +988,22 @@ function rsssl_fields( $load_values = true ) {
                 []
             ],
         ],
+		[
+			'id'       => 'measures_enabled',
+			'menu_id'  => 'vulnerabilities',
+			'group_id' => 'vulnerabilities_measures',
+			'type'     => 'checkbox',
+			'label'    => __("I have read and understood the risk to intervene with these measures.","really-simple-ssl"),
+			'comment' => '<a target="_blank">'.__("Read more", "really-simple-ssl") .'</a>',
+			'disabled' => false,
+			'default'  => false,
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'enable_vulnerability_scanner' => true,
+				]
+			],
+		],
         /* section x_xss_protection */
 		[
 			'id'       => 'x_xss_protection',

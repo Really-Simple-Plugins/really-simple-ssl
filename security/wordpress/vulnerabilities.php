@@ -205,8 +205,8 @@ if (!class_exists("rsssl_vulnerabilities")) {
                     'output' => [
                         'true' => [
                             'title' => sprintf(__('You have %s %s %s', 'really-simple-ssl'), $count, $this->risk_naming[$key], $count_label),
-                            'msg' => sprintf(__('You have %s %s %s. Please take appropriate action. For more information about these vulnerabilities, please read more <a href="/wp-admin/options-general.php?page=really-simple-security#settings/vulnerabilities">here</a>', 'really-simple-ssl'), $count, $this->risk_naming[$key],$count_label ),
-                            // 'url' => 'https://really-simple-ssl.com/knowledge-base/vulnerability-scanner/',
+                            'msg' => sprintf(__('You have %s %s %s. Please take appropriate action.','really-simple-ssl'), $count, $this->risk_naming[$key],$count_label ),
+                            'url' => 'https://really-simple-ssl.com/knowledge-base/vulnerability-scanner/',
                             'icon' => ($key === 'c') ? 'warning' : 'open',
                             'type' => 'warning',
                             'dismissible' => true,
@@ -614,16 +614,16 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 if ($this->check_vulnerability($plugin_file)) {
                     switch ($this->check_severity($plugin_file)) {
                         case 'c':
-                            echo sprintf('<a class="btn-vulnerable critical" target="_blank" href="%s">%s</a>', 'https://really-simple-ssl.com/vulnerabilities/'.$this->getIdentifier($plugin_file), ucfirst($this->risk_naming['c']));
+                            echo sprintf('<a class="rsssl-btn-vulnerable rsssl-critical" target="_blank" href="%s">%s</a>', 'https://really-simple-ssl.com/vulnerabilities/'.$this->getIdentifier($plugin_file), ucfirst($this->risk_naming['c']));
                             break;
                         case 'h':
-                            echo sprintf('<a class="btn-vulnerable high" target="_blank" href="%s">%s</a>', 'https://really-simple-ssl.com/vulnerabilities/'.$this->getIdentifier($plugin_file), ucfirst($this->risk_naming['h']));
+                            echo sprintf('<a class="rsssl-btn-vulnerable rsssl-high" target="_blank" href="%s">%s</a>', 'https://really-simple-ssl.com/vulnerabilities/'.$this->getIdentifier($plugin_file), ucfirst($this->risk_naming['h']));
                             break;
                         case 'm':
-                            echo sprintf('<a class="btn-vulnerable medium-risk" target="_blank" href="%s">%s</a>', 'https://really-simple-ssl.com/vulnerabilities/'.$this->getIdentifier($plugin_file), ucfirst($this->risk_naming['m']));
+                            echo sprintf('<a class="rsssl-btn-vulnerable rsssl-medium" target="_blank" href="%s">%s</a>', 'https://really-simple-ssl.com/vulnerabilities/'.$this->getIdentifier($plugin_file), ucfirst($this->risk_naming['h']));
                             break;
                         default:
-                            echo sprintf('<a class="btn-vulnerable low" target="_blank" href="%s">%s</a>', 'https://really-simple-ssl.com/vulnerabilities/'.$this->getIdentifier($plugin_file), ucfirst($this->risk_naming['l']));
+                            echo sprintf('<a class="rsssl-btn-vulnerable rsssl-low" target="_blank" href="%s">%s</a>', 'https://really-simple-ssl.com/vulnerabilities/'.$this->getIdentifier($plugin_file), ucfirst($this->risk_naming['l']));
                             break;
                     }
                 }
@@ -644,8 +644,8 @@ if (!class_exists("rsssl_vulnerabilities")) {
             }
             //only on settings page
             $rtl = is_rtl() ? 'rtl/' : '';
-            $url = trailingslashit(rsssl_url) . "assets/css/{$rtl}plugin.min.css";
-            $path = trailingslashit(rsssl_path) . "assets/css/{$rtl}plugin.min.css";
+            $url = trailingslashit(rsssl_url) . "assets/css/{$rtl}rsssl-plugin.min.css";
+            $path = trailingslashit(rsssl_path) . "assets/css/{$rtl}rsssl-plugin.min.css";
             if (file_exists($path)) {
                 wp_enqueue_style('rsssl-plugin', $url, array(), rsssl_version);
             }

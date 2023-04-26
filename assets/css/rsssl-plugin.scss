@@ -3,7 +3,7 @@
  */
 @import "variables.scss";
 
-.btn-vulnerable {
+.rsssl-btn-vulnerable {
   display: inline-block;
   text-decoration: none;
   font-size: var(--rsp-fs-100);
@@ -12,33 +12,33 @@
   margin: 0;
   padding: 4px 8px;
   min-width: 100px;
-    text-align: center;
+  text-align: center;
   cursor: pointer;
   font-weight: 600;
   -webkit-appearance: none;
   border-radius: var(--rsp-border-radius-xs);
   white-space: nowrap;
   box-sizing: border-box;
-  background-color: var(--rsp-yellow-faded);
+  background-color: var(--rsp-yellow);
   color: var(--rsp-black);
   border-color: var(--rsp-yellow);
   &:hover {
     text-decoration: underline;
   }
 
-  &.critical {
-    background-color: var(--rsp-red-faded);
+  &.rsssl-critical {
+    background-color: var(--rsp-red);
     color: var(--rsp-white);
     border-color: var(--rsp-red);
   }
 
-  &.high {
-    background-color: var(--rsp-red-faded);
-    color: var(--rsp-black);
+  &.rsssl-high {
+    background-color: var(--rsp-red);
+    color: var(--rsp-white);
     border-color: var(--rsp-red);
   }
 
-  &.medium-risk {
+  &.rsssl-medium {
     border-color: var(--rsp-yellow);
     color: var(--rsp-black);
     background-color: var(--rsp-yellow);

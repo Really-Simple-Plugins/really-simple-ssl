@@ -432,7 +432,7 @@ const SslLabs = (props) => {
                         </p>
                         <p className="rsssl-ssl-labs-list-item-text">{startTimeNice}</p>
                     </div>
-                    { !hasErrors && startTime && <div className="rsssl-ssl-labs-list-item">
+                    { <div className="rsssl-ssl-labs-list-item">
                         <Icon name="external-link" color="black"/>
                         <a href={url} target="_blank">{__('View detailed report on Qualys SSL Labs', 'really-simple-ssl')}</a>
                     </div> }

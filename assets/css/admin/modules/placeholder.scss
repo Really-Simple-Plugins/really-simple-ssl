@@ -12,6 +12,15 @@ $animation-duration: 1.6s;
   background-image: linear-gradient(90deg, $base-color 0px, $shine-color 40px, $base-color 80px);
   background-size: 600px;
 }
+.rsssl-datatable-placeholder {
+  div {
+    background-color:var(--rsp-grey-300);
+    height:25px;
+    &:nth-child(even) {
+        background-color:#fff;
+    }
+  }
+}
 
 .rsssl-rest-error-message {
   margin:30px;

@@ -1,7 +1,7 @@
 import {__} from '@wordpress/i18n';
 import useRiskData from "./RiskConfiguration/RiskData";
 import React, {useEffect, useState} from 'react';
-import DataTable from "react-data-table-component";
+import DataTable, {createTheme} from "react-data-table-component";
 import useFields from "./FieldsData";
 import VulnerabilitiesIntro from "./VulnerabilitiesIntro";
 
@@ -13,7 +13,7 @@ const VulnerabilitiesOverview = (props) => {
         fetchVulnerabilities,
         setDataLoaded
     } = useRiskData();
-    const {fields, getField, fieldAlreadyEnabled, getFieldValue} = useFields();
+    const {fields, fieldAlreadyEnabled, getFieldValue} = useFields();
     const [showIntro, setShowIntro] = useState(false);
 
     //we create the columns
@@ -21,7 +21,27 @@ const VulnerabilitiesOverview = (props) => {
     //getting the fields from the props
     let field = props.field;
     let enabled = false;
+    const customStyles = {
+        headCells: {
+            style: {
+                paddingLeft: '0', // override the cell padding for head cells
+                paddingRight: '0',
+            },
+        },
+        cells: {
+            style: {
+                paddingLeft: '0', // override the cell padding for data cells
+                paddingRight: '0',
+            },
+        },
+    };
 
+
+    createTheme('really-simple-plugins', {
+        divider: {
+            default: 'transparent',
+        },
+    }, 'light');
     function buildColumn(column) {
         return {
             name: column.name,
@@ -32,6 +52,7 @@ const VulnerabilitiesOverview = (props) => {
         };
     }
 
+    let dummyData = [['','','','',''],['','','','',''],['','','','','']];
     field.columns.forEach(function (item, i) {
         let newItem = buildColumn(item)
         columns.push(newItem);
@@ -42,18 +63,13 @@ const VulnerabilitiesOverview = (props) => {
         if ( fieldAlreadyEnabled('enable_vulnerability_scanner') ) {
             if (getFieldValue('vulnerabilities_intro_shown')!=1 ) {
                 if (!introCompleted) {
-                    console.log("show intro")
                     setShowIntro(true);
-                } else {
-                    console.log("do not show intro")
                 }
             } else {
                 if ( !dataLoaded ) {
                     fetchVulnerabilities();
                 }
             }
-        } else {
-            console.log("not already enabled");
         }
 
         if ( getFieldValue('enable_vulnerability_scanner')==1 && !fieldAlreadyEnabled('enable_vulnerability_scanner') ) {
@@ -73,12 +89,13 @@ const VulnerabilitiesOverview = (props) => {
             <>
                 <DataTable
                     columns={columns}
-                    //  data={dummyData}
+                    data={dummyData}
                     dense
                     pagination
                     noDataComponent={__("No results", "really-simple-ssl")}
                     persistTableHead
-                    //     customStyles={customStyles}
+                    theme="really-simple-plugins"
+                    customStyles={customStyles}
                 >
                 </DataTable>
                 <div className="rsssl-locked">
@@ -94,17 +111,17 @@ const VulnerabilitiesOverview = (props) => {
     //we need to add a key to the data called action wich produces the action buttons
     return (
         <>
-            {data.length>0 &&
-                <DataTable
-                    columns={columns}
-                    data={data}
-                    dense
-                    pagination
-                    noDataComponent={__("No results", "really-simple-ssl")}
-                    persistTableHead
-                >
-                </DataTable>
-            }
+            <DataTable
+                columns={columns}
+                data={data}
+                dense
+                pagination
+                persistTableHead
+                noDataComponent={__("No vulnerabilities found", "really-simple-ssl")}
+                theme="really-simple-plugins"
+                customStyles={customStyles}
+            >
+            </DataTable>
 
             {showIntro && <>
                 <VulnerabilitiesIntro/>

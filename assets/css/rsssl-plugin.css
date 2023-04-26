@@ -78,7 +78,7 @@
     }
 }
 
-.btn-vulnerable {
+.rsssl-btn-vulnerable {
     display: inline-block;
     text-decoration: none;
     font-size: var(--rsp-fs-100);
@@ -94,28 +94,28 @@
     border-radius: var(--rsp-border-radius-xs);
     white-space: nowrap;
     box-sizing: border-box;
-    background-color: var(--rsp-yellow-faded);
+    background-color: var(--rsp-yellow);
     color: var(--rsp-black);
     border-color: var(--rsp-yellow);
 }
 
-.btn-vulnerable:hover {
+.rsssl-btn-vulnerable:hover {
     text-decoration: underline;
 }
 
-.btn-vulnerable.critical {
-    background-color: var(--rsp-red-faded);
+.rsssl-btn-vulnerable.rsssl-critical {
+    background-color: var(--rsp-red);
     color: var(--rsp-white);
     border-color: var(--rsp-red);
 }
 
-.btn-vulnerable.high {
-    background-color: var(--rsp-red-faded);
-    color: var(--rsp-black);
+.rsssl-btn-vulnerable.rsssl-high {
+    background-color: var(--rsp-red);
+    color: var(--rsp-white);
     border-color: var(--rsp-red);
 }
 
-.btn-vulnerable.medium-risk {
+.rsssl-btn-vulnerable.rsssl-medium {
     border-color: var(--rsp-yellow);
     color: var(--rsp-black);
     background-color: var(--rsp-yellow);

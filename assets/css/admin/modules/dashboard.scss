@@ -23,6 +23,11 @@
       }
     }
   }
+  .rsssl-wpvul {
+    .rsssl-icon {
+      margin-top:5px;
+    }
+  }
   .rsssl-ssl-labs, .rsssl-hardening {
     &-select {
       background: var(--rsp-grey-200);
@@ -56,6 +61,7 @@
         justify-items: center;
         flex-wrap: wrap;
         background: var(--rsp-white);
+        min-height: 118px;
 
         &.active {
           box-shadow: inset 0 0 3px 2px var(--rsp-green-faded);

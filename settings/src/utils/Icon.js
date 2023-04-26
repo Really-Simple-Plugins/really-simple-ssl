@@ -13,6 +13,7 @@ const Icon = (props) => {
         'green': 'var(--rsp-green)',
         'yellow': 'var(--rsp-yellow)',
         'orange': 'var(--rsp-yellow)',
+        'red-faded': 'var(--rsp-red-faded)',
         'red': 'var(--rsp-red)',
         'grey': 'var(--rsp-grey-400)',
         'red-warning': 'var(--rsp-red-faded)',

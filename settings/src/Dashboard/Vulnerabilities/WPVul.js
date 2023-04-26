@@ -107,7 +107,8 @@ const WPVul = () => {
             <>
                 <div className="rsssl-hardening-list-item">
                     <Icon name="info" color='yellow'/>
-                    <p className={'rsssl-hardening-list-item-text'}> {__("Enable vulnerability detection for more information", "really-simple-ssl")} </p>
+                    <p className={'rsssl-hardening-list-item-text'}> {__("Enable vulnerability detection", "really-simple-ssl")}</p>
+                    <a href="#settings/vulnerabilities">{__("Enable", "really-simple-ssl")}</a>
                 </div>
             </>
         )
@@ -267,6 +268,7 @@ const WPVul = () => {
                             <p className={"rsssl-hardening-list-item-text"}>
                                 {__("You have %s open %d", "really-simple-ssl").replace("%s", notEnabledHardeningFields).replace('%d',hardeningWord)}
                             </p>
+                            <a href="#settings/hardening">{__("Settings", "really-simple-ssl")}</a>
                     </div>
                 </>
             )
@@ -286,6 +288,7 @@ const WPVul = () => {
         <>
             {dataLoaded ?
             <div className={'rsssl-hardening'}>
+                <div className="rsssl-gridblock-progress" ></div>
                 <div className={"rsssl-hardening-select "  + vulClass}>
                     <div className="rsssl-hardening-select-item">
                         {vulEnabled ? <Icon color={iconVulColor} size={23} name="radar-duotone"></Icon> : <Icon size={23}  color={iconVulEnabledColor} name="satellite-dish-duotone"></Icon>}
@@ -306,6 +309,7 @@ const WPVul = () => {
                 </div>
             </div>
                 : <div className="rsssl-hardening">
+                    <div className="rsssl-gridblock-progress" ></div>
                     <div className="rsssl-hardening-select">
                         <div className="rsssl-hardening-select-item">
                             <Icon size={23} color={'grey'} name="radar-duotone"></Icon>

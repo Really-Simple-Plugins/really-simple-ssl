@@ -4,10 +4,14 @@ import * as rsssl_api from "../../utils/api";
 import {__} from "@wordpress/i18n";
 import {produce} from "immer";
 import React from "react";
-
 const UseRiskData = create((set, get) => ({
-    riskData: [],
+    dummyRiskData: [
+        {id:'force_update',name:'Force Update',value:'l',description:__('Force update the plugin or theme','really-simple-ssl')},
+        {id:'quarantine',name:'Quarantine',value:'m',description:__('Isolates the plugin or theme if no update can be performed','really-simple-ssl')},
+    ],
+    riskData:[],
     vulnerabilities: [],
+    processing:false,
     dataLoaded: false,
     // Stuff we need for the WPVulData component
     updates: 0, //for letting the component know if there are updates available
@@ -66,13 +70,12 @@ const UseRiskData = create((set, get) => ({
                     item.vulnerability_action = <div className="rsssl-vulnerability-action">
                         <a className="button" href={"https://really-simple-ssl.com/vulnerabilities/" + item.rss_identifier}
                            target={"_blank"}>{__("Details", "really-simple-ssl")}</a>
-                        <a href={rsssl_settings.plugins_url + "?plugin_status=upgrade"}
+                        <a disabled={!item.update_available} href={rsssl_settings.plugins_url + "?plugin_status=upgrade"}
                            className="button button-primary"
-                        >{__("View", "really-simple-ssl")}</a>
+                        >{__("Update", "really-simple-ssl")}</a>
                     </div>
                 });
             }
-            console.log('fetch at: ', fetched.data.lastChecked);
             let riskData = fetched.data.riskData;
             if (!Array.isArray(riskData)) {riskData = []}
             set(
@@ -114,11 +117,11 @@ const UseRiskData = create((set, get) => ({
 
     vulnerabilityScore: () => {
         let score = 0;
-        let vulnerabiltiesList = get().vulList;
+        let vulnerabilitiesList = get().vulList;
 
-        Object.keys(vulnerabiltiesList).forEach(function (key) {
+        Object.keys(vulnerabilitiesList).forEach(function (key) {
             //if there are vulnerabilities with critical severity, score is 5
-            if (vulnerabiltiesList[key].risk_level === 'c') {
+            if (vulnerabilitiesList[key].risk_level === 'c') {
                 score = 5;
             } else if (score < 1) {
                 score = 1;
@@ -129,9 +132,9 @@ const UseRiskData = create((set, get) => ({
 
     hardeningScore: () => {
         let score = 0;
-        let vulnerabiltiesList = get().vulnerabilities;
-        for (let i = 0; i < vulnerabiltiesList.length; i++) {
-            score += vulnerabiltiesList[i].hardening_score;
+        let vulnerabilitiesList = get().vulnerabilities;
+        for (let i = 0; i < vulnerabilitiesList.length; i++) {
+            score += vulnerabilitiesList[i].hardening_score;
         }
         return score;
     },

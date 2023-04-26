@@ -9,10 +9,7 @@ import {__} from "@wordpress/i18n";
 const ProgressBlock = (props) => {
     const {percentageCompleted, progressText, filter, notices, progressLoaded, getProgressData, error} = useProgress();
   useEffect( () => {
-        const run = async () => {
-            await getProgressData();
-        }
-        run();
+      getProgressData();
     }, [] );
 
     const getStyles = () => {
@@ -117,7 +114,6 @@ export const AnimatedPercentage = ({ percentageCompleted }) => {
     };
 
     const animationInterval = setInterval(animatePercentage, 16);
-
     return () => clearInterval(animationInterval);
   }, [percentageCompleted]);
 

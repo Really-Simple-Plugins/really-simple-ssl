@@ -7,16 +7,25 @@ const NotificationTester = (props) => {
 
     const {field} = props;
     const [disabled, setDisabled] = useState(true);
-    const {addHelpNotice, fields, fieldAlreadyEnabled} = useFields();
+    const [mailNotificationsEnabled, setMailNotificationsEnabled] = useState(true);
+    const [vulnerabilitiesEnabled, setVulnerabilitiesEnabled] = useState(false);
+    const [vulnerabilitiesSaved, setVulnerabilitiesSaved] = useState(false);
+    const {addHelpNotice, fields, getFieldValue, fieldAlreadyEnabled} = useFields();
     useEffect ( () => {
-        if (fieldAlreadyEnabled('enable_vulnerability_scanner')) {
-            setDisabled(false);
-        }
+        let mailEnabled = getFieldValue('send_notifications_email') == 1;
+        let vulnerabilities = fieldAlreadyEnabled('enable_vulnerability_scanner');
+        setMailNotificationsEnabled(mailEnabled);
+        let enableButton = mailEnabled && vulnerabilities;
+        setDisabled(!enableButton);
+        setMailNotificationsEnabled(mailEnabled);
+        setVulnerabilitiesSaved(vulnerabilities);
+        setVulnerabilitiesEnabled(getFieldValue('enable_vulnerability_scanner') == 1)
     },[fields])
+
     const doTestNotification = async () => {
         //Test the notifications
         setDisabled(true);
-        rsssl_api.doAction( 'vulnerabilities_test_notification' ).then( (response) => {
+        rsssl_api.doAction( 'vulnerabilities_test_notification' ).then( () => {
             setDisabled(false);
             addHelpNotice(
                 field.id,
@@ -28,9 +37,17 @@ const NotificationTester = (props) => {
         });
 
     }
-
+    let fieldCopy = {...field};
+    if (!mailNotificationsEnabled) {
+        fieldCopy.tooltip = __('You have not enabled the email notifications in the general settings.','really-simple-ssl');
+        fieldCopy.warning = true;
+    } else if (vulnerabilitiesEnabled && !vulnerabilitiesSaved) {
+        fieldCopy.tooltip = __('The notification test only works if you save the setting first.','really-simple-ssl');
+        fieldCopy.warning = true;
+    }
     return (
         <>
+            <label>{props.labelWrap(fieldCopy)}</label>
             <button onClick={ () => doTestNotification()} disabled={ disabled } className="button button-default">{field.button_text}</button>
         </>
     )
