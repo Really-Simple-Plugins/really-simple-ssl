@@ -112,7 +112,7 @@ class rsssl_onboarding {
 			case 'activate_setting':
 				$recommended_ids = $this->get_hardening_fields();
 				foreach ($recommended_ids as $h ){
-					rsssl_update_option($h, true);
+					rsssl_update_option($h, 1);
 				}
 				$response = [
 					'next_action' => 'none',

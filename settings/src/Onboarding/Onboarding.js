@@ -7,9 +7,13 @@ import Placeholder from '../Placeholder/Placeholder';
 import useMenu from "../Menu/MenuData";
 import useFields from "../Settings/FieldsData";
 import useOnboardingData from "./OnboardingData";
+import useRiskData from "../Settings/RiskConfiguration/RiskData";
 
 const Onboarding = (props) => {
     const { fetchFieldsData, updateField, updateFieldsData, getFieldValue} = useFields();
+    const {
+        fetchVulnerabilities
+    } = useRiskData();
     const {
         dismissModal,
         actionHandler,
@@ -86,8 +90,16 @@ const Onboarding = (props) => {
 
     //ensure all fields are updated, and progress is retrieved again
     useEffect( () => {
-        if ( dataLoaded && currentStep.action === 'activate_setting' ){
-            fetchFieldsData('general');
+        //in currentStep.items, find item with id 'hardening'
+        //if it has status 'completed' fetchFieldsData again.
+        if ( currentStep && currentStep.items ) {
+            let hardeningItem = currentStep.items.find( (item) => {
+                return item.id==='hardening';
+            })
+            if ( hardeningItem && hardeningItem.status==='success' ) {
+                fetchFieldsData('hardening');
+                fetchVulnerabilities();
+            }
         }
     }, [currentStep])
 

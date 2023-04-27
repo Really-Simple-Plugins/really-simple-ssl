@@ -175,26 +175,28 @@ if (!class_exists("rsssl_vulnerabilities")) {
         {
             $this->cache_installed_plugins();
             $risks = $this->count_risk_levels();
+	        $level_to_show_on_dashboard = rsssl_get_option('vulnerability_notification_dashboard');
+	        $level_to_show_sitewide = rsssl_get_option('vulnerability_notification_sitewide');
             foreach ($this->risk_levels as $key => $value) {
                 if (!isset($risks[$key])) {
                     continue;
                 }
                 //this is shown bases on the config of vulnerability_notification_dashboard
-                $siteWide = true;
-                if (rsssl_get_option('vulnerability_notification_dashboard') && rsssl_get_option('vulnerability_notification_dashboard') !== '*') {
-                    if ($value < $this->risk_levels[rsssl_get_option('vulnerability_notification_dashboard')]) {
-                        //we skip this one.
-                        continue;
+                $siteWide = false;
+                $dashboardNotce = false;
+                if ( $level_to_show_on_dashboard && $level_to_show_on_dashboard !== '*') {
+                    if ($value >= $this->risk_levels[$level_to_show_on_dashboard]) {
+	                    $dashboardNotce = true;
                     }
                 }
-                if (rsssl_get_option('vulnerability_notification_dashboard') && rsssl_get_option('vulnerability_notification_dashboard') !== '*') {
-                    if ($value < $this->risk_levels[rsssl_get_option('vulnerability_notification_dashboard')]) {
-                        //we skip this one.
-                        $siteWide = false;
+                if ($level_to_show_sitewide && $level_to_show_sitewide !== '*') {
+                    if ($value >= $this->risk_levels[$level_to_show_sitewide]) {
+                        $siteWide = true;
                     }
                 }
-
-                // AertHulsebos - Open
+                if ( !$dashboardNotce && !$siteWide ) {
+                    continue;
+                }
 
                 $count = $risks[$key];
                 $count_label = _n('vulnerability', 'vulnerabilities', $count, 'really-simple-ssl');
@@ -1354,24 +1356,21 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 return;
             }
 
-            if (!rsssl_get_option('vulnerability_notification_email_admin')) {
+            $level_for_email = rsssl_get_option('vulnerability_notification_email_admin');
+            if (!$level_for_email || $level_for_email === '*') {
                 return;
             }
-
 
             //now based on the risk level we send a different email
             $risk_levels = $this->count_risk_levels();
             $total = 0;
 
             $blocks = [];
-            foreach ($risk_levels as $key => $value) {
-                if(rsssl_get_option('vulnerability_notification_email_admin') !== '*') {
-                    if (!($this->risk_levels[$key] < $this->risk_levels[rsssl_get_option('vulnerability_notification_email_admin')])) {
-                        $blocks[] = $this->createBlock($key, $value);
-                        $total = $total + $value;
-                    }
+            foreach ($risk_levels as $risk_level => $count) {
+                if ( $this->risk_levels[$risk_level] >= $this->risk_levels[$level_for_email] ) {
+                    $blocks[] = $this->createBlock($risk_level, $count);
+                    $total    += $count;
                 }
-
             }
             //date format is named month day year
             $date = date('F j, Y');

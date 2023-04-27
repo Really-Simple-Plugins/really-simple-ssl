@@ -6,7 +6,6 @@ import {getRelativeTime} from '../../utils/formatting';
 
 const WPVulFooter = (props) => {
     const {lastChecked} = useRiskData();
-    console.log(lastChecked);
     const {fields, getFieldValue} = useFields();
     const [vulEnabled, setVulEnabled] = useState(false);
     useEffect(() => {
