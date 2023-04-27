@@ -63,7 +63,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 'c' => __('critical', 'really-simple-ssl'),
             ];
 	        add_filter('rsssl_vulnerability_data', array($this, 'get_stats'));
-	        add_action( 'rsssl_after_save_field', array( $this, 'after_save_field' ), 10, 4 );
         }
 
         public static function riskNaming($risk = null)
@@ -74,11 +73,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
             }
             return $instance->risk_naming[$risk];
         }
-	    public function after_save_field( $field_id, $field_value, $prev_value, $type ) {;
-		    if ( $field_id==='enable_vulnerability_scanner' && $field_value && rsssl_get_option('vulnerabilities_intro_shown') ){
-			    $this->check_files();
-		    }
-	    }
 
         /**
          * Instantiates the class
@@ -163,12 +157,18 @@ if (!class_exists("rsssl_vulnerabilities")) {
             $instance = self::instance();
 
             //we check if the schedule already exists, if not, we add it.
-            if (!wp_next_scheduled('rsssl_vulnerabilities_cron')) {
-                wp_schedule_event(time(), $instance->schedule, 'rsssl_vulnerabilities_cron');
+            if ( !wp_next_scheduled('rsssl_vulnerabilities_cron') ) {
+                wp_schedule_event( time(), $instance->schedule, 'rsssl_vulnerabilities_cron');
                 //now we add the action to the cron.
                 add_action('rsssl_vulnerabilities_cron', array($instance, 'run'));
             }
-            return $instance->assemble_first_run();
+	        $instance->check_files();
+	        $instance->cache_installed_plugins();
+
+	        return [
+		        'request_success' => true,
+		        'data' =>   $instance->workable_plugins
+	        ];
         }
 
         public function show_help_notices($notices)
@@ -1417,17 +1417,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 'url' => 'https://really-simple-ssl.com/vulnerabilities/',
             ];
 
-        }
-
-        private function assemble_first_run()
-        {
-	        $this->check_files();
-            $this->cache_installed_plugins();
-
-            return [
-                    'request_success' => true,
-                'data' =>   $this->workable_plugins
-            ];
         }
 
     }

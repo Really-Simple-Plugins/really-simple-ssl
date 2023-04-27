@@ -4,14 +4,17 @@ import React, {useEffect, useState} from 'react';
 import DataTable, {createTheme} from "react-data-table-component";
 import useFields from "../FieldsData";
 import VulnerabilitiesIntro from "./VulnerabilitiesIntro";
+import useProgress from "../../Dashboard/Progress/ProgressData";
 
 const VulnerabilitiesOverview = (props) => {
+    const {getProgressData} = useProgress();
     const {
         dataLoaded,
         vulList,
         introCompleted,
         fetchVulnerabilities,
-        setDataLoaded
+        setDataLoaded,
+        fetchFirstRun
     } = useRiskData();
     const {fields, fieldAlreadyEnabled, getFieldValue} = useFields();
     const [showIntro, setShowIntro] = useState(false);
@@ -60,10 +63,13 @@ const VulnerabilitiesOverview = (props) => {
 
     //get data if field was already enabled, so not changed right now.
     useEffect(() => {
-        if ( fieldAlreadyEnabled('enable_vulnerability_scanner') ) {
+        if ( fieldAlreadyEnabled('enable_vulnerability_scanner' ) ) {
             if (getFieldValue('vulnerabilities_intro_shown')!=1 ) {
                 if (!introCompleted) {
                     setShowIntro(true);
+                } else {
+                    //if just enabled, but intro already shown, just get the first run data.
+                    initialize();
                 }
             } else {
                 if ( !dataLoaded ) {
@@ -76,6 +82,12 @@ const VulnerabilitiesOverview = (props) => {
             setDataLoaded(false);
         }
     }, [fields]);
+
+    const initialize = async () => {
+        await fetchFirstRun();
+        await fetchVulnerabilities();
+        await getProgressData();
+    }
 
     fields.forEach(function (item, i) {
         if (item.id === 'enable_vulnerability_scanner') {

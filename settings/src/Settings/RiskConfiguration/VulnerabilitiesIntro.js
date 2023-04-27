@@ -35,29 +35,25 @@ const VulnerabilitiesIntro = (props) => {
                             title={__("Preparing vulnerability detection", "really-simple-ssl")}
                             name={"first_runner"}
                             loading={true}
-                            time={2000}
-                            delay={1000}
+                            currentStep={1}
                         />
                         <Runner
                             title={__("Collecting plugin, theme and core data", "really-simple-ssl")}
                             name={"second_runner"}
                             loading={true}
-                            time={3000}
-                            delay={2000}
+                            currentStep={2}
                         />
                         <Runner
                             title={__("Scanning your WordPress configuration", "really-simple-ssl")}
                             name={"third_runner"}
                             loading={true}
-                            time={4000}
-                            delay={3000}
+                            currentStep={3}
                         />
                         <Runner
                             title={__("Reporting enabled", "really-simple-ssl")}
                             name={"fourth_runner"}
                             loading={true}
-                            time={5000}
-                            delay={4000}
+                            currentStep={4}
                         />
                     </div>
                     <div className={'rsssl-modal-footer'}>

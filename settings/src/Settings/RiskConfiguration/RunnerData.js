@@ -9,6 +9,8 @@ const useRunnerData = create((set, get) => ({
     setTime: (time) => set({time: time}),
     delay: 0,
     setDelay: (delay) => set({delay: delay}),
+    step:0,
+    setStep: (step) => set({step: step}),
 }));
 
 export default useRunnerData;
