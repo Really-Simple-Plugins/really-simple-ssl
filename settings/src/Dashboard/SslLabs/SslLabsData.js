@@ -55,7 +55,7 @@ const useSslLabs = create(( set, get ) => ({
     },
     runSslTest: () => {
         get().getSslLabsData().then((sslData)=>{
-            if ( sslData && sslData.status === 'ERROR' ){
+            if ( sslData.status && sslData.status === 'ERROR' ){
                 sslData = get().processSslData(sslData);
                 set({
                     sslData: sslData,
