@@ -26,17 +26,23 @@ const Page = (props) => {
 
     useEffect( () => {
         if (selectedMainMenuItem !== 'dashboard' ){
-            import ("./Settings/Settings").then(({ default: Settings }) => {
-                setSettings(() => Settings);
-            });
-            import("./Settings/Notices").then(({ default: Notices }) => {
-                setNotices(() => Notices);
-            });
-            import ("./Menu/Menu").then(({ default: Menu }) => {
-                setMenu(() => Menu);
-            });
+            if (!Settings) {
+                import ("./Settings/Settings").then(({default: Settings}) => {
+                    setSettings(() => Settings);
+                });
+            }
+            if (!Notices) {
+                import("./Settings/Notices").then(({default: Notices}) => {
+                    setNotices(() => Notices);
+                });
+            }
+            if (!Menu) {
+                import ("./Menu/Menu").then(({default: Menu}) => {
+                    setMenu(() => Menu);
+                });
+            }
         }
-        if (selectedMainMenuItem === 'dashboard' ){
+        if (selectedMainMenuItem === 'dashboard' && !DashboardPage ){
             import ( "./Dashboard/DashboardPage").then(({ default: DashboardPage }) => {
                 setDashboardPage(() => DashboardPage);
             });
@@ -46,7 +52,7 @@ const Page = (props) => {
 
     const [OnboardingModal, setOnboardingModal] = useState(null);
     useEffect( () => {
-        if (showOnboardingModal ){
+        if ( showOnboardingModal && !OnboardingModal ){
             import ("./Onboarding/OnboardingModal").then(({ default: OnboardingModal }) => {
                 setOnboardingModal(() => OnboardingModal);
             });
@@ -56,7 +62,7 @@ const Page = (props) => {
 
     const [Modal, setModal] = useState(null);
     useEffect( () => {
-        if ( showModal ){
+        if ( showModal && !Modal ){
             import ( "./Modal/Modal").then(({ default: Modal }) => {
                 setModal(() => Modal);
             });
