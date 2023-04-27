@@ -3,12 +3,14 @@ import {useEffect, useState} from "react";
 import * as rsssl_api from "../../utils/api";
 import useRiskData from "./RiskData";
 import useFields from "../FieldsData";
-
+import useProgress from "../../Dashboard/Progress/ProgressData";
 
 const Runner = (props) => {
     //let us make a state for the loading
     const [loadingState, setLoadingState] = useState(props.loading);
     const {setChangedField, updateField, saveFields} = useFields();
+    const {getProgressData} = useProgress();
+
     const {
         fetchVulnerabilities,
         setIntroCompleted
@@ -32,10 +34,34 @@ const Runner = (props) => {
             }
             firstRunner();
         }, []);
+    } else if(props.name === "second_runner") {
+        useEffect(() => {
+            const secondRunner = async () => {
+                await fetchVulnerabilities();
+                setTimeout(function () {
+                    //we set the loading state to true
+                    setLoadingState(false);
+                }, props.time);
+            }
+            secondRunner();
+        }, []);
+    } else if(props.name === "third_runner") {
+        useEffect(() => {
+            const thirdRunner = async () => {
+                //after the first run is complete, and vulnerabilities data is loaded,
+                //we reload the progress now to ensure we have all the vulnerabilities loaded on the dashboard.
+                await getProgressData();
+                setTimeout(function () {
+                    //we set the loading state to true
+                    setLoadingState(false);
+                }, props.time);
+            }
+            thirdRunner();
+        }, []);
     } else if(props.name === "fourth_runner") {
         useEffect(() => {
             const fourthRunner = async () => {
-                await fetchVulnerabilities();
+                //last run, store as completed
                 setIntroCompleted(true);
                 setChangedField('vulnerabilities_intro_shown', true);
                 updateField('vulnerabilities_intro_shown', true);

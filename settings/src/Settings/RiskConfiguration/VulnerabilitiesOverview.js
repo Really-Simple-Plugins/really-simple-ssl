@@ -1,8 +1,8 @@
 import {__} from '@wordpress/i18n';
-import useRiskData from "./RiskConfiguration/RiskData";
+import useRiskData from "./RiskData";
 import React, {useEffect, useState} from 'react';
 import DataTable, {createTheme} from "react-data-table-component";
-import useFields from "./FieldsData";
+import useFields from "../FieldsData";
 import VulnerabilitiesIntro from "./VulnerabilitiesIntro";
 
 const VulnerabilitiesOverview = (props) => {

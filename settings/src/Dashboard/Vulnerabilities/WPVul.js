@@ -26,6 +26,7 @@ const WPVul = () => {
             setVulEnabled(true);
         }
     }, [fields]);
+
     useEffect(() => {
         if (!dataLoaded) {
             fetchVulnerabilities();

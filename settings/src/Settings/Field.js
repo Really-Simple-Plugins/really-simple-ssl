@@ -18,7 +18,7 @@ import CheckboxControl from "./CheckboxControl";
 import Support from "./Support";
 import LearningMode from "./LearningMode/LearningMode";
 import RiskComponent from "./RiskConfiguration/RiskComponent";
-import VulnerabilitiesOverview from "./vulnerabilitiesOverview";
+import VulnerabilitiesOverview from "./RiskConfiguration/vulnerabilitiesOverview";
 import Button from "./Button";
 import Icon from "../utils/Icon";
 import { useEffect} from "@wordpress/element";

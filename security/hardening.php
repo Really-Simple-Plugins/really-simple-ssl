@@ -70,7 +70,6 @@ class rsssl_hardening {
 	public function getAllUpdatesCount(): int
 	{
 		$updates = wp_get_update_data();
-//		x_log($updates);
 		//we only want core, plugins and themes
 		$updates = array_slice($updates, 0, 3);
 
