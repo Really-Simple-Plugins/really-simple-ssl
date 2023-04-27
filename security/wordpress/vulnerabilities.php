@@ -67,7 +67,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	        //now we add the action to the cron.
 //	        add_filter('rsssl_daily_cron', array($this, 'run_cron'));
 
-	        add_action('rsssl_vulnerabilities_cron', array($this, 'run_cron'));
+            add_action('rsssl_vulnerabilities_cron', array($this, 'run_cron'), 10);
         }
 
         public static function riskNaming($risk = null)
@@ -116,11 +116,12 @@ if (!class_exists("rsssl_vulnerabilities")) {
         }
 
         public function run_cron(){
-            error_log("run RSSSL vulnerabilties cron");
+	        error_log( "run RSSSL vulnerabilties cron" );
 	        $instance = self::instance();
 	        $instance->check_files();
 	        $instance->cache_installed_plugins();
-	        if($this->trigger) {
+            error_log("installed plugins cached");
+	        if ( $this->trigger ) {
 		        $this->send_vulnerability_mail();
 	        }
         }
@@ -145,10 +146,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
             //same goes for themes.
             add_action('after_setup_theme', array($this, 'reload_files_on_update'), 10, 2);
             add_action('current_screen', array($this, 'show_inline_code'));
-
-            if($this->trigger) {
-                $this->send_vulnerability_mail();
-            }
         }
 
         /**
@@ -369,7 +366,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	     */
 	    public function cache_installed_plugins(): void
 	    {
-		    if ( ! rsssl_user_can_manage() ) {
+		    if ( ! rsssl_admin_logged_in() ) {
 			    return;
 		    }
 		    //first we get all installed plugins
@@ -626,7 +623,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
          */
         public function check_files(): void
         {
-	        if ( ! rsssl_user_can_manage() ) {
+	        if ( ! rsssl_admin_logged_in() ) {
 		        return;
 	        }
             $trigger = false;
@@ -662,7 +659,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
         public function reload_files_on_update()
         {
-	        if ( ! rsssl_user_can_manage() ) {
+	        if ( ! rsssl_admin_logged_in() ) {
 		        return;
 	        }
             //if the manifest is not older than 4 hours, we don't download it again.
@@ -684,7 +681,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
          */
         private function validate_local_file(bool $isCore = false, bool $manifest = false): bool
         {
-	        if ( ! rsssl_user_can_manage() ) {
+	        if ( ! rsssl_admin_logged_in() ) {
 		        return false;
 	        }
             if (!$manifest) {
@@ -722,7 +719,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
          */
         private function download(string $url)
         {
-	        if ( ! rsssl_user_can_manage() ) {
+	        if ( ! rsssl_admin_logged_in() ) {
 		        return null;
 	        }
             //now we check if the file remotely exists and then log an error if it does not.
@@ -749,7 +746,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
          */
         private function store_file($data, bool $isCore = false, bool $manifest = false): void
         {
-	        if ( ! rsssl_user_can_manage() ) {
+	        if ( ! rsssl_admin_logged_in() ) {
 		        return;
 	        }
             //if the data is empty, we return null
@@ -784,7 +781,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
         public function get_file_stored_info($isCore = false, $manifest = false)
         {
-	        if ( ! rsssl_user_can_manage() ) {
+	        if ( ! rsssl_admin_logged_in() ) {
 		        return false;
 	        }
             $upload_dir = wp_upload_dir();
@@ -817,7 +814,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
          */
         protected function download_core_vulnerabilities(): void
         {
-	        if ( ! rsssl_user_can_manage() ) {
+	        if ( ! rsssl_admin_logged_in() ) {
 		        return;
 	        }
             global $wp_version;
@@ -844,7 +841,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
          */
         protected function download_plugin_vulnerabilities(): void
         {
-	        if ( ! rsssl_user_can_manage() ) {
+	        if ( ! rsssl_admin_logged_in() ) {
 		        return;
 	        }
             //we get all the installed plugins
@@ -912,7 +909,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
          */
         private function get_components()
         {
-	        if ( ! rsssl_user_can_manage() ) {
+	        if ( ! rsssl_admin_logged_in() ) {
 		        return [];
 	        }
             $upload_dir = wp_upload_dir();
@@ -933,7 +930,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
         /* Section for the core files Note: No manifest is needed */
         private function get_core()
         {
-	        if ( ! rsssl_user_can_manage() ) {
+	        if ( ! rsssl_admin_logged_in() ) {
 		        return null;
 	        }
             $upload_dir = wp_upload_dir();
@@ -1182,7 +1179,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
          */
         private function download_manifest()
         {
-	        if ( ! rsssl_user_can_manage() ) {
+	        if ( ! rsssl_admin_logged_in() ) {
 		        return;
 	        }
             $url = self::RSS_SECURITY_API . 'manifest.json';
@@ -1202,7 +1199,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
          */
         private function getManifest()
         {
-	        if ( ! rsssl_user_can_manage() ) {
+	        if ( ! rsssl_admin_logged_in() ) {
 		        return false;
 	        }
             $upload_dir = wp_upload_dir();
@@ -1280,7 +1277,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
         public function send_vulnerability_mail()
         {
-	        if ( ! rsssl_user_can_manage() ) {
+	        if ( ! rsssl_admin_logged_in() ) {
 		        return;
 	        }
 
