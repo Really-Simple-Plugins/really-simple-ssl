@@ -72,7 +72,7 @@ const SslLabs = (props) => {
 
     const runSslTest = () => {
         getSslLabsData().then((sslData)=>{
-            if ( sslData && sslData.status === 'ERROR' ){
+            if ( sslData.status && sslData.status === 'ERROR' ){
                 sslData = processSslData(sslData);
                 setSslData(sslData);
                 setSslScanStatus('completed');
