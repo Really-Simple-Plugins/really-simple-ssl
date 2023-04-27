@@ -11,6 +11,7 @@ if ( RSSSL_USE_CRON ) {
 		if ( ! wp_next_scheduled( 'rsssl_every_day_hook' ) ) {
 			wp_schedule_event( time(), 'rsssl_daily', 'rsssl_every_day_hook' );
 		}
+
 		if ( ! wp_next_scheduled( 'rsssl_every_five_minutes_hook' ) ) {
 			wp_schedule_event( time(), 'rsssl_five_minutes', 'rsssl_every_five_minutes_hook' );
 		}

@@ -63,6 +63,11 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 'c' => __('critical', 'really-simple-ssl'),
             ];
 	        add_filter('rsssl_vulnerability_data', array($this, 'get_stats'));
+
+	        //now we add the action to the cron.
+//	        add_filter('rsssl_daily_cron', array($this, 'run_cron'));
+
+	        add_action('rsssl_vulnerabilities_cron', array($this, 'run_cron'));
         }
 
         public static function riskNaming($risk = null)
@@ -105,12 +110,19 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	        if ( ! rsssl_user_can_manage() ) {
 		        return;
 	        }
-            //we check if the vulnerability scanner is enabled and then the fun happens.
-            $this->cache_installed_plugins();
-            if ($this->boot) {
+            if ( $this->boot ) {
                 $this->run();
             }
+        }
 
+        public function run_cron(){
+            error_log("run RSSSL vulnerabilties cron");
+	        $instance = self::instance();
+	        $instance->check_files();
+	        $instance->cache_installed_plugins();
+	        if($this->trigger) {
+		        $this->send_vulnerability_mail();
+	        }
         }
 
         public function run()
@@ -118,10 +130,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	        if ( ! rsssl_user_can_manage() ) {
 		        return;
 	        }
-            //we check if the vulnerability scanner is enabled and then the fun happens.
-            //first we need to make sure we update the files every day. So we add a daily cron.
-            add_filter('rsssl_daily_cron', array($this, 'daily_cron'));
-
             //we check the rsssl options if the enable_feedback_in_plugin is set to true
             if (rsssl_get_option('enable_feedback_in_plugin')) {
                 // we enable the feedback in the plugin
@@ -136,7 +144,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
             //same goes for themes.
             add_action('after_setup_theme', array($this, 'reload_files_on_update'), 10, 2);
-
             add_action('current_screen', array($this, 'show_inline_code'));
 
             if($this->trigger) {
@@ -155,13 +162,10 @@ if (!class_exists("rsssl_vulnerabilities")) {
 		        return [];
 	        }
             $instance = self::instance();
-
-            //we check if the schedule already exists, if not, we add it.
-            if ( !wp_next_scheduled('rsssl_vulnerabilities_cron') ) {
-                wp_schedule_event( time(), $instance->schedule, 'rsssl_vulnerabilities_cron');
-                //now we add the action to the cron.
-                add_action('rsssl_vulnerabilities_cron', array($instance, 'run'));
-            }
+	        //we check if the schedule already exists, if not, we add it.
+	        if ( !wp_next_scheduled('rsssl_vulnerabilities_cron') ) {
+		        wp_schedule_event( time(), $instance->schedule, 'rsssl_vulnerabilities_cron');
+	        }
 	        $instance->check_files();
 	        $instance->cache_installed_plugins();
 
@@ -493,41 +497,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
 		    $this->workable_plugins['wordpress'] = $core_plugin;
 	    }
 
-
-        /**
-         * Adds a notice to the notices array.
-         *
-         * @param $notices
-         */
-        public static function add_startup_notices($notices)
-        {
-            //we add a notice to the dashboard if the vulnerability scanner is enabled.
-            $notices['rsssl_vulnerabilities'] = array(
-                'callback' => 'rsssl_vulnerabilities_enabled',
-                'score' => 3,
-                'output' => array(
-                    'true' => array(
-                        'msg' => __("Vulnerability check is on, configure notifications.", "really-simple-ssl"),
-                        'icon' => 'success',
-                        'url' => 'https://really-simple-ssl.com/instructions/about-vulnerabilities',
-                        'dismissible' => false,
-                        'highlight_field_id' => 'vulnerability_notification_dashboard',
-                        'admin_notice' => true,
-                    ),
-                    'false' => array(
-                        'msg' => __("Plugin, core and theme vulnerabilities are not checked.", "really-simple-ssl"),
-                        'icon' => 'open',
-                        'url' => 'https://really-simple-ssl.com/instructions/about-vulnerabilities',
-                        'dismissible' => true,
-                        'highlight_field_id' => 'enable_vulnerability_scanner',
-                    ),
-                ),
-            );
-
-            //we now check for vulnerabilities in the core, plugins and themes. and add a notice if there are any.
-            return $notices;
-        }
-
         /* Public Section 3: The plugin page add-on */
         /**
          * Callback for the manage_plugins_columns hook to add the vulnerability column
@@ -567,43 +536,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 'data' => $measures
             ];
         }
-
-        /**
-         * Sets Data for Risk_vulnerabilities_data
-         */
-        public static function risk_vulnerabilities_data(array $response, string $action, $data): array
-        {
-            return [
-                "request_success" => false,
-                'data' => []
-            ];
-            $self = new self();
-            if (!rsssl_user_can_manage()) {
-                return $response;
-            }
-
-            if ($action === 'risk_vulnerabilities_data_save') {
-                // Saving options for rsssl
-                switch ($data['field']) {
-                    case 'low_risk':
-                        //storing the update value
-                        rsssl_update_option('low_risk_measure', $data['value']);
-                        break;
-                    case 'medium_risk':
-                        rsssl_update_option('medium_risk_measure', $data['value']);
-                        break;
-                    case 'high_risk':
-                        rsssl_update_option('high_risk_measure', $data['value']);
-                        break;
-                    case 'critical_risk':
-                        rsssl_update_option('critical_risk_measure', $data['value']);
-                        break;
-                }
-            }
-
-            return self::measures_data();
-        }
-
 
         /**
          * Callback for the manage_plugins_custom_column hook to add the vulnerability field
