@@ -53,7 +53,7 @@ const RiskComponent = (props) => {
     let data = [...riskData];
     data = data.length===0 ? [...dummyRiskData] : data;
     let disabled = !vulnerabilityDetectionEnabled || !measuresEnabled || processing;
-    for (const key of data) {
+    for (const key in data) {
         let dataItem = {...data[key]}
         dataItem.riskSelection = <SelectControl
             disabled={disabled}
