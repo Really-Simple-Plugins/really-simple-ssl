@@ -2,15 +2,18 @@ import * as rsssl_api from "../../utils/api";
 import useFields from "../FieldsData";
 import {__} from "@wordpress/i18n";
 import {useEffect, useState} from "react";
+import useRiskData from "./RiskData";
 
 const NotificationTester = (props) => {
-
+    const {
+        fetchVulnerabilities
+    } = useRiskData();
     const {field} = props;
     const [disabled, setDisabled] = useState(true);
     const [mailNotificationsEnabled, setMailNotificationsEnabled] = useState(true);
     const [vulnerabilitiesEnabled, setVulnerabilitiesEnabled] = useState(false);
     const [vulnerabilitiesSaved, setVulnerabilitiesSaved] = useState(false);
-    const {addHelpNotice, fields, getFieldValue, fieldAlreadyEnabled} = useFields();
+    const {addHelpNotice, fields, getFieldValue, fieldAlreadyEnabled, fetchFieldsData} = useFields();
     useEffect ( () => {
         let mailEnabled = getFieldValue('send_notifications_email') == 1;
         let vulnerabilities = fieldAlreadyEnabled('enable_vulnerability_scanner');
@@ -27,6 +30,8 @@ const NotificationTester = (props) => {
         setDisabled(true);
         rsssl_api.doAction( 'vulnerabilities_test_notification' ).then( () => {
             setDisabled(false);
+            fetchFieldsData('vulnerabilities');
+            fetchVulnerabilities();
             addHelpNotice(
                 field.id,
                 'success',

@@ -209,7 +209,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
                             'title' => sprintf(__('You have %s %s %s', 'really-simple-ssl'), $count, $this->risk_naming[$key], $count_label),
                             'msg' => sprintf(__('You have %s %s %s. Please take appropriate action.','really-simple-ssl'), $count, $this->risk_naming[$key],$count_label ),
                             'url' => 'https://really-simple-ssl.com/knowledge-base/vulnerability-scanner/',
-                            'icon' => ($key === 'c') ? 'warning' : 'open',
+                            'icon' => ($key === 'c' || $key==='h') ? 'warning' : 'open',
                             'type' => 'warning',
                             'dismissible' => true,
                             'admin_notice' => $siteWide,
@@ -223,23 +223,23 @@ if (!class_exists("rsssl_vulnerabilities")) {
             //now we add the test notices for admin and dahboard.
 
             //if the option is filled, we add the test notice.
-            if(get_option('test_vulnerability_tester')) {
-	            $side_wide = rsssl_get_option('vulnerability_notification_dashboard');
-	            $dashboard = rsssl_get_option('vulnerability_notification_sitewide');
+            $test_id = get_option('test_vulnerability_tester');
+            if($test_id) {
+	            $dashboard = rsssl_get_option('vulnerability_notification_dashboard');
+	            $side_wide = rsssl_get_option('vulnerability_notification_sitewide');
 
 	            $site_wide_icon = $side_wide === 'l' || $side_wide === 'm' ? 'open' : 'warning';
-	            $dashboard_icon = $dashboard === 'l' || $dashboard === 'm' ? 'open' : 'warning';
-	            if ( $dashboard === 'l' || $dashboard === 'm' || $dashboard === 'h' || $dashboard === 'c') {
-		            $notices[ 'test_vulnerability_sitewide_' . get_option( 'test_vulnerability_tester' ) ] = [
+	            if ( $side_wide === 'l' || $side_wide === 'm' || $side_wide === 'h' || $side_wide === 'c') {
+		            $notices[ 'test_vulnerability_sitewide_' .$test_id ] = [
 			            'callback'          => '_true_',
 			            'score'             => 1,
 			            'show_with_options' => [ 'enable_vulnerability_scanner' ],
 			            'output'            => [
 				            'true' => [
-					            'title'        => __( 'Dashboard - Test Notification', 'really-simple-ssl' ),
+					            'title'        => __( 'Site wide - Test Notification', 'really-simple-ssl' ),
 					            'msg'          => __( 'This is a test notification from Really Simple SSL. You can safely dismiss this message.', 'really-simple-ssl' ),
 					            'url'          => 'https://really-simple-ssl.com/knowledge-base/vulnerability-scanner/',
-					            'icon'         => $dashboard_icon,
+					            'icon'         => $site_wide_icon,
 					            'dismissible'  => true,
 					            'admin_notice' => true,
 					            'plusone'      => true,
@@ -249,17 +249,18 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	            }
 
                 //don't add this one if the same level
-                if ($dashboard_icon !== $site_wide_icon) {
-	                if ( $side_wide === 'l' || $side_wide === 'm' || $side_wide === 'h' || $side_wide === 'c' ) {
-		                $notices[ 'test_vulnerability_dashboard_' . get_option( 'test_vulnerability_tester' ) ] = [
+	            $dashboard_icon = $dashboard === 'l' || $dashboard === 'm' ? 'open' : 'warning';
+	            if ($dashboard_icon !== $site_wide_icon) {
+	                if ( $dashboard === 'l' || $dashboard === 'm' || $dashboard === 'h' || $dashboard === 'c' ) {
+		                $notices[ 'test_vulnerability_dashboard_' .$test_id ] = [
 			                'callback'          => '_true_',
 			                'score'             => 1,
 			                'show_with_options' => [ 'enable_vulnerability_scanner' ],
 			                'output'            => [
 				                'true' => [
-					                'title'        => __( 'Test Vulnerability Dashboard', 'really-simple-ssl' ),
+					                'title'        => __( 'Dashboard - Test Notification', 'really-simple-ssl' ),
 					                'msg'          => __( 'This is a test notification from Really Simple SSL. You can safely dismiss this message.', 'really-simple-ssl' ),
-					                'icon'         => $site_wide_icon,
+					                'icon'         => $dashboard_icon,
 					                'dismissible'  => true,
 					                'admin_notice' => false,
 					                'plusone'      => true,
@@ -1453,6 +1454,8 @@ function rsssl_vulnerabilities_api( array $response, string $action, $data ): ar
 			//creating a random string based on time.
 			$random_string = md5( time() );
 			update_option( 'test_vulnerability_tester', $random_string, false );
+            //clear admin notices cache
+			delete_option('rsssl_admin_notices');
 			$response = rsssl_vulnerabilities::testGenerator();
 			break;
 		case 'vulnerabilities_scan_files':
@@ -1502,7 +1505,6 @@ if (function_exists('make_test_notifications')) {
                 'true' => [
                     'title' => __('Test notification', 'really-simple-ssl'),
                     'msg' => __("This is a 'Dashboard' notification test by Really Simple SSL. You can safely ignore this message. (x)", "really-simple-ssl"),
-                    // 'link' => 'https://really-simple-ssl.com/knowledge-base/vulnerability-scanner/',
                     'icon' => 'warning',
                     'type' => 'warning',
                     'dismissible' => true,
