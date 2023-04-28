@@ -65,6 +65,16 @@ const useFields = create(( set, get ) => ({
             })
         )
     },
+    updateFieldAttribute: (id, attribute, value) => {
+        set(
+            produce((state) => {
+                let index = state.fields.findIndex(fieldItem => fieldItem.id === id);
+                if (index !== -1) {
+                    state.fields[index][attribute] = value;
+                }
+            })
+        )
+    },
     updateSubField: (id, subItemId, value) => {
         set(
             produce((state) => {

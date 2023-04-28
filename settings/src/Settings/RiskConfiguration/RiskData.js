@@ -10,6 +10,12 @@ const UseRiskData = create((set, get) => ({
         {id:'quarantine',name:'Quarantine',value:'m',description:__('Isolates the plugin or theme if no update can be performed','really-simple-ssl')},
     ],
     riskData:[],
+    riskLevels: {
+        l: 1,
+        m: 2,
+        h: 3,
+        c: 4,
+    },
     vulnerabilities: [],
     processing:false,
     dataLoaded: false,

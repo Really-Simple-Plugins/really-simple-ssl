@@ -1,13 +1,13 @@
 import {
     TextControl,
     RadioControl,
-    SelectControl,
     TextareaControl,
     __experimentalNumberControl as NumberControl
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import License from "./License/License";
 import Password from "./Password";
+import SelectControl from "./SelectControl";
 import Host from "./Host";
 import Hyperlink from "../utils/Hyperlink";
 import LetsEncrypt from "../LetsEncrypt/LetsEncrypt";
@@ -240,11 +240,11 @@ const Field = (props) => {
             <div className={highLightClass} ref={scrollAnchor}>
               <SelectControl
                   disabled={ disabled }
-                  help={ field.comment }
                   label={labelWrap(field)}
-                  onChange={ ( fieldValue ) => onChangeHandler(fieldValue) }
+                  onChangeHandler={ ( fieldValue ) => onChangeHandler(fieldValue) }
                   value= { fieldValue }
                   options={ options }
+                  field={field}
               />
             </div>
         )
