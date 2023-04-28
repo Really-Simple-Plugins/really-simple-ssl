@@ -3,21 +3,12 @@ import { __ } from '@wordpress/i18n';
 import Notices from "./Settings/Notices";
 import useMenu from "./Menu/MenuData";
 
-const Header = (props) => {
+const Header = () => {
     const {menu, selectedMainMenuItem, fetchMenuData} = useMenu();
     let plugin_url = rsssl_settings.plugin_url;
-
     useEffect( () => {
         fetchMenuData();
-
     }, [] );
-    useEffect(() => {
-        const run = async () => {
-            await fetchMenuData();
-        }
-        run();
-    }, []);
-
 
     let menuItems = menu.filter( item => item!==null );
     return (
@@ -28,7 +19,7 @@ const Header = (props) => {
                     <nav className="rsssl-header-menu">
                         <ul>
                             {menuItems.map((menu_item, i) =>
-                                <li key={i}><a className={ selectedMainMenuItem === menu_item.id ? 'active' : '' } href={"#" + menu_item.id.toString()} >{menu_item.title}</a></li>)}
+                                <li key={"menu-"+i}><a className={ selectedMainMenuItem === menu_item.id ? 'active' : '' } href={"#" + menu_item.id.toString()} >{menu_item.title}</a></li>)}
 
                         </ul>
                     </nav>

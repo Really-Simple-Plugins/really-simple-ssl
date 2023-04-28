@@ -108,7 +108,7 @@ const Settings = () => {
         <>
             <div className="rsssl-wizard-settings">
                 { groups.map((group, i) =>
-                    <SettingsGroup key={i} index={i} group={group} fields={selectedFields}/>)
+                    <SettingsGroup key={"settingsGroup-"+i} index={i} group={group} fields={selectedFields}/>)
                 }
                 <div className="rsssl-grid-item-footer">
                     {/*This will be shown only if current step is not the first one*/}
@@ -142,7 +142,7 @@ const Settings = () => {
                         {noticesExpanded && __("Collapse all","really-simple-ssl")}
                     </div>
                 </div>
-                {notices.map((field, i) => <Help key={i} noticesExpanded={noticesExpanded} index={i} help={field} fieldId={field.id}/>)}
+                {notices.map((field, i) => <Help key={"help-"+i} noticesExpanded={noticesExpanded} index={i} help={field} fieldId={field.id}/>)}
             </div>
 
 

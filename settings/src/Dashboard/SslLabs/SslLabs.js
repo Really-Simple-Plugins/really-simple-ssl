@@ -1,31 +1,34 @@
-import {useState, useEffect, useRef} from "@wordpress/element";
-import * as rsssl_api from "../../utils/api";
+import { useEffect, useRef} from "@wordpress/element";
 import { __ } from '@wordpress/i18n';
 import Icon from "../../utils/Icon";
 import useSslLabs from "./SslLabsData";
 import {getRelativeTime} from "../../utils/formatting";
 
 const SslLabs = (props) => {
-    const {sslScanStatus, setSslScanStatus, isLocalHost, host } = useSslLabs();
-    const [sslData, setSslData] = useState(false);
-    const [endpointData, setEndpointData] = useState([]);
-    const [dataLoaded, setDataLoaded] = useState(false);
+    const {
+        dataLoaded,
+        clearCache,
+        endpointData,
+        setEndpointData,
+        sslData,
+        setSslData,
+        sslScanStatus,
+        setSslScanStatus,
+        isLocalHost,
+        fetchSslData,
+        runSslTest,
+        intervalId,
+        setIntervalId,
+        requestActive,
+        setRequestActive,
+        setClearCache
+    } = useSslLabs();
     const hasRunOnce = useRef(false);
-    const clearCache = useRef(false);
-    const requestActive = useRef(false);
-    const intervalId = useRef(false);
 
 
     useEffect(()=>{
         if ( !dataLoaded ) {
-            rsssl_api.doAction('ssltest_get').then( ( response ) => {
-                if (response.data.hasOwnProperty('host') )  {
-                    let data = processSslData(response.data);
-                    setSslData(data);
-                    setEndpointData(data.endpointData);
-                    setDataLoaded(true);
-                }
-            })
+            fetchSslData();
         }
     } , [])
 
@@ -39,164 +42,44 @@ const SslLabs = (props) => {
         }
 
         if (sslScanStatus==='active' && sslData.summary && sslData.summary.progress>=100 ) {
-            clearCache.current = true;
+            setClearCache(true);
             hasRunOnce.current = false;
             setSslData(false);
             setEndpointData(false);
         }
 
         if (sslScanStatus==='active' && sslData.status === 'ERROR' ) {
-            clearCache.current = true;
+            setClearCache(true);
             setSslData(false);
             setEndpointData(false);
         }
 
         let scanInComplete = (sslData && sslData.status !== 'READY');
         let userClickedStartScan = sslScanStatus==='active';
-        if (clearCache.current) scanInComplete = true;
+        if (clearCache) scanInComplete = true;
         let hasErrors = sslData.errors || sslData.status === 'ERROR';
         let startScan = !hasErrors && (scanInComplete || userClickedStartScan);
-        if ( !requestActive.current && startScan ) {
+        if ( !requestActive && startScan ) {
             setSslScanStatus('active');
-            requestActive.current = true;
+            setRequestActive(true);
             if ( !hasRunOnce.current ) {
                 runSslTest();
-                intervalId.current = setInterval(function(){
-                    runSslTest();
-                }, 3000)
+                if (!intervalId) {
+                    let newIntervalId = setInterval(function () {
+                        runSslTest();
+                    }, 4000);
+                    setIntervalId(newIntervalId);
+                }
                 hasRunOnce.current  = true;
             }
         } else if ( sslData && sslData.status === 'READY' ) {
             setSslScanStatus('completed');
-            clearInterval(intervalId.current);
+            clearInterval(intervalId);
         }
-    }, [sslScanStatus]);
+    }, [sslScanStatus, sslData]);
 
-    const runSslTest = () => {
-        getSslLabsData().then((sslData)=>{
-            if ( sslData && sslData.status === 'ERROR' ){
-                sslData = processSslData(sslData);
-                setSslData(sslData);
-                setSslScanStatus('completed');
-                clearInterval(intervalId.current);
-            } else
-            if ( sslData.endpoints && sslData.endpoints.filter((endpoint) => endpoint.statusMessage === 'Ready').length>0 ) {
-                let completedEndpoints = sslData.endpoints.filter((endpoint) => endpoint.statusMessage === 'Ready');
-                let lastCompletedEndpointIndex = completedEndpoints.length-1;
-                let lastCompletedEndpoint = completedEndpoints[ lastCompletedEndpointIndex];
-                let ipAddress = lastCompletedEndpoint.ipAddress;
-                getEndpointData(ipAddress).then( (response ) => {
 
-                    if ( !response.errors && endpointData ){
-                        //if the endpoint already is stored, replace it.
-                        let foundEndpoint = false;
-                        endpointData.forEach(function(endpoint, i) {
-                            if ( endpoint.ipAddress === response.ipAddress ) {
-                                endpointData[i] = response;
-                                foundEndpoint = true;
-                            }
-                        });
 
-                        if ( !foundEndpoint ) {
-                            endpointData[endpointData.length] = response;
-                        }
-
-                        setEndpointData(endpointData);
-                        sslData.endpointData = endpointData;
-                    }
-
-                    if ( !sslData.errors ) {
-                        rsssl_api.doAction('store_ssl_labs', sslData ).then( ( response ) => {});
-                    }
-                    sslData = processSslData(sslData);
-                    setSslData(sslData);
-                    requestActive.current = false;
-                });
-            } else {
-                //if there are no errors, this is the first request. We reset the endpoint data we have.
-                setEndpointData([]);
-                sslData.endpointData = endpointData;
-                sslData = processSslData(sslData);
-                setSslData(sslData);
-                if ( !sslData.errors ) {
-                    rsssl_api.doAction('store_ssl_labs', sslData ).then( ( response ) => {});
-                }
-
-                requestActive.current = false;
-            }
-
-        });
-
-}
-
-    const processSslData = (sslData) => {
-        let progress = sslData.progress ? sslData.progress : 0;
-        let startTime = sslData.startTime ? sslData.startTime : '';
-        let statusMessage = sslData.statusMessage ? sslData.statusMessage : '';
-        let grade = sslData.grade ? sslData.grade : '?';
-        let ipAddress='';
-        if ( sslData.endpoints ) {
-            let completedEndpoints = sslData.endpoints.filter((endpoint) => endpoint.statusMessage === 'Ready');
-            let completedEndpointsLength = completedEndpoints.length;
-            let lastCompletedEndpoint = completedEndpoints[ completedEndpointsLength-1];
-            let activeEndpoint = sslData.endpoints.filter((endpoint) => endpoint.statusMessage === 'In progress')[0];
-            let activeEndpointProgress = 0;
-            if (activeEndpoint) {
-                activeEndpointProgress = activeEndpoint.progress ? activeEndpoint.progress : 0;
-                statusMessage = activeEndpoint.statusDetailsMessage;
-                ipAddress = activeEndpoint.ipAddress;
-            }
-            if (lastCompletedEndpoint) grade = lastCompletedEndpoint.grade;
-
-            progress = ( completedEndpointsLength * 100 + activeEndpointProgress ) / sslData.endpoints.length;
-        }
-        if ( sslData.errors ) {
-            grade = '?';
-            statusMessage =  sslData.errors[0].message;
-            progress = 100;
-        }
-        let summary = {};
-        if ( progress >= 100) {
-            setSslScanStatus('completed');
-        }
-        summary.grade = grade;
-        summary.startTime = startTime;
-        summary.statusMessage = statusMessage;
-        summary.ipAddress = ipAddress;
-        summary.progress = progress;
-        sslData.summary = summary;
-        return sslData;
-    }
-
-    const getEndpointData = (ipAddress) => {
-        const url = 'https://api.ssllabs.com/api/v3/getEndpointData?host='+host()+'&s='+ipAddress;
-        let data = {};
-        data.url = url;
-        return rsssl_api.doAction('ssltest_run', data).then( ( response ) => {
-            if ( response && !response.errors) {
-                return JSON.parse(response);
-            }
-        })
-    }
-
-    const getSslLabsData = (e) => {
-        let clearCacheUrl = '';
-        if (clearCache.current){
-            clearCache.current = false;
-            clearCacheUrl = '&startNew=on';
-            setSslData(false);
-        }
-        const url = "https://api.ssllabs.com/api/v3/analyze?host="+host()+clearCacheUrl;
-        let data = {};
-        data.url = url;
-        return rsssl_api.doAction('ssltest_run', data).then( ( response ) => {
-            if ( response && !response.errors) {
-                return JSON.parse(response);
-            } else {
-                return false;
-            }
-        })
-    }
 
     /**
      * Get some styles for the progress bar
@@ -235,10 +118,10 @@ const SslLabs = (props) => {
         }
         return (
             <>
-                {(status==='inactive') && scoreSnippet("rsssl-test-inactive", "HSTS")}
-                {status==='processing' && scoreSnippet("rsssl-test-processing", "HSTS...")}
-                {status==='error' && scoreSnippet("rsssl-test-error", "No HSTS header")}
-                {status==='success' && scoreSnippet("rsssl-test-success", "HSTS header detected")}
+                {(status==='inactive') && scoreSnippet("rsssl-test-inactive", "HSTS",'hsts')}
+                {status==='processing' && scoreSnippet("rsssl-test-processing", "HSTS...", 'hsts')}
+                {status==='error' && scoreSnippet("rsssl-test-error", "No HSTS header", 'hsts')}
+                {status==='success' && scoreSnippet("rsssl-test-success", "HSTS header detected", 'hsts')}
             </>
         )
     }
@@ -274,7 +157,7 @@ const SslLabs = (props) => {
 
         return (
             <>
-            {scoreSnippet(ratingClass, __("Cipher strength","really-simple-ssl")+' '+rating+'%')}
+            {scoreSnippet(ratingClass, __("Cipher strength","really-simple-ssl")+' '+rating+'%','cipher')}
             </>
         )
     }
@@ -309,17 +192,17 @@ const SslLabs = (props) => {
         }
         return (
             <>
-            {(status==='inactive') && scoreSnippet("rsssl-test-inactive", "Certificate")}
-            {status==='processing' && scoreSnippet("rsssl-test-processing", "Certificate...")}
-            {status==='error' && !hasErrors && scoreSnippet("rsssl-test-error", "Certificate issue")}
-            {status==='success' && scoreSnippet("rsssl-test-success", "Valid certificate")}
+            {(status==='inactive') && scoreSnippet("rsssl-test-inactive", "Certificate", "certificate")}
+            {status==='processing' && scoreSnippet("rsssl-test-processing", "Certificate...", "certificate")}
+            {status==='error' && !hasErrors && scoreSnippet("rsssl-test-error", "Certificate issue", "certificate")}
+            {status==='success' && scoreSnippet("rsssl-test-success", "Valid certificate", "certificate")}
             </>
         )
     }
 
-    const scoreSnippet = (className, content) => {
+    const scoreSnippet = (className, content, id) => {
         return (
-            <div className={"rsssl-score-snippet "+className}>{content}</div>
+            <div key={id} className="rsssl-score-container"><div className={"rsssl-score-snippet "+className}>{content}</div></div>
         )
     }
 
@@ -338,10 +221,10 @@ const SslLabs = (props) => {
         }
         return (
             <>
-            {(status==='inactive') && scoreSnippet("rsssl-test-inactive", "Protocol support")}
-            {(status==='processing') && scoreSnippet("rsssl-test-processing", "Protocol support...")}
-            {status==='error' && scoreSnippet("rsssl-test-error", "Supports TLS 1.1")}
-            {status==='success' && scoreSnippet("rsssl-test-success", "No TLS 1.1")}
+            {(status==='inactive') && scoreSnippet("rsssl-test-inactive", "Protocol support", "protocol")}
+            {(status==='processing') && scoreSnippet("rsssl-test-processing", "Protocol support...", "protocol")}
+            {status==='error' && scoreSnippet("rsssl-test-error", "Supports TLS 1.1", "protocol")}
+            {status==='success' && scoreSnippet("rsssl-test-success", "No TLS 1.1", "protocol")}
             </>
         )
     }
@@ -360,7 +243,6 @@ const SslLabs = (props) => {
 
     let statusMessage = sslData ? sslData.summary.statusMessage : false;
     let grade = sslData ? sslData.summary.grade : '?';
-    let ipAddress = sslData ? sslData.summary.ipAddress : '';
     if ( sslData && sslData.status === 'READY' ) {
         if ( grade.indexOf('A')!==-1 ){
             sslClass = "rsssl-success";

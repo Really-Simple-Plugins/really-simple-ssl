@@ -10,6 +10,7 @@ const ProgressBlock = (props) => {
     const {percentageCompleted, progressText, filter, notices, progressLoaded, getProgressData, error} = useProgress();
   useEffect( () => {
       getProgressData();
+
     }, [] );
 
     const getStyles = () => {
@@ -75,7 +76,7 @@ const ProgressBlock = (props) => {
             </div>
 
             <div className="rsssl-scroll-container">
-                {noticesOutput.map((notice, i) => <TaskElement key={i} notice={notice}/>)}
+                {noticesOutput.map((notice, i) => <TaskElement key={"task-"+i} notice={notice}/>)}
             </div>
         </div>
     );

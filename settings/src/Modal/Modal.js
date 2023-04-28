@@ -57,7 +57,7 @@ const Modal = (props) => {
                 </div>
                 <div className="rsssl-modal-content">
                     { modalData.subtitle && <div className="rsssl-modal-subtitle">{modalData.subtitle}</div>}
-                    { Array.isArray(description) && description.map((s, i) => <div key={i} className="rsssl-modal-description">{s}</div>) }
+                    { Array.isArray(description) && description.map((s, i) => <div key={"modalDescription-"+i} className="rsssl-modal-description">{s}</div>) }
                 </div>
                 <div className="rsssl-modal-footer">
                     { modalData.edit && <a href={modalData.edit} target="_blank" className="button button-secondary">{__("Edit", "really-simple-ssl")}</a>}

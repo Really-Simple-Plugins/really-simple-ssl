@@ -6,17 +6,19 @@ import SslLabs from "./SslLabs/SslLabs";
 import SslLabsFooter from "./SslLabs/SslLabsFooter";
 import WPVul from "./Vulnerabilities/WPVul";
 import WPVulFooter from "./Vulnerabilities/WPVulFooter";
-import OtherPlugins from "./OtherPlugins";
-import {useState} from "@wordpress/element";
+import OtherPlugins from "./OtherPlugins/OtherPlugins";
+import TipsTricks from "./TipsTricks/TipsTricks";
+import TipsTricksFooter from "./TipsTricks/TipsTricksFooter";
 
 /*
  * Mapping of components, for use in the config array
- * @type {{SslLabs: JSX.Element}}
  */
-var dynamicComponents = {
+const dynamicComponents = {
     "ProgressBlock": ProgressBlock,
     "ProgressHeader": ProgressHeader,
     "ProgressFooter": ProgressFooter,
+    "TipsTricks": TipsTricks,
+    "TipsTricksFooter": TipsTricksFooter,
     "SslLabs": SslLabs,
     "SslLabsFooter": SslLabsFooter,
     "OtherPlugins": OtherPlugins,
@@ -25,42 +27,25 @@ var dynamicComponents = {
 };
 
 const GridBlock = (props) => {
-
-    const [footerHtml, setFooterHtml] = useState(props.block.footer.data);
-    const [content, setContent] = useState(props.block.content.data);
-    const [footer, setFooter] = useState(props.block.footer.data);
-    const [blockProps, setBlockProps] = useState([]);
-    const [blockData, setBlockData] = useState(props.block);
-
-    /*
-     * Allow child blocks to set data on the gridblock
-     * @param key
-     * @param value
-     */
-    const updateBlockProps = (key, value) => {
-        if (!blockProps.hasOwnProperty(key) || blockProps[key]!==value) {
-            blockProps[key] = value;
-            setBlockProps(blockProps);
-        }
-    }
-
+    const content = props.block.content.data;
+    const footer =props.block.footer ? props.block.footer.data : false;
+    const blockData = props.block;
+    const controls = props.block.controls ? props.block.controls : false;
     let className = "rsssl-grid-item "+blockData.class+" rsssl-"+blockData.id;
-    let DynamicBlockProps = { updateBlockProps: updateBlockProps, blockProps: blockProps, runTest: props.runTest };
     return (
-        <div className={className}>
-            <div className="rsssl-grid-item-header">
+        <div key={"block-"+blockData.id} className={className}>
+            <div key={"header-"+blockData.id} className="rsssl-grid-item-header">
                 <h3 className="rsssl-grid-title rsssl-h4">{ blockData.title }</h3>
                 <div className="rsssl-grid-item-controls">
-                    {blockData.controls && blockData.controls.type==='url' && <a href={blockData.controls.data}>{__("Instructions", "really-simple-ssl")}</a>}
-                    {blockData.controls && blockData.controls.type==='html' && <span className="rsssl-header-html" dangerouslySetInnerHTML={{__html: blockData.controls.data}}></span>}
-                    {blockData.controls && blockData.controls.type==='react' && wp.element.createElement(dynamicComponents[blockData.controls.data], DynamicBlockProps)}
+                    {controls.type==='url' && <a href={controls.data}>{__("Instructions", "really-simple-ssl")}</a>}
+                    {controls.type==='html' && <span className="rsssl-header-html" dangerouslySetInnerHTML={{__html: controls.data}}></span>}
+                    {controls.type==='react' && wp.element.createElement(dynamicComponents[controls.data])}
                 </div>
             </div>
-            { blockData.content.type!=='react' && <div className="rsssl-grid-item-content" dangerouslySetInnerHTML={{__html: content}}></div>}
-            { blockData.content.type==='react' && <div className="rsssl-grid-item-content">{wp.element.createElement(dynamicComponents[content], DynamicBlockProps)}</div>}
+            <div key={"content-"+blockData.id} className="rsssl-grid-item-content">{wp.element.createElement(dynamicComponents[content])}</div>
 
-            { blockData.footer.type==='html' && <div className="rsssl-grid-item-footer" dangerouslySetInnerHTML={{__html: footerHtml}}></div>}
-            { blockData.footer.type==='react' && <div className="rsssl-grid-item-footer">{wp.element.createElement(dynamicComponents[footer], DynamicBlockProps)}</div>}
+            { !footer && <div className="rsssl-grid-item-footer"></div>}
+            { footer && <div className="rsssl-grid-item-footer">{wp.element.createElement(dynamicComponents[footer])}</div>}
         </div>
     );
 }

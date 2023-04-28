@@ -160,7 +160,7 @@ const Onboarding = (props) => {
             let isPluginClass = showAsPlugin ? 'rsssl-is-plugin' : '';
             title = showAsPlugin ? <b>{title}</b> : title;
             return (
-                <li key={index} className={isPluginClass}>
+                <li key={"pluginItem-"+index} className={isPluginClass}>
                     <Icon name = {statusIcon} color = {statusColor} />
                     {title}{description && <>&nbsp;-&nbsp;{description}</>}
                     {id==='ssl_enabled' && networkwide && networkActivationStatus==='main_site_activated' && <>

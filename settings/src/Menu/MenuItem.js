@@ -29,7 +29,7 @@ const MenuItem = (props) => {
             </a>
             { (props.menuItem.menu_items && menuIsSelected) && <div className="rsssl-submenu-item">
                 {props.menuItem.menu_items.map(
-                    (subMenuItem, i) => subMenuItem.visible && <MenuItem key={i} menuItem={subMenuItem} />
+                    (subMenuItem, i) => subMenuItem.visible && <MenuItem key={"submenuItem"+i} menuItem={subMenuItem} />
                 )}
             </div>}
         </div>}

@@ -305,6 +305,9 @@ function rsssl_do_action($request, $ajax_data = false)
         case 'clear_cache':
             $response = rsssl_clear_test_caches($data);
             break;
+	    case 'otherpluginsdata':
+		    $response = rsssl_other_plugins_data();
+		    break;
         default:
             $response = apply_filters("rsssl_do_action", [], $action, $data);
     }
@@ -397,9 +400,6 @@ function rsssl_run_test($request, $ajax_data = false)
     switch ($test) {
         case 'progressdata':
             $response = RSSSL()->progress->get();
-            break;
-        case 'otherpluginsdata':
-            $response = rsssl_other_plugins_data();
             break;
         case 'dismiss_task':
             $response = RSSSL()->progress->dismiss_task($state);
