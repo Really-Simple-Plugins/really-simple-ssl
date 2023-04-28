@@ -17,7 +17,7 @@ const RiskComponent = (props) => {
                 fetchVulnerabilities();
             }
         }
-        let vulnerabilitiesEnabled = getFieldValue('enable_vulnerability_scanner')==1;
+        let vulnerabilitiesEnabled = fieldAlreadyEnabled('enable_vulnerability_scanner' );
         setVulnerabilityDetectionEnabled(vulnerabilitiesEnabled);
         let measuresOn = getFieldValue('measures_enabled')==1;
         setMeasuresEnabled(measuresOn);

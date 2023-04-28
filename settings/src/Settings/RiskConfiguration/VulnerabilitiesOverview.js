@@ -64,20 +64,20 @@ const VulnerabilitiesOverview = (props) => {
     //get data if field was already enabled, so not changed right now.
     useEffect(() => {
         if ( fieldAlreadyEnabled('enable_vulnerability_scanner' ) ) {
-            if (getFieldValue('vulnerabilities_intro_shown')!=1 ) {
-                if (!introCompleted) {
-                    setShowIntro(true);
-                } else {
-                    //if just enabled, but intro already shown, just get the first run data.
-                    initialize();
-                }
+            if (getFieldValue('vulnerabilities_intro_shown')!=1 && !introCompleted) {
+                setShowIntro(true);
             } else {
+                //if just enabled, but intro already shown, just get the first run data.
                 if ( !dataLoaded ) {
-                    fetchVulnerabilities();
+                    console.log("initialize, no intro");
+                    initialize();
                 }
             }
         }
+    }, [fields, dataLoaded]);
 
+    useEffect(() => {
+        //if this value changes, reload vulnerabilities data
         if ( getFieldValue('enable_vulnerability_scanner')==1 && !fieldAlreadyEnabled('enable_vulnerability_scanner') ) {
             setDataLoaded(false);
         }

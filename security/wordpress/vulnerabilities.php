@@ -65,9 +65,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	        add_filter('rsssl_vulnerability_data', array($this, 'get_stats'));
 
 	        //now we add the action to the cron.
-//	        add_filter('rsssl_daily_cron', array($this, 'run_cron'));
-
-            add_action('rsssl_vulnerabilities_cron', array($this, 'run_cron'), 10);
+	        add_filter('rsssl_five_minutes_cron', array($this, 'run_cron'));
         }
 
         public static function riskNaming($risk = null)
@@ -159,10 +157,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
 		        return [];
 	        }
             $instance = self::instance();
-	        //we check if the schedule already exists, if not, we add it.
-	        if ( !wp_next_scheduled('rsssl_vulnerabilities_cron') ) {
-		        wp_schedule_event( time(), $instance->schedule, 'rsssl_vulnerabilities_cron');
-	        }
 	        $instance->check_files();
 	        $instance->cache_installed_plugins();
 
