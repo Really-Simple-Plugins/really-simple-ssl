@@ -254,7 +254,7 @@ class rsssl_onboarding {
 		$plugins_to_install = [
 			[
 				"slug" => "burst-statistics",
-				'constant_premium' => false,
+				'constant_premium' => 'burst_pro',
 				"title" => "Burst Statistics",
 				"description" => __("Self-hosted, Privacy-friendly analytics tool", "really-simple-ssl"),
 				'read_more' => 'https://really-simple-plugins.com',//we only want one button, show we show it with the first plugin, then position it in the middle
