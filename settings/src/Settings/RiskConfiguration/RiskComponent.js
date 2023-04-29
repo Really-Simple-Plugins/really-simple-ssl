@@ -1,7 +1,5 @@
 import React, {useEffect,useState} from 'react';
 import UseRiskData from "./RiskData";
-import DataTable from 'react-data-table-component';
-import {SelectControl} from "@wordpress/components";
 import {__} from "@wordpress/i18n";
 import useFields from "../FieldsData";
 
@@ -11,6 +9,20 @@ const RiskComponent = (props) => {
     const { fields, fieldAlreadyEnabled, getFieldValue, setChangedField, updateField, saveFields} = useFields();
     const [measuresEnabled, setMeasuresEnabled] = useState(false);
     const [vulnerabilityDetectionEnabled, setVulnerabilityDetectionEnabled] = useState(false);
+    const [DataTable, setDataTable] = useState(null);
+    const [theme, setTheme] = useState(null);
+    useEffect( () => {
+        import('react-data-table-component').then(({ default: DataTable, createTheme }) => {
+            setDataTable(() => DataTable);
+            setTheme(() => createTheme('really-simple-plugins', {
+                divider: {
+                    default: 'transparent',
+                },
+            }, 'light'));
+        });
+
+    }, []);
+
     useEffect(() => {
         if ( fieldAlreadyEnabled('enable_vulnerability_scanner')) {
             if (!dataLoaded) {
@@ -32,6 +44,8 @@ const RiskComponent = (props) => {
 
     }, [] );
 
+
+
     //we create the columns
     let columns = [];
     //getting the fields from the props
@@ -52,19 +66,12 @@ const RiskComponent = (props) => {
     //and we add the select control to the data
     let data = [...riskData];
     data = data.length===0 ? [...dummyRiskData] : data;
-    let disabled = !vulnerabilityDetectionEnabled || !measuresEnabled || processing;
+    let disabled = !vulnerabilityDetectionEnabled || !measuresEnabled;
     for (const key in data) {
         let dataItem = {...data[key]}
-        dataItem.riskSelection = <SelectControl
-            disabled={disabled}
-            id={dataItem.id}
-            name={dataItem.name}
-            value={dataItem.value}
-            options={options}
-            label=''
-            onChange={(fieldValue) => onChangeHandler(fieldValue, dataItem)
-            }
-        />
+        dataItem.riskSelection = <select disabled={processing || disabled} value={dataItem.value} onChange={(e) => onChangeHandler(e.target.value, dataItem)}>
+            {options.map((option,i) => <option key={i} value={option.value} disabled={ dataItem.disabledRiskLevels &&  dataItem.disabledRiskLevels.includes(option.value)} >{option.label}</option>) }
+        </select>
         data[key] = dataItem;
     }
     let processingClass = disabled ? 'rsssl-processing' : '';
@@ -74,10 +81,11 @@ const RiskComponent = (props) => {
             <p>{
                 __("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam lacinia, nisl nisl aliquet nisl.","really-simple-ssl")
             }</p>
-            <DataTable
+            {DataTable && <DataTable
                 columns={columns}
                 data={Object.values(data)}
-            />
+                theme={theme}
+            /> }
         </div>
     )
 

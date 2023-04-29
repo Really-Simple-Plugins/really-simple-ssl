@@ -506,7 +506,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
          * @param $data
          * @return array
          */
-        public static function measures_data(): array
+        public function measures_data(): array
         {
             $measures = [];
             $measures[] = [
@@ -526,6 +526,22 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 "request_success" => true,
                 'data' => $measures
             ];
+        }
+
+        public static function measures_set($measures) {
+	       // update_option('rsssl_'.sanitize_title($data['field']), sanitize_text_field($data['value']), false );
+            $risk_data = isset($measures['riskData']) ? $measures['riskData'] : [];
+	        $self = new self();
+
+	        foreach ( $risk_data as $risk ) {
+                update_option('rsssl_'.sanitize_title($risk['id']), $self->sanitize_measure($risk['value']), false );
+            }
+            return [];
+        }
+
+        public function sanitize_measure($measure) {
+	        $self = new self();
+            return isset($self->risk_levels[$measure]) ? $measure : '*';
         }
 
         /**
@@ -1388,7 +1404,7 @@ function rsssl_vulnerabilities_api( array $response, string $action, $data ): ar
 			$response = rsssl_vulnerabilities::measures_data();
 			break;
 		case 'vulnerabilities_measures_set':
-			$response = rsssl_store_measures( $data );
+			$response = rsssl_vulnerabilities::measures_set($data);
 			break;
 	}
 
@@ -1396,23 +1412,7 @@ function rsssl_vulnerabilities_api( array $response, string $action, $data ): ar
 }
 add_filter( 'rsssl_do_action', 'rsssl_vulnerabilities_api', 10, 3 );
 
-/* Routing and API's */
 
-
-if (!function_exists('rsssl_store_measures')) {
-    /**
-     * This function is used to get the stats of the vulnerability scanner
-     *
-     * @param $data
-     * @return array
-     */
-    function rsssl_store_measures($data): array
-    {
-        update_option('rsssl_'.$data['field'], $data['value'], false );
-
-        return rsssl_vulnerabilities::measures_data();
-    }
-}
 
 /* End of Routing and API's */
 

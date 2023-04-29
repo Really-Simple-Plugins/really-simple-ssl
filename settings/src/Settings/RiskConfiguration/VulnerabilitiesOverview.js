@@ -69,7 +69,6 @@ const VulnerabilitiesOverview = (props) => {
             } else {
                 //if just enabled, but intro already shown, just get the first run data.
                 if ( !dataLoaded ) {
-                    console.log("initialize, no intro");
                     initialize();
                 }
             }

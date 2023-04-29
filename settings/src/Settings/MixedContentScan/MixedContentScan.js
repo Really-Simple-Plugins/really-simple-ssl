@@ -148,7 +148,7 @@ const MixedContentScan = (props) => {
                           <Icon name = "shield"  size="80px"/>
                     </div> }
                     </>}
-                { dataTable.length>0 && <div className={'rsssl-mixed-content-datatable'}><DataTable
+                { DataTable && dataTable.length>0 && <div className={'rsssl-mixed-content-datatable'}><DataTable
                     columns={columns}
                     data={dataTable}
                     dense

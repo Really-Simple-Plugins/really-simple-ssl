@@ -4,6 +4,7 @@ import * as rsssl_api from "../../utils/api";
 import {__} from "@wordpress/i18n";
 import {produce} from "immer";
 import React from "react";
+
 const UseRiskData = create((set, get) => ({
     dummyRiskData: [
         {id:'force_update',name:'Force Update',value:'l',description:__('Force update the plugin or theme','really-simple-ssl')},
@@ -35,14 +36,15 @@ const UseRiskData = create((set, get) => ({
             produce((state) => {
                 let index = state.riskData.findIndex((item) => item.id === field);
                 state.riskData[index].value = value;
+                state.riskData = get().enforceCascadingRiskLevels(state.riskData);
             })
         );
         try {
-            const riskData = await rsssl_api.doAction('vulnerabilities_measures_set', {
-                field: field,
-                value: value,
+            await rsssl_api.doAction('vulnerabilities_measures_set', {
+                riskData: get().riskData,
             });
-            set({riskData: riskData.data, dataLoaded: true, processing:false});
+
+            set({dataLoaded: true, processing:false});
         } catch (e) {
             console.log(e);
         }
@@ -51,7 +53,32 @@ const UseRiskData = create((set, get) => ({
     setIntroCompleted: (value) => {
         set({introCompleted: value});
     },
+    enforceCascadingRiskLevels: (data) => {
+        if (data.length===0) return data;
+        //get risk levels for force_update
+        let forceUpdateRiskLevel = data.filter((item) => item.id==='force_update')[0].value;
+        let quarantineRiskLevel = data.filter((item) => item.id==='quarantine')[0].value;
 
+        //get the integer value of the risk level
+        forceUpdateRiskLevel = get().riskLevels.hasOwnProperty(forceUpdateRiskLevel) ? get().riskLevels[forceUpdateRiskLevel] : 0;
+        quarantineRiskLevel = get().riskLevels.hasOwnProperty(quarantineRiskLevel) ? get().riskLevels[quarantineRiskLevel] : 0;
+        let quarantineIndex = data.findIndex((item) => item.id==='quarantine');
+        //if the quarantine risk level is lower than the force update risk level, we set it to the force update risk level
+        if (quarantineRiskLevel<forceUpdateRiskLevel) {
+            data[quarantineIndex].value = Object.keys(get().riskLevels).find(key => get().riskLevels[key] === forceUpdateRiskLevel);
+        }
+
+        //disable all values below this value
+        let disableUpTo = forceUpdateRiskLevel>0 ? forceUpdateRiskLevel-1 : 0
+        //create an array of integers up to the forceUpdateRiskLevel
+        let disabledRiskLevels =  Array.from(Array(disableUpTo).keys()).map(x => x +1);
+        disabledRiskLevels = disabledRiskLevels.map( (level) => {
+            return Object.keys(get().riskLevels).find(key => get().riskLevels[key] === level  );
+        });
+        if (forceUpdateRiskLevel>0) disabledRiskLevels.push('*');
+        data[quarantineIndex].disabledRiskLevels = disabledRiskLevels;
+        return data;
+    },
     capitalizeFirstLetter: (str) => {
         return str.charAt(0).toUpperCase() + str.slice(1);
     },
@@ -87,6 +114,7 @@ const UseRiskData = create((set, get) => ({
             }
             let riskData = fetched.data.riskData;
             if (!Array.isArray(riskData)) {riskData = []}
+            riskData = get().enforceCascadingRiskLevels(riskData);
             set(
                 produce((state) => {
                     state.vulnerabilities = vulnerabilities;
