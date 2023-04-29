@@ -1,6 +1,6 @@
 import Tooltip from '@mui/material/Tooltip';
 import {styled} from "@mui/material/styles";
-import {opacity} from "../../../../../../wp-includes/js/codemirror/csslint";
+// import {opacity} from "../../../../../../wp-includes/js/codemirror/csslint";
 
 const Icon = (props) => {
     const {name, color, size} = props;
@@ -550,7 +550,6 @@ const Icon = (props) => {
             </div>
         </StyledTooltip>
     );
-
 };
 
 export default Icon;

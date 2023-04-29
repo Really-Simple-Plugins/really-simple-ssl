@@ -16,7 +16,7 @@ const Help = (props) => {
     return (
         <>
             { notice.title && notice.text &&
-                <details className={"rsssl-wizard-help-notice rsssl-" + notice.label.toLowerCase()} open={openStatus}>
+                <details key={props.index} className={"rsssl-wizard-help-notice rsssl-" + notice.label.toLowerCase()} open={openStatus}>
                     <summary>{notice.title} <Icon name='chevron-down' /></summary>
                     {/*some notices contain html, like for the htaccess notices. A title is required for those options, otherwise the text becomes the title. */}
                     <div dangerouslySetInnerHTML={{__html:notice.text}}></div>
@@ -24,7 +24,7 @@ const Help = (props) => {
                 </details>
             }
             { notice.title && !notice.text &&
-                <div className={"rsssl-wizard-help-notice rsssl-" + notice.label.toLowerCase()}><p>{notice.title}</p></div>
+                <div  key={props.index} className={"rsssl-wizard-help-notice rsssl-" + notice.label.toLowerCase()}><p>{notice.title}</p></div>
             }
         </>
     );

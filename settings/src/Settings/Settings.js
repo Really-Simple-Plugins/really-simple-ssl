@@ -142,7 +142,7 @@ const Settings = () => {
                         {noticesExpanded && __("Collapse all","really-simple-ssl")}
                     </div>
                 </div>
-                {notices.map((field, i) => <Help key={"help-"+i} noticesExpanded={noticesExpanded} index={i} help={field} fieldId={field.id}/>)}
+                {notices.map((field, i) => <Help key={i} noticesExpanded={noticesExpanded} index={i} help={field} fieldId={field.id}/>)}
             </div>
 
 
