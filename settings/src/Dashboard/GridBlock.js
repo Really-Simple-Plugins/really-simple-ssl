@@ -31,6 +31,7 @@ const dynamicComponents = {
     "WPVulFooter": WPVulFooter,
 };
 
+
 const GridBlock = (props) => {
     const content = props.block.content;
     const footer =props.block.footer ? props.block.footer : false;
