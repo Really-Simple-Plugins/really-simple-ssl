@@ -7,7 +7,7 @@ import useMenu from "./Menu/MenuData";
 import useOnboardingData from "./Onboarding/OnboardingData";
 import useModal from "./Modal/ModalData";
 
-const Page = (props) => {
+const Page = () => {
     const {error, fields, changedFields, fetchFieldsData, updateFieldsData, fieldsLoaded} = useFields();
     const {showOnboardingModal, fetchOnboardingModalStatus, modalStatusLoaded,} = useOnboardingData();
     const {selectedMainMenuItem, fetchMenuData } = useMenu();

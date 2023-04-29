@@ -1,6 +1,6 @@
 import GridBlock from "./GridBlock";
 
-const DashboardPage = (props) => {
+const DashboardPage = () => {
     let blocks = rsssl_settings.blocks;
     return (
         <>

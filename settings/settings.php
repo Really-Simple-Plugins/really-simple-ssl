@@ -9,6 +9,8 @@ defined('ABSPATH') or die();
  */
 
 require_once(rsssl_path . 'settings/config/config.php');
+require_once(rsssl_path . 'settings/config/menu.php');
+require_once(rsssl_path . 'settings/config/blocks.php');
 require_once(rsssl_path . 'settings/config/disable-fields-filter.php');
 
 /**
