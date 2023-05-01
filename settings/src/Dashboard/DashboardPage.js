@@ -13,8 +13,12 @@ import TipsTricksFooter from "./TipsTricks/TipsTricksFooter";
 import OtherPluginsHeader from "./OtherPlugins/OtherPluginsHeader";
 import OtherPlugins from "./OtherPlugins/OtherPlugins";
 import { __ } from '@wordpress/i18n';
+import DashboardPlaceholder from "../Placeholder/DashboardPlaceholder";
+import useFields from "../Settings/FieldsData";
 
 const DashboardPage = () => {
+    const {fieldsLoaded} = useFields();
+
     const blocks = [
         {
             id: 'progress',
@@ -53,7 +57,8 @@ const DashboardPage = () => {
     ]
     return (
         <>
-            {blocks.map((block, i) => <GridBlock key={"grid_"+i} block={block}/>)}
+            {!fieldsLoaded && <DashboardPlaceholder></DashboardPlaceholder>}
+            {fieldsLoaded && blocks.map((block, i) => <GridBlock key={"grid_"+i} block={block}/>)}
         </>
     );
 

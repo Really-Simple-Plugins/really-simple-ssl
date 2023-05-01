@@ -1,4 +1,4 @@
-import Placeholder from '../Placeholder/Placeholder';
+import MenuPlaceholder from '../Placeholder/MenuPlaceholder';
 import MenuItem from './MenuItem';
 import { __ } from '@wordpress/i18n';
 import useMenu from "./MenuData";
@@ -12,14 +12,7 @@ const Menu = () => {
 
     if ( !subMenuLoaded ) {
         return(
-            <div className="rsssl-wizard-menu rsssl-grid-item">
-                <div className="rsssl-grid-item-header">
-                    ...<h1 className="rsssl-h4"></h1>
-                </div>
-                <div className="rsssl-grid-item-content">
-                    <Placeholder lines="3"></Placeholder>
-                </div>
-            </div>
+            <MenuPlaceholder />
         )
     }
     return (

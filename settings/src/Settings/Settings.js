@@ -1,5 +1,5 @@
 import { useState} from "@wordpress/element";
-import Placeholder from "../Placeholder/Placeholder";
+import SettingsPlaceholder from "../Placeholder/SettingsPlaceholder";
 import {in_array} from "../utils/lib";
 import SettingsGroup from "./SettingsGroup";
 import Help from "./Help";
@@ -43,14 +43,7 @@ const Settings = () => {
     const { menu_items: menuItems } = subMenu;
     if ( !subMenuLoaded || !fieldsLoaded || menuItems.length===0 ) {
         return(
-            <div className="cmplz-wizard-settings cmplz-column-2">
-                <div className="cmplz-grid-item">
-                    <div className="cmplz-grid-item-content">
-                        <div className="cmplz-settings-block-intro"><Placeholder lines="3"></Placeholder></div>
-                    </div>
-                </div>
-                <div className="cmplz-grid-item-footer"></div>
-            </div>
+            <SettingsPlaceholder />
         )
     }
 

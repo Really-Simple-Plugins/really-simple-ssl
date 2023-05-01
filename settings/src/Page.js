@@ -100,10 +100,10 @@ const Page = () => {
     return (
         <div className="rsssl-wrapper">
             {OnboardingModal && <OnboardingModal />}
-            {!fieldsLoaded && <PagePlaceholder></PagePlaceholder>}
+
             {Modal && <Modal/>}
-            {fieldsLoaded &&
-                (
+            {
+
                     <>
                         <Header />
                         <div className={"rsssl-content-area rsssl-grid rsssl-" + selectedMainMenuItem}>
@@ -119,7 +119,7 @@ const Page = () => {
                             }
                         </div>
                     </>
-                )
+
             }
         </div>
     );
