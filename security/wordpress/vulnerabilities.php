@@ -513,7 +513,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 'id' => 'force_update',
                 'name' => __('Force update', 'really-simple-ssl'),
                 'value' => get_option('rsssl_force_update'),
-                'description' => sprintf(__('Forcefully update the plugin or theme with this option.', 'really-simple-ssl'), self::riskNaming('l')),
+                'description' => sprintf(__('Force update the plugin or theme with this option', 'really-simple-ssl'), self::riskNaming('l')),
             ];
             $measures[] = [
                 'id' => 'quarantine',
