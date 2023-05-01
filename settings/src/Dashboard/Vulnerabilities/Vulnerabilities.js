@@ -4,7 +4,7 @@ import {useEffect, useState} from "react";
 import useFields from "../../Settings/FieldsData";
 import useRiskData from "../../Settings/RiskConfiguration/RiskData";
 
-const WPVul = () => {
+const Vulnerabilities = () => {
     const {
         vulnerabilities,
         vulnerabilityScore,
@@ -343,4 +343,4 @@ const WPVul = () => {
     )
 }
 
-export default WPVul;
+export default Vulnerabilities;

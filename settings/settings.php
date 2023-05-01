@@ -10,7 +10,6 @@ defined('ABSPATH') or die();
 
 require_once(rsssl_path . 'settings/config/config.php');
 require_once(rsssl_path . 'settings/config/menu.php');
-require_once(rsssl_path . 'settings/config/blocks.php');
 require_once(rsssl_path . 'settings/config/disable-fields-filter.php');
 
 /**
@@ -80,7 +79,6 @@ function rsssl_plugin_admin_scripts()
             'upgrade_link' => is_multisite() ? 'https://really-simple-ssl.com/pro/?mtm_campaign=fallback&mtm_source=free&mtm_content=upgrade' : 'https://really-simple-ssl.com/pro/?mtm_campaign=fallback&mtm_source=free&mtm_content=upgrade',
             'plugin_url' => rsssl_url,
             'network_link' => network_site_url('plugins.php'),
-            'blocks' => rsssl_blocks(),
             'pro_plugin_active' => defined('rsssl_pro_version'),
             'networkwide_active' => !is_multisite() || rsssl_is_networkwide_active(),//true for single sites and network wide activated
             'nonce' => wp_create_nonce('wp_rest'),//to authenticate the logged in user
