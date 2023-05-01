@@ -64,6 +64,9 @@ class rsssl_onboarding {
 		$error = false;
 		$next_action = 'none';
 		switch( $action ){
+			case 'onboarding_data':
+				$response = $this->onboarding_data($data);
+				break;
 			case 'get_modal_status':
 				$response =  ["dismissed" => !$this->show_onboarding_modal()];
 				break;
@@ -155,13 +158,13 @@ class rsssl_onboarding {
 	 * @return array
 	 */
 
-	public function onboarding_data( WP_REST_Request $request): array {
+	public function onboarding_data( $data ): array {
 		// "warning", // yellow dot
 		// "error", // red dot
 		// "active" // green dot
 		$info = "";
-		$refresh = isset($_GET['forceRefresh']) && $_GET['forceRefresh']===true;
-		$nonce = $_GET['nonce'] ?? false;
+		$refresh = isset($data['forceRefresh']) && $data['forceRefresh']===true;
+		$nonce = $data['nonce'] ?? false;
 		if ( !wp_verify_nonce($nonce, 'rsssl_nonce') ) {
 			return [];
 		}

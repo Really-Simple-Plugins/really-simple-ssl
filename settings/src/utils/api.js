@@ -223,7 +223,3 @@ export const doAction = (action, data) => {
     data.nonce = rsssl_settings.rsssl_nonce;
     return apiPost('reallysimplessl/v1/do_action/'+action, data);
 }
-
-export const getOnboarding = (forceRefresh) => {
-    return apiGet('reallysimplessl/v1/onboarding'+glue()+'forceRefresh='+forceRefresh+getNonce());
-}

@@ -184,7 +184,9 @@ const useOnboardingData = create(( set, get ) => ({
 }));
 
 const retrieveSteps = (forceRefresh) => {
-    return rsssl_api.getOnboarding(forceRefresh).then( ( response ) => {
+    let data={};
+    data.forceRefresh = forceRefresh;
+    return rsssl_api.doAction('onboarding_data', data).then( ( response ) => {
         let steps = response.steps;
         let sslEnabled=  response.ssl_enabled;
         let networkActivationStatus=  response.network_activation_status;
