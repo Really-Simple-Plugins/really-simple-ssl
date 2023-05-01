@@ -84,7 +84,6 @@ function rsssl_plugin_admin_scripts()
             'nonce' => wp_create_nonce('wp_rest'),//to authenticate the logged in user
             'rsssl_nonce' => wp_create_nonce('rsssl_nonce'),
             'wpconfig_fix_required' => RSSSL()->admin->do_wpconfig_loadbalancer_fix() && !RSSSL()->admin->wpconfig_has_fixes(),
-
         ])
     );
 }

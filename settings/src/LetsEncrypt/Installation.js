@@ -1,4 +1,4 @@
-import {useState, useEffect} from "@wordpress/element";
+import {useState} from "@wordpress/element";
 import { __ } from '@wordpress/i18n';
 import * as rsssl_api from "../utils/api";
 import {dispatch,} from '@wordpress/data';

@@ -1,18 +1,18 @@
 import {__} from '@wordpress/i18n';
 import * as rsssl_api from "../utils/api";
-import {dispatch,} from '@wordpress/data';
+import {dispatch} from '@wordpress/data';
 import {useUpdateEffect} from 'react-use';
 import sleeper from "../utils/sleeper";
 import Hyperlink from "../utils/Hyperlink";
-
 import {
     Button,
 } from '@wordpress/components';
-import useLetsEncryptData from "./letsEncryptData";
 import useFields from "../Settings/FieldsData";
+import useMenu from "../Menu/MenuData";
 
 const Directories = (props) => {
-    const {addHelpNotice} = useFields();
+    const {addHelpNotice, updateField, setChangedField, saveFields, fetchFieldsData} = useFields();
+    const { setSelectedSubMenuItem} = useMenu();
 
     let action = props.action;
 
@@ -47,10 +47,12 @@ const Directories = (props) => {
         return (<></>);
     }
 
-    const handleSwitchToDNS = () => {
-        props.updateField('verification_type', 'dns');
-        return rsssl_api.runLetsEncryptTest('update_verification_type', 'dns').then((response) => {
-            props.selectMenu('le-dns-verification');
+    const handleSwitchToDNS = async () => {
+        updateField('verification_type', 'dns');
+        setChangedField('verification_type', 'dns');
+        await saveFields(true, true);
+        await rsssl_api.runLetsEncryptTest('update_verification_type', 'dns').then((response) => {
+
             const notice = dispatch('core/notices').createNotice(
                 'success',
                 __('Switched to DNS', 'really-simple-ssl'),
@@ -64,6 +66,8 @@ const Directories = (props) => {
                 dispatch('core/notices').removeNotice('rsssl_switched_to_dns');
             });
         });
+        await setSelectedSubMenuItem('le-dns-verification');
+        await fetchFieldsData('le-directories');
     }
 
     return (
@@ -83,7 +87,7 @@ const Directories = (props) => {
                     </Button>
                 </div>
             }
-            {action.status !== 'error' && rsssl_settings.hosting_dashboard === 'cpanel' &&
+            {rsssl_settings.hosting_dashboard === 'cpanel' &&
                 <><p>
                     <Hyperlink target="_blank"
                                text={__("If you also want to secure subdomains like mail.domain.com, cpanel.domain.com, you have to use the %sDNS%s challenge.", "really-simple-ssl")}
