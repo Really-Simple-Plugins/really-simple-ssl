@@ -19,7 +19,6 @@ class rsssl_onboarding {
 		}
 
 		self::$_this = $this;
-		add_action( 'rest_api_init', array($this, 'onboarding_rest_route'), 10 );
 		add_action( 'admin_init', array( $this, 'maybe_redirect_to_settings_page'), 40);
 		add_filter("rsssl_run_test", array($this, 'handle_onboarding_request'), 10, 3);
 		add_filter("rsssl_do_action", array($this, 'handle_onboarding_action'), 10, 3);
@@ -377,16 +376,6 @@ class rsssl_onboarding {
 			}
 		}
 		return true;
-	}
-
-	public function onboarding_rest_route() {
-		register_rest_route( 'reallysimplessl/v1', 'onboarding', array(
-			'methods'  => 'GET',
-			'callback' => array($this, 'onboarding_data'),
-			'permission_callback' => function () {
-				return rsssl_user_can_manage();
-			}
-		) );
 	}
 
 	/**
