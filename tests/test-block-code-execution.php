@@ -1,11 +1,22 @@
 <?php
+
 class RssslCodeExecutionTest extends WP_UnitTestCase {
 
+    /**
+     * Set up the test environment.
+     *
+     * @return void
+     */
     public function setUp(): void {
         parent::setUp();
         require_once __DIR__ . '/../security/wordpress/block-code-execution-uploads.php';
     }
 
+    /**
+     * Test if PHP execution is blocked in the /wp-content/uploads folder.
+     *
+     * @return void
+     */
     public function test_php_execution_in_uploads_folder() {
         $uploads_dir = wp_upload_dir();
         $uploads_path = $uploads_dir['basedir'];
