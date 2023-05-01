@@ -1,7 +1,7 @@
 import {create} from 'zustand';
 import * as rsssl_api from "../../utils/api";
 const useSslLabs = create(( set, get ) => ({
-    debug:true, //set to true for localhost testing, with wordpress.org as domain
+    debug:false, //set to true for localhost testing, with wordpress.org as domain
     sslScanStatus: false,
     sslData: false,
     endpointData: [],
