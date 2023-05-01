@@ -1,89 +1,79 @@
-.rsssl-field-wrap {
+
+
+.rsssl {
+  .rdt_TableHeadRow, .rdt_TableRow, .rdt_Pagination {
+    @include rsssl-inline-block-padding;
+    padding-block: var(--rsp-spacing-xs);
+  }
+
   .rdt_TableCol, .rdt_TableCell {
-    min-width:50px;
+    padding-left: 0;
+    padding-right: 0;
   }
-  .rdt_TableHeadRow {
-    .rdt_TableCol:last-child {
-      flex-grow:0;
-      flex-direction: row-reverse;
-      //margin-right: 20px;
+
+  .rdt_Pagination {
+    select + svg {
+      display: none;
     }
+  }
+
+  .rsssl-empty-data-table {
+    text-align: center;
+    padding: var(--rsp-spacing-xl);
+  }
+
+  .rsssl-grid-item.datatable {
+    .rsssl-field-wrap {
+      width: 100%;
+    }
+
+    .rsssl-loading-container {
+      align-content: space-between;
+      height: 100%;
+
+      & > div {
+        width: 100%;
+      }
+    }
+
+    .rsssl-csp-revoked > div:nth-child(-n+3) {
+      opacity: 0.3;
+    }
+  }
+
+  .rsssl-mixed-content-datatable {
+    width: 100%;
   }
   .rdt_TableRow {
-    &:nth-child(odd){
-      background-color:var(--rsp-grey-200)
+    &:nth-child(odd) {
+      background-color: var(--rsp-grey-200)
     }
-    padding:var(--rsp-spacing-xs) 0;
-    .rdt_TableCell:last-child {
-      flex-grow:0;
+    &:not(:last-of-type) {
+      border: unset;
     }
-    .rsssl-status-allowed, .rsssl-status-revoked{
-      min-width:110px;
-      margin-right:20px;
-    }
-  }
-
-  .rsssl-csp-revoked >div:nth-child(-n+3) {
-    opacity:0.3;
-  }
-}
-
-
-.rsssl-content_security_policy .rsssl-field-wrap {
-  .rdt_TableHeadRow {
-    .rdt_TableCol:last-child {
-      flex-grow:0;
-      min-width:initial;
-    }
-    .rdt_TableCol:nth-last-child(2) {
-      //flex-direction: row-reverse;
-    }
+    border: unset;
   }
 
 
-  .rdt_TableRow {
-    .rsssl-status-allowed, .rsssl-status-revoked, .rsssl-learning-mode-delete{
-      //margin-right:0;
-    }
-    .rdt_TableCell:last-child {
-      flex-grow:0;
-      min-width:initial;
-    }
-    .rdt_TableCell:nth-last-child(2) {
-      //flex-direction: row-reverse;
-      //margin-right:10px;
-    }
-  }
-
-  .rsssl-csp-revoked >div:nth-child(-n+3) {
-    opacity:0.3;
-  }
-}
-
-//wp-core also adds an svg for the select dropdown, so we hide the one from the react datatables component
-nav.rdt_Pagination>div>svg {
-  display:none !important;
-}
-
-.rsssl-content_security_policy, .rsssl-xml_rpc {
-  .rsssl-field-wrap >div >div {
-    overflow-x:inherit;
-    overflow-y:inherit;
-  }
-}
-
-.rsssl-permissions_policy {
-  .rdt_TableRow {
-    .rdt_TableCell:last-child {
-      min-width: fit-content;
-      .components-input-control__container {
-        min-width: fit-content;
+  // per seperate datatable
+  .rsssl-hardening_xml{
+    .rdt_TableCol, .rdt_TableCell {
+      &:nth-of-type(1) {
+        flex: 5 0 0px;
+        max-width: 100%;
       }
     }
   }
-}
-.rsssl-mixed-content-datatable{
-  & > div > div {
-    display: flex;
+  .rsssl-vulnerabilities_overview{
+    .rdt_TableCol, .rdt_TableCell {
+      &:nth-of-type(1) {
+        flex: 2 0 0px;
+        max-width: 100%;
+      }
+      &:nth-of-type(4) {
+        flex: 2 0 0px;
+        max-width: 100%;
+      }
+    }
   }
 }

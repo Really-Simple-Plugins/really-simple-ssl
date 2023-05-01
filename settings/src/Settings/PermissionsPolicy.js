@@ -61,6 +61,7 @@ const PermissionsPolicy = (props) => {
             name: item.name,
             sortable: item.sortable,
             width: item.width,
+            grow: item.grow,
             selector: row => row[item.column],
         }
         columns.push(newItem);
@@ -101,11 +102,17 @@ const PermissionsPolicy = (props) => {
             },
         },
     };
+    // add width to columns if not set
+    columns.forEach(function(item, i) {
+        if (!item.width) {
+            item.width = 'auto';
+        }
+    });
 
     if (!DataTable || !theme) return null;
 
     return (
-        <div className={ props.highLightClass}>
+        <>
                 <DataTable
                     columns={columns}
                     data={outputData}
@@ -114,7 +121,7 @@ const PermissionsPolicy = (props) => {
                     customStyles={customStyles}
                     theme={theme}
                 />
-                { enablePermissionsPolicy!=1 && <button className="button button-primary" onClick={ (e) => togglePermissionsPolicyStatus(e, true ) }>{__("Enforce","really-simple-ssl")}</button> }
+            { enablePermissionsPolicy!=1 && <div className={'rsssl-grid-item-content-footer'} ><button className="button button-primary" onClick={ (e) => togglePermissionsPolicyStatus(e, true ) }>{__("Enforce","really-simple-ssl")}</button></div> }
                 { enablePermissionsPolicy==1 && <div className="rsssl-locked">
                     <div className="rsssl-shield-overlay">
                         <Icon name = "shield"  size="80px"/>
@@ -132,7 +139,7 @@ const PermissionsPolicy = (props) => {
                         {__("The Permissions Policy has been disabled.", "really-simple-ssl")}
                     </div>
                 </div>}
-        </div>
+        </>
     )
 }
 

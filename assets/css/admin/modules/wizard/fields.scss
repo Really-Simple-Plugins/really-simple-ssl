@@ -12,7 +12,7 @@ html {
         margin: 0;
       }
       .rsssl-tooltip {
-        flex-grow:1;
+        flex-grow: 1;
       }
       .components-input-control__container {
         max-width: max-content;
@@ -56,6 +56,11 @@ html {
       opacity:0.7
     }
     .rsssl-grid-item{
+      &.border-to-border{
+        .rsssl-field-wrap{
+            padding: 0;
+        }
+      }
       .rsssl-grid-item-content{
         padding: var(--rsp-spacing-xs) 0;
       }
@@ -81,6 +86,7 @@ html {
       align-items: center;
     }
   }
+
 
   .rsssl-highlight {
     background-color: transparent;

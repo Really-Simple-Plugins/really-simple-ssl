@@ -39,6 +39,7 @@
     min-height: 10px;
   }
   .rsssl-grid-item-content-footer{
+    @include rsssl-block-padding;
     display: flex;
     gap: var(--rsp-spacing-s);
   }

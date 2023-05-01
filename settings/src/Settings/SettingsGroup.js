@@ -89,8 +89,24 @@ const SettingsGroup = (props) => {
     let anchor = getAnchor('main');
     let disabledClass = disabled || networkwide_error ? 'rsssl-disabled' : '';
 
+    let containerClassName = 'rsssl-grid-item';
+
+    console.log('activeGroup', activeGroup);
+    if (activeGroup && activeGroup.id) {
+        containerClassName += ' rsssl-' + activeGroup.id;
+    }
+
+    if (activeGroup && activeGroup.class) {
+        containerClassName += ' ' + activeGroup.class;
+    }
+
+    if (disabledClass) {
+        containerClassName += ' ' + disabledClass;
+    }
+
+
     return (
-        <div className={"rsssl-grid-item rsssl-"+activeGroup.id + ' ' +  disabledClass}>
+        <div className={containerClassName}>
             {activeGroup.title && <div className="rsssl-grid-item-header">
                 <h3 className="rsssl-h4">{activeGroup.title}</h3>
                 {activeGroup.helpLink && anchor!=='letsencrypt'&& <div className="rsssl-grid-item-controls"><Hyperlink target="_blank" className="rsssl-helplink" text={helplinkText} url={activeGroup.helpLink}/></div>}
