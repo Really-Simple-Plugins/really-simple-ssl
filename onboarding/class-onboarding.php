@@ -4,15 +4,6 @@ require_once(rsssl_path . 'class-installer.php');
 
 class rsssl_onboarding {
 	private static $_this;
-	private $hardening = [
-		'disable_file_editing',
-		'hide_wordpress_version',
-		'block_code_execution_uploads',
-		'disable_login_feedback',
-		'disable_user_enumeration',
-		'disable_indexing',
-	];
-
 	function __construct() {
 		if ( isset( self::$_this ) ) {
 			wp_die( sprintf( __( '%s is a singleton class and you cannot create a second instance.', 'really-simple-ssl' ), get_class( $this ) ) );

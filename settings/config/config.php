@@ -510,7 +510,6 @@ function rsssl_fields( $load_values = true ) {
             'label' => __('Vulnerability detection', 'really-simple-ssl'),
             'tooltip'  => __( "This feature depends on multiple standard background processes. If a process fails or is unavailable on your system, detection might not work. We run frequent tests for this purpose. We will notify you accordingly if there are any issues.", 'really-simple-ssl' ),
             'disabled' => false,
-						// 'comment' => __("Powered by WPVulnerability", 'really-simple-ssl'),
             'default' => false,
             'warning' => true,
             'help'               => [

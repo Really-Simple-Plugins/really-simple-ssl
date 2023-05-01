@@ -8,7 +8,7 @@ const CheckboxControl = (props) => {
     const [ isOpen, setIsOpen ] = useState( false );
 
     const onChangeHandler = (e) => {
-        if (props.field.warning && !props.field.value) {
+        if (props.field.warning && props.field.warning.length>0 && !props.field.value) {
             setIsOpen( true );
         } else {
             executeAction();
