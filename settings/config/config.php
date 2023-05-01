@@ -597,7 +597,7 @@ function rsssl_fields( $load_values = true ) {
                 'c' => __('Critical (default)', 'really-simple-ssl'),
             ],
             'label' => __('Email admin', 'really-simple-ssl'),
-            'tooltip'  => __( "This will send emails about vulnerbalities directly from your server. Make sure you can receive emails by the testing a preview below.", 'really-simple-ssl' ),
+            'tooltip'  => __( "This will send emails about vulnerabilities directly from your server. Make sure you can receive emails by the testing a preview below.", 'really-simple-ssl' ),
             'warning' => true,
             'disabled' => false,
             'default' => 'c',

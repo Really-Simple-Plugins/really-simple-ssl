@@ -48,10 +48,8 @@ const GridBlock = (props) => {
                         <div className="rsssl-grid-item-controls"></div>
                     </>
                 }
-
             </div>
             <div key={"content-"+blockData.id} className="rsssl-grid-item-content">{wp.element.createElement(dynamicComponents[content])}</div>
-
             { !footer && <div className="rsssl-grid-item-footer"></div>}
             { footer && <div className="rsssl-grid-item-footer">{wp.element.createElement(dynamicComponents[footer])}</div>}
         </div>
