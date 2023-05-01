@@ -79,7 +79,7 @@ const RiskComponent = (props) => {
     return (
         <div className={processingClass}>
             <p>{
-                __("You can choose to automate the most common actions for a vulnerability. Each action is set to a minimum risk level, similar to the notifications. Please read the instructions to read more about the process.","really-simple-ssl")
+                __("You can choose to automate the most common actions for a vulnerability. Each action is set to a minimum risk level, similar to the notifications. Please read the instructions to learn more about the process.","really-simple-ssl")
             }</p>
             {DataTable && <DataTable
                 columns={columns}
