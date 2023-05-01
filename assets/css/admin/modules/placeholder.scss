@@ -66,6 +66,19 @@ $animation-duration: 1.6s;
   }
 
 }
+.rsssl-dashboard-placeholder {
+  &.rsssl-grid-item.rsssl-row-2 {
+    grid-row: span 1;
+  }
+}
+.rsssl-settings-placeholder {
+  .rsssl-grid-item{
+    min-height:400px;
+  }
+}
+.rsssl-menu-placeholder {
+  min-height:400px;
+}
 
 @keyframes shine-lines {
   0% {

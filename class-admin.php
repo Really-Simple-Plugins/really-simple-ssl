@@ -520,6 +520,11 @@ class rsssl_admin
     public function wpconfig_is_writable()
     {
         $wpconfig_path = $this->find_wp_config_path();
+
+        if (empty($wpconfig_path)) {
+		    return false;
+	    }
+
         if ( is_writable($wpconfig_path) ) {
 	        return true;
         }
@@ -909,6 +914,10 @@ class rsssl_admin
 		}
 
 		$wpconfig_path = $this->find_wp_config_path();
+		if (empty($wpconfig_path)) {
+			return;
+		}
+
 		if ( !is_writable($wpconfig_path) ) {
             return;
 		}
@@ -2313,9 +2322,6 @@ class rsssl_admin
 	            ),
             ),
 	        'vul_beta' => array(
-		        'condition'  => array(
-			        'RSSSL()->admin->is_upgraded',
-		        ),
 		        'callback' => '_true_',
 		        'output' => array(
 			        'true' => array(
@@ -2814,6 +2820,9 @@ class rsssl_admin
 		//only if cookie settings were not inserted yet
 		if ( $this->secure_cookie_settings_status() !== 'set' ) {
 			$wpconfig_path = RSSSL()->admin->find_wp_config_path();
+			if (empty($wpconfig_path)) {
+				return false;
+			}
 			$wpconfig = file_get_contents($wpconfig_path);
 			if ((strlen($wpconfig)!=0) && is_writable($wpconfig_path)) {
 				$rule  = "\n"."//Begin Really Simple SSL session cookie settings"."\n";

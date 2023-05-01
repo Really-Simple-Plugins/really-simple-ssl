@@ -21,6 +21,7 @@ const useOnboardingData = create(( set, get ) => ({
     email: '',
     includeTips:false,
     sendTestEmail:true,
+    actionStatus: '',
     setIncludeTips: (includeTips) => {
         set(state => ({ includeTips }))
     },
@@ -93,6 +94,7 @@ const useOnboardingData = create(( set, get ) => ({
     },
     setShowOnBoardingModal: (showOnboardingModal) => set(state => ({ showOnboardingModal })),
     actionHandler: async (id, action, event) => {
+        set({actionStatus: 'processing'});
         event.preventDefault();
         get().updateItemStatus(action, 'processing', id);
         let next = await processAction(action, id);
@@ -100,6 +102,8 @@ const useOnboardingData = create(( set, get ) => ({
         if ( next.action!=='none' && next.action!=='completed') {
             next = await processAction(next.action, id);
             get().updateItemStatus(next.action, next.status, id);
+        } else {
+            set({actionStatus: 'completed'});
         }
     },
     getSteps: async (forceRefresh) => {
@@ -163,32 +167,25 @@ const useOnboardingData = create(( set, get ) => ({
         }, 1000) //add a delay, otherwise it's so fast the user may not trust it.
     },
     activateSSLNetworkWide: () => {
+        if (get().networkProgress>=100) {
+            get().updateItemStatus('completed', 'success', 'ssl_enabled');
+            set({
+                networkActivationStatus:'completed'
+            });
+            return;
+        }
         set((state) => ({processing: true}));
         rsssl_api.runTest('activate_ssl_networkwide' ).then( ( response ) => {
-
             if (response.success) {
                 set({
                     networkProgress: response.progress,
+                    processing:false,
                 });
                 if (response.progress>=100) {
-
-                    const currentStepIndex = get().currentStepIndex;
-                    const itemIndex = get().steps[currentStepIndex].items.findIndex(item => {return item.id==='ssl_enabled';});
-                    set(
-                        produce((state) => {
-                            let step = get().currentStep;
-                            let stepCopy = {...step};
-                            let itemsCopy = [...step.items];
-                            let itemCopy = {...step.items[itemIndex]};
-                            itemCopy.status = 'success';
-                            itemCopy.current_action = '';
-                            itemsCopy[itemIndex] = itemCopy;
-                            stepCopy.items = itemsCopy;
-                            state.steps[currentStepIndex] = stepCopy;
-                            state.currentStep = state.steps[currentStepIndex];
-                            state.processing = false;
-                        })
-                    )
+                    get().updateItemStatus('completed', 'success', 'ssl_enabled');
+                    set({
+                        networkActivationStatus:'completed'
+                    });
                 }
             }
         });

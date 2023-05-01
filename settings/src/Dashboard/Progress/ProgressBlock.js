@@ -1,7 +1,6 @@
 import {
     useState, useEffect, useRef
 } from '@wordpress/element';
-
 import TaskElement from "./../TaskElement";
 import useProgress from "./ProgressData";
 import {__} from "@wordpress/i18n";

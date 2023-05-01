@@ -220,6 +220,9 @@ const isNextButtonDisabled = (fields, selectedMenuItem) => {
 
 const updateFieldsListWithConditions = (fields) => {
     let newFields = [];
+    if (!fields || !Array.isArray(fields)) {
+        return [];
+    }
     fields.forEach(function(field, i) {
         let enabled = !( field.hasOwnProperty('react_conditions') && !validateConditions(field.react_conditions, fields, field.id) );
         let previouslyEnabled = !field.conditionallyDisabled;
