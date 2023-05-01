@@ -223,7 +223,7 @@ const WPVul = () => {
                                 .replace("%d", vulnerabilityWord)
                             }
                         </p>
-                        <a style={linkStyle} href={'#'}
+                        <a style={linkStyle} href={'#settings/vulnerabilities'}
                            target="_blank">{__('Read more', 'really-simple-ssl')}</a>
                     </div>
                 </>
@@ -279,7 +279,7 @@ const WPVul = () => {
                     <Icon name="circle-check" color='green'/>
                     <p className={"rsssl-hardening-list-item-text"}>{__("Hardening features are configured", "really-simple-ssl")}</p>
                     {/*@todo link toevoegen?*/}
-                    <a style={linkStyle} href={'#'} target="_blank">{__('What now', 'really-simple-ssl')}?</a>
+                    <a style={linkStyle} href={'#settings/vulnerabilities'} target="_blank">{__('What now', 'really-simple-ssl')}?</a>
                 </div>
             </>)
         }

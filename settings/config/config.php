@@ -552,7 +552,7 @@ function rsssl_fields( $load_values = true ) {
                 'h' => __('High-risk', 'really-simple-ssl'),
                 'c' => __('Critical', 'really-simple-ssl'),
             ],
-            'label' => __('Dashboard', 'really-simple-ssl'),
+            'label' => __('Really Simple SSL dashboard', 'really-simple-ssl'),
             'disabled' => false,
             'default' => 'l',
             'react_conditions' => [
@@ -574,7 +574,7 @@ function rsssl_fields( $load_values = true ) {
                 'h' => __('High-risk (default)', 'really-simple-ssl'),
                 'c' => __('Critical', 'really-simple-ssl'),
             ],
-            'label' => __('Site-wide notification', 'really-simple-ssl'),
+            'label' => __('Site-wide, admin notification', 'really-simple-ssl'),
             'disabled' => false,
             'default' => 'h',
             'react_conditions' => [
@@ -596,8 +596,8 @@ function rsssl_fields( $load_values = true ) {
                 'h' => __('High-risk', 'really-simple-ssl'),
                 'c' => __('Critical (default)', 'really-simple-ssl'),
             ],
-            'label' => __('Email admin', 'really-simple-ssl'),
-            'tooltip'  => __( "This will send emails about vulnerabilities directly from your server. Make sure you can receive emails by the testing a preview below.", 'really-simple-ssl' ),
+            'label' => __('Email', 'really-simple-ssl'),
+            'tooltip'  => __( "This will send emails about vulnerabilities directly from your server. Make sure you can receive emails by the testing a preview below. If this feature is disabled, please enable notifications under general settings.", 'really-simple-ssl' ),
             'warning' => true,
             'disabled' => false,
             'default' => 'c',
@@ -1208,4 +1208,3 @@ function rsssl_fields( $load_values = true ) {
 
 	return array_values( $fields );
 }
-

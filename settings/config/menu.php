@@ -78,12 +78,13 @@ function rsssl_menu() {
 							'id'       => 'vulnerabilities_basic',
 							'helpLink' => 'https://really-simple-ssl.com/instructions/about-vulnerabilities/',
 							'title'    => __( 'Vulnerabilities', 'really-simple-ssl' ),
-							// 'intro'    => __( '', 'really-simple-ssl' ),
+							'intro'    => __( 'Here you can configure vulnerability detection, notifications and measures. To learn more about the features displayed, please use the instructions linked in the top-right corner.', 'really-simple-ssl' ),
 						],
 						[
 							'id'       => 'vulnerabilities_notifications',
 							'helpLink' => 'https://really-simple-ssl.com/instructions/about-vulnerabilities#notifications',
 							'title'    => __( 'Notifications', 'really-simple-ssl' ),
+							'intro'    => __( 'These notifications are set to the minimum risk level that triggers a notification. For example, the default site-wide notification triggers on high-risk and critical vulnerabilities.', 'really-simple-ssl' ),
 						],
 						[
 							'id'       => 'vulnerabilities_overview',
