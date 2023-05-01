@@ -12,6 +12,10 @@ if ( RSSSL_USE_CRON ) {
 			wp_schedule_event( time(), 'rsssl_daily', 'rsssl_every_day_hook' );
 		}
 
+		if ( ! wp_next_scheduled( 'rsssl_twice_daily_hook' ) ) {
+			wp_schedule_event( time(), 'rsssl_twice_daily', 'rsssl_twice_daily_hook' );
+		}
+
 		if ( ! wp_next_scheduled( 'rsssl_every_five_minutes_hook' ) ) {
 			wp_schedule_event( time(), 'rsssl_five_minutes', 'rsssl_every_five_minutes_hook' );
 		}
@@ -20,7 +24,10 @@ if ( RSSSL_USE_CRON ) {
 		}
 	}
 }
-
+add_action( 'rsssl_twice_daily_hook', 'rsssl_twice_daily_cron' );
+function rsssl_twice_daily_cron(){
+	do_action('rsssl_twice_daily_cron');
+}
 /**
  * Ensure the hook has a function attached to it.
  */
@@ -57,6 +64,10 @@ function rsssl_filter_cron_schedules( $schedules ) {
 	$schedules['rsssl_daily']   = array(
 		'interval' => DAY_IN_SECONDS,
 		'display'  => __( 'Once every day' )
+	);
+	$schedules['rsssl_twice_daily']   = array(
+		'interval' => 12 * HOUR_IN_SECONDS,
+		'display'  => __( 'Twice every day' )
 	);
 	$schedules['rsssl_weekly']   = array(
 		'interval' => WEEK_IN_SECONDS,
