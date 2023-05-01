@@ -636,7 +636,7 @@ function rsssl_fields( $load_values = true ) {
             ],
         ],
         [
-            'id'    => 'vulnerabilities_list',
+            'id'    => 'vulnerabilities-overview',
             'menu_id' => 'vulnerabilities',
             'group_id' => 'vulnerabilities_overview',
             'type' => 'vulnerabilitiestable',
