@@ -36,8 +36,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
         public $schedule = 'twicedaily'; //set for twice a day. so every 12 hours.
 
         public $update_count = 0;
-
-        private $admin_notices = [];
         protected $risk_naming = [];
 
         /**
@@ -1015,7 +1013,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
                     //we add the style to the head
                     document.head.appendChild(style);
                     //we loop through the components
-
                     vulnerable_components.forEach(function(component) {
                         //we get the theme element
                         let theme_element = $(\".theme[data-slug='\"+component.slug+\"']\");
@@ -1023,13 +1020,11 @@ if (!class_exists("rsssl_vulnerabilities")) {
                         if (theme_element.length > 0) {
                             //we check the risk
                             let level = levels[component.risk];
-                            let text = '" . esc_attr(__('Security: <-level->', 'really-simple-ssl')) . "';
-                            text = text.replace('<-level->', level);
-
+                            let text = '" . esc_attr(__('Vulnerability: %s', 'really-simple-ssl')) . "';
+                            text = text.replace('%s', level);
                             if (component.risk === 'h' || component.risk === 'c') {
-
                                 //we add the danger class
-                                theme_element.prepend('<div class=\"rss-theme-notice-danger\"><p><span class=\"dashicons dashicons-no\"></span>  '+text+'</p></div>');
+                                theme_element.prepend('<div class=\"rss-theme-notice-danger\"><p><span class=\"dashicons dashicons-info\"></span>  '+text+'</p></div>');
                             } else {
                                 theme_element.prepend('<div class=\"rss-theme-notice-warning\"><p></p><span class=\"dashicons dashicons-info\"></span>  '+text+'</p></div>');
                             }
