@@ -99,6 +99,7 @@ function rsssl_menu() {
 							'premium'      => true,
 							'helpLink'     => 'https://really-simple-ssl.com/instructions/about-vulnerabilities#measures',
 							'title'        => __( 'Measures', 'really-simple-ssl' ),
+							'class' => 'border-to-border datatable',
 							'premium_text' => __( "Improve Security with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
 						],
 					],
