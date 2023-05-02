@@ -49,7 +49,6 @@ const UseRiskData = create((set, get) => ({
             console.log(e);
         }
     },
-
     setIntroCompleted: (value) => {
         set({introCompleted: value});
     },
