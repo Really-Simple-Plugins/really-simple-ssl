@@ -1421,5 +1421,5 @@ if (function_exists('make_test_notifications')) {
         //we store the notice in the notices array
         update_option('rsssl_admin_notices', $notices);
     }
-	add_action('admin_init', array(rsssl_vulnerabilities::class, 'instance'));
+	add_action('init', array(rsssl_vulnerabilities::class, 'instance'));
 }
