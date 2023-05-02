@@ -70,13 +70,12 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	        add_filter('rsssl_notices', [$this, 'show_help_notices'], 10, 1);
         }
 
-        public static function riskNaming($risk = null)
+        public function riskNaming($risk = null)
         {
-            $instance = self::instance();
             if (is_null($risk)) {
-                return $instance->risk_naming;
+                return $this->risk_naming;
             }
-            return $instance->risk_naming[$risk];
+            return $this->risk_naming[$risk];
         }
 
         /**
@@ -110,9 +109,8 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
         public function run_cron(){
 	        error_log( "run RSSSL vulnerabilties cron" );
-	        $instance = self::instance();
-	        $instance->check_files();
-	        $instance->cache_installed_plugins();
+	        $this->check_files();
+	        $this->cache_installed_plugins();
             error_log("installed plugins cached");
 	        if ( $this->trigger ) {
 		        $this->send_vulnerability_mail();
@@ -121,6 +119,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
         public function run()
         {
+            error_log("run RSSSL vulnerabilties");
 	        if ( ! rsssl_user_can_manage() ) {
 		        return;
 	        }
@@ -146,18 +145,17 @@ if (!class_exists("rsssl_vulnerabilities")) {
          *
          * @return array
          */
-        public static function firstRun(): array
+        public function firstRun(): array
         {
 	        if ( ! rsssl_user_can_manage() ) {
 		        return [];
 	        }
-            $instance = self::instance();
-	        $instance->check_files();
-	        $instance->cache_installed_plugins();
+	        $this->check_files();
+	        $this->cache_installed_plugins();
 
 	        return [
 		        'request_success' => true,
-		        'data' =>   $instance->workable_plugins
+		        'data' =>   $this->workable_plugins
 	        ];
         }
 
@@ -321,26 +319,25 @@ if (!class_exists("rsssl_vulnerabilities")) {
          *
          * @return array
          */
-        public static function get_stats($stats): array
+        public function get_stats($stats): array
         {
 	        if ( ! rsssl_user_can_manage() ) {
 		        return $stats;
 	        }
 
-            $self = new self();
-	        $self->cache_installed_plugins();
+	        $this->cache_installed_plugins();
             //now we only get the data we need.
-            $vulnerabilities = array_filter($self->workable_plugins, static function ($plugin) {
+            $vulnerabilities = array_filter($this->workable_plugins, static function ($plugin) {
                 if (isset($plugin['vulnerable']) && $plugin['vulnerable']) {
                     return $plugin;
                 }
                 return false;
             });
 
-	        $time = $self->get_file_stored_info(true);
+	        $time = $this->get_file_stored_info(true);
 	        $stats['vulnerabilities'] = count($vulnerabilities);
 	        $stats['vulList'] = $vulnerabilities;
-            $riskData = $self->measures_data();
+            $riskData = $this->measures_data();
             $stats['riskData'] = $riskData['data'];
 	        $stats['lastChecked'] = $time;
             return $stats;
@@ -508,13 +505,13 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 'id' => 'force_update',
                 'name' => __('Force update', 'really-simple-ssl'),
                 'value' => get_option('rsssl_force_update'),
-                'description' => sprintf(__('Will run a frequent update process on vulnerable components.', 'really-simple-ssl'), self::riskNaming('l')),
+                'description' => sprintf(__('Will run a frequent update process on vulnerable components.', 'really-simple-ssl'), $this->riskNaming('l')),
             ];
             $measures[] = [
                 'id' => 'quarantine',
                 'name' => __('Quarantine', 'really-simple-ssl'),
                 'value' => get_option('rsssl_quarantine'),
-                'description' => sprintf(__('Compnonents will be quarantined if the update process fails.', 'really-simple-ssl'), self::riskNaming('m')),
+                'description' => sprintf(__('Compnonents will be quarantined if the update process fails.', 'really-simple-ssl'), $this->riskNaming('m')),
             ];
 
             return [
@@ -523,20 +520,17 @@ if (!class_exists("rsssl_vulnerabilities")) {
             ];
         }
 
-        public static function measures_set($measures) {
+        public function measures_set($measures): array {
 	       // update_option('rsssl_'.sanitize_title($data['field']), sanitize_text_field($data['value']), false );
-            $risk_data = isset($measures['riskData']) ? $measures['riskData'] : [];
-	        $self = new self();
-
+            $risk_data = $measures['riskData'] ?? [];
 	        foreach ( $risk_data as $risk ) {
-                update_option('rsssl_'.sanitize_title($risk['id']), $self->sanitize_measure($risk['value']), false );
+                update_option('rsssl_'.sanitize_title($risk['id']), $this->sanitize_measure($risk['value']), false );
             }
             return [];
         }
 
         public function sanitize_measure($measure) {
-	        $self = new self();
-            return isset($self->risk_levels[$measure]) ? $measure : '*';
+            return isset($this->risk_levels[$measure]) ? $measure : '*';
         }
 
         /**
@@ -1351,7 +1345,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
     }
 
     //we initialize the class
-    add_action('admin_init', array(rsssl_vulnerabilities::class, 'instance'));
+    add_action('init', array(rsssl_vulnerabilities::class, 'instance'));
 }
 
 #########################################################################################
@@ -1429,5 +1423,4 @@ if (function_exists('make_test_notifications')) {
         //we store the notice in the notices array
         update_option('rsssl_admin_notices', $notices);
     }
-	add_action('admin_init', array(rsssl_vulnerabilities::class, 'instance'));
 }
