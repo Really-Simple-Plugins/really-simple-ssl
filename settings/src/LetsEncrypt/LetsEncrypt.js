@@ -56,8 +56,6 @@ const LetsEncrypt = (props) => {
 
     useEffect(() => {
         previousActionIndex.current = actionIndex;
-        let p = ( 100 / maxIndex.current ) * (actionIndex);
-        console.log(p);
         setProgress( ( 100 / maxIndex.current ) * (actionIndex));
 
         //ensure that progress does not get to 100 when retries are still running
