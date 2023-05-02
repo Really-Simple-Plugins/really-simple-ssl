@@ -70,6 +70,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
 	        //now we add the action to the cron.
 	        add_filter('rsssl_twice_daily_cron', array($this, 'run_cron'));
+	        add_filter('rsssl_notices', [$this, 'show_help_notices'], 10, 1);
         }
 
         public static function riskNaming($risk = null)
@@ -519,13 +520,13 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 'id' => 'force_update',
                 'name' => __('Force update', 'really-simple-ssl'),
                 'value' => get_option('rsssl_force_update'),
-                'description' => sprintf(__('Force update the plugin or theme with this option', 'really-simple-ssl'), self::riskNaming('l')),
+                'description' => sprintf(__('Will run a frequent update process on vulnerable components.', 'really-simple-ssl'), self::riskNaming('l')),
             ];
             $measures[] = [
                 'id' => 'quarantine',
                 'name' => __('Quarantine', 'really-simple-ssl'),
                 'value' => get_option('rsssl_quarantine'),
-                'description' => sprintf(__('Isolates the plugin or theme if no update can be performed', 'really-simple-ssl'), self::riskNaming('m')),
+                'description' => sprintf(__('Compnonents will be quarantined if the update process fails.', 'really-simple-ssl'), self::riskNaming('m')),
             ];
 
             return [
@@ -1374,7 +1375,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 #########################################################################################
 //we clear all the cache when the vulnerability scanner is enabled
 
-add_filter('rsssl_notices', [new rsssl_vulnerabilities(), 'show_help_notices'], 10, 1);
+
 
 function rsssl_vulnerabilities_api( array $response, string $action, $data ): array {
 	if ( ! rsssl_user_can_manage() ) {
