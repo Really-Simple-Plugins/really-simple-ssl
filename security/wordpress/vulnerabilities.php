@@ -115,10 +115,10 @@ if (!class_exists("rsssl_vulnerabilities")) {
             //we check if upgrader_process_complete is called, so we can reload the files.
             add_action('upgrader_process_complete', array($this, 'reload_files_on_update'), 10, 2);
             //After activation, we need to reload the files.
-            add_action('activate_plugin', array($this, 'reload_files_on_update'), 10, 2);
+            add_action( 'activate_plugin', array($this, 'reload_files_on_update'), 10, 2);
 
             //same goes for themes.
-            add_action('after_setup_theme', array($this, 'reload_files_on_update'), 10, 2);
+            add_action('after_switch_theme', array($this, 'reload_files_on_update'), 10, 2);
             add_action('current_screen', array($this, 'show_inline_code'));
         }
 
