@@ -60,22 +60,25 @@ const UseRiskData = create((set, get) => ({
         let quarantineRiskLevel = data.filter((item) => item.id==='quarantine')[0].value;
 
         //get the integer value of the risk level
-        forceUpdateRiskLevel = get().riskLevels.hasOwnProperty(forceUpdateRiskLevel) ? get().riskLevels[forceUpdateRiskLevel] : 0;
-        quarantineRiskLevel = get().riskLevels.hasOwnProperty(quarantineRiskLevel) ? get().riskLevels[quarantineRiskLevel] : 0;
+        forceUpdateRiskLevel = get().riskLevels.hasOwnProperty(forceUpdateRiskLevel) ? get().riskLevels[forceUpdateRiskLevel] : 5;
+        quarantineRiskLevel = get().riskLevels.hasOwnProperty(quarantineRiskLevel) ? get().riskLevels[quarantineRiskLevel] : 5;
         let quarantineIndex = data.findIndex((item) => item.id==='quarantine');
         //if the quarantine risk level is lower than the force update risk level, we set it to the force update risk level
         if (quarantineRiskLevel<forceUpdateRiskLevel) {
             data[quarantineIndex].value = Object.keys(get().riskLevels).find(key => get().riskLevels[key] === forceUpdateRiskLevel);
         }
+        //if the force update risk level is none, set quarantine also to none.
+        if ( forceUpdateRiskLevel===5 ) {
+            data[quarantineIndex].value = '*';
+        }
 
         //disable all values below this value
-        let disableUpTo = forceUpdateRiskLevel>0 ? forceUpdateRiskLevel-1 : 0
+        let disableUpTo = forceUpdateRiskLevel>0 ? forceUpdateRiskLevel : 0
         //create an array of integers up to the forceUpdateRiskLevel
-        let disabledRiskLevels =  Array.from(Array(disableUpTo).keys()).map(x => x +1);
+        let disabledRiskLevels =  Array.from(Array(disableUpTo).keys()).map(x => x);
         disabledRiskLevels = disabledRiskLevels.map( (level) => {
             return Object.keys(get().riskLevels).find(key => get().riskLevels[key] === level  );
         });
-        if (forceUpdateRiskLevel>0) disabledRiskLevels.push('*');
         data[quarantineIndex].disabledRiskLevels = disabledRiskLevels;
         return data;
     },
