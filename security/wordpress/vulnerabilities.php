@@ -127,17 +127,18 @@ if (!class_exists("rsssl_vulnerabilities")) {
          *
          * @return array
          */
-        public function firstRun(): array
+        public static function firstRun(): array
         {
 	        if ( ! rsssl_user_can_manage() ) {
 		        return [];
 	        }
-	        $this->check_files();
-	        $this->cache_installed_plugins();
+            $self = new self();
+	        $self->check_files();
+	        $self->cache_installed_plugins();
 
 	        return [
 		        'request_success' => true,
-		        'data' =>   $this->workable_plugins
+		        'data' =>   $self->workable_plugins
 	        ];
         }
 
@@ -1297,7 +1298,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
     //we initialize the class
     //add_action('init', array(rsssl_vulnerabilities::class, 'instance'));
-    if (!defined('rsssl_pro')) {
+    if ( !defined('rsssl_pro_version') ) {
 	    $vulnerabilities = new rsssl_vulnerabilities();
     }
 }
@@ -1330,7 +1331,7 @@ function rsssl_vulnerabilities_api( array $response, string $action, $data ): ar
 			$response = rsssl_vulnerabilities::measures_data();
 			break;
 		case 'vulnerabilities_measures_set':
-			$response = rsssl_vulnerabilities::measures_set($data);
+			$response = ( new rsssl_vulnerabilities )->measures_set($data);
 			break;
 	}
 
