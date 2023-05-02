@@ -70,6 +70,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
 	        //now we add the action to the cron.
 	        add_filter('rsssl_five_minutes_cron', array($this, 'run_cron'));
+	        add_filter('rsssl_notices', [$this, 'show_help_notices'], 10, 1);
         }
 
         public static function riskNaming($risk = null)
@@ -1369,7 +1370,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 #########################################################################################
 //we clear all the cache when the vulnerability scanner is enabled
 
-add_filter('rsssl_notices', [new rsssl_vulnerabilities(), 'show_help_notices'], 10, 1);
+
 
 
 if (!function_exists('rsssl_vulnerabilities_enabled')) {
