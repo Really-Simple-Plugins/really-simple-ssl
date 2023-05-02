@@ -79,18 +79,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
         }
 
         /* Public Section 1: Class Build-up initialization and instancing */
-        /**
-         * Initiate the class
-         *
-         * @return void
-         */
-        public function init()
-        {
-	        if ( ! rsssl_user_can_manage() ) {
-		        return;
-	        }
-			$this->run();
-        }
 
         public function run_cron(){
 	        $this->check_files();
@@ -100,7 +88,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	        }
         }
 
-        public function run()
+        public function init()
         {
 	        if ( ! rsssl_user_can_manage() ) {
 		        return;
