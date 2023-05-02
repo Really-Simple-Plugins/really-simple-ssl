@@ -3,7 +3,7 @@
 use security\wordpress\vulnerabilities\FileStorage;
 
 defined('ABSPATH') or die();
-
+error_log("vulnerabilities.php loaded");
 //including the file storage class
 require_once(rsssl_path . 'security/wordpress/vulnerabilities/FileStorage.php');
 
@@ -408,7 +408,9 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
 		    //now we get the components from the file
 		    $components = $this->get_components();
+		    x_log(self::class);
 
+		    x_log($installed_plugins);
 		    //We loop through plugins and check if they are in the components array
 		    foreach ($installed_plugins as $key => $plugin) {
 			    $plugin['vulnerable'] = false;
@@ -606,7 +608,10 @@ if (!class_exists("rsssl_vulnerabilities")) {
          */
         private function check_vulnerability($plugin_file)
         {
-            return $this->workable_plugins[$plugin_file]['vulnerable'];
+            x_log("check vulnerability");
+            x_log($this->workable_plugins);
+            x_log(self::class);
+            return $this->workable_plugins[ $plugin_file ]['vulnerable'] ?? false;
         }
 
         /**
