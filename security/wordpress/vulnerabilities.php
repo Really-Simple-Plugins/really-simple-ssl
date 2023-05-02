@@ -49,9 +49,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
         ];
         public $trigger = false;
 
-        protected $boot = true;
-
-
         public function __construct()
         {
             $this->risk_naming = [
@@ -91,15 +88,10 @@ if (!class_exists("rsssl_vulnerabilities")) {
         {
             static $instance = false;
             if ( !$instance ) {
-                $instance = new rsssl_vulnerabilities();
-                //if the file exists, we include it.
-                if ( defined('rsssl_pro_path') && file_exists(rsssl_pro_path . '/security/wordpress/vulnerabilities_pro.php')) {
-                    require_once(rsssl_pro_path . '/security/wordpress/vulnerabilities_pro.php');
-                    $instance = new rsssl_vulnerabilities_pro();
-                }
+                $instance = new self();
+	            $instance->init();
             }
-            $instance->init();
-            return $instance;
+			return $instance;
         }
 
         /* Public Section 1: Class Build-up initialization and instancing */
@@ -113,9 +105,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	        if ( ! rsssl_user_can_manage() ) {
 		        return;
 	        }
-            if ( $this->boot ) {
-                $this->run();
-            }
+			$this->run();
         }
 
         public function run_cron(){
@@ -1439,5 +1429,5 @@ if (function_exists('make_test_notifications')) {
         //we store the notice in the notices array
         update_option('rsssl_admin_notices', $notices);
     }
+	add_action('admin_init', array(rsssl_vulnerabilities::class, 'instance'));
 }
-$vulnerabilities = new rsssl_vulnerabilities();
