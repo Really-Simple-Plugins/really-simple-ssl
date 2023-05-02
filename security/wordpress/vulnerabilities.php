@@ -62,6 +62,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 		        'h' => 'high-risk',
 		        'c' => 'critical',
 	        ];
+	        $this->init();
 	        add_filter('rsssl_vulnerability_data', array($this, 'get_stats'));
 
 	        //now we add the action to the cron.
@@ -82,15 +83,15 @@ if (!class_exists("rsssl_vulnerabilities")) {
          *
          * @return self
          */
-        public static function instance(): self
-        {
-            static $instance = false;
-            if ( !$instance ) {
-                $instance = new self();
-	            $instance->init();
-            }
-			return $instance;
-        }
+//        public static function instance(): self
+//        {
+//            static $instance = false;
+//            if ( !$instance ) {
+//                $instance = new self();
+//	            $instance->init();
+//            }
+//			return $instance;
+//        }
 
         /* Public Section 1: Class Build-up initialization and instancing */
         /**
@@ -100,6 +101,8 @@ if (!class_exists("rsssl_vulnerabilities")) {
          */
         public function init()
         {
+	        error_log("run init free");
+
 	        if ( ! rsssl_user_can_manage() ) {
 		        return;
 	        }
@@ -107,10 +110,9 @@ if (!class_exists("rsssl_vulnerabilities")) {
         }
 
         public function run_cron(){
-	        error_log( "run RSSSL vulnerabilties cron" );
+	        error_log( "run RSSSL vulnerabilties cron FREE" );
 	        $this->check_files();
 	        $this->cache_installed_plugins();
-            error_log("installed plugins cached");
 	        if ( $this->trigger ) {
 		        $this->send_vulnerability_mail();
 	        }
@@ -266,35 +268,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
             return $notices;
         }
 
-        public function schedule_cron_job() {
-            // Get the current timestamp
-            $timestamp = time();
-
-            // Calculate the interval in seconds based on the value of $schedule
-            $interval = $this->get_interval_from_schedule( $this->schedule );
-
-            // Schedule the cron job using wp_schedule_event()
-            wp_schedule_event( $timestamp, $interval, 'rsssl_security_cron' );
-        }
-
-        private function get_interval_from_schedule( $schedule ) {
-            switch ( $schedule ) {
-                case 'hourly':
-                    return HOUR_IN_SECONDS;
-                case 'twicedaily':
-                    return 12 * HOUR_IN_SECONDS;
-                case 'daily':
-                    return DAY_IN_SECONDS;
-                case 'weekly':
-                    return WEEK_IN_SECONDS;
-                case 'monthly':
-                    return MONTH_IN_SECONDS;
-                default:
-                    // If $schedule is not a valid value, default to every 12 hours
-                    return 12 * HOUR_IN_SECONDS;
-            }
-        }
-
         /**
          * Generate plugin files for testing purposes.
          *
@@ -395,10 +368,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
 		    //now we get the components from the file
 		    $components = $this->get_components();
-		    x_log(self::class);
-
-		    x_log($installed_plugins);
-		    //We loop through plugins and check if they are in the components array
+            //We loop through plugins and check if they are in the components array
 		    foreach ($installed_plugins as $key => $plugin) {
 			    $plugin['vulnerable'] = false;
 			    $update = get_site_transient('update_plugins');
@@ -592,9 +562,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
          */
         private function check_vulnerability($plugin_file)
         {
-            x_log("check vulnerability");
-            x_log($this->workable_plugins);
-            x_log(self::class);
             return $this->workable_plugins[ $plugin_file ]['vulnerable'] ?? false;
         }
 
@@ -1345,11 +1312,13 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 'url' => "https://really-simple-ssl.com/vulnerability/$slug",
             ];
         }
-
     }
 
     //we initialize the class
-    add_action('init', array(rsssl_vulnerabilities::class, 'instance'));
+    //add_action('init', array(rsssl_vulnerabilities::class, 'instance'));
+    if (!defined('rsssl_pro')) {
+	    $vulnerabilities = new rsssl_vulnerabilities();
+    }
 }
 
 #########################################################################################
