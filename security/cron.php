@@ -26,6 +26,7 @@ if ( RSSSL_USE_CRON ) {
 }
 add_action( 'rsssl_twice_daily_hook', 'rsssl_twice_daily_cron' );
 function rsssl_twice_daily_cron(){
+	error_log("twice daily cron #1");
 	do_action('rsssl_twice_daily_cron');
 }
 /**

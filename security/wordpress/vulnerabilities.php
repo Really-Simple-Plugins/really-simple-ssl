@@ -3,7 +3,6 @@
 use security\wordpress\vulnerabilities\FileStorage;
 
 defined('ABSPATH') or die();
-error_log("vulnerabilities.php loaded");
 //including the file storage class
 require_once(rsssl_path . 'security/wordpress/vulnerabilities/FileStorage.php');
 
