@@ -1440,3 +1440,4 @@ if (function_exists('make_test_notifications')) {
         update_option('rsssl_admin_notices', $notices);
     }
 }
+$vulnerabilities = new rsssl_vulnerabilities();
