@@ -444,7 +444,8 @@ class rsssl_admin
 
 	public function notice_html( string $class, string $content, $more_info=false, $dismiss_id=false ) {
 		$class .= ' notice ';
-        $target = strpos($more_info, 'really-simple-ssl.com')!==false ? 'target="_blank"' : '';
+		$is_internal_link = strpos($more_info, 'really-simple-ssl.com')===false;
+        $target = !$is_internal_link ? 'target="_blank"' : '';
         $url = is_ssl() ? "https://" : "http://";
 		$url .= $_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"];
         $url = esc_url_raw($url);
@@ -499,7 +500,7 @@ class rsssl_admin
                             <a class="button" href="<?php echo add_query_arg(['dismiss_notice'=>$dismiss_id], $url )?>"><?php _e("Dismiss", "really-simple-ssl")?></a>
                         <?php } ?>
                         <?php if ($more_info) { ?>
-                            <a class="button" <?php echo $target?> href="<?php echo esc_url_raw($more_info)?>"><?php _e("More info", "really-simple-ssl")?></a>
+                            <a class="button" <?php echo $target?> href="<?php echo esc_url_raw($more_info)?>"><?php $is_internal_link ? _e("View", "really-simple-ssl") : _e("More info", "really-simple-ssl")?></a>
                         <?php } ?>
                     </div>
                 <?php } ?>
@@ -1723,7 +1724,7 @@ class rsssl_admin
         if ( is_array($notices) ) {
 	        foreach ( $notices as $id => $notice ){
 		        $notice = $notice['output'];
-		        $class = ( $notice['status'] !== 'completed' ) ? 'error' : 'updated';
+//		        $class = ( $notice['status'] !== 'completed' ) ? 'error' : 'updated';
 				//if there is an open status, we change error to warning.
 		        $class = ( $notice['status'] === 'open' )? 'warning':'error';
 		        $more_info = $notice['url'] ?? false;

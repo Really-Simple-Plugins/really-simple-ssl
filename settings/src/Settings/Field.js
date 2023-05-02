@@ -25,12 +25,18 @@ import { useEffect} from "@wordpress/element";
 import useFields from "./FieldsData";
 import PostDropdown from "./PostDropDown";
 import NotificationTester from "./RiskConfiguration/NotificationTester";
+import getAnchor from "../utils/getAnchor";
 
 const Field = (props) => {
     let scrollAnchor = React.createRef();
     const {updateField, setChangedField, highLightField} = useFields();
 
     useEffect( () => {
+        //check if the url contains the query variable 'anchor'
+        let anchor = getAnchor('anchor');
+        if ( anchor && anchor === props.field.id ) {
+            scrollAnchor.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
         if ( highLightField===props.field.id && scrollAnchor.current ) {
             scrollAnchor.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }

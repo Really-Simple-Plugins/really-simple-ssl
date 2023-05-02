@@ -115,44 +115,6 @@ const Vulnerabilities = () => {
         )
     }
 
-    const getHighestRiskVulnerability = () => {
-        //we have an array of risks the order in which we check is important so c, h, m, l
-        let highestRiskVulnerability = {
-            name: riskNaming[risks[1].level],
-            count: 0
-        };
-
-        //we get the highest risk based where c is highest, followed by h and then m and l is lowest
-        for (let i = 0; i < risks.length; i++) {
-            if (risks[i].level === 'c') {
-                highestRiskVulnerability = {
-                    name: riskNaming[risks[i].level],
-                    count: risks[i].count
-                };
-                break;
-            }
-            if (risks[i].level === 'h') {
-                highestRiskVulnerability = {
-                    name: riskNaming[risks[i].level],
-                    count: risks[i].count
-                };
-            }
-            if (risks[i].level === 'm') {
-                highestRiskVulnerability = {
-                    name: riskNaming[risks[i].level],
-                    count: risks[i].count
-                };
-            }
-            if (risks[i].level === 'l') {
-                highestRiskVulnerability = {
-                    name: riskNaming[risks[i].level],
-                    count: risks[i].count
-                };
-            }
-        }
-        return highestRiskVulnerability;
-    }
-
     const checkUpdates = () => {
         let icon = 'circle-check';
         let iconColor = 'green';
@@ -212,7 +174,6 @@ const Vulnerabilities = () => {
             )
         }
         if (vulnerabilities) {
-            let highestRiskVulnerability = getHighestRiskVulnerability();
             return (
                 <>
                     <div className="rsssl-hardening-list-item">
@@ -223,8 +184,7 @@ const Vulnerabilities = () => {
                                 .replace("%d", vulnerabilityWord)
                             }
                         </p>
-                        <a style={linkStyle} href={'#settings/vulnerabilities'}
-                           target="_blank">{__('Read more', 'really-simple-ssl')}</a>
+                        <a style={linkStyle} href={'#settings/vulnerabilities'}>{__('Learn more', 'really-simple-ssl')}</a>
                     </div>
                 </>
             )
