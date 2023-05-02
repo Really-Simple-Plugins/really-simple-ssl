@@ -78,21 +78,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
             return $this->risk_naming[$risk];
         }
 
-        /**
-         * Instantiates the class
-         *
-         * @return self
-         */
-//        public static function instance(): self
-//        {
-//            static $instance = false;
-//            if ( !$instance ) {
-//                $instance = new self();
-//	            $instance->init();
-//            }
-//			return $instance;
-//        }
-
         /* Public Section 1: Class Build-up initialization and instancing */
         /**
          * Initiate the class
@@ -101,8 +86,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
          */
         public function init()
         {
-	        error_log("run init free");
-
 	        if ( ! rsssl_user_can_manage() ) {
 		        return;
 	        }
@@ -110,7 +93,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
         }
 
         public function run_cron(){
-	        error_log( "run RSSSL vulnerabilties cron FREE" );
 	        $this->check_files();
 	        $this->cache_installed_plugins();
 	        if ( $this->trigger ) {
@@ -120,7 +102,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
         public function run()
         {
-            error_log("run RSSSL vulnerabilties");
 	        if ( ! rsssl_user_can_manage() ) {
 		        return;
 	        }
