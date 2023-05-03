@@ -43,7 +43,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
             'h' => 3,
             'c' => 4,
         ];
-        public $trigger = false;
+        public $jsons_files_updated = false;
 
         public function __construct()
         {
@@ -80,8 +80,8 @@ if (!class_exists("rsssl_vulnerabilities")) {
         public function run_cron(): void {
 	        $this->check_files();
 	        $this->cache_installed_plugins();
-	        if ( $this->trigger ) {
-                error_log("triggered, send vulnerability mail");
+	        if ( $this->jsons_files_updated ) {
+                error_log("jsons_files_updateded, send vulnerability mail");
 		        $this->send_vulnerability_mail();
 	        }
         }
@@ -416,6 +416,8 @@ if (!class_exists("rsssl_vulnerabilities")) {
 		    }
 		    //we add the core plugin to the workable_plugins array
 		    $this->workable_plugins['wordpress'] = $core_plugin;
+
+            //store an
 	    }
 
         /* Public Section 3: The plugin page add-on */
@@ -496,8 +498,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
          * @param string $column_name
          * @param string $plugin_file
          */
-        public function add_vulnerability_field( string $column_name, string $plugin_file)
-        {
+        public function add_vulnerability_field( string $column_name, string $plugin_file): void {
             if ( ( $column_name === 'vulnerability' ) && $this->check_vulnerability( $plugin_file ) ) {
                 switch ($this->check_severity($plugin_file)) {
                     case 'c':
@@ -732,7 +733,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
             }
 
             FileStorage::StoreFile($file, $data);
-            $this->trigger = true;
+            $this->jsons_files_updated = true;
         }
 
         public function get_file_stored_info($isCore = false, $manifest = false)
