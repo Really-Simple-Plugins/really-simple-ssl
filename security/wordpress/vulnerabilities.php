@@ -78,7 +78,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
         /* Public Section 1: Class Build-up initialization and instancing */
 
         public function run_cron(): void {
-            error_log("run free cron");
 	        $this->check_files();
 	        $this->cache_installed_plugins();
 	        if ( !$this->jsons_files_updated && $this->should_send_mail() ) {
