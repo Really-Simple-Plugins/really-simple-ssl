@@ -465,6 +465,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	       // update_option('rsssl_'.sanitize_title($data['field']), sanitize_text_field($data['value']), false );
             $risk_data = $measures['riskData'] ?? [];
 	        foreach ( $risk_data as $risk ) {
+                if ( !isset($risk['value']) ) continue;
                 update_option('rsssl_'.sanitize_title($risk['id']), $this->sanitize_measure($risk['value']), false );
             }
             return [];
