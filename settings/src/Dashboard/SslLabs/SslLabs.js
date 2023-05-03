@@ -112,7 +112,7 @@ const SslLabs = (props) => {
 
         if ( endpointData && endpointData.length>0 ) {
             let failedData = endpointData.filter(function (endpoint) {
-                return endpoint.details.hstsPolicy.status!=='present';
+                return endpoint.details.hstsPolicy && endpoint.details.hstsPolicy.status!=='present';
             });
             status = failedData.length>0 ? 'error' : 'success';
         }
