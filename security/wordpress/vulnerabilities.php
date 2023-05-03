@@ -78,9 +78,10 @@ if (!class_exists("rsssl_vulnerabilities")) {
         /* Public Section 1: Class Build-up initialization and instancing */
 
         public function run_cron(): void {
+            error_log("run free cron");
 	        $this->check_files();
 	        $this->cache_installed_plugins();
-	        if ( $this->jsons_files_updated ) {
+	        if ( !$this->jsons_files_updated && $this->should_send_mail() ) {
                 error_log("jsons_files_updateded, send vulnerability mail");
 		        $this->send_vulnerability_mail();
 	        }
@@ -416,8 +417,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
 		    }
 		    //we add the core plugin to the workable_plugins array
 		    $this->workable_plugins['wordpress'] = $core_plugin;
-
-            //store an
 	    }
 
         /* Public Section 3: The plugin page add-on */
@@ -1176,6 +1175,46 @@ if (!class_exists("rsssl_vulnerabilities")) {
             }
 
             return $risk_levels;
+        }
+
+	    /**
+         * check if a new mail should be sent about vulnerabilities
+	     * @return bool
+	     */
+        private function should_send_mail(): bool {
+            $plugins = $this->workable_plugins;
+            $vulnerable_plugins = array();
+            foreach ($plugins as $plugin) {
+                if (isset($plugin['risk_level'])) {
+                    $vulnerable_plugins[] = $plugin['rss_identifier'];
+                }
+            }
+
+            $mail_sent_for = get_option('rsssl_vulnerability_mail_sent_for',[]);
+            error_log(print_r("mail sent for: ",true));
+            error_log(print_r($mail_sent_for,true));
+            //cleanup. Check if plugins in mail_sent_for exist in the $plugins array
+            foreach ($mail_sent_for as $key => $rss_identifier) {
+                if ( ! in_array($rss_identifier, $vulnerable_plugins) ) {
+                    unset($mail_sent_for[$key]);
+                }
+            }
+	        error_log(print_r("vulnerable_plugins",true));
+	        error_log(print_r($vulnerable_plugins,true));
+
+            $diff = array_diff($vulnerable_plugins, $mail_sent_for);
+	        error_log(print_r("difference:",true));
+	        error_log(print_r($diff,true));
+
+            //add the new plugins to the mail_sent_for array
+	        $mail_sent_for += $diff;
+	        update_option('rsssl_vulnerability_mail_sent_for',$mail_sent_for, false );
+            if (empty($diff)){
+                error_log("No changes in vulnerabilities, don't send mail ");
+            } else {
+	            error_log("Found changes in vulnerabilities, send new mail ");
+            }
+            return !empty($diff);
         }
 
 	    /**
