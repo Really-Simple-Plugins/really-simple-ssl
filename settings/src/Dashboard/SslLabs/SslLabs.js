@@ -214,7 +214,7 @@ const SslLabs = (props) => {
         if ( endpointData && endpointData.length>0 ) {
             status = 'success';
             endpointData.forEach(function(endpoint, i){
-                endpoint.details.protocols.forEach(function(protocol, j){
+                endpoint.details.protocols && endpoint.details.protocols.forEach(function(protocol, j){
                    if (protocol.version==='1.1') status = 'error';
                });
            });
