@@ -81,6 +81,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	        $this->check_files();
 	        $this->cache_installed_plugins();
 	        if ( $this->trigger ) {
+                error_log("triggered, send vulnerability mail");
 		        $this->send_vulnerability_mail();
 	        }
         }
@@ -1240,7 +1241,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
             $mailer->warning_blocks = $blocks;
             if ($total > 0) {
                 //if for some reason the total is 0, we don't send an email
-                $mailer->send_mail(true);
+                $mailer->send_mail();
             }
         }
 
