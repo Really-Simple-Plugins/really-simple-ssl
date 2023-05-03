@@ -64,6 +64,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
 	        //now we add the action to the cron.
 	        add_filter('rsssl_twice_daily_cron', array($this, 'run_cron'));
+	        add_filter('rsssl_every_five_minutes_hook', array($this, 'run_cron'));
 	        add_filter('rsssl_notices', [$this, 'show_help_notices'], 10, 1);
         }
 
