@@ -82,7 +82,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	        $this->check_files();
 	        $this->cache_installed_plugins();
 	        if ( !$this->jsons_files_updated && $this->should_send_mail() ) {
-                error_log("jsons_files_updateded, send vulnerability mail");
+                error_log("jsons_files_updateded and new rss_id in list, send vulnerability mail");
 		        $this->send_vulnerability_mail();
 	        }
         }
