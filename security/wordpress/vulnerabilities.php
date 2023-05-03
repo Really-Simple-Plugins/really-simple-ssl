@@ -1191,23 +1191,21 @@ if (!class_exists("rsssl_vulnerabilities")) {
             }
 
             $mail_sent_for = get_option('rsssl_vulnerability_mail_sent_for',[]);
-            error_log(print_r("mail sent for: ",true));
-            error_log(print_r($mail_sent_for,true));
             //cleanup. Check if plugins in mail_sent_for exist in the $plugins array
             foreach ($mail_sent_for as $key => $rss_identifier) {
                 if ( ! in_array($rss_identifier, $vulnerable_plugins) ) {
                     unset($mail_sent_for[$key]);
                 }
             }
-	        error_log(print_r("vulnerable_plugins",true));
-	        error_log(print_r($vulnerable_plugins,true));
 
             $diff = array_diff($vulnerable_plugins, $mail_sent_for);
-	        error_log(print_r("difference:",true));
-	        error_log(print_r($diff,true));
+            foreach ($diff as $rss_identifier) {
+                if (!in_array($rss_identifier, $mail_sent_for)){
+	                $mail_sent_for[] = $rss_identifier;
+                }
+            }
 
             //add the new plugins to the mail_sent_for array
-	        $mail_sent_for += $diff;
 	        update_option('rsssl_vulnerability_mail_sent_for',$mail_sent_for, false );
             if (empty($diff)){
                 error_log("No changes in vulnerabilities, don't send mail ");
