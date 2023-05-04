@@ -22,7 +22,7 @@ const VulnerabilitiesIntro = () => {
                     <div className="rsssl-header-extension">
                         <div>
                             <p>
-                                {__("You have enabled vulnerability detection! Really Simple SSL will check your plugins, themes and WordPress core daily and report if any known vulnerabilities are fouond.", "really-simple-ssl")}
+                                {__("You have enabled vulnerability detection! Really Simple SSL will check your plugins, themes and WordPress core daily and report if any known vulnerabilities are found.", "really-simple-ssl")}
                             </p>
                             <img className="rsssl-intro-logo"
                                  src={rsssl_settings.plugin_url+'/assets/img/really-simple-ssl-intro.svg'}>

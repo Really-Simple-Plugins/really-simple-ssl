@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-05-04T08:18:21+00:00\n"
+"POT-Creation-Date: 2023-05-04T15:16:22+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: really-simple-ssl\n"
@@ -928,7 +928,7 @@ msgid "I don't know, or not listed, proceed with installation"
 msgstr ""
 
 #: lets-encrypt/config/fields.php:8
-#: settings/config/menu.php:229
+#: settings/config/menu.php:230
 msgid "System Status"
 msgstr ""
 
@@ -937,7 +937,7 @@ msgid "General settings"
 msgstr ""
 
 #: lets-encrypt/config/fields.php:17
-#: settings/config/menu.php:247
+#: settings/config/menu.php:248
 msgid "Directories"
 msgstr ""
 
@@ -946,12 +946,12 @@ msgid "DNS Verification"
 msgstr ""
 
 #: lets-encrypt/config/fields.php:25
-#: settings/config/menu.php:257
+#: settings/config/menu.php:258
 msgid "Generation"
 msgstr ""
 
 #: lets-encrypt/config/fields.php:29
-#: settings/config/menu.php:262
+#: settings/config/menu.php:263
 msgid "Installation"
 msgstr ""
 
@@ -1424,7 +1424,7 @@ msgid "You have enabled a feature on %s. We think it's important to let you know
 msgstr ""
 
 #: mailer/class-mail.php:46
-#: mailer/class-mail.php:79
+#: mailer/class-mail.php:77
 msgid "Email address not valid"
 msgstr ""
 
@@ -1444,29 +1444,25 @@ msgstr ""
 msgid "Email notifications are only sent for important updates, security notices or when certain features are enabled."
 msgstr ""
 
-#: mailer/class-mail.php:74
+#: mailer/class-mail.php:72
 msgid "Email could not be sent. No message or subject set."
 msgstr ""
 
-#: mailer/class-mail.php:84
-msgid "Email could not be sent. Please wait a few minutes before trying again."
-msgstr ""
-
-#: mailer/class-mail.php:120
+#: mailer/class-mail.php:113
 #: settings/build/688.js:1
 #: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:187
 msgid "Learn more"
 msgstr ""
 
-#: mailer/class-mail.php:132
+#: mailer/class-mail.php:124
 msgid "Email sent! Please check your mail"
 msgstr ""
 
-#: mailer/class-mail.php:136
+#: mailer/class-mail.php:128
 msgid "Email could not be sent."
 msgstr ""
 
-#: mailer/class-mail.php:138
+#: mailer/class-mail.php:130
 msgid "An error occurred:"
 msgstr ""
 
@@ -1583,7 +1579,7 @@ msgid "Activate our plugin %s"
 msgstr ""
 
 #: onboarding/class-onboarding.php:325
-#: settings/config/menu.php:267
+#: settings/config/menu.php:268
 #: settings/build/688.js:1
 #: settings/build/967.js:1
 #: settings/src/Dashboard/OtherPlugins/OtherPluginsData.js:74
@@ -1884,7 +1880,7 @@ msgid "forbidden - number in author name not allowed = %s"
 msgstr ""
 
 #: security/wordpress/vulnerabilities.php:159
-#: security/wordpress/vulnerabilities.php:1288
+#: security/wordpress/vulnerabilities.php:1335
 #: settings/build/688.js:1
 #: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:38
 msgid "vulnerability"
@@ -1893,7 +1889,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: security/wordpress/vulnerabilities.php:166
-#: security/wordpress/vulnerabilities.php:1309
+#: security/wordpress/vulnerabilities.php:1340
 msgid "You have %s %s %s"
 msgstr ""
 
@@ -1938,43 +1934,44 @@ msgstr ""
 msgid "Compnonents will be quarantined if the update process fails."
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:963
+#: security/wordpress/vulnerabilities.php:524
+#: security/wordpress/vulnerabilities.php:996
+msgid "Quarantined"
+msgstr ""
+
+#: security/wordpress/vulnerabilities.php:981
 msgid "Vulnerability: %s"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:1275
+#: security/wordpress/vulnerabilities.php:1303
 msgid "Vulnerability Alert: %s"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:1276
+#: security/wordpress/vulnerabilities.php:1304
 msgid "%s: %s vulnerabilities found"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:1277
-msgid "This is a vulnerability alert from Really Simple SSL. "
+#: security/wordpress/vulnerabilities.php:1305
+msgid "This is a vulnerability alert from Really Simple SSL for %s. "
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:1295
-msgid "Critical vulnerabilities require immediate action."
+#: security/wordpress/vulnerabilities.php:1337
+msgid "A %s vulnerability is found in %s."
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:1298
-msgid "High vulnerabilities require immediate action."
+#: security/wordpress/vulnerabilities.php:1337
+msgid "Multiple %s vulnerabilities have been found."
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:1301
-msgid "Medium vulnerabilities require your action."
+#: security/wordpress/vulnerabilities.php:1342
+msgid "Based on your settings, Really Simple SSL will take appropriate action, or you will need to solve it manually."
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:1304
-msgid "Low vulnerabilities require your action."
-msgstr ""
-
-#: security/wordpress/vulnerabilities.php:1373
+#: security/wordpress/vulnerabilities.php:1415
 msgid "Test notification"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:1374
+#: security/wordpress/vulnerabilities.php:1416
 msgid "This is a 'Dashboard' notification test by Really Simple SSL. You can safely ignore this message. (x)"
 msgstr ""
 
@@ -2621,81 +2618,85 @@ msgid "Measures"
 msgstr ""
 
 #: settings/config/menu.php:100
+msgid "You can choose to automate the most common actions for a vulnerability. Each action is set to a minimum risk level, similar to the notifications. Please read the instructions to learn more about the process."
+msgstr ""
+
+#: settings/config/menu.php:101
 msgid "Improve Security with %sReally Simple SSL Pro%s"
 msgstr ""
 
-#: settings/config/menu.php:106
-#: settings/config/menu.php:114
+#: settings/config/menu.php:107
+#: settings/config/menu.php:115
 msgid "Mixed Content Scan"
 msgstr ""
 
-#: settings/config/menu.php:110
-#: settings/config/menu.php:118
+#: settings/config/menu.php:111
+#: settings/config/menu.php:119
 msgid "Get the Mixed Content Scan with %sReally Simple SSL Pro%s"
 msgstr ""
 
-#: settings/config/menu.php:124
-#: settings/config/menu.php:133
+#: settings/config/menu.php:125
+#: settings/config/menu.php:134
 msgid "Recommended Security Headers"
 msgstr ""
 
-#: settings/config/menu.php:131
+#: settings/config/menu.php:132
 msgid "Get Recommended Security Headers with %sReally Simple SSL Pro%s"
 msgstr ""
 
-#: settings/config/menu.php:147
+#: settings/config/menu.php:148
 msgid "Get HTTP Strict Transport Security with %sReally Simple SSL Pro%s"
 msgstr ""
 
-#: settings/config/menu.php:149
+#: settings/config/menu.php:150
 msgid "HTTP Strict Transport Security"
 msgstr ""
 
-#: settings/config/menu.php:161
+#: settings/config/menu.php:162
 msgid "Get the Permissions Policy with %sReally Simple SSL Pro%s"
 msgstr ""
 
-#: settings/config/menu.php:179
+#: settings/config/menu.php:180
 msgid "Get Upgrade Insecure Requests with %sReally Simple SSL Pro%s"
 msgstr ""
 
-#: settings/config/menu.php:188
+#: settings/config/menu.php:189
 msgid "Get Frame Ancestors with %sReally Simple SSL Pro%s"
 msgstr ""
 
-#: settings/config/menu.php:198
+#: settings/config/menu.php:199
 msgid "Get Source Directives with %sReally Simple SSL Pro%s"
 msgstr ""
 
-#: settings/config/menu.php:208
+#: settings/config/menu.php:209
 msgid "Get Cross Origin Policy Headers with %sReally Simple SSL Pro%s"
 msgstr ""
 
-#: settings/config/menu.php:220
+#: settings/config/menu.php:221
 msgid "We have tried to make our Wizard as simple and fast as possible. Although these questions are all necessary, if there’s any way you think we can improve the plugin, please let us %sknow%s!"
 msgstr ""
 
-#: settings/config/menu.php:222
+#: settings/config/menu.php:223
 msgid " Please note that you can always save and finish the wizard later, use our %sdocumentation%s for additional information or log a %ssupport ticket%s if you need our assistance."
 msgstr ""
 
-#: settings/config/menu.php:230
+#: settings/config/menu.php:231
 msgid "Letʼs Encrypt is a free, automated and open certificate authority brought to you by the nonprofit Internet Security Research Group (ISRG)."
 msgstr ""
 
-#: settings/config/menu.php:237
+#: settings/config/menu.php:238
 msgid "General Settings"
 msgstr ""
 
-#: settings/config/menu.php:241
+#: settings/config/menu.php:242
 msgid "Hosting"
 msgstr ""
 
-#: settings/config/menu.php:242
+#: settings/config/menu.php:243
 msgid "Below you will find the instructions for different hosting environments and configurations. If you start the process with the necessary instructions and credentials the next view steps will be done in no time."
 msgstr ""
 
-#: settings/config/menu.php:252
+#: settings/config/menu.php:253
 msgid "DNS verification"
 msgstr ""
 
@@ -3131,14 +3132,14 @@ msgstr ""
 
 #: settings/build/772.js:1
 #: settings/build/967.js:1
-#: settings/src/Settings/Field.js:99
+#: settings/src/Settings/Field.js:112
 #: settings/src/Settings/SettingsGroup.js:118
 msgid "This feature is only available networkwide."
 msgstr ""
 
 #: settings/build/772.js:1
 #: settings/build/967.js:1
-#: settings/src/Settings/Field.js:100
+#: settings/src/Settings/Field.js:113
 #: settings/src/Settings/SettingsGroup.js:118
 msgid "Network settings"
 msgstr ""
@@ -3726,18 +3727,13 @@ msgid "Blocked"
 msgstr ""
 
 #: settings/build/967.js:1
-#: settings/src/Settings/RiskConfiguration/RiskComponent.js:82
-msgid "You can choose to automate the most common actions for a vulnerability. Each action is set to a minimum risk level, similar to the notifications. Please read the instructions to learn more about the process."
-msgstr ""
-
-#: settings/build/967.js:1
 #: settings/src/Settings/RiskConfiguration/VulnerabilitiesIntro.js:15
 msgid "Introducing vulnerabilities"
 msgstr ""
 
 #: settings/build/967.js:1
 #: settings/src/Settings/RiskConfiguration/VulnerabilitiesIntro.js:25
-msgid "You have enabled vulnerability detection! Really Simple SSL will check your plugins, themes and WordPress core daily and report if any known vulnerabilities are fouond."
+msgid "You have enabled vulnerability detection! Really Simple SSL will check your plugins, themes and WordPress core daily and report if any known vulnerabilities are found."
 msgstr ""
 
 #: settings/build/967.js:1
