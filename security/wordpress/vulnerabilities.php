@@ -1311,7 +1311,9 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
             return [
                 'title' => sprintf(__("You have %s %s %s", "really-simple-ssl"), $count, $risk, $vulnerability),
-                'message' => $message . ' ' . sprintf(__('Based on your settings, Really Simple SSL will take appropriate action, or you will need to solve it manually. Get more information from the Really Simple SSL dashboard on %s'), $this->domain()),
+                'message' => $message . ' ' .
+                             __('Based on your settings, Really Simple SSL will take appropriate action, or you will need to solve it manually.','really-simple-ssl') .' '.
+                             sprintf(__('Get more information from the Really Simple SSL dashboard on %s'), $this->domain() ),
                 'url' => "https://really-simple-ssl.com/manual/vulnerabilities/",
             ];
         }
