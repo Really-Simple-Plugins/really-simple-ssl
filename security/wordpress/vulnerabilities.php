@@ -1241,8 +1241,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
             }
         }
 
-        public function send_vulnerability_mail()
-        {
+        public function send_vulnerability_mail(): void {
 	        if ( ! rsssl_admin_logged_in() ) {
 		        return;
 	        }
@@ -1253,7 +1252,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
             }
 
             $level_for_email = rsssl_get_option('vulnerability_notification_email_admin');
-            if (!$level_for_email || $level_for_email === '*') {
+            if ( !$level_for_email || $level_for_email === '*' ) {
                 return;
             }
 
@@ -1268,13 +1267,12 @@ if (!class_exists("rsssl_vulnerabilities")) {
                     $total    += $count;
                 }
             }
+
             //date format is named month day year
-            $date = date('F j, Y');
-            $domain = get_site_url();
             $mailer = new rsssl_mailer();
-            $mailer->subject = sprintf(__("Vulnerability Alert: %s", "really-simple-ssl"), $domain);
-            $mailer->title = sprintf(__("%s: %s vulnerabilities found", "really-simple-ssl"), $date, $total);
-            $message = __("This is a vulnerability alert from Really Simple SSL. ","really-simple-ssl");
+            $mailer->subject = sprintf(__("Vulnerability Alert: %s", "really-simple-ssl"), get_site_url() );
+            $mailer->title = sprintf(__("%s: %s vulnerabilities found", "really-simple-ssl"), $this->date(), $total);
+            $message = sprintf(__("This is a vulnerability alert from Really Simple SSL for %s. ","really-simple-ssl"), $this->domain() );
             $mailer->message = $message;
             $mailer->warning_blocks = $blocks;
             if ($total > 0) {
@@ -1283,34 +1281,38 @@ if (!class_exists("rsssl_vulnerabilities")) {
             }
         }
 
-        protected function createBlock($severity, $count): array
+        protected function createBlock($risk_level, $count): array
         {
-            $vulnerability = _n('vulnerability', 'vulnerabilities', $count, 'really-simple-ssl');
-            $risk = $this->risk_naming[$severity];
-            $domain = get_site_url();
-            $messagePrefix = '';
-            $messageSuffix = sprintf(__('Get more information from the Really Simple SSL dashboard on %s about all vulnerabilities'), $domain);
-            switch ($severity) {
-                case 'c':
-                    $messagePrefix = __("Critical vulnerabilities require immediate action.", "really-simple-ssl");
-                    break;
-                case 'h':
-                    $messagePrefix = __("High vulnerabilities require immediate action.", "really-simple-ssl");
-                    break;
-                case 'm':
-                    $messagePrefix = __("Medium vulnerabilities require your action.", "really-simple-ssl");
-                    break;
-                case 'l':
-                    $messagePrefix = __("Low vulnerabilities require your action.", "really-simple-ssl");
-                    break;
+            $plugin_name = '';
+            //if we have only one plugin with this risk level, we can show the plugin name
+            //we search it in the list
+            if ( $count===1 ){
+                $plugins = $this->workable_plugins;
+                foreach ($plugins as $plugin) {
+                    if (isset($plugin['risk_level']) && $plugin['risk_level'] === $risk_level) {
+                        $plugin_name = $plugin['Name'];
+                    }
+                }
             }
-            $slug = $this->risk_slugs[$severity];
+            $vulnerability = _n('vulnerability', 'vulnerabilities', $count, 'really-simple-ssl');
+            $risk = $this->risk_naming[$risk_level];
+	        $message = $count === 1 ? sprintf(__("A %s vulnerability is found in %s.", "really-simple-ssl"),$risk, $plugin_name) : sprintf(__("Multiple %s vulnerabilities have been found.", "really-simple-ssl"), $risk);
+
             return [
                 'title' => sprintf(__("You have %s %s %s", "really-simple-ssl"), $count, $risk, $vulnerability),
-                'message' => $messagePrefix . ' ' . $messageSuffix,
-                'url' => "https://really-simple-ssl.com/vulnerability/$slug",
+                'message' => $message . ' ' . sprintf(__('Based on your settings, Really Simple SSL will take appropriate action, or you will need to solve it manually. Get more information from the Really Simple SSL dashboard on %s'), $this->domain()),
+                'url' => "https://really-simple-ssl.com/manual/vulnerabilities/",
             ];
         }
+
+	    public function date(){
+		    return date(get_option('date_format'));
+	    }
+
+	    public function domain(): string {
+		    return '<a href="'.get_site_url().'" target="_blank">'.get_site_url().'</a>';
+	    }
+
     }
 
     //we initialize the class
