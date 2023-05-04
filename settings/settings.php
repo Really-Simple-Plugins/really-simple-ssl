@@ -666,6 +666,8 @@ function rsssl_rest_api_fields_get()
     if (!rsssl_user_can_manage()) {
         return [];
     }
+
+//	rsssl_update_option('vulnerabilities_intro_shown', false);
     $output = array();
     $fields = rsssl_fields();
     foreach ($fields as $index => $field) {
