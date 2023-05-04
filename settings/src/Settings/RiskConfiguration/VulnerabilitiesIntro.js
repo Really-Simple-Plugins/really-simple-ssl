@@ -3,18 +3,18 @@ import {Button, Modal} from "@wordpress/components";
 import {useState} from '@wordpress/element';
 import Runner from "./Runner";
 
-const VulnerabilitiesIntro = (props) => {
+const VulnerabilitiesIntro = () => {
     //first we define a state for the steps
-    const [ isOpen, setOpen ] = useState( false );
+    const [ isClosed, setClosed ] = useState( false );
 
     //this function closes the modal when onClick is activated
-    if(!isOpen) {
+    if(!isClosed) {
         return (
             <>
                 <Modal
                     title={__('Introducing vulnerabilities', 'really-simple-ssl')}
                     className="rsssl-modal"
-                    onRequestClose={setOpen}
+                    onRequestClose={setClosed}
                     shouldCloseOnClickOutside={true}
                     shouldCloseOnEsc={true}
                     overlayClassName="rsssl-modal-overlay"
@@ -60,7 +60,7 @@ const VulnerabilitiesIntro = (props) => {
                         <Button
                             isPrimary
                             onClick={() => {
-                                setOpen(true);
+                                setClosed(true);
                                 //we redirect to dashboard
                                 window.location.hash = "dashboard";
                             }}
@@ -69,7 +69,7 @@ const VulnerabilitiesIntro = (props) => {
                         </Button>
                         <Button isSecondary
                                 onClick={() => {
-                                    setOpen(true);
+                                    setClosed(true);
                                 }}
                         >
                             {__('Dismiss', 'really-simple-ssl')}
