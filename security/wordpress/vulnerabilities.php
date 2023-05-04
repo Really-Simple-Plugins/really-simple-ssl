@@ -498,7 +498,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
          * @param string $plugin_file
          */
         public function add_vulnerability_field( string $column_name, string $plugin_file): void {
-            x_log($plugin_file);
             if ( ( $column_name === 'vulnerability' ) ) {
                 if ($this->check_vulnerability( $plugin_file ) ) {
 	                switch ( $this->check_severity( $plugin_file ) ) {
