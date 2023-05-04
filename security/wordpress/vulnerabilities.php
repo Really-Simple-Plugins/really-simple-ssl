@@ -996,7 +996,9 @@ if (!class_exists("rsssl_vulnerabilities")) {
                             let divClass = 'rsssl-theme-notice-danger';
                             theme_element.insertAdjacentHTML('afterbegin', `
                               <div class="${divClass}">
-                                <p><span class="dashicons dashicons-info"></span>${text}</p>
+                                <p><span class="dashicons dashicons-info"></span>
+                                    <a href="https://really-simple-ssl.com/manual/vulnerabilities#quarantine" target="_blank">${text}</a>
+                                </p>
                               </div>
                             `);
                         }
