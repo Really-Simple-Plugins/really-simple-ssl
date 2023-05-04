@@ -1241,6 +1241,10 @@ if (!class_exists("rsssl_vulnerabilities")) {
             }
         }
 
+	    /**
+         * Send email warning
+	     * @return void
+	     */
         public function send_vulnerability_mail(): void {
 	        if ( ! rsssl_admin_logged_in() ) {
 		        return;
@@ -1259,7 +1263,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
             //now based on the risk level we send a different email
             $risk_levels = $this->count_risk_levels();
             $total = 0;
-
             $blocks = [];
             foreach ($risk_levels as $risk_level => $count) {
                 if ( $this->risk_levels[$risk_level] >= $this->risk_levels[$level_for_email] ) {
@@ -1281,7 +1284,15 @@ if (!class_exists("rsssl_vulnerabilities")) {
             }
         }
 
-        protected function createBlock($risk_level, $count): array
+	    /**
+         * Create an email block by risk level
+	     *
+	     * @param string $risk_level
+	     * @param int    $count
+	     *
+	     * @return array
+	     */
+        protected function createBlock(string $risk_level, int $count): array
         {
             $plugin_name = '';
             //if we have only one plugin with this risk level, we can show the plugin name
