@@ -45,11 +45,11 @@ if ( ! class_exists( 'rsssl_front_end' ) ) {
 	     * Because a domain can be a subdomain, this will add www.sub.domain.com to the safe list.
 	     * As there is no solid way to check if a domain is a subdomain, this is the best we can do.
 	     *
-	     * @param $domains
+	     * @param array $domains
 	     *
-	     * @return mixed
+	     * @return array
 	     */
-		public function add_alternative_domain($domains){
+		public function add_alternative_domain( array $domains): array {
 			$domain = site_url();
 			//Parse to strip off any /subfolder/
 			$parse = parse_url($domain);
