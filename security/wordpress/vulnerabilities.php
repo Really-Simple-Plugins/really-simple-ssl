@@ -1248,7 +1248,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	        }
 
             //first we check if the user wants to receive emails
-            if (!rsssl_get_option('send_notifications_email')) {
+            if ( !rsssl_get_option('send_notifications_email') ) {
                 return;
             }
 

@@ -65,11 +65,9 @@ if ( !class_exists('rsssl_mailer') ) {
 		/**
 		 * Send an e-mail with the correct login URL
 		 *
-		 * @param bool $override_rate_limit
-		 *
 		 * @return array
 		 */
-		public function send_mail($override_rate_limit = false) {
+		public function send_mail(): array {
 			if ( empty($this->message) || empty($this->subject) ) {
 				$this->error = __("Email could not be sent. No message or subject set.", "really-simple-ssl");
 			}
@@ -77,11 +75,6 @@ if ( !class_exists('rsssl_mailer') ) {
 			$this->to = rsssl_get_option('notifications_email_address', get_bloginfo('admin_email') );
 			if ( !is_email($this->to) ){
 				$this->error = __("Email address not valid", "really-simple-ssl");
-			}
-
-			// Prevent spam
-			if ( !$override_rate_limit && get_transient('rsssl_email_recently_sent') ) {
-				$this->error = __("Email could not be sent. Please wait a few minutes before trying again.", "really-simple-ssl");
 			}
 
 			$template = file_get_contents(__DIR__.'/templates/email.html');
@@ -127,7 +120,6 @@ if ( !class_exists('rsssl_mailer') ) {
                     $this->sent_by_text
 				], $template );
 			$success = wp_mail( $this->to, sanitize_text_field($this->subject), $body, array('Content-Type: text/html; charset=UTF-8') );
-			set_transient('rsssl_email_recently_sent', true, 5 * MINUTE_IN_SECONDS );
             if ($success) {
                 return ['success' => true, 'message' => __('Email sent! Please check your mail', "really-simple-ssl")];
             }
