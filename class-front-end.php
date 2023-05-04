@@ -19,6 +19,7 @@ if ( ! class_exists( 'rsssl_front_end' ) ) {
 	        $this->wp_redirect = rsssl_get_option('redirect', 'redirect') === 'wp_redirect';
 			add_action( 'rest_api_init', array($this, 'wp_rest_api_force_ssl'), ~PHP_INT_MAX);
 	        add_filter( 'wp_safe_redirect_fallback', array($this, 'set_fallback_url'), 10, 2 );
+	        add_filter( 'allowed_redirect_hosts', array($this, 'add_alternative_domain'), 10, 2 );
         }
 
         static function this()
@@ -36,6 +37,30 @@ if ( ! class_exists( 'rsssl_front_end' ) ) {
 	    public function set_fallback_url( $url, $status ) {
 		    return site_url();
 	    }
+
+	    /**
+	     * If a site has a non www domain, the www domain is not in the allowed_hosts list. As a consenquence, redirects from
+	     * http://www to https://www will redirect to the fallback url. This filter adds the www domain to the allowed hosts list in that case.
+	     * If the site_url is www, add non www. Otherwise add www to the safe list.
+	     * Because a domain can be a subdomain, this will add www.sub.domain.com to the safe list.
+	     * As there is no solid way to check if a domain is a subdomain, this is the best we can do.
+	     *
+	     * @param $domains
+	     *
+	     * @return mixed
+	     */
+		public function add_alternative_domain($domains){
+			$domain = site_url();
+			//Parse to strip off any /subfolder/
+			$parse = parse_url($domain);
+			$domain = $parse['host'] ?? str_replace( array( 'http://', 'https://' ), '', $domain );
+			$new_domain = strpos($domain, 'www.') !== false ? str_replace('www.', '', $domain) : 'www.' . $domain;
+			if (! in_array( $new_domain, $domains, true ) ) {
+				$domains[] = $new_domain;
+			}
+			error_log(print_r($domains, true));
+			return $domains;
+		}
 
         /**
          * PHP redirect, when ssl is true.
