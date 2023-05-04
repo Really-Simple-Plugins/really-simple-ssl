@@ -105,7 +105,7 @@ const PermissionsPolicy = (props) => {
     if (!DataTable || !theme) return null;
 
     return (
-        <div className={ props.highLightClass}>
+        <div>
                 <DataTable
                     columns={columns}
                     data={outputData}

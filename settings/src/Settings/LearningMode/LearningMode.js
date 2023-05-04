@@ -175,7 +175,7 @@ const LearningMode = (props) => {
 
     return (
         <>
-            <div key="1" className={ highLightClass}>
+            <div>
                 { !dataLoaded || data.length==0 && <>
                     <div className="rsssl-learningmode-placeholder">
                         <div></div><div></div><div></div><div></div>

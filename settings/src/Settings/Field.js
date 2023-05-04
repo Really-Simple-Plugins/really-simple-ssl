@@ -21,7 +21,7 @@ import RiskComponent from "./RiskConfiguration/RiskComponent";
 import VulnerabilitiesOverview from "./RiskConfiguration/vulnerabilitiesOverview";
 import Button from "./Button";
 import Icon from "../utils/Icon";
-import { useEffect} from "@wordpress/element";
+import { useEffect, useState } from "@wordpress/element";
 import useFields from "./FieldsData";
 import PostDropdown from "./PostDropDown";
 import NotificationTester from "./RiskConfiguration/NotificationTester";
@@ -30,17 +30,30 @@ import getAnchor from "../utils/getAnchor";
 const Field = (props) => {
     let scrollAnchor = React.createRef();
     const {updateField, setChangedField, highLightField} = useFields();
+    const [anchor, setAnchor] = useState(null);
 
     useEffect( () => {
         //check if the url contains the query variable 'anchor'
-        let anchor = getAnchor('anchor');
-        if ( anchor && anchor === props.field.id ) {
-            scrollAnchor.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
+        setAnchor(getAnchor('anchor'))
+        handleAnchor();
         if ( highLightField===props.field.id && scrollAnchor.current ) {
             scrollAnchor.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     },[]);
+
+    useEffect( () => {
+        handleAnchor();
+    },[anchor]);
+
+    window.addEventListener('hashchange', (e) => {
+        setAnchor(getAnchor('anchor'));
+    });
+
+    const handleAnchor = () => {
+        if ( anchor && anchor === props.field.id ) {
+            scrollAnchor.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }
 
     const onChangeHandler = (fieldValue) => {
         let field = props.field;
