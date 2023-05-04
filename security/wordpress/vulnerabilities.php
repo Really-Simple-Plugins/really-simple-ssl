@@ -298,7 +298,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
 		    //first we get all installed plugins
 		    $installed_plugins = get_plugins();
 		    $installed_themes = wp_get_themes();
-
 		    //we flatten the array
 
 		    //we make the installed_themes look like the installed_plugins
@@ -1008,23 +1007,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
             echo ob_get_clean();
         }
 
-        public function show_theme_closed()
-        {
-            $screen = get_current_screen();
-            $theme = wp_get_theme();
-            if ($screen && $screen->id !== 'settings_page_really-simple-security') {
-                add_action('admin_notices', function () use ($theme) {
-                    ?>
-                    <div class="notice notice-error is-dismissible">
-                        <p><?php echo sprintf(__(esc_attr('The theme %s is closed for security issues. Please update the theme as soon as possible.'), 'rss-security'), $theme->get('Name')); ?></p>
-                    </div>
-                    <?php
-                });
-            }
-
-        }
-
-
         /* End of theme files section */
 
 
@@ -1057,7 +1039,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
             return $active_components;
         }
-
 
         /**
          * This function adds the vulnerability with the highest risk to the plugins page
@@ -1235,9 +1216,9 @@ if (!class_exists("rsssl_vulnerabilities")) {
             //add the new plugins to the mail_sent_for array
 	        update_option('rsssl_vulnerability_mail_sent_for',$mail_sent_for, false );
             if (empty($diff)){
-                error_log("No changes in vulnerabilities, don't send mail ");
+                error_log("No changes in vulnerabilities, don't send free notification mail ");
             } else {
-	            error_log("Found changes in vulnerabilities, send new mail ");
+	            error_log("Found changes in vulnerabilities, send free notification mail ");
             }
             return !empty($diff);
         }
