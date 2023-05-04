@@ -498,20 +498,31 @@ if (!class_exists("rsssl_vulnerabilities")) {
          * @param string $plugin_file
          */
         public function add_vulnerability_field( string $column_name, string $plugin_file): void {
-            if ( ( $column_name === 'vulnerability' ) && $this->check_vulnerability( $plugin_file ) ) {
-                switch ($this->check_severity($plugin_file)) {
-                    case 'c':
-                        echo sprintf('<a class="rsssl-btn-vulnerable rsssl-critical" target="_blank" href="%s">%s</a>', 'https://really-simple-ssl.com/vulnerabilities/'.$this->getIdentifier($plugin_file), ucfirst($this->risk_naming['c']));
-                        break;
-                    case 'h':
-                        echo sprintf('<a class="rsssl-btn-vulnerable rsssl-high" target="_blank" href="%s">%s</a>', 'https://really-simple-ssl.com/vulnerabilities/'.$this->getIdentifier($plugin_file), ucfirst($this->risk_naming['h']));
-                        break;
-                    case 'm':
-                        echo sprintf('<a class="rsssl-btn-vulnerable rsssl-medium" target="_blank" href="%s">%s</a>', 'https://really-simple-ssl.com/vulnerabilities/'.$this->getIdentifier($plugin_file), ucfirst($this->risk_naming['m']));
-                        break;
-                    default:
-                        echo sprintf('<a class="rsssl-btn-vulnerable rsssl-low" target="_blank" href="%s">%s</a>', 'https://really-simple-ssl.com/vulnerabilities/'.$this->getIdentifier($plugin_file), ucfirst($this->risk_naming['l']));
-                        break;
+            x_log($plugin_file);
+            if ( ( $column_name === 'vulnerability' ) ) {
+                if ($this->check_vulnerability( $plugin_file ) ) {
+	                switch ( $this->check_severity( $plugin_file ) ) {
+		                case 'c':
+			                echo sprintf( '<a class="rsssl-btn-vulnerable rsssl-critical" target="_blank" href="%s">%s</a>',
+				                'https://really-simple-ssl.com/vulnerabilities/' . $this->getIdentifier( $plugin_file ), ucfirst( $this->risk_naming['c'] ) );
+			                break;
+		                case 'h':
+			                echo sprintf( '<a class="rsssl-btn-vulnerable rsssl-high" target="_blank" href="%s">%s</a>',
+				                'https://really-simple-ssl.com/vulnerabilities/' . $this->getIdentifier( $plugin_file ), ucfirst( $this->risk_naming['h'] ) );
+			                break;
+		                case 'm':
+			                echo sprintf( '<a class="rsssl-btn-vulnerable rsssl-medium" target="_blank" href="%s">%s</a>',
+				                'https://really-simple-ssl.com/vulnerabilities/' . $this->getIdentifier( $plugin_file ), ucfirst( $this->risk_naming['m'] ) );
+			                break;
+		                default:
+			                echo sprintf( '<a class="rsssl-btn-vulnerable rsssl-low" target="_blank" href="%s">%s</a>',
+				                'https://really-simple-ssl.com/vulnerabilities/' . $this->getIdentifier( $plugin_file ), ucfirst( $this->risk_naming['l'] ) );
+			                break;
+	                }
+                }
+                if ( $this->is_quarantined($plugin_file)) {
+	                echo sprintf( '<a class="rsssl-btn-vulnerable rsssl-critical" target="_blank" href="%s">%s</a>',
+		                'https://really-simple-ssl.com/manual/vulnerabilities#quarantine' , __("Quarantined","really-simple-ssl") );
                 }
             }
         }
@@ -548,6 +559,17 @@ if (!class_exists("rsssl_vulnerabilities")) {
         {
             return $this->workable_plugins[ $plugin_file ]['vulnerable'] ?? false;
         }
+
+	    /**
+         * Check if a plugin is quarantined
+	     *
+	     * @param string $plugin_file
+	     *
+	     * @return bool
+	     */
+	    private function is_quarantined(string $plugin_file): bool {
+            return strpos($plugin_file, '-rsssl-q-')!==false;
+	    }
 
         /**
          * checks if the plugin's severity closed
@@ -720,9 +742,8 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 $file = $upload_dir . '/manifest.json';
             }
 
-
             //we check if the directory exists, if not, we create it
-            if (!file_exists($upload_dir)) {
+            if ( !file_exists($upload_dir) ) {
                 mkdir($upload_dir, 0755, true);
             }
 
@@ -929,8 +950,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
             add_action('admin_footer', [$this, 'enqueue_theme_warning_scripts']);
         }
 
-        public function enqueue_theme_warning_scripts()
-        {
+        public function enqueue_theme_warning_scripts(): void {
             //we get all components with vulnerabilities
             $components = $this->get_components();
             ob_start();?>
@@ -938,9 +958,8 @@ if (!class_exists("rsssl_vulnerabilities")) {
                     window.addEventListener("load", () => {
                     let style = document.createElement('style');
                     let vulnerable_components = [<?php echo implode(',', array_map(function ($component) {
-                    //we return slug and risk
-                    return "{slug: '" . esc_attr($component->slug) . "', risk: '" . esc_attr($this->get_highest_vulnerability($component->vulnerabilities)) . "'}";
-                }, $components)) ?>];
+                        return "{slug: '" . esc_attr($component->slug) . "', risk: '" . esc_attr($this->get_highest_vulnerability($component->vulnerabilities)) . "'}";
+                    }, $components)) ?>];
 
                     //we create the style for warning
                     style.innerHTML = '.rsssl-theme-notice-warning {background-color: #FFF6CE; border-left: 4px solid #ffb900; box-shadow: 0 1px 1px 0 rgba(0,0,0,.1); position:relative; z-index:50; margin-bottom: -48px; padding: 1px 12px;}';
@@ -963,16 +982,25 @@ if (!class_exists("rsssl_vulnerabilities")) {
                             let text = '<?php echo esc_attr(__('Vulnerability: %s', 'really-simple-ssl')) ?>';
                             text = text.replace('%s', level);
                             let divClass = component.risk === 'h' || component.risk === 'c' ? 'rsssl-theme-notice-danger' : 'rsssl-theme-notice-warning';
-                            let spanEl = document.createElement('span');
-                            spanEl.classList.add('dashicons');
-                            spanEl.classList.add('dashicons-info');
-                            let pEl = document.createElement('p');
-                            pEl.appendChild(spanEl);
-                            pEl.innerHTML += text;
-                            let divEl = document.createElement('div');
-                            divEl.appendChild(pEl);
-                            divEl.classList.add(divClass);
-                            theme_element.prepend(divEl);
+                            theme_element.insertAdjacentHTML('afterbegin', `
+                              <div class="${divClass}">
+                                <p><span class="dashicons dashicons-info"></span>${text}</p>
+                              </div>
+                            `);
+                        }
+                    });
+                    //find quarantined themes, find all themes where the data-slug contains '-rsssl-q'
+                    document.querySelectorAll(".theme[data-slug*='-rsssl-q']").forEach(function(theme_element) {
+                        //if the theme exists
+                        if ( theme_element ) {
+                            //we check the risk
+                            let text = '<?php echo esc_attr(__('Quarantined', 'really-simple-ssl')) ?>';
+                            let divClass = 'rsssl-theme-notice-danger';
+                            theme_element.insertAdjacentHTML('afterbegin', `
+                              <div class="${divClass}">
+                                <p><span class="dashicons dashicons-info"></span>${text}</p>
+                              </div>
+                            `);
                         }
                     });
                 });
