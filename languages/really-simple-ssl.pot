@@ -2,14 +2,14 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Really Simple SSL 6.3.0\n"
+"Project-Id-Version: Really Simple SSL 7.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/really-simple-ssl\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-05-04T15:16:22+00:00\n"
+"POT-Creation-Date: 2023-05-05T07:35:28+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: really-simple-ssl\n"
@@ -1666,11 +1666,11 @@ msgstr ""
 msgid "SSL is not yet enabled on this site."
 msgstr ""
 
-#: rlrsssl-really-simple-ssl.php:171
+#: rlrsssl-really-simple-ssl.php:170
 msgid "Update Really Simple SSL Pro: the plugin needs to be updated to the latest version to be compatible."
 msgstr ""
 
-#: rlrsssl-really-simple-ssl.php:173
+#: rlrsssl-really-simple-ssl.php:172
 msgid "Visit the plugins overview or %srenew your license%s."
 msgstr ""
 
@@ -1880,7 +1880,7 @@ msgid "forbidden - number in author name not allowed = %s"
 msgstr ""
 
 #: security/wordpress/vulnerabilities.php:159
-#: security/wordpress/vulnerabilities.php:1335
+#: security/wordpress/vulnerabilities.php:1318
 #: settings/build/688.js:1
 #: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:38
 msgid "vulnerability"
@@ -1889,7 +1889,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: security/wordpress/vulnerabilities.php:166
-#: security/wordpress/vulnerabilities.php:1340
+#: security/wordpress/vulnerabilities.php:1323
 msgid "You have %s %s %s"
 msgstr ""
 
@@ -1910,7 +1910,7 @@ msgstr ""
 msgid "Dashboard - Test Notification"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:430
+#: security/wordpress/vulnerabilities.php:429
 #: settings/config/menu.php:74
 #: settings/config/menu.php:80
 #: settings/build/688.js:1
@@ -1918,60 +1918,60 @@ msgstr ""
 msgid "Vulnerabilities"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:445
+#: security/wordpress/vulnerabilities.php:444
 msgid "Force update"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:447
+#: security/wordpress/vulnerabilities.php:446
 msgid "Will run a frequent update process on vulnerable components."
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:451
+#: security/wordpress/vulnerabilities.php:450
 msgid "Quarantine"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:453
+#: security/wordpress/vulnerabilities.php:452
 msgid "Compnonents will be quarantined if the update process fails."
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:524
-#: security/wordpress/vulnerabilities.php:996
+#: security/wordpress/vulnerabilities.php:523
+#: security/wordpress/vulnerabilities.php:995
 msgid "Quarantined"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:981
+#: security/wordpress/vulnerabilities.php:980
 msgid "Vulnerability: %s"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:1303
+#: security/wordpress/vulnerabilities.php:1286
 msgid "Vulnerability Alert: %s"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:1304
+#: security/wordpress/vulnerabilities.php:1287
 msgid "%s: %s vulnerabilities found"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:1305
+#: security/wordpress/vulnerabilities.php:1288
 msgid "This is a vulnerability alert from Really Simple SSL for %s. "
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:1337
+#: security/wordpress/vulnerabilities.php:1320
 msgid "A %s vulnerability is found in %s."
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:1337
+#: security/wordpress/vulnerabilities.php:1320
 msgid "Multiple %s vulnerabilities have been found."
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:1342
+#: security/wordpress/vulnerabilities.php:1325
 msgid "Based on your settings, Really Simple SSL will take appropriate action, or you will need to solve it manually."
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:1415
+#: security/wordpress/vulnerabilities.php:1398
 msgid "Test notification"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:1416
+#: security/wordpress/vulnerabilities.php:1399
 msgid "This is a 'Dashboard' notification test by Really Simple SSL. You can safely ignore this message. (x)"
 msgstr ""
 

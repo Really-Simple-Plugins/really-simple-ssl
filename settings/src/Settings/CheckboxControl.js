@@ -1,13 +1,24 @@
 /*
 * The tooltip can't be included in the native toggleControl, so we have to build our own.
 */
-import { __experimentalConfirmDialog as ConfirmDialog } from '@wordpress/components';
-import { useState} from "@wordpress/element";
-
+import { useState, useEffect } from "@wordpress/element";
 const CheckboxControl = (props) => {
     const [ isOpen, setIsOpen ] = useState( false );
+    const [ ConfirmDialog, setConfirmDialog ] = useState( false );
+    useEffect( () => {
+        if (!ConfirmDialog) {
+            import ('@wordpress/components').then(({default: __experimentalConfirmDialog}) => {
+                setConfirmDialog(() => __experimentalConfirmDialog);
+            });
+        }
+    }, []);
 
     const onChangeHandler = (e) => {
+        //wordpress <6.0 does not have the confirmdialog component
+        if (!ConfirmDialog) {
+            executeAction();
+            return;
+        }
         if (props.field.warning && props.field.warning.length>0 && !props.field.value) {
             setIsOpen( true );
         } else {
@@ -37,15 +48,16 @@ const CheckboxControl = (props) => {
     let field = props.field;
     let is_checked = field.value ? 'is-checked' : '';
     let is_disabled = props.disabled ? 'is-disabled' : '';
+
     return (
         <>
-            <ConfirmDialog
+            {ConfirmDialog && <ConfirmDialog
                 isOpen={ isOpen }
                 onConfirm={ handleConfirm }
                 onCancel={ handleCancel }
             >
                 {field.warning}
-            </ConfirmDialog>
+            </ConfirmDialog> }
             <div className="components-base-control components-toggle-control">
                 <div className="components-base-control__field">
                     <div data-wp-component="HStack" className="components-flex components-h-stack">
