@@ -93,9 +93,12 @@ nav.rdt_Pagination>div>svg {
   .rsssl-field-wrap {
     margin-left:CALC( -1 * var(--rsp-spacing-l) );
     margin-right:CALC( -1 * var(--rsp-spacing-l) );
-    >.components-base-control, .rsssl-comment, .rsssl-grid-item-content-footer, .rsssl-progress-container,
+    >.components-base-control, .rsssl-comment,
+    //.rsssl-grid-item-content-footer,
+    .rsssl-progress-container,
     >div>button,
-    .rsssl-learning-mode-footer
+    .rsssl-learning-mode-footer,
+    .rsssl-mixed-content-description
     {
       margin-left:var(--rsp-spacing-l);
       margin-right:var(--rsp-spacing-l);
