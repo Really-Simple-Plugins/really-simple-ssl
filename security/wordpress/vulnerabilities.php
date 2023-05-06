@@ -960,11 +960,12 @@ if (!class_exists("rsssl_vulnerabilities")) {
                     }, $components)) ?>];
 
                     //we create the style for warning
-                    style.innerHTML = '.rsssl-theme-notice-warning {background-color: #FFF6CE; border-left: 4px solid #ffb900; box-shadow: 0 1px 1px 0 rgba(0,0,0,.1); position:relative; z-index:50; margin-bottom: -48px; padding: 1px 12px;}';
+                    style.innerHTML = '.rsssl-theme-notice {box-shadow: 0 1px 1px 0 rgba(0,0,0,.1); position:relative; z-index:50; margin-bottom: -35px; padding: 8px 12px;}';
+                    style.innerHTML += '.rsssl-theme-notice-warning {background-color: #FFF6CE; border-left: 4px solid #ffb900;}';
                     //we create the style for danger
-                    style.innerHTML += '.rsssl-theme-notice-danger {background-color: #FFCECE; border-left: 4px solid #dc3232; box-shadow: 0 1px 1px 0 rgba(0,0,0,.1); position:relative; z-index:50; margin-bottom: -48px; padding: 1px 12px;}';
-                    //we create the style for closed
-                    style.innerHTML += '.rsssl-theme-notice-closed {background-color: #fff; border-left: 4px solid #dc3232; box-shadow: 0 1px 1px 0 rgba(0,0,0,.1); margin: 0; padding: 1px 12px;}';
+                    style.innerHTML += '.rsssl-theme-notice-danger {background-color: #FFCECE; border-left: 4px solid #dc3232;}';
+                    style.innerHTML += '.rsssl-theme-notice-below-notice{margin-top: 41px;}';
+                    style.innerHTML += '.rsssl-theme-notice-warning .dashicons, .rsssl-theme-notice-danger .dashicons{margin-right: 12px;}';
                     let levels = <?php echo json_encode($this->risk_naming)?>;
 
                     //we add the style to the head
@@ -972,17 +973,21 @@ if (!class_exists("rsssl_vulnerabilities")) {
                     //we loop through the components
                     vulnerable_components.forEach(function(component) {
                         //we get the theme element
-                        let theme_element = document.querySelector(".theme[data-slug='"+component.slug+"']");
+                        let theme_element = document.querySelector(".theme[data-slug='twentyeleven']");
                         //if the theme exists
                         if (theme_element) {
+                            //check if theme element contains notice. if so, push this notice down with class rsssl-theme-notice-below-notice
+                            let hasNotice = theme_element.querySelector('.update-message.notice');
                             //we check the risk
                             let level = levels[component.risk];
                             let text = '<?php echo esc_attr(__('Vulnerability: %s', 'really-simple-ssl')) ?>';
                             text = text.replace('%s', level);
-                            let divClass = component.risk === 'h' || component.risk === 'c' ? 'rsssl-theme-notice-danger' : 'rsssl-theme-notice-warning';
+                            let divClass = ' rsssl-theme-notice ';
+                            divClass += component.risk === 'h' || component.risk === 'c' ? 'rsssl-theme-notice-danger' : 'rsssl-theme-notice-warning';
+                            if (hasNotice) divClass += ' rsssl-theme-notice-below-notice';
                             theme_element.insertAdjacentHTML('afterbegin', `
                               <div class="${divClass}">
-                                <p><span class="dashicons dashicons-info"></span>${text}</p>
+                                <div><span class="dashicons dashicons-info"></span>${text}</div>
                               </div>
                             `);
                         }
@@ -993,12 +998,12 @@ if (!class_exists("rsssl_vulnerabilities")) {
                         if ( theme_element ) {
                             //we check the risk
                             let text = '<?php echo esc_attr(__('Quarantined', 'really-simple-ssl')) ?>';
-                            let divClass = 'rsssl-theme-notice-danger';
+                            let divClass = 'rsssl-theme-notice rsssl-theme-notice-danger';
                             theme_element.insertAdjacentHTML('afterbegin', `
                               <div class="${divClass}">
-                                <p><span class="dashicons dashicons-info"></span>
+                                <div><span class="dashicons dashicons-info"></span>
                                     <a href="https://really-simple-ssl.com/manual/vulnerabilities#quarantine" target="_blank">${text}</a>
-                                </p>
+                                </div>
                               </div>
                             `);
                         }
