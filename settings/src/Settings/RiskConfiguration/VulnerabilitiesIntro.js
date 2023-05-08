@@ -1,12 +1,26 @@
 import {__} from "@wordpress/i18n";
 import {Button, Modal} from "@wordpress/components";
-import {useState} from '@wordpress/element';
+import {useState,useEffect} from '@wordpress/element';
 import Runner from "./Runner";
+import useRunnerData from "./RunnerData";
 
 const VulnerabilitiesIntro = () => {
     //first we define a state for the steps
     const [ isClosed, setClosed ] = useState( false );
+    const [ disabled, setDisabled ] = useState( true );
+    const {step} = useRunnerData();
 
+    useEffect (() => {
+        if (step===4) {
+            setDisabled(false);
+        }
+    },[step])
+
+    const closeOnX = () => {
+        if (!disabled) {
+            setClosed(true);
+        }
+    }
     //this function closes the modal when onClick is activated
     if(!isClosed) {
         return (
@@ -14,7 +28,7 @@ const VulnerabilitiesIntro = () => {
                 <Modal
                     title={__('Introducing vulnerabilities', 'really-simple-ssl')}
                     className="rsssl-modal"
-                    onRequestClose={setClosed}
+                    onRequestClose={() => closeOnX()}
                     shouldCloseOnClickOutside={true}
                     shouldCloseOnEsc={true}
                     overlayClassName="rsssl-modal-overlay"
@@ -57,7 +71,7 @@ const VulnerabilitiesIntro = () => {
                         />
                     </div>
                     <div className={'rsssl-modal-footer'}>
-                        <Button
+                        <Button disabled={disabled}
                             isPrimary
                             onClick={() => {
                                 setClosed(true);
@@ -67,7 +81,7 @@ const VulnerabilitiesIntro = () => {
                         >
                             {__('Dashboard', 'really-simple-ssl')}
                         </Button>
-                        <Button isSecondary
+                        <Button disabled={disabled} isSecondary
                                 onClick={() => {
                                     setClosed(true);
                                 }}
