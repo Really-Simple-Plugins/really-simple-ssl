@@ -53,18 +53,12 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 'h' => __('high-risk', 'really-simple-ssl'),
                 'c' => __('critical', 'really-simple-ssl'),
             ];
-	        $this->risk_slugs = [
-		        'l' => 'low-risk',
-		        'm' => 'medium-risk',
-		        'h' => 'high-risk',
-		        'c' => 'critical',
-	        ];
+
 	        $this->init();
 	        add_filter('rsssl_vulnerability_data', array($this, 'get_stats'));
 
 	        //now we add the action to the cron.
-	        add_filter('rsssl_twice_daily_cron', array($this, 'run_cron'));
-	        add_filter('rsssl_every_five_minutes_hook', array($this, 'run_cron'));
+	        add_filter('rsssl_every_three_hours_cron', array($this, 'run_cron'));
 	        add_filter('rsssl_notices', [$this, 'show_help_notices'], 10, 1);
         }
 
@@ -88,11 +82,11 @@ if (!class_exists("rsssl_vulnerabilities")) {
         }
 
         public function init(): void {
-	        if ( ! rsssl_user_can_manage() ) {
+	        if ( ! rsssl_admin_logged_in() ) {
 		        return;
 	        }
             //we check the rsssl options if the enable_feedback_in_plugin is set to true
-            if (rsssl_get_option('enable_feedback_in_plugin')) {
+            if ( rsssl_get_option('enable_feedback_in_plugin') ) {
                 // we enable the feedback in the plugin
                 $this->enable_feedback_in_plugin();
                 $this->enable_feedback_in_theme();
@@ -230,9 +224,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
             }
 
-
             update_option('rsssl_admin_notices', $notices);
-
             return $notices;
         }
 
@@ -338,28 +330,16 @@ if (!class_exists("rsssl_vulnerabilities")) {
 			    $plugin['Slug'] = $slug;
 			    $plugin['vulnerable'] = false;
 			    $update = get_site_transient('update_plugins');
-			    if (isset($update->response[$slug])) {
-				    $plugin['update_available'] = true;
-			    } else {
-				    $plugin['update_available'] = false;
-			    }
+                $plugin['update_available'] = isset($update->response[$slug]);
 
-			    if($plugin['type'] === 'theme') {
+			    if( $plugin['type'] === 'theme' ) {
 				    // we check if the theme exists as a directory
-				    if (!file_exists(get_theme_root() . '/' . $slug ) ) {
-					    $plugin['folder_exists'] = false;
-				    } else {
-					    $plugin['folder_exists'] = true;
-				    }
+                    $plugin['folder_exists'] = file_exists(get_theme_root() . '/' . $slug );
 			    }
 
-			    if($plugin['type'] === 'plugin') {
+			    if( $plugin['type'] === 'plugin' ) {
 				    //also we check if the folder exists for the plugin we added this check for later purposes
-				    if (!file_exists(WP_PLUGIN_DIR . '/' . dirname($slug) ) ) {
-					    $plugin['folder_exists'] = false;
-				    } else {
-					    $plugin['folder_exists'] = true;
-				    }
+                    $plugin['folder_exists'] = file_exists(WP_PLUGIN_DIR . '/' . dirname($slug) );
 			    }
 
 			    //if there are no components, we return
@@ -376,8 +356,13 @@ if (!class_exists("rsssl_vulnerabilities")) {
 					    }
 				    }
 			    }
-			    //we walk through the components array
+                if ($slug ==='really-simple-testing-vulnerability-test-c-rsssl-q-M3DYzs/vulnerability-test-c.php'){
+                    x_log($slug);
+                    x_log($plugin);
+                    x_log($components);
+                }
 
+			    //we walk through the components array
 			    $this->workable_plugins[$slug] = $plugin;
 		    }
 
