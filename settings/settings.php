@@ -79,6 +79,7 @@ function rsssl_plugin_admin_scripts()
             'plugin_url' => rsssl_url,
             'network_link' => network_site_url('plugins.php'),
             'pro_plugin_active' => defined('rsssl_pro_version'),
+            'pro_incompatible' => defined('rsssl_pro_version') && rsssl_incompatible_premium_version(),
             'networkwide_active' => !is_multisite() || rsssl_is_networkwide_active(),//true for single sites and network wide activated
             'nonce' => wp_create_nonce('wp_rest'),//to authenticate the logged in user
             'rsssl_nonce' => wp_create_nonce('rsssl_nonce'),
