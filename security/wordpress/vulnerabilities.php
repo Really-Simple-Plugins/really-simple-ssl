@@ -335,6 +335,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 		    $components = $this->get_components();
             //We loop through plugins and check if they are in the components array
 		    foreach ($installed_plugins as $slug => $plugin) {
+			    $plugin['Slug'] = $slug;
 			    $plugin['vulnerable'] = false;
 			    $update = get_site_transient('update_plugins');
 			    if (isset($update->response[$slug])) {
@@ -371,7 +372,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
 							    $plugin['rss_identifier'] = $this->getLinkedUUID($component->vulnerabilities, $plugin['risk_level']);
 							    $plugin['risk_name'] = $this->risk_naming[$plugin['risk_level']];
 							    $plugin['date'] = $this->getLinkedDate($component->vulnerabilities, $plugin['risk_level']);
-							    $plugin['file'] = $slug;
 						    }
 					    }
 				    }
@@ -410,7 +410,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
 			    $core_plugin['rss_identifier'] = $this->getLinkedUUID($core->vulnerabilities, $core_plugin['risk_level']);
 			    $core_plugin['risk_name'] = $this->risk_naming[$core_plugin['risk_level']];
 			    $core_plugin['date'] = $this->getLinkedDate($core->vulnerabilities, $core_plugin['risk_level']);
-			    $core_plugin['file'] = 'wordpress';
 		    }
 		    //we add the core plugin to the workable_plugins array
 		    $this->workable_plugins['wordpress'] = $core_plugin;
