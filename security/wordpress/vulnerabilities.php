@@ -317,16 +317,14 @@ if (!class_exists("rsssl_vulnerabilities")) {
 		    }, $installed_themes);
 
 		    //we add a column type to all values in the array
-		    $installed_themes = array_map(function ($theme) {
+		    $installed_themes = array_map( static function ($theme) {
 			    $theme['type'] = 'theme';
-
 			    return $theme;
 		    }, $installed_themes);
 
 		    //we add a column type to all values in the array
-		    $installed_plugins = array_map(function ($plugin) {
+		    $installed_plugins = array_map( static function ($plugin) {
 			    $plugin['type'] = 'plugin';
-
 			    return $plugin;
 		    }, $installed_plugins);
 
@@ -336,10 +334,10 @@ if (!class_exists("rsssl_vulnerabilities")) {
 		    //now we get the components from the file
 		    $components = $this->get_components();
             //We loop through plugins and check if they are in the components array
-		    foreach ($installed_plugins as $key => $plugin) {
+		    foreach ($installed_plugins as $slug => $plugin) {
 			    $plugin['vulnerable'] = false;
 			    $update = get_site_transient('update_plugins');
-			    if (isset($update->response[$key])) {
+			    if (isset($update->response[$slug])) {
 				    $plugin['update_available'] = true;
 			    } else {
 				    $plugin['update_available'] = false;
@@ -347,7 +345,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
 			    if($plugin['type'] === 'theme') {
 				    // we check if the theme exists as a directory
-				    if (!file_exists(get_theme_root() . '/' . $plugin['TextDomain']) ) {
+				    if (!file_exists(get_theme_root() . '/' . $slug ) ) {
 					    $plugin['folder_exists'] = false;
 				    } else {
 					    $plugin['folder_exists'] = true;
@@ -356,7 +354,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
 			    if($plugin['type'] === 'plugin') {
 				    //also we check if the folder exists for the plugin we added this check for later purposes
-				    if (!file_exists(WP_PLUGIN_DIR . '/' . $plugin['TextDomain']) ) {
+				    if (!file_exists(WP_PLUGIN_DIR . '/' . dirname($slug) ) ) {
 					    $plugin['folder_exists'] = false;
 				    } else {
 					    $plugin['folder_exists'] = true;
@@ -373,14 +371,14 @@ if (!class_exists("rsssl_vulnerabilities")) {
 							    $plugin['rss_identifier'] = $this->getLinkedUUID($component->vulnerabilities, $plugin['risk_level']);
 							    $plugin['risk_name'] = $this->risk_naming[$plugin['risk_level']];
 							    $plugin['date'] = $this->getLinkedDate($component->vulnerabilities, $plugin['risk_level']);
-							    $plugin['file'] = $key;
+							    $plugin['file'] = $slug;
 						    }
 					    }
 				    }
 			    }
 			    //we walk through the components array
 
-			    $this->workable_plugins[$key] = $plugin;
+			    $this->workable_plugins[$slug] = $plugin;
 		    }
 
 		    //now we get the core information
@@ -725,29 +723,29 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	        if ( ! rsssl_admin_logged_in() ) {
 		        return;
 	        }
+	        //we get the upload directory
+	        $upload_dir = wp_upload_dir();
+	        $upload_dir = $upload_dir['basedir'];
+	        $upload_dir = $upload_dir . self::RSSSL_VULNERABILITIES_LOCATION;
+
+	        if (!$manifest) {
+		        $file = $upload_dir . '/' . ($isCore ? 'core.json' : 'components.json');
+	        } else {
+		        $file = $upload_dir . '/manifest.json';
+	        }
+	        //we delete the old file if it exists
+	        if (file_exists($file)) {
+		        wp_delete_file($file);
+	        }
+
             //if the data is empty, we return null
             if (empty($data)) {
                 return;
-            }
-            //we get the upload directory
-            $upload_dir = wp_upload_dir();
-            $upload_dir = $upload_dir['basedir'];
-            $upload_dir = $upload_dir . self::RSSSL_VULNERABILITIES_LOCATION;
-
-            if (!$manifest) {
-                $file = $upload_dir . '/' . ($isCore ? 'core.json' : 'components.json');
-            } else {
-                $file = $upload_dir . '/manifest.json';
             }
 
             //we check if the directory exists, if not, we create it
             if ( !file_exists($upload_dir) ) {
                 mkdir($upload_dir, 0755, true);
-            }
-
-            //we delete the old file if it exists
-            if (file_exists($file)) {
-                wp_delete_file($file);
             }
 
             FileStorage::StoreFile($file, $data);
