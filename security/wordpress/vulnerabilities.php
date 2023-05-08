@@ -853,7 +853,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
             }
 
             //we make the installed_themes look like the installed_plugins
-            $installed_themes = array_map(function ($theme) {
+            $installed_themes = array_map( static function ($theme) {
                 return [
                     'Name' => $theme->get('Name'),
                     'Slug' => $theme->get('TextDomain'),
