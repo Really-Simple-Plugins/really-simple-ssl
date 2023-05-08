@@ -346,8 +346,8 @@ if (!class_exists("rsssl_vulnerabilities")) {
 			    if ( !empty($components) ) {
 				    foreach ($components as $component) {
                         //@todo change into slug
-//					    if ($plugin['Slug'] === $component->slug) {
-					    if ($plugin['TextDomain'] === $component->slug) {
+					    if ($plugin['Slug'] === $component->slug) {
+//					    if ($plugin['TextDomain'] === $component->slug) {
 						    if (!empty($component->vulnerabilities) && $plugin['folder_exists'] === true) {
 							    $plugin['vulnerable'] = true;
 							    $plugin['risk_level'] = $this->get_highest_vulnerability($component->vulnerabilities);
@@ -807,12 +807,12 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 $installed_plugins[$slug]['Slug'] = $slug;
                 $plugin = $plugin['TextDomain'];
                 //@todo change into slug
-                //$url = self::RSSSL_SECURITY_API . 'plugin/' . $slug . '.json';
-                $url = self::RSSSL_SECURITY_API . 'plugin/' . $plugin . '.json';
+                $url = self::RSSSL_SECURITY_API . 'plugin/' . $slug . '.json';
+//              $url = self::RSSSL_SECURITY_API . 'plugin/' . $plugin . '.json';
                 //if the plugin is not in the manifest, we skip it
                 //@todo change into slug
-//              if (!in_array($slug, (array)$manifest)) {
-                if (!in_array($plugin, (array)$manifest)) {
+              if (!in_array($slug, (array)$manifest)) {
+//                if (!in_array($plugin, (array)$manifest)) {
                     continue;
                 }
                 $data = $this->download($url);
@@ -823,7 +823,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
             //we also do it for all the installed themes
             $installed_themes = wp_get_themes();
             foreach ($installed_themes as $theme) {
-                $theme = $theme->get('TextDomain');
+                $theme = $theme->get('Slug');
                 $url = self::RSSSL_SECURITY_API . 'theme/' . $theme . '.json';
 
                 //if the plugin is not in the manifest, we skip it
@@ -1013,15 +1013,13 @@ if (!class_exists("rsssl_vulnerabilities")) {
          */
         private function filter_active_components($components, array $active_plugins): array
         {
-//            x_log($components);
             $active_components = [];
             foreach ($components as $component) {
                 foreach ($active_plugins as $active_plugin) {
                     // new rework for logic
                     //@todo change to slug
-                    x_log($active_plugin);
-	                //if (isset($component->slug) && $component->slug === $active_plugin['Slug']) {
-                    if (isset($component->slug) && $component->slug === $active_plugin['TextDomain']) {
+	                if (isset($component->slug) && $component->slug === $active_plugin['Slug']) {
+//                    if (isset($component->slug) && $component->slug === $active_plugin['TextDomain']) {
                         //now we filter out the relevant vulnerabilities
                         $component->vulnerabilities = $this->filter_vulnerabilities($component->vulnerabilities, $active_plugin['Version']);
                         //if we have vulnerabilities, we add the component to the active components or when the plugin is closed
