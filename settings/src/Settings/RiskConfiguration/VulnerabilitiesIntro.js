@@ -93,6 +93,9 @@ const VulnerabilitiesIntro = () => {
             </>
         )
     }
+
+    //in case the modal is closed we return null
+    return null;
 }
 
 export default VulnerabilitiesIntro;
