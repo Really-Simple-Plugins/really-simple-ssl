@@ -356,11 +356,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
 					    }
 				    }
 			    }
-                if ($slug ==='really-simple-testing-vulnerability-test-c-rsssl-q-M3DYzs/vulnerability-test-c.php'){
-                    x_log($slug);
-                    x_log($plugin);
-                    x_log($components);
-                }
 
 			    //we walk through the components array
 			    $this->workable_plugins[$slug] = $plugin;
@@ -1011,6 +1006,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
          */
         private function filter_active_components($components, array $active_plugins): array
         {
+//            x_log($components);
             $active_components = [];
             foreach ($components as $component) {
                 foreach ($active_plugins as $active_plugin) {
