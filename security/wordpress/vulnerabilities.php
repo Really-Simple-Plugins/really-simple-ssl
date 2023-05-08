@@ -345,6 +345,8 @@ if (!class_exists("rsssl_vulnerabilities")) {
 			    //if there are no components, we return
 			    if ( !empty($components) ) {
 				    foreach ($components as $component) {
+                        //@todo change into slug
+//					    if ($plugin['Slug'] === $component->slug) {
 					    if ($plugin['TextDomain'] === $component->slug) {
 						    if (!empty($component->vulnerabilities) && $plugin['folder_exists'] === true) {
 							    $plugin['vulnerable'] = true;
@@ -801,10 +803,15 @@ if (!class_exists("rsssl_vulnerabilities")) {
             //first we get the manifest file
             $manifest = $this->getManifest();
             $vulnerabilities = [];
-            foreach ($installed_plugins as $plugin) {
+            foreach ($installed_plugins as $slug => $plugin) {
+                $installed_plugins[$slug]['Slug'] = $slug;
                 $plugin = $plugin['TextDomain'];
+                //@todo change into slug
+                //$url = self::RSSSL_SECURITY_API . 'plugin/' . $slug . '.json';
                 $url = self::RSSSL_SECURITY_API . 'plugin/' . $plugin . '.json';
                 //if the plugin is not in the manifest, we skip it
+                //@todo change into slug
+//              if (!in_array($slug, (array)$manifest)) {
                 if (!in_array($plugin, (array)$manifest)) {
                     continue;
                 }
@@ -1011,6 +1018,9 @@ if (!class_exists("rsssl_vulnerabilities")) {
             foreach ($components as $component) {
                 foreach ($active_plugins as $active_plugin) {
                     // new rework for logic
+                    //@todo change to slug
+                    x_log($active_plugin);
+	                //if (isset($component->slug) && $component->slug === $active_plugin['Slug']) {
                     if (isset($component->slug) && $component->slug === $active_plugin['TextDomain']) {
                         //now we filter out the relevant vulnerabilities
                         $component->vulnerabilities = $this->filter_vulnerabilities($component->vulnerabilities, $active_plugin['Version']);
