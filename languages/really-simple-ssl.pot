@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-05-08T07:48:39+00:00\n"
+"POT-Creation-Date: 2023-05-08T09:23:26+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: really-simple-ssl\n"
@@ -54,7 +54,7 @@ msgstr ""
 #: settings/build/885.js:1
 #: settings/build/967.js:1
 #: settings/src/Onboarding/Onboarding.js:246
-#: settings/src/Settings/RiskConfiguration/VulnerabilitiesIntro.js:91
+#: settings/src/Settings/RiskConfiguration/VulnerabilitiesIntro.js:89
 msgid "Dismiss"
 msgstr ""
 
@@ -1412,11 +1412,14 @@ msgid "This email was sent to"
 msgstr ""
 
 #: mailer/class-mail.php:28
-msgid "What now?"
+#: mailer/class-mail.php:113
+#: settings/build/688.js:1
+#: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:187
+msgid "Learn more"
 msgstr ""
 
 #: mailer/class-mail.php:29
-msgid "I didn't change any settings in the plugin."
+msgid "Why did I receive this email?"
 msgstr ""
 
 #: mailer/class-mail.php:31
@@ -1446,12 +1449,6 @@ msgstr ""
 
 #: mailer/class-mail.php:72
 msgid "Email could not be sent. No message or subject set."
-msgstr ""
-
-#: mailer/class-mail.php:113
-#: settings/build/688.js:1
-#: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:187
-msgid "Learn more"
 msgstr ""
 
 #: mailer/class-mail.php:124
@@ -2547,7 +2544,7 @@ msgstr ""
 
 #: settings/config/menu.php:12
 #: settings/build/967.js:1
-#: settings/src/Settings/RiskConfiguration/VulnerabilitiesIntro.js:84
+#: settings/src/Settings/RiskConfiguration/VulnerabilitiesIntro.js:82
 msgid "Dashboard"
 msgstr ""
 
@@ -3576,7 +3573,7 @@ msgstr ""
 #: settings/build/967.js:1
 #: settings/src/Settings/LearningMode/LearningMode.js:190
 #: settings/src/Settings/MixedContentScan/MixedContentScan.js:157
-#: settings/src/Settings/RiskConfiguration/VulnerabilitiesOverview.js:109
+#: settings/src/Settings/RiskConfiguration/VulnerabilitiesOverview.js:107
 msgid "No results"
 msgstr ""
 
@@ -3621,7 +3618,7 @@ msgstr ""
 #: settings/build/967.js:1
 #: settings/src/Settings/LearningMode/LearningMode.js:244
 #: settings/src/Settings/PermissionsPolicy.js:131
-#: settings/src/Settings/RiskConfiguration/VulnerabilitiesOverview.js:117
+#: settings/src/Settings/RiskConfiguration/VulnerabilitiesOverview.js:115
 msgid "Disabled"
 msgstr ""
 
@@ -3727,42 +3724,42 @@ msgid "Blocked"
 msgstr ""
 
 #: settings/build/967.js:1
-#: settings/src/Settings/RiskConfiguration/VulnerabilitiesIntro.js:31
+#: settings/src/Settings/RiskConfiguration/VulnerabilitiesIntro.js:29
 msgid "Introducing vulnerabilities"
 msgstr ""
 
 #: settings/build/967.js:1
-#: settings/src/Settings/RiskConfiguration/VulnerabilitiesIntro.js:41
+#: settings/src/Settings/RiskConfiguration/VulnerabilitiesIntro.js:39
 msgid "You have enabled vulnerability detection! Really Simple SSL will check your plugins, themes and WordPress core daily and report if any known vulnerabilities are found."
 msgstr ""
 
 #: settings/build/967.js:1
-#: settings/src/Settings/RiskConfiguration/VulnerabilitiesIntro.js:51
+#: settings/src/Settings/RiskConfiguration/VulnerabilitiesIntro.js:49
 msgid "Preparing vulnerability detection"
 msgstr ""
 
 #: settings/build/967.js:1
-#: settings/src/Settings/RiskConfiguration/VulnerabilitiesIntro.js:57
+#: settings/src/Settings/RiskConfiguration/VulnerabilitiesIntro.js:55
 msgid "Collecting plugin, theme and core data"
 msgstr ""
 
 #: settings/build/967.js:1
-#: settings/src/Settings/RiskConfiguration/VulnerabilitiesIntro.js:63
+#: settings/src/Settings/RiskConfiguration/VulnerabilitiesIntro.js:61
 msgid "Scanning your WordPress configuration"
 msgstr ""
 
 #: settings/build/967.js:1
-#: settings/src/Settings/RiskConfiguration/VulnerabilitiesIntro.js:69
+#: settings/src/Settings/RiskConfiguration/VulnerabilitiesIntro.js:67
 msgid "Reporting enabled"
 msgstr ""
 
 #: settings/build/967.js:1
-#: settings/src/Settings/RiskConfiguration/VulnerabilitiesOverview.js:137
+#: settings/src/Settings/RiskConfiguration/VulnerabilitiesOverview.js:135
 msgid "No vulnerabilities found"
 msgstr ""
 
 #: settings/build/967.js:1
-#: settings/src/Settings/RiskConfiguration/VulnerabilitiesOverview.js:117
+#: settings/src/Settings/RiskConfiguration/VulnerabilitiesOverview.js:115
 msgid "Activate vulnerability detection to enable this block."
 msgstr ""
 
