@@ -25,8 +25,8 @@ if ( !class_exists('rsssl_mailer') ) {
 			$this->subject = __("Notification by Really Simple SSL", "really-simple-ssl");
 			$this->title = __("Learn more about our features!", "really-simple-ssl");
 			$this->sent_to_text = __("This email was sent to", "really-simple-ssl");
-			$this->what_now_text = __( "What now?", "really-simple-ssl");
-			$this->change_text = __("I didn't change any settings in the plugin.", "really-simple-ssl");
+			$this->what_now_text = __( "Learn more", "really-simple-ssl");
+			$this->change_text = __("Why did I receive this email?", "really-simple-ssl");
 			$domain = '<a href="'.site_url().'">'.site_url().'</a>';
 			$this->message = sprintf(__("You have enabled a feature on %s. We think it's important to let you know a little bit more about this feature so you can use it without worries.","really-simple-ssl"), $domain);
 
