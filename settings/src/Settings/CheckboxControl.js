@@ -19,6 +19,7 @@ const CheckboxControl = (props) => {
             executeAction();
             return;
         }
+
         if (props.field.warning && props.field.warning.length>0 && !props.field.value) {
             setIsOpen( true );
         } else {

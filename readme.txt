@@ -99,6 +99,10 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 = 6.3.0 =
 * Improvement: added support for the new Let's Encrypt staging environment
 
+= 6.2.5 =
+* Improvement: add warning alert option
+* Fix: capability mismatch in multisite. props @verkkovaraani
+
 = 6.2.4 =
 * Improvement: optionally enable notification emails in onboarding wizard
 * Improvement: onboarding styling
