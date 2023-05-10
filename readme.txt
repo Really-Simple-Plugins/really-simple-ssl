@@ -96,6 +96,10 @@ The plugin checks your certificate before enabling, but if, for example, you mig
 If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions](https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/) instead.
 
 == Changelog ==
+= 7.0.0 =
+* Improvement: move onboarding rest api to do_action rest_route
+* Improvement: catch several edge situations in SSL Labs api
+
 = 6.3.0 =
 * Improvement: added support for the new Let's Encrypt staging environment
 
