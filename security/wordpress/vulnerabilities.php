@@ -426,7 +426,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 'id' => 'quarantine',
                 'name' => __('Quarantine', 'really-simple-ssl'),
                 'value' => get_option('rsssl_quarantine'),
-                'description' => sprintf(__('Compnonents will be quarantined if the update process fails.', 'really-simple-ssl'), $this->riskNaming('m')),
+                'description' => sprintf(__('Components will be quarantined if the update process fails.', 'really-simple-ssl'), $this->riskNaming('m')),
             ];
 
             return [
