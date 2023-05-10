@@ -371,6 +371,10 @@ function rsssl_run_test($request, $ajax_data=false){
 	if ( !$ajax_data  ) {
 		rsssl_remove_fallback_notice();
 	}
+	$nonce = $request->get_param('nonce');
+	if (!wp_verify_nonce($nonce, 'rsssl_nonce')) {
+		return [];
+	}
 	$data = $ajax_data!==false ? $ajax_data : $request->get_params();
 	$test = sanitize_title($request->get_param('test'));
 	$state = $request->get_param('state');
