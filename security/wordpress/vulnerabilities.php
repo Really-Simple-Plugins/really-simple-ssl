@@ -24,7 +24,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
     class rsssl_vulnerabilities
     {
         const RSSSL_VULNERABILITIES_LOCATION = '/really-simple-ssl';
-        const RSSSL_SECURITY_API = 'https://api.really-simple-security.com/storage/downloads/';
+        const RSSSL_SECURITY_API = 'https://downloads.really-simple-security.com/rsssl/vulnerabilities/V1/';
         public $workable_plugins = [];
 
         /**
