@@ -32,6 +32,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
          */
         public $interval = 12 * HOUR_IN_SECONDS;
         public $update_count = 0;
+        
         protected $risk_naming = [];
 
         /**
