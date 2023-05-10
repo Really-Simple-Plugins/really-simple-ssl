@@ -217,6 +217,7 @@ function rsssl_fields( $load_values = true ) {
 				'title' => __( "About Hardening", 'really-simple-ssl' ),
 				'text'  => __( 'Hardening features limit the possibility of potential weaknesses and vulnerabilities which can be misused.', 'really-simple-ssl' ),
 			],
+			'recommended'        => true,
 		],
 		[
 			'id'                 => 'disable_file_editing',

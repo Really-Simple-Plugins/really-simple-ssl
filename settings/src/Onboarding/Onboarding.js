@@ -100,7 +100,6 @@ const Onboarding = (props) => {
                     return item.id === 'hardening';
                 })
                 if (hardeningItem && hardeningItem.status === 'success') {
-                    console.log("fetch fields data after activating hardening");
                     await fetchFieldsData('hardening');
                     await getProgressData();
                     await fetchVulnerabilities();
@@ -126,7 +125,6 @@ const Onboarding = (props) => {
                 }
             }
         }).then( async () => {
-            console.log("fetch progress data after activate ssl");
             await getProgressData();
             await fetchFieldsData(selectedMainMenuItem )
         } );

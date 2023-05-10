@@ -70,7 +70,6 @@ const SettingsGroup = (props) => {
     if ( !activeGroup ) {
         return (<></>);
     }
-    console.log(rsssl_settings.pro_incompatible);
     let msg = activeGroup.premium_text ? activeGroup.premium_text : __("Learn more about %sPremium%s", "really-simple-ssl");
     if ( rsssl_settings.pro_plugin_active ) {
         if ( licenseStatus === 'empty' || licenseStatus === 'deactivated' ) {

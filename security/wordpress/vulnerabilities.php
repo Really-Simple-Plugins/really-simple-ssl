@@ -292,9 +292,9 @@ if (!class_exists("rsssl_vulnerabilities")) {
 		    $installed_plugins = get_plugins();
 		    $installed_themes = wp_get_themes();
 		    //we flatten the array
-
+		    $update = get_site_transient('update_themes');
 		    //we make the installed_themes look like the installed_plugins
-		    $installed_themes = array_map(function ($theme) {
+		    $installed_themes = array_map( static function ($theme) use ($update) {
 			    return [
 				    'Name' => $theme->get('Name'),
 				    'Slug' => $theme->get('TextDomain'),
@@ -306,6 +306,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 				    'TextDomain' => $theme->get('TextDomain'),
 				    'RequiresWP' => $theme->get('RequiresWP'),
 				    'RequiresPHP' => $theme->get('RequiresPHP'),
+                    'update_available' => isset($update->response[$theme->get('TextDomain')]),
 			    ];
 		    }, $installed_themes);
 
@@ -316,10 +317,12 @@ if (!class_exists("rsssl_vulnerabilities")) {
 		    }, $installed_themes);
 
 		    //we add a column type to all values in the array
-		    $installed_plugins = array_map( static function ($plugin) {
+		    $update = get_site_transient('update_plugins');
+		    $installed_plugins = array_map( static function ($plugin, $slug) use ($update) {
 			    $plugin['type'] = 'plugin';
+			    $plugin['update_available'] = isset($update->response[$slug]);
 			    return $plugin;
-		    }, $installed_plugins);
+		    }, $installed_plugins, array_keys($installed_plugins) );
 
 		    //we merge the two arrays
 		    $installed_plugins = array_merge($installed_plugins, $installed_themes);
@@ -330,9 +333,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
 		    foreach ($installed_plugins as $slug => $plugin) {
 			    $plugin['Slug'] = $slug;
 			    $plugin['vulnerable'] = false;
-			    $update = get_site_transient('update_plugins');
-                $plugin['update_available'] = isset($update->response[$slug]);
-
 			    if( $plugin['type'] === 'theme' ) {
 				    // we check if the theme exists as a directory
                     $plugin['folder_exists'] = file_exists(get_theme_root() . '/' . $slug );
@@ -394,7 +394,8 @@ if (!class_exists("rsssl_vulnerabilities")) {
 		    }
 		    //we add the core plugin to the workable_plugins array
 		    $this->workable_plugins['wordpress'] = $core_plugin;
-	    }
+        }
+
 
         /* Public Section 3: The plugin page add-on */
         /**
@@ -1007,7 +1008,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
          */
         private function filter_active_components($components, array $active_plugins): array
         {
-//            x_log($components);
             $active_components = [];
             foreach ($components as $component) {
                 foreach ($active_plugins as $active_plugin) {
