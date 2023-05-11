@@ -1843,7 +1843,6 @@ class rsssl_admin
 
 	    if ( !$this->is_settings_page() ) {
 		    $cached_notices = get_option('rsssl_admin_notices');
-            $cached_notices = false;
             if ( $cached_notices === 'empty') {
                 return [];
             }
