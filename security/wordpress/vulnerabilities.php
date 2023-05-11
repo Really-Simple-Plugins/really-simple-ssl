@@ -318,8 +318,9 @@ if (!class_exists("rsssl_vulnerabilities")) {
 		    //we add a column type to all values in the array
 		    $update = get_site_transient('update_plugins');
 		    $installed_plugins = array_map( static function ($plugin, $slug) use ($update) {
-			    $plugin['type'] = 'plugin';
+  			    $plugin['type'] = 'plugin';
 			    $plugin['update_available'] = isset($update->response[$slug]);
+                $plugin['Slug'] = $slug;
 			    return $plugin;
 		    }, $installed_plugins, array_keys($installed_plugins) );
 
@@ -329,8 +330,8 @@ if (!class_exists("rsssl_vulnerabilities")) {
 		    //now we get the components from the file
 		    $components = $this->get_components();
             //We loop through plugins and check if they are in the components array
-		    foreach ($installed_plugins as $slug => $plugin) {
-			    $plugin['Slug'] = $slug;
+		    foreach ($installed_plugins as $plugin) {
+			    $slug = $plugin['Slug'];
 			    $plugin['vulnerable'] = false;
 			    if( $plugin['type'] === 'theme' ) {
 				    // we check if the theme exists as a directory
@@ -360,6 +361,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 			    //we walk through the components array
 			    $this->workable_plugins[$slug] = $plugin;
 		    }
+
 
 		    //now we get the core information
 		    $core = $this->get_core();
