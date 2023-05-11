@@ -1,8 +1,19 @@
-import { useEffect, useRef} from "@wordpress/element";
+import { useEffect, useState, useRef} from "@wordpress/element";
 import { __ } from '@wordpress/i18n';
 import Icon from "../../utils/Icon";
 import useSslLabs from "./SslLabsData";
 import {getRelativeTime} from "../../utils/formatting";
+const ScoreElement = ({className, content, id}) => {
+    const [hover, setHover] = useState(false);
+
+    let hoverClass = hover ? 'rsssl-hover' : '';
+    return (
+        <div key={id} className="rsssl-score-container"><div
+            onMouseEnter={()=> setHover(true)}
+            onMouseLeave={() => setHover(false)}
+            className={"rsssl-score-snippet "+className+' '+hoverClass}>{content}</div></div>
+    )
+}
 
 const SslLabs = (props) => {
     const {
@@ -97,6 +108,12 @@ const SslLabs = (props) => {
             {},
             {width: progress+"%"},
         );
+    }
+
+    const scoreSnippet = (className, content, id) => {
+        return (
+            <ScoreElement className={className} content={content} id={id}/>
+        )
     }
 
     /**
@@ -200,11 +217,7 @@ const SslLabs = (props) => {
         )
     }
 
-    const scoreSnippet = (className, content, id) => {
-        return (
-            <div key={id} className="rsssl-score-container"><div className={"rsssl-score-snippet "+className}>{content}</div></div>
-        )
-    }
+
 
     const supportsTlS11 = () => {
         let status = 'processing';
