@@ -76,9 +76,18 @@ if (!class_exists("rsssl_vulnerabilities")) {
         public function run_cron(): void {
 	        $this->check_files();
 	        $this->cache_installed_plugins();
-	        if ( $this->jsons_files_updated && $this->should_send_mail() ) {
-		        $this->send_vulnerability_mail();
+	        if ( $this->jsons_files_updated ) {
+                if ($this->should_send_mail()) {
+	                $this->send_vulnerability_mail();
+                }
+
+                foreach ($this->risk_levels as $level => $int_level ) {
+	                if ( $this->should_reset_notification($level) ) {
+                        delete_option("rsssl_" . $level . "_dismissed");
+                    }
+                }
 	        }
+
         }
 
         public function init(): void {
@@ -1174,6 +1183,42 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
             return $risk_levels;
         }
+
+	    /**
+	     * check if a a dismissed notice should be reset
+         *
+	     * @param string $risk_level
+	     *
+	     * @return bool
+	     */
+	    private function should_reset_notification(string $risk_level): bool {
+		    $plugins = $this->workable_plugins;
+		    $vulnerable_plugins = array();
+		    foreach ($plugins as $plugin) {
+			    if (isset($plugin['risk_level']) && $plugin['risk_level'] === $risk_level) {
+				    $vulnerable_plugins[] = $plugin['rss_identifier'];
+			    }
+		    }
+
+		    $dismissed_for = get_option("rsssl_{$risk_level}_notification_dismissed_for",[]);
+		    //cleanup. Check if plugins in mail_sent_for exist in the $plugins array
+		    foreach ($dismissed_for as $key => $rss_identifier) {
+			    if ( ! in_array($rss_identifier, $vulnerable_plugins) ) {
+				    unset($dismissed_for[$key]);
+			    }
+		    }
+
+		    $diff = array_diff($vulnerable_plugins, $dismissed_for);
+		    foreach ($diff as $rss_identifier) {
+			    if (!in_array($rss_identifier, $dismissed_for)){
+				    $dismissed_for[] = $rss_identifier;
+			    }
+		    }
+
+		    //add the new plugins to the $dismissed_for array
+		    update_option("rsssl_{$risk_level}_notification_dismissed_for", $dismissed_for, false );
+		    return !empty($diff);
+	    }
 
 	    /**
          * check if a new mail should be sent about vulnerabilities

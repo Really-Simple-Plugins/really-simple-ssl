@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-05-11T11:47:03+00:00\n"
+"POT-Creation-Date: 2023-05-11T12:39:17+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: really-simple-ssl\n"
@@ -1877,8 +1877,8 @@ msgstr ""
 msgid "forbidden - number in author name not allowed = %s"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:153
-#: security/wordpress/vulnerabilities.php:1301
+#: security/wordpress/vulnerabilities.php:162
+#: security/wordpress/vulnerabilities.php:1346
 #: settings/build/688.js:1
 #: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:38
 msgid "vulnerability"
@@ -1886,29 +1886,29 @@ msgid_plural "vulnerabilities"
 msgstr[0] ""
 msgstr[1] ""
 
-#: security/wordpress/vulnerabilities.php:160
-#: security/wordpress/vulnerabilities.php:1306
+#: security/wordpress/vulnerabilities.php:169
+#: security/wordpress/vulnerabilities.php:1351
 msgid "You have %s %s %s"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:161
+#: security/wordpress/vulnerabilities.php:170
 msgid "You have %s %s %s. Please take appropriate action."
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:190
+#: security/wordpress/vulnerabilities.php:199
 msgid "Site wide - Test Notification"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:191
-#: security/wordpress/vulnerabilities.php:213
+#: security/wordpress/vulnerabilities.php:200
+#: security/wordpress/vulnerabilities.php:222
 msgid "This is a test notification from Really Simple SSL. You can safely dismiss this message."
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:212
+#: security/wordpress/vulnerabilities.php:221
 msgid "Dashboard - Test Notification"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:410
+#: security/wordpress/vulnerabilities.php:419
 #: settings/config/menu.php:74
 #: settings/config/menu.php:80
 #: settings/build/688.js:1
@@ -1916,61 +1916,53 @@ msgstr ""
 msgid "Vulnerabilities"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:425
+#: security/wordpress/vulnerabilities.php:434
 msgid "Force update"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:427
+#: security/wordpress/vulnerabilities.php:436
 msgid "Will run a frequent update process on vulnerable components."
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:431
+#: security/wordpress/vulnerabilities.php:440
 msgid "Quarantine"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:433
+#: security/wordpress/vulnerabilities.php:442
 msgid "Components will be quarantined if the update process fails."
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:504
-#: security/wordpress/vulnerabilities.php:983
+#: security/wordpress/vulnerabilities.php:513
+#: security/wordpress/vulnerabilities.php:992
 msgid "Quarantined"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:966
+#: security/wordpress/vulnerabilities.php:975
 msgid "Vulnerability: %s"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:1269
+#: security/wordpress/vulnerabilities.php:1314
 msgid "Vulnerability Alert: %s"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:1270
+#: security/wordpress/vulnerabilities.php:1315
 msgid "%s: %s vulnerabilities found"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:1271
+#: security/wordpress/vulnerabilities.php:1316
 msgid "This is a vulnerability alert from Really Simple SSL for %s. "
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:1303
+#: security/wordpress/vulnerabilities.php:1348
 msgid "A %s vulnerability is found in %s."
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:1303
+#: security/wordpress/vulnerabilities.php:1348
 msgid "Multiple %s vulnerabilities have been found."
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:1308
+#: security/wordpress/vulnerabilities.php:1353
 msgid "Based on your settings, Really Simple SSL will take appropriate action, or you will need to solve it manually."
-msgstr ""
-
-#: security/wordpress/vulnerabilities.php:1381
-msgid "Test notification"
-msgstr ""
-
-#: security/wordpress/vulnerabilities.php:1382
-msgid "This is a 'Dashboard' notification test by Really Simple SSL. You can safely ignore this message. (x)"
 msgstr ""
 
 #: settings/config/config.php:40
