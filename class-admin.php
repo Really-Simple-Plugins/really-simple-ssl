@@ -444,18 +444,23 @@ class rsssl_admin
 
 	public function notice_html( string $class, string $content, $more_info=false, $dismiss_id=false ) {
 		$class .= ' notice ';
-        $target = strpos($more_info, 'really-simple-ssl.com')!==false ? 'target="_blank"' : '';
+		$is_internal_link = strpos($more_info, 'really-simple-ssl.com')===false;
+        $target = !$is_internal_link ? 'target="_blank"' : '';
         $url = is_ssl() ? "https://" : "http://";
 		$url .= $_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"];
         $url = esc_url_raw($url);
 		ob_start();?>
             <style>
                 #rsssl-message {
+                    margin:10px 0;
                     padding: 0;
                     border-left-color: #333;
                 }
                 #rsssl-message.error{
                     border-left-color:#d7263d;
+                }
+                #rsssl-message.warning{
+                    border-left-color:#ffb900;
                 }
                 .rsssl-notice {
                     display:flex;
@@ -489,17 +494,19 @@ class rsssl_admin
                 <div class="rsssl-notice-content">
 					<?php echo $content ?>
                 </div>
-                <?php if ($more_info ) { ?>
+                <?php if ( $more_info || $dismiss_id ) { ?>
                     <div class="rsssl-admin-notice-more-info">
                         <?php if ($dismiss_id) { ?>
                             <a class="button" href="<?php echo add_query_arg(['dismiss_notice'=>$dismiss_id], $url )?>"><?php _e("Dismiss", "really-simple-ssl")?></a>
                         <?php } ?>
-                        <a class="button" <?php echo $target?> href="<?php echo esc_url_raw($more_info)?>"><?php _e("More info", "really-simple-ssl")?></a></div>
+                        <?php if ($more_info) { ?>
+                            <a class="button" <?php echo $target?> href="<?php echo esc_url_raw($more_info)?>"><?php $is_internal_link ? _e("View", "really-simple-ssl") : _e("More info", "really-simple-ssl")?></a>
+                        <?php } ?>
+                    </div>
                 <?php } ?>
             </div>
         </div>
 		<?php
-
 		return ob_get_clean();
 	}
 
@@ -514,9 +521,10 @@ class rsssl_admin
     public function wpconfig_is_writable()
     {
         $wpconfig_path = $this->find_wp_config_path();
-	    if (empty($wpconfig_path)) {
-            return false;
+        if (empty($wpconfig_path)) {
+		    return false;
 	    }
+
         if ( is_writable($wpconfig_path) ) {
 	        return true;
         }
@@ -906,7 +914,7 @@ class rsssl_admin
 
 		$wpconfig_path = $this->find_wp_config_path();
 		if (empty($wpconfig_path)) {
-            return;
+			return;
 		}
 
 		if ( !is_writable($wpconfig_path) ) {
@@ -1700,6 +1708,8 @@ class rsssl_admin
         if ( !rsssl_user_can_manage() ){
             return;
         }
+        require_once(ABSPATH . 'wp-admin/includes/screen.php'); //temp fix for WordPress until it gets fixed in core
+
 	    //prevent showing the review on edit screen, as gutenberg removes the class which makes it editable.
 	    $screen = get_current_screen();
 	    if ( $screen && $screen->base === 'post' ) {
@@ -1712,7 +1722,9 @@ class rsssl_admin
         if ( is_array($notices) ) {
 	        foreach ( $notices as $id => $notice ){
 		        $notice = $notice['output'];
-		        $class = ( $notice['status'] !== 'completed' ) ? 'error' : 'updated';
+//		        $class = ( $notice['status'] !== 'completed' ) ? 'error' : 'updated';
+				//if there is an open status, we change error to warning.
+		        $class = ( $notice['status'] === 'open' )? 'warning':'error';
 		        $more_info = $notice['url'] ?? false;
 		        $dismiss_id = isset($notice['dismissible']) && $notice['dismissible'] ? $id : false;
 		        echo $this->notice_html( $class.' '.$id, $notice['msg'], $more_info, $dismiss_id);
@@ -1831,6 +1843,7 @@ class rsssl_admin
 
 	    if ( !$this->is_settings_page() ) {
 		    $cached_notices = get_option('rsssl_admin_notices');
+            $cached_notices = false;
             if ( $cached_notices === 'empty') {
                 return [];
             }
@@ -2094,11 +2107,13 @@ class rsssl_admin
 	            ],
 	            'output' => array(
                     'htaccess-redirect-set' => array(
-                        'msg' =>__('301 redirect to https set: .htaccess redirect.', 'really-simple-ssl'),
+                      'title' => __('301 .htaccess redirect', 'really-simple-ssl'),
+                        'msg' =>__('The 301 redirect with .htaccess to HTTPS is now enabled.', 'really-simple-ssl'),
                         'icon' => 'success'
                     ),
                     'wp-redirect-to-htaccess' => array(
                         'highlight_field_id' => 'redirect',
+                        'title' => __('301 .htaccess redirect', 'really-simple-ssl'),
                         'msg' => __('WordPress 301 redirect enabled. We recommend to enable a 301 .htaccess redirect.', 'really-simple-ssl'),
                         'icon' => 'open',
                         'plusone' => RSSSL()->server->uses_htaccess(),
@@ -2306,15 +2321,12 @@ class rsssl_admin
 	            ),
             ),
 	        'vul_beta' => array(
-		        'condition'  => array(
-			        'RSSSL()->admin->is_upgraded',
-		        ),
 		        'callback' => '_true_',
 		        'output' => array(
 			        'true' => array(
 				        'msg' => __( "Our vulnerability reporting is in beta. Signup for the beta to discover the new features!", 'really-simple-ssl' ),
-				        'icon' => 'open',
-				        'admin_notice' => true,
+				        'icon' => 'urgent',
+				        'admin_notice' => false,
 				        'url' => 'https://really-simple-ssl.com/vulnerability-reporting/',
 				        'dismissible' => true,
 				        'plusone' => true,
@@ -2563,6 +2575,7 @@ class rsssl_admin
         if ( $hook !== 'settings_page_really-simple-security') {
             return;
         }
+        //only on settings page
 	    $min = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
         $rtl = is_rtl() ? 'rtl/' : '';
         $url = trailingslashit(rsssl_url) . "assets/css/{$rtl}admin{$min}.css";

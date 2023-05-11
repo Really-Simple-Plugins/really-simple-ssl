@@ -12,6 +12,15 @@ $animation-duration: 1.6s;
   background-image: linear-gradient(90deg, $base-color 0px, $shine-color 40px, $base-color 80px);
   background-size: 600px;
 }
+.rsssl-datatable-placeholder {
+  div {
+    background-color:var(--rsp-grey-300);
+    height:25px;
+    &:nth-child(even) {
+        background-color:#fff;
+    }
+  }
+}
 
 .rsssl-rest-error-message {
   margin:30px;
@@ -56,6 +65,19 @@ $animation-duration: 1.6s;
     background-color: #ddd;
   }
 
+}
+.rsssl-dashboard-placeholder {
+  &.rsssl-grid-item.rsssl-row-2 {
+    grid-row: span 1;
+  }
+}
+.rsssl-settings-placeholder {
+  .rsssl-grid-item{
+    min-height:400px;
+  }
+}
+.rsssl-menu-placeholder {
+  min-height:400px;
 }
 
 @keyframes shine-lines {

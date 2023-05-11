@@ -3,7 +3,9 @@
  * Plugin Name: Really Simple SSL
  * Plugin URI: https://really-simple-ssl.com
  * Description: Lightweight SSL & Hardening Plugin
- * Version: 6.2.4
+ * Version: 7.0.0
+ * Requires at least: 5.8
+ * Requires PHP: 7.2
  * Author: Really Simple Plugins
  * Author URI: https://really-simple-plugins.com
  * License: GPL2
@@ -25,27 +27,13 @@
 defined('ABSPATH') or die("you do not have access to this page!");
 
 if (!function_exists('rsssl_activation_check')) {
-	/**
-	 * Checks if the plugin can safely be activated, at least php 5.6 and wp 4.8
-	 */
 	function rsssl_activation_check()
 	{
-		if (version_compare(PHP_VERSION, '7.2', '<')) {
-			deactivate_plugins(plugin_basename(__FILE__));
-			wp_die(__('Really Simple SSL cannot be activated. The plugin requires PHP 7.2 or higher', 'really-simple-ssl'));
-		}
-
-		global $wp_version;
-		if (version_compare($wp_version, '5.7', '<')) {
-			deactivate_plugins(plugin_basename(__FILE__));
-			wp_die(__('Really Simple SSL cannot be activated. The plugin requires WordPress 5.7 or higher', 'really-simple-ssl'));
-		}
         update_option('rsssl_show_onboarding', true);
         set_transient('rsssl_redirect_to_settings_page', true, HOUR_IN_SECONDS );
     }
 	register_activation_hook( __FILE__, 'rsssl_activation_check' );
 }
-
 class REALLY_SIMPLE_SSL
 {
 	private static $instance;
@@ -61,6 +49,7 @@ class REALLY_SIMPLE_SSL
 	public $certificate;
 	public $wp_cli;
 	public $site_health;
+    public $vulnerabilities;
 
 	private function __construct()
 	{
@@ -105,11 +94,11 @@ class REALLY_SIMPLE_SSL
 		define('rsssl_path', trailingslashit(plugin_dir_path(__FILE__)));
         define('rsssl_template_path', trailingslashit(plugin_dir_path(__FILE__)).'grid/templates/');
         define('rsssl_plugin', plugin_basename(__FILE__));
-        define('rsssl_add_on_version_requirement', '6.2.4');
+        define('rsssl_add_on_version_requirement', '7.0.0');
         if (!defined('rsssl_file') ){
             define('rsssl_file', __FILE__);
         }
-		define('rsssl_version', '6.2.4');
+		define('rsssl_version', '7.0.0');
 		define('rsssl_le_cron_generation_renewal_check', 20);
 		define('rsssl_le_manual_generation_renewal_check', 15);
 	}
@@ -251,10 +240,7 @@ if ( !function_exists('rsssl_admin_logged_in')){
 
 function RSSSL()
 {
-	global $wp_version;
-	if ( version_compare($wp_version, '5.7', '>=') && version_compare(PHP_VERSION, '7.2', '>=')) {
-		return REALLY_SIMPLE_SSL::instance();
-	}
+    return REALLY_SIMPLE_SSL::instance();
 }
 add_action('plugins_loaded', 'RSSSL', 8);
 

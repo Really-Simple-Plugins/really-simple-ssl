@@ -18,13 +18,27 @@ function scssTask(cb) {
   .pipe(gulp.dest('./assets/css'))
   .pipe(rtlcss())
   .pipe(gulp.dest('./assets/css/rtl'));
-
    cb();
 }
 exports.scss = scssTask
 
+function scssPluginTask(cb) {
+  // compile scss to css and minify
+  gulp.src('./assets/css/rsssl-plugin.scss')
+  .pipe(sass(({outputStyle: 'expanded'})).on('error', sass.logError))
+  .pipe(cssbeautify())
+  .pipe(gulp.dest('./assets/css'))
+  .pipe(cssuglify())
+  .pipe(concat('rsssl-plugin.min.css'))
+  .pipe(gulp.dest('./assets/css'))
+  .pipe(rtlcss())
+  .pipe(gulp.dest('./assets/css/rtl'));
+   cb();
+}
+exports.scss = scssPluginTask
+
 gulp.task('default', function () {
-	return
+    return
 });
 function jsTask(cb) {
   // compile js and minify
@@ -41,6 +55,7 @@ exports.js = jsTask
 
 function defaultTask(cb) {
   gulp.watch('./assets/css/**/*.scss', { ignoreInitial: false }, scssTask);
+  gulp.watch('./assets/css/**/*.scss', { ignoreInitial: false }, scssPluginTask);
 //   gulp.watch('./assets/js/**/*.js', { ignoreInitial: false }, jsTask);
   spawn('npm', ['start'], { cwd: 'settings', stdio: 'inherit' })
   cb();

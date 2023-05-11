@@ -27,16 +27,22 @@ const ProgressHeader = (props) => {
     open_task_count = openNotices.length;
 
     return (
-        <div className={"rsssl-task-switcher-container rsssl-active-filter-"+filter}>
-            <span className="rsssl-task-switcher rsssl-all-tasks" onClick={onClickHandler} htmlFor="rsssl-all-tasks" data-filter="all">
-                    { __( "All tasks", "really-simple-ssl" ) }
-                    <span className="rsssl_task_count">({all_task_count})</span>
-            </span>
-            <span className="rsssl-task-switcher rsssl-remaining-tasks" onClick={onClickHandler} htmlFor="rsssl-remaining-tasks" data-filter="remaining">
-                    { __( "Remaining tasks", "really-simple-ssl" )}
-                    <span className="rsssl_task_count">({open_task_count})</span>
-            </span>
-        </div>
+        <>
+            <h3 className="rsssl-grid-title rsssl-h4">{  __( "Progress", 'really-simple-ssl' ) }</h3>
+            <div className="rsssl-grid-item-controls">
+                <div className={"rsssl-task-switcher-container rsssl-active-filter-"+filter}>
+                    <span className="rsssl-task-switcher rsssl-all-tasks" onClick={onClickHandler} htmlFor="rsssl-all-tasks" data-filter="all">
+                            { __( "All tasks", "really-simple-ssl" ) }
+                        <span className="rsssl_task_count">({all_task_count})</span>
+                    </span>
+                            <span className="rsssl-task-switcher rsssl-remaining-tasks" onClick={onClickHandler} htmlFor="rsssl-remaining-tasks" data-filter="remaining">
+                            { __( "Remaining tasks", "really-simple-ssl" )}
+                                <span className="rsssl_task_count">({open_task_count})</span>
+                    </span>
+                </div>
+            </div>
+        </>
+
     );
 
 }

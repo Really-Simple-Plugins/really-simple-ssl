@@ -1,5 +1,5 @@
 import { useState} from "@wordpress/element";
-import Placeholder from "../Placeholder/Placeholder";
+import SettingsPlaceholder from "../Placeholder/SettingsPlaceholder";
 import {in_array} from "../utils/lib";
 import SettingsGroup from "./SettingsGroup";
 import Help from "./Help";
@@ -43,14 +43,7 @@ const Settings = () => {
     const { menu_items: menuItems } = subMenu;
     if ( !subMenuLoaded || !fieldsLoaded || menuItems.length===0 ) {
         return(
-            <div className="cmplz-wizard-settings cmplz-column-2">
-                <div className="cmplz-grid-item">
-                    <div className="cmplz-grid-item-content">
-                        <div className="cmplz-settings-block-intro"><Placeholder lines="3"></Placeholder></div>
-                    </div>
-                </div>
-                <div className="cmplz-grid-item-footer"></div>
-            </div>
+            <SettingsPlaceholder />
         )
     }
 
@@ -68,7 +61,7 @@ const Settings = () => {
         let noticeIsLinkedToField = false;
 
         //notices that are linked to a field. Only in case of warnings.
-        if ( notice.show_with_options && notice.output.icon === 'warning') {
+        if ( notice.show_with_options) {
             let noticeFields = selectedFields.filter(field => notice.show_with_options.includes(field.id));
             noticeIsLinkedToField = noticeFields.length>0;
         }
@@ -108,7 +101,7 @@ const Settings = () => {
         <>
             <div className="rsssl-wizard-settings">
                 { groups.map((group, i) =>
-                    <SettingsGroup key={i} index={i} group={group} fields={selectedFields}/>)
+                    <SettingsGroup key={"settingsGroup-"+i} index={i} group={group} fields={selectedFields}/>)
                 }
                 <div className="rsssl-grid-item-footer">
                     {/*This will be shown only if current step is not the first one*/}

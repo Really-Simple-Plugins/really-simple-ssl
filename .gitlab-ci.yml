@@ -1,5 +1,6 @@
 stages:
   - test
+  - build
 
 # Select what we should cache
 cache:
@@ -75,7 +76,7 @@ variables:
 test:php7.4:
   image: php:7.4
   script:
-    - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
+    - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never --debug
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
     - if: $CI_COMMIT_BRANCH == 'master'

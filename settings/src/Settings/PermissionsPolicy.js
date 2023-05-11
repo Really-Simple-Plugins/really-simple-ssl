@@ -3,13 +3,25 @@ import {
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import {useState,useEffect} from '@wordpress/element';
-import DataTable, {createTheme} from 'react-data-table-component';
 import Icon from "../utils/Icon";
 import useFields from "./FieldsData";
 
 const PermissionsPolicy = (props) => {
     const {fields, updateField, updateSubField, setChangedField, saveFields} = useFields();
     const [enablePermissionsPolicy, setEnablePermissionsPolicy] = useState(0);
+    const [DataTable, setDataTable] = useState(null);
+    const [theme, setTheme] = useState(null);
+    useEffect( () => {
+        import('react-data-table-component').then(({ default: DataTable, createTheme }) => {
+            setDataTable(() => DataTable);
+            setTheme(() => createTheme('really-simple-plugins', {
+                divider: {
+                    default: 'transparent',
+                },
+            }, 'light'));
+        });
+
+    }, []);
 
     useEffect( () => {
         let field = fields.filter(field => field.id === 'enable_permissions_policy')[0];
@@ -90,21 +102,17 @@ const PermissionsPolicy = (props) => {
         },
     };
 
-    createTheme('really-simple-plugins', {
-        divider: {
-            default: 'transparent',
-        },
-    }, 'light');
+    if (!DataTable || !theme) return null;
 
     return (
-        <div className={ props.highLightClass}>
+        <div>
                 <DataTable
                     columns={columns}
                     data={outputData}
                     dense
                     pagination={false}
                     customStyles={customStyles}
-                    theme="really-simple-plugins"
+                    theme={theme}
                 />
                 { enablePermissionsPolicy!=1 && <button className="button button-primary" onClick={ (e) => togglePermissionsPolicyStatus(e, true ) }>{__("Enforce","really-simple-ssl")}</button> }
                 { enablePermissionsPolicy==1 && <div className="rsssl-locked">

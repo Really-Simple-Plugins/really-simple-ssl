@@ -6,10 +6,16 @@ import Icon from "../utils/Icon";
 import Placeholder from '../Placeholder/Placeholder';
 import useMenu from "../Menu/MenuData";
 import useFields from "../Settings/FieldsData";
+import useProgress from "../Dashboard/Progress/ProgressData";
 import useOnboardingData from "./OnboardingData";
+import useRiskData from "../Settings/RiskConfiguration/RiskData";
 
 const Onboarding = (props) => {
     const { fetchFieldsData, updateField, updateFieldsData, getFieldValue} = useFields();
+    const { getProgressData} = useProgress();
+    const {
+        fetchVulnerabilities
+    } = useRiskData();
     const {
         dismissModal,
         actionHandler,
@@ -72,7 +78,7 @@ const Onboarding = (props) => {
 
     useEffect( () => {
         const run = async () => {
-            getSteps(false);
+            await getSteps(false);
             if ( dataLoaded && sslEnabled && currentStepIndex===0) {
                 setCurrentStepIndex(1)
             }
@@ -86,9 +92,21 @@ const Onboarding = (props) => {
 
     //ensure all fields are updated, and progress is retrieved again
     useEffect( () => {
-        if ( dataLoaded && currentStep.action === 'activate_setting' ){
-            fetchFieldsData('general');
+        const runUpdate = async () => {
+            //in currentStep.items, find item with id 'hardening'
+            //if it has status 'completed' fetchFieldsData again.
+            if (currentStep && currentStep.items) {
+                let hardeningItem = currentStep.items.find((item) => {
+                    return item.id === 'hardening';
+                })
+                if (hardeningItem && hardeningItem.status === 'success') {
+                    await fetchFieldsData('hardening');
+                    await getProgressData();
+                    await fetchVulnerabilities();
+                }
+            }
         }
+        runUpdate();
     }, [currentStep])
 
     const activateSSL = () => {
@@ -98,7 +116,6 @@ const Onboarding = (props) => {
             setCurrentStepIndex(currentStepIndex+1);
             //change url to https, after final check
             if ( response.success ) {
-
                 if ( response.site_url_changed ) {
                     window.location.reload();
                 } else {
@@ -107,7 +124,10 @@ const Onboarding = (props) => {
                     }
                 }
             }
-        }).then( async () => { await fetchFieldsData(selectedMainMenuItem ) } );
+        }).then( async () => {
+            await getProgressData();
+            await fetchFieldsData(selectedMainMenuItem )
+        } );
     }
 
     const parseStepItems = (items) => {
@@ -148,7 +168,7 @@ const Onboarding = (props) => {
             let isPluginClass = showAsPlugin ? 'rsssl-is-plugin' : '';
             title = showAsPlugin ? <b>{title}</b> : title;
             return (
-                <li key={index} className={isPluginClass}>
+                <li key={"pluginItem-"+index} className={isPluginClass}>
                     <Icon name = {statusIcon} color = {statusColor} />
                     {title}{description && <>&nbsp;-&nbsp;{description}</>}
                     {id==='ssl_enabled' && networkwide && networkActivationStatus==='main_site_activated' && <>

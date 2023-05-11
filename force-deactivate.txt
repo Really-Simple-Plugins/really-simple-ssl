@@ -39,6 +39,8 @@ function rsssl_run_force_deactivate() {
 	$step = 1;
 	echo "<h1>Force deactivation of Really Simple SSL</h1>";
 	echo $step . ". Resetting options" . "<br>";
+	//ensure we can run the code
+	define( 'WP_CLI',true );
 	RSSSL()->admin->deactivate();
 	$step ++;
 

@@ -1,6 +1,7 @@
 import getAnchor from "./getAnchor";
 import axios from 'axios';
 import apiFetch from '@wordpress/api-fetch';
+
 /*
  * Makes a get request to the fields list
  *
@@ -222,8 +223,4 @@ export const doAction = (action, data) => {
     if (typeof data === 'undefined') data = {};
     data.nonce = rsssl_settings.rsssl_nonce;
     return apiPost('reallysimplessl/v1/do_action/'+action, data);
-}
-
-export const getOnboarding = (forceRefresh) => {
-    return apiGet('reallysimplessl/v1/onboarding'+glue()+'forceRefresh='+forceRefresh+getNonce());
 }

@@ -25,8 +25,8 @@ if ( !class_exists('rsssl_mailer') ) {
 			$this->subject = __("Notification by Really Simple SSL", "really-simple-ssl");
 			$this->title = __("Learn more about our features!", "really-simple-ssl");
 			$this->sent_to_text = __("This email was sent to", "really-simple-ssl");
-			$this->what_now_text = __( "What now?", "really-simple-ssl");
-			$this->change_text = __("I didn't change any settings in the plugin.", "really-simple-ssl");
+			$this->what_now_text = __( "Learn more", "really-simple-ssl");
+			$this->change_text = __("Why did I receive this email?", "really-simple-ssl");
 			$domain = '<a href="'.site_url().'">'.site_url().'</a>';
 			$this->message = sprintf(__("You have enabled a feature on %s. We think it's important to let you know a little bit more about this feature so you can use it without worries.","really-simple-ssl"), $domain);
 
@@ -47,7 +47,6 @@ if ( !class_exists('rsssl_mailer') ) {
 			}
 			$this->title = __("Really Simple SSL - Notification Test", "really-simple-ssl");
 			$this->message = __("This email is confirmation that any security notices are likely to reach your inbox.", "really-simple-ssl");
-
 			$this->warning_blocks = [
 				[
 					'title' => __("About notifications","really-simple-ssl"),
@@ -55,17 +54,7 @@ if ( !class_exists('rsssl_mailer') ) {
 					'url' => 'https://really-simple-ssl.com/email-notifications/',
 				]
 			];
-			$success = $this->send_mail(true);
-			if ($success) {
-				return ['success' => true, 'message' => __('Email sent! Please check your mail', "really-simple-ssl")];
-			}
-
-			if (empty($this->error)) {
-				$this->error = __('Email could not be sent.', "really-simple-ssl");
-			} else {
-				$this->error = __('An error occurred:', "really-simple-ssl").'<br>'.$this->error;
-			}
-			return ['success' => false, 'message' => $this->error];
+			return $this->send_mail(true);
 		}
 
 		public function log_mailer_errors( $wp_error ){
@@ -76,18 +65,16 @@ if ( !class_exists('rsssl_mailer') ) {
 		/**
 		 * Send an e-mail with the correct login URL
 		 *
-		 * @param bool $override_rate_limit
-		 *
-		 * @return bool
+		 * @return array
 		 */
-		public function send_mail($override_rate_limit = false) {
+		public function send_mail(): array {
 			if ( empty($this->message) || empty($this->subject) ) {
-				return false;
+				$this->error = __("Email could not be sent. No message or subject set.", "really-simple-ssl");
 			}
 
 			$this->to = rsssl_get_option('notifications_email_address', get_bloginfo('admin_email') );
 			if ( !is_email($this->to) ){
-				return false;
+				$this->error = __("Email address not valid", "really-simple-ssl");
 			}
 
 			$template = file_get_contents(__DIR__.'/templates/email.html');
@@ -133,9 +120,16 @@ if ( !class_exists('rsssl_mailer') ) {
                     $this->sent_by_text
 				], $template );
 			$success = wp_mail( $this->to, sanitize_text_field($this->subject), $body, array('Content-Type: text/html; charset=UTF-8') );
-			set_transient('rsssl_email_recently_sent', true, 5 * MINUTE_IN_SECONDS );
-			return $success;
-		}
+            if ($success) {
+                return ['success' => true, 'message' => __('Email sent! Please check your mail', "really-simple-ssl")];
+            }
 
+            if (empty($this->error)) {
+                $this->error = __('Email could not be sent.', "really-simple-ssl");
+            } else {
+                $this->error = __('An error occurred:', "really-simple-ssl").'<br>'.$this->error;
+            }
+            return ['success' => false, 'message' => $this->error];
+		}
 	}
 }

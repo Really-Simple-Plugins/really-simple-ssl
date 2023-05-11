@@ -12,7 +12,6 @@ if ( ! class_exists( "rsssl_le_restapi" ) ) {
 
 			self::$_this = $this;
 			add_filter("rsssl_run_test", array($this, 'handle_lets_encrypt_request'), 10, 3);
-			add_filter("rsssl_localize_script", array($this, 'localize_script'), 10, 3);
 			add_action( 'rsssl_after_save_field', array( $this, 'after_save_field' ), 10, 4 );
 		}
 
@@ -20,20 +19,7 @@ if ( ! class_exists( "rsssl_le_restapi" ) ) {
 			return self::$_this;
 		}
 
-		/**
-         * Add some information to the javascript
-		 * @param array $args
-		 *
-		 * @return array
-		 */
-        public function localize_script($args){
-            $hosting_dashboard = 'other';
-            if ( rsssl_is_cpanel() ) $hosting_dashboard = 'cpanel';
-            if ( rsssl_is_directadmin() ) $hosting_dashboard = 'directadmin';
-            if ( rsssl_is_plesk() ) $hosting_dashboard = 'plesk';
-            $args['hosting_dashboard'] = $hosting_dashboard;
-            return $args;
-        }
+
 
 		/**
          * Switch to DNS verification

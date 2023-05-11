@@ -1,14 +1,19 @@
 .rsssl-modal {
-  border-radius: 0;
+
   .rsssl-modal-header, .components-modal__header {
     background-color: var(--rsp-yellow-faded);
     padding: var(--rsp-spacing-m) var(--rsp-spacing-m)!important;
     //no border radius on bottom
-    border-radius: 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom: 0;
   }
 
   .components-modal__content {
     padding: 0;
+    &:before {
+      margin-bottom:initial;
+    }
   }
 
   .rsssl-header-extension {
@@ -25,11 +30,16 @@
   .rsssl-intro-logo {
     width: 7em;
     position: absolute;
-    right: 1em;
-    top: 7em;
+    right: 1.5em;
+    top: 8em;
     height: auto;
     margin: 0;
     padding: 0;
+  }
+  @media (max-width: 768px) {
+    .rsssl-intro-logo {
+      display:none;
+    }
   }
 
   .rsssl-ssl-intro-container {

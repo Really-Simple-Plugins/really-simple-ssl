@@ -584,7 +584,7 @@ if (!class_exists('rsssl_multisite')) {
         {
             //remove slashes of the http(s)
             $domain = preg_replace("/(http:\/\/|https:\/\/)/", "", $domain);
-            if (strpos($domain, "/") !== FALSE) {
+            if ( strpos($domain, "/") !== FALSE ) {
                 return true;
             }
             return false;
@@ -601,6 +601,10 @@ if (!class_exists('rsssl_multisite')) {
 
         public function show_notices()
         {
+			if ( !rsssl_user_can_manage() ) {
+				return;
+			}
+
             //prevent showing the review on edit screen, as gutenberg removes the class which makes it editable.
             $screen = get_current_screen();
 	        if ( $screen && $screen->base === 'post' ) return;
@@ -610,7 +614,7 @@ if (!class_exists('rsssl_multisite')) {
 		        foreach ( $notices as $id => $notice ){
 			        $notice = $notice['output'];
 			        $class = ( $notice['status'] !== 'completed' ) ? 'error' : 'updated';
-			        $more_info = isset($notice['url']) ? $notice['url'] : false;
+			        $more_info = $notice['url'] ?? false;
 			        $dismiss_id = isset($notice['dismissible']) && $notice['dismissible'] ? $id : false;
 			        echo RSSSL()->admin->notice_html( $class.' '.$id, $notice['msg'], $more_info, $dismiss_id);
 		        }

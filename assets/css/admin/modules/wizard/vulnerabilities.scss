@@ -1,0 +1,16 @@
+.rsssl-vulnerability-action {
+  a.button {
+    margin-left:10px;
+  }
+}
+
+.rsssl-processing {
+  opacity:0.5;
+}
+.rsssl-vulnerabilities_measures {
+  .rsssl-locked-overlay {
+    input[type=checkbox] {
+      margin-top: 0;
+    }
+  }
+}
