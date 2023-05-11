@@ -26,7 +26,7 @@ class rsssl_admin
         register_deactivation_hook( __DIR__ . "/" . $this->plugin_filename, array($this, 'deactivate'));
 	    add_action( 'admin_init', array($this, 'add_privacy_info') );
 	    add_action( 'admin_init', array($this, 'maybe_dismiss_review_notice') );
-	    add_action( 'rsssl_weekly_cron', array($this, 'clear_admin_notices_cache') );
+	    add_action( 'rsssl_daily_cron', array($this, 'clear_admin_notices_cache') );
 
 	    //add the settings page for the plugin
 	    add_action('admin_enqueue_scripts', array($this, 'enqueue_assets'));
@@ -521,7 +521,6 @@ class rsssl_admin
     public function wpconfig_is_writable()
     {
         $wpconfig_path = $this->find_wp_config_path();
-
         if (empty($wpconfig_path)) {
 		    return false;
 	    }
@@ -580,23 +579,22 @@ class rsssl_admin
      * @since  2.1
      *
      * @access public
-     * @return string|null
+     * @return string|false
      *
      */
 
     public function find_wp_config_path()
     {
-        //limit nr of iterations to 20
-        $i = 0;
-        $maxiterations = 20;
-        $dir = __DIR__;
-        do {
-            $i++;
-            if (file_exists($dir . "/wp-config.php")) {
-                return $dir . "/wp-config.php";
-            }
-        } while (($dir = realpath("$dir/..")) && ($i < $maxiterations));
-        return null;
+	    $location_of_wp_config = ABSPATH;
+	    if ( ! file_exists( ABSPATH . 'wp-config.php' ) && file_exists( dirname( ABSPATH ) . '/wp-config.php' ) ) {
+		    $location_of_wp_config = dirname( ABSPATH );
+	    }
+	    $location_of_wp_config = trailingslashit( $location_of_wp_config );
+        $wpconfig_path = $location_of_wp_config . 'wp-config.php';
+        if ( file_exists( $wpconfig_path ) ) {
+	        return $wpconfig_path;
+        }
+        return false;
     }
 
     /**
@@ -1724,12 +1722,13 @@ class rsssl_admin
         if ( is_array($notices) ) {
 	        foreach ( $notices as $id => $notice ){
 		        $notice = $notice['output'];
-//		        $class = ( $notice['status'] !== 'completed' ) ? 'error' : 'updated';
-				//if there is an open status, we change error to warning.
-		        $class = ( $notice['status'] === 'open' )? 'warning':'error';
-		        $more_info = $notice['url'] ?? false;
-		        $dismiss_id = isset($notice['dismissible']) && $notice['dismissible'] ? $id : false;
-		        echo $this->notice_html( $class.' '.$id, $notice['msg'], $more_info, $dismiss_id);
+		        if ( isset($notice['msg']) ) {
+                    //if there is an open status, we change error to warning.
+                    $class = ( $notice['status'] === 'open' )? 'warning':'error';
+                    $more_info = $notice['url'] ?? false;
+                    $dismiss_id = isset($notice['dismissible']) && $notice['dismissible'] ? $id : false;
+	                echo $this->notice_html( $class.' '.$id, $notice['msg'], $more_info, $dismiss_id);
+                }
 	        }
         }
     }
@@ -1845,7 +1844,6 @@ class rsssl_admin
 
 	    if ( !$this->is_settings_page() ) {
 		    $cached_notices = get_option('rsssl_admin_notices');
-            $cached_notices = false;
             if ( $cached_notices === 'empty') {
                 return [];
             }
@@ -1853,7 +1851,6 @@ class rsssl_admin
                 return $cached_notices;
 		    }
 	    }
-
         //not cached, set a default here
         //only cache if the admin_notices are retrieved.
         if ( $args['admin_notices'] ) {
@@ -2416,12 +2413,6 @@ class rsssl_admin
 	                unset( $notices[$id]);
                 }
             }
-            //ensure an empty list is also cached
-		    $cache_notices = empty($notices) ? 'empty' : $notices;
-		    //only cache if the admin_notices are retrieved.
-		    if ( $args['admin_notices'] ) {
-			    update_option( 'rsssl_admin_notices', $cache_notices );
-		    }
         }
 
 	    //sort so warnings are on top
@@ -2449,6 +2440,14 @@ class rsssl_admin
 			    }
 		    }
         }
+
+	    //ensure an empty list is also cached
+	    $cache_notices = empty($notices) ? 'empty' : $notices;
+	    //only cache if the admin_notices are retrieved.
+	    if ( $args['admin_notices'] ) {
+		    update_option( 'rsssl_admin_notices', $cache_notices );
+	    }
+
 	    return $notices;
     }
 
@@ -2821,9 +2820,10 @@ class rsssl_admin
 		//only if cookie settings were not inserted yet
 		if ( $this->secure_cookie_settings_status() !== 'set' ) {
 			$wpconfig_path = RSSSL()->admin->find_wp_config_path();
-			if (empty($wpconfig_path)) {
-				return false;
-			}
+            if (empty($wpconfig_path)) {
+                return;
+            }
+
 			$wpconfig = file_get_contents($wpconfig_path);
 			if ((strlen($wpconfig)!=0) && is_writable($wpconfig_path)) {
 				$rule  = "\n"."//Begin Really Simple SSL session cookie settings"."\n";

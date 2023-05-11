@@ -61,6 +61,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	        //now we add the action to the cron.
 	        add_filter('rsssl_every_three_hours_cron', array($this, 'run_cron'));
 	        add_filter('rsssl_notices', [$this, 'show_help_notices'], 10, 1);
+
         }
 
         public function riskNaming($risk = null)
@@ -75,11 +76,51 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
         public function run_cron(): void {
 	        $this->check_files();
-	        $this->cache_installed_plugins();
-	        if ( !$this->jsons_files_updated && $this->should_send_mail() ) {
-		        $this->send_vulnerability_mail();
+	        $this->cache_installed_plugins(true);
+	        if ( $this->jsons_files_updated ) {
+                if ($this->should_send_mail()) {
+	                $this->send_vulnerability_mail();
+                }
+
+                $this->check_notice_reset();
 	        }
+
         }
+
+	    /**
+         * Check if dismissed notices have to be reset
+	     * @return void
+	     */
+        private function check_notice_reset(): void {
+            $this->cache_installed_plugins();
+	        $clear_admin_notices_cache = false;
+	        foreach ( $this->risk_levels as $level => $int_level ) {
+		        if ( $this->should_reset_notification($level) ) {
+			        delete_option("rsssl_" . 'risk_level_' . $level . "_dismissed");
+                    $clear_admin_notices_cache = true;
+		        }
+	        }
+            if ($clear_admin_notices_cache) {
+	            RSSSL()->admin->clear_admin_notices_cache();
+            }
+        }
+
+	    /**
+	     * Checks the files on age and downloads if needed.
+	     * @return void
+	     */
+	    public function reload_files_on_update(): void {
+		    if ( ! rsssl_admin_logged_in() ) {
+			    return;
+		    }
+		    //if the manifest is not older than 4 hours, we don't download it again.
+		    if ( $this->get_file_stored_info(false, true) < time() - 14400) {
+			    $this->download_manifest();
+		    }
+		    $this->download_plugin_vulnerabilities();
+		    $this->download_core_vulnerabilities();
+		    $this->check_notice_reset();
+	    }
 
         public function init(): void {
 	        if ( ! rsssl_admin_logged_in() ) {
@@ -114,7 +155,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	        }
             $self = new self();
 	        $self->check_files();
-	        $self->cache_installed_plugins();
+	        $self->cache_installed_plugins(true);
 
 	        return [
 		        'request_success' => true,
@@ -129,15 +170,15 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	        $level_to_show_on_dashboard = rsssl_get_option('vulnerability_notification_dashboard');
 	        $level_to_show_sitewide = rsssl_get_option('vulnerability_notification_sitewide');
             foreach ($this->risk_levels as $key => $value) {
-                if (!isset($risks[$key])) {
+                if ( !isset($risks[$key]) ) {
                     continue;
                 }
                 //this is shown bases on the config of vulnerability_notification_dashboard
                 $siteWide = false;
-                $dashboardNotce = false;
+                $dashboardNotice = false;
                 if ( $level_to_show_on_dashboard && $level_to_show_on_dashboard !== '*') {
                     if ($value >= $this->risk_levels[$level_to_show_on_dashboard]) {
-	                    $dashboardNotce = true;
+	                    $dashboardNotice = true;
                     }
                 }
                 if ($level_to_show_sitewide && $level_to_show_sitewide !== '*') {
@@ -145,7 +186,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
                         $siteWide = true;
                     }
                 }
-                if ( !$dashboardNotce && !$siteWide ) {
+                if ( !$dashboardNotice && !$siteWide ) {
                     continue;
                 }
 
@@ -220,11 +261,8 @@ if (!class_exists("rsssl_vulnerabilities")) {
 		                ];
 	                }
                 }
-
-
             }
 
-            update_option('rsssl_admin_notices', $notices);
             return $notices;
         }
 
@@ -282,11 +320,15 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	     * And loads it into a memory cache on page load
 	     *
 	     */
-	    public function cache_installed_plugins(): void
+	    public function cache_installed_plugins($force_update=false): void
 	    {
 		    if ( ! rsssl_admin_logged_in() ) {
 			    return;
 		    }
+
+            if ( !$force_update && !empty($this->workable_plugins) ) {
+                return;
+            }
 		    //first we get all installed plugins
 		    $installed_plugins = get_plugins();
 		    $installed_themes = wp_get_themes();
@@ -316,10 +358,12 @@ if (!class_exists("rsssl_vulnerabilities")) {
 		    }, $installed_themes);
 
 		    //we add a column type to all values in the array
+            //this resets the array keys (currently slugs) so we preserve them in the 'Slug' column.
 		    $update = get_site_transient('update_plugins');
 		    $installed_plugins = array_map( static function ($plugin, $slug) use ($update) {
-			    $plugin['type'] = 'plugin';
+  			    $plugin['type'] = 'plugin';
 			    $plugin['update_available'] = isset($update->response[$slug]);
+                $plugin['Slug'] = $slug;
 			    return $plugin;
 		    }, $installed_plugins, array_keys($installed_plugins) );
 
@@ -329,8 +373,8 @@ if (!class_exists("rsssl_vulnerabilities")) {
 		    //now we get the components from the file
 		    $components = $this->get_components();
             //We loop through plugins and check if they are in the components array
-		    foreach ($installed_plugins as $slug => $plugin) {
-			    $plugin['Slug'] = $slug;
+		    foreach ($installed_plugins as $plugin) {
+			    $slug = $plugin['Slug'];
 			    $plugin['vulnerable'] = false;
 			    if( $plugin['type'] === 'theme' ) {
 				    // we check if the theme exists as a directory
@@ -360,6 +404,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 			    //we walk through the components array
 			    $this->workable_plugins[$slug] = $plugin;
 		    }
+
 
 		    //now we get the core information
 		    $core = $this->get_core();
@@ -476,6 +521,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
          */
         public function add_vulnerability_field( string $column_name, string $plugin_file): void {
             if ( ( $column_name === 'vulnerability' ) ) {
+	            $this->cache_installed_plugins();
                 if ($this->check_vulnerability( $plugin_file ) ) {
 	                switch ( $this->check_severity( $plugin_file ) ) {
 		                case 'c':
@@ -608,22 +654,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
             }
         }
 
-	    /**
-         * Checks the files on age and downloads if needed.
-	     * @return void
-	     */
-        public function reload_files_on_update(): void {
-	        if ( ! rsssl_admin_logged_in() ) {
-		        return;
-	        }
-            //if the manifest is not older than 4 hours, we don't download it again.
-            if ( $this->get_file_stored_info(false, true) < time() - 14400) {
-                $this->download_manifest();
-            }
-            $this->download_plugin_vulnerabilities();
-            $this->download_core_vulnerabilities();
-        }
-
 
         /**
          * Checks if the file is valid and exists. It checks three files: the manifest, the core vulnerabilities and the plugin vulnerabilities.
@@ -710,18 +740,18 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	        $upload_dir = $upload_dir['basedir'];
 	        $upload_dir = $upload_dir . self::RSSSL_VULNERABILITIES_LOCATION;
 
-	        if (!$manifest) {
+	        if ( !$manifest ) {
 		        $file = $upload_dir . '/' . ($isCore ? 'core.json' : 'components.json');
 	        } else {
 		        $file = $upload_dir . '/manifest.json';
 	        }
 	        //we delete the old file if it exists
-	        if (file_exists($file)) {
+	        if ( file_exists($file) ) {
 		        wp_delete_file($file);
 	        }
 
             //if the data is empty, we return null
-            if (empty($data)) {
+            if ( empty($data) ) {
                 return;
             }
 
@@ -1173,6 +1203,40 @@ if (!class_exists("rsssl_vulnerabilities")) {
         }
 
 	    /**
+	     * check if a a dismissed notice should be reset
+         *
+	     * @param string $risk_level
+	     *
+	     * @return bool
+	     */
+	    private function should_reset_notification(string $risk_level): bool {
+		    $plugins = $this->workable_plugins;
+		    $vulnerable_plugins = array();
+		    foreach ($plugins as $plugin) {
+			    if (isset($plugin['risk_level']) && $plugin['risk_level'] === $risk_level) {
+				    $vulnerable_plugins[] = $plugin['rss_identifier'];
+			    }
+		    }
+		    $dismissed_for = get_option("rsssl_{$risk_level}_notification_dismissed_for",[]);
+		    //cleanup. Check if plugins in mail_sent_for exist in the $plugins array
+		    foreach ($dismissed_for as $key => $rss_identifier) {
+			    if ( ! in_array($rss_identifier, $vulnerable_plugins) ) {
+				    unset($dismissed_for[$key]);
+			    }
+		    }
+
+		    $diff = array_diff($vulnerable_plugins, $dismissed_for);
+		    foreach ($diff as $rss_identifier) {
+			    if (!in_array($rss_identifier, $dismissed_for)){
+				    $dismissed_for[] = $rss_identifier;
+			    }
+		    }
+		    //add the new plugins to the $dismissed_for array
+		    update_option("rsssl_{$risk_level}_notification_dismissed_for", $dismissed_for, false );
+		    return !empty($diff);
+	    }
+
+	    /**
          * check if a new mail should be sent about vulnerabilities
 	     * @return bool
 	     */
@@ -1361,31 +1425,4 @@ function rsssl_vulnerabilities_api( array $response, string $action, $data ): ar
 }
 add_filter( 'rsssl_do_action', 'rsssl_vulnerabilities_api', 10, 3 );
 
-
-
 /* End of Routing and API's */
-
-if (function_exists('make_test_notifications')) {
-    function make_test_notifications()
-    {
-        $notices = get_option('rsssl_admin_notices');
-        $notice = [
-            'callback' => '_true_',
-            'score' => 1,
-            'show_with_options' => ['enable_vulnerability_scanner'],
-            'output' => [
-                'true' => [
-                    'title' => __('Test notification', 'really-simple-ssl'),
-                    'msg' => __("This is a 'Dashboard' notification test by Really Simple SSL. You can safely ignore this message. (x)", "really-simple-ssl"),
-                    'icon' => 'warning',
-                    'type' => 'warning',
-                    'dismissible' => true,
-                    'admin_notice' => true,
-                ]
-            ]
-        ];
-        $notices['test_vulnerability_notice'] = $notice;
-        //we store the notice in the notices array
-        update_option('rsssl_admin_notices', $notices);
-    }
-}

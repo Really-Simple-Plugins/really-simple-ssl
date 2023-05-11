@@ -25,7 +25,7 @@ const TipsTricks = () => {
             link: 'https://really-simple-ssl.com/instructions/about-hsts/',
         }, {
             content: "Improve Security: About vulnerabilities",
-            link: 'https://really-simple-ssl.com/instructions/about-vulnerabilties',
+            link: 'https://really-simple-ssl.com/instructions/about-vulnerabilities',
         }, {
             content: "Instructions: Debugging with Really Simple SSL",
             link: 'https://really-simple-ssl.com/instructions/debugging/',
