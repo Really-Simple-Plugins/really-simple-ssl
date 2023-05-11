@@ -129,7 +129,7 @@ const SslLabs = (props) => {
 
         if ( endpointData && endpointData.length>0 ) {
             let failedData = endpointData.filter(function (endpoint) {
-                return endpoint.details.hstsPolicy.status!=='present';
+                return endpoint.details.hstsPolicy && endpoint.details.hstsPolicy.status!=='present';
             });
             status = failedData.length>0 ? 'error' : 'success';
         }
@@ -160,7 +160,7 @@ const SslLabs = (props) => {
             let weakest = 256;
             let strongest = 128;
             endpointData.forEach(function(endpoint, i){
-                endpoint.details.suites.forEach(function(suite, j){
+                endpoint.details.suites && endpoint.details.suites.forEach(function(suite, j){
                    suite.list.forEach(function(cipher, j){
                        weakest = cipher.cipherStrength<weakest ? cipher.cipherStrength : weakest;
                        strongest = cipher.cipherStrength>strongest ? cipher.cipherStrength : strongest;
@@ -203,7 +203,7 @@ const SslLabs = (props) => {
         }
         if ( endpointData && endpointData.length>0 ) {
             let failedData = endpointData.filter(function (endpoint) {
-                return endpoint.grade.indexOf('A')===-1;
+                return endpoint.grade && endpoint.grade.indexOf('A')===-1;
             });
             status = failedData.length>0 ? 'error' : 'success';
         }
@@ -227,7 +227,7 @@ const SslLabs = (props) => {
         if ( endpointData && endpointData.length>0 ) {
             status = 'success';
             endpointData.forEach(function(endpoint, i){
-                endpoint.details.protocols.forEach(function(protocol, j){
+                endpoint.details.protocols && endpoint.details.protocols.forEach(function(protocol, j){
                    if (protocol.version==='1.1') status = 'error';
                });
            });

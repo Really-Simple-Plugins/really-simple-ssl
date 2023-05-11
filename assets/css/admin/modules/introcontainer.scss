@@ -6,10 +6,14 @@
     //no border radius on bottom
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
+    border-bottom: 0;
   }
 
   .components-modal__content {
     padding: 0;
+    &:before {
+      margin-bottom:initial;
+    }
   }
 
   .rsssl-header-extension {

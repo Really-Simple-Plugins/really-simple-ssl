@@ -48,6 +48,9 @@ html {
         }
       }
     }
+    select option {
+      font-size: var(--rsp-fs-300);
+    }
     .components-form-toggle.is-checked .components-form-toggle__track{
       background-color: var(--rsp-dark-blue);
     }

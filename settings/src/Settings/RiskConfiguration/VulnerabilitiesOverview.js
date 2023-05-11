@@ -18,7 +18,6 @@ const VulnerabilitiesOverview = (props) => {
     } = useRiskData();
     const {fields, fieldAlreadyEnabled, getFieldValue} = useFields();
     const [showIntro, setShowIntro] = useState(false);
-
     //we create the columns
     let columns = [];
     //getting the fields from the props
@@ -38,8 +37,6 @@ const VulnerabilitiesOverview = (props) => {
             },
         },
     };
-
-
     createTheme('really-simple-plugins', {
         divider: {
             default: 'transparent',
@@ -98,6 +95,10 @@ const VulnerabilitiesOverview = (props) => {
         return (
             //If there is no data or vulnerabilities scanner is disabled we show some dummy data behind a mask
             <>
+                {showIntro && <>
+                        <VulnerabilitiesIntro/>
+                    </>
+                }
                 <DataTable
                     columns={columns}
                     data={dummyData}
@@ -118,13 +119,16 @@ const VulnerabilitiesOverview = (props) => {
         )
     }
 
-    let data = vulList;
     //we need to add a key to the data called action wich produces the action buttons
     return (
         <>
+            {showIntro && <>
+                <VulnerabilitiesIntro/>
+            </>
+            }
             <DataTable
                 columns={columns}
-                data={data}
+                data={vulList}
                 dense
                 pagination
                 persistTableHead
@@ -134,10 +138,7 @@ const VulnerabilitiesOverview = (props) => {
             >
             </DataTable>
 
-            {showIntro && <>
-                <VulnerabilitiesIntro/>
-            </>
-            }
+
         </>
     )
 

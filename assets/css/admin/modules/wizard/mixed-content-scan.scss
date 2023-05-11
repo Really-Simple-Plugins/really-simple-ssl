@@ -15,8 +15,12 @@
   }
 
   .rsssl-field-wrap {
+    .rdt_TableCell[data-column-id="2"] {
+      display:grid;
+    }
     .rdt_TableCol, .rdt_TableCell {
-      min-width: 80px;
+      min-width: 110px;
+
     }
   }
 

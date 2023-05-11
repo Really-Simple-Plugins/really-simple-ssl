@@ -1,20 +1,34 @@
 import {__} from "@wordpress/i18n";
 import {Button, Modal} from "@wordpress/components";
-import {useState} from '@wordpress/element';
+import {useState,useEffect} from '@wordpress/element';
 import Runner from "./Runner";
+import useRunnerData from "./RunnerData";
 
-const VulnerabilitiesIntro = (props) => {
+const VulnerabilitiesIntro = () => {
     //first we define a state for the steps
-    const [ isOpen, setOpen ] = useState( false );
+    const [ isClosed, setClosed ] = useState( false );
+    const [ disabled, setDisabled ] = useState( true );
+    const {step} = useRunnerData();
 
+    useEffect (() => {
+        if (step===4) {
+            setDisabled(false);
+        }
+    },[step])
+
+    const closeOnX = () => {
+        if (!disabled) {
+            setClosed(true);
+        }
+    }
     //this function closes the modal when onClick is activated
-    if(!isOpen) {
+    if(!isClosed) {
         return (
             <>
                 <Modal
                     title={__('Introducing vulnerabilities', 'really-simple-ssl')}
                     className="rsssl-modal"
-                    onRequestClose={setOpen}
+                    onRequestClose={() => closeOnX()}
                     shouldCloseOnClickOutside={true}
                     shouldCloseOnEsc={true}
                     overlayClassName="rsssl-modal-overlay"
@@ -22,7 +36,7 @@ const VulnerabilitiesIntro = (props) => {
                     <div className="rsssl-header-extension">
                         <div>
                             <p>
-                                {__("You have enabled vulnerability detection! Really Simple SSL will check your plugins, themes and WordPress core daily and report if any known vulnerabilities are fouond.", "really-simple-ssl")}
+                                {__("You have enabled vulnerability detection! Really Simple SSL will check your plugins, themes and WordPress core daily and report if any known vulnerabilities are found.", "really-simple-ssl")}
                             </p>
                             <img className="rsssl-intro-logo"
                                  src={rsssl_settings.plugin_url+'/assets/img/really-simple-ssl-intro.svg'}>
@@ -57,19 +71,19 @@ const VulnerabilitiesIntro = (props) => {
                         />
                     </div>
                     <div className={'rsssl-modal-footer'}>
-                        <Button
+                        <Button disabled={disabled}
                             isPrimary
                             onClick={() => {
-                                setOpen(true);
+                                setClosed(true);
                                 //we redirect to dashboard
                                 window.location.hash = "dashboard";
                             }}
                         >
                             {__('Dashboard', 'really-simple-ssl')}
                         </Button>
-                        <Button isSecondary
+                        <Button disabled={disabled} isSecondary
                                 onClick={() => {
-                                    setOpen(true);
+                                    setClosed(true);
                                 }}
                         >
                             {__('Dismiss', 'really-simple-ssl')}
@@ -79,6 +93,9 @@ const VulnerabilitiesIntro = (props) => {
             </>
         )
     }
+
+    //in case the modal is closed we return null
+    return null;
 }
 
 export default VulnerabilitiesIntro;

@@ -22,7 +22,7 @@ if ( !class_exists('rsssl_installer') ){
          */
 
         public function plugin_is_downloaded(){
-            return file_exists(trailingslashit(WP_PLUGIN_DIR).$this->get_activation_slug() );
+            return file_exists(trailingslashit (WP_PLUGIN_DIR).$this->get_activation_slug() );
         }
         /**
          * Check if plugin is activated
@@ -81,50 +81,78 @@ if ( !class_exists('rsssl_installer') ){
         /**
          * Download the plugin
          * @return bool
+         * @todo restore
          */
-        public function download_plugin() {
-            if ( !current_user_can('install_plugins') ) {
-				return false;
-            }
-	        if ( get_transient("rsssl_plugin_download_active")!==$this->slug ) {
-                set_transient("rsssl_plugin_download_active", $this->slug,MINUTE_IN_SECONDS );
-                $info          = $this->get_plugin_info();
-                $download_link = esc_url_raw( $info->versions['trunk'] );
-                require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
-                require_once ABSPATH . 'wp-admin/includes/file.php';
-                include_once ABSPATH . 'wp-admin/includes/plugin-install.php';
-                $skin     = new WP_Ajax_Upgrader_Skin();
-	            $upgrader = new Plugin_Upgrader( $skin );
-	            $result = $upgrader->install( $download_link );
-		        if (is_wp_error($result)){
-			        return false;
-		        }
-	            delete_transient("rsssl_plugin_download_active");
-            }
-			return true;
-        }
+	    public function download_plugin() {
+		    if (!current_user_can('install_plugins')) {
+			    return false;
+		    }
+
+		    if (get_transient("rsssl_plugin_download_active") !== $this->slug) {
+			    set_transient("rsssl_plugin_download_active", $this->slug, MINUTE_IN_SECONDS);
+			    $info = $this->get_plugin_info();
+
+			    $download_link = esc_url_raw($info->versions['trunk']);
+
+			    require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+			    require_once ABSPATH . 'wp-admin/includes/file.php';
+			    include_once ABSPATH . 'wp-admin/includes/plugin-install.php';
+
+			    if ( ! is_writable(WP_PLUGIN_DIR ) ) {
+				    return false;
+			    }
+
+			    $skin = new WP_Ajax_Upgrader_Skin();
+			    $upgrader = new Plugin_Upgrader($skin);
+
+			    $result = $upgrader->install($download_link);
+
+			    if (is_wp_error($result)) {
+				    return false;
+			    }
+
+			    delete_transient("rsssl_plugin_download_active");
+		    }
+
+		    return true;
+	    }
 
         /**
          * Activate the plugin
          *
          * @return bool
          */
-        public function activate_plugin() {
-            if ( !current_user_can('install_plugins')) {
-				return false;
-            }
-			$slug = $this->get_activation_slug();
-	        $networkwide = is_multisite() && rsssl_is_networkwide_active();
-	        if ( !defined('DOING_CRON') ) {
-		        define( 'DOING_CRON', true);
-	        }
-            $result = activate_plugin( $slug, '', $networkwide );
-			if (is_wp_error($result)){
-				return false;
-			}
-            $this->cancel_tour();
-			return true;
-        }
+	    public function activate_plugin() {
+		    if (!current_user_can('install_plugins')) {
+			    return false;
+		    }
+
+		    $slug = $this->get_activation_slug();
+		    $plugin_file_path = trailingslashit(WP_PLUGIN_DIR) . $slug;
+
+		    // Make sure the plugin file exists before trying to activate it
+		    if (!file_exists($plugin_file_path)) {
+			    return false;
+		    }
+
+		    // Use plugin_basename to generate the correct slug, considering the WP_PLUGIN_DIR
+		    $plugin_slug = plugin_basename($plugin_file_path);
+
+		    $networkwide = is_multisite() && rsssl_is_networkwide_active();
+
+		    if (!defined('DOING_CRON')) {
+			    define('DOING_CRON', true);
+		    }
+
+		    $result = activate_plugin($plugin_slug, '', $networkwide);
+		    if (is_wp_error($result)) {
+			    return false;
+		    }
+
+		    $this->cancel_tour();
+		    return true;
+	    }
+
 
         /**
          * Get plugin info

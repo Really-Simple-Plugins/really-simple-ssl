@@ -1,5 +1,4 @@
 <?php
-
 defined('ABSPATH') or die();
 
 /**
@@ -80,6 +79,7 @@ function rsssl_plugin_admin_scripts()
             'plugin_url' => rsssl_url,
             'network_link' => network_site_url('plugins.php'),
             'pro_plugin_active' => defined('rsssl_pro_version'),
+            'pro_incompatible' => defined('rsssl_pro_version') && rsssl_incompatible_premium_version(),
             'networkwide_active' => !is_multisite() || rsssl_is_networkwide_active(),//true for single sites and network wide activated
             'nonce' => wp_create_nonce('wp_rest'),//to authenticate the logged in user
             'rsssl_nonce' => wp_create_nonce('rsssl_nonce'),
@@ -392,6 +392,10 @@ function rsssl_run_test($request, $ajax_data = false)
     if (!$ajax_data) {
         rsssl_remove_fallback_notice();
     }
+    $nonce = $request->get_param('nonce');
+	if (!wp_verify_nonce($nonce, 'rsssl_nonce')) {
+		return [];
+	}
     $data = $ajax_data !== false ? $ajax_data : $request->get_params();
     $test = sanitize_title($request->get_param('test'));
     $state = $request->get_param('state');
@@ -666,6 +670,8 @@ function rsssl_rest_api_fields_get()
     if (!rsssl_user_can_manage()) {
         return [];
     }
+
+//	rsssl_update_option('vulnerabilities_intro_shown', false);
     $output = array();
     $fields = rsssl_fields();
     foreach ($fields as $index => $field) {

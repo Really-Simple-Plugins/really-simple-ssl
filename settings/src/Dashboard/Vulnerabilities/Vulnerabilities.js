@@ -46,7 +46,8 @@ const Vulnerabilities = () => {
     useEffect(() => {
         if (fields.length>0) {
             let notEnabledFields = fields.filter(field => field.recommended);
-            notEnabledFields = notEnabledFields.filter(field => field.value !== 1);
+            //we need to filter enabled fields, but also disabled fields, because these are not enabled, but set by another method, so disabled
+            notEnabledFields = notEnabledFields.filter(field => field.value !== 1 && field.disabled !== true);
             setNotEnabledHardeningFields(notEnabledFields.length);
         }
     },[fields])
