@@ -61,6 +61,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	        //now we add the action to the cron.
 	        add_filter('rsssl_every_three_hours_cron', array($this, 'run_cron'));
 	        add_filter('rsssl_notices', [$this, 'show_help_notices'], 10, 1);
+
         }
 
         public function riskNaming($risk = null)
@@ -75,7 +76,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
         public function run_cron(): void {
 	        $this->check_files();
-	        $this->cache_installed_plugins();
+	        $this->cache_installed_plugins(true);
 	        if ( $this->jsons_files_updated ) {
                 if ($this->should_send_mail()) {
 	                $this->send_vulnerability_mail();
@@ -123,7 +124,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	        }
             $self = new self();
 	        $self->check_files();
-	        $self->cache_installed_plugins();
+	        $self->cache_installed_plugins(true);
 
 	        return [
 		        'request_success' => true,
@@ -291,11 +292,15 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	     * And loads it into a memory cache on page load
 	     *
 	     */
-	    public function cache_installed_plugins(): void
+	    public function cache_installed_plugins($force_update=false): void
 	    {
 		    if ( ! rsssl_admin_logged_in() ) {
 			    return;
 		    }
+
+            if ( !$force_update && !empty($this->workable_plugins) ) {
+                return;
+            }
 		    //first we get all installed plugins
 		    $installed_plugins = get_plugins();
 		    $installed_themes = wp_get_themes();
@@ -488,6 +493,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
          */
         public function add_vulnerability_field( string $column_name, string $plugin_file): void {
             if ( ( $column_name === 'vulnerability' ) ) {
+	            $this->cache_installed_plugins();
                 if ($this->check_vulnerability( $plugin_file ) ) {
 	                switch ( $this->check_severity( $plugin_file ) ) {
 		                case 'c':
@@ -1199,7 +1205,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
 				    $vulnerable_plugins[] = $plugin['rss_identifier'];
 			    }
 		    }
-
 		    $dismissed_for = get_option("rsssl_{$risk_level}_notification_dismissed_for",[]);
 		    //cleanup. Check if plugins in mail_sent_for exist in the $plugins array
 		    foreach ($dismissed_for as $key => $rss_identifier) {
