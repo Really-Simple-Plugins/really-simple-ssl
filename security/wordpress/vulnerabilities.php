@@ -77,7 +77,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	        $this->check_files();
 	        $this->cache_installed_plugins();
 	        if ( !$this->jsons_files_updated && $this->should_send_mail() ) {
-                error_log("jsons_files_updateded and new rss_id in list, send vulnerability mail");
 		        $this->send_vulnerability_mail();
 	        }
         }
@@ -685,7 +684,9 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
                 return json_decode($json);
             }
-            error_log('Could not download file from ' . $url);
+            if ( defined('WP_DEBUG') && WP_DEBUG ) {
+                error_log('Could not download file from ' . $url);
+            }
 
             return null;
         }
@@ -1201,11 +1202,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
             //add the new plugins to the mail_sent_for array
 	        update_option('rsssl_vulnerability_mail_sent_for',$mail_sent_for, false );
-            if (empty($diff)){
-                error_log("No changes in vulnerabilities, don't send free notification mail ");
-            } else {
-	            error_log("Found changes in vulnerabilities, send free notification mail ");
-            }
             return !empty($diff);
         }
 
