@@ -1722,12 +1722,11 @@ class rsssl_admin
         if ( is_array($notices) ) {
 	        foreach ( $notices as $id => $notice ){
 		        $notice = $notice['output'];
-				//if there is an open status, we change error to warning.
-		        $class = ( $notice['status'] === 'open' )? 'warning':'error';
-		        $more_info = $notice['url'] ?? false;
-		        $dismiss_id = isset($notice['dismissible']) && $notice['dismissible'] ? $id : false;
-
-                if ( $notice['msg'] ) {
+		        if ( isset($notice['msg']) ) {
+                    //if there is an open status, we change error to warning.
+                    $class = ( $notice['status'] === 'open' )? 'warning':'error';
+                    $more_info = $notice['url'] ?? false;
+                    $dismiss_id = isset($notice['dismissible']) && $notice['dismissible'] ? $id : false;
 	                echo $this->notice_html( $class.' '.$id, $notice['msg'], $more_info, $dismiss_id);
                 }
 	        }
