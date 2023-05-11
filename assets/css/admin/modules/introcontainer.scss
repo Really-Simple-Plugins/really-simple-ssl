@@ -36,6 +36,11 @@
     margin: 0;
     padding: 0;
   }
+  @media (max-width: 768px) {
+    .rsssl-intro-logo {
+      display:none;
+    }
+  }
 
   .rsssl-ssl-intro-container {
     .rsssl-details {
