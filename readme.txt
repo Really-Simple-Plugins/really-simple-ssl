@@ -97,6 +97,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 
 == Changelog ==
 = 7.0.0 =
+* New: Vulnerability detection, powered by wpvulnerabilities.org
 * Improvement: move onboarding rest api to do_action rest_route
 * Improvement: catch several edge situations in SSL Labs api
 

@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-05-08T09:35:32+00:00\n"
+"POT-Creation-Date: 2023-05-11T07:46:31+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: really-simple-ssl\n"
@@ -53,7 +53,7 @@ msgstr ""
 #: class-admin.php:500
 #: settings/build/885.js:1
 #: settings/build/967.js:1
-#: settings/src/Onboarding/Onboarding.js:246
+#: settings/src/Onboarding/Onboarding.js:244
 #: settings/src/Settings/RiskConfiguration/VulnerabilitiesIntro.js:89
 msgid "Dismiss"
 msgstr ""
@@ -116,7 +116,7 @@ msgstr ""
 #: settings/build/829.js:1
 #: settings/src/Dashboard/OtherPlugins/OtherPlugins.js:21
 #: settings/src/Menu/Menu.js:27
-#: settings/src/Settings/SettingsGroup.js:108
+#: settings/src/Settings/SettingsGroup.js:109
 msgid "Upgrade"
 msgstr ""
 
@@ -200,7 +200,7 @@ msgid "Could not test certificate"
 msgstr ""
 
 #: class-admin.php:2023
-#: onboarding/class-onboarding.php:228
+#: onboarding/class-onboarding.php:230
 msgid "Automatic certificate detection is not possible on your server."
 msgstr ""
 
@@ -418,7 +418,7 @@ msgstr ""
 #: class-multisite.php:220
 #: settings/config/menu.php:18
 #: settings/build/688.js:1
-#: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:232
+#: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:233
 #: settings/src/Dashboard/Vulnerabilities/VulnerabilitiesFooter.js:24
 msgid "Settings"
 msgstr ""
@@ -548,7 +548,7 @@ msgstr ""
 #: settings/build/885.js:1
 #: settings/build/967.js:1
 #: settings/src/Dashboard/Progress/ProgressFooter.js:24
-#: settings/src/Onboarding/Onboarding.js:211
+#: settings/src/Onboarding/Onboarding.js:209
 msgid "Activate SSL"
 msgstr ""
 
@@ -1245,7 +1245,7 @@ msgstr ""
 #: lets-encrypt/functions.php:369
 #: lets-encrypt/functions.php:370
 #: settings/build/772.js:1
-#: settings/src/Settings/SettingsGroup.js:88
+#: settings/src/Settings/SettingsGroup.js:89
 msgid "Instructions"
 msgstr ""
 
@@ -1414,7 +1414,7 @@ msgstr ""
 #: mailer/class-mail.php:28
 #: mailer/class-mail.php:113
 #: settings/build/688.js:1
-#: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:187
+#: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:188
 msgid "Learn more"
 msgstr ""
 
@@ -1463,106 +1463,106 @@ msgstr ""
 msgid "An error occurred:"
 msgstr ""
 
-#: onboarding/class-onboarding.php:161
+#: onboarding/class-onboarding.php:163
 msgid "You can also let the automatic scan of the pro version handle this for you, and get premium support, increased security with HSTS and more!"
 msgstr ""
 
-#: onboarding/class-onboarding.php:161
+#: onboarding/class-onboarding.php:163
 msgid "Check out Really Simple SSL Pro"
 msgstr ""
 
-#: onboarding/class-onboarding.php:167
+#: onboarding/class-onboarding.php:169
 msgid "Almost ready to migrate to SSL!"
 msgstr ""
 
-#: onboarding/class-onboarding.php:168
+#: onboarding/class-onboarding.php:170
 msgid "Before you migrate, please check for:"
 msgstr ""
 
-#: onboarding/class-onboarding.php:174
+#: onboarding/class-onboarding.php:176
 msgid "Get notified!"
 msgstr ""
 
-#: onboarding/class-onboarding.php:175
+#: onboarding/class-onboarding.php:177
 msgid "We use email notification to explain important updates in plugin settings."
 msgstr ""
 
-#: onboarding/class-onboarding.php:175
+#: onboarding/class-onboarding.php:177
 msgid "Add your email address below."
 msgstr ""
 
-#: onboarding/class-onboarding.php:179
+#: onboarding/class-onboarding.php:181
 msgid "Thanks for updating!"
 msgstr ""
 
-#: onboarding/class-onboarding.php:179
+#: onboarding/class-onboarding.php:181
 msgid "Congratulations!"
 msgstr ""
 
-#: onboarding/class-onboarding.php:180
+#: onboarding/class-onboarding.php:182
 msgid "Now have a look at our new features."
 msgstr ""
 
-#: onboarding/class-onboarding.php:208
+#: onboarding/class-onboarding.php:210
 msgid "Http references in your .css and .js files: change any http:// into https://"
 msgstr ""
 
-#: onboarding/class-onboarding.php:212
+#: onboarding/class-onboarding.php:214
 msgid "Images, stylesheets or scripts from a domain without an SSL certificate: remove them or move to your own server."
 msgstr ""
 
-#: onboarding/class-onboarding.php:216
+#: onboarding/class-onboarding.php:218
 msgid "You may need to login in again."
 msgstr ""
 
-#: onboarding/class-onboarding.php:223
+#: onboarding/class-onboarding.php:225
 msgid "An SSL certificate has been detected"
 msgstr ""
 
-#: onboarding/class-onboarding.php:228
+#: onboarding/class-onboarding.php:230
 msgid "Could not test certificate."
 msgstr ""
 
-#: onboarding/class-onboarding.php:233
+#: onboarding/class-onboarding.php:235
 msgid "No SSL certificate has been detected."
 msgstr ""
 
-#: onboarding/class-onboarding.php:233
+#: onboarding/class-onboarding.php:235
 msgid "Please refresh the SSL status if a certificate has been installed recently."
 msgstr ""
 
-#: onboarding/class-onboarding.php:251
-#: settings/settings.php:430
+#: onboarding/class-onboarding.php:253
+#: settings/settings.php:435
 msgid "Self-hosted, Privacy-friendly analytics tool"
 msgstr ""
 
-#: onboarding/class-onboarding.php:258
+#: onboarding/class-onboarding.php:260
 msgid "Cookie Consent Management as it should be"
 msgstr ""
 
-#: onboarding/class-onboarding.php:266
+#: onboarding/class-onboarding.php:268
 msgid "SSL has been activated"
 msgstr ""
 
-#: onboarding/class-onboarding.php:274
+#: onboarding/class-onboarding.php:276
 msgid "Enable recommended hardening features in Really Simple SSL"
 msgstr ""
 
-#: onboarding/class-onboarding.php:279
+#: onboarding/class-onboarding.php:281
 #: settings/build/688.js:1
-#: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:112
+#: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:113
 msgid "Enable"
 msgstr ""
 
-#: onboarding/class-onboarding.php:283
+#: onboarding/class-onboarding.php:285
 msgid "Hardening features are enabled!"
 msgstr ""
 
-#: onboarding/class-onboarding.php:300
+#: onboarding/class-onboarding.php:302
 msgid "%s has been installed!"
 msgstr ""
 
-#: onboarding/class-onboarding.php:315
+#: onboarding/class-onboarding.php:317
 #: upgrade/upgrade-to-pro.php:146
 #: upgrade/upgrade-to-pro.php:159
 #: upgrade/upgrade-to-pro.php:176
@@ -1571,11 +1571,11 @@ msgstr ""
 msgid "Install"
 msgstr ""
 
-#: onboarding/class-onboarding.php:321
+#: onboarding/class-onboarding.php:323
 msgid "Activate our plugin %s"
 msgstr ""
 
-#: onboarding/class-onboarding.php:325
+#: onboarding/class-onboarding.php:327
 #: settings/config/menu.php:268
 #: settings/build/688.js:1
 #: settings/build/967.js:1
@@ -1594,12 +1594,12 @@ msgstr ""
 #: placeholders/class-placeholder.php:222
 #: placeholders/class-placeholder.php:248
 #: placeholders/class-placeholder.php:273
-#: settings/config/config.php:972
+#: settings/config/config.php:973
 #: settings/build/688.js:1
 #: settings/build/885.js:1
 #: settings/build/967.js:1
 #: settings/src/Settings/MixedContentScan/MixedContentScan.js:89
-#: settings/src/Settings/RiskConfiguration/RiskData.js:111
+#: settings/src/Settings/RiskConfiguration/RiskData.js:112
 msgid "Details"
 msgstr ""
 
@@ -1693,22 +1693,22 @@ msgid "Please set the wp-content folder to writable:"
 msgstr ""
 
 #: security/hardening.php:13
-#: security/wordpress/vulnerabilities.php:51
+#: security/wordpress/vulnerabilities.php:52
 msgid "low-risk"
 msgstr ""
 
 #: security/hardening.php:14
-#: security/wordpress/vulnerabilities.php:52
+#: security/wordpress/vulnerabilities.php:53
 msgid "medium-risk"
 msgstr ""
 
 #: security/hardening.php:15
-#: security/wordpress/vulnerabilities.php:53
+#: security/wordpress/vulnerabilities.php:54
 msgid "high-risk"
 msgstr ""
 
 #: security/hardening.php:16
-#: security/wordpress/vulnerabilities.php:54
+#: security/wordpress/vulnerabilities.php:55
 msgid "critical"
 msgstr ""
 
@@ -1865,6 +1865,7 @@ msgid "The DISALLOW_FILE_EDIT constant is defined and set to false. You can remo
 msgstr ""
 
 #: security/wordpress/prevent-login-info-leakage.php:9
+#: tests/test-prevent-login-info-leakage.php:35
 msgid "Invalid login details."
 msgstr ""
 
@@ -1876,8 +1877,8 @@ msgstr ""
 msgid "forbidden - number in author name not allowed = %s"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:159
-#: security/wordpress/vulnerabilities.php:1323
+#: security/wordpress/vulnerabilities.php:153
+#: security/wordpress/vulnerabilities.php:1298
 #: settings/build/688.js:1
 #: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:38
 msgid "vulnerability"
@@ -1885,29 +1886,29 @@ msgid_plural "vulnerabilities"
 msgstr[0] ""
 msgstr[1] ""
 
-#: security/wordpress/vulnerabilities.php:166
-#: security/wordpress/vulnerabilities.php:1328
+#: security/wordpress/vulnerabilities.php:160
+#: security/wordpress/vulnerabilities.php:1303
 msgid "You have %s %s %s"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:167
+#: security/wordpress/vulnerabilities.php:161
 msgid "You have %s %s %s. Please take appropriate action."
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:196
+#: security/wordpress/vulnerabilities.php:190
 msgid "Site wide - Test Notification"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:197
-#: security/wordpress/vulnerabilities.php:219
+#: security/wordpress/vulnerabilities.php:191
+#: security/wordpress/vulnerabilities.php:213
 msgid "This is a test notification from Really Simple SSL. You can safely dismiss this message."
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:218
+#: security/wordpress/vulnerabilities.php:212
 msgid "Dashboard - Test Notification"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:429
+#: security/wordpress/vulnerabilities.php:407
 #: settings/config/menu.php:74
 #: settings/config/menu.php:80
 #: settings/build/688.js:1
@@ -1915,60 +1916,60 @@ msgstr ""
 msgid "Vulnerabilities"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:444
+#: security/wordpress/vulnerabilities.php:422
 msgid "Force update"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:446
+#: security/wordpress/vulnerabilities.php:424
 msgid "Will run a frequent update process on vulnerable components."
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:450
+#: security/wordpress/vulnerabilities.php:428
 msgid "Quarantine"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:452
-msgid "Compnonents will be quarantined if the update process fails."
+#: security/wordpress/vulnerabilities.php:430
+msgid "Components will be quarantined if the update process fails."
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:523
-#: security/wordpress/vulnerabilities.php:1000
+#: security/wordpress/vulnerabilities.php:501
+#: security/wordpress/vulnerabilities.php:980
 msgid "Quarantined"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:983
+#: security/wordpress/vulnerabilities.php:963
 msgid "Vulnerability: %s"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:1291
+#: security/wordpress/vulnerabilities.php:1266
 msgid "Vulnerability Alert: %s"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:1292
+#: security/wordpress/vulnerabilities.php:1267
 msgid "%s: %s vulnerabilities found"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:1293
+#: security/wordpress/vulnerabilities.php:1268
 msgid "This is a vulnerability alert from Really Simple SSL for %s. "
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:1325
+#: security/wordpress/vulnerabilities.php:1300
 msgid "A %s vulnerability is found in %s."
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:1325
+#: security/wordpress/vulnerabilities.php:1300
 msgid "Multiple %s vulnerabilities have been found."
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:1330
+#: security/wordpress/vulnerabilities.php:1305
 msgid "Based on your settings, Really Simple SSL will take appropriate action, or you will need to solve it manually."
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:1403
+#: security/wordpress/vulnerabilities.php:1378
 msgid "Test notification"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:1404
+#: security/wordpress/vulnerabilities.php:1379
 msgid "This is a 'Dashboard' notification test by Really Simple SSL. You can safely ignore this message. (x)"
 msgstr ""
 
@@ -2082,292 +2083,292 @@ msgstr ""
 msgid "Hardening features limit the possibility of potential weaknesses and vulnerabilities which can be misused."
 msgstr ""
 
-#: settings/config/config.php:226
+#: settings/config/config.php:227
 msgid "Disable the built-in file editors"
 msgstr ""
 
-#: settings/config/config.php:236
+#: settings/config/config.php:237
 msgid "Prevent code execution in the public 'Uploads' folder"
 msgstr ""
 
-#: settings/config/config.php:246
+#: settings/config/config.php:247
 msgid "Hide your WordPress version"
 msgstr ""
 
-#: settings/config/config.php:256
+#: settings/config/config.php:257
 msgid "By default, WordPress shows if a username or email address exists when a login fails. This will change it to generic feedback."
 msgstr ""
 
-#: settings/config/config.php:257
+#: settings/config/config.php:258
 msgid "Prevent login feedback"
 msgstr ""
 
-#: settings/config/config.php:267
+#: settings/config/config.php:268
 msgid "Disable directory browsing"
 msgstr ""
 
-#: settings/config/config.php:277
+#: settings/config/config.php:278
 msgid "Disable user enumeration"
 msgstr ""
 
-#: settings/config/config.php:288
+#: settings/config/config.php:289
 msgid "Block the username 'admin'"
 msgstr ""
 
-#: settings/config/config.php:290
+#: settings/config/config.php:291
 msgid "Settings update: Username 'admin' renamed"
 msgstr ""
 
-#: settings/config/config.php:291
+#: settings/config/config.php:292
 msgid "As a security precaution, the username ‘admin’ has been changed on %s. From now on, you can login with '%s' or an email address."
 msgstr ""
 
-#: settings/config/config.php:295
+#: settings/config/config.php:296
 msgid "If the username 'admin' currently exists, you can rename it here. Please note that you can no longer use this username, and should use the new username or an email address"
 msgstr ""
 
-#: settings/config/config.php:305
+#: settings/config/config.php:306
 msgid "Choose new username to replace 'admin'"
 msgstr ""
 
-#: settings/config/config.php:329
+#: settings/config/config.php:330
 msgid "Disable XML-RPC"
 msgstr ""
 
-#: settings/config/config.php:338
+#: settings/config/config.php:339
 msgid "Block user registrations when login and display name are the same"
 msgstr ""
 
-#: settings/config/config.php:347
+#: settings/config/config.php:348
 msgid "This will limit or fully disable HTTP requests that are not needed, but could be used with malicious intent."
 msgstr ""
 
-#: settings/config/config.php:348
+#: settings/config/config.php:349
 msgid "Disable HTTP methods"
 msgstr ""
 
-#: settings/config/config.php:357
+#: settings/config/config.php:358
 msgid "Settings update: Database prefix changed"
 msgstr ""
 
-#: settings/config/config.php:358
+#: settings/config/config.php:359
 msgid "Security through obscurity. Your site is no longer using the default wp_ prefix for database tables. The process has been designed to only complete and replace the tables after all wp_ tables are successfully renamed. In the unlikely event that this does lead to database issues on your site, please navigate to our troubleshooting article."
 msgstr ""
 
-#: settings/config/config.php:361
 #: settings/config/config.php:362
+#: settings/config/config.php:363
 msgid "This will permanently change your database prefixes and you can NOT rollback this feature. Please make sure you have a back-up."
 msgstr ""
 
-#: settings/config/config.php:364
+#: settings/config/config.php:365
 msgid "Rename and randomize your database prefix"
 msgstr ""
 
-#: settings/config/config.php:373
+#: settings/config/config.php:374
 msgid "A debug.log is publicly accessibile and has a standard location. This will change the location to a randomly named folder in /wp-content/"
 msgstr ""
 
-#: settings/config/config.php:375
+#: settings/config/config.php:376
 msgid "Settings update: Debug.log file relocated"
 msgstr ""
 
-#: settings/config/config.php:376
+#: settings/config/config.php:377
 msgid "From now on, the debug.log won’t be publicly accessible whenever wp-debugging is enabled. The debug log will be stored in a randomly named folder in /wp-content/. This prevents possible leakage of sensitive debugging information."
 msgstr ""
 
-#: settings/config/config.php:379
+#: settings/config/config.php:380
 msgid "Change debug.log file location"
 msgstr ""
 
-#: settings/config/config.php:388
+#: settings/config/config.php:389
 msgid "Disable application passwords"
 msgstr ""
 
-#: settings/config/config.php:398
+#: settings/config/config.php:399
 msgid "Allows you to enter a custom login URL."
 msgstr ""
 
-#: settings/config/config.php:399
+#: settings/config/config.php:400
 msgid "Enable Custom login URL"
 msgstr ""
 
-#: settings/config/config.php:401
+#: settings/config/config.php:402
 msgid "You have changed your login URL"
 msgstr ""
 
-#: settings/config/config.php:402
+#: settings/config/config.php:403
 msgid "Your login URL has changed to {login_url} to prevent common bot attacks on standard login URLs. Learn more about this feature, common questions and measures to prevent any issues."
 msgstr ""
 
-#: settings/config/config.php:413
+#: settings/config/config.php:414
 msgid "Enter a custom login URL. This allows you to log in via this custom URL instead of /wp-admin or /wp-login.php"
 msgstr ""
 
-#: settings/config/config.php:414
+#: settings/config/config.php:415
 msgid "Example: If you want to change your login page from /wp-admin/ to /control/ answer: control"
 msgstr ""
 
-#: settings/config/config.php:415
+#: settings/config/config.php:416
 msgid "Custom login URL"
 msgstr ""
 
-#: settings/config/config.php:431
+#: settings/config/config.php:432
 msgid "Users trying to enter via /wp-admin or /wp-login.php will be redirected to this URL."
 msgstr ""
 
-#: settings/config/config.php:467
+#: settings/config/config.php:468
 #: settings/config/menu.php:67
 msgid "XML-RPC"
 msgstr ""
 
-#: settings/config/config.php:478
+#: settings/config/config.php:479
 msgid "Method"
 msgstr ""
 
-#: settings/config/config.php:483
+#: settings/config/config.php:484
 msgid "Login status"
 msgstr ""
 
-#: settings/config/config.php:488
+#: settings/config/config.php:489
 msgid "Count"
 msgstr ""
 
-#: settings/config/config.php:493
-#: settings/config/config.php:675
-#: settings/config/config.php:704
-#: settings/config/config.php:1174
+#: settings/config/config.php:494
+#: settings/config/config.php:676
+#: settings/config/config.php:705
+#: settings/config/config.php:1175
 msgid "Action"
 msgstr ""
 
-#: settings/config/config.php:498
+#: settings/config/config.php:499
 msgid "Delete"
 msgstr ""
 
-#: settings/config/config.php:510
+#: settings/config/config.php:511
 msgid "Vulnerability detection"
 msgstr ""
 
-#: settings/config/config.php:511
+#: settings/config/config.php:512
 msgid "This feature depends on multiple standard background processes. If a process fails or is unavailable on your system, detection might not work. We run frequent tests for this purpose. We will notify you accordingly if there are any issues."
 msgstr ""
 
-#: settings/config/config.php:518
+#: settings/config/config.php:519
 msgid "About Vulnerabilities"
 msgstr ""
 
-#: settings/config/config.php:519
+#: settings/config/config.php:520
 msgid "Really Simple SSL collects information about plugins, themes, and core vulnerabilities from our database powered by WPVulnerability. Anonymized data about these vulnerable components will be sent to Really Simple SSL for statistical analysis to improve open-source contributions. For more information, please read our privacy statement."
 msgstr ""
 
-#: settings/config/config.php:535
+#: settings/config/config.php:536
 msgid "If there's a vulnerability, you will also get feedback on the themes and plugin overview."
 msgstr ""
 
-#: settings/config/config.php:538
+#: settings/config/config.php:539
 msgid "Feedback in plugin overview"
 msgstr ""
 
-#: settings/config/config.php:555
-#: settings/config/config.php:577
-#: settings/config/config.php:599
-#: settings/config/config.php:688
+#: settings/config/config.php:556
+#: settings/config/config.php:578
+#: settings/config/config.php:600
+#: settings/config/config.php:689
 msgid "None"
 msgstr ""
 
-#: settings/config/config.php:556
+#: settings/config/config.php:557
 msgid "Low-risk (default)"
 msgstr ""
 
-#: settings/config/config.php:557
-#: settings/config/config.php:579
-#: settings/config/config.php:601
-#: settings/config/config.php:690
+#: settings/config/config.php:558
+#: settings/config/config.php:580
+#: settings/config/config.php:602
+#: settings/config/config.php:691
 msgid "Medium-risk"
 msgstr ""
 
-#: settings/config/config.php:558
-#: settings/config/config.php:602
-#: settings/config/config.php:691
+#: settings/config/config.php:559
+#: settings/config/config.php:603
+#: settings/config/config.php:692
 msgid "High-risk"
 msgstr ""
 
-#: settings/config/config.php:559
-#: settings/config/config.php:581
-#: settings/config/config.php:692
+#: settings/config/config.php:560
+#: settings/config/config.php:582
+#: settings/config/config.php:693
 msgid "Critical"
 msgstr ""
 
-#: settings/config/config.php:561
+#: settings/config/config.php:562
 msgid "Really Simple SSL dashboard"
 msgstr ""
 
-#: settings/config/config.php:578
+#: settings/config/config.php:579
 msgid "Low-risk "
 msgstr ""
 
-#: settings/config/config.php:580
+#: settings/config/config.php:581
 msgid "High-risk (default)"
 msgstr ""
 
-#: settings/config/config.php:583
+#: settings/config/config.php:584
 msgid "Site-wide, admin notification"
 msgstr ""
 
-#: settings/config/config.php:600
-#: settings/config/config.php:689
+#: settings/config/config.php:601
+#: settings/config/config.php:690
 msgid "Low-risk"
 msgstr ""
 
-#: settings/config/config.php:603
+#: settings/config/config.php:604
 msgid "Critical (default)"
 msgstr ""
 
-#: settings/config/config.php:605
+#: settings/config/config.php:606
 msgid "Email"
 msgstr ""
 
-#: settings/config/config.php:606
+#: settings/config/config.php:607
 msgid "This will send emails about vulnerabilities directly from your server. Make sure you can receive emails by the testing a preview below. If this feature is disabled, please enable notifications under general settings."
 msgstr ""
 
-#: settings/config/config.php:626
-#: settings/config/config.php:629
+#: settings/config/config.php:627
+#: settings/config/config.php:630
 #: settings/build/967.js:1
 #: settings/src/Settings/RiskConfiguration/NotificationTester.js:39
 msgid "Test notifications"
 msgstr ""
 
-#: settings/config/config.php:627
+#: settings/config/config.php:628
 msgid "Test notifications can be used to test email delivery and shows how vulnerabilities will be reported on your WordPress installation."
 msgstr ""
 
-#: settings/config/config.php:644
+#: settings/config/config.php:645
 msgid "Vulnerabilities Overview"
 msgstr ""
 
-#: settings/config/config.php:656
+#: settings/config/config.php:657
 msgid "Component"
 msgstr ""
 
-#: settings/config/config.php:663
-#: settings/config/config.php:710
+#: settings/config/config.php:664
+#: settings/config/config.php:711
 msgid "Risk"
 msgstr ""
 
-#: settings/config/config.php:669
+#: settings/config/config.php:670
 msgid "Date"
 msgstr ""
 
-#: settings/config/config.php:716
-#: settings/config/config.php:959
+#: settings/config/config.php:717
+#: settings/config/config.php:960
 msgid "Description"
 msgstr ""
 
-#: settings/config/config.php:731
+#: settings/config/config.php:732
 msgid "I have read and understood the risks to intervene with these measures."
 msgstr ""
 
-#: settings/config/config.php:732
+#: settings/config/config.php:733
 #: settings/build/688.js:1
 #: settings/build/967.js:1
 #: settings/src/Dashboard/SslLabs/SslLabs.js:306
@@ -2375,80 +2376,80 @@ msgstr ""
 msgid "Read more"
 msgstr ""
 
-#: settings/config/config.php:750
+#: settings/config/config.php:751
 msgid "disabled"
 msgstr ""
 
-#: settings/config/config.php:751
+#: settings/config/config.php:752
 msgid "(recommended)"
 msgstr ""
 
-#: settings/config/config.php:760
+#: settings/config/config.php:761
 msgid "About Recommended Security Headers"
 msgstr ""
 
-#: settings/config/config.php:761
+#: settings/config/config.php:762
 msgid "These security headers are the fundamental security measures to protect your website visitors while visiting your website."
 msgstr ""
 
-#: settings/config/config.php:779
-#: settings/config/config.php:793
-#: settings/config/config.php:893
-#: settings/config/config.php:915
-#: settings/config/config.php:930
+#: settings/config/config.php:780
+#: settings/config/config.php:794
+#: settings/config/config.php:894
+#: settings/config/config.php:916
+#: settings/config/config.php:931
 msgid "Off"
 msgstr ""
 
-#: settings/config/config.php:794
+#: settings/config/config.php:795
 msgid "recommended"
 msgstr ""
 
-#: settings/config/config.php:818
+#: settings/config/config.php:819
 msgid "About HTTP Strict Transport Security"
 msgstr ""
 
-#: settings/config/config.php:819
+#: settings/config/config.php:820
 msgid "Leveraging your SSL certificate with HSTS is a staple for every website. Force your website over SSL, mitigating risks of malicious counterfeit websites in your name."
 msgstr ""
 
-#: settings/config/config.php:873
+#: settings/config/config.php:874
 msgid "One day (for testing only)"
 msgstr ""
 
-#: settings/config/config.php:874
+#: settings/config/config.php:875
 msgid "One year"
 msgstr ""
 
-#: settings/config/config.php:875
+#: settings/config/config.php:876
 msgid "Two years (required for preload)"
 msgstr ""
 
-#: settings/config/config.php:901
+#: settings/config/config.php:902
 msgid "About Cross Origin Policies"
 msgstr ""
 
-#: settings/config/config.php:902
+#: settings/config/config.php:903
 msgid "One of the most powerful features, and therefore the most complex are the Cross-Origin headers that can isolate your website so any data leaks are minimized."
 msgstr ""
 
-#: settings/config/config.php:948
+#: settings/config/config.php:949
 msgid "About the Mixed Content Scan"
 msgstr ""
 
-#: settings/config/config.php:949
+#: settings/config/config.php:950
 msgid "The extensive mixed content scan will list all current and future issues and provide a fix, or instructions to fix manually."
 msgstr ""
 
-#: settings/config/config.php:953
+#: settings/config/config.php:954
 msgid "Type"
 msgstr ""
 
-#: settings/config/config.php:965
-#: settings/config/config.php:1159
+#: settings/config/config.php:966
+#: settings/config/config.php:1160
 msgid "Location"
 msgstr ""
 
-#: settings/config/config.php:978
+#: settings/config/config.php:979
 #: settings/build/187.js:1
 #: settings/build/967.js:1
 #: settings/src/Modal/Modal.js:66
@@ -2456,13 +2457,13 @@ msgstr ""
 msgid "Fix"
 msgstr ""
 
-#: settings/config/config.php:993
+#: settings/config/config.php:994
 #: settings/build/967.js:1
 #: settings/src/Settings/LearningMode/ChangeStatus.js:7
 msgid "Allow"
 msgstr ""
 
-#: settings/config/config.php:993
+#: settings/config/config.php:994
 #: settings/build/967.js:1
 #: settings/src/Settings/LearningMode/LearningMode.js:202
 #: settings/src/Settings/LearningMode/LearningMode.js:208
@@ -2470,67 +2471,67 @@ msgstr ""
 msgid "Disable"
 msgstr ""
 
-#: settings/config/config.php:993
+#: settings/config/config.php:994
 msgid "Self (Default)"
 msgstr ""
 
-#: settings/config/config.php:994
+#: settings/config/config.php:995
 msgid "Permissions Policy"
 msgstr ""
 
-#: settings/config/config.php:999
+#: settings/config/config.php:1000
 msgid "About the Permission Policy"
 msgstr ""
 
-#: settings/config/config.php:1000
+#: settings/config/config.php:1001
 msgid "Browser features are plentiful, but most are not needed on your website."
 msgstr ""
 
-#: settings/config/config.php:1000
+#: settings/config/config.php:1001
 msgid "They might be misused if you don’t actively tell the browser to disable these features."
 msgstr ""
 
-#: settings/config/config.php:1004
+#: settings/config/config.php:1005
 msgid "Feature"
 msgstr ""
 
-#: settings/config/config.php:1009
+#: settings/config/config.php:1010
 msgid "Options"
 msgstr ""
 
-#: settings/config/config.php:1082
+#: settings/config/config.php:1083
 msgid "Enable Permissions Policy"
 msgstr ""
 
-#: settings/config/config.php:1091
+#: settings/config/config.php:1092
 msgid "Serve encrypted and authenticated responses"
 msgstr ""
 
-#: settings/config/config.php:1097
+#: settings/config/config.php:1098
 msgid "About the Content Security Policy"
 msgstr ""
 
-#: settings/config/config.php:1098
+#: settings/config/config.php:1099
 msgid "The content security policy has many options, so we always recommend starting in ‘learning mode’ to see what files and scripts are loaded."
 msgstr ""
 
-#: settings/config/config.php:1113
+#: settings/config/config.php:1114
 msgid "Disable (Default)"
 msgstr ""
 
-#: settings/config/config.php:1117
+#: settings/config/config.php:1118
 msgid "Allow your domain to be embedded"
 msgstr ""
 
-#: settings/config/config.php:1126
+#: settings/config/config.php:1127
 msgid "Add additional domains which can embed your website, if needed. Comma seperated."
 msgstr ""
 
-#: settings/config/config.php:1164
+#: settings/config/config.php:1165
 msgid "Directive"
 msgstr ""
 
-#: settings/config/config.php:1169
+#: settings/config/config.php:1170
 msgid "Source"
 msgstr ""
 
@@ -2697,19 +2698,19 @@ msgstr ""
 msgid "DNS verification"
 msgstr ""
 
-#: settings/settings.php:109
+#: settings/settings.php:110
 msgid "SSL settings"
 msgstr ""
 
-#: settings/settings.php:110
+#: settings/settings.php:111
 msgid "SSL"
 msgstr ""
 
-#: settings/settings.php:438
+#: settings/settings.php:443
 msgid "Complianz - Cookie Consent Management as it should be"
 msgstr ""
 
-#: settings/settings.php:445
+#: settings/settings.php:450
 msgid "Terms and Conditions"
 msgstr ""
 
@@ -2903,9 +2904,9 @@ msgstr ""
 #: settings/src/Dashboard/Progress/ProgressBlock.js:41
 #: settings/src/Dashboard/Progress/ProgressBlock.js:47
 #: settings/src/Dashboard/Progress/ProgressBlock.js:48
-#: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:289
-#: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:293
-#: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:297
+#: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:290
+#: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:294
+#: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:298
 msgid "Loading..."
 msgstr ""
 
@@ -3012,39 +3013,39 @@ msgid "hardening features"
 msgstr ""
 
 #: settings/build/688.js:1
-#: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:230
+#: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:231
 msgid "You have %s open %d"
 msgstr ""
 
 #: settings/build/688.js:1
-#: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:240
+#: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:241
 msgid "Hardening features are configured"
 msgstr ""
 
 #: settings/build/688.js:1
-#: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:242
+#: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:243
 msgid "What now"
 msgstr ""
 
 #: settings/build/688.js:1
-#: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:111
+#: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:112
 msgid "Enable vulnerability detection"
 msgstr ""
 
 #: settings/build/688.js:1
-#: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:182
-#: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:197
+#: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:183
+#: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:198
 msgid "You have %s %d"
 msgstr ""
 
 #: settings/build/688.js:1
-#: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:136
-#: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:150
+#: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:137
+#: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:151
 msgid "You have %s %d pending"
 msgstr ""
 
 #: settings/build/688.js:1
-#: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:139
+#: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:140
 msgid "%d"
 msgstr ""
 
@@ -3064,8 +3065,8 @@ msgstr ""
 #: settings/build/885.js:1
 #: settings/build/967.js:1
 #: settings/src/Dashboard/OtherPlugins/OtherPluginsData.js:75
-#: settings/src/Onboarding/Onboarding.js:151
-#: settings/src/Onboarding/Onboarding.js:152
+#: settings/src/Onboarding/Onboarding.js:149
+#: settings/src/Onboarding/Onboarding.js:150
 msgid "Activating..."
 msgstr ""
 
@@ -3103,41 +3104,46 @@ msgstr ""
 #: settings/build/688.js:1
 #: settings/build/885.js:1
 #: settings/build/967.js:1
-#: settings/src/Settings/RiskConfiguration/RiskData.js:114
+#: settings/src/Settings/RiskConfiguration/RiskData.js:115
 msgid "Update"
 msgstr ""
 
 #: settings/build/772.js:1
-#: settings/src/Settings/SettingsGroup.js:75
+#: settings/src/Settings/SettingsGroup.js:73
 msgid "Learn more about %sPremium%s"
 msgstr ""
 
 #: settings/build/772.js:1
-#: settings/src/Settings/SettingsGroup.js:98
+#: settings/src/Settings/SettingsGroup.js:81
+msgid "You are using an incompatible version of Really Simple SSL pro. Please update to the latest version."
+msgstr ""
+
+#: settings/build/772.js:1
+#: settings/src/Settings/SettingsGroup.js:99
 msgid "Reset Let's Encrypt"
 msgstr ""
 
 #: settings/build/772.js:1
-#: settings/src/Settings/SettingsGroup.js:110
+#: settings/src/Settings/SettingsGroup.js:111
 msgid "Check license"
 msgstr ""
 
 #: settings/build/772.js:1
-#: settings/src/Settings/SettingsGroup.js:117
+#: settings/src/Settings/SettingsGroup.js:118
 msgid "Network feature"
 msgstr ""
 
 #: settings/build/772.js:1
 #: settings/build/967.js:1
 #: settings/src/Settings/Field.js:112
-#: settings/src/Settings/SettingsGroup.js:118
+#: settings/src/Settings/SettingsGroup.js:119
 msgid "This feature is only available networkwide."
 msgstr ""
 
 #: settings/build/772.js:1
 #: settings/build/967.js:1
 #: settings/src/Settings/Field.js:113
-#: settings/src/Settings/SettingsGroup.js:118
+#: settings/src/Settings/SettingsGroup.js:119
 msgid "Network settings"
 msgstr ""
 
@@ -3168,139 +3174,139 @@ msgstr ""
 
 #: settings/build/885.js:1
 #: settings/build/967.js:1
-#: settings/src/Onboarding/Onboarding.js:264
+#: settings/src/Onboarding/Onboarding.js:262
 msgid "Fetching next step..."
 msgstr ""
 
 #: settings/build/885.js:1
 #: settings/build/967.js:1
-#: settings/src/Onboarding/Onboarding.js:142
+#: settings/src/Onboarding/Onboarding.js:140
 msgid "SSL has been activated network wide"
 msgstr ""
 
 #: settings/build/885.js:1
 #: settings/build/967.js:1
-#: settings/src/Onboarding/Onboarding.js:145
+#: settings/src/Onboarding/Onboarding.js:143
 msgid "Processing activation of subsites networkwide"
 msgstr ""
 
 #: settings/build/885.js:1
 #: settings/build/967.js:1
-#: settings/src/Onboarding/Onboarding.js:153
+#: settings/src/Onboarding/Onboarding.js:151
 msgid "Installing..."
 msgstr ""
 
 #: settings/build/885.js:1
 #: settings/build/967.js:1
-#: settings/src/Onboarding/Onboarding.js:154
+#: settings/src/Onboarding/Onboarding.js:152
 msgid "Failed"
 msgstr ""
 
 #: settings/build/885.js:1
 #: settings/build/967.js:1
-#: settings/src/Onboarding/Onboarding.js:155
+#: settings/src/Onboarding/Onboarding.js:153
 msgid "Finished"
 msgstr ""
 
 #: settings/build/885.js:1
 #: settings/build/967.js:1
-#: settings/src/Onboarding/Onboarding.js:178
+#: settings/src/Onboarding/Onboarding.js:176
 msgid "working"
 msgstr ""
 
 #: settings/build/885.js:1
 #: settings/build/967.js:1
-#: settings/src/Onboarding/Onboarding.js:179
+#: settings/src/Onboarding/Onboarding.js:177
 msgid "completed"
 msgstr ""
 
 #: settings/build/885.js:1
 #: settings/build/967.js:1
-#: settings/src/Onboarding/Onboarding.js:185
+#: settings/src/Onboarding/Onboarding.js:183
 msgid "Read More"
 msgstr ""
 
 #: settings/build/885.js:1
 #: settings/build/967.js:1
-#: settings/src/Onboarding/Onboarding.js:279
+#: settings/src/Onboarding/Onboarding.js:277
 msgid "Your email address"
 msgstr ""
 
 #: settings/build/885.js:1
 #: settings/build/967.js:1
-#: settings/src/Onboarding/Onboarding.js:281
+#: settings/src/Onboarding/Onboarding.js:279
 msgid "Include 6 Tips & Tricks to get started with Really Simple SSL."
 msgstr ""
 
 #: settings/build/885.js:1
 #: settings/build/967.js:1
-#: settings/src/Onboarding/Onboarding.js:281
+#: settings/src/Onboarding/Onboarding.js:279
 msgid "Privacy Statement"
 msgstr ""
 
 #: settings/build/885.js:1
 #: settings/build/967.js:1
-#: settings/src/Onboarding/Onboarding.js:283
+#: settings/src/Onboarding/Onboarding.js:281
 msgid "Send a notification test email - Notification emails are sent from your server."
 msgstr ""
 
 #: settings/build/885.js:1
 #: settings/build/967.js:1
-#: settings/src/Onboarding/Onboarding.js:292
+#: settings/src/Onboarding/Onboarding.js:290
 msgid "Refresh SSL status"
 msgstr ""
 
 #: settings/build/885.js:1
 #: settings/build/967.js:1
-#: settings/src/Onboarding/Onboarding.js:293
+#: settings/src/Onboarding/Onboarding.js:291
 msgid "The SSL detection method is not 100% accurate."
 msgstr ""
 
 #: settings/build/885.js:1
 #: settings/build/967.js:1
-#: settings/src/Onboarding/Onboarding.js:294
+#: settings/src/Onboarding/Onboarding.js:292
 msgid "If you’re certain an SSL certificate is present, and refresh SSL status does not work, please check “Override SSL detection” to continue activating SSL."
 msgstr ""
 
 #: settings/build/885.js:1
 #: settings/build/967.js:1
-#: settings/src/Onboarding/Onboarding.js:211
+#: settings/src/Onboarding/Onboarding.js:209
 msgid "Activate SSL networkwide"
 msgstr ""
 
 #: settings/build/885.js:1
 #: settings/build/967.js:1
-#: settings/src/Onboarding/Onboarding.js:216
+#: settings/src/Onboarding/Onboarding.js:214
 msgid "Improve Security with PRO"
 msgstr ""
 
 #: settings/build/885.js:1
 #: settings/build/967.js:1
-#: settings/src/Onboarding/Onboarding.js:217
+#: settings/src/Onboarding/Onboarding.js:215
 msgid "Install SSL"
 msgstr ""
 
 #: settings/build/885.js:1
 #: settings/build/967.js:1
-#: settings/src/Onboarding/Onboarding.js:219
+#: settings/src/Onboarding/Onboarding.js:217
 msgid "Override SSL detection"
 msgstr ""
 
 #: settings/build/885.js:1
 #: settings/build/967.js:1
-#: settings/src/Onboarding/Onboarding.js:235
+#: settings/src/Onboarding/Onboarding.js:233
 msgid "Save and continue"
 msgstr ""
 
 #: settings/build/885.js:1
 #: settings/build/967.js:1
-#: settings/src/Onboarding/Onboarding.js:236
+#: settings/src/Onboarding/Onboarding.js:234
 msgid "Skip"
 msgstr ""
 
 #: settings/build/885.js:1
 #: settings/build/967.js:1
-#: settings/src/Onboarding/Onboarding.js:245
+#: settings/src/Onboarding/Onboarding.js:243
 msgid "Go to Dashboard"
 msgstr ""
 
@@ -3551,12 +3557,12 @@ msgid "Copy content"
 msgstr ""
 
 #: settings/build/967.js:1
-#: settings/src/LetsEncrypt/LetsEncrypt.js:144
+#: settings/src/LetsEncrypt/LetsEncrypt.js:142
 msgid "Verifying DNS records..."
 msgstr ""
 
 #: settings/build/967.js:1
-#: settings/src/LetsEncrypt/LetsEncrypt.js:280
+#: settings/src/LetsEncrypt/LetsEncrypt.js:278
 msgid "Attempt %s."
 msgstr ""
 
