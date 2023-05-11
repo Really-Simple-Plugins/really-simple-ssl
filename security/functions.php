@@ -494,3 +494,158 @@ function rsssl_list_users_where_display_name_is_login_name() {
 
 	return '';
 }
+
+/**
+ *
+ * Get IP addresses.
+ *
+ * @return array Array of IP addresses.
+ */
+function rsssl_get_ips(): array
+{
+    $ip_addresses = [];
+
+    // Check X-Forwarded-For, X-Forwarded, Forwarded-For, and Forwarded
+    $headers_to_check = array(
+        'REMOTE_ADDR',
+        'HTTP_X_FORWARDED_FOR',
+        'HTTP_X_FORWARDED',
+        'HTTP_FORWARDED_FOR',
+        'HTTP_FORWARDED',
+        'HTTP_CF_CONNECTING_IP',
+        'HTTP_FASTLY_CLIENT_IP',
+        'HTTP_X_CLUSTER_CLIENT_IP',
+        'HTTP_X_REAL_IP'
+    );
+
+    foreach ($headers_to_check as $header) {
+        if (isset($_SERVER[$header])) {
+            $ips = explode(',', $_SERVER[$header]);
+            foreach ($ips as $ip) {
+                $ip = trim($ip);
+
+                if ($ip === '127.0.0.1') {
+                    continue;
+                }
+
+                if (filter_var($ip, FILTER_VALIDATE_IP)) {
+                    $ip_addresses[] = $ip;
+                }
+            }
+        }
+    }
+
+    // Remove duplicates
+    return array_unique($ip_addresses);
+}
+
+/**
+ * Check if an IP is within a specified range.
+ *
+ * @param string $ip    The IP address to check.
+ * @param string $range The IP range to match against.
+ *
+ * @return bool True if the IP is in the range, false otherwise.
+ */
+function rsssl_ip_in_range($ip, $range): bool
+{
+    if (strpos($range, '/') !== false) {
+        // CIDR notation
+        list($subnet, $bits) = explode('/', $range);
+
+        if (filter_var($subnet, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+            // IPv4 address
+            $ip = ip2long($ip);
+            $subnet = ip2long($subnet);
+            $mask = -1 << (32 - $bits);
+            $subnet &= $mask; // nb: in case the supplied subnet wasn't correctly aligned
+            return ($ip & $mask) === $subnet;
+        }
+
+        if (filter_var($subnet, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+            // IPv6 address
+            $ip = inet_pton($ip);
+            $subnet = inet_pton($subnet);
+            $mask = str_repeat("\xff", $bits / 8) . str_repeat("\x00", 16 - ($bits / 8));
+            return ($ip & $mask) === $subnet;
+        }
+
+        return false;
+    }
+
+// Regular notation
+    return $ip === $range;
+}
+
+/**
+ * Check IP addresses against allowlist and blocklist.
+ *
+ * @param array $ip_addresses Array of IP addresses to check.
+ *
+ * @return int Status code indicating the result.
+ */
+function rsssl_check_ip( $ip_addresses ) {
+    global $wpdb;
+
+    // Fetch IP ranges from the database tables
+    $allowlist_ranges = $wpdb->get_col("SELECT ip_range FROM rsssl_allowlist");
+    $blocklist_ranges = $wpdb->get_col("SELECT ip_range FROM rsssl_blocklist");
+
+    $allowed_ips = [];
+    $blocked_ips = [];
+
+    foreach ($ip_addresses as $ip) {
+        $is_allowed = false;
+        $is_blocked = false;
+
+        // Check against allowlist
+        foreach ($allowlist_ranges as $range) {
+            if (rsssl_ip_in_range($ip, $range)) {
+                $is_allowed = true;
+                break;
+            }
+        }
+
+        if ($is_allowed) {
+            $allowed_ips[] = $ip;
+            continue; // Move to the next IP address
+        }
+
+        // Check against blocklist
+        foreach ($blocklist_ranges as $range) {
+            if (rsssl_ip_in_range($ip, $range)) {
+                $is_blocked = true;
+                break;
+            }
+        }
+
+        if ($is_blocked) {
+            $blocked_ips[] = $ip;
+        }
+    }
+
+    // Perform actions based on blocked and allowed IPs
+    // ...
+
+    // Store IP addresses in the database tables
+    foreach ($allowed_ips as $ip) {
+        $wpdb->insert('rsssl_allowlist', ['ip_address' => $ip]);
+    }
+
+    foreach ($blocked_ips as $ip) {
+        $wpdb->insert('rsssl_blocklist', ['ip_address' => $ip]);
+    }
+
+    // Determine the status code based on the results
+    $status_code = 0; // Default status code (no hits)
+
+    if (count($allowed_ips) > 0) {
+        $status_code = 10; // Allowlist hit status code
+    } elseif (count($blocked_ips) > 0) {
+        $status_code = 20; // Blocklist hit status code
+    }
+
+    return $status_code;
+}
+
+
