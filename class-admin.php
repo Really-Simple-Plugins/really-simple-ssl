@@ -1721,16 +1721,15 @@ class rsssl_admin
 	    $notices = $this->get_notices_list( array('admin_notices'=>true) );
         if ( is_array($notices) ) {
 	        foreach ( $notices as $id => $notice ){
-                x_log($notice);
 		        $notice = $notice['output'];
-//		        $class = ( $notice['status'] !== 'completed' ) ? 'error' : 'updated';
 				//if there is an open status, we change error to warning.
 		        $class = ( $notice['status'] === 'open' )? 'warning':'error';
 		        $more_info = $notice['url'] ?? false;
 		        $dismiss_id = isset($notice['dismissible']) && $notice['dismissible'] ? $id : false;
-                x_log($notice);
-                //x_log($notice['msg']);
-		        echo $this->notice_html( $class.' '.$id, $notice['msg'], $more_info, $dismiss_id);
+
+                if ( $notice['msg'] ) {
+	                echo $this->notice_html( $class.' '.$id, $notice['msg'], $more_info, $dismiss_id);
+                }
 	        }
         }
     }
