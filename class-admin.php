@@ -1721,12 +1721,15 @@ class rsssl_admin
 	    $notices = $this->get_notices_list( array('admin_notices'=>true) );
         if ( is_array($notices) ) {
 	        foreach ( $notices as $id => $notice ){
+                x_log($notice);
 		        $notice = $notice['output'];
 //		        $class = ( $notice['status'] !== 'completed' ) ? 'error' : 'updated';
 				//if there is an open status, we change error to warning.
 		        $class = ( $notice['status'] === 'open' )? 'warning':'error';
 		        $more_info = $notice['url'] ?? false;
 		        $dismiss_id = isset($notice['dismissible']) && $notice['dismissible'] ? $id : false;
+                x_log($notice);
+                //x_log($notice['msg']);
 		        echo $this->notice_html( $class.' '.$id, $notice['msg'], $more_info, $dismiss_id);
 	        }
         }
@@ -1850,7 +1853,6 @@ class rsssl_admin
                 return $cached_notices;
 		    }
 	    }
-
         //not cached, set a default here
         //only cache if the admin_notices are retrieved.
         if ( $args['admin_notices'] ) {
@@ -2413,12 +2415,6 @@ class rsssl_admin
 	                unset( $notices[$id]);
                 }
             }
-            //ensure an empty list is also cached
-		    $cache_notices = empty($notices) ? 'empty' : $notices;
-		    //only cache if the admin_notices are retrieved.
-		    if ( $args['admin_notices'] ) {
-			    update_option( 'rsssl_admin_notices', $cache_notices );
-		    }
         }
 
 	    //sort so warnings are on top
@@ -2446,6 +2442,14 @@ class rsssl_admin
 			    }
 		    }
         }
+
+	    //ensure an empty list is also cached
+	    $cache_notices = empty($notices) ? 'empty' : $notices;
+	    //only cache if the admin_notices are retrieved.
+	    if ( $args['admin_notices'] ) {
+		    update_option( 'rsssl_admin_notices', $cache_notices );
+	    }
+
 	    return $notices;
     }
 
