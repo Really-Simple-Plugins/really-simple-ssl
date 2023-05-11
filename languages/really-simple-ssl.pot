@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-05-11T12:39:17+00:00\n"
+"POT-Creation-Date: 2023-05-11T13:25:13+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: really-simple-ssl\n"
@@ -96,21 +96,21 @@ msgstr ""
 msgid "Don't show again"
 msgstr ""
 
-#: class-admin.php:1825
+#: class-admin.php:1826
 msgid "Completed"
 msgstr ""
 
-#: class-admin.php:1826
+#: class-admin.php:1827
 #: settings/build/967.js:1
 #: settings/src/Settings/MixedContentScan/MixedContentScan.js:57
 msgid "Warning"
 msgstr ""
 
-#: class-admin.php:1827
+#: class-admin.php:1828
 msgid "Open"
 msgstr ""
 
-#: class-admin.php:1828
+#: class-admin.php:1829
 #: settings/build/688.js:1
 #: settings/build/772.js:1
 #: settings/build/829.js:1
@@ -364,57 +364,57 @@ msgstr ""
 msgid "Our vulnerability reporting is in beta. Signup for the beta to discover the new features!"
 msgstr ""
 
-#: class-admin.php:2697
+#: class-admin.php:2699
 msgid "Are you sure?"
 msgstr ""
 
-#: class-admin.php:2708
+#: class-admin.php:2710
 msgid "To deactivate the plugin correctly, please select if you want to:"
 msgstr ""
 
-#: class-admin.php:2710
+#: class-admin.php:2712
 msgid "Deactivate, but stay on SSL."
 msgstr ""
 
-#: class-admin.php:2711
+#: class-admin.php:2713
 msgid "Deactivate, and revert to http. This will remove all changes by the plugin."
 msgstr ""
 
-#: class-admin.php:2713
+#: class-admin.php:2715
 msgid "Deactivating the plugin while keeping SSL will do the following:"
 msgstr ""
 
-#: class-admin.php:2715
+#: class-admin.php:2717
 msgid "The mixed content fixer will stop working"
 msgstr ""
 
-#: class-admin.php:2716
+#: class-admin.php:2718
 msgid "The WordPress 301 redirect will stop working"
 msgstr ""
 
-#: class-admin.php:2717
+#: class-admin.php:2719
 msgid "Your site address will remain https://"
 msgstr ""
 
-#: class-admin.php:2718
+#: class-admin.php:2720
 msgid "The .htaccess redirect will remain active"
 msgstr ""
 
-#: class-admin.php:2727
+#: class-admin.php:2729
 #: upgrade/upgrade-to-pro.php:370
 msgid "Cancel"
 msgstr ""
 
-#: class-admin.php:2728
+#: class-admin.php:2730
 msgid "Deactivate, keep https"
 msgstr ""
 
-#: class-admin.php:2729
+#: class-admin.php:2731
 msgid "Deactivate, revert to http"
 msgstr ""
 
-#: class-admin.php:2755
-#: class-admin.php:2758
+#: class-admin.php:2757
+#: class-admin.php:2760
 #: class-multisite.php:220
 #: settings/config/menu.php:18
 #: settings/build/688.js:1
@@ -423,14 +423,14 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: class-admin.php:2763
+#: class-admin.php:2765
 #: class-multisite.php:223
 #: settings/build/index.js:1
 #: settings/src/Header.js:36
 msgid "Support"
 msgstr ""
 
-#: class-admin.php:2768
+#: class-admin.php:2770
 #: class-multisite.php:227
 msgid "Improve security - Upgrade"
 msgstr ""
@@ -1877,8 +1877,8 @@ msgstr ""
 msgid "forbidden - number in author name not allowed = %s"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:162
-#: security/wordpress/vulnerabilities.php:1346
+#: security/wordpress/vulnerabilities.php:163
+#: security/wordpress/vulnerabilities.php:1351
 #: settings/build/688.js:1
 #: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:38
 msgid "vulnerability"
@@ -1886,29 +1886,29 @@ msgid_plural "vulnerabilities"
 msgstr[0] ""
 msgstr[1] ""
 
-#: security/wordpress/vulnerabilities.php:169
-#: security/wordpress/vulnerabilities.php:1351
+#: security/wordpress/vulnerabilities.php:170
+#: security/wordpress/vulnerabilities.php:1356
 msgid "You have %s %s %s"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:170
+#: security/wordpress/vulnerabilities.php:171
 msgid "You have %s %s %s. Please take appropriate action."
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:199
+#: security/wordpress/vulnerabilities.php:200
 msgid "Site wide - Test Notification"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:200
-#: security/wordpress/vulnerabilities.php:222
+#: security/wordpress/vulnerabilities.php:201
+#: security/wordpress/vulnerabilities.php:223
 msgid "This is a test notification from Really Simple SSL. You can safely dismiss this message."
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:221
+#: security/wordpress/vulnerabilities.php:222
 msgid "Dashboard - Test Notification"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:419
+#: security/wordpress/vulnerabilities.php:424
 #: settings/config/menu.php:74
 #: settings/config/menu.php:80
 #: settings/build/688.js:1
@@ -1916,52 +1916,52 @@ msgstr ""
 msgid "Vulnerabilities"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:434
+#: security/wordpress/vulnerabilities.php:439
 msgid "Force update"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:436
+#: security/wordpress/vulnerabilities.php:441
 msgid "Will run a frequent update process on vulnerable components."
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:440
+#: security/wordpress/vulnerabilities.php:445
 msgid "Quarantine"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:442
+#: security/wordpress/vulnerabilities.php:447
 msgid "Components will be quarantined if the update process fails."
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:513
-#: security/wordpress/vulnerabilities.php:992
+#: security/wordpress/vulnerabilities.php:519
+#: security/wordpress/vulnerabilities.php:998
 msgid "Quarantined"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:975
+#: security/wordpress/vulnerabilities.php:981
 msgid "Vulnerability: %s"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:1314
+#: security/wordpress/vulnerabilities.php:1319
 msgid "Vulnerability Alert: %s"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:1315
+#: security/wordpress/vulnerabilities.php:1320
 msgid "%s: %s vulnerabilities found"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:1316
+#: security/wordpress/vulnerabilities.php:1321
 msgid "This is a vulnerability alert from Really Simple SSL for %s. "
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:1348
+#: security/wordpress/vulnerabilities.php:1353
 msgid "A %s vulnerability is found in %s."
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:1348
+#: security/wordpress/vulnerabilities.php:1353
 msgid "Multiple %s vulnerabilities have been found."
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:1353
+#: security/wordpress/vulnerabilities.php:1358
 msgid "Based on your settings, Really Simple SSL will take appropriate action, or you will need to solve it manually."
 msgstr ""
 

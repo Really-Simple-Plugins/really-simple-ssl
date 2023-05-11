@@ -82,14 +82,45 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	                $this->send_vulnerability_mail();
                 }
 
-                foreach ($this->risk_levels as $level => $int_level ) {
-	                if ( $this->should_reset_notification($level) ) {
-                        delete_option("rsssl_" . $level . "_dismissed");
-                    }
-                }
+                $this->check_notice_reset();
 	        }
 
         }
+
+	    /**
+         * Check if dismissed notices have to be reset
+	     * @return void
+	     */
+        private function check_notice_reset(): void {
+            $this->cache_installed_plugins();
+	        $clear_admin_notices_cache = false;
+	        foreach ( $this->risk_levels as $level => $int_level ) {
+		        if ( $this->should_reset_notification($level) ) {
+			        delete_option("rsssl_" . 'risk_level_' . $level . "_dismissed");
+                    $clear_admin_notices_cache = true;
+		        }
+	        }
+            if ($clear_admin_notices_cache) {
+	            RSSSL()->admin->clear_admin_notices_cache();
+            }
+        }
+
+	    /**
+	     * Checks the files on age and downloads if needed.
+	     * @return void
+	     */
+	    public function reload_files_on_update(): void {
+		    if ( ! rsssl_admin_logged_in() ) {
+			    return;
+		    }
+		    //if the manifest is not older than 4 hours, we don't download it again.
+		    if ( $this->get_file_stored_info(false, true) < time() - 14400) {
+			    $this->download_manifest();
+		    }
+		    $this->download_plugin_vulnerabilities();
+		    $this->download_core_vulnerabilities();
+		    $this->check_notice_reset();
+	    }
 
         public function init(): void {
 	        if ( ! rsssl_admin_logged_in() ) {
@@ -230,11 +261,8 @@ if (!class_exists("rsssl_vulnerabilities")) {
 		                ];
 	                }
                 }
-
-
             }
 
-            update_option('rsssl_admin_notices', $notices);
             return $notices;
         }
 
@@ -624,22 +652,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
             } else {
                 $this->download_plugin_vulnerabilities();
             }
-        }
-
-	    /**
-         * Checks the files on age and downloads if needed.
-	     * @return void
-	     */
-        public function reload_files_on_update(): void {
-	        if ( ! rsssl_admin_logged_in() ) {
-		        return;
-	        }
-            //if the manifest is not older than 4 hours, we don't download it again.
-            if ( $this->get_file_stored_info(false, true) < time() - 14400) {
-                $this->download_manifest();
-            }
-            $this->download_plugin_vulnerabilities();
-            $this->download_core_vulnerabilities();
         }
 
 
@@ -1219,7 +1231,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
 				    $dismissed_for[] = $rss_identifier;
 			    }
 		    }
-
 		    //add the new plugins to the $dismissed_for array
 		    update_option("rsssl_{$risk_level}_notification_dismissed_for", $dismissed_for, false );
 		    return !empty($diff);

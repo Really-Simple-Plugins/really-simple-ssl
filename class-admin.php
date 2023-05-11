@@ -26,7 +26,7 @@ class rsssl_admin
         register_deactivation_hook( __DIR__ . "/" . $this->plugin_filename, array($this, 'deactivate'));
 	    add_action( 'admin_init', array($this, 'add_privacy_info') );
 	    add_action( 'admin_init', array($this, 'maybe_dismiss_review_notice') );
-	    add_action( 'rsssl_weekly_cron', array($this, 'clear_admin_notices_cache') );
+	    add_action( 'rsssl_daily_cron', array($this, 'clear_admin_notices_cache') );
 
 	    //add the settings page for the plugin
 	    add_action('admin_enqueue_scripts', array($this, 'enqueue_assets'));
