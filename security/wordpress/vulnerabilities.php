@@ -316,6 +316,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 		    }, $installed_themes);
 
 		    //we add a column type to all values in the array
+            //this resets the array keys (currently slugs) so we preserve them in the 'Slug' column.
 		    $update = get_site_transient('update_plugins');
 		    $installed_plugins = array_map( static function ($plugin, $slug) use ($update) {
   			    $plugin['type'] = 'plugin';
