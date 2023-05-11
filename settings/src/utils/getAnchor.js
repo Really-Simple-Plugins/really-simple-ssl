@@ -17,7 +17,19 @@ const getAnchor = (level) => {
         let urlPart = queryString[1];
 
         //for submenu, we have to get the string after the slash.
-        if ( level === 'menu' ) {
+        if ( level === 'anchor' ) {
+            //if there is no slash, there is no menu level
+            if ( urlPart.indexOf('/') === -1 ) {
+                return false;
+            } else {
+                let urlParts = urlPart.split('/');
+                if (urlParts.length<=2) {
+                    return false;
+                } else {
+                    return urlParts[2];
+                }
+            }
+        } else if ( level === 'menu' ) {
             //if there is no slash, there is no menu level
             if ( urlPart.indexOf('/') === -1 ) {
                 return false;

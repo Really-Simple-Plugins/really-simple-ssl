@@ -10,7 +10,7 @@ const Placeholder = (props) => {
   return (
       <div className="rsssl-placeholder">
         {props.error && <Error error={props.error} /> }
-        {Array.from({length: lines}).map((item, i) => (<div className="rsssl-placeholder-line" key={i} ></div>))}
+        {Array.from({length: lines}).map((item, i) => (<div className="rsssl-placeholder-line" key={"placeholder-"+i} ></div>))}
       </div>
   );
 

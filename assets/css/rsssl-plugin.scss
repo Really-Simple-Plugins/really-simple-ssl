@@ -1,0 +1,47 @@
+/*
+  This was created for styling the plugin overview page for vulnerable plugins.
+ */
+@import "variables.scss";
+
+.rsssl-btn-vulnerable {
+  display: inline-block;
+  text-decoration: none;
+  font-size: var(--rsp-fs-100);
+  line-height: 2.15384615;
+  min-height: 30px;
+  margin: 0;
+  padding: 4px 8px;
+  min-width: 100px;
+  text-align: center;
+  cursor: pointer;
+  font-weight: 600;
+  -webkit-appearance: none;
+  border-radius: var(--rsp-border-radius-xs);
+  white-space: nowrap;
+  box-sizing: border-box;
+  background-color: var(--rsp-yellow);
+  color: var(--rsp-black);
+  border-color: var(--rsp-yellow);
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &.rsssl-critical {
+    background-color: var(--rsp-red);
+    color: var(--rsp-white);
+    border-color: var(--rsp-red);
+  }
+
+  &.rsssl-high {
+    background-color: var(--rsp-red);
+    color: var(--rsp-white);
+    border-color: var(--rsp-red);
+  }
+
+  &.rsssl-medium {
+    border-color: var(--rsp-yellow);
+    color: var(--rsp-black);
+    background-color: var(--rsp-yellow);
+  }
+}
+

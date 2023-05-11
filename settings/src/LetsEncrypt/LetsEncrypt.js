@@ -273,7 +273,7 @@ const LetsEncrypt = (props) => {
                 <div className="rsssl_letsencrypt_container rsssl-progress-container field-group">
                     <ul>
                        {actionsOutput.map((action, i) =>
-                              <li key={i}>
+                              <li key={"action-"+i}>
                                   <Icon name = {getStatusIcon(action)} color = {getStatusColor(action)} />
                                         {action.do==='retry' && attemptCount >=1 && <>{__("Attempt %s.", "really-simple-ssl").replace('%s', attemptCount)} </>}
                                         &nbsp;

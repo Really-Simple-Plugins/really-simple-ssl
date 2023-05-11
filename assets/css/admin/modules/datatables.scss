@@ -82,8 +82,35 @@ nav.rdt_Pagination>div>svg {
     }
   }
 }
+
 .rsssl-mixed-content-datatable{
   & > div > div {
     display: flex;
+  }
+}
+
+.rsssl-vulnerabilities_overview, .rsssl-vulnerabilities_measures, .rsssl-mixedcontentscan, .rsssl-permissions_policy, .rsssl-content_security_policy {
+  .rsssl-field-wrap {
+    margin-left:CALC( -1 * var(--rsp-spacing-l) );
+    margin-right:CALC( -1 * var(--rsp-spacing-l) );
+    >.components-base-control, .rsssl-comment,
+    //.rsssl-grid-item-content-footer,
+    .rsssl-progress-container,
+    >div>button,
+    .rsssl-learning-mode-footer,
+    .rsssl-mixed-content-description,
+    .rsssl-current-scan-action
+    {
+      margin-left:var(--rsp-spacing-l);
+      margin-right:var(--rsp-spacing-l);
+    }
+  }
+  .rdt_TableCell, .rdt_TableCol{
+    &:first-child {
+      padding-left: var(--rsp-spacing-l);
+    }
+    &:last-child {
+      padding-right: var(--rsp-spacing-l);
+    }
   }
 }

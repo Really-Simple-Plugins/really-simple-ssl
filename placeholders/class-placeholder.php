@@ -106,7 +106,7 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
 			return $output;
 		}
 
-		public function xml_data() {
+        public function xml_data() {
 			$data = [
 				[
 					'id'           => 1,
@@ -140,6 +140,17 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
 
 			return $data;
 		}
+
+        public function demo_vulnerabilities_data() {
+            $data[] = [
+                'id'          => 1,
+                'component'   => 'wordpress',
+                'risk'        => 'high',
+                'date'        => '2020-01-01',
+
+                ];
+
+        }
 
 		public function mixed_content_data() {
 			$data[] = [

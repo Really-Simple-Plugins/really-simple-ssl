@@ -4,22 +4,12 @@ require_once(rsssl_path . 'class-installer.php');
 
 class rsssl_onboarding {
 	private static $_this;
-	private $hardening = [
-		'disable_file_editing',
-		'hide_wordpress_version',
-		'block_code_execution_uploads',
-		'disable_login_feedback',
-		'disable_user_enumeration',
-		'disable_indexing',
-	];
-
 	function __construct() {
 		if ( isset( self::$_this ) ) {
 			wp_die( sprintf( __( '%s is a singleton class and you cannot create a second instance.', 'really-simple-ssl' ), get_class( $this ) ) );
 		}
 
 		self::$_this = $this;
-		add_action( 'rest_api_init', array($this, 'onboarding_rest_route'), 10 );
 		add_action( 'admin_init', array( $this, 'maybe_redirect_to_settings_page'), 40);
 		add_filter("rsssl_run_test", array($this, 'handle_onboarding_request'), 10, 3);
 		add_filter("rsssl_do_action", array($this, 'handle_onboarding_action'), 10, 3);
@@ -64,6 +54,9 @@ class rsssl_onboarding {
 		$error = false;
 		$next_action = 'none';
 		switch( $action ){
+			case 'onboarding_data':
+				$response = $this->onboarding_data($data);
+				break;
 			case 'get_modal_status':
 				$response =  ["dismissed" => !$this->show_onboarding_modal()];
 				break;
@@ -110,8 +103,9 @@ class rsssl_onboarding {
 				];
 				break;
 			case 'activate_setting':
-				foreach ($this->hardening as $h ){
-					rsssl_update_option($h, true);
+				$recommended_ids = $this->get_hardening_fields();
+				foreach ($recommended_ids as $h ){
+					rsssl_update_option($h, 1);
 				}
 				$response = [
 					'next_action' => 'none',
@@ -155,13 +149,13 @@ class rsssl_onboarding {
 	 * @return array
 	 */
 
-	public function onboarding_data( WP_REST_Request $request): array {
+	public function onboarding_data( $data ): array {
 		// "warning", // yellow dot
 		// "error", // red dot
 		// "active" // green dot
 		$info = "";
-		$refresh = isset($_GET['forceRefresh']) && $_GET['forceRefresh']===true;
-		$nonce = $_GET['nonce'] ?? false;
+		$refresh = isset($data['forceRefresh']) && $data['forceRefresh']===true;
+		$nonce = $data['nonce'] ?? false;
 		if ( !wp_verify_nonce($nonce, 'rsssl_nonce') ) {
 			return [];
 		}
@@ -368,12 +362,25 @@ class rsssl_onboarding {
 	 * @return bool
 	 */
 	public function all_recommended_hardening_features_enabled(){
-		foreach ($this->hardening as $h ){
+		$recommended_ids = $this->get_hardening_fields();
+		foreach ($recommended_ids as $h ){
 			if ( rsssl_get_option($h)!=1 ) {
 				return false;
 			}
 		}
 		return true;
+	}
+
+	private function get_hardening_fields(){
+		$fields = rsssl_fields(false);
+		//get all fields that are recommended
+		$recommended = array_filter($fields, function($field){
+			return isset($field['recommended']) && $field['recommended'];
+		});
+		//get all id's from this array
+		return array_map(function($field){
+			return $field['id'];
+		}, $recommended);
 	}
 
 	public function onboarding_rest_route() {
@@ -385,6 +392,7 @@ class rsssl_onboarding {
 			}
 		) );
 	}
+
 
 	/**
 	 * Update SSL detection overridden option

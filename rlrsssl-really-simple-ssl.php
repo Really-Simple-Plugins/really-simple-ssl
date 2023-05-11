@@ -3,15 +3,14 @@
  * Plugin Name: Really Simple SSL
  * Plugin URI: https://really-simple-ssl.com
  * Description: Lightweight SSL & Hardening Plugin
- * Version: 6.2.5
- * Requires at least: 5.7
+ * Version: 7.0.0
+ * Requires at least: 5.8
  * Requires PHP: 7.2
  * Author: Really Simple Plugins
  * Author URI: https://really-simple-plugins.com
  * License: GPL2
  * Text Domain: really-simple-ssl
  * Domain Path: /languages
- * Requires PHP: 7.2
  */
 /*  Copyright 2023  Really Simple Plugins BV  (email : support@really-simple-ssl.com)
     This program is free software; you can redistribute it and/or modify
@@ -35,7 +34,6 @@ if (!function_exists('rsssl_activation_check')) {
     }
 	register_activation_hook( __FILE__, 'rsssl_activation_check' );
 }
-
 class REALLY_SIMPLE_SSL
 {
 	private static $instance;
@@ -51,6 +49,7 @@ class REALLY_SIMPLE_SSL
 	public $certificate;
 	public $wp_cli;
 	public $site_health;
+    public $vulnerabilities;
 
 	private function __construct()
 	{
@@ -95,11 +94,11 @@ class REALLY_SIMPLE_SSL
 		define('rsssl_path', trailingslashit(plugin_dir_path(__FILE__)));
         define('rsssl_template_path', trailingslashit(plugin_dir_path(__FILE__)).'grid/templates/');
         define('rsssl_plugin', plugin_basename(__FILE__));
-        define('rsssl_add_on_version_requirement', '6.2.4');
+        define('rsssl_add_on_version_requirement', '7.0.0');
         if (!defined('rsssl_file') ){
             define('rsssl_file', __FILE__);
         }
-		define('rsssl_version', '6.2.5');
+		define('rsssl_version', '7.0.0');
 		define('rsssl_le_cron_generation_renewal_check', 20);
 		define('rsssl_le_manual_generation_renewal_check', 15);
 	}
@@ -241,10 +240,7 @@ if ( !function_exists('rsssl_admin_logged_in')){
 
 function RSSSL()
 {
-	global $wp_version;
-	if ( version_compare($wp_version, '5.7', '>=') && version_compare(PHP_VERSION, '7.2', '>=')) {
-		return REALLY_SIMPLE_SSL::instance();
-	}
+    return REALLY_SIMPLE_SSL::instance();
 }
 add_action('plugins_loaded', 'RSSSL', 8);
 

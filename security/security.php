@@ -4,6 +4,7 @@ class REALLY_SIMPLE_SECURITY
 {
 	private static $instance;
 	public $firewall_manager;
+	public $hardening;
 
 	private function __construct()
 	{
@@ -17,6 +18,7 @@ class REALLY_SIMPLE_SECURITY
 			self::$instance->includes();
 			if ( rsssl_admin_logged_in() ) {
 				self::$instance->firewall_manager = new rsssl_firewall_manager();
+				self::$instance->hardening = new rsssl_hardening();
 			}
 		}
 		return self::$instance;
@@ -27,6 +29,7 @@ class REALLY_SIMPLE_SECURITY
 		$path = rsssl_path.'security/';
 		require_once( $path . 'cron.php' );
 		require_once( $path . 'integrations.php' );
+		require_once( $path . 'hardening.php' );
 
 		/**
 		 * Load only on back-end

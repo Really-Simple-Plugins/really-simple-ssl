@@ -10,60 +10,69 @@
 
 import React, { useState, useEffect } from "react";
 import { __ } from '@wordpress/i18n';
-import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 import apiFetch from '@wordpress/api-fetch';
-import * as rsssl_api from "../utils/api";
-import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import useFields from "./FieldsData";
-
-// Material UI theme overrides
-const theme = createTheme({
-    typography: {
-        fontSize: 12,
-        fontFamily: 'inherit',
-    },
-    overrides: {
-        MuiInputBase: {
-            root: {
-                fontSize: '12px',
-                fontFamily: 'inherit',
-                height: '40px',
-            }
-        },
-        MuiList: {
-            root: {
-                fontSize: '8px',
-            }
-        },
-        MuiAutocomplete: {
-            inputRoot: {
-                '& .MuiAutocomplete-input': {
-                    padding: '0 !important',
-                    border: 0,
-                },
-                flexWrap: 'inherit',
-            },
-            popper: {
-                fontSize: '12px',
-            },
-            paper: {
-                fontSize: '12px',
-            },
-            option: {
-                fontSize: '12px',
-            },
-            root: {
-                padding: 0,
-            }
-        },
-    },
-});
 
 const PostDropdown = ({ field }) => {
     const [posts, setPosts] = useState([]);
     const [selectedPost, setSelectedPost] = useState("");
     const {updateField, setChangedField} = useFields();
+    const [ThemeProvider, setThemeProvider] = useState(null);
+    const [theme, setTheme] = useState(null);
+    const [Autocomplete, setAutocomplete] = useState(null);
+    useEffect( () => {
+        import('@material-ui/lab/Autocomplete').then(({ default: Autocomplete }) => {
+            setAutocomplete(() => Autocomplete);
+        });
+
+       import ('@material-ui/core/styles').then(({ createTheme,  ThemeProvider }) => {
+           setThemeProvider(() => ThemeProvider);
+            setTheme(() => createTheme({
+                    typography: {
+                        fontSize: 12,
+                        fontFamily: 'inherit',
+                    },
+                    overrides: {
+                        MuiInputBase: {
+                            root: {
+                                fontSize: '12px',
+                                fontFamily: 'inherit',
+                                height: '40px',
+                            }
+                        },
+                        MuiList: {
+                            root: {
+                                fontSize: '8px',
+                            }
+                        },
+                        MuiAutocomplete: {
+                            inputRoot: {
+                                '& .MuiAutocomplete-input': {
+                                    padding: '0 !important',
+                                    border: 0,
+                                },
+                                flexWrap: 'inherit',
+                            },
+                            popper: {
+                                fontSize: '12px',
+                            },
+                            paper: {
+                                fontSize: '12px',
+                            },
+                            option: {
+                                fontSize: '12px',
+                            },
+                            root: {
+                                padding: 0,
+                            }
+                        },
+                    },
+                })
+            );
+       });
+
+    }, []);
 
     // Fetch the list of posts from the WordPress database when the component mounts.
     useEffect(() => {
@@ -93,6 +102,10 @@ const PostDropdown = ({ field }) => {
         }
     }, [field.value]);
 
+
+    if (!Autocomplete || !ThemeProvider || !theme) {
+        return null;
+    }
 
     return (
         <div>

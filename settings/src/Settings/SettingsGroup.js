@@ -1,4 +1,3 @@
-import Field from "./Field";
 import Hyperlink from "../utils/Hyperlink";
 import getAnchor from "../utils/getAnchor";
 import {__} from '@wordpress/i18n';
@@ -6,6 +5,7 @@ import * as rsssl_api from "../utils/api";
 import useFields from "../Settings/FieldsData";
 import useMenu from "../Menu/MenuData";
 import useLicense from "./License/LicenseData";
+import {useEffect,useState} from '@wordpress/element';
 
 
 /**
@@ -14,8 +14,15 @@ import useLicense from "./License/LicenseData";
 const SettingsGroup = (props) => {
     const {fields} = useFields();
     const {licenseStatus} = useLicense();
-
     const {selectedSubMenuItem, subMenu} = useMenu();
+    const [Field, setField] = useState(null);
+    useEffect( () => {
+        import("./Field").then(({ default: Field }) => {
+                setField(() => Field);
+            });
+
+    }, []);
+
     let upgrade='https://really-simple-ssl.com/pro/?mtm_campaign=fallback&mtm_source=free&mtm_content=upgrade';
 
     /*
@@ -60,11 +67,9 @@ const SettingsGroup = (props) => {
         }
     }
 
-    let status = 'invalid';
     if ( !activeGroup ) {
         return (<></>);
     }
-
     let msg = activeGroup.premium_text ? activeGroup.premium_text : __("Learn more about %sPremium%s", "really-simple-ssl");
     if ( rsssl_settings.pro_plugin_active ) {
         if ( licenseStatus === 'empty' || licenseStatus === 'deactivated' ) {
@@ -72,9 +77,12 @@ const SettingsGroup = (props) => {
         } else {
             msg = rsssl_settings.messageInvalid;
         }
+        if (rsssl_settings.pro_incompatible) {
+            msg = __("You are using an incompatible version of Really Simple SSL pro. Please update to the latest version.", "really-simple-ssl");
+        }
     }
 
-    let disabled = licenseStatus !=='valid' && activeGroup.premium;
+    let disabled = (licenseStatus !=='valid' || rsssl_settings.pro_incompatible ) && activeGroup.premium;
     //if a feature can only be used on networkwide or single site setups, pass that info here.
     let networkwide_error = !rsssl_settings.networkwide_active && activeGroup.networkwide_required;
     upgrade = activeGroup.upgrade ? activeGroup.upgrade : upgrade;
@@ -93,8 +101,8 @@ const SettingsGroup = (props) => {
             </div>}
             <div className="rsssl-grid-item-content">
                 {activeGroup.intro && <div className="rsssl-settings-block-intro">{activeGroup.intro}</div>}
-                {selectedFields.map((field, i) =>
-                    <Field key={i} index={i} field={field} fields={selectedFields}/>)}
+                {Field && selectedFields.map((field, i) =>
+                    <Field key={"selectedFields-"+i} index={i} field={field} fields={selectedFields}/>)}
             </div>
             {disabled && !networkwide_error && <div className="rsssl-locked">
                 <div className="rsssl-locked-overlay">

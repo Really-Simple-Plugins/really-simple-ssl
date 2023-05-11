@@ -1,13 +1,13 @@
 import {
     TextControl,
     RadioControl,
-    SelectControl,
     TextareaControl,
     __experimentalNumberControl as NumberControl
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import License from "./License/License";
 import Password from "./Password";
+import SelectControl from "./SelectControl";
 import Host from "./Host";
 import Hyperlink from "../utils/Hyperlink";
 import LetsEncrypt from "../LetsEncrypt/LetsEncrypt";
@@ -17,21 +17,43 @@ import PermissionsPolicy from "./PermissionsPolicy";
 import CheckboxControl from "./CheckboxControl";
 import Support from "./Support";
 import LearningMode from "./LearningMode/LearningMode";
+import RiskComponent from "./RiskConfiguration/RiskComponent";
+import VulnerabilitiesOverview from "./RiskConfiguration/vulnerabilitiesOverview";
 import Button from "./Button";
 import Icon from "../utils/Icon";
-import { useEffect} from "@wordpress/element";
+import { useEffect, useState } from "@wordpress/element";
 import useFields from "./FieldsData";
 import PostDropdown from "./PostDropDown";
+import NotificationTester from "./RiskConfiguration/NotificationTester";
+import getAnchor from "../utils/getAnchor";
 
 const Field = (props) => {
     let scrollAnchor = React.createRef();
     const {updateField, setChangedField, highLightField} = useFields();
+    const [anchor, setAnchor] = useState(null);
 
     useEffect( () => {
+        //check if the url contains the query variable 'anchor'
+        setAnchor(getAnchor('anchor'))
+        handleAnchor();
         if ( highLightField===props.field.id && scrollAnchor.current ) {
             scrollAnchor.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     },[]);
+
+    useEffect( () => {
+        handleAnchor();
+    },[anchor]);
+
+    window.addEventListener('hashchange', (e) => {
+        setAnchor(getAnchor('anchor'));
+    });
+
+    const handleAnchor = () => {
+        if ( anchor && anchor === props.field.id ) {
+            scrollAnchor.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }
 
     const onChangeHandler = (fieldValue) => {
         let field = props.field;
@@ -237,11 +259,11 @@ const Field = (props) => {
             <div className={highLightClass} ref={scrollAnchor}>
               <SelectControl
                   disabled={ disabled }
-                  help={ field.comment }
                   label={labelWrap(field)}
-                  onChange={ ( fieldValue ) => onChangeHandler(fieldValue) }
+                  onChangeHandler={ ( fieldValue ) => onChangeHandler(fieldValue) }
                   value= { fieldValue }
                   options={ options }
+                  field={field}
               />
             </div>
         )
@@ -278,6 +300,12 @@ const Field = (props) => {
         )
     }
 
+    if ( field.type==='riskcomponent' ) {
+        return (<div className={highLightClass} ref={scrollAnchor}>
+            <RiskComponent field={props.field}/>
+        </div>)
+    }
+
     if ( field.type === 'mixedcontentscan' ) {
         return (
             <div className={highLightClass} ref={scrollAnchor}>
@@ -286,15 +314,31 @@ const Field = (props) => {
         )
     }
 
+    if (field.type === 'vulnerabilitiestable') {
+        return (
+            <div className={highLightClass} ref={scrollAnchor}>
+              <VulnerabilitiesOverview field={props.field} />
+            </div>
+        )
+    }
+
+    if(field.type === 'notificationtester') {
+        return (
+            <div className={'rsssl-field-button ' + highLightClass} ref={scrollAnchor}>
+                <NotificationTester field={props.field} labelWrap={labelWrap}/>
+            </div>
+        )
+    }
+
     if ( field.type === 'letsencrypt' ) {
             return (
-               <LetsEncrypt key={field.id} field={field} />
+               <LetsEncrypt field={field} />
             )
     }
 
     if ( field.type === 'activate' ) {
             return (
-               <Activate key={field.id} field={field}/>
+               <Activate field={field}/>
             )
     }
 

@@ -1,12 +1,12 @@
 === Really Simple SSL ===
-Contributors: RogierLankhorst, markwolters, hesseldejong, janwoostendorp, vicocotea
+Contributors: RogierLankhorst, markwolters, hesseldejong, vicocotea
 Donate link: https://www.paypal.me/reallysimplessl
 Tags: SSL, https, force SSL, mixed content, insecure content, secure website, website security, TLS, security, secure socket layers, HSTS
-Requires at least: 5.7
+Requires at least: 5.8
 License: GPL2
 Tested up to: 6.2
 Requires PHP: 7.2
-Stable tag: 6.2.5
+Stable tag: 7.0.0
 
 The easiest way to improve security! Leverage your SSL certificate and protect your website visitors.
 
@@ -96,6 +96,13 @@ The plugin checks your certificate before enabling, but if, for example, you mig
 If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions](https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/) instead.
 
 == Changelog ==
+= 7.0.0 =
+* Improvement: move onboarding rest api to do_action rest_route
+* Improvement: catch several edge situations in SSL Labs api
+
+= 6.3.0 =
+* Improvement: added support for the new Let's Encrypt staging environment
+
 = 6.2.5 =
 * Improvement: add warning alert option
 * Fix: capability mismatch in multisite. props @verkkovaraani
@@ -103,10 +110,8 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 = 6.2.4 =
 * Improvement: optionally enable notification emails in onboarding wizard
 * Improvement: onboarding styling
-* Improvement: do not send an 'admin username renamed' email if the setting has been enabled, but no username was actually renamed, props @zignorp
 * Fix: catch non array value from notices array, props @kenrichman
-* Fix: typo in documentation link, props @bookman53
-* Fix: Let's Encrypt Wizard not functioning because of change to functional components, props @growthrankmedia
+* Fix: typo in documenation link, props @bookman53
 
 = 6.2.3 =
 * Improvement: Changed Back-end react to functional components

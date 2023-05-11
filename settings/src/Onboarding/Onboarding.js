@@ -6,11 +6,16 @@ import Icon from "../utils/Icon";
 import Placeholder from '../Placeholder/Placeholder';
 import useMenu from "../Menu/MenuData";
 import useFields from "../Settings/FieldsData";
-import useOnboardingData from "./OnboardingData";
 import useProgress from "../Dashboard/Progress/ProgressData";
+import useOnboardingData from "./OnboardingData";
+import useRiskData from "../Settings/RiskConfiguration/RiskData";
 
 const Onboarding = (props) => {
     const { fetchFieldsData, updateField, updateFieldsData, getFieldValue} = useFields();
+    const { getProgressData} = useProgress();
+    const {
+        fetchVulnerabilities
+    } = useRiskData();
     const {
         dismissModal,
         actionHandler,
@@ -22,7 +27,6 @@ const Onboarding = (props) => {
         dataLoaded,
         processing,
         setProcessing,
-        actionStatus,
         steps,
         currentStep,
         currentStepIndex,
@@ -43,8 +47,6 @@ const Onboarding = (props) => {
         setSendTestEmail
     } = useOnboardingData();
     const {setSelectedMainMenuItem, selectedMainMenuItem} = useMenu();
-    const { getProgressData} = useProgress();
-
     const statuses = {
         'inactive': {
             'icon': 'info',
@@ -69,10 +71,10 @@ const Onboarding = (props) => {
     };
 
     useEffect( () => {
-        if (networkwide && networkActivationStatus === 'main_site_activated' && currentStepIndex===2 ) {
+        if (networkwide && networkActivationStatus==='main_site_activated') {
             activateSSLNetworkWide();
         }
-    }, [networkActivationStatus, networkProgress, currentStepIndex])
+    }, [networkActivationStatus, networkProgress])
 
     useEffect( () => {
         const run = async () => {
@@ -90,11 +92,22 @@ const Onboarding = (props) => {
 
     //ensure all fields are updated, and progress is retrieved again
     useEffect( () => {
-        if (actionStatus==='completed' ) {
-            getProgressData();
-            fetchFieldsData(selectedMainMenuItem );
+        const runUpdate = async () => {
+            //in currentStep.items, find item with id 'hardening'
+            //if it has status 'completed' fetchFieldsData again.
+            if (currentStep && currentStep.items) {
+                let hardeningItem = currentStep.items.find((item) => {
+                    return item.id === 'hardening';
+                })
+                if (hardeningItem && hardeningItem.status === 'success') {
+                    await fetchFieldsData('hardening');
+                    await getProgressData();
+                    await fetchVulnerabilities();
+                }
+            }
         }
-    },[actionStatus])
+        runUpdate();
+    }, [currentStep])
 
     const activateSSL = () => {
         setProcessing(true);
@@ -103,11 +116,12 @@ const Onboarding = (props) => {
             setCurrentStepIndex(currentStepIndex+1);
             //change url to https, after final check
             if ( response.success ) {
-                if ( networkwide ) {
-                    setNetworkActivationStatus('main_site_activated');
-                }
                 if ( response.site_url_changed ) {
-                   window.location.reload();
+                    window.location.reload();
+                } else {
+                    if ( networkwide ) {
+                        setNetworkActivationStatus('main_site_activated');
+                    }
                 }
             }
         }).then( async () => {
@@ -153,9 +167,8 @@ const Onboarding = (props) => {
             let showAsPlugin = item.status!=='success' && item.is_plugin && item.current_action === 'none';
             let isPluginClass = showAsPlugin ? 'rsssl-is-plugin' : '';
             title = showAsPlugin ? <b>{title}</b> : title;
-            let completed = status==='success' && (current_action==='completed' || current_action==='none');
             return (
-                <li key={index} className={isPluginClass}>
+                <li key={"pluginItem-"+index} className={isPluginClass}>
                     <Icon name = {statusIcon} color = {statusColor} />
                     {title}{description && <>&nbsp;-&nbsp;{description}</>}
                     {id==='ssl_enabled' && networkwide && networkActivationStatus==='main_site_activated' && <>
@@ -164,11 +177,8 @@ const Onboarding = (props) => {
                         {networkProgress>=100 && __("completed", "really-simple-ssl") }
                         </>}
                     {button && <>&nbsp;-&nbsp;
-                        {!completed && <>
-                            {showLink && <Button isLink={true} onClick={(e) => actionHandler(id, action, e)}>{buttonTitle}</Button>}
-                            {!showLink && <>{buttonTitle}</>}
-                        </>}
-                        {completed && <>{__("Completed", "really-simple-ssl")}</>}
+                        {showLink && <Button isLink={true} onClick={(e) => actionHandler(id, action, e)}>{buttonTitle}</Button>}
+                        {!showLink && <>{buttonTitle}</>}
                     </>}
                     {showAsPlugin && read_more && <a target="_blank" href={read_more} className="button button-default rsssl-read-more">{__("Read More", "really-simple-ssl")}</a>}
                 </li>
@@ -195,11 +205,12 @@ const Onboarding = (props) => {
     }
 
     const controlButtons = () => {
+
         let ActivateSSLText = networkwide ? __("Activate SSL networkwide", "really-simple-ssl") : __("Activate SSL", "really-simple-ssl");
         if ( currentStepIndex === 0 ) {
            return (
                 <>
-                    <button disabled={processing || ( !certificateValid && !overrideSSL ) } className="button button-primary" onClick={() => {activateSSL()}}>{ActivateSSLText}</button>
+                    <button disabled={processing || (!certificateValid && !overrideSSL) } className="button button-primary" onClick={() => {activateSSL()}}>{ActivateSSLText}</button>
                     { certificateValid && !rsssl_settings.pro_plugin_active && <a target="_blank" href={rsssl_settings.upgrade_link} className="button button-default" >{__("Improve Security with PRO", "really-simple-ssl")}</a>}
                     { !certificateValid && <button className="button button-default" onClick={() => {goToLetsEncrypt()}}>{__("Install SSL", "really-simple-ssl")}</button>}
                     { !certificateValid && <ToggleControl
@@ -230,7 +241,7 @@ const Onboarding = (props) => {
             return (
                 <>
                     <button className="button button-primary" onClick={() => {goToDashboard()}}>{__('Go to Dashboard', 'really-simple-ssl')}</button>
-                    { !!props.isModal && <button className="button button-default" onClick={() => dismissModal()}>{__('Dismiss', 'really-simple-ssl')}</button>}
+                    <button className="button button-default" onClick={() => dismissModal()}>{__('Dismiss', 'really-simple-ssl')}</button>
                 </>
             );
         }
@@ -262,7 +273,6 @@ const Onboarding = (props) => {
                         </ul>
                         { currentStep.id === 'email'&&
                             <>
-                                {!props.isModal && <p>{__("We use email notification to explain important updates in plugin settings. Add your email address below.","really-simple-ssl")}</p>}
                                 <div>
                                     <input type="email" value={email} placeholder={__("Your email address", "really-simple-ssl")} onChange={(e) => setEmail(e.target.value)} />
                                 </div><div>

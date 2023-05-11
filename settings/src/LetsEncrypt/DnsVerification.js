@@ -92,12 +92,12 @@ const DnsVerification = (props) => {
                                    url="https://really-simple-ssl.com/how-to-add-a-txt-record-to-dns"/>
                     </p>
                     <div  className="rsssl-dns-text-records">
-                        <div key={0}>
+                        <div>
                             <div className="rsssl-dns-domain">@/{__("domain", "really-simple-ssl")}</div>
                             <div className="rsssl-dns-field">{__("Value", "really-simple-ssl")}</div>
                         </div>
                         { tokens.map((tokenData, i) =>
-                            <div key={i+1}>
+                            <div>
                                 <div className="rsssl-dns-">_acme-challenge.{tokenData.domain}</div>
                                 <div className="rsssl-dns-field rsssl-selectable">{tokenData.token}</div>
                             </div>

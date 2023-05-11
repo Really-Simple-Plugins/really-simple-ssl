@@ -11,6 +11,11 @@ if ( RSSSL_USE_CRON ) {
 		if ( ! wp_next_scheduled( 'rsssl_every_day_hook' ) ) {
 			wp_schedule_event( time(), 'rsssl_daily', 'rsssl_every_day_hook' );
 		}
+
+		if ( ! wp_next_scheduled( 'rsssl_every_three_hours_hook' ) ) {
+			wp_schedule_event( time(), 'rsssl_every_three_hours', 'rsssl_every_three_hours_hook' );
+		}
+
 		if ( ! wp_next_scheduled( 'rsssl_every_five_minutes_hook' ) ) {
 			wp_schedule_event( time(), 'rsssl_five_minutes', 'rsssl_every_five_minutes_hook' );
 		}
@@ -19,7 +24,10 @@ if ( RSSSL_USE_CRON ) {
 		}
 	}
 }
-
+add_action( 'rsssl_every_three_hours_hook', 'rsssl_every_three_hours_cron' );
+function rsssl_every_three_hours_cron(){
+	do_action('rsssl_every_three_hours_cron');
+}
 /**
  * Ensure the hook has a function attached to it.
  */
@@ -57,6 +65,10 @@ function rsssl_filter_cron_schedules( $schedules ) {
 		'interval' => DAY_IN_SECONDS,
 		'display'  => __( 'Once every day' )
 	);
+	$schedules['rsssl_every_three_hours']   = array(
+		'interval' => 3 * HOUR_IN_SECONDS,
+		'display'  => __( 'Every three hours' )
+	);
 	$schedules['rsssl_weekly']   = array(
 		'interval' => WEEK_IN_SECONDS,
 		'display'  => __( 'Once every week' )
@@ -69,6 +81,7 @@ function rsssl_clear_scheduled_hooks() {
 	wp_clear_scheduled_hook( 'rsssl_every_day_hook' );
 	wp_clear_scheduled_hook( 'rsssl_every_week_hook' );
 	wp_clear_scheduled_hook( 'rsssl_every_five_minutes_hook' );
+	wp_clear_scheduled_hook( 'rsssl_every_three_hours' );
 	wp_clear_scheduled_hook( 'rsssl_ssl_process_hook' );
 }
 

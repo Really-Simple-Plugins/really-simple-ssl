@@ -29,17 +29,28 @@
       }
     }
     &.rsssl-featured{
+
+      &.rsssl-active {
+        .rsssl-menu-item-beta-pill {
+          color: var(--rsp-black);
+        }
+      }
       a{
-        //padding-block: var(--rsp-spacing-m);
-        //background: var(--rsp-dark-blue-faded);
         font-weight: 600;
         flex-wrap: wrap;
         .rsssl-menu-item-featured-pill{
             background: var(--rsp-green);
             color: var(--rsp-text-color-white);
-            padding: 2px 9px;
-            border-radius: var(--rsp-border-radius);
+            padding: 4px 8px;
+            border-radius: var(--rsp-border-radius-xs);
             font-size: var(--rsp-fs-100);
+        }
+        .rsssl-menu-item-beta-pill{
+          background: var(--rsp-yellow);
+          color: var(--rsp-text-color-black);
+          padding: 4px 8px;
+          border-radius: var(--rsp-border-radius-xs);
+          font-size: var(--rsp-fs-100);
         }
       }
     }

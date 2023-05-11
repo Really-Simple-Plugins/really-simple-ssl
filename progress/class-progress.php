@@ -152,6 +152,4 @@ class rsssl_progress {
 			'percentage' => $this->percentage(),
 		];
 	}
-
-
 }
