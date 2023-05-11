@@ -101,6 +101,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 * Improvement: move onboarding rest api to do_action rest_route
 * Improvement: catch several edge situations in SSL Labs api
 * Improvement: SSL Labs block responsiveness
+* Improvement: more robust handling of wp-config.php detection
 
 = 6.3.0 =
 * Improvement: added support for the new Let's Encrypt staging environment
