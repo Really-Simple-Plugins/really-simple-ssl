@@ -521,7 +521,6 @@ class rsssl_admin
     public function wpconfig_is_writable()
     {
         $wpconfig_path = $this->find_wp_config_path();
-
         if (empty($wpconfig_path)) {
 		    return false;
 	    }
@@ -580,23 +579,22 @@ class rsssl_admin
      * @since  2.1
      *
      * @access public
-     * @return string|null
+     * @return string|false
      *
      */
 
     public function find_wp_config_path()
     {
-        //limit nr of iterations to 20
-        $i = 0;
-        $maxiterations = 20;
-        $dir = __DIR__;
-        do {
-            $i++;
-            if (file_exists($dir . "/wp-config.php")) {
-                return $dir . "/wp-config.php";
-            }
-        } while (($dir = realpath("$dir/..")) && ($i < $maxiterations));
-        return null;
+	    $location_of_wp_config = ABSPATH;
+	    if ( ! file_exists( ABSPATH . 'wp-config.php' ) && file_exists( dirname( ABSPATH ) . '/wp-config.php' ) ) {
+		    $location_of_wp_config = dirname( ABSPATH );
+	    }
+	    $location_of_wp_config = trailingslashit( $location_of_wp_config );
+        $wpconfig_path = $location_of_wp_config . 'wp-config.php';
+        if ( file_exists( $wpconfig_path ) ) {
+	        return $wpconfig_path;
+        }
+        return false;
     }
 
     /**
@@ -2821,9 +2819,10 @@ class rsssl_admin
 		//only if cookie settings were not inserted yet
 		if ( $this->secure_cookie_settings_status() !== 'set' ) {
 			$wpconfig_path = RSSSL()->admin->find_wp_config_path();
-			if (empty($wpconfig_path)) {
-				return false;
-			}
+            if (empty($wpconfig_path)) {
+                return;
+            }
+
 			$wpconfig = file_get_contents($wpconfig_path);
 			if ((strlen($wpconfig)!=0) && is_writable($wpconfig_path)) {
 				$rule  = "\n"."//Begin Really Simple SSL session cookie settings"."\n";
