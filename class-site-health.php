@@ -56,9 +56,16 @@ if ( !class_exists("rsssl_site_health") ) {
 				);
 			}
 
-			if ( defined('WP_DEBUG') && WP_DEBUG && defined('WP_DEBUG_DISPLAY') && WP_DEBUG_DISPLAY ) {
+			if ( defined( 'WP_DEBUG' ) && WP_DEBUG && defined( 'WP_DEBUG_DISPLAY' ) && WP_DEBUG_DISPLAY ) {
 				$tests['direct']['rsssl_debug_display'] = array(
 					'test' => array( $this, "rsssl_site_health_debug_display_test" ),
+				);
+			}
+
+			if ( rsssl_get_option( 'enable_vulnerability_scanner' ) ) {
+				$vulnerabilities                          = new rsssl_vulnerabilities();
+				$tests['direct']["rsssl_vulnerabilities"] = array(
+					'test' => [ $vulnerabilities, "get_site_health_notice" ],
 				);
 			}
 
