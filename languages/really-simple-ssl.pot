@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-05-11T13:25:13+00:00\n"
+"POT-Creation-Date: 2023-05-12T09:57:23+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: really-simple-ssl\n"
@@ -1599,7 +1599,7 @@ msgstr ""
 #: settings/build/885.js:1
 #: settings/build/967.js:1
 #: settings/src/Settings/MixedContentScan/MixedContentScan.js:89
-#: settings/src/Settings/RiskConfiguration/RiskData.js:112
+#: settings/src/Settings/RiskConfiguration/RiskData.js:111
 msgid "Details"
 msgstr ""
 
@@ -1877,8 +1877,8 @@ msgstr ""
 msgid "forbidden - number in author name not allowed = %s"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:163
-#: security/wordpress/vulnerabilities.php:1351
+#: security/wordpress/vulnerabilities.php:194
+#: security/wordpress/vulnerabilities.php:1362
 #: settings/build/688.js:1
 #: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:38
 msgid "vulnerability"
@@ -1886,29 +1886,29 @@ msgid_plural "vulnerabilities"
 msgstr[0] ""
 msgstr[1] ""
 
-#: security/wordpress/vulnerabilities.php:170
-#: security/wordpress/vulnerabilities.php:1356
+#: security/wordpress/vulnerabilities.php:201
+#: security/wordpress/vulnerabilities.php:1367
 msgid "You have %s %s %s"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:171
+#: security/wordpress/vulnerabilities.php:202
 msgid "You have %s %s %s. Please take appropriate action."
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:200
+#: security/wordpress/vulnerabilities.php:231
 msgid "Site wide - Test Notification"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:201
-#: security/wordpress/vulnerabilities.php:223
+#: security/wordpress/vulnerabilities.php:232
+#: security/wordpress/vulnerabilities.php:254
 msgid "This is a test notification from Really Simple SSL. You can safely dismiss this message."
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:222
+#: security/wordpress/vulnerabilities.php:253
 msgid "Dashboard - Test Notification"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:424
+#: security/wordpress/vulnerabilities.php:452
 #: settings/config/menu.php:74
 #: settings/config/menu.php:80
 #: settings/build/688.js:1
@@ -1916,52 +1916,52 @@ msgstr ""
 msgid "Vulnerabilities"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:439
+#: security/wordpress/vulnerabilities.php:467
 msgid "Force update"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:441
+#: security/wordpress/vulnerabilities.php:469
 msgid "Will run a frequent update process on vulnerable components."
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:445
+#: security/wordpress/vulnerabilities.php:473
 msgid "Quarantine"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:447
+#: security/wordpress/vulnerabilities.php:475
 msgid "Components will be quarantined if the update process fails."
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:519
-#: security/wordpress/vulnerabilities.php:998
+#: security/wordpress/vulnerabilities.php:547
+#: security/wordpress/vulnerabilities.php:1010
 msgid "Quarantined"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:981
+#: security/wordpress/vulnerabilities.php:993
 msgid "Vulnerability: %s"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:1319
+#: security/wordpress/vulnerabilities.php:1330
 msgid "Vulnerability Alert: %s"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:1320
+#: security/wordpress/vulnerabilities.php:1331
 msgid "%s: %s vulnerabilities found"
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:1321
+#: security/wordpress/vulnerabilities.php:1332
 msgid "This is a vulnerability alert from Really Simple SSL for %s. "
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:1353
+#: security/wordpress/vulnerabilities.php:1364
 msgid "A %s vulnerability is found in %s."
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:1353
+#: security/wordpress/vulnerabilities.php:1364
 msgid "Multiple %s vulnerabilities have been found."
 msgstr ""
 
-#: security/wordpress/vulnerabilities.php:1358
+#: security/wordpress/vulnerabilities.php:1369
 msgid "Based on your settings, Really Simple SSL will take appropriate action, or you will need to solve it manually."
 msgstr ""
 
@@ -2363,7 +2363,7 @@ msgstr ""
 #: settings/config/config.php:733
 #: settings/build/688.js:1
 #: settings/build/967.js:1
-#: settings/src/Dashboard/SslLabs/SslLabs.js:306
+#: settings/src/Dashboard/SslLabs/SslLabs.js:319
 #: settings/src/LetsEncrypt/DnsVerification.js:91
 msgid "Read more"
 msgstr ""
@@ -2940,32 +2940,32 @@ msgid "Powered by Qualys"
 msgstr ""
 
 #: settings/build/688.js:1
-#: settings/src/Dashboard/SslLabs/SslLabs.js:241
+#: settings/src/Dashboard/SslLabs/SslLabs.js:254
 msgid "No test started yet"
 msgstr ""
 
 #: settings/build/688.js:1
-#: settings/src/Dashboard/SslLabs/SslLabs.js:267
+#: settings/src/Dashboard/SslLabs/SslLabs.js:280
 msgid "Not available on localhost"
 msgstr ""
 
 #: settings/build/688.js:1
-#: settings/src/Dashboard/SslLabs/SslLabs.js:160
+#: settings/src/Dashboard/SslLabs/SslLabs.js:177
 msgid "Cipher strength"
 msgstr ""
 
 #: settings/build/688.js:1
-#: settings/src/Dashboard/SslLabs/SslLabs.js:303
+#: settings/src/Dashboard/SslLabs/SslLabs.js:316
 msgid "What does my score mean?"
 msgstr ""
 
 #: settings/build/688.js:1
-#: settings/src/Dashboard/SslLabs/SslLabs.js:312
+#: settings/src/Dashboard/SslLabs/SslLabs.js:325
 msgid "Last check:"
 msgstr ""
 
 #: settings/build/688.js:1
-#: settings/src/Dashboard/SslLabs/SslLabs.js:319
+#: settings/src/Dashboard/SslLabs/SslLabs.js:332
 msgid "View detailed report on Qualys SSL Labs"
 msgstr ""
 
@@ -3096,7 +3096,7 @@ msgstr ""
 #: settings/build/688.js:1
 #: settings/build/885.js:1
 #: settings/build/967.js:1
-#: settings/src/Settings/RiskConfiguration/RiskData.js:115
+#: settings/src/Settings/RiskConfiguration/RiskData.js:114
 msgid "Update"
 msgstr ""
 
@@ -3792,7 +3792,7 @@ msgid "All notifications are triggered successfully, please check your email to 
 msgstr ""
 
 #: settings/build/index.js:1
-#: settings/src/Onboarding/OnboardingData.js:148
+#: settings/src/Onboarding/OnboardingData.js:156
 msgid "Re-checking SSL certificate, please wait..."
 msgstr ""
 
