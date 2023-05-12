@@ -1108,13 +1108,13 @@ if (!class_exists("rsssl_vulnerabilities")) {
             add_action('admin_enqueue_scripts', array($this, 'add_vulnerability_styles'));
             //we add an extra column to the plugins page
             add_filter('manage_plugins_columns', array($this, 'add_vulnerability_column'));
+            add_filter('manage_plugins-network_columns', array($this, 'add_vulnerability_column'));
             //now we add the field to the plugins page
             add_action('manage_plugins_custom_column', array($this, 'add_vulnerability_field'), 10, 3);
+            add_action('manage_plugins-network_custom_column', array($this, 'add_vulnerability_field'), 10, 3);
         }
 
         /* End of private functions | Feedback, Styles and scripts */
-
-
 
         /**
          * This function downloads the manifest file from the api server
