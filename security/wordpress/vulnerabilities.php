@@ -982,7 +982,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
                     //we loop through the components
                     vulnerable_components.forEach(function(component) {
                         //we get the theme element
-                        let theme_element = document.querySelector(".theme[data-slug='twentyeleven']");
+                        let theme_element = document.querySelector(".theme[data-slug='"+component.slug+"']");
                         //if the theme exists
                         if (theme_element) {
                             //check if theme element contains notice. if so, push this notice down with class rsssl-theme-notice-below-notice
