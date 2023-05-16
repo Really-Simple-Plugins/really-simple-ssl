@@ -496,156 +496,221 @@ function rsssl_list_users_where_display_name_is_login_name() {
 }
 
 /**
+ * Retrieves the client's IP addresses.
  *
- * Get IP addresses.
+ * This function checks multiple headers in the $_SERVER superglobal to determine the client's IP addresses.
+ * This includes the standard 'REMOTE_ADDR' as well as many others that may be set by proxies or load balancers.
+ * The function excludes local IP (127.0.0.1) and validates each IP address before adding it to the return array.
  *
- * @return array Array of IP addresses.
+ * @return array An array of unique valid IP addresses.
  */
-function rsssl_get_ips(): array
-{
-    $ip_addresses = [];
+function rsssl_get_ips(): array {
+	$ip_addresses = [];
 
-    // Check X-Forwarded-For, X-Forwarded, Forwarded-For, and Forwarded
-    $headers_to_check = array(
-        'REMOTE_ADDR',
-        'HTTP_X_FORWARDED_FOR',
-        'HTTP_X_FORWARDED',
-        'HTTP_FORWARDED_FOR',
-        'HTTP_FORWARDED',
-        'HTTP_CF_CONNECTING_IP',
-        'HTTP_FASTLY_CLIENT_IP',
-        'HTTP_X_CLUSTER_CLIENT_IP',
-        'HTTP_X_REAL_IP'
-    );
+	// Check X-Forwarded-For, X-Forwarded, Forwarded-For, and Forwarded
+	$headers_to_check = array(
+		'REMOTE_ADDR',
+		'HTTP_X_FORWARDED_FOR',
+		'HTTP_X_FORWARDED',
+		'HTTP_FORWARDED_FOR',
+		'HTTP_FORWARDED',
+		'HTTP_CF_CONNECTING_IP',
+		'HTTP_FASTLY_CLIENT_IP',
+		'HTTP_X_CLUSTER_CLIENT_IP',
+		'HTTP_X_REAL_IP'
+	);
 
-    foreach ($headers_to_check as $header) {
-        if (isset($_SERVER[$header])) {
-            $ips = explode(',', $_SERVER[$header]);
-            foreach ($ips as $ip) {
-                $ip = trim($ip);
+	foreach ( $headers_to_check as $header ) {
+		if ( isset( $_SERVER[ $header ] ) ) {
+			$ips = explode( ',', $_SERVER[ $header ] );
+			foreach ( $ips as $ip ) {
+				$ip = trim( $ip );
 
-                if ($ip === '127.0.0.1') {
-                    continue;
-                }
+				if ( $ip === '127.0.0.1' ) {
+					continue;
+				}
 
-                if (filter_var($ip, FILTER_VALIDATE_IP)) {
-                    $ip_addresses[] = $ip;
-                }
-            }
-        }
-    }
+				if ( filter_var( $ip, FILTER_VALIDATE_IP ) ) {
+					$ip_addresses[] = $ip;
+				}
+			}
+		}
+	}
 
-    // Remove duplicates
-    return array_unique($ip_addresses);
+	// Remove duplicates
+	return array_unique( $ip_addresses );
 }
 
 /**
- * Check if an IP is within a specified range.
+ * Checks if a given IP address is within a specified IP range.
  *
- * @param string $ip    The IP address to check.
- * @param string $range The IP range to match against.
+ * This function supports both IPv4 and IPv6 addresses, and can handle ranges in
+ * both standard notation (e.g. "192.0.2.0") and CIDR notation (e.g. "192.0.2.0/24").
  *
- * @return bool True if the IP is in the range, false otherwise.
+ * In CIDR notation, the function uses a bitmask to check if the IP address falls within
+ * the range. For IPv4 addresses, it uses the `ip2long()` function to convert the IP
+ * address and subnet to their integer representations, and then uses the bitmask to
+ * compare them. For IPv6 addresses, it uses the `inet_pton()` function to convert the IP
+ * address and subnet to their binary representations, and uses a similar bitmask approach.
+ *
+ * If the range is not in CIDR notation, it simply checks if the IP equals the range.
+ *
+ * @param string $ip The IP address to check.
+ * @param string $range The range to check the IP address against.
+ *
+ * @return bool True if the IP address is within the range, false otherwise.
  */
-function rsssl_ip_in_range($ip, $range): bool
-{
-    if (strpos($range, '/') !== false) {
-        // CIDR notation
-        list($subnet, $bits) = explode('/', $range);
+function rsssl_ip_in_range( string $ip, string $range ): bool {
+	// Check if the IP address is properly formatted
+	if ( ! filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6 ) ) {
+		throw new InvalidArgumentException( 'Invalid IP address format.' );
+	}
+	// Check if the range is in CIDR notation
+	if ( strpos( $range, '/' ) !== false ) {
+		// The range is in CIDR notation, so we split it into the subnet and the bit count
+		[ $subnet, $bits ] = explode( '/', $range );
 
-        if (filter_var($subnet, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
-            // IPv4 address
-            $ip = ip2long($ip);
-            $subnet = ip2long($subnet);
-            $mask = -1 << (32 - $bits);
-            $subnet &= $mask; // nb: in case the supplied subnet wasn't correctly aligned
-            return ($ip & $mask) === $subnet;
-        }
+		if ( ! is_numeric( $bits ) || $bits < 0 || $bits > 128 ) {
+			throw new InvalidArgumentException( 'Invalid range format. The bit count in CIDR notation must be a number between 0 and 128.' );
+		}
 
-        if (filter_var($subnet, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
-            // IPv6 address
-            $ip = inet_pton($ip);
-            $subnet = inet_pton($subnet);
-            $mask = str_repeat("\xff", $bits / 8) . str_repeat("\x00", 16 - ($bits / 8));
-            return ($ip & $mask) === $subnet;
-        }
+		// Check if the subnet is a valid IPv4 address
+		if ( filter_var( $subnet, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 ) ) {
+			// Convert the IP address and subnet to their integer representations
+			$ip     = ip2long( $ip );
+			$subnet = ip2long( $subnet );
 
-        return false;
-    }
+			// Create a mask based on the number of bits
+			$mask = - 1 << ( 32 - $bits );
 
-// Regular notation
-    return $ip === $range;
+			// Apply the mask to the subnet
+			$subnet &= $mask;
+
+			// Compare the masked IP address and subnet
+			return ( $ip & $mask ) === $subnet;
+		}
+
+		// Check if the subnet is a valid IPv6 address
+		if ( filter_var( $subnet, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6 ) ) {
+			// Convert the IP address and subnet to their binary representations
+			$ip     = inet_pton( $ip );
+			$subnet = inet_pton( $subnet );
+			// Divide the number of bits by 8 to find the number of full bytes
+			$full_bytes = floor( $bits / 8 );
+			// Find the number of remaining bits after the full bytes
+			$partial_byte = $bits % 8;
+			// Initialize the mask
+			$mask = '';
+			// Add the full bytes to the mask, each byte being "\xff" (255 in binary)
+			$mask .= str_repeat( "\xff", $full_bytes );
+			// If there are any remaining bits...
+			if ( $partial_byte !== 0 ) {
+				// Add a byte to the mask with the correct number of 1 bits
+				// First, create a string with the correct number of 1s
+				// Then, pad the string to 8 bits with 0s
+				// Convert the binary string to a decimal number
+				// Convert the decimal number to a character and add it to the mask
+				$mask .= chr( bindec( str_pad( str_repeat( '1', $partial_byte ), 8, '0' ) ) );
+			}
+
+			// Fill in the rest of the mask with "\x00" (0 in binary)
+			// The total length of the mask should be 16 bytes, so subtract the number of bytes already added
+			// If we added a partial byte, we need to subtract 1 more from the number of bytes to add
+			$mask .= str_repeat( "\x00", 16 - $full_bytes - ( $partial_byte != 0 ? 1 : 0 ) );
+
+			// Compare the masked IP address and subnet
+			return ( $ip & $mask ) === $subnet;
+		}
+
+		// The subnet was not a valid IP address
+		throw new InvalidArgumentException( 'Invalid range format. The subnet in CIDR notation must be a valid IP address.' );
+	}
+
+	if ( ! filter_var( $range, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6 ) ) {
+		// The range was not in CIDR notation and was not a valid IP address
+		throw new InvalidArgumentException( 'Invalid range format. If not in CIDR notation, the range must be a valid IP address.' );
+	}
+
+	// The range is not in CIDR notation, so we simply check if the IP equals the range
+	return $ip === $range;
 }
 
 /**
- * Check IP addresses against allowlist and blocklist.
+ * Checks a list of IP addresses against allowlist and blocklist.
  *
- * @param array $ip_addresses Array of IP addresses to check.
+ * This function fetches explicit IP addresses from the database tables and checks if the supplied IPs are in the allowlist or blocklist.
+ * If an IP is found in the allowlist or blocklist, it is stored in the corresponding database table and a status code is returned.
  *
- * @return int Status code indicating the result.
+ * @param array $ip_addresses The list of IP addresses to check.
+ *
+ * @return int Status code representing the check result: 10 for allowlist hit, 20 for blocklist hit, 0 for no hits.
  */
-function rsssl_check_ip( $ip_addresses ) {
-    global $wpdb;
+function rsssl_check_ip_addresses( array $ip_addresses ): int {
+	global $wpdb;
 
-    // Fetch IP ranges from the database tables
-    $allowlist_ranges = $wpdb->get_col("SELECT ip_range FROM rsssl_allowlist");
-    $blocklist_ranges = $wpdb->get_col("SELECT ip_range FROM rsssl_blocklist");
+	// Fetch explicit IP addresses from the database tables
+	$allowlist_ips = $wpdb->get_col( "SELECT ip_address FROM rsssl_allowlist" );
+	$blocklist_ips = $wpdb->get_col( "SELECT ip_address FROM rsssl_blocklist" );
 
-    $allowed_ips = [];
-    $blocked_ips = [];
+	foreach ( $ip_addresses as $ip) {
+		// Check against allowlist
+		if ( in_array( $ip, $allowlist_ips, true ) ) {
+			// If IP is in the allowlist, store it and return status code immediately
+			$wpdb->insert( 'rsssl_allowlist', [ 'ip_address' => $ip ] );
 
-    foreach ($ip_addresses as $ip) {
-        $is_allowed = false;
-        $is_blocked = false;
+			return 0; // Allowlist hit status code
+		}
 
-        // Check against allowlist
-        foreach ($allowlist_ranges as $range) {
-            if (rsssl_ip_in_range($ip, $range)) {
-                $is_allowed = true;
-                break;
-            }
-        }
+		// If IP is not in the allowlist, check against blocklist
+		if ( in_array( $ip, $blocklist_ips, true ) ) {
+			// If IP is in the blocklist, store it and return status code
+			$wpdb->insert( 'rsssl_blocklist', [ 'ip_address' => $ip ] );
 
-        if ($is_allowed) {
-            $allowed_ips[] = $ip;
-            continue; // Move to the next IP address
-        }
+			return 1; // Blocklist hit status code
+		}
+	}
 
-        // Check against blocklist
-        foreach ($blocklist_ranges as $range) {
-            if (rsssl_ip_in_range($ip, $range)) {
-                $is_blocked = true;
-                break;
-            }
-        }
-
-        if ($is_blocked) {
-            $blocked_ips[] = $ip;
-        }
-    }
-
-    // Perform actions based on blocked and allowed IPs
-    // ...
-
-    // Store IP addresses in the database tables
-    foreach ($allowed_ips as $ip) {
-        $wpdb->insert('rsssl_allowlist', ['ip_address' => $ip]);
-    }
-
-    foreach ($blocked_ips as $ip) {
-        $wpdb->insert('rsssl_blocklist', ['ip_address' => $ip]);
-    }
-
-    // Determine the status code based on the results
-    $status_code = 0; // Default status code (no hits)
-
-    if (count($allowed_ips) > 0) {
-        $status_code = 10; // Allowlist hit status code
-    } elseif (count($blocked_ips) > 0) {
-        $status_code = 20; // Blocklist hit status code
-    }
-
-    return $status_code;
+	return -1; // Default status code (no hits)
 }
 
+/**
+ * Checks a list of IP addresses against allowlist and blocklist ranges.
+ *
+ * This function fetches IP ranges from the database tables and checks if the supplied IPs are within the allowlist or blocklist ranges.
+ * If an IP is found in the allowlist or blocklist range, it is stored in the corresponding database table and a status code is returned.
+ *
+ * @param array $ip_addresses The list of IP addresses to check.
+ *
+ * @return int Status code representing the check result: 10 for allowlist hit, 20 for blocklist hit, 0 for no hits.
+ */
+function rsssl_check_ip_ranges( array $ip_addresses ): int {
+	global $wpdb;
 
+	// Fetch IP ranges from the database tables
+	$allowlist_ranges = $wpdb->get_col( "SELECT ip_range FROM rsssl_allowlist_ranges" );
+	$blocklist_ranges = $wpdb->get_col( "SELECT ip_range FROM rsssl_blocklist_ranges" );
+
+	foreach ( $ip_addresses as $ip ) {
+		// Check against allowlist
+		foreach ( $allowlist_ranges as $range ) {
+			if ( rsssl_ip_in_range( $ip, $range ) ) {
+				// If IP is in the allowlist range, store it and return status code immediately
+				$wpdb->insert( 'rsssl_allowlist_ranges', [ 'ip_address' => $ip ] );
+
+				return 0; // Allowlist hit status code
+			}
+		}
+
+		// If IP is not in the allowlist, check against blocklist
+		foreach ( $blocklist_ranges as $range ) {
+			if ( rsssl_ip_in_range( $ip, $range ) ) {
+				// If IP is in the blocklist range, store it and return status code
+				$wpdb->insert( 'rsssl_blocklist_ranges', [ 'ip_address' => $ip ] );
+
+				return 1; // Blocklist hit status code
+			}
+		}
+	}
+
+	return 9; // Default status code (no hits)
+}
