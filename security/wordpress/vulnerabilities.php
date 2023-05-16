@@ -84,7 +84,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
                 $this->check_notice_reset();
 	        }
-
         }
 
 	    /**
@@ -1327,7 +1326,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
             //date format is named month day year
             $mailer = new rsssl_mailer();
-            $mailer->subject = sprintf(__("Vulnerability Alert: %s", "really-simple-ssl"), get_site_url() );
+            $mailer->subject = sprintf(__("Vulnerability Alert: %s", "really-simple-ssl"), $this->site_url() );
             $mailer->title = sprintf(__("%s: %s vulnerabilities found", "really-simple-ssl"), $this->date(), $total);
             $message = sprintf(__("This is a vulnerability alert from Really Simple SSL for %s. ","really-simple-ssl"), $this->domain() );
             $mailer->message = $message;
@@ -1372,13 +1371,35 @@ if (!class_exists("rsssl_vulnerabilities")) {
             ];
         }
 
-	    public function date(){
+	    /**
+	     * Get a nicely formatted date for today's date
+	     *
+	     * @return string
+	     */
+	    public function date(): string {
 		    return date(get_option('date_format'));
 	    }
 
+        /**
+         * Get the domain name in a clickable format
+         *
+         * @return string
+         */
 	    public function domain(): string {
-		    return '<a href="'.get_site_url().'" target="_blank">'.get_site_url().'</a>';
+		    return '<a href="'.$this->site_url().'" target="_blank">'.$this->site_url().'</a>';
 	    }
+
+	    /**
+         * Cron triggers may sometimes result in http URL's, even though SSL is enabled in Really Simple SSL.
+         * We ensure that the URL is returned with https if SSL is enabled.
+         *
+	     * @return string
+	     */
+        public function site_url(): string {
+            $ssl_enabled = rsssl_get_option('ssl_enabled') || is_ssl();
+            $scheme = $ssl_enabled ? 'https' : 'http';
+            return get_site_url(null, '', $scheme);
+        }
 
     }
 
