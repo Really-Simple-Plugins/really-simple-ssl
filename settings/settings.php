@@ -176,11 +176,13 @@ function rsssl_rest_api_fallback()
             $data = $_GET['data'] ?? false;
             $data = json_decode(stripcslashes($data));
             $data = (array)$data;
+            $nonce = isset($_GET['nonce']) ? sanitize_text_field($_GET['nonce']) : false;
             $id = isset($_GET['id']) ? sanitize_text_field($_GET['id']) : false;
             $state = isset($_GET['state']) ? sanitize_title($_GET['state']) : false;
             $request->set_param('test', $test);
             $request->set_param('state', $state);
             $request->set_param('id', $id);
+            $request->set_param('nonce', $nonce);
             //remove
             foreach ($_GET as $key => $value) {
                 $data[$key] = sanitize_text_field($value);
