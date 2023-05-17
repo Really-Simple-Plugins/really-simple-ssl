@@ -207,11 +207,11 @@ if ( ! function_exists('rsssl_add_manage_security_capability')){
         if( $role && !$role->has_cap( 'manage_security' ) ){
             $role->add_cap( 'manage_security' );
         }
+		add_action('shutdown', 'flush_rewrite_rules');
 	}
 
 	register_activation_hook( __FILE__, 'rsssl_add_manage_security_capability' );
 }
-
 if ( ! function_exists( 'rsssl_user_can_manage' ) ) {
 	/**
      * Check if user has required capability

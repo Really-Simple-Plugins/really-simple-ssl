@@ -9,7 +9,6 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-05-16T11:11:01+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: really-simple-ssl\n"
@@ -3034,11 +3033,6 @@ msgstr ""
 #: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:137
 #: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:151
 msgid "You have %s %d pending"
-msgstr ""
-
-#: settings/build/688.js:1
-#: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:140
-msgid "%d"
 msgstr ""
 
 #: settings/build/688.js:1
