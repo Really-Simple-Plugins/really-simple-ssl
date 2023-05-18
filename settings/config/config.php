@@ -89,6 +89,7 @@ function rsssl_fields( $load_values = true ) {
 			'disabled'         => false,
 			'required'         => false,
 			'default'          => false,
+			'tooltip'  => __( "Only enable if the default mixed content fixer does not fix your front-end mixed content.", 'really-simple-ssl' ),
 			'react_conditions' => [
 				'relation' => 'AND',
 				[
@@ -102,6 +103,7 @@ function rsssl_fields( $load_values = true ) {
 			'group_id' => 'general',
 			'type'     => 'checkbox',
 			'label'    => __( "Mixed content fixer - back-end", "really-simple-ssl" ),
+			'tooltip'  => __( "Only enable this if you experience mixed content in the admin environment of your WordPress website.", 'really-simple-ssl' ),
 			'disabled' => false,
 			'default'  => false,
 		],
