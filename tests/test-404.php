@@ -20,7 +20,13 @@ class TestUrls extends WP_UnitTestCase {
 
 		// Now loop through these files. Exclude /vendor and /node_modules as we only want links from the plugin itself and not from dependencies
 		foreach ( $php_files as $file ) {
+			$filepath = $file[0];
 			if ( strpos( $file[0], 'node_modules' ) !== false || strpos( $file[0], 'vendor' ) !== false ) {
+				continue;
+			}
+
+			$file_parts = explode( DIRECTORY_SEPARATOR, $filepath );
+			if ( in_array( 'wp-admin', $file_parts ) || in_array( 'wp-includes', $file_parts ) ) {
 				continue;
 			}
 
