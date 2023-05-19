@@ -21,7 +21,7 @@ class TestUrls extends WP_UnitTestCase {
 		// Now loop through these files. Exclude /vendor and /node_modules as we only want links from the plugin itself and not from dependencies
 		foreach ( $php_files as $file ) {
 
-			if ( strpos( $file[0], 'node_modules' ) !== false
+			if (    strpos( $file[0], 'node_modules' ) !== false
 			     || strpos( $file[0], 'vendor' ) !== false
 			     || strpos( $file[0], 'burst-statistics' ) !== false
 			     || strpos( $file[0], 'complianz' ) !== false
@@ -77,6 +77,7 @@ class TestUrls extends WP_UnitTestCase {
 				if ( $status_code === 404 ) {
 					$failed_urls[] = $link;
 					error_log( "URL returned 404: " . $link );
+					error_log("Originated from: " . $file[0] );
 				} else {
 					// This link works!
 //					error_log("Success for URL $link");
