@@ -20,13 +20,15 @@ class TestUrls extends WP_UnitTestCase {
 
 		// Now loop through these files. Exclude /vendor and /node_modules as we only want links from the plugin itself and not from dependencies
 		foreach ( $php_files as $file ) {
-			$filepath = $file[0];
-			if ( strpos( $file[0], 'node_modules' ) !== false || strpos( $file[0], 'vendor' ) !== false ) {
-				continue;
-			}
 
-			$file_parts = explode( DIRECTORY_SEPARATOR, $filepath );
-			if ( in_array( 'wp-admin', $file_parts ) || in_array( 'wp-includes', $file_parts ) ) {
+			if ( strpos( $file[0], 'node_modules' ) !== false
+			     || strpos( $file[0], 'vendor' ) !== false
+			     || strpos( $file[0], 'burst-statistics' ) !== false
+			     || strpos( $file[0], 'complianz' ) !== false
+			     || strpos( $file[0], 'vendor' ) !== false
+			     || strpos( $file[0], 'wp-admin' ) !== false
+			     || strpos( $file[0], 'wp-includes' ) !== false )
+			{
 				continue;
 			}
 
@@ -42,7 +44,7 @@ class TestUrls extends WP_UnitTestCase {
 					$link = preg_replace( '/^([^?]+)\??.*$/', '$1', $link );
 					// Finally, replace all characters that should not be present in an URL, leaving only the following: forward /, word characters (\w), a period (.), a colon (:), a hyphen (-), or a hash symbol (#) with an empty string.
 					// This is done to strip artifacts from extracted URLS in PHP code, e.g. " ' < > \ etc.
-					$link   = trim( preg_replace( '/[^\/\w.:#\-]/', '', $link ) );
+					$link   = trailingslashit( trim( preg_replace( '/[^\/\w.:#\-]/', '', $link ) ) );
 					$urls[] = $link;
 				}
 			}
