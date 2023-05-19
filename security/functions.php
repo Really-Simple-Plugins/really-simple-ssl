@@ -542,6 +542,47 @@ function rsssl_get_ips(): array {
 }
 
 /**
+ * Processes an IP or range and calls the appropriate function.
+ *
+ * This function determines whether the provided input is an IP address or an IP range,
+ * and then calls the appropriate function accordingly.
+ *
+ * @param $ip
+ *
+ * @return array Returns an array with the results of the checks.
+ */
+function rsssl_check_ip_address( $ip ) {
+	$results = [];
+
+	// Ensure the input is an array
+	if (!is_array($ip)) {
+		$ip = [$ip];
+	}
+
+	foreach ( $ip as $item ) {
+		// Remove any white space around the input
+		$item = trim($item);
+		// Validate the input to determine whether it's an IP or a range
+		if ( filter_var( $item, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6 ) ) {
+			// It's a valid IP address
+			 $results[$item] = rsssl_get_ip_addresses_from_db( [ $item ] );
+		} elseif ( strpos( $item, '/' ) !== false ) {
+			// It's a range, but we need to make sure it's in CIDR notation
+			list( $subnet, $bits ) = explode( '/', $item );
+			if ( is_numeric( $bits ) && $bits >= 0 && $bits <= 128 && filter_var( $subnet, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6 ) ) {
+				// It's a valid range in CIDR notation
+				$results[$item] = rsssl_insert_ip_ranges( [ $item ] );
+			}
+		} else {
+			// The input was not a valid IP or a valid range in CIDR notation
+			throw new InvalidArgumentException( 'Invalid IP or range format. If range, it must be in CIDR notation.' );
+		}
+	}
+
+	return $results;
+}
+
+/**
  * Checks if a given IP address is within a specified IP range.
  *
  * This function supports both IPv4 and IPv6 addresses, and can handle ranges in
@@ -645,26 +686,30 @@ function rsssl_ip_in_range( $ip , $range ): bool {
  *
  * @return int Status code representing the check result: 10 for allowlist hit, 20 for blocklist hit, 0 for no hits.
  */
-function rsssl_check_ip_addresses( array $ip_addresses ): int {
+function rsssl_get_ip_addresses_from_db(array $ip_addresses): int {
 	global $wpdb;
 
 	// Fetch explicit IP addresses from the database tables
-	$allowlist_ips = $wpdb->get_col( "SELECT ip_address FROM rsssl_allowlist" );
-	$blocklist_ips = $wpdb->get_col( "SELECT ip_address FROM rsssl_blocklist" );
+	$allowlist_ips = $wpdb->get_col(
+		$wpdb->prepare("SELECT ip_address FROM rsssl_allowlist WHERE ip_address IN (%s)", $ip_addresses)
+	);
+	$blocklist_ips = $wpdb->get_col(
+		$wpdb->prepare("SELECT ip_address FROM rsssl_blocklist WHERE ip_address IN (%s)", $ip_addresses)
+	);
 
-	foreach ( $ip_addresses as $ip) {
+	foreach ($ip_addresses as $ip) {
 		// Check against allowlist
-		if ( in_array( $ip, $allowlist_ips, true ) ) {
+		if (in_array($ip, $allowlist_ips, true)) {
 			// If IP is in the allowlist, store it and return status code immediately
-			$wpdb->insert( 'rsssl_allowlist', [ 'ip_address' => $ip ] );
+			$wpdb->insert('rsssl_allowlist', ['ip_address' => $ip]);
 
 			return 0; // Allowlist hit status code
 		}
 
 		// If IP is not in the allowlist, check against blocklist
-		if ( in_array( $ip, $blocklist_ips, true ) ) {
+		if (in_array($ip, $blocklist_ips, true)) {
 			// If IP is in the blocklist, store it and return status code
-			$wpdb->insert( 'rsssl_blocklist', [ 'ip_address' => $ip ] );
+			$wpdb->insert('rsssl_blocklist', ['ip_address' => $ip]);
 
 			return 1; // Blocklist hit status code
 		}
@@ -683,7 +728,7 @@ function rsssl_check_ip_addresses( array $ip_addresses ): int {
  *
  * @return int Status code representing the check result: 10 for allowlist hit, 20 for blocklist hit, 0 for no hits.
  */
-function rsssl_check_ip_ranges( array $ip_addresses ): int {
+function rsssl_insert_ip_ranges( array $ip_addresses ): int {
 	global $wpdb;
 
 	// Fetch IP ranges from the database tables

@@ -2,8 +2,9 @@
 
 class RssslTestIPFunctions extends WP_UnitTestCase {
 
-	private $ip_in_range_test_cases;
-	private $get_ips_test_cases;
+	protected $ip_in_range_test_cases;
+	protected $get_ips_test_cases;
+	protected $check_ip_test_cases_normal_and_range;
 
 	public function setUp(): void {
 		parent::setUp();
@@ -21,6 +22,10 @@ class RssslTestIPFunctions extends WP_UnitTestCase {
 			[ 'ip' => '192.0.2.1', 'range' => '192.0.2.0', 'expected' => false ],
 			[ 'ip' => '2001:db8::', 'range' => '2001:db8::', 'expected' => true ],
 			[ 'ip' => '2001:db8::1', 'range' => '2001:db8::', 'expected' => false ],
+			[ 'ip' => '2001:db8::1', 'range' => '2001:db8::/64', 'expected' => true ],
+			[ 'ip' => '2001:db8:0:1::', 'range' => '2001:db8::/64', 'expected' => false ],
+			[ 'ip' => '2001:db8::1', 'range' => '2001:db8::/128', 'expected' => true ],
+			[ 'ip' => '2001:db8::2', 'range' => '2001:db8::/128', 'expected' => false ],
 			[ 'ip' => 'not an IP address', 'range' => '192.0.2.0/24', 'expected' => 'InvalidArgumentException' ],
 			[ 'ip' => '192.0.2.0', 'range' => 'not a range', 'expected' => 'InvalidArgumentException:' ],
 			[ 'ip' => 'not an IP address', 'range' => 'not a range', 'expected' => 'InvalidArgumentException' ],
@@ -89,7 +94,39 @@ class RssslTestIPFunctions extends WP_UnitTestCase {
 			],
 		];
 
+		$this->check_ip_test_cases_normal_and_range = [
+			[ 'ip' => ['192.0.2.0'], 'expected' => ['192.0.2.0' => true] ],
+			[ 'ip' => ['2001:db8::'], 'expected' => ['2001:db8::' => true] ],
+			[ 'ip' => ['192.0.2.0/24'], 'expected' => ['192.0.2.0/24' => true] ],
+			[ 'ip' => ['2001:db8::/32'], 'expected' => ['2001:db8::/32' => true] ],
+			[ 'ip' => ['not an IP address'], 'expected' => 'InvalidArgumentException' ],
+			[ 'ip' => ['192.0.2.0/24', '2001:db8::/32'], 'expected' => ['192.0.2.0/24' => true, '2001:db8::/32' => true] ],
+			[ 'ip' => ['not an IP address/24'], 'expected' => 'InvalidArgumentException' ],
+		];
+
 		require_once __DIR__ . '/../security/functions.php';
+	}
+
+	public function test_rsssl_check_ip() {
+		foreach ( $this->check_ip_test_cases_normal_and_range as $test_case ) {
+			// Given
+			$ip = $test_case['ip'];
+
+			// Handle InvalidArgumentException
+			if ( $test_case['expected'] == 'InvalidArgumentException') {
+				$this->expectException(InvalidArgumentException::class);
+
+				// When
+				rsssl_check_ip_address( $ip );
+				continue;
+			}
+
+			// When
+			$result = rsssl_check_ip_address( $ip );
+
+			// Then
+			$this->assertEquals( $test_case['expected'], $result );
+		}
 	}
 
 	public function test_rsssl_get_ips() {
