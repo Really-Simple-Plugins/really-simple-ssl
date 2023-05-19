@@ -137,7 +137,7 @@ const Vulnerabilities = () => {
                             {__("You have %s %d pending", "really-simple-ssl").replace("%s", updates).replace("%d", updateWord)}
                         </p>
                         <a href={rsssl_settings.plugins_url + "?plugin_status=upgrade"}
-                           style={linkStyle}>{capitalizeFirstLetter(__('%d', 'really-simple-ssl').replace('%d', updateWord))}</a>
+                           style={linkStyle}>{capitalizeFirstLetter(updateWord)}</a>
                     </div>
 
                 </>

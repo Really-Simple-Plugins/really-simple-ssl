@@ -1,11 +1,11 @@
 import { __ } from '@wordpress/i18n';
 import {
-    useState, useEffect,
+    useEffect,
 } from '@wordpress/element';
 import useProgress from "./ProgressData";
 
-const ProgressHeader = (props) => {
-    const {setFilter, filter, fetchFilter, notices} = useProgress();
+const ProgressHeader = () => {
+    const {setFilter, filter, fetchFilter, notices, error } = useProgress();
 
     useEffect( () => {
         fetchFilter();
@@ -16,6 +16,12 @@ const ProgressHeader = (props) => {
         if (filter==='all' || filter==='remaining') {
             setFilter(filter);
         }
+    }
+
+    if  (error ) {
+        return (
+            <></>
+        );
     }
 
     let all_task_count = 0;

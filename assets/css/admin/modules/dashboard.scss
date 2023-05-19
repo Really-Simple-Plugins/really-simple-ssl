@@ -123,7 +123,6 @@
       }
     }
     .rsssl-score-snippet {
-      white-space: nowrap;
       max-width: 100%;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -134,6 +133,11 @@
       border-radius: var(--rsp-border-radius-xs);
       color: var(--rsp-text-color);
       text-align: left;
+      &.rsssl-hover {
+        height:initial;
+        //white-space: nowrap;
+        line-height:initial;
+      }
 
       &.rsssl-test-inactive {
         background-color: var(--rsp-grey-200);

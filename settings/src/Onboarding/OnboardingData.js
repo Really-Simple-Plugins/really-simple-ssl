@@ -168,13 +168,13 @@ const useOnboardingData = create(( set, get ) => ({
     },
     activateSSLNetworkWide: () => {
         if (get().networkProgress>=100) {
-            get().updateItemStatus('completed', 'success', 'ssl_enabled');
             set({
+                sslEnabled: true,
                 networkActivationStatus:'completed'
             });
             return;
         }
-        set((state) => ({processing: true}));
+        set(() => ({processing: true}));
         rsssl_api.runTest('activate_ssl_networkwide' ).then( ( response ) => {
             if (response.success) {
                 set({
@@ -182,8 +182,9 @@ const useOnboardingData = create(( set, get ) => ({
                     processing:false,
                 });
                 if (response.progress>=100) {
-                    get().updateItemStatus('completed', 'success', 'ssl_enabled');
+
                     set({
+                        sslEnabled: true,
                         networkActivationStatus:'completed'
                     });
                 }

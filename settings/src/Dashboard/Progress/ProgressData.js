@@ -20,7 +20,7 @@ const useProgress = create(( set, get ) => ({
         }
     },
     getProgressData: async () => {
-        const {percentage, text, notices} = await rsssl_api.runTest('progressData', 'refresh').then( ( response ) => {
+        const {percentage, text, notices, error } = await rsssl_api.runTest('progressData', 'refresh').then( ( response ) => {
             return response;
         });
 
@@ -29,6 +29,7 @@ const useProgress = create(( set, get ) => ({
             percentageCompleted:percentage,
             progressText:text,
             progressLoaded:true,
+            error:error,
         }))
     },
     dismissNotice: async (noticeId) => {
