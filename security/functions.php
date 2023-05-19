@@ -560,7 +560,7 @@ function rsssl_get_ips(): array {
  *
  * @return bool True if the IP address is within the range, false otherwise.
  */
-function rsssl_ip_in_range( string $ip, string $range ): bool {
+function rsssl_ip_in_range( $ip , $range ): bool {
 	// Check if the IP address is properly formatted
 	if ( ! filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6 ) ) {
 		throw new InvalidArgumentException( 'Invalid IP address format.' );

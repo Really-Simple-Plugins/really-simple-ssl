@@ -1,6 +1,6 @@
 <?php
 
-class RssslCodeExecutionTest extends WP_UnitTestCase {
+class RssslTestIPFunctions extends WP_UnitTestCase {
 
 	private $ip_in_range_test_cases;
 	private $get_ips_test_cases;
@@ -22,7 +22,7 @@ class RssslCodeExecutionTest extends WP_UnitTestCase {
 			[ 'ip' => '2001:db8::', 'range' => '2001:db8::', 'expected' => true ],
 			[ 'ip' => '2001:db8::1', 'range' => '2001:db8::', 'expected' => false ],
 			[ 'ip' => 'not an IP address', 'range' => '192.0.2.0/24', 'expected' => 'InvalidArgumentException' ],
-			[ 'ip' => '192.0.2.0', 'range' => 'not a range', 'expected' => 'InvalidArgumentException' ],
+			[ 'ip' => '192.0.2.0', 'range' => 'not a range', 'expected' => 'InvalidArgumentException:' ],
 			[ 'ip' => 'not an IP address', 'range' => 'not a range', 'expected' => 'InvalidArgumentException' ],
 		];
 
@@ -106,11 +106,16 @@ class RssslCodeExecutionTest extends WP_UnitTestCase {
 	}
 
 	public function test_rsssl_ip_in_range() {
-		$test_cases = $this->ip_in_range_test_cases;;
+		$test_cases = $this->ip_in_range_test_cases;
 		foreach ( $test_cases as $test_case ) {
 			// Given
 			$ip    = $test_case['ip'];
 			$range = $test_case['range'];
+
+			// Handle InvalidArgumentException
+			if ( $test_case['expected'] == 'InvalidArgumentException') {
+				$this->expectException(InvalidArgumentException::class);
+			}
 
 			// When
 			$inRange = rsssl_ip_in_range( $ip, $range );
