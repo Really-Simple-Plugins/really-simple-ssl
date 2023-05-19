@@ -77,7 +77,6 @@ class TestUrls extends WP_UnitTestCase {
 				if ( $status_code === 404 ) {
 					$failed_urls[] = $link;
 					error_log( "URL returned 404: " . $link );
-					error_log("Originated from: " . $file );
 					error_log(print_r( $file , true ) );
 				} else {
 					// This link works!
