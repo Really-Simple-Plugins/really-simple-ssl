@@ -330,6 +330,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
             }
 		    //first we get all installed plugins
 		    $installed_plugins = get_plugins();
+
 		    $installed_themes = wp_get_themes();
 		    //we flatten the array
 		    $update = get_site_transient('update_themes');
@@ -362,7 +363,8 @@ if (!class_exists("rsssl_vulnerabilities")) {
 		    $installed_plugins = array_map( static function ($plugin, $slug) use ($update) {
   			    $plugin['type'] = 'plugin';
 			    $plugin['update_available'] = isset($update->response[$slug]);
-                $plugin['Slug'] = $slug;
+                $plugin['Slug'] = dirname($slug);
+                $plugin['File'] = $slug;
 			    return $plugin;
 		    }, $installed_plugins, array_keys($installed_plugins) );
 
@@ -388,7 +390,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 			    //if there are no components, we return
 			    if ( !empty($components) ) {
 				    foreach ($components as $component) {
-					    if ($plugin['TextDomain'] === $component->slug) {
+					    if ($plugin['Slug'] === $component->slug) {
 						    if (!empty($component->vulnerabilities) && $plugin['folder_exists'] === true) {
 							    $plugin['vulnerable'] = true;
 							    $plugin['risk_level'] = $this->get_highest_vulnerability($component->vulnerabilities);
@@ -578,7 +580,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
          */
         private function check_vulnerability($plugin_file)
         {
-            return $this->workable_plugins[ $plugin_file ]['vulnerable'] ?? false;
+            return $this->workable_plugins[ dirname($plugin_file) ]['vulnerable'] ?? false;
         }
 
 	    /**
@@ -601,12 +603,12 @@ if (!class_exists("rsssl_vulnerabilities")) {
          */
         private function check_severity($plugin_file)
         {
-            return $this->workable_plugins[$plugin_file]['risk_level'];
+            return $this->workable_plugins[dirname($plugin_file)]['risk_level'];
         }
 
         private function getIdentifier($plugin_file)
         {
-            return $this->workable_plugins[$plugin_file]['rss_identifier'];
+            return $this->workable_plugins[dirname($plugin_file)]['rss_identifier'];
         }
         /* End of plug-in page add-on */
 
@@ -833,11 +835,12 @@ if (!class_exists("rsssl_vulnerabilities")) {
             //first we get the manifest file
             $manifest = $this->getManifest();
             $vulnerabilities = [];
-            foreach ($installed_plugins as $plugin) {
-                $plugin = $plugin['TextDomain'];
-                $url = self::RSSSL_SECURITY_API . 'plugin/' . $plugin . '.json';
+            foreach ($installed_plugins as $file => $plugin) {
+                $slug = dirname($file);
+	            $installed_plugins[ $file ]['Slug'] = $slug;
+                $url = self::RSSSL_SECURITY_API . 'plugin/' . $slug . '.json';
                 //if the plugin is not in the manifest, we skip it
-                if (!in_array($plugin, (array)$manifest)) {
+                if (!in_array($slug, (array)$manifest)) {
                     continue;
                 }
                 $data = $this->download($url);
@@ -1041,8 +1044,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
             $active_components = [];
             foreach ($components as $component) {
                 foreach ($active_plugins as $active_plugin) {
-                    // new rework for logic
-                    if (isset($component->slug) && $component->slug === $active_plugin['TextDomain']) {
+                    if (isset($component->slug) && $component->slug === $active_plugin['Slug']) {
                         //now we filter out the relevant vulnerabilities
                         $component->vulnerabilities = $this->filter_vulnerabilities($component->vulnerabilities, $active_plugin['Version']);
                         //if we have vulnerabilities, we add the component to the active components or when the plugin is closed
@@ -1172,12 +1174,11 @@ if (!class_exists("rsssl_vulnerabilities")) {
                     $operator_to = $vulnerability->operator_to;
                     //we now check if the version is between the two versions
                     if (version_compare($Version, $version_from, $operator_from) && version_compare($Version, $version_to, $operator_to)) {
-                        $filtered_vulnerabilities[] = $vulnerability;
+	                    $filtered_vulnerabilities[] = $vulnerability;
                     }
                 }
 
             }
-
             return $filtered_vulnerabilities;
         }
 
