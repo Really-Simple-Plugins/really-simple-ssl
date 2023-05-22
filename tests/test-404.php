@@ -44,7 +44,7 @@ class TestUrls extends WP_UnitTestCase {
 					$link = preg_replace( '/^([^?]+)\??.*$/', '$1', $link );
 					// Finally, replace all characters that should not be present in an URL, leaving only the following: forward /, word characters (\w), a period (.), a colon (:), a hyphen (-), or a hash symbol (#) with an empty string.
 					// This is done to strip artifacts from extracted URLS in PHP code, e.g. " ' < > \ etc.
-					$link   = trailingslashit( trim( preg_replace( '/[^\/\w.:#\-]/', '', $link ) ) );
+					$link   = trim( preg_replace( '/[^\/\w.:#\-]/', '', $link ) );
 					if ( filter_var($link, FILTER_VALIDATE_URL) ) {
 						$urls[] = $link;
 					}
