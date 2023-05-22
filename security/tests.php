@@ -437,7 +437,7 @@ function rsssl_src_contains_wp_version() {
 		try {
 			$wp_version = get_bloginfo( 'version' );
 			$web_source = "";
-			$response = wp_remote_get( home_url() );
+			$response = wp_remote_get( home_url( "token=".time() ) );
 			if ( ! is_wp_error( $response ) ) {
 				if ( is_array( $response ) ) {
 					$status     = wp_remote_retrieve_response_code( $response );
