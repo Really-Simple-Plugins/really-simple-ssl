@@ -32,7 +32,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
          */
         public $interval = 12 * HOUR_IN_SECONDS;
         public $update_count = 0;
-        
+
         protected $risk_naming = [];
 
         /**
@@ -543,7 +543,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 }
                 if ( $this->is_quarantined($plugin_file)) {
 	                echo sprintf( '<a class="rsssl-btn-vulnerable rsssl-critical" target="_blank" href="%s">%s</a>',
-		                'https://really-simple-ssl.com/manual/vulnerabilities#quarantine' , __("Quarantined","really-simple-ssl") );
+		                'https://really-simple-ssl.com/instructions/about-vulnerabilities/#quarantine' , __("Quarantined","really-simple-ssl") );
                 }
             }
         }
@@ -1011,7 +1011,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
                             theme_element.insertAdjacentHTML('afterbegin', `
                               <div class="${divClass}">
                                 <div><span class="dashicons dashicons-info"></span>
-                                    <a href="https://really-simple-ssl.com/manual/vulnerabilities#quarantine" target="_blank">${text}</a>
+                                    <a href="https://really-simple-ssl.com/instructions/about-vulnerabilities/#quarantine" target="_blank">${text}</a>
                                 </div>
                               </div>
                             `);
@@ -1367,7 +1367,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 'message' => $message . ' ' .
                              __('Based on your settings, Really Simple SSL will take appropriate action, or you will need to solve it manually.','really-simple-ssl') .' '.
                              sprintf(__('Get more information from the Really Simple SSL dashboard on %s'), $this->domain() ),
-                'url' => "https://really-simple-ssl.com/manual/vulnerabilities/",
+                'url' => "https://really-simple-ssl.com/instructions/about-vulnerabilities/",
             ];
         }
 
