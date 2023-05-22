@@ -108,7 +108,7 @@ class rsssl_onboarding {
 					rsssl_update_option($h, 1);
 				}
 				$response = [
-					'next_action' => 'none',
+					'next_action' => 'completed',
 					'success' => true,
 				];
 		}

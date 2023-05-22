@@ -1160,7 +1160,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
             $filtered_vulnerabilities = array();
             foreach ($vulnerabilities as $vulnerability) {
                 //if fixed_in value is Not fixed we
-                if ($vulnerability->fixed_in !== 'not fixed') {
+                if ( $vulnerability->fixed_in !== 'not fixed' ) {
                     if (version_compare($Version, $vulnerability->fixed_in, '<')) {
                         $filtered_vulnerabilities[] = $vulnerability;
                     }
