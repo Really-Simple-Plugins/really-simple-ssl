@@ -1,6 +1,6 @@
 <?php
 
-class TestUrls extends WP_UnitTestCase {
+class RssslTestUrls extends WP_UnitTestCase {
 
 	public function test_external_links() {
 		// Set the base directory path where your plugin files are located
@@ -82,13 +82,9 @@ class TestUrls extends WP_UnitTestCase {
 					error_log(print_r( $file , true ) );
 				} else {
 					// This link works!
-//					error_log("Success for URL $link");
 				}
 			}
 		}
-
-		error_log( "Failed URLs" );
-		error_log( print_r( $failed_urls, true ) );
 
 		// Check if failed_urls is empty. Is it empty? Congratulations! Test passed!
 		if ( empty( $failed_urls ) ) {
