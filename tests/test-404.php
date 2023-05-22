@@ -91,8 +91,8 @@ class TestUrls extends WP_UnitTestCase {
 		error_log( print_r( $failed_urls, true ) );
 
 		// Check if failed_urls is empty. Is it empty? Congratulations! Test passed!
-		if ( empty( $failed_urls ) ) {
-			$this->pass( "Test passed! No URLs result in a 404 error" );
+		if ( ! empty( $failed_urls ) ) {
+			$this->assertEmpty($failed_urls);
 		} else {
 			// Fail the test if any URLs did not pass our checks
 			$this->fail( "Test Failed! Failed to fetch the following URLs:\n" . implode( "\n", $failed_urls ) );
