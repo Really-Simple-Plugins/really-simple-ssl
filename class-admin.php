@@ -26,7 +26,7 @@ class rsssl_admin
         register_deactivation_hook( __DIR__ . "/" . $this->plugin_filename, array($this, 'deactivate'));
 	    add_action( 'admin_init', array($this, 'add_privacy_info') );
 	    add_action( 'admin_init', array($this, 'maybe_dismiss_review_notice') );
-	    add_action( 'rsssl_weekly_cron', array($this, 'clear_admin_notices_cache') );
+	    add_action( 'rsssl_daily_cron', array($this, 'clear_admin_notices_cache') );
 
 	    //add the settings page for the plugin
 	    add_action('admin_enqueue_scripts', array($this, 'enqueue_assets'));
@@ -1722,12 +1722,11 @@ class rsssl_admin
         if ( is_array($notices) ) {
 	        foreach ( $notices as $id => $notice ){
 		        $notice = $notice['output'];
-				//if there is an open status, we change error to warning.
-		        $class = ( $notice['status'] === 'open' )? 'warning':'error';
-		        $more_info = $notice['url'] ?? false;
-		        $dismiss_id = isset($notice['dismissible']) && $notice['dismissible'] ? $id : false;
-
-                if ( $notice['msg'] ) {
+		        if ( isset($notice['msg']) ) {
+                    //if there is an open status, we change error to warning.
+                    $class = ( $notice['status'] === 'open' )? 'warning':'error';
+                    $more_info = $notice['url'] ?? false;
+                    $dismiss_id = isset($notice['dismissible']) && $notice['dismissible'] ? $id : false;
 	                echo $this->notice_html( $class.' '.$id, $notice['msg'], $more_info, $dismiss_id);
                 }
 	        }
