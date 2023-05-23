@@ -205,7 +205,8 @@ if (!class_exists("rsssl_vulnerabilities")) {
 			    ),
 			    'description' => sprintf(
 				    '<p>%s</p>',
-				    sprintf(__( '%s vulnerabilities have been detected. Please check the vulnerabilities overview to see if it is low, medium, high or critical, and take appropriate action.' ,'really-simple-ssl' ), $total)
+				    sprintf(_n( '%s vulnerability has been detected.', '%s vulnerabilities have been detected.', $total, 'really-simple-ssl' ), number_format_i18n( $total )) . ' '.
+				    __( 'Please check the vulnerabilities overview to see if it is low, medium, high or critical, and take appropriate action.' ,'really-simple-ssl' )
 			    ),
 			    'actions'     => sprintf(
 				    '<p><a href="%s" target="_blank" rel="noopener">%s</a></p>',
