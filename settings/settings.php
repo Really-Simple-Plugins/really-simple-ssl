@@ -430,11 +430,12 @@ function rsssl_other_plugins_data($slug = false)
     }
     $plugins = array(
         [
-            'slug' => 'burst-statistics',
             'constant_free' => 'burst_version',
-            'wordpress_url' => 'https://wordpress.org/plugins/burst-statistics/',
-            'upgrade_url' => 'https://burst-statistics.com/?src=rsssl-plugin',
-            'title' => 'Burst Statistics - ' . __("Self-hosted, Privacy-friendly analytics tool", "really-simple-ssl"),
+            'constant_premium' => 'burst_pro',
+            'upgrade_url' => 'https://burst-statistics.com/pricing?src=rsssl-plugin',
+            'search' => 'burst+statistics+complianz',
+            'url' => 'https://wordpress.org/plugins/burst-statistics/',
+            'title' => 'Burst Statistics - '. __("Self-hosted and privacy-friendly analytics tool.", 'really-simple-ssl'),
         ],
         [
             'slug' => 'complianz-gdpr',
