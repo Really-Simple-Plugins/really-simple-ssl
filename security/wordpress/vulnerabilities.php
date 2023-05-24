@@ -213,7 +213,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 				    esc_url( __( add_query_arg(array('page'=>'really-simple-security#settings/vulnerabilities/vulnerabilities-overview'), rsssl_admin_url() ) ) ),
 				    __( 'View vulnerabilities', 'really-simple-ssl' )
 			    ),
-			    'test' => '',
+			    'test' => 'rsssl_vulnerabilities',
 		    );
         }
 
