@@ -430,11 +430,11 @@ function rsssl_other_plugins_data($slug = false)
     }
     $plugins = array(
         [
+            'slug' => 'burst-statistics',
             'constant_free' => 'burst_version',
             'constant_premium' => 'burst_pro',
+            'wordpress_url' => 'https://wordpress.org/plugins/burst-statistics/',
             'upgrade_url' => 'https://burst-statistics.com/pricing?src=rsssl-plugin',
-            'search' => 'burst+statistics+complianz',
-            'url' => 'https://wordpress.org/plugins/burst-statistics/',
             'title' => 'Burst Statistics - '. __("Self-hosted and privacy-friendly analytics tool.", 'really-simple-ssl'),
         ],
         [
