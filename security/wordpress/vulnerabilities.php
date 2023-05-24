@@ -1162,6 +1162,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
             $filtered_vulnerabilities = array();
             foreach ($vulnerabilities as $vulnerability) {
                 //if fixed_in contains a version, and the current version is higher than the fixed_in version, we skip it as fixed.
+                //This needs to be a positive check only, as the fixed_in value is less accurate than the version_from and version_to values
 	            if ($vulnerability->fixed_in !== 'not fixed' && version_compare($Version, $vulnerability->fixed_in, '>=') ) {
 		            continue;
 	            }
