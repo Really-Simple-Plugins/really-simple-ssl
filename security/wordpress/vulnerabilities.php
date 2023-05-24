@@ -1161,21 +1161,19 @@ if (!class_exists("rsssl_vulnerabilities")) {
         {
             $filtered_vulnerabilities = array();
             foreach ($vulnerabilities as $vulnerability) {
-                //if fixed_in value is Not fixed we
-                if ($vulnerability->fixed_in !== 'not fixed') {
-                    if (version_compare($Version, $vulnerability->fixed_in, '<')) {
-                        $filtered_vulnerabilities[] = $vulnerability;
-                    }
-                } else {
-                    //we have the fields version_from and version_to and their needed operators
-                    $version_from = $vulnerability->version_from;
-                    $version_to = $vulnerability->version_to;
-                    $operator_from = $vulnerability->operator_from;
-                    $operator_to = $vulnerability->operator_to;
-                    //we now check if the version is between the two versions
-                    if (version_compare($Version, $version_from, $operator_from) && version_compare($Version, $version_to, $operator_to)) {
-	                    $filtered_vulnerabilities[] = $vulnerability;
-                    }
+                //if fixed_in contains a version, and the current version is higher than the fixed_in version, we skip it as fixed.
+	            if ($vulnerability->fixed_in !== 'not fixed' && version_compare($Version, $vulnerability->fixed_in, '>=') ) {
+		            continue;
+	            }
+
+                //we have the fields version_from and version_to and their needed operators
+                $version_from = $vulnerability->version_from;
+                $version_to = $vulnerability->version_to;
+                $operator_from = $vulnerability->operator_from;
+                $operator_to = $vulnerability->operator_to;
+                //we now check if the version is between the two versions
+                if (version_compare($Version, $version_from, $operator_from) && version_compare($Version, $version_to, $operator_to)) {
+                    $filtered_vulnerabilities[] = $vulnerability;
                 }
 
             }
