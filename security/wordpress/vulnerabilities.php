@@ -162,6 +162,60 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	        ];
         }
 
+	    /**
+         * Get site health notice for vulnerabilities
+	     * @return array
+	     */
+	    public function get_site_health_notice()
+	    {
+            if (!rsssl_admin_logged_in()){
+                return [];
+            }
+
+		    $this->cache_installed_plugins();
+		    $risks = $this->count_risk_levels();
+            if (count($risks) === 0) {
+	            return array(
+		            'label'       => __( 'No known vulnerabilities detected', 'really-simple-ssl' ),
+		            'status'      => 'good',
+		            'badge'       => array(
+			            'label' => __('Security'),
+			            'color' => 'blue',
+		            ),
+		            'description' => sprintf(
+			            '<p>%s</p>',
+			            __( 'No known vulnerabilities detected.', 'really-simple-ssl' )
+		            ),
+		            'actions'     => '',
+		            'test'        => 'health_test',
+	            );
+            }
+            $total = 0;
+		    foreach ($this->risk_levels as $risk_level => $value) {
+                $total += $risks[ $risk_level ] ?? 0;
+            }
+
+		    return array(
+			    'label'       => __( 'Vulnerabilities detected','really-simple-ssl' ),
+			    'status'      => 'critical',
+			    'badge'       => array(
+				    'label' => __( 'Security' ),
+				    'color' => 'blue',
+			    ),
+			    'description' => sprintf(
+				    '<p>%s</p>',
+				    sprintf(_n( '%s vulnerability has been detected.', '%s vulnerabilities have been detected.', $total, 'really-simple-ssl' ), number_format_i18n( $total )) . ' '.
+				    __( 'Please check the vulnerabilities overview for more information and take appropriate action.' ,'really-simple-ssl' )
+			    ),
+			    'actions'     => sprintf(
+				    '<p><a href="%s" target="_blank" rel="noopener">%s</a></p>',
+				    esc_url( __( add_query_arg(array('page'=>'really-simple-security#settings/vulnerabilities/vulnerabilities-overview'), rsssl_admin_url() ) ) ),
+				    __( 'View vulnerabilities', 'really-simple-ssl' )
+			    ),
+			    'test' => 'rsssl_vulnerabilities',
+		    );
+        }
+
         public function show_help_notices($notices)
         {
             $this->cache_installed_plugins();
@@ -1161,6 +1215,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
         {
             $filtered_vulnerabilities = array();
             foreach ($vulnerabilities as $vulnerability) {
+
                 //if fixed_in value is Not fixed we
                 if ($vulnerability->fixed_in !== 'not fixed') {
                     if (version_compare($Version, $vulnerability->fixed_in, '<')) {
@@ -1177,7 +1232,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	                    $filtered_vulnerabilities[] = $vulnerability;
                     }
                 }
-
             }
             return $filtered_vulnerabilities;
         }
