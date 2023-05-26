@@ -9,8 +9,6 @@ if ( !class_exists("rsssl_site_health") ) {
 			}
 
 			add_filter( 'site_status_tests', array($this, 'health_check' ), 1, 10 );
-			add_filter( 'site_status_tests', array( $this, 'add_rsssl_debug_log_notice' ), 1, 20 );
-
 			self::$_this = $this;
 		}
 
@@ -27,39 +25,36 @@ if ( !class_exists("rsssl_site_health") ) {
 		public function health_check( $tests ) {
 			unset($tests['async']['https_status']);
 			if ( !rsssl_get_option('dismiss_all_notices') ) {
-				$tests['direct']['rsssl-health'] = array(
+				$tests['direct']['rsssl_ssl_health'] = array(
 					'label' => __( 'SSL Status Test' , 'really-simple-ssl'),
-					'test'  => array($this, "health_test"),
+					'test'  => array($this, "ssl_tests"),
 				);
 
-				$tests['direct']['rsssl-headers'] = array(
+				$tests['direct']['headers_test'] = array(
 					'label' => __( 'Security Headers Test' , 'really-simple-ssl' ),
 					'test'  => array($this, "headers_test"),
 				);
 
-			}
+				unset( $tests['direct']['debug_enabled'] );
+				if ( rsssl_is_debugging_enabled() && rsssl_debug_log_value_is_default() ) {
+					$tests['direct']['rsssl_debug_log'] = array(
+						'test' => array( $this, "site_health_debug_log_test" ),
+					);
+				}
 
-			return $tests;
-		}
+				if ( defined( 'WP_DEBUG' ) && WP_DEBUG && defined( 'WP_DEBUG_DISPLAY' ) && WP_DEBUG_DISPLAY ) {
+					$tests['direct']['rsssl_debug_display'] = array(
+						'test' => array( $this, "site_health_debug_display_test" ),
+					);
+				}
 
+				if ( rsssl_get_option( 'enable_vulnerability_scanner' ) ) {
+					$vulnerabilities                          = new rsssl_vulnerabilities();
+					$tests['direct']["rsssl_vulnerabilities"] = array(
+						'test' => [ $vulnerabilities, "get_site_health_notice" ],
+					);
+				}
 
-		/**
-		 * Add our own WP_DEBUG_LOG notice
-		 * @return array
-		 */
-		public function add_rsssl_debug_log_notice( $tests ) {
-
-			unset( $tests['direct']['debug_enabled'] );
-			if ( rsssl_is_debugging_enabled() && rsssl_debug_log_value_is_default() ) {
-				$tests['direct']['rsssl_debug_log'] = array(
-					'test' => array( $this, "rsssl_site_health_debug_log_test" ),
-				);
-			}
-
-			if ( defined('WP_DEBUG') && WP_DEBUG && defined('WP_DEBUG_DISPLAY') && WP_DEBUG_DISPLAY ) {
-				$tests['direct']['rsssl_debug_display'] = array(
-					'test' => array( $this, "rsssl_site_health_debug_display_test" ),
-				);
 			}
 
 			return $tests;
@@ -69,7 +64,7 @@ if ( !class_exists("rsssl_site_health") ) {
 		 * Generate the WP_DEBUG notice
 		 *
 		 */
-		public function rsssl_site_health_debug_log_test() {
+		public function site_health_debug_log_test() {
 			$result = array(
 				'label'       => __( 'Your site is set to log errors to a potentially public file' ),
 				'status'      => 'critical',
@@ -89,7 +84,7 @@ if ( !class_exists("rsssl_site_health") ) {
 					/* translators: Accessibility text. */
 					__( '(opens in a new tab)' )
 				),
-				'test' => '',
+				'test' => 'rsssl_debug_log',
 			);
 
 			return $result;
@@ -99,7 +94,7 @@ if ( !class_exists("rsssl_site_health") ) {
 		 * Explain users about risks of debug display
 		 *
 		 */
-		public function rsssl_site_health_debug_display_test() {
+		public function site_health_debug_display_test() {
 			$result = array(
 				'label'       => __( 'Your site is set to display errors on your website', 'really-simple-ssl' ),
 				'status'      => 'critical',
@@ -119,7 +114,7 @@ if ( !class_exists("rsssl_site_health") ) {
 					/* translators: Accessibility text. */
 					__( '(opens in a new tab)' )
 				),
-				'test' => '',
+				'test' => 'rsssl_debug_display',
 			);
 
 			return $result;
@@ -168,7 +163,7 @@ if ( !class_exists("rsssl_site_health") ) {
 		 * Some basic SSL health checks
 		 * @return array
 		 */
-		public function health_test() {
+		public function ssl_tests() {
 			$url = add_query_arg(array('page' => 'really-simple-security'), rsssl_admin_url() );
 
 			$result = array(
@@ -183,7 +178,7 @@ if ( !class_exists("rsssl_site_health") ) {
 					__( 'You have set a 301 redirect to SSL. This is important for SEO purposes', 'really-simple-ssl' )
 				),
 				'actions'     => '',
-				'test'        => 'health_test',
+				'test'        => 'rsssl_ssl_health',
 			);
 
 			if ( !rsssl_get_option('ssl_enabled') ) {
