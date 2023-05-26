@@ -53,7 +53,7 @@ class rsssl_firewall_manager {
 	 *
 	 */
 	public function insert_advanced_header_file() {
-		if ( !rsssl_user_can_manage() && !defined( 'RSSSL_LEARNING_MODE' ) ) {
+        if ( ( ! rsssl_user_can_manage() && !defined('RSSSL_LEARNING_MODE' ) ) || defined('RSSSL_DO_NOT_EDIT_ADVANCED_HEADERS' ) ) {
 			return;
 		}
 
