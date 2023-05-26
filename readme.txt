@@ -112,7 +112,6 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 == Changelog ==
 = 7.0.4 =
 * Fix: feedback on hardening features enable action not showing as enabled, props @rtpHarry
-* Improvement: Burst Pro auto installer 
 
 = 7.0.3 =
 * Fix: fix false positives on some plugins
