@@ -6,7 +6,7 @@ Requires at least: 5.8
 License: GPL2
 Tested up to: 6.2
 Requires PHP: 7.2
-Stable tag: 7.0.3
+Stable tag: 7.0.4
 
 The easiest way to improve security! Leverage your SSL certificate and protect your website visitors.
 
@@ -110,6 +110,10 @@ The plugin checks your certificate before enabling, but if, for example, you mig
 If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions](https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/) instead.
 
 == Changelog ==
+= 7.0.4 =
+* Fix: feedback on hardening features enable action not showing as enabled, props @rtpHarry
+* Improvement: Burst Pro auto installer 
+
 = 7.0.3 =
 * Fix: fix false positives on some plugins
 * Improvement: vulnerability notifications in site health, if notifications are enabled.
