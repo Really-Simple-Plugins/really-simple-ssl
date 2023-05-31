@@ -58,11 +58,7 @@ function rsssl_get_chunk_translations() {
 	$files = scandir(rsssl_path . 'settings/build');
 	$json_translations = [];
 	foreach ($files as $file) {
-		//get relative path to this file
-		$relative_path =  'settings/build/' . $file;
-		//create md5 hash of the relative path. The hash is used by wordpress to create the json file name.
-		$hash = md5($relative_path);
-		$chunk_handle = 'rsssl-chunk-'.$hash;
+		$chunk_handle = 'rsssl-chunk-'.$file;
         //temporarily register the script, so we can get a translations object.
 		wp_register_script( $chunk_handle, plugins_url('build/'.$file, __FILE__), [], true );
         $localeData = load_script_textdomain( $chunk_handle, 'really-simple-ssl' );

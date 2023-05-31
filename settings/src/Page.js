@@ -56,7 +56,6 @@ const Page = () => {
         }
         if (selectedMainMenuItem === 'dashboard' && !DashboardPage ){
             import ( "./Dashboard/DashboardPage").then(async ({default: DashboardPage}) => {
-                //let localeData = getLocaleData('really-simple-ssl');
                 setDashboardPage(() => DashboardPage);
             });
         }
@@ -116,7 +115,6 @@ const Page = () => {
 
             {Modal && <Modal/>}
             {
-
                     <>
                         <Header />
                         <div className={"rsssl-content-area rsssl-grid rsssl-" + selectedMainMenuItem}>
