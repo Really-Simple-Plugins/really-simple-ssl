@@ -443,7 +443,7 @@ function rsssl_other_plugins_data($slug = false)
             'constant_premium' => 'cmplz_premium',
             'wordpress_url' => 'https://wordpress.org/plugins/complianz-gdpr/',
             'upgrade_url' => 'https://complianz.io/pricing?src=rsssl-plugin',
-            'title' => __("Complianz - Cookie Consent Management as it should be", "really-simple-ssl"),
+            'title' => __("Complianz - Consent Management as it should be", "really-simple-ssl"),
         ],
         [
             'slug' => 'complianz-terms-conditions',

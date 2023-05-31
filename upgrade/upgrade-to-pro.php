@@ -158,7 +158,7 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 					'disabled' => '',
 					'button_text' => __("Install", "really-simple-ssl"),
 					'slug' => 'complianz-gdpr',
-					'description' => __('Configure your Cookie Notice, Cookie Consent and Cookie Policy with our Wizard and Cookie Scan. Supports GDPR, DSGVO, TTDSG, LGPD, POPIA, RGPD, CCPA and PIPEDA.', "really-simple-ssl"),
+					'description' => __('Configure your Cookie Notice, Consent Management and Cookie Policy with our Wizard and Cookie Scan. Supports GDPR, DSGVO, TTDSG, LGPD, POPIA, RGPD, CCPA and PIPEDA.', "really-simple-ssl"),
 					'install_url' => 'complianz+gdpr+POPIA&tab=search&type=term',
 				];
 				if ($current_plugin==='complianz-gdpr') {
