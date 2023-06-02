@@ -154,7 +154,7 @@ class Rsssl_Limit_Login_Attempts {
 			// Validate the input to determine whether it's an IP or a range
 			if ( filter_var( $item, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6 ) ) {
 				// It's a valid IP address
-				$results[ $item ] = $this->check_against_ips( [ $ip ] );
+				$results[ $item ] = $this->check_against_ips( [ $item ] );
 			}
 
 			if ( strpos( $item, '/' ) !== false ) {
@@ -162,7 +162,7 @@ class Rsssl_Limit_Login_Attempts {
 				[ $subnet, $bits ] = explode( '/', $item );
 				if ( is_numeric( $bits ) && $bits >= 0 && $bits <= 128 && filter_var( $subnet, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6 ) ) {
 					// It's a valid range in CIDR notation
-					$results[ $item ] = $this->check_against_ranges( [ $ip ] );
+					$results[ $item ] = $this->check_against_ranges( [ $item ] );
 				}
 			} else {
 				// The input was not a valid IP or a valid range in CIDR notation
