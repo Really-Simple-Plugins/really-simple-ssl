@@ -485,3 +485,5 @@ class Rsssl_Limit_Login_Attempts {
 	}
 
 }
+
+new Rsssl_Limit_Login_Attempts();
