@@ -95,8 +95,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         'folder'               => 'wordpress',
         'impact'               => 'medium',
         'risk'                 => 'medium',
-        'option_id'            => 'enable_limit_login_attempts',
-	    'admin_only'           => true,
+        'option_id'            => 'limit_login_attempts',
     ),
 ) );
 
