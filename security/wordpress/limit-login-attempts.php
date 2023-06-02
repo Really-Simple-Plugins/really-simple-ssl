@@ -20,7 +20,7 @@ class Rsssl_Limit_Login_Attempts {
 			return;
 		}
 
-		if ( get_option( 'rsssl_limit_login_attempts_db_version' ) !== rsssl_version ) {
+		if ( ! get_option( 'rsssl_limit_login_attempts_db_version' ) || get_option( 'rsssl_limit_login_attempts_db_version' ) != rsssl_version ) {
 
 			global $wpdb;
 
