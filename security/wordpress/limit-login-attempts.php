@@ -140,7 +140,7 @@ class Rsssl_Limit_Login_Attempts {
 		if ( $status === 'blocked' ) {
 			exit();
 		}
-		
+
 	}
 
 	/**
@@ -487,11 +487,11 @@ class Rsssl_Limit_Login_Attempts {
 	 * the cache for the corresponding IP cache key.
 	 *
 	 * @param string $table The table name ('rsssl_allowlist' or 'rsssl_blocklist').
-	 * @param string $ip The IP address or range.
+	 * @param string $ip    The IP address or range.
 	 *
 	 * @return void
 	 */
-	public function invalidate_cache( $table, $ip ): void {
+	public function invalidate_cache( string $table, string $ip ): void {
 
 		if ( $table === 'rsssl_allowlist' ) {
 			// Check if range or IP
