@@ -134,6 +134,15 @@ class Rsssl_Limit_Login_Attempts {
 		return array_values( array_unique( $ip_addresses ) );
 	}
 
+	public function check_request(){
+		$ips = $this->get_ip_address();
+		$status = $this->check_ip_address( $ips );
+		if ( $status === 'blocked' ) {
+			exit();
+		}
+		
+	}
+
 	/**
 	 * Processes an IP or range and calls the appropriate function.
 	 *
@@ -147,7 +156,7 @@ class Rsssl_Limit_Login_Attempts {
 	public function check_ip_address( $ip_addresses ): array {
 
 		$results = [];
-
+		$found_blocked_ip = false;
 		foreach ( $ip_addresses as $ip ) {
 			// Remove any white space around the input
 			$item = trim( $ip );
@@ -155,6 +164,13 @@ class Rsssl_Limit_Login_Attempts {
 			if ( filter_var( $item, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6 ) ) {
 				// It's a valid IP address
 				$results[ $item ] = $this->check_against_ips( [ $item ] );
+
+				$status = $this->get_ip_status([$item]);
+				if ( $status === 'allowed' ) {
+					return 'allowed';
+				} else if ($status === 'blocked') {
+					$found_blocked_ip = true;
+				}
 			}
 
 			if ( strpos( $item, '/' ) !== false ) {
@@ -163,12 +179,23 @@ class Rsssl_Limit_Login_Attempts {
 				if ( is_numeric( $bits ) && $bits >= 0 && $bits <= 128 && filter_var( $subnet, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6 ) ) {
 					// It's a valid range in CIDR notation
 					$results[ $item ] = $this->check_against_ranges( [ $item ] );
+					$status = $this->get_ip_range_status([$item]);
+					if ( $status === 'allowed' ) {
+						return 'allowed';
+					} else if ($status === 'blocked') {
+						$found_blocked_ip = true;
+					}
 				}
 			} else {
+				continue;
 				// The input was not a valid IP or a valid range in CIDR notation
-				throw new InvalidArgumentException( 'Invalid IP or range format. If range, it must be in CIDR notation.' );
 			}
 		}
+
+		if ($found_blocked_ip) {
+			return 'blocked';
+		}
+		return 'none';
 
 		return $results;
 	}
