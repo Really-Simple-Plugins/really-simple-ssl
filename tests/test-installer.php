@@ -54,7 +54,6 @@ class RssslInstallerTest extends WP_UnitTestCase {
             ob_start();
             $installer = new rsssl_installer( $plugin );
             $this->assertTrue( $installer->download_plugin(), 'Download of ' . $plugin . ' plugin failed.' );
-            ob_get_clean();
             $this->assertTrue( $installer->plugin_is_downloaded(), $plugin . ' plugin is not downloaded.' );
             $this->assertTrue( $installer->activate_plugin(), 'Activation of ' . $plugin . ' plugin failed.' );
             $this->assertTrue( $installer->plugin_is_activated(), $plugin . ' plugin is not activated.' );
