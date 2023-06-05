@@ -1,4 +1,5 @@
 <?php
+
 defined('ABSPATH') or die();
 class rsssl_firewall_manager {
 	private static $_this;
@@ -91,8 +92,13 @@ class rsssl_firewall_manager {
 		$wpconfig_path = $this->find_wp_config_path();
 		$wpconfig      = file_get_contents( $wpconfig_path );
 		if ( is_writable( $wpconfig_path ) && strpos( $wpconfig, 'advanced-headers.php' ) === false ) {
-            $rule = 'if ( file_exists(' . "'$this->wp_content_dir" . "/advanced-headers.php') ) { " . "\n";
-            $rule .= "\t" . 'require_once ' . "'$this->wp_content_dir" .  "/advanced-headers.php';" . "\n" . "}";
+            if ( defined('WP_CONTENT_DIR') ) {
+                $rule = "if ( file_exists( WP_CONTENT_DIR . '/advanced-headers.php') ) {\n";
+                $rule .= "\trequire_once WP_CONTENT_DIR . '/advanced-headers.php';\n}";
+            } else {
+                $rule = "if ( file_exists(dirname(__FILE__) . '/wp-content/advanced-headers.php') ) {\n";
+                $rule .= "\trequire_once dirname(__FILE__) . '/wp-content/advanced-headers.php';\n}";
+            }
 
 			//if RSSSL comment is found, insert after
 			$rsssl_comment = '//END Really Simple SSL Server variable fix';
