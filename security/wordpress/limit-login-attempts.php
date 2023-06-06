@@ -4,7 +4,10 @@ class Rsssl_Limit_Login_Attempts {
 
 	public function __construct() {
 		$this->create_db_tables();
-	}
+        add_action('init', array($this, 'check_request'));
+        # @todo dit is de juiste hook
+//        add_action('login_init', array($this, 'check_request'));
+    }
 
 	/**
 	 * Create the tables to store the IP addresses and ranges in.
@@ -49,6 +52,24 @@ class Rsssl_Limit_Login_Attempts {
 
 		}
 	}
+
+    /**
+     *
+     * Process the request. Get the IP address(es) and check if they are present in the allowlist / blocklist.
+     *
+     * @return void
+     */
+    public function check_request(): void
+    {
+        $ips = $this->get_ip_address();
+        $status = $this->check_ip_address( $ips );
+        if ( $status === 'blocked' || $status === 'not_found' ) {
+            // @todo uncomment when done testing
+//            exit();
+        }
+
+        // Allowed, process logic
+    }
 
 	/**
 	 * Retrieves a list of unique, validated IP addresses from various headers.
@@ -131,16 +152,10 @@ class Rsssl_Limit_Login_Attempts {
 		}
 
 		// Remove duplicate IP addresses from the array and reindex the array
+        error_log("========= new entry ===========");
+        error_log("Detected IP addresses:");
+        error_log(print_r(array_values( array_unique( $ip_addresses ) ), true));
 		return array_values( array_unique( $ip_addresses ) );
-	}
-
-	public function check_request(){
-		$ips = $this->get_ip_address();
-		$status = $this->check_ip_address( $ips );
-		if ( $status === 'blocked' ) {
-			exit();
-		}
-
 	}
 
 	/**
@@ -151,11 +166,11 @@ class Rsssl_Limit_Login_Attempts {
 	 *
 	 * @param $ip_addresses
 	 *
-	 * @return array Returns a status representing the check result: 'allowed' for allowlist hit, 'blocked' for blocklist hit, 'not found' for no hits.
+	 * @return string Returns a status representing the check result: 'allowed' for allowlist hit, 'blocked' for blocklist hit, 'not found' for no hits.
 	 */
-	public function check_ip_address( $ip_addresses ): array {
+	public function check_ip_address( $ip_addresses ): string
+    {
 
-		$results = [];
 		$found_blocked_ip = false;
 		foreach ( $ip_addresses as $ip ) {
 			// Remove any white space around the input
@@ -163,42 +178,32 @@ class Rsssl_Limit_Login_Attempts {
 			// Validate the input to determine whether it's an IP or a range
 			if ( filter_var( $item, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6 ) ) {
 				// It's a valid IP address
-				$results[ $item ] = $this->check_against_ips( [ $item ] );
+				$status = $this->check_against_ips([$item]);
+                // If not found in regular IP's, check against ranges
+                if ( $status === 'not_found' ) {
+                    $status = $this->get_ip_range_status([$item]);
+                }
 
-				$status = $this->get_ip_status([$item]);
-				if ( $status === 'allowed' ) {
+                if ( $status === 'allowed' ) {
+                    error_log("IP $item allowed");
 					return 'allowed';
-				} else if ($status === 'blocked') {
-					$found_blocked_ip = true;
 				}
-			}
 
-			if ( strpos( $item, '/' ) !== false ) {
-				// It's a range, but we need to make sure it's in CIDR notation
-				[ $subnet, $bits ] = explode( '/', $item );
-				if ( is_numeric( $bits ) && $bits >= 0 && $bits <= 128 && filter_var( $subnet, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6 ) ) {
-					// It's a valid range in CIDR notation
-					$results[ $item ] = $this->check_against_ranges( [ $item ] );
-					$status = $this->get_ip_range_status([$item]);
-					if ( $status === 'allowed' ) {
-						return 'allowed';
-					} else if ($status === 'blocked') {
-						$found_blocked_ip = true;
-					}
-				}
-			} else {
-				continue;
-				// The input was not a valid IP or a valid range in CIDR notation
-			}
+                if ($status === 'blocked') {
+                    error_log("IP $item blocked");
+                    $found_blocked_ip = true;
+                }
+            }
 		}
 
 		if ($found_blocked_ip) {
-			return 'blocked';
+            return 'blocked';
 		}
-		return 'none';
 
-		return $results;
-	}
+        error_log("IP $item not found in block or allowlist");
+        return 'not_found';
+
+    }
 
 	/**
 	 * Checks if a given IP address is within a specified IP range.
@@ -222,7 +227,8 @@ class Rsssl_Limit_Login_Attempts {
 	public function ip_in_range( string $ip, string $range ): bool {
 		// Check if the IP address is properly formatted
 		if ( ! filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6 ) ) {
-			throw new InvalidArgumentException( 'Invalid IP address format.' );
+			error_log("$ip not in $range");
+            return false;
 		}
 		// Check if the range is in CIDR notation
 		if ( strpos( $range, '/' ) !== false ) {
@@ -230,7 +236,8 @@ class Rsssl_Limit_Login_Attempts {
 			[ $subnet, $bits ] = explode( '/', $range );
 
 			if ( ! is_numeric( $bits ) || $bits < 0 || $bits > 128 ) {
-				throw new InvalidArgumentException( 'Invalid range format. The bit count in CIDR notation must be a number between 0 and 128.' );
+                error_log("$range invalid CIDR notation");
+                return false;
 			}
 
 			// Check if the subnet is a valid IPv4 address
@@ -282,12 +289,14 @@ class Rsssl_Limit_Login_Attempts {
 			}
 
 			// The subnet was not a valid IP address
-			throw new InvalidArgumentException( 'Invalid range format. The subnet in CIDR notation must be a valid IP address.' );
-		}
+            error_log("$range invalid CIDR notation");
+            return false;
+        }
 
 		if ( ! filter_var( $range, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6 ) ) {
 			// The range was not in CIDR notation and was not a valid IP address
-			throw new InvalidArgumentException( 'Invalid range format. If not in CIDR notation, the range must be a valid IP address.' );
+            error_log("$range invalid CIDR notation");
+            return false;
 		}
 
 		// The range is not in CIDR notation, so we simply check if the IP equals the range
@@ -329,10 +338,12 @@ class Rsssl_Limit_Login_Attempts {
 		// Check the IP addresses
 		foreach ( $ip_addresses as $ip ) {
 			if ( in_array( $ip, $allowlist_ips, true ) ) {
+                error_log("$ip found as regular IP in allowlist");
 				return 'allowed';
 			}
 			if ( in_array( $ip, $blocklist_ips, true ) ) {
-				return 'blocked';
+                error_log("$ip found as regular IP in blocklist");
+                return 'blocked';
 			}
 		}
 
@@ -349,7 +360,7 @@ class Rsssl_Limit_Login_Attempts {
 	 *
 	 * @return string|null Status representing the check result: 'allowed' for allowlist hit, 'blocked' for blocklist hit, 'not found' for no hits.
 	 */
-	public function check_against_ranges( array $ip_addresses ): string {
+	public function get_ip_range_status( array $ip_addresses ): string {
 
 		global $wpdb;
 
@@ -375,11 +386,13 @@ class Rsssl_Limit_Login_Attempts {
 		foreach ( $ip_addresses as $ip ) {
 			foreach ( $allowlist_ranges as $range ) {
 				if ( $this->ip_in_range( $ip, $range ) ) {
+                    error_log("$ip found in $range allowlist range");
 					return 'allowed';
 				}
 			}
 			foreach ( $blocklist_ranges as $range ) {
 				if ( $this->ip_in_range( $ip, $range ) ) {
+                    error_log("$ip found in $range blocklist range");
 					return 'blocked';
 				}
 			}
@@ -403,7 +416,7 @@ class Rsssl_Limit_Login_Attempts {
 
 		$wpdb->insert(
 			$wpdb->prefix . 'rsssl_allowlist',
-			[ 'ip_or_range' => $ip ],
+			[ 'ip_or_range' => filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE ) ],
 			[ '%s ']
 		);
 
@@ -425,7 +438,7 @@ class Rsssl_Limit_Login_Attempts {
 
 		$wpdb->insert(
 			$wpdb->prefix . 'rsssl_blocklist',
-			[ 'ip_or_range' => $ip ],
+			[ 'ip_or_range' => filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE ) ],
 			[ '%s ']
 		);
 
@@ -448,7 +461,7 @@ class Rsssl_Limit_Login_Attempts {
 
 		$wpdb->delete(
 			$wpdb->prefix . 'rsssl_allowlist',
-			[ 'ip_or_range' => $ip ],
+			[ 'ip_or_range' => filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE ) ],
 			[ '%s ']
 		);
 
@@ -471,7 +484,7 @@ class Rsssl_Limit_Login_Attempts {
 
 		$wpdb->delete(
 			$wpdb->prefix . 'rsssl_blocklist',
-			[ 'ip_or_range' => $ip ],
+			[ 'ip_or_range' => filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE ) ],
 			[ '%s ']
 		);
 
