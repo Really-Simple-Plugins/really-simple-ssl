@@ -90,8 +90,8 @@ class rsssl_firewall_manager {
 		$wpconfig      = file_get_contents( $wpconfig_path );
 		if ( is_writable( $wpconfig_path ) && strpos( $wpconfig, 'advanced-headers.php' ) === false ) {
             $default_path = ABSPATH; // second element in the array is a boolean flag
-            $path = apply_filters('rsssl_path_filter', $default_path);
-            if ( ! has_filter('rsssl_path_filter') ) {
+            $path = apply_filters('rsssl_advanced_headers_path_filter', $default_path);
+            if ( ! has_filter('rsssl_advanced_headers_path_filter') ) {
                 // use default
                 $rule = 'if (file_exists( ABSPATH . "wp-content/advanced-headers.php")) {' . "\n";
                 $rule .= "\t" . 'require_once ABSPATH . "wp-content/advanced-headers.php";' . "\n" . '}';
