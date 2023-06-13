@@ -61,8 +61,10 @@ class rsssl_firewall_manager {
 			return;
 		}
 
-		$wpcontent_dir  = ABSPATH . 'wp-content';
-		$advanced_headers_file = $wpcontent_dir . '/advanced-headers.php';
+        $wpcontent_dir  = ABSPATH . 'wp-content';
+        $wpcontent_dir = apply_filters('rsssl_advanced_headers_path_filter', $wpcontent_dir);
+        $advanced_headers_file = $wpcontent_dir . '/advanced-headers.php';
+
 		$rules    = apply_filters('rsssl_firewall_rules', '');
 		//no rules? remove the file
 		if ( empty(trim($rules) ) ) {
@@ -82,7 +84,7 @@ class rsssl_firewall_manager {
 		$contents .= "//RULES START\n".$rules;
 
 		// write to advanced-header.php file
-		if ( is_writable( ABSPATH . 'wp-content' ) ) {
+		if ( is_writable( $wpcontent_dir ) ) {
 			file_put_contents( $advanced_headers_file, $contents );
 		}
 
