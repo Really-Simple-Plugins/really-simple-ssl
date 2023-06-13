@@ -83,15 +83,25 @@ class rsssl_firewall_manager {
 
 		// write to advanced-header.php file
 		if ( is_writable( ABSPATH . 'wp-content' ) ) {
-			file_put_contents( ABSPATH . "wp-content/advanced-headers.php", $contents );
+			file_put_contents( $advanced_headers_file, $contents );
 		}
 
 		$wpconfig_path = $this->find_wp_config_path();
 		$wpconfig      = file_get_contents( $wpconfig_path );
 		if ( is_writable( $wpconfig_path ) && strpos( $wpconfig, 'advanced-headers.php' ) === false ) {
-			$rule = 'if ( file_exists(ABSPATH . "wp-content/advanced-headers.php") ) { ' . "\n";
-			$rule .= "\t" . 'require_once ABSPATH . "wp-content/advanced-headers.php";' . "\n" . "}";
-			//if RSSSL comment is found, insert after
+            $default_path = ABSPATH; // second element in the array is a boolean flag
+            $path = apply_filters('rsssl_path_filter', $default_path);
+            if ( ! has_filter('rsssl_path_filter') ) {
+                // use default
+                $rule = 'if (file_exists( ABSPATH . "wp-content/advanced-headers.php")) {' . "\n";
+                $rule .= "\t" . 'require_once ABSPATH . "wp-content/advanced-headers.php";' . "\n" . '}';
+            } else {
+                // use filter output as path
+                $rule = 'if (file_exists(\'' . $path . '/advanced-headers.php\')) {' . "\n";
+                $rule .= "\t" . 'require_once \'' . $path . '/advanced-headers.php\';' . "\n" . '}';
+            }
+
+            //if RSSSL comment is found, insert after
 			$rsssl_comment = '//END Really Simple SSL Server variable fix';
 			if ( strpos($wpconfig, $rsssl_comment)!==false ) {
 				$pos = strrpos($wpconfig, $rsssl_comment);
