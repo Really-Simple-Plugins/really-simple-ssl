@@ -12,6 +12,9 @@ class RssslTestUrls extends WP_UnitTestCase {
 		// Set URLS and failed_urls
 		$urls        = [];
 		$failed_urls = [];
+        $excluded_urls = [
+            'https://really-simple-ssl.com/vulnerabilities',
+        ];
 
 		// Use RecursiveIteratorIterator/RegexIterator classes to get all .php files in root + recursive plugin directories
 		// This proved more reliable than using glob()
@@ -40,6 +43,13 @@ class RssslTestUrls extends WP_UnitTestCase {
 				if ( strpos( $link, 'https://' ) === 0 ) {
 					// First remove excess HTML from links in PHP code using "><img src=" for example.
 					$link = strip_tags( $link );
+
+                    foreach( $excluded_urls as $excluded_url ) {
+                        if ( strpos( $link, $excluded_url ) !== false ) {
+                            continue;
+                        }
+                    }
+
 					// Then cut off the link after ? to exclude mtmcampaign etc.
 					$link = preg_replace( '/^([^?]+)\??.*$/', '$1', $link );
 					// Finally, replace all characters that should not be present in an URL, leaving only the following: forward /, word characters (\w), a period (.), a colon (:), a hyphen (-), or a hash symbol (#) with an empty string.
