@@ -58,7 +58,6 @@ if ( ! class_exists( 'rsssl_front_end' ) ) {
 			if (! in_array( $new_domain, $domains, true ) ) {
 				$domains[] = $new_domain;
 			}
-			error_log(print_r($domains, true));
 			return $domains;
 		}
 
