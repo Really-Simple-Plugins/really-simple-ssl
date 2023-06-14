@@ -1919,7 +1919,7 @@ class rsssl_admin
                         'icon' => 'warning',
                         'admin_notice' => true,
                         'plusone' => true,
-                        'dismissible' => false,
+                        'dismissible' => true,
                         'url' => 'https://really-simple-ssl.com/knowledge-base/htaccess-wp-config-files-not-writable/',
                     ),
                 ),
