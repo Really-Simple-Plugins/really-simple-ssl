@@ -46,7 +46,7 @@ class RssslTestUrls extends WP_UnitTestCase {
 
                     foreach( $excluded_urls as $excluded_url ) {
                         if ( strpos( $link, $excluded_url ) !== false ) {
-                            continue;
+                            continue 2;
                         }
                     }
 
