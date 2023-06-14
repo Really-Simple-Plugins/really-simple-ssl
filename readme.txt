@@ -6,7 +6,7 @@ Requires at least: 5.8
 License: GPL2
 Tested up to: 6.2
 Requires PHP: 7.2
-Stable tag: 7.0.4
+Stable tag: 7.0.5
 
 The easiest way to improve security! Leverage your SSL certificate and protect your website visitors.
 
@@ -110,6 +110,12 @@ The plugin checks your certificate before enabling, but if, for example, you mig
 If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions](https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/) instead.
 
 == Changelog ==
+= 7.0.5 =
+* June 14th 2023
+* Improvement: notice informing about the new free vulnerability detection feature
+* Improvement: improved the php redirect method
+* Improvement: make the wp-config.php not writable notice dismissable
+
 = 7.0.4 =
 * Fix: feedback on hardening features enable action not showing as enabled, props @rtpHarry
 
