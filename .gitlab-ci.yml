@@ -52,20 +52,31 @@ before_script:
 
   # Zip current branch to allow it to be installed using wp-cli
   - zip -r really-simple-ssl.zip .
-  # Now test both an installation of the branche to test (contained in the .zip file), plus an update from the live repo version to the branche to test
-  # Install, activate, deactivate and uninstall the current branch in our WordPress installation
+  # The goal here is to test an installation of a specific branch (which is contained in a .zip file), as well as an update from the live version of the plugin to the branch to test.
+
+  # Install the plugin from the .zip file of the current branch. This is the branch we're testing.
   - wp plugin install really-simple-ssl.zip --allow-root --force
+  # Activate the plugin that we just installed.
   - wp plugin activate really-simple-ssl --allow-root
+  # Deactivate the plugin. This might be done to simulate a user deactivating the plugin, or to ensure a clean state before testing other functionality.
   - wp plugin deactivate really-simple-ssl --allow-root
+  # Uninstall the plugin. This removes the plugin's files and data from the WordPress site.
   - wp plugin uninstall really-simple-ssl --allow-root
-  # Now test an upgrade
-  # As this is a free plugin, we can grab the current live version directly from the WordPress plugin repo using WP CLI
+  # Now we're going to test an upgrade. Since Really Simple SSL is a free plugin, we can install the current live version directly from the WordPress plugin repository.
+
+  # Install the live version of the plugin from the WordPress plugin repository.
   - wp plugin install really-simple-ssl --allow-root
+  # Activate the live version of the plugin.
   - wp plugin activate really-simple-ssl --allow-root
+  # Get the version of the live plugin and store it in a variable named OLD_VERSION.
   - export OLD_VERSION=$(wp plugin get really-simple-ssl --field=version --allow-root)
+  # Now install the version of the plugin from the .zip file again. This simulates updating the plugin from the live version to the new version contained in the .zip file.
   - wp plugin install really-simple-ssl.zip --allow-root --force
+  # Get the version of the newly updated plugin and store it in a variable named NEW_VERSION.
   - export NEW_VERSION=$(wp plugin get really-simple-ssl --field=version --allow-root)
+  # Deactivate the updated plugin.
   - wp plugin deactivate really-simple-ssl --allow-root
+  # Uninstall the updated plugin.
   - wp plugin uninstall really-simple-ssl --allow-root
 
 #  - if [ "$NEW_VERSION" != "$OLD_VERSION" ]; then echo "Update successful"; else echo "Update failed"; fi
