@@ -12,7 +12,7 @@ if ( ! class_exists( 'rsssl_front_end' ) ) {
         function __construct()
         {
             if (isset(self::$_this))
-                wp_die(sprintf(__('%s is a singleton class and you cannot create a second instance.', 'really-simple-ssl'), get_class($this)));
+                wp_die(sprintf('%s is a singleton class and you cannot create a second instance.', get_class($this)));
 
             self::$_this = $this;
 	        $this->ssl_enabled = rsssl_get_option('ssl_enabled');
@@ -82,8 +82,8 @@ if ( ! class_exists( 'rsssl_front_end' ) ) {
             if ( !is_ssl() && !(defined("rsssl_no_wp_redirect") && rsssl_no_wp_redirect) ) {
                 $redirect_url = "https://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
                 $redirect_url = apply_filters("rsssl_wp_redirect_url", $redirect_url);
-                wp_safe_redirect($redirect_url, 301, 'Really Simple SSL');
-                exit;
+	            wp_redirect($redirect_url);
+				exit;
             }
         }
     }
