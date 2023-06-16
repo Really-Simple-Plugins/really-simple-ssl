@@ -18,7 +18,7 @@ if ( ! class_exists( 'rsssl_front_end' ) ) {
 	        $this->ssl_enabled = rsssl_get_option('ssl_enabled');
 	        $this->wp_redirect = rsssl_get_option('redirect', 'redirect') === 'wp_redirect';
 			add_action( 'rest_api_init', array($this, 'wp_rest_api_force_ssl'), ~PHP_INT_MAX);
-	        add_filter( 'wp_safe_redirect_fallback', array($this, 'set_fallback_url'), 10, 2 );
+	        //add_filter( 'wp_safe_redirect_fallback', array($this, 'set_fallback_url'), 10, 2 );
 	        add_filter( 'allowed_redirect_hosts', array($this, 'add_alternative_domain'), 10, 2 );
         }
 
