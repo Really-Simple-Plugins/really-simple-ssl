@@ -11,7 +11,6 @@ class RSSSLDisableXMLRPCTest extends WP_UnitTestCase {
      */
     protected function setUp(): void {
         parent::setUp();
-        define('XMLRPC_REQUEST', true);
         require_once __DIR__ . '/../security/wordpress/disable-xmlrpc.php';
     }
 
