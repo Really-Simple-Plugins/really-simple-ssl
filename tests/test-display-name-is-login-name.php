@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Class RssslJavaScriptTest
+ *
+ * Test class for testing JavaScript code related to plugin functionality.
+ */
 class RssslJavaScriptTest extends WP_UnitTestCase {
 
     /**

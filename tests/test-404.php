@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * Class RssslTestUrls
+ *
+ * This class is responsible for testing external links within a plugin.
+ */
 class RssslTestUrls extends WP_UnitTestCase {
 
 	public function test_external_links() {

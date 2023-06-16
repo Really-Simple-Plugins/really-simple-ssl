@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * Class RSSSLDisableIndexingTest
+ *
+ * Test class for disabling indexing in the server configuration.
+ */
 class RSSSLDisableIndexingTest extends WP_UnitTestCase {
 
 	/**

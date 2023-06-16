@@ -52,6 +52,7 @@ before_script:
 
   # Zip current branch to allow it to be installed using wp-cli
   - zip -r really-simple-ssl.zip .
+  # Now test both an install of the branche to test (contained in the .zip file), plus an update from the live repo version to the branche to test
   # Install, activate, deactivate and uninstall the current branch in our WordPress installation
   - wp plugin install really-simple-ssl.zip --allow-root --force
   - wp plugin activate really-simple-ssl --allow-root
@@ -61,9 +62,13 @@ before_script:
   # As this is a free plugin, we can grab the current live version directly from the WordPress plugin repo using WP CLI
   - wp plugin install really-simple-ssl --allow-root
   - wp plugin activate really-simple-ssl --allow-root
+  - export OLD_VERSION=$(wp plugin get really-simple-ssl --field=version --allow-root)
   - wp plugin install really-simple-ssl.zip --allow-root --force
+  - export NEW_VERSION=$(wp plugin get really-simple-ssl --field=version --allow-root)
   - wp plugin deactivate really-simple-ssl --allow-root
   - wp plugin uninstall really-simple-ssl --allow-root
+
+#  - if [ "$NEW_VERSION" != "$OLD_VERSION" ]; then echo "Update successful"; else echo "Update failed"; fi
 
 variables:
   # Configure mysql service (https://hub.docker.com/_/mysql/)

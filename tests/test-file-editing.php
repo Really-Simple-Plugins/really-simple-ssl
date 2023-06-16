@@ -1,4 +1,10 @@
 <?php
+
+/**
+ * Class RssslFileEditingTest
+ *
+ * Test class for file editing functionality in WordPress.
+ */
 class RssslFileEditingTest extends WP_UnitTestCase {
 
     /**

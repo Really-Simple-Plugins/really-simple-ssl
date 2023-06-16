@@ -2,10 +2,24 @@
 
 require( 'class-installer.php' );
 
+/**
+ * This class handles the setup and test of Really Simple Plugins plugin installations.
+ *
+ * The class is responsible for defining the FS_METHOD if not already set,
+ * loading the WordPress environment, setting an active user, and activating
+ * necessary plugins. It also includes a method to test plugin installation.
+ */
+
 class RssslInstallerTest extends WP_UnitTestCase {
-	/**
-	 * @throws Exception
-	 */
+    /**
+     * Sets up the environment for plugin testing.
+     *
+     * This method handles the initialization of the FS_METHOD constant, loading
+     * the WordPress environment, setting an active user, and activating required
+     * plugins. It is designed to work both locally and in a pipeline.
+     *
+     * @return void
+     */
 	public function setUp(): void {
 		// Gitlab pipeline requires direct filesystem methods! Without FS_METHOD tests will fail
 		if ( ! defined('FS_METHOD') ) {
@@ -43,7 +57,16 @@ class RssslInstallerTest extends WP_UnitTestCase {
 
 	}
 
-	public function test_plugin_installation() {
+    /**
+    * Tests the installation of specific plugins.
+    *
+    * This method downloads, checks the download, activates, and checks the activation
+    * of the following plugins: 'burst-statistics', 'complianz-gdpr', and 'complianz-terms-conditions'.
+    * Any failure at each step results in an assertion error.
+    *
+    * @return void
+    */
+    public function test_plugin_installation() {
 
 		$burst_installer           = new rsssl_installer( 'burst-statistics' );
 		$complianz_gdpr_installer  = new rsssl_installer( 'complianz-gdpr' );

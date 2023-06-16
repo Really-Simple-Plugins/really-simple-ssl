@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Class RSSSLTestRenameAdminUser
+ *
+ * Test class for renaming the admin user in WordPress.
+ */
 class RSSSLTestRenameAdminUser extends WP_UnitTestCase {
 
     /**

@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Class RSSSLUserEnumerationTest
+ *
+ * Test class for preventing user enumeration in WordPress.
+ */
 class RSSSLUserEnumerationTest extends WP_UnitTestCase {
     public function setUp(): void {
         parent::setUp();

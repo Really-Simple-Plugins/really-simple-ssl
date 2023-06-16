@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * Class RssslCodeExecutionTest
+ *
+ * This class is responsible for testing if PHP execution is blocked in the /wp-content/uploads folder.
+ */
 class RssslCodeExecutionTest extends WP_UnitTestCase {
 
     /**

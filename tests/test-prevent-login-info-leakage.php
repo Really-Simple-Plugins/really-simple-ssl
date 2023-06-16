@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Class RssslPreventLoginInfoLeakageTest
+ *
+ * Test class for preventing login info leakage in WordPress.
+ */
 class RssslPreventLoginInfoLeakageTest extends WP_UnitTestCase {
 
     /**

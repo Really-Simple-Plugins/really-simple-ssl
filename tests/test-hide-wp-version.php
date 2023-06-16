@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Class RssslRemoveWPVersionTest
+ *
+ * Test class for removing WordPress version information.
+ */
 class RssslRemoveWPVersionTest extends WP_UnitTestCase {
 
     /**

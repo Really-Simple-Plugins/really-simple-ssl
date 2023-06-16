@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Class RssslUsersCanRegisterTest
+ *
+ * Test class for filtering the 'users_can_register' option in WordPress to disable user registration.
+ */
 class RssslUsersCanRegisterTest extends WP_UnitTestCase {
 
         /**

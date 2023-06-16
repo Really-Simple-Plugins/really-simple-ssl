@@ -11,6 +11,7 @@ class RSSSLDisableXMLRPCTest extends WP_UnitTestCase {
      */
     protected function setUp(): void {
         parent::setUp();
+        define('XMLRPC_REQUEST', true);
         require_once __DIR__ . '/../security/wordpress/disable-xmlrpc.php';
     }
 
@@ -22,9 +23,6 @@ class RSSSLDisableXMLRPCTest extends WP_UnitTestCase {
         $this->assertFalse(apply_filters('xmlrpc_enabled', true));
     }
 
-    /**
-     * Test if the 'rsd_link' action is removed from 'wp_head'
-     */
     /**
      * Test if the 'rsd_link' action is removed from 'wp_head'
      */
