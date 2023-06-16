@@ -4,6 +4,9 @@
  * Class RSSSLDisableXMLRPCTest
  *
  * Test class for disable-xmlrpc.php functions
+ *
+ * @package WordPress
+ * @subpackage Tests
  */
 class RSSSLDisableXMLRPCTest extends WP_UnitTestCase {
     /**

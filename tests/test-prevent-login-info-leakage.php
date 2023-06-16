@@ -4,6 +4,9 @@
  * Class RssslPreventLoginInfoLeakageTest
  *
  * Test class for preventing login info leakage in WordPress.
+ *
+ * @package WordPress
+ * @subpackage Tests
  */
 class RssslPreventLoginInfoLeakageTest extends WP_UnitTestCase {
 

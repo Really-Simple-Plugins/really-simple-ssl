@@ -8,6 +8,9 @@ require( 'class-installer.php' );
  * The class is responsible for defining the FS_METHOD if not already set,
  * loading the WordPress environment, setting an active user, and activating
  * necessary plugins. It also includes a method to test plugin installation.
+ *
+ * @package WordPress
+ * @subpackage Tests
  */
 
 class RssslInstallerTest extends WP_UnitTestCase {

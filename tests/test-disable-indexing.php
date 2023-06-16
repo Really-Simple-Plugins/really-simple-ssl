@@ -3,6 +3,9 @@
  * Class RSSSLDisableIndexingTest
  *
  * Test class for disabling indexing in the server configuration.
+ *
+ * @package WordPress
+ * @subpackage Tests
  */
 class RSSSLDisableIndexingTest extends WP_UnitTestCase {
 

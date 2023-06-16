@@ -4,6 +4,9 @@
  * Class RSSSLUserEnumerationTest
  *
  * Test class for preventing user enumeration in WordPress.
+ *
+ * @package WordPress
+ * @subpackage Tests
  */
 class RSSSLUserEnumerationTest extends WP_UnitTestCase {
     public function setUp(): void {

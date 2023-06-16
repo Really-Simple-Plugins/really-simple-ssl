@@ -4,6 +4,9 @@
  * Class RssslFileEditingTest
  *
  * Test class for file editing functionality in WordPress.
+ *
+ * @package WordPress
+ * @subpackage Tests
  */
 class RssslFileEditingTest extends WP_UnitTestCase {
 

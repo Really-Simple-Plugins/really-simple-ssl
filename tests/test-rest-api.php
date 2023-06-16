@@ -4,6 +4,9 @@
  * Class RSSSLAuthorizeRestApiRequestsTest
  *
  * Test class for authorize-rest-api-requests.php functions
+ *
+ * @package WordPress
+ * @subpackage Tests
  */
 class RSSSLAuthorizeRestApiRequestsTest extends WP_UnitTestCase {
     /**

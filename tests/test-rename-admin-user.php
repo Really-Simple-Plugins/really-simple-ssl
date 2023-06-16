@@ -4,6 +4,9 @@
  * Class RSSSLTestRenameAdminUser
  *
  * Test class for renaming the admin user in WordPress.
+ *
+ * @package WordPress
+ * @subpackage Tests
  */
 class RSSSLTestRenameAdminUser extends WP_UnitTestCase {
 

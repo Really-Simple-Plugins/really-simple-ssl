@@ -4,6 +4,9 @@
  * Class RssslRemoveWPVersionTest
  *
  * Test class for removing WordPress version information.
+ *
+ * @package WordPress
+ * @subpackage Tests
  */
 class RssslRemoveWPVersionTest extends WP_UnitTestCase {
 

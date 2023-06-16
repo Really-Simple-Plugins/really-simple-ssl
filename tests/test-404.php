@@ -1,10 +1,38 @@
 <?php
+
 /**
  * Class RssslTestUrls
  *
- * This class is responsible for testing external links within a plugin.
+ * This class extends WP_UnitTestCase and is responsible for testing external links
+ * within the plugin. It implements a single method that iterates through all PHP
+ * files in the plugin's directory, excluding certain directories (like vendor,
+ * node_modules, etc.), and checks if the external links within the plugin code are valid.
+ *
+ * @package WordPress
+ * @subpackage Tests
  */
+
 class RssslTestUrls extends WP_UnitTestCase {
+
+    /**
+     * test_external_links()
+     *
+     * This method tests external links contained in the plugin's PHP files. It first
+     * retrieves all PHP files excluding specific directories. Then, it parses each file
+     * for external links, validates them, and then makes an HTTP request to each link
+     * to ensure they're valid and don't return a 404 error. Links from the following
+     * domains are specifically tested: really-simple-ssl.com, scan.really-simple-ssl.com,
+     * complianz.io, really-simple-plugins.com, ziprecipes.net, and wordpress.org.
+     *
+     * Excluded URLs are defined in $excluded_urls array and they are ignored in the
+     * link check process. All failed URLs are logged and returned in the final test
+     * result. If no links fail, the test passes.
+     *
+     * Note: The function includes a delay (200-500ms) between each HTTP request to prevent
+     * overloading the servers.
+     *
+     * @return void
+     */
 
 	public function test_external_links() {
 		// Set the base directory path where your plugin files are located
