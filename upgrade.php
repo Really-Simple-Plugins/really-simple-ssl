@@ -173,7 +173,7 @@ function rsssl_upgrade() {
 	}
 
 	//don't clear on each update.
-	//RSSSL()->admin->clear_admin_notices_cache();
+	RSSSL()->admin->clear_admin_notices_cache();
 
 	//delete in future upgrade. We want to check the review notice dismissed as fallback still.
 	//delete_option( 'rlrsssl_options' );
