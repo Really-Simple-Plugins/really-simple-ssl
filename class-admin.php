@@ -2504,6 +2504,7 @@ class rsssl_admin
 			    $base = $matches[1];
 			    $class = $matches[2];
 			    $function = $matches[3];
+                error_log("validate function $base ()-> $class -> $function");
 			    $output = call_user_func( array( $base()->{$class}, $function ) );
 		    } else {
 			    $output = $func();
