@@ -52,7 +52,7 @@ if ( !function_exists('rsssl_admin_url')) {
 	 * @return string|null
 	 */
 	function rsssl_admin_url(){
-		return is_multisite() && is_network_admin() ? network_admin_url('settings.php') : admin_url("options-general.php");
+		return is_multisite() ? network_admin_url('settings.php') : admin_url("options-general.php");
 	}
 }
 
@@ -64,18 +64,16 @@ if ( !function_exists('rsssl_maybe_clear_transients')) {
 	 */
 	function rsssl_maybe_clear_transients( $field_id, $field_value, $prev_value, $field_type ) {
 		if ( $field_id === ' mixed_content_fixer' && $field_value ) {
-			delete_transient( 'rsssl_can_use_curl_headers_check' );
 			delete_transient( 'rsssl_mixed_content_fixer_detected' );
 			RSSSL()->admin->mixed_content_fixer_detected();
 		}
-		delete_transient('rsssl_admin_user_count');
 		//no change
 		if ( $field_value === $prev_value ) {
 			return;
 		}
 
 		if ( $field_id === 'disable_http_methods' ) {
-			delete_transient( 'rsssl_http_methods_allowed' );
+			delete_option( 'rsssl_http_methods_allowed' );
 			rsssl_http_methods_allowed();
 		}
 		if ( $field_id === 'xmlrpc' ) {
@@ -91,11 +89,11 @@ if ( !function_exists('rsssl_maybe_clear_transients')) {
 			rsssl_code_execution_allowed();
 		}
 		if ( $field_id === 'hide_wordpress_version' ) {
-			delete_transient( 'rsssl_wp_version_detected' );
+			delete_option( 'rsssl_wp_version_detected' );
 			rsssl_src_contains_wp_version();
 		}
 		if ( $field_id === 'rename_admin_user' ) {
-			wp_cache_delete('rsssl_admin_user_count');
+			delete_transient('rsssl_admin_user_count');
 			rsssl_has_admin_user();
 		}
 
@@ -335,6 +333,55 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 }
 
 /**
+ * Store warning blocks for later use in the mailer
+ *
+ * @param array $changed_fields
+ *
+ * @return void
+ */
+function rsssl_gather_warning_blocks_for_mail( array $changed_fields ){
+	if (!rsssl_user_can_manage() ) {
+		return;
+	}
+
+	if ( !rsssl_get_option('send_notifications_email') ) {
+		return;
+	}
+
+    $fields = array_filter($changed_fields, static function($field) {
+        // Check if email_condition exists and call the function, else assume true
+	    if ( !isset($field['email']['condition']) ) {
+			$email_condition_result = true;
+	    } else if (is_array($field['email']['condition'])) {
+			//rsssl option check
+		    $fieldname = array_key_first($field['email']['condition']);
+			$value = $field['email']['condition'][$fieldname];
+			$email_condition_result = rsssl_get_option($fieldname) === $value;
+	    } else {
+			//function check
+		    $email_condition_result = call_user_func($field['email']['condition']);
+	    }
+        return isset($field['email']['message']) && $field['value'] && $email_condition_result;
+    });
+
+	if ( count($fields)===0 ) {
+		return;
+	}
+	$current_fields = get_option('rsssl_email_warning_fields', []);
+	//if it's empty, we start counting time. 30 mins later we send a mail.
+	update_option('rsssl_email_warning_fields_saved', time(), false );
+
+	$current_ids = array_column($current_fields, 'id');
+	foreach ($fields as $field){
+		if ( !in_array( $field['id'], $current_ids, true ) ) {
+			$current_fields[] = $field;
+		}
+	}
+	update_option('rsssl_email_warning_fields', $current_fields, false);
+}
+add_action('rsssl_after_saved_fields', 'rsssl_gather_warning_blocks_for_mail', 40);
+
+/**
  * Check if server uses .htaccess
  * @return bool
  */
@@ -427,21 +474,6 @@ function rsssl_generate_random_string($length) {
 	}
 
 	return $randomString;
-}
-
-/**
- * Wrapper for admin user renamed but user enumeration enabled check
- * @return bool
- */
-function check_admin_user_renamed_and_enumeration_disabled() {
-	// Check if rename-admin-user has been loaded, while user-enumeration hasn't been loaded
-	if ( function_exists( 'rsssl_username_admin_changed' ) && ! function_exists( 'rsssl_disable_user_enumeration' ) ) {
-		if ( rsssl_username_admin_changed() !== false ) {
-			return true;
-		}
-	}
-
-	return false;
 }
 
 /**

@@ -1,0 +1,192 @@
+.rsssl {
+  &-grid{
+    .border-to-border {
+      .rsssl-grid-item-content {
+        padding: 0;
+
+        & > * {
+          padding-inline: var(--rsp-spacing-l);
+          width: 100%;
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+        }
+      }
+    }
+    .border-to-border.rsssl-ssllabs, .border-to-border.rsssl-wpvul {
+      .rsssl-grid-item-content {
+
+        & > * {
+          padding-left: 0;
+          padding-right: 0;
+        }
+      }
+    }
+  }
+  .rsssl-wpvul {
+    .rsssl-icon {
+      margin-top:5px;
+    }
+  }
+  .rsssl-ssl-labs, .rsssl-hardening {
+    &-select {
+      background: var(--rsp-grey-200);
+      padding-inline: var(--rsp-spacing-l);
+      padding-block: var(--rsp-spacing-m);
+      display: grid;
+      width: 100%;
+      grid-template-columns: calc(50% - var(--rsp-spacing-s) / 2)  calc(50% - var(--rsp-spacing-s) / 2);
+      gap: var(--rsp-spacing-s);
+      transition: background-color 0.3s ease-in-out;
+
+      &.rsssl-error {
+        background: var(--rsp-red-faded);
+      }
+
+      &.rsssl-warning {
+        background: var(--rsp-yellow-faded);
+      }
+
+      &.rsssl-success {
+        background: var(--rsp-green-faded);
+      }
+
+      &-item {
+        border-radius: var(--rsp-border-radius-xs);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+        padding-block: var(--rsp-spacing-s);
+        justify-items: center;
+        flex-wrap: wrap;
+        background: var(--rsp-white);
+        min-height: 118px;
+
+        &.active {
+          box-shadow: inset 0 0 3px 2px var(--rsp-green-faded);
+          border: 2px solid var(--rsp-green);
+        }
+
+        h2 {
+          margin-top: var(--rsp-spacing-xxs);
+          font-weight: 800;
+          &.big-number{
+            font-size: var(--rsp-fs-850);
+          }
+        }
+
+        span {
+          display: flex;
+          gap: 3px;
+          justify-content: center;
+          font-size: var(--rsp-fs-100);
+        }
+      }
+    }
+    &-list {
+      width: 100%;
+
+      &-item {
+        width: 100%;
+        display: grid;
+        justify-items: flex-start;
+        grid-template-columns: auto 1fr auto;
+        gap: var(--rsp-spacing-s);
+        padding-block: var(--rsp-spacing-xs);
+        padding-inline: var(--rsp-spacing-l);
+
+        &:nth-of-type(even) {
+          background: var(--rsp-grey-200);
+        }
+
+        &-text {
+          width: 100%;
+          margin-right: auto;
+        }
+
+        &-number {
+          font-weight: 600;
+        }
+        .rsssl-icon{
+          align-items: start;
+          margin-top: 2px;
+        }
+      }
+    }
+  }
+  .rsssl-ssl-labs {
+    &-select {
+      &-item{
+        padding-inline: var(--rsp-spacing-s);
+        gap: var(--rsp-spacing-xxs);
+      }
+    }
+    .rsssl-score-snippet {
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      height: 18px;
+      line-height: 18px;
+      padding-inline: var(--rsp-spacing-xxs);
+      font-size: var(--rsp-fs-100);
+      border-radius: var(--rsp-border-radius-xs);
+      color: var(--rsp-text-color);
+      text-align: left;
+      &.rsssl-hover {
+        height:initial;
+        //white-space: nowrap;
+        line-height:initial;
+      }
+
+      &.rsssl-test-inactive {
+        background-color: var(--rsp-grey-200);
+        color: var(--rsp-color-disabled);
+      }
+
+      &.rsssl-test-processing {
+        background-color: var(--rsp-yellow);
+        color: var(--rsp-black);
+      }
+
+      &.rsssl-test-success {
+        background-color: var(--rsp-color-success);
+        color: var(--rsp-text-color-white);
+      }
+
+      &.rsssl-test-error {
+        background-color: var(--rsp-brand-primary);
+        color: var(--rsp-black);
+      }
+    }
+  }
+  .rsssl-hardening {
+    &-select {
+      &-item {
+        .rsssl-badge{
+          margin-top: var(--rsp-spacing-xxs);
+        }
+      }
+    }
+  }
+}
+
+.rsssl-gridblock-progress-container {
+  &.rsssl-error {
+    .rsssl-gridblock-progress {
+      background: var(--rsp-color-warning);
+    }
+  }
+
+  &.rsssl-inactive {
+    height: 4px;
+    width: 100%;
+    display: flex;
+    background: var(--rsp-grey-300);
+
+    .rsssl-gridblock-progress {
+      transition: width 1s ease-in-out;
+      background: var(--rsp-green);
+    }
+  }
+}

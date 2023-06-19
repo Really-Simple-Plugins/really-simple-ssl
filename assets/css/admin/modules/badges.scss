@@ -1,0 +1,51 @@
+.rsssl {
+  .rsssl-badge {
+    --badge-height: 20px;
+    height: var(--badge-height);
+    line-height: var(--badge-height);
+    padding-inline: 8px;
+
+    min-width: 100px;
+    text-align: center;
+    border-radius: var(--rsp-border-radius-xs);
+    color: var(--rsp-white);
+    display: table;
+    margin: auto auto;
+    font-size: var(--rsp-fs-100);
+
+    &.rsp-dark {
+      background-color: var(--rsp-black);
+      color: var(--rsp-white);
+    }
+
+    &.rsp-low {
+      background-color: var(--rsp-yellow-faded);
+      color: var(--rsp-black);
+    }
+
+    &.rsp-medium {
+      background-color: var(--rsp-yellow);
+      color: var(--rsp-black);
+    }
+
+    &.rsp-high {
+      background-color: var(--rsp-red-faded);
+      color: var(--rsp-black);
+    }
+
+    &.rsp-critical {
+      background-color: var(--rsp-red);
+      color: var(--rsp-white);
+    }
+
+    &.rsp-success {
+      background-color: var(--rsp-color-success);
+      color: var(--rsp-white);
+    }
+
+    &.rsp-default {
+      background-color: var(--rsp-grey-200);
+      color:black;
+    }
+  }
+}

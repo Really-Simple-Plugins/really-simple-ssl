@@ -32,8 +32,11 @@
     "gulp-uglifycss": "^1.1.0"
   },
   "dependencies": {
+    "@material-ui/core": "^4.12.4",
+    "@material-ui/lab": "^4.0.0-alpha.61",
+    "@material-ui/styles": "^4.11.5",
     "gulp": "^4.0.2",
-    "gulp-run": "^1.7.1",
+    "gulp-run": "^1.7.0",
     "sass": "^1.54.9"
   }
 }

@@ -31,7 +31,7 @@ function rsssl_general_security_notices( $notices ) {
 				'msg' => __("Disable application passwords.", "really-simple-ssl"),
 				'icon' => 'premium',
 				'url' => 'https://really-simple-ssl.com/definition/what-are-application-passwords/',
-				'dismissible' => true,
+				'dismissible' => false,
 				'highlight_field_id' => 'disable_application_passwords',
 			),
 		),
@@ -148,21 +148,6 @@ function rsssl_general_security_notices( $notices ) {
 		],
 	);
 
-	$notices['admin_user_renamed_user_enumeration_enabled'] = array(
-		'condition' => ['check_admin_user_renamed_and_enumeration_disabled'],
-		'callback' => '_true_',
-		'score' => 5,
-		'output' => array(
-			'true' => array(
-				'highlight_field_id' => 'disable_user_enumeration',
-				'msg' => __("To prevent attackers from identifying the renamed administrator, activate the 'Disable User Enumeration' setting.", "really-simple-ssl"),
-				'url' => 'https://really-simple-ssl.com/what-are-user-enumeration-attacks/',
-				'icon' => 'open',
-				'dismissible' => true,
-			),
-		),
-	);
-
 	$notices['username_admin_exists'] = array(
 		'condition' => ['rsssl_has_admin_user'],
 		'callback' => '_true_',
@@ -227,6 +212,22 @@ function rsssl_general_security_notices( $notices ) {
 		),
 	);
 
+	$notices['vulnerabilities'] = array(
+		'condition' => ['NOT option_enable_vulnerability_scanner'],
+		'callback' => '_true_',
+		'score' => 5,
+		'output' => array(
+			'true' => array(
+				'msg' => __("Really Simple SSL has a new feature! Introducing Vulnerability Detection, enable it now.", "really-simple-ssl"),
+				'icon' => 'open',
+				'dismissible' => true,
+				'url' => 'https://really-simple-ssl.com/vulnerability-detection/',
+				'highlight_field_id' => 'enable_vulnerability_scanner',
+				'plusone' => true,
+			),
+		),
+	);
+
 //	$notices['xmlrpc'] = array(
 //		'callback' => 'rsssl_xmlrpc_allowed',
 //		'score' => 10,
@@ -283,6 +284,19 @@ function rsssl_general_security_notices( $notices ) {
 			),
 		),
 	);
+
+//	$notices['login-url-not-working'] = array(
+//		'callback' => 'NOT rsssl_new_login_url_working',
+//		'score' => 5,
+//		'output' => array(
+//			'true' => array(
+//				'msg' => __("Your new login URL does not seem to work. Still using /wp-admin and /wp-login.php.", "really-simple-ssl"),
+//				'url' => 'https://really-simple-ss.com/',
+//				'icon' => 'warning',
+//				'dismissible' => true,
+//			),
+//		),
+//	);
 
 	return $notices;
 }

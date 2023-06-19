@@ -1,23 +1,25 @@
 import {useState, useEffect} from "@wordpress/element";
 import { __ } from '@wordpress/i18n';
-import * as rsssl_api from "../utils/api";
-import {dispatch,} from '@wordpress/data';
-import Notices from "../Settings/Notices";
-import update from 'immutability-helper';
+import {dispatch} from '@wordpress/data';
 import Hyperlink from "../utils/Hyperlink";
 import {useUpdateEffect} from 'react-use';
-import sleeper from "../utils/sleeper";
 import {
     Button,
 } from '@wordpress/components';
+import useFields from "../Settings/FieldsData";
+import useMenu from "../Menu/MenuData";
+import * as rsssl_api from "../utils/api";
+import sleeper from "../utils/sleeper";
 
 const DnsVerification = (props) => {
-    const action = props.action;
+    const {fields, addHelpNotice, updateField, setChangedField, saveFields, fetchFieldsData, getFieldValue} = useFields();
+    const {selectedSubMenuItem, setSelectedSubMenuItem} = useMenu();
     const [tokens, setTokens] = useState(false);
-     useUpdateEffect(()=> {
+    let action = props.action;
 
+     useUpdateEffect(()=> {
         if (action && action.action==='challenge_directory_reachable' && action.status==='error') {
-            props.addHelp(
+            addHelpNotice(
                 props.field.id,
                  'default',
                 __("The challenge directory is used to verify the domain ownership.", "really-simple-ssl"),
@@ -32,23 +34,52 @@ const DnsVerification = (props) => {
          }
      });
 
-    const handleSwitchToDir = () => {
-        props.updateField('verification_type', 'dir');
-        return rsssl_api.runLetsEncryptTest('update_verification_type', 'dir').then( ( response ) => {
-            props.selectMenu('le-directories');
+    const handleSwitchToDir = async () => {
+        await setSelectedSubMenuItem('le-directories');
+        await updateField('verification_type', 'dir');
+        await setChangedField('verification_type', 'dir');
+        await saveFields(true, true);
+        await rsssl_api.runLetsEncryptTest('update_verification_type', 'dir').then((response) => {
             const notice = dispatch('core/notices').createNotice(
                 'success',
-                __( 'Switched to directory', 'really-simple-ssl' ),
+                __('Switched to Directory', 'really-simple-ssl'),
                 {
                     __unstableHTML: true,
                     id: 'rsssl_switched_to_dns',
                     type: 'snackbar',
                     isDismissible: true,
                 }
-            ).then(sleeper(3000)).then(( response ) => {
+            ).then(sleeper(3000)).then((response) => {
                 dispatch('core/notices').removeNotice('rsssl_switched_to_dns');
             });
         });
+        await fetchFieldsData('le-directories');
+    }
+
+    const handleSwitchToDNS = async () => {
+
+        await rsssl_api.runLetsEncryptTest('update_verification_type', 'dns').then((response) => {
+
+            const notice = dispatch('core/notices').createNotice(
+                'success',
+                __('Switched to DNS', 'really-simple-ssl'),
+                {
+                    __unstableHTML: true,
+                    id: 'rsssl_switched_to_dns',
+                    type: 'snackbar',
+                    isDismissible: true,
+                }
+            ).then(sleeper(3000)).then((response) => {
+                dispatch('core/notices').removeNotice('rsssl_switched_to_dns');
+            });
+        });
+        await setSelectedSubMenuItem('le-dns-verification');
+    }
+
+
+    let verificationType = getFieldValue('verification_type');
+    if (verificationType==='dir') {
+        return (<></>);
     }
 
     return (
@@ -61,12 +92,12 @@ const DnsVerification = (props) => {
                                    url="https://really-simple-ssl.com/how-to-add-a-txt-record-to-dns"/>
                     </p>
                     <div  className="rsssl-dns-text-records">
-                        <div key={0}>
+                        <div>
                             <div className="rsssl-dns-domain">@/{__("domain", "really-simple-ssl")}</div>
                             <div className="rsssl-dns-field">{__("Value", "really-simple-ssl")}</div>
                         </div>
                         { tokens.map((tokenData, i) =>
-                            <div key={i+1}>
+                            <div>
                                 <div className="rsssl-dns-">_acme-challenge.{tokenData.domain}</div>
                                 <div className="rsssl-dns-field rsssl-selectable">{tokenData.token}</div>
                             </div>

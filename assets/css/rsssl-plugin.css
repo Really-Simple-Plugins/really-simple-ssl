@@ -1,0 +1,122 @@
+/*
+  This was created for styling the plugin overview page for vulnerable plugins.
+ */
+:root {
+    --rsp-spacing-xxs: 5px;
+    --rsp-spacing-xs: 10px;
+    --rsp-spacing-s: 15px;
+    --rsp-spacing-m: 20px;
+    --rsp-spacing-l: 25px;
+    --rsp-spacing-xl: 30px;
+    --rsp-grid-margin: var(--rsp-spacing-s);
+    --rsp-grid-gap: var(--rsp-spacing-m);
+    --rsp-border-radius: 12px;
+    --rsp-border-radius-s: 8px;
+    --rsp-border-radius-xs: 3px;
+    --rsp-border: 1px solid var(--rsp-border-color);
+    --rsp-box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+    --rsp-box-shadow-dark: rgba(0, 0, 0, 0.2) 0px 4px 6px -1px, rgba(0, 0, 0, 0.12) 1px 0px 4px 1px;
+    --rsp-border-color: #dfdfdf;
+    --rsp-black: #333;
+    --rsp-white: #fff;
+    --rsp-yellow: #fbc43e;
+    --rsp-blue: #009fff;
+    --rsp-dark-yellow: #e6a800;
+    --rsp-dark-blue: #1E73BE;
+    --rsp-green: #2e8a37;
+    --rsp-red: #D7263D;
+    --rsp-dark-red: #9b0212;
+    --rsp-pink: #E35899;
+    --rsp-wp-blue: #007cba;
+    --rsp-yellow-faded: #fdf4df;
+    --rsp-blue-faded: #ecf8fe;
+    --rsp-dark-blue-faded: #ebf2f9;
+    --rsp-green-faded: #ecf4ed;
+    --rsp-red-faded: #fbebed;
+    --rsp-pink-faded: #fceff5;
+    --rsp-wp-blue-faded: #c6e0ef;
+    --rsp-background-block-color: var(--rsp-white);
+    --rsp-background-color: #f0f0f1;
+    --rsp-input-background-color: #fff;
+    --rsp-input-text-color: var(--rsp-text-color);
+    --rsp-input-border-color: var(--rsp-grey-400);
+    --rsp-text-color: rgba(26, 26, 26, 0.9);
+    --rsp-text-color-invert: rgba(255, 255, 255, 0.9);
+    --rsp-text-color-white: rgba(255, 255, 255, 0.9);
+    --rsp-text-color-light: rgba(69, 69, 82, 0.9);
+    --rsp-text-color-hover: var(--rsp-green);
+    --rsp-grey-100: #fafafa;
+    --rsp-grey-200: #f7f7f7;
+    --rsp-grey-300: #ededed;
+    --rsp-grey-400: #c6c6c6;
+    --rsp-grey-500: #737373;
+    --rsp-grey-600: #696969;
+    --rsp-color-success: var(--rsp-green);
+    --rsp-color-error: var(--rsp-red);
+    --rsp-color-warning: var(--rsp-yellow);
+    --rsp-color-open: var(--rsp-yellow);
+    --rsp-color-disabled: var(--rsp-grey-300);
+    --rsp-fs-100: 0.6875rem;
+    --rsp-fs-200: 0.75rem;
+    --rsp-fs-300: 0.8125rem;
+    --rsp-fs-400: 0.875rem;
+    --rsp-fs-500: 1rem;
+    --rsp-fs-600: 1.125rem;
+    --rsp-fs-700: 1.25rem;
+    --rsp-fs-800: 1.5rem;
+    --rsp-fs-850: 2.8rem;
+    --rsp-fs-900: 3.5rem;
+}
+
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.rsssl-btn-vulnerable {
+    display: inline-block;
+    text-decoration: none;
+    font-size: var(--rsp-fs-100);
+    line-height: 2.15384615;
+    min-height: 30px;
+    margin: 0;
+    padding: 4px 8px;
+    min-width: 100px;
+    text-align: center;
+    cursor: pointer;
+    font-weight: 600;
+    -webkit-appearance: none;
+    border-radius: var(--rsp-border-radius-xs);
+    white-space: nowrap;
+    box-sizing: border-box;
+    background-color: var(--rsp-yellow);
+    color: var(--rsp-black);
+    border-color: var(--rsp-yellow);
+}
+
+.rsssl-btn-vulnerable:hover {
+    text-decoration: underline;
+}
+
+.rsssl-btn-vulnerable.rsssl-critical {
+    background-color: var(--rsp-red);
+    color: var(--rsp-white);
+    border-color: var(--rsp-red);
+}
+
+.rsssl-btn-vulnerable.rsssl-high {
+    background-color: var(--rsp-red);
+    color: var(--rsp-white);
+    border-color: var(--rsp-red);
+}
+
+.rsssl-btn-vulnerable.rsssl-medium {
+    border-color: var(--rsp-yellow);
+    color: var(--rsp-black);
+    background-color: var(--rsp-yellow);
+}

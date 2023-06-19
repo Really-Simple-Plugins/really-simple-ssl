@@ -4,7 +4,6 @@ defined('ABSPATH') or die();
  *  Only functions also required on front-end here
  */
 
-
 /**
  * Get a Really Simple SSL option by name
  *
@@ -34,6 +33,10 @@ function rsssl_get_option( string $name, $default=false ) {
 	$value = $options[ $name ] ?? false;
 	if ( $value===false && $default!==false ) {
 		$value = $default;
+	}
+
+	if ($value===1) {
+		$value = true;
 	}
 
 	return apply_filters("rsssl_option_$name", $value, $name);

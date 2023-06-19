@@ -1,5 +1,7 @@
 <?php
-defined('ABSPATH') or die();/**
+defined('ABSPATH') or die();
+
+/**
  * Username 'admin' changed notice
  * @return array
  */
@@ -10,7 +12,7 @@ function rsssl_admin_username_changed( $notices ) {
 		'score' => 5,
 		'output' => array(
 			'true' => array(
-				'msg' => sprintf(__("Username 'admin' has been changed to %s", "really-simple-ssl"), get_site_transient('rsssl_username_admin_changed') ),
+				'msg' => sprintf(__("Username 'admin' has been changed to %s", "really-simple-ssl"),esc_html(get_site_transient('rsssl_username_admin_changed')) ),
 				'icon' => 'open',
 				'dismissible' => true,
 			),
@@ -61,6 +63,9 @@ function rsssl_rename_admin_user() {
 			$parse  = parse_url( $domain );
 			$host   = $parse['host'] ?? 'example.com';
 			$email  = "$new_user_login@$host";
+
+			// Do not send an e-mail with this temporary e-mail address
+			add_filter('send_email_change_email', '__return_false');
 
 			// update e-mail for existing user. Cannot have two accounts connected to the same e-mail address
 			$success = wp_update_user( array(

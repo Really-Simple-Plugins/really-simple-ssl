@@ -20,6 +20,8 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 		private $steps;
 		private $prefix;
 		private $dashboard_url;
+		private $instructions;
+		private $account_url;
 
 		/**
 		 * Class constructor.
@@ -46,6 +48,8 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 						$this->prefix = "rsssl_";
 						$this->api_url = "https://really-simple-ssl.com";
 						$this->dashboard_url = add_query_arg(["page" => "really-simple-security"], $rsssl_admin_url );
+						$this->account_url = 'https://really-simple-ssl.com/account';
+						$this->instructions = 'https://really-simple-ssl.com/knowledge-base/install-really-simple-ssl-pro';
 						break;
 					case "brst_pro":
 						$this->slug = "burst";
@@ -54,6 +58,8 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 						$this->prefix = "burst_";
 						$this->api_url = "https://burst-statistics.com";
 						$this->dashboard_url = add_query_arg(["page" => "burst"], admin_url( "admin.php" ));
+						$this->account_url = 'https://burst-statistics.com/account';
+						$this->instructions = 'https://burst-statistics.com/how-to-install-burst-premium';
 						break;
 					case "cmplz_pro":
 					default:
@@ -63,6 +69,8 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 						$this->prefix = "cmplz_";
 						$this->api_url = "https://complianz.io";
 						$this->dashboard_url = add_query_arg(["page" => "complianz"], admin_url("admin.php") );
+                        $this->account_url = 'https://complianz.io/account';
+                        $this->instructions = 'https://complianz.io/how-to-install-complianz-gdpr-premium-plugin';
 						break;
 				}
 			}
@@ -143,14 +151,14 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 
 			if ( $plugin_to_be_installed === 'really-simple-ssl' ){
 				$suggestion = [
-					'icon_url' => $dir_url.'complianz-gdpr.gif',
+					'icon_url' => $dir_url.'complianz-gdpr.png',
 					'constant' => 'cmplz_version',
 					'title' => 'Complianz GDPR/CCPA',
 					'description_short' => __('GDPR/CCPA Privacy Suite', "really-simple-ssl"),
 					'disabled' => '',
 					'button_text' => __("Install", "really-simple-ssl"),
 					'slug' => 'complianz-gdpr',
-					'description' => __('Configure your Cookie Notice, Cookie Consent and Cookie Policy with our Wizard and Cookie Scan. Supports GDPR, DSGVO, TTDSG, LGPD, POPIA, RGPD, CCPA and PIPEDA.', "really-simple-ssl"),
+					'description' => __('Configure your Cookie Notice, Consent Management and Cookie Policy with our Wizard and Cookie Scan. Supports GDPR, DSGVO, TTDSG, LGPD, POPIA, RGPD, CCPA and PIPEDA.', "really-simple-ssl"),
 					'install_url' => 'complianz+gdpr+POPIA&tab=search&type=term',
 				];
 				if ($current_plugin==='complianz-gdpr') {
@@ -361,8 +369,8 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
                             <a href="<?php echo $plugins_url ?>" role="button" class="button-primary rsp-red rsp-hidden rsp-btn rsp-cancel">
 								<?php echo __("Cancel", "really-simple-ssl") ?>
                             </a>
-                            <div class="rsp-error-message rsp-folder rsp-package rsp-install rsp-activate rsp-hidden"><span><?php _e('An Error Occurred:',"really-simple-ssl")?></span>&nbsp;<?php printf(__('Install %sManually%s.',"really-simple-ssl").'&nbsp;', '<a target="_blank" href="https://really-simple-ssl.com/knowledge-base/install-really-simple-ssl-pro/">','</a>')?></div>
-                            <div class="rsp-error-message rsp-license rsp-hidden"><span><?php _e('An Error Occurred:',"really-simple-ssl")?></span>&nbsp;<?php printf(__('Check your %slicense%s.',"really-simple-ssl").'&nbsp;', '<a target="_blank" href="https://really-simple-ssl.com/account/">','</a>')?></div>
+                            <div class="rsp-error-message rsp-folder rsp-package rsp-install rsp-activate rsp-hidden"><span><?php _e('An Error Occurred:',"really-simple-ssl")?></span>&nbsp;<?php printf(__('Install %sManually%s.',"really-simple-ssl").'&nbsp;', '<a target="_blank" href="'.$this->account_url.'">','</a>')?></div>
+                            <div class="rsp-error-message rsp-license rsp-hidden"><span><?php _e('An Error Occurred:',"really-simple-ssl")?></span>&nbsp;<?php printf(__('Check your %slicense%s.',"really-simple-ssl").'&nbsp;', '<a target="_blank" href="'.$this->instructions.'">','</a>')?></div>
                         </div>
                     </div>
                 </div>
@@ -415,21 +423,27 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 				$error = true;
 			}
 
-			if ( defined($this->plugin_constant) ) {
-				deactivate_plugins( $this->slug );
+            if ( !isset($_GET['token']) || !wp_verify_nonce($_GET['token'], 'upgrade_to_pro_nonce')) {
+                $error = true;
             }
 
-            $file = trailingslashit(WP_CONTENT_DIR).'plugins/'.$this->slug;
-			if ( file_exists($file ) ) {
-                $dir = dirname($file);
-                $new_dir = $dir.'_'.time();
-                set_transient('rsssl_upgrade_dir', $new_dir, WEEK_IN_SECONDS);
-                rename($dir, $new_dir);
-                //prevent uninstalling code by previous plugin
-                unlink(trailingslashit($new_dir).'uninstall.php');
-			}
+            if (!$error) {
+	            if ( defined( $this->plugin_constant ) ) {
+		            deactivate_plugins( $this->slug );
+	            }
 
-			if ( file_exists($file ) ) {
+	            $file = trailingslashit( WP_CONTENT_DIR ) . 'plugins/' . $this->slug;
+	            if ( file_exists( $file ) ) {
+		            $dir     = dirname( $file );
+		            $new_dir = $dir . '_' . time();
+		            set_transient( 'rsssl_upgrade_dir', $new_dir, WEEK_IN_SECONDS );
+		            rename( $dir, $new_dir );
+		            //prevent uninstalling code by previous plugin
+		            unlink( trailingslashit( $new_dir ) . 'uninstall.php' );
+	            }
+            }
+
+			if ( !$error && file_exists($file ) ) {
 				$error = true;
 				$response = [
 					'success' => false,
@@ -437,7 +451,7 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 				];
 			}
 
-			if ( !$error && isset($_GET['token']) && wp_verify_nonce($_GET['token'], 'upgrade_to_pro_nonce') && isset($_GET['plugin']) ) {
+			if ( !$error && isset($_GET['plugin']) ) {
 				if ( !file_exists(WP_PLUGIN_DIR . '/' . $this->slug) ) {
 					$response = [
 						'success' => true,

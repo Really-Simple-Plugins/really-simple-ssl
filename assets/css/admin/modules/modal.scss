@@ -7,7 +7,7 @@
   background-color: rgba(0, 0, 0, 0.6);
   width: 100%;
   height: 100%;
-  z-index: 2;
+  z-index: 12; //higher than rsssl-locked
 }
 
 .rsssl-modal {
@@ -24,7 +24,7 @@
   /* transform: translate(-50%, -50%); */
   margin: 25px auto;
 
-  .rsssl-modal-header {
+  &-header {
     @include rsssl-block-padding;
     display: flex;
     justify-content: space-between;
@@ -32,7 +32,6 @@
     border-radius: var(--rsp-border-radius);
     .modal-title {
       margin: 0;
-      background-color: white;
     }
     .rsssl-modal-close {
       cursor: pointer;
@@ -48,17 +47,17 @@
     }
   }
 
-  .rsssl-modal-content {
+  &-content {
     position: relative;
     font-size: var(--rsp-fs-300);
     line-height: 1.5;
     @include rsssl-block-padding;
-    .rsssl-modal-subtitle {
+    &-subtitle {
       font-size: var(--rsp-fs-600);
       font-weight: 600;
       margin-bottom: var(--rsp-spacing-xs);
     }
-    .rsssl-modal-description {
+    &-description {
       overflow-wrap: anywhere;
       margin-top: 0;
       font-weight: 400;
@@ -66,7 +65,7 @@
       margin-bottom: var(--rsp-spacing-s);
     }
   }
-  .rsssl-modal-footer {
+  &-footer {
     display: flex;
     flex-direction: row;
     @include rsssl-block-padding;
@@ -92,6 +91,47 @@
       &:hover {
         opacity: 0.9;
       }
+    }
+  }
+}
+//this has to apply both to modal and LE activation step
+.rsssl-modal-content-step {
+  input[type="email"]{
+    width: 100%;
+    margin-bottom: var(--rsp-spacing-m);
+    border: 2px solid;
+    height: 50px;
+    border-color: var(--rsp-grey-300);
+  }
+  ul{
+    margin-bottom: var(--rsp-spacing-m);
+    li {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: var(--rsp-spacing-xxs);
+      &.rsssl-is-plugin{
+        background-color: var(--rsp-grey-100);
+        border: none;
+        margin: 10px 0 0 0;
+        padding:2px 0;
+        position:relative;
+        a.button-default.rsssl-read-more{
+          position:absolute;
+          display:none;
+          top:17px;
+          right:20px;
+          z-index:5;
+          @media(max-width: 620px) {
+            position:relative;
+            margin-left:20px;
+            z-index:5;
+          }
+        }
+      }
+      .rsssl-icon{
+        margin-right:7px;
+      }
+
     }
   }
 }

@@ -58,10 +58,14 @@
       font-size:18px;
     }
     .rsssl-help-control {
-      margin-left:auto;
+      margin-left:auto; 
       cursor:pointer;
     }
 
+  }
+  >div{
+    flex-grow:1;
+    width:100%;
   }
 }
 
@@ -72,6 +76,9 @@
   height: fit-content;
   background-color: var(--rsp-dark-blue-faded);
   &.rsssl-warning {
+    background-color: var(--rsp-red-faded);
+  }
+  &.rsssl-open {
     background-color: var(--rsp-yellow-faded);
   }
   summary, p{

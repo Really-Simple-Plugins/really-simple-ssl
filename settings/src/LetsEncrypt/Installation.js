@@ -1,38 +1,34 @@
-import {useState, useEffect} from "@wordpress/element";
+import {useState} from "@wordpress/element";
 import { __ } from '@wordpress/i18n';
 import * as rsssl_api from "../utils/api";
 import {dispatch,} from '@wordpress/data';
-import Notices from "../Settings/Notices";
-import update from 'immutability-helper';
 import {useUpdateEffect} from 'react-use';
 import sleeper from "../utils/sleeper";
-import Hyperlink from "../utils/Hyperlink";
-
-import {
-    Button,
-} from '@wordpress/components';
+import useFields from "../Settings/FieldsData";
 
 const Installation = (props) => {
-    const action = props.action;
+    const {addHelpNotice} = useFields();
+
     const [installationData, setInstallationData] = useState(false);
+    let action = props.action;
 
      useUpdateEffect(()=> {
         if ((action && action.status==='warning' && installationData && installationData.generated_by_rsssl )) {
-            props.addHelp(
+            addHelpNotice(
                 props.field.id,
                  'default',
                  __("This is the certificate, which you need to install in your hosting dashboard.", "really-simple-ssl"),
                  __("Certificate (CRT)", "really-simple-ssl")
               );
 
-              props.addHelp(
+              addHelpNotice(
                 props.field.id,
                  'default',
                  __("The private key can be uploaded or pasted in the appropriate field on your hosting dashboard.", "really-simple-ssl"),
                  __("Private Key (KEY)", "really-simple-ssl")
               );
 
-              props.addHelp(
+              addHelpNotice(
                 props.field.id,
                  'default',
                  __("The CA Bundle will sometimes be automatically detected. If not, you can use this file.", "really-simple-ssl"),
@@ -43,16 +39,13 @@ const Installation = (props) => {
         if ( action && (action.status==='error' || action.status === 'warning') ) {
             rsssl_api.runLetsEncryptTest('installation_data').then( ( response ) => {
                 if (response) {
-                    setInstallationData(response.data.output);
+                    setInstallationData(response.output);
                 }
             });
         }
 
      });
 
-     useEffect(()=> {
-
-    });
 
     const handleCopyAction = (type) => {
         let success;

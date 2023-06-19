@@ -7,6 +7,7 @@ if ( !defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 $settings = get_option('rsssl_options');
 if (isset($settings['delete_data_on_uninstall']) && $settings['delete_data_on_uninstall']) {
 	$options = [
+		"rsssl_notification_email",
 		"rsssl_remaining_tasks",
 		"rsssl_activation_timestamp",
 		"rsssl_activation_timestamp",
@@ -34,6 +35,7 @@ if (isset($settings['delete_data_on_uninstall']) && $settings['delete_data_on_un
 		"rsssl_le_dns_configured_by_rsssl",
 		"rsssl_onboarding_dismissed",
 		"rsssl_ssl_detection_overridden",
+		"rsssl_http_methods_allowed",
 		"rsssl_show_onboarding",
 		"rsssl_deactivate_list",
 		"rsssl_firewall_error",
@@ -43,6 +45,9 @@ if (isset($settings['delete_data_on_uninstall']) && $settings['delete_data_on_un
 		"rsssl_current_version",
 		"rsssl_network_activation_status",
 		"rsssl_run",
+		"rsssl_wp_version_detected",
+		"rsssl_admin_notices",
+		"rsssl_plusone_count",
 		"rsssl_siteprocessing_progress",
 		"rsssl_ssl_activation_active",
 		"rsssl_network_activation_status",
@@ -52,7 +57,6 @@ if (isset($settings['delete_data_on_uninstall']) && $settings['delete_data_on_un
 		"rsssl_htaccess_rules",
 		"rsssl_options",
 		"rsssl_key",
-		"rsssl_6_upgrade_completed",
 	];
 	foreach ( $options as $option_name ) {
 		delete_option( $option_name );
@@ -63,7 +67,6 @@ if (isset($settings['delete_data_on_uninstall']) && $settings['delete_data_on_un
 		"rsssl_http_methods_allowed",
 		"rsssl_code_execution_allowed_status",
 		"rsssl_directory_indexing_status",
-		"rsssl_wp_version_detected",
 		"rsssl_htaccess_test_success",
 		"rsssl_can_use_curl_headers_check",
 		"rsssl_curl_error",

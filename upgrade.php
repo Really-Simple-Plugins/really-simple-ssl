@@ -3,9 +3,14 @@ defined('ABSPATH') or die();
 
 add_action('plugins_loaded', 'rsssl_upgrade', 20);
 function rsssl_upgrade() {
+	#only run upgrade check if cron, or if admin.
+	if ( !rsssl_admin_logged_in() ) {
+		return;
+	}
+
 	$prev_version = get_option( 'rsssl_current_version', false );
 	//no version change, skip upgrade.
-	if ( get_option('rsssl_6_upgrade_completed') && ($prev_version && version_compare( $prev_version, rsssl_version, '==' )) ){
+	if ( $prev_version && version_compare( $prev_version, rsssl_version, '==' ) ){
 		return;
 	}
 	//dismiss notices that should be dismissed on plugin upgrade
@@ -40,10 +45,8 @@ function rsssl_upgrade() {
 		}
 	}
 
-	if (
-		!get_option('rsssl_6_upgrade_completed') || ( $prev_version && version_compare( $prev_version, '6.0.0', '<' ) )
-	) {
-		delete_transient('rsssl_admin_notices');
+	if ( $prev_version && version_compare( $prev_version, '6.0.0', '<' ) ) {
+		delete_option('rsssl_admin_notices');
 		update_option('rsssl_show_onboarding', true, false);
 		//upgrade both site and network settings
 		$options = get_option( 'rlrsssl_options' );
@@ -129,8 +132,10 @@ function rsssl_upgrade() {
 		} else {
 			update_option( 'rsssl_options', $new_options );
 		}
-		update_option('rsssl_6_upgrade_completed', true, false);
+		update_option('rsssl_flush_rewrite_rules', time() );
 	}
+
+
 
 	#clean up old rest api optimizer on upgrade
 	if ( $prev_version && version_compare( $prev_version, '6.0.5', '<' ) ) {
@@ -142,7 +147,7 @@ function rsssl_upgrade() {
 	#clear notices cache for multisite on upgrade, for the subsite notice
 	if ( version_compare( $prev_version, '6.0.9', '<' ) ) {
 		if ( is_multisite() ) {
-			delete_transient('rsssl_admin_notices' );
+			delete_option('rsssl_admin_notices' );
 		}
 	}
 
@@ -151,11 +156,30 @@ function rsssl_upgrade() {
 		rsssl_add_manage_security_capability();
 	}
 
+	#move notices transient to option, for better persistence
+	if ( $prev_version && version_compare( $prev_version, '6.0.13', '<' ) ) {
+		$notices = get_transient('rsssl_admin_notices');
+		$plus_ones = get_transient('rsssl_plusone_count');
+		update_option('rsssl_admin_notices', $notices);
+		update_option('rsssl_plusone_count', $plus_ones);
+	}
+
+	if ( $prev_version && version_compare( $prev_version, '6.2.3', '<' ) ) {
+		rsssl_update_option('send_notifications_email', 1 );
+	}
+
+	if ( $prev_version && version_compare( $prev_version, '6.2.4', '<' ) ) {
+		delete_option('rsssl_6_upgrade_completed' );
+	}
+
+	//don't clear on each update.
+	//RSSSL()->admin->clear_admin_notices_cache();
+
 	//delete in future upgrade. We want to check the review notice dismissed as fallback still.
 	//delete_option( 'rlrsssl_options' );
 	//delete_site_option( 'rlrsssl_network_options' );
 	//delete_option( 'rsssl_options_lets-encrypt' );
-
+	update_option('rsssl_previous_version', $prev_version, false);
 	do_action("rsssl_upgrade", $prev_version);
-	update_option( 'rsssl_current_version', rsssl_version );
+	update_option( 'rsssl_current_version', rsssl_version, false );
 }
