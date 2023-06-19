@@ -2389,9 +2389,9 @@ class rsssl_admin
 		    $notices[$id]['output'] = $notice['output'][ $output ];
 
 		    $notices[$id]['output']['status'] = ( $notices[$id]['output']['icon'] === 'success') ? 'completed' : $notices[$id]['output']['icon'];
-		    if ( !in_array( $notices[$id]['output']['status'], $statuses ) ){
-			    unset($notices[$id]);
-			    continue;
+            if ( is_array( $statuses ) && ! in_array( $notices[$id]['output']['status'], $statuses ) ) {
+                unset($notices[$id]);
+                continue;
             }
 		    $condition_functions = $notice['condition'];
 		    foreach ( $condition_functions as $func ) {
