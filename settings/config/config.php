@@ -343,6 +343,15 @@ function rsssl_fields( $load_values = true ) {
 			'default'  => false,
 		],
 		[
+			'id'       => 'limit_login_attempts',
+			'menu_id'  => 'hardening',
+			'group_id' => 'hardening_basic',
+			'type'     => 'checkbox',
+			'label'    => __( "Limit login attempts", 'really-simple-ssl' ),
+			'disabled' => false,
+			'default'  => false,
+		],
+		[
 			'id'       => 'disable_http_methods',
 			'menu_id'  => 'hardening',
 			'group_id' => 'hardening_extended',
