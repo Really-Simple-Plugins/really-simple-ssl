@@ -102,6 +102,20 @@ function rsssl_menu() {
 						],
 					],
 				],
+                [
+                    'id' => 'limit_login_attempts',
+                    'title' => __('Limit Login Attempts', 'really-simple-ssl'),
+                    'premium' => false,
+                    'groups' => [
+                        [
+                            'id' => 'limit_login_attempts_basic',
+                            'helpLink' => 'https://really-simple-ssl.com/knowledge-base/limit-login-attempts/?mtm_campaign=instructions&mtm_source=free',
+                            'title' => __('Limit Login Attempts', 'really-simple-ssl'),
+                            'intro' => __('Limit the number of login attempts to prevent brute force attacks.', 'really-simple-ssl'),
+                            'premium_text' => __('Get Limit Login Attempts with %sReally Simple SSL Pro%s', 'really-simple-ssl'),
+                        ],
+                    ],
+                ],
 				[
 					'id'           => 'mixed_content_scan',
 					'title'        => __( 'Mixed Content Scan', 'really-simple-ssl' ),

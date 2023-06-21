@@ -742,6 +742,15 @@ function rsssl_fields( $load_values = true ) {
 				]
 			],
 		],
+        /* section limited_login_attempts */
+        [
+            'id' => 'enable_limited_login_attempts',
+            'menu_id' => 'limit_login_attempts',
+            'group_id' => 'limit_login_attempts_basic',
+            'type' => 'checkbox',
+            'label' => __('Enable limited login attempts', 'really-simple-ssl'),
+            'disabled' => false,
+        ],
         /* section x_xss_protection */
 		[
 			'id'       => 'x_xss_protection',
