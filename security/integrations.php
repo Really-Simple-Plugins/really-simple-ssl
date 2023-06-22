@@ -90,6 +90,18 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         'option_id'            => 'enable_vulnerability_scanner',
 	    'admin_only'           => true,
     ),
+
+
+    'two-factor' => array(
+        'label'                => '2FA',
+        'folder'               => 'wordpress',
+        'impact'               => 'medium',
+        'risk'                 => 'low',
+        'option_id'            => 'two_fa_enabled',
+        // @todo
+        'always_include'       => true,
+    ),
+
 ) );
 
 /**

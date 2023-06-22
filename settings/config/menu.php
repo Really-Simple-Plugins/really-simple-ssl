@@ -212,6 +212,36 @@ function rsssl_menu() {
 					'helpLink'             => 'https://really-simple-ssl.com/instructions/cross-origin-policies/?mtm_campaign=instructions&mtm_source=free',
 
 				],
+				[
+					'id'                   => 'two_fa',
+					'networkwide_required' => true,
+					'premium'              => false,
+					'premium_text'         => __( 'Get 2-factor authentication with %sReally Simple SSL Pro%s', 'really-simple-ssl' ),
+					'upgrade'              => 'https://really-simple-ssl.com/pro/?mtm_campaign=cops&mtm_source=free&mtm_content=upgrade',
+					'title'                => '2FA',
+					'helpLink'             => 'https://really-simple-ssl.com/instructions/two-factor-authentication/?mtm_campaign=instructions&mtm_source=free',
+                    'groups'  => [
+                        [
+                            'id'       => 'two_fa_general',
+                            'helpLink' => 'https://really-simple-ssl.com/instructions/about-vulnerabilities/',
+                            'title'    => __( 'General', 'really-simple-ssl' ),
+                            'intro'    => __( 'Lorem ipsum', 'really-simple-ssl' ),
+                        ],
+                        [
+                            'id'       => 'two_fa_email',
+                            'helpLink' => 'https://really-simple-ssl.com/instructions/about-vulnerabilities#notifications',
+                            'title'    => __( 'Email', 'really-simple-ssl' ),
+                            'intro'    => __( 'Lorem ipsum', 'really-simple-ssl' ),
+                        ],
+                        [
+                            'id'       => 'two_fa_users',
+                            'helpLink' => 'https://really-simple-ssl.com/instructions/about-vulnerabilities#components',
+                            'title'    => __( 'Users', 'really-simple-ssl' ),
+                            'intro'    => __( 'Lorem ipsum', 'really-simple-ssl' ),
+                        ],
+                    ],
+
+				],
 			],
 		],
 		[

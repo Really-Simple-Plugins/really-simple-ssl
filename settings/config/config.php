@@ -940,6 +940,64 @@ function rsssl_fields( $load_values = true ) {
 			'default'  => 'disabled',
 		],
 		[
+			'id'       => 'two_fa_enabled',
+            'menu_id'  => 'two_fa',
+            'group_id' => 'two_fa_general',
+			'type'     => 'checkbox',
+			'label'    => __( "Enable 2FA", "really-simple-ssl-pro" ),
+			'disabled' => false,
+			'default'  => 'disabled',
+		],
+		[
+			'id'       => 'two_fa_email_code',
+			'menu_id'  => 'two_fa',
+			'group_id' => 'two_fa_email',
+			'type'     => 'checkbox',
+			'label'    => __( "Enable login with email code", "really-simple-ssl-pro" ),
+			'disabled' => false,
+			'default'  => 'disabled',
+		],
+		[
+			'id'       => 'two_fa_email_exclude_roles',
+			'menu_id'  => 'two_fa',
+			'group_id' => 'two_fa_email',
+			'type'     => 'dropdown',
+			'label'    => __( "Exclude roles", "really-simple-ssl-pro" ),
+			'disabled' => false,
+			'default'  => 'disabled',
+		],
+        [
+            'id'    => 'two_fa_users_table',
+            'menu_id' => 'two_fa',
+            'group_id' => 'two_fa_users',
+            'type' => 'two_fa_table',
+
+            'label' => __('Users', 'really-simple-ssl'),
+            'disabled' => false,
+            'default' => false,
+            'columns' => [
+                [
+                    'id'      => 'user',
+                    'name'     => __( 'User', 'really-simple-ssl' ),
+                    'sortable' => false,
+                    'column'   => 'User',
+                    'width'    => '20%',
+                ],
+                [
+                    'id'      => 'two_fa',
+                    'name'     => __( '2FA', 'really-simple-ssl' ),
+                    'sortable' => false,
+                    'column'   => 'two_fa_method',
+                ],
+                [
+                    'id'      => 'user_role',
+                    'name'     => __( 'User role', 'really-simple-ssl' ),
+                    'sortable' => false,
+                    'column'   => 'user_role',
+                ],[]
+            ]
+        ],
+		[
 			'id'          => 'mixedcontentscan',
 			'menu_id'     => 'mixed_content_scan',
 			'group_id'    => 'mixedcontentscan',
