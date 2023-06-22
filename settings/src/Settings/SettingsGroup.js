@@ -94,7 +94,33 @@ const SettingsGroup = (props) => {
         <div className={"rsssl-grid-item rsssl-"+activeGroup.id + ' ' +  disabledClass}>
             {activeGroup.title && <div className="rsssl-grid-item-header">
                 <h3 className="rsssl-h4">{activeGroup.title}</h3>
-                {activeGroup.helpLink && anchor!=='letsencrypt'&& <div className="rsssl-grid-item-controls"><Hyperlink target="_blank" className="rsssl-helplink" text={helplinkText} url={activeGroup.helpLink}/></div>}
+                {activeGroup.groupFilter && (
+                    <div className="rsssl-grid-item-controls">
+                        {activeGroup.groupFilter && (
+                            <select
+                                className="rsssl-group-filter"
+                                id={"rsssl-group-filter-" + activeGroup.id}
+                                name={"rsssl-group-filter-" + activeGroup.id}
+                            >
+                                {activeGroup.groupFilter.options.map((option) => (
+                                    <option key={option.id} value={option.id}>
+                                        {option.title}
+                                    </option>
+                                ))}
+                            </select>
+                        )}
+                    </div>
+                )}
+                {activeGroup.helpLink && anchor!=='letsencrypt'&& (
+                    <div className="rsssl-grid-item-controls">
+                        <Hyperlink
+                            target="_blank"
+                            className="rsssl-helplink"
+                            text={helplinkText}
+                            url={activeGroup.helpLink}
+                        />
+                    </div>
+                )}
                 {anchor==='letsencrypt' && <div className="rsssl-grid-item-controls">
                     <a href="#" className="rsssl-helplink" onClick={ (e) => handleLetsEncryptReset(e) }>{__("Reset Let's Encrypt","really-simple-ssl")}</a>
                 </div>}
