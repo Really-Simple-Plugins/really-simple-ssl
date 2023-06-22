@@ -1513,6 +1513,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _PostDropDown__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./PostDropDown */ "./src/Settings/PostDropDown.js");
 /* harmony import */ var _RiskConfiguration_NotificationTester__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./RiskConfiguration/NotificationTester */ "./src/Settings/RiskConfiguration/NotificationTester.js");
 /* harmony import */ var _utils_getAnchor__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ../utils/getAnchor */ "./src/utils/getAnchor.js");
+/* harmony import */ var _Menu_MenuData__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ../Menu/MenuData */ "./src/Menu/MenuData.js");
+
 
 
 
@@ -1546,6 +1548,14 @@ const Field = props => {
     highLightField
   } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_20__["default"])();
   const [anchor, setAnchor] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
+  const {
+    selectedFilter,
+    setSelectedFilter
+  } = (0,_Menu_MenuData__WEBPACK_IMPORTED_MODULE_24__["default"])();
+  const handleFilterChange = value => {
+    setSelectedFilter(value); // Update selectedFilter when the filter value changes
+  };
+
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     //check if the url contains the query variable 'anchor'
     setAnchor((0,_utils_getAnchor__WEBPACK_IMPORTED_MODULE_23__["default"])('anchor'));
@@ -1828,9 +1838,11 @@ const Field = props => {
       className: highLightClass,
       ref: scrollAnchor
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_LimitLoginAttempts_IpAddressModule__WEBPACK_IMPORTED_MODULE_17__["default"], {
-      field: props.field
+      field: props.field,
+      selectedFilter: selectedFilter // Pass selectedFilter as a prop to IpAddressModule
     }));
   }
+
   if (field.type === 'notificationtester') {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: 'rsssl-field-button ' + highLightClass,
@@ -2507,9 +2519,17 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const IpAddressModule = props => {
+  const {
+    fields,
+    fieldAlreadyEnabled,
+    getFieldValue
+  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_4__["default"])();
+  const {
+    selectedFilter
+  } = props;
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-ip-address-module"
-  }, "HOI");
+  }, "selecte name = ", selectedFilter);
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (IpAddressModule);
 

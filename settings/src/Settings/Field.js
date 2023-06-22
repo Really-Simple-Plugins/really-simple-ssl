@@ -27,12 +27,18 @@ import useFields from "./FieldsData";
 import PostDropdown from "./PostDropDown";
 import NotificationTester from "./RiskConfiguration/NotificationTester";
 import getAnchor from "../utils/getAnchor";
+import useMenu from "../Menu/MenuData";
 
 const Field = (props) => {
     let scrollAnchor = React.createRef();
     const {updateField, setChangedField, highLightField} = useFields();
     const [anchor, setAnchor] = useState(null);
+    const {selectedFilter, setSelectedFilter} = useMenu();
 
+
+    const handleFilterChange = (value) => {
+        setSelectedFilter(value); // Update selectedFilter when the filter value changes
+    };
     useEffect( () => {
         //check if the url contains the query variable 'anchor'
         setAnchor(getAnchor('anchor'))
@@ -49,7 +55,6 @@ const Field = (props) => {
     window.addEventListener('hashchange', (e) => {
         setAnchor(getAnchor('anchor'));
     });
-
     const handleAnchor = () => {
         if ( anchor && anchor === props.field.id ) {
             scrollAnchor.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -326,7 +331,10 @@ const Field = (props) => {
     if (field.type === 'ipaddressmodule') {
         return (
             <div className={highLightClass} ref={scrollAnchor}>
-              <IpAddressModule field={props.field} />
+              <IpAddressModule
+                  field={props.field}
+                  selectedFilter={selectedFilter} // Pass selectedFilter as a prop to IpAddressModule
+              />
             </div>
         )
     }

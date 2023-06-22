@@ -4,9 +4,12 @@ import DataTable, {createTheme} from "react-data-table-component";
 import useFields from "../FieldsData";
 
 const IpAddressModule = (props) => {
+    const {fields, fieldAlreadyEnabled, getFieldValue} = useFields();
+
+    const { selectedFilter } = props;
     return (
         <div className="rsssl-ip-address-module">
-            HOI
+            selecte name = {selectedFilter}
         </div>
     );
 }

@@ -426,6 +426,10 @@ const SettingsGroup = props => {
     fields
   } = (0,_Settings_FieldsData__WEBPACK_IMPORTED_MODULE_5__["default"])();
   const {
+    selectedFilter,
+    setSelectedFilter
+  } = (0,_Menu_MenuData__WEBPACK_IMPORTED_MODULE_6__["default"])();
+  const {
     licenseStatus
   } = (0,_License_LicenseData__WEBPACK_IMPORTED_MODULE_7__["default"])();
   const {
@@ -514,8 +518,15 @@ const SettingsGroup = props => {
   }, activeGroup.groupFilter && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
     className: "rsssl-group-filter",
     id: "rsssl-group-filter-" + activeGroup.id,
-    name: "rsssl-group-filter-" + activeGroup.id
-  }, activeGroup.groupFilter.options.map(option => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
+    name: "rsssl-group-filter-" + activeGroup.id,
+    value: selectedFilter,
+    onChange: e => {
+      const selectedValue = e.target.value;
+      setSelectedFilter(selectedValue);
+    }
+  }, activeGroup.groupFilter.options.map(option =>
+  //if the value is equal to the selected value, set it as selected
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
     key: option.id,
     value: option.id
   }, option.title)))), activeGroup.helpLink && anchor !== 'letsencrypt' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {

@@ -127,18 +127,19 @@ function rsssl_menu() {
                         'id' => 'limit_login_attempts_ip_address',
                         'premium' => true,
                         'groupFilter' => [
+                            'default' => 'limit_login_attempts_advanced_filter_log',
                             'id' => 'limit_login_attempts_advanced_filter',
                             'options' => [
                                 [
-                                    'id' => 'limit_login_attempts_advanced_filter_blocked',
+                                    'id' => 'filter_blocked',
                                     'title' => __('Blocked', 'really-simple-ssl'),
                                 ],
                                 [
-                                    'id' => 'limit_login_attempts_advanced_filter_trusted',
+                                    'id' => 'filter_trusted',
                                     'title' => __('Trusted', 'really-simple-ssl'),
                                 ],
                                 [
-                                    'id' => 'limit_login_attempts_advanced_filter_log',
+                                    'id' => 'filter_log',
                                     'title' => __('Log', 'really-simple-ssl'),
                                 ],
                             ],
