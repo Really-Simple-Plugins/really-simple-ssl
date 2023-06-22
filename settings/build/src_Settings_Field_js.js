@@ -2512,7 +2512,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var react_data_table_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-data-table-component */ "./node_modules/react-data-table-component/dist/index.cjs.js");
-/* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../FieldsData */ "./src/Settings/FieldsData.js");
+/* harmony import */ var _LimitLoginAttemptsData__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./LimitLoginAttemptsData */ "./src/Settings/LimitLoginAttempts/LimitLoginAttemptsData.js");
+/* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../FieldsData */ "./src/Settings/FieldsData.js");
+
 
 
 
@@ -2520,18 +2522,123 @@ __webpack_require__.r(__webpack_exports__);
 
 const IpAddressModule = props => {
   const {
+    selectedFilter
+  } = props;
+  const {
+    EventLog,
+    dataLoaded,
+    fetchEventLog
+  } = (0,_LimitLoginAttemptsData__WEBPACK_IMPORTED_MODULE_4__["default"])();
+  const {
     fields,
     fieldAlreadyEnabled,
     getFieldValue
-  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_4__["default"])();
-  const {
-    selectedFilter
-  } = props;
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-ip-address-module"
-  }, "selecte name = ", selectedFilter);
+  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_5__["default"])();
+  let field = props.field;
+  let columns = [];
+  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
+    if (selectedFilter) {
+      if (!dataLoaded) {
+        fetchEventLog(selectedFilter).then(r => console.log(r));
+      }
+    }
+  });
+  function buildColumn(column) {
+    return {
+      name: column.name,
+      sortable: column.sortable,
+      width: column.width,
+      visible: column.visible,
+      selector: row => row[column.column]
+    };
+  }
+  const customStyles = {
+    headCells: {
+      style: {
+        paddingLeft: '0',
+        // override the cell padding for head cells
+        paddingRight: '0'
+      }
+    },
+    cells: {
+      style: {
+        paddingLeft: '0',
+        // override the cell padding for data cells
+        paddingRight: '0'
+      }
+    }
+  };
+  (0,react_data_table_component__WEBPACK_IMPORTED_MODULE_3__.createTheme)('really-simple-plugins', {
+    divider: {
+      default: 'transparent'
+    }
+  }, 'light');
+  field.columns.forEach(function (item, i) {
+    let newItem = buildColumn(item);
+    columns.push(newItem);
+  });
+
+  //only show the datatable if the data is loaded
+  if (!dataLoaded) {
+    return null;
+  }
+  console.log(EventLog, columns);
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    dense: true,
+    pagination: true,
+    noDataComponent: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("No results", "really-simple-ssl"),
+    persistTableHead: true,
+    theme: "really-simple-plugins",
+    customStyles: customStyles
+  });
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (IpAddressModule);
+
+/***/ }),
+
+/***/ "./src/Settings/LimitLoginAttempts/LimitLoginAttemptsData.js":
+/*!*******************************************************************!*\
+  !*** ./src/Settings/LimitLoginAttempts/LimitLoginAttemptsData.js ***!
+  \*******************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/index.mjs");
+/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils/api */ "./src/utils/api.js");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
+/* Creates A Store For Risk Data using Zustand */
+
+
+
+
+
+const LimitLoginAttemptsData = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set, get) => ({
+  processing: false,
+  dataLoaded: false,
+  EventLog: [],
+  fetchEventLog: async selectedFilter => {
+    set({
+      processing: true
+    });
+    try {
+      let response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction(selectedFilter);
+      set({
+        EventLog: response,
+        dataLoaded: true,
+        processing: false
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}));
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (LimitLoginAttemptsData);
 
 /***/ }),
 

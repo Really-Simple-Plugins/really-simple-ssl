@@ -868,6 +868,29 @@ function rsssl_fields( $load_values = true ) {
                     'enable_limited_login_attempts' => true,
                 ]
             ],
+            'columns'          => [
+                [
+                    'name'     => __( 'Ip Address', 'really-simple-ssl' ),
+                    'sortable' => false,
+                    'column'   => 'source_ip',
+                    'width'    => '15%',
+                ],
+                [
+                    'name'     => __( 'Date', 'really-simple-ssl' ),
+                    'sortable' => false,
+                    'column'   => 'datetime',
+                    'width'         => '20%',
+                ],
+                [
+                    'name'     => __( 'User', 'really-simple-ssl' ),
+                    'sortable' => false,
+                    'column'   => 'username',
+                    'type'   => 'text',
+                    'width'     => '70%',
+                    'minWidth'  => '300px',
+                ],
+                []
+            ],
         ],
         //Multiple datatables log/trusted/Blocked
 
