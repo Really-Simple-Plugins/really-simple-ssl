@@ -854,15 +854,23 @@ function rsssl_fields( $load_values = true ) {
                 ]
             ],
         ],
-        //Multiple datatables log/trusted/Blocked
-        //The log table
         [
-            'id' => 'limit_login_attempts_log',
+            'id' => 'limit_login_attempts_ip_address_overview',
             'menu_id' => 'limit_login_attempts',
-            'group_id' => 'limit_login_attempts_log',
-            'type' => 'datatable',
-
+            'group_id' => 'limit_login_attempts_ip_address',
+            'type' => 'ipaddressmodule',
+            'label' => __('IP address overview', 'really-simple-ssl'),
+            'disabled' => false,
+            'default' => false,
+            'react_conditions' => [
+                'relation' => 'AND',
+                [
+                    'enable_limited_login_attempts' => true,
+                ]
+            ],
         ],
+        //Multiple datatables log/trusted/Blocked
+
         /* section x_xss_protection */
 		[
 			'id'       => 'x_xss_protection',

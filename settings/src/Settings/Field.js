@@ -19,6 +19,7 @@ import Support from "./Support";
 import LearningMode from "./LearningMode/LearningMode";
 import RiskComponent from "./RiskConfiguration/RiskComponent";
 import VulnerabilitiesOverview from "./RiskConfiguration/vulnerabilitiesOverview";
+import IpAddressModule from "./LimitLoginAttempts/IpAddressModule";
 import Button from "./Button";
 import Icon from "../utils/Icon";
 import { useEffect, useState } from "@wordpress/element";
@@ -318,6 +319,14 @@ const Field = (props) => {
         return (
             <div className={highLightClass} ref={scrollAnchor}>
               <VulnerabilitiesOverview field={props.field} />
+            </div>
+        )
+    }
+
+    if (field.type === 'ipaddressmodule') {
+        return (
+            <div className={highLightClass} ref={scrollAnchor}>
+              <IpAddressModule field={props.field} />
             </div>
         )
     }
