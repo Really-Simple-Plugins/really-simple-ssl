@@ -3,6 +3,7 @@ import React, {useEffect, useState} from 'react';
 import DataTable, {createTheme} from "react-data-table-component";
 import LimitLoginAttemptsData from "./LimitLoginAttemptsData";
 import useFields from "../FieldsData";
+import {Button} from "@wordpress/components";
 
 const IpAddressModule = (props) => {
 
@@ -15,6 +16,7 @@ const IpAddressModule = (props) => {
 
     useEffect(() => {
         if (selectedFilter) {
+            console.log("selectedFilter", selectedFilter);
             if (!dataLoaded) {
                 fetchEventLog(selectedFilter).then(r => console.log(r));
             }
@@ -59,12 +61,30 @@ const IpAddressModule = (props) => {
 
 
     //only show the datatable if the data is loaded
-    if (!dataLoaded) {
-        return null;
+    if (!dataLoaded && !selectedFilter && columns.length === 0) {
+        return (
+            <div className="rsssl-spinner">
+                <div className="rsssl-spinner__inner">
+                    <div className="rsssl-spinner__icon"></div>
+                    <div className="rsssl-spinner__text">{__("Loading...", "really-simple-ssl")}</div>
+                </div>
+            </div>
+        );
     }
-    console.log(EventLog, columns)
+
+    let dummyData = [['127.0.0.1','testuser1','','',''],['','','','',''],['','','','','']];
+
+
     return (
-        <DataTable
+        <>
+            {/*Display the add row button */}
+            <div className="rsssl-add-row">
+                <Button isSecondary onClick={() => console.log("add row")}>{__("Add row", "really-simple-ssl")}</Button>
+            </div>
+            {/*Display the datatable*/}
+            <DataTable
+            columns={columns}
+            data={EventLog}
             dense
             pagination
             noDataComponent={__("No results", "really-simple-ssl")}
@@ -72,6 +92,8 @@ const IpAddressModule = (props) => {
             theme="really-simple-plugins"
             customStyles={customStyles}
         ></DataTable>
+        </>
+
     );
 }
 

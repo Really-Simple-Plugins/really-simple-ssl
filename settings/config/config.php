@@ -889,7 +889,24 @@ function rsssl_fields( $load_values = true ) {
                     'width'     => '70%',
                     'minWidth'  => '300px',
                 ],
-                []
+                [
+                    'name' => __('Action', 'really-simple-ssl'),
+                    'sortable' => false,
+                    'column' => 'action',
+                    'width' => '10%',
+                ],
+                [
+                    'name' => __('Country', 'really-simple-ssl'),
+                    'sortable' => false,
+                    'column' => 'country',
+                    'width' => '10%',
+                ],
+                [
+                    'name' => __('Api', 'really-simple-ssl'),
+                    'sortable' => false,
+                    'column' => 'api',
+                    'width' => '10%',
+                ]
             ],
         ],
         //Multiple datatables log/trusted/Blocked
