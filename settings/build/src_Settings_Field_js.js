@@ -1476,6 +1476,208 @@ const CheckboxControl = props => {
 
 /***/ }),
 
+/***/ "./src/Settings/EventLog/EventData.js":
+/*!********************************************!*\
+  !*** ./src/Settings/EventLog/EventData.js ***!
+  \********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/index.mjs");
+/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils/api */ "./src/utils/api.js");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var immer__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! immer */ "./node_modules/immer/dist/immer.esm.mjs");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
+/* Creates A Store For Risk Data using Zustand */
+
+
+
+
+
+const EventData = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set, get) => ({
+  processing: false,
+  dataLoaded: false,
+  pagination: {},
+  dataActions: {},
+  EventLog: [],
+  fetchEventLog: async () => {
+    try {
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('event_log', get().dataActions);
+      //now we set the EventLog
+      if (response) {
+        set({
+          EventLog: response,
+          dataLoaded: true,
+          processing: false,
+          pagination: response.pagination
+        });
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  handleTablePageChange: async (page, pageSize) => {
+    //Add the page and pageSize to the dataActions
+    set((0,immer__WEBPACK_IMPORTED_MODULE_4__.produce)(state => {
+      state.dataActions = {
+        ...state.dataActions,
+        page,
+        pageSize
+      };
+    }));
+  },
+  handleTableRowsChange: async (currentRowsPerPage, currentPage) => {
+    //Add the page and pageSize to the dataActions
+    set((0,immer__WEBPACK_IMPORTED_MODULE_4__.produce)(state => {
+      state.dataActions = {
+        ...state.dataActions,
+        currentRowsPerPage,
+        currentPage
+      };
+    }));
+  },
+  //this handles all pagination and sorting
+  handleTableSort: async (column, sortDirection) => {
+    //Add the column and sortDirection to the dataActions
+    set((0,immer__WEBPACK_IMPORTED_MODULE_4__.produce)(state => {
+      state.dataActions = {
+        ...state.dataActions,
+        sortColumn: column,
+        sortDirection
+      };
+    }));
+  }
+}));
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (EventData);
+
+/***/ }),
+
+/***/ "./src/Settings/EventLog/EventViewer.js":
+/*!**********************************************!*\
+  !*** ./src/Settings/EventLog/EventViewer.js ***!
+  \**********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var react_data_table_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-data-table-component */ "./node_modules/react-data-table-component/dist/index.cjs.js");
+/* harmony import */ var _EventData__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./EventData */ "./src/Settings/EventLog/EventData.js");
+/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../utils/api */ "./src/utils/api.js");
+
+
+
+
+
+
+const EventViewer = props => {
+  const {
+    EventLog,
+    dataLoaded,
+    pagination,
+    dataActions,
+    handleTableRowsChange,
+    fetchEventLog,
+    handleTableSort,
+    handleTablePageChange
+  } = (0,_EventData__WEBPACK_IMPORTED_MODULE_4__["default"])();
+
+  //we create the columns
+  let columns = [];
+  //getting the fields from the props
+  let field = props.field;
+  //we loop through the fields
+  field.columns.forEach(function (item, i) {
+    let newItem = buildColumn(item);
+    columns.push(newItem);
+  });
+  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
+    if (!dataLoaded) {
+      fetchEventLog();
+    }
+  });
+  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
+    if (dataActions) {
+      fetchEventLog();
+    }
+  }, [dataActions]);
+  const customStyles = {
+    headCells: {
+      style: {
+        paddingLeft: '0',
+        // override the cell padding for head cells
+        paddingRight: '0'
+      }
+    },
+    cells: {
+      style: {
+        paddingLeft: '0',
+        // override the cell padding for data cells
+        paddingRight: '0'
+      }
+    }
+  };
+  (0,react_data_table_component__WEBPACK_IMPORTED_MODULE_3__.createTheme)('really-simple-plugins', {
+    divider: {
+      default: 'transparent'
+    }
+  }, 'light');
+
+  //only show the datatable if the data is loaded
+  if (!dataLoaded && columns.length === 0 && EventLog.length === 0) {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-spinner"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-spinner__inner"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-spinner__icon"
+    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-spinner__text"
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Loading...", "really-simple-ssl"))));
+  }
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    columns: columns,
+    data: EventLog.data,
+    dense: true,
+    pagination: true,
+    onChangePage: handleTablePageChange,
+    paginationServer: true,
+    onSort: handleTableSort,
+    sortServer: true,
+    paginationTotalRows: pagination.totalRows,
+    onChangeRowsPerPage: handleTableRowsChange,
+    noDataComponent: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("No results", "really-simple-ssl"),
+    persistTableHead: true,
+    theme: "really-simple-plugins",
+    customStyles: customStyles
+  }));
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (EventViewer);
+function buildColumn(column) {
+  return {
+    name: column.name,
+    sortable: column.sortable,
+    width: column.width,
+    visible: column.visible,
+    column: column.column,
+    selector: row => row[column.column]
+  };
+}
+
+/***/ }),
+
 /***/ "./src/Settings/Field.js":
 /*!*******************************!*\
   !*** ./src/Settings/Field.js ***!
@@ -1514,6 +1716,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _RiskConfiguration_NotificationTester__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./RiskConfiguration/NotificationTester */ "./src/Settings/RiskConfiguration/NotificationTester.js");
 /* harmony import */ var _utils_getAnchor__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ../utils/getAnchor */ "./src/utils/getAnchor.js");
 /* harmony import */ var _Menu_MenuData__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ../Menu/MenuData */ "./src/Menu/MenuData.js");
+/* harmony import */ var _EventLog_EventViewer__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./EventLog/EventViewer */ "./src/Settings/EventLog/EventViewer.js");
+
 
 
 
@@ -1843,6 +2047,15 @@ const Field = props => {
     }));
   }
 
+  console.log(field.type);
+  if (field.type === 'event-viewer') {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: highLightClass,
+      ref: scrollAnchor
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_EventLog_EventViewer__WEBPACK_IMPORTED_MODULE_25__["default"], {
+      field: props.field
+    }));
+  }
   if (field.type === 'notificationtester') {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: 'rsssl-field-button ' + highLightClass,

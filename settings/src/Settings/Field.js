@@ -28,6 +28,7 @@ import PostDropdown from "./PostDropDown";
 import NotificationTester from "./RiskConfiguration/NotificationTester";
 import getAnchor from "../utils/getAnchor";
 import useMenu from "../Menu/MenuData";
+import EventViewer from "./EventLog/EventViewer";
 
 const Field = (props) => {
     let scrollAnchor = React.createRef();
@@ -335,6 +336,16 @@ const Field = (props) => {
                   field={props.field}
                   selectedFilter={selectedFilter} // Pass selectedFilter as a prop to IpAddressModule
               />
+            </div>
+        )
+    }
+console.log(field.type);
+    if (field.type === 'event-viewer') {
+        return (
+            <div className={highLightClass} ref={scrollAnchor}>
+                <EventViewer
+                    field={props.field}
+                />
             </div>
         )
     }
