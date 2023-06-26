@@ -105,6 +105,20 @@ if (!class_exists("rsssl_vulnerabilities")) {
         }
 
 	    /**
+	     * Allow users to manually force a re-check, e.g. in case of manually updating plugins
+	     * @return void
+	     */
+	    public function force_reload_files(){
+		    if ( ! rsssl_admin_logged_in() ) {
+			    return;
+		    }
+
+		    if ( isset($_GET['rsssl_check_vulnerabilities']) ) {
+			    $this->reload_files_on_update();
+		    }
+	    }
+
+	    /**
 	     * Checks the files on age and downloads if needed.
 	     * @return void
 	     */
@@ -136,6 +150,8 @@ if (!class_exists("rsssl_vulnerabilities")) {
             add_action('upgrader_process_complete', array($this, 'reload_files_on_update'), 10, 2);
             //After activation, we need to reload the files.
             add_action( 'activate_plugin', array($this, 'reload_files_on_update'), 10, 2);
+	        //we can also force it
+            add_action( 'admin_init', array($this, 'force_reload_files'));
 
             //same goes for themes.
             add_action('after_switch_theme', array($this, 'reload_files_on_update'), 10, 2);
