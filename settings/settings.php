@@ -239,6 +239,15 @@ function rsssl_settings_rest_route()
             return rsssl_user_can_manage();
         }
     ));
+
+    register_rest_route('reallysimplessl/v1', 'roles', array(
+        'methods' => 'GET',
+        'callback' => 'rsssl_get_roles',
+        'permission_callback' => function () {
+            return rsssl_user_can_manage();
+        }
+    ));
+
 }
 
 /**
@@ -509,6 +518,8 @@ function rsssl_sanitize_field_type($type)
         'vulnerablemeasures',
         'LetsEncrypt',
         'postdropdown',
+        'two_fa_dropdown',
+        'two_fa_table',
     ];
     if (in_array($type, $types)) {
         return $type;
@@ -747,6 +758,11 @@ function rsssl_sanitize_field($value, string $type, string $id)
             return rsssl_sanitize_datatable($value, $type, $id);
         case 'mixedcontentscan':
             return $value;
+        case 'two_fa_dropdown':
+            return array_map('sanitize_text_field', $value);
+        case 'two_fa_table':
+            return $value;
+
         default:
             return sanitize_text_field($value);
     }
@@ -1010,4 +1026,40 @@ function rsssl_conditions_apply(array $conditions)
     }
 
     return $condition_applies;
+}
+
+/**
+ * Fetch all user roles.
+ *
+ * Tries to get roles from cache first. If roles are not in cache, it fetches them and stores them in cache.
+ *
+ * @return WP_REST_Response An array of roles, each role being an associative array with 'label' and 'value' keys.
+ */
+function rsssl_get_roles( $data ) {
+
+    if ( ! wp_verify_nonce( $data['nonce'], 'rsssl_nonce' ) ) {
+        return;
+    }
+
+    global $wp_roles;
+
+    // Try to get roles from cache
+    $roles = wp_cache_get( 'rsssl_roles' );
+
+    // If roles are not in cache, fetch and set cache
+    if ( ! $roles ) {
+        // Just return the names, not the capabilities
+        $roles_names = array_keys( $wp_roles->roles );
+
+        // Extract unique role values from the role names
+        $roles = array_values( array_unique( $roles_names ) );
+
+        // Set the roles in cache for future use
+        wp_cache_set( 'rsssl_roles', $roles );
+    }
+
+    $output['roles'] =  $roles;
+    $output['request_success'] = true;
+    return new WP_REST_Response($output, 200);
+
 }

@@ -1,14 +1,87 @@
-import {__} from '@wordpress/i18n';
-import React, {useEffect, useState} from 'react';
-import DataTable, {createTheme} from "react-data-table-component";
-import useFields from "./FieldsData";
+import { __ } from '@wordpress/i18n';
+import React, { useEffect, useState } from 'react';
+import DataTable, { createTheme } from 'react-data-table-component';
+import FilterComponent from 'react-data-table-component';
+import apiFetch from '@wordpress/api-fetch'; // If you're fetching data from the WordPress API
+import useFields from './FieldsData';
 
 const TwoFaTable = (props) => {
-    // @todo how to pass users
-    const { users } = props;
-    let columns = [];
-    const {fields, fieldAlreadyEnabled, getFieldValue} = useFields();
+    // Initialize the state for the users data
+    const [users, setUsers] = useState([]);
     let field = props.field;
+    const [twoFAMethods, setTwoFAMethods] = useState({});
+    const [filterText, setFilterText] = React.useState('');
+    const [resetPaginationToggle, setResetPaginationToggle] = React.useState(false);
+    const [filteredItems, setFilteredItems] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        if (filterText) {
+            setFilteredItems(
+                users.filter(
+                    item => item.user && item.user.toLowerCase().includes(filterText.toLowerCase()),
+                )
+            );
+        } else {
+            setFilteredItems(users);
+        }
+    }, [users, filterText]);
+
+    useEffect(() => {
+        apiFetch({ path: '/wp/v2/users?context=edit&_fields=id,name,roles,meta' })
+            .then((data) => {
+                const formattedData = data.map(user => ({
+                    id: user.id,
+                    user: user.name,
+                    two_fa_method: user.meta.two_fa_method || 'disabled',
+                    user_role: user.roles[0] // Assuming each user has at least one role
+                }));
+
+                const initialTwoFAMethods = data.reduce((methods, user) => {
+                    methods[user.id] = user.meta.two_fa_method || 'disabled';  // Use user.id instead of user.name
+                    return methods;
+                }, {});
+                setTwoFAMethods(initialTwoFAMethods);
+
+                setUsers(formattedData);
+
+                setLoading(false);
+
+            })
+            .catch((error) => {
+                console.error('Error fetching users:', error);
+
+                setLoading(false);
+            });
+    }, []);
+
+    function handleTwoFAMethodChange(userId, newMethod) {
+        setTwoFAMethods(prevMethods => ({
+            ...prevMethods,
+            [userId]: newMethod,
+        }));
+
+        // Find the user object
+        const user = users.find(user => user.id === userId);
+
+        // Update the user meta
+        apiFetch({
+            path: `/wp/v2/users/${user.id}`,
+            method: 'POST',
+            data: {
+                meta: {
+                    ...user.meta,
+                    two_fa_method: newMethod,
+                },
+            },
+        })
+        .then((response) => {
+            console.log('Reponse', response); // This will log the updated user object
+        })
+        .catch((error) => {
+            console.error('Error updating user meta:', error);
+        });
+    }
 
     function buildColumn(column) {
         return {
@@ -16,13 +89,30 @@ const TwoFaTable = (props) => {
             sortable: column.sortable,
             width: column.width,
             visible: column.visible,
-            selector: row => row[column.column],
+            selector: row => row[column.key],
         };
     }
 
-    // let dummyData = [['','','','',''],['','','','',''],['','','','','']];
+    let columns = [];
+
     field.columns.forEach(function (item, i) {
-        let newItem = buildColumn(item)
+        let newItem = { ...item, key: item.column };
+        newItem = buildColumn(newItem);
+        newItem.visible = newItem.visible ?? true; // If `visible` is undefined, set it to true
+        newItem.name = newItem.name
+
+        if (newItem.name === '2FA') {
+            newItem.cell = row => (
+                <select
+                    value={twoFAMethods[row.id] || 'disabled'}
+                    onChange={event => handleTwoFAMethodChange(row.id, event.target.value)}
+                >
+                    <option value="disabled">Disabled</option>
+                    <option value="email">Email</option>
+                </select>
+            );
+        }
+
         columns.push(newItem);
     });
 
@@ -41,17 +131,34 @@ const TwoFaTable = (props) => {
         },
     };
 
+    const subHeaderComponentMemo = React.useMemo(() => {
+        const handleClear = () => {
+            if (filterText) {
+                setResetPaginationToggle(!resetPaginationToggle);
+                setFilterText('');
+            }
+        };
+
+        return (
+            <FilterComponent onFilter={e => setFilterText(e.target.value)} onClear={handleClear} filterText={filterText} />
+        );
+    }, [filterText, resetPaginationToggle]);
+
     createTheme('really-simple-plugins', {
         divider: {
             default: 'transparent',
         },
     }, 'light');
 
-    if (!users || users.length === 0) {
+    if (loading) {
+        return <div>Loading...</div>;  // replace this with a loading spinner or similar if you like
+    } else {
         return (
             <DataTable
                 columns={columns}
-                data={[]}
+                data={filteredItems}
+                subHeader
+                subHeaderComponent={subHeaderComponentMemo}
                 dense
                 pagination
                 noDataComponent={__("No results", "really-simple-ssl")}
@@ -59,20 +166,9 @@ const TwoFaTable = (props) => {
                 theme="really-simple-plugins"
                 customStyles={customStyles}
             />
-        )
+        );
     }
 
-    return (
-        <DataTable
-            columns={columns}
-            data={users}
-            dense
-            pagination
-            persistTableHead
-            theme="really-simple-plugins"
-            customStyles={customStyles}
-        />
-    )
-}
+};
 
 export default TwoFaTable;

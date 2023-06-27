@@ -20,6 +20,7 @@ import LearningMode from "./LearningMode/LearningMode";
 import RiskComponent from "./RiskConfiguration/RiskComponent";
 import VulnerabilitiesOverview from "./RiskConfiguration/vulnerabilitiesOverview";
 import TwoFaTable from "./TwoFaTable";
+import TwoFaRolesDropDown from "./TwoFaRolesDropDown";
 import Button from "./Button";
 import Icon from "../utils/Icon";
 import { useEffect, useState } from "@wordpress/element";
@@ -329,6 +330,14 @@ const Field = (props) => {
               <TwoFaTable field={props.field} />
             </div>
         )
+    }
+
+    if (field.type === 'two_fa_dropdown') {
+        return (
+            <div className={highLightClass} ref={scrollAnchor}>
+                <TwoFaRolesDropDown field={props.field} />
+            </div>
+        );
     }
 
     if(field.type === 'notificationtester') {

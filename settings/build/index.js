@@ -3549,6 +3549,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "doAction": () => (/* binding */ doAction),
 /* harmony export */   "getFields": () => (/* binding */ getFields),
 /* harmony export */   "getNonce": () => (/* binding */ getNonce),
+/* harmony export */   "getUserRoles": () => (/* binding */ getUserRoles),
 /* harmony export */   "runLetsEncryptTest": () => (/* binding */ runLetsEncryptTest),
 /* harmony export */   "runTest": () => (/* binding */ runTest),
 /* harmony export */   "setFields": () => (/* binding */ setFields)
@@ -3764,6 +3765,9 @@ const runTest = (test, state, data) => {
   }
   data = encodeURIComponent(JSON.stringify(data));
   return apiGet('reallysimplessl/v1/tests/' + test + glue() + 'state=' + state + getNonce() + '&data=' + data);
+};
+const getUserRoles = () => {
+  return apiGet('reallysimplessl/v1/roles/' + getNonce());
 };
 const runLetsEncryptTest = (test, id) => {
   return apiGet('reallysimplessl/v1/tests/' + test + glue() + 'letsencrypt=1&id=' + id + getNonce());
