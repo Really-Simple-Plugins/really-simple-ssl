@@ -111,6 +111,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 
 == Changelog ==
 = 7.0.6 =
+* 04-07-2023
 * Improvement: support custom wp-content directory in advanced-headers.php
 * Improvement: prevent usage of subdirectories in custom login url
 
