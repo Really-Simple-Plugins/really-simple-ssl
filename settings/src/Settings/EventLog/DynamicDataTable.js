@@ -1,11 +1,22 @@
 import {__} from '@wordpress/i18n';
 import React, {useEffect, useState} from 'react';
 import DataTable, {createTheme} from "react-data-table-component";
-import EventData from "./EventData";
+import DynamicDataTableStore from "./DynamicDataTableStore";
 import * as rsssl_api from "../../utils/api";
 
-const EventViewer = (props) => {
-    const {EventLog, dataLoaded, pagination, dataActions, handleTableRowsChange,fetchEventLog, handleTableSort, handleTablePageChange} = EventData()
+const DynamicDataTable = (props) => {
+    const {
+        DynamicDataTable,
+        dataLoaded,
+        pagination,
+        dataActions,
+        handleTableRowsChange,
+        fetchDynamicData,
+        handleTableSort,
+        handleTablePageChange,
+        handleTableSearch
+    } = DynamicDataTableStore()
+
 
     //we create the columns
     let columns = [];
@@ -19,13 +30,13 @@ const EventViewer = (props) => {
 
     useEffect(() => {
         if (!dataLoaded) {
-            fetchEventLog();
+            fetchDynamicData(field.action);
         }
     });
 
     useEffect(() => {
         if (dataActions) {
-            fetchEventLog();
+            fetchDynamicData(field.action);
         }
     }, [dataActions]);
 
@@ -50,7 +61,7 @@ const EventViewer = (props) => {
     }, 'light');
 
     //only show the datatable if the data is loaded
-    if (!dataLoaded && columns.length === 0 && EventLog.length === 0) {
+    if (!dataLoaded && columns.length === 0 && DynamicDataTable.length === 0) {
         return (
             <div className="rsssl-spinner">
                 <div className="rsssl-spinner__inner">
@@ -61,22 +72,42 @@ const EventViewer = (props) => {
         );
     }
 
+    let searchableColumns = [];
+    //setting the searchable columns
+    columns.map(column => {
+        if (column.searchable) {
+            searchableColumns.push(column.column);
+        }
+    });
 
 
     return (
         <>
+            {/*Display the search bar*/}
+            <div className="rsssl-search-bar">
+                <div className="rsssl-search-bar__inner">
+                    <div className="rsssl-search-bar__icon"></div>
+                    <input
+                        type="text"
+                        className="rsssl-search-bar__input"
+                        placeholder={__("Search", "really-simple-ssl")}
+                        onChange={event => handleTableSearch(event.target.value, searchableColumns)}
+                    />
+                </div>
+            </div>
             {/*Display the datatable*/}
             <DataTable
                 columns={columns}
-                data={EventLog.data}
+                data={DynamicDataTable.data}
                 dense
                 pagination
-                onChangePage={handleTablePageChange}
                 paginationServer
-                onSort={handleTableSort}
-                sortServer
                 paginationTotalRows={pagination.totalRows}
                 onChangeRowsPerPage={handleTableRowsChange}
+                onChangePage={handleTablePageChange}
+                sortServer
+                onSort={handleTableSort}
+                paginationRowsPerPageOptions={[10, 25, 50, 100]}
                 noDataComponent={__("No results", "really-simple-ssl")}
                 persistTableHead
                 theme="really-simple-plugins"
@@ -86,12 +117,13 @@ const EventViewer = (props) => {
     );
 
 }
-export default EventViewer;
+export default DynamicDataTable;
 
 function buildColumn(column) {
     return {
         name: column.name,
         sortable: column.sortable,
+        searchable: column.searchable,
         width: column.width,
         visible: column.visible,
         column: column.column,

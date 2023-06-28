@@ -28,7 +28,7 @@ import PostDropdown from "./PostDropDown";
 import NotificationTester from "./RiskConfiguration/NotificationTester";
 import getAnchor from "../utils/getAnchor";
 import useMenu from "../Menu/MenuData";
-import EventViewer from "./EventLog/EventViewer";
+import DynamicDataTable from "./EventLog/DynamicDataTable";
 
 const Field = (props) => {
     let scrollAnchor = React.createRef();
@@ -340,11 +340,12 @@ const Field = (props) => {
         )
     }
 console.log(field.type);
-    if (field.type === 'event-viewer') {
+    if (field.type === 'dynamic-datatable') {
         return (
             <div className={highLightClass} ref={scrollAnchor}>
-                <EventViewer
+                <DynamicDataTable
                     field={props.field}
+                    action={props.action}
                 />
             </div>
         )

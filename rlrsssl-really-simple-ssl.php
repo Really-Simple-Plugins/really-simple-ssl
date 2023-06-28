@@ -24,6 +24,10 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
+use security\wordpress\DynamicTables\DataTable;
+use security\wordpress\DynamicTables\QueryBuilder;
+
 defined('ABSPATH') or die("you do not have access to this page!");
 
 if (!function_exists('rsssl_activation_check')) {
@@ -128,6 +132,10 @@ class REALLY_SIMPLE_SSL
 			require_once( rsssl_path . 'class-site-health.php');
 			require_once( rsssl_path . 'mailer/class-mail.php');
 			require_once( rsssl_path . 'lets-encrypt/letsencrypt.php' );
+            //we include the queryBuilder
+            require_once( rsssl_path . 'security/wordpress/DynamicTables/QueryBuilder.php' );
+            //we include the DataTable
+            require_once( rsssl_path . 'security/wordpress/DynamicTables//DataTable.php' );
 			if ( isset($_GET['install_pro'])) {
 				require_once( rsssl_path . 'upgrade/upgrade-to-pro.php');
 			}
@@ -251,5 +259,11 @@ if ( !function_exists('rsssl_is_logged_in_rest')){
             return false;
         }
         return is_user_logged_in();
+	}
+}
+
+if ( !function_exists('rsssl_datatable')){
+	function rsssl_datatable($data, $table) {
+		return new DataTable($data, new QueryBuilder($table));
 	}
 }

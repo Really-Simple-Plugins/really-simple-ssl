@@ -5,27 +5,35 @@ import {__} from "@wordpress/i18n";
 import {produce} from "immer";
 import React from "react";
 
-const EventData = create((set, get) => ({
+const DynamicDataTableStore = create((set, get) => ({
 
     processing: false,
     dataLoaded: false,
     pagination: {},
     dataActions: {},
-    EventLog: [],
+    DynamicDataTable: [],
 
-    fetchEventLog: async () => {
+    fetchDynamicData: async (action) => {
         try {
             const response = await rsssl_api.doAction(
-                'event_log',
+                action,
                 get().dataActions
             );
             //now we set the EventLog
             if (response) {
-                set({EventLog: response, dataLoaded: true, processing: false, pagination: response.pagination});
+                set({DynamicDataTable: response, dataLoaded: true, processing: false, pagination: response.pagination});
             }
         } catch (e) {
             console.log(e);
         }
+    },
+
+    handleTableSearch: async (search, searchColumns) => {
+        //Add the search to the dataActions
+        set(produce((state) => {
+                state.dataActions = {...state.dataActions, search, searchColumns};
+            })
+        );
     },
 
     handleTablePageChange: async (page, pageSize) => {
@@ -56,4 +64,4 @@ const EventData = create((set, get) => ({
 
 }));
 
-export default EventData;
+export default DynamicDataTableStore;

@@ -858,7 +858,8 @@ function rsssl_fields( $load_values = true ) {
             'id' => 'event_log_viewer',
             'menu_id' => 'limit_login_attempts',
             'group_id' => 'limit_login_attempts_event_log',
-            'type' => 'event-viewer',
+            'type' => 'dynamic-datatable',
+            'action' => 'event_log',
             'label' => __('IP address overview', 'really-simple-ssl'),
             'disabled' => false,
             'default' => false,
@@ -871,15 +872,16 @@ function rsssl_fields( $load_values = true ) {
             'columns'          => [
                 [
                     'name'     => __( 'Ip Address', 'really-simple-ssl' ),
-                    'sortable' => false,
+                    'sortable' => true,
+                    'searchable' => true,
                     'column'   => 'source_ip',
                     'width'    => '15%',
                 ],
                 [
                     'name'     => __( 'User', 'really-simple-ssl' ),
                     'sortable' => true,
-                    'filterable' => true,
                     'column'   => 'username',
+                    'searchable' => true,
                     'type'   => 'text',
                     'width'     => '20%',
                     'minWidth'  => '100px',
@@ -898,7 +900,7 @@ function rsssl_fields( $load_values = true ) {
                 ],
                 [
                     'name' => __('Severity', 'really-simple-ssl'),
-                    'sortable' => false,
+                    'sortable' => true,
                     'column' => 'severity',
                     'width' => '10%',
                 ],
