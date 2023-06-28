@@ -318,6 +318,9 @@ function rsssl_do_action($request, $ajax_data = false)
 	    case 'otherpluginsdata':
 		    $response = rsssl_other_plugins_data();
 		    break;
+        case 'two_fa_table':
+		    $response = rsssl_two_fa_table();
+		    break;
         default:
             $response = apply_filters("rsssl_do_action", [], $action, $data);
     }
@@ -1063,3 +1066,39 @@ function rsssl_get_roles( $data ) {
     return new WP_REST_Response($output, 200);
 
 }
+
+function rsssl_two_fa_table() {
+    $users = get_users(array(
+        'fields' => array('ID', 'user_nicename'), // Only get necessary fields
+    ));
+
+    $formattedData = array();
+    $initialTwoFAMethods = array();
+
+    foreach ($users as $user) {
+        // Fetch user meta data
+        $user_meta = get_user_meta($user->ID);
+
+        // Set two_fa_method, default to 'disabled'
+        $two_fa_method = isset($user_meta['two_fa_method']) ? $user_meta['two_fa_method'][0] : 'disabled';
+
+        // Create a WP_User instance to access roles
+        $wp_user = new WP_User($user->ID);
+        $user_role = !empty($wp_user->roles) ? $wp_user->roles[0] : '';
+
+        // Format user data
+        $formattedData[] = array(
+//            'id' => $user->ID,
+            'user' => $user->user_nicename,
+            'two_fa_method' => $two_fa_method,
+            'user_role' => $user_role,
+        );
+
+        // Set initial two_fa_methods
+        $initialTwoFAMethods[$user->ID] = $two_fa_method;
+    }
+
+    return $formattedData;
+
+}
+

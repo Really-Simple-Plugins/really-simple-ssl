@@ -19,7 +19,7 @@ import Support from "./Support";
 import LearningMode from "./LearningMode/LearningMode";
 import RiskComponent from "./RiskConfiguration/RiskComponent";
 import VulnerabilitiesOverview from "./RiskConfiguration/vulnerabilitiesOverview";
-import TwoFaTable from "./TwoFaTable";
+// import TwoFaTable from "./TwoFaTable";
 import TwoFaRolesDropDown from "./TwoFaRolesDropDown";
 import Button from "./Button";
 import Icon from "../utils/Icon";
@@ -28,7 +28,7 @@ import useFields from "./FieldsData";
 import PostDropdown from "./PostDropDown";
 import NotificationTester from "./RiskConfiguration/NotificationTester";
 import getAnchor from "../utils/getAnchor";
-
+import DynamicDataTable from "./EventLog/DynamicDataTable";
 const Field = (props) => {
     let scrollAnchor = React.createRef();
     const {updateField, setChangedField, highLightField} = useFields();
@@ -324,13 +324,13 @@ const Field = (props) => {
         )
     }
 
-    if (field.type === 'two_fa_table') {
-        return (
-            <div className={highLightClass} ref={scrollAnchor}>
-              <TwoFaTable field={props.field} />
-            </div>
-        )
-    }
+    // if (field.type === 'two_fa_table') {
+    //     return (
+    //         <div className={highLightClass} ref={scrollAnchor}>
+    //           <TwoFaTable field={props.field} />
+    //         </div>
+    //     )
+    // }
 
     if (field.type === 'two_fa_dropdown') {
         return (
@@ -338,6 +338,19 @@ const Field = (props) => {
                 <TwoFaRolesDropDown field={props.field} />
             </div>
         );
+    }
+
+    if (field.type === 'dynamic-datatable') {
+        console.log(props.field)
+        console.log(props.field.action)
+        return (
+            <div className={highLightClass} ref={scrollAnchor}>
+                <DynamicDataTable
+                    field={props.field}
+                    action={props.field.action}
+                />
+            </div>
+        )
     }
 
     if(field.type === 'notificationtester') {

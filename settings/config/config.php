@@ -962,15 +962,20 @@ function rsssl_fields( $load_values = true ) {
 			'menu_id'  => 'two_fa',
 			'group_id' => 'two_fa_email',
 			'type'     => 'two_fa_dropdown',
-//			'label'    => __( "Exclude roles", "really-simple-ssl-pro" ),
-//            'disabled' => false,
-//            'default' => false,
+            'react_conditions' => [
+                'relation' => 'AND',
+                [
+                    'two_fa_email_code' => '1',
+                ]
             ],
+        ],
         [
             'id'    => 'two_fa_users_table',
             'menu_id' => 'two_fa',
             'group_id' => 'two_fa_users',
-            'type' => 'two_fa_table',
+//            'type' => 'two_fa_table',
+            'type' => 'dynamic-datatable',
+            'action' => 'two_fa_table',
             'label' => __('Users', 'really-simple-ssl'),
             'disabled' => false,
             'default' => false,
@@ -978,12 +983,13 @@ function rsssl_fields( $load_values = true ) {
                 [
                     'id'      => 'user',
                     'name'     => __( 'User', 'really-simple-ssl' ),
+                    'searchable' => true,
                     'sortable' => false,
                     'column'   => 'user',
-                    'width'    => '20%',
+//                    'width'    => '20%',
                 ],
                 [
-                    'id'      => 'two_fa',
+                    'id'      => 'two_fa_method',
                     'name'     => __( '2FA', 'really-simple-ssl' ),
                     'sortable' => false,
                     'column'   => 'two_fa_method',
@@ -993,7 +999,7 @@ function rsssl_fields( $load_values = true ) {
                     'name'     => __( 'User role', 'really-simple-ssl' ),
                     'sortable' => false,
                     'column'   => 'user_role',
-                ],[]
+                ],
             ]
         ],
 		[

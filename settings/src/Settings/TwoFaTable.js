@@ -34,11 +34,11 @@ const TwoFaTable = (props) => {
                     id: user.id,
                     user: user.name,
                     two_fa_method: user.meta.two_fa_method || 'disabled',
-                    user_role: user.roles[0] // Assuming each user has at least one role
+                    user_role: user.roles[0]
                 }));
 
                 const initialTwoFAMethods = data.reduce((methods, user) => {
-                    methods[user.id] = user.meta.two_fa_method || 'disabled';  // Use user.id instead of user.name
+                    methods[user.id] = user.meta.two_fa_method || 'disabled';
                     return methods;
                 }, {});
                 setTwoFAMethods(initialTwoFAMethods);
@@ -151,7 +151,7 @@ const TwoFaTable = (props) => {
     }, 'light');
 
     if (loading) {
-        return <div>Loading...</div>;  // replace this with a loading spinner or similar if you like
+        return <div>Loading...</div>;
     } else {
         return (
             <DataTable
