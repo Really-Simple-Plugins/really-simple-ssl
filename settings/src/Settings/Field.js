@@ -339,13 +339,13 @@ const Field = (props) => {
             </div>
         )
     }
-console.log(field.type);
+
     if (field.type === 'dynamic-datatable') {
         return (
             <div className={highLightClass} ref={scrollAnchor}>
                 <DynamicDataTable
                     field={props.field}
-                    action={props.action}
+                    action={props.field.action}
                 />
             </div>
         )

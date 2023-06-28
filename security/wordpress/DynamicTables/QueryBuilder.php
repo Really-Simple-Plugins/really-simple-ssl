@@ -194,7 +194,7 @@ class QueryBuilder {
 				'lastPage'    => $lastPage,
 			],
 			//if the debug option in WordPress is set to true, the query will be returned
-			// 'query' => $this->toSql(), - uncomment this line if you want to see the query
+			// 'query' => $this->toSql(), //- uncomment this line if you want to see the query
 		];
 	}
 
