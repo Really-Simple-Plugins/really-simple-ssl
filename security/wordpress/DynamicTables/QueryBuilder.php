@@ -94,11 +94,10 @@ class QueryBuilder {
 	}
 
 	public function count() {
-		$query = $this->getQuery( true );
-		//get the number of rows from the query with Explain
-		$explainQuery = "EXPLAIN $query";
+        $query = $this->getQuery( true );
+        $countQuery = "SELECT COUNT(*) as count FROM ($query) as subquery";
 
-		return $this->execute( $explainQuery )[0]->rows;
+        return $this->execute($countQuery)[0]->count;
 	}
 
 	private function execute( $query ) {
@@ -179,15 +178,16 @@ class QueryBuilder {
 			$offset = 0;
 		}
 		$this->limit( $rows, $offset );
-		$total   = $this->count();
-		$results = $this->get();
+        $results = $this->get();
+        $total = $this->count();
+
 
 		$lastPage = ceil( $total / $rows );
 
 		return [
 			'data'       => $results,
 			'pagination' => [
-				'totalRows'   => $this->count(),
+				'totalRows'   => $total,
 				'perPage'     => $rows,
 				'offset'      => $offset,
 				'currentPage' => $page,
