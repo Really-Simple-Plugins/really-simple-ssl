@@ -263,6 +263,12 @@ if ( !function_exists('rsssl_is_logged_in_rest')){
 }
 
 if ( !function_exists('rsssl_datatable')){
+    /**
+     * @param $data //the data refers to the post data that comes from the DynamicTables.js
+     * @param $table //the name of the MySql database table where your content is stored
+     *
+     * @return DataTable
+     */
 	function rsssl_datatable($data, $table) {
 		return new DataTable($data, new QueryBuilder($table));
 	}
