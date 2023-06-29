@@ -318,7 +318,7 @@ function rsssl_do_action($request, $ajax_data = false)
 	    case 'otherpluginsdata':
 		    $response = rsssl_other_plugins_data();
 		    break;
-        case 'two_fa_table':
+        case 'rsssl_two_fa_table':
 		    $response = rsssl_two_fa_table();
 		    break;
         default:

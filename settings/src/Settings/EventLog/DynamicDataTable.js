@@ -80,6 +80,7 @@ const DynamicDataTable = (props) => {
         }
     });
 
+    console.log(DynamicDataTable.data)
 
     return (
         <>
@@ -102,7 +103,7 @@ const DynamicDataTable = (props) => {
                 dense
                 pagination
                 paginationServer
-                paginationTotalRows={pagination.totalRows}
+                // paginationTotalRows={pagination.totalRows}
                 onChangeRowsPerPage={handleTableRowsChange}
                 onChangePage={handleTablePageChange}
                 sortServer

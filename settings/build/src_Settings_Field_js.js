@@ -1574,6 +1574,7 @@ const DynamicDataTable = props => {
       searchableColumns.push(column.column);
     }
   });
+  console.log(DynamicDataTable.data);
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-search-bar"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -1590,8 +1591,9 @@ const DynamicDataTable = props => {
     data: DynamicDataTable.data,
     dense: true,
     pagination: true,
-    paginationServer: true,
-    paginationTotalRows: pagination.totalRows,
+    paginationServer: true
+    // paginationTotalRows={pagination.totalRows}
+    ,
     onChangeRowsPerPage: handleTableRowsChange,
     onChangePage: handleTablePageChange,
     sortServer: true,
@@ -2078,8 +2080,6 @@ const Field = props => {
     }));
   }
   if (field.type === 'dynamic-datatable') {
-    console.log(props.field);
-    console.log(props.field.action);
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: highLightClass,
       ref: scrollAnchor

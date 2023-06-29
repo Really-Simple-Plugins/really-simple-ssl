@@ -148,7 +148,7 @@ const Field = (props) => {
     }
 
     if ( field.type==='radio' ){
-        return (    
+        return (
             <div className={highLightClass} ref={scrollAnchor}>
               <RadioControl
                   label={labelWrap(field)}
@@ -341,8 +341,6 @@ const Field = (props) => {
     }
 
     if (field.type === 'dynamic-datatable') {
-        console.log(props.field)
-        console.log(props.field.action)
         return (
             <div className={highLightClass} ref={scrollAnchor}>
                 <DynamicDataTable
