@@ -30,6 +30,7 @@ const DynamicDataTable = (props) => {
 
     useEffect(() => {
         if (!dataLoaded) {
+        console.log("yyyy");
             fetchDynamicData(field.action);
         }
     });
@@ -80,7 +81,10 @@ const DynamicDataTable = (props) => {
         }
     });
 
-    console.log(DynamicDataTable.data)
+    useEffect(() => {
+        console.log(DynamicDataTable);
+    }, [DynamicDataTable]);
+
 
     return (
         <>

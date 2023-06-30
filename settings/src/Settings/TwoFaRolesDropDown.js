@@ -77,7 +77,7 @@ const TwoFaRolesDropDown = ({ field }) => {
     return (
         <div>
             <label htmlFor="rsssl-exclude-roles">
-                {__("Exclude these roles from the two-factor authentication e-mail.", "really-simple-ssl")}
+                {__("Force on:", "really-simple-ssl")}
             </label>
             <Select
                 isMulti

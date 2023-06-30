@@ -1525,6 +1525,7 @@ const DynamicDataTable = props => {
   });
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
     if (!dataLoaded) {
+      console.log("yyyy");
       fetchDynamicData(field.action);
     }
   });
@@ -1574,7 +1575,9 @@ const DynamicDataTable = props => {
       searchableColumns.push(column.column);
     }
   });
-  console.log(DynamicDataTable.data);
+  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
+    console.log(DynamicDataTable);
+  }, [DynamicDataTable]);
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-search-bar"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -1654,13 +1657,13 @@ const DynamicDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((s
       const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction(action, get().dataActions);
       //now we set the EventLog
       if (response) {
-        console.log(response);
         set({
           DynamicDataTable: response,
           dataLoaded: true,
           processing: false,
           pagination: response.pagination
         });
+        console.log("setting after");
       }
     } catch (e) {
       console.log(e);
@@ -4597,7 +4600,7 @@ const TwoFaRolesDropDown = _ref => {
   // Render the component
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
     htmlFor: "rsssl-exclude-roles"
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Exclude these roles from the two-factor authentication e-mail.", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_select__WEBPACK_IMPORTED_MODULE_6__["default"], {
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Force on:", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_select__WEBPACK_IMPORTED_MODULE_6__["default"], {
     isMulti: true,
     options: roles,
     onChange: handleChange,
