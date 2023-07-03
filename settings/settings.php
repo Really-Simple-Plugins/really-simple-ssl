@@ -765,9 +765,7 @@ function rsssl_sanitize_field($value, string $type, string $id)
         case 'mixedcontentscan':
             return $value;
         case 'two_fa_dropdown':
-            if (!is_array($value)) {
-                $value = array($value);
-            }
+	        $value = !is_array($value) ? [] : $value;
             return array_map('sanitize_text_field', $value);
         case 'two_fa_table':
             return $value;
