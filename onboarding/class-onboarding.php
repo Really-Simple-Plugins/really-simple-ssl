@@ -257,7 +257,7 @@ class rsssl_onboarding {
 				"slug" => "complianz-gdpr",
 				'constant_premium' => 'cmplz_premium',
 				"title" => "Complianz",
-				"description" => __("Cookie Consent Management as it should be", "really-simple-ssl"),
+				"description" => __("Consent Management as it should be", "really-simple-ssl"),
 				'read_more' => false,
 			]
 		];
@@ -460,5 +460,3 @@ class rsssl_onboarding {
 	}
 
 }
-
-

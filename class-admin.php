@@ -443,12 +443,17 @@ class rsssl_admin
 	 */
 
 	public function notice_html( string $class, string $content, $more_info=false, $dismiss_id=false ) {
+        if (!rsssl_user_can_manage() ) {
+            return '';
+        }
 		$class .= ' notice ';
 		$is_internal_link = strpos($more_info, 'really-simple-ssl.com')===false;
         $target = !$is_internal_link ? 'target="_blank"' : '';
         $url = is_ssl() ? "https://" : "http://";
 		$url .= $_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"];
-        $url = esc_url_raw($url);
+		$url = wp_validate_redirect( $url, apply_filters( 'wp_safe_redirect_fallback', admin_url(), 302 ) );
+
+		$url = esc_url_raw($url);
 		ob_start();?>
             <style>
                 #rsssl-message {
@@ -1914,7 +1919,7 @@ class rsssl_admin
                         'icon' => 'warning',
                         'admin_notice' => true,
                         'plusone' => true,
-                        'dismissible' => false,
+                        'dismissible' => true,
                         'url' => 'https://really-simple-ssl.com/knowledge-base/htaccess-wp-config-files-not-writable/',
                     ),
                 ),

@@ -61,8 +61,9 @@ class rsssl_firewall_manager {
 			return;
 		}
 
-		$wpcontent_dir  = ABSPATH . 'wp-content';
-		$advanced_headers_file = $wpcontent_dir . '/advanced-headers.php';
+		$use_dynamic_path = WP_CONTENT_DIR === ABSPATH . 'wp-content';
+        $advanced_headers_file = WP_CONTENT_DIR . '/advanced-headers.php';
+
 		$rules    = apply_filters('rsssl_firewall_rules', '');
 		//no rules? remove the file
 		if ( empty(trim($rules) ) ) {
@@ -82,16 +83,24 @@ class rsssl_firewall_manager {
 		$contents .= "//RULES START\n".$rules;
 
 		// write to advanced-header.php file
-		if ( is_writable( ABSPATH . 'wp-content' ) ) {
-			file_put_contents( ABSPATH . "wp-content/advanced-headers.php", $contents );
+		if ( is_writable( WP_CONTENT_DIR ) ) {
+			file_put_contents( $advanced_headers_file, $contents );
 		}
 
 		$wpconfig_path = $this->find_wp_config_path();
 		$wpconfig      = file_get_contents( $wpconfig_path );
 		if ( is_writable( $wpconfig_path ) && strpos( $wpconfig, 'advanced-headers.php' ) === false ) {
-			$rule = 'if ( file_exists(ABSPATH . "wp-content/advanced-headers.php") ) { ' . "\n";
-			$rule .= "\t" . 'require_once ABSPATH . "wp-content/advanced-headers.php";' . "\n" . "}";
-			//if RSSSL comment is found, insert after
+			// As WP_CONTENT_DIR is not defined at this point in the wp-config, we can't use that.
+			// for those setups where the WP_CONTENT_DIR is not in the default location, we hardcode the path.
+            if ( $use_dynamic_path ) {
+                $rule = 'if (file_exists( ABSPATH . "wp-content/advanced-headers.php")) {' . "\n";
+                $rule .= "\t" . 'require_once ABSPATH . "wp-content/advanced-headers.php";' . "\n" . '}';
+            } else {
+                $rule = 'if (file_exists(\'' . WP_CONTENT_DIR . '/advanced-headers.php\')) {' . "\n";
+                $rule .= "\t" . 'require_once \'' . WP_CONTENT_DIR . '/advanced-headers.php\';' . "\n" . '}';
+            }
+
+            //if RSSSL comment is found, insert after
 			$rsssl_comment = '//END Really Simple SSL Server variable fix';
 			if ( strpos($wpconfig, $rsssl_comment)!==false ) {
 				$pos = strrpos($wpconfig, $rsssl_comment);
@@ -103,12 +112,12 @@ class rsssl_firewall_manager {
 		}
 
 		//save errors
-		if ( is_writable( $wpcontent_dir ) && (is_writable( $wpconfig_path ) || strpos( $wpconfig, 'advanced-headers.php' ) !== false ) ) {
+		if ( is_writable( WP_CONTENT_DIR ) && (is_writable( $wpconfig_path ) || strpos( $wpconfig, 'advanced-headers.php' ) !== false ) ) {
 			update_option('rsssl_firewall_error', false, false );
 		} else {
 			if ( !is_writable( $wpconfig_path ) ) {
 				update_option('rsssl_firewall_error', 'wpconfig-notwritable', false );
-			} else if ( !is_writable( $wpcontent_dir )) {
+			} else if ( !is_writable( WP_CONTENT_DIR )) {
 				update_option('rsssl_firewall_error', 'advanced-headers-notwritable', false );
 			}
 		}
