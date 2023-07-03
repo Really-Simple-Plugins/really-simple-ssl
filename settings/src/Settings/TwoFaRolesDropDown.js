@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
-import { __ } from '@wordpress/i18n';
-import apiFetch from '@wordpress/api-fetch';
 import useFields from "./FieldsData";
 import * as rsssl_api from "../utils/api";
 
@@ -77,7 +75,7 @@ const TwoFaRolesDropDown = ({ field }) => {
     return (
         <div>
             <label htmlFor="rsssl-exclude-roles">
-                {__("Force on:", "really-simple-ssl")}
+                {field.label}
             </label>
             <Select
                 isMulti

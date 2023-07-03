@@ -321,6 +321,9 @@ function rsssl_do_action($request, $ajax_data = false)
         case 'rsssl_two_fa_table':
 		    $response = rsssl_two_fa_table();
 		    break;
+        case 'rsssl_send_two_fa_code':
+		    $response = rsssl_send_two_fa_code();
+		    break;
         default:
             $response = apply_filters("rsssl_do_action", [], $action, $data);
     }
@@ -762,6 +765,9 @@ function rsssl_sanitize_field($value, string $type, string $id)
         case 'mixedcontentscan':
             return $value;
         case 'two_fa_dropdown':
+            if (!is_array($value)) {
+                $value = array($value);
+            }
             return array_map('sanitize_text_field', $value);
         case 'two_fa_table':
             return $value;
@@ -1036,7 +1042,7 @@ function rsssl_conditions_apply(array $conditions)
  *
  * Tries to get roles from cache first. If roles are not in cache, it fetches them and stores them in cache.
  *
- * @return WP_REST_Response An array of roles, each role being an associative array with 'label' and 'value' keys.
+ * @return void An array of roles, each role being an associative array with 'label' and 'value' keys.
  */
 function rsssl_get_roles( $data ) {
 
@@ -1063,6 +1069,7 @@ function rsssl_get_roles( $data ) {
 
     $output['roles'] =  $roles;
     $output['request_success'] = true;
+
     return new WP_REST_Response($output, 200);
 
 }
@@ -1100,5 +1107,19 @@ function rsssl_two_fa_table() {
 
     return $formattedData;
 
+}
+
+/**
+ * Function to send a 2FA e-mail token to the current user
+ */
+if ( ! function_exists('rsssl_send_two_fa_code') ) {
+    function rsssl_send_two_fa_code() {
+        if ( class_exists('Rsssl_Two_Factor_Email' ) ) {
+            $instance = Rsssl_Two_Factor_Email::get_instance();
+            // Call the method on the instance.
+            $user = get_current_user();
+            $instance->generate_and_email_token($user);
+        }
+    }
 }
 

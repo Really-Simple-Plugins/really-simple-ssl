@@ -957,11 +957,61 @@ function rsssl_fields( $load_values = true ) {
 			'disabled' => false,
 			'default'  => 'disabled',
 		],
+        [
+            'id'          => 'send_two_fa_test_email',
+            'menu_id'     => 'two_fa',
+            'group_id'    => 'two_fa_email',
+            'type'        => 'button',
+            'action'         => 'rsssl_send_two_fa_code',
+            'button_text' => __( "Send", "really-simple-ssl" ),
+            'label'       => __( "Send 2FA code", 'really-simple-ssl' ),
+            'disabled'    => false,
+            'default'     => false,
+            'condition_action'   => 'hide',
+            'react_conditions' => [
+                'relation' => 'AND',
+                [
+                    'two_fa_email_code' => 1,
+                ]
+            ],
+        ],
+        [
+            'id'          => 'verify_two_fa_email_code',
+            'menu_id'     => 'two_fa',
+            'group_id'    => 'two_fa_email',
+            'type'        => 'button',
+            'action'         => 'rsssl_verify_two_fa_code',
+            'button_text' => __( "Send", "really-simple-ssl" ),
+            'label'       => __( "Send 2FA code", 'really-simple-ssl' ),
+            'disabled'    => false,
+            'default'     => false,
+            'condition_action'   => 'hide',
+            'react_conditions' => [
+                'relation' => 'AND',
+                [
+                    'two_fa_email_code' => 1,
+                ]
+            ],
+        ],
 		[
-			'id'       => 'two_fa_email_exclude_roles',
+			'id'       => 'two_fa_forced_roles',
 			'menu_id'  => 'two_fa',
 			'group_id' => 'two_fa_email',
 			'type'     => 'two_fa_dropdown',
+            'label'    => __( "Force on:", "really-simple-ssl-pro" ),
+            'react_conditions' => [
+                'relation' => 'AND',
+                [
+                    'two_fa_email_code' => '1',
+                ]
+            ],
+        ],
+		[
+			'id'       => 'two_fa_optional_roles',
+			'menu_id'  => 'two_fa',
+			'group_id' => 'two_fa_email',
+			'type'     => 'two_fa_dropdown',
+            'label'    => __( "Optional for:", "really-simple-ssl-pro" ),
             'react_conditions' => [
                 'relation' => 'AND',
                 [

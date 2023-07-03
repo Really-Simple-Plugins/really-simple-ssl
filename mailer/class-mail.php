@@ -37,7 +37,7 @@ if ( !class_exists('rsssl_mailer') ) {
 		 * Send a test email
 		 * @return array
 		 */
-		public function send_test_mail(){
+		public function send_test_mail() {
 			if ( !rsssl_user_can_manage() ) {
 				return ['success' => false, 'message' => 'Not allowed'];
 			}
