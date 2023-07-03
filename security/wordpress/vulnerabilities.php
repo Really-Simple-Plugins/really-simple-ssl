@@ -1434,16 +1434,16 @@ if (!class_exists("rsssl_vulnerabilities")) {
         public function get_warning_string( string $risk_level, int $count): string {
             switch ($risk_level){
                 case 'c':
-                    $warning = _n('You have 1 critical vulnerability', 'You have %s critical vulnerabilities', $count, 'really-simple-ssl');
+                    $warning = sprintf(_n('You have 1 critical vulnerability', 'You have %s critical vulnerabilities', $count, 'really-simple-ssl'), $count);
                     break;
                 case 'h':
-                    $warning = _n('You have 1 high-risk vulnerability', 'You have %s high-risk vulnerabilities', $count, 'really-simple-ssl');
+                    $warning = sprintf(_n('You have 1 high-risk vulnerability', 'You have %s high-risk vulnerabilities', $count, 'really-simple-ssl'), $count);
                     break;
                 case 'm':
-                    $warning = _n('You have 1 medium-risk vulnerability', 'You have %s medium-risk  vulnerabilities', $count, 'really-simple-ssl');
+                    $warning = sprintf(_n('You have 1 medium-risk vulnerability', 'You have %s medium-risk vulnerabilities', $count, 'really-simple-ssl'), $count);
                     break;
                 default:
-	                $warning = _n('You have 1 low-risk vulnerability', 'You have %s low-risk vulnerabilities', $count, 'really-simple-ssl');
+	                $warning = sprintf(_n('You have 1 low-risk vulnerability', 'You have %s low-risk vulnerabilities', $count, 'really-simple-ssl'), $count);
                     break;
             }
             return $warning;
