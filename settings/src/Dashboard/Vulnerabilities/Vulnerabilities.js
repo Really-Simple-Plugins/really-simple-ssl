@@ -10,7 +10,6 @@ const Vulnerabilities = () => {
         vulnerabilityScore,
         updates,
         dataLoaded,
-        vulnerabilityCount,
         fetchVulnerabilities
     } = useRiskData();
     const {fields, getFieldValue} = useFields();
@@ -55,7 +54,6 @@ const Vulnerabilities = () => {
         }
     },[fields])
 
-    let risks = vulnerabilityCount();
     let vulClass = 'rsssl-inactive';
     let badgeVulStyle = vulEnabled?'rsp-success':'rsp-default';
     let badgeUpdateStyle = 'rsp-success';
@@ -258,7 +256,7 @@ const Vulnerabilities = () => {
                     <div className="rsssl-hardening-select-item">
                         {vulEnabled ? <Icon color={iconVulColor} size={23} name="radar-duotone"></Icon> : <Icon size={23}  color={iconVulEnabledColor} name="satellite-dish-duotone"></Icon>}
                         <h2>{vulEnabled ? vulnerabilities : '?'}</h2>
-                        <span className={"rsssl-badge " + badgeVulStyle}>{capitalizeFirstLetter(vulnerabilityWord)}</span>
+                        <span className={"rsssl-badge " + badgeVulStyle}>{updateWordCapitalized}</span>
                     </div>
                     <div className="rsssl-hardening-select-item">
                         { updates ? <Icon size={23} color={iconUpdateColor} name="rotate-exclamation-light"></Icon> : <Icon size={23} color={'black'} name="rotate-light"></Icon>}
