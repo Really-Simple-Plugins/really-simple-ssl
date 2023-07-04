@@ -114,6 +114,8 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 * 04-07-2023
 * Improvement: support custom wp-content directory in advanced-headers.php
 * Improvement: prevent usage of subdirectories in custom login url
+* Fix: translations not loading for chunked react components
+* Improvement: add option to manually re-check vulnerabilities '&rsssl_check_vulnerabilities', props @fawp
 
 = 7.0.5 =
 * Fix: some users with a non www site reporting issues on the login page over http://www, due to the changes in the wp redirect. Reverting to the old method. props @pedalnorth, @mossifer.
