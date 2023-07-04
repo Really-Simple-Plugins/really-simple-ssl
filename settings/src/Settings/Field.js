@@ -54,12 +54,13 @@ const Field = (props) => {
             scrollAnchor.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     }
-
     const onChangeHandler = (fieldValue) => {
         let field = props.field;
         //if there's a pattern, validate it.
         if ( field.pattern ) {
-            fieldValue = fieldValue.replace(/[^a-zA-Z\-_\/]+/g, '');
+            const regex = new RegExp(field.pattern, 'g');
+            const allowedCharactersArray = fieldValue.match(regex);
+            fieldValue = allowedCharactersArray ? allowedCharactersArray.join('') : '';
         }
         updateField(field.id, fieldValue);
 
@@ -166,7 +167,6 @@ const Field = (props) => {
         return (
             <div className={highLightClass} ref={scrollAnchor}>
               <TextControl
-                  pattern={field.pattern ? field.pattern : null}
                   required={ field.required }
                   placeholder={ field.placeholder }
                   disabled={ disabled }

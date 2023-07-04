@@ -419,7 +419,7 @@ function rsssl_fields( $load_values = true ) {
             'disabled' => false,
             'default'  => false,
             'condition_action'   => 'hide',
-	        'pattern' => '/[^a-zA-Z0-9\/_-]/',
+	        'pattern' => '[a-zA-Z0-9\-_]+',
             'react_conditions' => [
                 'relation' => 'AND',
                 [
