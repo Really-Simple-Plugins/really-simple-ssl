@@ -46,23 +46,51 @@ function rsssl_fix_rest_url_for_wpml($url, $path, $blog_id, $scheme)
 
 add_filter('rest_url', 'rsssl_fix_rest_url_for_wpml', 10, 4);
 
+/**
+ * WordPress doesn't allow for translation of chunks resulting of code splitting.
+ * Several workarounds have popped up in JetPack and Woocommerce: https://developer.wordpress.com/2022/01/06/wordpress-plugin-i18n-webpack-and-composer/
+ * Below is mainly based on the Woocommerce solution, which seems to be the most simple approach. Simplicity is king here.
+ *
+ * @return array
+ */
+function rsssl_get_chunk_translations() {
+	//get all files from the settings/build folder
+	$files = scandir(rsssl_path . 'settings/build');
+	$json_translations = [];
+	foreach ($files as $file) {
+		$chunk_handle = 'rsssl-chunk-'.$file;
+        //temporarily register the script, so we can get a translations object.
+		wp_register_script( $chunk_handle, plugins_url('build/'.$file, __FILE__), [], true );
+        $localeData = load_script_textdomain( $chunk_handle, 'really-simple-ssl' );
+        if (!empty($localeData)){
+	        $json_translations[] = $localeData;
+        }
+		wp_deregister_script( $chunk_handle );
+	}
+    return $json_translations;
+}
+
 
 function rsssl_plugin_admin_scripts()
 {
+
     $script_asset_path = __DIR__ . "/build/index.asset.php";
     $script_asset = require($script_asset_path);
+    $handle = 'rsssl-settings';
+	wp_enqueue_script( $handle,'');
     wp_enqueue_script(
-        'rsssl-settings',
+	    $handle,
         plugins_url('build/index.js', __FILE__),
         $script_asset['dependencies'],
         $script_asset['version']
     );
-    wp_set_script_translations('rsssl-settings', 'really-simple-ssl');
+    wp_set_script_translations($handle, 'really-simple-ssl');
 
     wp_localize_script(
         'rsssl-settings',
         'rsssl_settings',
         apply_filters('rsssl_localize_script', [
+            'json_translations' => rsssl_get_chunk_translations(),
             'menu' => rsssl_menu(),
             'site_url' => get_rest_url(),
             'plugins_url' => admin_url('update-core.php'),
@@ -86,6 +114,9 @@ function rsssl_plugin_admin_scripts()
             'wpconfig_fix_required' => RSSSL()->admin->do_wpconfig_loadbalancer_fix() && !RSSSL()->admin->wpconfig_has_fixes(),
         ])
     );
+
+
+
 }
 
 /**

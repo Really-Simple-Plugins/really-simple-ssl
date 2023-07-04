@@ -15,7 +15,7 @@ const ScoreElement = ({className, content, id}) => {
     )
 }
 
-const SslLabs = (props) => {
+const SslLabs = () => {
     const {
         dataLoaded,
         clearCache,
