@@ -58,65 +58,86 @@ function rsssl_get_chunk_translations() {
 	$files = scandir(rsssl_path . 'settings/build');
 	$json_translations = [];
 	foreach ($files as $file) {
+        x_log($file);
 		$chunk_handle = 'rsssl-chunk-'.$file;
         //temporarily register the script, so we can get a translations object.
 		wp_register_script( $chunk_handle, plugins_url('build/'.$file, __FILE__), [], true );
         $localeData = load_script_textdomain( $chunk_handle, 'really-simple-ssl' );
+        x_log($localeData);
         if (!empty($localeData)){
 	        $json_translations[] = $localeData;
         }
 		wp_deregister_script( $chunk_handle );
 	}
+    x_log($json_translations);
     return $json_translations;
 }
 
 
 function rsssl_plugin_admin_scripts()
 {
+	// replace with the actual path to your build directory
+	$buildDirPath = plugin_dir_path(__FILE__) . '/build';
 
-    $script_asset_path = __DIR__ . "/build/index.asset.php";
-    $script_asset = require($script_asset_path);
-    $handle = 'rsssl-settings';
-	wp_enqueue_script( $handle,'');
-    wp_enqueue_script(
-	    $handle,
-        plugins_url('build/index.js', __FILE__),
-        $script_asset['dependencies'],
-        $script_asset['version']
-    );
-    wp_set_script_translations($handle, 'really-simple-ssl');
+	// get the filenames in the build directory
+	$filenames = scandir($buildDirPath);
 
-    wp_localize_script(
-        'rsssl-settings',
-        'rsssl_settings',
-        apply_filters('rsssl_localize_script', [
-            'json_translations' => rsssl_get_chunk_translations(),
-            'menu' => rsssl_menu(),
-            'site_url' => get_rest_url(),
-            'plugins_url' => admin_url('update-core.php'),
-            'admin_ajax_url' => add_query_arg(
-                array(
-                    'type' => 'errors',
-                    'action' => 'rsssl_rest_api_fallback'
-                ),
-                admin_url('admin-ajax.php')),
-            'dashboard_url' => add_query_arg(['page' => 'really-simple-security'], rsssl_admin_url()),
-            'letsencrypt_url' => rsssl_letsencrypt_wizard_url(),
-            'le_generated_by_rsssl' => rsssl_generated_by_rsssl(),
-            'upgrade_link' => is_multisite() ? 'https://really-simple-ssl.com/pro/?mtm_campaign=fallback&mtm_source=free&mtm_content=upgrade' : 'https://really-simple-ssl.com/pro/?mtm_campaign=fallback&mtm_source=free&mtm_content=upgrade',
-            'plugin_url' => rsssl_url,
-            'network_link' => network_site_url('plugins.php'),
-            'pro_plugin_active' => defined('rsssl_pro_version'),
-            'pro_incompatible' => defined('rsssl_pro_version') && rsssl_incompatible_premium_version(),
-            'networkwide_active' => !is_multisite() || rsssl_is_networkwide_active(),//true for single sites and network wide activated
-            'nonce' => wp_create_nonce('wp_rest'),//to authenticate the logged in user
-            'rsssl_nonce' => wp_create_nonce('rsssl_nonce'),
-            'wpconfig_fix_required' => RSSSL()->admin->do_wpconfig_loadbalancer_fix() && !RSSSL()->admin->wpconfig_has_fixes(),
-        ])
-    );
+	// filter the filenames to get the JavaScript and asset filenames
+	$jsFilename = '';
+	$assetFilename = '';
+	foreach ($filenames as $filename) {
+		if (strpos($filename, 'index.') === 0) {
+			if (substr($filename, -3) === '.js') {
+				$jsFilename = $filename;
+			} elseif (substr($filename, -10) === '.asset.php') {
+				$assetFilename = $filename;
+			}
+		}
+	}
 
-
-
+	// check if the necessary files are found
+	if ($jsFilename !== '' && $assetFilename !== '') {
+		$assetFilePath = $buildDirPath . '/' . $assetFilename;
+		$assetFile     = require( $assetFilePath );
+		$handle = 'rsssl-settings';
+		wp_enqueue_script( $handle);
+		wp_enqueue_script(
+			'rsssl-settings',
+			plugins_url( 'build/' . $jsFilename, __FILE__ ),
+			$assetFile['dependencies'],
+			$assetFile['version'],
+			true
+		);
+		wp_set_script_translations($handle, 'really-simple-ssl');
+		wp_localize_script(
+			'rsssl-settings',
+			'rsssl_settings',
+			apply_filters('rsssl_localize_script', [
+				'json_translations' => rsssl_get_chunk_translations(),
+				'menu' => rsssl_menu(),
+				'site_url' => get_rest_url(),
+				'plugins_url' => admin_url('update-core.php'),
+				'admin_ajax_url' => add_query_arg(
+					array(
+						'type' => 'errors',
+						'action' => 'rsssl_rest_api_fallback'
+					),
+					admin_url('admin-ajax.php')),
+				'dashboard_url' => add_query_arg(['page' => 'really-simple-security'], rsssl_admin_url()),
+				'letsencrypt_url' => rsssl_letsencrypt_wizard_url(),
+				'le_generated_by_rsssl' => rsssl_generated_by_rsssl(),
+				'upgrade_link' => is_multisite() ? 'https://really-simple-ssl.com/pro/?mtm_campaign=fallback&mtm_source=free&mtm_content=upgrade' : 'https://really-simple-ssl.com/pro/?mtm_campaign=fallback&mtm_source=free&mtm_content=upgrade',
+				'plugin_url' => rsssl_url,
+				'network_link' => network_site_url('plugins.php'),
+				'pro_plugin_active' => defined('rsssl_pro_version'),
+				'pro_incompatible' => defined('rsssl_pro_version') && rsssl_incompatible_premium_version(),
+				'networkwide_active' => !is_multisite() || rsssl_is_networkwide_active(),//true for single sites and network wide activated
+				'nonce' => wp_create_nonce('wp_rest'),//to authenticate the logged in user
+				'rsssl_nonce' => wp_create_nonce('rsssl_nonce'),
+				'wpconfig_fix_required' => RSSSL()->admin->do_wpconfig_loadbalancer_fix() && !RSSSL()->admin->wpconfig_has_fixes(),
+			])
+		);
+	}
 }
 
 /**
