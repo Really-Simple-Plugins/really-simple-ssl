@@ -58,12 +58,13 @@ function rsssl_get_chunk_translations() {
 	$files = scandir(rsssl_path . 'settings/build');
 	$json_translations = [];
 	foreach ($files as $file) {
-        x_log($file);
+        error_log($file);
 		$chunk_handle = 'rsssl-chunk-'.$file;
         //temporarily register the script, so we can get a translations object.
+        error_log(plugins_url('build/'.$file, __FILE__));
 		wp_register_script( $chunk_handle, plugins_url('build/'.$file, __FILE__), [], true );
         $localeData = load_script_textdomain( $chunk_handle, 'really-simple-ssl' );
-        x_log($localeData);
+		error_log($localeData);
         if (!empty($localeData)){
 	        $json_translations[] = $localeData;
         }
@@ -86,7 +87,7 @@ function rsssl_plugin_admin_scripts()
 	$jsFilename = '';
 	$assetFilename = '';
 	foreach ($filenames as $filename) {
-		if (strpos($filename, 'index.') === 0) {
+		if (strpos($filename, 'index') === 0) {
 			if (substr($filename, -3) === '.js') {
 				$jsFilename = $filename;
 			} elseif (substr($filename, -10) === '.asset.php') {
