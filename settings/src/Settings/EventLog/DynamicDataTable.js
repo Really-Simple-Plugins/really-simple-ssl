@@ -22,11 +22,14 @@ const DynamicDataTable = (props) => {
     let columns = [];
     //getting the fields from the props
     let field = props.field;
+    // console.log(field)
     //we loop through the fields
     field.columns.forEach(function (item, i) {
         let newItem = buildColumn(item)
         columns.push(newItem);
     });
+
+    console.log(columns)
 
     useEffect(() => {
         if (!dataLoaded) {
@@ -102,7 +105,7 @@ const DynamicDataTable = (props) => {
             {/*Display the datatable*/}
             <DataTable
                 columns={columns}
-                data={DynamicDataTable.data}
+                data={DynamicDataTable}
                 dense
                 pagination
                 paginationServer

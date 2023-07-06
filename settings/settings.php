@@ -309,6 +309,10 @@ function rsssl_do_action($request, $ajax_data = false)
             $mailer = new rsssl_mailer();
             $response = $mailer->send_test_mail();
             break;
+        case 'send_verification_mail':
+            $mailer = new rsssl_mailer();
+            $response = $mailer->send_verification_mail();
+            break;
         case 'plugin_actions':
             $response = rsssl_plugin_actions($data);
             break;
@@ -1093,7 +1097,7 @@ function rsssl_two_fa_table() {
 
         // Format user data
         $formattedData[] = array(
-//            'id' => $user->ID,
+//            'column' => '',
             'user' => $user->user_nicename,
             'two_fa_method' => $two_fa_method,
             'user_role' => $user_role,

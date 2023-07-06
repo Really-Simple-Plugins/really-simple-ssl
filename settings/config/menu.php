@@ -30,6 +30,11 @@ function rsssl_menu() {
 							'helpLink' => 'https://really-simple-ssl.com/instructions/about-our-general-settings/?mtm_campaign=instructions&mtm_source=free',
 						],
 						[
+							'id'       => 'email',
+							'title'    => __( 'E-mail', 'really-simple-ssl' ),
+							'helpLink' => 'https://really-simple-ssl.com/instructions/about-our-general-settings/?mtm_campaign=instructions&mtm_source=free',
+						],
+						[
 							'id' => 'support',
 							'title' => __('Premium Support', 'really-simple-ssl'),
 							'intro' => __('The following information is attached when you send this form: license key, scan results, your domain, .htaccess file, debug log and a list of active plugins.', 'really-simple-ssl'),

@@ -1306,11 +1306,7 @@ const Onboarding = props => {
   }), (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Include 6 Tips & Tricks to get started with Really Simple SSL.", "really-simple-ssl"), "\xA0", (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
     href: "https://really-simple-ssl.com/legal/privacy-statement/",
     target: "_blank"
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Privacy Statement", "really-simple-ssl")))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-    onChange: e => setSendTestEmail(e.target.checked),
-    type: "checkbox",
-    checked: sendTestEmail
-  }), (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Send a notification test email - Notification emails are sent from your server.", "really-simple-ssl")))), certificateValid && step.info_text && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Privacy Statement", "really-simple-ssl")))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null)), certificateValid && step.info_text && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-modal-description",
     dangerouslySetInnerHTML: {
       __html: step.info_text
@@ -1358,6 +1354,7 @@ const Button = props => {
   const {
     addHelpNotice
   } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_4__["default"])();
+  console.log(props.field);
   const onClickHandler = action => {
     let data = {};
     _utils_api__WEBPACK_IMPORTED_MODULE_3__.doAction(action, data).then(response => {
@@ -1367,8 +1364,9 @@ const Button = props => {
       addHelpNotice(props.field.id, label, text, title, false);
     });
   };
+  let is_disabled = props.field.disabled ? 'is-disabled' : '';
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, props.field.url && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Hyperlink__WEBPACK_IMPORTED_MODULE_2__["default"], {
-    className: "button button-default",
+    className: "button button-default" + is_disabled,
     text: props.field.button_text,
     url: props.field.url
   }), props.field.action && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
@@ -1518,11 +1516,13 @@ const DynamicDataTable = props => {
   let columns = [];
   //getting the fields from the props
   let field = props.field;
+  // console.log(field)
   //we loop through the fields
   field.columns.forEach(function (item, i) {
     let newItem = buildColumn(item);
     columns.push(newItem);
   });
+  console.log(columns);
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
     if (!dataLoaded) {
       fetchDynamicData(field.action);
@@ -1590,7 +1590,7 @@ const DynamicDataTable = props => {
     onChange: event => handleTableSearch(event.target.value, searchableColumns)
   }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
     columns: columns,
-    data: DynamicDataTable.data,
+    data: DynamicDataTable,
     dense: true,
     pagination: true,
     paginationServer: true

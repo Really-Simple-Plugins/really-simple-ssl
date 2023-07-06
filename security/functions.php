@@ -494,3 +494,11 @@ function rsssl_list_users_where_display_name_is_login_name() {
 
 	return '';
 }
+
+function rsssl_is_email_verified() {
+    // @todo
+    // if usermeta, verified
+    return true;
+
+    return false;
+}

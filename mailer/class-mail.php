@@ -57,6 +57,38 @@ if ( !class_exists('rsssl_mailer') ) {
 			return $this->send_mail(true);
 		}
 
+        public function send_verification_mail() {
+
+            if ( !rsssl_user_can_manage() ) {
+                return ['success' => false, 'message' => 'Not allowed'];
+            }
+
+            $this->to = rsssl_get_option('notifications_email_address', get_bloginfo('admin_email') );
+
+            // Generate verification code
+            $verification_code = str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
+            // Set verification expiration
+            $verification_expiration = strtotime("+15 minutes");
+
+            // Get current user ID
+            $user = wp_get_current_user();
+            $user_id = $user->ID;
+
+            // @todo save, options or usermeta?
+            update_option("rsssl_verification_code_{$user_id}", $verification_code);
+            update_option("rsssl_verification_expiration_{$user_id}", $verification_expiration);
+
+            // @todo use cron to periodically delete expired tokens
+
+            if ( !is_email($this->to) ) {
+                return ['success' => false, 'message' => __('Email address not valid',"really-simple-ssl")];
+            }
+
+            $this->title = __("Really Simple SSL - Verification code", "really-simple-ssl");
+            $this->message = __("Verify your e-mail using code:", "really-simple-ssl") . $verification_code ;
+            return $this->send_mail();
+        }
+
 		public function log_mailer_errors( $wp_error ){
 			if (is_wp_error($wp_error)) {
 				$this->error = $wp_error->get_error_message();
