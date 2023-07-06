@@ -63,10 +63,15 @@ if ( !function_exists('rsssl_maybe_clear_transients')) {
 	 * @return void
 	 */
 	function rsssl_maybe_clear_transients( $field_id, $field_value, $prev_value, $field_type ) {
-		if ( $field_id === ' mixed_content_fixer' && $field_value ) {
+		if ( $field_id === 'mixed_content_fixer' && $field_value ) {
 			delete_transient( 'rsssl_mixed_content_fixer_detected' );
 			RSSSL()->admin->mixed_content_fixer_detected();
 		}
+
+		//expire in five minutes
+		$headers = get_transient('rsssl_can_use_curl_headers_check');
+		set_transient('rsssl_can_use_curl_headers_check', $headers, 5 * MINUTE_IN_SECONDS);
+
 		//no change
 		if ( $field_value === $prev_value ) {
 			return;
