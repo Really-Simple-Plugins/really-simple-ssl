@@ -328,6 +328,9 @@ function rsssl_do_action($request, $ajax_data = false)
         case 'rsssl_send_two_fa_code':
 		    $response = rsssl_send_two_fa_code();
 		    break;
+//        case 'verify_email':
+//		    $response = rsssl_verify_email( $data );
+//		    break;
         default:
             $response = apply_filters("rsssl_do_action", [], $action, $data);
     }
@@ -530,6 +533,7 @@ function rsssl_sanitize_field_type($type)
         'postdropdown',
         'two_fa_dropdown',
         'two_fa_table',
+//        'verify_email',
     ];
     if (in_array($type, $types)) {
         return $type;
@@ -771,6 +775,8 @@ function rsssl_sanitize_field($value, string $type, string $id)
         case 'two_fa_dropdown':
 	        $value = !is_array($value) ? [] : $value;
             return array_map('sanitize_text_field', $value);
+//        case 'verify_email':
+//            return $value;
         case 'two_fa_table':
             return $value;
 
@@ -1047,6 +1053,8 @@ function rsssl_conditions_apply(array $conditions)
  * @return void An array of roles, each role being an associative array with 'label' and 'value' keys.
  */
 function rsssl_get_roles( $data ) {
+    $id = $data['id'];
+    error_log($id);
 
     if ( ! wp_verify_nonce( $data['nonce'], 'rsssl_nonce' ) ) {
         return;
@@ -1069,11 +1077,16 @@ function rsssl_get_roles( $data ) {
         wp_cache_set( 'rsssl_roles', $roles );
     }
 
-    $output['roles'] =  $roles;
+    // Filter out forced roles that are also in optional roles
+    $optional_roles = rsssl_get_option('two_fa_optional_roles');
+    $forced_roles = rsssl_get_option('two_fa_forced_roles');
+    $roles = array_diff($roles, $optional_roles, $forced_roles);
+
+    $output['roles'] = $roles;
     $output['request_success'] = true;
 
+    error_log(print_r($output, true));
     return new WP_REST_Response($output, 200);
-
 }
 
 function rsssl_two_fa_table() {

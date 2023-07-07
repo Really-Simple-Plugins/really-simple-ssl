@@ -136,6 +136,22 @@ function rsssl_fields( $load_values = true ) {
                     'really-simple-ssl' ),
             ],
         ],
+//        [
+//            'id'          => 'verify-email',
+//            'menu_id'     => 'general',
+//            'group_id'    => 'email',
+//            'type'        => 'verify_email',
+//            'warning'     => true,
+//            'label'       => __( "Verify e-mail", 'really-simple-ssl' ),
+//            'disabled'    => rsssl_is_email_verified(),
+//            'tooltip'  => __( "Enter the code you received via e-mail.", 'really-simple-ssl' ),
+//            'help'             => [
+//                'label' => 'warning',
+//                'title' => __( "Email validation is required", 'really-simple-ssl' ),
+//                'text'  => __( 'Lorem flipsum',
+//                    'really-simple-ssl' ),
+//            ],
+//        ],
 		[
 			'id'       => 'notifications_email_address',
 			'menu_id'  => 'general',
@@ -958,42 +974,42 @@ function rsssl_fields( $load_values = true ) {
 			'disabled' => false,
 			'default'  => 'disabled',
 		],
-        [
-            'id'          => 'send_two_fa_test_email',
-            'menu_id'     => 'two_fa',
-            'group_id'    => 'two_fa_email',
-            'type'        => 'button',
-            'action'         => 'rsssl_send_two_fa_code',
-            'button_text' => __( "Send", "really-simple-ssl" ),
-            'label'       => __( "Send 2FA code", 'really-simple-ssl' ),
-            'disabled'    => false,
-            'default'     => false,
-            'condition_action'   => 'hide',
-            'react_conditions' => [
-                'relation' => 'AND',
-                [
-                    'two_fa_email_code' => 1,
-                ]
-            ],
-        ],
-        [
-            'id'          => 'verify_two_fa_email_code',
-            'menu_id'     => 'two_fa',
-            'group_id'    => 'two_fa_email',
-            'type'        => 'button',
-            'action'         => 'rsssl_verify_two_fa_code',
-            'button_text' => __( "Send", "really-simple-ssl" ),
-            'label'       => __( "Send 2FA code", 'really-simple-ssl' ),
-            'disabled'    => false,
-            'default'     => false,
-            'condition_action'   => 'hide',
-            'react_conditions' => [
-                'relation' => 'AND',
-                [
-                    'two_fa_email_code' => 1,
-                ]
-            ],
-        ],
+//        [
+//            'id'          => 'send_two_fa_test_email',
+//            'menu_id'     => 'two_fa',
+//            'group_id'    => 'two_fa_email',
+//            'type'        => 'button',
+//            'action'         => 'rsssl_send_two_fa_code',
+//            'button_text' => __( "Send", "really-simple-ssl" ),
+//            'label'       => __( "Send 2FA code", 'really-simple-ssl' ),
+//            'disabled'    => false,
+//            'default'     => false,
+//            'condition_action'   => 'hide',
+//            'react_conditions' => [
+//                'relation' => 'AND',
+//                [
+//                    'two_fa_email_code' => 1,
+//                ]
+//            ],
+//        ],
+//        [
+//            'id'          => 'verify_two_fa_email_code',
+//            'menu_id'     => 'two_fa',
+//            'group_id'    => 'two_fa_email',
+//            'type'        => 'button',
+//            'action'         => 'rsssl_verify_two_fa_code',
+//            'button_text' => __( "Send", "really-simple-ssl" ),
+//            'label'       => __( "Send 2FA code", 'really-simple-ssl' ),
+//            'disabled'    => false,
+//            'default'     => false,
+//            'condition_action'   => 'hide',
+//            'react_conditions' => [
+//                'relation' => 'AND',
+//                [
+//                    'two_fa_email_code' => 1,
+//                ]
+//            ],
+//        ],
 		[
 			'id'       => 'two_fa_forced_roles',
 			'menu_id'  => 'two_fa',

@@ -21,6 +21,7 @@ import RiskComponent from "./RiskConfiguration/RiskComponent";
 import VulnerabilitiesOverview from "./RiskConfiguration/vulnerabilitiesOverview";
 // import TwoFaTable from "./TwoFaTable";
 import TwoFaRolesDropDown from "./TwoFaRolesDropDown";
+// import VerifyEmailCode from "./VerifyEmailCode";
 import Button from "./Button";
 import Icon from "../utils/Icon";
 import { useEffect, useState } from "@wordpress/element";
@@ -29,6 +30,7 @@ import PostDropdown from "./PostDropDown";
 import NotificationTester from "./RiskConfiguration/NotificationTester";
 import getAnchor from "../utils/getAnchor";
 import DynamicDataTable from "./EventLog/DynamicDataTable";
+import VerificationInput from "./VerifyEmailCode";
 const Field = (props) => {
     let scrollAnchor = React.createRef();
     const {updateField, setChangedField, highLightField} = useFields();
@@ -323,6 +325,14 @@ const Field = (props) => {
             </div>
         )
     }
+
+    // if (field.type === 'verify_email') {
+    //     return (
+    //         <div className={highLightClass} ref={scrollAnchor}>
+    //           <VerificationInput field={props.field} />
+    //         </div>
+    //     )
+    // }
 
     // if (field.type === 'two_fa_table') {
     //     return (

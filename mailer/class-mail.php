@@ -74,18 +74,34 @@ if ( !class_exists('rsssl_mailer') ) {
             $user = wp_get_current_user();
             $user_id = $user->ID;
 
-            // @todo save, options or usermeta?
-            update_option("rsssl_verification_code_{$user_id}", $verification_code);
-            update_option("rsssl_verification_expiration_{$user_id}", $verification_expiration);
+            update_user_meta($user_id, "rsssl_email_verification_code", $verification_code);
+            update_user_meta($user_id, "rsssl_email_verification_code_expiration", $verification_expiration);
+            update_option('rsssl_email_verification_started', 'started');
 
-            // @todo use cron to periodically delete expired tokens
+            $users_with_tokens[] = $user_id;
+            set_transient('rsssl_rsssl_users_with_active_tokens', $users_with_tokens );
 
-            if ( !is_email($this->to) ) {
+            if ( ! is_email( $this->to ) ) {
                 return ['success' => false, 'message' => __('Email address not valid',"really-simple-ssl")];
             }
 
+            $this->subject = __("Really Simple SSL - Verification code", "really-simple-ssl");
             $this->title = __("Really Simple SSL - Verification code", "really-simple-ssl");
-            $this->message = __("Verify your e-mail using code:", "really-simple-ssl") . $verification_code ;
+
+            $nonce = wp_create_nonce('rsssl_email_verification_'.$user_id);
+
+            $verification_url = add_query_arg(
+                array(
+                    'user_id' => $user_id,
+                    'rssslnonce' => $nonce,
+                    'verification_code' => $verification_code,
+                ),
+                get_home_url()  // Use appropriate URL for your use case
+            );
+
+            // Include the verification URL in the email
+            $this->message = __("Verify your e-mail by clicking the following link: ", "really-simple-ssl") . $verification_url;
+
             return $this->send_mail();
         }
 

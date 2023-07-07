@@ -275,5 +275,28 @@ function rsssl_register_user_meta() {
             return rsssl_user_can_manage();
         },
     ]);
+
+    register_meta('user', 'rsssl_email_verification_code', [
+        'show_in_rest' => true,
+        'single' => true,
+        'type' => 'string',
+        'description' => 'Temporary e-mail verification code',
+        'default' => 'disabled',
+        'auth_callback' => function() {
+            return rsssl_user_can_manage();
+        },
+    ]);
+
+    register_meta('user', 'rsssl_email_verification_code_expiration', [
+        'show_in_rest' => true,
+        'single' => true,
+        'type' => 'string',
+        'description' => 'Expiration time for verification code',
+        'default' => 'disabled',
+        'auth_callback' => function() {
+            return rsssl_user_can_manage();
+        },
+    ]);
 }
+
 add_action( 'init' , 'rsssl_register_user_meta' );

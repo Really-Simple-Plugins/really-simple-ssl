@@ -64,6 +64,16 @@ class rsssl_admin
             add_action( 'admin_init', array($this, 'recheck_certificate') );
         }
 
+        // Handle e-mail verification
+        if ( isset( $_POST['rsssl_verification_code'] ) ) {
+
+            $verification_code = $_POST['verification_code'];
+            $verification_code = sanitize_text_field($verification_code);
+
+            $this->verify_user_email( $verification_code );
+
+        }
+
 	    add_filter( 'rsssl_htaccess_security_rules', array($this, 'add_htaccess_redirect') );
 	    add_filter( 'before_rocket_htaccess_rules', array($this, 'add_htaccess_redirect_before_wp_rocket' ) );
 	    add_filter( 'rsssl_five_minutes_cron', array($this, 'maybe_send_mail' ) );
@@ -74,6 +84,44 @@ class rsssl_admin
     static function this()
     {
         return self::$_this;
+    }
+
+    /**
+     * @param $verification_code
+     * @return void
+     *
+     * Handle e-mail verification
+     */
+    public function verify_user_email( $verification_code ) {
+
+        if ( ! rsssl_user_can_manage() ) {
+            return;
+        }
+
+        // verify code
+        $user = wp_get_current_user();
+        $user_id = $user->ID;
+
+        $nonce = $_GET['rssslnonce'];
+
+        if ( ! wp_verify_nonce( $nonce, 'rsssl_email_verification_'.$user_id ) ) {
+            return;
+        }
+
+        $verification_expiration = date("Y-m-d H:i:s" );
+
+        // Always sanitize user inputs
+        $verification_expiration = sanitize_text_field( $verification_expiration );
+
+        $current_time = date("Y-m-d H:i:s");
+
+        $saved_verification_code = get_user_meta( $user_id, "rsssl_email_verification_code", $verification_code );
+        $saved_verification_expiration = get_user_meta( $user_id, "rsssl_email_verification_code_expiration", $verification_expiration );
+
+        if ( $verification_code == $saved_verification_code && $current_time < $saved_verification_expiration ) {
+            // If the verification code is correct and hasn't expired, update the verification status
+            update_option('rsssl_email_verification_started', 'completed');
+        }
     }
 
 	/**

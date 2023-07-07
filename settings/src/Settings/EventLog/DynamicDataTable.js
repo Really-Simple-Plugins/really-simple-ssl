@@ -29,7 +29,7 @@ const DynamicDataTable = (props) => {
         columns.push(newItem);
     });
 
-    console.log(columns)
+    // console.log(columns)
 
     useEffect(() => {
         if (!dataLoaded) {
@@ -84,7 +84,7 @@ const DynamicDataTable = (props) => {
     });
 
     useEffect(() => {
-        console.log(DynamicDataTable);
+        // console.log(DynamicDataTable);
     }, [DynamicDataTable]);
 
 

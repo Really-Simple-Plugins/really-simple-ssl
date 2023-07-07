@@ -468,7 +468,7 @@ function rsssl_generate_random_string($length) {
 	$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 	$randomString = '';
 
-	for ($i = 0; $i < $length; $i++) {
+	for ( $i = 0; $i < $length; $i++ ) {
 		$index = rand(0, strlen($characters) - 1);
 		$randomString .= $characters[$index];
 	}
@@ -482,6 +482,7 @@ function rsssl_generate_random_string($length) {
  * Get users as string to display
  */
 function rsssl_list_users_where_display_name_is_login_name() {
+
 	if ( !rsssl_user_can_manage() ) {
 		return '';
 	}
@@ -495,10 +496,88 @@ function rsssl_list_users_where_display_name_is_login_name() {
 	return '';
 }
 
+/**
+ * @return bool|void
+ *
+ * Check if user e-mail is verified
+ */
 function rsssl_is_email_verified() {
-    // @todo
-    // if usermeta, verified
-    return true;
+
+    if ( ! rsssl_user_can_manage() ) {
+        return false;
+    }
+
+    if ( get_option('rsssl_email_verification') == 'completed' ) {
+        // completed
+        return true;
+    }
+
+    if ( get_option('rsssl_email_verification') == 'started' ) {
+        // started
+        return false;
+    }
+
+    if ( get_option('rsssl_email_verification') == 'expired' ) {
+        // expired link
+        return false;
+    }
 
     return false;
+}
+
+/**
+ * @return void
+ *
+ * Clear expired verification tokens from DB
+ */
+function rsssl_clear_expired_tokens() {
+    $users_with_tokens = get_transient('rsssl_users_with_active_tokens' );
+    if( $users_with_tokens ) {
+        foreach ( $users_with_tokens as $key => $user_id )  {
+            $token_expiration = get_user_meta($user_id, 'rsssl_email_verification_code_expiration', true);
+            if ( $token_expiration > time() ) {
+                delete_user_meta( $user_id, 'rsssl_email_verification_code' );
+                delete_user_meta( $user_id, 'rsssl_email_verification_code_expiration' );
+                unset( $users_with_tokens[$key] );
+            }
+        }
+        // Update the transient with the updated list of users who still have active tokens
+        set_transient('rsssl_users_with_active_tokens', $users_with_tokens, 0);
+    }
+}
+
+add_filter('rsssl_five_minutes_cron', 'rsssl_clear_expired_tokens' );
+
+/**
+ * @param $data
+ * @return void
+ *
+ * Verify e-mail code
+ */
+function rsssl_verify_email( $data ) {
+
+    if ( !rsssl_user_can_manage() ) {
+        return;
+    }
+
+    $nonce = $data['nonce'];
+    if ( ! wp_verify_nonce( $nonce, 'rsssl_nonce' ) ) {
+        return;
+    }
+
+    // Get the current user
+    $user_id = get_current_user_id();
+
+    // Fetch the user's verification code
+    $user_code = get_user_meta($user_id, 'rsssl_email_verification_code', true);
+
+    // Check the provided code against the user's code
+    if ( intval( $data['input'] ) === intval( $user_code ) ) {
+        // If the code is correct, do something (e.g., verify the email)
+        wp_send_json_success('Code is valid', 200);
+        update_option('rsssl_email_verification', 'completed');
+    } else {
+        // If the code is incorrect, send an error
+        wp_send_json_error('Code is invalid', 400);
+    }
 }

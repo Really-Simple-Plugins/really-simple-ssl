@@ -9,7 +9,7 @@ import useFields from "./FieldsData";
 const Button = (props) => {
     const {addHelpNotice} = useFields();
 
-    console.log(props.field);
+    // console.log(props.field);
 
     const onClickHandler = (action) => {
         let data = {};

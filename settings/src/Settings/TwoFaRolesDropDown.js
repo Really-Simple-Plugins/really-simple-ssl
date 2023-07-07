@@ -24,7 +24,7 @@ const TwoFaRolesDropDown = ({ field }) => {
         const fetchRoles = async () => {
             try {
                 // Fetch the roles from the server using rsssl_api.getUserRoles()
-                const response = await rsssl_api.getUserRoles();
+                const response = await rsssl_api.getUserRoles(field.id);
 
                 // Handle the response
                 if (!response) {
@@ -33,13 +33,16 @@ const TwoFaRolesDropDown = ({ field }) => {
                 }
 
                 const data = response.roles;
-                if (!data) {
-                    console.error('No data received in the server response.');
+                if (typeof data !== 'object') {
+                    console.error('Invalid data received in the server response. Expected an object.');
                     return;
                 }
 
+                // Convert the object to an array
+                const dataArray = Object.values(data);
+
                 // Format the data into options array for react-select
-                const formattedData = data.map((role, index) => ({ value: role, label: role }));
+                const formattedData = dataArray.map((role, index) => ({ value: role, label: role }));
 
                 // Set the roles state with formatted data
                 setRoles(formattedData);
