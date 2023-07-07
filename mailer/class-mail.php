@@ -92,9 +92,9 @@ if ( !class_exists('rsssl_mailer') ) {
 
             $verification_url = add_query_arg(
                 array(
-                    'user_id' => $user_id,
-                    'rssslnonce' => $nonce,
-                    'verification_code' => $verification_code,
+//                    'user_id' => $user_id,
+                    'rsssl_nonce' => $nonce,
+                    'rsssl_verification_code' => $verification_code,
                 ),
                 get_home_url()  // Use appropriate URL for your use case
             );

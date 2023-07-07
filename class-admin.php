@@ -65,7 +65,7 @@ class rsssl_admin
         }
 
         // Handle e-mail verification
-        if ( isset( $_POST['rsssl_verification_code'] ) ) {
+        if ( isset( $_GET['rsssl_verification_code'] ) ) {
 
             $verification_code = $_POST['verification_code'];
             $verification_code = sanitize_text_field($verification_code);
@@ -102,7 +102,7 @@ class rsssl_admin
         $user = wp_get_current_user();
         $user_id = $user->ID;
 
-        $nonce = $_GET['rssslnonce'];
+        $nonce = $_GET['rsssl_nonce'];
 
         if ( ! wp_verify_nonce( $nonce, 'rsssl_email_verification_'.$user_id ) ) {
             return;
@@ -120,6 +120,7 @@ class rsssl_admin
 
         if ( $verification_code == $saved_verification_code && $current_time < $saved_verification_expiration ) {
             // If the verification code is correct and hasn't expired, update the verification status
+            error_log("Successfully verified");
             update_option('rsssl_email_verification_started', 'completed');
         }
     }
