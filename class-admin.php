@@ -67,7 +67,7 @@ class rsssl_admin
         // Handle e-mail verification
         if ( isset( $_GET['rsssl_verification_code'] ) ) {
 
-            $verification_code = $_POST['verification_code'];
+            $verification_code = $_GET['rsssl_verification_code'];
             $verification_code = sanitize_text_field($verification_code);
 
             $this->verify_user_email( $verification_code );
