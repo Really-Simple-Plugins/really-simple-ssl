@@ -392,6 +392,15 @@ function rsssl_fields( $load_values = true ) {
 			'disabled' => false,
 			'default'  => false,
 		],
+		[
+			'id'       => 'block_admin_creation',
+			'menu_id'  => 'hardening',
+			'group_id' => 'hardening_extended',
+			'type'     => 'checkbox',
+			'label'    => __( "Prevent administrator creation outside WordPress user profile", 'really-simple-ssl' ),
+			'disabled' => false,
+			'default'  => false,
+		],
         [
             'id'       => 'change_login_url_enabled',
             'menu_id'  => 'hardening',

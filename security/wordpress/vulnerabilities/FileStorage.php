@@ -83,7 +83,7 @@ class FileStorage
             $this->hash = get_option('rsssl_hashkey');
         } else {
             $this->hash = md5(uniqid(rand(), true));
-            update_option('rsssl_hashkey', $this->hash);
+            update_option('rsssl_hashkey', $this->hash, false);
         }
     }
 
