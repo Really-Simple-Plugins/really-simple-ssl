@@ -20,7 +20,7 @@ import LearningMode from "./LearningMode/LearningMode";
 import RiskComponent from "./RiskConfiguration/RiskComponent";
 import VulnerabilitiesOverview from "./RiskConfiguration/vulnerabilitiesOverview";
 // import TwoFaTable from "./TwoFaTable";
-import TwoFaRolesDropDown from "./TwoFaRolesDropDown";
+import TwoFaRolesDropDown from "./TwoFA/TwoFaRolesDropDown";
 // import VerifyEmailCode from "./VerifyEmailCode";
 import Button from "./Button";
 import Icon from "../utils/Icon";
@@ -30,7 +30,7 @@ import PostDropdown from "./PostDropDown";
 import NotificationTester from "./RiskConfiguration/NotificationTester";
 import getAnchor from "../utils/getAnchor";
 import DynamicDataTable from "./EventLog/DynamicDataTable";
-import VerificationInput from "./VerifyEmailCode";
+// import VerificationInput from "./VerifyEmailCode";
 const Field = (props) => {
     let scrollAnchor = React.createRef();
     const {updateField, setChangedField, highLightField} = useFields();
@@ -129,6 +129,7 @@ const Field = (props) => {
     }
 
     if ( field.type==='checkbox' ){
+        console.log(field, disabled)
         return (
             <div className={highLightClass} ref={scrollAnchor}>
                 <CheckboxControl

@@ -973,6 +973,12 @@ function rsssl_fields( $load_values = true ) {
 			'label'    => __( "Enable login with email code", "really-simple-ssl-pro" ),
 			'disabled' => false,
 			'default'  => 'disabled',
+			'react_condition' => [
+				'relation' => 'AND',
+				[
+					'two_fa_enabled' => true,
+				]
+			],
 		],
 //        [
 //            'id'          => 'send_two_fa_test_email',
@@ -1019,7 +1025,7 @@ function rsssl_fields( $load_values = true ) {
             'react_conditions' => [
                 'relation' => 'AND',
                 [
-                    'two_fa_email_code' => '1',
+                    'two_fa_email_code' => true,
                 ]
             ],
         ],
@@ -1032,7 +1038,7 @@ function rsssl_fields( $load_values = true ) {
             'react_conditions' => [
                 'relation' => 'AND',
                 [
-                    'two_fa_email_code' => '1',
+                    'two_fa_email_code' => true,
                 ]
             ],
         ],
@@ -1053,7 +1059,7 @@ function rsssl_fields( $load_values = true ) {
                     'searchable' => true,
                     'width'    => '20%',
                     'visible' => true,
-                    'column'   => 'User',
+                    'column'   => 'user',
                 ],
                 [
                     'name'     => __( '2FA', 'really-simple-ssl' ),
@@ -1061,7 +1067,7 @@ function rsssl_fields( $load_values = true ) {
                     'searchable' => false,
                     'width'    => '20%',
                     'visible' => true,
-                    'column'   => '2FA',
+                    'column'   => 'two_fa_method',
                 ],
                 [
                     'name'     => __( 'User role', 'really-simple-ssl' ),
@@ -1069,7 +1075,7 @@ function rsssl_fields( $load_values = true ) {
                     'searchable' => false,
                     'width'    => '20%',
                     'visible' => true,
-                    'column'   => 'User role',
+                    'column'   => 'user_role',
                 ],
             ]
         ],

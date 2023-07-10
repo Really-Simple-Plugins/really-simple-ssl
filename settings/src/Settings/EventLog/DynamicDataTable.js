@@ -2,7 +2,6 @@ import {__} from '@wordpress/i18n';
 import React, {useEffect, useState} from 'react';
 import DataTable, {createTheme} from "react-data-table-component";
 import DynamicDataTableStore from "./DynamicDataTableStore";
-import * as rsssl_api from "../../utils/api";
 
 const DynamicDataTable = (props) => {
     const {
@@ -29,7 +28,7 @@ const DynamicDataTable = (props) => {
         columns.push(newItem);
     });
 
-    // console.log(columns)
+    console.log(columns)
 
     useEffect(() => {
         if (!dataLoaded) {
@@ -87,7 +86,7 @@ const DynamicDataTable = (props) => {
         // console.log(DynamicDataTable);
     }, [DynamicDataTable]);
 
-
+    console.log(DynamicDataTable);
     return (
         <>
             {/*Display the search bar*/}
@@ -133,7 +132,6 @@ function buildColumn(column) {
         searchable: column.searchable,
         width: column.width,
         visible: column.visible,
-        column: column.column,
         selector: row => row[column.column],
     };
 }

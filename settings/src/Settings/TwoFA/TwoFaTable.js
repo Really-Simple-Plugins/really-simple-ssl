@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import DataTable, { createTheme } from 'react-data-table-component';
 import FilterComponent from 'react-data-table-component';
 import apiFetch from '@wordpress/api-fetch'; // If you're fetching data from the WordPress API
-import useFields from './FieldsData';
 
 const TwoFaTable = (props) => {
     // Initialize the state for the users data
@@ -99,7 +98,6 @@ const TwoFaTable = (props) => {
         let newItem = { ...item, key: item.column };
         newItem = buildColumn(newItem);
         newItem.visible = newItem.visible ?? true; // If `visible` is undefined, set it to true
-        newItem.name = newItem.name
 
         if (newItem.name === '2FA') {
             newItem.cell = row => (

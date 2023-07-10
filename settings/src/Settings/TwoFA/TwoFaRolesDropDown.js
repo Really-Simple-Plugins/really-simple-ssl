@@ -1,17 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
-import useFields from "./FieldsData";
-import * as rsssl_api from "../utils/api";
-
+import useFields from "../FieldsData";
+import useTwoFaData from './TwoFaStore';
 /**
  * TwoFaRolesDropDown component represents a dropdown select for excluding roles
  * from two-factor authentication email.
  * @param {object} field - The field object containing information about the field.
  */
 const TwoFaRolesDropDown = ({ field }) => {
-
-    // State initialization
-    const [roles, setRoles] = useState([]);
+    const {fetchRoles, roles, rolesLoaded} = useTwoFaData();
     const [selectedRoles, setSelectedRoles] = useState([]);
 
     // Custom hook to manage form fields
@@ -21,42 +18,15 @@ const TwoFaRolesDropDown = ({ field }) => {
      * Fetches the roles from the server on component mount.
      */
     useEffect(() => {
-        const fetchRoles = async () => {
-            try {
-                // Fetch the roles from the server using rsssl_api.getUserRoles()
-                const response = await rsssl_api.getUserRoles(field.id);
+        const run = async () => {
+            await fetchRoles(field.id);
+            // Set the selectedRoles state based on the field value
+            const selectedRolesFromField = field.value.map(value => ({ value, label: value }));
+            setSelectedRoles(selectedRolesFromField);
+        }
+        run()
 
-                // Handle the response
-                if (!response) {
-                    console.error('No response received from the server.');
-                    return;
-                }
-
-                const data = response.roles;
-                if (typeof data !== 'object') {
-                    console.error('Invalid data received in the server response. Expected an object.');
-                    return;
-                }
-
-                // Convert the object to an array
-                const dataArray = Object.values(data);
-
-                // Format the data into options array for react-select
-                const formattedData = dataArray.map((role, index) => ({ value: role, label: role }));
-
-                // Set the roles state with formatted data
-                setRoles(formattedData);
-
-                // Set the selectedRoles state based on the field value
-                const selectedRolesFromField = field.value.map(value => ({ value, label: value }));
-                setSelectedRoles(selectedRolesFromField);
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        };
-
-        fetchRoles();
-    }, []);
+    }, [rolesLoaded]);
 
     /**
      * Handles the change event of the react-select component.
