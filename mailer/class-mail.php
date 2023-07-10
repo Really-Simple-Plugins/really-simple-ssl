@@ -69,12 +69,11 @@ if ( !class_exists('rsssl_mailer') ) {
             $verification_expiration = strtotime("+15 minutes");
 
             // Get current user ID
-            $user = wp_get_current_user();
-            $user_id = $user->ID;
+            $user_id = get_current_user_id();
 
             update_user_meta($user_id, "rsssl_email_verification_code", $verification_code);
             update_user_meta($user_id, "rsssl_email_verification_code_expiration", $verification_expiration);
-            update_option('rsssl_email_verification_started', 'started');
+            update_option('rsssl_email_verification_status', 'started', false);
 
             $users_with_tokens[] = $user_id;
             set_transient('rsssl_rsssl_users_with_active_tokens', $users_with_tokens );
@@ -83,21 +82,22 @@ if ( !class_exists('rsssl_mailer') ) {
                 return ['success' => false, 'message' => __('Email address not valid',"really-simple-ssl")];
             }
 
+	        $verification_url = add_query_arg(
+		        array(
+			        'rsssl_nonce' => wp_create_nonce('rsssl_email_verification_'.$user_id),
+			        'rsssl_verification_code' => $verification_code,
+		        ),
+		        rsssl_admin_url()
+	        );
+
             $this->subject = __("Really Simple SSL - Verification code", "really-simple-ssl");
             $this->title = __("Really Simple SSL - Verification code", "really-simple-ssl");
-
-            $nonce = wp_create_nonce('rsssl_email_verification_'.$user_id);
-
-            $verification_url = add_query_arg(
-                array(
-                    'rsssl_nonce' => $nonce,
-                    'rsssl_verification_code' => $verification_code,
-                ),
-                trailingslashit( get_home_url() ) . 'wp-admin'
-            );
-
-            // Include the verification URL in the email
-            $this->message = __("Verify your e-mail by clicking the following link: ", "really-simple-ssl") . $verification_url;
+	        $this->message = __("E-mail verification.", "really-simple-ssl");
+	        $this->warning_blocks[] = [
+		        'title' => __("Confirm e-mail.", "really-simple-ssl"),
+		        'message' => sprintf(__("Click the button below to confirm your email address, or copy the following URL: %s", "really-simple-ssl"), $verification_url),
+		        'url' => $verification_url,
+	        ];
 
             return $this->send_mail();
         }
