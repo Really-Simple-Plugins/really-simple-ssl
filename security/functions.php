@@ -517,10 +517,10 @@ function rsssl_is_email_verified() {
         return false;
     }
 
-    if ( get_option('rsssl_email_verification') == 'expired' ) {
-        // expired link
-        return false;
-    }
+//    if ( get_option('rsssl_email_verification') == 'expired' ) {
+//        // expired link
+//        return false;
+//    }
 
     return false;
 }
@@ -580,4 +580,10 @@ function rsssl_verify_email( $data ) {
         // If the code is incorrect, send an error
         wp_send_json_error('Code is invalid', 400);
     }
+}
+
+function rsssl_get_verification_code(): string
+{
+    // Generate verification code
+    return str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
 }

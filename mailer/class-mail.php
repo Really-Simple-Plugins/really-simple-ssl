@@ -65,9 +65,7 @@ if ( !class_exists('rsssl_mailer') ) {
 
             $this->to = rsssl_get_option('notifications_email_address', get_bloginfo('admin_email') );
 
-            // Generate verification code
-            $verification_code = str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
-            // Set verification expiration
+            $verification_code = rsssl_get_verification_code();
             $verification_expiration = strtotime("+15 minutes");
 
             // Get current user ID
@@ -92,11 +90,10 @@ if ( !class_exists('rsssl_mailer') ) {
 
             $verification_url = add_query_arg(
                 array(
-//                    'user_id' => $user_id,
                     'rsssl_nonce' => $nonce,
                     'rsssl_verification_code' => $verification_code,
                 ),
-                get_home_url()  // Use appropriate URL for your use case
+                trailingslashit( get_home_url() ) . 'wp-admin'
             );
 
             // Include the verification URL in the email
