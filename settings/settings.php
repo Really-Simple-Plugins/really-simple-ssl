@@ -1110,6 +1110,7 @@ function rsssl_two_fa_table() {
         // Format user data
         $formattedData[] = array(
 //            'column' => '',
+            'id' => $user->ID,
             'user' => $user->user_nicename,
             'two_fa_method' => $two_fa_method,
             'user_role' => $user_role,
@@ -1119,7 +1120,7 @@ function rsssl_two_fa_table() {
         $initialTwoFAMethods[$user->ID] = $two_fa_method;
     }
 
-    return $formattedData;
+    return ['data' => $formattedData];
 
 }
 

@@ -1591,7 +1591,7 @@ const DynamicDataTable = props => {
     onChange: event => handleTableSearch(event.target.value, searchableColumns)
   }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
     columns: columns,
-    data: DynamicDataTable,
+    data: DynamicDataTable.data,
     dense: true,
     pagination: true,
     paginationServer: true
