@@ -549,41 +549,11 @@ function rsssl_clear_expired_tokens() {
 add_filter('rsssl_five_minutes_cron', 'rsssl_clear_expired_tokens' );
 
 /**
- * @param $data
- * @return void
+ * @return string
  *
- * Verify e-mail code
+ * Generate an e-mail verification code
  */
-function rsssl_verify_email( $data ) {
-
-    if ( !rsssl_user_can_manage() ) {
-        return;
-    }
-
-    $nonce = $data['nonce'];
-    if ( ! wp_verify_nonce( $nonce, 'rsssl_nonce' ) ) {
-        return;
-    }
-
-    // Get the current user
-    $user_id = get_current_user_id();
-
-    // Fetch the user's verification code
-    $user_code = get_user_meta($user_id, 'rsssl_email_verification_code', true);
-
-    // Check the provided code against the user's code
-    if ( intval( $data['input'] ) === intval( $user_code ) ) {
-        // If the code is correct, do something (e.g., verify the email)
-        wp_send_json_success('Code is valid', 200);
-        update_option('rsssl_email_verification', 'completed');
-    } else {
-        // If the code is incorrect, send an error
-        wp_send_json_error('Code is invalid', 400);
-    }
-}
-
 function rsssl_get_verification_code(): string
 {
-    // Generate verification code
     return str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
 }

@@ -113,7 +113,7 @@ class rsssl_admin
         // Always sanitize user inputs
         $verification_expiration = sanitize_text_field( $verification_expiration );
 
-        $current_time = date("Y-m-d H:i:s");
+        $current_time = time();
 
         $saved_verification_code = get_user_meta( $user_id, "rsssl_email_verification_code", $verification_code );
         $saved_verification_expiration = get_user_meta( $user_id, "rsssl_email_verification_code_expiration", $verification_expiration );

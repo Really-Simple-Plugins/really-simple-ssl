@@ -328,9 +328,6 @@ function rsssl_do_action($request, $ajax_data = false)
         case 'rsssl_send_two_fa_code':
 		    $response = rsssl_send_two_fa_code();
 		    break;
-//        case 'verify_email':
-//		    $response = rsssl_verify_email( $data );
-//		    break;
         default:
             $response = apply_filters("rsssl_do_action", [], $action, $data);
     }
@@ -1053,8 +1050,6 @@ function rsssl_conditions_apply(array $conditions)
  * @return void An array of roles, each role being an associative array with 'label' and 'value' keys.
  */
 function rsssl_get_roles( $data ) {
-    $id = $data['id'];
-    error_log($id);
 
     if ( ! wp_verify_nonce( $data['nonce'], 'rsssl_nonce' ) ) {
         return;
@@ -1080,7 +1075,11 @@ function rsssl_get_roles( $data ) {
     // Filter out forced roles that are also in optional roles
     $optional_roles = rsssl_get_option('two_fa_optional_roles');
     $forced_roles = rsssl_get_option('two_fa_forced_roles');
-    $roles = array_diff($roles, $optional_roles, $forced_roles);
+
+    // If no role is selected in either dropdown, show all roles in both dropdowns
+    if ( ! empty( $optional_roles ) || ! empty( $forced_roles ) ) {
+        $roles = array_diff($roles, $optional_roles, $forced_roles);
+    }
 
     $output['roles'] = $roles;
     $output['request_success'] = true;
