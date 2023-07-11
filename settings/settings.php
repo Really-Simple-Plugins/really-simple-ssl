@@ -240,14 +240,6 @@ function rsssl_settings_rest_route()
         }
     ));
 
-    register_rest_route('reallysimplessl/v1', 'roles', array(
-        'methods' => 'GET',
-        'callback' => 'rsssl_get_roles',
-        'permission_callback' => function () {
-            return rsssl_user_can_manage();
-        }
-    ));
-
 }
 
 /**
@@ -322,12 +314,15 @@ function rsssl_do_action($request, $ajax_data = false)
 	    case 'otherpluginsdata':
 		    $response = rsssl_other_plugins_data();
 		    break;
-        case 'rsssl_two_fa_table':
+        case 'two_fa_table':
 		    $response = rsssl_two_fa_table();
 		    break;
-        case 'rsssl_send_two_fa_code':
-		    $response = rsssl_send_two_fa_code();
-		    break;
+//        case 'send_two_fa_code':
+//		    $response = rsssl_send_two_fa_code();
+//		    break;
+        case 'get_roles':
+            $response = rsssl_get_roles( $data );
+            break;
         default:
             $response = apply_filters("rsssl_do_action", [], $action, $data);
     }
@@ -1047,7 +1042,7 @@ function rsssl_conditions_apply(array $conditions)
  *
  * Tries to get roles from cache first. If roles are not in cache, it fetches them and stores them in cache.
  *
- * @return void An array of roles, each role being an associative array with 'label' and 'value' keys.
+ * @return array An array of roles, each role being an associative array with 'label' and 'value' keys.
  */
 function rsssl_get_roles( $data ) {
 
@@ -1084,8 +1079,7 @@ function rsssl_get_roles( $data ) {
     $output['roles'] = $roles;
     $output['request_success'] = true;
 
-    error_log(print_r($output, true));
-    return new WP_REST_Response($output, 200);
+    return $output;
 }
 
 function rsssl_two_fa_table() {
@@ -1124,17 +1118,17 @@ function rsssl_two_fa_table() {
 
 }
 
-/**
- * Function to send a 2FA e-mail token to the current user
- */
-if ( ! function_exists('rsssl_send_two_fa_code') ) {
-    function rsssl_send_two_fa_code() {
-        if ( class_exists('Rsssl_Two_Factor_Email' ) ) {
-            $instance = Rsssl_Two_Factor_Email::get_instance();
-            // Call the method on the instance.
-            $user = get_current_user();
-            $instance->generate_and_email_token($user);
-        }
-    }
-}
+///**
+// * Function to send a 2FA e-mail token to the current user
+// */
+//if ( ! function_exists('rsssl_send_two_fa_code') ) {
+//    function rsssl_send_two_fa_code() {
+//        if ( class_exists('Rsssl_Two_Factor_Email' ) ) {
+//            $instance = Rsssl_Two_Factor_Email::get_instance();
+//            // Call the method on the instance.
+//            $user = get_current_user();
+//            $instance->generate_and_email_token($user);
+//        }
+//    }
+//}
 

@@ -121,6 +121,7 @@ class REALLY_SIMPLE_SSL
             require_once( rsssl_path . 'onboarding/class-onboarding.php' );
             require_once( rsssl_path . 'placeholders/class-placeholder.php' );
             require_once( rsssl_path . 'class-admin.php');
+            require_once( rsssl_path . 'mailer/class-mail-admin.php');
 			require_once( rsssl_path . 'class-cache.php');
 			require_once( rsssl_path . 'class-server.php');
             require_once( rsssl_path . 'progress/class-progress.php');

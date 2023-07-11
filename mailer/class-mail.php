@@ -57,26 +57,20 @@ if ( !class_exists('rsssl_mailer') ) {
 			return $this->send_mail(true);
 		}
 
-        public function send_verification_mail() {
+        public function send_verification_mail( $email ) {
 
             if ( !rsssl_user_can_manage() ) {
                 return ['success' => false, 'message' => 'Not allowed'];
             }
 
-            $this->to = rsssl_get_option('notifications_email_address', get_bloginfo('admin_email') );
+            $this->to = $email;
 
             $verification_code = rsssl_get_verification_code();
             $verification_expiration = strtotime("+15 minutes");
 
-            // Get current user ID
-            $user_id = get_current_user_id();
-
-            update_user_meta($user_id, "rsssl_email_verification_code", $verification_code);
-            update_user_meta($user_id, "rsssl_email_verification_code_expiration", $verification_expiration);
+            update_option('rsssl_email_verification_code', $verification_code, false);
+            update_option('rsssl_email_verification_code_expiration', $verification_expiration, false);
             update_option('rsssl_email_verification_status', 'started', false);
-
-            $users_with_tokens[] = $user_id;
-            set_transient('rsssl_rsssl_users_with_active_tokens', $users_with_tokens );
 
             if ( ! is_email( $this->to ) ) {
                 return ['success' => false, 'message' => __('Email address not valid',"really-simple-ssl")];
@@ -85,7 +79,7 @@ if ( !class_exists('rsssl_mailer') ) {
 	        $verification_url = add_query_arg(
 		        array(
 			        'rsssl_nonce' => wp_create_nonce('rsssl_email_verification_'.$user_id),
-			        'rsssl_verification_code' => $verification_code,
+			        'rsssl_verification_code' => str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT),
 		        ),
 		        rsssl_admin_url()
 	        );

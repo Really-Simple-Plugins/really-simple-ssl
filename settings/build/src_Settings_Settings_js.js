@@ -1,5 +1,5 @@
 "use strict";
-(self["webpackChunkreally_simple_ssl"] = self["webpackChunkreally_simple_ssl"] || []).push([["src_Settings_Settings_js"],{
+(globalThis["webpackChunkreally_simple_ssl"] = globalThis["webpackChunkreally_simple_ssl"] || []).push([["src_Settings_Settings_js"],{
 
 /***/ "./src/LetsEncrypt/letsEncryptData.js":
 /*!********************************************!*\
@@ -1261,8 +1261,8 @@ const Icon = props => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   errorMsg: () => (/* binding */ errorMsg),
-/* harmony export */   in_array: () => (/* binding */ in_array)
+/* harmony export */   "errorMsg": () => (/* binding */ errorMsg),
+/* harmony export */   "in_array": () => (/* binding */ in_array)
 /* harmony export */ });
 const in_array = (needle, haystack) => {
   let length = haystack.length;

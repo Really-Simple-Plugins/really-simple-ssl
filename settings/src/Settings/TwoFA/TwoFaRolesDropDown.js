@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 import useFields from "../FieldsData";
 import useTwoFaData from './TwoFaStore';
+import * as rsssl_api from "../../utils/api";
 /**
  * TwoFaRolesDropDown component represents a dropdown select for excluding roles
  * from two-factor authentication email.
@@ -19,13 +20,21 @@ const TwoFaRolesDropDown = ({ field }) => {
      */
     useEffect(() => {
         const run = async () => {
-            await fetchRoles(field.id);
-            // Set the selectedRoles state based on the field value
-            const selectedRolesFromField = field.value.map(value => ({ value, label: value }));
-            setSelectedRoles(selectedRolesFromField);
-        }
-        run()
+            try {
+                // replace `get_roles` with your actual action
+                const response = await rsssl_api.doAction('get_roles', { id: field.id });
+                console.log(response);
 
+                // Set the selectedRoles state based on the field value
+                const selectedRolesFromField = field.value.map(value => ({ value, label: value }));
+                setSelectedRoles(selectedRolesFromField);
+            } catch (err) {
+                console.error(err);
+            } finally {
+                // setLoading(false);
+            }
+        }
+        run();
     }, [rolesLoaded]);
 
     /**

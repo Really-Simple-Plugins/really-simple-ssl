@@ -215,10 +215,6 @@ export const runTest = (test, state, data ) => {
     return apiGet('reallysimplessl/v1/tests/'+test+glue()+'state='+state+getNonce()+'&data='+data)
 };
 
-export const getUserRoles = ( id ) => {
-    return apiGet('reallysimplessl/v1/roles/'+glue()+'id='+id+getNonce());
-}
-
 export const runLetsEncryptTest = (test, id ) => {
     return apiGet('reallysimplessl/v1/tests/'+test+glue()+'letsencrypt=1&id='+id+getNonce());
 }

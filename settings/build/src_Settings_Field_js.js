@@ -1,5 +1,5 @@
 "use strict";
-(self["webpackChunkreally_simple_ssl"] = self["webpackChunkreally_simple_ssl"] || []).push([["src_Settings_Field_js"],{
+(globalThis["webpackChunkreally_simple_ssl"] = globalThis["webpackChunkreally_simple_ssl"] || []).push([["src_Settings_Field_js"],{
 
 /***/ "./src/Dashboard/Progress/ProgressData.js":
 /*!************************************************!*\
@@ -1522,7 +1522,6 @@ const DynamicDataTable = props => {
     let newItem = buildColumn(item);
     columns.push(newItem);
   });
-  console.log(columns);
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
     if (!dataLoaded) {
       fetchDynamicData(field.action);
@@ -1577,7 +1576,6 @@ const DynamicDataTable = props => {
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
     // console.log(DynamicDataTable);
   }, [DynamicDataTable]);
-  console.log(DynamicDataTable);
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-search-bar"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -4515,9 +4513,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var react_select__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-select */ "./node_modules/react-select/dist/react-select.esm.js");
+/* harmony import */ var react_select__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-select */ "./node_modules/react-select/dist/react-select.esm.js");
 /* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../FieldsData */ "./src/Settings/FieldsData.js");
 /* harmony import */ var _TwoFaStore__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./TwoFaStore */ "./src/Settings/TwoFA/TwoFaStore.js");
+/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../utils/api */ "./src/utils/api.js");
+
 
 
 
@@ -4550,13 +4550,24 @@ const TwoFaRolesDropDown = _ref => {
    */
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     const run = async () => {
-      await fetchRoles(field.id);
-      // Set the selectedRoles state based on the field value
-      const selectedRolesFromField = field.value.map(value => ({
-        value,
-        label: value
-      }));
-      setSelectedRoles(selectedRolesFromField);
+      try {
+        // replace `get_roles` with your actual action
+        const response = await _utils_api__WEBPACK_IMPORTED_MODULE_4__.doAction('get_roles', {
+          id: field.id
+        });
+        console.log(response);
+
+        // Set the selectedRoles state based on the field value
+        const selectedRolesFromField = field.value.map(value => ({
+          value,
+          label: value
+        }));
+        setSelectedRoles(selectedRolesFromField);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        // setLoading(false);
+      }
     };
     run();
   }, [rolesLoaded]);
@@ -4580,7 +4591,7 @@ const TwoFaRolesDropDown = _ref => {
   // Render the component
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
     htmlFor: "rsssl-exclude-roles"
-  }, field.label), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_select__WEBPACK_IMPORTED_MODULE_4__["default"], {
+  }, field.label), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_select__WEBPACK_IMPORTED_MODULE_5__["default"], {
     isMulti: true,
     options: roles,
     onChange: handleChange,

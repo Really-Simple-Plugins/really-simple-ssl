@@ -93,7 +93,7 @@ class rsssl_onboarding {
 						$this->signup_for_mailinglist( $email );
 					}
                     $mailer = new rsssl_mailer();
-                    $mailer->send_verification_mail();
+                    $mailer->send_verification_mail( $email );
 				}
 
 				$response = [

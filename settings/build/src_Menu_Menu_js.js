@@ -1,5 +1,5 @@
 "use strict";
-(self["webpackChunkreally_simple_ssl"] = self["webpackChunkreally_simple_ssl"] || []).push([["src_Menu_Menu_js"],{
+(globalThis["webpackChunkreally_simple_ssl"] = globalThis["webpackChunkreally_simple_ssl"] || []).push([["src_Menu_Menu_js"],{
 
 /***/ "./src/Menu/Menu.js":
 /*!**************************!*\

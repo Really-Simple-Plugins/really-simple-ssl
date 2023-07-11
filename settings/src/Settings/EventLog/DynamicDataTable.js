@@ -28,8 +28,6 @@ const DynamicDataTable = (props) => {
         columns.push(newItem);
     });
 
-    console.log(columns)
-
     useEffect(() => {
         if (!dataLoaded) {
             fetchDynamicData(field.action);
@@ -86,7 +84,6 @@ const DynamicDataTable = (props) => {
         // console.log(DynamicDataTable);
     }, [DynamicDataTable]);
 
-    console.log(DynamicDataTable);
     return (
         <>
             {/*Display the search bar*/}

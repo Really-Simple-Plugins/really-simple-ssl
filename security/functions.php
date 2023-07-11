@@ -524,36 +524,3 @@ function rsssl_is_email_verified() {
 
     return false;
 }
-
-/**
- * @return void
- *
- * Clear expired verification tokens from DB
- */
-function rsssl_clear_expired_tokens() {
-    $users_with_tokens = get_transient('rsssl_users_with_active_tokens' );
-    if( $users_with_tokens ) {
-        foreach ( $users_with_tokens as $key => $user_id )  {
-            $token_expiration = get_user_meta($user_id, 'rsssl_email_verification_code_expiration', true);
-            if ( $token_expiration > time() ) {
-                delete_user_meta( $user_id, 'rsssl_email_verification_code' );
-                delete_user_meta( $user_id, 'rsssl_email_verification_code_expiration' );
-                unset( $users_with_tokens[$key] );
-            }
-        }
-        // Update the transient with the updated list of users who still have active tokens
-        set_transient('rsssl_users_with_active_tokens', $users_with_tokens, 0);
-    }
-}
-
-add_filter('rsssl_five_minutes_cron', 'rsssl_clear_expired_tokens' );
-
-/**
- * @return string
- *
- * Generate an e-mail verification code
- */
-function rsssl_get_verification_code(): string
-{
-    return str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
-}
