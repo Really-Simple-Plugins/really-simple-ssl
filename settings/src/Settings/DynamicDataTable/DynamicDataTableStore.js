@@ -3,7 +3,7 @@ import {create} from 'zustand';
 import * as rsssl_api from "../../utils/api";
 import {__} from "@wordpress/i18n";
 import {produce} from "immer";
-import React from "react";
+import React, {useState} from "react";
 
 const DynamicDataTableStore = create((set, get) => ({
 
@@ -21,13 +21,24 @@ const DynamicDataTableStore = create((set, get) => ({
             );
             //now we set the EventLog
             if (response) {
-                set({DynamicDataTable: response, dataLoaded: true, processing: false, pagination: response.pagination});
-                // console.log("setting after")
+                console.log(response)
+                set(state => ({
+                    ...state,
+                    DynamicDataTable: response.data,
+                    dataLoaded: true,
+                    processing: false,
+                    pagination: response.pagination,
+                    // Removed the twoFAMethods set from here...
+                }));
+                // Return the response for the calling function to use
+                return response;
             }
+
         } catch (e) {
             console.log(e);
         }
     },
+
 
     handleTableSearch: async (search, searchColumns) => {
         //Add the search to the dataActions
@@ -62,6 +73,19 @@ const DynamicDataTableStore = create((set, get) => ({
         );
     },
 
+    updateUserMeta: async (userId, updatedMeta) => {
+        set(produce((state) => {
+            const userIndex = state.DynamicDataTable.findIndex(user => user.id === userId);
+            if (userIndex !== -1) {
+                state.DynamicDataTable[userIndex].two_fa_method = updatedMeta;
+            }
+        }));
+
+        let data = {};
+        data.userId = userId;
+        data.method = updatedMeta;
+        const response = await rsssl_api.doAction('store_two_fa_usermeta', data);
+    },
 
 }));
 

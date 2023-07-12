@@ -317,6 +317,9 @@ function rsssl_do_action($request, $ajax_data = false)
         case 'two_fa_table':
 		    $response = rsssl_two_fa_table();
 		    break;
+        case 'store_two_fa_usermeta'  :
+            $response = rsssl_store_two_fa_usermeta( $data );
+            break;
 //        case 'send_two_fa_code':
 //		    $response = rsssl_send_two_fa_code();
 //		    break;
@@ -1061,7 +1064,9 @@ function rsssl_get_roles( $data ) {
         $roles_names = array_keys( $wp_roles->roles );
 
         // Extract unique role values from the role names
-        $roles = array_values( array_unique( $roles_names ) );
+        $roles = array_map(function($role) {
+            return array('value' => $role, 'label' => $role);
+        }, array_values( array_unique( $roles_names )));
 
         // Set the roles in cache for future use
         wp_cache_set( 'rsssl_roles', $roles );
@@ -1080,6 +1085,27 @@ function rsssl_get_roles( $data ) {
     $output['request_success'] = true;
 
     return $output;
+}
+
+function rsssl_store_two_fa_usermeta( $data ) {
+    // Extract userId and meta from $data
+    $userId = isset($data['userId']) ? intval($data['userId']) : null;
+    $two_fa_method = isset($data['method']) ? $data['method'] : null;
+
+    // Check if both are not null
+    if (null !== $userId && null !== $two_fa_method) {
+        // Update user meta
+        $result = update_user_meta($userId, 'two_fa_method', $two_fa_method);
+
+        // Check if update was successful
+        if ($result) {
+            return ['data' => 'User meta updated successfully.'];
+        } else {
+            return ['error' => 'Failed to update user meta.'];
+        }
+    } else {
+        return ['error' => 'Invalid data.'];
+    }
 }
 
 function rsssl_two_fa_table() {

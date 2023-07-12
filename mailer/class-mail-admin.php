@@ -5,8 +5,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * Class to send an e-mail
  */
 
-if ( !class_exists('rsssl_mailer') ) {
-    class rsssl_mailer
+if ( !class_exists('rsssl_mailer_admin') ) {
+    class rsssl_mailer_admin
     {
 
         public function __construct()

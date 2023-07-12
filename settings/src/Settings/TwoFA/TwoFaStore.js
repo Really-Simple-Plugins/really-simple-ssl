@@ -6,7 +6,7 @@ const TwoFaData = create(( set, get ) => ({
     fetchRoles: async (fieldId) => {
         try {
             // Fetch the roles from the server using rsssl_api.getUserRoles()
-            const response = await rsssl_api.getUserRoles(fieldId);
+            const response = await rsssl_api.doAction('get_roles', { id: field.id });
 
             // Handle the response
             if (!response) {

@@ -1476,10 +1476,10 @@ const CheckboxControl = props => {
 
 /***/ }),
 
-/***/ "./src/Settings/EventLog/DynamicDataTable.js":
-/*!***************************************************!*\
-  !*** ./src/Settings/EventLog/DynamicDataTable.js ***!
-  \***************************************************/
+/***/ "./src/Settings/DynamicDataTable/DynamicDataTable.js":
+/*!***********************************************************!*\
+  !*** ./src/Settings/DynamicDataTable/DynamicDataTable.js ***!
+  \***********************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -1493,7 +1493,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var react_data_table_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-data-table-component */ "./node_modules/react-data-table-component/dist/index.cjs.js");
-/* harmony import */ var _DynamicDataTableStore__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./DynamicDataTableStore */ "./src/Settings/EventLog/DynamicDataTableStore.js");
+/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/api-fetch */ "@wordpress/api-fetch");
+/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _DynamicDataTableStore__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./DynamicDataTableStore */ "./src/Settings/DynamicDataTable/DynamicDataTableStore.js");
+
 
 
 
@@ -1509,41 +1512,89 @@ const DynamicDataTable = props => {
     fetchDynamicData,
     handleTableSort,
     handleTablePageChange,
-    handleTableSearch
-  } = (0,_DynamicDataTableStore__WEBPACK_IMPORTED_MODULE_4__["default"])();
-
-  //we create the columns
-  let columns = [];
-  //getting the fields from the props
+    handleTableSearch,
+    updateUserMeta
+  } = (0,_DynamicDataTableStore__WEBPACK_IMPORTED_MODULE_5__["default"])();
   let field = props.field;
-  // console.log(field)
-  //we loop through the fields
-  field.columns.forEach(function (item, i) {
-    let newItem = buildColumn(item);
-    columns.push(newItem);
-  });
+  const [twoFAMethods, setTwoFAMethods] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)({});
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
     if (!dataLoaded) {
-      fetchDynamicData(field.action);
+      fetchDynamicData(field.action).then(response => {
+        // Extract the two_fa_methods and set it to local state
+        const methods = response.data.reduce((acc, user) => ({
+          ...acc,
+          [user.id]: user.two_fa_method
+        }), {});
+        setTwoFAMethods(methods);
+      });
     }
-  });
+  }, [dataLoaded, field.action, fetchDynamicData]);
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
     if (dataActions) {
       fetchDynamicData(field.action);
     }
   }, [dataActions]);
+  function handleTwoFAMethodChange(userId, newMethod) {
+    setTwoFAMethods(prevMethods => ({
+      ...prevMethods,
+      [userId]: newMethod
+    }));
+    _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_4___default()({
+      path: `/wp/v2/users/${userId}`,
+      method: 'POST',
+      data: {
+        meta: {
+          two_fa_method: newMethod
+        }
+      }
+    }).then(response => {
+      updateUserMeta(userId, newMethod);
+    }).catch(error => {
+      console.error('Error updating user meta:', error);
+    });
+  }
+  function buildColumn(column) {
+    let newColumn = {
+      name: column.name,
+      sortable: column.sortable,
+      searchable: column.searchable,
+      width: column.width,
+      visible: column.visible,
+      selector: row => row[column.column]
+    };
+    if (newColumn.name === '2FA') {
+      newColumn.cell = row => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
+        value: twoFAMethods[row.id] || 'disabled',
+        onChange: event => handleTwoFAMethodChange(row.id, event.target.value)
+      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
+        value: "disabled"
+      }, "Disabled"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
+        value: "email"
+      }, "Email"));
+    }
+    return newColumn;
+  }
+  let columns = [];
+  field.columns.forEach(function (item, i) {
+    var _newItem$visible;
+    let newItem = {
+      ...item,
+      key: item.column
+    };
+    newItem = buildColumn(newItem);
+    newItem.visible = (_newItem$visible = newItem.visible) !== null && _newItem$visible !== void 0 ? _newItem$visible : true;
+    columns.push(newItem);
+  });
   const customStyles = {
     headCells: {
       style: {
         paddingLeft: '0',
-        // override the cell padding for head cells
         paddingRight: '0'
       }
     },
     cells: {
       style: {
         paddingLeft: '0',
-        // override the cell padding for data cells
         paddingRight: '0'
       }
     }
@@ -1553,8 +1604,6 @@ const DynamicDataTable = props => {
       default: 'transparent'
     }
   }, 'light');
-
-  //only show the datatable if the data is loaded
   if (!dataLoaded && columns.length === 0 && DynamicDataTable.length === 0) {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-spinner"
@@ -1567,15 +1616,11 @@ const DynamicDataTable = props => {
     }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Loading...", "really-simple-ssl"))));
   }
   let searchableColumns = [];
-  //setting the searchable columns
   columns.map(column => {
     if (column.searchable) {
       searchableColumns.push(column.column);
     }
   });
-  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
-    // console.log(DynamicDataTable);
-  }, [DynamicDataTable]);
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-search-bar"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -1589,12 +1634,10 @@ const DynamicDataTable = props => {
     onChange: event => handleTableSearch(event.target.value, searchableColumns)
   }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
     columns: columns,
-    data: DynamicDataTable.data,
+    data: DynamicDataTable,
     dense: true,
     pagination: true,
-    paginationServer: true
-    // paginationTotalRows={pagination.totalRows}
-    ,
+    paginationServer: true,
     onChangeRowsPerPage: handleTableRowsChange,
     onChangePage: handleTablePageChange,
     sortServer: true,
@@ -1607,23 +1650,13 @@ const DynamicDataTable = props => {
   }));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (DynamicDataTable);
-function buildColumn(column) {
-  return {
-    name: column.name,
-    sortable: column.sortable,
-    searchable: column.searchable,
-    width: column.width,
-    visible: column.visible,
-    selector: row => row[column.column]
-  };
-}
 
 /***/ }),
 
-/***/ "./src/Settings/EventLog/DynamicDataTableStore.js":
-/*!********************************************************!*\
-  !*** ./src/Settings/EventLog/DynamicDataTableStore.js ***!
-  \********************************************************/
+/***/ "./src/Settings/DynamicDataTable/DynamicDataTableStore.js":
+/*!****************************************************************!*\
+  !*** ./src/Settings/DynamicDataTable/DynamicDataTableStore.js ***!
+  \****************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -1654,13 +1687,17 @@ const DynamicDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((s
       const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction(action, get().dataActions);
       //now we set the EventLog
       if (response) {
-        set({
-          DynamicDataTable: response,
+        console.log(response);
+        set(state => ({
+          ...state,
+          DynamicDataTable: response.data,
           dataLoaded: true,
           processing: false,
           pagination: response.pagination
-        });
-        // console.log("setting after")
+          // Removed the twoFAMethods set from here...
+        }));
+        // Return the response for the calling function to use
+        return response;
       }
     } catch (e) {
       console.log(e);
@@ -1706,6 +1743,18 @@ const DynamicDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((s
         sortDirection
       };
     }));
+  },
+  updateUserMeta: async (userId, updatedMeta) => {
+    set((0,immer__WEBPACK_IMPORTED_MODULE_4__.produce)(state => {
+      const userIndex = state.DynamicDataTable.findIndex(user => user.id === userId);
+      if (userIndex !== -1) {
+        state.DynamicDataTable[userIndex].two_fa_method = updatedMeta;
+      }
+    }));
+    let data = {};
+    data.userId = userId;
+    data.method = updatedMeta;
+    const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('store_two_fa_usermeta', data);
   }
 }));
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (DynamicDataTableStore);
@@ -1749,7 +1798,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _PostDropDown__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./PostDropDown */ "./src/Settings/PostDropDown.js");
 /* harmony import */ var _RiskConfiguration_NotificationTester__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./RiskConfiguration/NotificationTester */ "./src/Settings/RiskConfiguration/NotificationTester.js");
 /* harmony import */ var _utils_getAnchor__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ../utils/getAnchor */ "./src/utils/getAnchor.js");
-/* harmony import */ var _EventLog_DynamicDataTable__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./EventLog/DynamicDataTable */ "./src/Settings/EventLog/DynamicDataTable.js");
+/* harmony import */ var _DynamicDataTable_DynamicDataTable__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./DynamicDataTable/DynamicDataTable */ "./src/Settings/DynamicDataTable/DynamicDataTable.js");
 
 
 
@@ -2094,7 +2143,7 @@ const Field = props => {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: highLightClass,
       ref: scrollAnchor
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_EventLog_DynamicDataTable__WEBPACK_IMPORTED_MODULE_24__["default"], {
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_DynamicDataTable_DynamicDataTable__WEBPACK_IMPORTED_MODULE_24__["default"], {
       field: props.field,
       action: props.field.action
     }));
@@ -4623,7 +4672,9 @@ const TwoFaData = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, get) => 
   fetchRoles: async fieldId => {
     try {
       // Fetch the roles from the server using rsssl_api.getUserRoles()
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.getUserRoles(fieldId);
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('get_roles', {
+        id: field.id
+      });
 
       // Handle the response
       if (!response) {

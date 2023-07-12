@@ -1,6 +1,7 @@
 import {__} from '@wordpress/i18n';
 import React, {useEffect, useState} from 'react';
 import DataTable, {createTheme} from "react-data-table-component";
+import apiFetch from '@wordpress/api-fetch';
 import DynamicDataTableStore from "./DynamicDataTableStore";
 
 const DynamicDataTable = (props) => {
@@ -13,26 +14,22 @@ const DynamicDataTable = (props) => {
         fetchDynamicData,
         handleTableSort,
         handleTablePageChange,
-        handleTableSearch
-    } = DynamicDataTableStore()
+        handleTableSearch,
+        updateUserMeta
+    } = DynamicDataTableStore();
 
-
-    //we create the columns
-    let columns = [];
-    //getting the fields from the props
     let field = props.field;
-    // console.log(field)
-    //we loop through the fields
-    field.columns.forEach(function (item, i) {
-        let newItem = buildColumn(item)
-        columns.push(newItem);
-    });
+    const [twoFAMethods, setTwoFAMethods] = useState({});
 
     useEffect(() => {
         if (!dataLoaded) {
-            fetchDynamicData(field.action);
+            fetchDynamicData(field.action).then(response => {
+                // Extract the two_fa_methods and set it to local state
+                const methods = response.data.reduce((acc, user) => ({...acc, [user.id]: user.two_fa_method}), {});
+                setTwoFAMethods(methods);
+            });
         }
-    });
+    }, [dataLoaded, field.action, fetchDynamicData]);
 
     useEffect(() => {
         if (dataActions) {
@@ -40,16 +37,73 @@ const DynamicDataTable = (props) => {
         }
     }, [dataActions]);
 
+    function handleTwoFAMethodChange(userId, newMethod) {
+        setTwoFAMethods(prevMethods => ({
+            ...prevMethods,
+            [userId]: newMethod,
+        }));
+
+        apiFetch({
+            path: `/wp/v2/users/${userId}`,
+            method: 'POST',
+            data: {
+                meta: {
+                    two_fa_method: newMethod,
+                },
+            },
+        })
+            .then((response) => {
+                updateUserMeta(userId, newMethod);
+            })
+            .catch((error) => {
+                console.error('Error updating user meta:', error);
+            });
+    }
+
+    function buildColumn(column) {
+        let newColumn = {
+            name: column.name,
+            sortable: column.sortable,
+            searchable: column.searchable,
+            width: column.width,
+            visible: column.visible,
+            selector: row => row[column.column],
+        };
+
+        if (newColumn.name === '2FA') {
+            newColumn.cell = row => (
+                <select
+                    value={twoFAMethods[row.id] || 'disabled'}
+                    onChange={event => handleTwoFAMethodChange(row.id, event.target.value)}
+                >
+                    <option value="disabled">Disabled</option>
+                    <option value="email">Email</option>
+                </select>
+            );
+        }
+
+        return newColumn;
+    }
+
+    let columns = [];
+
+    field.columns.forEach(function (item, i) {
+        let newItem = { ...item, key: item.column };
+        newItem = buildColumn(newItem);
+        newItem.visible = newItem.visible ?? true;
+        columns.push(newItem);
+    });
+
     const customStyles = {
         headCells: {
             style: {
-                paddingLeft: '0', // override the cell padding for head cells
+                paddingLeft: '0',
                 paddingRight: '0',
             },
         },
         cells: {
             style: {
-                paddingLeft: '0', // override the cell padding for data cells
+                paddingLeft: '0',
                 paddingRight: '0',
             },
         },
@@ -60,7 +114,6 @@ const DynamicDataTable = (props) => {
         },
     }, 'light');
 
-    //only show the datatable if the data is loaded
     if (!dataLoaded && columns.length === 0 && DynamicDataTable.length === 0) {
         return (
             <div className="rsssl-spinner">
@@ -73,20 +126,14 @@ const DynamicDataTable = (props) => {
     }
 
     let searchableColumns = [];
-    //setting the searchable columns
     columns.map(column => {
         if (column.searchable) {
             searchableColumns.push(column.column);
         }
     });
 
-    useEffect(() => {
-        // console.log(DynamicDataTable);
-    }, [DynamicDataTable]);
-
     return (
         <>
-            {/*Display the search bar*/}
             <div className="rsssl-search-bar">
                 <div className="rsssl-search-bar__inner">
                     <div className="rsssl-search-bar__icon"></div>
@@ -98,14 +145,12 @@ const DynamicDataTable = (props) => {
                     />
                 </div>
             </div>
-            {/*Display the datatable*/}
             <DataTable
                 columns={columns}
-                data={DynamicDataTable.data}
+                data={DynamicDataTable}
                 dense
                 pagination
                 paginationServer
-                // paginationTotalRows={pagination.totalRows}
                 onChangeRowsPerPage={handleTableRowsChange}
                 onChangePage={handleTablePageChange}
                 sortServer
@@ -118,17 +163,5 @@ const DynamicDataTable = (props) => {
             ></DataTable>
         </>
     );
-
 }
 export default DynamicDataTable;
-
-function buildColumn(column) {
-    return {
-        name: column.name,
-        sortable: column.sortable,
-        searchable: column.searchable,
-        width: column.width,
-        visible: column.visible,
-        selector: row => row[column.column],
-    };
-}

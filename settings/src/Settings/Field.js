@@ -29,7 +29,7 @@ import useFields from "./FieldsData";
 import PostDropdown from "./PostDropDown";
 import NotificationTester from "./RiskConfiguration/NotificationTester";
 import getAnchor from "../utils/getAnchor";
-import DynamicDataTable from "./EventLog/DynamicDataTable";
+import DynamicDataTable from "./DynamicDataTable/DynamicDataTable";
 // import VerificationInput from "./VerifyEmailCode";
 const Field = (props) => {
     let scrollAnchor = React.createRef();
