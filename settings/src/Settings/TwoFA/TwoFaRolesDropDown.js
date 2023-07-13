@@ -15,6 +15,13 @@ const TwoFaRolesDropDown = ({ field }) => {
     // Custom hook to manage form fields
     const { updateField, setChangedField } = useFields();
 
+    useEffect(() => {
+        const run = async () => {
+            await fetchRoles(field.id);
+        }
+        run();
+    }, []);
+
     /**
      * Fetches the roles from the server on component mount.
      */
@@ -53,19 +60,21 @@ const TwoFaRolesDropDown = ({ field }) => {
         setSelectedRoles(selectedOptions);
     };
 
+    console.log(roles)
+    console.log(selectedRoles)
     // Render the component
     return (
         <div>
             <label htmlFor="rsssl-exclude-roles">
                 {field.label}
             </label>
-            <Select
-                isMulti
-                options={roles}
-                onChange={handleChange}
-                value={selectedRoles}
-                menuPosition={"fixed"}
-            />
+                <Select
+                    isMulti
+                    options={roles}
+                    onChange={handleChange}
+                    value={selectedRoles}
+                    menuPosition={"fixed"}
+                />
         </div>
     );
 };

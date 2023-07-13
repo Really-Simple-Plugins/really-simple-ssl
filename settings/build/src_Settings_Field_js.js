@@ -4593,6 +4593,12 @@ const TwoFaRolesDropDown = _ref => {
     updateField,
     setChangedField
   } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_2__["default"])();
+  (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
+    const run = async () => {
+      await fetchRoles(field.id);
+    };
+    run();
+  }, []);
 
   /**
    * Fetches the roles from the server on component mount.
@@ -4636,7 +4642,8 @@ const TwoFaRolesDropDown = _ref => {
     // Update the selectedRoles state
     setSelectedRoles(selectedOptions);
   };
-
+  console.log(roles);
+  console.log(selectedRoles);
   // Render the component
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
     htmlFor: "rsssl-exclude-roles"
@@ -4669,11 +4676,11 @@ __webpack_require__.r(__webpack_exports__);
 const TwoFaData = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, get) => ({
   roles: [],
   rolesLoaded: false,
-  fetchRoles: async fieldId => {
+  fetchRoles: async id => {
     try {
       // Fetch the roles from the server using rsssl_api.getUserRoles()
       const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('get_roles', {
-        id: field.id
+        id: id
       });
 
       // Handle the response

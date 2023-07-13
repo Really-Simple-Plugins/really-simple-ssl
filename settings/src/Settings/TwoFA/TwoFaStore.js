@@ -3,10 +3,10 @@ import * as rsssl_api from "../../utils/api";
 const TwoFaData = create(( set, get ) => ({
     roles: [],
     rolesLoaded:false,
-    fetchRoles: async (fieldId) => {
+    fetchRoles: async ( id ) => {
         try {
             // Fetch the roles from the server using rsssl_api.getUserRoles()
-            const response = await rsssl_api.doAction('get_roles', { id: field.id });
+            const response = await rsssl_api.doAction('get_roles', { id: id });
 
             // Handle the response
             if (!response) {

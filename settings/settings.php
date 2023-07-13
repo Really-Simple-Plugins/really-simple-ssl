@@ -314,15 +314,6 @@ function rsssl_do_action($request, $ajax_data = false)
 	    case 'otherpluginsdata':
 		    $response = rsssl_other_plugins_data();
 		    break;
-        case 'two_fa_table':
-		    $response = rsssl_two_fa_table();
-		    break;
-        case 'store_two_fa_usermeta'  :
-            $response = rsssl_store_two_fa_usermeta( $data );
-            break;
-//        case 'send_two_fa_code':
-//		    $response = rsssl_send_two_fa_code();
-//		    break;
         case 'get_roles':
             $response = rsssl_get_roles( $data );
             break;
@@ -1064,9 +1055,7 @@ function rsssl_get_roles( $data ) {
         $roles_names = array_keys( $wp_roles->roles );
 
         // Extract unique role values from the role names
-        $roles = array_map(function($role) {
-            return array('value' => $role, 'label' => $role);
-        }, array_values( array_unique( $roles_names )));
+        $roles = array_values( array_unique( $roles_names ));
 
         // Set the roles in cache for future use
         wp_cache_set( 'rsssl_roles', $roles );
@@ -1078,71 +1067,17 @@ function rsssl_get_roles( $data ) {
 
     // If no role is selected in either dropdown, show all roles in both dropdowns
     if ( ! empty( $optional_roles ) || ! empty( $forced_roles ) ) {
-        $roles = array_diff($roles, $optional_roles, $forced_roles);
+        $roles = array_filter($roles, function($role) use ($optional_roles, $forced_roles) {
+            return !in_array($role, $optional_roles) && !in_array($role, $forced_roles);
+        });
     }
 
-    $output['roles'] = $roles;
+    $output['roles'] = array_values($roles); // Reset array keys
     $output['request_success'] = true;
 
     return $output;
 }
 
-function rsssl_store_two_fa_usermeta( $data ) {
-    // Extract userId and meta from $data
-    $userId = isset($data['userId']) ? intval($data['userId']) : null;
-    $two_fa_method = isset($data['method']) ? $data['method'] : null;
-
-    // Check if both are not null
-    if (null !== $userId && null !== $two_fa_method) {
-        // Update user meta
-        $result = update_user_meta($userId, 'two_fa_method', $two_fa_method);
-
-        // Check if update was successful
-        if ($result) {
-            return ['data' => 'User meta updated successfully.'];
-        } else {
-            return ['error' => 'Failed to update user meta.'];
-        }
-    } else {
-        return ['error' => 'Invalid data.'];
-    }
-}
-
-function rsssl_two_fa_table() {
-    $users = get_users(array(
-        'fields' => array('ID', 'user_nicename'), // Only get necessary fields
-    ));
-
-    $formattedData = array();
-    $initialTwoFAMethods = array();
-
-    foreach ($users as $user) {
-        // Fetch user meta data
-        $user_meta = get_user_meta($user->ID);
-
-        // Set two_fa_method, default to 'disabled'
-        $two_fa_method = isset($user_meta['two_fa_method']) ? $user_meta['two_fa_method'][0] : 'disabled';
-
-        // Create a WP_User instance to access roles
-        $wp_user = new WP_User($user->ID);
-        $user_role = !empty($wp_user->roles) ? $wp_user->roles[0] : '';
-
-        // Format user data
-        $formattedData[] = array(
-//            'column' => '',
-            'id' => $user->ID,
-            'user' => $user->user_nicename,
-            'two_fa_method' => $two_fa_method,
-            'user_role' => $user_role,
-        );
-
-        // Set initial two_fa_methods
-        $initialTwoFAMethods[$user->ID] = $two_fa_method;
-    }
-
-    return ['data' => $formattedData];
-
-}
 
 ///**
 // * Function to send a 2FA e-mail token to the current user

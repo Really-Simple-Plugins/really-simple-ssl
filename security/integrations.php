@@ -94,7 +94,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 
     'two-factor' => array(
         'label'                => '2FA',
-        'folder'               => 'wordpress',
+        'folder'               => 'wordpress/two_fa',
         'impact'               => 'medium',
         'risk'                 => 'low',
         'option_id'            => 'two_fa_enabled',
