@@ -106,8 +106,8 @@ test:php7.3:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
     - if: $CI_COMMIT_BRANCH == 'master'
 
-# We test PHP7.2 with multisite
-test:php7.2:multisite:
+# We test PHP7.3 with multisite
+test:php7.3:multisite:
   variables:
     WP_MULTISITE: "1"
     XDEBUG_VERSION: "3.1.6"
