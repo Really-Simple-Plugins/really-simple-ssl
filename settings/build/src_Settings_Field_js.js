@@ -1520,10 +1520,10 @@ const DynamicDataTable = props => {
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
     if (!dataLoaded) {
       fetchDynamicData(field.action).then(response => {
-        // Extract the two_fa_methods and set it to local state
+        // Extract the rsssl_two_fa_methods and set it to local state
         const methods = response.data.reduce((acc, user) => ({
           ...acc,
-          [user.id]: user.two_fa_method
+          [user.id]: user.rsssl_two_fa_method
         }), {});
         setTwoFAMethods(methods);
       });
@@ -1544,7 +1544,7 @@ const DynamicDataTable = props => {
       method: 'POST',
       data: {
         meta: {
-          two_fa_method: newMethod
+          rsssl_two_fa_method: newMethod
         }
       }
     }).then(response => {
@@ -1748,7 +1748,7 @@ const DynamicDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((s
     set((0,immer__WEBPACK_IMPORTED_MODULE_4__.produce)(state => {
       const userIndex = state.DynamicDataTable.findIndex(user => user.id === userId);
       if (userIndex !== -1) {
-        state.DynamicDataTable[userIndex].two_fa_method = updatedMeta;
+        state.DynamicDataTable[userIndex].rsssl_two_fa_method = updatedMeta;
       }
     }));
     let data = {};

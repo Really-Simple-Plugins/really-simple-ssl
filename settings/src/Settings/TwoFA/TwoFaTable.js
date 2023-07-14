@@ -32,12 +32,12 @@ const TwoFaTable = (props) => {
                 const formattedData = data.map(user => ({
                     id: user.id,
                     user: user.name,
-                    two_fa_method: user.meta.two_fa_method || 'disabled',
+                    rsssl_two_fa_method: user.meta.rsssl_two_fa_method || 'disabled',
                     user_role: user.roles[0]
                 }));
 
                 const initialTwoFAMethods = data.reduce((methods, user) => {
-                    methods[user.id] = user.meta.two_fa_method || 'disabled';
+                    methods[user.id] = user.meta.rsssl_two_fa_method || 'disabled';
                     return methods;
                 }, {});
                 setTwoFAMethods(initialTwoFAMethods);
@@ -70,7 +70,7 @@ const TwoFaTable = (props) => {
             data: {
                 meta: {
                     ...user.meta,
-                    two_fa_method: newMethod,
+                    rsssl_two_fa_method: newMethod,
                 },
             },
         })

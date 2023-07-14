@@ -24,8 +24,8 @@ const DynamicDataTable = (props) => {
     useEffect(() => {
         if (!dataLoaded) {
             fetchDynamicData(field.action).then(response => {
-                // Extract the two_fa_methods and set it to local state
-                const methods = response.data.reduce((acc, user) => ({...acc, [user.id]: user.two_fa_method}), {});
+                // Extract the rsssl_two_fa_methods and set it to local state
+                const methods = response.data.reduce((acc, user) => ({...acc, [user.id]: user.rsssl_two_fa_method}), {});
                 setTwoFAMethods(methods);
             });
         }
@@ -48,7 +48,7 @@ const DynamicDataTable = (props) => {
             method: 'POST',
             data: {
                 meta: {
-                    two_fa_method: newMethod,
+                    rsssl_two_fa_method: newMethod,
                 },
             },
         })

@@ -1067,7 +1067,7 @@ function rsssl_fields( $load_values = true ) {
                     'searchable' => false,
                     'width'    => '20%',
                     'visible' => true,
-                    'column'   => 'two_fa_method',
+                    'column'   => 'rsssl_two_fa_method',
                 ],
                 [
                     'name'     => __( 'User role', 'really-simple-ssl' ),

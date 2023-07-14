@@ -77,7 +77,7 @@ const DynamicDataTableStore = create((set, get) => ({
         set(produce((state) => {
             const userIndex = state.DynamicDataTable.findIndex(user => user.id === userId);
             if (userIndex !== -1) {
-                state.DynamicDataTable[userIndex].two_fa_method = updatedMeta;
+                state.DynamicDataTable[userIndex].rsssl_two_fa_method = updatedMeta;
             }
         }));
 

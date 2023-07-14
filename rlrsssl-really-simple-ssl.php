@@ -261,12 +261,12 @@ if ( !function_exists('rsssl_is_logged_in_rest')){
 }
 
 /**
- * Add two_fa_method usermeta field
+ * Add rsssl_two_fa_method usermeta field
  *
  * @return void
  */
 function rsssl_register_user_meta() {
-    register_meta('user', 'two_fa_method', [
+    register_meta('user', 'rsssl_two_fa_method', [
         'show_in_rest' => true,
         'single' => true,
         'type' => 'string',
