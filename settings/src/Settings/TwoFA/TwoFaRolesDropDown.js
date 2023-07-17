@@ -30,7 +30,6 @@ const TwoFaRolesDropDown = ({ field }) => {
             try {
                 // replace `get_roles` with your actual action
                 const response = await rsssl_api.doAction('get_roles', { id: field.id });
-                console.log(response);
 
                 // Set the selectedRoles state based on the field value
                 const selectedRolesFromField = field.value.map(value => ({ value, label: value }));
@@ -60,21 +59,16 @@ const TwoFaRolesDropDown = ({ field }) => {
         setSelectedRoles(selectedOptions);
     };
 
-    console.log(roles)
-    console.log(selectedRoles)
     // Render the component
     return (
         <div>
-            <label htmlFor="rsssl-exclude-roles">
-                {field.label}
-            </label>
-                <Select
-                    isMulti
-                    options={roles}
-                    onChange={handleChange}
-                    value={selectedRoles}
-                    menuPosition={"fixed"}
-                />
+            <Select
+                isMulti
+                options={roles}
+                onChange={handleChange}
+                value={selectedRoles}
+                menuPosition={"fixed"}
+            />
         </div>
     );
 };

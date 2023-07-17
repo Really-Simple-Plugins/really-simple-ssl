@@ -75,7 +75,7 @@ const TwoFaTable = (props) => {
             },
         })
         .then((response) => {
-            // console.log('Reponse', response); // This will log the updated user object
+
         })
         .catch((error) => {
             console.error('Error updating user meta:', error);
@@ -166,7 +166,6 @@ const TwoFaTable = (props) => {
             />
         );
     }
-
 };
 
 export default TwoFaTable;

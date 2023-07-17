@@ -48,6 +48,7 @@ class REALLY_SIMPLE_SSL
 	public $placeholder;
 	public $certificate;
 	public $wp_cli;
+    public $mailer_admin;
 	public $site_health;
     public $vulnerabilities;
 
@@ -75,6 +76,7 @@ class REALLY_SIMPLE_SSL
 				self::$instance->placeholder = new rsssl_placeholder();
 				self::$instance->server = new rsssl_server();
 				self::$instance->admin = new rsssl_admin();
+				self::$instance->mailer_admin = new rsssl_mailer_admin();
 				self::$instance->onboarding = new rsssl_onboarding();
 				self::$instance->progress = new rsssl_progress();
 				self::$instance->certificate = new rsssl_certificate();

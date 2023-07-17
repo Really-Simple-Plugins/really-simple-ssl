@@ -21,7 +21,6 @@ const DynamicDataTableStore = create((set, get) => ({
             );
             //now we set the EventLog
             if (response) {
-                console.log(response)
                 set(state => ({
                     ...state,
                     DynamicDataTable: response.data,

@@ -136,22 +136,6 @@ function rsssl_fields( $load_values = true ) {
                     'really-simple-ssl' ),
             ],
         ],
-//        [
-//            'id'          => 'verify-email',
-//            'menu_id'     => 'general',
-//            'group_id'    => 'email',
-//            'type'        => 'verify_email',
-//            'warning'     => true,
-//            'label'       => __( "Verify e-mail", 'really-simple-ssl' ),
-//            'disabled'    => rsssl_is_email_verified(),
-//            'tooltip'  => __( "Enter the code you received via e-mail.", 'really-simple-ssl' ),
-//            'help'             => [
-//                'label' => 'warning',
-//                'title' => __( "Email validation is required", 'really-simple-ssl' ),
-//                'text'  => __( 'Lorem flipsum',
-//                    'really-simple-ssl' ),
-//            ],
-//        ],
 		[
 			'id'       => 'notifications_email_address',
 			'menu_id'  => 'general',
@@ -961,7 +945,7 @@ function rsssl_fields( $load_values = true ) {
             'menu_id'  => 'two_fa',
             'group_id' => 'two_fa_general',
 			'type'     => 'checkbox',
-			'label'    => __( "Enable 2FA", "really-simple-ssl-pro" ),
+			'label'    => __( "Enable login security", "really-simple-ssl-pro" ),
 			'disabled' => false,
 			'default'  => 'disabled',
 		],
@@ -970,7 +954,8 @@ function rsssl_fields( $load_values = true ) {
 			'menu_id'  => 'two_fa',
 			'group_id' => 'two_fa_email',
 			'type'     => 'checkbox',
-			'label'    => __( "Enable login with email code", "really-simple-ssl-pro" ),
+			'label'    => __( "Enable two-step login with email", "really-simple-ssl-pro" ),
+			'tooltip'  => __( "Lorem ipsum", 'really-simple-ssl' ),
 			'disabled' => false,
 			'default'  => 'disabled',
 			'react_condition' => [
@@ -980,49 +965,14 @@ function rsssl_fields( $load_values = true ) {
 				]
 			],
 		],
-//        [
-//            'id'          => 'send_two_fa_test_email',
-//            'menu_id'     => 'two_fa',
-//            'group_id'    => 'two_fa_email',
-//            'type'        => 'button',
-//            'action'         => 'send_two_fa_code',
-//            'button_text' => __( "Send", "really-simple-ssl" ),
-//            'label'       => __( "Send 2FA code", 'really-simple-ssl' ),
-//            'disabled'    => false,
-//            'default'     => false,
-//            'condition_action'   => 'hide',
-//            'react_conditions' => [
-//                'relation' => 'AND',
-//                [
-//                    'two_fa_email_code' => 1,
-//                ]
-//            ],
-//        ],
-//        [
-//            'id'          => 'verify_two_fa_email_code',
-//            'menu_id'     => 'two_fa',
-//            'group_id'    => 'two_fa_email',
-//            'type'        => 'button',
-//            'action'         => 'rsssl_verify_two_fa_code',
-//            'button_text' => __( "Send", "really-simple-ssl" ),
-//            'label'       => __( "Send 2FA code", 'really-simple-ssl' ),
-//            'disabled'    => false,
-//            'default'     => false,
-//            'condition_action'   => 'hide',
-//            'react_conditions' => [
-//                'relation' => 'AND',
-//                [
-//                    'two_fa_email_code' => 1,
-//                ]
-//            ],
-//        ],
 		[
 			'id'       => 'two_fa_forced_roles',
 			'menu_id'  => 'two_fa',
 			'group_id' => 'two_fa_email',
 			'type'     => 'two_fa_dropdown',
             'label'    => __( "Force on:", "really-simple-ssl-pro" ),
-            'react_conditions' => [
+			'tooltip'  => __( "Lorem ipsum", 'really-simple-ssl' ),
+			'react_conditions' => [
                 'relation' => 'AND',
                 [
                     'two_fa_email_code' => true,
@@ -1035,7 +985,8 @@ function rsssl_fields( $load_values = true ) {
 			'group_id' => 'two_fa_email',
 			'type'     => 'two_fa_dropdown',
             'label'    => __( "Optional for:", "really-simple-ssl-pro" ),
-            'react_conditions' => [
+			'tooltip'  => __( "Lorem ipsum", 'really-simple-ssl' ),
+			'react_conditions' => [
                 'relation' => 'AND',
                 [
                     'two_fa_email_code' => true,
@@ -1046,7 +997,6 @@ function rsssl_fields( $load_values = true ) {
             'id'    => 'two_fa_users_table',
             'menu_id' => 'two_fa',
             'group_id' => 'two_fa_users',
-//            'type' => 'two_fa_table',
             'type' => 'dynamic-datatable',
             'action' => 'two_fa_table',
             'label' => __('Users', 'really-simple-ssl'),
@@ -1065,7 +1015,7 @@ function rsssl_fields( $load_values = true ) {
                     'name'     => __( '2FA', 'really-simple-ssl' ),
                     'sortable' => false,
                     'searchable' => false,
-                    'width'    => '20%',
+//                    'width'    => '20%',
                     'visible' => true,
                     'column'   => 'rsssl_two_fa_method',
                 ],
@@ -1073,9 +1023,17 @@ function rsssl_fields( $load_values = true ) {
                     'name'     => __( 'User role', 'really-simple-ssl' ),
                     'sortable' => false,
                     'searchable' => false,
-                    'width'    => '20%',
+                    'width'    => 'auto',
                     'visible' => true,
                     'column'   => 'user_role',
+                ],
+                [
+                    'name'     => __( 'Status', 'really-simple-ssl' ),
+                    'sortable' => false,
+                    'searchable' => false,
+                    'width'    => 'auto',
+                    'visible' => true,
+                    'column'   => 'status_for_user',
                 ],
             ]
         ],

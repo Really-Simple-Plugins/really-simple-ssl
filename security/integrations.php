@@ -98,8 +98,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         'impact'               => 'medium',
         'risk'                 => 'low',
         'option_id'            => 'two_fa_enabled',
-        // @todo
-        'always_include'       => true,
+        'always_include'       => false,
     ),
 
 ) );

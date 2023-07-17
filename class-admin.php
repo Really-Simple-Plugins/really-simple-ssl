@@ -2310,7 +2310,21 @@ class rsssl_admin
 			        ),
 		        ),
 	        ),
+	        'email_verification' => array(
+		        'callback' => 'RSSSL()->mailer_admin->check_email_verification_status',
+		        'output' => array(
+			        'true' => array(
+				        'msg' => __( "E-mail verification has not been completed yet. Check your e-mail and click the link", 'really-simple-ssl' ),
+				        'icon' => 'open',
+				        'admin_notice' => false,
+				        'url' => 'https://really-simple-ssl.com/email-verification/',
+				        'dismissible' => true,
+				        'plusone' => true,
+			        ),
+		        ),
+	        ),
         );
+
         //on multisite, don't show the notice on subsites.
         //we can't make different sets for network admin and for subsites (at least not for admin notices), as these notices are cached,
         //so the same cache will be used on both types of site

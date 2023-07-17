@@ -129,7 +129,6 @@ const Field = (props) => {
     }
 
     if ( field.type==='checkbox' ){
-        console.log(field, disabled)
         return (
             <div className={highLightClass} ref={scrollAnchor}>
                 <CheckboxControl
@@ -327,26 +326,14 @@ const Field = (props) => {
         )
     }
 
-    // if (field.type === 'verify_email') {
-    //     return (
-    //         <div className={highLightClass} ref={scrollAnchor}>
-    //           <VerificationInput field={props.field} />
-    //         </div>
-    //     )
-    // }
-
-    // if (field.type === 'two_fa_table') {
-    //     return (
-    //         <div className={highLightClass} ref={scrollAnchor}>
-    //           <TwoFaTable field={props.field} />
-    //         </div>
-    //     )
-    // }
-
     if (field.type === 'two_fa_dropdown') {
         return (
             <div className={highLightClass} ref={scrollAnchor}>
-                <TwoFaRolesDropDown field={props.field} />
+                <label htmlFor="rsssl-two-fa-dropdown-{field.id}">
+                    {labelWrap(field)}
+                </label>
+                <TwoFaRolesDropDown field={props.field}
+                />
             </div>
         );
     }

@@ -761,11 +761,8 @@ function rsssl_sanitize_field($value, string $type, string $id)
         case 'two_fa_dropdown':
 	        $value = !is_array($value) ? [] : $value;
             return array_map('sanitize_text_field', $value);
-//        case 'verify_email':
-//            return $value;
         case 'two_fa_table':
             return $value;
-
         default:
             return sanitize_text_field($value);
     }
@@ -1077,19 +1074,4 @@ function rsssl_get_roles( $data ) {
 
     return $output;
 }
-
-
-///**
-// * Function to send a 2FA e-mail token to the current user
-// */
-//if ( ! function_exists('rsssl_send_two_fa_code') ) {
-//    function rsssl_send_two_fa_code() {
-//        if ( class_exists('Rsssl_Two_Factor_Email' ) ) {
-//            $instance = Rsssl_Two_Factor_Email::get_instance();
-//            // Call the method on the instance.
-//            $user = get_current_user();
-//            $instance->generate_and_email_token($user);
-//        }
-//    }
-//}
 

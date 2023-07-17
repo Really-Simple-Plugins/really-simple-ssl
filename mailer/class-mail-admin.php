@@ -90,6 +90,21 @@ if ( !class_exists('rsssl_mailer_admin') ) {
             }
         }
 
+	    /**
+	     * @return bool|void
+	     *
+	     * E-mail verification status callback
+	     */
+		public function check_email_verification_status() {
+			$status = get_option('rsssl_email_verification_status');
+
+			if ( $status == 'started' ) {
+				return true;
+			} elseif ( $status === 'completed') {
+				return false;
+			}
+
+		}
 
     }
 }

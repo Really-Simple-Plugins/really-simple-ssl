@@ -13,7 +13,6 @@ const VerificationInput = ({ field }) => {
         try {
             // replace `/api/get_code` with your actual API endpoint
             rsssl_api.doAction('verify_email', { field, input }).then((response) => {
-                // console.log(response);
                 const verificationCode = response; // Assume code comes in 'code' key
 
                 if (input === verificationCode) {
