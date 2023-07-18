@@ -298,24 +298,6 @@ function rsssl_general_security_notices( $notices ) {
 //		),
 //	);
 
-	$notices['admin_registration_failed'] = array(
-		'callback' => '_true_',
-		'condition'  => array(
-			'wp_option_rsssl_admin_registration_started',
-			'NOT option_block_admin_creation',
-		),
-		'score' => 5,
-		'output' => array(
-			'true' => array(
-				'highlight_field_id' => 'block_admin_creation',
-				'msg' => __("Block admin creation was disabled, because the registration of admin users has failed.", "really-simple-ssl"),
-				'icon' => 'warning',
-				'dismissible' => false,
-				'url' => 'https://really-simple-ssl.com/knowledge-base/admin-registration-failed/',
-			),
-		),
-	);
-
 	return $notices;
 }
 add_filter('rsssl_notices', 'rsssl_general_security_notices');
