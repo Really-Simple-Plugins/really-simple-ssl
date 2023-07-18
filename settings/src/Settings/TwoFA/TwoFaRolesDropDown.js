@@ -59,15 +59,24 @@ const TwoFaRolesDropDown = ({ field }) => {
         setSelectedRoles(selectedOptions);
     };
 
+    const customStyles = {
+        multiValue: (provided) => ({
+            ...provided,
+            backgroundColor: field.id === 'two_fa_forced_roles' ? '#F5CD54' :
+                field.id === 'two_fa_optional_roles' ? '#FDF5DC' : 'default',
+        }),
+    };
+
     // Render the component
     return (
-        <div>
+        <div style={{ marginTop: '5px' }}>
             <Select
                 isMulti
                 options={roles}
                 onChange={handleChange}
                 value={selectedRoles}
                 menuPosition={"fixed"}
+                styles={customStyles}
             />
         </div>
     );

@@ -517,5 +517,10 @@ function rsssl_is_email_verified() {
         return false;
     }
 
+	if ( get_option('rsssl_email_verification_status') == 'email_changed' ) {
+	    // e-mail changed, has to re-verify
+        return false;
+    }
+
     return false;
 }

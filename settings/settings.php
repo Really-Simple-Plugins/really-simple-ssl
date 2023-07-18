@@ -303,7 +303,7 @@ function rsssl_do_action($request, $ajax_data = false)
             break;
         case 'send_verification_mail':
             $mailer = new rsssl_mailer();
-            $response = $mailer->send_verification_mail();
+            $response = $mailer->send_verification_mail( rsssl_get_option('notifications_email_address') );
             break;
         case 'plugin_actions':
             $response = rsssl_plugin_actions($data);

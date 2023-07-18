@@ -18,6 +18,7 @@ if ( !class_exists('rsssl_mailer') ) {
         public $what_now_text;
         public $sent_by_text;
 		public $warning_blocks;
+		public $logo;
 		public $error = '';
 
 		public function __construct() {
@@ -28,6 +29,7 @@ if ( !class_exists('rsssl_mailer') ) {
 			$this->what_now_text = __( "Learn more", "really-simple-ssl");
 			$this->change_text = __("Why did I receive this email?", "really-simple-ssl");
 			$domain = '<a href="'.site_url().'">'.site_url().'</a>';
+			$this->logo = "https://really-simple-ssl.com/wp-content/uploads/2022/09/Really-Simple-SSL-Logo-04-2048x539.png";
 			$this->message = sprintf(__("You have enabled a feature on %s. We think it's important to let you know a little bit more about this feature so you can use it without worries.","really-simple-ssl"), $domain);
 
 			add_action('wp_mail_failed', array($this, 'log_mailer_errors'), 10, 1);
@@ -93,6 +95,7 @@ if ( !class_exists('rsssl_mailer') ) {
 		        'url' => $verification_url,
 	        ];
 
+			error_log("Sending mail");
             return $this->send_mail();
         }
 
@@ -112,7 +115,7 @@ if ( !class_exists('rsssl_mailer') ) {
 			}
 
 			$this->to = rsssl_get_option('notifications_email_address', get_bloginfo('admin_email') );
-			if ( !is_email($this->to) ){
+			if ( !is_email($this->to) ) {
 				$this->error = __("Email address not valid", "really-simple-ssl");
 			}
 
@@ -122,8 +125,8 @@ if ( !class_exists('rsssl_mailer') ) {
 				$block_template = file_get_contents(__DIR__.'/templates/block.html');
 				foreach ($this->warning_blocks as $warning_block){
 					$block_html .= str_replace(
-						['{title}','{message}','{url}'],
-						[ sanitize_text_field($warning_block['title']), wp_kses_post($warning_block['message']), esc_url_raw($warning_block['url']) ],
+						['{title}','{message}','{url}', '{logo}'],
+						[ sanitize_text_field($warning_block['title']), wp_kses_post($warning_block['message']), esc_url_raw($warning_block['url']), $this->logo ],
 						$block_template);
 				}
 			}

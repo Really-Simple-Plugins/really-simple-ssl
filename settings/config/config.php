@@ -108,7 +108,7 @@ function rsssl_fields( $load_values = true ) {
 			'default'  => false,
 		],
         [
-            'id'          => 'send-verification-email',
+            'id'          => 'send_verification_email',
             'menu_id'     => 'general',
             'group_id'    => 'email',
             'type'        => 'button',
@@ -966,20 +966,6 @@ function rsssl_fields( $load_values = true ) {
 			],
 		],
 		[
-			'id'       => 'two_fa_forced_roles',
-			'menu_id'  => 'two_fa',
-			'group_id' => 'two_fa_email',
-			'type'     => 'two_fa_dropdown',
-            'label'    => __( "Force on:", "really-simple-ssl-pro" ),
-			'tooltip'  => __( "Lorem ipsum", 'really-simple-ssl' ),
-			'react_conditions' => [
-                'relation' => 'AND',
-                [
-                    'two_fa_email_code' => true,
-                ]
-            ],
-        ],
-		[
 			'id'       => 'two_fa_optional_roles',
 			'menu_id'  => 'two_fa',
 			'group_id' => 'two_fa_email',
@@ -993,6 +979,21 @@ function rsssl_fields( $load_values = true ) {
                 ]
             ],
         ],
+
+		[
+			'id'       => 'two_fa_forced_roles',
+			'menu_id'  => 'two_fa',
+			'group_id' => 'two_fa_email',
+			'type'     => 'two_fa_dropdown',
+			'label'    => __( "Force on:", "really-simple-ssl-pro" ),
+			'tooltip'  => __( "Lorem ipsum", 'really-simple-ssl' ),
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'two_fa_email_code' => true,
+				]
+			],
+		],
         [
             'id'    => 'two_fa_users_table',
             'menu_id' => 'two_fa',
@@ -1015,6 +1016,7 @@ function rsssl_fields( $load_values = true ) {
                     'name'     => __( 'Status', 'really-simple-ssl' ),
                     'sortable' => false,
                     'searchable' => false,
+                    'width'    => '25%',
                     'visible' => true,
                     'column'   => 'rsssl_two_fa_method',
                 ],
@@ -1022,7 +1024,7 @@ function rsssl_fields( $load_values = true ) {
                     'name'     => __( 'User role', 'really-simple-ssl' ),
                     'sortable' => false,
                     'searchable' => false,
-                    'width'    => 'auto',
+                    'width'    => '20%',
                     'visible' => true,
                     'column'   => 'user_role',
                 ],
@@ -1030,7 +1032,7 @@ function rsssl_fields( $load_values = true ) {
                     'name'     => __( 'E-mail status', 'really-simple-ssl' ),
                     'sortable' => false,
                     'searchable' => false,
-                    'width'    => 'auto',
+                    'width'    => '30%',
                     'visible' => true,
                     'column'   => 'status_for_user',
                 ],

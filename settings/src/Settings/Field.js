@@ -28,7 +28,7 @@ import PostDropdown from "./PostDropDown";
 import NotificationTester from "./RiskConfiguration/NotificationTester";
 import getAnchor from "../utils/getAnchor";
 import DynamicDataTable from "./DynamicDataTable/DynamicDataTable";
-// import VerificationInput from "./VerifyEmailCode";
+
 const Field = (props) => {
     let scrollAnchor = React.createRef();
     const {updateField, setChangedField, highLightField} = useFields();
@@ -160,21 +160,36 @@ const Field = (props) => {
         );
     }
 
-    if ( field.type==='text' || field.type==='email' ){
+    if (field.type==='text' || field.type==='email'){
+
+        const sendVerificationEmailField = props.fields.find(field => field.id === 'send_verification_email');
+        const emailIsVerified = sendVerificationEmailField.disabled;
+        
         return (
-            <div className={highLightClass} ref={scrollAnchor}>
-              <TextControl
-                  required={ field.required }
-                  placeholder={ field.placeholder }
-                  disabled={ disabled }
-                  help={ field.comment }
-                  label={labelWrap(field)}
-                  onChange={ ( fieldValue ) => onChangeHandler(fieldValue) }
-                  value= { fieldValue }
-              />
+            <div className={highLightClass} ref={scrollAnchor} style={{position: 'relative'}}>
+                <TextControl
+                    required={ field.required }
+                    placeholder={ field.placeholder }
+                    disabled={ disabled }
+                    help={ field.comment }
+                    label={labelWrap(field)}
+                    onChange={ ( fieldValue ) => onChangeHandler(fieldValue) }
+                    value= { fieldValue }
+                />
+                <div style={{
+                    position: 'absolute',
+                    bottom: '23px',
+                    right: '35px',
+                }}>
+                    {emailIsVerified
+                        ? <Icon name='circle-check' color={'green'} />
+                        : <Icon name='circle-times' color={'red'} />}
+
+                </div>
             </div>
         );
     }
+
 
     if ( field.type==='button' ){
         return (

@@ -1828,7 +1828,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-// import VerificationInput from "./VerifyEmailCode";
 const Field = props => {
   let scrollAnchor = React.createRef();
   const {
@@ -1959,9 +1958,14 @@ const Field = props => {
     }));
   }
   if (field.type === 'text' || field.type === 'email') {
+    const sendVerificationEmailField = props.fields.find(field => field.id === 'send_verification_email');
+    const emailIsVerified = sendVerificationEmailField.disabled;
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: highLightClass,
-      ref: scrollAnchor
+      ref: scrollAnchor,
+      style: {
+        position: 'relative'
+      }
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
       required: field.required,
       placeholder: field.placeholder,
@@ -1970,7 +1974,19 @@ const Field = props => {
       label: labelWrap(field),
       onChange: fieldValue => onChangeHandler(fieldValue),
       value: fieldValue
-    }));
+    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      style: {
+        position: 'absolute',
+        bottom: '23px',
+        right: '35px'
+      }
+    }, emailIsVerified ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_19__["default"], {
+      name: "circle-check",
+      color: 'green'
+    }) : (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_19__["default"], {
+      name: "circle-times",
+      color: 'red'
+    })));
   }
   if (field.type === 'button') {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -4626,14 +4642,25 @@ const TwoFaRolesDropDown = _ref => {
     // Update the selectedRoles state
     setSelectedRoles(selectedOptions);
   };
+  const customStyles = {
+    multiValue: provided => ({
+      ...provided,
+      backgroundColor: field.id === 'two_fa_forced_roles' ? '#F5CD54' : field.id === 'two_fa_optional_roles' ? '#FDF5DC' : 'default'
+    })
+  };
 
   // Render the component
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_select__WEBPACK_IMPORTED_MODULE_5__["default"], {
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    style: {
+      marginTop: '5px'
+    }
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_select__WEBPACK_IMPORTED_MODULE_5__["default"], {
     isMulti: true,
     options: roles,
     onChange: handleChange,
     value: selectedRoles,
-    menuPosition: "fixed"
+    menuPosition: "fixed",
+    styles: customStyles
   }));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (TwoFaRolesDropDown);
