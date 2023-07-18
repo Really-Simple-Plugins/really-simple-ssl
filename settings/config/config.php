@@ -107,17 +107,6 @@ function rsssl_fields( $load_values = true ) {
 			'disabled' => false,
 			'default'  => false,
 		],
-		[
-			'id'       => 'send_notifications_email',
-			'menu_id'  => 'general',
-			'group_id' => 'email',
-			'type'     => 'checkbox',
-			'label'    => __( "Notifications by email", 'really-simple-ssl' ),
-			'tooltip'  => __( "Get notified of important changes, updates and settings. Recommended when using security features.", 'really-simple-ssl' ),
-			'disabled' => false,
-			'default'  => false,
-		],
-
         [
             'id'          => 'send-verification-email',
             'menu_id'     => 'general',
@@ -151,6 +140,17 @@ function rsssl_fields( $load_values = true ) {
 					'send_notifications_email' => 1,
 				]
 			],
+		],
+
+		[
+			'id'       => 'send_notifications_email',
+			'menu_id'  => 'general',
+			'group_id' => 'email',
+			'type'     => 'checkbox',
+			'label'    => __( "Notifications by email", 'really-simple-ssl' ),
+			'tooltip'  => __( "Get notified of important changes, updates and settings. Recommended when using security features.", 'really-simple-ssl' ),
+			'disabled' => false,
+			'default'  => false,
 		],
 		[
 			'id'       => 'dismiss_all_notices',
@@ -1012,10 +1012,9 @@ function rsssl_fields( $load_values = true ) {
                     'column'   => 'user',
                 ],
                 [
-                    'name'     => __( '2FA', 'really-simple-ssl' ),
+                    'name'     => __( 'Status', 'really-simple-ssl' ),
                     'sortable' => false,
                     'searchable' => false,
-//                    'width'    => '20%',
                     'visible' => true,
                     'column'   => 'rsssl_two_fa_method',
                 ],
@@ -1028,7 +1027,7 @@ function rsssl_fields( $load_values = true ) {
                     'column'   => 'user_role',
                 ],
                 [
-                    'name'     => __( 'Status', 'really-simple-ssl' ),
+                    'name'     => __( 'E-mail status', 'really-simple-ssl' ),
                     'sortable' => false,
                     'searchable' => false,
                     'width'    => 'auto',

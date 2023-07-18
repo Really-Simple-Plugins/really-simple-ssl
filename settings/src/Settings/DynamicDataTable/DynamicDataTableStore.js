@@ -1,12 +1,13 @@
 /* Creates A Store For Risk Data using Zustand */
 import {create} from 'zustand';
 import * as rsssl_api from "../../utils/api";
-import {__} from "@wordpress/i18n";
 import {produce} from "immer";
 import React, {useState} from "react";
 
 const DynamicDataTableStore = create((set, get) => ({
 
+    twoFAMethods: {},
+    setTwoFAMethods: (methods) => set((state) => ({ ...state, twoFAMethods: methods })),
     processing: false,
     dataLoaded: false,
     pagination: {},
@@ -37,7 +38,6 @@ const DynamicDataTableStore = create((set, get) => ({
             console.log(e);
         }
     },
-
 
     handleTableSearch: async (search, searchColumns) => {
         //Add the search to the dataActions

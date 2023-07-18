@@ -507,20 +507,15 @@ function rsssl_is_email_verified() {
         return false;
     }
 
-    if ( get_option('rsssl_email_verification') == 'completed' ) {
+    if ( get_option('rsssl_email_verification_status') == 'completed' ) {
         // completed
         return true;
     }
 
-    if ( get_option('rsssl_email_verification') == 'started' ) {
-        // started
+    if ( get_option('rsssl_email_verification_status') == 'started' ) {
+	    // started
         return false;
     }
-
-//    if ( get_option('rsssl_email_verification') == 'expired' ) {
-//        // expired link
-//        return false;
-//    }
 
     return false;
 }

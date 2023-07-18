@@ -6,6 +6,8 @@ import DynamicDataTableStore from "./DynamicDataTableStore";
 
 const DynamicDataTable = (props) => {
     const {
+        twoFAMethods,
+        setTwoFAMethods,
         DynamicDataTable,
         dataLoaded,
         pagination,
@@ -19,14 +21,13 @@ const DynamicDataTable = (props) => {
     } = DynamicDataTableStore();
 
     let field = props.field;
-    const [twoFAMethods, setTwoFAMethods] = useState({});
 
     useEffect(() => {
         if (!dataLoaded) {
             fetchDynamicData(field.action).then(response => {
                 // Extract the rsssl_two_fa_methods and set it to local state
                 const methods = response.data.reduce((acc, user) => ({...acc, [user.id]: user.rsssl_two_fa_method}), {});
-                setTwoFAMethods(methods);
+                setTwoFAMethods(methods); // This is now setting the state in the Zustand store
             });
         }
     }, [dataLoaded, field.action, fetchDynamicData]);
@@ -70,12 +71,13 @@ const DynamicDataTable = (props) => {
             selector: row => row[column.column],
         };
 
-        if (newColumn.name === '2FA') {
+        if (newColumn.name === 'Status') {
             newColumn.cell = row => (
                 <select
-                    value={twoFAMethods[row.id] || 'disabled'}
+                    value={twoFAMethods[row.id] || 'open'}
                     onChange={event => handleTwoFAMethodChange(row.id, event.target.value)}
                 >
+                    <option value="open">Open</option>
                     <option value="disabled">Disabled</option>
                     <option value="email">Email</option>
                 </select>
