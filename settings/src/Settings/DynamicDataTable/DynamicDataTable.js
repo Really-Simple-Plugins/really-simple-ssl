@@ -170,7 +170,7 @@ const DynamicDataTable = (props) => {
             </div>
             <DataTable
                 columns={columns}
-                data={DynamicDataTable}
+                data={DynamicDataTable.data}
                 dense
                 pagination
                 paginationServer

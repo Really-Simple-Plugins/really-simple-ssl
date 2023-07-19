@@ -27,7 +27,7 @@ const DynamicDataTableStore = create((set, get) => ({
                 console.log(response);
                 set(state => ({
                     ...state,
-                    DynamicDataTable: response.data,
+                    DynamicDataTable: response,
                     dataLoaded: true,
                     processing: false,
                     pagination: response.pagination,
