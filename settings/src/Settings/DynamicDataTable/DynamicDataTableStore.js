@@ -16,12 +16,15 @@ const DynamicDataTableStore = create((set, get) => ({
 
     fetchDynamicData: async (action) => {
         try {
+
             const response = await rsssl_api.doAction(
                 action,
                 get().dataActions
             );
             //now we set the EventLog
             if (response) {
+                console.log("Response in store")
+                console.log(response);
                 set(state => ({
                     ...state,
                     DynamicDataTable: response.data,

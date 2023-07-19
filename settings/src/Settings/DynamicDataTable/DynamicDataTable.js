@@ -2,6 +2,7 @@ import {__} from '@wordpress/i18n';
 import React, {useEffect, useState} from 'react';
 import DataTable, {createTheme} from "react-data-table-component";
 import apiFetch from '@wordpress/api-fetch';
+import useFields from "../FieldsData";
 import DynamicDataTableStore from "./DynamicDataTableStore";
 
 const DynamicDataTable = (props) => {
@@ -21,16 +22,36 @@ const DynamicDataTable = (props) => {
     } = DynamicDataTableStore();
 
     let field = props.field;
+    const [enabled, setEnabled] = useState(false);
+    const {fields} = useFields();
 
     useEffect(() => {
         if (!dataLoaded) {
-            fetchDynamicData(field.action).then(response => {
-                // Extract the rsssl_two_fa_methods and set it to local state
-                const methods = response.data.reduce((acc, user) => ({...acc, [user.id]: user.rsssl_two_fa_method}), {});
-                setTwoFAMethods(methods); // This is now setting the state in the Zustand store
-            });
+            fetchDynamicData(field.action)
+                .then(response => {
+                    // Check if response.data is defined and is an array before calling reduce
+                    console.log("Response in dynamicdatatable")
+                    console.log(response);
+                    if(response.data && Array.isArray(response.data)) {
+                        const methods = response.data.reduce((acc, user) => ({...acc, [user.id]: user.rsssl_two_fa_method}), {});
+                        setTwoFAMethods(methods);
+                    } else {
+                        console.error('Unexpected response:', response);
+                    }
+                })
+                .catch(err => {
+                    console.error(err); // Log any errors
+                });
         }
     }, [dataLoaded, field.action, fetchDynamicData]);
+
+    useEffect(() => {
+        fields.forEach(function (item, i) {
+            if (item.id === 'two_fa_enabled') {
+                setEnabled(item.value);
+            }
+        });
+    }, [fields]);
 
     useEffect(() => {
         if (dataActions) {
@@ -163,7 +184,16 @@ const DynamicDataTable = (props) => {
                 theme="really-simple-plugins"
                 customStyles={customStyles}
             ></DataTable>
+            { !enabled &&
+                <div className="rsssl-locked">
+                    <div className="rsssl-locked-overlay"><span
+                        className="rsssl-task-status rsssl-open">{__('Disabled', 'really-simple-ssl')}</span><span>{__('Activate Enable login security to enable this block.', 'really-simple-ssl')}</span>
+                    </div>
+                </div>
+            }
         </>
     );
+
+
 }
 export default DynamicDataTable;

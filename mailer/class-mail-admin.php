@@ -29,6 +29,11 @@ if ( !class_exists('rsssl_mailer_admin') ) {
 			}
 		}
 
+		/**
+		 * @return void
+		 *
+		 * Verify user e-mail
+		 */
 		public function maybe_verify_user_email() {
 
 			if ( ! rsssl_user_can_manage() ) {
@@ -52,13 +57,13 @@ if ( !class_exists('rsssl_mailer_admin') ) {
 			}
 
 			$current_time                  = time();
-			$saved_verification_code       = get_user_meta( $user_id, "rsssl_email_verification_code", $verification_code );
-			$saved_verification_expiration = get_user_meta( $user_id, "rsssl_email_verification_code_expiration" );
+			$saved_verification_code       = get_option('rsssl_email_verification_code');
+			$saved_verification_expiration = get_option('rsssl_email_verification_code_expiration');
 
 			if ( $verification_code === $saved_verification_code && $saved_verification_expiration && $current_time < $saved_verification_expiration ) {
 				// If the verification code is correct and hasn't expired, update the verification status
-				error_log( "Successfully verified" );
 				update_option( 'rsssl_email_verification_status', 'completed', false );
+				set_transient('rsssl_redirect_to_settings_page', true, HOUR_IN_SECONDS );
 			}
 		}
 

@@ -3,6 +3,7 @@ import Select from 'react-select';
 import useFields from "../FieldsData";
 import useTwoFaData from './TwoFaStore';
 import * as rsssl_api from "../../utils/api";
+import {__} from "@wordpress/i18n";
 /**
  * TwoFaRolesDropDown component represents a dropdown select for excluding roles
  * from two-factor authentication email.
@@ -13,7 +14,8 @@ const TwoFaRolesDropDown = ({ field }) => {
     const [selectedRoles, setSelectedRoles] = useState([]);
 
     // Custom hook to manage form fields
-    const { updateField, setChangedField } = useFields();
+    const { fields, updateField, setChangedField } = useFields();
+    let enabled = false;
 
     useEffect(() => {
         const run = async () => {
@@ -67,9 +69,35 @@ const TwoFaRolesDropDown = ({ field }) => {
         }),
     };
 
-    // Render the component
+    fields.forEach(function (item, i) {
+        if (item.id === 'two_fa_enabled') {
+            enabled = item.value;
+        }
+    });
+
+    if ( ! enabled ) {
+        // Render the component
+        return (
+            <div style={{marginTop: '5px'}}>
+                <Select
+                    isMulti
+                    options={roles}
+                    onChange={handleChange}
+                    value={selectedRoles}
+                    menuPosition={"fixed"}
+                    styles={customStyles}
+                />
+                <div className="rsssl-locked">
+                    <div className="rsssl-locked-overlay"><span
+                        className="rsssl-task-status rsssl-open">{__('Disabled', 'really-simple-ssl')}</span><span>{__('Activate Enable login security to enable this block.', 'really-simple-ssl')}</span>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     return (
-        <div style={{ marginTop: '5px' }}>
+        <div style={{marginTop: '5px'}}>
             <Select
                 isMulti
                 options={roles}

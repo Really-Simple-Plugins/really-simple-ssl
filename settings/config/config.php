@@ -1008,7 +1008,6 @@ function rsssl_fields( $load_values = true ) {
                     'name'     => __( 'User', 'really-simple-ssl' ),
                     'sortable' => false,
                     'searchable' => true,
-                    'width'    => '20%',
                     'visible' => true,
                     'column'   => 'user',
                 ],
@@ -1016,7 +1015,6 @@ function rsssl_fields( $load_values = true ) {
                     'name'     => __( 'Status', 'really-simple-ssl' ),
                     'sortable' => false,
                     'searchable' => false,
-                    'width'    => '25%',
                     'visible' => true,
                     'column'   => 'rsssl_two_fa_method',
                 ],
@@ -1024,7 +1022,6 @@ function rsssl_fields( $load_values = true ) {
                     'name'     => __( 'User role', 'really-simple-ssl' ),
                     'sortable' => false,
                     'searchable' => false,
-                    'width'    => '20%',
                     'visible' => true,
                     'column'   => 'user_role',
                 ],
@@ -1032,11 +1029,16 @@ function rsssl_fields( $load_values = true ) {
                     'name'     => __( 'E-mail status', 'really-simple-ssl' ),
                     'sortable' => false,
                     'searchable' => false,
-                    'width'    => '30%',
                     'visible' => true,
                     'column'   => 'status_for_user',
                 ],
-            ]
+            ],
+            'react_conditions' => [
+				'relation' => 'AND',
+					[
+						'two_fa_email_code' => true,
+					]
+			],
         ],
 		[
 			'id'          => 'mixedcontentscan',

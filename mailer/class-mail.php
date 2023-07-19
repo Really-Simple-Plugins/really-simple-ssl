@@ -67,8 +67,11 @@ if ( !class_exists('rsssl_mailer') ) {
 
             $this->to = $email;
 
-            $verification_code = rsssl_get_verification_code();
+            $verification_code = str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
             $verification_expiration = strtotime("+15 minutes");
+
+			// Delete existing option
+	        delete_option('rsssl_email_verification_code');
 
             update_option('rsssl_email_verification_code', $verification_code, false);
             update_option('rsssl_email_verification_code_expiration', $verification_expiration, false);
@@ -78,10 +81,12 @@ if ( !class_exists('rsssl_mailer') ) {
                 return ['success' => false, 'message' => __('Email address not valid',"really-simple-ssl")];
             }
 
+	        $user_id = get_current_user_id();
+
 	        $verification_url = add_query_arg(
 		        array(
 			        'rsssl_nonce' => wp_create_nonce('rsssl_email_verification_'.$user_id),
-			        'rsssl_verification_code' => str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT),
+			        'rsssl_verification_code' => $verification_code,
 		        ),
 		        rsssl_admin_url()
 	        );
@@ -119,14 +124,16 @@ if ( !class_exists('rsssl_mailer') ) {
 				$this->error = __("Email address not valid", "really-simple-ssl");
 			}
 
+			error_log($this->logo);
+
 			$template = file_get_contents(__DIR__.'/templates/email.html');
 			$block_html = '';
 			if (is_array($this->warning_blocks) && count($this->warning_blocks)>0) {
 				$block_template = file_get_contents(__DIR__.'/templates/block.html');
 				foreach ($this->warning_blocks as $warning_block){
 					$block_html .= str_replace(
-						['{title}','{message}','{url}', '{logo}'],
-						[ sanitize_text_field($warning_block['title']), wp_kses_post($warning_block['message']), esc_url_raw($warning_block['url']), $this->logo ],
+						['{title}','{message}','{url}'],
+						[ sanitize_text_field($warning_block['title']), wp_kses_post($warning_block['message']), esc_url_raw($warning_block['url']) ],
 						$block_template);
 				}
 			}
@@ -145,7 +152,8 @@ if ( !class_exists('rsssl_mailer') ) {
                     '{change_text}',
                     '{what_now}',
                     '{sent_to_text}',
-                    '{sent_by_text}'
+                    '{sent_by_text}',
+					'{logo}',
 				],
 				[
 					sanitize_text_field( $this->title ),
@@ -159,7 +167,8 @@ if ( !class_exists('rsssl_mailer') ) {
                     $this->change_text,
                     $this->what_now_text,
                     $this->sent_to_text,
-                    $this->sent_by_text
+                    $this->sent_by_text,
+					$this->logo,
 				], $template );
 			$success = wp_mail( $this->to, sanitize_text_field($this->subject), $body, array('Content-Type: text/html; charset=UTF-8') );
             if ($success) {

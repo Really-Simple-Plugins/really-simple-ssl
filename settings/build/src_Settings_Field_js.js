@@ -1494,7 +1494,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_data_table_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-data-table-component */ "./node_modules/react-data-table-component/dist/index.cjs.js");
 /* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/api-fetch */ "@wordpress/api-fetch");
 /* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _DynamicDataTableStore__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./DynamicDataTableStore */ "./src/Settings/DynamicDataTable/DynamicDataTableStore.js");
+/* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../FieldsData */ "./src/Settings/FieldsData.js");
+/* harmony import */ var _DynamicDataTableStore__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./DynamicDataTableStore */ "./src/Settings/DynamicDataTable/DynamicDataTableStore.js");
+
 
 
 
@@ -1515,20 +1517,39 @@ const DynamicDataTable = props => {
     handleTablePageChange,
     handleTableSearch,
     updateUserMeta
-  } = (0,_DynamicDataTableStore__WEBPACK_IMPORTED_MODULE_5__["default"])();
+  } = (0,_DynamicDataTableStore__WEBPACK_IMPORTED_MODULE_6__["default"])();
   let field = props.field;
+  const [enabled, setEnabled] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(false);
+  const {
+    fields
+  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_5__["default"])();
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
     if (!dataLoaded) {
       fetchDynamicData(field.action).then(response => {
-        // Extract the rsssl_two_fa_methods and set it to local state
-        const methods = response.data.reduce((acc, user) => ({
-          ...acc,
-          [user.id]: user.rsssl_two_fa_method
-        }), {});
-        setTwoFAMethods(methods); // This is now setting the state in the Zustand store
+        // Check if response.data is defined and is an array before calling reduce
+        console.log("Response in dynamicdatatable");
+        console.log(response);
+        if (response.data && Array.isArray(response.data)) {
+          const methods = response.data.reduce((acc, user) => ({
+            ...acc,
+            [user.id]: user.rsssl_two_fa_method
+          }), {});
+          setTwoFAMethods(methods);
+        } else {
+          console.error('Unexpected response:', response);
+        }
+      }).catch(err => {
+        console.error(err); // Log any errors
       });
     }
   }, [dataLoaded, field.action, fetchDynamicData]);
+  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
+    fields.forEach(function (item, i) {
+      if (item.id === 'two_fa_enabled') {
+        setEnabled(item.value);
+      }
+    });
+  }, [fields]);
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
     if (dataActions) {
       fetchDynamicData(field.action);
@@ -1649,7 +1670,13 @@ const DynamicDataTable = props => {
     persistTableHead: true,
     theme: "really-simple-plugins",
     customStyles: customStyles
-  }));
+  }), !enabled && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-locked"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-locked-overlay"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "rsssl-task-status rsssl-open"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Disabled', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Activate Enable login security to enable this block.', 'really-simple-ssl')))));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (DynamicDataTable);
 
@@ -1691,6 +1718,8 @@ const DynamicDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_2__.create)((s
       const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction(action, get().dataActions);
       //now we set the EventLog
       if (response) {
+        console.log("Response in store");
+        console.log(response);
         set(state => ({
           ...state,
           DynamicDataTable: response.data,
@@ -4563,10 +4592,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var react_select__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-select */ "./node_modules/react-select/dist/react-select.esm.js");
+/* harmony import */ var react_select__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-select */ "./node_modules/react-select/dist/react-select.esm.js");
 /* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../FieldsData */ "./src/Settings/FieldsData.js");
 /* harmony import */ var _TwoFaStore__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./TwoFaStore */ "./src/Settings/TwoFA/TwoFaStore.js");
 /* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../utils/api */ "./src/utils/api.js");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__);
+
 
 
 
@@ -4591,9 +4623,11 @@ const TwoFaRolesDropDown = _ref => {
 
   // Custom hook to manage form fields
   const {
+    fields,
     updateField,
     setChangedField
   } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_2__["default"])();
+  let enabled = false;
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     const run = async () => {
       await fetchRoles(field.id);
@@ -4648,13 +4682,37 @@ const TwoFaRolesDropDown = _ref => {
       backgroundColor: field.id === 'two_fa_forced_roles' ? '#F5CD54' : field.id === 'two_fa_optional_roles' ? '#FDF5DC' : 'default'
     })
   };
-
-  // Render the component
+  fields.forEach(function (item, i) {
+    if (item.id === 'two_fa_enabled') {
+      enabled = item.value;
+    }
+  });
+  if (!enabled) {
+    // Render the component
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      style: {
+        marginTop: '5px'
+      }
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_select__WEBPACK_IMPORTED_MODULE_6__["default"], {
+      isMulti: true,
+      options: roles,
+      onChange: handleChange,
+      value: selectedRoles,
+      menuPosition: "fixed",
+      styles: customStyles
+    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-locked"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-locked-overlay"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+      className: "rsssl-task-status rsssl-open"
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)('Disabled', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)('Activate Enable login security to enable this block.', 'really-simple-ssl')))));
+  }
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     style: {
       marginTop: '5px'
     }
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_select__WEBPACK_IMPORTED_MODULE_5__["default"], {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_select__WEBPACK_IMPORTED_MODULE_6__["default"], {
     isMulti: true,
     options: roles,
     onChange: handleChange,

@@ -220,7 +220,7 @@ function rsssl_menu() {
 				[
 					'id'                   => 'two_fa',
 					'networkwide_required' => true,
-					'premium'              => false,
+					'premium'              => true,
 					'premium_text'         => __( 'Get 2-factor authentication with %sReally Simple SSL Pro%s', 'really-simple-ssl' ),
 					'upgrade'              => 'https://really-simple-ssl.com/pro/?mtm_campaign=cops&mtm_source=free&mtm_content=upgrade',
 					'title'                => '2FA',
@@ -228,18 +228,24 @@ function rsssl_menu() {
                     'groups'  => [
                         [
                             'id'       => 'two_fa_general',
+                            'premium'              => true,
+                            'premium_text'         => __( "Get 2FA with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
                             'helpLink' => 'https://really-simple-ssl.com/instructions/about-vulnerabilities/',
                             'title'    => __( 'General', 'really-simple-ssl' ),
                             'intro'    => __( 'Lorem ipsum', 'really-simple-ssl' ),
                         ],
                         [
                             'id'       => 'two_fa_email',
+                            'premium'              => true,
+                            'premium_text'         => __( "Get 2FA with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
                             'helpLink' => 'https://really-simple-ssl.com/instructions/about-vulnerabilities#notifications',
                             'title'    => __( 'Email', 'really-simple-ssl' ),
                             'intro'    => __( 'Lorem ipsum', 'really-simple-ssl' ),
                         ],
                         [
                             'id'       => 'two_fa_users',
+                            'premium'              => true,
+                            'premium_text'         => __( "Get 2FA with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
                             'helpLink' => 'https://really-simple-ssl.com/instructions/about-vulnerabilities#components',
                             'title'    => __( 'Users', 'really-simple-ssl' ),
                             'intro'    => __( 'Lorem ipsum', 'really-simple-ssl' ),
