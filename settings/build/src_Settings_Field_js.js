@@ -1534,7 +1534,6 @@ const DynamicDataTable = props => {
             [user.id]: user.rsssl_two_fa_method
           }), {});
           setTwoFAMethods(methods);
-          // setDynamicData(response.data);
         } else {
           console.error('Unexpected response:', response);
         }
@@ -1567,13 +1566,6 @@ const DynamicDataTable = props => {
       console.error('Error updating user meta:', error);
     });
   }
-  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
-    fields.forEach(function (item, i) {
-      if (item.id === 'two_fa_enabled') {
-        setEnabled(item.value);
-      }
-    });
-  }, [fields]);
   function buildColumn(column) {
     let newColumn = {
       name: column.name,
@@ -1651,41 +1643,6 @@ const DynamicDataTable = props => {
       }
     });
   }, [fields]);
-  if (!enabled) {
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-search-bar"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-search-bar__inner"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-search-bar__icon"
-    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-      type: "text",
-      className: "rsssl-search-bar__input",
-      placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Search", "really-simple-ssl"),
-      onChange: event => handleTableSearch(event.target.value, searchableColumns)
-    }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
-      columns: columns,
-      data: DynamicDataTable,
-      dense: true,
-      pagination: true,
-      paginationServer: true,
-      onChangeRowsPerPage: handleTableRowsChange,
-      onChangePage: handleTablePageChange,
-      sortServer: true,
-      onSort: handleTableSort,
-      paginationRowsPerPageOptions: [10, 25, 50, 100],
-      noDataComponent: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("No results", "really-simple-ssl"),
-      persistTableHead: true,
-      theme: "really-simple-plugins",
-      customStyles: customStyles
-    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-locked"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-locked-overlay"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-      className: "rsssl-task-status rsssl-open"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Disabled', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Activate Enable login security to enable this block.', 'really-simple-ssl')))));
-  }
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-search-bar"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -1699,7 +1656,7 @@ const DynamicDataTable = props => {
     onChange: event => handleTableSearch(event.target.value, searchableColumns)
   }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
     columns: columns,
-    data: DynamicDataTable,
+    data: DynamicDataTable.data,
     dense: true,
     pagination: true,
     paginationServer: true,
@@ -1757,12 +1714,14 @@ const DynamicDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_2__.create)((s
   DynamicDataTable: [],
   fetchDynamicData: async action => {
     try {
+      console.log("FetDD action");
+      console.log(action);
       const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction(action, get().dataActions);
       //now we set the EventLog
       if (response) {
         set(state => ({
           ...state,
-          DynamicDataTable: response.data,
+          DynamicDataTable: response,
           dataLoaded: true,
           processing: false,
           pagination: response.pagination

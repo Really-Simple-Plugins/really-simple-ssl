@@ -34,7 +34,6 @@ const DynamicDataTable = (props) => {
                     if(response.data && Array.isArray(response.data)) {
                         const methods = response.data.reduce((acc, user) => ({...acc, [user.id]: user.rsssl_two_fa_method}), {});
                         setTwoFAMethods(methods);
-                        // setDynamicData(response.data);
                     } else {
                         console.error('Unexpected response:', response);
                     }
@@ -44,7 +43,6 @@ const DynamicDataTable = (props) => {
                 });
         }
     }, [dataLoaded, field.action, fetchDynamicData]);
-
 
     useEffect(() => {
         if (dataActions) {
@@ -74,14 +72,6 @@ const DynamicDataTable = (props) => {
                 console.error('Error updating user meta:', error);
             });
     }
-
-    useEffect(() => {
-        fields.forEach(function (item, i) {
-            if (item.id === 'two_fa_enabled') {
-                setEnabled(item.value);
-            }
-        });
-    }, [fields]);
 
     function buildColumn(column) {
         let newColumn = {
@@ -164,45 +154,6 @@ const DynamicDataTable = (props) => {
         });
     }, [fields]);
 
-    if ( ! enabled ) {
-        return (
-            <>
-                <div className="rsssl-search-bar">
-                    <div className="rsssl-search-bar__inner">
-                        <div className="rsssl-search-bar__icon"></div>
-                        <input
-                            type="text"
-                            className="rsssl-search-bar__input"
-                            placeholder={__("Search", "really-simple-ssl")}
-                            onChange={event => handleTableSearch(event.target.value, searchableColumns)}
-                        />
-                    </div>
-                </div>
-                <DataTable
-                    columns={columns}
-                    data={DynamicDataTable}
-                    dense
-                    pagination
-                    paginationServer
-                    onChangeRowsPerPage={handleTableRowsChange}
-                    onChangePage={handleTablePageChange}
-                    sortServer
-                    onSort={handleTableSort}
-                    paginationRowsPerPageOptions={[10, 25, 50, 100]}
-                    noDataComponent={__("No results", "really-simple-ssl")}
-                    persistTableHead
-                    theme="really-simple-plugins"
-                    customStyles={customStyles}
-                ></DataTable>
-                <div className="rsssl-locked">
-                    <div className="rsssl-locked-overlay"><span
-                        className="rsssl-task-status rsssl-open">{__('Disabled', 'really-simple-ssl')}</span><span>{__('Activate Enable login security to enable this block.', 'really-simple-ssl')}</span>
-                    </div>
-                </div>
-            </>
-        );
-    }
-
     return (
         <>
             <div className="rsssl-search-bar">
@@ -218,7 +169,7 @@ const DynamicDataTable = (props) => {
             </div>
             <DataTable
                 columns={columns}
-                data={DynamicDataTable}
+                data={DynamicDataTable.data}
                 dense
                 pagination
                 paginationServer

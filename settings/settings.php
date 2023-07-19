@@ -272,6 +272,7 @@ function rsssl_remove_fallback_notice()
  */
 function rsssl_do_action($request, $ajax_data = false)
 {
+
     if (!rsssl_user_can_manage()) {
         return;
     }
@@ -279,6 +280,7 @@ function rsssl_do_action($request, $ajax_data = false)
     if (!$ajax_data) {
         rsssl_remove_fallback_notice();
     }
+
     $action = sanitize_title($request->get_param('action'));
     $data = $ajax_data !== false ? $ajax_data : $request->get_params();
 
@@ -318,7 +320,10 @@ function rsssl_do_action($request, $ajax_data = false)
             $response = rsssl_get_roles( $data );
             break;
         default:
-            $response = apply_filters("rsssl_do_action", [], $action, $data);
+            error_log("DEFAULT!!!");
+	        error_log($action);
+	        $response = apply_filters("rsssl_do_action", [], $action, $data);
+            error_log(print_r($response, true));
     }
 
     if (is_array($response)) {

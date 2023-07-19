@@ -17,6 +17,8 @@ const DynamicDataTableStore = create((set, get) => ({
     fetchDynamicData: async (action) => {
         try {
 
+            console.log("FetDD action")
+            console.log(action)
             const response = await rsssl_api.doAction(
                 action,
                 get().dataActions
@@ -25,7 +27,7 @@ const DynamicDataTableStore = create((set, get) => ({
             if (response) {
                 set(state => ({
                     ...state,
-                    DynamicDataTable: response.data,
+                    DynamicDataTable: response,
                     dataLoaded: true,
                     processing: false,
                     pagination: response.pagination,

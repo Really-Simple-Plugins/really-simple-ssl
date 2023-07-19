@@ -3769,9 +3769,11 @@ const runLetsEncryptTest = (test, id) => {
   return apiGet('reallysimplessl/v1/tests/' + test + glue() + 'letsencrypt=1&id=' + id + getNonce());
 };
 const doAction = (action, data) => {
-  if (typeof data === 'undefined') data = {};
-  data.nonce = rsssl_settings.rsssl_nonce;
-  return apiPost('reallysimplessl/v1/do_action/' + action, data);
+  const newData = {
+    ...data
+  };
+  newData.nonce = rsssl_settings.rsssl_nonce;
+  return apiPost('reallysimplessl/v1/do_action/' + action, newData);
 };
 
 /***/ }),

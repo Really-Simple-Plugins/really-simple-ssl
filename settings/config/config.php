@@ -958,12 +958,12 @@ function rsssl_fields( $load_values = true ) {
 			'tooltip'  => __( "Lorem ipsum", 'really-simple-ssl' ),
 			'disabled' => false,
 			'default'  => 'disabled',
-			'react_condition' => [
-				'relation' => 'AND',
-				[
-					'two_fa_enabled' => true,
-				]
-			],
+//			'react_condition' => [
+//				'relation' => 'AND',
+//				[
+//					'two_fa_enabled' => true,
+//				]
+//			],
 		],
 		[
 			'id'       => 'two_fa_optional_roles',
@@ -972,12 +972,12 @@ function rsssl_fields( $load_values = true ) {
 			'type'     => 'two_fa_dropdown',
             'label'    => __( "Optional for:", "really-simple-ssl-pro" ),
 			'tooltip'  => __( "Lorem ipsum", 'really-simple-ssl' ),
-			'react_conditions' => [
-                'relation' => 'AND',
-                [
-                    'two_fa_email_code' => true,
-                ]
-            ],
+//			'react_conditions' => [
+//                'relation' => 'AND',
+//                [
+//                    'two_fa_email_code' => true,
+//                ]
+//            ],
         ],
 
 		[
@@ -987,12 +987,12 @@ function rsssl_fields( $load_values = true ) {
 			'type'     => 'two_fa_dropdown',
 			'label'    => __( "Force on:", "really-simple-ssl-pro" ),
 			'tooltip'  => __( "Lorem ipsum", 'really-simple-ssl' ),
-			'react_conditions' => [
-				'relation' => 'AND',
-				[
-					'two_fa_email_code' => true,
-				]
-			],
+//			'react_conditions' => [
+//				'relation' => 'AND',
+//				[
+//					'two_fa_email_code' => true,
+//				]
+//			],
 		],
         [
             'id'    => 'two_fa_users_table',
@@ -1033,12 +1033,12 @@ function rsssl_fields( $load_values = true ) {
                     'column'   => 'status_for_user',
                 ],
             ],
-            'react_conditions' => [
-				'relation' => 'AND',
-					[
-						'two_fa_email_code' => true,
-					]
-			],
+//            'react_conditions' => [
+//				'relation' => 'AND',
+//					[
+//						'two_fa_email_code' => true,
+//					]
+//			],
         ],
 		[
 			'id'          => 'mixedcontentscan',
