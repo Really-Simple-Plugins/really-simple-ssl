@@ -1014,14 +1014,14 @@ function rsssl_fields( $load_values = true ) {
                 [
                     'name'     => __( 'Status', 'really-simple-ssl' ),
                     'sortable' => false,
-                    'searchable' => true,
+                    'searchable' => false,
                     'visible' => true,
                     'column'   => 'rsssl_two_fa_method',
                 ],
                 [
                     'name'     => __( 'User role', 'really-simple-ssl' ),
                     'sortable' => false,
-                    'searchable' => true,
+                    'searchable' => false,
                     'visible' => true,
                     'column'   => 'user_role',
                 ],

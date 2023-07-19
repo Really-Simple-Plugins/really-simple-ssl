@@ -1513,13 +1513,14 @@ const DynamicDataTable = props => {
     dataActions,
     handleTableRowsChange,
     fetchDynamicData,
+    setDynamicData,
     handleTableSort,
     handleTablePageChange,
     handleTableSearch,
     updateUserMeta
   } = (0,_DynamicDataTableStore__WEBPACK_IMPORTED_MODULE_6__["default"])();
   let field = props.field;
-  const [enabled, setEnabled] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(false);
+  let enabled = false;
   const {
     fields
   } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_5__["default"])();
@@ -1527,14 +1528,13 @@ const DynamicDataTable = props => {
     if (!dataLoaded) {
       fetchDynamicData(field.action).then(response => {
         // Check if response.data is defined and is an array before calling reduce
-        console.log("Response in dynamicdatatable");
-        console.log(response);
         if (response.data && Array.isArray(response.data)) {
           const methods = response.data.reduce((acc, user) => ({
             ...acc,
             [user.id]: user.rsssl_two_fa_method
           }), {});
           setTwoFAMethods(methods);
+          setDynamicData(response.data);
         } else {
           console.error('Unexpected response:', response);
         }
@@ -1544,22 +1544,15 @@ const DynamicDataTable = props => {
     }
   }, [dataLoaded, field.action, fetchDynamicData]);
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
-    fields.forEach(function (item, i) {
-      if (item.id === 'two_fa_enabled') {
-        setEnabled(item.value);
-      }
-    });
-  }, [fields]);
-  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
     if (dataActions) {
-      fetchDynamicData(field.action);
+      fetchDynamicData(field.action).then(response => setDynamicData(response.data));
     }
-  }, [dataActions]);
+  }, [dataActions, field.action, fetchDynamicData, setDynamicData]);
   function handleTwoFAMethodChange(userId, newMethod) {
-    setTwoFAMethods(prevMethods => ({
-      ...prevMethods,
+    setTwoFAMethods({
+      ...twoFAMethods,
       [userId]: newMethod
-    }));
+    });
     _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_4___default()({
       path: `/wp/v2/users/${userId}`,
       method: 'POST',
@@ -1644,6 +1637,46 @@ const DynamicDataTable = props => {
       searchableColumns.push(column.column);
     }
   });
+  fields.forEach(function (item, i) {
+    if (item.id === 'two_fa_enabled') {
+      enabled = item.value;
+    }
+  });
+  if (!enabled) {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-search-bar"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-search-bar__inner"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-search-bar__icon"
+    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+      type: "text",
+      className: "rsssl-search-bar__input",
+      placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Search", "really-simple-ssl"),
+      onChange: event => handleTableSearch(event.target.value, searchableColumns)
+    }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      columns: columns,
+      data: DynamicDataTable,
+      dense: true,
+      pagination: true,
+      paginationServer: true,
+      onChangeRowsPerPage: handleTableRowsChange,
+      onChangePage: handleTablePageChange,
+      sortServer: true,
+      onSort: handleTableSort,
+      paginationRowsPerPageOptions: [10, 25, 50, 100],
+      noDataComponent: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("No results", "really-simple-ssl"),
+      persistTableHead: true,
+      theme: "really-simple-plugins",
+      customStyles: customStyles
+    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-locked"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-locked-overlay"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+      className: "rsssl-task-status rsssl-open"
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Disabled', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Activate Enable login security to enable this block.', 'really-simple-ssl')))));
+  }
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-search-bar"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -1657,7 +1690,7 @@ const DynamicDataTable = props => {
     onChange: event => handleTableSearch(event.target.value, searchableColumns)
   }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
     columns: columns,
-    data: DynamicDataTable.data,
+    data: DynamicDataTable,
     dense: true,
     pagination: true,
     paginationServer: true,
@@ -1670,13 +1703,7 @@ const DynamicDataTable = props => {
     persistTableHead: true,
     theme: "really-simple-plugins",
     customStyles: customStyles
-  }), !enabled && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-locked"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-locked-overlay"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-    className: "rsssl-task-status rsssl-open"
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Disabled', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Activate Enable login security to enable this block.', 'really-simple-ssl')))));
+  }));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (DynamicDataTable);
 
@@ -1716,25 +1743,21 @@ const DynamicDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_2__.create)((s
   fetchDynamicData: async action => {
     try {
       const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction(action, get().dataActions);
-      //now we set the EventLog
-      if (response) {
-        console.log("Response in store");
-        console.log(response);
-        set(state => ({
-          ...state,
-          DynamicDataTable: response,
-          dataLoaded: true,
-          processing: false,
-          pagination: response.pagination
-          // Removed the twoFAMethods set from here...
-        }));
-        // Return the response for the calling function to use
-        return response;
-      }
+      return response;
     } catch (e) {
       console.log(e);
     }
   },
+  setDynamicData: data => {
+    set(state => ({
+      ...state,
+      DynamicDataTable: data,
+      dataLoaded: true,
+      processing: false
+      //...
+    }));
+  },
+
   handleTableSearch: async (search, searchColumns) => {
     //Add the search to the dataActions
     set((0,immer__WEBPACK_IMPORTED_MODULE_3__.produce)(state => {

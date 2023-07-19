@@ -16,30 +16,21 @@ const DynamicDataTableStore = create((set, get) => ({
 
     fetchDynamicData: async (action) => {
         try {
-
-            const response = await rsssl_api.doAction(
-                action,
-                get().dataActions
-            );
-            //now we set the EventLog
-            if (response) {
-                console.log("Response in store")
-                console.log(response);
-                set(state => ({
-                    ...state,
-                    DynamicDataTable: response,
-                    dataLoaded: true,
-                    processing: false,
-                    pagination: response.pagination,
-                    // Removed the twoFAMethods set from here...
-                }));
-                // Return the response for the calling function to use
-                return response;
-            }
-
+            const response = await rsssl_api.doAction(action, get().dataActions);
+            return response;
         } catch (e) {
             console.log(e);
         }
+    },
+
+    setDynamicData: (data) => {
+        set(state => ({
+            ...state,
+            DynamicDataTable: data,
+            dataLoaded: true,
+            processing: false,
+            //...
+        }));
     },
 
     handleTableSearch: async (search, searchColumns) => {

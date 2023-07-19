@@ -15,6 +15,7 @@ const DynamicDataTable = (props) => {
         dataActions,
         handleTableRowsChange,
         fetchDynamicData,
+        setDynamicData,
         handleTableSort,
         handleTablePageChange,
         handleTableSearch,
@@ -22,7 +23,7 @@ const DynamicDataTable = (props) => {
     } = DynamicDataTableStore();
 
     let field = props.field;
-    const [enabled, setEnabled] = useState(false);
+    let enabled = false;
     const {fields} = useFields();
 
     useEffect(() => {
@@ -30,11 +31,10 @@ const DynamicDataTable = (props) => {
             fetchDynamicData(field.action)
                 .then(response => {
                     // Check if response.data is defined and is an array before calling reduce
-                    console.log("Response in dynamicdatatable")
-                    console.log(response);
                     if(response.data && Array.isArray(response.data)) {
                         const methods = response.data.reduce((acc, user) => ({...acc, [user.id]: user.rsssl_two_fa_method}), {});
                         setTwoFAMethods(methods);
+                        setDynamicData(response.data);
                     } else {
                         console.error('Unexpected response:', response);
                     }
@@ -46,24 +46,17 @@ const DynamicDataTable = (props) => {
     }, [dataLoaded, field.action, fetchDynamicData]);
 
     useEffect(() => {
-        fields.forEach(function (item, i) {
-            if (item.id === 'two_fa_enabled') {
-                setEnabled(item.value);
-            }
-        });
-    }, [fields]);
-
-    useEffect(() => {
         if (dataActions) {
-            fetchDynamicData(field.action);
+            fetchDynamicData(field.action)
+                .then(response => setDynamicData(response.data));
         }
-    }, [dataActions]);
+    }, [dataActions, field.action, fetchDynamicData, setDynamicData]);
 
     function handleTwoFAMethodChange(userId, newMethod) {
-        setTwoFAMethods(prevMethods => ({
-            ...prevMethods,
-            [userId]: newMethod,
-        }));
+        setTwoFAMethods({
+            ...twoFAMethods,
+            [userId]: newMethod
+        });
 
         apiFetch({
             path: `/wp/v2/users/${userId}`,
@@ -81,6 +74,7 @@ const DynamicDataTable = (props) => {
                 console.error('Error updating user meta:', error);
             });
     }
+
 
     function buildColumn(column) {
         let newColumn = {
@@ -155,6 +149,51 @@ const DynamicDataTable = (props) => {
         }
     });
 
+    fields.forEach(function (item, i) {
+        if (item.id === 'two_fa_enabled') {
+            enabled = item.value;
+        }
+    });
+
+    if ( ! enabled ) {
+        return (
+            <>
+                <div className="rsssl-search-bar">
+                    <div className="rsssl-search-bar__inner">
+                        <div className="rsssl-search-bar__icon"></div>
+                        <input
+                            type="text"
+                            className="rsssl-search-bar__input"
+                            placeholder={__("Search", "really-simple-ssl")}
+                            onChange={event => handleTableSearch(event.target.value, searchableColumns)}
+                        />
+                    </div>
+                </div>
+                <DataTable
+                    columns={columns}
+                    data={DynamicDataTable}
+                    dense
+                    pagination
+                    paginationServer
+                    onChangeRowsPerPage={handleTableRowsChange}
+                    onChangePage={handleTablePageChange}
+                    sortServer
+                    onSort={handleTableSort}
+                    paginationRowsPerPageOptions={[10, 25, 50, 100]}
+                    noDataComponent={__("No results", "really-simple-ssl")}
+                    persistTableHead
+                    theme="really-simple-plugins"
+                    customStyles={customStyles}
+                ></DataTable>
+                <div className="rsssl-locked">
+                    <div className="rsssl-locked-overlay"><span
+                        className="rsssl-task-status rsssl-open">{__('Disabled', 'really-simple-ssl')}</span><span>{__('Activate Enable login security to enable this block.', 'really-simple-ssl')}</span>
+                    </div>
+                </div>
+            </>
+        );
+    }
+
     return (
         <>
             <div className="rsssl-search-bar">
@@ -170,7 +209,7 @@ const DynamicDataTable = (props) => {
             </div>
             <DataTable
                 columns={columns}
-                data={DynamicDataTable.data}
+                data={DynamicDataTable}
                 dense
                 pagination
                 paginationServer
@@ -184,16 +223,8 @@ const DynamicDataTable = (props) => {
                 theme="really-simple-plugins"
                 customStyles={customStyles}
             ></DataTable>
-            { !enabled &&
-                <div className="rsssl-locked">
-                    <div className="rsssl-locked-overlay"><span
-                        className="rsssl-task-status rsssl-open">{__('Disabled', 'really-simple-ssl')}</span><span>{__('Activate Enable login security to enable this block.', 'really-simple-ssl')}</span>
-                    </div>
-                </div>
-            }
         </>
     );
-
 
 }
 export default DynamicDataTable;
