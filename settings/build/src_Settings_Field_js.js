@@ -1513,14 +1513,14 @@ const DynamicDataTable = props => {
     dataActions,
     handleTableRowsChange,
     fetchDynamicData,
-    setDynamicData,
+    // setDynamicData,
     handleTableSort,
     handleTablePageChange,
     handleTableSearch,
     updateUserMeta
   } = (0,_DynamicDataTableStore__WEBPACK_IMPORTED_MODULE_6__["default"])();
   let field = props.field;
-  let enabled = false;
+  const [enabled, setEnabled] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(false);
   const {
     fields
   } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_5__["default"])();
@@ -1534,7 +1534,7 @@ const DynamicDataTable = props => {
             [user.id]: user.rsssl_two_fa_method
           }), {});
           setTwoFAMethods(methods);
-          setDynamicData(response.data);
+          // setDynamicData(response.data);
         } else {
           console.error('Unexpected response:', response);
         }
@@ -1545,9 +1545,9 @@ const DynamicDataTable = props => {
   }, [dataLoaded, field.action, fetchDynamicData]);
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
     if (dataActions) {
-      fetchDynamicData(field.action).then(response => setDynamicData(response.data));
+      fetchDynamicData(field.action);
     }
-  }, [dataActions, field.action, fetchDynamicData, setDynamicData]);
+  }, [dataActions]);
   function handleTwoFAMethodChange(userId, newMethod) {
     setTwoFAMethods({
       ...twoFAMethods,
@@ -1567,6 +1567,13 @@ const DynamicDataTable = props => {
       console.error('Error updating user meta:', error);
     });
   }
+  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
+    fields.forEach(function (item, i) {
+      if (item.id === 'two_fa_enabled') {
+        setEnabled(item.value);
+      }
+    });
+  }, [fields]);
   function buildColumn(column) {
     let newColumn = {
       name: column.name,
@@ -1637,11 +1644,13 @@ const DynamicDataTable = props => {
       searchableColumns.push(column.column);
     }
   });
-  fields.forEach(function (item, i) {
-    if (item.id === 'two_fa_enabled') {
-      enabled = item.value;
-    }
-  });
+  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
+    fields.forEach(function (item, i) {
+      if (item.id === 'two_fa_enabled') {
+        setEnabled(item.value);
+      }
+    });
+  }, [fields]);
   if (!enabled) {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-search-bar"
@@ -1703,7 +1712,13 @@ const DynamicDataTable = props => {
     persistTableHead: true,
     theme: "really-simple-plugins",
     customStyles: customStyles
-  }));
+  }), !enabled && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-locked"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-locked-overlay"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "rsssl-task-status rsssl-open"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Disabled', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Activate Enable login security to enable this block.', 'really-simple-ssl')))));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (DynamicDataTable);
 
@@ -1743,21 +1758,23 @@ const DynamicDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_2__.create)((s
   fetchDynamicData: async action => {
     try {
       const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction(action, get().dataActions);
-      return response;
+      //now we set the EventLog
+      if (response) {
+        set(state => ({
+          ...state,
+          DynamicDataTable: response.data,
+          dataLoaded: true,
+          processing: false,
+          pagination: response.pagination
+          // Removed the twoFAMethods set from here...
+        }));
+        // Return the response for the calling function to use
+        return response;
+      }
     } catch (e) {
       console.log(e);
     }
   },
-  setDynamicData: data => {
-    set(state => ({
-      ...state,
-      DynamicDataTable: data,
-      dataLoaded: true,
-      processing: false
-      //...
-    }));
-  },
-
   handleTableSearch: async (search, searchColumns) => {
     //Add the search to the dataActions
     set((0,immer__WEBPACK_IMPORTED_MODULE_3__.produce)(state => {

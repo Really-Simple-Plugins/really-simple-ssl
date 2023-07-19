@@ -15,7 +15,7 @@ const DynamicDataTable = (props) => {
         dataActions,
         handleTableRowsChange,
         fetchDynamicData,
-        setDynamicData,
+        // setDynamicData,
         handleTableSort,
         handleTablePageChange,
         handleTableSearch,
@@ -23,7 +23,7 @@ const DynamicDataTable = (props) => {
     } = DynamicDataTableStore();
 
     let field = props.field;
-    let enabled = false;
+    const [enabled, setEnabled] = useState(false);
     const {fields} = useFields();
 
     useEffect(() => {
@@ -34,7 +34,7 @@ const DynamicDataTable = (props) => {
                     if(response.data && Array.isArray(response.data)) {
                         const methods = response.data.reduce((acc, user) => ({...acc, [user.id]: user.rsssl_two_fa_method}), {});
                         setTwoFAMethods(methods);
-                        setDynamicData(response.data);
+                        // setDynamicData(response.data);
                     } else {
                         console.error('Unexpected response:', response);
                     }
@@ -45,12 +45,12 @@ const DynamicDataTable = (props) => {
         }
     }, [dataLoaded, field.action, fetchDynamicData]);
 
+
     useEffect(() => {
         if (dataActions) {
-            fetchDynamicData(field.action)
-                .then(response => setDynamicData(response.data));
+            fetchDynamicData(field.action);
         }
-    }, [dataActions, field.action, fetchDynamicData, setDynamicData]);
+    }, [dataActions]);
 
     function handleTwoFAMethodChange(userId, newMethod) {
         setTwoFAMethods({
@@ -75,6 +75,13 @@ const DynamicDataTable = (props) => {
             });
     }
 
+    useEffect(() => {
+        fields.forEach(function (item, i) {
+            if (item.id === 'two_fa_enabled') {
+                setEnabled(item.value);
+            }
+        });
+    }, [fields]);
 
     function buildColumn(column) {
         let newColumn = {
@@ -149,11 +156,13 @@ const DynamicDataTable = (props) => {
         }
     });
 
-    fields.forEach(function (item, i) {
-        if (item.id === 'two_fa_enabled') {
-            enabled = item.value;
-        }
-    });
+    useEffect(() => {
+        fields.forEach(function (item, i) {
+            if (item.id === 'two_fa_enabled') {
+                setEnabled(item.value);
+            }
+        });
+    }, [fields]);
 
     if ( ! enabled ) {
         return (
@@ -223,6 +232,13 @@ const DynamicDataTable = (props) => {
                 theme="really-simple-plugins"
                 customStyles={customStyles}
             ></DataTable>
+            { !enabled &&
+                <div className="rsssl-locked">
+                    <div className="rsssl-locked-overlay"><span
+                        className="rsssl-task-status rsssl-open">{__('Disabled', 'really-simple-ssl')}</span><span>{__('Activate Enable login security to enable this block.', 'really-simple-ssl')}</span>
+                    </div>
+                </div>
+            }
         </>
     );
 
