@@ -797,14 +797,13 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
 	    private function remote_file_exists($url) {
 		    $headers = @get_headers($url);
-
 		    if ($headers === false) {
 			    // URL is not accessible or some error occurred
 			    return false;
 		    }
 
 		    // Check if the HTTP status code starts with "200" (indicating success)
-		    return strpos($headers[0], '200') === 0;
+		    return strpos($headers[0], '200') !== false;
 	    }
 
         /**
