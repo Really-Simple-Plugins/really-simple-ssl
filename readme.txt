@@ -6,7 +6,7 @@ Requires at least: 5.8
 License: GPL2
 Tested up to: 6.2
 Requires PHP: 7.2
-Stable tag: 7.0.6
+Stable tag: 7.0.7
 
 The easiest way to improve security! Leverage your SSL certificate and protect your website visitors.
 
@@ -110,8 +110,14 @@ The plugin checks your certificate before enabling, but if, for example, you mig
 If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions](https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/) instead.
 
 == Changelog ==
+= 7.0.7 =
+* July 25th 2023
+* Improvement: modal icon placement in wizard on smaller screens
+* Improvement: expire cached detected headers five minutes after saving the settings
+* Fix: handling of legacy options in php 8.1
+
 = 7.0.6 =
-* 04-07-2023
+* July 4th 2023
 * Improvement: support custom wp-content directory in advanced-headers.php
 * Improvement: prevent usage of subdirectories in custom login url
 * Fix: translations not loading for chunked react components
