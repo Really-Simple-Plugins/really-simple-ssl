@@ -24,14 +24,13 @@ const DynamicDataTableStore = create((set, get) => ({
             if (response) {
                 set(state => ({
                     ...state,
-                    DynamicDataTable: response,
+                    DynamicDataTable: response.data,
                     dataLoaded: true,
                     processing: false,
                     pagination: response.pagination,
                     // Removed the twoFAMethods set from here...
                 }));
                 // Return the response for the calling function to use
-                console.log(response)
                 return response;
             }
 

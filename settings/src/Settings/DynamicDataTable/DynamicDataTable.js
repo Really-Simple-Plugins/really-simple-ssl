@@ -31,7 +31,7 @@ const DynamicDataTable = (props) => {
     useEffect(() => {
         twoFAEnabledRef.current = getFieldValue('two_fa_enabled');
         saveFields(true, false)
-    }, [getFieldValue('two_fa_enabled')]); // Update the ref every time getFieldValue('two_fa_enabled') changes
+    }, [getFieldValue('two_fa_enabled')]);
 
     useEffect(() => {
         const value = getFieldValue('two_fa_enabled');
@@ -39,16 +39,9 @@ const DynamicDataTable = (props) => {
     }, [fields]);
 
     useEffect(() => {
-        console.log("Checking conditions for data fetch...");
-        console.log("dataLoaded:", dataLoaded);
-        console.log("two_fa_enabled field value:", getFieldValue('two_fa_enabled'));
-
         if (!dataLoaded || enabled !== getFieldValue('two_fa_enabled')) {
-            console.log("Condition met, fetching data (yy)");
-
             fetchDynamicData(field.action)
                 .then(response => {
-                    console.log(response)
                     // Check if response.data is defined and is an array before calling reduce
                     if(response.data && Array.isArray(response.data)) {
                         const methods = response.data.reduce((acc, user) => ({...acc, [user.id]: user.rsssl_two_fa_method}), {});
@@ -179,7 +172,7 @@ const DynamicDataTable = (props) => {
             </div>
             <DataTable
                 columns={columns}
-                data={DynamicDataTable.data}
+                data={DynamicDataTable}
                 dense
                 pagination
                 paginationServer

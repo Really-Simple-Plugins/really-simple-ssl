@@ -320,10 +320,7 @@ function rsssl_do_action($request, $ajax_data = false)
             $response = rsssl_get_roles( $data );
             break;
         default:
-            error_log("DEFAULT!!!");
-	        error_log($action);
 	        $response = apply_filters("rsssl_do_action", [], $action, $data);
-            error_log(print_r($response, true));
     }
 
     if (is_array($response)) {
@@ -1042,41 +1039,50 @@ function rsssl_conditions_apply(array $conditions)
  */
 function rsssl_get_roles( $data ) {
 
-    if ( ! wp_verify_nonce( $data['nonce'], 'rsssl_nonce' ) ) {
-        return;
-    }
+	if ( ! wp_verify_nonce( $data['nonce'], 'rsssl_nonce' ) ) {
+		return;
+	}
 
-    global $wp_roles;
+	global $wp_roles;
 
-    // Try to get roles from cache
-    $roles = wp_cache_get( 'rsssl_roles' );
+	// Try to get roles from cache
+	$roles = wp_cache_get( 'rsssl_roles' );
 
-    // If roles are not in cache, fetch and set cache
-    if ( ! $roles ) {
-        // Just return the names, not the capabilities
-        $roles_names = array_keys( $wp_roles->roles );
+	// If roles are not in cache, fetch and set cache
+	if ( ! $roles ) {
+		// Just return the names, not the capabilities
+		$roles_names = array_keys( $wp_roles->roles );
 
-        // Extract unique role values from the role names
-        $roles = array_values( array_unique( $roles_names ));
+		// Extract unique role values from the role names
+		$roles = array_values( array_unique( $roles_names ));
 
-        // Set the roles in cache for future use
-        wp_cache_set( 'rsssl_roles', $roles );
-    }
+		// Set the roles in cache for future use
+		wp_cache_set( 'rsssl_roles', $roles );
+	}
 
-    // Filter out forced roles that are also in optional roles
-    $optional_roles = rsssl_get_option('two_fa_optional_roles');
-    $forced_roles = rsssl_get_option('two_fa_forced_roles');
+	// Filter out forced roles that are also in optional roles
+	$optional_roles = rsssl_get_option('two_fa_optional_roles');
+	$forced_roles = rsssl_get_option('two_fa_forced_roles');
 
-    // If no role is selected in either dropdown, show all roles in both dropdowns
-    if ( ! empty( $optional_roles ) || ! empty( $forced_roles ) ) {
-        $roles = array_filter($roles, function($role) use ($optional_roles, $forced_roles) {
-            return !in_array($role, $optional_roles) && !in_array($role, $forced_roles);
-        });
-    }
+	// Make sure $optional_roles and $forced_roles are arrays
+	if ( ! is_array( $optional_roles ) ) {
+		$optional_roles = [];
+	}
+	if ( ! is_array( $forced_roles ) ) {
+		$forced_roles = [];
+	}
 
-    $output['roles'] = array_values($roles); // Reset array keys
-    $output['request_success'] = true;
+	// If no role is selected in either dropdown, show all roles in both dropdowns
+	if ( ! empty( $optional_roles ) || ! empty( $forced_roles ) ) {
+		$roles = array_filter($roles, function($role) use ($optional_roles, $forced_roles) {
+			return !in_array($role, $optional_roles) && !in_array($role, $forced_roles);
+		});
+	}
 
-    return $output;
+	$output['roles'] = array_values($roles); // Reset array keys
+	$output['request_success'] = true;
+
+	return $output;
 }
+
 
