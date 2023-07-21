@@ -1,5 +1,5 @@
 import {__} from '@wordpress/i18n';
-import React, {useEffect, useState} from 'react';
+import React, {useRef, useEffect, useState} from 'react';
 import DataTable, {createTheme} from "react-data-table-component";
 import apiFetch from '@wordpress/api-fetch';
 import useFields from "../FieldsData";
@@ -24,12 +24,31 @@ const DynamicDataTable = (props) => {
 
     let field = props.field;
     const [enabled, setEnabled] = useState(false);
-    const {fields} = useFields();
+    const {fields, getFieldValue, saveFields} = useFields();
+
+    const twoFAEnabledRef = useRef();
 
     useEffect(() => {
-        if (!dataLoaded) {
+        twoFAEnabledRef.current = getFieldValue('two_fa_enabled');
+        saveFields(true, false)
+    }, [getFieldValue('two_fa_enabled')]); // Update the ref every time getFieldValue('two_fa_enabled') changes
+
+    useEffect(() => {
+        const value = getFieldValue('two_fa_enabled');
+        setEnabled(value);
+    }, [fields]);
+
+    useEffect(() => {
+        console.log("Checking conditions for data fetch...");
+        console.log("dataLoaded:", dataLoaded);
+        console.log("two_fa_enabled field value:", getFieldValue('two_fa_enabled'));
+
+        if (!dataLoaded || enabled !== getFieldValue('two_fa_enabled')) {
+            console.log("Condition met, fetching data (yy)");
+
             fetchDynamicData(field.action)
                 .then(response => {
+                    console.log(response)
                     // Check if response.data is defined and is an array before calling reduce
                     if(response.data && Array.isArray(response.data)) {
                         const methods = response.data.reduce((acc, user) => ({...acc, [user.id]: user.rsssl_two_fa_method}), {});
@@ -42,7 +61,8 @@ const DynamicDataTable = (props) => {
                     console.error(err); // Log any errors
                 });
         }
-    }, [dataLoaded, field.action, fetchDynamicData]);
+    }, [dataLoaded, field.action, fetchDynamicData, getFieldValue('two_fa_enabled')]); // Add getFieldValue('two_fa_enabled') as a dependency
+
 
     useEffect(() => {
         if (dataActions) {
@@ -76,6 +96,7 @@ const DynamicDataTable = (props) => {
     function buildColumn(column) {
         let newColumn = {
             name: column.name,
+            column: column.column,
             sortable: column.sortable,
             searchable: column.searchable,
             width: column.width,
@@ -95,7 +116,7 @@ const DynamicDataTable = (props) => {
                 </select>
             );
         }
-
+        // console.log(newColumn);
         return newColumn;
     }
 
@@ -107,6 +128,10 @@ const DynamicDataTable = (props) => {
         newItem.visible = newItem.visible ?? true;
         columns.push(newItem);
     });
+
+    let searchableColumns = columns
+        .filter(column => column.searchable)
+        .map(column => column.column);
 
     const customStyles = {
         headCells: {
@@ -138,21 +163,6 @@ const DynamicDataTable = (props) => {
             </div>
         );
     }
-
-    let searchableColumns = [];
-    columns.map(column => {
-        if (column.searchable) {
-            searchableColumns.push(column.column);
-        }
-    });
-
-    useEffect(() => {
-        fields.forEach(function (item, i) {
-            if (item.id === 'two_fa_enabled') {
-                setEnabled(item.value);
-            }
-        });
-    }, [fields]);
 
     return (
         <>

@@ -16,9 +16,6 @@ const DynamicDataTableStore = create((set, get) => ({
 
     fetchDynamicData: async (action) => {
         try {
-
-            console.log("FetDD action")
-            console.log(action)
             const response = await rsssl_api.doAction(
                 action,
                 get().dataActions
@@ -34,6 +31,7 @@ const DynamicDataTableStore = create((set, get) => ({
                     // Removed the twoFAMethods set from here...
                 }));
                 // Return the response for the calling function to use
+                console.log(response)
                 return response;
             }
 
@@ -43,12 +41,11 @@ const DynamicDataTableStore = create((set, get) => ({
     },
 
     handleTableSearch: async (search, searchColumns) => {
-        //Add the search to the dataActions
         set(produce((state) => {
-                state.dataActions = {...state.dataActions, search, searchColumns};
-            })
-        );
+            state.dataActions = {...state.dataActions, search, searchColumns};
+        }));
     },
+
 
     handleTablePageChange: async (page, pageSize) => {
         //Add the page and pageSize to the dataActions

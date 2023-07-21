@@ -1522,11 +1522,28 @@ const DynamicDataTable = props => {
   let field = props.field;
   const [enabled, setEnabled] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(false);
   const {
-    fields
+    fields,
+    getFieldValue,
+    saveFields
   } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_5__["default"])();
+  const twoFAEnabledRef = (0,react__WEBPACK_IMPORTED_MODULE_2__.useRef)();
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
-    if (!dataLoaded) {
+    twoFAEnabledRef.current = getFieldValue('two_fa_enabled');
+    saveFields(true, false);
+  }, [getFieldValue('two_fa_enabled')]); // Update the ref every time getFieldValue('two_fa_enabled') changes
+
+  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
+    const value = getFieldValue('two_fa_enabled');
+    setEnabled(value);
+  }, [fields]);
+  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
+    console.log("Checking conditions for data fetch...");
+    console.log("dataLoaded:", dataLoaded);
+    console.log("two_fa_enabled field value:", getFieldValue('two_fa_enabled'));
+    if (!dataLoaded || enabled !== getFieldValue('two_fa_enabled')) {
+      console.log("Condition met, fetching data (yy)");
       fetchDynamicData(field.action).then(response => {
+        console.log(response);
         // Check if response.data is defined and is an array before calling reduce
         if (response.data && Array.isArray(response.data)) {
           const methods = response.data.reduce((acc, user) => ({
@@ -1541,7 +1558,8 @@ const DynamicDataTable = props => {
         console.error(err); // Log any errors
       });
     }
-  }, [dataLoaded, field.action, fetchDynamicData]);
+  }, [dataLoaded, field.action, fetchDynamicData, getFieldValue('two_fa_enabled')]); // Add getFieldValue('two_fa_enabled') as a dependency
+
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
     if (dataActions) {
       fetchDynamicData(field.action);
@@ -1569,6 +1587,7 @@ const DynamicDataTable = props => {
   function buildColumn(column) {
     let newColumn = {
       name: column.name,
+      column: column.column,
       sortable: column.sortable,
       searchable: column.searchable,
       width: column.width,
@@ -1587,6 +1606,7 @@ const DynamicDataTable = props => {
         value: "email"
       }, "Email"));
     }
+    // console.log(newColumn);
     return newColumn;
   }
   let columns = [];
@@ -1600,6 +1620,7 @@ const DynamicDataTable = props => {
     newItem.visible = (_newItem$visible = newItem.visible) !== null && _newItem$visible !== void 0 ? _newItem$visible : true;
     columns.push(newItem);
   });
+  let searchableColumns = columns.filter(column => column.searchable).map(column => column.column);
   const customStyles = {
     headCells: {
       style: {
@@ -1630,19 +1651,6 @@ const DynamicDataTable = props => {
       className: "rsssl-spinner__text"
     }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Loading...", "really-simple-ssl"))));
   }
-  let searchableColumns = [];
-  columns.map(column => {
-    if (column.searchable) {
-      searchableColumns.push(column.column);
-    }
-  });
-  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
-    fields.forEach(function (item, i) {
-      if (item.id === 'two_fa_enabled') {
-        setEnabled(item.value);
-      }
-    });
-  }, [fields]);
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-search-bar"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -1714,8 +1722,6 @@ const DynamicDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_2__.create)((s
   DynamicDataTable: [],
   fetchDynamicData: async action => {
     try {
-      console.log("FetDD action");
-      console.log(action);
       const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction(action, get().dataActions);
       //now we set the EventLog
       if (response) {
@@ -1728,6 +1734,7 @@ const DynamicDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_2__.create)((s
           // Removed the twoFAMethods set from here...
         }));
         // Return the response for the calling function to use
+        console.log(response);
         return response;
       }
     } catch (e) {
@@ -1735,7 +1742,6 @@ const DynamicDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_2__.create)((s
     }
   },
   handleTableSearch: async (search, searchColumns) => {
-    //Add the search to the dataActions
     set((0,immer__WEBPACK_IMPORTED_MODULE_3__.produce)(state => {
       state.dataActions = {
         ...state.dataActions,
