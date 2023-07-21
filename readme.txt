@@ -116,6 +116,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 * Improvement: expire cached detected headers five minutes after saving the settings
 * Fix: handling of legacy options in php 8.1
 * Fix: prevent issues with CloudFlare when submitting support form from within the plugin
+* Fix: translations singular/plural for japanese translations @maboroshin
 
 = 7.0.6 =
 * July 4th 2023
