@@ -778,6 +778,7 @@ function rsssl_fields( $load_values = true ) {
                 'relation' => 'AND',
                 [
                     'enable_limited_login_attempts' => true,
+                    'limit_login_attempts_confirm'  => true,
                 ]
             ],
         ],
@@ -799,6 +800,7 @@ function rsssl_fields( $load_values = true ) {
                 'relation' => 'AND',
                 [
                     'enable_limited_login_attempts' => true,
+                    'limit_login_attempts_confirm'  => true,
                 ]
             ],
         ],
@@ -820,6 +822,7 @@ function rsssl_fields( $load_values = true ) {
                 'relation' => 'AND',
                 [
                     'enable_limited_login_attempts' => true,
+                    'limit_login_attempts_confirm'  => true,
                 ]
             ],
         ],
@@ -851,6 +854,7 @@ function rsssl_fields( $load_values = true ) {
                 'relation' => 'AND',
                 [
                     'enable_limited_login_attempts' => true,
+                    'limit_login_attempts_confirm'  => true,
                 ]
             ],
         ],
