@@ -98,15 +98,15 @@ if ( !class_exists('rsssl_mailer_admin') ) {
 		 *
 		 * E-mail verification status callback
 		 */
-		public function check_email_verification_status() {
+		public function email_verification_completed() {
 			$status = get_option( 'rsssl_email_verification_status' );
 
 			if ( $status == 'started' ) {
-				return true;
+				return false;
 			}
 
 			if ( $status === 'completed' ) {
-				return false;
+				return true;
 			}
 
 			if ( $status === 'email_changed' ) {

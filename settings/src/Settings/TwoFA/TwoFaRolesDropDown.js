@@ -64,9 +64,20 @@ const TwoFaRolesDropDown = ({ field }) => {
     const customStyles = {
         multiValue: (provided) => ({
             ...provided,
+            borderRadius: '10px',
             backgroundColor: field.id === 'two_fa_forced_roles' ? '#F5CD54' :
                 field.id === 'two_fa_optional_roles' ? '#FDF5DC' : 'default',
         }),
+        multiValueRemove: (base, state) => ({
+            ...base,
+            color: state.isHovered ? 'initial' : base.color,
+            opacity: '0.7',
+            ':hover': {
+                backgroundColor: 'initial',
+                color: 'initial',
+                opacity: '1',
+            },
+        })
     };
 
     fields.forEach(function (item, i) {

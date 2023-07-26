@@ -13,6 +13,7 @@ if ( !class_exists('rsssl_mailer') ) {
 		public $headers;
 		public $message;
 		public $subject;
+		public $button_text;
         public $change_text;
         public $sent_to_text;
         public $what_now_text;
@@ -24,6 +25,7 @@ if ( !class_exists('rsssl_mailer') ) {
 		public function __construct() {
 			$this->sent_by_text = __("This email is part of the Really Simple SSL Notification System", "really-simple-ssl");
 			$this->subject = __("Notification by Really Simple SSL", "really-simple-ssl");
+			$this->button_text = __("Learn more", "really-simple-ssl");
 			$this->title = __("Learn more about our features!", "really-simple-ssl");
 			$this->sent_to_text = __("This email was sent to", "really-simple-ssl");
 			$this->what_now_text = __( "Learn more", "really-simple-ssl");
@@ -85,22 +87,23 @@ if ( !class_exists('rsssl_mailer') ) {
 
 	        $verification_url = add_query_arg(
 		        array(
-			        'rsssl_nonce' => wp_create_nonce('rsssl_email_verification_'.$user_id),
+			        'page' => 'really-simple-security',
+			        'rsssl_nonce' => wp_create_nonce('rsssl_email_verification_' . $user_id),
 			        'rsssl_verification_code' => $verification_code,
 		        ),
 		        rsssl_admin_url()
 	        );
 
             $this->subject = __("Really Simple SSL - Verification code", "really-simple-ssl");
-            $this->title = __("Really Simple SSL - Verification code", "really-simple-ssl");
-	        $this->message = __("E-mail verification.", "really-simple-ssl");
+            $this->title = __("Confirm your e-mail address", "really-simple-ssl");
+            $this->message = '';
+			$this->button_text = __("Confirm e-mail", "really-simple-ssl");
 	        $this->warning_blocks[] = [
-		        'title' => __("Confirm e-mail.", "really-simple-ssl"),
+		        'title' => '',
 		        'message' => sprintf(__("Click the button below to confirm your email address, or copy the following URL: %s", "really-simple-ssl"), $verification_url),
 		        'url' => $verification_url,
 	        ];
 
-			error_log("Sending mail");
             return $this->send_mail();
         }
 
@@ -123,8 +126,6 @@ if ( !class_exists('rsssl_mailer') ) {
 			if ( !is_email($this->to) ) {
 				$this->error = __("Email address not valid", "really-simple-ssl");
 			}
-
-			error_log($this->logo);
 
 			$template = file_get_contents(__DIR__.'/templates/email.html');
 			$block_html = '';
@@ -160,7 +161,7 @@ if ( !class_exists('rsssl_mailer') ) {
 					wp_kses_post( $this->message ),
 					$block_html,
 					$this->to,
-					__( "Learn more", 'really-simple-ssl' ),
+					$this->button_text,
 					site_url(),
 					$login_url,
 					$username,

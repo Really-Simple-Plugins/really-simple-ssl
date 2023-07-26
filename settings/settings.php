@@ -520,7 +520,7 @@ function rsssl_sanitize_field_type($type)
         'LetsEncrypt',
         'postdropdown',
         'two_fa_dropdown',
-        'two_fa_table',
+//        'two_fa_table',
 //        'verify_email',
     ];
     if (in_array($type, $types)) {
@@ -763,8 +763,6 @@ function rsssl_sanitize_field($value, string $type, string $id)
         case 'two_fa_dropdown':
 	        $value = !is_array($value) ? [] : $value;
             return array_map('sanitize_text_field', $value);
-        case 'two_fa_table':
-            return $value;
         default:
             return sanitize_text_field($value);
     }
@@ -1060,6 +1058,7 @@ function rsssl_get_roles( $data ) {
 		wp_cache_set( 'rsssl_roles', $roles );
 	}
 
+	/*
 	// Filter out forced roles that are also in optional roles
 	$optional_roles = rsssl_get_option('two_fa_optional_roles');
 	$forced_roles = rsssl_get_option('two_fa_forced_roles');
@@ -1078,11 +1077,13 @@ function rsssl_get_roles( $data ) {
 			return !in_array($role, $optional_roles) && !in_array($role, $forced_roles);
 		});
 	}
+	*/
 
 	$output['roles'] = array_values($roles); // Reset array keys
 	$output['request_success'] = true;
 
 	return $output;
 }
+
 
 

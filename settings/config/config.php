@@ -119,10 +119,9 @@ function rsssl_fields( $load_values = true ) {
             'disabled'    => rsssl_is_email_verified(),
             'tooltip'  => __( "Verify your e-mail address to get the most out of Really Simple SSL.", 'really-simple-ssl' ),
             'help'             => [
-                'label' => 'warning',
-                'title' => __( "Email validation is required", 'really-simple-ssl' ),
-                'text'  => __( 'Lorem flipsum',
-                    'really-simple-ssl' ),
+	            'label' => rsssl_is_email_verified() ? 'success' : 'warning',
+	            'title' => rsssl_is_email_verified() ? __( "Email validation completed", 'really-simple-ssl' ) : __( "Email validation is required", 'really-simple-ssl' ),
+                'text'  => __( 'Lorem ipsum', 'really-simple-ssl' ),
             ],
         ],
 		[

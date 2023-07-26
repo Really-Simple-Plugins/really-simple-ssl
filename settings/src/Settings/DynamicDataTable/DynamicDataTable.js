@@ -109,7 +109,6 @@ const DynamicDataTable = (props) => {
                 </select>
             );
         }
-        // console.log(newColumn);
         return newColumn;
     }
 
