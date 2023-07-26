@@ -135,7 +135,7 @@ class REALLY_SIMPLE_SSL
             //we include the queryBuilder
             require_once( rsssl_path . 'security/wordpress/DynamicTables/QueryBuilder.php' );
             //we include the DataTable
-            require_once( rsssl_path . 'security/wordpress/DynamicTables//DataTable.php' );
+            require_once( rsssl_path . 'security/wordpress/DynamicTables/DataTable.php' );
 			if ( isset($_GET['install_pro'])) {
 				require_once( rsssl_path . 'upgrade/upgrade-to-pro.php');
 			}
