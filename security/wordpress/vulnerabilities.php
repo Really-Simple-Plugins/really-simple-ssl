@@ -777,33 +777,38 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	        if ( ! rsssl_admin_logged_in() ) {
 		        return null;
 	        }
+
             //now we check if the file remotely exists and then log an error if it does not.
-            $headers = get_headers($url);
-            if (strpos($headers[0], '200')) {
-                //file exists, download it
-                if ($this->remote_file_exists($url)) {
-	                $json = file_get_contents( $url );
-	                return json_decode($json);
-                } else {
-                    return null;
-                }
+            if ($this->remote_file_exists($url)) {
+                $json = file_get_contents( $url );
+                return json_decode($json);
             }
-            if ( defined('WP_DEBUG') && WP_DEBUG ) {
+
+	        if ( defined('WP_DEBUG') && WP_DEBUG ) {
                 error_log('Could not download file from ' . $url);
             }
 
-            return null;
+	        return null;
         }
 
-	    private function remote_file_exists($url) {
-		    $headers = @get_headers($url);
-		    if ($headers === false) {
-			    // URL is not accessible or some error occurred
-			    return false;
-		    }
+	    private function remote_file_exists($url): bool {
+		    try {
+			    $headers = @get_headers($url);
+			    if ($headers === false) {
+				    // URL is not accessible or some error occurred
+				    return false;
+			    }
 
-		    // Check if the HTTP status code starts with "200" (indicating success)
-		    return strpos($headers[0], '200') !== false;
+			    // Check if the HTTP status code starts with "200" (indicating success)
+			    return strpos($headers[0], '200') !== false;
+			    // Rest of your code handling $headers goes here
+		    } catch (Exception $e) {
+                if ( defined('WP_DEBUG') && WP_DEBUG ) {
+                    error_log('Could not check if file exists: ' . $e->getMessage());
+                }
+			    return false;
+            }
+
 	    }
 
         /**
