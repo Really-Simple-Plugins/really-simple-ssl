@@ -145,17 +145,6 @@ const DynamicDataTable = (props) => {
         },
     }, 'light');
 
-    if (!dataLoaded && columns.length === 0 && DynamicDataTable.length === 0) {
-        return (
-            <div className="rsssl-spinner">
-                <div className="rsssl-spinner__inner">
-                    <div className="rsssl-spinner__icon"></div>
-                    <div className="rsssl-spinner__text">{__("Loading...", "really-simple-ssl")}</div>
-                </div>
-            </div>
-        );
-    }
-
     return (
         <>
             <div className="rsssl-search-bar">
@@ -169,22 +158,48 @@ const DynamicDataTable = (props) => {
                     />
                 </div>
             </div>
-            <DataTable
-                columns={columns}
-                data={DynamicDataTable}
-                dense
-                pagination
-                paginationServer
-                onChangeRowsPerPage={handleTableRowsChange}
-                onChangePage={handleTablePageChange}
-                sortServer
-                onSort={handleTableSort}
-                paginationRowsPerPageOptions={[10, 25, 50, 100]}
-                noDataComponent={__("No results", "really-simple-ssl")}
-                persistTableHead
-                theme="really-simple-plugins"
-                customStyles={customStyles}
-            ></DataTable>
+            {dataLoaded ?
+                <DataTable
+                    columns={columns}
+                    data={DynamicDataTable}
+                    dense
+                    pagination
+                    paginationServer
+                    onChangeRowsPerPage={handleTableRowsChange}
+                    onChangePage={handleTablePageChange}
+                    sortServer
+                    onSort={handleTableSort}
+                    paginationRowsPerPageOptions={[10, 25, 50, 100]}
+                    noDataComponent={__("No results", "really-simple-ssl")}
+                    persistTableHead
+                    theme="really-simple-plugins"
+                    customStyles={customStyles}
+                ></DataTable>
+                :
+                <div className="rsssl-spinner" style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginTop: "100px"
+                }}>
+                    <div className="rsssl-spinner__inner">
+                        <div className="rsssl-spinner__icon" style={{
+                            border: '8px solid white',
+                            borderTop: '8px solid #f4bf3e',
+                            borderRadius: '50%',
+                            width: '120px',
+                            height: '120px',
+                            animation: 'spin 2s linear infinite'
+                        }}></div>
+                        <div className="rsssl-spinner__text" style={{
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                        }}>{__("Loading data, please stand by...", "really-simple-ssl")}</div>
+                    </div>
+                </div>
+            }
             { !enabled &&
                 <div className="rsssl-locked">
                     <div className="rsssl-locked-overlay"><span
@@ -194,6 +209,8 @@ const DynamicDataTable = (props) => {
             }
         </>
     );
+
+
 
 }
 export default DynamicDataTable;

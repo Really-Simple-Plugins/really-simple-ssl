@@ -121,7 +121,7 @@ function rsssl_fields( $load_values = true ) {
             'help'             => [
 	            'label' => rsssl_is_email_verified() ? 'success' : 'warning',
 	            'title' => rsssl_is_email_verified() ? __( "Email validation completed", 'really-simple-ssl' ) : __( "Email validation is required", 'really-simple-ssl' ),
-                'text'  => __( 'Lorem ipsum', 'really-simple-ssl' ),
+                'text'  => __( 'Your e-mail address has been successfully verified', 'really-simple-ssl' ),
             ],
         ],
 		[
@@ -954,7 +954,7 @@ function rsssl_fields( $load_values = true ) {
 			'group_id' => 'two_fa_email',
 			'type'     => 'checkbox',
 			'label'    => __( "Enable two-step login with email", "really-simple-ssl-pro" ),
-			'tooltip'  => __( "Lorem ipsum", 'really-simple-ssl' ),
+			'tooltip'  => __( "This will send emails from your server, containing a verification code to users that try to login.", 'really-simple-ssl' ),
 			'disabled' => false,
 			'default'  => 'disabled',
 //			'react_condition' => [
@@ -970,7 +970,7 @@ function rsssl_fields( $load_values = true ) {
 			'group_id' => 'two_fa_email',
 			'type'     => 'two_fa_dropdown',
             'label'    => __( "Optional for:", "really-simple-ssl-pro" ),
-			'tooltip'  => __( "Lorem ipsum", 'really-simple-ssl' ),
+			'tooltip'  => __( "Two-step login will be enabled for these user roles, with the possibility to skip. If a user skips, Two-step login will be disabled for this user.", 'really-simple-ssl' ),
 //			'react_conditions' => [
 //                'relation' => 'AND',
 //                [
@@ -985,7 +985,7 @@ function rsssl_fields( $load_values = true ) {
 			'group_id' => 'two_fa_email',
 			'type'     => 'two_fa_dropdown',
 			'label'    => __( "Force on:", "really-simple-ssl-pro" ),
-			'tooltip'  => __( "Lorem ipsum", 'really-simple-ssl' ),
+			'tooltip'  => __( "These user roles are forced to enter the authentication code, without the possibility to skip.", 'really-simple-ssl' ),
 //			'react_conditions' => [
 //				'relation' => 'AND',
 //				[
