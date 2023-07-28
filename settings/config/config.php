@@ -843,10 +843,70 @@ function rsssl_fields( $load_values = true ) {
             ],
         ],
         [
-            'id' => 'limit_login_attempts_open_source_blocklist',
+            'id' => 'limit_login_attempts_users_view',
+            'menu_id' => 'limit_login_attempts',
+            'group_id' => 'limit_login_attempts_users',
+            'type' => 'dynamic-datatable',
+            'action' => 'event_log',
+            'disabled' => false,
+            'default' => false,
+            'react_conditions' => [
+                'relation' => 'AND',
+                [
+                    'enable_limited_login_attempts' => true,
+                    'limit_login_attempts_confirm'  => true,
+                ]
+            ],
+            'columns'          => [
+                [
+                    'name'     => __( 'Date', 'really-simple-ssl' ),
+                    'sortable' => true,
+                    'column'   => 'datetime',
+                    'width'         => '20%',
+                ],
+                [
+                    'name'     => __( 'Ip Address', 'really-simple-ssl' ),
+                    'sortable' => true,
+                    'searchable' => true,
+                    'column'   => 'source_ip',
+                    'width'    => '15%',
+                ],
+                [
+                    'name'     => __( 'Users', 'really-simple-ssl' ),
+                    'sortable' => true,
+                    'column'   => 'username',
+                    'searchable' => true,
+                    'type'   => 'text',
+                    'width'     => '20%',
+                    'minWidth'  => '100px',
+                ],
+                [
+                    'name' => __('Description', 'really-simple-ssl'),
+                    'sortable' => false,
+                    'column' => 'description',
+                    'width' => '25%',
+                ],
+                [
+                    'name'     => __( 'Country', 'really-simple-ssl' ),
+                    'sortable' => false,
+                    'column'   => 'action',
+                    'width'    => '20%',
+                ],
+                [
+                    'name'     => __( 'API', 'really-simple-ssl' ),
+                    'sortable' => false,
+                    'column'   => 'action',
+                    'width'    => '20%',
+                ],
+
+            ],
+        ],
+        [
+            'id' => 'limit_login_attempts_ip_view',
             'menu_id' => 'limit_login_attempts',
             'group_id' => 'limit_login_attempts_ip_address',
-            'type' => 'checkbox',
+            'type' => 'dynamic-datatable',
+            'action' => 'event_log',
             'label' => __('Enable open source blocklist API etc.', 'really-simple-ssl'),
             'disabled' => false,
             'default' => false,
@@ -856,6 +916,49 @@ function rsssl_fields( $load_values = true ) {
                     'enable_limited_login_attempts' => true,
                     'limit_login_attempts_confirm'  => true,
                 ]
+            ],
+            'columns'          => [
+                [
+                    'name'     => __( 'Date', 'really-simple-ssl' ),
+                    'sortable' => true,
+                    'column'   => 'datetime',
+                    'width'         => '20%',
+                ],
+                [
+                    'name'     => __( 'Ip Address', 'really-simple-ssl' ),
+                    'sortable' => true,
+                    'searchable' => true,
+                    'column'   => 'source_ip',
+                    'width'    => '15%',
+                ],
+                [
+                    'name'     => __( 'Users', 'really-simple-ssl' ),
+                    'sortable' => true,
+                    'column'   => 'username',
+                    'searchable' => true,
+                    'type'   => 'text',
+                    'width'     => '20%',
+                    'minWidth'  => '100px',
+                ],
+                [
+                    'name' => __('Description', 'really-simple-ssl'),
+                    'sortable' => false,
+                    'column' => 'description',
+                    'width' => '25%',
+                ],
+                [
+                    'name'     => __( 'Country', 'really-simple-ssl' ),
+                    'sortable' => false,
+                    'column'   => 'action',
+                    'width'    => '20%',
+                ],
+                [
+                    'name'     => __( 'API', 'really-simple-ssl' ),
+                    'sortable' => false,
+                    'column'   => 'action',
+                    'width'    => '20%',
+                ],
+
             ],
         ],
         [
@@ -875,6 +978,12 @@ function rsssl_fields( $load_values = true ) {
             ],
             'columns'          => [
                 [
+                    'name'     => __( 'Date', 'really-simple-ssl' ),
+                    'sortable' => true,
+                    'column'   => 'datetime',
+                    'width'         => '20%',
+                ],
+                [
                     'name'     => __( 'Ip Address', 'really-simple-ssl' ),
                     'sortable' => true,
                     'searchable' => true,
@@ -882,7 +991,7 @@ function rsssl_fields( $load_values = true ) {
                     'width'    => '15%',
                 ],
                 [
-                    'name'     => __( 'User', 'really-simple-ssl' ),
+                    'name'     => __( 'Users', 'really-simple-ssl' ),
                     'sortable' => true,
                     'column'   => 'username',
                     'searchable' => true,
@@ -891,23 +1000,24 @@ function rsssl_fields( $load_values = true ) {
                     'minWidth'  => '100px',
                 ],
                 [
-                    'name'     => __( 'Date', 'really-simple-ssl' ),
-                    'sortable' => true,
-                    'column'   => 'datetime',
-                    'width'         => '20%',
-                ],
-                [
                     'name' => __('Description', 'really-simple-ssl'),
                     'sortable' => false,
                     'column' => 'description',
                     'width' => '25%',
                 ],
                 [
-                    'name' => __('Severity', 'really-simple-ssl'),
-                    'sortable' => true,
-                    'column' => 'severity',
-                    'width' => '10%',
+                    'name'     => __( 'Country', 'really-simple-ssl' ),
+                    'sortable' => false,
+                    'column'   => 'action',
+                    'width'    => '20%',
                 ],
+                [
+                    'name'     => __( 'API', 'really-simple-ssl' ),
+                    'sortable' => false,
+                    'column'   => 'action',
+                    'width'    => '20%',
+                ],
+
             ],
         ],
         //Multiple datatables log/trusted/Blocked

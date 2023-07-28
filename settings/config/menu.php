@@ -137,6 +137,33 @@ function rsssl_menu()
                                 'really-simple-ssl'),
                         ],
                         [
+                            'id'           => 'limit_login_attempts_users',
+                            'premium'      => true,
+                            'groupFilter'  => [
+                                'default' => 'limit_login_attempts_advanced_filter_log',
+                                'id'      => 'limit_login_attempts_advanced_filter',
+                                'options' => [
+                                    [
+                                        'id'    => 'filter_blocked',
+                                        'title' => __('Blocked', 'really-simple-ssl'),
+                                    ],
+                                    [
+                                        'id'    => 'filter_trusted',
+                                        'title' => __('Trusted', 'really-simple-ssl'),
+                                    ],
+                                    [
+                                        'id'    => 'locked_out',
+                                        'title' => __('Locked-out', 'really-simple-ssl'),
+                                    ],
+                                ],
+                            ],
+                            'title'        => __('Users', 'really-simple-ssl'),
+                            'intro'        => __('Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et',
+                                'really-simple-ssl'),
+                            'premium_text' => __('Get Limit Login Attempts with %sReally Simple SSL Pro%s',
+                                'really-simple-ssl'),
+                        ],
+                        [
                             'id'           => 'limit_login_attempts_ip_address',
                             'premium'      => true,
                             'groupFilter'  => [
@@ -152,8 +179,8 @@ function rsssl_menu()
                                         'title' => __('Trusted', 'really-simple-ssl'),
                                     ],
                                     [
-                                        'id'    => 'filter_log',
-                                        'title' => __('Log', 'really-simple-ssl'),
+                                        'id'    => 'locked_out',
+                                        'title' => __('Locked-out', 'really-simple-ssl'),
                                     ],
                                 ],
                             ],
@@ -166,7 +193,24 @@ function rsssl_menu()
                         [
                             'id'       => 'limit_login_attempts_event_log',
                             'premium'  => true,
-                            'helpLink' => 'https://really-simple-ssl.com/knowledge-base/event-log/',
+                            'groupFilter'  => [
+                                'default' => 'limit_login_attempts_advanced_filter_log',
+                                'id'      => 'limit_login_attempts_advanced_filter',
+                                'options' => [
+                                    [
+                                        'id'    => 'warning',
+                                        'title' => __('Warnings', 'really-simple-ssl'),
+                                    ],
+                                    [
+                                        'id'    => 'informational',
+                                        'title' => __('Information', 'really-simple-ssl'),
+                                    ],
+                                    [
+                                        'id'    => 'all',
+                                        'title' => __('All', 'really-simple-ssl'),
+                                    ],
+                                ],
+                            ],
                             'title'    => __('Event Log', 'really-simple-ssl'),
                             'intro'    => __('Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna.',
                                 'really-simple-ssl'),
