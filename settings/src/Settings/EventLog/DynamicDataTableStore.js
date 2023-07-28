@@ -20,6 +20,7 @@ const DynamicDataTableStore = create((set, get) => ({
                 get().dataActions
             );
             //now we set the EventLog
+            console.log(response);
             if (response) {
                 set({DynamicDataTable: response, dataLoaded: true, processing: false, pagination: response.pagination});
             }
