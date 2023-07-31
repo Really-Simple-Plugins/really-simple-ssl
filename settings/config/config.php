@@ -901,6 +901,22 @@ function rsssl_fields( $load_values = true ) {
             ],
         ],
         [
+            'id' => 'limit_login_attempts_open_source',
+            'menu_id' => 'limit_login_attempts',
+            'group_id' => 'limit_login_attempts_ip_address',
+            'type' => 'checkbox',
+            'label' => __('Enable open source blocklist API etc.', 'really-simple-ssl'),
+            'disabled' => false,
+            'default' => false,
+            'react_conditions' => [
+                'relation' => 'AND',
+                [
+                    'enable_limited_login_attempts' => true,
+                    'limit_login_attempts_confirm'  => true,
+                ]
+            ],
+        ],
+        [
             'id' => 'limit_login_attempts_ip_view',
             'menu_id' => 'limit_login_attempts',
             'group_id' => 'limit_login_attempts_ip_address',
