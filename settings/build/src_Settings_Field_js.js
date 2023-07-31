@@ -2943,6 +2943,32 @@ const IpAddressDatatable = props => {
       searchableColumns.push(column.column);
     }
   });
+
+  //now we get the options for the select control
+  let options = props.field.options;
+  //we divide the key into label and the value into value
+  options = Object.entries(options).map(item => {
+    return {
+      label: item[1],
+      value: item[0]
+    };
+  });
+
+  //and now we add the options as a dropdown select to the status column
+  columns.map(column => {
+    if (column.column === 'status') {
+      column.cell = row => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
+        className: "rsssl-select",
+        value: row.status,
+        onChange: event => handleStatusChange(event.target.value, row.id)
+      }, options.map(option => {
+        return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
+          key: option.value,
+          value: option.value
+        }, option.label);
+      }));
+    }
+  });
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-container"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {

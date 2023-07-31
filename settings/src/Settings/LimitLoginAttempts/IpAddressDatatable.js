@@ -81,6 +81,27 @@ const IpAddressDatatable = (props) => {
         }
     });
 
+    //now we get the options for the select control
+    let options = props.field.options;
+    //we divide the key into label and the value into value
+    options = Object.entries(options).map((item) => {
+        return {label: item[1], value: item[0]};
+    });
+
+    //and now we add the options as a dropdown select to the status column
+    columns.map(column => {
+        if (column.column === 'status') {
+            column.cell = row => <select
+                className="rsssl-select"
+                value={row.status}
+                onChange={event => handleStatusChange(event.target.value, row.id)}
+            >
+                {options.map(option => {
+                    return <option key={option.value} value={option.value}>{option.label}</option>
+                })}
+            </select>
+        }
+    });
 
     return (
         <>
