@@ -1,8 +1,7 @@
 import {__} from '@wordpress/i18n';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import DataTable, {createTheme} from "react-data-table-component";
 import IpAddressDataTableStore from "./IpAddressDataTableStore";
-import * as rsssl_api from "../../utils/api";
 import {Button} from "@wordpress/components";
 
 const IpAddressDatatable = (props) => {
@@ -88,20 +87,37 @@ const IpAddressDatatable = (props) => {
         return {label: item[1], value: item[0]};
     });
 
-    //and now we add the options as a dropdown select to the status column
-    columns.map(column => {
-        if (column.column === 'status') {
-            column.cell = row => <select
+    function handleStatusChange(value, id) {
+
+    }
+    //we convert the data to an array
+    let data = {...DynamicDataTable.data};
+
+    function generateOptions(status, id) {
+        return (
+            <select
                 className="rsssl-select"
-                value={row.status}
-                onChange={event => handleStatusChange(event.target.value, row.id)}
+                value={status}
+                onChange={(event) => handleStatusChange(event.target.value, id)}
             >
-                {options.map(option => {
-                    return <option key={option.value} value={option.value}>{option.label}</option>
+                {options.map((item, i) => {
+                    return (
+                        <option key={i} value={item.value}>
+                            {item.label}
+                        </option>
+                    );
                 })}
             </select>
-        }
-    });
+        );
+    }
+
+    for (const key in data) {
+        let dataItem = {...data[key]}
+
+        dataItem.status = generateOptions(dataItem.status, dataItem.id);
+
+        data[key] = dataItem;
+    }
 
     return (
         <>
@@ -132,7 +148,7 @@ const IpAddressDatatable = (props) => {
             {/*Display the datatable*/}
             <DataTable
                 columns={columns}
-                data={DynamicDataTable.data}
+                data={Object.values(data)}
                 dense
                 pagination
                 paginationServer

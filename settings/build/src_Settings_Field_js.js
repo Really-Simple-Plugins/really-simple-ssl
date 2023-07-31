@@ -2860,10 +2860,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var react_data_table_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-data-table-component */ "./node_modules/react-data-table-component/dist/index.cjs.js");
 /* harmony import */ var _IpAddressDataTableStore__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./IpAddressDataTableStore */ "./src/Settings/LimitLoginAttempts/IpAddressDataTableStore.js");
-/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../utils/api */ "./src/utils/api.js");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__);
-
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__);
 
 
 
@@ -2953,29 +2951,37 @@ const IpAddressDatatable = props => {
       value: item[0]
     };
   });
-
-  //and now we add the options as a dropdown select to the status column
-  columns.map(column => {
-    if (column.column === 'status') {
-      column.cell = row => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
-        className: "rsssl-select",
-        value: row.status,
-        onChange: event => handleStatusChange(event.target.value, row.id)
-      }, options.map(option => {
-        return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
-          key: option.value,
-          value: option.value
-        }, option.label);
-      }));
-    }
-  });
+  function handleStatusChange(value, id) {}
+  //we convert the data to an array
+  let data = {
+    ...DynamicDataTable.data
+  };
+  function generateOptions(status, id) {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
+      className: "rsssl-select",
+      value: status,
+      onChange: event => handleStatusChange(event.target.value, id)
+    }, options.map((item, i) => {
+      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
+        key: i,
+        value: item.value
+      }, item.label);
+    }));
+  }
+  for (const key in data) {
+    let dataItem = {
+      ...data[key]
+    };
+    dataItem.status = generateOptions(dataItem.status, dataItem.id);
+    data[key] = dataItem;
+  }
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-container"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-add-button"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-add-button__inner"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.Button, {
     className: "button button-secondary rsssl-add-button__button"
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Add IP Address", "really-simple-ssl")))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-search-bar"
@@ -2990,7 +2996,7 @@ const IpAddressDatatable = props => {
     onChange: event => handleTableSearch(event.target.value, searchableColumns)
   })))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
     columns: columns,
-    data: DynamicDataTable.data,
+    data: Object.values(data),
     dense: true,
     pagination: true,
     paginationServer: true,

@@ -949,7 +949,7 @@ function rsssl_fields( $load_values = true ) {
                     'name'  => __( 'Status', 'really-simple-ssl' ),
                     'sortable' => false,
                     'column'   => 'status',
-                    'width'    => '15%',
+                    'width'    => '20%',
                 ],
                 [
                     'name'     => __( 'Last Login', 'really-simple-ssl' ),
