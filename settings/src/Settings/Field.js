@@ -19,7 +19,8 @@ import Support from "./Support";
 import LearningMode from "./LearningMode/LearningMode";
 import RiskComponent from "./RiskConfiguration/RiskComponent";
 import VulnerabilitiesOverview from "./RiskConfiguration/vulnerabilitiesOverview";
-import IpAddressModule from "./LimitLoginAttempts/IpAddressModule";
+import IpAddressDatatable from "./LimitLoginAttempts/IpAddressDatatable";
+// import IpAddressModule from "./LimitLoginAttempts/IpAddressModule";
 import Button from "./Button";
 import Icon from "../utils/Icon";
 import { useEffect, useState } from "@wordpress/element";
@@ -329,21 +330,32 @@ const Field = (props) => {
         )
     }
 
-    if (field.type === 'ipaddressmodule') {
-        return (
-            <div className={highLightClass} ref={scrollAnchor}>
-              <IpAddressModule
-                  field={props.field}
-                  selectedFilter={selectedFilter} // Pass selectedFilter as a prop to IpAddressModule
-              />
-            </div>
-        )
-    }
+    // if (field.type === 'ipaddressmodule') {
+    //     return (
+    //         <div className={highLightClass} ref={scrollAnchor}>
+    //           <IpAddressModule
+    //               field={props.field}
+    //               selectedFilter={selectedFilter} // Pass selectedFilter as a prop to IpAddressModule
+    //           />
+    //         </div>
+    //     )
+    // }
 
     if (field.type === 'dynamic-datatable') {
         return (
             <div className={highLightClass} ref={scrollAnchor}>
                 <DynamicDataTable
+                    field={props.field}
+                    action={props.field.action}
+                />
+            </div>
+        )
+    }
+
+    if (field.type === 'ip-address-datatable') {
+        return (
+            <div className={highLightClass} ref={scrollAnchor}>
+                <IpAddressDatatable
                     field={props.field}
                     action={props.field.action}
                 />

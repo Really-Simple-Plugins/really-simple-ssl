@@ -5,7 +5,7 @@ import {__} from "@wordpress/i18n";
 import {produce} from "immer";
 import React from "react";
 
-const DynamicDataTableStore = create((set, get) => ({
+const IpAddressDataTableStore = create((set, get) => ({
 
     processing: false,
     dataLoaded: false,
@@ -64,4 +64,4 @@ const DynamicDataTableStore = create((set, get) => ({
 
 }));
 
-export default DynamicDataTableStore;
+export default IpAddressDataTableStore;
