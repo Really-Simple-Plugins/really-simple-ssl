@@ -862,14 +862,14 @@ function rsssl_fields( $load_values = true ) {
                     'name'     => __( 'Date', 'really-simple-ssl' ),
                     'sortable' => true,
                     'column'   => 'datetime',
-                    'width'         => '20%',
+                    'width'         => '5',
                 ],
                 [
                     'name'     => __( 'Ip Address', 'really-simple-ssl' ),
                     'sortable' => true,
                     'searchable' => true,
                     'column'   => 'source_ip',
-                    'width'    => '15%',
+                    'width'    => '5%',
                 ],
                 [
                     'name'     => __( 'Users', 'really-simple-ssl' ),
@@ -877,8 +877,7 @@ function rsssl_fields( $load_values = true ) {
                     'column'   => 'username',
                     'searchable' => true,
                     'type'   => 'text',
-                    'width'     => '20%',
-                    'minWidth'  => '100px',
+                    'width'     => '10%',
                 ],
                 [
                     'name' => __('Description', 'really-simple-ssl'),
@@ -890,13 +889,13 @@ function rsssl_fields( $load_values = true ) {
                     'name'     => __( 'Country', 'really-simple-ssl' ),
                     'sortable' => false,
                     'column'   => 'action',
-                    'width'    => '20%',
+                    'width'    => '5%',
                 ],
                 [
                     'name'     => __( 'API', 'really-simple-ssl' ),
                     'sortable' => false,
                     'column'   => 'action',
-                    'width'    => '20%',
+                    'width'    => '5%',
                 ],
 
             ],
@@ -919,12 +918,6 @@ function rsssl_fields( $load_values = true ) {
             ],
             'columns'          => [
                 [
-                    'name'     => __( 'Date', 'really-simple-ssl' ),
-                    'sortable' => true,
-                    'column'   => 'datetime',
-                    'width'         => '25%',
-                ],
-                [
                     'name'     => __( 'Ip Address', 'really-simple-ssl' ),
                     'sortable' => true,
                     'searchable' => true,
@@ -932,15 +925,27 @@ function rsssl_fields( $load_values = true ) {
                     'width'    => '20%',
                 ],
                 [
+                    'name'  => __( 'Status', 'really-simple-ssl' ),
+                    'sortable' => false,
+                    'column'   => 'status',
+                    'width'    => '10%',
+                ],
+                [
+                    'name'     => __( 'Last Login', 'really-simple-ssl' ),
+                    'sortable' => true,
+                    'column'   => 'datetime',
+                    'width'         => '20%',
+                ],
+                [
                     'name'     => __( 'Country', 'really-simple-ssl' ),
                     'sortable' => false,
-                    'column'   => 'action',
+                    'column'   => 'country',
                     'width'    => '5%',
                 ],
                 [
                     'name'     => __( 'API', 'really-simple-ssl' ),
                     'sortable' => false,
-                    'column'   => 'action',
+                    'column'   => 'api',
                     'width'    => '5%',
                 ],
 
@@ -966,14 +971,14 @@ function rsssl_fields( $load_values = true ) {
                     'name'     => __( 'Date', 'really-simple-ssl' ),
                     'sortable' => true,
                     'column'   => 'datetime',
-                    'width'         => '20%',
+                    'width'         => '12%',
                 ],
                 [
                     'name'     => __( 'Ip Address', 'really-simple-ssl' ),
                     'sortable' => true,
                     'searchable' => true,
                     'column'   => 'source_ip',
-                    'width'    => '15%',
+                    'width'    => '12%',
                 ],
                 [
                     'name'     => __( 'Users', 'really-simple-ssl' ),
@@ -981,27 +986,26 @@ function rsssl_fields( $load_values = true ) {
                     'column'   => 'username',
                     'searchable' => true,
                     'type'   => 'text',
-                    'width'     => '20%',
-                    'minWidth'  => '100px',
+                    'width'     => '12%',
                 ],
                 [
                     'name' => __('Description', 'really-simple-ssl'),
                     'sortable' => false,
                     'column' => 'description',
-                    'width' => '25%',
+                    'width' => '44%',
                 ],
                 [
                     'name'     => __( 'Country', 'really-simple-ssl' ),
                     'sortable' => false,
                     'column'   => 'action',
-                    'width'    => '20%',
+                    'width'    => '5%',
                 ],
                 [
                     'name'     => __( 'API', 'really-simple-ssl' ),
                     'sortable' => false,
                     'column'   => 'action',
-                    'width'    => '20%',
-                ],
+                    'width'    => '5%',
+                ]
 
             ],
         ],

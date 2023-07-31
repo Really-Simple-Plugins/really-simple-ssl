@@ -164,3 +164,9 @@ nav.rdt_Pagination>div>svg {
 .rsssl-search-bar__input:focus {
   width: 200px; /* Adjust width as needed */
 }
+
+.rsssl-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

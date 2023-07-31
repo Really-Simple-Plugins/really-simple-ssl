@@ -3,6 +3,7 @@ import React, {useEffect, useState} from 'react';
 import DataTable, {createTheme} from "react-data-table-component";
 import IpAddressDataTableStore from "./IpAddressDataTableStore";
 import * as rsssl_api from "../../utils/api";
+import {Button} from "@wordpress/components";
 
 const IpAddressDatatable = (props) => {
     const {
@@ -83,16 +84,28 @@ const IpAddressDatatable = (props) => {
 
     return (
         <>
-            {/*Display the search bar*/}
-            <div className="rsssl-search-bar">
-                <div className="rsssl-search-bar__inner">
-                    <div className="rsssl-search-bar__icon"></div>
-                    <input
-                        type="text"
-                        className="rsssl-search-bar__input"
-                        placeholder={__("Search", "really-simple-ssl")}
-                        onChange={event => handleTableSearch(event.target.value, searchableColumns)}
-                    />
+            <div className="rsssl-container">
+                {/*display the add button on left side*/}
+                <div className="rsssl-add-button">
+                    <div className="rsssl-add-button__inner">
+                        <Button
+                            className="button button-secondary rsssl-add-button__button"
+                        >
+                            {__("Add IP Address", "really-simple-ssl")}
+                        </Button>
+                    </div>
+                </div>
+                {/*Display the search bar*/}
+                <div className="rsssl-search-bar">
+                    <div className="rsssl-search-bar__inner">
+                        <div className="rsssl-search-bar__icon"></div>
+                        <input
+                            type="text"
+                            className="rsssl-search-bar__input"
+                            placeholder={__("Search", "really-simple-ssl")}
+                            onChange={event => handleTableSearch(event.target.value, searchableColumns)}
+                        />
+                    </div>
                 </div>
             </div>
             {/*Display the datatable*/}
