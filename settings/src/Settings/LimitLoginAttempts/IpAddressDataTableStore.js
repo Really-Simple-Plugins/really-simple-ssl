@@ -21,14 +21,14 @@ const IpAddressDataTableStore = create((set, get) => ({
             );
             //now we set the EventLog
             if (response) {
-                set({DynamicDataTable: response, dataLoaded: true, processing: false, pagination: response.pagination});
+                set({IpDataTable: response, dataLoaded: true, processing: false, pagination: response.pagination});
             }
         } catch (e) {
             console.log(e);
         }
     },
 
-    handleTableSearch: async (search, searchColumns) => {
+    handleIpTableSearch: async (search, searchColumns) => {
         //Add the search to the dataActions
         set(produce((state) => {
                 state.dataActions = {...state.dataActions, search, searchColumns};
@@ -37,7 +37,7 @@ const IpAddressDataTableStore = create((set, get) => ({
         get().fetchIpData('ip_list');
     },
 
-    handleTablePageChange: async (page, pageSize) => {
+    handleIpTablePageChange: async (page, pageSize) => {
         //Add the page and pageSize to the dataActions
         set(produce((state) => {
                 state.dataActions = {...state.dataActions, page, pageSize};
@@ -46,7 +46,7 @@ const IpAddressDataTableStore = create((set, get) => ({
         get().fetchIpData('ip_list');
     },
 
-    handleTableRowsChange: async (currentRowsPerPage, currentPage) => {
+    handleIpTableRowsChange: async (currentRowsPerPage, currentPage) => {
         //Add the page and pageSize to the dataActions
         set(produce((state) => {
                 state.dataActions = {...state.dataActions, currentRowsPerPage, currentPage};
@@ -56,7 +56,7 @@ const IpAddressDataTableStore = create((set, get) => ({
     },
 
     //this handles all pagination and sorting
-    handleTableSort: async (column, sortDirection) => {
+    handleIpTableSort: async (column, sortDirection) => {
         //Add the column and sortDirection to the dataActions
         set(produce((state) => {
                 state.dataActions = {...state.dataActions, sortColumn: column, sortDirection};
@@ -65,7 +65,7 @@ const IpAddressDataTableStore = create((set, get) => ({
         get().fetchIpData('ip_list');
     },
 
-    handleTableFilter: async (column, filterValue) => {
+    handleIpTableFilter: async (column, filterValue) => {
         console.log(filterValue);
         //Add the column and sortDirection to the dataActions
         set(produce((state) => {

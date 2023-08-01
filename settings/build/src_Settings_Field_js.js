@@ -2817,7 +2817,7 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
       //now we set the EventLog
       if (response) {
         set({
-          DynamicDataTable: response,
+          IpDataTable: response,
           dataLoaded: true,
           processing: false,
           pagination: response.pagination
@@ -2827,7 +2827,7 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
       console.log(e);
     }
   },
-  handleTableSearch: async (search, searchColumns) => {
+  handleIpTableSearch: async (search, searchColumns) => {
     //Add the search to the dataActions
     set((0,immer__WEBPACK_IMPORTED_MODULE_4__.produce)(state => {
       state.dataActions = {
@@ -2838,7 +2838,7 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
     }));
     get().fetchIpData('ip_list');
   },
-  handleTablePageChange: async (page, pageSize) => {
+  handleIpTablePageChange: async (page, pageSize) => {
     //Add the page and pageSize to the dataActions
     set((0,immer__WEBPACK_IMPORTED_MODULE_4__.produce)(state => {
       state.dataActions = {
@@ -2849,7 +2849,7 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
     }));
     get().fetchIpData('ip_list');
   },
-  handleTableRowsChange: async (currentRowsPerPage, currentPage) => {
+  handleIpTableRowsChange: async (currentRowsPerPage, currentPage) => {
     //Add the page and pageSize to the dataActions
     set((0,immer__WEBPACK_IMPORTED_MODULE_4__.produce)(state => {
       state.dataActions = {
@@ -2861,7 +2861,7 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
     get().fetchIpData('ip_list');
   },
   //this handles all pagination and sorting
-  handleTableSort: async (column, sortDirection) => {
+  handleIpTableSort: async (column, sortDirection) => {
     //Add the column and sortDirection to the dataActions
     set((0,immer__WEBPACK_IMPORTED_MODULE_4__.produce)(state => {
       state.dataActions = {
@@ -2872,7 +2872,7 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
     }));
     get().fetchIpData('ip_list');
   },
-  handleTableFilter: async (column, filterValue) => {
+  handleIpTableFilter: async (column, filterValue) => {
     console.log(filterValue);
     //Add the column and sortDirection to the dataActions
     set((0,immer__WEBPACK_IMPORTED_MODULE_4__.produce)(state => {
@@ -2924,12 +2924,12 @@ const IpAddressDatatable = props => {
     dataLoaded,
     pagination,
     dataActions,
-    handleTableRowsChange,
+    handleIpTableRowsChange,
     fetchIpData,
-    handleTableSort,
-    handleTablePageChange,
-    handleTableSearch,
-    handleTableFilter
+    handleIpTableSort,
+    handleIpTablePageChange,
+    handleIpTableSearch,
+    handleIpTableFilter
   } = (0,_IpAddressDataTableStore__WEBPACK_IMPORTED_MODULE_4__["default"])();
 
   //here we set the selectedFilter from the Settings group
@@ -2955,7 +2955,7 @@ const IpAddressDatatable = props => {
     if (!currentFilter) {
       setSelectedFilter('all', moduleName);
     }
-    handleTableFilter('status', currentFilter);
+    handleIpTableFilter('status', currentFilter);
   }, [selectedFilter, moduleName]);
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
     if (!dataLoaded) {
@@ -3063,10 +3063,10 @@ const IpAddressDatatable = props => {
     pagination: true,
     paginationServer: true,
     paginationTotalRows: pagination.totalRows,
-    onChangeRowsPerPage: handleTableRowsChange,
-    onChangePage: handleTablePageChange,
+    onChangeRowsPerPage: handleIpTableRowsChange,
+    onChangePage: handleIpTablePageChange,
     sortServer: true,
-    onSort: handleTableSort,
+    onSort: handleIpTableSort,
     paginationRowsPerPageOptions: [10, 25, 50, 100],
     noDataComponent: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("No results", "really-simple-ssl"),
     persistTableHead: true,

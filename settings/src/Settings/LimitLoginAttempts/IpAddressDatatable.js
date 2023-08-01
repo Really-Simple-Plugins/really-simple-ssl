@@ -13,12 +13,12 @@ const IpAddressDatatable = (props) => {
         dataLoaded,
         pagination,
         dataActions,
-        handleTableRowsChange,
+        handleIpTableRowsChange,
         fetchIpData,
-        handleTableSort,
-        handleTablePageChange,
-        handleTableSearch,
-        handleTableFilter
+        handleIpTableSort,
+        handleIpTablePageChange,
+        handleIpTableSearch,
+        handleIpTableFilter
     } = IpAddressDataTableStore()
 
     //here we set the selectedFilter from the Settings group
@@ -42,7 +42,7 @@ const IpAddressDatatable = (props) => {
         if (!currentFilter) {
             setSelectedFilter('all', moduleName);
         }
-        handleTableFilter('status', currentFilter);
+        handleIpTableFilter('status', currentFilter);
     }, [selectedFilter, moduleName]);
 
     useEffect(() => {
@@ -130,7 +130,6 @@ const IpAddressDatatable = (props) => {
 
         data[key] = dataItem;
     }
-
     return (
         <>
             <div className="rsssl-container">
@@ -165,10 +164,10 @@ const IpAddressDatatable = (props) => {
                 pagination
                 paginationServer
                 paginationTotalRows={pagination.totalRows}
-                onChangeRowsPerPage={handleTableRowsChange}
-                onChangePage={handleTablePageChange}
+                onChangeRowsPerPage={handleIpTableRowsChange}
+                onChangePage={handleIpTablePageChange}
                 sortServer
-                onSort={handleTableSort}
+                onSort={handleIpTableSort}
                 paginationRowsPerPageOptions={[10, 25, 50, 100]}
                 noDataComponent={__("No results", "really-simple-ssl")}
                 persistTableHead
