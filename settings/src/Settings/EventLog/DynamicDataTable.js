@@ -12,12 +12,12 @@ const DynamicDataTable = (props) => {
         dataLoaded,
         pagination,
         dataActions,
-        handleTableRowsChange,
+        handleEventTableRowsChange,
         fetchDynamicData,
-        handleTableSort,
-        handleTablePageChange,
-        handleTableSearch,
-        handleTableFilter,
+        handleEventTableSort,
+        handleEventTablePageChange,
+        handleEventTableSearch,
+        handleEventTableFilter,
     } = DynamicDataTableStore()
 
     const moduleName = 'rsssl-group-filter-limit_login_attempts_event_log';
@@ -32,7 +32,7 @@ const DynamicDataTable = (props) => {
         if (!currentFilter) {
             setSelectedFilter('all', moduleName);
         }
-        handleTableFilter('status', currentFilter);
+        handleEventTableFilter('severity', currentFilter, moduleName);
     }, [selectedFilter, moduleName]);
 
     useEffect(() => {
@@ -116,10 +116,10 @@ const DynamicDataTable = (props) => {
                 pagination
                 paginationServer
                 paginationTotalRows={pagination.totalRows}
-                onChangeRowsPerPage={handleTableRowsChange}
-                onChangePage={handleTablePageChange}
+                onChangeRowsPerPage={handleEventTableRowsChange}
+                onChangePage={handleEventTablePageChange}
                 sortServer
-                onSort={handleTableSort}
+                onSort={handleEventTableSort}
                 paginationRowsPerPageOptions={[10, 25, 50, 100]}
                 noDataComponent={__("No results", "really-simple-ssl")}
                 persistTableHead

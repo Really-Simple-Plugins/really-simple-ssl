@@ -11,11 +11,10 @@ const IpAddressDataTableStore = create((set, get) => ({
     dataLoaded: false,
     pagination: {},
     dataActions: {},
-    DynamicDataTable: [],
+    IpDataTable: [],
 
-    fetchDynamicData: async (action) => {
+    fetchIpData: async (action) => {
         try {
-            console.log('heul wat aktie ', action);
             const response = await rsssl_api.doAction(
                 action,
                 get().dataActions
@@ -35,6 +34,7 @@ const IpAddressDataTableStore = create((set, get) => ({
                 state.dataActions = {...state.dataActions, search, searchColumns};
             })
         );
+        get().fetchIpData('ip_list');
     },
 
     handleTablePageChange: async (page, pageSize) => {
@@ -43,6 +43,7 @@ const IpAddressDataTableStore = create((set, get) => ({
                 state.dataActions = {...state.dataActions, page, pageSize};
             })
         );
+        get().fetchIpData('ip_list');
     },
 
     handleTableRowsChange: async (currentRowsPerPage, currentPage) => {
@@ -51,6 +52,7 @@ const IpAddressDataTableStore = create((set, get) => ({
                 state.dataActions = {...state.dataActions, currentRowsPerPage, currentPage};
             })
         );
+        get().fetchIpData('ip_list');
     },
 
     //this handles all pagination and sorting
@@ -60,6 +62,7 @@ const IpAddressDataTableStore = create((set, get) => ({
                 state.dataActions = {...state.dataActions, sortColumn: column, sortDirection};
             })
         );
+        get().fetchIpData('ip_list');
     },
 
     handleTableFilter: async (column, filterValue) => {
@@ -69,6 +72,7 @@ const IpAddressDataTableStore = create((set, get) => ({
                 state.dataActions = {...state.dataActions, filterColumn: column, filterValue};
             })
         );
+        get().fetchIpData('ip_list');
     },
 
 }));

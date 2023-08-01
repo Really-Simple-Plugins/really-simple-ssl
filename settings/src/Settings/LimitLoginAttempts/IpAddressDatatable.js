@@ -2,19 +2,19 @@ import {__} from '@wordpress/i18n';
 import React, {useEffect, useRef, useState} from 'react';
 import DataTable, {createTheme} from "react-data-table-component";
 import IpAddressDataTableStore from "./IpAddressDataTableStore";
-import useMenu from "../../Menu/MenuData";
+import FilterData from "../FilterData";
 
 import {Button} from "@wordpress/components";
 import {produce} from "immer";
 
 const IpAddressDatatable = (props) => {
     const {
-        DynamicDataTable,
+        IpDataTable,
         dataLoaded,
         pagination,
         dataActions,
         handleTableRowsChange,
-        fetchDynamicData,
+        fetchIpData,
         handleTableSort,
         handleTablePageChange,
         handleTableSearch,
@@ -22,28 +22,9 @@ const IpAddressDatatable = (props) => {
     } = IpAddressDataTableStore()
 
     //here we set the selectedFilter from the Settings group
-    const {selectedFilter, setSelectedFilter, activeGroupId} = useState({});
-    const prevSelectedFilterRef = useRef({});
-    const moduleName = 'limit_login_attempts_ip_address';
+    const {selectedFilter, setSelectedFilter, activeGroupId, getCurrentFilter} = FilterData();
+    const moduleName = 'rsssl-group-filter-limit_login_attempts_ip_address';
 
-    // // Update the prevSelectedFilterRef when the selectedFilter changes
-    // useEffect(() => {
-    //     prevSelectedFilterRef.current = selectedFilter;
-    // }, [selectedFilter]);
-    //
-    // // Set the selected filter to 'all' if it is false
-    // useEffect(() => {
-    //     if (!selectedFilter[moduleName]) {
-    //         setSelectedFilter('all', moduleName);
-    //     }
-    // }, [selectedFilter]);
-    //
-    // // Update data when selectedFilter changes
-    // useEffect(() => {
-    //     if (selectedFilter[moduleName]) {
-    //         handleTableFilter('status', selectedFilter[moduleName]);
-    //     }
-    // }, [selectedFilter[moduleName], activeGroupId, handleTableFilter]);
 
     //we create the columns
     let columns = [];
@@ -56,18 +37,20 @@ const IpAddressDatatable = (props) => {
     });
 
     useEffect(() => {
+        const currentFilter = getCurrentFilter(moduleName);
+
+        if (!currentFilter) {
+            setSelectedFilter('all', moduleName);
+        }
+        handleTableFilter('status', currentFilter);
+    }, [selectedFilter, moduleName]);
+
+    useEffect(() => {
         if (!dataLoaded) {
-            fetchDynamicData(field.action);
+            fetchIpData(field.action);
         }
     });
-    //
-    // useEffect(() => {
-    //     if (dataActions) {
-    //         fetchDynamicData(field.action);
-    //     }
-    // }, [dataActions]);
 
-    //we handle the filters
 
     const customStyles = {
         headCells: {
@@ -90,7 +73,7 @@ const IpAddressDatatable = (props) => {
     }, 'light');
 
     //only show the datatable if the data is loaded
-    if (!dataLoaded && columns.length === 0 && DynamicDataTable.length === 0) {
+    if (!dataLoaded && columns.length === 0 && IpDataTable.length === 0) {
         return (
             <div className="rsssl-spinner">
                 <div className="rsssl-spinner__inner">
@@ -120,7 +103,7 @@ const IpAddressDatatable = (props) => {
 
     }
     //we convert the data to an array
-    let data = {...DynamicDataTable.data};
+    let data = {...IpDataTable.data};
 
     function generateOptions(status, id) {
         return (

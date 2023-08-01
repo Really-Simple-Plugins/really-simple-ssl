@@ -15,7 +15,6 @@ const DynamicDataTableStore = create((set, get) => ({
 
     fetchDynamicData: async (action) => {
         try {
-            console.log('Eventlog', action);
             const response = await rsssl_api.doAction(
                 action,
                 get().dataActions
@@ -29,7 +28,7 @@ const DynamicDataTableStore = create((set, get) => ({
         }
     },
 
-    handleTableSearch: async (search, searchColumns) => {
+    handleEventTableSearch: async (search, searchColumns) => {
         //Add the search to the dataActions
         set(produce((state) => {
                 state.dataActions = {...state.dataActions, search, searchColumns};
@@ -38,7 +37,7 @@ const DynamicDataTableStore = create((set, get) => ({
         get().fetchDynamicData('event_log');
     },
 
-    handleTablePageChange: async (page, pageSize) => {
+    handleEventTablePageChange: async (page, pageSize) => {
         //Add the page and pageSize to the dataActions
         set(produce((state) => {
                 state.dataActions = {...state.dataActions, page, pageSize};
@@ -47,7 +46,7 @@ const DynamicDataTableStore = create((set, get) => ({
         get().fetchDynamicData('event_log');
     },
 
-    handleTableRowsChange: async (currentRowsPerPage, currentPage) => {
+    handleEventTableRowsChange: async (currentRowsPerPage, currentPage) => {
         //Add the page and pageSize to the dataActions
         set(produce((state) => {
                 state.dataActions = {...state.dataActions, currentRowsPerPage, currentPage};
@@ -57,7 +56,7 @@ const DynamicDataTableStore = create((set, get) => ({
     },
 
     //this handles all pagination and sorting
-    handleTableSort: async (column, sortDirection) => {
+    handleEventTableSort: async (column, sortDirection) => {
         //Add the column and sortDirection to the dataActions
         set(produce((state) => {
                 state.dataActions = {...state.dataActions, sortColumn: column, sortDirection};
@@ -66,7 +65,7 @@ const DynamicDataTableStore = create((set, get) => ({
         get().fetchDynamicData('event_log');
     },
 
-    handleTableFilter: async (column, filterValue) => {
+    handleEventTableFilter: async (column, filterValue) => {
         //Add the column and sortDirection to the dataActions
         set(produce((state) => {
                 state.dataActions = {...state.dataActions, filterColumn: column, filterValue};
