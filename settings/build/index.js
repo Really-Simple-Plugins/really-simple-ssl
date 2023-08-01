@@ -2252,6 +2252,7 @@ const useMenu = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, get) => ({
   selectedMainMenuItem: false,
   selectedSubMenuItem: false,
   selectedFilter: false,
+  activeGroupId: false,
   hasPremiumItems: false,
   subMenu: {
     title: ' ',
@@ -2272,11 +2273,6 @@ const useMenu = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, get) => ({
     }));
     // window.location.href=rsssl_settings.dashboard_url+'#'+selectedMainMenuItem;
     window.location.hash = selectedMainMenuItem;
-  },
-  setSelectedFilter: selectedFilter => {
-    set(state => ({
-      selectedFilter
-    }));
   },
   //we need to get the main menu item directly from the anchor, otherwise we have to wait for the menu to load in page.js
   fetchSelectedMainMenuItem: () => {

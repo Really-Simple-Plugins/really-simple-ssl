@@ -5,6 +5,7 @@ import * as rsssl_api from "../utils/api";
 import useFields from "../Settings/FieldsData";
 import useMenu from "../Menu/MenuData";
 import useLicense from "./License/LicenseData";
+import filterData from "./FilterData";
 import {useEffect, useState} from '@wordpress/element';
 
 
@@ -13,7 +14,8 @@ import {useEffect, useState} from '@wordpress/element';
  */
 const SettingsGroup = (props) => {
     const {fields} = useFields();
-    const {selectedFilter, setSelectedFilter} = useMenu();
+    const {selectedFilter, setSelectedFilter} = filterData();
+    const {setActiveGroupId, activeGroupId} = useMenu();
     const {licenseStatus} = useLicense();
     const {selectedSubMenuItem, subMenu} = useMenu();
     const [Field, setField] = useState(null);
@@ -24,7 +26,6 @@ const SettingsGroup = (props) => {
         });
 
     }, []);
-
 
 
     let upgrade = 'https://really-simple-ssl.com/pro/?mtm_campaign=fallback&mtm_source=free&mtm_content=upgrade';
@@ -93,7 +94,7 @@ const SettingsGroup = (props) => {
     let helplinkText = activeGroup.helpLink_text ? activeGroup.helpLink_text : __("Instructions", "really-simple-ssl");
     let anchor = getAnchor('main');
     let disabledClass = disabled || networkwide_error ? 'rsssl-disabled' : '';
-
+    const filterId = "rsssl-group-filter-" + activeGroup.id;
     return (
         <div className={"rsssl-grid-item rsssl-" + activeGroup.id + ' ' + disabledClass}>
             {activeGroup.title && <div className="rsssl-grid-item-header">
@@ -103,12 +104,12 @@ const SettingsGroup = (props) => {
                         {activeGroup.groupFilter && (
                             <select
                                 className="rsssl-group-filter"
-                                id={"rsssl-group-filter-" + activeGroup.id}
-                                name={"rsssl-group-filter-" + activeGroup.id}
-                                value={selectedFilter}
+                                id={filterId}
+                                name={filterId}
+                                value={selectedFilter[filterId]}
                                 onChange={(e) => {
                                     const selectedValue = e.target.value;
-                                    setSelectedFilter(selectedValue);
+                                    setSelectedFilter(selectedValue, filterId);
                                 }}
                             >
                                 {activeGroup.groupFilter.options.map((option) => (

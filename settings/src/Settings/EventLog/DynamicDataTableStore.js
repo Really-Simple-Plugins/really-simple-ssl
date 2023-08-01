@@ -15,6 +15,7 @@ const DynamicDataTableStore = create((set, get) => ({
 
     fetchDynamicData: async (action) => {
         try {
+            console.log('Eventlog', action);
             const response = await rsssl_api.doAction(
                 action,
                 get().dataActions
@@ -34,6 +35,7 @@ const DynamicDataTableStore = create((set, get) => ({
                 state.dataActions = {...state.dataActions, search, searchColumns};
             })
         );
+        get().fetchDynamicData('event_log');
     },
 
     handleTablePageChange: async (page, pageSize) => {
@@ -42,6 +44,7 @@ const DynamicDataTableStore = create((set, get) => ({
                 state.dataActions = {...state.dataActions, page, pageSize};
             })
         );
+        get().fetchDynamicData('event_log');
     },
 
     handleTableRowsChange: async (currentRowsPerPage, currentPage) => {
@@ -50,6 +53,7 @@ const DynamicDataTableStore = create((set, get) => ({
                 state.dataActions = {...state.dataActions, currentRowsPerPage, currentPage};
             })
         );
+        get().fetchDynamicData('event_log');
     },
 
     //this handles all pagination and sorting
@@ -59,6 +63,17 @@ const DynamicDataTableStore = create((set, get) => ({
                 state.dataActions = {...state.dataActions, sortColumn: column, sortDirection};
             })
         );
+        get().fetchDynamicData('event_log');
+    },
+
+    handleTableFilter: async (column, filterValue) => {
+        //Add the column and sortDirection to the dataActions
+        set(produce((state) => {
+                state.dataActions = {...state.dataActions, filterColumn: column, filterValue};
+            })
+        );
+        //we prefetch the data
+        get().fetchDynamicData('event_log');
     },
 
 

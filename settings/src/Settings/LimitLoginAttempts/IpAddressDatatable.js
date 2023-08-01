@@ -1,8 +1,11 @@
 import {__} from '@wordpress/i18n';
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import DataTable, {createTheme} from "react-data-table-component";
 import IpAddressDataTableStore from "./IpAddressDataTableStore";
+import useMenu from "../../Menu/MenuData";
+
 import {Button} from "@wordpress/components";
+import {produce} from "immer";
 
 const IpAddressDatatable = (props) => {
     const {
@@ -14,9 +17,33 @@ const IpAddressDatatable = (props) => {
         fetchDynamicData,
         handleTableSort,
         handleTablePageChange,
-        handleTableSearch
+        handleTableSearch,
+        handleTableFilter
     } = IpAddressDataTableStore()
 
+    //here we set the selectedFilter from the Settings group
+    const {selectedFilter, setSelectedFilter, activeGroupId} = useState({});
+    const prevSelectedFilterRef = useRef({});
+    const moduleName = 'limit_login_attempts_ip_address';
+
+    // // Update the prevSelectedFilterRef when the selectedFilter changes
+    // useEffect(() => {
+    //     prevSelectedFilterRef.current = selectedFilter;
+    // }, [selectedFilter]);
+    //
+    // // Set the selected filter to 'all' if it is false
+    // useEffect(() => {
+    //     if (!selectedFilter[moduleName]) {
+    //         setSelectedFilter('all', moduleName);
+    //     }
+    // }, [selectedFilter]);
+    //
+    // // Update data when selectedFilter changes
+    // useEffect(() => {
+    //     if (selectedFilter[moduleName]) {
+    //         handleTableFilter('status', selectedFilter[moduleName]);
+    //     }
+    // }, [selectedFilter[moduleName], activeGroupId, handleTableFilter]);
 
     //we create the columns
     let columns = [];
@@ -33,12 +60,14 @@ const IpAddressDatatable = (props) => {
             fetchDynamicData(field.action);
         }
     });
+    //
+    // useEffect(() => {
+    //     if (dataActions) {
+    //         fetchDynamicData(field.action);
+    //     }
+    // }, [dataActions]);
 
-    useEffect(() => {
-        if (dataActions) {
-            fetchDynamicData(field.action);
-        }
-    }, [dataActions]);
+    //we handle the filters
 
     const customStyles = {
         headCells: {

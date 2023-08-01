@@ -133,6 +133,36 @@ const SettingsPlaceholder = () => {
 
 /***/ }),
 
+/***/ "./src/Settings/FilterData.js":
+/*!************************************!*\
+  !*** ./src/Settings/FilterData.js ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/index.mjs");
+// FilterData.js
+
+const filterData = (0,zustand__WEBPACK_IMPORTED_MODULE_0__.create)((set, get) => ({
+  selectedFilter: [],
+  setSelectedFilter: (selectedFilter, activeGroupId) => {
+    set(state => ({
+      //we make it an array, so we can have multiple filters
+      selectedFilter: {
+        ...state.selectedFilter,
+        [activeGroupId]: selectedFilter
+      }
+    }));
+  },
+  getCurrentFilter: activeGroupId => get().selectedFilter[activeGroupId]
+}));
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (filterData);
+
+/***/ }),
+
 /***/ "./src/Settings/Help.js":
 /*!******************************!*\
   !*** ./src/Settings/Help.js ***!
@@ -408,6 +438,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Settings_FieldsData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Settings/FieldsData */ "./src/Settings/FieldsData.js");
 /* harmony import */ var _Menu_MenuData__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Menu/MenuData */ "./src/Menu/MenuData.js");
 /* harmony import */ var _License_LicenseData__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./License/LicenseData */ "./src/Settings/License/LicenseData.js");
+/* harmony import */ var _FilterData__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./FilterData */ "./src/Settings/FilterData.js");
+
 
 
 
@@ -428,6 +460,10 @@ const SettingsGroup = props => {
   const {
     selectedFilter,
     setSelectedFilter
+  } = (0,_FilterData__WEBPACK_IMPORTED_MODULE_8__["default"])();
+  const {
+    setActiveGroupId,
+    activeGroupId
   } = (0,_Menu_MenuData__WEBPACK_IMPORTED_MODULE_6__["default"])();
   const {
     licenseStatus
@@ -507,6 +543,7 @@ const SettingsGroup = props => {
   let helplinkText = activeGroup.helpLink_text ? activeGroup.helpLink_text : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Instructions", "really-simple-ssl");
   let anchor = (0,_utils_getAnchor__WEBPACK_IMPORTED_MODULE_2__["default"])('main');
   let disabledClass = disabled || networkwide_error ? 'rsssl-disabled' : '';
+  const filterId = "rsssl-group-filter-" + activeGroup.id;
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-grid-item rsssl-" + activeGroup.id + ' ' + disabledClass
   }, activeGroup.title && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -517,12 +554,12 @@ const SettingsGroup = props => {
     className: "rsssl-grid-item-controls"
   }, activeGroup.groupFilter && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
     className: "rsssl-group-filter",
-    id: "rsssl-group-filter-" + activeGroup.id,
-    name: "rsssl-group-filter-" + activeGroup.id,
-    value: selectedFilter,
+    id: filterId,
+    name: filterId,
+    value: selectedFilter[filterId],
     onChange: e => {
       const selectedValue = e.target.value;
-      setSelectedFilter(selectedValue);
+      setSelectedFilter(selectedValue, filterId);
     }
   }, activeGroup.groupFilter.options.map(option =>
   //if the value is equal to the selected value, set it as selected

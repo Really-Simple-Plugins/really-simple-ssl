@@ -1,8 +1,10 @@
 import {__} from '@wordpress/i18n';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import DataTable, {createTheme} from "react-data-table-component";
 import DynamicDataTableStore from "./DynamicDataTableStore";
+import FilterData from "../FilterData";
 import * as rsssl_api from "../../utils/api";
+import useMenu from "../../Menu/MenuData";
 
 const DynamicDataTable = (props) => {
     const {
@@ -14,8 +16,30 @@ const DynamicDataTable = (props) => {
         fetchDynamicData,
         handleTableSort,
         handleTablePageChange,
-        handleTableSearch
+        handleTableSearch,
+        handleTableFilter,
     } = DynamicDataTableStore()
+
+    const moduleName = 'rsssl-group-filter-limit_login_attempts_event_log';
+    //here we set the selectedFilter from the Settings group
+    const {selectedFilter, setSelectedFilter, activeGroupId, getCurrentFilter} = FilterData();
+
+
+
+    useEffect(() => {
+        const currentFilter = getCurrentFilter(moduleName);
+
+        if (!currentFilter) {
+            setSelectedFilter('all', moduleName);
+        }
+        handleTableFilter('status', currentFilter);
+    }, [selectedFilter, moduleName]);
+
+    useEffect(() => {
+        if (!dataLoaded) {
+            fetchDynamicData(field.action);
+        }
+    });
 
 
     //we create the columns
@@ -28,17 +52,6 @@ const DynamicDataTable = (props) => {
         columns.push(newItem);
     });
 
-    useEffect(() => {
-        if (!dataLoaded) {
-            fetchDynamicData(field.action);
-        }
-    });
-
-    useEffect(() => {
-        if (dataActions) {
-            fetchDynamicData(field.action);
-        }
-    }, [dataActions]);
 
     const customStyles = {
         headCells: {

@@ -1494,7 +1494,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var react_data_table_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-data-table-component */ "./node_modules/react-data-table-component/dist/index.cjs.js");
 /* harmony import */ var _DynamicDataTableStore__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./DynamicDataTableStore */ "./src/Settings/EventLog/DynamicDataTableStore.js");
-/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../utils/api */ "./src/utils/api.js");
+/* harmony import */ var _FilterData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../FilterData */ "./src/Settings/FilterData.js");
+/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../utils/api */ "./src/utils/api.js");
+/* harmony import */ var _Menu_MenuData__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../Menu/MenuData */ "./src/Menu/MenuData.js");
+
+
 
 
 
@@ -1511,8 +1515,29 @@ const DynamicDataTable = props => {
     fetchDynamicData,
     handleTableSort,
     handleTablePageChange,
-    handleTableSearch
+    handleTableSearch,
+    handleTableFilter
   } = (0,_DynamicDataTableStore__WEBPACK_IMPORTED_MODULE_4__["default"])();
+  const moduleName = 'rsssl-group-filter-limit_login_attempts_event_log';
+  //here we set the selectedFilter from the Settings group
+  const {
+    selectedFilter,
+    setSelectedFilter,
+    activeGroupId,
+    getCurrentFilter
+  } = (0,_FilterData__WEBPACK_IMPORTED_MODULE_5__["default"])();
+  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
+    const currentFilter = getCurrentFilter(moduleName);
+    if (!currentFilter) {
+      setSelectedFilter('all', moduleName);
+    }
+    handleTableFilter('status', currentFilter);
+  }, [selectedFilter, moduleName]);
+  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
+    if (!dataLoaded) {
+      fetchDynamicData(field.action);
+    }
+  });
 
   //we create the columns
   let columns = [];
@@ -1523,16 +1548,6 @@ const DynamicDataTable = props => {
     let newItem = buildColumn(item);
     columns.push(newItem);
   });
-  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
-    if (!dataLoaded) {
-      fetchDynamicData(field.action);
-    }
-  });
-  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
-    if (dataActions) {
-      fetchDynamicData(field.action);
-    }
-  }, [dataActions]);
   const customStyles = {
     headCells: {
       style: {
@@ -1649,6 +1664,7 @@ const DynamicDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((s
   DynamicDataTable: [],
   fetchDynamicData: async action => {
     try {
+      console.log('Eventlog', action);
       const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction(action, get().dataActions);
       //now we set the EventLog
       if (response) {
@@ -1672,6 +1688,7 @@ const DynamicDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((s
         searchColumns
       };
     }));
+    get().fetchDynamicData('event_log');
   },
   handleTablePageChange: async (page, pageSize) => {
     //Add the page and pageSize to the dataActions
@@ -1682,6 +1699,7 @@ const DynamicDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((s
         pageSize
       };
     }));
+    get().fetchDynamicData('event_log');
   },
   handleTableRowsChange: async (currentRowsPerPage, currentPage) => {
     //Add the page and pageSize to the dataActions
@@ -1692,6 +1710,7 @@ const DynamicDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((s
         currentPage
       };
     }));
+    get().fetchDynamicData('event_log');
   },
   //this handles all pagination and sorting
   handleTableSort: async (column, sortDirection) => {
@@ -1703,6 +1722,19 @@ const DynamicDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((s
         sortDirection
       };
     }));
+    get().fetchDynamicData('event_log');
+  },
+  handleTableFilter: async (column, filterValue) => {
+    //Add the column and sortDirection to the dataActions
+    set((0,immer__WEBPACK_IMPORTED_MODULE_4__.produce)(state => {
+      state.dataActions = {
+        ...state.dataActions,
+        filterColumn: column,
+        filterValue
+      };
+    }));
+    //we prefetch the data
+    get().fetchDynamicData('event_log');
   }
 }));
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (DynamicDataTableStore);
@@ -2782,6 +2814,7 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
   DynamicDataTable: [],
   fetchDynamicData: async action => {
     try {
+      console.log('heul wat aktie ', action);
       const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction(action, get().dataActions);
       //now we set the EventLog
       if (response) {
@@ -2836,6 +2869,17 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
         sortDirection
       };
     }));
+  },
+  handleTableFilter: async (column, filterValue) => {
+    console.log(filterValue);
+    //Add the column and sortDirection to the dataActions
+    set((0,immer__WEBPACK_IMPORTED_MODULE_4__.produce)(state => {
+      state.dataActions = {
+        ...state.dataActions,
+        filterColumn: column,
+        filterValue
+      };
+    }));
   }
 }));
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (IpAddressDataTableStore);
@@ -2860,8 +2904,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var react_data_table_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-data-table-component */ "./node_modules/react-data-table-component/dist/index.cjs.js");
 /* harmony import */ var _IpAddressDataTableStore__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./IpAddressDataTableStore */ "./src/Settings/LimitLoginAttempts/IpAddressDataTableStore.js");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _Menu_MenuData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../Menu/MenuData */ "./src/Menu/MenuData.js");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__);
+
+
 
 
 
@@ -2878,8 +2925,37 @@ const IpAddressDatatable = props => {
     fetchDynamicData,
     handleTableSort,
     handleTablePageChange,
-    handleTableSearch
+    handleTableSearch,
+    handleTableFilter
   } = (0,_IpAddressDataTableStore__WEBPACK_IMPORTED_MODULE_4__["default"])();
+
+  //here we set the selectedFilter from the Settings group
+  const {
+    selectedFilter,
+    setSelectedFilter,
+    activeGroupId
+  } = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)({});
+  const prevSelectedFilterRef = (0,react__WEBPACK_IMPORTED_MODULE_2__.useRef)({});
+  const moduleName = 'limit_login_attempts_ip_address';
+
+  // // Update the prevSelectedFilterRef when the selectedFilter changes
+  // useEffect(() => {
+  //     prevSelectedFilterRef.current = selectedFilter;
+  // }, [selectedFilter]);
+  //
+  // // Set the selected filter to 'all' if it is false
+  // useEffect(() => {
+  //     if (!selectedFilter[moduleName]) {
+  //         setSelectedFilter('all', moduleName);
+  //     }
+  // }, [selectedFilter]);
+  //
+  // // Update data when selectedFilter changes
+  // useEffect(() => {
+  //     if (selectedFilter[moduleName]) {
+  //         handleTableFilter('status', selectedFilter[moduleName]);
+  //     }
+  // }, [selectedFilter[moduleName], activeGroupId, handleTableFilter]);
 
   //we create the columns
   let columns = [];
@@ -2895,11 +2971,15 @@ const IpAddressDatatable = props => {
       fetchDynamicData(field.action);
     }
   });
-  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
-    if (dataActions) {
-      fetchDynamicData(field.action);
-    }
-  }, [dataActions]);
+  //
+  // useEffect(() => {
+  //     if (dataActions) {
+  //         fetchDynamicData(field.action);
+  //     }
+  // }, [dataActions]);
+
+  //we handle the filters
+
   const customStyles = {
     headCells: {
       style: {
@@ -2981,7 +3061,7 @@ const IpAddressDatatable = props => {
     className: "rsssl-add-button"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-add-button__inner"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.Button, {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
     className: "button button-secondary rsssl-add-button__button"
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Add IP Address", "really-simple-ssl")))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-search-bar"

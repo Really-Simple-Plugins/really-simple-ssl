@@ -15,6 +15,7 @@ const IpAddressDataTableStore = create((set, get) => ({
 
     fetchDynamicData: async (action) => {
         try {
+            console.log('heul wat aktie ', action);
             const response = await rsssl_api.doAction(
                 action,
                 get().dataActions
@@ -61,6 +62,14 @@ const IpAddressDataTableStore = create((set, get) => ({
         );
     },
 
+    handleTableFilter: async (column, filterValue) => {
+        console.log(filterValue);
+        //Add the column and sortDirection to the dataActions
+        set(produce((state) => {
+                state.dataActions = {...state.dataActions, filterColumn: column, filterValue};
+            })
+        );
+    },
 
 }));
 

@@ -171,16 +171,20 @@ function rsssl_menu()
                                 'id'      => 'limit_login_attempts_advanced_filter',
                                 'options' => [
                                     [
-                                        'id'    => 'filter_blocked',
+                                        'id'    => 'blocked',
                                         'title' => __('Blocked', 'really-simple-ssl'),
                                     ],
                                     [
-                                        'id'    => 'filter_trusted',
+                                        'id'    => 'trusted',
                                         'title' => __('Trusted', 'really-simple-ssl'),
                                     ],
                                     [
-                                        'id'    => 'locked_out',
+                                        'id'    => 'locked',
                                         'title' => __('Locked-out', 'really-simple-ssl'),
+                                    ],
+                                    [
+                                        'id'    => 'all',
+                                        'title' => __('All', 'really-simple-ssl'),
                                     ],
                                 ],
                             ],
