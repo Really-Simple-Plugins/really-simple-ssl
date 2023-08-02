@@ -944,7 +944,7 @@ function rsssl_fields( $load_values = true ) {
             'menu_id'  => 'two_fa',
             'group_id' => 'two_fa_general',
 			'type'     => 'checkbox',
-			'label'    => __( "Enable login security", "really-simple-ssl-pro" ),
+			'label'    => __( "Enable login protection", "really-simple-ssl-pro" ),
 			'disabled' => false,
 			'default'  => 'disabled',
 		],
@@ -953,7 +953,7 @@ function rsssl_fields( $load_values = true ) {
 			'menu_id'  => 'two_fa',
 			'group_id' => 'two_fa_email',
 			'type'     => 'checkbox',
-			'label'    => __( "Enable two-step login with email", "really-simple-ssl-pro" ),
+			'label'    => __( "Enable two-step verification", "really-simple-ssl-pro" ),
 			'tooltip'  => __( "This will send emails from your server, containing a verification code to users that try to login.", 'really-simple-ssl' ),
 			'disabled' => false,
 			'default'  => 'disabled',
@@ -970,7 +970,7 @@ function rsssl_fields( $load_values = true ) {
 			'group_id' => 'two_fa_email',
 			'type'     => 'two_fa_dropdown',
             'label'    => __( "Optional for:", "really-simple-ssl-pro" ),
-			'tooltip'  => __( "Two-step login will be enabled for these user roles, with the possibility to skip. If a user skips, Two-step login will be disabled for this user.", 'really-simple-ssl' ),
+			'tooltip'  => __( "Two-step verification will be enabled for these user roles, with the possibility to skip. If a user skips, two-step verification will be disabled for this user.", 'really-simple-ssl' ),
 //			'react_conditions' => [
 //                'relation' => 'AND',
 //                [
