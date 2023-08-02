@@ -223,7 +223,7 @@ function rsssl_menu() {
 					'premium'              => true,
 					'premium_text'         => __( 'Get two-factor authentication with %sReally Simple SSL Pro%s', 'really-simple-ssl' ),
 					'upgrade'              => 'https://really-simple-ssl.com/pro/?mtm_campaign=cops&mtm_source=free&mtm_content=upgrade',
-					'title'                => 'Login Security',
+					'title'                => 'Login Protection',
 					'helpLink'             => 'https://really-simple-ssl.com/instructions/two-factor-authentication/?mtm_campaign=instructions&mtm_source=free',
                     'groups'  => [
                         [

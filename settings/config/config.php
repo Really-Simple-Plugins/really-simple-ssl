@@ -985,7 +985,7 @@ function rsssl_fields( $load_values = true ) {
 			'group_id' => 'two_fa_email',
 			'type'     => 'two_fa_dropdown',
 			'label'    => __( "Force on:", "really-simple-ssl-pro" ),
-			'tooltip'  => __( "These user roles are forced to enter the authentication code, without the possibility to skip.", 'really-simple-ssl' ),
+			'tooltip'  => __( "These user roles are forced to enter the verification code, without the possibility to skip.", 'really-simple-ssl' ),
 //			'react_conditions' => [
 //				'relation' => 'AND',
 //				[
