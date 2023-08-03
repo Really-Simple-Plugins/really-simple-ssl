@@ -144,16 +144,20 @@ function rsssl_menu()
                                 'id'      => 'limit_login_attempts_advanced_filter',
                                 'options' => [
                                     [
-                                        'id'    => 'filter_blocked',
+                                        'id'    => 'blocked',
                                         'title' => __('Blocked', 'really-simple-ssl'),
                                     ],
                                     [
-                                        'id'    => 'filter_trusted',
+                                        'id'    => 'trusted',
                                         'title' => __('Trusted', 'really-simple-ssl'),
                                     ],
                                     [
-                                        'id'    => 'locked_out',
+                                        'id'    => 'locked',
                                         'title' => __('Locked-out', 'really-simple-ssl'),
+                                    ],
+                                    [
+                                        'id'    => 'all',
+                                        'title' => __('All', 'really-simple-ssl'),
                                     ],
                                 ],
                             ],
@@ -212,6 +216,33 @@ function rsssl_menu()
                                     [
                                         'id'    => 'all',
                                         'title' => __('All', 'really-simple-ssl'),
+                                    ],
+                                ],
+                            ],
+                            'title'    => __('Event Log', 'really-simple-ssl'),
+                            'intro'    => __('Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna.',
+                                'really-simple-ssl'),
+                            'premium_text' => __('Get Limit Login Attempts with %sReally Simple SSL Pro%s',
+                                'really-simple-ssl'),
+                        ],
+                        [
+                            'id'       => 'limit_login_attempts_country',
+                            'premium'  => true,
+                            'groupFilter'  => [
+                                'default' => 'limit_login_attempts_advanced_filter_log',
+                                'id'      => 'limit_login_attempts_advanced_filter',
+                                'options' => [
+                                    [
+                                        'id'    => 'trusted',
+                                        'title' => __('Trusted', 'really-simple-ssl'),
+                                    ],
+                                    [
+                                        'id'    => 'blocked',
+                                        'title' => __('blocked', 'really-simple-ssl'),
+                                    ],
+                                    [
+                                        'id'    => 'all',
+                                        'title' => __('All Countries', 'really-simple-ssl'),
                                     ],
                                 ],
                             ],

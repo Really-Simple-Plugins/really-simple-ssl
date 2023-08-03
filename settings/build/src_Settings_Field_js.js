@@ -1599,7 +1599,7 @@ const DynamicDataTable = props => {
     type: "text",
     className: "rsssl-search-bar__input",
     placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Search", "really-simple-ssl"),
-    onChange: event => handleTableSearch(event.target.value, searchableColumns)
+    onChange: event => handleEventTableSearch(event.target.value, searchableColumns)
   }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
     columns: columns,
     data: DynamicDataTable.data,
@@ -1779,6 +1779,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_getAnchor__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ../utils/getAnchor */ "./src/utils/getAnchor.js");
 /* harmony import */ var _Menu_MenuData__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ../Menu/MenuData */ "./src/Menu/MenuData.js");
 /* harmony import */ var _EventLog_DynamicDataTable__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./EventLog/DynamicDataTable */ "./src/Settings/EventLog/DynamicDataTable.js");
+/* harmony import */ var _LimitLoginAttempts_UserDatatable__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./LimitLoginAttempts/UserDatatable */ "./src/Settings/LimitLoginAttempts/UserDatatable.js");
+/* harmony import */ var _LimitLoginAttempts_CountryDatatable__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./LimitLoginAttempts/CountryDatatable */ "./src/Settings/LimitLoginAttempts/CountryDatatable.js");
 
 
 
@@ -1798,6 +1800,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 // import IpAddressModule from "./LimitLoginAttempts/IpAddressModule";
+
+
 
 
 
@@ -2126,6 +2130,24 @@ const Field = props => {
       className: highLightClass,
       ref: scrollAnchor
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_LimitLoginAttempts_IpAddressDatatable__WEBPACK_IMPORTED_MODULE_17__["default"], {
+      field: props.field,
+      action: props.field.action
+    }));
+  }
+  if (field.type === 'user-datatable') {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: highLightClass,
+      ref: scrollAnchor
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_LimitLoginAttempts_UserDatatable__WEBPACK_IMPORTED_MODULE_26__["default"], {
+      field: props.field,
+      action: props.field.action
+    }));
+  }
+  if (field.type === 'country-datatable') {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: highLightClass,
+      ref: scrollAnchor
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_LimitLoginAttempts_CountryDatatable__WEBPACK_IMPORTED_MODULE_27__["default"], {
       field: props.field,
       action: props.field.action
     }));
@@ -2782,6 +2804,318 @@ const License = props => {
 
 /***/ }),
 
+/***/ "./src/Settings/LimitLoginAttempts/CountryDataTableStore.js":
+/*!******************************************************************!*\
+  !*** ./src/Settings/LimitLoginAttempts/CountryDataTableStore.js ***!
+  \******************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/index.mjs");
+/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils/api */ "./src/utils/api.js");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var immer__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! immer */ "./node_modules/immer/dist/immer.esm.mjs");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
+/* Creates A Store For Risk Data using Zustand */
+
+
+
+
+
+const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set, get) => ({
+  processing: false,
+  dataLoaded: false,
+  pagination: {},
+  dataActions: {},
+  CountryDataTable: [],
+  fetchCountryData: async action => {
+    try {
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction(action, get().dataActions);
+      //now we set the EventLog
+      if (response) {
+        set({
+          CountryDataTable: response,
+          dataLoaded: true,
+          processing: false,
+          pagination: response.pagination
+        });
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  handleCountryTableSearch: async (search, searchColumns) => {
+    //Add the search to the dataActions
+    set((0,immer__WEBPACK_IMPORTED_MODULE_4__.produce)(state => {
+      state.dataActions = {
+        ...state.dataActions,
+        search,
+        searchColumns
+      };
+    }));
+    get().fetchCountryData('country_list');
+  },
+  handleCountryTablePageChange: async (page, pageSize) => {
+    //Add the page and pageSize to the dataActions
+    set((0,immer__WEBPACK_IMPORTED_MODULE_4__.produce)(state => {
+      state.dataActions = {
+        ...state.dataActions,
+        page,
+        pageSize
+      };
+    }));
+    get().fetchCountryData('country_list');
+  },
+  handleCountryTableRowsChange: async (currentRowsPerPage, currentPage) => {
+    //Add the page and pageSize to the dataActions
+    set((0,immer__WEBPACK_IMPORTED_MODULE_4__.produce)(state => {
+      state.dataActions = {
+        ...state.dataActions,
+        currentRowsPerPage,
+        currentPage
+      };
+    }));
+    get().fetchCountryData('country_list');
+  },
+  //this handles all pagination and sorting
+  handleCountryTableSort: async (column, sortDirection) => {
+    //Add the column and sortDirection to the dataActions
+    set((0,immer__WEBPACK_IMPORTED_MODULE_4__.produce)(state => {
+      state.dataActions = {
+        ...state.dataActions,
+        sortColumn: column,
+        sortDirection
+      };
+    }));
+    get().fetchCountryData('country_list');
+  },
+  handleCountryTableFilter: async (column, filterValue) => {
+    console.log(filterValue);
+    //Add the column and sortDirection to the dataActions
+    set((0,immer__WEBPACK_IMPORTED_MODULE_4__.produce)(state => {
+      state.dataActions = {
+        ...state.dataActions,
+        filterColumn: column,
+        filterValue
+      };
+    }));
+    get().fetchCountryData('country_list');
+  }
+}));
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (CountryDataTableStore);
+
+/***/ }),
+
+/***/ "./src/Settings/LimitLoginAttempts/CountryDatatable.js":
+/*!*************************************************************!*\
+  !*** ./src/Settings/LimitLoginAttempts/CountryDatatable.js ***!
+  \*************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var react_data_table_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-data-table-component */ "./node_modules/react-data-table-component/dist/index.cjs.js");
+/* harmony import */ var _CountryDataTableStore__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./CountryDataTableStore */ "./src/Settings/LimitLoginAttempts/CountryDataTableStore.js");
+/* harmony import */ var _FilterData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../FilterData */ "./src/Settings/FilterData.js");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__);
+
+
+
+
+
+
+
+
+const CountryDatatable = props => {
+  const {
+    CountryDataTable,
+    dataLoaded,
+    pagination,
+    dataActions,
+    handleCountryTableRowsChange,
+    fetchCountryData,
+    handleCountryTableSort,
+    handleCountryTablePageChange,
+    handleCountryTableSearch,
+    handleCountryTableFilter
+  } = (0,_CountryDataTableStore__WEBPACK_IMPORTED_MODULE_4__["default"])();
+
+  //here we set the selectedFilter from the Settings group
+  const {
+    selectedFilter,
+    setSelectedFilter,
+    activeGroupId,
+    getCurrentFilter
+  } = (0,_FilterData__WEBPACK_IMPORTED_MODULE_5__["default"])();
+  const moduleName = 'rsssl-group-filter-limit_login_attempts_Countrys';
+
+  //we create the columns
+  let columns = [];
+  //getting the fields from the props
+  let field = props.field;
+  //we loop through the fields
+  field.columns.forEach(function (item, i) {
+    let newItem = buildColumn(item);
+    columns.push(newItem);
+  });
+  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
+    const currentFilter = getCurrentFilter(moduleName);
+    if (!currentFilter) {
+      setSelectedFilter('all', moduleName);
+    }
+    handleCountryTableFilter('region', currentFilter);
+  }, [selectedFilter, moduleName]);
+  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
+    if (!dataLoaded) {
+      fetchCountryData(field.action);
+    }
+  });
+  const customStyles = {
+    headCells: {
+      style: {
+        paddingLeft: '0',
+        // override the cell padding for head cells
+        paddingRight: '0'
+      }
+    },
+    cells: {
+      style: {
+        paddingLeft: '0',
+        // override the cell padding for data cells
+        paddingRight: '0'
+      }
+    }
+  };
+  (0,react_data_table_component__WEBPACK_IMPORTED_MODULE_3__.createTheme)('really-simple-plugins', {
+    divider: {
+      default: 'transparent'
+    }
+  }, 'light');
+
+  //only show the datatable if the data is loaded
+  if (!dataLoaded && columns.length === 0 && CountryDataTable.length === 0) {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-spinner"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-spinner__inner"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-spinner__icon"
+    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-spinner__text"
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Loading...", "really-simple-ssl"))));
+  }
+  let searchableColumns = [];
+  //setting the searchable columns
+  columns.map(column => {
+    if (column.searchable) {
+      searchableColumns.push(column.column);
+    }
+  });
+
+  //now we get the options for the select control
+  let options = props.field.options;
+  //we divide the key into label and the value into value
+  options = Object.entries(options).map(item => {
+    return {
+      label: item[1],
+      value: item[0]
+    };
+  });
+  function handleStatusChange(value, id) {}
+  //we convert the data to an array
+  let data = {
+    ...CountryDataTable.data
+  };
+  function generateOptions(status, id) {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
+      className: "rsssl-select",
+      value: status,
+      onChange: event => handleStatusChange(event.target.value, id)
+    }, options.map((item, i) => {
+      let disabled = false;
+      if (item.value === 'locked') {
+        disabled = true;
+      }
+      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
+        key: i,
+        value: item.value,
+        disabled: disabled
+      }, item.label);
+    }));
+  }
+  for (const key in data) {
+    let dataItem = {
+      ...data[key]
+    };
+    dataItem.status = generateOptions(dataItem.status, dataItem.id);
+    data[key] = dataItem;
+  }
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-container"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-add-button"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-add-button__inner"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
+    className: "button button-secondary rsssl-add-button__button"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Add Country", "really-simple-ssl")))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-search-bar"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-search-bar__inner"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-search-bar__icon"
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "text",
+    className: "rsssl-search-bar__input",
+    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Search", "really-simple-ssl"),
+    onChange: event => handleCountryTableSearch(event.target.value, searchableColumns)
+  })))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    columns: columns,
+    data: Object.values(data),
+    dense: true,
+    pagination: true,
+    paginationServer: true,
+    paginationTotalRows: pagination.totalRows,
+    onChangeRowsPerPage: handleCountryTableRowsChange,
+    onChangePage: handleCountryTablePageChange,
+    sortServer: true,
+    onSort: handleCountryTableSort,
+    paginationRowsPerPageOptions: [10, 25, 50, 100],
+    noDataComponent: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("No results", "really-simple-ssl"),
+    persistTableHead: true,
+    theme: "really-simple-plugins",
+    customStyles: customStyles
+  }));
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (CountryDatatable);
+function buildColumn(column) {
+  return {
+    name: column.name,
+    sortable: column.sortable,
+    searchable: column.searchable,
+    width: column.width,
+    visible: column.visible,
+    column: column.column,
+    selector: row => row[column.column]
+  };
+}
+
+/***/ }),
+
 /***/ "./src/Settings/LimitLoginAttempts/IpAddressDataTableStore.js":
 /*!********************************************************************!*\
   !*** ./src/Settings/LimitLoginAttempts/IpAddressDataTableStore.js ***!
@@ -3024,9 +3358,15 @@ const IpAddressDatatable = props => {
       value: status,
       onChange: event => handleStatusChange(event.target.value, id)
     }, options.map((item, i) => {
+      //if item value = locked the option will show but is nog selectable
+      let disabled = false;
+      if (item.value === 'locked') {
+        disabled = true;
+      }
       return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
         key: i,
-        value: item.value
+        value: item.value,
+        disabled: disabled
       }, item.label);
     }));
   }
@@ -3055,7 +3395,7 @@ const IpAddressDatatable = props => {
     type: "text",
     className: "rsssl-search-bar__input",
     placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Search", "really-simple-ssl"),
-    onChange: event => handleTableSearch(event.target.value, searchableColumns)
+    onChange: event => handleIpTableSearch(event.target.value, searchableColumns)
   })))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
     columns: columns,
     data: Object.values(data),
@@ -3075,6 +3415,318 @@ const IpAddressDatatable = props => {
   }));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (IpAddressDatatable);
+function buildColumn(column) {
+  return {
+    name: column.name,
+    sortable: column.sortable,
+    searchable: column.searchable,
+    width: column.width,
+    visible: column.visible,
+    column: column.column,
+    selector: row => row[column.column]
+  };
+}
+
+/***/ }),
+
+/***/ "./src/Settings/LimitLoginAttempts/UserDataTableStore.js":
+/*!***************************************************************!*\
+  !*** ./src/Settings/LimitLoginAttempts/UserDataTableStore.js ***!
+  \***************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/index.mjs");
+/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils/api */ "./src/utils/api.js");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var immer__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! immer */ "./node_modules/immer/dist/immer.esm.mjs");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
+/* Creates A Store For Risk Data using Zustand */
+
+
+
+
+
+const UserDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set, get) => ({
+  processing: false,
+  dataLoaded: false,
+  pagination: {},
+  dataActions: {},
+  UserDataTable: [],
+  fetchUserData: async action => {
+    try {
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction(action, get().dataActions);
+      //now we set the EventLog
+      if (response) {
+        set({
+          UserDataTable: response,
+          dataLoaded: true,
+          processing: false,
+          pagination: response.pagination
+        });
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  handleUserTableSearch: async (search, searchColumns) => {
+    //Add the search to the dataActions
+    set((0,immer__WEBPACK_IMPORTED_MODULE_4__.produce)(state => {
+      state.dataActions = {
+        ...state.dataActions,
+        search,
+        searchColumns
+      };
+    }));
+    get().fetchUserData('user_list');
+  },
+  handleUserTablePageChange: async (page, pageSize) => {
+    //Add the page and pageSize to the dataActions
+    set((0,immer__WEBPACK_IMPORTED_MODULE_4__.produce)(state => {
+      state.dataActions = {
+        ...state.dataActions,
+        page,
+        pageSize
+      };
+    }));
+    get().fetchUserData('user_list');
+  },
+  handleUserTableRowsChange: async (currentRowsPerPage, currentPage) => {
+    //Add the page and pageSize to the dataActions
+    set((0,immer__WEBPACK_IMPORTED_MODULE_4__.produce)(state => {
+      state.dataActions = {
+        ...state.dataActions,
+        currentRowsPerPage,
+        currentPage
+      };
+    }));
+    get().fetchUserData('user_list');
+  },
+  //this handles all pagination and sorting
+  handleUserTableSort: async (column, sortDirection) => {
+    //Add the column and sortDirection to the dataActions
+    set((0,immer__WEBPACK_IMPORTED_MODULE_4__.produce)(state => {
+      state.dataActions = {
+        ...state.dataActions,
+        sortColumn: column,
+        sortDirection
+      };
+    }));
+    get().fetchUserData('user_list');
+  },
+  handleUserTableFilter: async (column, filterValue) => {
+    console.log(filterValue);
+    //Add the column and sortDirection to the dataActions
+    set((0,immer__WEBPACK_IMPORTED_MODULE_4__.produce)(state => {
+      state.dataActions = {
+        ...state.dataActions,
+        filterColumn: column,
+        filterValue
+      };
+    }));
+    get().fetchUserData('user_list');
+  }
+}));
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (UserDataTableStore);
+
+/***/ }),
+
+/***/ "./src/Settings/LimitLoginAttempts/UserDatatable.js":
+/*!**********************************************************!*\
+  !*** ./src/Settings/LimitLoginAttempts/UserDatatable.js ***!
+  \**********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var react_data_table_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-data-table-component */ "./node_modules/react-data-table-component/dist/index.cjs.js");
+/* harmony import */ var _UserDataTableStore__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./UserDataTableStore */ "./src/Settings/LimitLoginAttempts/UserDataTableStore.js");
+/* harmony import */ var _FilterData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../FilterData */ "./src/Settings/FilterData.js");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__);
+
+
+
+
+
+
+
+
+const UserDatatable = props => {
+  const {
+    UserDataTable,
+    dataLoaded,
+    pagination,
+    dataActions,
+    handleUserTableRowsChange,
+    fetchUserData,
+    handleUserTableSort,
+    handleUserTablePageChange,
+    handleUserTableSearch,
+    handleUserTableFilter
+  } = (0,_UserDataTableStore__WEBPACK_IMPORTED_MODULE_4__["default"])();
+
+  //here we set the selectedFilter from the Settings group
+  const {
+    selectedFilter,
+    setSelectedFilter,
+    activeGroupId,
+    getCurrentFilter
+  } = (0,_FilterData__WEBPACK_IMPORTED_MODULE_5__["default"])();
+  const moduleName = 'rsssl-group-filter-limit_login_attempts_users';
+
+  //we create the columns
+  let columns = [];
+  //getting the fields from the props
+  let field = props.field;
+  //we loop through the fields
+  field.columns.forEach(function (item, i) {
+    let newItem = buildColumn(item);
+    columns.push(newItem);
+  });
+  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
+    const currentFilter = getCurrentFilter(moduleName);
+    if (!currentFilter) {
+      setSelectedFilter('all', moduleName);
+    }
+    handleUserTableFilter('status', currentFilter);
+  }, [selectedFilter, moduleName]);
+  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
+    if (!dataLoaded) {
+      fetchUserData(field.action);
+    }
+  });
+  const customStyles = {
+    headCells: {
+      style: {
+        paddingLeft: '0',
+        // override the cell padding for head cells
+        paddingRight: '0'
+      }
+    },
+    cells: {
+      style: {
+        paddingLeft: '0',
+        // override the cell padding for data cells
+        paddingRight: '0'
+      }
+    }
+  };
+  (0,react_data_table_component__WEBPACK_IMPORTED_MODULE_3__.createTheme)('really-simple-plugins', {
+    divider: {
+      default: 'transparent'
+    }
+  }, 'light');
+
+  //only show the datatable if the data is loaded
+  if (!dataLoaded && columns.length === 0 && UserDataTable.length === 0) {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-spinner"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-spinner__inner"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-spinner__icon"
+    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-spinner__text"
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Loading...", "really-simple-ssl"))));
+  }
+  let searchableColumns = [];
+  //setting the searchable columns
+  columns.map(column => {
+    if (column.searchable) {
+      searchableColumns.push(column.column);
+    }
+  });
+
+  //now we get the options for the select control
+  let options = props.field.options;
+  //we divide the key into label and the value into value
+  options = Object.entries(options).map(item => {
+    return {
+      label: item[1],
+      value: item[0]
+    };
+  });
+  function handleStatusChange(value, id) {}
+  //we convert the data to an array
+  let data = {
+    ...UserDataTable.data
+  };
+  function generateOptions(status, id) {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
+      className: "rsssl-select",
+      value: status,
+      onChange: event => handleStatusChange(event.target.value, id)
+    }, options.map((item, i) => {
+      let disabled = false;
+      if (item.value === 'locked') {
+        disabled = true;
+      }
+      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
+        key: i,
+        value: item.value,
+        disabled: disabled
+      }, item.label);
+    }));
+  }
+  for (const key in data) {
+    let dataItem = {
+      ...data[key]
+    };
+    dataItem.status = generateOptions(dataItem.status, dataItem.id);
+    data[key] = dataItem;
+  }
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-container"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-add-button"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-add-button__inner"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
+    className: "button button-secondary rsssl-add-button__button"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Add User", "really-simple-ssl")))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-search-bar"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-search-bar__inner"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-search-bar__icon"
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "text",
+    className: "rsssl-search-bar__input",
+    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Search", "really-simple-ssl"),
+    onChange: event => handleUserTableSearch(event.target.value, searchableColumns)
+  })))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    columns: columns,
+    data: Object.values(data),
+    dense: true,
+    pagination: true,
+    paginationServer: true,
+    paginationTotalRows: pagination.totalRows,
+    onChangeRowsPerPage: handleUserTableRowsChange,
+    onChangePage: handleUserTablePageChange,
+    sortServer: true,
+    onSort: handleUserTableSort,
+    paginationRowsPerPageOptions: [10, 25, 50, 100],
+    noDataComponent: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("No results", "really-simple-ssl"),
+    persistTableHead: true,
+    theme: "really-simple-plugins",
+    customStyles: customStyles
+  }));
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (UserDatatable);
 function buildColumn(column) {
   return {
     name: column.name,

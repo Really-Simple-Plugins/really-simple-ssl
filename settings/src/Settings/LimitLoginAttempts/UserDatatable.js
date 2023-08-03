@@ -1,29 +1,29 @@
 import {__} from '@wordpress/i18n';
 import React, {useEffect, useRef, useState} from 'react';
 import DataTable, {createTheme} from "react-data-table-component";
-import IpAddressDataTableStore from "./IpAddressDataTableStore";
+import UserDataTableStore from "./UserDataTableStore";
 import FilterData from "../FilterData";
 
 import {Button} from "@wordpress/components";
 import {produce} from "immer";
 
-const IpAddressDatatable = (props) => {
+const UserDatatable = (props) => {
     const {
-        IpDataTable,
+        UserDataTable,
         dataLoaded,
         pagination,
         dataActions,
-        handleIpTableRowsChange,
-        fetchIpData,
-        handleIpTableSort,
-        handleIpTablePageChange,
-        handleIpTableSearch,
-        handleIpTableFilter
-    } = IpAddressDataTableStore()
+        handleUserTableRowsChange,
+        fetchUserData,
+        handleUserTableSort,
+        handleUserTablePageChange,
+        handleUserTableSearch,
+        handleUserTableFilter
+    } = UserDataTableStore()
 
     //here we set the selectedFilter from the Settings group
     const {selectedFilter, setSelectedFilter, activeGroupId, getCurrentFilter} = FilterData();
-    const moduleName = 'rsssl-group-filter-limit_login_attempts_ip_address';
+    const moduleName = 'rsssl-group-filter-limit_login_attempts_users';
 
 
     //we create the columns
@@ -42,12 +42,12 @@ const IpAddressDatatable = (props) => {
         if (!currentFilter) {
             setSelectedFilter('all', moduleName);
         }
-        handleIpTableFilter('status', currentFilter);
+        handleUserTableFilter('status', currentFilter);
     }, [selectedFilter, moduleName]);
 
     useEffect(() => {
         if (!dataLoaded) {
-            fetchIpData(field.action);
+            fetchUserData(field.action);
         }
     });
 
@@ -73,7 +73,7 @@ const IpAddressDatatable = (props) => {
     }, 'light');
 
     //only show the datatable if the data is loaded
-    if (!dataLoaded && columns.length === 0 && IpDataTable.length === 0) {
+    if (!dataLoaded && columns.length === 0 && UserDataTable.length === 0) {
         return (
             <div className="rsssl-spinner">
                 <div className="rsssl-spinner__inner">
@@ -103,7 +103,7 @@ const IpAddressDatatable = (props) => {
 
     }
     //we convert the data to an array
-    let data = {...IpDataTable.data};
+    let data = {...UserDataTable.data};
 
     function generateOptions(status, id) {
         return (
@@ -113,7 +113,6 @@ const IpAddressDatatable = (props) => {
                 onChange={(event) => handleStatusChange(event.target.value, id)}
             >
                 {options.map((item, i) => {
-                    //if item value = locked the option will show but is nog selectable
                     let disabled = false;
                     if (item.value === 'locked') {
                         disabled = true;
@@ -135,6 +134,7 @@ const IpAddressDatatable = (props) => {
 
         data[key] = dataItem;
     }
+
     return (
         <>
             <div className="rsssl-container">
@@ -144,7 +144,7 @@ const IpAddressDatatable = (props) => {
                         <Button
                             className="button button-secondary rsssl-add-button__button"
                         >
-                            {__("Add IP Address", "really-simple-ssl")}
+                            {__("Add User", "really-simple-ssl")}
                         </Button>
                     </div>
                 </div>
@@ -156,7 +156,7 @@ const IpAddressDatatable = (props) => {
                             type="text"
                             className="rsssl-search-bar__input"
                             placeholder={__("Search", "really-simple-ssl")}
-                            onChange={event => handleIpTableSearch(event.target.value, searchableColumns)}
+                            onChange={event => handleUserTableSearch(event.target.value, searchableColumns)}
                         />
                     </div>
                 </div>
@@ -169,10 +169,10 @@ const IpAddressDatatable = (props) => {
                 pagination
                 paginationServer
                 paginationTotalRows={pagination.totalRows}
-                onChangeRowsPerPage={handleIpTableRowsChange}
-                onChangePage={handleIpTablePageChange}
+                onChangeRowsPerPage={handleUserTableRowsChange}
+                onChangePage={handleUserTablePageChange}
                 sortServer
-                onSort={handleIpTableSort}
+                onSort={handleUserTableSort}
                 paginationRowsPerPageOptions={[10, 25, 50, 100]}
                 noDataComponent={__("No results", "really-simple-ssl")}
                 persistTableHead
@@ -183,7 +183,7 @@ const IpAddressDatatable = (props) => {
     );
 
 }
-export default IpAddressDatatable;
+export default UserDatatable;
 
 function buildColumn(column) {
     return {

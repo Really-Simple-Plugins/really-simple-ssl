@@ -104,7 +104,7 @@ const DynamicDataTable = (props) => {
                         type="text"
                         className="rsssl-search-bar__input"
                         placeholder={__("Search", "really-simple-ssl")}
-                        onChange={event => handleTableSearch(event.target.value, searchableColumns)}
+                        onChange={event => handleEventTableSearch(event.target.value, searchableColumns)}
                     />
                 </div>
             </div>

@@ -30,6 +30,8 @@ import NotificationTester from "./RiskConfiguration/NotificationTester";
 import getAnchor from "../utils/getAnchor";
 import useMenu from "../Menu/MenuData";
 import DynamicDataTable from "./EventLog/DynamicDataTable";
+import UserDatatable from "./LimitLoginAttempts/UserDatatable";
+import CountryDatatable from "./LimitLoginAttempts/CountryDatatable";
 
 const Field = (props) => {
     let scrollAnchor = React.createRef();
@@ -356,6 +358,28 @@ const Field = (props) => {
         return (
             <div className={highLightClass} ref={scrollAnchor}>
                 <IpAddressDatatable
+                    field={props.field}
+                    action={props.field.action}
+                />
+            </div>
+        )
+    }
+
+    if (field.type === 'user-datatable') {
+        return (
+            <div className={highLightClass} ref={scrollAnchor}>
+                <UserDatatable
+                    field={props.field}
+                    action={props.field.action}
+                />
+            </div>
+        )
+    }
+
+    if (field.type === 'country-datatable') {
+        return (
+            <div className={highLightClass} ref={scrollAnchor}>
+                <CountryDatatable
                     field={props.field}
                     action={props.field.action}
                 />

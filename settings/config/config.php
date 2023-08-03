@@ -846,8 +846,13 @@ function rsssl_fields( $load_values = true ) {
             'id' => 'limit_login_attempts_users_view',
             'menu_id' => 'limit_login_attempts',
             'group_id' => 'limit_login_attempts_users',
-            'type' => 'dynamic-datatable',
-            'action' => 'event_log',
+            'type' => 'user-datatable',
+            'action' => 'user_list',
+            'options'   =>  [
+                'blocked' => __( 'Blocked', 'really-simple-ssl' ),
+                'locked' => __( 'Locked-out', 'really-simple-ssl' ),
+                'trusted' => __( 'Trusted', 'really-simple-ssl' ),
+            ],
             'disabled' => false,
             'default' => false,
             'react_conditions' => [
@@ -859,42 +864,33 @@ function rsssl_fields( $load_values = true ) {
             ],
             'columns'          => [
                 [
-                    'name'     => __( 'Date', 'really-simple-ssl' ),
-                    'sortable' => true,
-                    'column'   => 'datetime',
-                    'width'         => '5',
-                ],
-                [
-                    'name'     => __( 'Ip Address', 'really-simple-ssl' ),
-                    'sortable' => true,
-                    'searchable' => true,
-                    'column'   => 'source_ip',
-                    'width'    => '5%',
-                ],
-                [
                     'name'     => __( 'Users', 'really-simple-ssl' ),
                     'sortable' => true,
-                    'column'   => 'username',
-                    'searchable' => true,
-                    'type'   => 'text',
-                    'width'     => '10%',
+                    'column'   => 'attempt_value',
+                    'width'         => '15%',
                 ],
                 [
-                    'name' => __('Description', 'really-simple-ssl'),
+                    'name'  => __( 'Status', 'really-simple-ssl' ),
                     'sortable' => false,
-                    'column' => 'description',
-                    'width' => '25%',
+                    'column'   => 'status',
+                    'width'    => '20%',
+                ],
+                [
+                    'name'     => __( 'Last Login', 'really-simple-ssl' ),
+                    'sortable' => true,
+                    'column'   => 'datetime',
+                    'width'         => '20%',
                 ],
                 [
                     'name'     => __( 'Country', 'really-simple-ssl' ),
                     'sortable' => false,
-                    'column'   => 'action',
+                    'column'   => 'country',
                     'width'    => '5%',
                 ],
                 [
                     'name'     => __( 'API', 'really-simple-ssl' ),
                     'sortable' => false,
-                    'column'   => 'action',
+                    'column'   => 'api',
                     'width'    => '5%',
                 ],
 
@@ -1027,6 +1023,60 @@ function rsssl_fields( $load_values = true ) {
                     'column'   => 'action',
                     'width'    => '5%',
                 ]
+
+            ],
+        ],
+        [
+            'id' => 'limit_login_attempts_country_view',
+            'menu_id' => 'limit_login_attempts',
+            'group_id' => 'limit_login_attempts_country',
+            'type' => 'country-datatable',
+            'action' => 'country_list',
+            'options'   =>  [
+                'blocked' => __( 'Blocked', 'really-simple-ssl' ),
+                'locked' => __( 'Locked-out', 'really-simple-ssl' ),
+                'trusted' => __( 'Trusted', 'really-simple-ssl' ),
+            ],
+            'disabled' => false,
+            'default' => false,
+            'react_conditions' => [
+                'relation' => 'AND',
+                [
+                    'enable_limited_login_attempts' => true,
+                    'limit_login_attempts_confirm'  => true,
+                ]
+            ],
+            'columns'          => [
+                [
+                    'name'     => __( 'Country', 'really-simple-ssl' ),
+                    'sortable' => true,
+                    'column'   => 'country_name',
+                    'width'         => '15%',
+                ],
+                [
+                    'name'  => __( 'Region', 'really-simple-ssl' ),
+                    'sortable' => false,
+                    'column'   => 'region',
+                    'width'    => '20%',
+                ],
+                [
+                    'name'     => __( 'Action', 'really-simple-ssl' ),
+                    'sortable' => true,
+                    'column'   => 'action',
+                    'width'         => '20%',
+                ],
+                [
+                    'name'     => __( 'Users', 'really-simple-ssl' ),
+                    'sortable' => false,
+                    'column'   => 'users',
+                    'width'    => '5%',
+                ],
+                [
+                    'name'     => __( 'API', 'really-simple-ssl' ),
+                    'sortable' => false,
+                    'column'   => 'api',
+                    'width'    => '5%',
+                ],
 
             ],
         ],
