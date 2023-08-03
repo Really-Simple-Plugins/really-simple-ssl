@@ -4,9 +4,9 @@ Donate link: https://www.paypal.me/reallysimplessl
 Tags: SSL, https, force SSL, mixed content, security, secure website, website security, TLS, secure socket layers, HSTS
 Requires at least: 5.8
 License: GPL2
-Tested up to: 6.2
+Tested up to: 6.3
 Requires PHP: 7.2
-Stable tag: 7.0.7
+Stable tag: 7.0.8
 
 The easiest way to improve security! Leverage your SSL certificate and protect your website visitors.
 
@@ -110,6 +110,11 @@ The plugin checks your certificate before enabling, but if, for example, you mig
 If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions](https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/) instead.
 
 == Changelog ==
+
+= 7.0.8 =
+* August 8th 2023
+* Improvement: WordPress tested up to 6.3
+
 = 7.0.7 =
 * July 25th 2023
 * Improvement: modal icon placement in wizard on smaller screens
