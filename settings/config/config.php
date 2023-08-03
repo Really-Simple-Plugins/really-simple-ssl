@@ -1033,9 +1033,8 @@ function rsssl_fields( $load_values = true ) {
             'type' => 'country-datatable',
             'action' => 'country_list',
             'options'   =>  [
-                'blocked' => __( 'Blocked', 'really-simple-ssl' ),
-                'locked' => __( 'Locked-out', 'really-simple-ssl' ),
-                'trusted' => __( 'Trusted', 'really-simple-ssl' ),
+                'blocked' => __( 'Block', 'really-simple-ssl' ),
+                'trusted' => __( 'Allow', 'really-simple-ssl' ),
             ],
             'disabled' => false,
             'default' => false,
@@ -1048,22 +1047,30 @@ function rsssl_fields( $load_values = true ) {
             ],
             'columns'          => [
                 [
+                    'name'     => '',
+                    'sortable' => true,
+                    'column'   => 'iso2_code',
+                    'width'         => '2%',
+                ],
+                [
                     'name'     => __( 'Country', 'really-simple-ssl' ),
                     'sortable' => true,
+	                'searchable' => true,
                     'column'   => 'country_name',
-                    'width'         => '15%',
+                    'width'         => '18%',
                 ],
                 [
                     'name'  => __( 'Region', 'really-simple-ssl' ),
-                    'sortable' => false,
+                    'sortable' => true,
+	                'searchable' => true,
                     'column'   => 'region',
-                    'width'    => '20%',
+                    'width'    => '15%',
                 ],
                 [
                     'name'     => __( 'Action', 'really-simple-ssl' ),
                     'sortable' => true,
                     'column'   => 'action',
-                    'width'         => '20%',
+                    'width'         => '40%',
                 ],
                 [
                     'name'     => __( 'Users', 'really-simple-ssl' ),

@@ -1,5 +1,5 @@
 "use strict";
-(globalThis["webpackChunkreally_simple_ssl"] = globalThis["webpackChunkreally_simple_ssl"] || []).push([["src_Dashboard_DashboardPage_js"],{
+(self["webpackChunkreally_simple_ssl"] = self["webpackChunkreally_simple_ssl"] || []).push([["src_Dashboard_DashboardPage_js"],{
 
 /***/ "./src/Dashboard/DashboardPage.js":
 /*!****************************************!*\
@@ -347,7 +347,7 @@ const OtherPluginsHeader = () => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "AnimatedPercentage": () => (/* binding */ AnimatedPercentage),
+/* harmony export */   AnimatedPercentage: () => (/* binding */ AnimatedPercentage),
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
@@ -2902,7 +2902,7 @@ const Icon = props => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "getRelativeTime": () => (/* binding */ getRelativeTime)
+/* harmony export */   getRelativeTime: () => (/* binding */ getRelativeTime)
 /* harmony export */ });
 /**
  Takes a relative date and an optional date parameter, and returns a human-readable string representing the difference between the two dates.

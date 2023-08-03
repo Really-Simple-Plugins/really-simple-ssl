@@ -1,5 +1,5 @@
 "use strict";
-(globalThis["webpackChunkreally_simple_ssl"] = globalThis["webpackChunkreally_simple_ssl"] || []).push([["src_Modal_Modal_js"],{
+(self["webpackChunkreally_simple_ssl"] = self["webpackChunkreally_simple_ssl"] || []).push([["src_Modal_Modal_js"],{
 
 /***/ "./src/Modal/Modal.js":
 /*!****************************!*\

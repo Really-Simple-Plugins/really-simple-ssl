@@ -246,7 +246,7 @@ function rsssl_menu()
                                     ],
                                 ],
                             ],
-                            'title'    => __('Event Log', 'really-simple-ssl'),
+                            'title'    => __('Countries', 'really-simple-ssl'),
                             'intro'    => __('Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna.',
                                 'really-simple-ssl'),
                             'premium_text' => __('Get Limit Login Attempts with %sReally Simple SSL Pro%s',

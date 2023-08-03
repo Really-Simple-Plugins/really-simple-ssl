@@ -3,9 +3,10 @@ import React, {useEffect, Countryef, useState} from 'react';
 import DataTable, {createTheme} from "react-data-table-component";
 import CountryDataTableStore from "./CountryDataTableStore";
 import FilterData from "../FilterData";
-
+import Flag from "../../Flag/Flag";
 import {Button} from "@wordpress/components";
 import {produce} from "immer";
+import Icon from "../../utils/Icon";
 
 const CountryDatatable = (props) => {
     const {
@@ -105,13 +106,17 @@ const CountryDatatable = (props) => {
     //we convert the data to an array
     let data = {...CountryDataTable.data};
 
-    function generateOptions(status, id) {
+    function generateOptions(status, id, name = '') {
         return (
-            <select
-                className="rsssl-select"
-                value={status}
-                onChange={(event) => handleStatusChange(event.target.value, id)}
-            >
+            <div>
+                            <select
+                                className="rsssl-select"
+                                value={status}
+                                onChange={(event) => handleStatusChange(event.target.value, id)}
+                                style={{
+                                    width: '100%!important',
+                                }}
+                            >
                 {options.map((item, i) => {
                     let disabled = false;
                     if (item.value === 'locked') {
@@ -119,48 +124,69 @@ const CountryDatatable = (props) => {
                     }
                     return (
                         <option key={i} value={item.value} disabled={disabled}>
-                            {item.label}
+                            {item.label} {name}
                         </option>
                     );
                 })}
             </select>
+            </div>
+
         );
+    }
+
+    function generateFlag(flag, title) {
+        console.log(flag);
+        return (
+            <>
+                <Flag
+                    countryCode={flag}
+                    style={{
+                        fontSize: '2em',
+                        marginLeft: '0.3em',
+                    }}
+                    title={title}
+                ></Flag>
+            </>
+
+        )
+    }
+
+    function generateGoodBad(value) {
+        console.log(value);
+        if (value > 0) {
+            return (
+                <Icon name="circle-check" color='green'/>
+            )
+        } else {
+            return (
+                <Icon name="circle-times" color='red'/>
+            )
+        }
     }
 
     for (const key in data) {
         let dataItem = {...data[key]}
-
-        dataItem.status = generateOptions(dataItem.status, dataItem.id);
+        dataItem.action = generateOptions(dataItem.action, dataItem.id, dataItem.country_name);
+        dataItem.iso2_code = generateFlag(dataItem.iso2_code, dataItem.country_name);
+        dataItem.users = generateGoodBad(dataItem.users);
+        dataItem.api = generateGoodBad(dataItem.api);
 
         data[key] = dataItem;
     }
 
     return (
-        <>
-            <div className="rsssl-container">
-                {/*display the add button on left side*/}
-                <div className="rsssl-add-button">
-                    <div className="rsssl-add-button__inner">
-                        <Button
-                            className="button button-secondary rsssl-add-button__button"
-                        >
-                            {__("Add Country", "really-simple-ssl")}
-                        </Button>
-                    </div>
-                </div>
-                {/*Display the search bar*/}
-                <div className="rsssl-search-bar">
-                    <div className="rsssl-search-bar__inner">
-                        <div className="rsssl-search-bar__icon"></div>
-                        <input
-                            type="text"
-                            className="rsssl-search-bar__input"
-                            placeholder={__("Search", "really-simple-ssl")}
-                            onChange={event => handleCountryTableSearch(event.target.value, searchableColumns)}
-                        />
-                    </div>
-                </div>
+        <><div className="rsssl-search-bar">
+            <div className="rsssl-search-bar__inner">
+                <div className="rsssl-search-bar__icon"></div>
+                <input
+                    type="text"
+                    className="rsssl-search-bar__input"
+                    placeholder={__("Search", "really-simple-ssl")}
+                    onChange={event => handleCountryTableSearch(event.target.value, searchableColumns)}
+                />
             </div>
+        </div>
+
             {/*Display the datatable*/}
             <DataTable
                 columns={columns}

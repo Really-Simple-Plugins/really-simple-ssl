@@ -1,5 +1,5 @@
 "use strict";
-(globalThis["webpackChunkreally_simple_ssl"] = globalThis["webpackChunkreally_simple_ssl"] || []).push([["src_Onboarding_OnboardingModal_js"],{
+(self["webpackChunkreally_simple_ssl"] = self["webpackChunkreally_simple_ssl"] || []).push([["src_Onboarding_OnboardingModal_js"],{
 
 /***/ "./src/Dashboard/Progress/ProgressData.js":
 /*!************************************************!*\
@@ -1485,7 +1485,7 @@ const Icon = props => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "useFirstMountState": () => (/* binding */ useFirstMountState)
+/* harmony export */   useFirstMountState: () => (/* binding */ useFirstMountState)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
