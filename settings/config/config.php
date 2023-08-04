@@ -392,6 +392,23 @@ function rsssl_fields( $load_values = true ) {
 			'disabled' => false,
 			'default'  => false,
 		],
+		[
+			'id'       => 'block_admin_creation',
+			'menu_id'  => 'hardening',
+			'group_id' => 'hardening_extended',
+			'type'     => 'checkbox',
+			'warning'  => __( "WARNING: This setting will restrict assigning the administrator role to the native user profile function of Wordpress. Making a user administrator by using third party plugins will most likely result in the user being demoted to subscriber. If you need to need to make a user administrator in a third party plugin, temporarily disable this setting while you make the change.", 'really-simple-ssl' ),
+			'tooltip'  => __( "This will block attempts of creating administrators outside of the native user creation process by WordPress. This might include other plugins that create, edit or assigns roles to users.", 'really-simple-ssl' ),
+			'help'               => [
+				'label' => 'default',
+				'url'   => 'https://really-simple-ssl.com/instructions/about-hardening-features/',
+				'title' => __( "Unauthorized administrators", 'really-simple-ssl' ),
+				'text'  => __( 'Many vulnerabilities are exploited by injecting a user with administrator capabilities outside of the native WordPress creation process. Under advanced hardening you can prevent this from happening.', 'really-simple-ssl' ),
+			],
+			'label'    => __( "Restrict creation of administrator roles", 'really-simple-ssl' ),
+			'disabled' => false,
+			'default'  => false,
+		],
         [
             'id'       => 'change_login_url_enabled',
             'menu_id'  => 'hardening',
