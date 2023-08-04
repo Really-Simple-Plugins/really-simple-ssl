@@ -179,7 +179,7 @@ function rsssl_menu() {
 							'premium'              => true,
 							'premium_text'         => __( "Get Upgrade Insecure Requests with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
 							'upgrade'              => 'https://really-simple-ssl.com/pro/?mtm_campaign=upgradeinsecurerequests&mtm_source=free&mtm_content=upgrade',
-							'helpLink'             => 'https://really-simple-ssl.com/instructions/upgrade-insecure-requests/?mtm_campaign=instructions&mtm_source=free',
+							'helpLink'             => 'https://really-simple-ssl.com/instructions/configuring-the-content-security-policy/?mtm_campaign=instructions&mtm_source=free',
 							'title'                => 'Upgrade Insecure Requests',
 						],
 						[

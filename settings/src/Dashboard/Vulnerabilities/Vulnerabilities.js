@@ -37,7 +37,7 @@ const Vulnerabilities = () => {
         const v = (vulnerabilities === 1) ? __("vulnerability", "really-simple-ssl") : __("vulnerabilities", "really-simple-ssl");
         setVulnerabilityWord(v);
         const u = (updates === 1) ? __("update", "really-simple-ssl") : __("updates", "really-simple-ssl");
-        const s = _n('You have 1 update pending', 'You have %s updates pending', updates, 'really-simple-ssl').replace('%s', updates);
+        const s = _n('You have %s update pending', 'You have %s updates pending', updates, 'really-simple-ssl').replace('%s', updates);
         setUpdateWord(u);
         setUpdateWordCapitalized(u.charAt(0).toUpperCase() + u.slice(1));
         setUpdateString(s);
