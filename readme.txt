@@ -114,6 +114,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 = 7.0.8 =
 * August 8th 2023
 * Improvement: WordPress tested up to 6.3
+* Improvement: improve file existence check json
 
 = 7.0.7 =
 * July 25th 2023
