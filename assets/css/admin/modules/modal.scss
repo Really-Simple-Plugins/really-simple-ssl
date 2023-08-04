@@ -11,7 +11,7 @@
 }
 
 .rsssl-modal {
-  width: clamp(300px, 75ch, 100vw - 50px);
+  width: clamp(300px, 75ch, 60vw);
   height: max-content;
   position: absolute;
   z-index: 9999;//ensure the modal is over the WP menu in the sidebar.
