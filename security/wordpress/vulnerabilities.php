@@ -777,20 +777,39 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	        if ( ! rsssl_admin_logged_in() ) {
 		        return null;
 	        }
-            //now we check if the file remotely exists and then log an error if it does not.
-            $headers = get_headers($url);
-            if (strpos($headers[0], '200')) {
-                //file exists, download it
-                $json = file_get_contents($url);
 
+            //now we check if the file remotely exists and then log an error if it does not.
+            if ($this->remote_file_exists($url)) {
+                $json = file_get_contents( $url );
                 return json_decode($json);
             }
-            if ( defined('WP_DEBUG') && WP_DEBUG ) {
+
+	        if ( defined('WP_DEBUG') && WP_DEBUG ) {
                 error_log('Could not download file from ' . $url);
             }
 
-            return null;
+	        return null;
         }
+
+	    private function remote_file_exists($url): bool {
+		    try {
+			    $headers = @get_headers($url);
+			    if ($headers === false) {
+				    // URL is not accessible or some error occurred
+				    return false;
+			    }
+
+			    // Check if the HTTP status code starts with "200" (indicating success)
+			    return strpos($headers[0], '200') !== false;
+			    // Rest of your code handling $headers goes here
+		    } catch (Exception $e) {
+                if ( defined('WP_DEBUG') && WP_DEBUG ) {
+                    error_log('Could not check if file exists: ' . $e->getMessage());
+                }
+			    return false;
+            }
+
+	    }
 
         /**
          * Stores a full core or component file in the upload folder
@@ -1450,16 +1469,16 @@ if (!class_exists("rsssl_vulnerabilities")) {
         public function get_warning_string( string $risk_level, int $count): string {
             switch ($risk_level){
                 case 'c':
-                    $warning = sprintf(_n('You have 1 critical vulnerability', 'You have %s critical vulnerabilities', $count, 'really-simple-ssl'), $count);
+                    $warning = sprintf(_n('You have %s critical vulnerability', 'You have %s critical vulnerabilities', $count, 'really-simple-ssl'), $count);
                     break;
                 case 'h':
-                    $warning = sprintf(_n('You have 1 high-risk vulnerability', 'You have %s high-risk vulnerabilities', $count, 'really-simple-ssl'), $count);
+                    $warning = sprintf(_n('You have %s high-risk vulnerability', 'You have %s high-risk vulnerabilities', $count, 'really-simple-ssl'), $count);
                     break;
                 case 'm':
-                    $warning = sprintf(_n('You have 1 medium-risk vulnerability', 'You have %s medium-risk vulnerabilities', $count, 'really-simple-ssl'), $count);
+                    $warning = sprintf(_n('You have %s medium-risk vulnerability', 'You have %s medium-risk vulnerabilities', $count, 'really-simple-ssl'), $count);
                     break;
                 default:
-	                $warning = sprintf(_n('You have 1 low-risk vulnerability', 'You have %s low-risk vulnerabilities', $count, 'really-simple-ssl'), $count);
+	                $warning = sprintf(_n('You have %s low-risk vulnerability', 'You have %s low-risk vulnerabilities', $count, 'really-simple-ssl'), $count);
                     break;
             }
             return $warning;
