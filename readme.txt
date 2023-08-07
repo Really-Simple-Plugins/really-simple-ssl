@@ -117,7 +117,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 * Improvement: WordPress tested up to 6.3
 * Improvement: improve file existence check json
 * Fix: handling of legacy options in php 8.1
-* Fix: vount remaining tasks
+* Fix: count remaining tasks
 
 = 7.0.7 =
 * July 25th 2023
