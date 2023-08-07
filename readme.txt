@@ -113,8 +113,11 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 
 = 7.0.8 =
 * August 8th 2023
+* New: Advanced hardening: block admin creation
 * Improvement: WordPress tested up to 6.3
 * Improvement: improve file existence check json
+* Fix: handling of legacy options in php 8.1
+* Fix: vount remaining tasks
 
 = 7.0.7 =
 * July 25th 2023
