@@ -43,6 +43,7 @@ Isolate your website from unnecessary file loading and exchanges with third-part
 * Rename and randomize your database prefix.
 * Change the debug.log file location to a non-public folder
 * Disable application passwords.
+* Control admin creation
 * Disable HTTP methods, reducing HTTP requests.
 
 === Vulnerability Measures ===
