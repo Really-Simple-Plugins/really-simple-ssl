@@ -233,12 +233,12 @@ function rsssl_menu()
                                 'id'      => 'limit_login_attempts_advanced_filter',
                                 'options' => [
                                     [
-                                        'id'    => 'trusted',
-                                        'title' => __('Trusted', 'really-simple-ssl'),
+                                        'id'    => 'allow',
+                                        'title' => __('Allowed', 'really-simple-ssl'),
                                     ],
                                     [
                                         'id'    => 'blocked',
-                                        'title' => __('blocked', 'really-simple-ssl'),
+                                        'title' => __('Blocked', 'really-simple-ssl'),
                                     ],
                                     [
                                         'id'    => 'all',

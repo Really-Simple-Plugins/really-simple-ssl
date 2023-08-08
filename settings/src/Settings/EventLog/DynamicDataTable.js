@@ -1,10 +1,12 @@
 import {__} from '@wordpress/i18n';
 import React, {useEffect, useState, useRef} from 'react';
-import DataTable, {createTheme} from "react-data-table-component";
+import DataTable, {createTheme, ExpanderComponentProps} from "react-data-table-component";
 import DynamicDataTableStore from "./DynamicDataTableStore";
 import FilterData from "../FilterData";
 import * as rsssl_api from "../../utils/api";
 import useMenu from "../../Menu/MenuData";
+import Flag from "../../Flag/Flag";
+import Icon from "../../utils/Icon";
 
 const DynamicDataTable = (props) => {
     const {
@@ -23,7 +25,6 @@ const DynamicDataTable = (props) => {
     const moduleName = 'rsssl-group-filter-limit_login_attempts_event_log';
     //here we set the selectedFilter from the Settings group
     const {selectedFilter, setSelectedFilter, activeGroupId, getCurrentFilter} = FilterData();
-
 
 
     useEffect(() => {
@@ -92,6 +93,93 @@ const DynamicDataTable = (props) => {
             searchableColumns.push(column.column);
         }
     });
+    let data = [];
+
+    if (DynamicDataTable.data) {
+        data = DynamicDataTable.data.map((dataItem) => {
+            let newItem = {...dataItem};
+            newItem.iso2_code = generateFlag(newItem.iso2_code, 'Netherlands');
+            newItem.expandableRows = true;
+            return newItem;
+        });
+    }
+
+    //we convert DynamicDataTable to an array
+
+
+    //we generate an expandable row
+    const ExpandableRow = ({data}) => {
+        let code, icon, color = '';
+        switch (data.severity) {
+            case 'warning':
+                code = 'rsssl-warning';
+                icon = 'circle-times';
+                color = 'red';
+                break;
+                case 'informational':
+                code = 'rsssl-primary';
+                icon = 'info';
+                color = 'black';
+                break;
+
+
+            default:
+                code = 'rsssl-primary';
+        }
+
+        return (
+            <div className={"rsssl-wizard-help-notice " + code}
+                 style={{padding: '1em', borderRadius: '5px'}}>
+                {/*now we place a block to the rightcorner with the severity*/}
+                <div style={{float: 'right'}}>
+                    <Icon name={icon} color={color}/>
+                </div>
+                <div style={{fontSize: '1em', fontWeight: 'bold'}}>{data.severity}</div>
+                <div>{data.description}</div>
+            </div>
+        );
+    };
+
+
+    function generateFlag(flag, title) {
+        return (
+            <>
+                <Flag
+                    countryCode={flag}
+                    style={{
+                        fontSize: '2em',
+                        marginLeft: '0.3em',
+                    }}
+                    title={title}
+                ></Flag>
+            </>
+
+        )
+    }
+
+    function generateGoodBad(value) {
+        ``
+        if (value > 0) {
+            return (
+                <Icon name="circle-check" color='green'/>
+            )
+        } else {
+            return (
+                <Icon name="circle-times" color='red'/>
+            )
+        }
+    }
+
+    // for (const key in data) {
+    //     let dataItem = {...data[key]}
+    //
+    //     dataItem.iso2_code = generateFlag(dataItem.iso2_code, 'Netherlands');
+    //     //we add the expandable row
+    //     dataItem.expandableRows = true;
+    //     // dataItem.api = generateGoodBad(dataItem.api);
+    //
+    //     data[key] = dataItem;
+    // }
 
 
     return (
@@ -111,16 +199,28 @@ const DynamicDataTable = (props) => {
             {/*Display the datatable*/}
             <DataTable
                 columns={columns}
-                data={DynamicDataTable.data}
+                data={data}
                 dense
                 pagination
                 paginationServer
                 paginationTotalRows={pagination.totalRows}
+                paginationPerPage={pagination.perPage}
+                paginationDefaultPage={pagination.currentPage}
+                paginationComponentOptions={{
+                    rowsPerPageText: __('Rows per page:', 'really-simple-ssl'),
+                    rangeSeparatorText: __('of', 'really-simple-ssl'),
+                    noRowsPerPage: false,
+                    selectAllRowsItem: false,
+                    selectAllRowsItemText: __('All', 'really-simple-ssl'),
+
+                }}
                 onChangeRowsPerPage={handleEventTableRowsChange}
                 onChangePage={handleEventTablePageChange}
+                expandableRows
+                expandableRowsComponent={ExpandableRow}
                 sortServer
                 onSort={handleEventTableSort}
-                paginationRowsPerPageOptions={[10, 25, 50, 100]}
+                paginationRowsPerPageOptions={[5, 10, 25, 50, 100]}
                 noDataComponent={__("No results", "really-simple-ssl")}
                 persistTableHead
                 theme="really-simple-plugins"

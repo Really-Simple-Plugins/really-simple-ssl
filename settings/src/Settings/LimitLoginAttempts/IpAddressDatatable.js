@@ -6,6 +6,9 @@ import FilterData from "../FilterData";
 
 import {Button} from "@wordpress/components";
 import {produce} from "immer";
+import Flag from "../../Flag/Flag";
+import Icon from "../../utils/Icon";
+import CidrCalculator from "./CidrCalculator";
 
 const IpAddressDatatable = (props) => {
     const {
@@ -128,15 +131,48 @@ const IpAddressDatatable = (props) => {
         );
     }
 
+    function generateFlag(flag, title) {
+        return (
+            <>
+                <Flag
+                    countryCode={flag}
+                    style={{
+                        fontSize: '2em',
+                        marginLeft: '0.3em',
+                    }}
+                    title={title}
+                ></Flag>
+            </>
+
+        )
+    }
+
+    function generateGoodBad(value) {``
+        if (value > 0) {
+            return (
+                <Icon name="circle-check" color='green'/>
+            )
+        } else {
+            return (
+                <Icon name="circle-times" color='red'/>
+            )
+        }
+    }
+
     for (const key in data) {
         let dataItem = {...data[key]}
 
         dataItem.status = generateOptions(dataItem.status, dataItem.id);
+        dataItem.iso2_code = generateFlag('NL', 'Netherlands');
+        dataItem.api = generateGoodBad(dataItem.api);
 
         data[key] = dataItem;
     }
     return (
         <>
+            <div className="rsssl-container">
+                <CidrCalculator/>
+            </div>
             <div className="rsssl-container">
                 {/*display the add button on left side*/}
                 <div className="rsssl-add-button">

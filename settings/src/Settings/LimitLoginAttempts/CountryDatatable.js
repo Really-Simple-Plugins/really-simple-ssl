@@ -106,7 +106,7 @@ const CountryDatatable = (props) => {
     //we convert the data to an array
     let data = {...CountryDataTable.data};
 
-    function generateOptions(status, id, name = '') {
+    function generateOptions(status, id, name = '', region = '') {
         return (
             <div>
                             <select
@@ -122,9 +122,13 @@ const CountryDatatable = (props) => {
                     if (item.value === 'locked') {
                         disabled = true;
                     }
+                    let displayValue = name;
+                    if (item.value.startsWith('region')) {
+                        displayValue = region;
+                    }
                     return (
                         <option key={i} value={item.value} disabled={disabled}>
-                            {item.label} {name}
+                            {item.label} {displayValue}
                         </option>
                     );
                 })}
@@ -135,7 +139,6 @@ const CountryDatatable = (props) => {
     }
 
     function generateFlag(flag, title) {
-        console.log(flag);
         return (
             <>
                 <Flag
@@ -151,8 +154,7 @@ const CountryDatatable = (props) => {
         )
     }
 
-    function generateGoodBad(value) {
-        console.log(value);
+    function generateGoodBad(value) {``
         if (value > 0) {
             return (
                 <Icon name="circle-check" color='green'/>
@@ -166,7 +168,7 @@ const CountryDatatable = (props) => {
 
     for (const key in data) {
         let dataItem = {...data[key]}
-        dataItem.action = generateOptions(dataItem.action, dataItem.id, dataItem.country_name);
+        dataItem.action = generateOptions(dataItem.action, dataItem.id, dataItem.country_name, dataItem.region);
         dataItem.iso2_code = generateFlag(dataItem.iso2_code, dataItem.country_name);
         dataItem.users = generateGoodBad(dataItem.users);
         dataItem.api = generateGoodBad(dataItem.api);

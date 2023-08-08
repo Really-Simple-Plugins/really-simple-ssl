@@ -66,7 +66,6 @@ const IpAddressDataTableStore = create((set, get) => ({
     },
 
     handleIpTableFilter: async (column, filterValue) => {
-        console.log(filterValue);
         //Add the column and sortDirection to the dataActions
         set(produce((state) => {
                 state.dataActions = {...state.dataActions, filterColumn: column, filterValue};

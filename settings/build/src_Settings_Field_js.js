@@ -18091,6 +18091,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _FilterData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../FilterData */ "./src/Settings/FilterData.js");
 /* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../utils/api */ "./src/utils/api.js");
 /* harmony import */ var _Menu_MenuData__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../Menu/MenuData */ "./src/Menu/MenuData.js");
+/* harmony import */ var _Flag_Flag__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../Flag/Flag */ "./src/Flag/Flag.js");
+/* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../utils/Icon */ "./src/utils/Icon.js");
+
+
 
 
 
@@ -18183,6 +18187,98 @@ const DynamicDataTable = props => {
       searchableColumns.push(column.column);
     }
   });
+  let data = [];
+  if (DynamicDataTable.data) {
+    data = DynamicDataTable.data.map(dataItem => {
+      let newItem = {
+        ...dataItem
+      };
+      newItem.iso2_code = generateFlag(newItem.iso2_code, 'Netherlands');
+      newItem.expandableRows = true;
+      return newItem;
+    });
+  }
+
+  //we convert DynamicDataTable to an array
+
+  //we generate an expandable row
+  const ExpandableRow = _ref => {
+    let {
+      data
+    } = _ref;
+    let code,
+      icon,
+      color = '';
+    switch (data.severity) {
+      case 'warning':
+        code = 'rsssl-warning';
+        icon = 'circle-times';
+        color = 'red';
+        break;
+      case 'informational':
+        code = 'rsssl-primary';
+        icon = 'info';
+        color = 'black';
+        break;
+      default:
+        code = 'rsssl-primary';
+    }
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-wizard-help-notice " + code,
+      style: {
+        padding: '1em',
+        borderRadius: '5px'
+      }
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      style: {
+        float: 'right'
+      }
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_9__["default"], {
+      name: icon,
+      color: color
+    })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      style: {
+        fontSize: '1em',
+        fontWeight: 'bold'
+      }
+    }, data.severity), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, data.description));
+  };
+  function generateFlag(flag, title) {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Flag_Flag__WEBPACK_IMPORTED_MODULE_8__["default"], {
+      countryCode: flag,
+      style: {
+        fontSize: '2em',
+        marginLeft: '0.3em'
+      },
+      title: title
+    }));
+  }
+  function generateGoodBad(value) {
+    ``;
+    if (value > 0) {
+      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_9__["default"], {
+        name: "circle-check",
+        color: "green"
+      });
+    } else {
+      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_9__["default"], {
+        name: "circle-times",
+        color: "red"
+      });
+    }
+  }
+
+  // for (const key in data) {
+  //     let dataItem = {...data[key]}
+  //
+  //     dataItem.iso2_code = generateFlag(dataItem.iso2_code, 'Netherlands');
+  //     //we add the expandable row
+  //     dataItem.expandableRows = true;
+  //     // dataItem.api = generateGoodBad(dataItem.api);
+  //
+  //     data[key] = dataItem;
+  // }
+
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-search-bar"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -18196,16 +18292,27 @@ const DynamicDataTable = props => {
     onChange: event => handleEventTableSearch(event.target.value, searchableColumns)
   }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
     columns: columns,
-    data: DynamicDataTable.data,
+    data: data,
     dense: true,
     pagination: true,
     paginationServer: true,
     paginationTotalRows: pagination.totalRows,
+    paginationPerPage: pagination.perPage,
+    paginationDefaultPage: pagination.currentPage,
+    paginationComponentOptions: {
+      rowsPerPageText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Rows per page:', 'really-simple-ssl'),
+      rangeSeparatorText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('of', 'really-simple-ssl'),
+      noRowsPerPage: false,
+      selectAllRowsItem: false,
+      selectAllRowsItemText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('All', 'really-simple-ssl')
+    },
     onChangeRowsPerPage: handleEventTableRowsChange,
     onChangePage: handleEventTablePageChange,
+    expandableRows: true,
+    expandableRowsComponent: ExpandableRow,
     sortServer: true,
     onSort: handleEventTableSort,
-    paginationRowsPerPageOptions: [10, 25, 50, 100],
+    paginationRowsPerPageOptions: [5, 10, 25, 50, 100],
     noDataComponent: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("No results", "really-simple-ssl"),
     persistTableHead: true,
     theme: "really-simple-plugins",
@@ -19398,6 +19505,130 @@ const License = props => {
 
 /***/ }),
 
+/***/ "./src/Settings/LimitLoginAttempts/CidrCalculator.js":
+/*!***********************************************************!*\
+  !*** ./src/Settings/LimitLoginAttempts/CidrCalculator.js ***!
+  \***********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+
+
+function CidrCalculator() {
+  const [oct0, setOct0] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(0);
+  const [oct1, setOct1] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(0);
+  const [oct2, setOct2] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(0);
+  const [oct3, setOct3] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(0);
+  const [prefix, setPrefix] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(24);
+  const [startRange, setStartRange] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)("");
+  const [endRange, setEndRange] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)("");
+  const updateFromRange = () => {
+    const [startIp, prefixValue] = startRange.split('/');
+    const [o0, o1, o2, o3] = startIp.split('.');
+    if (prefixValue) {
+      setOct0(oct0);
+      setOct1(oct1);
+      setOct2(oct2);
+      setOct3(oct3);
+      setPrefix(Number(prefixValue)); // Make sure prefixValue is a number
+    } else {
+      console.error("Invalid CIDR format");
+    }
+  };
+  const calculateClass = () => {
+    if (prefix >= 8 && prefix <= 15) return "A";else if (prefix >= 16 && prefix <= 23) return "B";else if (prefix >= 24 && prefix <= 30) return "C";else return "";
+  };
+
+  // The rest of your functions (e.g., calculateClass, IPBinary, etc.) remain the same
+
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "row center"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "col s12 m12 l12"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "card"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "card-content"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "card-title"
+  }, "IP Subnet Calculator"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "divider"
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("br", null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    placeholder: "Start IP Range",
+    value: startRange,
+    onChange: e => setStartRange(e.target.value),
+    style: {
+      width: '150px'
+    }
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    placeholder: "End IP Range",
+    value: endRange,
+    onChange: e => setEndRange(e.target.value),
+    style: {
+      width: '150px'
+    }
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    onClick: updateFromRange
+  }, "Update from Range"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "divider"
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("br", null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    value: oct0,
+    onChange: e => setOct0(e.target.value),
+    type: "number",
+    min: "0",
+    max: "255",
+    style: {
+      width: '50px'
+    }
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    value: oct1,
+    onChange: e => setOct1(e.target.value),
+    type: "number",
+    min: "0",
+    max: "255",
+    style: {
+      width: '50px'
+    }
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    value: oct2,
+    onChange: e => setOct2(e.target.value),
+    type: "number",
+    min: "0",
+    max: "255",
+    style: {
+      width: '50px'
+    }
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    value: oct3,
+    onChange: e => setOct3(e.target.value),
+    type: "number",
+    min: "0",
+    max: "255",
+    style: {
+      width: '50px'
+    }
+  }), "/ ", (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    value: prefix,
+    onChange: e => setPrefix(e.target.value),
+    type: "number",
+    min: "0",
+    max: "32",
+    style: {
+      width: '50px'
+    }
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("br", null), "Class: ", calculateClass(), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("br", null)))));
+}
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (CidrCalculator);
+
+/***/ }),
+
 /***/ "./src/Settings/LimitLoginAttempts/CountryDataTableStore.js":
 /*!******************************************************************!*\
   !*** ./src/Settings/LimitLoginAttempts/CountryDataTableStore.js ***!
@@ -19489,7 +19720,6 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((s
     get().fetchCountryData('country_list');
   },
   handleCountryTableFilter: async (column, filterValue) => {
-    console.log(filterValue);
     //Add the column and sortDirection to the dataActions
     set((0,immer__WEBPACK_IMPORTED_MODULE_4__.produce)(state => {
       state.dataActions = {
@@ -19640,6 +19870,7 @@ const CountryDatatable = props => {
   };
   function generateOptions(status, id) {
     let name = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';
+    let region = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : '';
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
       className: "rsssl-select",
       value: status,
@@ -19652,15 +19883,18 @@ const CountryDatatable = props => {
       if (item.value === 'locked') {
         disabled = true;
       }
+      let displayValue = name;
+      if (item.value.startsWith('region')) {
+        displayValue = region;
+      }
       return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
         key: i,
         value: item.value,
         disabled: disabled
-      }, item.label, " ", name);
+      }, item.label, " ", displayValue);
     })));
   }
   function generateFlag(flag, title) {
-    console.log(flag);
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Flag_Flag__WEBPACK_IMPORTED_MODULE_6__["default"], {
       countryCode: flag,
       style: {
@@ -19671,7 +19905,7 @@ const CountryDatatable = props => {
     }));
   }
   function generateGoodBad(value) {
-    console.log(value);
+    ``;
     if (value > 0) {
       return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_8__["default"], {
         name: "circle-check",
@@ -19688,7 +19922,7 @@ const CountryDatatable = props => {
     let dataItem = {
       ...data[key]
     };
-    dataItem.action = generateOptions(dataItem.action, dataItem.id, dataItem.country_name);
+    dataItem.action = generateOptions(dataItem.action, dataItem.id, dataItem.country_name, dataItem.region);
     dataItem.iso2_code = generateFlag(dataItem.iso2_code, dataItem.country_name);
     dataItem.users = generateGoodBad(dataItem.users);
     dataItem.api = generateGoodBad(dataItem.api);
@@ -19829,7 +20063,6 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
     get().fetchIpData('ip_list');
   },
   handleIpTableFilter: async (column, filterValue) => {
-    console.log(filterValue);
     //Add the column and sortDirection to the dataActions
     set((0,immer__WEBPACK_IMPORTED_MODULE_4__.produce)(state => {
       state.dataActions = {
@@ -19866,6 +20099,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _FilterData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../FilterData */ "./src/Settings/FilterData.js");
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _Flag_Flag__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../Flag/Flag */ "./src/Flag/Flag.js");
+/* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../utils/Icon */ "./src/utils/Icon.js");
+/* harmony import */ var _CidrCalculator__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./CidrCalculator */ "./src/Settings/LimitLoginAttempts/CidrCalculator.js");
+
+
+
 
 
 
@@ -19992,14 +20231,42 @@ const IpAddressDatatable = props => {
       }, item.label);
     }));
   }
+  function generateFlag(flag, title) {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Flag_Flag__WEBPACK_IMPORTED_MODULE_7__["default"], {
+      countryCode: flag,
+      style: {
+        fontSize: '2em',
+        marginLeft: '0.3em'
+      },
+      title: title
+    }));
+  }
+  function generateGoodBad(value) {
+    ``;
+    if (value > 0) {
+      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_8__["default"], {
+        name: "circle-check",
+        color: "green"
+      });
+    } else {
+      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_8__["default"], {
+        name: "circle-times",
+        color: "red"
+      });
+    }
+  }
   for (const key in data) {
     let dataItem = {
       ...data[key]
     };
     dataItem.status = generateOptions(dataItem.status, dataItem.id);
+    dataItem.iso2_code = generateFlag('NL', 'Netherlands');
+    dataItem.api = generateGoodBad(dataItem.api);
     data[key] = dataItem;
   }
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-container"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_CidrCalculator__WEBPACK_IMPORTED_MODULE_9__["default"], null)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-container"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-add-button"
@@ -20142,7 +20409,6 @@ const UserDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set,
     get().fetchUserData('user_list');
   },
   handleUserTableFilter: async (column, filterValue) => {
-    console.log(filterValue);
     //Add the column and sortDirection to the dataActions
     set((0,immer__WEBPACK_IMPORTED_MODULE_4__.produce)(state => {
       state.dataActions = {
