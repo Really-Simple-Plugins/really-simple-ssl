@@ -1011,7 +1011,7 @@ function rsssl_fields( $load_values = true ) {
                     'column'   => 'user',
                 ],
                 [
-                    'name'     => __( 'Status', 'really-simple-ssl' ),
+                    'name'     => __( 'Action', 'really-simple-ssl' ),
                     'sortable' => false,
                     'searchable' => false,
                     'visible' => true,
@@ -1025,7 +1025,7 @@ function rsssl_fields( $load_values = true ) {
                     'column'   => 'user_role',
                 ],
                 [
-                    'name'     => __( 'E-mail status', 'really-simple-ssl' ),
+                    'name'     => __( 'Status', 'really-simple-ssl' ),
                     'sortable' => false,
                     'searchable' => false,
                     'visible' => true,

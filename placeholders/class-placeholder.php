@@ -11,6 +11,11 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
 
 			add_filter( "rsssl_run_test", array( $this, 'mixed_content_scan' ), 9, 3 );
 			add_filter( 'rsssl_do_action', array( $this, 'learningmode_table_data' ), 10, 3 );
+
+			if ( defined('rsssl_pro_path' ) ) {
+//				add_filter( 'rsssl_do_action', array( $this, 'two_factor_users_data' ), 11, 3 );
+			}
+
 			self::$_this = $this;
 
 		}
@@ -289,6 +294,68 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
 			return [ 'data' => $data, 'progress' => 80, 'state' => 'stop', 'action' => '', 'nonce' => wp_create_nonce( 'fix_mixed_content' ) ];
 		}
 
+		/**
+		 * @return void
+		 *
+		 * Dummy data for two factor Email block
+		 */
+		public function two_factor_email_data() {
+
+		}
+
+
+		/**
+		 * @return array
+		 *
+		 * Dummy data for two factor Users block
+		 */
+		public function two_factor_users_data( array $response, string $action, $data ) {
+
+			if ( $action == 'two_fa_table' ) {
+
+				$response['data'] = [
+					[
+						'id'                  => 1,
+						'user'                => 'User1',
+						'rsssl_two_fa_method' => 'Email',
+						'user_role'           => 'Administrator',
+						'status_for_user'     => 'Enabled'
+					],
+					[
+						'id'                  => 2,
+						'user'                => 'User2',
+						'rsssl_two_fa_method' => 'Open',
+						'user_role'           => 'Editor',
+						'status_for_user'     => 'Open'
+					],
+					[
+						'id'                  => 3,
+						'user'                => 'User3',
+						'rsssl_two_fa_method' => 'Disabled',
+						'user_role'           => 'Subscriber',
+						'status_for_user'     => 'Disabled'
+					],
+					[
+						'id'                  => 4,
+						'user'                => 'User4',
+						'rsssl_two_fa_method' => 'Email',
+						'user_role'           => 'Contributor',
+						'status_for_user'     => 'Enabled'
+					],
+					[
+						'id'                  => 5,
+						'user'                => 'User5',
+						'rsssl_two_fa_method' => 'Open',
+						'user_role'           => 'Author',
+						'status_for_user'     => 'Open'
+					],
+				];
+
+			}
+
+			return $response;
+
+		}
 
 	}
 }
