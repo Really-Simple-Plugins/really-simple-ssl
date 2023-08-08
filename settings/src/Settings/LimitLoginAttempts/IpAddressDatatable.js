@@ -3,7 +3,6 @@ import React, {useEffect, useRef, useState} from 'react';
 import DataTable, {createTheme} from "react-data-table-component";
 import IpAddressDataTableStore from "./IpAddressDataTableStore";
 import FilterData from "../FilterData";
-
 import {Button} from "@wordpress/components";
 import {produce} from "immer";
 import Flag from "../../Flag/Flag";
@@ -26,9 +25,10 @@ const IpAddressDatatable = (props) => {
 
     //here we set the selectedFilter from the Settings group
     const {selectedFilter, setSelectedFilter, activeGroupId, getCurrentFilter} = FilterData();
+    const [addingIpAddress, setAddingIpAddress] = useState(false);
+
+
     const moduleName = 'rsssl-group-filter-limit_login_attempts_ip_address';
-
-
     //we create the columns
     let columns = [];
     //getting the fields from the props
@@ -87,6 +87,8 @@ const IpAddressDatatable = (props) => {
         );
     }
 
+
+
     let searchableColumns = [];
     //setting the searchable columns
     columns.map(column => {
@@ -102,11 +104,13 @@ const IpAddressDatatable = (props) => {
         return {label: item[1], value: item[0]};
     });
 
+
     function handleStatusChange(value, id) {
 
     }
     //we convert the data to an array
     let data = {...IpDataTable.data};
+
 
     function generateOptions(status, id) {
         return (
@@ -168,17 +172,57 @@ const IpAddressDatatable = (props) => {
 
         data[key] = dataItem;
     }
+
+    function handleAddClick() {
+        setAddingIpAddress(true);
+    }
+
+    function handleCancel() {
+        // Reset the state
+        setAddingIpAddress(false);
+        // Remove the temporary row
+        delete data[0];
+        // Restore the original data
+        data[0] = data[0.5];
+    }
+
+    function handleSubmit(newIp) {
+        // Validate and add the new IP address here
+        // ...
+
+        // Reset the state
+        setAddingIpAddress(false);
+    }
+
+    if (addingIpAddress) {
+        data[0.5] = data[0];
+
+        data[0] = {
+            // Your temporary row's data here, e.g.,
+            attempt_value:
+                <input
+                    type="text"
+                    placeholder="Enter IP Address"
+                    // ... other attributes here ...
+                />,
+            status: generateOptions('locked', 0),
+            iso2_code: <button onClick={handleCancel}>Cancel</button>,
+            datetime: <CidrCalculator/>,
+            api: <button>Save</button>,
+        };
+    }
+
+
+
     return (
         <>
-            <div className="rsssl-container">
-                <CidrCalculator/>
-            </div>
             <div className="rsssl-container">
                 {/*display the add button on left side*/}
                 <div className="rsssl-add-button">
                     <div className="rsssl-add-button__inner">
                         <Button
                             className="button button-secondary rsssl-add-button__button"
+                            onClick={handleAddClick}
                         >
                             {__("Add IP Address", "really-simple-ssl")}
                         </Button>

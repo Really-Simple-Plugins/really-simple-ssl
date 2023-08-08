@@ -19521,110 +19521,44 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
 
 
-function CidrCalculator() {
-  const [oct0, setOct0] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(0);
-  const [oct1, setOct1] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(0);
-  const [oct2, setOct2] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(0);
-  const [oct3, setOct3] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(0);
-  const [prefix, setPrefix] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(24);
-  const [startRange, setStartRange] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)("");
-  const [endRange, setEndRange] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)("");
-  const updateFromRange = () => {
-    const [startIp, prefixValue] = startRange.split('/');
-    const [o0, o1, o2, o3] = startIp.split('.');
-    if (prefixValue) {
-      setOct0(oct0);
-      setOct1(oct1);
-      setOct2(oct2);
-      setOct3(oct3);
-      setPrefix(Number(prefixValue)); // Make sure prefixValue is a number
-    } else {
-      console.error("Invalid CIDR format");
+const CidrCalculator = () => {
+  const [lowestIP, setLowestIP] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)("");
+  const [highestIP, setHighestIP] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)("");
+  const [cidrNotation, setCidrNotation] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)("");
+  const ipToNumber = ip => ip.split(".").reduce((acc, cur) => (acc << 8) + parseInt(cur, 10), 0);
+  const cidrFromIPRange = () => {
+    //first we check if the IP's are valid
+    if (!lowestIP || !highestIP) {
+      alert("Please enter a valid IP address");
+      return;
     }
-  };
-  const calculateClass = () => {
-    if (prefix >= 8 && prefix <= 15) return "A";else if (prefix >= 16 && prefix <= 23) return "B";else if (prefix >= 24 && prefix <= 30) return "C";else return "";
-  };
+    if (ipToNumber(lowestIP) > ipToNumber(highestIP)) {
+      alert("Lowest IP address should be lower than highest IP address");
+      return;
+    }
+    const lowIPNumber = ipToNumber(lowestIP);
+    const highIPNumber = ipToNumber(highestIP);
 
-  // The rest of your functions (e.g., calculateClass, IPBinary, etc.) remain the same
-
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "row center"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "col s12 m12 l12"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "card"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "card-content"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-    className: "card-title"
-  }, "IP Subnet Calculator"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "divider"
-  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("br", null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-    placeholder: "Start IP Range",
-    value: startRange,
-    onChange: e => setStartRange(e.target.value),
-    style: {
-      width: '150px'
+    // Find the prefix length (subnet mask) by counting common bits
+    let prefixLength = 32;
+    while ((lowIPNumber & 1 << 32 - prefixLength) === (highIPNumber & 1 << 32 - prefixLength)) {
+      prefixLength -= 1;
     }
-  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-    placeholder: "End IP Range",
-    value: endRange,
-    onChange: e => setEndRange(e.target.value),
-    style: {
-      width: '150px'
-    }
-  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-    onClick: updateFromRange
-  }, "Update from Range"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "divider"
-  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("br", null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-    value: oct0,
-    onChange: e => setOct0(e.target.value),
-    type: "number",
-    min: "0",
-    max: "255",
-    style: {
-      width: '50px'
-    }
-  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-    value: oct1,
-    onChange: e => setOct1(e.target.value),
-    type: "number",
-    min: "0",
-    max: "255",
-    style: {
-      width: '50px'
-    }
-  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-    value: oct2,
-    onChange: e => setOct2(e.target.value),
-    type: "number",
-    min: "0",
-    max: "255",
-    style: {
-      width: '50px'
-    }
-  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-    value: oct3,
-    onChange: e => setOct3(e.target.value),
-    type: "number",
-    min: "0",
-    max: "255",
-    style: {
-      width: '50px'
-    }
-  }), "/ ", (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-    value: prefix,
-    onChange: e => setPrefix(e.target.value),
-    type: "number",
-    min: "0",
-    max: "32",
-    style: {
-      width: '50px'
-    }
-  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("br", null), "Class: ", calculateClass(), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("br", null)))));
-}
+    const cidr = `${lowestIP}/${prefixLength}`;
+    setCidrNotation(cidr);
+  };
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, "Lowest IP Address:"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "text",
+    value: lowestIP,
+    onChange: e => setLowestIP(e.target.value)
+  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, "Highest IP Address:"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "text",
+    value: highestIP,
+    onChange: e => setHighestIP(e.target.value)
+  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    onClick: cidrFromIPRange
+  }, "Calculate CIDR"), cidrNotation && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, "CIDR Notation: ", cidrNotation));
+};
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (CidrCalculator);
 
 /***/ }),
@@ -20134,8 +20068,8 @@ const IpAddressDatatable = props => {
     activeGroupId,
     getCurrentFilter
   } = (0,_FilterData__WEBPACK_IMPORTED_MODULE_5__["default"])();
+  const [addingIpAddress, setAddingIpAddress] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(false);
   const moduleName = 'rsssl-group-filter-limit_login_attempts_ip_address';
-
   //we create the columns
   let columns = [];
   //getting the fields from the props
@@ -20264,16 +20198,51 @@ const IpAddressDatatable = props => {
     dataItem.api = generateGoodBad(dataItem.api);
     data[key] = dataItem;
   }
+  function handleAddClick() {
+    setAddingIpAddress(true);
+  }
+  function handleCancel() {
+    // Reset the state
+    setAddingIpAddress(false);
+    // Remove the temporary row
+    delete data[0];
+    // Restore the original data
+    data[0] = data[0.5];
+  }
+  function handleSubmit(newIp) {
+    // Validate and add the new IP address here
+    // ...
+
+    // Reset the state
+    setAddingIpAddress(false);
+  }
+  if (addingIpAddress) {
+    data[0.5] = data[0];
+    data[0] = {
+      // Your temporary row's data here, e.g.,
+      attempt_value: (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+        type: "text",
+        placeholder: "Enter IP Address"
+        // ... other attributes here ...
+      }),
+
+      status: generateOptions('locked', 0),
+      iso2_code: (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+        onClick: handleCancel
+      }, "Cancel"),
+      datetime: (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_CidrCalculator__WEBPACK_IMPORTED_MODULE_9__["default"], null),
+      api: (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", null, "Save")
+    };
+  }
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-container"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_CidrCalculator__WEBPACK_IMPORTED_MODULE_9__["default"], null)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-container"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-add-button"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-add-button__inner"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
-    className: "button button-secondary rsssl-add-button__button"
+    className: "button button-secondary rsssl-add-button__button",
+    onClick: handleAddClick
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Add IP Address", "really-simple-ssl")))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-search-bar"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
