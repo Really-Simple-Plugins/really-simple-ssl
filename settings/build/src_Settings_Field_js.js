@@ -19932,6 +19932,9 @@ __webpack_require__.r(__webpack_exports__);
 const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set, get) => ({
   processing: false,
   dataLoaded: false,
+  ipAddress: '',
+  statusSelected: '',
+  idSelected: '',
   pagination: {},
   dataActions: {},
   IpDataTable: [],
@@ -20006,6 +20009,56 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
       };
     }));
     get().fetchIpData('ip_list');
+  },
+  setIpAddress: ipAddress => {
+    set({
+      ipAddress
+    });
+  },
+  setStatusSelected: statusSelected => {
+    set({
+      statusSelected
+    });
+  },
+  setId: idSelected => {
+    set({
+      idSelected
+    });
+  },
+  updateRow: async (id, status) => {
+    set({
+      processing: true
+    });
+    try {
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('ip_update_row', {
+        id,
+        status
+      });
+      //now we set the EventLog
+      if (response) {
+        get().fetchIpData('ip_list');
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  addRow: async (ipAddress, status) => {
+    console.log(ipAddress, status);
+    set({
+      processing: true
+    });
+    try {
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('ip_add_ip_address', {
+        ipAddress,
+        status
+      });
+      //now we set the EventLog
+      if (response) {
+        get().fetchIpData('ip_list');
+      }
+    } catch (e) {
+      console.log(e);
+    }
   }
 }));
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (IpAddressDataTableStore);
@@ -20058,7 +20111,14 @@ const IpAddressDatatable = props => {
     handleIpTableSort,
     handleIpTablePageChange,
     handleIpTableSearch,
-    handleIpTableFilter
+    handleIpTableFilter,
+    ipAddress,
+    updateRow,
+    statusSelected,
+    setIpAddress,
+    setStatusSelected,
+    setIdSelected,
+    idSelected
   } = (0,_IpAddressDataTableStore__WEBPACK_IMPORTED_MODULE_4__["default"])();
 
   //here we set the selectedFilter from the Settings group
@@ -20142,12 +20202,25 @@ const IpAddressDatatable = props => {
       value: item[0]
     };
   });
-  function handleStatusChange(value, id) {}
+  function handleStatusChange(value, id) {
+    //if the id is not 'new' we update the row
+    if (id !== 'new') {
+      updateRow(id, value);
+    } else {
+      console.log(value);
+      //if the id is 'new' we set the statusSelected
+      setStatusSelected(value);
+    }
+  }
   //we convert the data to an array
   let data = {
     ...IpDataTable.data
   };
   function generateOptions(status, id) {
+    //if the there is no id we set it to new
+    if (!id) {
+      id = 'new';
+    }
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
       className: "rsssl-select",
       value: status,
@@ -20175,6 +20248,7 @@ const IpAddressDatatable = props => {
       title: title
     }));
   }
+  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {}, []);
   function generateGoodBad(value) {
     ``;
     if (value > 0) {
@@ -20222,11 +20296,12 @@ const IpAddressDatatable = props => {
       // Your temporary row's data here, e.g.,
       attempt_value: (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
         type: "text",
-        placeholder: "Enter IP Address"
+        placeholder: "Enter IP Address",
+        value: ipAddress
         // ... other attributes here ...
       }),
 
-      status: generateOptions('locked', 0),
+      status: generateOptions(statusSelected, 'new'),
       iso2_code: (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
         onClick: handleCancel
       }, "Cancel"),

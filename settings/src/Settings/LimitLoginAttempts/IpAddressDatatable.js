@@ -20,13 +20,19 @@ const IpAddressDatatable = (props) => {
         handleIpTableSort,
         handleIpTablePageChange,
         handleIpTableSearch,
-        handleIpTableFilter
+        handleIpTableFilter,
+        ipAddress,
+        updateRow,
+        statusSelected,
+        setIpAddress,
+        setStatusSelected,
+        setIdSelected,
+        idSelected,
     } = IpAddressDataTableStore()
 
     //here we set the selectedFilter from the Settings group
     const {selectedFilter, setSelectedFilter, activeGroupId, getCurrentFilter} = FilterData();
     const [addingIpAddress, setAddingIpAddress] = useState(false);
-
 
     const moduleName = 'rsssl-group-filter-limit_login_attempts_ip_address';
     //we create the columns
@@ -106,13 +112,24 @@ const IpAddressDatatable = (props) => {
 
 
     function handleStatusChange(value, id) {
-
+        //if the id is not 'new' we update the row
+        if (id !== 'new') {
+            updateRow(id, value);
+        } else {
+            console.log(value);
+            //if the id is 'new' we set the statusSelected
+            setStatusSelected(value);
+        }
     }
     //we convert the data to an array
     let data = {...IpDataTable.data};
 
 
     function generateOptions(status, id) {
+        //if the there is no id we set it to new
+        if (!id) {
+            id = 'new';
+        }
         return (
             <select
                 className="rsssl-select"
@@ -125,6 +142,7 @@ const IpAddressDatatable = (props) => {
                     if (item.value === 'locked') {
                         disabled = true;
                     }
+
                     return (
                         <option key={i} value={item.value} disabled={disabled}>
                             {item.label}
@@ -150,6 +168,10 @@ const IpAddressDatatable = (props) => {
 
         )
     }
+
+    useEffect(() => {
+
+    },[])
 
     function generateGoodBad(value) {``
         if (value > 0) {
@@ -203,9 +225,10 @@ const IpAddressDatatable = (props) => {
                 <input
                     type="text"
                     placeholder="Enter IP Address"
+                    value={ipAddress}
                     // ... other attributes here ...
                 />,
-            status: generateOptions('locked', 0),
+            status: generateOptions(statusSelected, 'new'),
             iso2_code: <button onClick={handleCancel}>Cancel</button>,
             datetime: <CidrCalculator/>,
             api: <button>Save</button>,

@@ -9,6 +9,9 @@ const IpAddressDataTableStore = create((set, get) => ({
 
     processing: false,
     dataLoaded: false,
+    ipAddress: '',
+    statusSelected: '',
+    idSelected: '',
     pagination: {},
     dataActions: {},
     IpDataTable: [],
@@ -73,6 +76,53 @@ const IpAddressDataTableStore = create((set, get) => ({
         );
         get().fetchIpData('ip_list');
     },
+
+    setIpAddress: (ipAddress) => {
+        set({ipAddress});
+    },
+
+    setStatusSelected: (statusSelected) => {
+        set({statusSelected});
+    },
+
+    setId: (idSelected) => {
+        set({idSelected});
+    },
+
+    updateRow: async (id, status) => {
+        set({processing: true});
+        try {
+            const response = await rsssl_api.doAction(
+                'ip_update_row',
+                {id, status}
+            );
+            //now we set the EventLog
+            if (response) {
+                get().fetchIpData('ip_list');
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    },
+
+    addRow: async (ipAddress, status) => {
+        console.log(ipAddress, status);
+        set({processing: true});
+        try {
+            const response = await rsssl_api.doAction(
+                'ip_add_ip_address',
+                {ipAddress, status}
+            );
+            //now we set the EventLog
+            if (response) {
+                get().fetchIpData('ip_list');
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+
 
 }));
 
