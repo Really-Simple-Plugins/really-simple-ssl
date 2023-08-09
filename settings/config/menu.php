@@ -232,7 +232,7 @@ function rsssl_menu() {
                             'premium_text'         => __( "Get Login Protection with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
                             'helpLink' => 'https://really-simple-ssl.com/instructions/two-factor-authentication',
                             'title'    => __( 'General', 'really-simple-ssl' ),
-                            'intro'    => __( 'Improving password and login management is crucial for login protection, which is a significant cause of security breaches. We recommend using verification steps for account access by all users.', 'really-simple-ssl' ),
+                            'intro'    => __( 'Bad password and login management is the number one cause for account theft. Enhance login security per user role to prevent account theft.', 'really-simple-ssl' ),
                         ],
                         [
                             'id'       => 'two_fa_email',
@@ -248,7 +248,7 @@ function rsssl_menu() {
                             'premium_text'         => __( "Get Login Protection with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
                             'helpLink' => 'https://really-simple-ssl.com/instructions/two-factor-authentication',
                             'title'    => __( 'Users', 'really-simple-ssl' ),
-                            'intro'    => __( 'This is an overview of users on your website. You can force actions per user and track their status.', 'really-simple-ssl' ),
+                            'intro'    => __( 'Here you can see which users have enabled two-step login, or change the status per user.', 'really-simple-ssl' ),
                         ],
                     ],
 

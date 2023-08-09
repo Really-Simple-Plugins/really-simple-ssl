@@ -12,8 +12,9 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
 			add_filter( "rsssl_run_test", array( $this, 'mixed_content_scan' ), 9, 3 );
 			add_filter( 'rsssl_do_action', array( $this, 'learningmode_table_data' ), 10, 3 );
 
-			if ( defined('rsssl_pro_path' ) ) {
-//				add_filter( 'rsssl_do_action', array( $this, 'two_factor_users_data' ), 11, 3 );
+			if ( ! class_exists('REALLY_SIMPLE_SSL_PRO' ) ) {
+				error_log("Not defined by why?");
+				add_filter( 'rsssl_do_action', array( $this, 'two_factor_users_data' ), 11, 3 );
 			}
 
 			self::$_this = $this;

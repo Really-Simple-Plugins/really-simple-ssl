@@ -1590,11 +1590,11 @@ const DynamicDataTable = props => {
     };
     if (newColumn.name === 'Action') {
       newColumn.cell = row => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
-        value: twoFAMethods[row.id] || 'open',
+        value: twoFAMethods[row.id],
         onChange: event => handleTwoFAMethodChange(row.id, event.target.value)
       }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
         value: "open"
-      }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Open", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
+      }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Choose", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
         value: "disabled"
       }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Disabled", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
         value: "email"

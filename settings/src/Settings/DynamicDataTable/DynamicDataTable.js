@@ -98,12 +98,13 @@ const DynamicDataTable = (props) => {
         };
 
         if (newColumn.name === 'Action') {
+
             newColumn.cell = row => (
                 <select
-                    value={twoFAMethods[row.id] || 'open'}
+                    value={twoFAMethods[row.id]}
                     onChange={event => handleTwoFAMethodChange(row.id, event.target.value)}
                 >
-                    <option value="open">{__("Open", "really-simple-ssl")}</option>
+                    <option value="open">{__("Choose", "really-simple-ssl")}</option>
                     <option value="disabled">{__("Disabled", "really-simple-ssl")}</option>
                     <option value="email">Email</option>
                 </select>

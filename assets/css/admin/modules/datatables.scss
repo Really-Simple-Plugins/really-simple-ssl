@@ -138,9 +138,10 @@ nav.rdt_Pagination>div>svg {
 .rsssl-search-bar__inner {
   display: flex;
   align-items: center;
-  background-color: gray;
   border-radius: 3px;
   transition: background-color 0.3s ease;
+  margin-right: 16px;
+  margin-top: 16px;
 }
 
 .rsssl-search-bar__inner:focus-within {
