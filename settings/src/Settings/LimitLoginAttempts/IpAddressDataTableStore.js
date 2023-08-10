@@ -5,12 +5,17 @@ import {__} from "@wordpress/i18n";
 import {produce} from "immer";
 import React from "react";
 
+
+
 const IpAddressDataTableStore = create((set, get) => ({
 
     processing: false,
     dataLoaded: false,
     ipAddress: '',
+    highestIP: '',
+    lowestIP: '',
     statusSelected: '',
+    inputRangeValidated: false,
     idSelected: '',
     pagination: {},
     dataActions: {},
@@ -120,8 +125,70 @@ const IpAddressDataTableStore = create((set, get) => ({
         } catch (e) {
             console.log(e);
         }
-    }
+    },
 
+    setIpRange: (ipAddress) => {
+
+    },
+
+
+    validateIpv4: (ip) => {
+        const parts = ip.split(".");
+        if (parts.length !== 4) return false;
+        for (let part of parts) {
+            const num = parseInt(part, 10);
+            if (isNaN(num) || num < 0 || num > 255) return false;
+        }
+        return true;
+    },
+
+    validateIpv6: (ip) => {
+        const parts = ip.split(":");
+        if (parts.length !== 8) return false;
+        for (let part of parts) {
+            if (part.length > 4 || !/^[0-9a-fA-F]+$/.test(part)) return false;
+        }
+        return true;
+    },
+
+    ipToNumber: (ip) => {
+        if (get().validateIpv4(ip)) {
+            return get().ipV4ToNumber(ip);
+        } else if (get().validateIpv6(ip)) {
+            return get().ipV6ToNumber(ip);
+        }
+    },
+
+    ipV4ToNumber: (ip) => {
+        return ip.split(".").reduce((acc, cur) => (acc << 8) + parseInt(cur, 10), 0);
+    },
+
+    ipV6ToNumber: (ip) => {
+        return ip.split(":").reduce((acc, cur) => (acc << 16) + parseInt(cur, 16), 0);
+    },
+
+
+
+    validateIpRange: (lowest, highest) => {
+        //first we determine if the IP is ipv4 or ipv6
+        if (lowest && highest) {
+            if (get().validateIpv4(lowest) && get().validateIpv4(highest)) {
+                //now we check if the lowest is lower than the highest
+                if (get().ipToNumber(lowest) > get().ipToNumber(highest)) {
+                    set({inputRangeValidated: false});
+                    return;
+                }
+                set({inputRangeValidated: true});
+            } else if (get().validateIpv6(lowest) && get().validateIpv6(highest)) {
+                //now we check if the lowest is lower than the highest
+                if (get().ipToNumber(lowest) > get().ipToNumber(highest)) {
+                    set({inputRangeValidated: false});
+                    return;
+                }
+                set({inputRangeValidated: true});
+            }
+        }
+    }
 
 
 }));

@@ -19505,6 +19505,69 @@ const License = props => {
 
 /***/ }),
 
+/***/ "./src/Settings/LimitLoginAttempts/Cidr.js":
+/*!*************************************************!*\
+  !*** ./src/Settings/LimitLoginAttempts/Cidr.js ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _IpAddressDataTableStore__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./IpAddressDataTableStore */ "./src/Settings/LimitLoginAttempts/IpAddressDataTableStore.js");
+
+
+
+const Cidr = () => {
+  const [lowestIP, setLowestIP] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)("");
+  const [highestIP, setHighestIP] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)("");
+  const {
+    setIpAddress,
+    validateIpRange,
+    setIpRange
+  } = (0,_IpAddressDataTableStore__WEBPACK_IMPORTED_MODULE_2__["default"])();
+
+  //if the lowestIP or highestIP is changed, we validate the IP range
+  (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
+    if (lowestIP || highestIP) {
+      validateIpRange(lowestIP, highestIP);
+    }
+  }, [lowestIP, highestIP]);
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-ip-address-input"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-ip-address-input__inner"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-ip-address-input__icon"
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    id: "lowestIP",
+    type: "text",
+    className: "rsssl-ip-address-input__input",
+    placeholder: "Enter IP range start",
+    value: lowestIP,
+    onChange: e => setLowestIP(e.target.value)
+  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-ip-address-input__inner"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-ip-address-input__icon"
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    id: "highestIP",
+    type: "text",
+    className: "rsssl-ip-address-input__input",
+    placeholder: "Enter IP range end",
+    value: highestIP,
+    onChange: e => setHighestIP(e.target.value)
+  }))));
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Cidr);
+
+/***/ }),
+
 /***/ "./src/Settings/LimitLoginAttempts/CidrCalculator.js":
 /*!***********************************************************!*\
   !*** ./src/Settings/LimitLoginAttempts/CidrCalculator.js ***!
@@ -19519,12 +19582,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _IpAddressDataTableStore__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./IpAddressDataTableStore */ "./src/Settings/LimitLoginAttempts/IpAddressDataTableStore.js");
+
 
 
 const CidrCalculator = () => {
   const [lowestIP, setLowestIP] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)("");
   const [highestIP, setHighestIP] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)("");
   const [cidrNotation, setCidrNotation] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)("");
+  const {
+    setIpAddress
+  } = (0,_IpAddressDataTableStore__WEBPACK_IMPORTED_MODULE_2__["default"])();
   const ipToNumber = ip => ip.split(".").reduce((acc, cur) => (acc << 8) + parseInt(cur, 10), 0);
   const cidrFromIPRange = () => {
     //first we check if the IP's are valid
@@ -19546,6 +19614,7 @@ const CidrCalculator = () => {
     }
     const cidr = `${lowestIP}/${prefixLength}`;
     setCidrNotation(cidr);
+    setIpAddress(cidr);
   };
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, "Lowest IP Address:"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
     type: "text",
@@ -19557,7 +19626,7 @@ const CidrCalculator = () => {
     onChange: e => setHighestIP(e.target.value)
   })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
     onClick: cidrFromIPRange
-  }, "Calculate CIDR"), cidrNotation && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, "CIDR Notation: ", cidrNotation));
+  }, "Set CIDR"));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (CidrCalculator);
 
@@ -19933,7 +20002,10 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
   processing: false,
   dataLoaded: false,
   ipAddress: '',
+  highestIP: '',
+  lowestIP: '',
   statusSelected: '',
+  inputRangeValidated: false,
   idSelected: '',
   pagination: {},
   dataActions: {},
@@ -20059,6 +20131,65 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
     } catch (e) {
       console.log(e);
     }
+  },
+  setIpRange: ipAddress => {},
+  validateIpv4: ip => {
+    const parts = ip.split(".");
+    if (parts.length !== 4) return false;
+    for (let part of parts) {
+      const num = parseInt(part, 10);
+      if (isNaN(num) || num < 0 || num > 255) return false;
+    }
+    return true;
+  },
+  validateIpv6: ip => {
+    const parts = ip.split(":");
+    if (parts.length !== 8) return false;
+    for (let part of parts) {
+      if (part.length > 4 || !/^[0-9a-fA-F]+$/.test(part)) return false;
+    }
+    return true;
+  },
+  ipToNumber: ip => {
+    if (get().validateIpv4(ip)) {
+      return get().ipV4ToNumber(ip);
+    } else if (get().validateIpv6(ip)) {
+      return get().ipV6ToNumber(ip);
+    }
+  },
+  ipV4ToNumber: ip => {
+    return ip.split(".").reduce((acc, cur) => (acc << 8) + parseInt(cur, 10), 0);
+  },
+  ipV6ToNumber: ip => {
+    return ip.split(":").reduce((acc, cur) => (acc << 16) + parseInt(cur, 16), 0);
+  },
+  validateIpRange: (lowest, highest) => {
+    //first we determine if the IP is ipv4 or ipv6
+    if (lowest && highest) {
+      if (get().validateIpv4(lowest) && get().validateIpv4(highest)) {
+        //now we check if the lowest is lower than the highest
+        if (get().ipToNumber(lowest) > get().ipToNumber(highest)) {
+          set({
+            inputRangeValidated: false
+          });
+          return;
+        }
+        set({
+          inputRangeValidated: true
+        });
+      } else if (get().validateIpv6(lowest) && get().validateIpv6(highest)) {
+        //now we check if the lowest is lower than the highest
+        if (get().ipToNumber(lowest) > get().ipToNumber(highest)) {
+          set({
+            inputRangeValidated: false
+          });
+          return;
+        }
+        set({
+          inputRangeValidated: true
+        });
+      }
+    }
   }
 }));
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (IpAddressDataTableStore);
@@ -20089,6 +20220,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Flag_Flag__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../Flag/Flag */ "./src/Flag/Flag.js");
 /* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../utils/Icon */ "./src/utils/Icon.js");
 /* harmony import */ var _CidrCalculator__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./CidrCalculator */ "./src/Settings/LimitLoginAttempts/CidrCalculator.js");
+/* harmony import */ var _Cidr__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./Cidr */ "./src/Settings/LimitLoginAttempts/Cidr.js");
+/* harmony import */ var _CountryDatatable__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./CountryDatatable */ "./src/Settings/LimitLoginAttempts/CountryDatatable.js");
+
+
 
 
 
@@ -20118,7 +20253,9 @@ const IpAddressDatatable = props => {
     setIpAddress,
     setStatusSelected,
     setIdSelected,
-    idSelected
+    idSelected,
+    validateIpRange,
+    inputRangeValidated
   } = (0,_IpAddressDataTableStore__WEBPACK_IMPORTED_MODULE_4__["default"])();
 
   //here we set the selectedFilter from the Settings group
@@ -20129,6 +20266,7 @@ const IpAddressDatatable = props => {
     getCurrentFilter
   } = (0,_FilterData__WEBPACK_IMPORTED_MODULE_5__["default"])();
   const [addingIpAddress, setAddingIpAddress] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(false);
+  const [calculateCidr, setCalculateCidr] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(false);
   const moduleName = 'rsssl-group-filter-limit_login_attempts_ip_address';
   //we create the columns
   let columns = [];
@@ -20213,9 +20351,9 @@ const IpAddressDatatable = props => {
     }
   }
   //we convert the data to an array
-  let data = {
+  let data = Object.values({
     ...IpDataTable.data
-  };
+  });
   function generateOptions(status, id) {
     //if the there is no id we set it to new
     if (!id) {
@@ -20248,7 +20386,6 @@ const IpAddressDatatable = props => {
       title: title
     }));
   }
-  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {}, []);
   function generateGoodBad(value) {
     ``;
     if (value > 0) {
@@ -20276,13 +20413,26 @@ const IpAddressDatatable = props => {
     setAddingIpAddress(true);
   }
   function handleCancel() {
-    // Reset the state
+    // Set both states to false
     setAddingIpAddress(false);
-    // Remove the temporary row
-    delete data[0];
-    // Restore the original data
-    data[0] = data[0.5];
+    setCalculateCidr(false);
   }
+  function handleCancelCidr() {
+    setCalculateCidr(false);
+  }
+
+  // Observe changes to addingIpAddress and calculateCidr
+  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
+    // This code will run after addingIpAddress or calculateCidr is updated
+    if (!addingIpAddress && !calculateCidr) {
+      let data = Object.values({
+        ...IpDataTable.data
+      });
+      console.log(data);
+    }
+    console.log('active', data);
+    // You can also handle other logic here that depends on the updated values
+  }, [addingIpAddress, calculateCidr]);
   function handleSubmit(newIp) {
     // Validate and add the new IP address here
     // ...
@@ -20291,23 +20441,48 @@ const IpAddressDatatable = props => {
     setAddingIpAddress(false);
   }
   if (addingIpAddress) {
-    data[0.5] = data[0];
-    data[0] = {
-      // Your temporary row's data here, e.g.,
-      attempt_value: (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    data.unshift({
+      attempt_value: (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+        id: 'ipAddress',
         type: "text",
         placeholder: "Enter IP Address",
-        value: ipAddress
+        className: 'rsssl-input',
+        value: ipAddress,
+        onChange: event => setIpAddress(event.target.value)
         // ... other attributes here ...
-      }),
-
+      }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("br", null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+        className: 'button button-small button-secondary right',
+        onClick: () => setCalculateCidr(true)
+      }, "advanced")),
       status: generateOptions(statusSelected, 'new'),
       iso2_code: (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-        onClick: handleCancel
+        onClick: handleCancel,
+        className: 'button button-small button-secondary'
       }, "Cancel"),
-      datetime: (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_CidrCalculator__WEBPACK_IMPORTED_MODULE_9__["default"], null),
-      api: (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", null, "Save")
-    };
+      // datetime: <Cidr/>,
+      api: (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+        className: 'button button-small button-primary'
+      }, "Save")
+    });
+  }
+
+  // When calculating CIDR
+  if (calculateCidr) {
+    data.splice(1, 0, {
+      attempt_value: (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Cidr__WEBPACK_IMPORTED_MODULE_10__["default"], null),
+      status: (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+        className: 'button button-primary',
+        onClick: () => validateIpRange(),
+        disabled: !inputRangeValidated
+      }, "Validate Range"),
+      iso2_code: (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+        className: 'button button-small button-secondary',
+        onClick: handleCancelCidr
+      }, "Cancel"),
+      api: (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+        className: 'button button-small button-primary'
+      }, "Set")
+    });
   }
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-container"
@@ -20331,11 +20506,11 @@ const IpAddressDatatable = props => {
     onChange: event => handleIpTableSearch(event.target.value, searchableColumns)
   })))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
     columns: columns,
-    data: Object.values(data),
+    data: data,
     dense: true,
     pagination: true,
     paginationServer: true,
-    paginationTotalRows: pagination.totalRows,
+    paginationTotalRows: Object.values(data).length,
     onChangeRowsPerPage: handleIpTableRowsChange,
     onChangePage: handleIpTablePageChange,
     sortServer: true,

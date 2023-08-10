@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import IpAddressDataTableStore  from "./IpAddressDataTableStore";
 
 const CidrCalculator = () => {
     const [lowestIP, setLowestIP] = useState("");
     const [highestIP, setHighestIP] = useState("");
     const [cidrNotation, setCidrNotation] = useState("");
+    const {setIpAddress} = IpAddressDataTableStore();
 
     const ipToNumber = (ip) =>
         ip.split(".").reduce((acc, cur) => (acc << 8) + parseInt(cur, 10), 0);
@@ -32,6 +34,7 @@ const CidrCalculator = () => {
 
         const cidr = `${lowestIP}/${prefixLength}`;
         setCidrNotation(cidr);
+        setIpAddress(cidr);
     };
 
     return (
@@ -52,8 +55,7 @@ const CidrCalculator = () => {
                     onChange={(e) => setHighestIP(e.target.value)}
                 />
             </div>
-            <button onClick={cidrFromIPRange}>Calculate CIDR</button>
-            {cidrNotation && <div>CIDR Notation: {cidrNotation}</div>}
+            <button onClick={cidrFromIPRange}>Set CIDR</button>
         </div>
     );
 };

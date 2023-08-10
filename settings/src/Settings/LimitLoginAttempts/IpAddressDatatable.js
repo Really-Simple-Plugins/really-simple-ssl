@@ -8,6 +8,8 @@ import {produce} from "immer";
 import Flag from "../../Flag/Flag";
 import Icon from "../../utils/Icon";
 import CidrCalculator from "./CidrCalculator";
+import Cidr from "./Cidr";
+import countryDatatable from "./CountryDatatable";
 
 const IpAddressDatatable = (props) => {
     const {
@@ -28,11 +30,14 @@ const IpAddressDatatable = (props) => {
         setStatusSelected,
         setIdSelected,
         idSelected,
+        validateIpRange,
+        inputRangeValidated,
     } = IpAddressDataTableStore()
 
     //here we set the selectedFilter from the Settings group
     const {selectedFilter, setSelectedFilter, activeGroupId, getCurrentFilter} = FilterData();
     const [addingIpAddress, setAddingIpAddress] = useState(false);
+    const [calculateCidr, setCalculateCidr] = useState(false);
 
     const moduleName = 'rsssl-group-filter-limit_login_attempts_ip_address';
     //we create the columns
@@ -59,7 +64,6 @@ const IpAddressDatatable = (props) => {
             fetchIpData(field.action);
         }
     });
-
 
     const customStyles = {
         headCells: {
@@ -122,7 +126,7 @@ const IpAddressDatatable = (props) => {
         }
     }
     //we convert the data to an array
-    let data = {...IpDataTable.data};
+    let data = Object.values({...IpDataTable.data});
 
 
     function generateOptions(status, id) {
@@ -169,10 +173,6 @@ const IpAddressDatatable = (props) => {
         )
     }
 
-    useEffect(() => {
-
-    },[])
-
     function generateGoodBad(value) {``
         if (value > 0) {
             return (
@@ -200,13 +200,26 @@ const IpAddressDatatable = (props) => {
     }
 
     function handleCancel() {
-        // Reset the state
+        // Set both states to false
         setAddingIpAddress(false);
-        // Remove the temporary row
-        delete data[0];
-        // Restore the original data
-        data[0] = data[0.5];
+        setCalculateCidr(false);
     }
+
+    function handleCancelCidr() {
+        setCalculateCidr(false);
+    }
+
+// Observe changes to addingIpAddress and calculateCidr
+    useEffect(() => {
+        // This code will run after addingIpAddress or calculateCidr is updated
+        if (!addingIpAddress && !calculateCidr) {
+            let data = Object.values({...IpDataTable.data});
+            console.log(data);
+        }
+        console.log('active',data);
+        // You can also handle other logic here that depends on the updated values
+    }, [addingIpAddress, calculateCidr]);
+
 
     function handleSubmit(newIp) {
         // Validate and add the new IP address here
@@ -217,25 +230,45 @@ const IpAddressDatatable = (props) => {
     }
 
     if (addingIpAddress) {
-        data[0.5] = data[0];
-
-        data[0] = {
-            // Your temporary row's data here, e.g.,
+        data.unshift({
             attempt_value:
-                <input
-                    type="text"
-                    placeholder="Enter IP Address"
-                    value={ipAddress}
-                    // ... other attributes here ...
-                />,
+                <div>
+                    <input
+                        id={'ipAddress'}
+                        type="text"
+                        placeholder="Enter IP Address"
+                        className={'rsssl-input'}
+                        value={ipAddress}
+                        onChange={(event) => setIpAddress(event.target.value)}
+                        // ... other attributes here ...
+                    /><br></br>
+                    <a className={'button button-small button-secondary right'}
+                       onClick={() => setCalculateCidr(true)}
+                    >advanced</a>
+                </div>,
+
             status: generateOptions(statusSelected, 'new'),
-            iso2_code: <button onClick={handleCancel}>Cancel</button>,
-            datetime: <CidrCalculator/>,
-            api: <button>Save</button>,
-        };
+            iso2_code: <button onClick={handleCancel} className={'button button-small button-secondary'}>Cancel</button>,
+            // datetime: <Cidr/>,
+            api: <button className={'button button-small button-primary'}>Save</button>,
+        });
     }
 
-
+// When calculating CIDR
+    if (calculateCidr) {
+        data.splice(1, 0, {
+            attempt_value: <Cidr></Cidr>,
+            status: <button
+                className={'button button-primary'}
+                onClick={() => validateIpRange()}
+                disabled={!inputRangeValidated}
+            >Validate Range</button>,
+            iso2_code: <button className={'button button-small button-secondary'}
+            onClick={handleCancelCidr}
+            >Cancel</button>,
+            api: <button className={'button button-small button-primary'}>Set</button>,
+        });
+    }
 
     return (
         <>
@@ -267,11 +300,11 @@ const IpAddressDatatable = (props) => {
             {/*Display the datatable*/}
             <DataTable
                 columns={columns}
-                data={Object.values(data)}
+                data={data}
                 dense
                 pagination
                 paginationServer
-                paginationTotalRows={pagination.totalRows}
+                paginationTotalRows={Object.values(data).length}
                 onChangeRowsPerPage={handleIpTableRowsChange}
                 onChangePage={handleIpTablePageChange}
                 sortServer
