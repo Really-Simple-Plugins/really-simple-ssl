@@ -20004,8 +20004,12 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
   ipAddress: '',
   highestIP: '',
   lowestIP: '',
-  statusSelected: '',
+  statusSelected: 'blocked',
   inputRangeValidated: false,
+  cidr: '',
+  ip_count: '',
+  canSetCidr: false,
+  ipRange: {},
   idSelected: '',
   pagination: {},
   dataActions: {},
@@ -20132,7 +20136,6 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
       console.log(e);
     }
   },
-  setIpRange: ipAddress => {},
   validateIpv4: ip => {
     const parts = ip.split(".");
     if (parts.length !== 4) return false;
@@ -20161,7 +20164,7 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
     return ip.split(".").reduce((acc, cur) => (acc << 8) + parseInt(cur, 10), 0);
   },
   ipV6ToNumber: ip => {
-    return ip.split(":").reduce((acc, cur) => (acc << 16) + parseInt(cur, 16), 0);
+    return ip.split(":").reduce((acc, cur) => (acc << BigInt(16)) + BigInt(parseInt(cur, 16)), BigInt(0));
   },
   validateIpRange: (lowest, highest) => {
     //first we determine if the IP is ipv4 or ipv6
@@ -20189,6 +20192,30 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
           inputRangeValidated: true
         });
       }
+    }
+    if (get().inputRangeValidated) {
+      set({
+        ipRange: {
+          lowest,
+          highest
+        }
+      });
+    }
+  },
+  fetchCidrData: async action => {
+    try {
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction(action, get().ipRange);
+      //now we set the EventLog
+      if (response) {
+        //we set the cidrFound and cidrCount
+        set({
+          cidr: response.cidr,
+          ip_count: response.ip_count,
+          canSetCidr: true
+        });
+      }
+    } catch (e) {
+      console.log(e);
     }
   }
 }));
@@ -20222,6 +20249,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _CidrCalculator__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./CidrCalculator */ "./src/Settings/LimitLoginAttempts/CidrCalculator.js");
 /* harmony import */ var _Cidr__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./Cidr */ "./src/Settings/LimitLoginAttempts/Cidr.js");
 /* harmony import */ var _CountryDatatable__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./CountryDatatable */ "./src/Settings/LimitLoginAttempts/CountryDatatable.js");
+/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @wordpress/api-fetch */ "@wordpress/api-fetch");
+/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_12__);
+
 
 
 
@@ -20249,13 +20279,18 @@ const IpAddressDatatable = props => {
     handleIpTableFilter,
     ipAddress,
     updateRow,
+    addRow,
     statusSelected,
     setIpAddress,
     setStatusSelected,
+    fetchCidrData,
+    canSetCidr,
     setIdSelected,
     idSelected,
     validateIpRange,
-    inputRangeValidated
+    inputRangeValidated,
+    cidr,
+    ip_count
   } = (0,_IpAddressDataTableStore__WEBPACK_IMPORTED_MODULE_4__["default"])();
 
   //here we set the selectedFilter from the Settings group
@@ -20420,6 +20455,19 @@ const IpAddressDatatable = props => {
   function handleCancelCidr() {
     setCalculateCidr(false);
   }
+  function handleSubmit(newIp) {
+    // Validate and add the new IP address here
+    // ...
+
+    // Reset the state
+    setAddingIpAddress(false);
+    setCalculateCidr(false);
+    // we check if statusSelected is not empty
+    if (statusSelected !== '') {
+      //we add the row
+      addRow(newIp, statusSelected);
+    }
+  }
 
   // Observe changes to addingIpAddress and calculateCidr
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
@@ -20433,13 +20481,11 @@ const IpAddressDatatable = props => {
     console.log('active', data);
     // You can also handle other logic here that depends on the updated values
   }, [addingIpAddress, calculateCidr]);
-  function handleSubmit(newIp) {
-    // Validate and add the new IP address here
-    // ...
-
-    // Reset the state
-    setAddingIpAddress(false);
-  }
+  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
+    if (canSetCidr) {
+      setIpAddress(cidr);
+    }
+  }, [canSetCidr]);
   if (addingIpAddress) {
     data.unshift({
       attempt_value: (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
@@ -20455,14 +20501,14 @@ const IpAddressDatatable = props => {
         onClick: () => setCalculateCidr(true)
       }, "advanced")),
       status: generateOptions(statusSelected, 'new'),
-      iso2_code: (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+      // datetime: <Cidr/>,
+      api: (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
         onClick: handleCancel,
         className: 'button button-small button-secondary'
-      }, "Cancel"),
-      // datetime: <Cidr/>,
-      api: (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-        className: 'button button-small button-primary'
-      }, "Save")
+      }, "Cancel"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("br", null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+        className: 'button button-small button-primary',
+        onClick: () => handleSubmit(ipAddress)
+      }, "Save"))
     });
   }
 
@@ -20472,16 +20518,16 @@ const IpAddressDatatable = props => {
       attempt_value: (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Cidr__WEBPACK_IMPORTED_MODULE_10__["default"], null),
       status: (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
         className: 'button button-primary',
-        onClick: () => validateIpRange(),
+        onClick: () => fetchCidrData('get_mask_from_range'),
         disabled: !inputRangeValidated
       }, "Validate Range"),
-      iso2_code: (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+      api: (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
         className: 'button button-small button-secondary',
         onClick: handleCancelCidr
       }, "Cancel"),
-      api: (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-        className: 'button button-small button-primary'
-      }, "Set")
+      datetime: (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+        className: 'left'
+      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("strong", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("CIDR Notation", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("br", null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, cidr), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("br", null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("hr", null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("strong", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("IP Count", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("br", null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, ip_count))
     });
   }
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {

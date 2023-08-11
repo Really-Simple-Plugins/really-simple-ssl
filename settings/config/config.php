@@ -935,36 +935,35 @@ function rsssl_fields( $load_values = true ) {
             ],
             'columns'          => [
                 [
+                    'name'     => __( 'Country', 'really-simple-ssl' ),
+                    'sortable' => false,
+                    'column'   => 'iso2_code',
+                    'width'    => '2%',
+                ],
+                [
                     'name'     => __( 'Ip Address', 'really-simple-ssl' ),
                     'sortable' => true,
                     'searchable' => true,
                     'column'   => 'attempt_value',
-                    'width'    => '30%',
                 ],
                 [
                     'name'  => __( 'Status', 'really-simple-ssl' ),
                     'sortable' => false,
                     'column'   => 'status',
-                    'width'    => '30%',
                 ],
                 [
                     'name'     => __( 'Last Login', 'really-simple-ssl' ),
                     'sortable' => true,
                     'column'   => 'datetime',
-                    'width'         => '30%',
                 ],
-                [
-                    'name'     => __( 'Country', 'really-simple-ssl' ),
-                    'sortable' => false,
-                    'column'   => 'iso2_code',
-                    'width'    => '5%',
-                ],
+
                 [
                     'name'     => __( 'API', 'really-simple-ssl' ),
                     'sortable' => false,
                     'column'   => 'api',
-                    'width'    => '5%',
-                ],
+                    'width'    => '10%',
+                    'paddingLeft'  => '10px',
+                ],['width'    => '1%'],
 
             ],
         ],

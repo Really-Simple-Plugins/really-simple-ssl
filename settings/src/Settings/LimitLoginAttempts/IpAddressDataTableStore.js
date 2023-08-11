@@ -14,8 +14,12 @@ const IpAddressDataTableStore = create((set, get) => ({
     ipAddress: '',
     highestIP: '',
     lowestIP: '',
-    statusSelected: '',
+    statusSelected: 'blocked',
     inputRangeValidated: false,
+    cidr: '',
+    ip_count: '',
+    canSetCidr: false,
+    ipRange: {},
     idSelected: '',
     pagination: {},
     dataActions: {},
@@ -127,11 +131,6 @@ const IpAddressDataTableStore = create((set, get) => ({
         }
     },
 
-    setIpRange: (ipAddress) => {
-
-    },
-
-
     validateIpv4: (ip) => {
         const parts = ip.split(".");
         if (parts.length !== 4) return false;
@@ -164,10 +163,8 @@ const IpAddressDataTableStore = create((set, get) => ({
     },
 
     ipV6ToNumber: (ip) => {
-        return ip.split(":").reduce((acc, cur) => (acc << 16) + parseInt(cur, 16), 0);
+        return ip.split(":").reduce((acc, cur) => (acc << BigInt(16)) + BigInt(parseInt(cur, 16)), BigInt(0));
     },
-
-
 
     validateIpRange: (lowest, highest) => {
         //first we determine if the IP is ipv4 or ipv6
@@ -187,6 +184,26 @@ const IpAddressDataTableStore = create((set, get) => ({
                 }
                 set({inputRangeValidated: true});
             }
+        }
+        if (get().inputRangeValidated) {
+            set({ipRange: {lowest, highest}});
+        }
+    },
+
+
+    fetchCidrData: async (action) => {
+        try {
+            const response = await rsssl_api.doAction(
+                action,
+                get().ipRange
+            );
+            //now we set the EventLog
+            if (response) {
+               //we set the cidrFound and cidrCount
+                set({cidr: response.cidr, ip_count: response.ip_count, canSetCidr: true});
+            }
+        } catch (e) {
+            console.log(e);
         }
     }
 

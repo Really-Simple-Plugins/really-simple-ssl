@@ -10,6 +10,7 @@ import Icon from "../../utils/Icon";
 import CidrCalculator from "./CidrCalculator";
 import Cidr from "./Cidr";
 import countryDatatable from "./CountryDatatable";
+import {use} from "@wordpress/api-fetch";
 
 const IpAddressDatatable = (props) => {
     const {
@@ -25,13 +26,18 @@ const IpAddressDatatable = (props) => {
         handleIpTableFilter,
         ipAddress,
         updateRow,
+        addRow,
         statusSelected,
         setIpAddress,
         setStatusSelected,
+        fetchCidrData,
+        canSetCidr,
         setIdSelected,
         idSelected,
         validateIpRange,
         inputRangeValidated,
+        cidr,
+        ip_count,
     } = IpAddressDataTableStore()
 
     //here we set the selectedFilter from the Settings group
@@ -209,6 +215,20 @@ const IpAddressDatatable = (props) => {
         setCalculateCidr(false);
     }
 
+    function handleSubmit(newIp) {
+        // Validate and add the new IP address here
+        // ...
+
+        // Reset the state
+        setAddingIpAddress(false);
+        setCalculateCidr(false);
+        // we check if statusSelected is not empty
+        if (statusSelected !== '') {
+            //we add the row
+            addRow(newIp, statusSelected);
+        }
+    }
+
 // Observe changes to addingIpAddress and calculateCidr
     useEffect(() => {
         // This code will run after addingIpAddress or calculateCidr is updated
@@ -220,14 +240,14 @@ const IpAddressDatatable = (props) => {
         // You can also handle other logic here that depends on the updated values
     }, [addingIpAddress, calculateCidr]);
 
+    useEffect(() => {
+        if (canSetCidr) {
+            setIpAddress(cidr);
+        }
+    }, [canSetCidr])
 
-    function handleSubmit(newIp) {
-        // Validate and add the new IP address here
-        // ...
 
-        // Reset the state
-        setAddingIpAddress(false);
-    }
+
 
     if (addingIpAddress) {
         data.unshift({
@@ -248,9 +268,13 @@ const IpAddressDatatable = (props) => {
                 </div>,
 
             status: generateOptions(statusSelected, 'new'),
-            iso2_code: <button onClick={handleCancel} className={'button button-small button-secondary'}>Cancel</button>,
             // datetime: <Cidr/>,
-            api: <button className={'button button-small button-primary'}>Save</button>,
+            api: <div>
+                <button onClick={handleCancel} className={'button button-small button-secondary'}>Cancel</button><br/>
+                <button className={'button button-small button-primary'}
+                 onClick={() => handleSubmit(ipAddress)}
+                >Save</button>
+            </div>,
         });
     }
 
@@ -260,13 +284,19 @@ const IpAddressDatatable = (props) => {
             attempt_value: <Cidr></Cidr>,
             status: <button
                 className={'button button-primary'}
-                onClick={() => validateIpRange()}
+                onClick={() => fetchCidrData('get_mask_from_range')}
                 disabled={!inputRangeValidated}
             >Validate Range</button>,
-            iso2_code: <button className={'button button-small button-secondary'}
+            api: <button className={'button button-small button-secondary'}
             onClick={handleCancelCidr}
             >Cancel</button>,
-            api: <button className={'button button-small button-primary'}>Set</button>,
+            datetime: <div className={'left'}>
+                <strong>{__("CIDR Notation", "really-simple-ssl")}</strong><br></br>
+                <span>{cidr}</span><br/>
+                <hr/>
+                <strong>{__("IP Count", "really-simple-ssl")}</strong><br></br>
+                <span>{ip_count}</span>
+            </div>,
         });
     }
 
