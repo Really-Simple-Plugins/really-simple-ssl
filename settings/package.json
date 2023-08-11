@@ -28,6 +28,7 @@
     "react-modal": "^3.16.1",
     "react-transition-group": "^4.4.2",
     "react-use": "^17.4.0",
+    "reusify": "^1.0.4",
     "styled-components": "^5.3.5",
     "zustand": "^4.3.2"
   },

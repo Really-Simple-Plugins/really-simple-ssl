@@ -7,10 +7,7 @@ import {Button} from "@wordpress/components";
 import {produce} from "immer";
 import Flag from "../../utils/Flag/Flag";
 import Icon from "../../utils/Icon";
-import CidrCalculator from "./CidrCalculator";
 import Cidr from "./Cidr";
-import countryDatatable from "./CountryDatatable";
-import {use} from "@wordpress/api-fetch";
 
 const IpAddressDatatable = (props) => {
     const {
@@ -234,9 +231,7 @@ const IpAddressDatatable = (props) => {
         // This code will run after addingIpAddress or calculateCidr is updated
         if (!addingIpAddress && !calculateCidr) {
             let data = Object.values({...IpDataTable.data});
-            console.log(data);
         }
-        console.log('active',data);
         // You can also handle other logic here that depends on the updated values
     }, [addingIpAddress, calculateCidr]);
 

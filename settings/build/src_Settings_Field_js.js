@@ -3356,6 +3356,10 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
   pagination: {},
   dataActions: {},
   IpDataTable: [],
+  /*
+  * This function fetches the data from the server and fills the property IpDataTable
+  * Note this function works with the DataTable class on serverside
+   */
   fetchIpData: async action => {
     try {
       const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction(action, get().dataActions);
@@ -3372,6 +3376,9 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
       console.log(e);
     }
   },
+  /*
+  * This function handles the search, it is called from the search from it's parent class
+   */
   handleIpTableSearch: async (search, searchColumns) => {
     //Add the search to the dataActions
     set((0,immer__WEBPACK_IMPORTED_MODULE_4__.produce)(state => {
@@ -3381,8 +3388,11 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
         searchColumns
       };
     }));
-    get().fetchIpData('ip_list');
+    await get().fetchIpData('ip_list');
   },
+  /*
+  * This function handles the page change, it is called from the DataTable class
+   */
   handleIpTablePageChange: async (page, pageSize) => {
     //Add the page and pageSize to the dataActions
     set((0,immer__WEBPACK_IMPORTED_MODULE_4__.produce)(state => {
@@ -3392,8 +3402,11 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
         pageSize
       };
     }));
-    get().fetchIpData('ip_list');
+    await get().fetchIpData('ip_list');
   },
+  /*
+  * This function handles the rows change, it is called from the DataTable class
+   */
   handleIpTableRowsChange: async (currentRowsPerPage, currentPage) => {
     //Add the page and pageSize to the dataActions
     set((0,immer__WEBPACK_IMPORTED_MODULE_4__.produce)(state => {
@@ -3403,9 +3416,11 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
         currentPage
       };
     }));
-    get().fetchIpData('ip_list');
+    await get().fetchIpData('ip_list');
   },
-  //this handles all pagination and sorting
+  /*
+  * This function handles the sort, it is called from the DataTable class
+   */
   handleIpTableSort: async (column, sortDirection) => {
     //Add the column and sortDirection to the dataActions
     set((0,immer__WEBPACK_IMPORTED_MODULE_4__.produce)(state => {
@@ -3415,8 +3430,11 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
         sortDirection
       };
     }));
-    get().fetchIpData('ip_list');
+    await get().fetchIpData('ip_list');
   },
+  /*
+  * This function handles the filter, it is called from the GroupSetting class
+   */
   handleIpTableFilter: async (column, filterValue) => {
     //Add the column and sortDirection to the dataActions
     set((0,immer__WEBPACK_IMPORTED_MODULE_4__.produce)(state => {
@@ -3426,23 +3444,35 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
         filterValue
       };
     }));
-    get().fetchIpData('ip_list');
+    await get().fetchIpData('ip_list');
   },
+  /*
+  * This function sets the ip address and is used by Cidr and IpAddressInput
+   */
   setIpAddress: ipAddress => {
     set({
       ipAddress
     });
   },
+  /*
+  * This function sets the status selected and is used by Cidr and IpAddressInput and from the options
+   */
   setStatusSelected: statusSelected => {
     set({
       statusSelected
     });
   },
+  /*
+  * This function sets the id selected and is used by Cidr and IpAddressInput and from the options
+   */
   setId: idSelected => {
     set({
       idSelected
     });
   },
+  /*
+  * This function updates the row only changing the status
+   */
   updateRow: async (id, status) => {
     set({
       processing: true
@@ -3454,14 +3484,16 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
       });
       //now we set the EventLog
       if (response) {
-        get().fetchIpData('ip_list');
+        await get().fetchIpData('ip_list');
       }
     } catch (e) {
       console.log(e);
     }
   },
+  /*
+  * This function add a new row to the table
+   */
   addRow: async (ipAddress, status) => {
-    console.log(ipAddress, status);
     set({
       processing: true
     });
@@ -3472,12 +3504,19 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
       });
       //now we set the EventLog
       if (response) {
-        get().fetchIpData('ip_list');
+        await get().fetchIpData('ip_list');
       }
     } catch (e) {
       console.log(e);
     }
   },
+  /**
+   * This function validates the ip address string if it is a proper ip address
+   * This checks ipv4 addresses
+   *
+   * @param ip
+   * @returns {boolean}
+   */
   validateIpv4: ip => {
     const parts = ip.split(".");
     if (parts.length !== 4) return false;
@@ -3487,7 +3526,15 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
     }
     return true;
   },
+  /**
+   * This function validates the ip address string if it is a proper ip address
+   * This checks ipv6 addresses
+   *
+   * @param ip
+   * @returns {boolean}
+   */
   validateIpv6: ip => {
+    console.log('validating ipv6', ip);
     const parts = ip.split(":");
     if (parts.length !== 8) return false;
     for (let part of parts) {
@@ -3495,47 +3542,116 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
     }
     return true;
   },
+  extendIpV6: ip => {
+    console.log('extendIpV6', ip);
+    // Handle the special case of '::' at the start or end
+    if (ip === '::') ip = '0::0';
+
+    // Handle the '::' within the address
+    if (ip.includes('::')) {
+      console.log('includes ::');
+      const parts = ip.split('::');
+      if (parts.length > 2) return false;
+      const left = parts[0].split(':').filter(Boolean);
+      const right = parts[1].split(':').filter(Boolean);
+
+      // Calculate how many zeros are needed
+      const zerosNeeded = 8 - (left.length + right.length);
+
+      // Concatenate all parts with the appropriate number of zeros
+      return [...left, ...Array(zerosNeeded).fill('0'), ...right].join(':');
+    }
+    return ip;
+  },
+  /**
+   * This function converts the ip address to a number
+   *
+   * @param ip
+   * @returns {*}
+   */
   ipToNumber: ip => {
     if (get().validateIpv4(ip)) {
       return get().ipV4ToNumber(ip);
-    } else if (get().validateIpv6(ip)) {
-      return get().ipV6ToNumber(ip);
+    } else if (get().validateIpv6(get().extendIpV6(ip))) {
+      return get().ipV6ToNumber(get().extendIpV6(ip));
     }
   },
+  /**
+   * This function converts the ip address to a number if it is a ipv4 address
+   * @param ip
+   * @returns {*}
+   */
   ipV4ToNumber: ip => {
     return ip.split(".").reduce((acc, cur) => (acc << 8) + parseInt(cur, 10), 0);
   },
+  /**
+   * This function converts the ip address to a number if it is a ipv6 address
+   * @param ip
+   * @returns {*}
+   */
   ipV6ToNumber: ip => {
-    return ip.split(":").reduce((acc, cur) => (acc << BigInt(16)) + BigInt(parseInt(cur, 16)), BigInt(0));
+    return ip.split(":").reduce((acc, cur) => {
+      const segmentValue = parseInt(cur, 16);
+      if (isNaN(segmentValue)) {
+        console.warn(`Invalid segment in IPv6 address: ${oldIp}`);
+        return acc;
+      }
+      return (acc << BigInt(16)) + BigInt(segmentValue);
+    }, BigInt(0));
   },
+  // ipV6ToNumber: (ip) => {
+  //     return ip.split(":").reduce((acc, cur) => (acc << BigInt(16)) + BigInt(parseInt(cur, 16)), BigInt(0));
+  // },
+
+  /**
+   * This function validates the ip range, if the lowest is lower than the highest
+   * This checks ipv4 and ipv6 addresses
+   *
+   * @param lowest
+   * @param highest
+   */
   validateIpRange: (lowest, highest) => {
+    let from = '';
+    let to = '';
+    console.log('validateIpRange');
     //first we determine if the IP is ipv4 or ipv6
     if (lowest && highest) {
+      console.log('lowest and highest validation');
       if (get().validateIpv4(lowest) && get().validateIpv4(highest)) {
+        console.log('ipv4 validated');
         //now we check if the lowest is lower than the highest
         if (get().ipToNumber(lowest) > get().ipToNumber(highest)) {
+          console.warn('lowest is higher than highest');
           set({
             inputRangeValidated: false
           });
           return;
         }
+        from = lowest;
+        to = highest;
         set({
           inputRangeValidated: true
         });
-      } else if (get().validateIpv6(lowest) && get().validateIpv6(highest)) {
+      } else if (get().validateIpv6(get().extendIpV6(lowest)) && get().validateIpv6(get().extendIpV6(highest))) {
+        console.log('ipv6 validated');
         //now we check if the lowest is lower than the highest
-        if (get().ipToNumber(lowest) > get().ipToNumber(highest)) {
+        if (get().ipToNumber(get().extendIpV6(lowest)) > get().ipToNumber(get().extendIpV6(highest))) {
+          console.warn('lowest is higher than highest');
           set({
             inputRangeValidated: false
           });
           return;
         }
+        from = get().extendIpV6(lowest);
+        to = get().extendIpV6(highest);
         set({
           inputRangeValidated: true
         });
       }
     }
     if (get().inputRangeValidated) {
+      let lowest = from;
+      let highest = to;
       set({
         ipRange: {
           lowest,
@@ -3544,6 +3660,13 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
       });
     }
   },
+  /**
+   * This function fetches the cidr data from the server and sets the cidr and ip_count
+   * This function is called from the Cidr class
+   *
+   * @param action
+   * @returns {Promise<void>}
+   */
   fetchCidrData: async action => {
     try {
       const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction(action, get().ipRange);
@@ -3552,6 +3675,7 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
         //we set the cidrFound and cidrCount
         set({
           cidr: response.cidr,
+          ipAddress: response.cidr,
           ip_count: response.ip_count,
           canSetCidr: true
         });
@@ -3588,14 +3712,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__);
 /* harmony import */ var _utils_Flag_Flag__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../utils/Flag/Flag */ "./src/utils/Flag/Flag.js");
 /* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../utils/Icon */ "./src/utils/Icon.js");
-Object(function webpackMissingModule() { var e = new Error("Cannot find module './CidrCalculator'"); e.code = 'MODULE_NOT_FOUND'; throw e; }());
-/* harmony import */ var _Cidr__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./Cidr */ "./src/Settings/LimitLoginAttempts/Cidr.js");
-/* harmony import */ var _CountryDatatable__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./CountryDatatable */ "./src/Settings/LimitLoginAttempts/CountryDatatable.js");
-/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @wordpress/api-fetch */ "@wordpress/api-fetch");
-/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_12__);
-
-
-
+/* harmony import */ var _Cidr__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./Cidr */ "./src/Settings/LimitLoginAttempts/Cidr.js");
 
 
 
@@ -3818,9 +3935,7 @@ const IpAddressDatatable = props => {
       let data = Object.values({
         ...IpDataTable.data
       });
-      console.log(data);
     }
-    console.log('active', data);
     // You can also handle other logic here that depends on the updated values
   }, [addingIpAddress, calculateCidr]);
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
@@ -3857,7 +3972,7 @@ const IpAddressDatatable = props => {
   // When calculating CIDR
   if (calculateCidr) {
     data.splice(1, 0, {
-      attempt_value: (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Cidr__WEBPACK_IMPORTED_MODULE_10__["default"], null),
+      attempt_value: (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Cidr__WEBPACK_IMPORTED_MODULE_9__["default"], null),
       status: (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
         className: 'button button-primary',
         onClick: () => fetchCidrData('get_mask_from_range'),
