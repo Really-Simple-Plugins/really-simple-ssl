@@ -2974,70 +2974,6 @@ const Cidr = () => {
 
 /***/ }),
 
-/***/ "./src/Settings/LimitLoginAttempts/CidrCalculator.js":
-/*!***********************************************************!*\
-  !*** ./src/Settings/LimitLoginAttempts/CidrCalculator.js ***!
-  \***********************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _IpAddressDataTableStore__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./IpAddressDataTableStore */ "./src/Settings/LimitLoginAttempts/IpAddressDataTableStore.js");
-
-
-
-const CidrCalculator = () => {
-  const [lowestIP, setLowestIP] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)("");
-  const [highestIP, setHighestIP] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)("");
-  const [cidrNotation, setCidrNotation] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)("");
-  const {
-    setIpAddress
-  } = (0,_IpAddressDataTableStore__WEBPACK_IMPORTED_MODULE_2__["default"])();
-  const ipToNumber = ip => ip.split(".").reduce((acc, cur) => (acc << 8) + parseInt(cur, 10), 0);
-  const cidrFromIPRange = () => {
-    //first we check if the IP's are valid
-    if (!lowestIP || !highestIP) {
-      alert("Please enter a valid IP address");
-      return;
-    }
-    if (ipToNumber(lowestIP) > ipToNumber(highestIP)) {
-      alert("Lowest IP address should be lower than highest IP address");
-      return;
-    }
-    const lowIPNumber = ipToNumber(lowestIP);
-    const highIPNumber = ipToNumber(highestIP);
-
-    // Find the prefix length (subnet mask) by counting common bits
-    let prefixLength = 32;
-    while ((lowIPNumber & 1 << 32 - prefixLength) === (highIPNumber & 1 << 32 - prefixLength)) {
-      prefixLength -= 1;
-    }
-    const cidr = `${lowestIP}/${prefixLength}`;
-    setCidrNotation(cidr);
-    setIpAddress(cidr);
-  };
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, "Lowest IP Address:"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-    type: "text",
-    value: lowestIP,
-    onChange: e => setLowestIP(e.target.value)
-  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, "Highest IP Address:"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-    type: "text",
-    value: highestIP,
-    onChange: e => setHighestIP(e.target.value)
-  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-    onClick: cidrFromIPRange
-  }, "Set CIDR"));
-};
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (CidrCalculator);
-
-/***/ }),
-
 /***/ "./src/Settings/LimitLoginAttempts/CountryDataTableStore.js":
 /*!******************************************************************!*\
   !*** ./src/Settings/LimitLoginAttempts/CountryDataTableStore.js ***!
@@ -3652,7 +3588,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__);
 /* harmony import */ var _utils_Flag_Flag__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../utils/Flag/Flag */ "./src/utils/Flag/Flag.js");
 /* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../utils/Icon */ "./src/utils/Icon.js");
-/* harmony import */ var _CidrCalculator__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./CidrCalculator */ "./src/Settings/LimitLoginAttempts/CidrCalculator.js");
+Object(function webpackMissingModule() { var e = new Error("Cannot find module './CidrCalculator'"); e.code = 'MODULE_NOT_FOUND'; throw e; }());
 /* harmony import */ var _Cidr__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./Cidr */ "./src/Settings/LimitLoginAttempts/Cidr.js");
 /* harmony import */ var _CountryDatatable__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./CountryDatatable */ "./src/Settings/LimitLoginAttempts/CountryDatatable.js");
 /* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @wordpress/api-fetch */ "@wordpress/api-fetch");
