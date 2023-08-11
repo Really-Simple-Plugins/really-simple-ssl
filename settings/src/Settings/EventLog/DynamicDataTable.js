@@ -5,7 +5,7 @@ import DynamicDataTableStore from "./DynamicDataTableStore";
 import FilterData from "../FilterData";
 import * as rsssl_api from "../../utils/api";
 import useMenu from "../../Menu/MenuData";
-import Flag from "../../Flag/Flag";
+import Flag from "../../utils/Flag/Flag";
 import Icon from "../../utils/Icon";
 
 const DynamicDataTable = (props) => {

@@ -3,7 +3,7 @@ import React, {useEffect, Countryef, useState} from 'react';
 import DataTable, {createTheme} from "react-data-table-component";
 import CountryDataTableStore from "./CountryDataTableStore";
 import FilterData from "../FilterData";
-import Flag from "../../Flag/Flag";
+import Flag from "../../utils/Flag/Flag";
 import {Button} from "@wordpress/components";
 import {produce} from "immer";
 import Icon from "../../utils/Icon";

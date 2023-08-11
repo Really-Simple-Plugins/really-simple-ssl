@@ -5,7 +5,7 @@ import IpAddressDataTableStore from "./IpAddressDataTableStore";
 import FilterData from "../FilterData";
 import {Button} from "@wordpress/components";
 import {produce} from "immer";
-import Flag from "../../Flag/Flag";
+import Flag from "../../utils/Flag/Flag";
 import Icon from "../../utils/Icon";
 import CidrCalculator from "./CidrCalculator";
 import Cidr from "./Cidr";
