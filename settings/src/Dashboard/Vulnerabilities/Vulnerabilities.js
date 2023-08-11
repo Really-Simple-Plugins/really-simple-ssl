@@ -175,6 +175,7 @@ const Vulnerabilities = () => {
                 </>
             )
         }
+
         if (vulnerabilities) {
             return (
                 <>
@@ -256,7 +257,7 @@ const Vulnerabilities = () => {
                     <div className="rsssl-hardening-select-item">
                         {vulEnabled ? <Icon color={iconVulColor} size={23} name="radar-duotone"></Icon> : <Icon size={23}  color={iconVulEnabledColor} name="satellite-dish-duotone"></Icon>}
                         <h2>{vulEnabled ? vulnerabilities : '?'}</h2>
-                        <span className={"rsssl-badge " + badgeVulStyle}>{updateWordCapitalized}</span>
+                        <span className={"rsssl-badge " + badgeVulStyle}>{vulnerabilityWord.charAt(0).toUpperCase() + vulnerabilityWord.slice(1).toLowerCase()}</span>
                     </div>
                     <div className="rsssl-hardening-select-item">
                         { updates ? <Icon size={23} color={iconUpdateColor} name="rotate-exclamation-light"></Icon> : <Icon size={23} color={'black'} name="rotate-light"></Icon>}
@@ -277,7 +278,7 @@ const Vulnerabilities = () => {
                         <div className="rsssl-hardening-select-item">
                             <Icon size={23} color={'grey'} name="radar-duotone"></Icon>
                             <h2>0</h2>
-                            <span className={"rsssl-badge rsp-default"}>{updateWordCapitalized}</span>
+                            <span className={"rsssl-badge rsp-default"}>{vulnerabilityWord.charAt(0).toUpperCase() + vulnerabilityWord.slice(1).toLowerCase()}</span>
                         </div>
                         <div className="rsssl-hardening-select-item">
                             <Icon size={23} color={'grey'} name="rotate-exclamation-light"></Icon>
