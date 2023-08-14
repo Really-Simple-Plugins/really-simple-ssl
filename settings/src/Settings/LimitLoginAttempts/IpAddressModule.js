@@ -9,7 +9,6 @@ const IpAddressModule = (props) => {
 
     const { selectedFilter } = props;
     const { EventLog, dataLoaded, fetchEventLog } = LimitLoginAttemptsData();
-    const {fields, fieldAlreadyEnabled, getFieldValue} = useFields();
 
     let field = props.field;
     let columns = [];
