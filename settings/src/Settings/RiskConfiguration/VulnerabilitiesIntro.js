@@ -71,16 +71,8 @@ const VulnerabilitiesIntro = () => {
                         />
                     </div>
                     <div className={'rsssl-modal-footer'}>
-                        <Button disabled={disabled}
-                            isPrimary
-                            onClick={() => {
-                                setClosed(true);
-                                //we redirect to dashboard
-                                window.location.hash = "dashboard";
-                            }}
-                        >
-                            {__('Dashboard', 'really-simple-ssl')}
-                        </Button>
+                        <button type="button" onClick={(e) => window.location.hash = "dashboard" } className="button button-primary">{ __("Dashboard", "really-simple-ssl")}</button>
+                        {/*<button type="button" onClick={(e) => setClosed(true); } className="button button-primary">{ __("Dashboard", "really-simple-ssl")}</button>*/}
                         <Button disabled={disabled} isSecondary
                                 onClick={() => {
                                     setClosed(true);

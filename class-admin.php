@@ -30,6 +30,7 @@ class rsssl_admin
 
 	    //add the settings page for the plugin
 	    add_action('admin_enqueue_scripts', array($this, 'enqueue_assets'));
+	    add_action('admin_enqueue_scripts', array($this, 'override_wordpress_assets'), 9999 );
 	    add_action('admin_init', array($this, 'listen_for_deactivation'), 40);
 	    add_action('plugins_loaded', array($this, 'maybe_redirect_old_settings_url'), 10);
 
@@ -2590,6 +2591,21 @@ class rsssl_admin
         $url = trailingslashit(rsssl_url) . "assets/css/{$rtl}admin{$min}.css";
         $path = trailingslashit(rsssl_path) . "assets/css/{$rtl}admin{$min}.css";
 	    wp_enqueue_style('rsssl-css', $url, ['wp-components'], filemtime($path));
+    }
+
+    public function override_wordpress_assets( $hook ) {
+
+	    if ( $hook !== 'settings_page_really-simple-security') {
+		    return;
+	    }
+
+        error_log("Loading styles");
+
+	    $url = trailingslashit(rsssl_url) . "assets/css/admin/override-wordpress.css";
+	    $path = trailingslashit(rsssl_path) . "assets/css/admin/override-wordpress.css";
+
+	    wp_enqueue_style('rsssl-override-wp-css', $url, ['wp-components'], filemtime($path));
+
     }
 
     /**

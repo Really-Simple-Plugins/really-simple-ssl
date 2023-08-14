@@ -1,0 +1,20 @@
+@media (min-width:600px) {
+  body .components-text-control__input:focus {
+    border-color: var(--rsp-dark-blue) !important;
+    box-shadow: 0 0 0 1px var(--rsp-dark-blue) !important;
+    outline: 2px solid transparent !important;
+  }
+
+  body .components-textarea-control__input:focus {
+    border-color: var(--rsp-dark-blue) !important;
+    box-shadow: 0 0 0 1px var(--rsp-dark-blue) !important;
+    outline: 2px solid transparent !important;
+  }
+
+  .wp-core-ui select:focus {
+    border-color: var(--rsp-dark-blue) !important;
+    box-shadow: 0 0 0 1px var(--rsp-dark-blue) !important;
+    outline: 2px solid transparent !important;
+  }
+
+}
