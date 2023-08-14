@@ -2598,9 +2598,7 @@ class rsssl_admin
 	    if ( $hook !== 'settings_page_really-simple-security') {
 		    return;
 	    }
-
-        error_log("Loading styles");
-
+        
 	    $url = trailingslashit(rsssl_url) . "assets/css/admin/override-wordpress.css";
 	    $path = trailingslashit(rsssl_path) . "assets/css/admin/override-wordpress.css";
 
