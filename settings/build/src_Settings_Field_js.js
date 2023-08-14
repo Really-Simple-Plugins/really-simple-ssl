@@ -3114,7 +3114,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const CountryDatatable = props => {
-  var _pagination$totalRows;
   const {
     CountryDataTable,
     dataLoaded,
@@ -3274,7 +3273,6 @@ const CountryDatatable = props => {
     dataItem.api = generateGoodBad(dataItem.api);
     data[key] = dataItem;
   }
-  pagination.totalRows = 0;
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-search-bar"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -3291,13 +3289,15 @@ const CountryDatatable = props => {
     data: Object.values(data),
     dense: true,
     pagination: true,
-    paginationServer: true,
-    paginationTotalRows: (_pagination$totalRows = pagination.totalRows) !== null && _pagination$totalRows !== void 0 ? _pagination$totalRows : 0,
-    onChangeRowsPerPage: handleCountryTableRowsChange,
-    onChangePage: handleCountryTablePageChange,
-    sortServer: true,
-    onSort: handleCountryTableSort,
-    paginationRowsPerPageOptions: [10, 25, 50, 100],
+    paginationServer: true
+    // paginationTotalRows={pagination.totalRows ?? 0}
+    // onChangeRowsPerPage={handleCountryTableRowsChange}
+    // onChangePage={handleCountryTablePageChange}
+    ,
+    sortServer: true
+    // onSort={handleCountryTableSort}
+    // paginationRowsPerPageOptions={[10, 25, 50, 100]}
+    ,
     noDataComponent: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("No results", "really-simple-ssl"),
     persistTableHead: true,
     theme: "really-simple-plugins",
