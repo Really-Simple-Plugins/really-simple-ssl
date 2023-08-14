@@ -176,6 +176,8 @@ const CountryDatatable = (props) => {
         data[key] = dataItem;
     }
 
+
+    pagination.totalRows = 0;
     return (
         <><div className="rsssl-search-bar">
             <div className="rsssl-search-bar__inner">

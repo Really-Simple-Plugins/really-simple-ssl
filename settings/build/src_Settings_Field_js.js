@@ -3274,6 +3274,7 @@ const CountryDatatable = props => {
     dataItem.api = generateGoodBad(dataItem.api);
     data[key] = dataItem;
   }
+  pagination.totalRows = 0;
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-search-bar"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
