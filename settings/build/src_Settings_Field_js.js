@@ -3114,6 +3114,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const CountryDatatable = props => {
+  var _pagination$totalRows;
   const {
     CountryDataTable,
     dataLoaded,
@@ -3290,7 +3291,7 @@ const CountryDatatable = props => {
     dense: true,
     pagination: true,
     paginationServer: true,
-    paginationTotalRows: pagination.totalRows,
+    paginationTotalRows: (_pagination$totalRows = pagination.totalRows) !== null && _pagination$totalRows !== void 0 ? _pagination$totalRows : 0,
     onChangeRowsPerPage: handleCountryTableRowsChange,
     onChangePage: handleCountryTablePageChange,
     sortServer: true,

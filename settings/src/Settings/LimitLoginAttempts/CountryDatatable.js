@@ -196,7 +196,7 @@ const CountryDatatable = (props) => {
                 dense
                 pagination
                 paginationServer
-                paginationTotalRows={pagination.totalRows}
+                paginationTotalRows={pagination.totalRows ?? 0}
                 onChangeRowsPerPage={handleCountryTableRowsChange}
                 onChangePage={handleCountryTablePageChange}
                 sortServer
