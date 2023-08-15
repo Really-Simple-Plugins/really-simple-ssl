@@ -3835,6 +3835,26 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
     } catch (e) {
       console.log(e);
     }
+  },
+  updateMultiRow: async (ids, status) => {
+    set({
+      processing: true
+    });
+    try {
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('ip_update_multi_row', {
+        ids,
+        status
+      });
+      //now we set the EventLog
+      if (response) {
+        await get().fetchIpData('ip_list');
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  handleLockedOut: async id => {
+    console.warn('handleLockedOut' + id);
   }
 }));
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (IpAddressDataTableStore);
@@ -3885,6 +3905,7 @@ const IpAddressDatatable = props => {
     pagination,
     dataActions,
     handleIpTableRowsChange,
+    updateMultiRow,
     fetchIpData,
     handleIpTableSort,
     handleIpTablePageChange,
@@ -3915,6 +3936,7 @@ const IpAddressDatatable = props => {
   } = (0,_FilterData__WEBPACK_IMPORTED_MODULE_5__["default"])();
   const [addingIpAddress, setAddingIpAddress] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(false);
   const [calculateCidr, setCalculateCidr] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(false);
+  const [rowsSelected, setRowsSelected] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)([]);
   const moduleName = 'rsssl-group-filter-limit_login_attempts_ip_address';
   //we create the columns
   let columns = [];
@@ -4003,10 +4025,39 @@ const IpAddressDatatable = props => {
       setStatusSelected(value);
     }
   }
+
   //we convert the data to an array
   let data = Object.values({
     ...IpDataTable.data
   });
+  function blockIpAddresses(data) {
+    //we check if the data is an array
+    if (Array.isArray(data)) {
+      let ids = [];
+      data.map(item => {
+        ids.push(item.id);
+      });
+      updateMultiRow(ids, 'blocked');
+      //we emtry the rowsSelected
+      setRowsSelected([]);
+    } else {
+      updateRow(data, 'blocked');
+    }
+  }
+  function trustIpAddresses(data) {
+    //we check if the data is an array
+    if (Array.isArray(data)) {
+      let ids = [];
+      data.map(item => {
+        ids.push(item.id);
+      });
+      updateMultiRow(ids, 'trusted');
+      //we emtry the rowsSelected
+      setRowsSelected([]);
+    } else {
+      updateRow(data, 'trusted');
+    }
+  }
   function generateOptions(status, id) {
     //if the there is no id we set it to new
     if (!id) {
@@ -4053,42 +4104,44 @@ const IpAddressDatatable = props => {
       });
     }
   }
+  function generateActionButtons(id) {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-action-buttons"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-action-buttons__inner"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
+      className: "button button-secondary rsssl-action-buttons__button",
+      onClick: () => {
+        trustIpAddresses(id);
+      }
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Trust", "really-simple-ssl"))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-action-buttons__inner"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
+      className: "button button-primary rsssl-action-buttons__button",
+      onClick: () => {
+        blockIpAddresses(id);
+      }
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Block", "really-simple-ssl"))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-action-buttons__inner"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
+      className: "button button-red rsssl-action-buttons__button",
+      onClick: () => {
+        setIpAddress('');
+        setIdSelected(id);
+        setAddingIpAddress(true);
+      }
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Reset", "really-simple-ssl")))));
+  }
   for (const key in data) {
     let dataItem = {
       ...data[key]
     };
-    dataItem.status = generateOptions(dataItem.status, dataItem.id);
-    dataItem.iso2_code = generateFlag('NL', 'Netherlands');
-    dataItem.api = generateGoodBad(dataItem.api);
+    dataItem.action = generateActionButtons(dataItem.id);
     data[key] = dataItem;
   }
-  function handleAddClick() {
-    setAddingIpAddress(true);
+  function handleSelection(state) {
+    setRowsSelected(state.selectedRows);
   }
-  function handleCancel() {
-    // Set both states to false
-    setAddingIpAddress(false);
-    setCalculateCidr(false);
-  }
-  function handleCancelCidr() {
-    setCalculateCidr(false);
-  }
-
-  // Observe changes to addingIpAddress and calculateCidr
-  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
-    // This code will run after addingIpAddress or calculateCidr is updated
-    if (!addingIpAddress && !calculateCidr) {
-      let data = Object.values({
-        ...IpDataTable.data
-      });
-    }
-    // You can also handle other logic here that depends on the updated values
-  }, [addingIpAddress, calculateCidr]);
-  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
-    if (canSetCidr) {
-      setIpAddress(cidr);
-    }
-  }, [canSetCidr]);
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_AddIpAddressModal__WEBPACK_IMPORTED_MODULE_10__["default"], {
     isOpen: addingIpAddress,
     onRequestClose: handleClose,
@@ -4115,7 +4168,40 @@ const IpAddressDatatable = props => {
     className: "rsssl-search-bar__input",
     placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Search", "really-simple-ssl"),
     onChange: event => handleIpTableSearch(event.target.value, searchableColumns)
-  })))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
+  })))), rowsSelected.length > 0 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-container",
+    style: {
+      marginTop: '1em',
+      marginBottom: '1em'
+    }
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-multiselect-datatable-form rsssl-primary"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("You have selected", "really-simple-ssl"), " ", rowsSelected.length, " ", (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("rows", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-action-buttons"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-action-buttons__inner"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
+    className: "button button-secondary rsssl-action-buttons__button",
+    onClick: () => {
+      trustIpAddresses(rowsSelected);
+    }
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Trust", "really-simple-ssl"))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-action-buttons__inner"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
+    className: "button button-primary rsssl-action-buttons__button",
+    onClick: () => {
+      blockIpAddresses(rowsSelected);
+    }
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Block", "really-simple-ssl"))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-action-buttons__inner"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
+    className: "button button-red rsssl-action-buttons__button",
+    onClick: () => {
+      setIpAddress('');
+      setIdSelected(id);
+      setAddingIpAddress(true);
+    }
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Reset", "really-simple-ssl")))))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
     columns: columns,
     data: data,
     dense: true,
@@ -4129,6 +4215,9 @@ const IpAddressDatatable = props => {
     paginationRowsPerPageOptions: [10, 25, 50, 100],
     noDataComponent: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("No results", "really-simple-ssl"),
     persistTableHead: true,
+    selectableRows: true,
+    onSelectedRowsChange: handleSelection,
+    clearSelectedRows: rowsSelected.length <= 0,
     theme: "really-simple-plugins",
     customStyles: customStyles
   }));

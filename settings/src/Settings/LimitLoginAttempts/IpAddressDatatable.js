@@ -17,6 +17,7 @@ const IpAddressDatatable = (props) => {
         pagination,
         dataActions,
         handleIpTableRowsChange,
+        updateMultiRow,
         fetchIpData,
         handleIpTableSort,
         handleIpTablePageChange,
@@ -42,6 +43,7 @@ const IpAddressDatatable = (props) => {
     const {selectedFilter, setSelectedFilter, activeGroupId, getCurrentFilter} = FilterData();
     const [addingIpAddress, setAddingIpAddress] = useState(false);
     const [calculateCidr, setCalculateCidr] = useState(false);
+    const [rowsSelected, setRowsSelected] = useState([]);
 
     const moduleName = 'rsssl-group-filter-limit_login_attempts_ip_address';
     //we create the columns
@@ -134,8 +136,39 @@ const IpAddressDatatable = (props) => {
             setStatusSelected(value);
         }
     }
+
     //we convert the data to an array
     let data = Object.values({...IpDataTable.data});
+
+    function blockIpAddresses(data) {
+        //we check if the data is an array
+        if (Array.isArray(data)) {
+            let ids = [];
+            data.map((item) => {
+                ids.push(item.id);
+            });
+            updateMultiRow(ids, 'blocked');
+            //we emtry the rowsSelected
+            setRowsSelected([]);
+        } else {
+            updateRow(data, 'blocked');
+        }
+    }
+
+    function trustIpAddresses(data) {
+        //we check if the data is an array
+        if (Array.isArray(data)) {
+            let ids = [];
+            data.map((item) => {
+                ids.push(item.id);
+            });
+            updateMultiRow(ids, 'trusted');
+            //we emtry the rowsSelected
+            setRowsSelected([]);
+        } else {
+            updateRow(data, 'trusted');
+        }
+    }
 
 
     function generateOptions(status, id) {
@@ -182,7 +215,8 @@ const IpAddressDatatable = (props) => {
         )
     }
 
-    function generateGoodBad(value) {``
+    function generateGoodBad(value) {
+        ``
         if (value > 0) {
             return (
                 <Icon name="circle-check" color='green'/>
@@ -194,47 +228,62 @@ const IpAddressDatatable = (props) => {
         }
     }
 
+    function generateActionButtons(id) {
+        return (
+            <>
+                <div className="rsssl-action-buttons">
+                    {/* if the id is new we show the Trust button */}
+                    <div className="rsssl-action-buttons__inner">
+                        <Button
+                            className="button button-secondary rsssl-action-buttons__button"
+                            onClick={() => {
+                                trustIpAddresses(id);
+                            }}
+                        >
+                            {__("Trust", "really-simple-ssl")}
+                        </Button>
+                    </div>
+                    {/* if the id is new we show the Block button */}
+                    <div className="rsssl-action-buttons__inner">
+                        <Button
+                            className="button button-primary rsssl-action-buttons__button"
+                            onClick={() => {
+                               blockIpAddresses(id);
+                            }}
+                        >
+                            {__("Block", "really-simple-ssl")}
+                        </Button>
+                    </div>
+                    {/* if the id is new we show the Reset button */}
+                    <div className="rsssl-action-buttons__inner">
+                        <Button
+                            className="button button-red rsssl-action-buttons__button"
+                            onClick={() => {
+                                setIpAddress('');
+                                setIdSelected(id);
+                                setAddingIpAddress(true);
+                            }
+                            }
+                        >
+                            {__("Reset", "really-simple-ssl")}
+                        </Button>
+                    </div>
+                </div>
+            </>
+        );
+    }
+
     for (const key in data) {
         let dataItem = {...data[key]}
 
-        dataItem.status = generateOptions(dataItem.status, dataItem.id);
-        dataItem.iso2_code = generateFlag('NL', 'Netherlands');
-        dataItem.api = generateGoodBad(dataItem.api);
+        dataItem.action = generateActionButtons(dataItem.id);
 
         data[key] = dataItem;
     }
 
-    function handleAddClick() {
-        setAddingIpAddress(true);
+    function handleSelection(state) {
+        setRowsSelected(state.selectedRows);
     }
-
-    function handleCancel() {
-        // Set both states to false
-        setAddingIpAddress(false);
-        setCalculateCidr(false);
-    }
-
-    function handleCancelCidr() {
-        setCalculateCidr(false);
-    }
-
-
-
-// Observe changes to addingIpAddress and calculateCidr
-    useEffect(() => {
-        // This code will run after addingIpAddress or calculateCidr is updated
-        if (!addingIpAddress && !calculateCidr) {
-            let data = Object.values({...IpDataTable.data});
-        }
-        // You can also handle other logic here that depends on the updated values
-    }, [addingIpAddress, calculateCidr]);
-
-    useEffect(() => {
-        if (canSetCidr) {
-            setIpAddress(cidr);
-        }
-    }, [canSetCidr])
-
 
     return (
         <>
@@ -251,14 +300,14 @@ const IpAddressDatatable = (props) => {
 
                 <div className="rsssl-add-button">
                     {(getCurrentFilter(moduleName) === 'blocked' || getCurrentFilter(moduleName) === 'trusted') && (
-                    <div className="rsssl-add-button__inner">
-                        <Button
-                            className="button button-secondary rsssl-add-button__button"
-                            onClick={handleOpen}
-                        >
-                            {__("Add IP Address", "really-simple-ssl")}
-                        </Button>
-                    </div>
+                        <div className="rsssl-add-button__inner">
+                            <Button
+                                className="button button-secondary rsssl-add-button__button"
+                                onClick={handleOpen}
+                            >
+                                {__("Add IP Address", "really-simple-ssl")}
+                            </Button>
+                        </div>
                     )}
                 </div>
 
@@ -275,6 +324,60 @@ const IpAddressDatatable = (props) => {
                     </div>
                 </div>
             </div>
+
+            { /*Display the action form what to do with the selected*/}
+            {rowsSelected.length > 0 && (
+                <div className="rsssl-container" style={{
+                    marginTop: '1em',
+                    marginBottom: '1em',
+                }}>
+                    <div className={"rsssl-multiselect-datatable-form rsssl-primary"}
+                   >
+                        <div>
+                            {__("You have selected", "really-simple-ssl")} {rowsSelected.length} {__("rows", "really-simple-ssl")}
+                        </div>
+
+                        <div className="rsssl-action-buttons">
+                            {/* if the id is new we show the Trust button */}
+                            <div className="rsssl-action-buttons__inner">
+                                <Button
+                                    className="button button-secondary rsssl-action-buttons__button"
+                                    onClick={() => {
+                                        trustIpAddresses(rowsSelected);
+                                    }}
+                                >
+                                    {__("Trust", "really-simple-ssl")}
+                                </Button>
+                            </div>
+                            {/* if the id is new we show the Block button */}
+                            <div className="rsssl-action-buttons__inner">
+                                <Button
+                                    className="button button-primary rsssl-action-buttons__button"
+                                    onClick={() => {
+                                        blockIpAddresses(rowsSelected);
+                                    }}
+                                >
+                                    {__("Block", "really-simple-ssl")}
+                                </Button>
+                            </div>
+                            {/* if the id is new we show the Reset button */}
+                            <div className="rsssl-action-buttons__inner">
+                                <Button
+                                    className="button button-red rsssl-action-buttons__button"
+                                    onClick={() => {
+                                        setIpAddress('');
+                                        setIdSelected(id);
+                                        setAddingIpAddress(true);
+                                    }
+                                    }
+                                >
+                                    {__("Reset", "really-simple-ssl")}
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
             {/*Display the datatable*/}
             <DataTable
                 columns={columns}
@@ -290,6 +393,9 @@ const IpAddressDatatable = (props) => {
                 paginationRowsPerPageOptions={[10, 25, 50, 100]}
                 noDataComponent={__("No results", "really-simple-ssl")}
                 persistTableHead
+                selectableRows
+                onSelectedRowsChange={handleSelection}
+                clearSelectedRows={rowsSelected.length <= 0}
                 theme="really-simple-plugins"
                 customStyles={customStyles}
             ></DataTable>

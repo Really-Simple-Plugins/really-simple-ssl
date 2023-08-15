@@ -349,6 +349,26 @@ const IpAddressDataTableStore = create((set, get) => ({
         } catch (e) {
             console.log(e);
         }
+    },
+
+    updateMultiRow: async (ids, status) => {
+        set({processing: true});
+        try {
+            const response = await rsssl_api.doAction(
+                'ip_update_multi_row',
+                {ids, status}
+            );
+            //now we set the EventLog
+            if (response) {
+                await get().fetchIpData('ip_list');
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    },
+
+    handleLockedOut: async (id) => {
+        console.warn('handleLockedOut' + id);
     }
 
 
