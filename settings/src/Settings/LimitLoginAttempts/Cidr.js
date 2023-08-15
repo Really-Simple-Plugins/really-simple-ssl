@@ -1,5 +1,7 @@
 import React, {useState, useEffect} from "react";
+
 import IpAddressDataTableStore from "./IpAddressDataTableStore";
+import IpAddressInput from "./IpAddressInput";
 
 const Cidr = () => {
 
@@ -20,22 +22,21 @@ const Cidr = () => {
             <div className="rsssl-ip-address-input">
                 <div className="rsssl-ip-address-input__inner">
                     <div className="rsssl-ip-address-input__icon"></div>
-                    <input
+                    <IpAddressInput
                         id="lowestIP"
                         type="text"
                         className="rsssl-ip-address-input__input"
-                        placeholder="Enter IP range start"
                         value={lowestIP}
                         onChange={ (e) => setLowestIP(e.target.value)}
-                    />
+                        />
+
                 </div>
                 <div className="rsssl-ip-address-input__inner">
                     <div className="rsssl-ip-address-input__icon"></div>
-                    <input
+                    <IpAddressInput
                         id="highestIP"
                         type="text"
                         className="rsssl-ip-address-input__input"
-                        placeholder="Enter IP range end"
                         value={highestIP}
                         onChange={(e) => setHighestIP(e.target.value)}
                     />

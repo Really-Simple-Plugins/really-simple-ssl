@@ -187,6 +187,7 @@ const Icon = (props) => {
         };
     }
 
+
     if (iconName === 'sync') {
         renderedIcon = {
             html:

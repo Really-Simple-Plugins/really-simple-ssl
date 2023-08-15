@@ -154,11 +154,7 @@ function rsssl_menu()
                                     [
                                         'id'    => 'locked',
                                         'title' => __('Locked-out', 'really-simple-ssl'),
-                                    ],
-                                    [
-                                        'id'    => 'all',
-                                        'title' => __('All', 'really-simple-ssl'),
-                                    ],
+                                    ]
                                 ],
                             ],
                             'title'        => __('Users', 'really-simple-ssl'),
@@ -185,10 +181,6 @@ function rsssl_menu()
                                     [
                                         'id'    => 'locked',
                                         'title' => __('Locked-out', 'really-simple-ssl'),
-                                    ],
-                                    [
-                                        'id'    => 'all',
-                                        'title' => __('All', 'really-simple-ssl'),
                                     ],
                                 ],
                             ],

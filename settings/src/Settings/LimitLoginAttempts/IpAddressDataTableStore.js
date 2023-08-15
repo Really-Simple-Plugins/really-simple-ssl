@@ -24,6 +24,7 @@ const IpAddressDataTableStore = create((set, get) => ({
     pagination: {},
     dataActions: {},
     IpDataTable: [],
+    maskError: false,
 
     /*
     * This function fetches the data from the server and fills the property IpDataTable
@@ -108,7 +109,21 @@ const IpAddressDataTableStore = create((set, get) => ({
     * This function sets the ip address and is used by Cidr and IpAddressInput
      */
     setIpAddress: (ipAddress) => {
-        set({ipAddress});
+        // Split the input into IP and CIDR mask
+        let [ip, mask] = ipAddress.split('/');
+        //if , we change it to .
+        ip = ip.replace(/,/g, '.');
+
+        let ipRegex = /^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$|^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,4}|((25[0-5]|(2[0-4]|1{0,1}[0-9])?[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9])?[0-9]))|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9])?[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9])?[0-9]))$/;
+        if (!ipRegex.test(ip)) {
+            set({maskError: true});
+        } else {
+            set({maskError: false});
+        }
+
+        // Construct the final IP address by optionally appending the CIDR mask
+        let finalIp = mask ? `${ip}/${mask}` : ip;
+        set({ ipAddress: finalIp })
     },
 
     /*
@@ -150,16 +165,20 @@ const IpAddressDataTableStore = create((set, get) => ({
     addRow: async (ipAddress, status) => {
         set({processing: true});
         try {
-            const response = await rsssl_api.doAction(
-                'ip_add_ip_address',
-                {ipAddress, status}
-            );
-            //now we set the EventLog
-            if (response) {
+            const response = await rsssl_api.doAction('ip_add_ip_address', {ipAddress, status});
+            // Consider checking the response structure for any specific success or failure signals
+            if (response && response.request_success) {
                 await get().fetchIpData('ip_list');
+                // Potentially notify the user of success, if needed.
+            } else {
+                // Handle any unsuccessful response if needed.
+                console.log("Failed to add IP address: ", response.message);
             }
         } catch (e) {
             console.log(e);
+            // Notify the user of an error.
+        } finally {
+            set({processing: false});
         }
     },
 

@@ -8,6 +8,7 @@ import {produce} from "immer";
 import Flag from "../../utils/Flag/Flag";
 import Icon from "../../utils/Icon";
 import Cidr from "./Cidr";
+import AddIpAddressModal from "./AddIpAddressModal";
 
 const IpAddressDatatable = (props) => {
     const {
@@ -57,7 +58,7 @@ const IpAddressDatatable = (props) => {
         const currentFilter = getCurrentFilter(moduleName);
 
         if (!currentFilter) {
-            setSelectedFilter('all', moduleName);
+            setSelectedFilter('blocked', moduleName);
         }
         handleIpTableFilter('status', currentFilter);
     }, [selectedFilter, moduleName]);
@@ -100,7 +101,13 @@ const IpAddressDatatable = (props) => {
         );
     }
 
+    const handleOpen = () => {
+        setAddingIpAddress(true);
+    };
 
+    const handleClose = () => {
+        setAddingIpAddress(false);
+    };
 
     let searchableColumns = [];
     //setting the searchable columns
@@ -123,7 +130,6 @@ const IpAddressDatatable = (props) => {
         if (id !== 'new') {
             updateRow(id, value);
         } else {
-            console.log(value);
             //if the id is 'new' we set the statusSelected
             setStatusSelected(value);
         }
@@ -212,19 +218,7 @@ const IpAddressDatatable = (props) => {
         setCalculateCidr(false);
     }
 
-    function handleSubmit(newIp) {
-        // Validate and add the new IP address here
-        // ...
 
-        // Reset the state
-        setAddingIpAddress(false);
-        setCalculateCidr(false);
-        // we check if statusSelected is not empty
-        if (statusSelected !== '') {
-            //we add the row
-            addRow(newIp, statusSelected);
-        }
-    }
 
 // Observe changes to addingIpAddress and calculateCidr
     useEffect(() => {
@@ -242,73 +236,32 @@ const IpAddressDatatable = (props) => {
     }, [canSetCidr])
 
 
-
-
-    if (addingIpAddress) {
-        data.unshift({
-            attempt_value:
-                <div>
-                    <input
-                        id={'ipAddress'}
-                        type="text"
-                        placeholder="Enter IP Address"
-                        className={'rsssl-input'}
-                        value={ipAddress}
-                        onChange={(event) => setIpAddress(event.target.value)}
-                        // ... other attributes here ...
-                    /><br></br>
-                    <a className={'button button-small button-secondary right'}
-                       onClick={() => setCalculateCidr(true)}
-                    >advanced</a>
-                </div>,
-
-            status: generateOptions(statusSelected, 'new'),
-            // datetime: <Cidr/>,
-            api: <div>
-                <button onClick={handleCancel} className={'button button-small button-secondary'}>Cancel</button><br/>
-                <button className={'button button-small button-primary'}
-                 onClick={() => handleSubmit(ipAddress)}
-                >Save</button>
-            </div>,
-        });
-    }
-
-// When calculating CIDR
-    if (calculateCidr) {
-        data.splice(1, 0, {
-            attempt_value: <Cidr></Cidr>,
-            status: <button
-                className={'button button-primary'}
-                onClick={() => fetchCidrData('get_mask_from_range')}
-                disabled={!inputRangeValidated}
-            >Validate Range</button>,
-            api: <button className={'button button-small button-secondary'}
-            onClick={handleCancelCidr}
-            >Cancel</button>,
-            datetime: <div className={'left'}>
-                <strong>{__("CIDR Notation", "really-simple-ssl")}</strong><br></br>
-                <span>{cidr}</span><br/>
-                <hr/>
-                <strong>{__("IP Count", "really-simple-ssl")}</strong><br></br>
-                <span>{ip_count}</span>
-            </div>,
-        });
-    }
-
     return (
         <>
+            <AddIpAddressModal
+                isOpen={addingIpAddress}
+                onRequestClose={handleClose}
+                options={options}
+                value={ipAddress}
+                status={getCurrentFilter(moduleName)}
+            >
+            </AddIpAddressModal>
             <div className="rsssl-container">
                 {/*display the add button on left side*/}
+
                 <div className="rsssl-add-button">
+                    {(getCurrentFilter(moduleName) === 'blocked' || getCurrentFilter(moduleName) === 'trusted') && (
                     <div className="rsssl-add-button__inner">
                         <Button
                             className="button button-secondary rsssl-add-button__button"
-                            onClick={handleAddClick}
+                            onClick={handleOpen}
                         >
                             {__("Add IP Address", "really-simple-ssl")}
                         </Button>
                     </div>
+                    )}
                 </div>
+
                 {/*Display the search bar*/}
                 <div className="rsssl-search-bar">
                     <div className="rsssl-search-bar__inner">
