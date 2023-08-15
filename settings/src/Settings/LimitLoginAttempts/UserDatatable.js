@@ -6,6 +6,8 @@ import FilterData from "../FilterData";
 
 import {Button} from "@wordpress/components";
 import {produce} from "immer";
+import AddIpAddressModal from "./AddIpAddressModal";
+import AddUserModal from "./AddUserModal";
 
 const UserDatatable = (props) => {
     const {
@@ -18,11 +20,15 @@ const UserDatatable = (props) => {
         handleUserTableSort,
         handleUserTablePageChange,
         handleUserTableSearch,
-        handleUserTableFilter
+        handleUserTableFilter,
+        updateRow,
     } = UserDataTableStore()
 
     //here we set the selectedFilter from the Settings group
     const {selectedFilter, setSelectedFilter, activeGroupId, getCurrentFilter} = FilterData();
+    const [rowsSelected, setRowsSelected] = useState([]);
+    const [addingUser, setAddingUser] = useState(false);
+    const [user, setUser] = useState('');
     const moduleName = 'rsssl-group-filter-limit_login_attempts_users';
 
 
@@ -40,7 +46,7 @@ const UserDatatable = (props) => {
         const currentFilter = getCurrentFilter(moduleName);
 
         if (!currentFilter) {
-            setSelectedFilter('all', moduleName);
+            setSelectedFilter('blocked', moduleName);
         }
         handleUserTableFilter('status', currentFilter);
     }, [selectedFilter, moduleName]);
@@ -92,6 +98,15 @@ const UserDatatable = (props) => {
         }
     });
 
+
+    const handleOpen = () => {
+        setAddingUser(true);
+    };
+
+    const handleClose = () => {
+        setAddingUser(false);
+    };
+
     //now we get the options for the select control
     let options = props.field.options;
     //we divide the key into label and the value into value
@@ -102,6 +117,79 @@ const UserDatatable = (props) => {
     function handleStatusChange(value, id) {
 
     }
+
+    function blockUsers(data) {
+        //we check if the data is an array
+        if (Array.isArray(data)) {
+            let ids = [];
+            data.map((item) => {
+                ids.push(item.id);
+            });
+            updateMultiRow(ids, 'blocked');
+            //we emtry the rowsSelected
+            setRowsSelected([]);
+        } else {
+            updateRow(data, 'blocked');
+        }
+    }
+
+    function trustUsers(data) {
+        //we check if the data is an array
+        if (Array.isArray(data)) {
+            let ids = [];
+            data.map((item) => {
+                ids.push(item.id);
+            });
+            updateMultiRow(ids, 'trusted');
+            //we emtry the rowsSelected
+            setRowsSelected([]);
+        } else {
+            updateRow(data, 'trusted');
+        }
+    }
+    function handleSelection(state) {
+        setRowsSelected(state.selectedRows);
+    }
+
+    function generateActionButtons(id) {
+        return (
+            <>
+                <div className="rsssl-action-buttons">
+                    {/* if the id is new we show the Trust button */}
+                    <div className="rsssl-action-buttons__inner">
+                        <Button
+                            className="button button-secondary rsssl-action-buttons__button"
+                            onClick={() => {
+                                trustUsers(id);
+                            }}
+                        >
+                            {__("Trust", "really-simple-ssl")}
+                        </Button>
+                    </div>
+                    {/* if the id is new we show the Block button */}
+                    <div className="rsssl-action-buttons__inner">
+                        <Button
+                            className="button button-primary rsssl-action-buttons__button"
+                            onClick={() => {
+                                blockUsers(id);
+                            }}
+                        >
+                            {__("Block", "really-simple-ssl")}
+                        </Button>
+                    </div>
+                    {/* if the id is new we show the Reset button */}
+                    <div className="rsssl-action-buttons__inner">
+                        <Button
+                            className="button button-red rsssl-action-buttons__button"
+                        >
+                            {__("Reset", "really-simple-ssl")}
+                        </Button>
+                    </div>
+                </div>
+            </>
+        );
+    }
+
     //we convert the data to an array
     let data = {...UserDataTable.data};
 
@@ -129,20 +217,28 @@ const UserDatatable = (props) => {
 
     for (const key in data) {
         let dataItem = {...data[key]}
-
-        dataItem.status = generateOptions(dataItem.status, dataItem.id);
-
+        //we add the action buttons
+        dataItem.action = generateActionButtons(dataItem.id);
         data[key] = dataItem;
     }
 
     return (
         <>
+            <AddUserModal
+                isOpen={addingUser}
+                onRequestClose={handleClose}
+                options={options}
+                value={user}
+                status={getCurrentFilter(moduleName)}
+            >
+            </AddUserModal>
             <div className="rsssl-container">
                 {/*display the add button on left side*/}
                 <div className="rsssl-add-button">
                     <div className="rsssl-add-button__inner">
                         <Button
                             className="button button-secondary rsssl-add-button__button"
+                            onClick={handleOpen}
                         >
                             {__("Add User", "really-simple-ssl")}
                         </Button>
@@ -161,6 +257,59 @@ const UserDatatable = (props) => {
                     </div>
                 </div>
             </div>
+            { /*Display the action form what to do with the selected*/}
+            {rowsSelected.length > 0 && (
+                <div className="rsssl-container" style={{
+                    marginTop: '1em',
+                    marginBottom: '1em',
+                }}>
+                    <div className={"rsssl-multiselect-datatable-form rsssl-primary"}
+                    >
+                        <div>
+                            {__("You have selected", "really-simple-ssl")} {rowsSelected.length} {__("rows", "really-simple-ssl")}
+                        </div>
+
+                        <div className="rsssl-action-buttons">
+                            {/* if the id is new we show the Trust button */}
+                            <div className="rsssl-action-buttons__inner">
+                                <Button
+                                    className="button button-secondary rsssl-action-buttons__button"
+                                    onClick={() => {
+                                        trustIpAddresses(rowsSelected);
+                                    }}
+                                >
+                                    {__("Trust", "really-simple-ssl")}
+                                </Button>
+                            </div>
+                            {/* if the id is new we show the Block button */}
+                            <div className="rsssl-action-buttons__inner">
+                                <Button
+                                    className="button button-primary rsssl-action-buttons__button"
+                                    onClick={() => {
+                                        blockIpAddresses(rowsSelected);
+                                    }}
+                                >
+                                    {__("Block", "really-simple-ssl")}
+                                </Button>
+                            </div>
+                            {/* if the id is new we show the Reset button */}
+                            <div className="rsssl-action-buttons__inner">
+                                <Button
+                                    className="button button-red rsssl-action-buttons__button"
+                                    onClick={() => {
+                                        setIpAddress('');
+                                        setIdSelected(id);
+                                        setAddingIpAddress(true);
+                                    }
+                                    }
+                                >
+                                    {__("Reset", "really-simple-ssl")}
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
             {/*Display the datatable*/}
             <DataTable
                 columns={columns}
@@ -174,6 +323,9 @@ const UserDatatable = (props) => {
                 sortServer
                 onSort={handleUserTableSort}
                 paginationRowsPerPageOptions={[10, 25, 50, 100]}
+                selectableRows
+                onSelectedRowsChange={handleSelection}
+                clearSelectedRows={rowsSelected.length <= 0}
                 noDataComponent={__("No results", "really-simple-ssl")}
                 persistTableHead
                 theme="really-simple-plugins"

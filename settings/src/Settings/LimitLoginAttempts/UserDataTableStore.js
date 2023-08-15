@@ -74,6 +74,64 @@ const UserDataTableStore = create((set, get) => ({
         get().fetchUserData('user_list');
     },
 
+    /*
+* This function add a new row to the table
+ */
+    addRow: async (user, status) => {
+        set({processing: true});
+        try {
+            const response = await rsssl_api.doAction('user_add_user', {user, status});
+            // Consider checking the response structure for any specific success or failure signals
+            if (response && response.request_success) {
+                await get().fetchUserData('user_list');
+                // Potentially notify the user of success, if needed.
+            } else {
+                // Handle any unsuccessful response if needed.
+                console.log("Failed to add User: ", response.message);
+            }
+        } catch (e) {
+            console.log(e);
+            // Notify the user of an error.
+        } finally {
+            set({processing: false});
+        }
+    },
+
+    /*
+* This function updates the row only changing the status
+ */
+    updateRow: async (id, status) => {
+        set({processing: true});
+        try {
+            const response = await rsssl_api.doAction(
+                'user_update_row',
+                {id, status}
+            );
+            //now we set the EventLog
+            if (response) {
+                await get().fetchUserData('user_list');
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    },
+
+
+    updateMultiRow: async (ids, status) => {
+        set({processing: true});
+        try {
+            const response = await rsssl_api.doAction(
+                'user_update_multi_row',
+                {ids, status}
+            );
+            //now we set the EventLog
+            if (response) {
+                await get().fetchUserData('user_list');
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    },
 }));
 
 export default UserDataTableStore;

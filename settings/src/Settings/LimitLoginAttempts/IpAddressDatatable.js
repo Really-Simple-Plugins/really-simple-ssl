@@ -42,7 +42,6 @@ const IpAddressDatatable = (props) => {
     //here we set the selectedFilter from the Settings group
     const {selectedFilter, setSelectedFilter, activeGroupId, getCurrentFilter} = FilterData();
     const [addingIpAddress, setAddingIpAddress] = useState(false);
-    const [calculateCidr, setCalculateCidr] = useState(false);
     const [rowsSelected, setRowsSelected] = useState([]);
 
     const moduleName = 'rsssl-group-filter-limit_login_attempts_ip_address';
