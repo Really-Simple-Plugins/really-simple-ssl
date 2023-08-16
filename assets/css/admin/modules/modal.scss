@@ -135,3 +135,7 @@
     }
   }
 }
+
+.components-modal__frame {
+  width: clamp(300px, 75ch, 100vw - 50px);
+}

@@ -4,9 +4,9 @@ Donate link: https://www.paypal.me/reallysimplessl
 Tags: SSL, https, force SSL, mixed content, security, secure website, website security, TLS, secure socket layers, HSTS
 Requires at least: 5.8
 License: GPL2
-Tested up to: 6.2
+Tested up to: 6.3
 Requires PHP: 7.2
-Stable tag: 7.0.5
+Stable tag: 7.0.8
 
 The easiest way to improve security! Leverage your SSL certificate and protect your website visitors.
 
@@ -43,6 +43,7 @@ Isolate your website from unnecessary file loading and exchanges with third-part
 * Rename and randomize your database prefix.
 * Change the debug.log file location to a non-public folder
 * Disable application passwords.
+* Control admin creation
 * Disable HTTP methods, reducing HTTP requests.
 
 === Vulnerability Measures ===
@@ -110,6 +111,29 @@ The plugin checks your certificate before enabling, but if, for example, you mig
 If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions](https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/) instead.
 
 == Changelog ==
+
+= 7.0.8 =
+* August 8th 2023
+* Improvement: WordPress tested up to 6.3
+* Improvement: improve file existence check json
+* Fix: handling of legacy options in php 8.1
+* Fix: count remaining tasks
+
+= 7.0.7 =
+* July 25th 2023
+* Improvement: modal icon placement in wizard on smaller screens
+* Improvement: expire cached detected headers five minutes after saving the settings
+* Fix: handling of legacy options in php 8.1
+* Fix: prevent issues with CloudFlare when submitting support form from within the plugin
+* Fix: translations singular/plural for japanese translations @maboroshin
+
+= 7.0.6 =
+* July 4th 2023
+* Improvement: support custom wp-content directory in advanced-headers.php
+* Improvement: prevent usage of subdirectories in custom login url
+* Fix: translations not loading for chunked react components
+* Improvement: add option to manually re-check vulnerabilities '&rsssl_check_vulnerabilities', props @fawp
+
 = 7.0.5 =
 * Fix: some users with a non www site reporting issues on the login page over http://www, due to the changes in the wp redirect. Reverting to the old method. props @pedalnorth, @mossifer.
 

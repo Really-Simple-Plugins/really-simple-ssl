@@ -67,12 +67,12 @@ function rsssl_is_networkwide_active(){
 /**
  * if the option is does not exist in our new array, check if it's available in the old option. If so, use that one
  * @deprecated to be used until 6.2, as fallback for failed upgrades in some specific edge case situations
- * @param array  $options
+ * @param array|bool $options
  * @param string $name
  *
  * @return array
  */
-function rsssl_get_legacy_option( array $options, string $name): array {
+function rsssl_get_legacy_option( $options, string $name): array {
 	$old_options = is_multisite() ? get_site_option('rlrsssl_network_options') : get_option( 'rlrsssl_options' );
 	if ( $old_options ) {
 		if ( $name === 'ssl_enabled' && isset( $old_options['ssl_enabled']) ) {
