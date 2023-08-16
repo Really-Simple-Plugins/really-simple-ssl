@@ -2,6 +2,7 @@ import {__} from '@wordpress/i18n';
 import React, {useEffect, useRef, useState} from 'react';
 import DataTable, {createTheme} from "react-data-table-component";
 import IpAddressDataTableStore from "./IpAddressDataTableStore";
+import DynamicDataTableStore from "../EventLog/DynamicDataTableStore";
 import FilterData from "../FilterData";
 import {Button} from "@wordpress/components";
 import {produce} from "immer";
@@ -25,6 +26,8 @@ const IpAddressDatatable = (props) => {
         handleIpTableFilter,
         ipAddress,
         updateRow,
+        resetRow,
+        resetMultiRow,
         addRow,
         statusSelected,
         setIpAddress,
@@ -43,6 +46,7 @@ const IpAddressDatatable = (props) => {
     const {selectedFilter, setSelectedFilter, activeGroupId, getCurrentFilter} = FilterData();
     const [addingIpAddress, setAddingIpAddress] = useState(false);
     const [rowsSelected, setRowsSelected] = useState([]);
+    const {fetchDynamicData} = DynamicDataTableStore();
 
     const moduleName = 'rsssl-group-filter-limit_login_attempts_ip_address';
     //we create the columns
@@ -152,6 +156,7 @@ const IpAddressDatatable = (props) => {
         } else {
             updateRow(data, 'blocked');
         }
+        fetchDynamicData('event_log')
     }
 
     function trustIpAddresses(data) {
@@ -167,6 +172,22 @@ const IpAddressDatatable = (props) => {
         } else {
             updateRow(data, 'trusted');
         }
+    }
+
+    function resetIpAddresses(data) {
+        //we check if the data is an array
+        if (Array.isArray(data)) {
+            let ids = [];
+            data.map((item) => {
+                ids.push(item.id);
+            });
+            resetMultiRow(ids);
+            //we emtry the rowsSelected
+            setRowsSelected([]);
+        } else {
+            resetRow(data);
+        }
+        fetchDynamicData('event_log')
     }
 
 
@@ -258,9 +279,7 @@ const IpAddressDatatable = (props) => {
                         <Button
                             className="button button-red rsssl-action-buttons__button"
                             onClick={() => {
-                                setIpAddress('');
-                                setIdSelected(id);
-                                setAddingIpAddress(true);
+                                resetIpAddresses(id);
                             }
                             }
                         >
@@ -364,11 +383,8 @@ const IpAddressDatatable = (props) => {
                                 <Button
                                     className="button button-red rsssl-action-buttons__button"
                                     onClick={() => {
-                                        setIpAddress('');
-                                        setIdSelected(id);
-                                        setAddingIpAddress(true);
-                                    }
-                                    }
+                                        resetIpAddresses(rowsSelected);
+                                    }}
                                 >
                                     {__("Reset", "really-simple-ssl")}
                                 </Button>

@@ -4,11 +4,13 @@ import IpAddressDataTableStore   from "./IpAddressDataTableStore";
 import {__} from "@wordpress/i18n";
 import IpAddressInput from "./IpAddressInput";
 import Cidr from "./Cidr";
+import DynamicDataTableStore from "../EventLog/DynamicDataTableStore";
 
 const AddIpAddressModal = (props) => {
     if (!props.isOpen) return null;
     const { inputRangeValidated, fetchCidrData, ipAddress, setIpAddress, maskError, addRow} = IpAddressDataTableStore();
     const [rangeDisplay, setRangeDisplay] = useState(false);
+    const {fetchDynamicData} = DynamicDataTableStore();
     //we add a function to handle the range fill
     const handleRangeFill = () => {
         //we toggle the range display
@@ -32,6 +34,7 @@ const AddIpAddressModal = (props) => {
             setIpAddress('');
             //we close the modal
             props.onRequestClose();
+            fetchDynamicData('event_log')
         }
     }
 

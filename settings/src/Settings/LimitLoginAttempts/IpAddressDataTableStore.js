@@ -5,8 +5,6 @@ import {__} from "@wordpress/i18n";
 import {produce} from "immer";
 import React from "react";
 
-
-
 const IpAddressDataTableStore = create((set, get) => ({
 
     processing: false,
@@ -25,6 +23,7 @@ const IpAddressDataTableStore = create((set, get) => ({
     dataActions: {},
     IpDataTable: [],
     maskError: false,
+
 
     /*
     * This function fetches the data from the server and fills the property IpDataTable
@@ -345,6 +344,8 @@ const IpAddressDataTableStore = create((set, get) => ({
             if (response) {
                //we set the cidrFound and cidrCount
                 set({cidr: response.cidr, ipAddress: response.cidr, ip_count: response.ip_count, canSetCidr: true});
+                //we reload the event log
+
             }
         } catch (e) {
             console.log(e);
@@ -367,11 +368,37 @@ const IpAddressDataTableStore = create((set, get) => ({
         }
     },
 
-    handleLockedOut: async (id) => {
-        console.warn('handleLockedOut' + id);
+    resetRow: async (id) => {
+        set({processing: true});
+        try {
+            const response = await rsssl_api.doAction(
+                'delete_entry',
+                {id}
+            );
+            //now we set the EventLog
+            if (response) {
+                await get().fetchIpData('ip_list');
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    },
+
+    resetMultiRow: async (ids) => {
+        set({processing: true});
+        try {
+            const response = await rsssl_api.doAction(
+                'delete_multi_entries',
+                {ids}
+            );
+            //now we set the EventLog
+            if (response) {
+                await get().fetchIpData('ip_list');
+            }
+        } catch (e) {
+            console.log(e);
+        }
     }
-
-
 }));
 
 export default IpAddressDataTableStore;
