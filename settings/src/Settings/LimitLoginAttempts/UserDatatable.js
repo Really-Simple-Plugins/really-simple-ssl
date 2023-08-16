@@ -247,6 +247,18 @@ const UserDatatable = (props) => {
         data[key] = dataItem;
     }
 
+//if the data is empty we return a message
+    if (Object.keys(data).length === 0) {
+        return (
+            <div className="rsssl-no-data">
+                <div className="rsssl-no-data__inner">
+                    <div className="rsssl-no-data__icon"></div>
+                    <div className="rsssl-no-data__text">{__("Please activate pro for this feature", "really-simple-ssl")}</div>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <>
             <AddUserModal

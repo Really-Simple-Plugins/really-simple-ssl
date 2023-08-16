@@ -1685,6 +1685,18 @@ const DynamicDataTable = props => {
   //     data[key] = dataItem;
   // }
 
+  //if the data is empty we return a message
+  if (Object.keys(data).length === 0) {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-no-data"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-no-data__inner"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-no-data__icon"
+    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-no-data__text"
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Please activate pro for this feature", "really-simple-ssl"))));
+  }
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-search-bar"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -4294,6 +4306,19 @@ const IpAddressDatatable = props => {
   function handleSelection(state) {
     setRowsSelected(state.selectedRows);
   }
+
+  //if the data is empty we return a message
+  if (Object.keys(data).length === 0) {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-no-data"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-no-data__inner"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-no-data__icon"
+    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-no-data__text"
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Please activate pro for this feature", "really-simple-ssl"))));
+  }
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_AddIpAddressModal__WEBPACK_IMPORTED_MODULE_11__["default"], {
     isOpen: addingIpAddress,
     onRequestClose: handleClose,
@@ -4922,6 +4947,19 @@ const UserDatatable = props => {
     //we add the action buttons
     dataItem.action = generateActionButtons(dataItem.id);
     data[key] = dataItem;
+  }
+
+  //if the data is empty we return a message
+  if (Object.keys(data).length === 0) {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-no-data"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-no-data__inner"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-no-data__icon"
+    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-no-data__text"
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Please activate pro for this feature", "really-simple-ssl"))));
   }
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_AddUserModal__WEBPACK_IMPORTED_MODULE_8__["default"], {
     isOpen: addingUser,
