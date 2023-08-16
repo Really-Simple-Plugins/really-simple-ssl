@@ -202,10 +202,6 @@ function rsssl_menu()
                                         'title' => __('Warnings', 'really-simple-ssl'),
                                     ],
                                     [
-                                        'id'    => 'informational',
-                                        'title' => __('Information', 'really-simple-ssl'),
-                                    ],
-                                    [
                                         'id'    => 'all',
                                         'title' => __('All', 'really-simple-ssl'),
                                     ],

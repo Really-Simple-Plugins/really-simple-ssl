@@ -1003,22 +1003,24 @@ function rsssl_fields($load_values = true)
             ],
             'columns'          => [
                 [
-                    'name'     => '',
-                    'sortable' => true,
-                    'column'   => 'iso2_code',
-                    'width'    => '2%',
-                ],
-                [
                     'name'     => __('Date', 'really-simple-ssl'),
                     'sortable' => true,
                     'column'   => 'datetime',
 //                    'width'         => '12%',
                 ],
                 [
-                    'name'     => __('Event', 'really-simple-ssl'),
+                    'name'       => __('User', 'really-simple-ssl'),
+                    'sortable'   => true,
+                    'column'     => 'username',
+                    'searchable' => true,
+                    'type'       => 'text',
+//                    'width'     => '12%',
+                ],
+                [
+                    'name'     => 'country',
                     'sortable' => true,
-                    'column'   => 'event_type',
-//                    'width'         => '12%',
+                    'column'   => 'iso2_code',
+                    'width'    => '10%',
                 ],
                 [
                     'name'       => __('Ip Address', 'really-simple-ssl'),
@@ -1028,24 +1030,14 @@ function rsssl_fields($load_values = true)
 //                    'width'    => '12%',
                 ],
                 [
-                    'name'       => __('Users', 'really-simple-ssl'),
-                    'sortable'   => true,
-                    'column'     => 'username',
-                    'searchable' => true,
-                    'type'       => 'text',
-//                    'width'     => '12%',
+                    'name'     => __('Event', 'really-simple-ssl'),
+                    'sortable' => true,
+                    'column'   => 'event_type',
+//                    'width'         => '12%',
                 ],
-//                [
-//                    'name' => __('Description', 'really-simple-ssl'),
-//                    'sortable' => false,
-//                    'column' => 'description',
-//                    'width' => '44%',
-//                ],
+
                 [
-                    'name'     => __('API', 'really-simple-ssl'),
-                    'sortable' => false,
-                    'column'   => 'action',
-                    'width'    => '5%',
+                    'width'    => '1px',
                 ]
 
             ],
