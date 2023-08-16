@@ -4635,6 +4635,38 @@ const UserDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set,
     } catch (e) {
       console.log(e);
     }
+  },
+  resetRow: async id => {
+    set({
+      processing: true
+    });
+    try {
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('delete_entry', {
+        id
+      });
+      //now we set the EventLog
+      if (response) {
+        await get().fetchUserData('user_list');
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  resetMultiRow: async ids => {
+    set({
+      processing: true
+    });
+    try {
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('delete_multi_entries', {
+        ids
+      });
+      //now we set the EventLog
+      if (response) {
+        await get().fetchUserData('user_list');
+      }
+    } catch (e) {
+      console.log(e);
+    }
   }
 }));
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (UserDataTableStore);
@@ -4664,6 +4696,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__);
 /* harmony import */ var _AddIpAddressModal__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./AddIpAddressModal */ "./src/Settings/LimitLoginAttempts/AddIpAddressModal.js");
 /* harmony import */ var _AddUserModal__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./AddUserModal */ "./src/Settings/LimitLoginAttempts/AddUserModal.js");
+/* harmony import */ var _EventLog_DynamicDataTableStore__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../EventLog/DynamicDataTableStore */ "./src/Settings/EventLog/DynamicDataTableStore.js");
+
 
 
 
@@ -4679,6 +4713,8 @@ const UserDatatable = props => {
     UserDataTable,
     dataLoaded,
     pagination,
+    resetRow,
+    resetMultiRow,
     dataActions,
     handleUserTableRowsChange,
     fetchUserData,
@@ -4699,6 +4735,9 @@ const UserDatatable = props => {
   const [rowsSelected, setRowsSelected] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)([]);
   const [addingUser, setAddingUser] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(false);
   const [user, setUser] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)('');
+  const {
+    fetchDynamicData
+  } = (0,_EventLog_DynamicDataTableStore__WEBPACK_IMPORTED_MODULE_9__["default"])();
   const moduleName = 'rsssl-group-filter-limit_login_attempts_users';
 
   //we create the columns
@@ -4793,6 +4832,7 @@ const UserDatatable = props => {
     } else {
       updateRow(data, 'blocked');
     }
+    fetchDynamicData('event_log');
   }
   function trustUsers(data) {
     //we check if the data is an array
@@ -4807,6 +4847,22 @@ const UserDatatable = props => {
     } else {
       updateRow(data, 'trusted');
     }
+    fetchDynamicData('event_log');
+  }
+  function resetUsers(data) {
+    //we check if the data is an array
+    if (Array.isArray(data)) {
+      let ids = [];
+      data.map(item => {
+        ids.push(item.id);
+      });
+      resetMultiRow(ids);
+      //we emtry the rowsSelected
+      setRowsSelected([]);
+    } else {
+      resetRow(data);
+    }
+    fetchDynamicData('event_log');
   }
   function handleSelection(state) {
     setRowsSelected(state.selectedRows);
@@ -4831,7 +4887,10 @@ const UserDatatable = props => {
     }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Block", "really-simple-ssl"))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-action-buttons__inner"
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
-      className: "button button-red rsssl-action-buttons__button"
+      className: "button button-red rsssl-action-buttons__button",
+      onClick: () => {
+        resetUsers(id);
+      }
     }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Reset", "really-simple-ssl")))));
   }
 
@@ -4919,9 +4978,7 @@ const UserDatatable = props => {
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
     className: "button button-red rsssl-action-buttons__button",
     onClick: () => {
-      setIpAddress('');
-      setIdSelected(id);
-      setAddingIpAddress(true);
+      resetUsers(rowsSelected);
     }
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Reset", "really-simple-ssl")))))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
     columns: columns,

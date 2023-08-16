@@ -132,6 +132,37 @@ const UserDataTableStore = create((set, get) => ({
             console.log(e);
         }
     },
+    resetRow: async (id) => {
+        set({processing: true});
+        try {
+            const response = await rsssl_api.doAction(
+                'delete_entry',
+                {id}
+            );
+            //now we set the EventLog
+            if (response) {
+                await get().fetchUserData('user_list');
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    },
+
+    resetMultiRow: async (ids) => {
+        set({processing: true});
+        try {
+            const response = await rsssl_api.doAction(
+                'delete_multi_entries',
+                {ids}
+            );
+            //now we set the EventLog
+            if (response) {
+                await get().fetchUserData('user_list');
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    }
 }));
 
 export default UserDataTableStore;

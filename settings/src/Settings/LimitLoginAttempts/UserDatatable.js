@@ -8,12 +8,15 @@ import {Button} from "@wordpress/components";
 import {produce} from "immer";
 import AddIpAddressModal from "./AddIpAddressModal";
 import AddUserModal from "./AddUserModal";
+import DynamicDataTableStore from "../EventLog/DynamicDataTableStore";
 
 const UserDatatable = (props) => {
     const {
         UserDataTable,
         dataLoaded,
         pagination,
+        resetRow,
+        resetMultiRow,
         dataActions,
         handleUserTableRowsChange,
         fetchUserData,
@@ -29,6 +32,7 @@ const UserDatatable = (props) => {
     const [rowsSelected, setRowsSelected] = useState([]);
     const [addingUser, setAddingUser] = useState(false);
     const [user, setUser] = useState('');
+    const {fetchDynamicData} = DynamicDataTableStore();
     const moduleName = 'rsssl-group-filter-limit_login_attempts_users';
 
 
@@ -131,6 +135,7 @@ const UserDatatable = (props) => {
         } else {
             updateRow(data, 'blocked');
         }
+        fetchDynamicData('event_log')
     }
 
     function trustUsers(data) {
@@ -146,6 +151,23 @@ const UserDatatable = (props) => {
         } else {
             updateRow(data, 'trusted');
         }
+        fetchDynamicData('event_log')
+    }
+
+    function resetUsers(data) {
+        //we check if the data is an array
+        if (Array.isArray(data)) {
+            let ids = [];
+            data.map((item) => {
+                ids.push(item.id);
+            });
+            resetMultiRow(ids);
+            //we emtry the rowsSelected
+            setRowsSelected([]);
+        } else {
+            resetRow(data);
+        }
+        fetchDynamicData('event_log');
     }
     function handleSelection(state) {
         setRowsSelected(state.selectedRows);
@@ -181,6 +203,9 @@ const UserDatatable = (props) => {
                     <div className="rsssl-action-buttons__inner">
                         <Button
                             className="button button-red rsssl-action-buttons__button"
+                            onClick={() => {
+                                resetUsers(id);
+                            }}
                         >
                             {__("Reset", "really-simple-ssl")}
                         </Button>
@@ -297,9 +322,7 @@ const UserDatatable = (props) => {
                                 <Button
                                     className="button button-red rsssl-action-buttons__button"
                                     onClick={() => {
-                                        setIpAddress('');
-                                        setIdSelected(id);
-                                        setAddingIpAddress(true);
+                                      resetUsers(rowsSelected);
                                     }
                                     }
                                 >
