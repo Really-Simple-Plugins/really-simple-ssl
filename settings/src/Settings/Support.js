@@ -22,8 +22,8 @@ const Support = () => {
             + '&scanresults=' + encodeURIComponent(response.scan_results)
             + '&licensekey=' + encodeURIComponent(response.license_key)
             + '&supportrequest=' + encodeURIComponent(encodedMessage)
-            + '&htaccesscontents=' + response.htaccess_contents
-            + '&debuglog=' + response.system_status;
+            + '&htaccesscontents=' + encodeURIComponent(response.htaccess_contents)
+            + '&debuglog=' + encodeURIComponent(response.system_status);
             window.location.assign(url);
         });
     }

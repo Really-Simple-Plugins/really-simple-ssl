@@ -56,9 +56,14 @@ const Field = (props) => {
             scrollAnchor.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     }
-
     const onChangeHandler = (fieldValue) => {
         let field = props.field;
+        //if there's a pattern, validate it.
+        if ( field.pattern ) {
+            const regex = new RegExp(field.pattern, 'g');
+            const allowedCharactersArray = fieldValue.match(regex);
+            fieldValue = allowedCharactersArray ? allowedCharactersArray.join('') : '';
+        }
         updateField(field.id, fieldValue);
 
         //we can configure other fields if a field is enabled, or set to a certain value.

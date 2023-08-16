@@ -55,7 +55,7 @@ const ProgressBlock = (props) => {
     let noticesOutput = notices;
     if ( filter==='remaining' ) {
         noticesOutput = noticesOutput.filter(function (notice) {
-            return notice.output.status==='open';
+            return notice.output.status==='open' || notice.output.status==='warning';
         });
     }
 

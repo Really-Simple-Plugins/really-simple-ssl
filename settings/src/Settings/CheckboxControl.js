@@ -2,24 +2,16 @@
 * The tooltip can't be included in the native toggleControl, so we have to build our own.
 */
 import { useState, useEffect } from "@wordpress/element";
+import { __experimentalConfirmDialog as ConfirmDialog } from '@wordpress/components';
+
 const CheckboxControl = (props) => {
     const [ isOpen, setIsOpen ] = useState( false );
-    const [ ConfirmDialog, setConfirmDialog ] = useState( false );
-    useEffect( () => {
-        if (!ConfirmDialog) {
-            import ('@wordpress/components').then(({default: __experimentalConfirmDialog}) => {
-                setConfirmDialog(() => __experimentalConfirmDialog);
-            });
-        }
-    }, []);
-
-    const onChangeHandler = (e) => {
+        const onChangeHandler = (e) => {
         //wordpress <6.0 does not have the confirmdialog component
-        if (!ConfirmDialog) {
+        if ( !ConfirmDialog ) {
             executeAction();
             return;
         }
-
         if (props.field.warning && props.field.warning.length>0 && !props.field.value) {
             setIsOpen( true );
         } else {

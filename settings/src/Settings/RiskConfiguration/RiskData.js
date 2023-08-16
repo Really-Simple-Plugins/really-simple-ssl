@@ -81,9 +81,6 @@ const UseRiskData = create((set, get) => ({
         data[quarantineIndex].disabledRiskLevels = disabledRiskLevels;
         return data;
     },
-    capitalizeFirstLetter: (str) => {
-        return str.charAt(0).toUpperCase() + str.slice(1);
-    },
     fetchFirstRun: async () => {
         await rsssl_api.doAction('vulnerabilities_scan_files');
     },
