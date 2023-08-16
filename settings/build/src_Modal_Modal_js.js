@@ -1,16 +1,13 @@
 "use strict";
-(globalThis["webpackChunkreally_simple_ssl"] = globalThis["webpackChunkreally_simple_ssl"] || []).push([["src_Modal_Modal_js"],{
+(self["webpackChunkreally_simple_ssl"] = self["webpackChunkreally_simple_ssl"] || []).push([["src_Modal_Modal_js"],{
 
 /***/ "./src/Modal/Modal.js":
 /*!****************************!*\
   !*** ./src/Modal/Modal.js ***!
   \****************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
@@ -113,7 +110,7 @@ const Modal = props => {
     onClick: e => handleFix(e, 'fix')
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Fix", "really-simple-ssl")))));
 };
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Modal);
+/* harmony default export */ __webpack_exports__["default"] = (Modal);
 
 /***/ }),
 
@@ -121,12 +118,9 @@ const Modal = props => {
 /*!***************************!*\
   !*** ./src/utils/Icon.js ***!
   \***************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
 /* harmony import */ var _babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/extends */ "./node_modules/@babel/runtime/helpers/esm/extends.js");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
@@ -806,7 +800,7 @@ const Icon = props => {
     className: 'rsssl-icon rsssl-icon-' + iconName
   }, renderedIcon.html));
 };
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Icon);
+/* harmony default export */ __webpack_exports__["default"] = (Icon);
 
 /***/ })
 
