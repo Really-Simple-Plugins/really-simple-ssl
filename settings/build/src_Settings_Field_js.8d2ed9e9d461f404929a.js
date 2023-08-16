@@ -1355,27 +1355,19 @@ const Button = props => {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
 
 /*
 * The tooltip can't be included in the native toggleControl, so we have to build our own.
 */
 
+
 const CheckboxControl = props => {
   const [isOpen, setIsOpen] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
-  const [ConfirmDialog, setConfirmDialog] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
-  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-    if (!ConfirmDialog) {
-      Promise.resolve(/*! import() */).then(__webpack_require__.t.bind(__webpack_require__, /*! @wordpress/components */ "@wordpress/components", 23)).then(_ref => {
-        let {
-          default: __experimentalConfirmDialog
-        } = _ref;
-        setConfirmDialog(() => __experimentalConfirmDialog);
-      });
-    }
-  }, []);
   const onChangeHandler = e => {
     //wordpress <6.0 does not have the confirmdialog component
-    if (!ConfirmDialog) {
+    if (!_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.__experimentalConfirmDialog) {
       executeAction();
       return;
     }
@@ -1405,7 +1397,7 @@ const CheckboxControl = props => {
   let field = props.field;
   let is_checked = field.value ? 'is-checked' : '';
   let is_disabled = props.disabled ? 'is-disabled' : '';
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, ConfirmDialog && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ConfirmDialog, {
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, _wordpress_components__WEBPACK_IMPORTED_MODULE_1__.__experimentalConfirmDialog && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.__experimentalConfirmDialog, {
     isOpen: isOpen,
     onConfirm: handleConfirm,
     onCancel: handleCancel
@@ -1861,6 +1853,12 @@ const Field = props => {
   };
   const onChangeHandler = fieldValue => {
     let field = props.field;
+    //if there's a pattern, validate it.
+    if (field.pattern) {
+      const regex = new RegExp(field.pattern, 'g');
+      const allowedCharactersArray = fieldValue.match(regex);
+      fieldValue = allowedCharactersArray ? allowedCharactersArray.join('') : '';
+    }
     updateField(field.id, fieldValue);
 
     //we can configure other fields if a field is enabled, or set to a certain value.
@@ -3707,6 +3705,7 @@ const RiskComponent = props => {
   /**
    * Initialize
    */
+
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     let enabled = getFieldValue('measures_enabled') == 1;
     setMeasuresEnabled(enabled);
@@ -3894,9 +3893,6 @@ const UseRiskData = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, get) =
     });
     data[quarantineIndex].disabledRiskLevels = disabledRiskLevels;
     return data;
-  },
-  capitalizeFirstLetter: str => {
-    return str.charAt(0).toUpperCase() + str.slice(1);
   },
   fetchFirstRun: async () => {
     await _utils_api__WEBPACK_IMPORTED_MODULE_1__.doAction('vulnerabilities_scan_files');
@@ -4468,7 +4464,7 @@ const Support = () => {
     setSending(true);
     return _utils_api__WEBPACK_IMPORTED_MODULE_3__.runTest('supportData', 'refresh').then(response => {
       let encodedMessage = message.replace(/(?:\r\n|\r|\n)/g, '--br--');
-      let url = 'https://really-simple-ssl.com/support' + '?customername=' + encodeURIComponent(response.customer_name) + '&email=' + response.email + '&domain=' + response.domain + '&scanresults=' + encodeURIComponent(response.scan_results) + '&licensekey=' + encodeURIComponent(response.license_key) + '&supportrequest=' + encodeURIComponent(encodedMessage) + '&htaccesscontents=' + response.htaccess_contents + '&debuglog=' + response.system_status;
+      let url = 'https://really-simple-ssl.com/support' + '?customername=' + encodeURIComponent(response.customer_name) + '&email=' + response.email + '&domain=' + response.domain + '&scanresults=' + encodeURIComponent(response.scan_results) + '&licensekey=' + encodeURIComponent(response.license_key) + '&supportrequest=' + encodeURIComponent(encodedMessage) + '&htaccesscontents=' + encodeURIComponent(response.htaccess_contents) + '&debuglog=' + encodeURIComponent(response.system_status);
       window.location.assign(url);
     });
   };
@@ -4698,4 +4694,4 @@ const TwoFaData = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, get) => 
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.js.map
+//# sourceMappingURL=src_Settings_Field_js.8d2ed9e9d461f404929a.js.map

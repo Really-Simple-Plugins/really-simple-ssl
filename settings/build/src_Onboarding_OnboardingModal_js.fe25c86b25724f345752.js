@@ -1,116 +1,764 @@
 "use strict";
-(self["webpackChunkreally_simple_ssl"] = self["webpackChunkreally_simple_ssl"] || []).push([["src_Modal_Modal_js"],{
+(self["webpackChunkreally_simple_ssl"] = self["webpackChunkreally_simple_ssl"] || []).push([["src_Onboarding_OnboardingModal_js"],{
 
-/***/ "./src/Modal/Modal.js":
-/*!****************************!*\
-  !*** ./src/Modal/Modal.js ***!
-  \****************************/
+/***/ "./src/Dashboard/Progress/ProgressData.js":
+/*!************************************************!*\
+  !*** ./src/Dashboard/Progress/ProgressData.js ***!
+  \************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/index.mjs");
+/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils/api */ "./src/utils/api.js");
+
+
+const useProgress = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, get) => ({
+  filter: 'all',
+  progressText: '',
+  notices: [],
+  error: false,
+  percentageCompleted: 0,
+  progressLoaded: false,
+  setFilter: filter => {
+    sessionStorage.rsssl_task_filter = filter;
+    set(state => ({
+      filter
+    }));
+  },
+  fetchFilter: () => {
+    if (typeof Storage !== "undefined" && sessionStorage.rsssl_task_filter) {
+      let filter = sessionStorage.rsssl_task_filter;
+      set(state => ({
+        filter: filter
+      }));
+    }
+  },
+  getProgressData: async () => {
+    const {
+      percentage,
+      text,
+      notices,
+      error
+    } = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.runTest('progressData', 'refresh').then(response => {
+      return response;
+    });
+    set(state => ({
+      notices: notices,
+      percentageCompleted: percentage,
+      progressText: text,
+      progressLoaded: true,
+      error: error
+    }));
+  },
+  dismissNotice: async noticeId => {
+    let notices = get().notices;
+    notices = notices.filter(function (notice) {
+      return notice.id !== noticeId;
+    });
+    set(state => ({
+      notices: notices
+    }));
+    const {
+      percentage
+    } = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.runTest('dismiss_task', noticeId);
+    set({
+      percentageCompleted: percentage
+    });
+  }
+}));
+/* harmony default export */ __webpack_exports__["default"] = (useProgress);
+
+/***/ }),
+
+/***/ "./src/Onboarding/Onboarding.js":
+/*!**************************************!*\
+  !*** ./src/Onboarding/Onboarding.js ***!
+  \**************************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/api */ "./src/utils/api.js");
-/* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/Icon */ "./src/utils/Icon.js");
-/* harmony import */ var _ModalData__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ModalData */ "./src/Modal/ModalData.js");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/Icon */ "./src/utils/Icon.js");
+/* harmony import */ var _Placeholder_Placeholder__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Placeholder/Placeholder */ "./src/Placeholder/Placeholder.js");
+/* harmony import */ var _Menu_MenuData__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Menu/MenuData */ "./src/Menu/MenuData.js");
+/* harmony import */ var _Settings_FieldsData__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../Settings/FieldsData */ "./src/Settings/FieldsData.js");
+/* harmony import */ var _Dashboard_Progress_ProgressData__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../Dashboard/Progress/ProgressData */ "./src/Dashboard/Progress/ProgressData.js");
+/* harmony import */ var _OnboardingData__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./OnboardingData */ "./src/Onboarding/OnboardingData.js");
+/* harmony import */ var _Settings_RiskConfiguration_RiskData__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../Settings/RiskConfiguration/RiskData */ "./src/Settings/RiskConfiguration/RiskData.js");
 
 
 
 
 
 
-const Modal = props => {
+
+
+
+
+
+
+const Onboarding = props => {
   const {
-    handleModal,
-    modalData,
-    setModalData,
-    showModal,
-    setIgnoredItemId,
-    setFixedItemId,
-    item
-  } = (0,_ModalData__WEBPACK_IMPORTED_MODULE_4__["default"])();
-  const [buttonsDisabled, setButtonsDisabled] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
-  const dismissModal = () => {
-    handleModal(false, null, null);
+    fetchFieldsData,
+    updateField,
+    updateFieldsData,
+    getFieldValue
+  } = (0,_Settings_FieldsData__WEBPACK_IMPORTED_MODULE_7__["default"])();
+  const {
+    getProgressData
+  } = (0,_Dashboard_Progress_ProgressData__WEBPACK_IMPORTED_MODULE_8__["default"])();
+  const {
+    fetchVulnerabilities
+  } = (0,_Settings_RiskConfiguration_RiskData__WEBPACK_IMPORTED_MODULE_10__["default"])();
+  const {
+    dismissModal,
+    actionHandler,
+    getSteps,
+    error,
+    certificateValid,
+    networkwide,
+    sslEnabled,
+    dataLoaded,
+    processing,
+    setProcessing,
+    steps,
+    currentStep,
+    currentStepIndex,
+    setCurrentStepIndex,
+    overrideSSL,
+    setOverrideSSL,
+    networkActivationStatus,
+    setNetworkActivationStatus,
+    networkProgress,
+    refreshSSLStatus,
+    activateSSLNetworkWide,
+    email,
+    setEmail,
+    saveEmail,
+    includeTips,
+    setIncludeTips,
+    sendTestEmail,
+    setSendTestEmail
+  } = (0,_OnboardingData__WEBPACK_IMPORTED_MODULE_9__["default"])();
+  const {
+    setSelectedMainMenuItem,
+    selectedMainMenuItem
+  } = (0,_Menu_MenuData__WEBPACK_IMPORTED_MODULE_6__["default"])();
+  const statuses = {
+    'inactive': {
+      'icon': 'info',
+      'color': 'orange'
+    },
+    'warning': {
+      'icon': 'circle-times',
+      'color': 'orange'
+    },
+    'error': {
+      'icon': 'circle-times',
+      'color': 'red'
+    },
+    'success': {
+      'icon': 'circle-check',
+      'color': 'green'
+    },
+    'processing': {
+      'icon': 'file-download',
+      'color': 'red'
+    }
   };
-  const handleFix = (e, type) => {
-    //set to disabled
-    let action = modalData.action;
-    setButtonsDisabled(true);
-    _utils_api__WEBPACK_IMPORTED_MODULE_2__.runTest(action, 'refresh', modalData).then(response => {
-      let data = {
-        ...modalData
-      };
-      data.description = response.msg;
-      data.subtitle = '';
-      setModalData(data);
-      setButtonsDisabled(false);
-      if (response.success) {
-        if (type === 'ignore' && item !== false) {
-          setIgnoredItemId(item.id);
-        } else {
-          setFixedItemId(item.id);
-        }
-        handleModal(false, null);
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    if (networkwide && networkActivationStatus === 'main_site_activated') {
+      activateSSLNetworkWide();
+    }
+  }, [networkActivationStatus, networkProgress]);
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    const run = async () => {
+      await getSteps(false);
+      if (dataLoaded && sslEnabled && currentStepIndex === 0) {
+        setCurrentStepIndex(1);
       }
+      if (getFieldValue('notifications_email_address') !== '' && email === '') {
+        setEmail(getFieldValue('notifications_email_address'));
+      }
+    };
+    run();
+  }, []);
+
+  //ensure all fields are updated, and progress is retrieved again
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    const runUpdate = async () => {
+      //in currentStep.items, find item with id 'hardening'
+      //if it has status 'completed' fetchFieldsData again.
+      if (currentStep && currentStep.items) {
+        let hardeningItem = currentStep.items.find(item => {
+          return item.id === 'hardening';
+        });
+        if (hardeningItem && hardeningItem.status === 'success') {
+          await fetchFieldsData('hardening');
+          await getProgressData();
+          await fetchVulnerabilities();
+        }
+      }
+    };
+    runUpdate();
+  }, [currentStep]);
+  const activateSSL = () => {
+    setProcessing(true);
+    _utils_api__WEBPACK_IMPORTED_MODULE_2__.runTest('activate_ssl').then(async response => {
+      setProcessing(false);
+      setCurrentStepIndex(currentStepIndex + 1);
+      //change url to https, after final check
+      if (response.success) {
+        if (response.site_url_changed) {
+          window.location.reload();
+        } else {
+          if (networkwide) {
+            setNetworkActivationStatus('main_site_activated');
+          }
+        }
+      }
+    }).then(async () => {
+      await getProgressData();
+      await fetchFieldsData(selectedMainMenuItem);
     });
   };
-  if (!showModal) {
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null);
+  const parseStepItems = items => {
+    return items && items.map((item, index) => {
+      let {
+        title,
+        description,
+        current_action,
+        action,
+        status,
+        button,
+        id,
+        read_more
+      } = item;
+      if (id === 'ssl_enabled' && networkwide) {
+        if (networkProgress >= 100) {
+          status = 'success';
+          title = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("SSL has been activated network wide", "really-simple-ssl");
+        } else {
+          status = 'processing';
+          title = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Processing activation of subsites networkwide", "really-simple-ssl");
+        }
+      }
+      const statusIcon = item.status !== 'success' && item.is_plugin && item.current_action === 'none' ? 'empty' : statuses[status].icon;
+      const statusColor = statuses[status].color;
+      const currentActions = {
+        'activate_setting': (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('Activating...', "really-simple-ssl"),
+        'activate': (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('Activating...', "really-simple-ssl"),
+        'install_plugin': (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('Installing...', "really-simple-ssl"),
+        'error': (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('Failed', "really-simple-ssl"),
+        'completed': (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('Finished', "really-simple-ssl")
+      };
+      let buttonTitle = '';
+      if (button) {
+        buttonTitle = button;
+        if (current_action !== 'none') {
+          buttonTitle = currentActions[current_action];
+          if (current_action === 'failed') {
+            buttonTitle = currentActions['error'];
+          }
+        }
+      }
+      let showLink = button && button === buttonTitle;
+      let showAsPlugin = item.status !== 'success' && item.is_plugin && item.current_action === 'none';
+      let isPluginClass = showAsPlugin ? 'rsssl-is-plugin' : '';
+      title = showAsPlugin ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("b", null, title) : title;
+      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", {
+        key: "pluginItem-" + index,
+        className: isPluginClass
+      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        name: statusIcon,
+        color: statusColor
+      }), title, description && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, "\xA0-\xA0", description), id === 'ssl_enabled' && networkwide && networkActivationStatus === 'main_site_activated' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, "\xA0-\xA0", networkProgress < 100 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("working", "really-simple-ssl"), "\xA0", networkProgress, "%"), networkProgress >= 100 && (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("completed", "really-simple-ssl")), button && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, "\xA0-\xA0", showLink && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+        isLink: true,
+        onClick: e => actionHandler(id, action, e)
+      }, buttonTitle), !showLink && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, buttonTitle)), showAsPlugin && read_more && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+        target: "_blank",
+        href: read_more,
+        className: "button button-default rsssl-read-more"
+      }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Read More", "really-simple-ssl")));
+    });
+  };
+  const goToDashboard = () => {
+    if (props.isModal) dismissModal();
+    setSelectedMainMenuItem('dashboard');
+  };
+  const goToLetsEncrypt = () => {
+    if (props.isModal) dismissModal();
+    window.location.href = rsssl_settings.letsencrypt_url;
+  };
+  const saveEmailAndUpdateFields = async () => {
+    await saveEmail();
+    updateField('send_notifications_email', true);
+    updateField('notifications_email_address', email);
+    updateFieldsData();
+  };
+  const controlButtons = () => {
+    let ActivateSSLText = networkwide ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Activate SSL networkwide", "really-simple-ssl") : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Activate SSL", "really-simple-ssl");
+    if (currentStepIndex === 0) {
+      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+        disabled: processing || !certificateValid && !overrideSSL,
+        className: "button button-primary",
+        onClick: () => {
+          activateSSL();
+        }
+      }, ActivateSSLText), certificateValid && !rsssl_settings.pro_plugin_active && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+        target: "_blank",
+        href: rsssl_settings.upgrade_link,
+        className: "button button-default"
+      }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Improve Security with PRO", "really-simple-ssl")), !certificateValid && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+        className: "button button-default",
+        onClick: () => {
+          goToLetsEncrypt();
+        }
+      }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Install SSL", "really-simple-ssl")), !certificateValid && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.ToggleControl, {
+        label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Override SSL detection", "really-simple-ssl"),
+        checked: overrideSSL,
+        onChange: value => {
+          setOverrideSSL(value);
+          let data = {};
+          data.overrideSSL = value;
+          _utils_api__WEBPACK_IMPORTED_MODULE_2__.doAction('override_ssl_detection', data);
+        }
+      }));
+    }
+    if (currentStepIndex > 0 && currentStepIndex < steps.length - 1) {
+      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+        disabled: processing,
+        className: "button button-primary",
+        onClick: () => saveEmailAndUpdateFields()
+      }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('Save and continue', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+        disabled: processing,
+        className: "button button-default",
+        onClick: () => {
+          setCurrentStepIndex(currentStepIndex + 1);
+        }
+      }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('Skip', 'really-simple-ssl')));
+    }
+
+    //for last step only
+    if (steps.length - 1 === currentStepIndex) {
+      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+        className: "button button-primary",
+        onClick: () => {
+          goToDashboard();
+        }
+      }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('Go to Dashboard', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+        className: "button button-default",
+        onClick: () => dismissModal()
+      }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('Dismiss', 'really-simple-ssl')));
+    }
+  };
+  if (error) {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Placeholder_Placeholder__WEBPACK_IMPORTED_MODULE_5__["default"], {
+      lines: "3",
+      error: error
+    });
   }
-  let disabled = buttonsDisabled ? 'disabled' : '';
-  let description = modalData.description;
-  if (!Array.isArray(description)) {
-    description = [description];
-  }
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-modal-backdrop",
-    onClick: e => dismissModal(e)
+  let step = currentStep;
+  let processingClass = processing ? 'rsssl-processing' : '';
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, !dataLoaded && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-onboarding-placeholder"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_4__["default"], {
+    name: "file-download",
+    color: "grey"
+  }), (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Fetching next step...", "really-simple-ssl"))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Placeholder_Placeholder__WEBPACK_IMPORTED_MODULE_5__["default"], {
+    lines: "3"
+  }))), dataLoaded && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-modal-content-step " + processingClass
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", null, parseStepItems(step.items)), currentStep.id === 'email' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "email",
+    value: email,
+    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Your email address", "really-simple-ssl"),
+    onChange: e => setEmail(e.target.value)
+  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    onChange: e => setIncludeTips(e.target.checked),
+    type: "checkbox",
+    checked: includeTips
+  }), (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Include 6 Tips & Tricks to get started with Really Simple SSL.", "really-simple-ssl"), "\xA0", (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    href: "https://really-simple-ssl.com/legal/privacy-statement/",
+    target: "_blank"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Privacy Statement", "really-simple-ssl")))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null)), certificateValid && step.info_text && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-modal-description",
+    dangerouslySetInnerHTML: {
+      __html: step.info_text
+    }
+  }), currentStepIndex === 0 && !certificateValid && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-modal-description"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    href: "#",
+    onClick: e => refreshSSLStatus(e)
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Refresh SSL status", "really-simple-ssl")), "\xA0", (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("The SSL detection method is not 100% accurate.", "really-simple-ssl"), "\xA0", (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("If you’re certain an SSL certificate is present, and refresh SSL status does not work, please check “Override SSL detection” to continue activating SSL.", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-modal-content-step-footer"
+  }, controlButtons())));
+};
+/* harmony default export */ __webpack_exports__["default"] = (Onboarding);
+
+/***/ }),
+
+/***/ "./src/Onboarding/OnboardingModal.js":
+/*!*******************************************!*\
+  !*** ./src/Onboarding/OnboardingModal.js ***!
+  \*******************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/api */ "./src/utils/api.js");
+/* harmony import */ var _Onboarding__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Onboarding */ "./src/Onboarding/Onboarding.js");
+/* harmony import */ var react_use__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react-use */ "./node_modules/react-use/esm/useUpdateEffect.js");
+/* harmony import */ var _Placeholder_Placeholder__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Placeholder/Placeholder */ "./src/Placeholder/Placeholder.js");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils/Icon */ "./src/utils/Icon.js");
+/* harmony import */ var _OnboardingData__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./OnboardingData */ "./src/Onboarding/OnboardingData.js");
+/* harmony import */ var _Settings_FieldsData__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../Settings/FieldsData */ "./src/Settings/FieldsData.js");
+
+
+
+
+
+
+
+
+
+
+const OnboardingModal = () => {
+  const {
+    fieldsLoaded
+  } = (0,_Settings_FieldsData__WEBPACK_IMPORTED_MODULE_7__["default"])();
+  const {
+    showOnboardingModal,
+    fetchOnboardingModalStatus,
+    modalStatusLoaded,
+    currentStep,
+    dismissModal
+  } = (0,_OnboardingData__WEBPACK_IMPORTED_MODULE_6__["default"])();
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    if (!modalStatusLoaded) {
+      fetchOnboardingModalStatus();
+    }
+  }, []);
+  (0,react_use__WEBPACK_IMPORTED_MODULE_8__["default"])(() => {
+    if (showOnboardingModal === true) {
+      let data = {};
+      data.dismiss = false;
+      _utils_api__WEBPACK_IMPORTED_MODULE_1__.doAction('dismiss_modal', data);
+    }
+  });
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, showOnboardingModal && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-modal-backdrop"
   }, "\xA0"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-modal",
-    id: "{id}"
+    className: "rsssl-modal rsssl-onboarding"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-modal-header"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
-    className: "modal-title"
-  }, modalData.title), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", null, currentStep.title), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
     type: "button",
     className: "rsssl-modal-close",
     "data-dismiss": "modal",
     "aria-label": "Close",
-    onClick: e => dismissModal(e)
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_3__["default"], {
-    name: "times"
-  }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    onClick: () => dismissModal()
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("svg", {
+    "aria-hidden": "true",
+    focusable: "false",
+    role: "img",
+    xmlns: "http://www.w3.org/2000/svg",
+    viewBox: "0 0 320 512",
+    height: "24"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("path", {
+    fill: "#000000",
+    d: "M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"
+  })))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-header-extension"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, currentStep.subtitle))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-modal-content"
-  }, modalData.subtitle && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-modal-subtitle"
-  }, modalData.subtitle), Array.isArray(description) && description.map((s, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    key: "modalDescription-" + i,
-    className: "rsssl-modal-description"
-  }, s))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-modal-footer"
-  }, modalData.edit && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-    href: modalData.edit,
-    target: "_blank",
-    className: "button button-secondary"
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Edit", "really-simple-ssl")), modalData.help && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-    href: modalData.help,
-    target: "_blank",
-    className: "button rsssl-button-help"
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Help", "really-simple-ssl")), !modalData.ignored && modalData.action === 'ignore_url' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-    disabled: disabled,
-    className: "button button-primary",
-    onClick: e => handleFix(e, 'ignore')
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Ignore", "really-simple-ssl")), modalData.action !== 'ignore_url' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-    disabled: disabled,
-    className: "button button-primary",
-    onClick: e => handleFix(e, 'fix')
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Fix", "really-simple-ssl")))));
+  }, !fieldsLoaded && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_5__["default"], {
+    name: "file-download",
+    color: "orange"
+  }), (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Please wait while we detect your setup", "really-simple-ssl"))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Placeholder_Placeholder__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    lines: "3"
+  })), fieldsLoaded && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Onboarding__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    isModal: true
+  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rssl-modal-footer"
+  }))));
 };
-/* harmony default export */ __webpack_exports__["default"] = (Modal);
+/* harmony default export */ __webpack_exports__["default"] = (OnboardingModal);
+
+/***/ }),
+
+/***/ "./src/Placeholder/Placeholder.js":
+/*!****************************************!*\
+  !*** ./src/Placeholder/Placeholder.js ***!
+  \****************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _utils_Error__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/Error */ "./src/utils/Error.js");
+
+
+const Placeholder = props => {
+  let lines = props.lines;
+  if (!lines) lines = 4;
+  if (props.error) {
+    lines = 0;
+  }
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-placeholder"
+  }, props.error && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Error__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    error: props.error
+  }), Array.from({
+    length: lines
+  }).map((item, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-placeholder-line",
+    key: "placeholder-" + i
+  })));
+};
+/* harmony default export */ __webpack_exports__["default"] = (Placeholder);
+
+/***/ }),
+
+/***/ "./src/Settings/RiskConfiguration/RiskData.js":
+/*!****************************************************!*\
+  !*** ./src/Settings/RiskConfiguration/RiskData.js ***!
+  \****************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/index.mjs");
+/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../utils/api */ "./src/utils/api.js");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var immer__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! immer */ "./node_modules/immer/dist/immer.esm.mjs");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_3__);
+
+/* Creates A Store For Risk Data using Zustand */
+
+
+
+
+
+const UseRiskData = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, get) => ({
+  dummyRiskData: [{
+    id: 'force_update',
+    name: 'Force Update',
+    value: 'l',
+    description: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Force update the plugin or theme', 'really-simple-ssl')
+  }, {
+    id: 'quarantine',
+    name: 'Quarantine',
+    value: 'm',
+    description: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Isolates the plugin or theme if no update can be performed', 'really-simple-ssl')
+  }],
+  riskData: [],
+  riskLevels: {
+    l: 1,
+    m: 2,
+    h: 3,
+    c: 4
+  },
+  vulnerabilities: [],
+  processing: false,
+  dataLoaded: false,
+  // Stuff we need for the WPVulData component
+  updates: 0,
+  //for letting the component know if there are updates available
+  HighestRisk: false,
+  //for storing the highest risk
+  lastChecked: '',
+  //for storing the last time the data was checked
+  vulEnabled: false,
+  //for storing the status of the vulnerability scan
+  riskNaming: {},
+  //for storing the risk naming
+  introCompleted: false,
+  //for storing the status of the first run
+  vulList: [],
+  //for storing the list of vulnerabilities
+  setDataLoaded: value => set({
+    dataLoaded: value
+  }),
+  //update Risk Data
+  updateRiskData: async (field, value) => {
+    set({
+      processing: true
+    });
+    set((0,immer__WEBPACK_IMPORTED_MODULE_5__.produce)(state => {
+      let index = state.riskData.findIndex(item => item.id === field);
+      state.riskData[index].value = value;
+      state.riskData = get().enforceCascadingRiskLevels(state.riskData);
+    }));
+    try {
+      await _utils_api__WEBPACK_IMPORTED_MODULE_1__.doAction('vulnerabilities_measures_set', {
+        riskData: get().riskData
+      });
+      set({
+        dataLoaded: true,
+        processing: false
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  setIntroCompleted: value => {
+    set({
+      introCompleted: value
+    });
+  },
+  enforceCascadingRiskLevels: data => {
+    if (data.length === 0) return data;
+    //get risk levels for force_update
+    let forceUpdateRiskLevel = data.filter(item => item.id === 'force_update')[0].value;
+    let quarantineRiskLevel = data.filter(item => item.id === 'quarantine')[0].value;
+
+    //get the integer value of the risk level
+    forceUpdateRiskLevel = get().riskLevels.hasOwnProperty(forceUpdateRiskLevel) ? get().riskLevels[forceUpdateRiskLevel] : 5;
+    quarantineRiskLevel = get().riskLevels.hasOwnProperty(quarantineRiskLevel) ? get().riskLevels[quarantineRiskLevel] : 5;
+    let quarantineIndex = data.findIndex(item => item.id === 'quarantine');
+    //if the quarantine risk level is lower than the force update risk level, we set it to the force update risk level
+    if (quarantineRiskLevel < forceUpdateRiskLevel) {
+      data[quarantineIndex].value = Object.keys(get().riskLevels).find(key => get().riskLevels[key] === forceUpdateRiskLevel);
+    }
+    //if the force update risk level is none, set quarantine also to none.
+    if (forceUpdateRiskLevel === 5) {
+      data[quarantineIndex].value = '*';
+    }
+
+    //disable all values below this value
+    let disableUpTo = forceUpdateRiskLevel > 0 ? forceUpdateRiskLevel : 0;
+    //create an array of integers up to the forceUpdateRiskLevel
+    let disabledRiskLevels = Array.from(Array(disableUpTo).keys()).map(x => x);
+    disabledRiskLevels = disabledRiskLevels.map(level => {
+      return Object.keys(get().riskLevels).find(key => get().riskLevels[key] === level);
+    });
+    data[quarantineIndex].disabledRiskLevels = disabledRiskLevels;
+    return data;
+  },
+  fetchFirstRun: async () => {
+    await _utils_api__WEBPACK_IMPORTED_MODULE_1__.doAction('vulnerabilities_scan_files');
+  },
+  /*
+  * Functions
+   */
+  fetchVulnerabilities: async () => {
+    let data = {};
+    try {
+      const fetched = await _utils_api__WEBPACK_IMPORTED_MODULE_1__.doAction('hardening_data', data);
+      let vulList = [];
+      let vulnerabilities = 0;
+      if (fetched.data.vulList) {
+        vulnerabilities = fetched.data.vulnerabilities;
+        vulList = fetched.data.vulList;
+        if (typeof vulList === 'object') {
+          //we make it an array
+          vulList = Object.values(vulList);
+        }
+        vulList.forEach(function (item, i) {
+          let updateUrl = item.update_available ? rsssl_settings.plugins_url + "?plugin_status=upgrade" : '#settings/vulnerabilities';
+          item.vulnerability_action = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+            className: "rsssl-vulnerability-action"
+          }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+            className: "button",
+            href: "https://really-simple-ssl.com/vulnerabilities/" + item.rss_identifier,
+            target: "_blank"
+          }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Details", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+            disabled: !item.update_available,
+            href: updateUrl,
+            className: "button button-primary"
+          }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Update", "really-simple-ssl")));
+        });
+      }
+      let riskData = fetched.data.riskData;
+      if (!Array.isArray(riskData)) {
+        riskData = [];
+      }
+      riskData = get().enforceCascadingRiskLevels(riskData);
+      set((0,immer__WEBPACK_IMPORTED_MODULE_5__.produce)(state => {
+        state.vulnerabilities = vulnerabilities;
+        state.vulList = vulList;
+        state.updates = fetched.data.updates;
+        state.dataLoaded = true;
+        state.riskNaming = fetched.data.riskNaming;
+        state.lastChecked = fetched.data.lastChecked;
+        state.vulEnabled = fetched.data.vulEnabled;
+        state.riskData = riskData;
+      }));
+    } catch (e) {
+      console.error(e);
+    }
+  },
+  vulnerabilityCount: () => {
+    let vuls = get().vulList;
+    //we group the data by risk level
+    //first we make vuls an array
+    let vulsArray = [];
+    Object.keys(vuls).forEach(function (key) {
+      vulsArray.push(vuls[key]);
+    });
+    let riskLevels = ['c', 'h', 'm', 'l'];
+    //we count the amount of vulnerabilities per risk level
+    return riskLevels.map(function (level) {
+      return {
+        level: level,
+        count: vulsArray.filter(function (vul) {
+          return vul.risk_level === level;
+        }).length
+      };
+    });
+  },
+  vulnerabilityScore: () => {
+    let score = 0;
+    let vulnerabilitiesList = get().vulList;
+    Object.keys(vulnerabilitiesList).forEach(function (key) {
+      //if there are vulnerabilities with critical severity, score is 5
+      if (vulnerabilitiesList[key].risk_level === 'c') {
+        score = 5;
+      } else if (score < 1) {
+        score = 1;
+      }
+    });
+    return score;
+  },
+  hardeningScore: () => {
+    let score = 0;
+    let vulnerabilitiesList = get().vulnerabilities;
+    for (let i = 0; i < vulnerabilitiesList.length; i++) {
+      score += vulnerabilitiesList[i].hardening_score;
+    }
+    return score;
+  },
+  activateVulnerabilityScanner: async () => {
+    let data = {};
+    try {
+      const fetched = await _utils_api__WEBPACK_IMPORTED_MODULE_1__.doAction('rsssl_scan_files');
+      if (fetched.request_success) {
+        //we get the data again
+        const run = async () => {
+          await get().fetchVulnerabilities();
+        };
+        run();
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
+}));
+/* harmony default export */ __webpack_exports__["default"] = (UseRiskData);
 
 /***/ }),
 
@@ -802,7 +1450,57 @@ const Icon = props => {
 };
 /* harmony default export */ __webpack_exports__["default"] = (Icon);
 
+/***/ }),
+
+/***/ "./node_modules/react-use/esm/useFirstMountState.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/react-use/esm/useFirstMountState.js ***!
+  \**********************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   useFirstMountState: function() { return /* binding */ useFirstMountState; }
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+function useFirstMountState() {
+    var isFirst = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(true);
+    if (isFirst.current) {
+        isFirst.current = false;
+        return true;
+    }
+    return isFirst.current;
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/react-use/esm/useUpdateEffect.js":
+/*!*******************************************************!*\
+  !*** ./node_modules/react-use/esm/useUpdateEffect.js ***!
+  \*******************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _useFirstMountState__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./useFirstMountState */ "./node_modules/react-use/esm/useFirstMountState.js");
+
+
+var useUpdateEffect = function (effect, deps) {
+    var isFirstMount = (0,_useFirstMountState__WEBPACK_IMPORTED_MODULE_1__.useFirstMountState)();
+    (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+        if (!isFirstMount) {
+            return effect();
+        }
+    }, deps);
+};
+/* harmony default export */ __webpack_exports__["default"] = (useUpdateEffect);
+
+
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Modal_Modal_js.js.map
+//# sourceMappingURL=src_Onboarding_OnboardingModal_js.fe25c86b25724f345752.js.map

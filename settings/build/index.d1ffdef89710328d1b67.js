@@ -2852,6 +2852,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Menu_MenuData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Menu/MenuData */ "./src/Menu/MenuData.js");
 /* harmony import */ var _Onboarding_OnboardingData__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Onboarding/OnboardingData */ "./src/Onboarding/OnboardingData.js");
 /* harmony import */ var _Modal_ModalData__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Modal/ModalData */ "./src/Modal/ModalData.js");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__);
+
 
 
 
@@ -2891,6 +2894,17 @@ const Page = () => {
       fetchOnboardingModalStatus();
     }
   }, []);
+
+  //load the chunk translations passed to us from the rsssl_settings object
+  //only works in build mode, not in dev mode.
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    rsssl_settings.json_translations.forEach(translationsString => {
+      let translations = JSON.parse(translationsString);
+      let localeData = translations.locale_data['really-simple-ssl'] || translations.locale_data.messages;
+      localeData[""].domain = 'really-simple-ssl';
+      (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__.setLocaleData)(localeData, 'really-simple-ssl');
+    });
+  }, []);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     if (selectedMainMenuItem !== 'dashboard') {
       if (!Settings) {
@@ -2919,7 +2933,7 @@ const Page = () => {
       }
     }
     if (selectedMainMenuItem === 'dashboard' && !DashboardPage) {
-      Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_mui_material_Tooltip_Tooltip_js"), __webpack_require__.e("src_Dashboard_DashboardPage_js")]).then(__webpack_require__.bind(__webpack_require__, /*! ./Dashboard/DashboardPage */ "./src/Dashboard/DashboardPage.js")).then(_ref4 => {
+      Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_mui_material_Tooltip_Tooltip_js"), __webpack_require__.e("src_Dashboard_DashboardPage_js")]).then(__webpack_require__.bind(__webpack_require__, /*! ./Dashboard/DashboardPage */ "./src/Dashboard/DashboardPage.js")).then(async _ref4 => {
         let {
           default: DashboardPage
         } = _ref4;
@@ -4581,36 +4595,6 @@ var vanilla = (createState) => {
 /******/ 		};
 /******/ 	}();
 /******/ 	
-/******/ 	/* webpack/runtime/create fake namespace object */
-/******/ 	!function() {
-/******/ 		var getProto = Object.getPrototypeOf ? function(obj) { return Object.getPrototypeOf(obj); } : function(obj) { return obj.__proto__; };
-/******/ 		var leafPrototypes;
-/******/ 		// create a fake namespace object
-/******/ 		// mode & 1: value is a module id, require it
-/******/ 		// mode & 2: merge all properties of value into the ns
-/******/ 		// mode & 4: return value when already ns object
-/******/ 		// mode & 16: return value when it's Promise-like
-/******/ 		// mode & 8|1: behave like require
-/******/ 		__webpack_require__.t = function(value, mode) {
-/******/ 			if(mode & 1) value = this(value);
-/******/ 			if(mode & 8) return value;
-/******/ 			if(typeof value === 'object' && value) {
-/******/ 				if((mode & 4) && value.__esModule) return value;
-/******/ 				if((mode & 16) && typeof value.then === 'function') return value;
-/******/ 			}
-/******/ 			var ns = Object.create(null);
-/******/ 			__webpack_require__.r(ns);
-/******/ 			var def = {};
-/******/ 			leafPrototypes = leafPrototypes || [null, getProto({}), getProto([]), getProto(getProto)];
-/******/ 			for(var current = mode & 2 && value; typeof current == 'object' && !~leafPrototypes.indexOf(current); current = getProto(current)) {
-/******/ 				Object.getOwnPropertyNames(current).forEach(function(key) { def[key] = function() { return value[key]; }; });
-/******/ 			}
-/******/ 			def['default'] = function() { return value; };
-/******/ 			__webpack_require__.d(ns, def);
-/******/ 			return ns;
-/******/ 		};
-/******/ 	}();
-/******/ 	
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	!function() {
 /******/ 		// define getter functions for harmony exports
@@ -4641,7 +4625,7 @@ var vanilla = (createState) => {
 /******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = function(chunkId) {
 /******/ 			// return url for filenames based on template
-/******/ 			return "" + chunkId + ".js";
+/******/ 			return "" + chunkId + "." + {"vendors-node_modules_mui_material_Tooltip_Tooltip_js":"9e56769246d2c0e1b208","src_Settings_Settings_js":"7f63dfc851f1d979916d","src_Menu_Menu_js":"c275f909410871ede758","src_Dashboard_DashboardPage_js":"7c797ecf2781781c72d3","src_Onboarding_OnboardingModal_js":"fe25c86b25724f345752","src_Modal_Modal_js":"758b796a1e632ade7c68","vendors-node_modules_material-ui_core_esm_TextField_TextField_js-node_modules_react-data-tabl-8e8716":"64aaccd4757f22c45708","src_Settings_Field_js":"8d2ed9e9d461f404929a","vendors-node_modules_material-ui_lab_esm_Autocomplete_index_js":"515dd4c5b9e6e345a1ea","vendors-node_modules_material-ui_core_esm_styles_index_js":"b2604edf5f43bcfce41a"}[chunkId] + ".js";
 /******/ 		};
 /******/ 	}();
 /******/ 	
@@ -4871,7 +4855,11 @@ __webpack_require__.r(__webpack_exports__);
 document.addEventListener('DOMContentLoaded', () => {
   const container = document.getElementById('really-simple-ssl');
   if (container) {
-    (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.render)((0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Page__WEBPACK_IMPORTED_MODULE_1__["default"], null)), container);
+    if (_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createRoot) {
+      (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createRoot)(container).render((0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Page__WEBPACK_IMPORTED_MODULE_1__["default"], null));
+    } else {
+      (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.render)((0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Page__WEBPACK_IMPORTED_MODULE_1__["default"], null), container);
+    }
   }
 });
 
@@ -4887,4 +4875,4 @@ document.addEventListener('click', e => {
 }();
 /******/ })()
 ;
-//# sourceMappingURL=index.js.map
+//# sourceMappingURL=index.d1ffdef89710328d1b67.js.map

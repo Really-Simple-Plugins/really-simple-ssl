@@ -396,7 +396,7 @@ const ProgressBlock = props => {
   let noticesOutput = notices;
   if (filter === 'remaining') {
     noticesOutput = noticesOutput.filter(function (notice) {
-      return notice.output.status === 'open';
+      return notice.output.status === 'open' || notice.output.status === 'warning';
     });
   }
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -710,7 +710,7 @@ const ScoreElement = _ref => {
     className: "rsssl-score-snippet " + className + ' ' + hoverClass
   }, content));
 };
-const SslLabs = props => {
+const SslLabs = () => {
   const {
     dataLoaded,
     clearCache,
@@ -1460,9 +1460,6 @@ const Vulnerabilities = () => {
     vulnerabilityScore,
     updates,
     dataLoaded,
-    riskNaming,
-    vulnerabilityCount,
-    capitalizeFirstLetter,
     fetchVulnerabilities
   } = (0,_Settings_RiskConfiguration_RiskData__WEBPACK_IMPORTED_MODULE_5__["default"])();
   const {
@@ -1471,6 +1468,8 @@ const Vulnerabilities = () => {
   } = (0,_Settings_FieldsData__WEBPACK_IMPORTED_MODULE_4__["default"])();
   const [vulnerabilityWord, setVulnerabilityWord] = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)('');
   const [updateWord, setUpdateWord] = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)('');
+  const [updateWordCapitalized, setUpdateWordCapitalized] = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)('');
+  const [updateString, setUpdateString] = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)('');
   const [hardeningWord, setHardeningWord] = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)('');
   const [notEnabledHardeningFields, setNotEnabledHardeningFields] = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)(0);
   const [vulEnabled, setVulEnabled] = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)(false);
@@ -1489,7 +1488,10 @@ const Vulnerabilities = () => {
     const v = vulnerabilities === 1 ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("vulnerability", "really-simple-ssl") : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("vulnerabilities", "really-simple-ssl");
     setVulnerabilityWord(v);
     const u = updates === 1 ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("update", "really-simple-ssl") : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("updates", "really-simple-ssl");
+    const s = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__._n)('You have %s update pending', 'You have %s updates pending', updates, 'really-simple-ssl').replace('%s', updates);
     setUpdateWord(u);
+    setUpdateWordCapitalized(u.charAt(0).toUpperCase() + u.slice(1));
+    setUpdateString(s);
     const h = notEnabledHardeningFields === 1 ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("hardening feature", "really-simple-ssl") : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("hardening features", "really-simple-ssl");
     setHardeningWord(h);
   }, [vulnerabilities, updates, notEnabledHardeningFields]);
@@ -1501,7 +1503,6 @@ const Vulnerabilities = () => {
       setNotEnabledHardeningFields(notEnabledFields.length);
     }
   }, [fields]);
-  let risks = vulnerabilityCount();
   let vulClass = 'rsssl-inactive';
   let badgeVulStyle = vulEnabled ? 'rsp-success' : 'rsp-default';
   let badgeUpdateStyle = 'rsp-success';
@@ -1578,10 +1579,10 @@ const Vulnerabilities = () => {
         color: iconColor
       }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
         className: "rsssl-hardening-list-item-text"
-      }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("You have %s %d pending", "really-simple-ssl").replace("%s", updates).replace("%d", updateWord)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+      }, updateString), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
         href: rsssl_settings.plugins_url + "?plugin_status=upgrade",
         style: linkStyle
-      }, capitalizeFirstLetter(updateWord))));
+      }, updateWordCapitalized)));
     } else {
       return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
         className: "rsssl-hardening-list-item"
@@ -1590,7 +1591,7 @@ const Vulnerabilities = () => {
         color: iconColor
       }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
         className: "rsssl-hardening-list-item-text"
-      }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("You have %s %d pending", "really-simple-ssl").replace("%s", updates).replace("%d", updateWord))));
+      }, updateString)));
     }
   };
   const checkVul = () => {
@@ -1688,7 +1689,7 @@ const Vulnerabilities = () => {
     name: "satellite-dish-duotone"
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", null, vulEnabled ? vulnerabilities : '?'), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     className: "rsssl-badge " + badgeVulStyle
-  }, capitalizeFirstLetter(vulnerabilityWord))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, updateWordCapitalized)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-hardening-select-item"
   }, updates ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_1__["default"], {
     size: 23,
@@ -1700,7 +1701,7 @@ const Vulnerabilities = () => {
     name: "rotate-light"
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", null, updates), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     className: "rsssl-badge " + badgeUpdateStyle
-  }, capitalizeFirstLetter(updateWord)))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, updateWordCapitalized))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-hardening-list"
   }, checknotEnabledHardeningFields(), checkVulActive(), checkVul(), checkUpdates())) : (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-hardening"
@@ -1716,7 +1717,7 @@ const Vulnerabilities = () => {
     name: "radar-duotone"
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", null, "0"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     className: "rsssl-badge rsp-default"
-  }, capitalizeFirstLetter(vulnerabilityWord))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, updateWordCapitalized)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-hardening-select-item"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_1__["default"], {
     size: 23,
@@ -1724,7 +1725,7 @@ const Vulnerabilities = () => {
     name: "rotate-exclamation-light"
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", null, "0"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     className: "rsssl-badge rsp-default"
-  }, capitalizeFirstLetter(updateWord)))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, updateWordCapitalized))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-hardening-list"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-hardening-list-item"
@@ -2020,9 +2021,6 @@ const UseRiskData = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, get) =
     });
     data[quarantineIndex].disabledRiskLevels = disabledRiskLevels;
     return data;
-  },
-  capitalizeFirstLetter: str => {
-    return str.charAt(0).toUpperCase() + str.slice(1);
   },
   fetchFirstRun: async () => {
     await _utils_api__WEBPACK_IMPORTED_MODULE_1__.doAction('vulnerabilities_scan_files');
@@ -2888,4 +2886,4 @@ const getRelativeTime = function (relativeDate) {
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Dashboard_DashboardPage_js.js.map
+//# sourceMappingURL=src_Dashboard_DashboardPage_js.7c797ecf2781781c72d3.js.map
