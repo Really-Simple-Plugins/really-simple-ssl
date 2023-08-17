@@ -116,7 +116,7 @@ const DynamicDataTable = (props) => {
                 icon = 'circle-times';
                 color = 'red';
                 break;
-                case 'informational':
+            case 'informational':
                 code = 'rsssl-primary';
                 icon = 'info';
                 color = 'black';
@@ -184,16 +184,19 @@ const DynamicDataTable = (props) => {
 
     return (
         <>
-            {/*Display the search bar*/}
-            <div className="rsssl-search-bar">
-                <div className="rsssl-search-bar__inner">
-                    <div className="rsssl-search-bar__icon"></div>
-                    <input
-                        type="text"
-                        className="rsssl-search-bar__input"
-                        placeholder={__("Search", "really-simple-ssl")}
-                        onChange={event => handleEventTableSearch(event.target.value, searchableColumns)}
-                    />
+            <div className="rsssl-container">
+                <div></div>
+                {/*Display the search bar*/}
+                <div className="rsssl-search-bar">
+                    <div className="rsssl-search-bar__inner">
+                        <div className="rsssl-search-bar__icon"></div>
+                        <input
+                            type="text"
+                            className="rsssl-search-bar__input"
+                            placeholder={__("Search", "really-simple-ssl")}
+                            onChange={event => handleEventTableSearch(event.target.value, searchableColumns)}
+                        />
+                    </div>
                 </div>
             </div>
             {/*Display the datatable*/}

@@ -284,7 +284,7 @@ const UserDatatable = (props) => {
             </div>
             { /*Display the action form what to do with the selected*/}
             {rowsSelected.length > 0 && (
-                <div className="rsssl-container" style={{
+                <div style={{
                     marginTop: '1em',
                     marginBottom: '1em',
                 }}>

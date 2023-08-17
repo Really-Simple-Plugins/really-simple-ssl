@@ -5,6 +5,7 @@ import DataTable, {createTheme} from "react-data-table-component";
 import useFields from "../FieldsData";
 import VulnerabilitiesIntro from "./VulnerabilitiesIntro";
 import useProgress from "../../Dashboard/Progress/ProgressData";
+import {Button} from "@wordpress/components";
 
 const VulnerabilitiesOverview = (props) => {
     const {getProgressData} = useProgress();
@@ -118,7 +119,6 @@ const VulnerabilitiesOverview = (props) => {
             </>
         )
     }
-
     //we need to add a key to the data called action wich produces the action buttons
     return (
         <>
@@ -126,6 +126,23 @@ const VulnerabilitiesOverview = (props) => {
                 <VulnerabilitiesIntro/>
             </>
             }
+            {/* We add a searchbox */}
+            <div className="rsssl-container">
+                <div>
+                    
+                </div>
+                {/*Display the search bar*/}
+                <div className="rsssl-search-bar">
+                    <div className="rsssl-search-bar__inner">
+                        <div className="rsssl-search-bar__icon"></div>
+                        <input
+                            type="text"
+                            className="rsssl-search-bar__input"
+                            placeholder={__("Search", "really-simple-ssl")}
+                        />
+                    </div>
+                </div>
+            </div>
             <DataTable
                 columns={columns}
                 data={vulList}
