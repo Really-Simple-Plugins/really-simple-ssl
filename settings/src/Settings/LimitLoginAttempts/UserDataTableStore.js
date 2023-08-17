@@ -12,6 +12,34 @@ const UserDataTableStore = create((set, get) => ({
     pagination: {},
     dataActions: {},
     UserDataTable: [],
+    //for faking data we add a dymmmyData
+    dummyData: {
+        data: [
+            {
+                attempt_type: "username",
+                attempt_value:"letsgoobegood",
+                datetime: "13:33, August 16",
+                id: 1,
+                last_failed: "1692192816",
+                status: "blocked"
+            },
+            {
+                attempt_type: "username",
+                attempt_value:"john@somewhere.now",
+                datetime: "13:33, August 16",
+                id: 2,
+                last_failed: "1692192916",
+                status: "blocked"
+            }
+        ]
+    } ,
+    dummyPagination: {
+        currentPage: 1,
+        lastPage: 1,
+        perPage: 10,
+        total: 2,
+        totalRows: 2,
+    },
 
     fetchUserData: async (action) => {
         try {
@@ -21,7 +49,12 @@ const UserDataTableStore = create((set, get) => ({
             );
             //now we set the EventLog
             if (response) {
-                set({UserDataTable: response, dataLoaded: true, processing: false, pagination: response.pagination});
+                //if the response is empty we set the dummyData
+                if (typeof response.pagination === 'undefined') {
+                    set({UserDataTable: get().dummyData, dataLoaded: true, processing: false, pagination: get().dummyPagination});
+                } else {
+                    set({UserDataTable: response, dataLoaded: true, processing: false, pagination: response.pagination});
+                }
             }
         } catch (e) {
             console.log(e);

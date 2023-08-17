@@ -2342,7 +2342,13 @@ const useMenu = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, get) => ({
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useMenu);
 
 // Parses menu items and nested items in single array
-const menuItemParser = (parsedMenuItems, menuItems, fields) => {
+const menuItemParser = function (parsedMenuItems) {
+  let menuItems = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+  let fields = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
+  if (!Array.isArray(menuItems)) {
+    console.error('menuItems is not an array:', menuItems);
+    return parsedMenuItems;
+  }
   menuItems.forEach(menuItem => {
     if (menuItem.visible) {
       parsedMenuItems.push(menuItem.id);
@@ -2354,6 +2360,20 @@ const menuItemParser = (parsedMenuItems, menuItems, fields) => {
   });
   return parsedMenuItems;
 };
+
+// const menuItemParser = (parsedMenuItems, menuItems, fields) => {
+//     menuItems.forEach((menuItem) => {
+//         if( menuItem.visible ) {
+//             parsedMenuItems.push(menuItem.id);
+//             if( menuItem.hasOwnProperty('menu_items') ) {
+//                 menuItem.menu_items = dropEmptyMenuItems(menuItem.menu_items, fields );
+//                 menuItemParser(parsedMenuItems, menuItem.menu_items, fields);
+//             }
+//         }
+//     });
+//     return parsedMenuItems;
+// }
+
 const getPreviousAndNextMenuItems = (menu, selectedSubMenuItem, fields) => {
   let previousMenuItem;
   let nextMenuItem;
@@ -2378,25 +2398,53 @@ const getPreviousAndNextMenuItems = (menu, selectedSubMenuItem, fields) => {
   };
 };
 const dropEmptyMenuItems = (menuItems, fields) => {
-  const newMenuItems = menuItems;
-  for (const [index, menuItem] of menuItems.entries()) {
-    let menuItemFields = fields.filter(field => {
-      return field.menu_id === menuItem.id;
-    });
-    menuItemFields = menuItemFields.filter(field => {
-      return field.visible;
-    });
+  if (!Array.isArray(fields)) {
+    console.error('Fields is not an array or is undefined', fields);
+    return menuItems; // Exit early to avoid further processing
+  }
+
+  const newMenuItems = [];
+  for (const menuItem of menuItems) {
+    let menuItemFields = fields.filter(field => field.menu_id === menuItem.id && field.visible);
     if (menuItemFields.length === 0 && !menuItem.hasOwnProperty('menu_items')) {
-      newMenuItems[index].visible = false;
+      // Do nothing. We don't push it to the newMenuItems
     } else {
-      newMenuItems[index].visible = true;
+      let newMenuItem = {
+        ...menuItem,
+        visible: true
+      }; // Deep copy of menuItem with visible set to true
       if (menuItem.hasOwnProperty('menu_items')) {
-        newMenuItems[index].menu_items = dropEmptyMenuItems(menuItem.menu_items, fields);
+        newMenuItem.menu_items = dropEmptyMenuItems(menuItem.menu_items, fields);
       }
+      newMenuItems.push(newMenuItem);
     }
   }
   return newMenuItems;
 };
+
+// const dropEmptyMenuItems = (menuItems, fields) => {
+//     const newMenuItems = menuItems;
+//     for (const [index, menuItem] of menuItems.entries()) {
+//         let menuItemFields = fields.filter((field) => {
+//             return (field.menu_id === menuItem.id )
+//         });
+//
+//         menuItemFields = menuItemFields.filter((field) => {
+//             return ( field.visible )
+//         });
+//         if ( menuItemFields.length === 0 && !menuItem.hasOwnProperty('menu_items') )  {
+//             newMenuItems[index].visible = false;
+//         } else {
+//             newMenuItems[index].visible = true;
+//             if( menuItem.hasOwnProperty('menu_items') ) {
+//                 newMenuItems[index].menu_items = dropEmptyMenuItems(menuItem.menu_items, fields);
+//             }
+//         }
+//
+//
+//     }
+//     return newMenuItems;
+// }
 
 /*
 * filter sidebar menu from complete menu structure
@@ -2485,18 +2533,53 @@ const getMenuItemByName = (name, menuItems) => {
   return false;
 };
 const addVisibleToMenuItems = menu => {
+  if (typeof menu === 'string') {
+    return menu; // If menu is a string, just return it as is
+  }
+
   let newMenuItems = menu.menu_items;
-  for (let [index, menuItem] of menu.menu_items.entries()) {
-    menuItem.visible = true;
-    if (menuItem.hasOwnProperty('menu_items')) {
-      menuItem = addVisibleToMenuItems(menuItem);
+  if (!Array.isArray(menu.menu_items)) {
+    newMenuItems = [];
+    for (const key in menu.menu_items) {
+      if (typeof menu.menu_items[key] === 'object') {
+        newMenuItems.push(menu.menu_items[key]);
+      }
     }
-    newMenuItems[index] = menuItem;
+  }
+  for (let [index, menuItem] of newMenuItems.entries()) {
+    if (typeof menuItem === 'object') {
+      menuItem.visible = true;
+      if (menuItem.hasOwnProperty('menu_items')) {
+        menuItem = addVisibleToMenuItems(menuItem);
+      }
+      newMenuItems[index] = menuItem;
+    }
   }
   menu.menu_items = newMenuItems;
   menu.visible = true;
   return menu;
 };
+
+// const addVisibleToMenuItems = (menu) => {
+//     let newMenuItems = menu.menu_items;
+//     if (!Array.isArray(menu.menu_items)) {
+//         //wait whut not an array, well let us fix that
+//         newMenuItems = [];
+//         for (const key in menu.menu_items) {
+//             newMenuItems.push(menu.menu_items[key]);
+//         }
+//     }
+//     for (let [index, menuItem] of menu.menu_items.entries()) {
+//         menuItem.visible = true;
+//         if( menuItem.hasOwnProperty('menu_items') ) {
+//             menuItem = addVisibleToMenuItems(menuItem);
+//         }
+//         newMenuItems[index] = menuItem;
+//     }
+//     menu.menu_items = newMenuItems;
+//     menu.visible = true;
+//     return menu;
+// }
 
 /***/ }),
 
@@ -2869,6 +2952,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Menu_MenuData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Menu/MenuData */ "./src/Menu/MenuData.js");
 /* harmony import */ var _Onboarding_OnboardingData__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Onboarding/OnboardingData */ "./src/Onboarding/OnboardingData.js");
 /* harmony import */ var _Modal_ModalData__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Modal/ModalData */ "./src/Modal/ModalData.js");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__);
+
 
 
 
@@ -2908,6 +2994,17 @@ const Page = () => {
       fetchOnboardingModalStatus();
     }
   }, []);
+
+  //load the chunk translations passed to us from the rsssl_settings object
+  //only works in build mode, not in dev mode.
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    rsssl_settings.json_translations.forEach(translationsString => {
+      let translations = JSON.parse(translationsString);
+      let localeData = translations.locale_data['really-simple-ssl'] || translations.locale_data.messages;
+      localeData[""].domain = 'really-simple-ssl';
+      (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__.setLocaleData)(localeData, 'really-simple-ssl');
+    });
+  }, []);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     if (selectedMainMenuItem !== 'dashboard') {
       if (!Settings) {
@@ -2936,7 +3033,7 @@ const Page = () => {
       }
     }
     if (selectedMainMenuItem === 'dashboard' && !DashboardPage) {
-      Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_mui_material_Tooltip_Tooltip_js"), __webpack_require__.e("src_Dashboard_DashboardPage_js")]).then(__webpack_require__.bind(__webpack_require__, /*! ./Dashboard/DashboardPage */ "./src/Dashboard/DashboardPage.js")).then(_ref4 => {
+      Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_mui_material_Tooltip_Tooltip_js"), __webpack_require__.e("src_Dashboard_DashboardPage_js")]).then(__webpack_require__.bind(__webpack_require__, /*! ./Dashboard/DashboardPage */ "./src/Dashboard/DashboardPage.js")).then(async _ref4 => {
         let {
           default: DashboardPage
         } = _ref4;
@@ -4618,36 +4715,6 @@ var vanilla = (createState) => {
 /******/ 		};
 /******/ 	})();
 /******/ 	
-/******/ 	/* webpack/runtime/create fake namespace object */
-/******/ 	(() => {
-/******/ 		var getProto = Object.getPrototypeOf ? (obj) => (Object.getPrototypeOf(obj)) : (obj) => (obj.__proto__);
-/******/ 		var leafPrototypes;
-/******/ 		// create a fake namespace object
-/******/ 		// mode & 1: value is a module id, require it
-/******/ 		// mode & 2: merge all properties of value into the ns
-/******/ 		// mode & 4: return value when already ns object
-/******/ 		// mode & 16: return value when it's Promise-like
-/******/ 		// mode & 8|1: behave like require
-/******/ 		__webpack_require__.t = function(value, mode) {
-/******/ 			if(mode & 1) value = this(value);
-/******/ 			if(mode & 8) return value;
-/******/ 			if(typeof value === 'object' && value) {
-/******/ 				if((mode & 4) && value.__esModule) return value;
-/******/ 				if((mode & 16) && typeof value.then === 'function') return value;
-/******/ 			}
-/******/ 			var ns = Object.create(null);
-/******/ 			__webpack_require__.r(ns);
-/******/ 			var def = {};
-/******/ 			leafPrototypes = leafPrototypes || [null, getProto({}), getProto([]), getProto(getProto)];
-/******/ 			for(var current = mode & 2 && value; typeof current == 'object' && !~leafPrototypes.indexOf(current); current = getProto(current)) {
-/******/ 				Object.getOwnPropertyNames(current).forEach((key) => (def[key] = () => (value[key])));
-/******/ 			}
-/******/ 			def['default'] = () => (value);
-/******/ 			__webpack_require__.d(ns, def);
-/******/ 			return ns;
-/******/ 		};
-/******/ 	})();
-/******/ 	
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
@@ -4678,7 +4745,7 @@ var vanilla = (createState) => {
 /******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = (chunkId) => {
 /******/ 			// return url for filenames based on template
-/******/ 			return "" + chunkId + ".js";
+/******/ 			return "" + chunkId + "." + {"vendors-node_modules_mui_material_Tooltip_Tooltip_js":"0cc86ac6c861846722b1","src_Settings_Settings_js":"872aa65cf5f73ea98131","src_Menu_Menu_js":"c275f909410871ede758","src_Dashboard_DashboardPage_js":"cc315f71743912c1ce7b","src_Onboarding_OnboardingModal_js":"407e53c159d78c14769a","src_Modal_Modal_js":"e34b60e44e1022d3fe24","vendors-node_modules_material-ui_core_esm_TextField_TextField_js-node_modules_react-data-tabl-841a27":"0ff92c205ee0a5de605b","src_Settings_Field_js":"67da09fed31bf892927a","vendors-node_modules_material-ui_lab_esm_Autocomplete_index_js":"515dd4c5b9e6e345a1ea","vendors-node_modules_material-ui_core_esm_styles_index_js":"b2604edf5f43bcfce41a"}[chunkId] + ".js";
 /******/ 		};
 /******/ 	})();
 /******/ 	
@@ -4908,7 +4975,11 @@ __webpack_require__.r(__webpack_exports__);
 document.addEventListener('DOMContentLoaded', () => {
   const container = document.getElementById('really-simple-ssl');
   if (container) {
-    (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.render)((0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Page__WEBPACK_IMPORTED_MODULE_1__["default"], null)), container);
+    if (_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createRoot) {
+      (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createRoot)(container).render((0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Page__WEBPACK_IMPORTED_MODULE_1__["default"], null));
+    } else {
+      (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.render)((0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Page__WEBPACK_IMPORTED_MODULE_1__["default"], null), container);
+    }
   }
 });
 
@@ -4925,4 +4996,4 @@ document.addEventListener('click', e => {
 
 /******/ })()
 ;
-//# sourceMappingURL=index.js.map
+//# sourceMappingURL=index.4177b76dd429f023da14.js.map

@@ -116,7 +116,7 @@ const DynamicDataTable = (props) => {
                 icon = 'circle-times';
                 color = 'red';
                 break;
-                case 'informational':
+            case 'informational':
                 code = 'rsssl-primary';
                 icon = 'info';
                 color = 'black';
@@ -181,30 +181,22 @@ const DynamicDataTable = (props) => {
     //     data[key] = dataItem;
     // }
 
-    //if the data is empty we return a message
-    if (Object.keys(data).length === 0) {
-        return (
-            <div className="rsssl-no-data">
-                <div className="rsssl-no-data__inner">
-                    <div className="rsssl-no-data__icon"></div>
-                    <div className="rsssl-no-data__text">{__("Please activate pro for this feature", "really-simple-ssl")}</div>
-                </div>
-            </div>
-        );
-    }
 
     return (
         <>
-            {/*Display the search bar*/}
-            <div className="rsssl-search-bar">
-                <div className="rsssl-search-bar__inner">
-                    <div className="rsssl-search-bar__icon"></div>
-                    <input
-                        type="text"
-                        className="rsssl-search-bar__input"
-                        placeholder={__("Search", "really-simple-ssl")}
-                        onChange={event => handleEventTableSearch(event.target.value, searchableColumns)}
-                    />
+            <div className="rsssl-container">
+                <div></div>
+                {/*Display the search bar*/}
+                <div className="rsssl-search-bar">
+                    <div className="rsssl-search-bar__inner">
+                        <div className="rsssl-search-bar__icon"></div>
+                        <input
+                            type="text"
+                            className="rsssl-search-bar__input"
+                            placeholder={__("Search", "really-simple-ssl")}
+                            onChange={event => handleEventTableSearch(event.target.value, searchableColumns)}
+                        />
+                    </div>
                 </div>
             </div>
             {/*Display the datatable*/}

@@ -1842,6 +1842,9 @@ class rsssl_admin
         );
         $args = wp_parse_args($args, $defaults);
 
+        //ensure the status is an an array
+	    $args['status'] = is_array($args['status']) ? $args['status'] : ['open', 'warning'];
+
 	    //if we're on the settings page, we need to clear the admin notices transient, because this list won't get refreshed otherwise
 	    if ( $this->is_settings_page() && !get_option('rsssl_6_notice_dismissed')) {
             update_option('rsssl_6_notice_dismissed', true, false );

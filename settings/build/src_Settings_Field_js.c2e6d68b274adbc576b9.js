@@ -1392,27 +1392,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
 
 /*
 * The tooltip can't be included in the native toggleControl, so we have to build our own.
 */
 
+
 const CheckboxControl = props => {
   const [isOpen, setIsOpen] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
-  const [ConfirmDialog, setConfirmDialog] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
-  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-    if (!ConfirmDialog) {
-      Promise.resolve(/*! import() */).then(__webpack_require__.t.bind(__webpack_require__, /*! @wordpress/components */ "@wordpress/components", 23)).then(_ref => {
-        let {
-          default: __experimentalConfirmDialog
-        } = _ref;
-        setConfirmDialog(() => __experimentalConfirmDialog);
-      });
-    }
-  }, []);
   const onChangeHandler = e => {
     //wordpress <6.0 does not have the confirmdialog component
-    if (!ConfirmDialog) {
+    if (!_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.__experimentalConfirmDialog) {
       executeAction();
       return;
     }
@@ -1442,7 +1434,7 @@ const CheckboxControl = props => {
   let field = props.field;
   let is_checked = field.value ? 'is-checked' : '';
   let is_disabled = props.disabled ? 'is-disabled' : '';
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, ConfirmDialog && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ConfirmDialog, {
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, _wordpress_components__WEBPACK_IMPORTED_MODULE_1__.__experimentalConfirmDialog && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.__experimentalConfirmDialog, {
     isOpen: isOpen,
     onConfirm: handleConfirm,
     onCancel: handleCancel
@@ -1685,19 +1677,9 @@ const DynamicDataTable = props => {
   //     data[key] = dataItem;
   // }
 
-  //if the data is empty we return a message
-  if (Object.keys(data).length === 0) {
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-no-data"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-no-data__inner"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-no-data__icon"
-    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-no-data__text"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Please activate pro for this feature", "really-simple-ssl"))));
-  }
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-container"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-search-bar"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-search-bar__inner"
@@ -1708,7 +1690,7 @@ const DynamicDataTable = props => {
     className: "rsssl-search-bar__input",
     placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Search", "really-simple-ssl"),
     onChange: event => handleEventTableSearch(event.target.value, searchableColumns)
-  }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
+  })))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
     columns: columns,
     data: data,
     dense: true,
@@ -1781,17 +1763,55 @@ const DynamicDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((s
   pagination: {},
   dataActions: {},
   DynamicDataTable: [],
+  //for faking data we add a dymmmyData
+  dummyData: {
+    data: [{
+      "id": 1,
+      "datetime": "10:02, August 16",
+      "severity": "warning",
+      "description": "This is a warning message",
+      "event_type": "Login protection",
+      "source_ip": "1.1.1.1",
+      "username": "admin",
+      "iso2_code": "NL"
+    }, {
+      "datetime": "10:02, August 16",
+      "severity": "warning",
+      "description": "This is a warning message",
+      "event_type": "Login protection",
+      "source_ip": "1.1.1.1",
+      "username": "admin",
+      "iso2_code": "NL"
+    }]
+  },
+  dummyPagination: {
+    currentPage: 1,
+    lastPage: 1,
+    perPage: 10,
+    total: 2,
+    totalRows: 2
+  },
   fetchDynamicData: async action => {
     try {
       const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction(action, get().dataActions);
       //now we set the EventLog
       if (response) {
-        set({
-          DynamicDataTable: response,
-          dataLoaded: true,
-          processing: false,
-          pagination: response.pagination
-        });
+        //if the response is empty we set the dummyData
+        if (typeof response.pagination === 'undefined') {
+          set({
+            DynamicDataTable: get().dummyData,
+            dataLoaded: true,
+            processing: false,
+            pagination: get().dummyPagination
+          });
+        } else {
+          set({
+            DynamicDataTable: response,
+            dataLoaded: true,
+            processing: false,
+            pagination: response.pagination
+          });
+        }
       }
     } catch (e) {
       console.log(e);
@@ -1973,6 +1993,12 @@ const Field = props => {
   };
   const onChangeHandler = fieldValue => {
     let field = props.field;
+    //if there's a pattern, validate it.
+    if (field.pattern) {
+      const regex = new RegExp(field.pattern, 'g');
+      const allowedCharactersArray = fieldValue.match(regex);
+      fieldValue = allowedCharactersArray ? allowedCharactersArray.join('') : '';
+    }
     updateField(field.id, fieldValue);
 
     //we can configure other fields if a field is enabled, or set to a certain value.
@@ -3221,36 +3247,72 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/index.mjs");
+/* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/index.mjs");
 /* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils/api */ "./src/utils/api.js");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var immer__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! immer */ "./node_modules/immer/dist/immer.esm.mjs");
+/* harmony import */ var immer__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! immer */ "./node_modules/immer/dist/immer.esm.mjs");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _CountryDatatable__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./CountryDatatable */ "./src/Settings/LimitLoginAttempts/CountryDatatable.js");
 /* Creates A Store For Risk Data using Zustand */
 
 
 
 
 
-const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set, get) => ({
+
+const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, get) => ({
   processing: false,
   dataLoaded: false,
   pagination: {},
   dataActions: {},
   CountryDataTable: [],
+  //for faking data we add a dymmmyData
+  dummyData: {
+    data: [{
+      "id": 1,
+      "iso2_code": "US",
+      "iso3_code": "USA",
+      "country_name": "United States",
+      "region": "North America",
+      "region_code": "NA"
+    }, {
+      "id": 2,
+      "iso2_code": "CA",
+      "iso3_code": "CAN",
+      "country_name": "Canada",
+      "region": "North America",
+      "region_code": "NA"
+    }]
+  },
+  dummyPagination: {
+    currentPage: 1,
+    lastPage: 1,
+    perPage: 10,
+    total: 2,
+    totalRows: 2
+  },
   fetchCountryData: async action => {
     try {
       const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction(action, get().dataActions);
       //now we set the EventLog
       if (response) {
-        set({
-          CountryDataTable: response,
-          dataLoaded: true,
-          processing: false,
-          pagination: response.pagination
-        });
+        if (typeof response.pagination === 'undefined') {
+          set({
+            CountryDataTable: get().dummyData,
+            dataLoaded: true,
+            processing: false,
+            pagination: get().dummyPagination
+          });
+        } else {
+          set({
+            CountryDataTable: response,
+            dataLoaded: true,
+            processing: false,
+            pagination: response.pagination
+          });
+        }
       }
     } catch (e) {
       console.log(e);
@@ -3258,7 +3320,7 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((s
   },
   handleCountryTableSearch: async (search, searchColumns) => {
     //Add the search to the dataActions
-    set((0,immer__WEBPACK_IMPORTED_MODULE_4__.produce)(state => {
+    set((0,immer__WEBPACK_IMPORTED_MODULE_5__.produce)(state => {
       state.dataActions = {
         ...state.dataActions,
         search,
@@ -3269,7 +3331,7 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((s
   },
   handleCountryTablePageChange: async (page, pageSize) => {
     //Add the page and pageSize to the dataActions
-    set((0,immer__WEBPACK_IMPORTED_MODULE_4__.produce)(state => {
+    set((0,immer__WEBPACK_IMPORTED_MODULE_5__.produce)(state => {
       state.dataActions = {
         ...state.dataActions,
         page,
@@ -3280,7 +3342,7 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((s
   },
   handleCountryTableRowsChange: async (currentRowsPerPage, currentPage) => {
     //Add the page and pageSize to the dataActions
-    set((0,immer__WEBPACK_IMPORTED_MODULE_4__.produce)(state => {
+    set((0,immer__WEBPACK_IMPORTED_MODULE_5__.produce)(state => {
       state.dataActions = {
         ...state.dataActions,
         currentRowsPerPage,
@@ -3292,7 +3354,7 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((s
   //this handles all pagination and sorting
   handleCountryTableSort: async (column, sortDirection) => {
     //Add the column and sortDirection to the dataActions
-    set((0,immer__WEBPACK_IMPORTED_MODULE_4__.produce)(state => {
+    set((0,immer__WEBPACK_IMPORTED_MODULE_5__.produce)(state => {
       state.dataActions = {
         ...state.dataActions,
         sortColumn: column,
@@ -3303,7 +3365,7 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((s
   },
   handleCountryTableFilter: async (column, filterValue) => {
     //Add the column and sortDirection to the dataActions
-    set((0,immer__WEBPACK_IMPORTED_MODULE_4__.produce)(state => {
+    set((0,immer__WEBPACK_IMPORTED_MODULE_5__.produce)(state => {
       state.dataActions = {
         ...state.dataActions,
         filterColumn: column,
@@ -3351,6 +3413,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const CountryDatatable = props => {
+  var _pagination$totalRows;
   const {
     CountryDataTable,
     dataLoaded,
@@ -3446,6 +3509,7 @@ const CountryDatatable = props => {
     };
   });
   function handleStatusChange(value, id) {}
+
   //we convert the data to an array
   let data = {
     ...CountryDataTable.data
@@ -3511,6 +3575,8 @@ const CountryDatatable = props => {
     data[key] = dataItem;
   }
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-container"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-search-bar"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-search-bar__inner"
@@ -3521,20 +3587,18 @@ const CountryDatatable = props => {
     className: "rsssl-search-bar__input",
     placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Search", "really-simple-ssl"),
     onChange: event => handleCountryTableSearch(event.target.value, searchableColumns)
-  }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
+  })))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
     columns: columns,
     data: Object.values(data),
     dense: true,
     pagination: true,
-    paginationServer: true
-    // paginationTotalRows={pagination.totalRows ?? 0}
-    // onChangeRowsPerPage={handleCountryTableRowsChange}
-    // onChangePage={handleCountryTablePageChange}
-    ,
-    sortServer: true
-    // onSort={handleCountryTableSort}
-    // paginationRowsPerPageOptions={[10, 25, 50, 100]}
-    ,
+    paginationServer: true,
+    paginationTotalRows: (_pagination$totalRows = pagination.totalRows) !== null && _pagination$totalRows !== void 0 ? _pagination$totalRows : 0,
+    onChangeRowsPerPage: handleCountryTableRowsChange,
+    onChangePage: handleCountryTablePageChange,
+    sortServer: true,
+    onSort: handleCountryTableSort,
+    paginationRowsPerPageOptions: [10, 25, 50, 100],
     noDataComponent: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("No results", "really-simple-ssl"),
     persistTableHead: true,
     theme: "really-simple-plugins",
@@ -3596,6 +3660,30 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
   dataActions: {},
   IpDataTable: [],
   maskError: false,
+  dummyData: {
+    data: [{
+      attempt_type: "source_ip",
+      attempt_value: "192.168.10.13/27",
+      datetime: "13:33, August 16",
+      id: 1,
+      last_failed: "1692192816",
+      status: "blocked"
+    }, {
+      attempt_type: "source_ip",
+      attempt_value: "::1",
+      datetime: "13:33, August 16",
+      id: 2,
+      last_failed: "1692192916",
+      status: "blocked"
+    }]
+  },
+  dummyPagination: {
+    currentPage: 1,
+    lastPage: 1,
+    perPage: 10,
+    total: 2,
+    totalRows: 2
+  },
   /*
   * This function fetches the data from the server and fills the property IpDataTable
   * Note this function works with the DataTable class on serverside
@@ -3605,12 +3693,22 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
       const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction(action, get().dataActions);
       //now we set the EventLog
       if (response) {
-        set({
-          IpDataTable: response,
-          dataLoaded: true,
-          processing: false,
-          pagination: response.pagination
-        });
+        //if the response is empty we set the dummyData
+        if (typeof response.pagination === 'undefined') {
+          set({
+            IpDataTable: get().dummyData,
+            dataLoaded: true,
+            processing: false,
+            pagination: get().dummyPagination
+          });
+        } else {
+          set({
+            IpDataTable: response,
+            dataLoaded: true,
+            processing: false,
+            pagination: response.pagination
+          });
+        }
       }
     } catch (e) {
       console.log(e);
@@ -4048,8 +4146,6 @@ const IpAddressDatatable = props => {
   const {
     IpDataTable,
     dataLoaded,
-    pagination,
-    dataActions,
     handleIpTableRowsChange,
     updateMultiRow,
     fetchIpData,
@@ -4061,18 +4157,7 @@ const IpAddressDatatable = props => {
     updateRow,
     resetRow,
     resetMultiRow,
-    addRow,
-    statusSelected,
-    setIpAddress,
-    setStatusSelected,
-    fetchCidrData,
-    canSetCidr,
-    setIdSelected,
-    idSelected,
-    validateIpRange,
-    inputRangeValidated,
-    cidr,
-    ip_count
+    setStatusSelected
   } = (0,_IpAddressDataTableStore__WEBPACK_IMPORTED_MODULE_4__["default"])();
 
   //here we set the selectedFilter from the Settings group
@@ -4084,6 +4169,7 @@ const IpAddressDatatable = props => {
   } = (0,_FilterData__WEBPACK_IMPORTED_MODULE_6__["default"])();
   const [addingIpAddress, setAddingIpAddress] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(false);
   const [rowsSelected, setRowsSelected] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)([]);
+  const [rowCleared, setRowCleared] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(false);
   const {
     fetchDynamicData
   } = (0,_EventLog_DynamicDataTableStore__WEBPACK_IMPORTED_MODULE_5__["default"])();
@@ -4190,9 +4276,11 @@ const IpAddressDatatable = props => {
       updateMultiRow(ids, 'blocked');
       //we emtry the rowsSelected
       setRowsSelected([]);
+      setRowCleared(true);
     } else {
       updateRow(data, 'blocked');
     }
+    setRowCleared(false);
     fetchDynamicData('event_log');
   }
   function trustIpAddresses(data) {
@@ -4205,9 +4293,12 @@ const IpAddressDatatable = props => {
       updateMultiRow(ids, 'trusted');
       //we emtry the rowsSelected
       setRowsSelected([]);
+      setRowCleared(true);
     } else {
       updateRow(data, 'trusted');
     }
+    setRowCleared(false);
+    fetchDynamicData('event_log');
   }
   function resetIpAddresses(data) {
     //we check if the data is an array
@@ -4219,9 +4310,11 @@ const IpAddressDatatable = props => {
       resetMultiRow(ids);
       //we emtry the rowsSelected
       setRowsSelected([]);
+      setRowCleared(true);
     } else {
       resetRow(data);
     }
+    setRowCleared(false);
     fetchDynamicData('event_log');
   }
   function generateOptions(status, id) {
@@ -4273,14 +4366,14 @@ const IpAddressDatatable = props => {
   function generateActionButtons(id) {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-action-buttons"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    }, getCurrentFilter(moduleName) === 'blocked' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-action-buttons__inner"
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__.Button, {
       className: "button button-secondary rsssl-action-buttons__button",
       onClick: () => {
         trustIpAddresses(id);
       }
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Trust", "really-simple-ssl"))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Trust", "really-simple-ssl"))), getCurrentFilter(moduleName) === 'trusted' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-action-buttons__inner"
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__.Button, {
       className: "button button-primary rsssl-action-buttons__button",
@@ -4346,7 +4439,6 @@ const IpAddressDatatable = props => {
     placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Search", "really-simple-ssl"),
     onChange: event => handleIpTableSearch(event.target.value, searchableColumns)
   })))), rowsSelected.length > 0 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-container",
     style: {
       marginTop: '1em',
       marginBottom: '1em'
@@ -4355,14 +4447,14 @@ const IpAddressDatatable = props => {
     className: "rsssl-multiselect-datatable-form rsssl-primary"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("You have selected", "really-simple-ssl"), " ", rowsSelected.length, " ", (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("rows", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-action-buttons"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, getCurrentFilter(moduleName) === 'blocked' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-action-buttons__inner"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__.Button, {
     className: "button button-secondary rsssl-action-buttons__button",
     onClick: () => {
       trustIpAddresses(rowsSelected);
     }
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Trust", "really-simple-ssl"))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Trust", "really-simple-ssl"))), getCurrentFilter(moduleName) === 'trusted' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-action-buttons__inner"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__.Button, {
     className: "button button-primary rsssl-action-buttons__button",
@@ -4391,8 +4483,9 @@ const IpAddressDatatable = props => {
     noDataComponent: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("No results", "really-simple-ssl"),
     persistTableHead: true,
     selectableRows: true,
+    selectableRowsHighlight: true,
     onSelectedRowsChange: handleSelection,
-    clearSelectedRows: rowsSelected.length <= 0,
+    clearSelectedRows: rowCleared,
     theme: "really-simple-plugins",
     customStyles: customStyles
   }));
@@ -4523,17 +4616,52 @@ const UserDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set,
   pagination: {},
   dataActions: {},
   UserDataTable: [],
+  //for faking data we add a dymmmyData
+  dummyData: {
+    data: [{
+      attempt_type: "username",
+      attempt_value: "letsgoobegood",
+      datetime: "13:33, August 16",
+      id: 1,
+      last_failed: "1692192816",
+      status: "blocked"
+    }, {
+      attempt_type: "username",
+      attempt_value: "john@somewhere.now",
+      datetime: "13:33, August 16",
+      id: 2,
+      last_failed: "1692192916",
+      status: "blocked"
+    }]
+  },
+  dummyPagination: {
+    currentPage: 1,
+    lastPage: 1,
+    perPage: 10,
+    total: 2,
+    totalRows: 2
+  },
   fetchUserData: async action => {
     try {
       const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction(action, get().dataActions);
       //now we set the EventLog
       if (response) {
-        set({
-          UserDataTable: response,
-          dataLoaded: true,
-          processing: false,
-          pagination: response.pagination
-        });
+        //if the response is empty we set the dummyData
+        if (typeof response.pagination === 'undefined') {
+          set({
+            UserDataTable: get().dummyData,
+            dataLoaded: true,
+            processing: false,
+            pagination: get().dummyPagination
+          });
+        } else {
+          set({
+            UserDataTable: response,
+            dataLoaded: true,
+            processing: false,
+            pagination: response.pagination
+          });
+        }
       }
     } catch (e) {
       console.log(e);
@@ -4760,6 +4888,7 @@ const UserDatatable = props => {
   const [rowsSelected, setRowsSelected] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)([]);
   const [addingUser, setAddingUser] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(false);
   const [user, setUser] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)('');
+  const [rowCleared, setRowCleared] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(false);
   const {
     fetchDynamicData
   } = (0,_EventLog_DynamicDataTableStore__WEBPACK_IMPORTED_MODULE_9__["default"])();
@@ -4895,14 +5024,14 @@ const UserDatatable = props => {
   function generateActionButtons(id) {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-action-buttons"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    }, getCurrentFilter(moduleName) === 'blocked' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-action-buttons__inner"
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
       className: "button button-secondary rsssl-action-buttons__button",
       onClick: () => {
         trustUsers(id);
       }
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Trust", "really-simple-ssl"))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Trust", "really-simple-ssl"))), getCurrentFilter(moduleName) === 'trusted' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-action-buttons__inner"
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
       className: "button button-primary rsssl-action-buttons__button",
@@ -4948,19 +5077,6 @@ const UserDatatable = props => {
     dataItem.action = generateActionButtons(dataItem.id);
     data[key] = dataItem;
   }
-
-  //if the data is empty we return a message
-  if (Object.keys(data).length === 0) {
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-no-data"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-no-data__inner"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-no-data__icon"
-    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-no-data__text"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Please activate pro for this feature", "really-simple-ssl"))));
-  }
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_AddUserModal__WEBPACK_IMPORTED_MODULE_8__["default"], {
     isOpen: addingUser,
     onRequestClose: handleClose,
@@ -4971,7 +5087,7 @@ const UserDatatable = props => {
     className: "rsssl-container"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-add-button"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, (getCurrentFilter(moduleName) === 'blocked' || getCurrentFilter(moduleName) === 'trusted') && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-add-button__inner"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
     className: "button button-secondary rsssl-add-button__button",
@@ -4988,7 +5104,6 @@ const UserDatatable = props => {
     placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Search", "really-simple-ssl"),
     onChange: event => handleUserTableSearch(event.target.value, searchableColumns)
   })))), rowsSelected.length > 0 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-container",
     style: {
       marginTop: '1em',
       marginBottom: '1em'
@@ -4997,19 +5112,19 @@ const UserDatatable = props => {
     className: "rsssl-multiselect-datatable-form rsssl-primary"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("You have selected", "really-simple-ssl"), " ", rowsSelected.length, " ", (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("rows", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-action-buttons"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, getCurrentFilter(moduleName) === 'blocked' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-action-buttons__inner"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
     className: "button button-secondary rsssl-action-buttons__button",
     onClick: () => {
-      trustIpAddresses(rowsSelected);
+      trustUsers(rowsSelected);
     }
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Trust", "really-simple-ssl"))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Trust", "really-simple-ssl"))), getCurrentFilter(moduleName) === 'trusted' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-action-buttons__inner"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
     className: "button button-primary rsssl-action-buttons__button",
     onClick: () => {
-      blockIpAddresses(rowsSelected);
+      blockUsers(rowsSelected);
     }
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Block", "really-simple-ssl"))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-action-buttons__inner"
@@ -5031,8 +5146,9 @@ const UserDatatable = props => {
     onSort: handleUserTableSort,
     paginationRowsPerPageOptions: [10, 25, 50, 100],
     selectableRows: true,
+    selectableRowsHighlight: true,
     onSelectedRowsChange: handleSelection,
-    clearSelectedRows: rowsSelected.length <= 0,
+    clearSelectedRows: rowCleared,
     noDataComponent: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("No results", "really-simple-ssl"),
     persistTableHead: true,
     theme: "really-simple-plugins",
@@ -6001,6 +6117,7 @@ const RiskComponent = props => {
   /**
    * Initialize
    */
+
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     let enabled = getFieldValue('measures_enabled') == 1;
     setMeasuresEnabled(enabled);
@@ -6191,9 +6308,6 @@ const UseRiskData = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, get) =
     });
     data[quarantineIndex].disabledRiskLevels = disabledRiskLevels;
     return data;
-  },
-  capitalizeFirstLetter: str => {
-    return str.charAt(0).toUpperCase() + str.slice(1);
   },
   fetchFirstRun: async () => {
     await _utils_api__WEBPACK_IMPORTED_MODULE_1__.doAction('vulnerabilities_scan_files');
@@ -6567,6 +6681,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../FieldsData */ "./src/Settings/FieldsData.js");
 /* harmony import */ var _VulnerabilitiesIntro__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./VulnerabilitiesIntro */ "./src/Settings/RiskConfiguration/VulnerabilitiesIntro.js");
 /* harmony import */ var _Dashboard_Progress_ProgressData__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../Dashboard/Progress/ProgressData */ "./src/Dashboard/Progress/ProgressData.js");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_8__);
+
 
 
 
@@ -6684,9 +6801,20 @@ const VulnerabilitiesOverview = props => {
       }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Disabled', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Activate vulnerability detection to enable this block.', 'really-simple-ssl')))))
     );
   }
-
   //we need to add a key to the data called action wich produces the action buttons
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, showIntro && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_VulnerabilitiesIntro__WEBPACK_IMPORTED_MODULE_6__["default"], null)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_4__["default"], {
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, showIntro && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_VulnerabilitiesIntro__WEBPACK_IMPORTED_MODULE_6__["default"], null)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-container"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-search-bar"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-search-bar__inner"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-search-bar__icon"
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "text",
+    className: "rsssl-search-bar__input",
+    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Search", "really-simple-ssl")
+  })))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_4__["default"], {
     columns: columns,
     data: vulList,
     dense: true,
@@ -6783,7 +6911,7 @@ const Support = () => {
     setSending(true);
     return _utils_api__WEBPACK_IMPORTED_MODULE_3__.runTest('supportData', 'refresh').then(response => {
       let encodedMessage = message.replace(/(?:\r\n|\r|\n)/g, '--br--');
-      let url = 'https://really-simple-ssl.com/support' + '?customername=' + encodeURIComponent(response.customer_name) + '&email=' + response.email + '&domain=' + response.domain + '&scanresults=' + encodeURIComponent(response.scan_results) + '&licensekey=' + encodeURIComponent(response.license_key) + '&supportrequest=' + encodeURIComponent(encodedMessage) + '&htaccesscontents=' + response.htaccess_contents + '&debuglog=' + response.system_status;
+      let url = 'https://really-simple-ssl.com/support' + '?customername=' + encodeURIComponent(response.customer_name) + '&email=' + response.email + '&domain=' + response.domain + '&scanresults=' + encodeURIComponent(response.scan_results) + '&licensekey=' + encodeURIComponent(response.license_key) + '&supportrequest=' + encodeURIComponent(encodedMessage) + '&htaccesscontents=' + encodeURIComponent(response.htaccess_contents) + '&debuglog=' + encodeURIComponent(response.system_status);
       window.location.assign(url);
     });
   };
@@ -23397,4 +23525,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.js.map
+//# sourceMappingURL=src_Settings_Field_js.c2e6d68b274adbc576b9.js.map

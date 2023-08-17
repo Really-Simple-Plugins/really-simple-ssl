@@ -23,7 +23,33 @@ const IpAddressDataTableStore = create((set, get) => ({
     dataActions: {},
     IpDataTable: [],
     maskError: false,
-
+    dummyData: {
+        data: [
+            {
+                attempt_type: "source_ip",
+                attempt_value:"192.168.10.13/27",
+                datetime: "13:33, August 16",
+                id: 1,
+                last_failed: "1692192816",
+                status: "blocked"
+            },
+            {
+                attempt_type: "source_ip",
+                attempt_value:"::1",
+                datetime: "13:33, August 16",
+                id: 2,
+                last_failed: "1692192916",
+                status: "blocked"
+            }
+        ]
+    } ,
+    dummyPagination: {
+        currentPage: 1,
+        lastPage: 1,
+        perPage: 10,
+        total: 2,
+        totalRows: 2,
+    },
 
     /*
     * This function fetches the data from the server and fills the property IpDataTable
@@ -37,7 +63,12 @@ const IpAddressDataTableStore = create((set, get) => ({
             );
             //now we set the EventLog
             if (response) {
-                set({IpDataTable: response, dataLoaded: true, processing: false, pagination: response.pagination});
+                //if the response is empty we set the dummyData
+                if (typeof response.pagination === 'undefined') {
+                    set({IpDataTable: get().dummyData, dataLoaded: true, processing: false, pagination: get().dummyPagination});
+                } else {
+                    set({IpDataTable: response, dataLoaded: true, processing: false, pagination: response.pagination});
+                }
             }
         } catch (e) {
             console.log(e);

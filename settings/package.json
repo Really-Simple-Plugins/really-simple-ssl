@@ -9,7 +9,10 @@
   "author": "Really Simple Plugins",
   "license": "GPL-2.0-only",
   "devDependencies": {
-    "@wordpress/scripts": "^23.4.0"
+    "@wordpress/scripts": "^23.4.0",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1",
+    "wp-scripts": "^0.0.1-security"
   },
   "dependencies": {
     "@material-ui/core": "^4.12.4",
@@ -21,6 +24,7 @@
     "@wordpress/components": "^19.16.0",
     "@wordpress/data-controls": "^2.27.0",
     "@wordpress/element": "^5.9.0",
+    "@wordpress/react-i18n": "^3.32.0",
     "immer": "^9.0.19",
     "immutability-helper": "^3.1.1",
     "react-country-flag": "^3.1.0",

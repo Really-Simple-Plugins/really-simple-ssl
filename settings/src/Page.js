@@ -6,6 +6,7 @@ import useFields from "./Settings/FieldsData";
 import useMenu from "./Menu/MenuData";
 import useOnboardingData from "./Onboarding/OnboardingData";
 import useModal from "./Modal/ModalData";
+import {setLocaleData} from "@wordpress/i18n";
 
 const Page = () => {
     const {error, fields, changedFields, fetchFieldsData, updateFieldsData, fieldsLoaded} = useFields();
@@ -23,6 +24,17 @@ const Page = () => {
             fetchOnboardingModalStatus();
         }
     }, []);
+
+    //load the chunk translations passed to us from the rsssl_settings object
+    //only works in build mode, not in dev mode.
+    useEffect(() => {
+        rsssl_settings.json_translations.forEach( (translationsString) => {
+            let translations = JSON.parse(translationsString);
+            let localeData = translations.locale_data[ 'really-simple-ssl' ] || translations.locale_data.messages;
+            localeData[""].domain = 'really-simple-ssl';
+            setLocaleData( localeData, 'really-simple-ssl' );
+        });
+    },[]);
 
     useEffect( () => {
         if (selectedMainMenuItem !== 'dashboard' ){
@@ -43,7 +55,7 @@ const Page = () => {
             }
         }
         if (selectedMainMenuItem === 'dashboard' && !DashboardPage ){
-            import ( "./Dashboard/DashboardPage").then(({ default: DashboardPage }) => {
+            import ( "./Dashboard/DashboardPage").then(async ({default: DashboardPage}) => {
                 setDashboardPage(() => DashboardPage);
             });
         }
@@ -103,7 +115,6 @@ const Page = () => {
 
             {Modal && <Modal/>}
             {
-
                     <>
                         <Header />
                         <div className={"rsssl-content-area rsssl-grid rsssl-" + selectedMainMenuItem}>

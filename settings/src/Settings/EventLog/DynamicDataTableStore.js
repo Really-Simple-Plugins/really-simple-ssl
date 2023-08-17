@@ -12,6 +12,36 @@ const DynamicDataTableStore = create((set, get) => ({
     pagination: {},
     dataActions: {},
     DynamicDataTable: [],
+    //for faking data we add a dymmmyData
+    dummyData: {data: [
+        {
+            "id": 1,
+            "datetime": "10:02, August 16",
+            "severity": "warning",
+            "description": "This is a warning message",
+            "event_type": "Login protection",
+            "source_ip": "1.1.1.1",
+            "username": "admin",
+            "iso2_code": "NL",
+        },
+        {
+            "datetime": "10:02, August 16",
+            "severity": "warning",
+            "description": "This is a warning message",
+            "event_type": "Login protection",
+            "source_ip": "1.1.1.1",
+            "username": "admin",
+            "iso2_code": "NL",
+        },
+    ]},
+    dummyPagination: {
+        currentPage: 1,
+        lastPage: 1,
+        perPage: 10,
+        total: 2,
+        totalRows: 2,
+    },
+
 
     fetchDynamicData: async (action) => {
         try {
@@ -21,7 +51,12 @@ const DynamicDataTableStore = create((set, get) => ({
             );
             //now we set the EventLog
             if (response) {
-                set({DynamicDataTable: response, dataLoaded: true, processing: false, pagination: response.pagination});
+                //if the response is empty we set the dummyData
+                if (typeof response.pagination === 'undefined') {
+                    set({DynamicDataTable: get().dummyData, dataLoaded: true, processing: false, pagination: get().dummyPagination});
+                } else {
+                    set({DynamicDataTable: response, dataLoaded: true, processing: false, pagination: response.pagination});
+                }
             }
         } catch (e) {
             console.log(e);

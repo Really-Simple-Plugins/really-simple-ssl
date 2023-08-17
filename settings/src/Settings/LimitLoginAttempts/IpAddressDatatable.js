@@ -15,8 +15,6 @@ const IpAddressDatatable = (props) => {
     const {
         IpDataTable,
         dataLoaded,
-        pagination,
-        dataActions,
         handleIpTableRowsChange,
         updateMultiRow,
         fetchIpData,
@@ -28,24 +26,14 @@ const IpAddressDatatable = (props) => {
         updateRow,
         resetRow,
         resetMultiRow,
-        addRow,
-        statusSelected,
-        setIpAddress,
         setStatusSelected,
-        fetchCidrData,
-        canSetCidr,
-        setIdSelected,
-        idSelected,
-        validateIpRange,
-        inputRangeValidated,
-        cidr,
-        ip_count,
     } = IpAddressDataTableStore()
 
     //here we set the selectedFilter from the Settings group
     const {selectedFilter, setSelectedFilter, activeGroupId, getCurrentFilter} = FilterData();
     const [addingIpAddress, setAddingIpAddress] = useState(false);
     const [rowsSelected, setRowsSelected] = useState([]);
+    const [rowCleared, setRowCleared] = useState(false);
     const {fetchDynamicData} = DynamicDataTableStore();
 
     const moduleName = 'rsssl-group-filter-limit_login_attempts_ip_address';
@@ -153,9 +141,11 @@ const IpAddressDatatable = (props) => {
             updateMultiRow(ids, 'blocked');
             //we emtry the rowsSelected
             setRowsSelected([]);
+            setRowCleared(true);
         } else {
             updateRow(data, 'blocked');
         }
+        setRowCleared(false);
         fetchDynamicData('event_log')
     }
 
@@ -169,9 +159,12 @@ const IpAddressDatatable = (props) => {
             updateMultiRow(ids, 'trusted');
             //we emtry the rowsSelected
             setRowsSelected([]);
+            setRowCleared(true);
         } else {
             updateRow(data, 'trusted');
         }
+        setRowCleared(false);
+        fetchDynamicData('event_log')
     }
 
     function resetIpAddresses(data) {
@@ -184,9 +177,11 @@ const IpAddressDatatable = (props) => {
             resetMultiRow(ids);
             //we emtry the rowsSelected
             setRowsSelected([]);
+            setRowCleared(true);
         } else {
             resetRow(data);
         }
+        setRowCleared(false);
         fetchDynamicData('event_log')
     }
 
@@ -253,27 +248,31 @@ const IpAddressDatatable = (props) => {
             <>
                 <div className="rsssl-action-buttons">
                     {/* if the id is new we show the Trust button */}
-                    <div className="rsssl-action-buttons__inner">
-                        <Button
-                            className="button button-secondary rsssl-action-buttons__button"
-                            onClick={() => {
-                                trustIpAddresses(id);
-                            }}
-                        >
-                            {__("Trust", "really-simple-ssl")}
-                        </Button>
-                    </div>
+                    {getCurrentFilter(moduleName) === 'blocked' && (
+                        <div className="rsssl-action-buttons__inner">
+                            <Button
+                                className="button button-secondary rsssl-action-buttons__button"
+                                onClick={() => {
+                                    trustIpAddresses(id);
+                                }}
+                            >
+                                {__("Trust", "really-simple-ssl")}
+                            </Button>
+                        </div>
+                    )}
                     {/* if the id is new we show the Block button */}
-                    <div className="rsssl-action-buttons__inner">
-                        <Button
-                            className="button button-primary rsssl-action-buttons__button"
-                            onClick={() => {
-                               blockIpAddresses(id);
-                            }}
-                        >
-                            {__("Block", "really-simple-ssl")}
-                        </Button>
-                    </div>
+                    {getCurrentFilter(moduleName) === 'trusted' && (
+                        <div className="rsssl-action-buttons__inner">
+                            <Button
+                                className="button button-primary rsssl-action-buttons__button"
+                                onClick={() => {
+                                    blockIpAddresses(id);
+                                }}
+                            >
+                                {__("Block", "really-simple-ssl")}
+                            </Button>
+                        </div>
+                    )}
                     {/* if the id is new we show the Reset button */}
                     <div className="rsssl-action-buttons__inner">
                         <Button
@@ -357,39 +356,44 @@ const IpAddressDatatable = (props) => {
 
             { /*Display the action form what to do with the selected*/}
             {rowsSelected.length > 0 && (
-                <div className="rsssl-container" style={{
-                    marginTop: '1em',
-                    marginBottom: '1em',
-                }}>
+                <div
+                    style={{
+                        marginTop: '1em',
+                        marginBottom: '1em',
+                    }}>
                     <div className={"rsssl-multiselect-datatable-form rsssl-primary"}
-                   >
+                    >
                         <div>
                             {__("You have selected", "really-simple-ssl")} {rowsSelected.length} {__("rows", "really-simple-ssl")}
                         </div>
 
                         <div className="rsssl-action-buttons">
                             {/* if the id is new we show the Trust button */}
-                            <div className="rsssl-action-buttons__inner">
-                                <Button
-                                    className="button button-secondary rsssl-action-buttons__button"
-                                    onClick={() => {
-                                        trustIpAddresses(rowsSelected);
-                                    }}
-                                >
-                                    {__("Trust", "really-simple-ssl")}
-                                </Button>
-                            </div>
+                            {getCurrentFilter(moduleName) === 'blocked' && (
+                                <div className="rsssl-action-buttons__inner">
+                                    <Button
+                                        className="button button-secondary rsssl-action-buttons__button"
+                                        onClick={() => {
+                                            trustIpAddresses(rowsSelected);
+                                        }}
+                                    >
+                                        {__("Trust", "really-simple-ssl")}
+                                    </Button>
+                                </div>
+                            )}
                             {/* if the id is new we show the Block button */}
-                            <div className="rsssl-action-buttons__inner">
-                                <Button
-                                    className="button button-primary rsssl-action-buttons__button"
-                                    onClick={() => {
-                                        blockIpAddresses(rowsSelected);
-                                    }}
-                                >
-                                    {__("Block", "really-simple-ssl")}
-                                </Button>
-                            </div>
+                            {getCurrentFilter(moduleName) === 'trusted' && (
+                                <div className="rsssl-action-buttons__inner">
+                                    <Button
+                                        className="button button-primary rsssl-action-buttons__button"
+                                        onClick={() => {
+                                            blockIpAddresses(rowsSelected);
+                                        }}
+                                    >
+                                        {__("Block", "really-simple-ssl")}
+                                    </Button>
+                                </div>
+                            )}
                             {/* if the id is new we show the Reset button */}
                             <div className="rsssl-action-buttons__inner">
                                 <Button
@@ -405,6 +409,7 @@ const IpAddressDatatable = (props) => {
                     </div>
                 </div>
             )}
+
             {/*Display the datatable*/}
             <DataTable
                 columns={columns}
@@ -421,8 +426,9 @@ const IpAddressDatatable = (props) => {
                 noDataComponent={__("No results", "really-simple-ssl")}
                 persistTableHead
                 selectableRows
+                selectableRowsHighlight={true}
                 onSelectedRowsChange={handleSelection}
-                clearSelectedRows={rowsSelected.length <= 0}
+                clearSelectedRows={rowCleared}
                 theme="really-simple-plugins"
                 customStyles={customStyles}
             ></DataTable>

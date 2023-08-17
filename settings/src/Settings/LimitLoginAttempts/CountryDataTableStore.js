@@ -4,6 +4,7 @@ import * as rsssl_api from "../../utils/api";
 import {__} from "@wordpress/i18n";
 import {produce} from "immer";
 import React from "react";
+import CountryDatatable from "./CountryDatatable";
 
 const CountryDataTableStore = create((set, get) => ({
 
@@ -12,6 +13,33 @@ const CountryDataTableStore = create((set, get) => ({
     pagination: {},
     dataActions: {},
     CountryDataTable: [],
+    //for faking data we add a dymmmyData
+    dummyData: { data: [
+        {
+            "id": 1,
+            "iso2_code": "US",
+            "iso3_code": "USA",
+            "country_name": "United States",
+            "region": "North America",
+            "region_code": "NA",
+        },
+        {
+            "id": 2,
+            "iso2_code": "CA",
+            "iso3_code": "CAN",
+            "country_name": "Canada",
+            "region": "North America",
+            "region_code": "NA",
+        },
+        ]},
+    dummyPagination: {
+        currentPage: 1,
+        lastPage: 1,
+        perPage: 10,
+        total: 2,
+        totalRows: 2,
+    },
+
 
     fetchCountryData: async (action) => {
         try {
@@ -21,7 +49,11 @@ const CountryDataTableStore = create((set, get) => ({
             );
             //now we set the EventLog
             if (response) {
-                set({CountryDataTable: response, dataLoaded: true, processing: false, pagination: response.pagination});
+                if (typeof response.pagination === 'undefined') {
+                    set({CountryDataTable: get().dummyData, dataLoaded: true, processing: false, pagination: get().dummyPagination});
+                } else {
+                    set({CountryDataTable: response, dataLoaded: true, processing: false, pagination: response.pagination});
+                }
             }
         } catch (e) {
             console.log(e);

@@ -38,13 +38,11 @@ const RiskComponent = (props) => {
     /**
      * Initialize
      */
+
     useEffect(() => {
         let enabled = getFieldValue('measures_enabled')==1;
         setMeasuresEnabled(enabled);
-
     }, [] );
-
-
 
     //we create the columns
     let columns = [];
