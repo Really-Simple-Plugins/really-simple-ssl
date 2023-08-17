@@ -202,12 +202,12 @@ const CountryDatatable = (props) => {
                 dense
                 pagination
                 paginationServer
-                // paginationTotalRows={pagination.totalRows ?? 0}
-                // onChangeRowsPerPage={handleCountryTableRowsChange}
-                // onChangePage={handleCountryTablePageChange}
+                paginationTotalRows={pagination.totalRows ?? 0}
+                onChangeRowsPerPage={handleCountryTableRowsChange}
+                onChangePage={handleCountryTablePageChange}
                 sortServer
-                // onSort={handleCountryTableSort}
-                // paginationRowsPerPageOptions={[10, 25, 50, 100]}
+                onSort={handleCountryTableSort}
+                paginationRowsPerPageOptions={[10, 25, 50, 100]}
                 noDataComponent={__("No results", "really-simple-ssl")}
                 persistTableHead
                 theme="really-simple-plugins"
