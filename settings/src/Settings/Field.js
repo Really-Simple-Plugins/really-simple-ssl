@@ -66,7 +66,7 @@ const Field = (props) => {
         }
         updateField(field.id, fieldValue);
 
-        //we can configure other fields if a field is enabled, or set to a certain value.
+        // we can configure other fields if a field is enabled, or set to a certain value.
         let configureFieldCondition = false;
         if ( field.configure_on_activation ) {
             if ( field.configure_on_activation.hasOwnProperty('condition') && props.field.value==field.configure_on_activation.condition ) {
@@ -165,10 +165,9 @@ const Field = (props) => {
         );
     }
 
-    if (field.type==='text' || field.type==='email'){
-
+    if (field.type==='email'){
         const sendVerificationEmailField = props.fields.find(field => field.id === 'send_verification_email');
-        const emailIsVerified = sendVerificationEmailField.disabled;
+        const emailIsVerified = sendVerificationEmailField && sendVerificationEmailField.disabled;
         
         return (
             <div className={highLightClass} ref={scrollAnchor} style={{position: 'relative'}}>
@@ -181,16 +180,27 @@ const Field = (props) => {
                     onChange={ ( fieldValue ) => onChangeHandler(fieldValue) }
                     value= { fieldValue }
                 />
-                <div style={{
-                    position: 'absolute',
-                    bottom: '23px',
-                    right: '35px',
-                }}>
+                <div className="rsssl-email-verified" >
                     {emailIsVerified
                         ? <Icon name='circle-check' color={'green'} />
                         : <Icon name='circle-times' color={'red'} />}
-
                 </div>
+            </div>
+        );
+    }
+
+    if (field.type==='text' ){
+        return (
+            <div className={highLightClass} ref={scrollAnchor} style={{position: 'relative'}}>
+                <TextControl
+                    required={ field.required }
+                    placeholder={ field.placeholder }
+                    disabled={ disabled }
+                    help={ field.comment }
+                    label={labelWrap(field)}
+                    onChange={ ( fieldValue ) => onChangeHandler(fieldValue) }
+                    value= { fieldValue }
+                />
             </div>
         );
     }
