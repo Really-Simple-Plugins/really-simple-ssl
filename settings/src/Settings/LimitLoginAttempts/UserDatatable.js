@@ -24,6 +24,7 @@ const UserDatatable = (props) => {
         handleUserTablePageChange,
         handleUserTableSearch,
         handleUserTableFilter,
+        updateMultiRow,
         updateRow,
     } = UserDataTableStore()
 
