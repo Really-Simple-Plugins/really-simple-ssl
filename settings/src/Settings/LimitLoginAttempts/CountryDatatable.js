@@ -146,7 +146,6 @@ const CountryDatatable = (props) => {
                     countryCode={flag}
                     style={{
                         fontSize: '2em',
-                        marginLeft: '0.3em',
                     }}
                     title={title}
                 ></Flag>

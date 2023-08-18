@@ -804,7 +804,6 @@ function rsssl_fields($load_values = true)
                 'relation' => 'AND',
                 [
                     'enable_limited_login_attempts' => true,
-                    'limit_login_attempts_confirm'  => true,
                 ]
             ],
         ],
@@ -822,47 +821,6 @@ function rsssl_fields($load_values = true)
             ],
             'disabled'         => false,
             'default'          => '30',
-            'react_conditions' => [
-                'relation' => 'AND',
-                [
-                    'enable_limited_login_attempts' => true,
-                    'limit_login_attempts_confirm'  => true,
-                ]
-            ],
-        ],
-        [
-            'id'               => 'limit_login_attempts_escelation',
-            'menu_id'          => 'limit_login_attempts',
-            'group_id'         => 'limit_login_attempts_advanced',
-            'type'             => 'select',
-            'label'            => __('Escalation', 'really-simple-ssl'),
-            'options'          => [
-                'a' => __('No escalation', 'really-simple-ssl'),
-                'b' => __('Forever', 'really-simple-ssl'),
-                'c' => __('1 week', 'really-simple-ssl'),
-                'd' => __('1 month', 'really-simple-ssl'),
-            ],
-            'disabled'         => false,
-            'default'          => 'a',
-            'react_conditions' => [
-                'relation' => 'AND',
-                [
-                    'enable_limited_login_attempts' => true,
-                    'limit_login_attempts_confirm'  => true,
-                ]
-            ],
-        ],
-        [
-            'id'               => 'limit_login_attempts_confirm',
-            'menu_id'          => 'limit_login_attempts',
-            'group_id'         => 'limit_login_attempts_advanced',
-            'type'             => 'checkbox',
-            'label'            => __("I have read and understood the risks to intervene with these measures.",
-                "really-simple-ssl"),
-            'comment'          => '<a href="https://really-simple-ssl.com/instructions/about-limit-login-attempts#settings" target="_blank">'.__("Read more",
-                    "really-simple-ssl").'</a>',
-            'disabled'         => false,
-            'default'          => false,
             'react_conditions' => [
                 'relation' => 'AND',
                 [
@@ -887,7 +845,6 @@ function rsssl_fields($load_values = true)
                 'relation' => 'AND',
                 [
                     'enable_limited_login_attempts' => true,
-                    'limit_login_attempts_confirm'  => true,
                 ]
             ],
             'columns'          => [
@@ -931,7 +888,6 @@ function rsssl_fields($load_values = true)
                 'relation' => 'AND',
                 [
                     'enable_limited_login_attempts' => true,
-                    'limit_login_attempts_confirm'  => true,
                 ]
             ],
         ],
@@ -953,7 +909,6 @@ function rsssl_fields($load_values = true)
                 'relation' => 'AND',
                 [
                     'enable_limited_login_attempts' => true,
-                    'limit_login_attempts_confirm'  => true,
                 ]
             ],
             'columns'          => [
