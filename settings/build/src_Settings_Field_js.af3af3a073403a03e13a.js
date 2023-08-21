@@ -3434,7 +3434,7 @@ const CountryDatatable = props => {
     activeGroupId,
     getCurrentFilter
   } = (0,_FilterData__WEBPACK_IMPORTED_MODULE_5__["default"])();
-  const moduleName = 'rsssl-group-filter-limit_login_attempts_Countrys';
+  const moduleName = 'rsssl-group-filter-limit_login_attempts_country';
 
   //we create the columns
   let columns = [];
@@ -3450,7 +3450,7 @@ const CountryDatatable = props => {
     if (!currentFilter) {
       setSelectedFilter('all', moduleName);
     }
-    handleCountryTableFilter('region', currentFilter);
+    handleCountryTableFilter('status', currentFilter);
   }, [selectedFilter, moduleName]);
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
     if (!dataLoaded) {
@@ -3567,11 +3567,49 @@ const CountryDatatable = props => {
     let dataItem = {
       ...data[key]
     };
-    dataItem.action = generateOptions(dataItem.action, dataItem.id, dataItem.country_name, dataItem.region);
-    dataItem.iso2_code = generateFlag(dataItem.iso2_code, dataItem.country_name);
-    dataItem.users = generateGoodBad(dataItem.users);
-    dataItem.api = generateGoodBad(dataItem.api);
+    dataItem.action = generateActionButtons(dataItem.id);
+    dataItem.attempt_value = generateFlag(dataItem.attempt_value, dataItem.country_name);
     data[key] = dataItem;
+  }
+  function generateActionButtons(id) {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-action-buttons"
+    }, getCurrentFilter(moduleName) === 'blocked' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-action-buttons__inner"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__.Button, {
+      className: "button button-secondary rsssl-action-buttons__button",
+      onClick: () => {
+        trustIpAddresses(id);
+      }
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Trust", "really-simple-ssl"))), getCurrentFilter(moduleName) === 'trusted' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-action-buttons__inner"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__.Button, {
+      className: "button button-primary rsssl-action-buttons__button",
+      onClick: () => {
+        blockIpAddresses(id);
+      }
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Block", "really-simple-ssl"))), getCurrentFilter(moduleName) === 'all' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-action-buttons__inner"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__.Button, {
+      className: "button button-primary rsssl-action-buttons__button",
+      onClick: () => {
+        blockCountry(id);
+      }
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Block", "really-simple-ssl"))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-action-buttons__inner"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__.Button, {
+      className: "button button-primary rsssl-action-buttons__button",
+      onClick: () => {
+        blockRegion(id);
+      }
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Block Region", "really-simple-ssl")))), getCurrentFilter(moduleName) !== 'all' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-action-buttons__inner"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__.Button, {
+      className: "button button-red rsssl-action-buttons__button",
+      onClick: () => {
+        resetIpAddresses(id);
+      }
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Reset", "really-simple-ssl")))));
   }
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-container"
@@ -23512,4 +23550,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.e22b125df28ab61cc968.js.map
+//# sourceMappingURL=src_Settings_Field_js.af3af3a073403a03e13a.js.map

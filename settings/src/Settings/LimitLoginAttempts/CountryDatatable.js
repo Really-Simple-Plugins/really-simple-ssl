@@ -24,7 +24,7 @@ const CountryDatatable = (props) => {
 
     //here we set the selectedFilter from the Settings group
     const {selectedFilter, setSelectedFilter, activeGroupId, getCurrentFilter} = FilterData();
-    const moduleName = 'rsssl-group-filter-limit_login_attempts_Countrys';
+    const moduleName = 'rsssl-group-filter-limit_login_attempts_country';
 
 
     //we create the columns
@@ -43,7 +43,7 @@ const CountryDatatable = (props) => {
         if (!currentFilter) {
             setSelectedFilter('all', moduleName);
         }
-        handleCountryTableFilter('region', currentFilter);
+        handleCountryTableFilter('status', currentFilter);
     }, [selectedFilter, moduleName]);
 
     useEffect(() => {
@@ -169,12 +169,82 @@ const CountryDatatable = (props) => {
 
     for (const key in data) {
         let dataItem = {...data[key]}
-        dataItem.action = generateOptions(dataItem.action, dataItem.id, dataItem.country_name, dataItem.region);
-        dataItem.iso2_code = generateFlag(dataItem.iso2_code, dataItem.country_name);
-        dataItem.users = generateGoodBad(dataItem.users);
-        dataItem.api = generateGoodBad(dataItem.api);
-
+        dataItem.action = generateActionButtons(dataItem.id);
+        dataItem.attempt_value = generateFlag(dataItem.attempt_value, dataItem.country_name);
         data[key] = dataItem;
+    }
+
+    function generateActionButtons(id) {
+        return (
+            <>
+                <div className="rsssl-action-buttons">
+                    {/* if the id is new we show the Trust button */}
+                    {getCurrentFilter(moduleName) === 'blocked' && (
+                        <div className="rsssl-action-buttons__inner">
+                            <Button
+                                className="button button-secondary rsssl-action-buttons__button"
+                                onClick={() => {
+                                    trustIpAddresses(id);
+                                }}
+                            >
+                                {__("Trust", "really-simple-ssl")}
+                            </Button>
+                        </div>
+                    )}
+                    {/* if the id is new we show the Block button */}
+                    {getCurrentFilter(moduleName) === 'trusted' && (
+                        <div className="rsssl-action-buttons__inner">
+                            <Button
+                                className="button button-primary rsssl-action-buttons__button"
+                                onClick={() => {
+                                    blockIpAddresses(id);
+                                }}
+                            >
+                                {__("Block", "really-simple-ssl")}
+                            </Button>
+                        </div>
+                    )}
+                    {getCurrentFilter(moduleName) === 'all' && (
+                        <>
+                        <div className="rsssl-action-buttons__inner">
+                            <Button
+                                className="button button-primary rsssl-action-buttons__button"
+                                onClick={() => {
+                                    blockCountry(id);
+                                }}
+                            >
+                                {__("Block", "really-simple-ssl")}
+                            </Button>
+                        </div>
+                        <div className="rsssl-action-buttons__inner">
+                            <Button
+                                className="button button-primary rsssl-action-buttons__button"
+                                onClick={() => {
+                                    blockRegion(id);
+                                }}
+                            >
+                                {__("Block Region", "really-simple-ssl")}
+                            </Button>
+                        </div>
+                        </>
+                    )}
+                    {/* if the id is new we show the Reset button */}
+                    {getCurrentFilter(moduleName) !== 'all' && (
+                    <div className="rsssl-action-buttons__inner">
+                        <Button
+                            className="button button-red rsssl-action-buttons__button"
+                            onClick={() => {
+                                resetIpAddresses(id);
+                            }
+                            }
+                        >
+                            {__("Reset", "really-simple-ssl")}
+                        </Button>
+                    </div>
+                        )}
+                </div>
+            </>
+        );
     }
 
     return (

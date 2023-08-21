@@ -221,7 +221,7 @@ function rsssl_menu()
                                 'id'      => 'limit_login_attempts_advanced_filter',
                                 'options' => [
                                     [
-                                        'id'    => 'allow',
+                                        'id'    => 'trusted',
                                         'title' => __('Allowed', 'really-simple-ssl'),
                                     ],
                                     [
@@ -229,8 +229,12 @@ function rsssl_menu()
                                         'title' => __('Blocked', 'really-simple-ssl'),
                                     ],
                                     [
-                                        'id'    => 'all',
-                                        'title' => __('All Countries', 'really-simple-ssl'),
+                                        'id'    => 'regions',
+                                        'title' => __('Continents', 'really-simple-ssl'),
+                                    ],
+                                    [
+                                        'id'    => 'countries',
+                                        'title' => __('Countries', 'really-simple-ssl'),
                                     ],
                                 ],
                             ],
