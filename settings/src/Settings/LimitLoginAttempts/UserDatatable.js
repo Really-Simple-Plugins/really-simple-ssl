@@ -140,18 +140,18 @@ const UserDatatable = (props) => {
         fetchDynamicData('event_log')
     }
 
-    function trustUsers(data) {
+    function allowUsers(data) {
         //we check if the data is an array
         if (Array.isArray(data)) {
             let ids = [];
             data.map((item) => {
                 ids.push(item.id);
             });
-            updateMultiRow(ids, 'trusted');
+            updateMultiRow(ids, 'allowed');
             //we emtry the rowsSelected
             setRowsSelected([]);
         } else {
-            updateRow(data, 'trusted');
+            updateRow(data, 'allowed');
         }
         fetchDynamicData('event_log')
     }
@@ -179,21 +179,21 @@ const UserDatatable = (props) => {
         return (
             <>
                 <div className="rsssl-action-buttons">
-                    {/* if the id is new we show the Trust button */}
+                    {/* if the id is new we show the Allow button */}
                     {getCurrentFilter(moduleName) === 'blocked' && (
                     <div className="rsssl-action-buttons__inner">
                         <Button
                             className="button button-secondary rsssl-action-buttons__button"
                             onClick={() => {
-                                trustUsers(id);
+                                allowUsers(id);
                             }}
                         >
-                            {__("Trust", "really-simple-ssl")}
+                            {__("Allow", "really-simple-ssl")}
                         </Button>
                     </div>
                     )}
                     {/* if the id is new we show the Block button */}
-                    {getCurrentFilter(moduleName) === 'trusted' && (
+                    {getCurrentFilter(moduleName) === 'allowed' && (
                     <div className="rsssl-action-buttons__inner">
                         <Button
                             className="button button-primary rsssl-action-buttons__button"
@@ -266,7 +266,7 @@ const UserDatatable = (props) => {
             <div className="rsssl-container">
                 {/*display the add button on left side*/}
                 <div className="rsssl-add-button">
-                    {(getCurrentFilter(moduleName) === 'blocked' || getCurrentFilter(moduleName) === 'trusted') && (
+                    {(getCurrentFilter(moduleName) === 'blocked' || getCurrentFilter(moduleName) === 'allowed') && (
                     <div className="rsssl-add-button__inner">
                         <Button
                             className="button button-secondary rsssl-add-button__button"
@@ -303,21 +303,21 @@ const UserDatatable = (props) => {
                         </div>
 
                         <div className="rsssl-action-buttons">
-                            {/* if the id is new we show the Trust button */}
+                            {/* if the id is new we show the Allow button */}
                             {getCurrentFilter(moduleName) === 'blocked' && (
                             <div className="rsssl-action-buttons__inner">
                                 <Button
                                     className="button button-secondary rsssl-action-buttons__button"
                                     onClick={() => {
-                                        trustUsers(rowsSelected);
+                                        allowUsers(rowsSelected);
                                     }}
                                 >
-                                    {__("Trust", "really-simple-ssl")}
+                                    {__("Allow", "really-simple-ssl")}
                                 </Button>
                             </div>
                             )}
                             {/* if the id is new we show the Block button */}
-                            {getCurrentFilter(moduleName) === 'trusted' && (
+                            {getCurrentFilter(moduleName) === 'allowed' && (
                             <div className="rsssl-action-buttons__inner">
                                 <Button
                                     className="button button-primary rsssl-action-buttons__button"

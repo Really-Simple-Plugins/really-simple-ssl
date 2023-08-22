@@ -961,14 +961,14 @@ function rsssl_fields($load_values = true)
             ],
             'columns'          => [
                 [
-                    'name'       => 'Country',
+                    'name'       => '',
                     'sortable'   => false,
                     'searchable' => true,
                     'column'     => 'attempt_value',
                     'width'      => '2%',
                 ],
                 [
-                    'name'       => __('Continent', 'really-simple-ssl'),
+                    'name'       => __('Country', 'really-simple-ssl'),
                     'sortable'   => true,
                     'searchable' => true,
                     'visible'   => false,
@@ -979,7 +979,7 @@ function rsssl_fields($load_values = true)
                     'name'       => __('Continent', 'really-simple-ssl'),
                     'sortable'   => true,
                     'searchable' => true,
-                    'column'     => 'region_name',
+                    'column'     => 'region',
                     'width'      => '20%',
                 ],
                 [

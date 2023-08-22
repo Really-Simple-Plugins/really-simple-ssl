@@ -148,8 +148,8 @@ function rsssl_menu()
                                         'title' => __('Blocked', 'really-simple-ssl'),
                                     ],
                                     [
-                                        'id'    => 'trusted',
-                                        'title' => __('Trusted', 'really-simple-ssl'),
+                                        'id'    => 'allowed',
+                                        'title' => __('Allowed', 'really-simple-ssl'),
                                     ],
                                     [
                                         'id'    => 'locked',
@@ -175,8 +175,8 @@ function rsssl_menu()
                                         'title' => __('Blocked', 'really-simple-ssl'),
                                     ],
                                     [
-                                        'id'    => 'trusted',
-                                        'title' => __('Trusted', 'really-simple-ssl'),
+                                        'id'    => 'allowed',
+                                        'title' => __('Allowed', 'really-simple-ssl'),
                                     ],
                                     [
                                         'id'    => 'locked',
@@ -221,7 +221,7 @@ function rsssl_menu()
                                 'id'      => 'limit_login_attempts_advanced_filter',
                                 'options' => [
                                     [
-                                        'id'    => 'trusted',
+                                        'id'    => 'allowed',
                                         'title' => __('Allowed', 'really-simple-ssl'),
                                     ],
                                     [
