@@ -115,6 +115,7 @@ function rsssl_menu()
                     'id'      => 'limit_login_attempts',
                     'title'   => __('Limit Login Attempts', 'really-simple-ssl'),
                     'premium' => false,
+                    'featured' => true,
                     'groups'  => [
                         [
                             'id'           => 'limit_login_attempts_general',

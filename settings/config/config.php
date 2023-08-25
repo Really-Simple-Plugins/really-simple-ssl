@@ -785,6 +785,13 @@ function rsssl_fields($load_values = true)
             'type'     => 'checkbox',
             'label'    => __('Enable limited login attempts', 'really-simple-ssl'),
             'disabled' => false,
+            'help'      => [
+                'label' => 'default',
+                'url'   => 'https://really-simple-ssl.com/knowledge-base/enable-limited-login-attempts/',
+                'title' => __("About limited login attempts", 'really-simple-ssl'),
+                'text'  => __('This feature will limit the number of login attempts per user. If a user exceeds the number of allowed attempts, the user will be blocked for a certain amount of time. You can also block IP addresses and view a list of blocked users and IP addresses.',
+                    'really-simple-ssl'),
+            ],
         ],
         [
             'id'               => 'limit_login_attempts_amount',
@@ -876,21 +883,21 @@ function rsssl_fields($load_values = true)
 
             ],
         ],
-        [
-            'id'               => 'limit_login_attempts_open_source',
-            'menu_id'          => 'limit_login_attempts',
-            'group_id'         => 'limit_login_attempts_ip_address',
-            'type'             => 'checkbox',
-            'label'            => __('Enable open source blocklist API etc.', 'really-simple-ssl'),
-            'disabled'         => false,
-            'default'          => false,
-            'react_conditions' => [
-                'relation' => 'AND',
-                [
-                    'enable_limited_login_attempts' => true,
-                ]
-            ],
-        ],
+//        [
+//            'id'               => 'limit_login_attempts_open_source',
+//            'menu_id'          => 'limit_login_attempts',
+//            'group_id'         => 'limit_login_attempts_ip_address',
+//            'type'             => 'checkbox',
+//            'label'            => __('Enable open source blocklist API etc.', 'really-simple-ssl'),
+//            'disabled'         => false,
+//            'default'          => false,
+//            'react_conditions' => [
+//                'relation' => 'AND',
+//                [
+//                    'enable_limited_login_attempts' => true,
+//                ]
+//            ],
+//        ],
         [
             'id'               => 'limit_login_attempts_ip_view',
             'menu_id'          => 'limit_login_attempts',
