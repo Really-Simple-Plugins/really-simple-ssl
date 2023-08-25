@@ -157,7 +157,7 @@ const IpAddressDatatable = (props) => {
                 ids.push(item.id);
             });
             updateMultiRow(ids, 'allowed');
-            //we emtry the rowsSelected
+            //we entry the rowsSelected
             setRowsSelected([]);
             setRowCleared(true);
         } else {

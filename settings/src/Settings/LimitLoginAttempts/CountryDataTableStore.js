@@ -106,6 +106,168 @@ const CountryDataTableStore = create((set, get) => ({
         get().fetchCountryData('country_list');
     },
 
+    /*
+* This function add a new row to the table
+ */
+    addRow: async (country, status) => {
+        set({processing: true});
+        try {
+            const response = await rsssl_api.doAction('add_country_to_list', {country, status});
+            // Consider checking the response structure for any specific success or failure signals
+            if (response && response.request_success) {
+                await get().fetchCountryData('country_list');
+                // Potentially notify the user of success, if needed.
+            } else {
+                // Handle any unsuccessful response if needed.
+                console.log("Failed to add country: ", response.message);
+            }
+        } catch (e) {
+            console.log(e);
+            // Notify the user of an error.
+        } finally {
+            set({processing: false});
+        }
+    },
+
+    addRowMultiple: async (countries, status) => {
+        set( {processing: true});
+        try {
+            const response = await rsssl_api.doAction('add_countries_to_list', {countries, status});
+            // Consider checking the response structure for any specific success or failure signals
+            if (response && response.request_success) {
+                await get().fetchCountryData('country_list');
+                // Potentially notify the user of success, if needed.
+            } else {
+                // Handle any unsuccessful response if needed.
+                console.log("Failed to add countries: ", response.message);
+            }
+        } catch (e) {
+            console.error(e);
+            // Notify the user of an error.
+        }
+    },
+
+    removeRowMultiple: async (countries, status) => {
+        set({processing: true});
+        try {
+            const response = await rsssl_api.doAction('remove_countries_from_list', {countries, status});
+            // Consider checking the response structure for any specific success or failure signals
+            if (response && response.request_success) {
+                await get().fetchCountryData('country_list');
+                // Potentially notify the user of success, if needed.
+            } else {
+                // Handle any unsuccessful response if needed.
+                console.log("Failed to remove countries: ", response.message);
+            }
+        } catch (e) {
+            console.error(e);
+            // Notify the user of an error.
+        }
+    },
+
+    removeRow: async (country, status) => {
+        set({processing: true});
+        try {
+            const response = await rsssl_api.doAction('remove_country_from_list', {country, status});
+            // Consider checking the response structure for any specific success or failure signals
+            if (response && response.request_success) {
+                await get().fetchCountryData('country_list');
+                // Potentially notify the user of success, if needed.
+            } else {
+                // Handle any unsuccessful response if needed.
+                console.log("Failed to remove country: ", response.message);
+            }
+        } catch (e) {
+            console.log(e);
+            // Notify the user of an error.
+        } finally {
+            set({processing: false});
+        }
+    },
+
+    addRegion: async (region, status) => {
+        set({processing: true});
+        try {
+            const response = await rsssl_api.doAction('add_region_to_list', {region, status});
+            // Consider checking the response structure for any specific success or failure signals
+            if (response && response.request_success) {
+                await get().fetchCountryData('country_list');
+                // Potentially notify the user of success, if needed.
+            } else {
+                // Handle any unsuccessful response if needed.
+                console.error("Failed to add region: ", response.message);
+            }
+        } catch (e) {
+            console.error(e);
+            // Notify the user of an error.
+        } finally {
+            set({processing: false});
+        }
+    },
+    removeRegion: async (region, status) => {
+        set({processing: true});
+        try {
+            const response = await rsssl_api.doAction('remove_region_from_list', {region, status});
+            // Consider checking the response structure for any specific success or failure signals
+            if (response && response.request_success) {
+                await get().fetchCountryData('country_list');
+                // Potentially notify the user of success, if needed.
+            } else {
+                // Handle any unsuccessful response if needed.
+                console.error("Failed to remove region: ", response.message);
+            }
+        } catch (e) {
+            console.error(e);
+            // Notify the user of an error.
+        }
+    },
+    updateMultiRow: async (ids, status) => {
+        set({processing: true});
+        try {
+            const response = await rsssl_api.doAction(
+                'update_multi_row',
+                {ids, status}
+            );
+            //now we set the EventLog
+            if (response) {
+                await get().fetchCountryData('country_list');
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    },
+
+    resetRow: async (id) => {
+        set({processing: true});
+        try {
+            const response = await rsssl_api.doAction(
+                'delete_entry',
+                {id}
+            );
+            //now we set the EventLog
+            if (response) {
+                await get().fetchCountryData('country_list');
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    },
+
+    resetMultiRow: async (ids) => {
+        set({processing: true});
+        try {
+            const response = await rsssl_api.doAction(
+                'delete_multi_entries',
+                {ids}
+            );
+            //now we set the EventLog
+            if (response) {
+                await get().fetchCountryData('country_list');
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    }
 }));
 
 export default CountryDataTableStore;

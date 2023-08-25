@@ -3373,6 +3373,205 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
       };
     }));
     get().fetchCountryData('country_list');
+  },
+  /*
+  * This function add a new row to the table
+  */
+  addRow: async (country, status) => {
+    set({
+      processing: true
+    });
+    try {
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('add_country_to_list', {
+        country,
+        status
+      });
+      // Consider checking the response structure for any specific success or failure signals
+      if (response && response.request_success) {
+        await get().fetchCountryData('country_list');
+        // Potentially notify the user of success, if needed.
+      } else {
+        // Handle any unsuccessful response if needed.
+        console.log("Failed to add country: ", response.message);
+      }
+    } catch (e) {
+      console.log(e);
+      // Notify the user of an error.
+    } finally {
+      set({
+        processing: false
+      });
+    }
+  },
+  addRowMultiple: async (countries, status) => {
+    set({
+      processing: true
+    });
+    try {
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('add_countries_to_list', {
+        countries,
+        status
+      });
+      // Consider checking the response structure for any specific success or failure signals
+      if (response && response.request_success) {
+        await get().fetchCountryData('country_list');
+        // Potentially notify the user of success, if needed.
+      } else {
+        // Handle any unsuccessful response if needed.
+        console.log("Failed to add countries: ", response.message);
+      }
+    } catch (e) {
+      console.error(e);
+      // Notify the user of an error.
+    }
+  },
+
+  removeRowMultiple: async (countries, status) => {
+    set({
+      processing: true
+    });
+    try {
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('remove_countries_from_list', {
+        countries,
+        status
+      });
+      // Consider checking the response structure for any specific success or failure signals
+      if (response && response.request_success) {
+        await get().fetchCountryData('country_list');
+        // Potentially notify the user of success, if needed.
+      } else {
+        // Handle any unsuccessful response if needed.
+        console.log("Failed to remove countries: ", response.message);
+      }
+    } catch (e) {
+      console.error(e);
+      // Notify the user of an error.
+    }
+  },
+
+  removeRow: async (country, status) => {
+    set({
+      processing: true
+    });
+    try {
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('remove_country_from_list', {
+        country,
+        status
+      });
+      // Consider checking the response structure for any specific success or failure signals
+      if (response && response.request_success) {
+        await get().fetchCountryData('country_list');
+        // Potentially notify the user of success, if needed.
+      } else {
+        // Handle any unsuccessful response if needed.
+        console.log("Failed to remove country: ", response.message);
+      }
+    } catch (e) {
+      console.log(e);
+      // Notify the user of an error.
+    } finally {
+      set({
+        processing: false
+      });
+    }
+  },
+  addRegion: async (region, status) => {
+    set({
+      processing: true
+    });
+    try {
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('add_region_to_list', {
+        region,
+        status
+      });
+      // Consider checking the response structure for any specific success or failure signals
+      if (response && response.request_success) {
+        await get().fetchCountryData('country_list');
+        // Potentially notify the user of success, if needed.
+      } else {
+        // Handle any unsuccessful response if needed.
+        console.error("Failed to add region: ", response.message);
+      }
+    } catch (e) {
+      console.error(e);
+      // Notify the user of an error.
+    } finally {
+      set({
+        processing: false
+      });
+    }
+  },
+  removeRegion: async (region, status) => {
+    set({
+      processing: true
+    });
+    try {
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('remove_region_from_list', {
+        region,
+        status
+      });
+      // Consider checking the response structure for any specific success or failure signals
+      if (response && response.request_success) {
+        await get().fetchCountryData('country_list');
+        // Potentially notify the user of success, if needed.
+      } else {
+        // Handle any unsuccessful response if needed.
+        console.error("Failed to remove region: ", response.message);
+      }
+    } catch (e) {
+      console.error(e);
+      // Notify the user of an error.
+    }
+  },
+
+  updateMultiRow: async (ids, status) => {
+    set({
+      processing: true
+    });
+    try {
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('update_multi_row', {
+        ids,
+        status
+      });
+      //now we set the EventLog
+      if (response) {
+        await get().fetchCountryData('country_list');
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  resetRow: async id => {
+    set({
+      processing: true
+    });
+    try {
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('delete_entry', {
+        id
+      });
+      //now we set the EventLog
+      if (response) {
+        await get().fetchCountryData('country_list');
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  resetMultiRow: async ids => {
+    set({
+      processing: true
+    });
+    try {
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('delete_multi_entries', {
+        ids
+      });
+      //now we set the EventLog
+      if (response) {
+        await get().fetchCountryData('country_list');
+      }
+    } catch (e) {
+      console.log(e);
+    }
   }
 }));
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (CountryDataTableStore);
@@ -3391,19 +3590,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var react_data_table_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-data-table-component */ "./node_modules/react-data-table-component/dist/index.cjs.js");
-/* harmony import */ var _CountryDataTableStore__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./CountryDataTableStore */ "./src/Settings/LimitLoginAttempts/CountryDataTableStore.js");
-/* harmony import */ var _FilterData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../FilterData */ "./src/Settings/FilterData.js");
-/* harmony import */ var _utils_Flag_Flag__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../utils/Flag/Flag */ "./src/utils/Flag/Flag.js");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../utils/Icon */ "./src/utils/Icon.js");
-
-
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_data_table_component__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-data-table-component */ "./node_modules/react-data-table-component/dist/index.cjs.js");
+/* harmony import */ var _CountryDataTableStore__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./CountryDataTableStore */ "./src/Settings/LimitLoginAttempts/CountryDataTableStore.js");
+/* harmony import */ var _FilterData__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../FilterData */ "./src/Settings/FilterData.js");
+/* harmony import */ var _utils_Flag_Flag__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../utils/Flag/Flag */ "./src/utils/Flag/Flag.js");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__);
 
 
 
@@ -3417,24 +3613,32 @@ const CountryDatatable = props => {
   const {
     CountryDataTable,
     dataLoaded,
-    pagination,
-    dataActions,
-    handleCountryTableRowsChange,
     fetchCountryData,
-    handleCountryTableSort,
+    handleCountryTableFilter,
+    addRow,
+    removeRow,
+    pagination,
     handleCountryTablePageChange,
+    handleCountryTableRowsChange,
+    handleCountryTableSort,
     handleCountryTableSearch,
-    handleCountryTableFilter
-  } = (0,_CountryDataTableStore__WEBPACK_IMPORTED_MODULE_4__["default"])();
-
-  //here we set the selectedFilter from the Settings group
+    addRegion,
+    removeRegion,
+    addRowMultiple,
+    removeRowMultiple,
+    resetRow,
+    resetMultiRow
+  } = (0,_CountryDataTableStore__WEBPACK_IMPORTED_MODULE_3__["default"])();
   const {
     selectedFilter,
     setSelectedFilter,
     activeGroupId,
     getCurrentFilter
-  } = (0,_FilterData__WEBPACK_IMPORTED_MODULE_5__["default"])();
-  const [rowsSelected, setRowsSelected] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)([]);
+  } = (0,_FilterData__WEBPACK_IMPORTED_MODULE_4__["default"])();
+
+  //here we set the selectedFilter from the Settings group
+  const [rowsSelected, setRowsSelected] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)([]);
+  const [rowCleared, setRowCleared] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
   const moduleName = 'rsssl-group-filter-limit_login_attempts_country';
 
   //we create the columns
@@ -3446,18 +3650,18 @@ const CountryDatatable = props => {
     let newItem = buildColumn(item);
     columns.push(newItem);
   });
-  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
+  (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     const currentFilter = getCurrentFilter(moduleName);
     if (!currentFilter) {
       setSelectedFilter('countries', moduleName);
     }
     handleCountryTableFilter('status', currentFilter);
   }, [selectedFilter, moduleName]);
-  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
+  (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     if (!dataLoaded) {
-      fetchCountryData(field.action);
+      fetchCountryData(props.field.action);
     }
-  });
+  }, [dataLoaded, props.field.action]);
   const customStyles = {
     headCells: {
       style: {
@@ -3474,7 +3678,7 @@ const CountryDatatable = props => {
       }
     }
   };
-  (0,react_data_table_component__WEBPACK_IMPORTED_MODULE_3__.createTheme)('really-simple-plugins', {
+  (0,react_data_table_component__WEBPACK_IMPORTED_MODULE_2__.createTheme)('really-simple-plugins', {
     divider: {
       default: 'transparent'
     }
@@ -3490,7 +3694,7 @@ const CountryDatatable = props => {
       className: "rsssl-spinner__icon"
     }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-spinner__text"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Loading...", "really-simple-ssl"))));
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("Loading...", "really-simple-ssl"))));
   }
   let searchableColumns = [];
   //setting the searchable columns
@@ -3510,55 +3714,79 @@ const CountryDatatable = props => {
     };
   });
   function handleSelection(state) {
+    console.log(state.selectedRows);
     setRowsSelected(state.selectedRows);
   }
-  function allowCountryRegion(id) {
-    const action = 'rsssl_allow_country';
-    const data = {
-      id: id
-    };
-    const actionData = {
-      action: action,
-      data: data
-    };
-    dataActions.push(actionData);
-    fetchCountryData(action);
+  function allowRegionByCode(code) {
+    if (Array.isArray(code)) {
+      //some multi action
+    } else {
+      removeRegion(code, 'blocked');
+    }
+    setRowCleared(false);
   }
-  function blockCountryRegion(id) {
-    const action = 'rsssl_block_country';
-    const data = {
-      id: id
-    };
-    const actionData = {
-      action: action,
-      data: data
-    };
-    dataActions.push(actionData);
-    fetchCountryData(action);
+  function allowMultiple(rows) {
+    let ids = [];
+    rows.map(item => {
+      ids.push(item.id);
+    });
+    resetMultiRow(ids, 'blocked');
   }
-  function allowRegionByCode(regioncode) {
-    const action = 'rsssl_allow_region';
-    const data = {
-      regioncode: regioncode
-    };
-    const actionData = {
-      action: action,
-      data: data
-    };
-    dataActions.push(actionData);
-    fetchCountryData(action);
+  function allowById(id) {
+    resetRow(id, 'blocked');
   }
-  function blockRegionByCode(regioncode) {
-    const action = 'rsssl_block_region';
-    const data = {
-      regioncode: regioncode
-    };
-    const actionData = {
-      action: action,
-      data: data
-    };
-    dataActions.push(actionData);
-    fetchCountryData(action);
+  function blockRegionByCode(code) {
+    if (Array.isArray(code)) {
+      //some multi action
+      code.forEach(function (item, i) {
+        addRegion(item, 'blocked');
+      });
+      //we clear the selected rows
+      setRowCleared(true);
+      setRowsSelected([]);
+    } else {
+      addRegion(code, 'blocked');
+    }
+    setRowCleared(false);
+    // fetchDynamicData('event_log');
+  }
+
+  function allowCountryByCode(code) {
+    //we check if the id is an array
+    if (Array.isArray(code)) {
+      let ids = [];
+      code.map(item => {
+        ids.push(item.iso2_code);
+      });
+      removeRowMultiple(ids, 'blocked');
+
+      //we clear the selected rows
+      setRowCleared(true);
+      setRowsSelected([]);
+    } else {
+      removeRow(code, 'blocked');
+    }
+    setRowCleared(false);
+    // fetchDynamicData('event_log');
+  }
+
+  function blockCountryByCode(code) {
+    console.log(code);
+    //we check if the id is an array
+    if (Array.isArray(code)) {
+      let ids = [];
+      code.map(item => {
+        ids.push(item.iso2_code);
+      });
+      addRowMultiple(ids, 'blocked');
+      //we clear the selected rows
+      setRowCleared(true);
+      setRowsSelected([]);
+    } else {
+      addRow(code, 'blocked');
+    }
+    setRowCleared(false);
+    // fetchDynamicData('event_log');
   }
 
   //we convert the data to an array
@@ -3566,7 +3794,7 @@ const CountryDatatable = props => {
     ...CountryDataTable.data
   };
   function generateFlag(flag, title) {
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Flag_Flag__WEBPACK_IMPORTED_MODULE_6__["default"], {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Flag_Flag__WEBPACK_IMPORTED_MODULE_5__["default"], {
       countryCode: flag,
       style: {
         fontSize: '2em'
@@ -3577,12 +3805,12 @@ const CountryDatatable = props => {
   function generateGoodBad(value) {
     ``;
     if (value > 0) {
-      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_8__["default"], {
+      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Icon, {
         name: "circle-check",
         color: "green"
       });
     } else {
-      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_8__["default"], {
+      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Icon, {
         name: "circle-times",
         color: "red"
       });
@@ -3594,12 +3822,11 @@ const CountryDatatable = props => {
     };
 
     //based on the correct filter we set the correct action buttons
-    if (getCurrentFilter(moduleName) === 'regions') {
-      dataItem.action = generateActionButtons(dataItem.regioncode);
-    } else if (getCurrentFilter(moduleName) === 'countries') {
-      dataItem.action = generateActionButtons(dataItem.iso2_code);
+    if (getCurrentFilter(moduleName) === 'regions' || getCurrentFilter(moduleName) === 'countries') {
+      dataItem.action = generateActionButtons(dataItem.attempt_value);
+    } else {
+      dataItem.action = generateActionButtons(dataItem.id);
     }
-    dataItem.action = generateActionButtons(dataItem.id);
     dataItem.attempt_value = generateFlag(dataItem.attempt_value, dataItem.country_name);
     data[key] = dataItem;
   }
@@ -3608,54 +3835,40 @@ const CountryDatatable = props => {
       className: "rsssl-action-buttons"
     }, getCurrentFilter(moduleName) === 'blocked' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-action-buttons__inner"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__.Button, {
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
       className: "button button-secondary rsssl-action-buttons__button",
       onClick: () => {
-        allowCountryRegion(id);
+        allowById(id);
       }
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Allow", "really-simple-ssl"))), getCurrentFilter(moduleName) === 'allowed' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("Allow", "really-simple-ssl"))), getCurrentFilter(moduleName) === 'regions' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-action-buttons__inner"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__.Button, {
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
       className: "button button-primary rsssl-action-buttons__button",
       onClick: () => {
-        blockCountryRegion(id);
+        blockRegionByCode(id);
       }
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Block", "really-simple-ssl"))), getCurrentFilter(moduleName) === 'regions' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("Block", "really-simple-ssl"))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-action-buttons__inner"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__.Button, {
-      className: "button button-primary rsssl-action-buttons__button",
-      onClick: () => {
-        blockRegionByCode(regioncode);
-      }
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Block", "really-simple-ssl"))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-action-buttons__inner"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__.Button, {
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
       className: "button button-secondary rsssl-action-buttons__button",
       onClick: () => {
-        allowRegionByCode(regioncode);
+        allowRegionByCode(id);
       }
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Allow", "really-simple-ssl")))), getCurrentFilter(moduleName) === 'countries' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("Allow", "really-simple-ssl")))), getCurrentFilter(moduleName) === 'countries' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-action-buttons__inner"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__.Button, {
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
       className: "button button-primary rsssl-action-buttons__button",
       onClick: () => {
-        blockCountryByCode(iso2code);
+        blockCountryByCode(id);
       }
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Block", "really-simple-ssl"))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("Block", "really-simple-ssl"))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-action-buttons__inner"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__.Button, {
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
       className: "button button-secondary rsssl-action-buttons__button",
       onClick: () => {
-        allowRegionByCode(iso2code);
+        allowCountryByCode(id);
       }
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Allow", "really-simple-ssl")))), getCurrentFilter(moduleName) !== 'regions' && getCurrentFilter(moduleName) !== 'countries' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-action-buttons__inner"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__.Button, {
-      className: "button button-red rsssl-action-buttons__button",
-      onClick: () => {
-        resetIpAddresses(id);
-      }
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Reset", "really-simple-ssl")))));
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("Allow", "really-simple-ssl"))))));
   }
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-container"
@@ -3668,9 +3881,39 @@ const CountryDatatable = props => {
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
     type: "text",
     className: "rsssl-search-bar__input",
-    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Search", "really-simple-ssl"),
+    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("Search", "really-simple-ssl"),
     onChange: event => handleCountryTableSearch(event.target.value, searchableColumns)
-  })))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
+  })))), rowsSelected.length > 0 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    style: {
+      marginTop: '1em',
+      marginBottom: '1em'
+    }
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-multiselect-datatable-form rsssl-primary"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("You have selected", "really-simple-ssl"), " ", rowsSelected.length, " ", (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("rows", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-action-buttons"
+  }, getCurrentFilter(moduleName) === 'countries' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-action-buttons__inner"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
+    className: "button button-secondary rsssl-action-buttons__button",
+    onClick: () => {
+      allowCountryByCode(rowsSelected);
+    }
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("Allow", "really-simple-ssl"))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-action-buttons__inner"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
+    className: "button button-primary rsssl-action-buttons__button",
+    onClick: () => {
+      blockCountryByCode(rowsSelected);
+    }
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("Block", "really-simple-ssl")))), getCurrentFilter(moduleName) === 'blocked' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-action-buttons__inner"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
+    className: "button button-secondary rsssl-action-buttons__button",
+    onClick: () => {
+      allowMultiple(rowsSelected);
+    }
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("Allow", "really-simple-ssl"))))))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_2__["default"], {
     columns: columns,
     data: Object.values(data),
     dense: true,
@@ -3682,10 +3925,11 @@ const CountryDatatable = props => {
     sortServer: true,
     onSort: handleCountryTableSort,
     paginationRowsPerPageOptions: [10, 25, 50, 100],
-    noDataComponent: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("No results", "really-simple-ssl"),
+    noDataComponent: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("No results", "really-simple-ssl"),
     persistTableHead: true,
     selectableRows: true,
     selectableRowsHighlight: true,
+    clearSelectedRows: rowCleared,
     onSelectedRowsChange: handleSelection,
     theme: "really-simple-plugins",
     customStyles: customStyles
@@ -4377,7 +4621,7 @@ const IpAddressDatatable = props => {
         ids.push(item.id);
       });
       updateMultiRow(ids, 'allowed');
-      //we emtry the rowsSelected
+      //we entry the rowsSelected
       setRowsSelected([]);
       setRowCleared(true);
     } else {
@@ -23599,4 +23843,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.7239030645f089551fa6.js.map
+//# sourceMappingURL=src_Settings_Field_js.91eab5a32eb294c65664.js.map

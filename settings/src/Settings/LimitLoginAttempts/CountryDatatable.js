@@ -1,30 +1,43 @@
-import {__} from '@wordpress/i18n';
-import React, {useEffect, Countryef, useState} from 'react';
-import DataTable, {createTheme} from "react-data-table-component";
+import React, { useEffect, useState, useCallback } from 'react';
+import DataTable, { createTheme } from "react-data-table-component";
 import CountryDataTableStore from "./CountryDataTableStore";
 import FilterData from "../FilterData";
 import Flag from "../../utils/Flag/Flag";
-import {Button} from "@wordpress/components";
-import {produce} from "immer";
-import Icon from "../../utils/Icon";
+import { Button } from "@wordpress/components";
+import { __ } from '@wordpress/i18n';
 
 const CountryDatatable = (props) => {
     const {
         CountryDataTable,
         dataLoaded,
-        pagination,
-        dataActions,
-        handleCountryTableRowsChange,
         fetchCountryData,
-        handleCountryTableSort,
+        handleCountryTableFilter,
+        addRow,
+        removeRow,
+        pagination,
         handleCountryTablePageChange,
+        handleCountryTableRowsChange,
+        handleCountryTableSort,
         handleCountryTableSearch,
-        handleCountryTableFilter
-    } = CountryDataTableStore()
+        addRegion,
+        removeRegion,
+        addRowMultiple,
+        removeRowMultiple,
+        resetRow,
+        resetMultiRow,
+    } = CountryDataTableStore();
+
+    const {
+        selectedFilter,
+        setSelectedFilter,
+        activeGroupId,
+        getCurrentFilter
+    } = FilterData();
 
     //here we set the selectedFilter from the Settings group
-    const {selectedFilter, setSelectedFilter, activeGroupId, getCurrentFilter} = FilterData();
     const [rowsSelected, setRowsSelected] = useState([]);
+    const [rowCleared, setRowCleared] = useState(false);
+
     const moduleName = 'rsssl-group-filter-limit_login_attempts_country';
 
 
@@ -40,7 +53,6 @@ const CountryDatatable = (props) => {
 
     useEffect(() => {
         const currentFilter = getCurrentFilter(moduleName);
-
         if (!currentFilter) {
             setSelectedFilter('countries', moduleName);
         }
@@ -49,9 +61,9 @@ const CountryDatatable = (props) => {
 
     useEffect(() => {
         if (!dataLoaded) {
-            fetchCountryData(field.action);
+            fetchCountryData(props.field.action);
         }
-    });
+    }, [dataLoaded, props.field.action]);
 
 
     const customStyles = {
@@ -102,39 +114,83 @@ const CountryDatatable = (props) => {
     });
 
     function handleSelection(state) {
+        console.log(state.selectedRows);
         setRowsSelected(state.selectedRows);
     }
 
-    function allowCountryRegion(id) {
-        const action = 'rsssl_allow_country';
-        const data = {id: id};
-        const actionData = {action: action, data: data};
-        dataActions.push(actionData);
-        fetchCountryData(action);
+    function allowRegionByCode(code) {
+        if (Array.isArray(code)) {
+            //some multi action
+        } else {
+            removeRegion(code, 'blocked');
+        }
+        setRowCleared(false);
     }
 
-    function blockCountryRegion(id) {
-        const action = 'rsssl_block_country';
-        const data = {id: id};
-        const actionData = {action: action, data: data};
-        dataActions.push(actionData);
-        fetchCountryData(action);
+    function allowMultiple (rows) {
+        let ids = [];
+        rows.map(item => {
+            ids.push(item.id);
+        });
+        resetMultiRow(ids, 'blocked');
     }
 
-    function allowRegionByCode(regioncode) {
-        const action = 'rsssl_allow_region';
-        const data = {regioncode: regioncode};
-        const actionData = {action: action, data: data};
-        dataActions.push(actionData);
-        fetchCountryData(action);
+    function allowById(id) {
+        resetRow(id, 'blocked');
     }
 
-    function blockRegionByCode(regioncode) {
-        const action = 'rsssl_block_region';
-        const data = {regioncode: regioncode};
-        const actionData = {action: action, data: data};
-        dataActions.push(actionData);
-        fetchCountryData(action);
+    function blockRegionByCode(code) {
+        if (Array.isArray(code)) {
+            //some multi action
+            code.forEach(function (item, i) {
+                addRegion(item, 'blocked');
+            });
+            //we clear the selected rows
+            setRowCleared(true);
+            setRowsSelected([]);
+        } else {
+            addRegion(code, 'blocked');
+        }
+        setRowCleared(false);
+        // fetchDynamicData('event_log');
+    }
+
+    function allowCountryByCode(code) {
+        //we check if the id is an array
+        if (Array.isArray(code)) {
+            let ids = [];
+            code.map(item => {
+                ids.push(item.iso2_code);
+            });
+            removeRowMultiple(ids, 'blocked');
+
+            //we clear the selected rows
+            setRowCleared(true);
+            setRowsSelected([]);
+        } else {
+            removeRow(code, 'blocked');
+        }
+        setRowCleared(false);
+        // fetchDynamicData('event_log');
+    }
+
+    function blockCountryByCode(code) {
+        console.log(code);
+        //we check if the id is an array
+        if (Array.isArray(code)) {
+            let ids = [];
+            code.map(item => {
+                ids.push(item.iso2_code);
+            });
+            addRowMultiple(ids, 'blocked');
+            //we clear the selected rows
+            setRowCleared(true);
+            setRowsSelected([]);
+        } else {
+            addRow(code, 'blocked');
+        }
+        setRowCleared(false);
+        // fetchDynamicData('event_log');
     }
 
     //we convert the data to an array
@@ -186,29 +242,17 @@ const CountryDatatable = (props) => {
         return (
             <>
                 <div className="rsssl-action-buttons">
+
                     {/* if the id is new we show the Allow button */}
                     {getCurrentFilter(moduleName) === 'blocked' && (
                         <div className="rsssl-action-buttons__inner">
                             <Button
                                 className="button button-secondary rsssl-action-buttons__button"
                                 onClick={() => {
-                                    allowCountryRegion(id);
+                                    allowById(id);
                                 }}
                             >
                                 {__("Allow", "really-simple-ssl")}
-                            </Button>
-                        </div>
-                    )}
-                    {/* if the id is new we show the Block button */}
-                    {getCurrentFilter(moduleName) === 'allowed' && (
-                        <div className="rsssl-action-buttons__inner">
-                            <Button
-                                className="button button-primary rsssl-action-buttons__button"
-                                onClick={() => {
-                                    blockCountryRegion(id);
-                                }}
-                            >
-                                {__("Block", "really-simple-ssl")}
                             </Button>
                         </div>
                     )}
@@ -218,7 +262,7 @@ const CountryDatatable = (props) => {
                                 <Button
                                     className="button button-primary rsssl-action-buttons__button"
                                     onClick={() => {
-                                        blockRegionByCode(regioncode);
+                                        blockRegionByCode(id);
                                     }}
                                 >
                                     {__("Block", "really-simple-ssl")}
@@ -228,7 +272,7 @@ const CountryDatatable = (props) => {
                                 <Button
                                     className="button button-secondary rsssl-action-buttons__button"
                                     onClick={() => {
-                                        allowRegionByCode(regioncode);
+                                        allowRegionByCode(id);
                                     }}
                                 >
                                     {__("Allow", "really-simple-ssl")}
@@ -242,7 +286,7 @@ const CountryDatatable = (props) => {
                                 <Button
                                     className="button button-primary rsssl-action-buttons__button"
                                     onClick={() => {
-                                        blockCountryByCode(iso2code);
+                                        blockCountryByCode(id);
                                     }}
                                 >
                                     {__("Block", "really-simple-ssl")}
@@ -252,7 +296,7 @@ const CountryDatatable = (props) => {
                                 <Button
                                     className="button button-secondary rsssl-action-buttons__button"
                                     onClick={() => {
-                                        allowRegionByCode(iso2code);
+                                        allowCountryByCode(id);
                                     }}
                                 >
                                     {__("Allow", "really-simple-ssl")}
@@ -261,19 +305,19 @@ const CountryDatatable = (props) => {
                         </>
                     )}
                     {/* if the id is new we show the Reset button */}
-                    {(getCurrentFilter(moduleName) !== 'regions' && getCurrentFilter(moduleName) !== 'countries') && (
-                    <div className="rsssl-action-buttons__inner">
-                        <Button
-                            className="button button-red rsssl-action-buttons__button"
-                            onClick={() => {
-                                resetIpAddresses(id);
-                            }
-                            }
-                        >
-                            {__("Reset", "really-simple-ssl")}
-                        </Button>
-                    </div>
-                        )}
+                    {/*{(getCurrentFilter(moduleName) !== 'regions' && getCurrentFilter(moduleName) !== 'countries') && (*/}
+                    {/*    <div className="rsssl-action-buttons__inner">*/}
+                    {/*        <Button*/}
+                    {/*            className="button button-red rsssl-action-buttons__button"*/}
+                    {/*            onClick={() => {*/}
+                    {/*                allowCountryByCode(id);*/}
+                    {/*            }*/}
+                    {/*            }*/}
+                    {/*        >*/}
+                    {/*            {__("Reset", "really-simple-ssl")}*/}
+                    {/*        </Button>*/}
+                    {/*    </div>*/}
+                    {/*)}*/}
                 </div>
             </>
         );
@@ -295,6 +339,66 @@ const CountryDatatable = (props) => {
                     </div>
                 </div>
             </div>
+            { /*Display the action form what to do with the selected*/}
+            {rowsSelected.length > 0 && (
+                <div
+                    style={{
+                        marginTop: '1em',
+                        marginBottom: '1em',
+                    }}>
+                    <div className={"rsssl-multiselect-datatable-form rsssl-primary"}
+                    >
+                        <div>
+                            {__("You have selected", "really-simple-ssl")} {rowsSelected.length} {__("rows", "really-simple-ssl")}
+                        </div>
+
+                        <div className="rsssl-action-buttons">
+                            {getCurrentFilter(moduleName) === 'countries' && (
+                                <>
+                                    {/* if the id is new we show the Allow button */}
+                                        <div className="rsssl-action-buttons__inner">
+                                            <Button
+                                                className="button button-secondary rsssl-action-buttons__button"
+                                                onClick={() => {
+                                                    allowCountryByCode(rowsSelected);
+                                                }}
+                                            >
+                                                {__("Allow", "really-simple-ssl")}
+                                            </Button>
+                                        </div>
+
+                                    {/* if the id is new we show the Block button */}
+                                        <div className="rsssl-action-buttons__inner">
+                                            <Button
+                                                className="button button-primary rsssl-action-buttons__button"
+                                                onClick={() => {
+                                                    blockCountryByCode(rowsSelected);
+                                                }}
+                                            >
+                                                {__("Block", "really-simple-ssl")}
+                                            </Button>
+                                        </div>
+                                </>
+                            )}
+                            {getCurrentFilter(moduleName) === 'blocked' && (
+                                <>
+                                    {/* if the id is new we show the Allow button */}
+                                    <div className="rsssl-action-buttons__inner">
+                                        <Button
+                                            className="button button-secondary rsssl-action-buttons__button"
+                                            onClick={() => {
+                                                allowMultiple(rowsSelected);
+                                            }}
+                                        >
+                                            {__("Allow", "really-simple-ssl")}
+                                        </Button>
+                                    </div>
+                                </>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/*Display the datatable*/}
             <DataTable
@@ -313,6 +417,7 @@ const CountryDatatable = (props) => {
                 persistTableHead
                 selectableRows
                 selectableRowsHighlight={true}
+                clearSelectedRows={rowCleared}
                 onSelectedRowsChange={handleSelection}
                 theme="really-simple-plugins"
                 customStyles={customStyles}
