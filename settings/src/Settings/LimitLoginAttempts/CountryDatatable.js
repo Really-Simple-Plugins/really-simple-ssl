@@ -54,7 +54,7 @@ const CountryDatatable = (props) => {
     useEffect(() => {
         const currentFilter = getCurrentFilter(moduleName);
         if (!currentFilter) {
-            setSelectedFilter('countries', moduleName);
+            setSelectedFilter('blocked', moduleName);
         }
         handleCountryTableFilter('status', currentFilter);
     }, [selectedFilter, moduleName]);

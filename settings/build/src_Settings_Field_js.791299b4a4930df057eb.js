@@ -3653,7 +3653,7 @@ const CountryDatatable = props => {
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     const currentFilter = getCurrentFilter(moduleName);
     if (!currentFilter) {
-      setSelectedFilter('countries', moduleName);
+      setSelectedFilter('blocked', moduleName);
     }
     handleCountryTableFilter('status', currentFilter);
   }, [selectedFilter, moduleName]);
@@ -23843,4 +23843,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.91eab5a32eb294c65664.js.map
+//# sourceMappingURL=src_Settings_Field_js.791299b4a4930df057eb.js.map

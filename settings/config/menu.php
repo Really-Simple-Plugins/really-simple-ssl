@@ -222,10 +222,6 @@ function rsssl_menu()
                                 'id'      => 'limit_login_attempts_advanced_filter',
                                 'options' => [
                                     [
-                                        'id'    => 'allowed',
-                                        'title' => __('Allowed', 'really-simple-ssl'),
-                                    ],
-                                    [
                                         'id'    => 'blocked',
                                         'title' => __('Blocked', 'really-simple-ssl'),
                                     ],
