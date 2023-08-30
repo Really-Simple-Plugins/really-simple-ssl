@@ -111,6 +111,9 @@ The plugin checks your certificate before enabling, but if, for example, you mig
 If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions](https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/) instead.
 
 == Changelog ==
+= 7.0.9 =
+* August 30th 2023
+* Improvement: typo update word
 
 = 7.0.8 =
 * August 8th 2023
