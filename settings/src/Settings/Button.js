@@ -18,15 +18,17 @@ const Button = (props) => {
             addHelpNotice(props.field.id, label, text, title, false);
         });
     }
+
+    let is_disabled = !!props.field.disabled;
+
     return (
         <>
             { props.field.url &&
-                <Hyperlink className="button button-default" text={props.field.button_text} url={props.field.url}/>
+                <Hyperlink className={"button button-default"} disabled={is_disabled} text={props.field.button_text} url={props.field.url}/>
             }
             { props.field.action &&
-                <button onClick={ () => onClickHandler( props.field.action ) }  className="button button-default">{props.field.button_text}</button>
+                <button onClick={ () => onClickHandler( props.field.action ) }  className="button button-default" disabled={is_disabled}>{props.field.button_text}</button>
             }
-
         </>
     );
 }

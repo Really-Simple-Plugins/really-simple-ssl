@@ -31,7 +31,12 @@ function rsssl_menu()
                             'helpLink' => 'https://really-simple-ssl.com/instructions/about-our-general-settings/?mtm_campaign=instructions&mtm_source=free',
                         ],
                         [
-                            'id'            => 'support',
+                            'id'            => 'email',
+							'title'    => __( 'E-mail', 'really-simple-ssl' ),
+							'helpLink' => 'https://really-simple-ssl.com/email-notifications/',
+						],
+						[
+							'id' => 'support',
                             'title'         => __('Premium Support', 'really-simple-ssl'),
                             'intro'         => __('The following information is attached when you send this form: license key, scan results, your domain, .htaccess file, debug log and a list of active plugins.',
                                 'really-simple-ssl'),
@@ -361,9 +366,45 @@ function rsssl_menu()
                     'title'                => 'Cross Origin Policy',
                     'helpLink'             => 'https://really-simple-ssl.com/instructions/cross-origin-policies/?mtm_campaign=instructions&mtm_source=free',
 
-                ],
-            ],
-        ],
+				],
+				[
+					'id'                   => 'two_fa',
+					'networkwide_required' => true,
+					'premium'              => true,
+					'premium_text'         => __( 'Get two-factor authentication with %sReally Simple SSL Pro%s', 'really-simple-ssl' ),
+					'upgrade'              => 'https://really-simple-ssl.com/pro/?mtm_campaign=cops&mtm_source=free&mtm_content=upgrade',
+					'title'                => 'Login Protection',
+					'helpLink'             => 'https://really-simple-ssl.com/instructions/two-factor-authentication/?mtm_campaign=instructions&mtm_source=free',
+                    'groups'  => [
+                        [
+                            'id'       => 'two_fa_general',
+                            'premium'              => true,
+                            'premium_text'         => __( "Get Login Protection with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
+                            'helpLink' => 'https://really-simple-ssl.com/instructions/two-factor-authentication',
+                            'title'    => __( 'General', 'really-simple-ssl' ),
+                            'intro'    => __( 'Bad password and login management is the number one cause for account theft. Enhance login security per user role to prevent account theft.', 'really-simple-ssl' ),
+                        ],
+                        [
+                            'id'       => 'two_fa_email',
+                            'premium'              => true,
+                            'premium_text'         => __( "Get Login Protection with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
+                            'helpLink' => 'https://really-simple-ssl.com/instructions/two-factor-authentication',
+                            'title'    => __( 'Email', 'really-simple-ssl' ),
+                            'intro'    => __( 'Two-step verification will enhance the authentication process by adding an additional layer. Selected users will be required to enter their correct credentials first, and then they must provide a one-time code sent to their email as an extra step.', 'really-simple-ssl' ),
+                        ],
+                        [
+                            'id'       => 'two_fa_users',
+                            'premium'              => true,
+                            'premium_text'         => __( "Get Login Protection with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
+                            'helpLink' => 'https://really-simple-ssl.com/instructions/two-factor-authentication',
+                            'title'    => __( 'Users', 'really-simple-ssl' ),
+                            'intro'    => __( 'Here you can see which users have enabled two-step login, or change the status per user.', 'really-simple-ssl' ),
+                        ],
+                    ],
+
+				],
+			],
+		],
         [
             "id"             => "letsencrypt",
             'default_hidden' => true,

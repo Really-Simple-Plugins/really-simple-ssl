@@ -1,58 +1,55 @@
 <?php
-defined('ABSPATH') or die();
-function rsssl_fields($load_values = true)
-{
-    if ( ! rsssl_user_can_manage()) {
-        return [];
-    }
-    $fields = [
-        [
-            'id'       => 'ssl_enabled',
-            'menu_id'  => 'general',
-            'group_id' => 'general',
-            'type'     => 'hidden',
-            'label'    => 'ssl_enabled',
-            'disabled' => false,
-            'default'  => false,
-        ],
-        [
-            'id'       => 'site_has_ssl',
-            'menu_id'  => 'general',
-            'group_id' => 'general',
-            'type'     => 'hidden',
-            'label'    => '',
-            'disabled' => false,
-            'default'  => false,
-        ],
-        [
-            'id'       => 'review_notice_shown',
-            'menu_id'  => 'general',
-            'group_id' => 'general',
-            'type'     => 'hidden',
-            'label'    => '',
-            'disabled' => false,
-            'default'  => false,
-        ],
-        [
-            'id'               => 'redirect',
+defined( 'ABSPATH' ) or die();
+function rsssl_fields( $load_values = true ) {
+	if ( ! rsssl_user_can_manage() ) {
+		return [];
+	}
+	$fields = [
+		[
+			'id'       => 'ssl_enabled',
+			'menu_id'  => 'general',
+			'group_id' => 'general',
+			'type'     => 'hidden',
+			'label'    => 'ssl_enabled',
+			'disabled' => false,
+			'default'  => false,
+		],
+		[
+			'id'       => 'site_has_ssl',
+			'menu_id'  => 'general',
+			'group_id' => 'general',
+			'type'     => 'hidden',
+			'label'    => '',
+			'disabled' => false,
+			'default'  => false,
+		],
+		[
+			'id'       => 'review_notice_shown',
+			'menu_id'  => 'general',
+			'group_id' => 'general',
+			'type'     => 'hidden',
+			'label'    => '',
+			'disabled' => false,
+			'default'  => false,
+		],
+		[
+			'id'               => 'redirect',
             'menu_id'          => 'general',
-            'group_id'         => 'general',
-            'type'             => 'select',
-            'tooltip'          => __("Changing redirect methods should be done with caution. Please make sure you have read our instructions beforehand at the right-hand side.",
-                'really-simple-ssl'),
-            'label'            => __("Redirect method", 'really-simple-ssl'),
-            'warning'          => true,
-            'options'          => [
-                'none'        => __("No redirect", "really-simple-ssl"),
-                'wp_redirect' => __("301 PHP redirect", "really-simple-ssl"),
-                'htaccess'    => __("301 .htaccess redirect (read instructions first)", "really-simple-ssl"),
-            ],
-            'help'             => [
-                'label' => 'default',
-                'title' => __("Redirect method", 'really-simple-ssl'),
-                'text'  => __('Redirects your site to https with a SEO friendly 301 redirect if it is requested over http.',
-                    'really-simple-ssl'),
-            ],
+			'group_id'         => 'general',
+			'type'             => 'select',
+			'tooltip'  => __( "Changing redirect methods should be done with caution. Please make sure you have read our instructions beforehand at the right-hand side.", 'really-simple-ssl' ),
+			'label'            => __( "Redirect method", 'really-simple-ssl' ),
+			'warning'     			=> true,
+			'options'          => [
+				'none'         => __( "No redirect", "really-simple-ssl" ),
+				'wp_redirect'  => __( "301 PHP redirect", "really-simple-ssl" ),
+				'htaccess'     => __( "301 .htaccess redirect (read instructions first)", "really-simple-ssl" ),
+			],
+			'help'             => [
+				'label' => 'default',
+				'title' => __( "Redirect method", 'really-simple-ssl' ),
+				'text'  => __( 'Redirects your site to https with a SEO friendly 301 redirect if it is requested over http.', 'really-simple-ssl' ),
+			],
             'email'            => [
                 'title'     => __("Settings update: .htaccess redirect", 'really-simple-ssl'),
                 'message'   => __("The .htaccess redirect has been enabled on your site. If the server configuration is non-standard, this might cause issues. Please check if all pages on your site are functioning properly.",
@@ -114,20 +111,38 @@ function rsssl_fields($load_values = true)
             'default'  => false,
         ],
         [
-            'id'       => 'send_notifications_email',
+            'id'       => 'send_verification_email',
             'menu_id'  => 'general',
-            'group_id' => 'general',
-            'type'     => 'checkbox',
-            'label'    => __("Notifications by email", 'really-simple-ssl'),
-            'tooltip'  => __("Get notified of important changes, updates and settings. Recommended when using security features.",
-                'really-simple-ssl'),
-            'disabled' => false,
-            'default'  => false,
+            'group_id' => 'email',
+            'type'     => 'button',
+            'action'      => 'send_verification_mail',
+            'button_text' => __( "Send", "really-simple-ssl" ),
+            'warning'     => true,
+            'label'    => __("Email verification", 'really-simple-ssl'),'disabled'    => rsssl_is_email_verified(),
+            'tooltip'  => __("Verify your e-mail address to get the most out of Really Simple SSL.", 'really-simple-ssl' ),
+            'help'             => [
+	            'label' => rsssl_is_email_verified() ? 'success' : 'warning',
+	            'title' => __( "Email validation", 'really-simple-ssl' ),
+	            'text' => rsssl_is_email_verified()
+		            ? __( "Email validation completed", 'really-simple-ssl' )
+		            : ( check_if_email_essential_feature()
+			            ? __( "You're using a feature where email is an essential part of the functionality. Please validate that you can send emails on your server.",
+                'really-simple-ssl')
+            : ''
+		            ),
+	            'url' => add_query_arg(['page'=>'really-simple-security#settings/general/email'], rsssl_admin_url() ),
+            ],
+            'react_conditions' => [
+	            'relation' => 'AND',
+	            [
+		            'send_notifications_email' => 1,
+            ]
+            ],
         ],
         [
             'id'               => 'notifications_email_address',
             'menu_id'          => 'general',
-            'group_id'         => 'general',
+            'group_id'         => 'email',
             'type'             => 'email',
             'label'            => __("Email address", 'really-simple-ssl'),
             'disabled'         => false,
@@ -140,23 +155,16 @@ function rsssl_fields($load_values = true)
                 ]
             ],
         ],
-        [
-            'id'               => 'send-test-email',
+
+            ['id'               => 'send_notifications_email',
             'menu_id'          => 'general',
-            'group_id'         => 'general',
-            'type'             => 'button',
-            'action'           => 'send_test_mail',
-            'button_text'      => __("Send", "really-simple-ssl"),
-            'label'            => __("Send test notification by email", 'really-simple-ssl'),
+            'group_id'         => 'email',
+            'type'             => 'checkbox',
+            'label'      => __("Notifications by email", 'really-simple-ssl'),
+            'tooltip'            => __("Get notified of important changes, updates and settings. Recommended when using security features.", 'really-simple-ssl'),
             'disabled'         => false,
             'default'          => false,
-            'condition_action' => 'hide',
-            'react_conditions' => [
-                'relation' => 'AND',
-                [
-                    'send_notifications_email' => 1,
-                ]
-            ],
+
         ],
         [
             'id'       => 'dismiss_all_notices',
@@ -1025,7 +1033,7 @@ function rsssl_fields($load_values = true)
             'id'               => 'event_log_viewer',
             'menu_id'          => 'limit_login_attempts',
             'group_id'         => 'limit_login_attempts_event_log',
-            'type'             => 'dynamic-datatable',
+            'type'             => 'eventlog-datatable',
             'action'           => 'event_log',
             'label'            => __('IP address overview', 'really-simple-ssl'),
             'disabled'         => false,
@@ -1282,7 +1290,100 @@ function rsssl_fields($load_values = true)
             'default'  => 'disabled',
         ],
         [
-            'id'       => 'mixedcontentscan',
+            'id'       => 'two_fa_enabled',
+            'menu_id'  => 'two_fa',
+            'group_id' => 'two_fa_general',
+			'type'     => 'checkbox',
+			'label'    => __( "Enable login protection", "really-simple-ssl-pro" ),
+			'disabled' => false,
+			'default'  => 'disabled',
+		],
+		[
+			'id'       => 'two_fa_email_code',
+			'menu_id'  => 'two_fa',
+			'group_id' => 'two_fa_email',
+			'type'     => 'checkbox',
+			'label'    => __( "Enable two-step verification", "really-simple-ssl-pro" ),
+			'tooltip'  => __( "This will send emails from your server, containing a verification code to users that try to login.", 'really-simple-ssl' ),
+			'disabled' => false,
+			'default'  => 'disabled',
+			'help'             => [
+				'label' => rsssl_is_email_verified() ? 'success' : 'warning',
+				'title' => __( "Email validation", 'really-simple-ssl' ),
+				'url' => add_query_arg(['page'=>'really-simple-security#settings/general/email'], rsssl_admin_url() ),
+				'text' => rsssl_is_email_verified()
+					? __( "Email validation completed", 'really-simple-ssl' )
+					: ( check_if_email_essential_feature()
+						? __( "You're using a feature where email is an essential part of the functionality. Please validate that you can send emails on your server.", 'really-simple-ssl' )
+						: ''
+					),
+			],
+		],
+		[
+			'id'       => 'two_fa_optional_roles',
+			'menu_id'  => 'two_fa',
+			'group_id' => 'two_fa_email',
+			'type'     => 'two_fa_dropdown',
+            'label'    => __( "Optional for:", "really-simple-ssl-pro" ),
+			'tooltip'  => __( "Two-step login will be enabled for these user roles, with the possibility to skip. If a user skips, Two-step login will be disabled for this user.", 'really-simple-ssl' ),
+        ],
+
+		[
+			'id'       => 'two_fa_forced_roles',
+			'menu_id'  => 'two_fa',
+			'group_id' => 'two_fa_email',
+			'type'     => 'two_fa_dropdown',
+			'label'    => __( "Force on:", "really-simple-ssl-pro" ),
+			'tooltip'  => __( "These user roles are forced to enter the authentication code, without the possibility to skip.", 'really-simple-ssl' ),
+		],
+        [
+            'id'    => 'two_fa_users_table',
+            'menu_id' => 'two_fa',
+            'group_id' => 'two_fa_users',
+            'type' => 'dynamic-datatable',
+            'action' => 'two_fa_table',
+            'label' => __('Users', 'really-simple-ssl'),
+            'disabled' => false,
+            'default' => false,
+            'columns' => [
+                [
+                    'name'     => __( 'User', 'really-simple-ssl' ),
+                    'sortable' => false,
+                    'searchable' => true,
+                    'visible' => true,
+                    'column'   => 'user',
+                ],
+                [
+                    'name'     => __( 'Action', 'really-simple-ssl' ),
+                    'sortable' => false,
+                    'searchable' => false,
+                    'visible' => true,
+                    'column'   => 'rsssl_two_fa_method',
+                ],
+                [
+                    'name'     => __( 'User role', 'really-simple-ssl' ),
+                    'sortable' => false,
+                    'searchable' => false,
+                    'visible' => true,
+                    'column'   => 'user_role',
+                ],
+                [
+                    'name'     => __( 'Status', 'really-simple-ssl' ),
+                    'sortable' => false,
+                    'searchable' => false,
+                    'visible' => true,
+                    'column'   => 'status_for_user',
+                ],
+            ],
+//            'react_conditions' => [
+//				'relation' => 'AND',
+//					[
+//						'two_fa_email_code' => true,
+//					]
+//			],
+        ],
+		[
+			'id'          => 'mixedcontentscan',
             'menu_id'  => 'mixed_content_scan',
             'group_id' => 'mixedcontentscan',
             'type'     => 'mixedcontentscan',

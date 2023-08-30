@@ -21,6 +21,7 @@ import RiskComponent from "./RiskConfiguration/RiskComponent";
 import VulnerabilitiesOverview from "./RiskConfiguration/vulnerabilitiesOverview";
 import IpAddressDatatable from "./LimitLoginAttempts/IpAddressDatatable";
 // import IpAddressModule from "./LimitLoginAttempts/IpAddressModule";
+import TwoFaRolesDropDown from "./TwoFA/TwoFaRolesDropDown";
 import Button from "./Button";
 import Icon from "../utils/Icon";
 import { useEffect, useState } from "@wordpress/element";
@@ -29,9 +30,10 @@ import PostDropdown from "./PostDropDown";
 import NotificationTester from "./RiskConfiguration/NotificationTester";
 import getAnchor from "../utils/getAnchor";
 import useMenu from "../Menu/MenuData";
-import DynamicDataTable from "./EventLog/DynamicDataTable";
+import EventLog from "./EventLog/DynamicDataTable";
 import UserDatatable from "./LimitLoginAttempts/UserDatatable";
 import CountryDatatable from "./LimitLoginAttempts/CountryDatatable";
+import DynamicDataTable from "./DynamicDataTable/DynamicDataTable";
 
 const Field = (props) => {
     let scrollAnchor = React.createRef();
@@ -74,7 +76,7 @@ const Field = (props) => {
         }
         updateField(field.id, fieldValue);
 
-        //we can configure other fields if a field is enabled, or set to a certain value.
+        // we can configure other fields if a field is enabled, or set to a certain value.
         let configureFieldCondition = false;
         if ( field.configure_on_activation ) {
             if ( field.configure_on_activation.hasOwnProperty('condition') && props.field.value==field.configure_on_activation.condition ) {
@@ -161,7 +163,7 @@ const Field = (props) => {
     }
 
     if ( field.type==='radio' ){
-        return (    
+        return (
             <div className={highLightClass} ref={scrollAnchor}>
               <RadioControl
                   label={labelWrap(field)}
@@ -173,21 +175,46 @@ const Field = (props) => {
         );
     }
 
-    if ( field.type==='text' || field.type==='email' ){
+    if (field.type==='email'){
+        const sendVerificationEmailField = props.fields.find(field => field.id === 'send_verification_email');
+        const emailIsVerified = sendVerificationEmailField && sendVerificationEmailField.disabled;
+
         return (
-            <div className={highLightClass} ref={scrollAnchor}>
-              <TextControl
-                  required={ field.required }
-                  placeholder={ field.placeholder }
-                  disabled={ disabled }
-                  help={ field.comment }
-                  label={labelWrap(field)}
-                  onChange={ ( fieldValue ) => onChangeHandler(fieldValue) }
-                  value= { fieldValue }
-              />
+            <div className={highLightClass} ref={scrollAnchor} style={{position: 'relative'}}>
+                <TextControl
+                    required={ field.required }
+                    placeholder={ field.placeholder }
+                    disabled={ disabled }
+                    help={ field.comment }
+                    label={labelWrap(field)}
+                    onChange={ ( fieldValue ) => onChangeHandler(fieldValue) }
+                    value= { fieldValue }
+                />
+                <div className="rsssl-email-verified" >
+                    {emailIsVerified
+                        ? <Icon name='circle-check' color={'green'} />
+                        : <Icon name='circle-times' color={'red'} />}
+                </div>
             </div>
         );
     }
+
+    if (field.type==='text' ){
+        return (
+            <div className={highLightClass} ref={scrollAnchor} style={{position: 'relative'}}>
+                <TextControl
+                    required={ field.required }
+                    placeholder={ field.placeholder }
+                    disabled={ disabled }
+                    help={ field.comment }
+                    label={labelWrap(field)}
+                    onChange={ ( fieldValue ) => onChangeHandler(fieldValue) }
+                    value= { fieldValue }
+                />
+            </div>
+        );
+    }
+
 
     if ( field.type==='button' ){
         return (
@@ -337,16 +364,28 @@ const Field = (props) => {
         )
     }
 
-    // if (field.type === 'ipaddressmodule') {
-    //     return (
-    //         <div className={highLightClass} ref={scrollAnchor}>
-    //           <IpAddressModule
-    //               field={props.field}
-    //               selectedFilter={selectedFilter} // Pass selectedFilter as a prop to IpAddressModule
-    //           />
-    //         </div>
-    //     )
-    // }
+    if (field.type === 'two_fa_dropdown') {
+        return (
+            <div className={highLightClass} ref={scrollAnchor}>
+                <label htmlFor="rsssl-two-fa-dropdown-{field.id}">
+                    {labelWrap(field)}
+                </label>
+                <TwoFaRolesDropDown field={props.field}
+                />
+            </div>
+        );
+    }
+
+    if (field.type === 'eventlog-datatable') {
+        return (
+            <div className={highLightClass} ref={scrollAnchor}>
+                <DynamicDataTable
+                    field={props.field}
+                    action={props.field.action}
+                />
+            </div>
+        )
+    }
 
     if (field.type === 'dynamic-datatable') {
         return (

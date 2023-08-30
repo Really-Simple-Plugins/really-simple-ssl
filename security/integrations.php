@@ -97,6 +97,17 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         'risk'                 => 'medium',
         'option_id'            => 'limit_login_attempts',
     ),
+
+
+    'two-factor' => array(
+        'label'                => '2FA',
+        'folder'               => 'wordpress/two_fa',
+        'impact'               => 'medium',
+        'risk'                 => 'low',
+        'option_id'            => 'two_fa_enabled',
+        'always_include'       => false,
+    ),
+
 ) );
 
 /**
