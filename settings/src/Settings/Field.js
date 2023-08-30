@@ -34,7 +34,7 @@ import EventLog from "./EventLog/DynamicDataTable";
 import UserDatatable from "./LimitLoginAttempts/UserDatatable";
 import CountryDatatable from "./LimitLoginAttempts/CountryDatatable";
 import DynamicDataTable from "./DynamicDataTable/DynamicDataTable";
-
+import TwoFaDataTable from "./TwoFA/TwoFaDataTable";
 const Field = (props) => {
     let scrollAnchor = React.createRef();
     const {updateField, setChangedField, highLightField} = useFields();
@@ -386,7 +386,16 @@ const Field = (props) => {
             </div>
         )
     }
-
+    if (field.type === 'twofa-datatable') {
+        return (
+            <div className={highLightClass} ref={scrollAnchor}>
+                <TwoFaDataTable
+                    field={props.field}
+                    action={props.field.action}
+                />
+            </div>
+        )
+    }
     if (field.type === 'dynamic-datatable') {
         return (
             <div className={highLightClass} ref={scrollAnchor}>

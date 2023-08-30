@@ -326,7 +326,9 @@ const CountryDatatable = (props) => {
     return (
         <>
             <div className="rsssl-container">
-                <div></div>
+                <div>
+                    {/* reserved for left side buttons */}
+                </div>
                 <div className="rsssl-search-bar">
                     <div className="rsssl-search-bar__inner">
                         <div className="rsssl-search-bar__icon"></div>

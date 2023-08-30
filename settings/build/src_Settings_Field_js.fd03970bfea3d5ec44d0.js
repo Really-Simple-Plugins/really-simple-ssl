@@ -2253,6 +2253,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _LimitLoginAttempts_UserDatatable__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./LimitLoginAttempts/UserDatatable */ "./src/Settings/LimitLoginAttempts/UserDatatable.js");
 /* harmony import */ var _LimitLoginAttempts_CountryDatatable__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./LimitLoginAttempts/CountryDatatable */ "./src/Settings/LimitLoginAttempts/CountryDatatable.js");
 /* harmony import */ var _DynamicDataTable_DynamicDataTable__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./DynamicDataTable/DynamicDataTable */ "./src/Settings/DynamicDataTable/DynamicDataTable.js");
+/* harmony import */ var _TwoFA_TwoFaDataTable__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./TwoFA/TwoFaDataTable */ "./src/Settings/TwoFA/TwoFaDataTable.js");
 
 
 
@@ -2272,6 +2273,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 // import IpAddressModule from "./LimitLoginAttempts/IpAddressModule";
+
 
 
 
@@ -2629,6 +2631,15 @@ const Field = props => {
       className: highLightClass,
       ref: scrollAnchor
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_DynamicDataTable_DynamicDataTable__WEBPACK_IMPORTED_MODULE_29__["default"], {
+      field: props.field,
+      action: props.field.action
+    }));
+  }
+  if (field.type === 'twofa-datatable') {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: highLightClass,
+      ref: scrollAnchor
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_TwoFA_TwoFaDataTable__WEBPACK_IMPORTED_MODULE_30__["default"], {
       field: props.field,
       action: props.field.action
     }));
@@ -4829,9 +4840,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__);
 /* harmony import */ var _utils_Flag_Flag__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../utils/Flag/Flag */ "./src/utils/Flag/Flag.js");
 /* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../utils/Icon */ "./src/utils/Icon.js");
-/* harmony import */ var _Cidr__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./Cidr */ "./src/Settings/LimitLoginAttempts/Cidr.js");
-/* harmony import */ var _AddIpAddressModal__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./AddIpAddressModal */ "./src/Settings/LimitLoginAttempts/AddIpAddressModal.js");
-
+/* harmony import */ var _AddIpAddressModal__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./AddIpAddressModal */ "./src/Settings/LimitLoginAttempts/AddIpAddressModal.js");
 
 
 
@@ -5101,7 +5110,7 @@ const IpAddressDatatable = props => {
   function handleSelection(state) {
     setRowsSelected(state.selectedRows);
   }
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_AddIpAddressModal__WEBPACK_IMPORTED_MODULE_11__["default"], {
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_AddIpAddressModal__WEBPACK_IMPORTED_MODULE_10__["default"], {
     isOpen: addingIpAddress,
     onRequestClose: handleClose,
     options: options,
@@ -7617,6 +7626,384 @@ const Support = () => {
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Send', 'really-simple-ssl')));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Support);
+
+/***/ }),
+
+/***/ "./src/Settings/TwoFA/TwoFaDataTable.js":
+/*!**********************************************!*\
+  !*** ./src/Settings/TwoFA/TwoFaDataTable.js ***!
+  \**********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var react_data_table_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-data-table-component */ "./node_modules/react-data-table-component/dist/index.cjs.js");
+/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/api-fetch */ "@wordpress/api-fetch");
+/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../FieldsData */ "./src/Settings/FieldsData.js");
+/* harmony import */ var _TwoFaDataTableStore__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./TwoFaDataTableStore */ "./src/Settings/TwoFA/TwoFaDataTableStore.js");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__);
+
+
+
+
+
+
+
+
+const DynamicDataTable = props => {
+  const {
+    twoFAMethods,
+    setTwoFAMethods,
+    DynamicDataTable,
+    dataLoaded,
+    pagination,
+    dataActions,
+    handleTableRowsChange,
+    fetchDynamicData,
+    // setDynamicData,
+    handleTableSort,
+    handleTablePageChange,
+    handleTableSearch,
+    updateUserMeta
+  } = (0,_TwoFaDataTableStore__WEBPACK_IMPORTED_MODULE_6__["default"])();
+  let field = props.field;
+  const [enabled, setEnabled] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(false);
+  const {
+    fields,
+    getFieldValue,
+    saveFields
+  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_5__["default"])();
+  const [rowsSelected, setRowsSelected] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)([]);
+  const [rowCleared, setRowCleared] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(false);
+  const twoFAEnabledRef = (0,react__WEBPACK_IMPORTED_MODULE_2__.useRef)();
+  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
+    twoFAEnabledRef.current = getFieldValue('two_fa_enabled');
+    saveFields(true, false);
+  }, [getFieldValue('two_fa_enabled')]);
+  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
+    const value = getFieldValue('two_fa_enabled');
+    setEnabled(value);
+  }, [fields]);
+  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
+    if (!dataLoaded || enabled !== getFieldValue('two_fa_enabled')) {
+      fetchDynamicData(field.action).then(response => {
+        // Check if response.data is defined and is an array before calling reduce
+        if (response.data && Array.isArray(response.data)) {
+          const methods = response.data.reduce((acc, user) => ({
+            ...acc,
+            [user.id]: user.rsssl_two_fa_method
+          }), {});
+          setTwoFAMethods(methods);
+        } else {
+          console.error('Unexpected response:', response);
+        }
+      }).catch(err => {
+        console.error(err); // Log any errors
+      });
+    }
+  }, [dataLoaded, field.action, fetchDynamicData, getFieldValue('two_fa_enabled')]); // Add getFieldValue('two_fa_enabled') as a dependency
+
+  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
+    if (dataActions) {
+      fetchDynamicData(field.action);
+    }
+  }, [dataActions]);
+  function handleTwoFAMethodChange(userId, newMethod) {
+    setTwoFAMethods({
+      ...twoFAMethods,
+      [userId]: newMethod
+    });
+    _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_4___default()({
+      path: `/wp/v2/users/${userId}`,
+      method: 'POST',
+      data: {
+        meta: {
+          rsssl_two_fa_method: newMethod
+        }
+      }
+    }).then(response => {
+      updateUserMeta(userId, newMethod);
+    }).catch(error => {
+      console.error('Error updating user meta:', error);
+    });
+  }
+  function buildColumn(column) {
+    let newColumn = {
+      name: column.name,
+      column: column.column,
+      sortable: column.sortable,
+      searchable: column.searchable,
+      width: column.width,
+      visible: column.visible,
+      selector: row => row[column.column]
+    };
+    if (newColumn.name === 'Action') {
+      newColumn.cell = row => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+        className: "rsssl-action-buttons"
+      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+        className: "rsssl-action-buttons__inner"
+      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__.Button, {
+        className: "button button-secondary rsssl-action-buttons__button",
+        onClick: () => handleTwoFAMethodChange(row.id, 'disabled')
+      }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Disabled", "really-simple-ssl"))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+        className: "rsssl-action-buttons__inner"
+      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__.Button, {
+        className: "button button-primary rsssl-action-buttons__button",
+        onClick: () => handleTwoFAMethodChange(row.id, 'email')
+      }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Email", "really-simple-ssl"))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+        className: "rsssl-action-buttons__inner"
+      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__.Button, {
+        className: "button button-red rsssl-action-buttons__button",
+        onClick: () => handleTwoFAMethodChange(row.id, 'reset')
+      }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Reset", "really-simple-ssl"))));
+    }
+    return newColumn;
+  }
+  let columns = [];
+  field.columns.forEach(function (item, i) {
+    var _newItem$visible;
+    let newItem = {
+      ...item,
+      key: item.column
+    };
+    newItem = buildColumn(newItem);
+    newItem.visible = (_newItem$visible = newItem.visible) !== null && _newItem$visible !== void 0 ? _newItem$visible : true;
+    columns.push(newItem);
+  });
+  let searchableColumns = columns.filter(column => column.searchable).map(column => column.column);
+  const customStyles = {
+    headCells: {
+      style: {
+        paddingLeft: '0',
+        paddingRight: '0'
+      }
+    },
+    cells: {
+      style: {
+        paddingLeft: '0',
+        paddingRight: '0'
+      }
+    }
+  };
+  (0,react_data_table_component__WEBPACK_IMPORTED_MODULE_3__.createTheme)('really-simple-plugins', {
+    divider: {
+      default: 'transparent'
+    }
+  }, 'light');
+  function handleSelection(state) {
+    setRowsSelected(state.selectedRows);
+  }
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-container",
+    style: {
+      marginTop: "20px"
+    }
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-search-bar"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-search-bar__inner"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-search-bar__icon"
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "text",
+    className: "rsssl-search-bar__input",
+    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Search", "really-simple-ssl"),
+    onChange: event => handleTableSearch(event.target.value, searchableColumns)
+  })))), rowsSelected.length > 0 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    style: {
+      marginTop: '1em',
+      marginBottom: '1em'
+    }
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-multiselect-datatable-form rsssl-primary"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("You have selected", "really-simple-ssl"), " ", rowsSelected.length, " ", (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("rows", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-action-buttons"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-action-buttons__inner"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__.Button, {
+    className: "button button-secondary rsssl-action-buttons__button"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Disabled", "really-simple-ssl"))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-action-buttons__inner"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__.Button, {
+    className: "button button-primary rsssl-action-buttons__button"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Email", "really-simple-ssl"))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-action-buttons__inner"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__.Button, {
+    className: "button button-red rsssl-action-buttons__button"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Reset", "really-simple-ssl")))))), dataLoaded ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    columns: columns,
+    data: DynamicDataTable,
+    dense: true,
+    pagination: true,
+    paginationServer: true,
+    onChangeRowsPerPage: handleTableRowsChange,
+    onChangePage: handleTablePageChange,
+    sortServer: true,
+    onSort: handleTableSort,
+    paginationRowsPerPageOptions: [10, 25, 50, 100],
+    noDataComponent: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("No results", "really-simple-ssl"),
+    persistTableHead: true,
+    selectableRows: true,
+    selectableRowsHighlight: true,
+    onSelectedRowsChange: handleSelection,
+    clearSelectedRows: rowCleared,
+    theme: "really-simple-plugins",
+    customStyles: customStyles
+  }) : (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-spinner",
+    style: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginTop: "100px"
+    }
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-spinner__inner"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-spinner__icon",
+    style: {
+      border: '8px solid white',
+      borderTop: '8px solid #f4bf3e',
+      borderRadius: '50%',
+      width: '120px',
+      height: '120px',
+      animation: 'spin 2s linear infinite'
+    }
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-spinner__text",
+    style: {
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)'
+    }
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Loading data, please stand by...", "really-simple-ssl")))), !enabled && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-locked"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-locked-overlay"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "rsssl-task-status rsssl-open"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Disabled', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Activate login protection to enable this block.', 'really-simple-ssl')))));
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (DynamicDataTable);
+
+/***/ }),
+
+/***/ "./src/Settings/TwoFA/TwoFaDataTableStore.js":
+/*!***************************************************!*\
+  !*** ./src/Settings/TwoFA/TwoFaDataTableStore.js ***!
+  \***************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/index.mjs");
+/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils/api */ "./src/utils/api.js");
+/* harmony import */ var immer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! immer */ "./node_modules/immer/dist/immer.esm.mjs");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* Creates A Store For Risk Data using Zustand */
+
+
+
+
+const DynamicDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_2__.create)((set, get) => ({
+  twoFAMethods: {},
+  setTwoFAMethods: methods => set(state => ({
+    ...state,
+    twoFAMethods: methods
+  })),
+  processing: false,
+  dataLoaded: false,
+  pagination: {},
+  dataActions: {},
+  DynamicDataTable: [],
+  fetchDynamicData: async action => {
+    try {
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction(action, get().dataActions);
+      //now we set the EventLog
+      if (response) {
+        set(state => ({
+          ...state,
+          DynamicDataTable: response.data,
+          dataLoaded: true,
+          processing: false,
+          pagination: response.pagination
+          // Removed the twoFAMethods set from here...
+        }));
+        // Return the response for the calling function to use
+        return response;
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  handleTableSearch: async (search, searchColumns) => {
+    set((0,immer__WEBPACK_IMPORTED_MODULE_3__.produce)(state => {
+      state.dataActions = {
+        ...state.dataActions,
+        search,
+        searchColumns
+      };
+    }));
+  },
+  handleTablePageChange: async (page, pageSize) => {
+    //Add the page and pageSize to the dataActions
+    set((0,immer__WEBPACK_IMPORTED_MODULE_3__.produce)(state => {
+      state.dataActions = {
+        ...state.dataActions,
+        page,
+        pageSize
+      };
+    }));
+  },
+  handleTableRowsChange: async (currentRowsPerPage, currentPage) => {
+    //Add the page and pageSize to the dataActions
+    set((0,immer__WEBPACK_IMPORTED_MODULE_3__.produce)(state => {
+      state.dataActions = {
+        ...state.dataActions,
+        currentRowsPerPage,
+        currentPage
+      };
+    }));
+  },
+  //this handles all pagination and sorting
+  handleTableSort: async (column, sortDirection) => {
+    //Add the column and sortDirection to the dataActions
+    set((0,immer__WEBPACK_IMPORTED_MODULE_3__.produce)(state => {
+      state.dataActions = {
+        ...state.dataActions,
+        sortColumn: column,
+        sortDirection
+      };
+    }));
+  },
+  updateUserMeta: async (userId, updatedMeta) => {
+    set((0,immer__WEBPACK_IMPORTED_MODULE_3__.produce)(state => {
+      const userIndex = state.DynamicDataTable.findIndex(user => user.id === userId);
+      if (userIndex !== -1) {
+        state.DynamicDataTable[userIndex].rsssl_two_fa_method = updatedMeta;
+      }
+    }));
+    let data = {};
+    data.userId = userId;
+    data.method = updatedMeta;
+    const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('store_two_fa_usermeta', data);
+  }
+}));
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (DynamicDataTableStore);
 
 /***/ }),
 
@@ -24431,4 +24818,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.b9fbefdf6aac76606135.js.map
+//# sourceMappingURL=src_Settings_Field_js.fd03970bfea3d5ec44d0.js.map

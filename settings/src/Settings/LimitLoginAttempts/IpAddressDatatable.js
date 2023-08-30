@@ -8,7 +8,6 @@ import {Button} from "@wordpress/components";
 import {produce} from "immer";
 import Flag from "../../utils/Flag/Flag";
 import Icon from "../../utils/Icon";
-import Cidr from "./Cidr";
 import AddIpAddressModal from "./AddIpAddressModal";
 
 const IpAddressDatatable = (props) => {
