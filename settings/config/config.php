@@ -810,12 +810,33 @@ function rsssl_fields($load_values = true)
             'menu_id'          => 'limit_login_attempts',
             'group_id'         => 'limit_login_attempts_advanced',
             'type'             => 'select',
-            'label'            => __('Block duration', 'really-simple-ssl'),
+            'label'            => __('Interval', 'really-simple-ssl'),
             'options'          => [
                 '30'  => '30'.__(' minutes', 'really-simple-ssl'),
                 '60'  => '1 '.__(' hour', 'really-simple-ssl'),
                 '120' => '2 '.__(' hours', 'really-simple-ssl'),
                 '240' => '4 '.__(' hours', 'really-simple-ssl'),
+            ],
+            'disabled'         => false,
+            'default'          => '30',
+            'react_conditions' => [
+                'relation' => 'AND',
+                [
+                    'enable_limited_login_attempts' => true,
+                ]
+            ],
+        ],
+        [
+            'id'               => 'limit_login_attempts_locked_out_duration',
+            'menu_id'          => 'limit_login_attempts',
+            'group_id'         => 'limit_login_attempts_advanced',
+            'type'             => 'select',
+            'label'            => __('Locked out', 'really-simple-ssl'),
+            'options'          => [
+                '15'  => '15'.__(' minutes', 'really-simple-ssl'),
+                '30'  => '30 '.__(' minutes', 'really-simple-ssl'),
+                '60' => '1 '.__(' hour', 'really-simple-ssl'),
+                '120' => '2 '.__(' hours', 'really-simple-ssl'),
             ],
             'disabled'         => false,
             'default'          => '30',
