@@ -7719,23 +7719,43 @@ const DynamicDataTable = props => {
     }
   }, [dataActions]);
   function handleTwoFAMethodChange(userId, newMethod) {
-    setTwoFAMethods({
-      ...twoFAMethods,
-      [userId]: newMethod
-    });
-    _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_4___default()({
-      path: `/wp/v2/users/${userId}`,
-      method: 'POST',
-      data: {
-        meta: {
-          rsssl_two_fa_method: newMethod
+    let reload = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+    //if the userId is an array, we need to loop through it
+    if (Array.isArray(userId)) {
+      const promises = userId.map(user => {
+        return handleTwoFAMethodChange(user.id, newMethod, false).then(() => {
+          //we remove the row from the selectedRows
+          setRowsSelected([]);
+          setRowCleared(true);
+        });
+      });
+      Promise.all(promises).then(() => {
+        setRowsSelected([]);
+        setRowCleared(true);
+        fetchDynamicData(field.action);
+      });
+    } else {
+      setTwoFAMethods({
+        ...twoFAMethods,
+        [userId]: newMethod
+      });
+      return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_4___default()({
+        path: `/wp/v2/users/${userId}`,
+        method: 'POST',
+        data: {
+          meta: {
+            rsssl_two_fa_method: newMethod
+          }
         }
-      }
-    }).then(response => {
-      updateUserMeta(userId, newMethod);
-    }).catch(error => {
-      console.error('Error updating user meta:', error);
-    });
+      }).then(response => {
+        updateUserMeta(userId, newMethod);
+        if (reload) {
+          fetchDynamicData(field.action);
+        }
+      }).catch(error => {
+        console.error('Error updating user meta:', error);
+      });
+    }
   }
   function buildColumn(column) {
     let newColumn = {
@@ -7801,6 +7821,7 @@ const DynamicDataTable = props => {
     }
   }, 'light');
   function handleSelection(state) {
+    setRowCleared(false);
     setRowsSelected(state.selectedRows);
   }
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -7831,11 +7852,13 @@ const DynamicDataTable = props => {
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-action-buttons__inner"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__.Button, {
-    className: "button button-secondary rsssl-action-buttons__button"
+    className: "button button-secondary rsssl-action-buttons__button",
+    onClick: () => handleTwoFAMethodChange(rowsSelected, 'disabled')
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Disabled", "really-simple-ssl"))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-action-buttons__inner"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__.Button, {
-    className: "button button-primary rsssl-action-buttons__button"
+    className: "button button-primary rsssl-action-buttons__button",
+    onClick: () => handleTwoFAMethodChange(rowsSelected, 'email')
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Email", "really-simple-ssl"))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-action-buttons__inner"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__.Button, {
@@ -24818,4 +24841,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.fd03970bfea3d5ec44d0.js.map
+//# sourceMappingURL=src_Settings_Field_js.f7f5fc225b5b08980f7a.js.map

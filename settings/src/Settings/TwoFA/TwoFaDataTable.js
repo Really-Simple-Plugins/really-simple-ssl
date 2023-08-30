@@ -69,27 +69,49 @@ const DynamicDataTable = (props) => {
         }
     }, [dataActions]);
 
-    function handleTwoFAMethodChange(userId, newMethod) {
-        setTwoFAMethods({
-            ...twoFAMethods,
-            [userId]: newMethod
-        });
+    function handleTwoFAMethodChange(userId, newMethod, reload = true) {
+        //if the userId is an array, we need to loop through it
+        if (Array.isArray(userId)) {
+                const promises = userId.map((user) => {
+                    return handleTwoFAMethodChange(user.id, newMethod, false)
+                        .then(() => {
+                            //we remove the row from the selectedRows
+                            setRowsSelected([]);
+                            setRowCleared(true);
+                        });
+                });
 
-        apiFetch({
-            path: `/wp/v2/users/${userId}`,
-            method: 'POST',
-            data: {
-                meta: {
-                    rsssl_two_fa_method: newMethod,
-                },
-            },
-        })
-            .then((response) => {
-                updateUserMeta(userId, newMethod);
-            })
-            .catch((error) => {
-                console.error('Error updating user meta:', error);
+                Promise.all(promises)
+                    .then(() => {
+                        setRowsSelected([]);
+                        setRowCleared(true);
+                        fetchDynamicData(field.action);
+                    });
+        } else {
+            setTwoFAMethods({
+                ...twoFAMethods,
+                [userId]: newMethod
             });
+
+            return apiFetch({
+                path: `/wp/v2/users/${userId}`,
+                method: 'POST',
+                data: {
+                    meta: {
+                        rsssl_two_fa_method: newMethod,
+                    },
+                },
+            })
+                .then((response) => {
+                    updateUserMeta(userId, newMethod);
+                    if (reload) {
+                        fetchDynamicData(field.action);
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error updating user meta:', error);
+                });
+        }
     }
 
     function buildColumn(column) {
@@ -170,6 +192,7 @@ const DynamicDataTable = (props) => {
     }, 'light');
 
     function handleSelection(state) {
+        setRowCleared(false);
         setRowsSelected(state.selectedRows);
     }
 
@@ -213,6 +236,7 @@ const DynamicDataTable = (props) => {
                             <div className="rsssl-action-buttons__inner">
                                 <Button
                                     className="button button-secondary rsssl-action-buttons__button"
+                                    onClick={() => handleTwoFAMethodChange(rowsSelected, 'disabled')}
                                 >
                                     {__("Disabled", "really-simple-ssl")}
                                 </Button>
@@ -220,6 +244,7 @@ const DynamicDataTable = (props) => {
                             <div className="rsssl-action-buttons__inner">
                                 <Button
                                     className="button button-primary rsssl-action-buttons__button"
+                                    onClick={() => handleTwoFAMethodChange(rowsSelected, 'email')}
                                 >
                                     {__("Email", "really-simple-ssl")}
                                 </Button>
