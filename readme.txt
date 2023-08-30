@@ -114,6 +114,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 = 7.0.9 =
 * August 30th 2023
 * Improvement: typo update word
+* Improvement: translatability in several strings.
 
 = 7.0.8 =
 * August 8th 2023
