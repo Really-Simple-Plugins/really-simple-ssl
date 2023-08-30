@@ -130,22 +130,6 @@ const DynamicDataTable = (props) => {
                 <div className="rsssl-action-buttons">
                     <div className="rsssl-action-buttons__inner">
                         <Button
-                            className="button button-secondary rsssl-action-buttons__button"
-                            onClick={() => handleTwoFAMethodChange(row.id, 'disabled')}
-                        >
-                            {__("Disabled", "really-simple-ssl")}
-                        </Button>
-                    </div>
-                    <div className="rsssl-action-buttons__inner">
-                        <Button
-                            className="button button-primary rsssl-action-buttons__button"
-                            onClick={() => handleTwoFAMethodChange(row.id, 'email')}
-                        >
-                            {__("Email", "really-simple-ssl")}
-                        </Button>
-                    </div>
-                    <div className="rsssl-action-buttons__inner">
-                        <Button
                             className="button button-red rsssl-action-buttons__button"
                             onClick={() => handleTwoFAMethodChange(row.id, 'reset')}
                         >
@@ -233,22 +217,6 @@ const DynamicDataTable = (props) => {
                         </div>
 
                         <div className="rsssl-action-buttons">
-                            <div className="rsssl-action-buttons__inner">
-                                <Button
-                                    className="button button-secondary rsssl-action-buttons__button"
-                                    onClick={() => handleTwoFAMethodChange(rowsSelected, 'disabled')}
-                                >
-                                    {__("Disabled", "really-simple-ssl")}
-                                </Button>
-                            </div>
-                            <div className="rsssl-action-buttons__inner">
-                                <Button
-                                    className="button button-primary rsssl-action-buttons__button"
-                                    onClick={() => handleTwoFAMethodChange(rowsSelected, 'email')}
-                                >
-                                    {__("Email", "really-simple-ssl")}
-                                </Button>
-                            </div>
                             <div className="rsssl-action-buttons__inner">
                                 <Button
                                     className="button button-red rsssl-action-buttons__button"
