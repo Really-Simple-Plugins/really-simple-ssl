@@ -120,8 +120,20 @@ function rsssl_fields( $load_values = true ) {
             'tooltip'  => __( "Verify your e-mail address to get the most out of Really Simple SSL.", 'really-simple-ssl' ),
             'help'             => [
 	            'label' => rsssl_is_email_verified() ? 'success' : 'warning',
-	            'title' => rsssl_is_email_verified() ? __( "Email validation completed", 'really-simple-ssl' ) : __( "Email validation is required", 'really-simple-ssl' ),
-                'text'  => __( 'Your e-mail address has been successfully verified', 'really-simple-ssl' ),
+	            'title' => __( "Email validation", 'really-simple-ssl' ),
+	            'text' => rsssl_is_email_verified()
+		            ? __( "Email validation completed", 'really-simple-ssl' )
+		            : ( check_if_email_essential_feature()
+			            ? __( "You're using a feature where email is an essential part of the functionality. Please validate that you can send emails on your server.", 'really-simple-ssl' )
+			            : ''
+		            ),
+	            'url' => add_query_arg(['page'=>'really-simple-security#settings/general/email'], rsssl_admin_url() ),
+            ],
+            'react_conditions' => [
+	            'relation' => 'AND',
+	            [
+		            'send_notifications_email' => 1,
+	            ]
             ],
         ],
 		[
@@ -977,8 +989,14 @@ function rsssl_fields( $load_values = true ) {
 			'default'  => 'disabled',
 			'help'             => [
 				'label' => rsssl_is_email_verified() ? 'success' : 'warning',
-				'title' => rsssl_is_email_verified() ? __( "Email validation completed", 'really-simple-ssl' ) : __( "Email validation is required", 'really-simple-ssl' ),
-				'text'  => __( 'Your e-mail address has been successfully verified', 'really-simple-ssl' ),
+				'title' => __( "Email validation", 'really-simple-ssl' ),
+				'url' => add_query_arg(['page'=>'really-simple-security#settings/general/email'], rsssl_admin_url() ),
+				'text' => rsssl_is_email_verified()
+					? __( "Email validation completed", 'really-simple-ssl' )
+					: ( check_if_email_essential_feature()
+						? __( "You're using a feature where email is an essential part of the functionality. Please validate that you can send emails on your server.", 'really-simple-ssl' )
+						: ''
+					),
 			],
 		],
 		[

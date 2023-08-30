@@ -93,3 +93,18 @@ function rsssl_get_legacy_option( $options, string $name): array {
 	}
 	return $options;
 }
+
+function check_if_email_essential_feature() {
+	$essential_features = array(
+		'limit_login_attempts' => rsssl_get_option('limit_login_attempts') == 1
+	);
+
+	// Check if the current feature is in the essential features array
+	foreach( $essential_features as $feature => $is_essential ) {
+		if ( $is_essential ) {
+			return true;
+		}
+	}
+
+	return false;
+}
