@@ -202,32 +202,7 @@ const DynamicDataTable = (props) => {
                     </div>
                 </div>
             </div>
-            {rowsSelected.length > 0 && (
-                <div
-                    style={{
-                        marginTop: '1em',
-                        marginBottom: '1em',
-                    }}
-                >
-                    <div
-                        className={"rsssl-multiselect-datatable-form rsssl-primary"}
-                    >
-                        <div>
-                            {__("You have selected", "really-simple-ssl")} {rowsSelected.length} {__("rows", "really-simple-ssl")}
-                        </div>
 
-                        <div className="rsssl-action-buttons">
-                            <div className="rsssl-action-buttons__inner">
-                                <Button
-                                    className="button button-red rsssl-action-buttons__button"
-                                >
-                                    {__("Reset", "really-simple-ssl")}
-                                </Button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
 
             {dataLoaded ?
                 <DataTable

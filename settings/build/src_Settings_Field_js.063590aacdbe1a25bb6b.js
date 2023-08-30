@@ -6302,6 +6302,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/Icon */ "./src/utils/Icon.js");
 /* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./FieldsData */ "./src/Settings/FieldsData.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_5__);
+
 
 
 
@@ -6319,6 +6322,8 @@ const PermissionsPolicy = props => {
   const [enablePermissionsPolicy, setEnablePermissionsPolicy] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(0);
   const [DataTable, setDataTable] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
   const [theme, setTheme] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
+  const [rowsSelected, setRowsSelected] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
+  const [rowCleared, setRowCleared] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     Promise.resolve(/*! import() */).then(__webpack_require__.bind(__webpack_require__, /*! react-data-table-component */ "./node_modules/react-data-table-component/dist/index.cjs.js")).then(_ref => {
       let {
@@ -6348,6 +6353,20 @@ const PermissionsPolicy = props => {
     setChangedField(field.id, value);
     saveFields(true, false);
   };
+  const OnClickHandler = (selectedRows, value) => {
+    let field = props.field;
+    if (typeof field.value === 'object') {
+      updateField(field.id, Object.values(field.value));
+    }
+    selectedRows.forEach(row => {
+      //the updateItemId allows us to update one specific item in a field set.
+      updateSubField(field.id, row.id, value);
+      setChangedField(field.id, value);
+    });
+    saveFields(true, false);
+    setRowCleared(true);
+    setRowsSelected([]);
+  };
   const togglePermissionsPolicyStatus = (e, enforce) => {
     e.preventDefault();
     //look up permissions policy enable field //enable_permissions_policy
@@ -6360,7 +6379,13 @@ const PermissionsPolicy = props => {
   };
   let field = props.field;
   let fieldValue = field.value;
-  let options = props.options;
+  const buttons = ['button-secondary', 'button-primary', 'button-red'];
+  //we add a button property to the options
+
+  let options = props.options.map((option, index) => {
+    option.button = buttons[index];
+    return option;
+  });
   columns = [];
   field.columns.forEach(function (item, i) {
     let newItem = {
@@ -6410,14 +6435,39 @@ const PermissionsPolicy = props => {
       }
     }
   };
+  function handleSelection(state) {
+    setRowCleared(false);
+    setRowsSelected(state.selectedRows);
+  }
   if (!DataTable || !theme) return null;
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(DataTable, {
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, rowsSelected.length > 0 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    style: {
+      marginTop: '1em',
+      marginBottom: '1em'
+    }
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-multiselect-datatable-form rsssl-primary"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("You have selected", "really-simple-ssl"), " ", rowsSelected.length, " ", (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("rows", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-action-buttons"
+  }, options.map(option => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-action-buttons__inner",
+    key: option.value
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button
+  // className={"button button-red rsssl-action-buttons__button"}
+  , {
+    className: "button " + option.button + " rsssl-action-buttons__button",
+    onClick: fieldValue => OnClickHandler(rowsSelected, option.value)
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)(option.label, "really-simple-ssl"))))))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(DataTable, {
     columns: columns,
     data: outputData,
     dense: true,
     pagination: false,
     customStyles: customStyles,
-    theme: theme
+    theme: theme,
+    selectableRows: true,
+    selectableRowsHighlight: true,
+    onSelectedRowsChange: handleSelection,
+    clearSelectedRows: rowCleared
   }), enablePermissionsPolicy != 1 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
     className: "button button-primary",
     onClick: e => togglePermissionsPolicyStatus(e, true)
@@ -7830,20 +7880,7 @@ const DynamicDataTable = props => {
     className: "rsssl-search-bar__input",
     placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Search", "really-simple-ssl"),
     onChange: event => handleTableSearch(event.target.value, searchableColumns)
-  })))), rowsSelected.length > 0 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    style: {
-      marginTop: '1em',
-      marginBottom: '1em'
-    }
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-multiselect-datatable-form rsssl-primary"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("You have selected", "really-simple-ssl"), " ", rowsSelected.length, " ", (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("rows", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-action-buttons"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-action-buttons__inner"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__.Button, {
-    className: "button button-red rsssl-action-buttons__button"
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Reset", "really-simple-ssl")))))), dataLoaded ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
+  })))), dataLoaded ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
     columns: columns,
     data: DynamicDataTable,
     dense: true,
@@ -24821,4 +24858,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.f1108603d9f2a9b8b090.js.map
+//# sourceMappingURL=src_Settings_Field_js.063590aacdbe1a25bb6b.js.map
