@@ -6,7 +6,7 @@ Requires at least: 5.8
 License: GPL2
 Tested up to: 6.3
 Requires PHP: 7.2
-Stable tag: 7.0.8
+Stable tag: 7.0.9
 
 The easiest way to improve security! Leverage your SSL certificate and protect your website visitors.
 
@@ -112,7 +112,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 
 == Changelog ==
 = 7.0.9 =
-* August 30th 2023
+* September 5th 2023
 * Improvement: typo update word
 * Improvement: translatability in several strings.
 

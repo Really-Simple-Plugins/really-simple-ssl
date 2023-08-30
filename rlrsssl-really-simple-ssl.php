@@ -3,7 +3,7 @@
  * Plugin Name: Really Simple SSL
  * Plugin URI: https://really-simple-ssl.com
  * Description: Lightweight SSL & Hardening Plugin
- * Version: 7.0.8
+ * Version: 7.0.9
  * Requires at least: 5.8
  * Requires PHP: 7.2
  * Author: Really Simple Plugins
@@ -98,7 +98,7 @@ class REALLY_SIMPLE_SSL
         if ( !defined('rsssl_file') ){
             define('rsssl_file', __FILE__);
         }
-		define('rsssl_version', '7.0.8');
+		define('rsssl_version', '7.0.9');
 		define('rsssl_le_cron_generation_renewal_check', 20);
 		define('rsssl_le_manual_generation_renewal_check', 15);
 	}
