@@ -7530,6 +7530,7 @@ const VulnerabilitiesOverview = props => {
     getFieldValue
   } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_5__["default"])();
   const [showIntro, setShowIntro] = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)(false);
+  const [searchTerm, setSearchTerm] = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)("");
   //we create the columns
   let columns = [];
   //getting the fields from the props
@@ -7562,7 +7563,8 @@ const VulnerabilitiesOverview = props => {
       sortable: column.sortable,
       width: column.width,
       visible: column.visible,
-      selector: row => row[column.column]
+      selector: row => row[column.column],
+      searchable: column.searchable
     };
   }
   let dummyData = [['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', '']];
@@ -7621,7 +7623,20 @@ const VulnerabilitiesOverview = props => {
       }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Disabled', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Activate vulnerability detection to enable this block.', 'really-simple-ssl')))))
     );
   }
-  //we need to add a key to the data called action wich produces the action buttons
+  let data = vulList.map(item => ({
+    ...item,
+    risk_name: (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+      className: "rsssl-badge-large rsp-" + item.risk_name.toLowerCase().replace('-risk', '')
+    }, item.risk_name.replace('-risk', ''))
+  }));
+  if (searchTerm.length > 0) {
+    data = data.filter(function (item) {
+      //we check if the search value is in the name or the risk name
+      if (item.Name.toLowerCase().includes(searchTerm.toLowerCase())) {
+        return item;
+      }
+    });
+  }
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, showIntro && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_VulnerabilitiesIntro__WEBPACK_IMPORTED_MODULE_6__["default"], null)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-container"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -7633,10 +7648,14 @@ const VulnerabilitiesOverview = props => {
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
     type: "text",
     className: "rsssl-search-bar__input",
-    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Search", "really-simple-ssl")
+    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Search", "really-simple-ssl"),
+    onKeyUp: event => {
+      //we get the value from the search bar
+      setSearchTerm(event.target.value);
+    }
   })))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_4__["default"], {
     columns: columns,
-    data: vulList,
+    data: data,
     dense: true,
     pagination: true,
     persistTableHead: true,
@@ -24929,4 +24948,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.97304ea7d3e029adb2a1.js.map
+//# sourceMappingURL=src_Settings_Field_js.187b455db9eb6071dbce.js.map
