@@ -6111,6 +6111,7 @@ const MixedContentScan = props => {
     };
     columns.push(newItem);
   });
+  console.log(mixedContentData);
   let dataTable = dataLoaded ? mixedContentData : [];
   for (const item of dataTable) {
     item.warningControl = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
@@ -6366,6 +6367,8 @@ const PermissionsPolicy = props => {
     saveFields(true, false);
     setRowCleared(true);
     setRowsSelected([]);
+    // Reset rowCleared back to false after the DataTable has re-rendered
+    setTimeout(() => setRowCleared(false), 0);
   };
   const togglePermissionsPolicyStatus = (e, enforce) => {
     e.preventDefault();
@@ -6457,7 +6460,7 @@ const PermissionsPolicy = props => {
   , {
     className: "button " + option.button + " rsssl-action-buttons__button",
     onClick: fieldValue => OnClickHandler(rowsSelected, option.value)
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)(option.label, "really-simple-ssl"))))))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(DataTable, {
+  }, option.value === 'self' ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Reset", "really-simple-ssl") : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)(option.label, "really-simple-ssl"))))))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(DataTable, {
     columns: columns,
     data: outputData,
     dense: true,
@@ -24858,4 +24861,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.063590aacdbe1a25bb6b.js.map
+//# sourceMappingURL=src_Settings_Field_js.9cea0381e6527a3f08c1.js.map

@@ -59,6 +59,8 @@ const PermissionsPolicy = (props) => {
 
         setRowCleared(true);
         setRowsSelected([]);
+        // Reset rowCleared back to false after the DataTable has re-rendered
+        setTimeout(() => setRowCleared(false), 0);
     }
 
 
@@ -166,7 +168,7 @@ const PermissionsPolicy = (props) => {
                                     className={"button " + option.button + " rsssl-action-buttons__button"}
                                     onClick={ ( fieldValue ) => OnClickHandler( rowsSelected, option.value ) }
                                 >
-                                    {__(option.label, "really-simple-ssl")}
+                                    {option.value === 'self' ? __("Reset", "really-simple-ssl") : __(option.label, "really-simple-ssl")}
                                 </Button>
                             </div>
                         ))}
