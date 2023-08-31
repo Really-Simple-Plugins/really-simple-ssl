@@ -2859,6 +2859,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../utils/Icon */ "./src/utils/Icon.js");
 /* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./../FieldsData */ "./src/Settings/FieldsData.js");
 /* harmony import */ var _LearningModeData__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./LearningModeData */ "./src/Settings/LearningMode/LearningModeData.js");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_8__);
+
+
 
 
 
@@ -2879,7 +2885,9 @@ const LearningMode = props => {
   const {
     fetchLearningModeData,
     learningModeData,
-    dataLoaded
+    dataLoaded,
+    updateStatus,
+    deleteData
   } = (0,_LearningModeData__WEBPACK_IMPORTED_MODULE_6__["default"])();
 
   //used to show if a feature is already enforced by a third party
@@ -2897,6 +2905,9 @@ const LearningMode = props => {
   const [filterValue, setFilterValue] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(-1);
   //the value that is used to enable or disable this feature. On or of.
   const [controlField, setControlField] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  // the value that is used to select and deselect rows
+  const [rowsSelected, setRowsSelected] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
+  const [rowCleared, setRowCleared] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   const [DataTable, setDataTable] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
   const [theme, setTheme] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
@@ -3039,10 +3050,66 @@ const LearningMode = props => {
       field: props.field
     });
   }
+  const handleMultiRowStatus = (status, selectedRows, type) => {
+    selectedRows.forEach(row => {
+      //the updateItemId allows us to update one specific item in a field set.
+      updateStatus(status, row, type);
+    });
+    setRowCleared(true);
+    setRowsSelected([]);
+    // Reset rowCleared back to false after the DataTable has re-rendered
+    setTimeout(() => setRowCleared(false), 0);
+  };
+  const handleMultiRowDelete = (selectedRows, type) => {
+    selectedRows.forEach(row => {
+      //the updateItemId allows us to update one specific item in a field set.
+      deleteData(row, type);
+    });
+    setRowCleared(true);
+    setRowsSelected([]);
+    // Reset rowCleared back to false after the DataTable has re-rendered
+    setTimeout(() => setRowCleared(false), 0);
+  };
+  function handleSelection(state) {
+    setRowCleared(false);
+    setRowsSelected(state.selectedRows);
+  }
   if (!DataTable || !theme) return null;
+  console.log(filterValue);
+  console.log(typeof filterValue);
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, !dataLoaded || data.length == 0 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-learningmode-placeholder"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null))), data.length > 0 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(DataTable, {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null))), rowsSelected.length > 0 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    style: {
+      marginTop: '1em',
+      marginBottom: '1em'
+    }
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-multiselect-datatable-form rsssl-primary"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("You have selected", "really-simple-ssl"), " ", rowsSelected.length, " ", (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("rows", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-action-buttons"
+  }, (Number(filterValue) === -1 || Number(filterValue) === 0) && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-action-buttons__inner"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__.Button
+  // className={"button button-red rsssl-action-buttons__button"}
+  , {
+    className: "button button-secondary rsssl-status-allowed rsssl-action-buttons__button",
+    onClick: () => handleMultiRowStatus(0, rowsSelected, props.field.id)
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Allow', 'really-simple-ssl'))), (Number(filterValue) === -1 || Number(filterValue) === 1) && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-action-buttons__inner"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__.Button
+  // className={"button button-red rsssl-action-buttons__button"}
+  , {
+    className: "button button-primary rsssl-action-buttons__button",
+    onClick: () => handleMultiRowStatus(1, rowsSelected, props.field.id)
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Revoke', 'really-simple-ssl'))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-action-buttons__inner"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__.Button
+  // className={"button button-red rsssl-action-buttons__button"}
+  , {
+    className: "button button-red rsssl-action-buttons__button",
+    onClick: () => handleMultiRowDelete(rowsSelected, props.field.id)
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Remove', 'really-simple-ssl')))))), data.length > 0 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(DataTable, {
     columns: columns,
     data: data,
     dense: true,
@@ -3051,7 +3118,11 @@ const LearningMode = props => {
     persistTableHead: true,
     theme: theme,
     customStyles: customStyles,
-    conditionalRowStyles: conditionalRowStyles
+    conditionalRowStyles: conditionalRowStyles,
+    selectableRows: true,
+    selectableRowsHighlight: true,
+    onSelectedRowsChange: handleSelection,
+    clearSelectedRows: rowCleared
   })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     key: "2",
     className: "rsssl-learning-mode-footer "
@@ -6111,7 +6182,6 @@ const MixedContentScan = props => {
     };
     columns.push(newItem);
   });
-  console.log(mixedContentData);
   let dataTable = dataLoaded ? mixedContentData : [];
   for (const item of dataTable) {
     item.warningControl = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
@@ -24861,4 +24931,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.9cea0381e6527a3f08c1.js.map
+//# sourceMappingURL=src_Settings_Field_js.a234b424cd49665b4f41.js.map
