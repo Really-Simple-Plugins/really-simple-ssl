@@ -1615,27 +1615,30 @@ function rsssl_fields( $load_values = true ) {
                     'name'     => __('Location', 'really-simple-ssl'),
                     'sortable' => false,
                     'column'   => 'documenturi',
+                    'width'   => '30%',
                 ],
                 [
                     'name'     => __('Directive', 'really-simple-ssl'),
                     'sortable' => false,
                     'column'   => 'violateddirective',
+                    'width'   => '10%',
                 ],
                 [
                     'name'     => __('Source', 'really-simple-ssl'),
                     'sortable' => false,
                     'column'   => 'blockeduri',
+                    'width'   => '30%',
                 ],
                 [
-                    'name'     => __('Action', 'really-simple-ssl'),
+                    'name'     => __('Options', 'really-simple-ssl'),
                     'sortable' => false,
                     'column'   => 'statusControl',
                 ],
-                [
-                    'name'     => '',//__('Delete', 'really-simple-ssl'),
-                    'sortable' => false,
-                    'column'   => 'deleteControl',
-                ],
+//                [
+//                    'name'     => '',//__('Delete', 'really-simple-ssl'),
+//                    'sortable' => false,
+//                    'column'   => 'deleteControl',
+//                ],
             ],
         ],
     ];
