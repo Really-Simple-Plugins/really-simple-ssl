@@ -6111,6 +6111,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../utils/Icon */ "./src/utils/Icon.js");
 /* harmony import */ var _MixedContentData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./MixedContentData */ "./src/Settings/MixedContentScan/MixedContentData.js");
 /* harmony import */ var _Modal_ModalData__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../Modal/ModalData */ "./src/Modal/ModalData.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_7__);
+
 
 
 
@@ -6256,6 +6259,47 @@ const MixedContentScan = props => {
       }
     }
   };
+  const ExpandableRow = _ref2 => {
+    let {
+      data
+    } = _ref2;
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-container"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, data.details.description.map((item, i) => {
+      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+        key: i
+      }, item), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("br", null));
+    }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-action-buttons__inner",
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button
+    // className={"button button-red rsssl-action-buttons__button"}
+    , {
+      className: "button button-red rsssl-action-buttons__button",
+      href: data.details.help,
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      },
+      target: "_blank"
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Help", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button
+    // className={"button button-red rsssl-action-buttons__button"}
+    , {
+      className: "button button-primary rsssl-action-buttons__button",
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginLeft: '10px'
+      },
+      onClick: () => ignoreDataItem(data)
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Ignore", "really-simple-ssl"))));
+  };
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-progress-container"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -6279,6 +6323,8 @@ const MixedContentScan = props => {
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(DataTable, {
     columns: columns,
     data: dataTable,
+    expandableRows: true,
+    expandableRowsComponent: ExpandableRow,
     dense: true,
     pagination: true,
     paginationResetDefaultPage: resetPaginationToggle // optionally, a hook to reset pagination to page 1
@@ -24948,4 +24994,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.187b455db9eb6071dbce.js.map
+//# sourceMappingURL=src_Settings_Field_js.98aa351203257593c5b3.js.map

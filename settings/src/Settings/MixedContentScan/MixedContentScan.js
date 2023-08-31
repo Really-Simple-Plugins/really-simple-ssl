@@ -1,10 +1,11 @@
 import {useState, useEffect} from "@wordpress/element";
-import {ToggleControl} from '@wordpress/components';
+import {Button, ToggleControl} from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import ModalControl from "../../Modal/ModalControl";
 import Icon from "../../utils/Icon";
 import UseMixedContent from "./MixedContentData";
 import useModal from "../../Modal/ModalData";
+import React from "react";
 
 const MixedContentScan = (props) => {
     const {fixedItems, ignoredItems} = useModal();
@@ -129,6 +130,43 @@ const MixedContentScan = (props) => {
         },
     };
 
+    const ExpandableRow = ({data}) => {
+        return (
+            <div
+                className={"rsssl-container"}>
+                <div>
+                    <p>
+                        {/* We loop through the description and place each item on a new line */}
+                        {data.details.description.map((item, i) => {
+                            return <><span key={i}>{item}</span><br/></>
+                        })}
+                    </p>
+                </div>
+                <div className="rsssl-action-buttons__inner"
+                     style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}
+                >
+                    <Button
+                        // className={"button button-red rsssl-action-buttons__button"}
+                        className={"button button-red rsssl-action-buttons__button"}
+                        href={data.details.help}
+                        style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}
+                        target="_blank"
+                    >
+                        {__("Help", "really-simple-ssl")}
+                    </Button>
+                    <Button
+                        // className={"button button-red rsssl-action-buttons__button"}
+                        className={"button button-primary rsssl-action-buttons__button"}
+                        style={{display: 'flex', alignItems: 'center', justifyContent: 'center', marginLeft: '10px'}}
+                        onClick={() => ignoreDataItem(data)}
+                    >
+                        {__("Ignore", "really-simple-ssl")}
+                    </Button>
+                </div>
+            </div>
+        );
+    };
+
     return (
         <>
             <div className="rsssl-progress-container">
@@ -151,6 +189,8 @@ const MixedContentScan = (props) => {
                 { DataTable && dataTable.length>0 && <div className={'rsssl-mixed-content-datatable'}><DataTable
                     columns={columns}
                     data={dataTable}
+                    expandableRows
+                    expandableRowsComponent={ExpandableRow}
                     dense
                     pagination
                     paginationResetDefaultPage={resetPaginationToggle} // optionally, a hook to reset pagination to page 1
