@@ -52,7 +52,7 @@ const UserDatatable = (props) => {
         const currentFilter = getCurrentFilter(moduleName);
 
         if (!currentFilter) {
-            setSelectedFilter('blocked', moduleName);
+            setSelectedFilter('locked', moduleName);
         }
         handleUserTableFilter('status', currentFilter);
     }, [selectedFilter, moduleName]);

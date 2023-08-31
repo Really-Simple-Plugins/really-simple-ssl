@@ -4966,7 +4966,7 @@ const IpAddressDatatable = props => {
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
     const currentFilter = getCurrentFilter(moduleName);
     if (!currentFilter) {
-      setSelectedFilter('blocked', moduleName);
+      setSelectedFilter('locked', moduleName);
     }
     handleIpTableFilter('status', currentFilter);
   }, [selectedFilter, moduleName]);
@@ -5674,7 +5674,7 @@ const UserDatatable = props => {
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
     const currentFilter = getCurrentFilter(moduleName);
     if (!currentFilter) {
-      setSelectedFilter('blocked', moduleName);
+      setSelectedFilter('locked', moduleName);
     }
     handleUserTableFilter('status', currentFilter);
   }, [selectedFilter, moduleName]);
@@ -24994,4 +24994,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.98aa351203257593c5b3.js.map
+//# sourceMappingURL=src_Settings_Field_js.243562af1b315b17ab6f.js.map

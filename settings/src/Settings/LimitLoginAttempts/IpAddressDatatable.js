@@ -50,7 +50,7 @@ const IpAddressDatatable = (props) => {
         const currentFilter = getCurrentFilter(moduleName);
 
         if (!currentFilter) {
-            setSelectedFilter('blocked', moduleName);
+            setSelectedFilter('locked', moduleName);
         }
         handleIpTableFilter('status', currentFilter);
     }, [selectedFilter, moduleName]);
