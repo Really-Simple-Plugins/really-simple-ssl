@@ -203,8 +203,6 @@ const LearningMode = (props) => {
     }
 
     if (!DataTable || !theme) return null;
-    console.log(filterValue);
-    console.log(typeof filterValue);
     return (
         <>
             <div>
