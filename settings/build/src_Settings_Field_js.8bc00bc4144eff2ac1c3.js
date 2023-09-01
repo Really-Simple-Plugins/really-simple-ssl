@@ -4100,11 +4100,11 @@ const CountryDatatable = props => {
       setSelectedFilter('blocked', moduleName);
     }
     handleCountryTableFilter('status', currentFilter);
-
-    // Clear selected rows
-    setRowCleared(true);
-    setTimeout(() => setRowCleared(false), 100);
-  }, [selectedFilter, moduleName, handleCountryTableFilter, getCurrentFilter, setSelectedFilter]);
+    setTimeout(() => {
+      setRowCleared(true);
+      setTimeout(() => setRowCleared(false), 100);
+    }, 100);
+  }, [selectedFilter, moduleName, handleCountryTableFilter, getCurrentFilter, setSelectedFilter, CountryDatatable]);
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     setRowCleared(false);
     setRowsSelected([]);
@@ -4138,12 +4138,20 @@ const CountryDatatable = props => {
   }, []);
   const allowRegionByCode = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)(code => {
     if (Array.isArray(code)) {
-      //some multi action
+      code.forEach(item => removeRegion(item, 'blocked'));
+      setTimeout(() => {
+        setRowCleared(true);
+        setTimeout(() => setRowCleared(false), 100);
+      }, 100);
+      setRowsSelected([]);
     } else {
       removeRegion(code, 'blocked');
     }
-    setRowCleared(false);
-    fetchDynamicData('event_log');
+    setTimeout(() => {
+      setRowCleared(true);
+      setTimeout(() => setRowCleared(false), 100);
+      setTimeout(() => fetchDynamicData('event_log'), 100);
+    }, 100);
   }, [removeRegion]);
   const allowMultiple = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)(rows => {
     const ids = rows.map(item => item.id);
@@ -4154,38 +4162,44 @@ const CountryDatatable = props => {
   }, [resetRow]);
   const blockRegionByCode = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)(code => {
     if (Array.isArray(code)) {
-      code.forEach(item => addRegion(item, 'blocked'));
-      setRowCleared(true);
+      code.forEach(item => addRegion(item.attempt_value, 'blocked'));
       setRowsSelected([]);
     } else {
       addRegion(code, 'blocked');
     }
-    setRowCleared(false);
-    fetchDynamicData('event_log');
+    setTimeout(() => {
+      setRowCleared(true);
+      setTimeout(() => setRowCleared(false), 100);
+      setTimeout(() => fetchDynamicData('event_log'), 100);
+    }, 100);
   }, [addRegion]);
   const allowCountryByCode = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)(code => {
     if (Array.isArray(code)) {
       const ids = code.map(item => item.iso2_code);
       removeRowMultiple(ids, 'blocked');
-      setRowCleared(true);
       setRowsSelected([]);
     } else {
       removeRow(code, 'blocked');
     }
-    setRowCleared(false);
-    fetchDynamicData('event_log');
+    setTimeout(() => {
+      setRowCleared(true);
+      setTimeout(() => setRowCleared(false), 100);
+      setTimeout(() => fetchDynamicData('event_log'), 100);
+    }, 100);
   }, [removeRow, removeRowMultiple]);
   const blockCountryByCode = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)(code => {
     if (Array.isArray(code)) {
       const ids = code.map(item => item.iso2_code);
       addRowMultiple(ids, 'blocked');
-      setRowCleared(true);
       setRowsSelected([]);
     } else {
       addRow(code, 'blocked');
     }
-    setRowCleared(false);
-    fetchDynamicData('event_log');
+    setTimeout(() => {
+      setRowCleared(true);
+      setTimeout(() => setRowCleared(false), 100);
+      setTimeout(() => fetchDynamicData('event_log'), 100);
+    }, 100);
   }, [addRow, addRowMultiple]);
   const data = {
     ...CountryDataTable.data
@@ -4293,7 +4307,11 @@ const CountryDatatable = props => {
     onClick: () => blockCountryByCode(rowsSelected)
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__.__)("Block", "really-simple-ssl"))), getCurrentFilter(moduleName) === 'blocked' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
     onClick: () => allowMultiple(rowsSelected)
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__.__)("Allow", "really-simple-ssl"))))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_2__["default"], {
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__.__)("Allow", "really-simple-ssl")), getCurrentFilter(moduleName) === 'regions' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
+    onClick: () => allowRegionByCode(rowsSelected)
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__.__)("Allow", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
+    onClick: () => blockRegionByCode(rowsSelected)
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__.__)("Block", "really-simple-ssl")))))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_2__["default"], {
     columns: columns,
     data: Object.values(data),
     dense: true,
@@ -5166,7 +5184,6 @@ const IpAddressDatatable = props => {
     noDataComponent: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("No results", "really-simple-ssl"),
     persistTableHead: true,
     selectableRows: true,
-    selectableRowsHighlight: true,
     onSelectedRowsChange: handleSelection,
     clearSelectedRows: rowCleared,
     theme: "really-simple-plugins",
@@ -5830,7 +5847,6 @@ const UserDatatable = props => {
     onSort: handleUserTableSort,
     paginationRowsPerPageOptions: [10, 25, 50, 100],
     selectableRows: true,
-    selectableRowsHighlight: true,
     onSelectedRowsChange: handleSelection,
     clearSelectedRows: rowCleared,
     noDataComponent: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("No results", "really-simple-ssl"),
@@ -24910,4 +24926,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.9c1917152c176311bdbd.js.map
+//# sourceMappingURL=src_Settings_Field_js.8bc00bc4144eff2ac1c3.js.map
