@@ -272,7 +272,12 @@ const UserDatatable = (props) => {
                             className="button button-secondary rsssl-add-button__button"
                             onClick={handleOpen}
                         >
-                            {__("Add User", "really-simple-ssl")}
+                            {getCurrentFilter(moduleName) === 'blocked' && (
+                                <>{__("Block User", "really-simple-ssl")}</>
+                            )}
+                            {getCurrentFilter(moduleName) === 'allowed' && (
+                                <>{__("Allow User", "really-simple-ssl")}</>
+                            )}
                         </button>
                     </div>
                     )}
