@@ -1919,7 +1919,6 @@ const EventLogDataTable = props => {
   let data = [];
   if (DynamicDataTable.data) {
     data = DynamicDataTable.data.map(dataItem => {
-      console.log(dataItem);
       let newItem = {
         ...dataItem
       };
@@ -2112,26 +2111,20 @@ const EventLogDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((
     totalRows: 2
   },
   fetchDynamicData: async action => {
+    console.log('fetching data eventlog');
     try {
       const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction(action, get().dataActions);
-      //now we set the EventLog
+      // now we set the EventLog
       if (response) {
-        //if the response is empty we set the dummyData
-        if (typeof response.pagination === 'undefined') {
-          set({
-            DynamicDataTable: get().dummyData,
-            dataLoaded: true,
-            processing: false,
-            pagination: get().dummyPagination
-          });
-        } else {
-          set({
-            DynamicDataTable: response,
-            dataLoaded: true,
-            processing: false,
-            pagination: response.pagination
-          });
-        }
+        // if the response is empty we set the dummyData
+        const data = typeof response.pagination === 'undefined' ? get().dummyData : response;
+        const pagination = typeof response.pagination === 'undefined' ? get().dummyPagination : response.pagination;
+        set({
+          DynamicDataTable: data,
+          dataLoaded: true,
+          processing: false,
+          pagination
+        });
       }
     } catch (e) {
       console.log(e);
@@ -4072,6 +4065,7 @@ const CountryDatatable = props => {
     resetMultiRow
   } = (0,_CountryDataTableStore__WEBPACK_IMPORTED_MODULE_3__["default"])();
   const {
+    DynamicDataTable,
     fetchDynamicData
   } = (0,_EventLog_EventLogDataTableStore__WEBPACK_IMPORTED_MODULE_4__["default"])();
   const {
@@ -4094,6 +4088,12 @@ const CountryDatatable = props => {
   }), []);
   const columns = props.field.columns.map(buildColumn);
   const searchableColumns = columns.filter(column => column.searchable).map(column => column.column);
+  (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
+    fetchDynamicData('event_log');
+  }, []);
+  (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
+    // code to execute after DynamicDataTable has been updated
+  }, [DynamicDataTable]);
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     const currentFilter = getCurrentFilter(moduleName);
     if (!currentFilter) {
@@ -4207,34 +4207,40 @@ const CountryDatatable = props => {
   const ActionButton = _ref => {
     let {
       onClick,
-      children
+      children,
+      className
     } = _ref;
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-action-buttons__inner"
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__.Button, {
-      className: "button button-secondary rsssl-action-buttons__button",
+      className: `button ${className} rsssl-action-buttons__button`,
       onClick: onClick
     }, children));
   };
-  const generateActionButtons = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)(id => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  const generateActionButtons = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)((id, status) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-action-buttons"
   }, getCurrentFilter(moduleName) === 'blocked' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
-    onClick: () => allowById(id)
+    onClick: () => allowById(id),
+    className: "button-secondary"
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__.__)("Allow", "really-simple-ssl")), getCurrentFilter(moduleName) === 'regions' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
-    onClick: () => blockRegionByCode(id)
+    onClick: () => blockRegionByCode(id),
+    className: "button-primary"
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__.__)("Block", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
-    onClick: () => allowRegionByCode(id)
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__.__)("Allow", "really-simple-ssl"))), getCurrentFilter(moduleName) === 'countries' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
-    onClick: () => blockCountryByCode(id)
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__.__)("Block", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
-    onClick: () => allowCountryByCode(id)
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__.__)("Allow", "really-simple-ssl")))), [getCurrentFilter, moduleName, allowById, blockRegionByCode, allowRegionByCode, blockCountryByCode, allowCountryByCode]);
+    onClick: () => allowRegionByCode(id),
+    className: "button-secondary"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__.__)("Allow", "really-simple-ssl"))), getCurrentFilter(moduleName) === 'countries' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, status === 'blocked' ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
+    onClick: () => allowCountryByCode(id),
+    className: "button-secondary"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__.__)("Allow", "really-simple-ssl")) : (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
+    onClick: () => blockCountryByCode(id),
+    className: "button-primary"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__.__)("Block", "really-simple-ssl")))), [getCurrentFilter, moduleName, allowById, blockRegionByCode, allowRegionByCode, blockCountryByCode, allowCountryByCode]);
   for (const key in data) {
     const dataItem = {
       ...data[key]
     };
     if (getCurrentFilter(moduleName) === 'regions' || getCurrentFilter(moduleName) === 'countries') {
-      dataItem.action = generateActionButtons(dataItem.attempt_value);
+      dataItem.action = generateActionButtons(dataItem.attempt_value, dataItem.status);
     } else {
       dataItem.action = generateActionButtons(dataItem.id);
     }
@@ -24904,4 +24910,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.0178f70276ac0281a279.js.map
+//# sourceMappingURL=src_Settings_Field_js.9c1917152c176311bdbd.js.map

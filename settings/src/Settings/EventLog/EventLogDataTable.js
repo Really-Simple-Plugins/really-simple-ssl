@@ -97,7 +97,6 @@ const EventLogDataTable = (props) => {
 
     if (DynamicDataTable.data) {
         data = DynamicDataTable.data.map((dataItem) => {
-            console.log(dataItem);
             let newItem = {...dataItem};
             newItem.iso2_code = generateFlag(newItem.iso2_code, newItem.country_name);
             newItem.expandableRows = true;

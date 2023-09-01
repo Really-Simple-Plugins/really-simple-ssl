@@ -29,6 +29,7 @@ const CountryDatatable = (props) => {
     } = CountryDataTableStore();
 
     const {
+        DynamicDataTable,
         fetchDynamicData,
     } = EventLogDataTableStore();
 
@@ -58,6 +59,14 @@ const CountryDatatable = (props) => {
     const searchableColumns = columns
         .filter(column => column.searchable)
         .map(column => column.column);
+
+    useEffect(() => {
+        fetchDynamicData('event_log');
+    }, []);
+
+    useEffect(() => {
+        // code to execute after DynamicDataTable has been updated
+    }, [DynamicDataTable]);
 
     useEffect(() => {
         const currentFilter = getCurrentFilter(moduleName);
@@ -188,10 +197,10 @@ const CountryDatatable = (props) => {
     ), []);
 
 
-    const ActionButton = ({ onClick, children }) => (
+    const ActionButton = ({ onClick, children, className }) => (
         <div className="rsssl-action-buttons__inner">
             <Button
-                className="button button-secondary rsssl-action-buttons__button"
+                className={`button ${className} rsssl-action-buttons__button`}
                 onClick={onClick}
             >
                 {children}
@@ -199,40 +208,45 @@ const CountryDatatable = (props) => {
         </div>
     );
 
-    const generateActionButtons = useCallback((id) => (
+    const generateActionButtons = useCallback((id, status) => (
         <div className="rsssl-action-buttons">
             {getCurrentFilter(moduleName) === 'blocked' && (
-                <ActionButton onClick={() => allowById(id)}>
+                <ActionButton onClick={() => allowById(id)} className="button-secondary">
                     {__("Allow", "really-simple-ssl")}
                 </ActionButton>
             )}
             {getCurrentFilter(moduleName) === 'regions' && (
                 <>
-                    <ActionButton onClick={() => blockRegionByCode(id)}>
+                    <ActionButton onClick={() => blockRegionByCode(id)} className="button-primary">
                         {__("Block", "really-simple-ssl")}
                     </ActionButton>
-                    <ActionButton onClick={() => allowRegionByCode(id)}>
+                    <ActionButton onClick={() => allowRegionByCode(id)} className="button-secondary">
                         {__("Allow", "really-simple-ssl")}
                     </ActionButton>
                 </>
             )}
             {getCurrentFilter(moduleName) === 'countries' && (
                 <>
-                    <ActionButton onClick={() => blockCountryByCode(id)}>
-                        {__("Block", "really-simple-ssl")}
-                    </ActionButton>
-                    <ActionButton onClick={() => allowCountryByCode(id)}>
-                        {__("Allow", "really-simple-ssl")}
-                    </ActionButton>
+                    {status === 'blocked' ? (
+                        <ActionButton onClick={() => allowCountryByCode(id)} className="button-secondary">
+                            {__("Allow", "really-simple-ssl")}
+                        </ActionButton>
+                    ) : (
+                        <ActionButton onClick={() => blockCountryByCode(id)} className="button-primary">
+                            {__("Block", "really-simple-ssl")}
+                        </ActionButton>
+                    )}
                 </>
             )}
         </div>
     ), [getCurrentFilter, moduleName, allowById, blockRegionByCode, allowRegionByCode, blockCountryByCode, allowCountryByCode]);
 
+
+
     for (const key in data) {
         const dataItem = {...data[key]};
         if (getCurrentFilter(moduleName) === 'regions' || getCurrentFilter(moduleName) === 'countries') {
-            dataItem.action = generateActionButtons(dataItem.attempt_value);
+            dataItem.action = generateActionButtons(dataItem.attempt_value, dataItem.status);
         } else {
             dataItem.action = generateActionButtons(dataItem.id);
         }
