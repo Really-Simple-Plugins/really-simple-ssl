@@ -413,7 +413,6 @@ const IpAddressDatatable = (props) => {
                 noDataComponent={__("No results", "really-simple-ssl")}
                 persistTableHead
                 selectableRows
-                selectableRowsHighlight={true}
                 onSelectedRowsChange={handleSelection}
                 clearSelectedRows={rowCleared}
                 theme="really-simple-plugins"

@@ -359,7 +359,6 @@ const UserDatatable = (props) => {
                 onSort={handleUserTableSort}
                 paginationRowsPerPageOptions={[10, 25, 50, 100]}
                 selectableRows
-                selectableRowsHighlight={true}
                 onSelectedRowsChange={handleSelection}
                 clearSelectedRows={rowCleared}
                 noDataComponent={__("No results", "really-simple-ssl")}
