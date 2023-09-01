@@ -4,7 +4,7 @@ import DataTable, {createTheme} from "react-data-table-component";
 import UserDataTableStore from "./UserDataTableStore";
 import FilterData from "../FilterData";
 
-import {Button} from "@wordpress/components";
+import {button} from "@wordpress/components";
 import {produce} from "immer";
 import AddIpAddressModal from "./AddIpAddressModal";
 import AddUserModal from "./AddUserModal";
@@ -175,46 +175,46 @@ const UserDatatable = (props) => {
         setRowsSelected(state.selectedRows);
     }
 
-    function generateActionButtons(id) {
+    function generateActionbuttons(id) {
         return (
             <>
                 <div className="rsssl-action-buttons">
                     {/* if the id is new we show the Allow button */}
                     {getCurrentFilter(moduleName) === 'blocked' && (
                     <div className="rsssl-action-buttons__inner">
-                        <Button
+                        <button
                             className="button button-secondary rsssl-action-buttons__button"
                             onClick={() => {
                                 allowUsers(id);
                             }}
                         >
                             {__("Allow", "really-simple-ssl")}
-                        </Button>
+                        </button>
                     </div>
                     )}
                     {/* if the id is new we show the Block button */}
                     {getCurrentFilter(moduleName) === 'allowed' && (
                     <div className="rsssl-action-buttons__inner">
-                        <Button
+                        <button
                             className="button button-primary rsssl-action-buttons__button"
                             onClick={() => {
                                 blockUsers(id);
                             }}
                         >
                             {__("Block", "really-simple-ssl")}
-                        </Button>
+                        </button>
                     </div>
                     )}
                     {/* if the id is new we show the Reset button */}
                     <div className="rsssl-action-buttons__inner">
-                        <Button
+                        <button
                             className="button button-red rsssl-action-buttons__button"
                             onClick={() => {
                                 resetUsers(id);
                             }}
                         >
                             {__("Reset", "really-simple-ssl")}
-                        </Button>
+                        </button>
                     </div>
                 </div>
             </>
@@ -249,7 +249,7 @@ const UserDatatable = (props) => {
     for (const key in data) {
         let dataItem = {...data[key]}
         //we add the action buttons
-        dataItem.action = generateActionButtons(dataItem.id);
+        dataItem.action = generateActionbuttons(dataItem.id);
         data[key] = dataItem;
     }
 
@@ -268,12 +268,12 @@ const UserDatatable = (props) => {
                 <div className="rsssl-add-button">
                     {(getCurrentFilter(moduleName) === 'blocked' || getCurrentFilter(moduleName) === 'allowed') && (
                     <div className="rsssl-add-button__inner">
-                        <Button
+                        <button
                             className="button button-secondary rsssl-add-button__button"
                             onClick={handleOpen}
                         >
                             {__("Add User", "really-simple-ssl")}
-                        </Button>
+                        </button>
                     </div>
                     )}
                 </div>
@@ -306,32 +306,32 @@ const UserDatatable = (props) => {
                             {/* if the id is new we show the Allow button */}
                             {getCurrentFilter(moduleName) === 'blocked' && (
                             <div className="rsssl-action-buttons__inner">
-                                <Button
+                                <button
                                     className="button button-secondary rsssl-action-buttons__button"
                                     onClick={() => {
                                         allowUsers(rowsSelected);
                                     }}
                                 >
                                     {__("Allow", "really-simple-ssl")}
-                                </Button>
+                                </button>
                             </div>
                             )}
                             {/* if the id is new we show the Block button */}
                             {getCurrentFilter(moduleName) === 'allowed' && (
                             <div className="rsssl-action-buttons__inner">
-                                <Button
+                                <button
                                     className="button button-primary rsssl-action-buttons__button"
                                     onClick={() => {
                                         blockUsers(rowsSelected);
                                     }}
                                 >
                                     {__("Block", "really-simple-ssl")}
-                                </Button>
+                                </button>
                             </div>
                             )}
                             {/* if the id is new we show the Reset button */}
                             <div className="rsssl-action-buttons__inner">
-                                <Button
+                                <button
                                     className="button button-red rsssl-action-buttons__button"
                                     onClick={() => {
                                       resetUsers(rowsSelected);
@@ -339,7 +339,7 @@ const UserDatatable = (props) => {
                                     }
                                 >
                                     {__("Reset", "really-simple-ssl")}
-                                </Button>
+                                </button>
                             </div>
                         </div>
                     </div>

@@ -4,7 +4,7 @@ import CountryDataTableStore from "./CountryDataTableStore";
 import EventLogDataTableStore from "../EventLog/EventLogDataTableStore";
 import FilterData from "../FilterData";
 import Flag from "../../utils/Flag/Flag";
-import { Button } from "@wordpress/components";
+import { button } from "@wordpress/components";
 import { __ } from '@wordpress/i18n';
 
 const CountryDatatable = (props) => {
@@ -214,12 +214,12 @@ const CountryDatatable = (props) => {
 
     const ActionButton = ({ onClick, children, className }) => (
         <div className="rsssl-action-buttons__inner">
-            <Button
+            <button
                 className={`button ${className} rsssl-action-buttons__button`}
                 onClick={onClick}
             >
                 {children}
-            </Button>
+            </button>
         </div>
     );
 
@@ -318,7 +318,7 @@ const CountryDatatable = (props) => {
                                     <ActionButton onClick={() => allowCountryByCode(rowsSelected)}>
                                         {__("Allow", "really-simple-ssl")}
                                     </ActionButton>
-                                    <ActionButton onClick={() => blockCountryByCode(rowsSelected)}>
+                                    <ActionButton onClick={() => blockCountryByCode(rowsSelected)}  className="button-primary">
                                         {__("Block", "really-simple-ssl")}
                                     </ActionButton>
                                 </>
@@ -330,7 +330,7 @@ const CountryDatatable = (props) => {
                             )}
                             {getCurrentFilter(moduleName) === 'regions' && (
                                 <>
-                                    <ActionButton onClick={() => allowRegionByCode(rowsSelected)}>
+                                    <ActionButton onClick={() => allowRegionByCode(rowsSelected)}  className="button-primary">
                                         {__("Allow", "really-simple-ssl")}
                                     </ActionButton>
                                     <ActionButton onClick={() => blockRegionByCode(rowsSelected)}>

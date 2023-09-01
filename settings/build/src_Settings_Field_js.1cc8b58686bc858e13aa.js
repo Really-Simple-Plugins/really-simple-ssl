@@ -4226,7 +4226,7 @@ const CountryDatatable = props => {
     } = _ref;
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-action-buttons__inner"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__.Button, {
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
       className: `button ${className} rsssl-action-buttons__button`,
       onClick: onClick
     }, children));
@@ -4304,11 +4304,13 @@ const CountryDatatable = props => {
   }, getCurrentFilter(moduleName) === 'countries' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
     onClick: () => allowCountryByCode(rowsSelected)
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__.__)("Allow", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
-    onClick: () => blockCountryByCode(rowsSelected)
+    onClick: () => blockCountryByCode(rowsSelected),
+    className: "button-primary"
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__.__)("Block", "really-simple-ssl"))), getCurrentFilter(moduleName) === 'blocked' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
     onClick: () => allowMultiple(rowsSelected)
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__.__)("Allow", "really-simple-ssl")), getCurrentFilter(moduleName) === 'regions' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
-    onClick: () => allowRegionByCode(rowsSelected)
+    onClick: () => allowRegionByCode(rowsSelected),
+    className: "button-primary"
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__.__)("Allow", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
     onClick: () => blockRegionByCode(rowsSelected)
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__.__)("Block", "really-simple-ssl")))))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_2__["default"], {
@@ -5077,27 +5079,27 @@ const IpAddressDatatable = props => {
       });
     }
   }
-  function generateActionButtons(id) {
+  function generateActionbuttons(id) {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-action-buttons"
     }, getCurrentFilter(moduleName) === 'blocked' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-action-buttons__inner"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__.Button, {
-      className: "button button-secondary rsssl-action-buttons__button",
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+      className: "button button-secondary button-datatable rsssl-action-buttons__button",
       onClick: () => {
         allowIpAddresses(id);
       }
     }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Allow", "really-simple-ssl"))), getCurrentFilter(moduleName) === 'allowed' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-action-buttons__inner"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__.Button, {
-      className: "button button-primary rsssl-action-buttons__button",
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+      className: "button button-primary button-datatable rsssl-action-buttons__button",
       onClick: () => {
         blockIpAddresses(id);
       }
     }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Block", "really-simple-ssl"))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-action-buttons__inner"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__.Button, {
-      className: "button button-red rsssl-action-buttons__button",
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+      className: "button button-red button-datatable rsssl-action-buttons__button",
       onClick: () => {
         resetIpAddresses(id);
       }
@@ -5107,7 +5109,7 @@ const IpAddressDatatable = props => {
     let dataItem = {
       ...data[key]
     };
-    dataItem.action = generateActionButtons(dataItem.id);
+    dataItem.action = generateActionbuttons(dataItem.id);
     data[key] = dataItem;
   }
   function handleSelection(state) {
@@ -5125,10 +5127,10 @@ const IpAddressDatatable = props => {
     className: "rsssl-add-button"
   }, (getCurrentFilter(moduleName) === 'blocked' || getCurrentFilter(moduleName) === 'allowed') && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-add-button__inner"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__.Button, {
-    className: "button button-secondary rsssl-add-button__button",
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    className: "button button-secondary button-datatable rsssl-add-button__button",
     onClick: handleOpen
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Add IP Address", "really-simple-ssl")))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, getCurrentFilter(moduleName) === 'blocked' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Block IP Address", "really-simple-ssl")), getCurrentFilter(moduleName) === 'allowed' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Allow IP Address", "really-simple-ssl"))))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-search-bar"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-search-bar__inner"
@@ -5150,22 +5152,22 @@ const IpAddressDatatable = props => {
     className: "rsssl-action-buttons"
   }, getCurrentFilter(moduleName) === 'blocked' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-action-buttons__inner"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__.Button, {
-    className: "button button-secondary rsssl-action-buttons__button",
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    className: "button button-secondary button-datatable rsssl-action-buttons__button",
     onClick: () => {
       allowIpAddresses(rowsSelected);
     }
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Allow", "really-simple-ssl"))), getCurrentFilter(moduleName) === 'allowed' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-action-buttons__inner"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__.Button, {
-    className: "button button-primary rsssl-action-buttons__button",
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    className: "button button-primary button-datatable rsssl-action-buttons__button",
     onClick: () => {
       blockIpAddresses(rowsSelected);
     }
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Block", "really-simple-ssl"))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-action-buttons__inner"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__.Button, {
-    className: "button button-red rsssl-action-buttons__button",
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    className: "button button-red button-datatable rsssl-action-buttons__button",
     onClick: () => {
       resetIpAddresses(rowsSelected);
     }
@@ -5722,26 +5724,26 @@ const UserDatatable = props => {
   function handleSelection(state) {
     setRowsSelected(state.selectedRows);
   }
-  function generateActionButtons(id) {
+  function generateActionbuttons(id) {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-action-buttons"
     }, getCurrentFilter(moduleName) === 'blocked' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-action-buttons__inner"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
       className: "button button-secondary rsssl-action-buttons__button",
       onClick: () => {
         allowUsers(id);
       }
     }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Allow", "really-simple-ssl"))), getCurrentFilter(moduleName) === 'allowed' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-action-buttons__inner"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
       className: "button button-primary rsssl-action-buttons__button",
       onClick: () => {
         blockUsers(id);
       }
     }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Block", "really-simple-ssl"))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-action-buttons__inner"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
       className: "button button-red rsssl-action-buttons__button",
       onClick: () => {
         resetUsers(id);
@@ -5775,7 +5777,7 @@ const UserDatatable = props => {
       ...data[key]
     };
     //we add the action buttons
-    dataItem.action = generateActionButtons(dataItem.id);
+    dataItem.action = generateActionbuttons(dataItem.id);
     data[key] = dataItem;
   }
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_AddUserModal__WEBPACK_IMPORTED_MODULE_8__["default"], {
@@ -5790,7 +5792,7 @@ const UserDatatable = props => {
     className: "rsssl-add-button"
   }, (getCurrentFilter(moduleName) === 'blocked' || getCurrentFilter(moduleName) === 'allowed') && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-add-button__inner"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
     className: "button button-secondary rsssl-add-button__button",
     onClick: handleOpen
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Add User", "really-simple-ssl")))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -5815,21 +5817,21 @@ const UserDatatable = props => {
     className: "rsssl-action-buttons"
   }, getCurrentFilter(moduleName) === 'blocked' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-action-buttons__inner"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
     className: "button button-secondary rsssl-action-buttons__button",
     onClick: () => {
       allowUsers(rowsSelected);
     }
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Allow", "really-simple-ssl"))), getCurrentFilter(moduleName) === 'allowed' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-action-buttons__inner"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
     className: "button button-primary rsssl-action-buttons__button",
     onClick: () => {
       blockUsers(rowsSelected);
     }
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Block", "really-simple-ssl"))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-action-buttons__inner"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
     className: "button button-red rsssl-action-buttons__button",
     onClick: () => {
       resetUsers(rowsSelected);
@@ -24926,4 +24928,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.8bc00bc4144eff2ac1c3.js.map
+//# sourceMappingURL=src_Settings_Field_js.1cc8b58686bc858e13aa.js.map
