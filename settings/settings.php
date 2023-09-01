@@ -7,9 +7,9 @@ defined('ABSPATH') or die();
  * @since 1.0.0
  */
 
-require_once(rsssl_path . 'settings/config/config.php');
-require_once(rsssl_path . 'settings/config/menu.php');
-require_once(rsssl_path . 'settings/config/disable-fields-filter.php');
+require_once(rsssl_path.'settings/config/config.php');
+require_once(rsssl_path.'settings/config/menu.php');
+require_once(rsssl_path.'settings/config/disable-fields-filter.php');
 
 /**
  * Fix for WPML issue where WPML breaks the rest api by adding a language locale in the url
@@ -37,10 +37,11 @@ function rsssl_fix_rest_url_for_wpml($url, $path, $blog_id, $scheme)
     }
 
     if ($current_language) {
-        if (strpos($url, '/' . $current_language . '/wp-json/')) {
-            $url = str_replace('/' . $current_language . '/wp-json/', '/wp-json/', $url);
+        if (strpos($url, '/'.$current_language.'/wp-json/')) {
+            $url = str_replace('/'.$current_language.'/wp-json/', '/wp-json/', $url);
         }
     }
+
     return $url;
 }
 
@@ -147,7 +148,7 @@ function rsssl_plugin_admin_scripts()
  */
 function rsssl_add_option_menu()
 {
-    if (!rsssl_user_can_manage()) {
+    if ( ! rsssl_user_can_manage()) {
         return;
     }
 
@@ -156,11 +157,11 @@ function rsssl_add_option_menu()
         return;
     }
 
-    $count = RSSSL()->admin->count_plusones();
-    $update_count = $count > 0 ? "<span class='update-plugins rsssl-update-count'><span class='update-count'>$count</span></span>" : "";
+    $count            = RSSSL()->admin->count_plusones();
+    $update_count     = $count > 0 ? "<span class='update-plugins rsssl-update-count'><span class='update-count'>$count</span></span>" : "";
     $page_hook_suffix = add_options_page(
         __("SSL settings", "really-simple-ssl"),
-        __("SSL", "really-simple-ssl") . $update_count,
+        __("SSL", "really-simple-ssl").$update_count,
         'manage_security',
         'really-simple-security',
         'rsssl_settings_page'
@@ -177,13 +178,13 @@ add_action('admin_menu', 'rsssl_add_option_menu');
 
 function rsssl_settings_page()
 {
-    if (!rsssl_user_can_manage()) {
+    if ( ! rsssl_user_can_manage()) {
         return;
     }
 
     ?>
-    <div id="really-simple-ssl" class="rsssl"></div>
-    <div id="really-simple-ssl-modal"></div>
+	<div id="really-simple-ssl" class="rsssl"></div>
+	<div id="really-simple-ssl-modal"></div>
     <?php
 }
 
@@ -195,9 +196,9 @@ function rsssl_settings_page()
 function rsssl_rest_api_fallback()
 {
     $response = $data = [];
-    $error = $action = $test = $do_action = false;
+    $error    = $action = $test = $do_action = false;
 
-    if (!rsssl_user_can_manage()) {
+    if ( ! rsssl_user_can_manage()) {
         $error = true;
     }
     //if the site is using this fallback, we want to show a notice
@@ -240,7 +241,7 @@ function rsssl_rest_api_fallback()
                 $data[$key] = sanitize_text_field($value);
             }
             $response = rsssl_run_test($request, $data);
-        } else if ($do_action) {
+        } elseif ($do_action) {
             $request = new WP_REST_Request();
             $request->set_param('action', $do_action);
             $response = rsssl_do_action($request, $data);
@@ -324,7 +325,6 @@ function rsssl_remove_fallback_notice()
  */
 function rsssl_do_action($request, $ajax_data = false)
 {
-
     if (!rsssl_user_can_manage()) {
         return;
     }
@@ -332,7 +332,6 @@ function rsssl_do_action($request, $ajax_data = false)
     if (!$ajax_data) {
         rsssl_remove_fallback_notice();
     }
-
     $action = sanitize_title($request->get_param('action'));
     $data = $ajax_data !== false ? $ajax_data : $request->get_params();
 
@@ -365,6 +364,9 @@ function rsssl_do_action($request, $ajax_data = false)
         case 'clear_cache':
             $response = rsssl_clear_test_caches($data);
             break;
+        case 'otherpluginsdata':
+            $response = rsssl_other_plugins_data();
+            break;
 	    case 'otherpluginsdata':
 		    $response = rsssl_other_plugins_data();
 		    break;
@@ -378,6 +380,7 @@ function rsssl_do_action($request, $ajax_data = false)
     if (is_array($response)) {
         $response['request_success'] = true;
     }
+
     return $response;
 }
 
@@ -416,9 +419,10 @@ function rsssl_plugin_actions($data)
     $installer = new rsssl_installer($slug);
     if ($action === 'download') {
         $installer->download_plugin();
-    } else if ($action === 'activate') {
+    } elseif ($action === 'activate') {
         $installer->activate_plugin();
     }
+
     return rsssl_other_plugins_data($slug);
 }
 

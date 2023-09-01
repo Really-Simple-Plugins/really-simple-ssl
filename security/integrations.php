@@ -90,6 +90,13 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         'option_id'            => 'enable_vulnerability_scanner',
 	    'admin_only'           => true,
     ),
+    'limit-login-attempts' => array(
+        'label'                => 'Limit login attempts',
+        'folder'               => 'wordpress',
+        'impact'               => 'medium',
+        'risk'                 => 'medium',
+        'option_id'            => 'limit_login_attempts',
+    ),
 
 
     'two-factor' => array(

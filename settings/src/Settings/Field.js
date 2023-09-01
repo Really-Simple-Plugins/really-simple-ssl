@@ -19,6 +19,8 @@ import Support from "./Support";
 import LearningMode from "./LearningMode/LearningMode";
 import RiskComponent from "./RiskConfiguration/RiskComponent";
 import VulnerabilitiesOverview from "./RiskConfiguration/vulnerabilitiesOverview";
+import IpAddressDatatable from "./LimitLoginAttempts/IpAddressDatatable";
+// import IpAddressModule from "./LimitLoginAttempts/IpAddressModule";
 import TwoFaRolesDropDown from "./TwoFA/TwoFaRolesDropDown";
 import Button from "./Button";
 import Icon from "../utils/Icon";
@@ -27,13 +29,22 @@ import useFields from "./FieldsData";
 import PostDropdown from "./PostDropDown";
 import NotificationTester from "./RiskConfiguration/NotificationTester";
 import getAnchor from "../utils/getAnchor";
+import useMenu from "../Menu/MenuData";
+import EventLog from "./EventLog/DynamicDataTable";
+import UserDatatable from "./LimitLoginAttempts/UserDatatable";
+import CountryDatatable from "./LimitLoginAttempts/CountryDatatable";
 import DynamicDataTable from "./DynamicDataTable/DynamicDataTable";
-
+import TwoFaDataTable from "./TwoFA/TwoFaDataTable";
 const Field = (props) => {
     let scrollAnchor = React.createRef();
     const {updateField, setChangedField, highLightField} = useFields();
     const [anchor, setAnchor] = useState(null);
+    const {selectedFilter, setSelectedFilter} = useMenu();
 
+
+    const handleFilterChange = (value) => {
+        setSelectedFilter(value); // Update selectedFilter when the filter value changes
+    };
     useEffect( () => {
         //check if the url contains the query variable 'anchor'
         setAnchor(getAnchor('anchor'))
@@ -50,7 +61,6 @@ const Field = (props) => {
     window.addEventListener('hashchange', (e) => {
         setAnchor(getAnchor('anchor'));
     });
-
     const handleAnchor = () => {
         if ( anchor && anchor === props.field.id ) {
             scrollAnchor.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -168,7 +178,7 @@ const Field = (props) => {
     if (field.type==='email'){
         const sendVerificationEmailField = props.fields.find(field => field.id === 'send_verification_email');
         const emailIsVerified = sendVerificationEmailField && sendVerificationEmailField.disabled;
-        
+
         return (
             <div className={highLightClass} ref={scrollAnchor} style={{position: 'relative'}}>
                 <TextControl
@@ -366,10 +376,63 @@ const Field = (props) => {
         );
     }
 
+    if (field.type === 'eventlog-datatable') {
+        return (
+            <div className={highLightClass} ref={scrollAnchor}>
+                <DynamicDataTable
+                    field={props.field}
+                    action={props.field.action}
+                />
+            </div>
+        )
+    }
+    if (field.type === 'twofa-datatable') {
+        return (
+            <div className={highLightClass} ref={scrollAnchor}>
+                <TwoFaDataTable
+                    field={props.field}
+                    action={props.field.action}
+                />
+            </div>
+        )
+    }
     if (field.type === 'dynamic-datatable') {
         return (
             <div className={highLightClass} ref={scrollAnchor}>
                 <DynamicDataTable
+                    field={props.field}
+                    action={props.field.action}
+                />
+            </div>
+        )
+    }
+
+    if (field.type === 'ip-address-datatable') {
+        return (
+            <div className={highLightClass} ref={scrollAnchor}>
+                <IpAddressDatatable
+                    field={props.field}
+                    action={props.field.action}
+                />
+            </div>
+        )
+    }
+
+    if (field.type === 'user-datatable') {
+        return (
+            <div className={highLightClass} ref={scrollAnchor}>
+                <UserDatatable
+                    field={props.field}
+                    action={props.field.action}
+                />
+            </div>
+        )
+    }
+
+    if (field.type === 'country-datatable') {
+        return (
+            <div className={highLightClass} ref={scrollAnchor}>
+                <CountryDatatable
                     field={props.field}
                     action={props.field.action}
                 />

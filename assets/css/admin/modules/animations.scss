@@ -1,0 +1,64 @@
+/* Accordeon */
+
+.rsssl-accordeon {
+  /* Basic styling for the accordion container */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.rsssl-accordeon__header {
+  /* Styling for the accordion header */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f5f5f5;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.rsssl-accordeon__header__inner {
+  /* Styling for the inner container of the header */
+  display: flex;
+  align-items: center;
+}
+
+.rsssl-accordeon__header__icon {
+  /* You can set a background-image or other styling here for the icon */
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+
+.rsssl-accordeon__header__title {
+  /* Styling for the title text */
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.rsssl-accordeon__header__button__inner {
+  /* Styling for the button inside the header */
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.rsssl-accordeon__content {
+  /* By default, hide the content */
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.rsssl-accordeon--open .rsssl-accordeon__content {
+  /* When the accordion is open, show the content */
+  max-height: 300px; /* You may need to adjust this value */
+}
+
+.rsssl-accordeon__content__inner {
+  /* Basic styling for the inner content container */
+  padding: 15px;
+  background-color: #fff;
+}
