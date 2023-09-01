@@ -118,17 +118,6 @@ function rsssl_fields( $load_values = true ) {
             'label'       => __( "Email verification", 'really-simple-ssl' ),
             'disabled'    => rsssl_is_email_verified(),
             'tooltip'  => __( "Verify your e-mail address to get the most out of Really Simple SSL.", 'really-simple-ssl' ),
-            'help'             => [
-	            'label' => rsssl_is_email_verified() ? 'success' : 'warning',
-	            'title' => __( "Email validation", 'really-simple-ssl' ),
-	            'text' => rsssl_is_email_verified()
-		            ? __( "Email validation completed", 'really-simple-ssl' )
-		            : ( check_if_email_essential_feature()
-			            ? __( "You're using a feature where email is an essential part of the functionality. Please validate that you can send emails on your server.", 'really-simple-ssl' )
-			            : ''
-		            ),
-	            'url' => add_query_arg(['page'=>'really-simple-security#settings/general/email'], rsssl_admin_url() ),
-            ],
             'react_conditions' => [
 	            'relation' => 'AND',
 	            [
@@ -987,17 +976,6 @@ function rsssl_fields( $load_values = true ) {
 			'tooltip'  => __( "This will send emails from your server, containing a verification code to users that try to login.", 'really-simple-ssl' ),
 			'disabled' => false,
 			'default'  => 'disabled',
-			'help'             => [
-				'label' => rsssl_is_email_verified() ? 'success' : 'warning',
-				'title' => __( "Email validation", 'really-simple-ssl' ),
-				'url' => add_query_arg(['page'=>'really-simple-security#settings/general/email'], rsssl_admin_url() ),
-				'text' => rsssl_is_email_verified()
-					? __( "Email validation completed", 'really-simple-ssl' )
-					: ( check_if_email_essential_feature()
-						? __( "You're using a feature where email is an essential part of the functionality. Please validate that you can send emails on your server.", 'really-simple-ssl' )
-						: ''
-					),
-			],
 		],
 		[
 			'id'       => 'two_fa_optional_roles',

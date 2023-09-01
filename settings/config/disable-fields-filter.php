@@ -34,8 +34,40 @@ function rsssl_remove_fields($fields){
 		$index = array_search( 'do_not_edit_htaccess', array_column( $fields, 'id' ), true );
 		unset($fields[$index]);
 	}
+
+	// 2FA and LLA e-mail verification help texts
+	if ( ! rsssl_is_email_verified() ) {
+		$index = array_search( 'send_verification_email', array_column( $fields, 'id' ), true );
+		$fields[$index]['help'] = rsssl_email_help_text();
+	}
+
+	if ( ! rsssl_is_email_verified() && rsssl_get_option('two_fa_email_code') == '1' ) {
+		$index = array_search( 'two_fa_email_code', array_column( $fields, 'id' ), true );
+		$fields[$index]['help'] = rsssl_email_help_text();
+	}
+
+	if ( ! rsssl_is_email_verified() && rsssl_get_option('limit_login_attempts') == '1' ) {
+		$index = array_search( 'limit_login_attempts', array_column( $fields, 'id' ), true );
+		$fields[$index]['help'] = rsssl_email_help_text();
+	}
+
 	return $fields;
 }
 add_filter('rsssl_fields', 'rsssl_remove_fields', 10, 1);
+
+function rsssl_email_help_text() {
+
+	return [
+		'label' => rsssl_is_email_verified() ? 'success' : 'warning',
+		'title' => __( "Email validation", 'really-simple-ssl' ),
+		'url'   => add_query_arg( [ 'page' => 'really-simple-security#settings/general/email' ], rsssl_admin_url() ),
+		'text'  => rsssl_is_email_verified()
+			? __( "Email validation completed", 'really-simple-ssl' )
+			: ( check_if_email_essential_feature()
+				? __( "You're using a feature where email is an essential part of the functionality. Please validate that you can send emails on your server.", 'really-simple-ssl' )
+				: __("Email not verified yet. Verify your e-mail address to get the most out of Really Simple SSL", "really-simple-ssl")
+			),
+	];
+}
 
 

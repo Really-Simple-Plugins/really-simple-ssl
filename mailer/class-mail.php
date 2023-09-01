@@ -19,8 +19,9 @@ if ( !class_exists('rsssl_mailer') ) {
         public $what_now_text;
         public $sent_by_text;
 		public $warning_blocks;
-		public $logo;
 		public $error = '';
+		public $template_filename;
+		public $block_template_filename;
 
 		public function __construct() {
 			$this->sent_by_text = __("This email is part of the Really Simple SSL Notification System", "really-simple-ssl");
@@ -30,11 +31,13 @@ if ( !class_exists('rsssl_mailer') ) {
 			$this->sent_to_text = __("This email was sent to", "really-simple-ssl");
 			$this->what_now_text = __( "Learn more", "really-simple-ssl");
 			$this->change_text = __("Why did I receive this email?", "really-simple-ssl");
+			$this->block_template_filename = apply_filters( 'rsssl_email_block_template', rsssl_path . '/mailer/templates/block.html' );
+			$this->template_filename = apply_filters( 'rsssl_email_template', rsssl_path . '/mailer/templates/email.html' );
 			$domain = '<a href="'.site_url().'">'.site_url().'</a>';
-			$this->logo = "https://really-simple-ssl.com/wp-content/uploads/2022/09/Really-Simple-SSL-Logo-04-2048x539.png";
 			$this->message = sprintf(__("You have enabled a feature on %s. We think it's important to let you know a little bit more about this feature so you can use it without worries.","really-simple-ssl"), $domain);
 
 			add_action('wp_mail_failed', array($this, 'log_mailer_errors'), 10, 1);
+
 		}
 
 		/**
@@ -94,7 +97,7 @@ if ( !class_exists('rsssl_mailer') ) {
 		        rsssl_admin_url() . '#settings/general'
 	        );
 
-            $this->subject = __("Really Simple SSL - Verification code", "really-simple-ssl");
+            $this->subject = __("Really Simple SSL - Verify your e-mail address", "really-simple-ssl");
             $this->title = __("Confirm your e-mail address", "really-simple-ssl");
             $this->message = '';
 			$this->button_text = __("Confirm e-mail", "really-simple-ssl");
@@ -127,10 +130,10 @@ if ( !class_exists('rsssl_mailer') ) {
 				$this->error = __("Email address not valid", "really-simple-ssl");
 			}
 
-			$template = file_get_contents(__DIR__.'/templates/email.html');
+			$template = file_get_contents( $this->template_filename );
 			$block_html = '';
 			if (is_array($this->warning_blocks) && count($this->warning_blocks)>0) {
-				$block_template = file_get_contents(__DIR__.'/templates/block.html');
+				$block_template = file_get_contents( $this->block_template_filename );
 				foreach ($this->warning_blocks as $warning_block){
 					$block_html .= str_replace(
 						['{title}','{message}','{url}'],
@@ -154,7 +157,7 @@ if ( !class_exists('rsssl_mailer') ) {
                     '{what_now}',
                     '{sent_to_text}',
                     '{sent_by_text}',
-					'{logo}',
+					'{domain}',
 				],
 				[
 					sanitize_text_field( $this->title ),
@@ -169,7 +172,7 @@ if ( !class_exists('rsssl_mailer') ) {
                     $this->what_now_text,
                     $this->sent_to_text,
                     $this->sent_by_text,
-					$this->logo,
+					site_url(),
 				], $template );
 			$success = wp_mail( $this->to, sanitize_text_field($this->subject), $body, array('Content-Type: text/html; charset=UTF-8') );
             if ($success) {
@@ -183,5 +186,6 @@ if ( !class_exists('rsssl_mailer') ) {
             }
             return ['success' => false, 'message' => $this->error];
 		}
+
 	}
 }
