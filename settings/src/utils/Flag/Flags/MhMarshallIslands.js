@@ -18,7 +18,7 @@ const SvgMhMarshallIslands = (props) => (
         maskType: "luminance",
       }}
     >
-      <rect width={16} height={12} fill="#fff" rx={-1} />
+      <rect width={16} height={12} fill="#fff" rx={0} />
     </mask>
     <g mask="url(#MH_-_Marshall_Islands_svg__a)">
       <path

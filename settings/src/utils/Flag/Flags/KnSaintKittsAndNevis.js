@@ -18,7 +18,7 @@ const SvgKnSaintKittsAndNevis = (props) => (
         maskType: "luminance",
       }}
     >
-      <rect width={16} height={12} fill="#fff" rx={-1} />
+      <rect width={16} height={12} fill="#fff" rx={0} />
     </mask>
     <g mask="url(#KN_-_Saint_Kitts_and_Nevis_svg__a)">
       <path

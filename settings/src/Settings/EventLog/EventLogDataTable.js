@@ -1,14 +1,14 @@
 import {__} from '@wordpress/i18n';
 import React, {useEffect, useState, useRef} from 'react';
 import DataTable, {createTheme, ExpanderComponentProps} from "react-data-table-component";
-import DynamicDataTableStore from "./DynamicDataTableStore";
+import EventLogDataTableStore from "./EventLogDataTableStore";
 import FilterData from "../FilterData";
 import * as rsssl_api from "../../utils/api";
 import useMenu from "../../Menu/MenuData";
 import Flag from "../../utils/Flag/Flag";
 import Icon from "../../utils/Icon";
 
-const DynamicDataTable = (props) => {
+const EventLogDataTable = (props) => {
     const {
         DynamicDataTable,
         dataLoaded,
@@ -20,7 +20,7 @@ const DynamicDataTable = (props) => {
         handleEventTablePageChange,
         handleEventTableSearch,
         handleEventTableFilter,
-    } = DynamicDataTableStore()
+    } = EventLogDataTableStore()
 
     const moduleName = 'rsssl-group-filter-limit_login_attempts_event_log';
     //here we set the selectedFilter from the Settings group
@@ -97,8 +97,9 @@ const DynamicDataTable = (props) => {
 
     if (DynamicDataTable.data) {
         data = DynamicDataTable.data.map((dataItem) => {
+            console.log(dataItem);
             let newItem = {...dataItem};
-            newItem.iso2_code = generateFlag(newItem.iso2_code, 'Netherlands');
+            newItem.iso2_code = generateFlag(newItem.iso2_code, newItem.country_name);
             newItem.expandableRows = true;
             return newItem;
         });
@@ -170,18 +171,6 @@ const DynamicDataTable = (props) => {
         }
     }
 
-    // for (const key in data) {
-    //     let dataItem = {...data[key]}
-    //
-    //     dataItem.iso2_code = generateFlag(dataItem.iso2_code, 'Netherlands');
-    //     //we add the expandable row
-    //     dataItem.expandableRows = true;
-    //     // dataItem.api = generateGoodBad(dataItem.api);
-    //
-    //     data[key] = dataItem;
-    // }
-
-
     return (
         <>
             <div className="rsssl-container">
@@ -233,7 +222,7 @@ const DynamicDataTable = (props) => {
     );
 
 }
-export default DynamicDataTable;
+export default EventLogDataTable;
 
 function buildColumn(column) {
     return {

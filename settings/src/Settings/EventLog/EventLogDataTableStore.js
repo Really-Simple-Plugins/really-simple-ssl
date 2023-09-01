@@ -5,7 +5,7 @@ import {__} from "@wordpress/i18n";
 import {produce} from "immer";
 import React from "react";
 
-const DynamicDataTableStore = create((set, get) => ({
+const EventLogDataTableStore = create((set, get) => ({
 
     processing: false,
     dataLoaded: false,
@@ -113,4 +113,4 @@ const DynamicDataTableStore = create((set, get) => ({
 
 }));
 
-export default DynamicDataTableStore;
+export default EventLogDataTableStore;

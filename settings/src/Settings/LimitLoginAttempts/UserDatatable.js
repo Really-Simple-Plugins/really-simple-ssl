@@ -8,7 +8,7 @@ import {Button} from "@wordpress/components";
 import {produce} from "immer";
 import AddIpAddressModal from "./AddIpAddressModal";
 import AddUserModal from "./AddUserModal";
-import DynamicDataTableStore from "../EventLog/DynamicDataTableStore";
+import EventLogDataTableStore from "../EventLog/EventLogDataTableStore";
 
 const UserDatatable = (props) => {
     const {
@@ -34,7 +34,7 @@ const UserDatatable = (props) => {
     const [addingUser, setAddingUser] = useState(false);
     const [user, setUser] = useState('');
     const [rowCleared, setRowCleared] = useState(false);
-    const {fetchDynamicData} = DynamicDataTableStore();
+    const {fetchDynamicData} = EventLogDataTableStore();
     const moduleName = 'rsssl-group-filter-limit_login_attempts_users';
 
 

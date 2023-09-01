@@ -2,7 +2,7 @@ import {__} from '@wordpress/i18n';
 import React, {useEffect, useRef, useState} from 'react';
 import DataTable, {createTheme} from "react-data-table-component";
 import IpAddressDataTableStore from "./IpAddressDataTableStore";
-import DynamicDataTableStore from "../EventLog/DynamicDataTableStore";
+import EventLogDataTableStore from "../EventLog/EventLogDataTableStore";
 import FilterData from "../FilterData";
 import {Button} from "@wordpress/components";
 import {produce} from "immer";
@@ -33,7 +33,7 @@ const IpAddressDatatable = (props) => {
     const [addingIpAddress, setAddingIpAddress] = useState(false);
     const [rowsSelected, setRowsSelected] = useState([]);
     const [rowCleared, setRowCleared] = useState(false);
-    const {fetchDynamicData} = DynamicDataTableStore();
+    const {fetchDynamicData} = EventLogDataTableStore();
 
     const moduleName = 'rsssl-group-filter-limit_login_attempts_ip_address';
     //we create the columns
