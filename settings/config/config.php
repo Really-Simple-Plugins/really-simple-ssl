@@ -1334,7 +1334,7 @@ function rsssl_fields( $load_values = true ) {
                     'searchable' => true,
                     'visible' => true,
                     'column'   => 'user',
-                    'width'    => '15%',
+                    'width'    => '25%',
                 ],
                 [
                     'name'     => __( 'Status', 'really-simple-ssl' ),
@@ -1342,7 +1342,7 @@ function rsssl_fields( $load_values = true ) {
                     'searchable' => false,
                     'visible' => true,
                     'column'   => 'status_for_user',
-                    'width'    => '10%',
+                    'width'    => '20%',
                 ],
                 [
                     'name'     => __( 'User role', 'really-simple-ssl' ),

@@ -109,3 +109,25 @@ function check_if_email_essential_feature() {
 
 	return false;
 }
+
+/**
+ * @param $response
+ * @param $user
+ * @param $request
+ *
+ * @return mixed
+ *
+ * Add user roles to /users endpoint
+ */
+function add_user_role_to_api_response( $response, $user, $request ) {
+	$headers = $request->get_headers();
+
+	if (isset($headers['referer']) && strpos($headers['referer'][0], 'really-simple-security') !== false) {
+		$data = $response->get_data();
+		$data['roles'] = $user->roles;
+		$response->set_data($data);
+	}
+
+	return $response;
+}
+add_filter('rest_prepare_user', 'add_user_role_to_api_response', 10, 3);
