@@ -1822,6 +1822,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Menu_MenuData__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../Menu/MenuData */ "./src/Menu/MenuData.js");
 /* harmony import */ var _utils_Flag_Flag__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../utils/Flag/Flag */ "./src/utils/Flag/Flag.js");
 /* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../utils/Icon */ "./src/utils/Icon.js");
+/* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../FieldsData */ "./src/Settings/FieldsData.js");
+
 
 
 
@@ -1853,6 +1855,11 @@ const EventLogDataTable = props => {
     activeGroupId,
     getCurrentFilter
   } = (0,_FilterData__WEBPACK_IMPORTED_MODULE_5__["default"])();
+  const {
+    fields,
+    fieldAlreadyEnabled,
+    getFieldValue
+  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_10__["default"])();
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
     const currentFilter = getCurrentFilter(moduleName);
     if (!currentFilter) {
@@ -1860,11 +1867,15 @@ const EventLogDataTable = props => {
     }
     handleEventTableFilter('severity', currentFilter, moduleName);
   }, [selectedFilter, moduleName]);
+
+  //get data if field was already enabled, so not changed right now.
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
-    if (!dataLoaded) {
-      fetchDynamicData(field.action);
+    if (fieldAlreadyEnabled) {
+      if (!dataLoaded) {
+        fetchDynamicData(field.action);
+      }
     }
-  });
+  }, [fields]);
 
   //we create the columns
   let columns = [];
@@ -1874,6 +1885,12 @@ const EventLogDataTable = props => {
   field.columns.forEach(function (item, i) {
     let newItem = buildColumn(item);
     columns.push(newItem);
+  });
+  let enabled = false;
+  fields.forEach(function (item, i) {
+    if (item.id === 'enable_limited_login_attempts') {
+      enabled = item.value;
+    }
   });
   const customStyles = {
     headCells: {
@@ -2036,7 +2053,13 @@ const EventLogDataTable = props => {
     persistTableHead: true,
     theme: "really-simple-plugins",
     customStyles: customStyles
-  }));
+  }), !enabled && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-locked"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-locked-overlay"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "rsssl-task-status rsssl-open"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Disabled', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Limit login attempts to enable this block.', 'really-simple-ssl')))));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (EventLogDataTable);
 function buildColumn(column) {
@@ -4034,6 +4057,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../FieldsData */ "./src/Settings/FieldsData.js");
+
 
 
 
@@ -4077,6 +4102,11 @@ const CountryDatatable = props => {
   const [rowsSelected, setRowsSelected] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)([]);
   const [rowCleared, setRowCleared] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
   const moduleName = 'rsssl-group-filter-limit_login_attempts_country';
+  const {
+    fields,
+    fieldAlreadyEnabled,
+    getFieldValue
+  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_9__["default"])();
   const buildColumn = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)(column => ({
     name: column.name,
     sortable: column.sortable,
@@ -4088,9 +4118,15 @@ const CountryDatatable = props => {
   }), []);
   const columns = props.field.columns.map(buildColumn);
   const searchableColumns = columns.filter(column => column.searchable).map(column => column.column);
+
+  //get data if field was already enabled, so not changed right now.
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
-    fetchDynamicData('event_log');
-  }, []);
+    if (fieldAlreadyEnabled) {
+      if (!dataLoaded) {
+        fetchCountryData(props.field.action);
+      }
+    }
+  }, [fields]);
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     // code to execute after DynamicDataTable has been updated
   }, [DynamicDataTable]);
@@ -4114,6 +4150,12 @@ const CountryDatatable = props => {
       fetchCountryData(props.field.action);
     }
   }, [dataLoaded, props.field.action, fetchCountryData]);
+  let enabled = false;
+  fields.forEach(function (item, i) {
+    if (item.id === 'enable_limited_login_attempts') {
+      enabled = item.value;
+    }
+  });
   const customStyles = {
     headCells: {
       style: {
@@ -4332,7 +4374,13 @@ const CountryDatatable = props => {
     onSelectedRowsChange: handleSelection,
     theme: "really-simple-plugins",
     customStyles: customStyles
-  }));
+  }), !enabled && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-locked"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-locked-overlay"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "rsssl-task-status rsssl-open"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__.__)('Disabled', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__.__)('Limit login attempts to enable this block.', 'really-simple-ssl')))));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (CountryDatatable);
 
@@ -4846,6 +4894,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_Flag_Flag__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../utils/Flag/Flag */ "./src/utils/Flag/Flag.js");
 /* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../utils/Icon */ "./src/utils/Icon.js");
 /* harmony import */ var _AddIpAddressModal__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./AddIpAddressModal */ "./src/Settings/LimitLoginAttempts/AddIpAddressModal.js");
+/* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../FieldsData */ "./src/Settings/FieldsData.js");
+
 
 
 
@@ -4889,6 +4939,11 @@ const IpAddressDatatable = props => {
   const {
     fetchDynamicData
   } = (0,_EventLog_EventLogDataTableStore__WEBPACK_IMPORTED_MODULE_5__["default"])();
+  const {
+    fields,
+    fieldAlreadyEnabled,
+    getFieldValue
+  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_11__["default"])();
   const moduleName = 'rsssl-group-filter-limit_login_attempts_ip_address';
   //we create the columns
   let columns = [];
@@ -4899,6 +4954,15 @@ const IpAddressDatatable = props => {
     let newItem = buildColumn(item);
     columns.push(newItem);
   });
+
+  //get data if field was already enabled, so not changed right now.
+  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
+    if (fieldAlreadyEnabled) {
+      if (!dataLoaded) {
+        fetchIpData(field.action);
+      }
+    }
+  }, [fields]);
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
     const currentFilter = getCurrentFilter(moduleName);
     if (!currentFilter) {
@@ -4906,11 +4970,6 @@ const IpAddressDatatable = props => {
     }
     handleIpTableFilter('status', currentFilter);
   }, [selectedFilter, moduleName]);
-  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
-    if (!dataLoaded) {
-      fetchIpData(field.action);
-    }
-  });
   const customStyles = {
     headCells: {
       style: {
@@ -4945,6 +5004,12 @@ const IpAddressDatatable = props => {
       className: "rsssl-spinner__text"
     }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Loading...", "really-simple-ssl"))));
   }
+  let enabled = false;
+  fields.forEach(function (item, i) {
+    if (item.id === 'enable_limited_login_attempts') {
+      enabled = item.value;
+    }
+  });
   const handleOpen = () => {
     setAddingIpAddress(true);
   };
@@ -5190,7 +5255,13 @@ const IpAddressDatatable = props => {
     clearSelectedRows: rowCleared,
     theme: "really-simple-plugins",
     customStyles: customStyles
-  }));
+  }), !enabled && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-locked"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-locked-overlay"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "rsssl-task-status rsssl-open"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Disabled', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Limit login attempts to enable this block.', 'really-simple-ssl')))));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (IpAddressDatatable);
 function buildColumn(column) {
@@ -5318,24 +5389,6 @@ const UserDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set,
   pagination: {},
   dataActions: {},
   UserDataTable: [],
-  //for faking data we add a dymmmyData
-  dummyData: {
-    data: [{
-      attempt_type: "username",
-      attempt_value: "letsgoobegood",
-      datetime: "13:33, August 16",
-      id: 1,
-      last_failed: "1692192816",
-      status: "blocked"
-    }, {
-      attempt_type: "username",
-      attempt_value: "john@somewhere.now",
-      datetime: "13:33, August 16",
-      id: 2,
-      last_failed: "1692192916",
-      status: "blocked"
-    }]
-  },
   dummyPagination: {
     currentPage: 1,
     lastPage: 1,
@@ -5351,7 +5404,7 @@ const UserDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set,
         //if the response is empty we set the dummyData
         if (typeof response.pagination === 'undefined') {
           set({
-            UserDataTable: get().dummyData,
+            UserDataTable: response,
             dataLoaded: true,
             processing: false,
             pagination: get().dummyPagination
@@ -5552,6 +5605,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _AddIpAddressModal__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./AddIpAddressModal */ "./src/Settings/LimitLoginAttempts/AddIpAddressModal.js");
 /* harmony import */ var _AddUserModal__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./AddUserModal */ "./src/Settings/LimitLoginAttempts/AddUserModal.js");
 /* harmony import */ var _EventLog_EventLogDataTableStore__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../EventLog/EventLogDataTableStore */ "./src/Settings/EventLog/EventLogDataTableStore.js");
+/* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../FieldsData */ "./src/Settings/FieldsData.js");
+
 
 
 
@@ -5596,6 +5651,11 @@ const UserDatatable = props => {
     fetchDynamicData
   } = (0,_EventLog_EventLogDataTableStore__WEBPACK_IMPORTED_MODULE_9__["default"])();
   const moduleName = 'rsssl-group-filter-limit_login_attempts_users';
+  const {
+    fields,
+    fieldAlreadyEnabled,
+    getFieldValue
+  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_10__["default"])();
 
   //we create the columns
   let columns = [];
@@ -5606,6 +5666,15 @@ const UserDatatable = props => {
     let newItem = buildColumn(item);
     columns.push(newItem);
   });
+
+  //get data if field was already enabled, so not changed right now.
+  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
+    if (fieldAlreadyEnabled) {
+      if (!dataLoaded) {
+        fetchUserData(field.action);
+      }
+    }
+  }, [fields]);
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
     const currentFilter = getCurrentFilter(moduleName);
     if (!currentFilter) {
@@ -5613,9 +5682,10 @@ const UserDatatable = props => {
     }
     handleUserTableFilter('status', currentFilter);
   }, [selectedFilter, moduleName]);
-  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
-    if (!dataLoaded) {
-      fetchUserData(field.action);
+  let enabled = false;
+  fields.forEach(function (item, i) {
+    if (item.id === 'enable_limited_login_attempts') {
+      enabled = item.value;
     }
   });
   const customStyles = {
@@ -5855,7 +5925,13 @@ const UserDatatable = props => {
     persistTableHead: true,
     theme: "really-simple-plugins",
     customStyles: customStyles
-  }));
+  }), !enabled && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-locked"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-locked-overlay"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "rsssl-task-status rsssl-open"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Disabled', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Limit login attempts to enable this block.', 'really-simple-ssl')))));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (UserDatatable);
 function buildColumn(column) {
@@ -24928,4 +25004,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.fc3e4701dba9624ec86b.js.map
+//# sourceMappingURL=src_Settings_Field_js.909ee967edca31644367.js.map

@@ -9,6 +9,7 @@ import {produce} from "immer";
 import AddIpAddressModal from "./AddIpAddressModal";
 import AddUserModal from "./AddUserModal";
 import EventLogDataTableStore from "../EventLog/EventLogDataTableStore";
+import useFields from "../FieldsData";
 
 const UserDatatable = (props) => {
     const {
@@ -36,6 +37,7 @@ const UserDatatable = (props) => {
     const [rowCleared, setRowCleared] = useState(false);
     const {fetchDynamicData} = EventLogDataTableStore();
     const moduleName = 'rsssl-group-filter-limit_login_attempts_users';
+    const {fields, fieldAlreadyEnabled, getFieldValue} = useFields();
 
 
     //we create the columns
@@ -48,6 +50,15 @@ const UserDatatable = (props) => {
         columns.push(newItem);
     });
 
+    //get data if field was already enabled, so not changed right now.
+    useEffect(() => {
+        if (fieldAlreadyEnabled) {
+            if (!dataLoaded) {
+                fetchUserData(field.action);
+            }
+        }
+    }, [fields]);
+
     useEffect(() => {
         const currentFilter = getCurrentFilter(moduleName);
 
@@ -57,12 +68,13 @@ const UserDatatable = (props) => {
         handleUserTableFilter('status', currentFilter);
     }, [selectedFilter, moduleName]);
 
-    useEffect(() => {
-        if (!dataLoaded) {
-            fetchUserData(field.action);
+    let enabled = false;
+
+    fields.forEach(function (item, i) {
+        if (item.id === 'enable_limited_login_attempts') {
+            enabled = item.value;
         }
     });
-
 
     const customStyles = {
         headCells: {
@@ -371,6 +383,13 @@ const UserDatatable = (props) => {
                 theme="really-simple-plugins"
                 customStyles={customStyles}
             ></DataTable>
+            {!enabled && (
+                <div className="rsssl-locked">
+                    <div className="rsssl-locked-overlay"><span
+                        className="rsssl-task-status rsssl-open">{__('Disabled', 'really-simple-ssl')}</span><span>{__('Limit login attempts to enable this block.', 'really-simple-ssl')}</span>
+                    </div>
+                </div>
+            )}
         </>
     );
 

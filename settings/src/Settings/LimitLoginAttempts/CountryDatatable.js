@@ -6,6 +6,7 @@ import FilterData from "../FilterData";
 import Flag from "../../utils/Flag/Flag";
 import { button } from "@wordpress/components";
 import { __ } from '@wordpress/i18n';
+import useFields from "../FieldsData";
 
 const CountryDatatable = (props) => {
     const {
@@ -43,6 +44,7 @@ const CountryDatatable = (props) => {
     const [rowsSelected, setRowsSelected] = useState([]);
     const [rowCleared, setRowCleared] = useState(false);
     const moduleName = 'rsssl-group-filter-limit_login_attempts_country';
+    const {fields, fieldAlreadyEnabled, getFieldValue} = useFields();
 
     const buildColumn = useCallback((column) => ({
         name: column.name,
@@ -60,9 +62,14 @@ const CountryDatatable = (props) => {
         .filter(column => column.searchable)
         .map(column => column.column);
 
+    //get data if field was already enabled, so not changed right now.
     useEffect(() => {
-        fetchDynamicData('event_log');
-    }, []);
+        if (fieldAlreadyEnabled) {
+            if (!dataLoaded) {
+                fetchCountryData(props.field.action);
+            }
+        }
+    }, [fields]);
 
     useEffect(() => {
         // code to execute after DynamicDataTable has been updated
@@ -91,6 +98,14 @@ const CountryDatatable = (props) => {
             fetchCountryData(props.field.action);
         }
     }, [dataLoaded, props.field.action, fetchCountryData]);
+
+    let enabled = false;
+
+    fields.forEach(function (item, i) {
+        if (item.id === 'enable_limited_login_attempts') {
+            enabled = item.value;
+        }
+    });
 
     const customStyles = {
         headCells: {
@@ -362,6 +377,13 @@ const CountryDatatable = (props) => {
                 theme="really-simple-plugins"
                 customStyles={customStyles}
             />
+            {!enabled && (
+                <div className="rsssl-locked">
+                    <div className="rsssl-locked-overlay"><span
+                        className="rsssl-task-status rsssl-open">{__('Disabled', 'really-simple-ssl')}</span><span>{__('Limit login attempts to enable this block.', 'really-simple-ssl')}</span>
+                    </div>
+                </div>
+            )}
         </>
     );
 }

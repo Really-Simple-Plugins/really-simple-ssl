@@ -7,6 +7,7 @@ import * as rsssl_api from "../../utils/api";
 import useMenu from "../../Menu/MenuData";
 import Flag from "../../utils/Flag/Flag";
 import Icon from "../../utils/Icon";
+import useFields from "../FieldsData";
 
 const EventLogDataTable = (props) => {
     const {
@@ -25,7 +26,7 @@ const EventLogDataTable = (props) => {
     const moduleName = 'rsssl-group-filter-limit_login_attempts_event_log';
     //here we set the selectedFilter from the Settings group
     const {selectedFilter, setSelectedFilter, activeGroupId, getCurrentFilter} = FilterData();
-
+    const {fields, fieldAlreadyEnabled, getFieldValue} = useFields();
 
     useEffect(() => {
         const currentFilter = getCurrentFilter(moduleName);
@@ -36,11 +37,14 @@ const EventLogDataTable = (props) => {
         handleEventTableFilter('severity', currentFilter, moduleName);
     }, [selectedFilter, moduleName]);
 
+    //get data if field was already enabled, so not changed right now.
     useEffect(() => {
-        if (!dataLoaded) {
-            fetchDynamicData(field.action);
+        if (fieldAlreadyEnabled) {
+            if (!dataLoaded) {
+                fetchDynamicData(field.action);
+            }
         }
-    });
+    }, [fields]);
 
 
     //we create the columns
@@ -51,6 +55,14 @@ const EventLogDataTable = (props) => {
     field.columns.forEach(function (item, i) {
         let newItem = buildColumn(item)
         columns.push(newItem);
+    });
+
+    let enabled = false;
+
+    fields.forEach(function (item, i) {
+        if (item.id === 'enable_limited_login_attempts') {
+            enabled = item.value;
+        }
     });
 
 
@@ -217,6 +229,13 @@ const EventLogDataTable = (props) => {
                 theme="really-simple-plugins"
                 customStyles={customStyles}
             ></DataTable>
+            {!enabled && (
+                <div className="rsssl-locked">
+                    <div className="rsssl-locked-overlay"><span
+                        className="rsssl-task-status rsssl-open">{__('Disabled', 'really-simple-ssl')}</span><span>{__('Limit login attempts to enable this block.', 'really-simple-ssl')}</span>
+                    </div>
+                </div>
+            )}
         </>
     );
 

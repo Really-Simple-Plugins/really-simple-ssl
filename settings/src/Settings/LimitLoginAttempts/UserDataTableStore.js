@@ -12,27 +12,6 @@ const UserDataTableStore = create((set, get) => ({
     pagination: {},
     dataActions: {},
     UserDataTable: [],
-    //for faking data we add a dymmmyData
-    dummyData: {
-        data: [
-            {
-                attempt_type: "username",
-                attempt_value:"letsgoobegood",
-                datetime: "13:33, August 16",
-                id: 1,
-                last_failed: "1692192816",
-                status: "blocked"
-            },
-            {
-                attempt_type: "username",
-                attempt_value:"john@somewhere.now",
-                datetime: "13:33, August 16",
-                id: 2,
-                last_failed: "1692192916",
-                status: "blocked"
-            }
-        ]
-    } ,
     dummyPagination: {
         currentPage: 1,
         lastPage: 1,
@@ -51,7 +30,7 @@ const UserDataTableStore = create((set, get) => ({
             if (response) {
                 //if the response is empty we set the dummyData
                 if (typeof response.pagination === 'undefined') {
-                    set({UserDataTable: get().dummyData, dataLoaded: true, processing: false, pagination: get().dummyPagination});
+                    set({UserDataTable: response, dataLoaded: true, processing: false, pagination: get().dummyPagination});
                 } else {
                     set({UserDataTable: response, dataLoaded: true, processing: false, pagination: response.pagination});
                 }
