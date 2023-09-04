@@ -7914,87 +7914,6 @@ const DynamicDataTable = props => {
       fetchDynamicData(field.action);
     }
   }, [dataActions]);
-  function handleTwoFAMethodChange(userId, newMethod) {
-    let reload = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
-    //if the userId is an array, we need to loop through it
-
-    if (newMethod === 'reset') {
-      // First, fetch the user data to get their role
-      _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_4___default()({
-        path: `/wp/v2/users/${userId}`,
-        method: 'GET'
-      }).then(async response => {
-        const userRoles = response.roles;
-        const forcedRoles = getFieldValue('two_fa_forced_roles');
-        const optionalRoles = getFieldValue('two_fa_optional_roles');
-
-        // if any of userRoles is in forcedRoles, newMethod = 'email'
-        if (userRoles.some(role => forcedRoles.includes(role))) {
-          newMethod = 'email';
-        }
-        // if any of userRoles is in optionalRoles, newMethod = 'open'
-        else if (userRoles.some(role => optionalRoles.includes(role))) {
-          newMethod = 'open';
-        }
-        // if none of the roles match, you can set a default method or throw an error
-        else {
-          newMethod = 'disabled';
-        }
-
-        // Now, update the user's 2FA method
-        return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_4___default()({
-          path: `/wp/v2/users/${userId}`,
-          method: 'POST',
-          data: {
-            meta: {
-              rsssl_two_fa_method: newMethod
-            }
-          }
-        });
-      }).then(() => {
-        // if (reload) {
-        fetchDynamicData(field.action);
-        // }
-      }).catch(error => {
-        console.error('Error:', error);
-      });
-    }
-    if (Array.isArray(userId)) {
-      const promises = userId.map(user => {
-        return handleTwoFAMethodChange(user.id, newMethod, false).then(() => {
-          //we remove the row from the selectedRows
-          setRowsSelected([]);
-          setRowCleared(true);
-        });
-      });
-      Promise.all(promises).then(() => {
-        setRowsSelected([]);
-        setRowCleared(true);
-        fetchDynamicData(field.action);
-      });
-    } else {
-      setTwoFAMethods({
-        ...twoFAMethods,
-        [userId]: newMethod
-      });
-      return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_4___default()({
-        path: `/wp/v2/users/${userId}`,
-        method: 'POST',
-        data: {
-          meta: {
-            rsssl_two_fa_method: newMethod
-          }
-        }
-      }).then(response => {
-        updateUserMeta(userId, newMethod);
-        if (reload) {
-          fetchDynamicData(field.action);
-        }
-      }).catch(error => {
-        console.error('Error updating user meta:', error);
-      });
-    }
-  }
   function buildColumn(column) {
     let newColumn = {
       name: column.name,
@@ -8010,7 +7929,7 @@ const DynamicDataTable = props => {
         className: "rsssl-action-buttons"
       }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
         className: "rsssl-action-buttons__inner"
-      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__.Button, {
+      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
         className: "button button-red rsssl-action-buttons__button",
         onClick: () => handleTwoFAMethodChange(row.id, 'reset')
       }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Reset", "really-simple-ssl"))));
@@ -8048,6 +7967,93 @@ const DynamicDataTable = props => {
       default: 'transparent'
     }
   }, 'light');
+  function handleTwoFAMethodChange(userId, newMethod) {
+    let reload = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+    // Function to handle reset logic
+    const resetUserMethod = id => {
+      return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_4___default()({
+        path: `/wp/v2/users/${id}`,
+        method: 'GET'
+      }).then(async response => {
+        const userRoles = response.roles;
+        const forcedRoles = getFieldValue('two_fa_forced_roles');
+        const optionalRoles = getFieldValue('two_fa_optional_roles');
+
+        // if any of userRoles is in forcedRoles, newMethod = 'email'
+        if (userRoles.some(role => forcedRoles.includes(role))) {
+          newMethod = 'email';
+        }
+        // if any of userRoles is in optionalRoles, newMethod = 'open'
+        else if (userRoles.some(role => optionalRoles.includes(role))) {
+          newMethod = 'open';
+        }
+        // if none of the roles match, you can set a default method or throw an error
+        else {
+          newMethod = 'disabled';
+        }
+
+        // Now, update the user's 2FA method
+        return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_4___default()({
+          path: `/wp/v2/users/${id}`,
+          method: 'POST',
+          data: {
+            meta: {
+              rsssl_two_fa_method: newMethod
+            }
+          }
+        });
+      }).then(() => {
+        fetchDynamicData(field.action);
+      }).catch(error => {
+        console.error('Error:', error);
+      });
+    };
+    if (Array.isArray(userId)) {
+      const promises = userId.map(user => {
+        if (newMethod === 'reset') {
+          return resetUserMethod(user.id).then(() => {
+            setRowsSelected([]);
+            setRowCleared(true);
+          });
+        } else {
+          return handleTwoFAMethodChange(user.id, newMethod, false).then(() => {
+            setRowsSelected([]);
+            setRowCleared(true);
+          });
+        }
+      });
+      Promise.all(promises).then(() => {
+        setRowsSelected([]);
+        setRowCleared(true);
+        fetchDynamicData(field.action);
+      });
+    } else {
+      if (newMethod === 'reset') {
+        resetUserMethod(userId);
+      } else {
+        setTwoFAMethods({
+          ...twoFAMethods,
+          [userId]: newMethod
+        });
+        return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_4___default()({
+          path: `/wp/v2/users/${userId}`,
+          method: 'POST',
+          data: {
+            meta: {
+              rsssl_two_fa_method: newMethod
+            }
+          }
+        }).then(response => {
+          updateUserMeta(userId, newMethod);
+          if (reload) {
+            fetchDynamicData(field.action);
+          }
+        }).catch(error => {
+          console.error('Error updating user meta:', error);
+        });
+      }
+    }
+  }
   function handleSelection(state) {
     setRowCleared(false);
     setRowsSelected(state.selectedRows);
@@ -8068,7 +8074,21 @@ const DynamicDataTable = props => {
     className: "rsssl-search-bar__input",
     placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Search", "really-simple-ssl"),
     onChange: event => handleTableSearch(event.target.value, searchableColumns)
-  })))), dataLoaded ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
+  })))), rowsSelected.length > 0 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    style: {
+      marginTop: '1em',
+      marginBottom: '1em'
+    }
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-multiselect-datatable-form rsssl-primary"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("You have selected", "really-simple-ssl"), " ", rowsSelected.length, " ", (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("rows", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-action-buttons"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-action-buttons__inner"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    className: "button button-red rsssl-action-buttons__button",
+    onClick: () => handleTwoFAMethodChange(rowsSelected, 'reset')
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Reset", "really-simple-ssl")))))), dataLoaded ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
     columns: columns,
     data: DynamicDataTable,
     dense: true,
@@ -25046,4 +25066,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.dccc10110be6250c9e17.js.map
+//# sourceMappingURL=src_Settings_Field_js.a2b48ce308fde48e3a4d.js.map

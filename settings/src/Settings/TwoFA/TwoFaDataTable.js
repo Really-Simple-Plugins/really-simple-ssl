@@ -74,97 +74,6 @@ const DynamicDataTable = (props) => {
         }
     }, [dataActions]);
 
-    function handleTwoFAMethodChange(userId, newMethod, reload = true) {
-        //if the userId is an array, we need to loop through it
-
-        if (newMethod === 'reset') {
-            // First, fetch the user data to get their role
-            apiFetch({
-                path: `/wp/v2/users/${userId}`,
-                method: 'GET',
-            })
-                .then(async (response) => {
-                    const userRoles = response.roles;
-                    const forcedRoles = getFieldValue('two_fa_forced_roles');
-                    const optionalRoles = getFieldValue('two_fa_optional_roles');
-
-                    // if any of userRoles is in forcedRoles, newMethod = 'email'
-                    if (userRoles.some(role => forcedRoles.includes(role))) {
-                        newMethod = 'email';
-                    }
-                    // if any of userRoles is in optionalRoles, newMethod = 'open'
-                    else if (userRoles.some(role => optionalRoles.includes(role))) {
-                        newMethod = 'open';
-                    }
-                    // if none of the roles match, you can set a default method or throw an error
-                    else {
-                        newMethod = 'disabled';
-                    }
-
-                    // Now, update the user's 2FA method
-                    return apiFetch({
-                        path: `/wp/v2/users/${userId}`,
-                        method: 'POST',
-                        data: {
-                            meta: {
-                                rsssl_two_fa_method: newMethod,
-                            },
-                        },
-                    });
-                })
-                .then(() => {
-                    // if (reload) {
-                        fetchDynamicData(field.action);
-                    // }
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
-                });
-        }
-
-        if (Array.isArray(userId)) {
-
-                const promises = userId.map((user) => {
-                    return handleTwoFAMethodChange(user.id, newMethod, false)
-                        .then(() => {
-                            //we remove the row from the selectedRows
-                            setRowsSelected([]);
-                            setRowCleared(true);
-                        });
-                });
-
-                Promise.all(promises)
-                    .then(() => {
-                        setRowsSelected([]);
-                        setRowCleared(true);
-                        fetchDynamicData(field.action);
-                    });
-        } else {
-            setTwoFAMethods({
-                ...twoFAMethods,
-                [userId]: newMethod
-            });
-
-            return apiFetch({
-                path: `/wp/v2/users/${userId}`,
-                method: 'POST',
-                data: {
-                    meta: {
-                        rsssl_two_fa_method: newMethod,
-                    },
-                },
-            })
-                .then((response) => {
-                    updateUserMeta(userId, newMethod);
-                    if (reload) {
-                        fetchDynamicData(field.action);
-                    }
-                })
-                .catch((error) => {
-                    console.error('Error updating user meta:', error);
-                });
-        }
-    }
 
     function buildColumn(column) {
         let newColumn = {
@@ -179,14 +88,14 @@ const DynamicDataTable = (props) => {
 
         if (newColumn.name === 'Action') {
             newColumn.cell = row => (
-            <div className="rsssl-action-buttons">
+                <div className="rsssl-action-buttons">
                     <div className="rsssl-action-buttons__inner">
-                        <Button
+                        <button
                             className="button button-red rsssl-action-buttons__button"
                             onClick={() => handleTwoFAMethodChange(row.id, 'reset')}
                         >
                             {__("Reset", "really-simple-ssl")}
-                        </Button>
+                        </button>
                     </div>
                 </div>
             );
@@ -227,6 +136,106 @@ const DynamicDataTable = (props) => {
         },
     }, 'light');
 
+    function handleTwoFAMethodChange(userId, newMethod, reload = true) {
+
+        // Function to handle reset logic
+        const resetUserMethod = (id) => {
+            return apiFetch({
+                path: `/wp/v2/users/${id}`,
+                method: 'GET',
+            })
+                .then(async (response) => {
+                    const userRoles = response.roles;
+                    const forcedRoles = getFieldValue('two_fa_forced_roles');
+                    const optionalRoles = getFieldValue('two_fa_optional_roles');
+
+                    // if any of userRoles is in forcedRoles, newMethod = 'email'
+                    if (userRoles.some(role => forcedRoles.includes(role))) {
+                        newMethod = 'email';
+                    }
+                    // if any of userRoles is in optionalRoles, newMethod = 'open'
+                    else if (userRoles.some(role => optionalRoles.includes(role))) {
+                        newMethod = 'open';
+                    }
+                    // if none of the roles match, you can set a default method or throw an error
+                    else {
+                        newMethod = 'disabled';
+                    }
+
+                    // Now, update the user's 2FA method
+                    return apiFetch({
+                        path: `/wp/v2/users/${id}`,
+                        method: 'POST',
+                        data: {
+                            meta: {
+                                rsssl_two_fa_method: newMethod,
+                            },
+                        },
+                    });
+                })
+                .then(() => {
+                    fetchDynamicData(field.action);
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+        }
+
+        if (Array.isArray(userId)) {
+            const promises = userId.map((user) => {
+                if (newMethod === 'reset') {
+                    return resetUserMethod(user.id)
+                        .then(() => {
+                            setRowsSelected([]);
+                            setRowCleared(true);
+                        });
+                } else {
+                    return handleTwoFAMethodChange(user.id, newMethod, false)
+                        .then(() => {
+                            setRowsSelected([]);
+                            setRowCleared(true);
+                        });
+                }
+            });
+
+            Promise.all(promises)
+                .then(() => {
+                    setRowsSelected([]);
+                    setRowCleared(true);
+                    fetchDynamicData(field.action);
+                });
+
+        } else {
+            if (newMethod === 'reset') {
+                resetUserMethod(userId);
+            } else {
+                setTwoFAMethods({
+                    ...twoFAMethods,
+                    [userId]: newMethod
+                });
+
+                return apiFetch({
+                    path: `/wp/v2/users/${userId}`,
+                    method: 'POST',
+                    data: {
+                        meta: {
+                            rsssl_two_fa_method: newMethod,
+                        },
+                    },
+                })
+                    .then((response) => {
+                        updateUserMeta(userId, newMethod);
+                        if (reload) {
+                            fetchDynamicData(field.action);
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Error updating user meta:', error);
+                    });
+            }
+        }
+    }
+
     function handleSelection(state) {
         setRowCleared(false);
         setRowsSelected(state.selectedRows);
@@ -254,6 +263,30 @@ const DynamicDataTable = (props) => {
                     </div>
                 </div>
             </div>
+            {rowsSelected.length > 0 && (
+                <div
+                    style={{
+                        marginTop: '1em',
+                        marginBottom: '1em',
+                    }}
+                >
+                    <div className={"rsssl-multiselect-datatable-form rsssl-primary"}>
+                        <div>
+                            {__("You have selected", "really-simple-ssl")} {rowsSelected.length} {__("rows", "really-simple-ssl")}
+                        </div>
+                        <div className="rsssl-action-buttons">
+                            <div className="rsssl-action-buttons__inner">
+                                <button
+                                    className="button button-red rsssl-action-buttons__button"
+                                    onClick={() => handleTwoFAMethodChange(rowsSelected, 'reset')}
+                                >
+                                    {__("Reset", "really-simple-ssl")}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {dataLoaded ?
                 <DataTable
