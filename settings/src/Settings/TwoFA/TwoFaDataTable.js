@@ -83,50 +83,43 @@ const DynamicDataTable = (props) => {
                 path: `/wp/v2/users/${userId}`,
                 method: 'GET',
             })
-                .then((response) => {
+                .then(async (response) => {
                     const userRoles = response.roles;
-                    console.log(userRoles);
+                    const forcedRoles = getFieldValue('two_fa_forced_roles');
+                    const optionalRoles = getFieldValue('two_fa_optional_roles');
 
-                    // fetch optional roles
-                    // console.log(selectedRoles);
+                    // if any of userRoles is in forcedRoles, newMethod = 'email'
+                    if (userRoles.some(role => forcedRoles.includes(role))) {
+                        newMethod = 'email';
+                    }
+                    // if any of userRoles is in optionalRoles, newMethod = 'open'
+                    else if (userRoles.some(role => optionalRoles.includes(role))) {
+                        newMethod = 'open';
+                    }
+                    // if none of the roles match, you can set a default method or throw an error
+                    else {
+                        newMethod = 'disabled';
+                    }
 
-                    // fetch required roles
-
+                    // Now, update the user's 2FA method
+                    return apiFetch({
+                        path: `/wp/v2/users/${userId}`,
+                        method: 'POST',
+                        data: {
+                            meta: {
+                                rsssl_two_fa_method: newMethod,
+                            },
+                        },
+                    });
+                })
+                .then(() => {
+                    // if (reload) {
+                        fetchDynamicData(field.action);
+                    // }
                 })
                 .catch((error) => {
-                    console.error('API Fetch Error:', error);
+                    console.error('Error:', error);
                 });
-
-                //     // Define the logic to update the 2FA method based on the role
-                //     if (userRole in optional roles) {
-                //         newMethod = 'open';
-                //     } else if (userRole === in required roles) {
-                //         newMethod = 'email';
-                //     } else {
-                //         console.error(`Unexpected role: ${userRole}`);
-                //         return;
-                //     }
-                //
-                //     // Once the newMethod is determined, you can set it as you originally did
-                //     return apiFetch({
-                //         path: `/wp/v2/users/${userId}`,
-                //         method: 'POST',
-                //         data: {
-                //             meta: {
-                //                 rsssl_two_fa_method: newMethod,
-                //             },
-                //         },
-                //     });
-                // })
-                // .then(() => {
-                //     // Once the 2FA method is set, continue your logic (e.g. reloading the data)
-                //     if (reload) {
-                //         fetchDynamicData(field.action);
-                //     }
-                // })
-                // .catch((error) => {
-                //     console.error('Error:', error);
-                // });
         }
 
         if (Array.isArray(userId)) {

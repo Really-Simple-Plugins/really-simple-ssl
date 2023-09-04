@@ -367,9 +367,6 @@ function rsssl_do_action($request, $ajax_data = false)
         case 'otherpluginsdata':
             $response = rsssl_other_plugins_data();
             break;
-	    case 'otherpluginsdata':
-		    $response = rsssl_other_plugins_data();
-		    break;
         case 'get_roles':
             $response = rsssl_get_roles( $data );
             break;
@@ -1140,6 +1137,3 @@ function rsssl_get_roles( $data ) {
 
 	return $output;
 }
-
-
-

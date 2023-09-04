@@ -7836,13 +7836,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../FieldsData */ "./src/Settings/FieldsData.js");
 /* harmony import */ var _TwoFaDataTableStore__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./TwoFaDataTableStore */ "./src/Settings/TwoFA/TwoFaDataTableStore.js");
-/* harmony import */ var _TwoFaStore__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./TwoFaStore */ "./src/Settings/TwoFA/TwoFaStore.js");
-/* harmony import */ var _TwoFaRolesDropDown__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./TwoFaRolesDropDown */ "./src/Settings/TwoFA/TwoFaRolesDropDown.js");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_9__);
-
-
-
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__);
 
 
 
@@ -7867,11 +7862,6 @@ const DynamicDataTable = props => {
     handleTableSearch,
     updateUserMeta
   } = (0,_TwoFaDataTableStore__WEBPACK_IMPORTED_MODULE_6__["default"])();
-  const {
-    fetchRoles,
-    roles,
-    rolesLoaded
-  } = (0,_TwoFaStore__WEBPACK_IMPORTED_MODULE_7__["default"])();
 
   // const {
   //     selectedRoles,
@@ -7929,50 +7919,42 @@ const DynamicDataTable = props => {
       _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_4___default()({
         path: `/wp/v2/users/${userId}`,
         method: 'GET'
-      }).then(response => {
+      }).then(async response => {
         const userRoles = response.roles;
-        console.log(userRoles);
+        const forcedRoles = getFieldValue('two_fa_forced_roles');
+        const optionalRoles = getFieldValue('two_fa_optional_roles');
 
-        // fetch optional roles
-        console.log(selectedRoles);
+        // if any of userRoles is in forcedRoles, newMethod = 'email'
+        if (userRoles.some(role => forcedRoles.includes(role))) {
+          newMethod = 'email';
+        }
+        // if any of userRoles is in optionalRoles, newMethod = 'open'
+        else if (userRoles.some(role => optionalRoles.includes(role))) {
+          newMethod = 'open';
+        }
+        // if none of the roles match, you can set a default method or throw an error
+        else {
+          newMethod = 'disabled';
+        }
 
-        // fetch required roles
+        // Now, update the user's 2FA method
+        return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_4___default()({
+          path: `/wp/v2/users/${userId}`,
+          method: 'POST',
+          data: {
+            meta: {
+              rsssl_two_fa_method: newMethod
+            }
+          }
+        });
+      }).then(() => {
+        // if (reload) {
+        fetchDynamicData(field.action);
+        // }
       }).catch(error => {
-        console.error('API Fetch Error:', error);
+        console.error('Error:', error);
       });
-
-      //     // Define the logic to update the 2FA method based on the role
-      //     if (userRole in optional roles) {
-      //         newMethod = 'open';
-      //     } else if (userRole === in required roles) {
-      //         newMethod = 'email';
-      //     } else {
-      //         console.error(`Unexpected role: ${userRole}`);
-      //         return;
-      //     }
-      //
-      //     // Once the newMethod is determined, you can set it as you originally did
-      //     return apiFetch({
-      //         path: `/wp/v2/users/${userId}`,
-      //         method: 'POST',
-      //         data: {
-      //             meta: {
-      //                 rsssl_two_fa_method: newMethod,
-      //             },
-      //         },
-      //     });
-      // })
-      // .then(() => {
-      //     // Once the 2FA method is set, continue your logic (e.g. reloading the data)
-      //     if (reload) {
-      //         fetchDynamicData(field.action);
-      //     }
-      // })
-      // .catch((error) => {
-      //     console.error('Error:', error);
-      // });
     }
-
     if (Array.isArray(userId)) {
       const promises = userId.map(user => {
         return handleTwoFAMethodChange(user.id, newMethod, false).then(() => {
@@ -8024,7 +8006,7 @@ const DynamicDataTable = props => {
         className: "rsssl-action-buttons"
       }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
         className: "rsssl-action-buttons__inner"
-      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_9__.Button, {
+      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__.Button, {
         className: "button button-red rsssl-action-buttons__button",
         onClick: () => handleTwoFAMethodChange(row.id, 'reset')
       }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Reset", "really-simple-ssl"))));
@@ -25060,4 +25042,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.00f9571ffc3d0dd17b64.js.map
+//# sourceMappingURL=src_Settings_Field_js.867cdc64118ece45127c.js.map
