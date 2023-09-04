@@ -44,7 +44,6 @@ const EventLogDataTableStore = create((set, get) => ({
 
 
     fetchDynamicData: async (action) => {
-        console.log('fetching data eventlog');
         try {
             const response = await rsssl_api.doAction(
                 action,

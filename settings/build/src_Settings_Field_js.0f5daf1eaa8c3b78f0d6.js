@@ -2134,7 +2134,6 @@ const EventLogDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((
     totalRows: 2
   },
   fetchDynamicData: async action => {
-    console.log('fetching data eventlog');
     try {
       const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction(action, get().dataActions);
       // now we set the EventLog
@@ -24999,4 +24998,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.58c149deebba7381e7b7.js.map
+//# sourceMappingURL=src_Settings_Field_js.0f5daf1eaa8c3b78f0d6.js.map
