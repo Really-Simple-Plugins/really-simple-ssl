@@ -4121,12 +4121,10 @@ const CountryDatatable = props => {
 
   //get data if field was already enabled, so not changed right now.
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
-    if (fieldAlreadyEnabled) {
-      if (!dataLoaded) {
-        fetchCountryData(props.field.action);
-      }
+    if (fieldAlreadyEnabled && !dataLoaded) {
+      fetchCountryData(props.field.action);
     }
-  }, [fields]);
+  }, [fieldAlreadyEnabled, dataLoaded, fetchCountryData, props.field.action]);
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     // code to execute after DynamicDataTable has been updated
   }, [DynamicDataTable]);
@@ -4178,23 +4176,20 @@ const CountryDatatable = props => {
   const handleSelection = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)(state => {
     setRowsSelected(state.selectedRows);
   }, []);
-  const allowRegionByCode = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)(code => {
+  const allowRegionByCode = async code => {
     if (Array.isArray(code)) {
-      code.forEach(item => removeRegion(item, 'blocked'));
-      setTimeout(() => {
-        setRowCleared(true);
-        setTimeout(() => setRowCleared(false), 100);
-      }, 100);
+      for (let item of code) {
+        await removeRegion(item, 'blocked');
+      }
       setRowsSelected([]);
     } else {
-      removeRegion(code, 'blocked');
+      await removeRegion(code, 'blocked');
     }
-    setTimeout(() => {
-      setRowCleared(true);
-      setTimeout(() => setRowCleared(false), 100);
-      setTimeout(() => fetchDynamicData('event_log'), 100);
-    }, 100);
-  }, [removeRegion]);
+    setRowCleared(true);
+    await new Promise(resolve => setTimeout(resolve, 100));
+    setRowCleared(false);
+    await fetchDynamicData('event_log');
+  };
   const allowMultiple = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)(rows => {
     const ids = rows.map(item => item.id);
     resetMultiRow(ids, 'blocked');
@@ -25004,4 +24999,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.909ee967edca31644367.js.map
+//# sourceMappingURL=src_Settings_Field_js.58c149deebba7381e7b7.js.map

@@ -64,12 +64,10 @@ const CountryDatatable = (props) => {
 
     //get data if field was already enabled, so not changed right now.
     useEffect(() => {
-        if (fieldAlreadyEnabled) {
-            if (!dataLoaded) {
-                fetchCountryData(props.field.action);
-            }
+        if (fieldAlreadyEnabled && !dataLoaded) {
+            fetchCountryData(props.field.action);
         }
-    }, [fields]);
+    }, [fieldAlreadyEnabled, dataLoaded, fetchCountryData, props.field.action]);
 
     useEffect(() => {
         // code to execute after DynamicDataTable has been updated
@@ -132,23 +130,21 @@ const CountryDatatable = (props) => {
         setRowsSelected(state.selectedRows);
     }, []);
 
-    const allowRegionByCode = useCallback((code) => {
+    const allowRegionByCode = async (code) => {
         if (Array.isArray(code)) {
-            code.forEach(item => removeRegion(item, 'blocked'));
-            setTimeout(() => {
-                setRowCleared(true);
-                setTimeout(() => setRowCleared(false), 100);
-            }, 100);
+            for (let item of code) {
+                await removeRegion(item, 'blocked');
+            }
             setRowsSelected([]);
         } else {
-            removeRegion(code, 'blocked');
+            await removeRegion(code, 'blocked');
         }
-        setTimeout(() => {
-            setRowCleared(true);
-            setTimeout(() => setRowCleared(false), 100);
-            setTimeout(() =>  fetchDynamicData('event_log'), 100);
-        }, 100);
-    }, [removeRegion]);
+        setRowCleared(true);
+        await new Promise(resolve => setTimeout(resolve, 100));
+        setRowCleared(false);
+        await fetchDynamicData('event_log');
+    };
+
 
     const allowMultiple = useCallback((rows) => {
         const ids = rows.map(item => item.id);
