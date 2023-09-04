@@ -1,5 +1,5 @@
 "use strict";
-(globalThis["webpackChunkreally_simple_ssl"] = globalThis["webpackChunkreally_simple_ssl"] || []).push([["src_Menu_Menu_js"],{
+(self["webpackChunkreally_simple_ssl"] = self["webpackChunkreally_simple_ssl"] || []).push([["src_Menu_Menu_js"],{
 
 /***/ "./src/Menu/Menu.js":
 /*!**************************!*\
@@ -176,4 +176,4 @@ const UseLicenseData = (0,zustand__WEBPACK_IMPORTED_MODULE_0__.create)((set, get
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Menu_Menu_js.d02fa823631e8bdbe312.js.map
+//# sourceMappingURL=src_Menu_Menu_js.c275f909410871ede758.js.map
