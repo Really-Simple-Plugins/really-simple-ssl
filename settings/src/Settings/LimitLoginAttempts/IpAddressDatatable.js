@@ -2,13 +2,14 @@ import {__} from '@wordpress/i18n';
 import React, {useEffect, useRef, useState} from 'react';
 import DataTable, {createTheme} from "react-data-table-component";
 import IpAddressDataTableStore from "./IpAddressDataTableStore";
-import DynamicDataTableStore from "../EventLog/DynamicDataTableStore";
+import EventLogDataTableStore from "../EventLog/EventLogDataTableStore";
 import FilterData from "../FilterData";
-import {Button} from "@wordpress/components";
+import {button} from "@wordpress/components";
 import {produce} from "immer";
 import Flag from "../../utils/Flag/Flag";
 import Icon from "../../utils/Icon";
 import AddIpAddressModal from "./AddIpAddressModal";
+import useFields from "../FieldsData";
 
 const IpAddressDatatable = (props) => {
     const {
@@ -33,7 +34,8 @@ const IpAddressDatatable = (props) => {
     const [addingIpAddress, setAddingIpAddress] = useState(false);
     const [rowsSelected, setRowsSelected] = useState([]);
     const [rowCleared, setRowCleared] = useState(false);
-    const {fetchDynamicData} = DynamicDataTableStore();
+    const {fetchDynamicData} = EventLogDataTableStore();
+    const {fields, fieldAlreadyEnabled, getFieldValue} = useFields();
 
     const moduleName = 'rsssl-group-filter-limit_login_attempts_ip_address';
     //we create the columns
@@ -46,20 +48,24 @@ const IpAddressDatatable = (props) => {
         columns.push(newItem);
     });
 
+    //get data if field was already enabled, so not changed right now.
+    useEffect(() => {
+        if (fieldAlreadyEnabled) {
+            if (!dataLoaded) {
+                fetchIpData(field.action);
+            }
+        }
+    }, [fields]);
+
     useEffect(() => {
         const currentFilter = getCurrentFilter(moduleName);
 
         if (!currentFilter) {
-            setSelectedFilter('blocked', moduleName);
+            setSelectedFilter('locked', moduleName);
         }
         handleIpTableFilter('status', currentFilter);
     }, [selectedFilter, moduleName]);
 
-    useEffect(() => {
-        if (!dataLoaded) {
-            fetchIpData(field.action);
-        }
-    });
 
     const customStyles = {
         headCells: {
@@ -92,6 +98,13 @@ const IpAddressDatatable = (props) => {
             </div>
         );
     }
+    let enabled = false;
+
+    fields.forEach(function (item, i) {
+        if (item.id === 'enable_limited_login_attempts') {
+            enabled = item.value;
+        }
+    });
 
     const handleOpen = () => {
         setAddingIpAddress(true);
@@ -242,47 +255,47 @@ const IpAddressDatatable = (props) => {
         }
     }
 
-    function generateActionButtons(id) {
+    function generateActionbuttons(id) {
         return (
             <>
                 <div className="rsssl-action-buttons">
                     {/* if the id is new we show the Allow button */}
                     {getCurrentFilter(moduleName) === 'blocked' && (
                         <div className="rsssl-action-buttons__inner">
-                            <Button
-                                className="button button-secondary rsssl-action-buttons__button"
+                            <button
+                                className="button button-secondary button-datatable rsssl-action-buttons__button"
                                 onClick={() => {
                                     allowIpAddresses(id);
                                 }}
                             >
                                 {__("Allow", "really-simple-ssl")}
-                            </Button>
+                            </button>
                         </div>
                     )}
                     {/* if the id is new we show the Block button */}
                     {getCurrentFilter(moduleName) === 'allowed' && (
                         <div className="rsssl-action-buttons__inner">
-                            <Button
-                                className="button button-primary rsssl-action-buttons__button"
+                            <button
+                                className="button button-primary button-datatable rsssl-action-buttons__button"
                                 onClick={() => {
                                     blockIpAddresses(id);
                                 }}
                             >
                                 {__("Block", "really-simple-ssl")}
-                            </Button>
+                            </button>
                         </div>
                     )}
                     {/* if the id is new we show the Reset button */}
                     <div className="rsssl-action-buttons__inner">
-                        <Button
-                            className="button button-red rsssl-action-buttons__button"
+                        <button
+                            className="button button-red button-datatable rsssl-action-buttons__button"
                             onClick={() => {
                                 resetIpAddresses(id);
                             }
                             }
                         >
                             {__("Reset", "really-simple-ssl")}
-                        </Button>
+                        </button>
                     </div>
                 </div>
             </>
@@ -292,7 +305,7 @@ const IpAddressDatatable = (props) => {
     for (const key in data) {
         let dataItem = {...data[key]}
 
-        dataItem.action = generateActionButtons(dataItem.id);
+        dataItem.action = generateActionbuttons(dataItem.id);
 
         data[key] = dataItem;
     }
@@ -317,12 +330,17 @@ const IpAddressDatatable = (props) => {
                 <div className="rsssl-add-button">
                     {(getCurrentFilter(moduleName) === 'blocked' || getCurrentFilter(moduleName) === 'allowed') && (
                         <div className="rsssl-add-button__inner">
-                            <Button
-                                className="button button-secondary rsssl-add-button__button"
+                            <button
+                                className="button button-secondary button-datatable rsssl-add-button__button"
                                 onClick={handleOpen}
                             >
-                                {__("Add IP Address", "really-simple-ssl")}
-                            </Button>
+                                {getCurrentFilter(moduleName) === 'blocked' && (
+                                <>{__("Block IP Address", "really-simple-ssl")}</>
+                                )}
+                                {getCurrentFilter(moduleName) === 'allowed' && (
+                                    <>{__("Allow IP Address", "really-simple-ssl")}</>
+                                )}
+                            </button>
                         </div>
                     )}
                 </div>
@@ -358,39 +376,39 @@ const IpAddressDatatable = (props) => {
                             {/* if the id is new we show the Allow button */}
                             {getCurrentFilter(moduleName) === 'blocked' && (
                                 <div className="rsssl-action-buttons__inner">
-                                    <Button
-                                        className="button button-secondary rsssl-action-buttons__button"
+                                    <button
+                                        className="button button-secondary button-datatable rsssl-action-buttons__button"
                                         onClick={() => {
                                             allowIpAddresses(rowsSelected);
                                         }}
                                     >
                                         {__("Allow", "really-simple-ssl")}
-                                    </Button>
+                                    </button>
                                 </div>
                             )}
                             {/* if the id is new we show the Block button */}
                             {getCurrentFilter(moduleName) === 'allowed' && (
                                 <div className="rsssl-action-buttons__inner">
-                                    <Button
-                                        className="button button-primary rsssl-action-buttons__button"
+                                    <button
+                                        className="button button-primary button-datatable rsssl-action-buttons__button"
                                         onClick={() => {
                                             blockIpAddresses(rowsSelected);
                                         }}
                                     >
                                         {__("Block", "really-simple-ssl")}
-                                    </Button>
+                                    </button>
                                 </div>
                             )}
                             {/* if the id is new we show the Reset button */}
                             <div className="rsssl-action-buttons__inner">
-                                <Button
-                                    className="button button-red rsssl-action-buttons__button"
+                                <button
+                                    className="button button-red button-datatable rsssl-action-buttons__button"
                                     onClick={() => {
                                         resetIpAddresses(rowsSelected);
                                     }}
                                 >
                                     {__("Reset", "really-simple-ssl")}
-                                </Button>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -413,12 +431,18 @@ const IpAddressDatatable = (props) => {
                 noDataComponent={__("No results", "really-simple-ssl")}
                 persistTableHead
                 selectableRows
-                selectableRowsHighlight={true}
                 onSelectedRowsChange={handleSelection}
                 clearSelectedRows={rowCleared}
                 theme="really-simple-plugins"
                 customStyles={customStyles}
             ></DataTable>
+            {!enabled && (
+                <div className="rsssl-locked">
+                    <div className="rsssl-locked-overlay"><span
+                        className="rsssl-task-status rsssl-open">{__('Disabled', 'really-simple-ssl')}</span><span>{__('Limit login attempts to enable this block.', 'really-simple-ssl')}</span>
+                    </div>
+                </div>
+            )}
         </>
     );
 

@@ -18,7 +18,7 @@ const SvgDeGermany = (props) => (
         maskType: "luminance",
       }}
     >
-      <rect width={16} height={12} fill="#fff" rx={-1} />
+      <rect width={16} height={12} fill="#fff" rx={0} />
     </mask>
     <g fillRule="evenodd" clipRule="evenodd" mask="url(#DE_-_Germany_svg__a)">
       <path fill="#FFD018" d="M0 8h16v4H0V8Z" />

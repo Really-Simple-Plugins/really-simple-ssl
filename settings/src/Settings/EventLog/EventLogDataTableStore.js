@@ -5,7 +5,7 @@ import {__} from "@wordpress/i18n";
 import {produce} from "immer";
 import React from "react";
 
-const DynamicDataTableStore = create((set, get) => ({
+const EventLogDataTableStore = create((set, get) => ({
 
     processing: false,
     dataLoaded: false,
@@ -49,14 +49,12 @@ const DynamicDataTableStore = create((set, get) => ({
                 action,
                 get().dataActions
             );
-            //now we set the EventLog
+            // now we set the EventLog
             if (response) {
-                //if the response is empty we set the dummyData
-                if (typeof response.pagination === 'undefined') {
-                    set({DynamicDataTable: get().dummyData, dataLoaded: true, processing: false, pagination: get().dummyPagination});
-                } else {
-                    set({DynamicDataTable: response, dataLoaded: true, processing: false, pagination: response.pagination});
-                }
+                // if the response is empty we set the dummyData
+                const data = typeof response.pagination === 'undefined' ? get().dummyData : response;
+                const pagination = typeof response.pagination === 'undefined' ? get().dummyPagination : response.pagination;
+                set({DynamicDataTable: data, dataLoaded: true, processing: false, pagination});
             }
         } catch (e) {
             console.log(e);
@@ -113,4 +111,4 @@ const DynamicDataTableStore = create((set, get) => ({
 
 }));
 
-export default DynamicDataTableStore;
+export default EventLogDataTableStore;
