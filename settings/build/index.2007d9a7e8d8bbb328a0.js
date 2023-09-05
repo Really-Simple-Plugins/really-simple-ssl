@@ -3389,6 +3389,7 @@ const updateFieldsListWithConditions = fields => {
   }
   fields.forEach(function (field, i) {
     let enabled = !(field.hasOwnProperty('react_conditions') && !validateConditions(field.react_conditions, fields, field.id));
+    console.log(field);
     let previouslyEnabled = !field.conditionallyDisabled;
     //we want to update the changed fields if this field has just become visible. Otherwise the new field won't get saved.
     const newField = {
@@ -4988,4 +4989,4 @@ document.addEventListener('click', e => {
 
 /******/ })()
 ;
-//# sourceMappingURL=index.583c922dd6ab7423bbdf.js.map
+//# sourceMappingURL=index.2007d9a7e8d8bbb328a0.js.map
