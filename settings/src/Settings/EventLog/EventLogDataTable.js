@@ -1,14 +1,15 @@
 import {__} from '@wordpress/i18n';
 import React, {useEffect, useState, useRef} from 'react';
 import DataTable, {createTheme, ExpanderComponentProps} from "react-data-table-component";
-import DynamicDataTableStore from "./DynamicDataTableStore";
+import EventLogDataTableStore from "./EventLogDataTableStore";
 import FilterData from "../FilterData";
 import * as rsssl_api from "../../utils/api";
 import useMenu from "../../Menu/MenuData";
 import Flag from "../../utils/Flag/Flag";
 import Icon from "../../utils/Icon";
+import useFields from "../FieldsData";
 
-const DynamicDataTable = (props) => {
+const EventLogDataTable = (props) => {
     const {
         DynamicDataTable,
         dataLoaded,
@@ -20,12 +21,12 @@ const DynamicDataTable = (props) => {
         handleEventTablePageChange,
         handleEventTableSearch,
         handleEventTableFilter,
-    } = DynamicDataTableStore()
+    } = EventLogDataTableStore()
 
     const moduleName = 'rsssl-group-filter-limit_login_attempts_event_log';
     //here we set the selectedFilter from the Settings group
     const {selectedFilter, setSelectedFilter, activeGroupId, getCurrentFilter} = FilterData();
-
+    const {fields, fieldAlreadyEnabled, getFieldValue} = useFields();
 
     useEffect(() => {
         const currentFilter = getCurrentFilter(moduleName);
@@ -36,11 +37,14 @@ const DynamicDataTable = (props) => {
         handleEventTableFilter('severity', currentFilter, moduleName);
     }, [selectedFilter, moduleName]);
 
+    //get data if field was already enabled, so not changed right now.
     useEffect(() => {
-        if (!dataLoaded) {
-            fetchDynamicData(field.action);
+        if (fieldAlreadyEnabled) {
+            if (!dataLoaded) {
+                fetchDynamicData(field.action);
+            }
         }
-    });
+    }, [fields]);
 
 
     //we create the columns
@@ -51,6 +55,14 @@ const DynamicDataTable = (props) => {
     field.columns.forEach(function (item, i) {
         let newItem = buildColumn(item)
         columns.push(newItem);
+    });
+
+    let enabled = false;
+
+    fields.forEach(function (item, i) {
+        if (item.id === 'enable_limited_login_attempts') {
+            enabled = item.value;
+        }
     });
 
 
@@ -98,7 +110,7 @@ const DynamicDataTable = (props) => {
     if (DynamicDataTable.data) {
         data = DynamicDataTable.data.map((dataItem) => {
             let newItem = {...dataItem};
-            newItem.iso2_code = generateFlag(newItem.iso2_code, 'Netherlands');
+            newItem.iso2_code = generateFlag(newItem.iso2_code, newItem.country_name);
             newItem.expandableRows = true;
             return newItem;
         });
@@ -170,18 +182,6 @@ const DynamicDataTable = (props) => {
         }
     }
 
-    // for (const key in data) {
-    //     let dataItem = {...data[key]}
-    //
-    //     dataItem.iso2_code = generateFlag(dataItem.iso2_code, 'Netherlands');
-    //     //we add the expandable row
-    //     dataItem.expandableRows = true;
-    //     // dataItem.api = generateGoodBad(dataItem.api);
-    //
-    //     data[key] = dataItem;
-    // }
-
-
     return (
         <>
             <div className="rsssl-container">
@@ -229,11 +229,18 @@ const DynamicDataTable = (props) => {
                 theme="really-simple-plugins"
                 customStyles={customStyles}
             ></DataTable>
+            {!enabled && (
+                <div className="rsssl-locked">
+                    <div className="rsssl-locked-overlay"><span
+                        className="rsssl-task-status rsssl-open">{__('Disabled', 'really-simple-ssl')}</span><span>{__('Limit login attempts to enable this block.', 'really-simple-ssl')}</span>
+                    </div>
+                </div>
+            )}
         </>
     );
 
 }
-export default DynamicDataTable;
+export default EventLogDataTable;
 
 function buildColumn(column) {
     return {

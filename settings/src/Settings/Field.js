@@ -20,7 +20,6 @@ import LearningMode from "./LearningMode/LearningMode";
 import RiskComponent from "./RiskConfiguration/RiskComponent";
 import VulnerabilitiesOverview from "./RiskConfiguration/vulnerabilitiesOverview";
 import IpAddressDatatable from "./LimitLoginAttempts/IpAddressDatatable";
-// import IpAddressModule from "./LimitLoginAttempts/IpAddressModule";
 import TwoFaRolesDropDown from "./TwoFA/TwoFaRolesDropDown";
 import Button from "./Button";
 import Icon from "../utils/Icon";
@@ -30,11 +29,11 @@ import PostDropdown from "./PostDropDown";
 import NotificationTester from "./RiskConfiguration/NotificationTester";
 import getAnchor from "../utils/getAnchor";
 import useMenu from "../Menu/MenuData";
-import EventLog from "./EventLog/DynamicDataTable";
 import UserDatatable from "./LimitLoginAttempts/UserDatatable";
 import CountryDatatable from "./LimitLoginAttempts/CountryDatatable";
 import DynamicDataTable from "./DynamicDataTable/DynamicDataTable";
 import TwoFaDataTable from "./TwoFA/TwoFaDataTable";
+import EventLogDataTable from "./EventLog/EventLogDataTable";
 const Field = (props) => {
     let scrollAnchor = React.createRef();
     const {updateField, setChangedField, highLightField} = useFields();
@@ -379,7 +378,7 @@ const Field = (props) => {
     if (field.type === 'eventlog-datatable') {
         return (
             <div className={highLightClass} ref={scrollAnchor}>
-                <DynamicDataTable
+                <EventLogDataTable
                     field={props.field}
                     action={props.field.action}
                 />

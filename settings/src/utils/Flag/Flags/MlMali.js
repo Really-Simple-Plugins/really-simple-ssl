@@ -18,7 +18,7 @@ const SvgMlMali = (props) => (
         maskType: "luminance",
       }}
     >
-      <rect width={16} height={12} fill="#fff" rx={-1} />
+      <rect width={16} height={12} fill="#fff" rx={0} />
     </mask>
     <g fillRule="evenodd" clipRule="evenodd" mask="url(#ML_-_Mali_svg__a)">
       <path fill="#FBCD17" d="M5 0h6v12H5V0Z" />

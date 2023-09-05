@@ -18,7 +18,7 @@ const SvgUgUganda = (props) => (
         maskType: "luminance",
       }}
     >
-      <rect width={16} height={12} fill="#fff" rx={-1} />
+      <rect width={16} height={12} fill="#fff" rx={0} />
     </mask>
     <g mask="url(#UG_-_Uganda_svg__a)">
       <path

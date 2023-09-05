@@ -3389,7 +3389,6 @@ const updateFieldsListWithConditions = fields => {
   }
   fields.forEach(function (field, i) {
     let enabled = !(field.hasOwnProperty('react_conditions') && !validateConditions(field.react_conditions, fields, field.id));
-    console.log(field);
     let previouslyEnabled = !field.conditionallyDisabled;
     //we want to update the changed fields if this field has just become visible. Otherwise the new field won't get saved.
     const newField = {
@@ -4741,7 +4740,7 @@ var vanilla = (createState) => {
 /******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = (chunkId) => {
 /******/ 			// return url for filenames based on template
-/******/ 			return "" + chunkId + "." + {"vendors-node_modules_mui_material_Tooltip_Tooltip_js":"d8434082544e12ff392b","src_Settings_Settings_js":"97b7166929c068e2119f","src_Menu_Menu_js":"d02fa823631e8bdbe312","src_Dashboard_DashboardPage_js":"7d453e40aad1ed2d6f19","src_Onboarding_OnboardingModal_js":"1d8d2851236cff97e5e0","src_Modal_Modal_js":"167602dc03f32835d434","vendors-node_modules_material-ui_core_esm_TextField_TextField_js-node_modules_react-data-tabl-8e8716":"92b86d2d6d2f09266d59","src_Settings_Field_js":"867cdc64118ece45127c","vendors-node_modules_material-ui_lab_esm_Autocomplete_index_js":"7e3acfc4b2cc4f80a10a","vendors-node_modules_material-ui_core_esm_styles_index_js":"a8b5b3bd6cd7ef36aa0a"}[chunkId] + ".js";
+/******/ 			return "" + chunkId + "." + {"vendors-node_modules_mui_material_Tooltip_Tooltip_js":"d8434082544e12ff392b","src_Settings_Settings_js":"97b7166929c068e2119f","src_Menu_Menu_js":"d02fa823631e8bdbe312","src_Dashboard_DashboardPage_js":"7d453e40aad1ed2d6f19","src_Onboarding_OnboardingModal_js":"1d8d2851236cff97e5e0","src_Modal_Modal_js":"167602dc03f32835d434","vendors-node_modules_material-ui_core_esm_TextField_TextField_js-node_modules_react-data-tabl-8e8716":"92b86d2d6d2f09266d59","src_Settings_Field_js":"15133ea6fea351914d23","vendors-node_modules_material-ui_lab_esm_Autocomplete_index_js":"7e3acfc4b2cc4f80a10a","vendors-node_modules_material-ui_core_esm_styles_index_js":"a8b5b3bd6cd7ef36aa0a"}[chunkId] + ".js";
 /******/ 		};
 /******/ 	})();
 /******/ 	
@@ -4989,4 +4988,4 @@ document.addEventListener('click', e => {
 
 /******/ })()
 ;
-//# sourceMappingURL=index.2007d9a7e8d8bbb328a0.js.map
+//# sourceMappingURL=index.c9a5304acbc9a513c5fc.js.map

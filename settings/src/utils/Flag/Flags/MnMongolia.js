@@ -18,7 +18,7 @@ const SvgMnMongolia = (props) => (
         maskType: "luminance",
       }}
     >
-      <rect width={16} height={12} fill="#fff" rx={-1} />
+      <rect width={16} height={12} fill="#fff" rx={0} />
     </mask>
     <g fillRule="evenodd" clipRule="evenodd" mask="url(#MN_-_Mongolia_svg__a)">
       <path fill="#4C67E8" d="M5 0h6v12H5V0Z" />

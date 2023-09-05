@@ -1009,11 +1009,6 @@ function rsssl_fields( $load_values = true ) {
                     'width'    => '10%',
                 ],
                 [
-                    'name'     => __('Date', 'really-simple-ssl'),
-                    'sortable' => true,
-                    'column'   => 'datetime',
-                ],
-                [
                     'name'     => '',
                     'sortable' => false,
                     'column'   => 'action',
