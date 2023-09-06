@@ -1395,12 +1395,12 @@ function rsssl_fields( $load_values = true ) {
                     'grow'     => 4,
                 ],
 
-//                [
-//                    'name'     => __('Details', 'really-simple-ssl'),
-//                    'sortable' => false,
-//                    'column'   => 'detailsControl',
-//                    'grow'     => 0,
-//                ],
+                [
+                    'name'     => __('Details', 'really-simple-ssl'),
+                    'sortable' => false,
+                    'column'   => 'detailsControl',
+                    'grow'     => 0,
+                ],
                 [
                     'name'     => __('Fix', 'really-simple-ssl'),
                     'sortable' => false,

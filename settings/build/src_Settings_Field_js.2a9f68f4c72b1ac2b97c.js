@@ -6265,44 +6265,56 @@ const MixedContentScan = props => {
   };
   const ExpandableRow = _ref2 => {
     let {
-      data
+      data,
+      disabled,
+      handleFix
     } = _ref2;
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-container"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, data.details.description.map((item, i) => {
-      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-        key: i
-      }, item), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("br", null));
-    }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-action-buttons__inner",
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, data.details.description.map((item, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)((react__WEBPACK_IMPORTED_MODULE_7___default().Fragment), {
+      key: i
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, item), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("br", null))))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "",
       style: {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'
       }
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button
-    // className={"button button-red rsssl-action-buttons__button"}
-    , {
-      className: "button button-red rsssl-action-buttons__button",
-      href: data.details.help,
+    }, data.details.edit && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+      href: data.details.edit,
+      target: "_blank",
+      rel: "noopener noreferrer",
+      className: "button button-secondary",
       style: {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'
-      },
-      target: "_blank"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Help", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button
-    // className={"button button-red rsssl-action-buttons__button"}
-    , {
-      className: "button button-primary rsssl-action-buttons__button",
+      }
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Edit", "really-simple-ssl")), data.details.help && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+      href: data.details.help,
+      target: "_blank",
+      rel: "noopener noreferrer",
+      className: "button button-red",
       style: {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        marginLeft: '10px'
-      },
-      onClick: () => ignoreDataItem(data)
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Ignore", "really-simple-ssl"))));
+        marginRight: '10px'
+      }
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Help", "really-simple-ssl")), !data.details.ignored && data.details.action === 'ignore_url' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+      disabled: disabled,
+      className: "button button-primary",
+      onClick: e => handleFix(e, 'ignore'),
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Ignore", "really-simple-ssl")), data.details.action !== 'ignore_url' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+      disabled: disabled,
+      className: "button button-primary rsssl-action-buttons__button",
+      onClick: e => handleFix(e, 'fix')
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Fix", "really-simple-ssl"))));
   };
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-progress-container"
@@ -25066,4 +25078,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.a2b48ce308fde48e3a4d.js.map
+//# sourceMappingURL=src_Settings_Field_js.2a9f68f4c72b1ac2b97c.js.map
