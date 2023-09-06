@@ -130,42 +130,69 @@ const MixedContentScan = (props) => {
         },
     };
 
-    const ExpandableRow = ({data}) => {
+    const ExpandableRow = ({ data, disabled, handleFix }) => {
         return (
-            <div
-                className={"rsssl-container"}>
+            <div className="rsssl-container">
                 <div>
                     <p>
-                        {/* We loop through the description and place each item on a new line */}
-                        {data.details.description.map((item, i) => {
-                            return <><span key={i}>{item}</span><br/></>
-                        })}
+                        {data.details.description.map((item, i) => (
+                            <React.Fragment key={i}>
+                                <span>{item}</span>
+                                <br />
+                            </React.Fragment>
+                        ))}
                     </p>
                 </div>
-                <div className="rsssl-action-buttons__inner"
-                     style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}
+                <div
+                    className=""
+                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                 >
-                    <Button
-                        // className={"button button-red rsssl-action-buttons__button"}
-                        className={"button button-red rsssl-action-buttons__button"}
-                        href={data.details.help}
-                        style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}
-                        target="_blank"
-                    >
-                        {__("Help", "really-simple-ssl")}
-                    </Button>
-                    <Button
-                        // className={"button button-red rsssl-action-buttons__button"}
-                        className={"button button-primary rsssl-action-buttons__button"}
-                        style={{display: 'flex', alignItems: 'center', justifyContent: 'center', marginLeft: '10px'}}
-                        onClick={() => ignoreDataItem(data)}
-                    >
-                        {__("Ignore", "really-simple-ssl")}
-                    </Button>
+                    {data.details.edit && (
+                        <a
+                            href={data.details.edit}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="button button-secondary"
+                            style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}
+                        >
+                            {__("Edit", "really-simple-ssl")}
+                        </a>
+                    )}
+                    {data.details.help && (
+                        <button
+                            href={data.details.help}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="button button-red"
+                            style={{display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '10px'}}
+                        >
+                            {__("Help", "really-simple-ssl")}
+                        </button>
+                    )}
+                    {!data.details.ignored && data.details.action === 'ignore_url' && (
+                        <button
+                            disabled={disabled}
+                            className="button button-primary"
+                            onClick={(e) => handleFix(e, 'ignore')}
+                            style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}
+                        >
+                            {__("Ignore", "really-simple-ssl")}
+                        </button>
+                    )}
+                    {data.details.action !== 'ignore_url' && (
+                        <button
+                            disabled={disabled}
+                            className="button button-primary rsssl-action-buttons__button"
+                            onClick={(e) => handleFix(e, 'fix')}
+                        >
+                            {__("Fix", "really-simple-ssl")}
+                        </button>
+                    )}
                 </div>
             </div>
         );
     };
+
 
     return (
         <>
