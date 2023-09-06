@@ -6436,7 +6436,8 @@ const MixedContentScan = props => {
       style: {
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        marginRight: '10px'
       }
     }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Edit", "really-simple-ssl")), data.details.help && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
       href: data.details.help,
@@ -6456,7 +6457,8 @@ const MixedContentScan = props => {
       style: {
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        marginRight: '10px'
       }
     }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Ignore", "really-simple-ssl")), data.details.action !== 'ignore_url' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
       disabled: disabled,
@@ -25227,7 +25229,11 @@ __webpack_require__.r(__webpack_exports__);
 
 }]);
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
+<<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 //# sourceMappingURL=src_Settings_Field_js.71728f3a274feb041ab6.js.map
 ========
 //# sourceMappingURL=src_Settings_Field_js.2a9f68f4c72b1ac2b97c.js.map
 >>>>>>>> c4feb033d (this should be it):settings/build/src_Settings_Field_js.2a9f68f4c72b1ac2b97c.js
+========
+//# sourceMappingURL=src_Settings_Field_js.887d242171386bcad1ea.js.map
+>>>>>>>> 14bdccc5e (removed the detail button):settings/build/src_Settings_Field_js.887d242171386bcad1ea.js

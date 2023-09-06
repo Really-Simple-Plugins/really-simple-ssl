@@ -4746,10 +4746,14 @@ var vanilla = (createState) => {
 /******/ 		__webpack_require__.u = (chunkId) => {
 /******/ 			// return url for filenames based on template
 <<<<<<<< HEAD:settings/build/index.b9dbac97b9bd293ecea4.js
+<<<<<<<< HEAD:settings/build/index.b9dbac97b9bd293ecea4.js
 /******/ 			return "" + chunkId + "." + {"vendors-node_modules_mui_material_Tooltip_Tooltip_js":"0cc86ac6c861846722b1","src_Settings_Settings_js":"902ea4078780eff558ca","src_Menu_Menu_js":"c275f909410871ede758","src_Dashboard_DashboardPage_js":"cc315f71743912c1ce7b","src_Onboarding_OnboardingModal_js":"85fbed60f8e666a7e677","src_Modal_Modal_js":"e34b60e44e1022d3fe24","vendors-node_modules_material-ui_core_esm_TextField_TextField_js-node_modules_react-data-tabl-8e8716":"64aaccd4757f22c45708","src_Settings_Field_js":"71728f3a274feb041ab6","vendors-node_modules_material-ui_lab_esm_Autocomplete_index_js":"515dd4c5b9e6e345a1ea","vendors-node_modules_material-ui_core_esm_styles_index_js":"b2604edf5f43bcfce41a"}[chunkId] + ".js";
 ========
 /******/ 			return "" + chunkId + "." + {"vendors-node_modules_mui_material_Tooltip_Tooltip_js":"0cc86ac6c861846722b1","src_Settings_Settings_js":"902ea4078780eff558ca","src_Menu_Menu_js":"c275f909410871ede758","src_Dashboard_DashboardPage_js":"cc315f71743912c1ce7b","src_Onboarding_OnboardingModal_js":"85fbed60f8e666a7e677","src_Modal_Modal_js":"e34b60e44e1022d3fe24","vendors-node_modules_material-ui_core_esm_TextField_TextField_js-node_modules_react-data-tabl-8e8716":"64aaccd4757f22c45708","src_Settings_Field_js":"2a9f68f4c72b1ac2b97c","vendors-node_modules_material-ui_lab_esm_Autocomplete_index_js":"515dd4c5b9e6e345a1ea","vendors-node_modules_material-ui_core_esm_styles_index_js":"b2604edf5f43bcfce41a"}[chunkId] + ".js";
 >>>>>>>> c4feb033d (this should be it):settings/build/index.04fcf54051c74425e689.js
+========
+/******/ 			return "" + chunkId + "." + {"vendors-node_modules_mui_material_Tooltip_Tooltip_js":"0cc86ac6c861846722b1","src_Settings_Settings_js":"902ea4078780eff558ca","src_Menu_Menu_js":"c275f909410871ede758","src_Dashboard_DashboardPage_js":"cc315f71743912c1ce7b","src_Onboarding_OnboardingModal_js":"85fbed60f8e666a7e677","src_Modal_Modal_js":"e34b60e44e1022d3fe24","vendors-node_modules_material-ui_core_esm_TextField_TextField_js-node_modules_react-data-tabl-8e8716":"64aaccd4757f22c45708","src_Settings_Field_js":"887d242171386bcad1ea","vendors-node_modules_material-ui_lab_esm_Autocomplete_index_js":"515dd4c5b9e6e345a1ea","vendors-node_modules_material-ui_core_esm_styles_index_js":"b2604edf5f43bcfce41a"}[chunkId] + ".js";
+>>>>>>>> 14bdccc5e (removed the detail button):settings/build/index.de55cc0da70333d095b0.js
 /******/ 		};
 /******/ 	})();
 /******/ 	
@@ -5001,7 +5005,11 @@ document.addEventListener('click', e => {
 /******/ })()
 ;
 <<<<<<<< HEAD:settings/build/index.b9dbac97b9bd293ecea4.js
+<<<<<<<< HEAD:settings/build/index.b9dbac97b9bd293ecea4.js
 //# sourceMappingURL=index.b9dbac97b9bd293ecea4.js.map
 ========
 //# sourceMappingURL=index.04fcf54051c74425e689.js.map
 >>>>>>>> c4feb033d (this should be it):settings/build/index.04fcf54051c74425e689.js
+========
+//# sourceMappingURL=index.de55cc0da70333d095b0.js.map
+>>>>>>>> 14bdccc5e (removed the detail button):settings/build/index.de55cc0da70333d095b0.js

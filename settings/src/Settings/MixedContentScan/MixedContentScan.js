@@ -153,7 +153,7 @@ const MixedContentScan = (props) => {
                             target="_blank"
                             rel="noopener noreferrer"
                             className="button button-secondary"
-                            style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}
+                            style={{display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '10px' }}
                         >
                             {__("Edit", "really-simple-ssl")}
                         </a>
@@ -174,7 +174,7 @@ const MixedContentScan = (props) => {
                             disabled={disabled}
                             className="button button-primary"
                             onClick={(e) => handleFix(e, 'ignore')}
-                            style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}
+                            style={{display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '10px'}}
                         >
                             {__("Ignore", "really-simple-ssl")}
                         </button>
