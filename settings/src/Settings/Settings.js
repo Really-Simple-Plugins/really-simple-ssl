@@ -48,9 +48,10 @@ const Settings = () => {
   const saveData = async (isSaveAndContinueButton) => {
     if (!isSaveAndContinueButton && isTestsOnlyMenu()) {
       setRefreshTests(true);
-    }
-    else {
-      await saveFields(true, true);
+    } else if (isSaveAndContinueButton) {
+      await saveFields(true, false);
+    } else {
+     await saveFields(true, true);
     }
   };
 

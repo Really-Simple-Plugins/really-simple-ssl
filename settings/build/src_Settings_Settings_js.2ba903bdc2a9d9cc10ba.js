@@ -288,6 +288,8 @@ const Settings = () => {
   const saveData = async isSaveAndContinueButton => {
     if (!isSaveAndContinueButton && isTestsOnlyMenu()) {
       setRefreshTests(true);
+    } else if (isSaveAndContinueButton) {
+      await saveFields(true, false);
     } else {
       await saveFields(true, true);
     }
@@ -341,7 +343,8 @@ const Settings = () => {
     }
   }
   let continueLink = nextButtonDisabled ? `#${selectedMainMenuItem}/${selectedSubMenuItem}` : `#${selectedMainMenuItem}/${nextMenuItem}`;
-  // let btnSaveText = isTestsOnlyMenu() ? __('Refresh', 'really-simple-ssl') : __('Save', 'really-simple-ssl');
+  // let btnSaveText = isTestsOnlyMenu() ? __('Refresh', 'really-simple-ssl') :
+  // __('Save', 'really-simple-ssl');
   let btnSaveText = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)('Save', 'really-simple-ssl');
   for (const menuItem of menuItems) {
     if (menuItem.id === selectedSubMenuItem && menuItem.tests_only) {
@@ -351,7 +354,7 @@ const Settings = () => {
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-wizard-settings"
   }, groups.map((group, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_SettingsGroup__WEBPACK_IMPORTED_MODULE_3__["default"], {
-    key: "settingsGroup-" + i,
+    key: 'settingsGroup-' + i,
     index: i,
     group: group,
     fields: selectedFields
@@ -360,7 +363,7 @@ const Settings = () => {
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ScrollProgress, null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-grid-item-footer"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: 'cmplz-grid-item-footer-buttons'
+    className: 'rsssl-grid-item-footer-buttons'
   }, selectedSubMenuItem !== menuItems[0].id && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
     className: "button button-secondary",
     href: `#${selectedMainMenuItem}/${previousMenuItem}`
@@ -378,10 +381,10 @@ const Settings = () => {
     className: "rsssl-help-header"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-help-title rsssl-h4"
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("Notifications", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)('Notifications', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-help-control",
     onClick: () => toggleNotices()
-  }, !noticesExpanded && (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("Expand all", "really-simple-ssl"), noticesExpanded && (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("Collapse all", "really-simple-ssl"))), notices.map((field, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Help__WEBPACK_IMPORTED_MODULE_4__["default"], {
+  }, !noticesExpanded && (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)('Expand all', 'really-simple-ssl'), noticesExpanded && (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)('Collapse all', 'really-simple-ssl'))), notices.map((field, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Help__WEBPACK_IMPORTED_MODULE_4__["default"], {
     key: i,
     noticesExpanded: noticesExpanded,
     index: i,
@@ -1316,4 +1319,4 @@ const errorMsg = error => {
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Settings_js.eb899224022b81f078e6.js.map
+//# sourceMappingURL=src_Settings_Settings_js.2ba903bdc2a9d9cc10ba.js.map
