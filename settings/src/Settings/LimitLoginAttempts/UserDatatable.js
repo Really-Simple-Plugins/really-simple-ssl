@@ -39,7 +39,6 @@ const UserDatatable = (props) => {
     const moduleName = 'rsssl-group-filter-limit_login_attempts_users';
     const {fields, fieldAlreadyEnabled, getFieldValue} = useFields();
 
-
     //we create the columns
     let columns = [];
     //getting the fields from the props

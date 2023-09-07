@@ -5,11 +5,13 @@ import apiFetch from '@wordpress/api-fetch';
 import useFields from "../FieldsData";
 import TwoFaDataTableStore from "./TwoFaDataTableStore";
 import {Button} from "@wordpress/components";
+import FilterData from "../FilterData";
 
 const DynamicDataTable = (props) => {
     const {
         twoFAMethods,
         setTwoFAMethods,
+        handleUsersTableFilter,
         DynamicDataTable,
         dataLoaded,
         pagination,
@@ -23,10 +25,14 @@ const DynamicDataTable = (props) => {
         updateUserMeta,
     } = TwoFaDataTableStore();
 
-    // const {
-    //     selectedRoles,
-    //     setSelectedRoles
-    // } = TwoFaRolesDropDown();
+    const {
+        selectedFilter,
+        setSelectedFilter,
+        activeGroupId,
+        getCurrentFilter
+    } = FilterData();
+
+    const moduleName = 'rsssl-group-filter-two_fa_user_filter';
 
     let field = props.field;
     const [enabled, setEnabled] = useState(false);
@@ -40,6 +46,20 @@ const DynamicDataTable = (props) => {
         twoFAEnabledRef.current = getFieldValue('two_fa_enabled');
         saveFields(true, false)
     }, [getFieldValue('two_fa_enabled')]);
+
+    useEffect(() => {
+        const currentFilter = getCurrentFilter(moduleName);
+        if (!currentFilter) {
+            setSelectedFilter('email', moduleName);
+        }
+        handleUsersTableFilter('status', currentFilter);
+        setTimeout(() => {
+            setRowCleared(true);
+            setTimeout(() => setRowCleared(false), 100);
+        }, 100);
+
+    }, [selectedFilter, moduleName, handleUsersTableFilter, getCurrentFilter, setSelectedFilter, DynamicDataTable]);
+
 
     useEffect(() => {
         const value = getFieldValue('two_fa_enabled');
