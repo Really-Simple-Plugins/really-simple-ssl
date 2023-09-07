@@ -549,9 +549,8 @@ const SettingsGroup = props => {
   }, activeGroup.title && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-grid-item-header"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", {
-    className: "rsssl-h4",
-    id: activeGroup.id
-  }, activeGroup.title), "PPP", activeGroup.groupFilter && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-h4"
+  }, activeGroup.title), activeGroup.groupFilter && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-grid-item-controls"
   }, activeGroup.groupFilter && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
     className: "rsssl-group-filter",
@@ -1340,4 +1339,4 @@ const errorMsg = error => {
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Settings_js.691b351d029c3ca20da4.js.map
+//# sourceMappingURL=src_Settings_Settings_js.902ea4078780eff558ca.js.map

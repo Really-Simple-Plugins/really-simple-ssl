@@ -7856,6 +7856,7 @@ const DynamicDataTable = props => {
   const {
     twoFAMethods,
     setTwoFAMethods,
+    handleUsersTableFilter,
     DynamicDataTable,
     dataLoaded,
     pagination,
@@ -7874,7 +7875,7 @@ const DynamicDataTable = props => {
     activeGroupId,
     getCurrentFilter
   } = (0,_FilterData__WEBPACK_IMPORTED_MODULE_8__["default"])();
-  const moduleName = 'rsssl-group-filter-two_fa_user_filter';
+  const moduleName = 'rsssl-group-filter-two_fa_users';
   let field = props.field;
   const [enabled, setEnabled] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(false);
   const {
@@ -7889,6 +7890,17 @@ const DynamicDataTable = props => {
     twoFAEnabledRef.current = getFieldValue('two_fa_enabled');
     saveFields(true, false);
   }, [getFieldValue('two_fa_enabled')]);
+  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
+    const currentFilter = getCurrentFilter(moduleName);
+    if (!currentFilter) {
+      setSelectedFilter('email', moduleName);
+    }
+    handleUsersTableFilter('status_for_user', currentFilter);
+    setTimeout(() => {
+      setRowCleared(true);
+      setTimeout(() => setRowCleared(false), 100);
+    }, 100);
+  }, [selectedFilter, moduleName, handleUsersTableFilter, getCurrentFilter, setSelectedFilter, DynamicDataTable]);
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
     const value = getFieldValue('two_fa_enabled');
     setEnabled(value);
@@ -8252,6 +8264,16 @@ const DynamicDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_2__.create)((s
     data.userId = userId;
     data.method = updatedMeta;
     const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('store_two_fa_usermeta', data);
+  },
+  handleUsersTableFilter: async (column, filterValue) => {
+    //Add the column and sortDirection to the dataActions
+    set((0,immer__WEBPACK_IMPORTED_MODULE_3__.produce)(state => {
+      state.dataActions = {
+        ...state.dataActions,
+        filterColumn: column,
+        filterValue
+      };
+    }));
   }
 }));
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (DynamicDataTableStore);
@@ -25069,4 +25091,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.5276890b0426ddf888a5.js.map
+//# sourceMappingURL=src_Settings_Field_js.e0ab0c3ba0951bbc09ef.js.map

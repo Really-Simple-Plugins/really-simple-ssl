@@ -32,7 +32,7 @@ const DynamicDataTable = (props) => {
         getCurrentFilter
     } = FilterData();
 
-    const moduleName = 'rsssl-group-filter-two_fa_user_filter';
+    const moduleName = 'rsssl-group-filter-two_fa_users';
 
     let field = props.field;
     const [enabled, setEnabled] = useState(false);
@@ -52,14 +52,13 @@ const DynamicDataTable = (props) => {
         if (!currentFilter) {
             setSelectedFilter('email', moduleName);
         }
-        handleUsersTableFilter('status', currentFilter);
+        handleUsersTableFilter('status_for_user', currentFilter);
         setTimeout(() => {
             setRowCleared(true);
             setTimeout(() => setRowCleared(false), 100);
         }, 100);
 
     }, [selectedFilter, moduleName, handleUsersTableFilter, getCurrentFilter, setSelectedFilter, DynamicDataTable]);
-
 
     useEffect(() => {
         const value = getFieldValue('two_fa_enabled');

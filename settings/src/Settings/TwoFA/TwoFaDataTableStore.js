@@ -85,6 +85,14 @@ const DynamicDataTableStore = create((set, get) => ({
         const response = await rsssl_api.doAction('store_two_fa_usermeta', data);
     },
 
+    handleUsersTableFilter: async (column, filterValue) => {
+        //Add the column and sortDirection to the dataActions
+        set(produce((state) => {
+                state.dataActions = {...state.dataActions, filterColumn: column, filterValue};
+            })
+        );
+    },
+
 }));
 
 export default DynamicDataTableStore;

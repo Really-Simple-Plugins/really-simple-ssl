@@ -399,24 +399,24 @@ function rsssl_menu()
 //                            'helpLink' => 'https://really-simple-ssl.com/instructions/two-factor-authentication',
                             'title'    => __( 'Users', 'really-simple-ssl' ),
                             'intro'    => __( 'Here you can see which users have enabled two-step login, or change the status per user.', 'really-simple-ssl' ),
-                        ],
-	                    'groupFilter'  => [
-		                    'default' => 'two_fa_user_filter_all',
-		                    'id'      => 'two_fa_user_filter',
-		                    'options' => [
-			                    [
-				                    'id'    => 'email',
-				                    'title' => __('Active', 'really-simple-ssl'),
-			                    ],
-			                    [
-				                    'id'    => 'open',
-				                    'title' => __('Pending', 'really-simple-ssl'),
-			                    ],
-			                    [
-				                    'id'    => 'disabled',
-				                    'title' => __('Disabled', 'really-simple-ssl'),
-			                    ]
-		                    ],
+                            'groupFilter'  => [
+	                            'default' => 'two_fa_user_filter_all',
+	                            'id'      => 'two_fa_user_filter',
+	                            'options' => [
+		                            [
+			                            'id'    => 'email',
+			                            'title' => __('Active', 'really-simple-ssl'),
+		                            ],
+		                            [
+			                            'id'    => 'open',
+			                            'title' => __('Pending', 'really-simple-ssl'),
+		                            ],
+		                            [
+			                            'id'    => 'disabled',
+			                            'title' => __('Disabled', 'really-simple-ssl'),
+		                            ]
+	                            ],
+                            ],
 	                    ],
                     ],
 
