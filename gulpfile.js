@@ -4,8 +4,14 @@ const concat = require('gulp-concat');
 const cssbeautify = require('gulp-cssbeautify');
 const cssuglify = require('gulp-uglifycss');
 const jsuglify = require('gulp-uglify');
+const browserify = require("browserify");
+const babelify = require("babelify");
+const source = require("vinyl-source-stream");
 const sass = require('gulp-sass')(require('sass'));
 const spawn = require('child_process').spawn;
+const browserify = require('browserify');
+const source = require('vinyl-source-stream');
+const babelify = require('babelify');
 
 function scssTask(cb) {
   // compile scss to css and minify
@@ -37,6 +43,27 @@ function scssPluginTask(cb) {
 }
 exports.scss = scssPluginTask
 
+function jsPluginTasks(cb) {
+    // compile js, transpile React JSX and minify
+    browserify({
+        entries: ['./assets/js/src/rsssl-plugin.js'],
+        extensions: ['.jsx', '.js'],
+        debug: true
+    })
+        .transform(babelify.configure({
+            presets: ['@babel/preset-env', '@babel/preset-react']
+        }))
+        .bundle()
+        .pipe(source('rsssl-plugin.js'))
+        .pipe(gulp.dest('./assets/js/build'))
+        .pipe(concat('rsssl-plugin.min.js'))
+        .pipe(jsuglify())
+        .pipe(gulp.dest('./assets/js/build'));
+
+    cb();
+}
+exports.js = jsPluginTasks;
+
 gulp.task('default', function () {
     return
 });
@@ -56,6 +83,7 @@ exports.js = jsTask
 function defaultTask(cb) {
   gulp.watch('./assets/css/**/*.scss', { ignoreInitial: false }, scssTask);
   gulp.watch('./assets/css/**/*.scss', { ignoreInitial: false }, scssPluginTask);
+    gulp.watch('./assets/js/src/**/*.js', { ignoreInitial: false }, jsPluginTasks);
 //   gulp.watch('./assets/js/**/*.js', { ignoreInitial: false }, jsTask);
   spawn('npm', ['start'], { cwd: 'settings', stdio: 'inherit' })
   cb();
