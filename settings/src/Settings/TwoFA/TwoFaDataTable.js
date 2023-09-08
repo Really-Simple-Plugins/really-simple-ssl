@@ -50,6 +50,7 @@ const DynamicDataTable = (props) => {
     useEffect(() => {
         const currentFilter = getCurrentFilter(moduleName);
         if (!currentFilter) {
+            console.log(moduleName);
             setSelectedFilter('email', moduleName);
         }
         handleUsersTableFilter('status_for_user', currentFilter);
@@ -58,7 +59,7 @@ const DynamicDataTable = (props) => {
             setTimeout(() => setRowCleared(false), 100);
         }, 100);
 
-    }, [selectedFilter, moduleName, handleUsersTableFilter, getCurrentFilter, setSelectedFilter, DynamicDataTable]);
+    }, [selectedFilter, moduleName, handleUsersTableFilter, getCurrentFilter, setSelectedFilter]);
 
     useEffect(() => {
         const value = getFieldValue('two_fa_enabled');
@@ -83,15 +84,8 @@ const DynamicDataTable = (props) => {
                 .catch(err => {
                     console.error(err); // Log any errors
                 });
-        }
+         }
     }, [dataLoaded, field.action, fetchDynamicData, getFieldValue('two_fa_enabled')]); // Add getFieldValue('two_fa_enabled') as a dependency
-
-
-    useEffect(() => {
-        if (dataActions) {
-            fetchDynamicData(field.action);
-        }
-    }, [dataActions]);
 
 
     function buildColumn(column) {

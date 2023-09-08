@@ -7893,6 +7893,7 @@ const DynamicDataTable = props => {
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
     const currentFilter = getCurrentFilter(moduleName);
     if (!currentFilter) {
+      console.log(moduleName);
       setSelectedFilter('email', moduleName);
     }
     handleUsersTableFilter('status_for_user', currentFilter);
@@ -7900,7 +7901,7 @@ const DynamicDataTable = props => {
       setRowCleared(true);
       setTimeout(() => setRowCleared(false), 100);
     }, 100);
-  }, [selectedFilter, moduleName, handleUsersTableFilter, getCurrentFilter, setSelectedFilter, DynamicDataTable]);
+  }, [selectedFilter, moduleName, handleUsersTableFilter, getCurrentFilter, setSelectedFilter]);
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
     const value = getFieldValue('two_fa_enabled');
     setEnabled(value);
@@ -7924,11 +7925,6 @@ const DynamicDataTable = props => {
     }
   }, [dataLoaded, field.action, fetchDynamicData, getFieldValue('two_fa_enabled')]); // Add getFieldValue('two_fa_enabled') as a dependency
 
-  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
-    if (dataActions) {
-      fetchDynamicData(field.action);
-    }
-  }, [dataActions]);
   function buildColumn(column) {
     let newColumn = {
       name: column.name,
@@ -8221,6 +8217,7 @@ const DynamicDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_2__.create)((s
         searchColumns
       };
     }));
+    await get().fetchDynamicData('two_fa_table');
   },
   handleTablePageChange: async (page, pageSize) => {
     //Add the page and pageSize to the dataActions
@@ -8231,6 +8228,7 @@ const DynamicDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_2__.create)((s
         pageSize
       };
     }));
+    await get().fetchDynamicData('two_fa_table');
   },
   handleTableRowsChange: async (currentRowsPerPage, currentPage) => {
     //Add the page and pageSize to the dataActions
@@ -8241,6 +8239,7 @@ const DynamicDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_2__.create)((s
         currentPage
       };
     }));
+    await get().fetchDynamicData('two_fa_table');
   },
   //this handles all pagination and sorting
   handleTableSort: async (column, sortDirection) => {
@@ -8252,6 +8251,7 @@ const DynamicDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_2__.create)((s
         sortDirection
       };
     }));
+    await get().fetchDynamicData('two_fa_table');
   },
   updateUserMeta: async (userId, updatedMeta) => {
     set((0,immer__WEBPACK_IMPORTED_MODULE_3__.produce)(state => {
@@ -8274,6 +8274,9 @@ const DynamicDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_2__.create)((s
         filterValue
       };
     }));
+    console.log('action', get().dataActions);
+    // //we fetch the data again
+    await get().fetchDynamicData('two_fa_table');
   }
 }));
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (DynamicDataTableStore);
@@ -25091,4 +25094,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.e0ab0c3ba0951bbc09ef.js.map
+//# sourceMappingURL=src_Settings_Field_js.db0e986b8346fa66dd09.js.map

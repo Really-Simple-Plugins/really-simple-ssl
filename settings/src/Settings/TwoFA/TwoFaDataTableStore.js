@@ -43,6 +43,7 @@ const DynamicDataTableStore = create((set, get) => ({
         set(produce((state) => {
             state.dataActions = {...state.dataActions, search, searchColumns};
         }));
+        await get().fetchDynamicData('two_fa_table');
     },
 
 
@@ -52,6 +53,7 @@ const DynamicDataTableStore = create((set, get) => ({
                 state.dataActions = {...state.dataActions, page, pageSize};
             })
         );
+        await get().fetchDynamicData('two_fa_table');
     },
 
     handleTableRowsChange: async (currentRowsPerPage, currentPage) => {
@@ -60,6 +62,7 @@ const DynamicDataTableStore = create((set, get) => ({
                 state.dataActions = {...state.dataActions, currentRowsPerPage, currentPage};
             })
         );
+        await get().fetchDynamicData('two_fa_table');
     },
 
     //this handles all pagination and sorting
@@ -69,6 +72,7 @@ const DynamicDataTableStore = create((set, get) => ({
                 state.dataActions = {...state.dataActions, sortColumn: column, sortDirection};
             })
         );
+        await get().fetchDynamicData('two_fa_table');
     },
 
     updateUserMeta: async (userId, updatedMeta) => {
@@ -91,6 +95,9 @@ const DynamicDataTableStore = create((set, get) => ({
                 state.dataActions = {...state.dataActions, filterColumn: column, filterValue};
             })
         );
+        console.log('action', get().dataActions);
+        // //we fetch the data again
+        await get().fetchDynamicData('two_fa_table');
     },
 
 }));
