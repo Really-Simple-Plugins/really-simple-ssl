@@ -161,7 +161,8 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
 
         }
 
-        public function limit_login_attempts_data( array &$response, string $action, $data ) {
+        public function limit_login_attempts_data( array $response, string $action, $data ): array
+        {
             if ( ! rsssl_user_can_manage() ) {
                 return $response;
             }
