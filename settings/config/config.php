@@ -1339,6 +1339,7 @@ function rsssl_fields( $load_values = true ) {
                     'sortable' => false,
                     'searchable' => false,
                     'visible' => true,
+	                'width'     => '70%',
                     'column'   => 'rsssl_two_fa_method',
                 ],
             ],
