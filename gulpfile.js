@@ -9,44 +9,45 @@ const babelify = require("babelify");
 const source = require("vinyl-source-stream");
 const sass = require('gulp-sass')(require('sass'));
 const spawn = require('child_process').spawn;
-const browserify = require('browserify');
-const source = require('vinyl-source-stream');
-const babelify = require('babelify');
+const buffer = require('vinyl-buffer');
 
 function scssTask(cb) {
-  // compile scss to css and minify
-  gulp.src('./assets/css/admin.scss')
-  .pipe(sass(({outputStyle: 'expanded'})).on('error', sass.logError))
-  .pipe(cssbeautify())
-  .pipe(gulp.dest('./assets/css'))
-  .pipe(cssuglify())
-  .pipe(concat('admin.min.css'))
-  .pipe(gulp.dest('./assets/css'))
-  .pipe(rtlcss())
-  .pipe(gulp.dest('./assets/css/rtl'));
-   cb();
+    // compile scss to css and minify
+    gulp.src('./assets/css/admin.scss')
+        .pipe(sass(({outputStyle: 'expanded'})).on('error', sass.logError))
+        .pipe(cssbeautify())
+        .pipe(gulp.dest('./assets/css'))
+        .pipe(cssuglify())
+        .pipe(concat('admin.min.css'))
+        .pipe(gulp.dest('./assets/css'))
+        .pipe(rtlcss())
+        .pipe(gulp.dest('./assets/css/rtl'));
+    cb();
 }
+
 exports.scss = scssTask
 
 function scssPluginTask(cb) {
-  // compile scss to css and minify
-  gulp.src('./assets/css/rsssl-plugin.scss')
-  .pipe(sass(({outputStyle: 'expanded'})).on('error', sass.logError))
-  .pipe(cssbeautify())
-  .pipe(gulp.dest('./assets/css'))
-  .pipe(cssuglify())
-  .pipe(concat('rsssl-plugin.min.css'))
-  .pipe(gulp.dest('./assets/css'))
-  .pipe(rtlcss())
-  .pipe(gulp.dest('./assets/css/rtl'));
-   cb();
+    // compile scss to css and minify
+    gulp.src('./assets/css/rsssl-plugin.scss')
+        .pipe(sass(({outputStyle: 'expanded'})).on('error', sass.logError))
+        .pipe(cssbeautify())
+        .pipe(gulp.dest('./assets/css'))
+        .pipe(cssuglify())
+        .pipe(concat('rsssl-plugin.min.css'))
+        .pipe(gulp.dest('./assets/css'))
+        .pipe(rtlcss())
+        .pipe(gulp.dest('./assets/css/rtl'));
+    cb();
 }
-exports.scss = scssPluginTask
+
+exports.scssPlugin = scssPluginTask
 
 function jsPluginTasks(cb) {
+    console.log('jsPluginTasks');
     // compile js, transpile React JSX and minify
-    browserify({
-        entries: ['./assets/js/src/rsssl-plugin.js'],
+    return browserify({
+        entries: ['./assets/js/src/rsssl-plugin.jsx'],
         extensions: ['.jsx', '.js'],
         debug: true
     })
@@ -55,39 +56,52 @@ function jsPluginTasks(cb) {
         }))
         .bundle()
         .pipe(source('rsssl-plugin.js'))
+        .pipe(buffer()) // <-- Add this line here
         .pipe(gulp.dest('./assets/js/build'))
         .pipe(concat('rsssl-plugin.min.js'))
         .pipe(jsuglify())
-        .pipe(gulp.dest('./assets/js/build'));
-
+        .pipe(gulp.dest('./assets/js/build'))
+        .on('error', function (err) {
+            console.error(err);
+            this.emit('end');
+        });
+    console.log('jsPluginTasks done');
     cb();
 }
-exports.js = jsPluginTasks;
+
+exports.jsPlugin = jsPluginTasks;
 
 gulp.task('default', function () {
     return
 });
-function jsTask(cb) {
-  // compile js and minify
-  // gulp.src('js/src/burst.js')
-  // .pipe(concat('burst.js'))
-  // .pipe(gulp.dest('./js/build'))
-  // .pipe(concat('burst.min.js'))
-  // .pipe(jsuglify())
-  // .pipe(gulp.dest('./js/build'));
 
-  cb();
+function jsTask(cb) {
+    // compile js and minify
+    // gulp.src('js/src/burst.js')
+    // .pipe(concat('burst.js'))
+    // .pipe(gulp.dest('./js/build'))
+    // .pipe(concat('burst.min.js'))
+    // .pipe(jsuglify())
+    // .pipe(gulp.dest('./js/build'));
+
+    cb();
 }
+
 exports.js = jsTask
 
 function defaultTask(cb) {
-  gulp.watch('./assets/css/**/*.scss', { ignoreInitial: false }, scssTask);
-  gulp.watch('./assets/css/**/*.scss', { ignoreInitial: false }, scssPluginTask);
-    gulp.watch('./assets/js/src/**/*.js', { ignoreInitial: false }, jsPluginTasks);
+    gulp.watch('./assets/css/**/*.scss', {ignoreInitial: false}, scssTask);
+    gulp.watch('./assets/css/**/*.scss', {ignoreInitial: false}, scssPluginTask);
+    gulp.watch(['./assets/js/src/**/*.js', './assets/js/src/**/*.jsx'], function () {
+        console.log('JS or JSX file changed. Running jsPluginTasks...');
+        jsPluginTasks();
+    });
+
 //   gulp.watch('./assets/js/**/*.js', { ignoreInitial: false }, jsTask);
-  spawn('npm', ['start'], { cwd: 'settings', stdio: 'inherit' })
-  cb();
+    spawn('npm', ['start'], {cwd: 'settings', stdio: 'inherit'})
+    cb();
 }
+
 exports.default = defaultTask
 
 // function buildTask(cb) {

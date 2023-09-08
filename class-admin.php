@@ -43,6 +43,9 @@ class rsssl_admin
             add_action('admin_footer', array($this, 'deactivate_popup'), 40);
         }
 
+		//external scripts for the plugin page only
+        add_action( 'admin_enqueue_scripts', 'enqueue_react_scripts' );
+
 
 	    //callbacks for the ajax dismiss buttons
 	    add_action('wp_ajax_rsssl_dismiss_review_notice', array($this, 'dismiss_review_notice_callback'));
@@ -3157,4 +3160,29 @@ if ( !function_exists('rsssl_ssl_detection_overridden' ) ) {
 	function rsssl_ssl_detection_overridden() {
 		return get_option( 'rsssl_ssl_detection_overridden' ) !== false;
 	}
+}
+
+if (! function_exists('enqueue_react_scripts' ) ) {
+    function enqueue_react_scripts($hook)
+    {
+        if ('plugins.php' != $hook) {
+            return;
+        }
+
+        // Enqueue your built React script
+        wp_enqueue_script('react_modal', plugins_url('/assets/js/build/rsssl-plugin.js', __FILE__),
+            array('wp-element'), '1.0.0', true);
+
+        wp_enqueue_script( 'event-listener', plugins_url( 'assets/js/eventListener.js', __FILE__ ), array(), '1.0.0', true );
+    }
+
+    function rsssl_add_modal_root_div() {
+        // Check if we're on the plugins.php page
+        $screen = get_current_screen();
+        if ($screen->id === 'plugins') {
+            echo '<div id="rsssl-modal-root"></div>';
+        }
+    }
+    add_action('admin_footer', 'rsssl_add_modal_root_div');
+
 }
