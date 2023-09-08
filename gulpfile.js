@@ -56,7 +56,7 @@ function jsPluginTasks(cb) {
         }))
         .bundle()
         .pipe(source('rsssl-plugin.js'))
-        .pipe(buffer()) // <-- Add this line here
+        .pipe(buffer())
         .pipe(gulp.dest('./assets/js/build'))
         .pipe(concat('rsssl-plugin.min.js'))
         .pipe(jsuglify())
