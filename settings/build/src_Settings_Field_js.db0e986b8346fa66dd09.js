@@ -7935,8 +7935,7 @@ const DynamicDataTable = props => {
       visible: column.visible,
       selector: row => row[column.column]
     };
-    console.log(newcolumn.id);
-    if (newColumn.id === 'Action') {
+    if (newColumn.name === 'Action') {
       newColumn.cell = row => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
         className: "rsssl-action-buttons"
       }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -25095,4 +25094,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.ced22384b318691892fa.js.map
+//# sourceMappingURL=src_Settings_Field_js.db0e986b8346fa66dd09.js.map

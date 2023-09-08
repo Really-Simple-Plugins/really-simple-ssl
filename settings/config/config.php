@@ -1316,7 +1316,7 @@ function rsssl_fields( $load_values = true ) {
                     'searchable' => true,
                     'visible' => true,
                     'column'   => 'user',
-                    'width'    => '25%',
+                    'width'    => '20%',
                 ],
                 [
                     'name'     => __( 'Status', 'really-simple-ssl' ),
