@@ -47,6 +47,8 @@ const CountryDatatable = (props) => {
     const {fields, fieldAlreadyEnabled, getFieldValue} = useFields();
 
     const buildColumn = useCallback((column) => ({
+        //if the filter is set to region and the columns = status we do not want to show the column
+        omit: getCurrentFilter(moduleName) === 'regions' && column.column === 'status',
         name: column.name,
         sortable: column.sortable,
         searchable: column.searchable,
