@@ -34,6 +34,10 @@ const AddIpAddressModal = (props) => {
             setIpAddress('');
             //we close the modal
             props.onRequestClose();
+            //we reset all data used for the range an ip address
+            setRangeDisplay(false);
+
+            //we fetch the data again
             fetchDynamicData('event_log')
         }
     }
