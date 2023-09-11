@@ -42,6 +42,8 @@ const CountryDataTableStore = create((set, get) => ({
 
 
     fetchCountryData: async (action) => {
+        set({processing: true});
+        set({dataLoaded: false});
         try {
             const response = await rsssl_api.doAction(
                 action,
