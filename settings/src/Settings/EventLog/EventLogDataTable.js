@@ -222,6 +222,7 @@ const EventLogDataTable = (props) => {
                 expandableRows
                 expandableRowsComponent={ExpandableRow}
                 sortServer
+                loading={dataLoaded}
                 onSort={handleEventTableSort}
                 paginationRowsPerPageOptions={[5, 10, 25, 50, 100]}
                 noDataComponent={__("No results", "really-simple-ssl")}
