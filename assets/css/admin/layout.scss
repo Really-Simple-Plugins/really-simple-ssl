@@ -142,7 +142,6 @@
     &.rsssl-disabled {
       min-height:200px;//add min height on disabled so the settings is visible behind the locked div.
     }
-    transition: all 1s ease;
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
