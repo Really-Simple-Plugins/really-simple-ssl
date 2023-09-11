@@ -203,12 +203,16 @@ const IpAddressDataTableStore = create((set, get) => ({
             } else {
                 // Handle any unsuccessful response if needed.
                 console.log("Failed to add IP address: ", response.message);
+                //we also clear the form
+                set({ipAddress: ''});
             }
         } catch (e) {
             console.log(e);
             // Notify the user of an error.
         } finally {
             set({processing: false});
+            //we also clear the form
+            set({ipAddress: ''});
         }
     },
 

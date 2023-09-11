@@ -4638,6 +4638,10 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
       } else {
         // Handle any unsuccessful response if needed.
         console.log("Failed to add IP address: ", response.message);
+        //we also clear the form
+        set({
+          ipAddress: ''
+        });
       }
     } catch (e) {
       console.log(e);
@@ -4645,6 +4649,10 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
     } finally {
       set({
         processing: false
+      });
+      //we also clear the form
+      set({
+        ipAddress: ''
       });
     }
   },
@@ -25101,4 +25109,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.dab75bcd2a45eb361484.js.map
+//# sourceMappingURL=src_Settings_Field_js.0404728a84758a7a41de.js.map
