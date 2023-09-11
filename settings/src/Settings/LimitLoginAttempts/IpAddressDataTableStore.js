@@ -224,6 +224,7 @@ const IpAddressDataTableStore = create((set, get) => ({
         if (parts.length !== 4) return false;
         for (let part of parts) {
             const num = parseInt(part, 10);
+            console.log(num);
             if (isNaN(num) || num < 0 || num > 255) return false;
         }
         return true;
@@ -279,6 +280,7 @@ const IpAddressDataTableStore = create((set, get) => ({
      */
     ipToNumber: (ip) => {
         if (get().validateIpv4(ip)) {
+            console.log('ip: ' + ip, 'number: ' + get().ipV4ToNumber(ip));
             return get().ipV4ToNumber(ip);
         } else if (get().validateIpv6(get().extendIpV6(ip))) {
             return get().ipV6ToNumber(get().extendIpV6(ip));
@@ -291,7 +293,7 @@ const IpAddressDataTableStore = create((set, get) => ({
      * @returns {*}
      */
     ipV4ToNumber: (ip) => {
-        return ip.split(".").reduce((acc, cur) => (acc << 8) + parseInt(cur, 10), 0);
+        return ip.split(".").reduce((acc, cur) => (acc * 256 + parseInt(cur, 10)) >>> 0, 0);
     },
 
     /**
@@ -321,6 +323,7 @@ const IpAddressDataTableStore = create((set, get) => ({
      * @param highest
      */
     validateIpRange: (lowest, highest) => {
+        set({inputRangeValidated: false});
         let from = '';
         let to = '';
         console.log('validateIpRange');
@@ -355,6 +358,7 @@ const IpAddressDataTableStore = create((set, get) => ({
             let lowest = from;
             let highest = to;
             set({ipRange: {lowest, highest}});
+            get().fetchCidrData('get_mask_from_range');
         }
     },
 
