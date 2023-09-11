@@ -56,6 +56,8 @@ const IpAddressDataTableStore = create((set, get) => ({
     * Note this function works with the DataTable class on serverside
      */
     fetchIpData: async (action) => {
+        set({processing: true});
+        set({dataLoaded: false});
         try {
             const response = await rsssl_api.doAction(
                 action,

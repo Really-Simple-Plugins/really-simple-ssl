@@ -418,6 +418,7 @@ const IpAddressDatatable = (props) => {
             )}
 
             {/*Display the datatable*/}
+            {dataLoaded ?
             <DataTable
                 columns={columns}
                 data={data}
@@ -437,7 +438,31 @@ const IpAddressDatatable = (props) => {
                 clearSelectedRows={rowCleared}
                 theme="really-simple-plugins"
                 customStyles={customStyles}
-            ></DataTable>
+            ></DataTable> :
+            <div className="rsssl-spinner" style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginTop: "100px"
+            }}>
+                <div className="rsssl-spinner__inner">
+                    <div className="rsssl-spinner__icon" style={{
+                        border: '8px solid white',
+                        borderTop: '8px solid #f4bf3e',
+                        borderRadius: '50%',
+                        width: '120px',
+                        height: '120px',
+                        animation: 'spin 2s linear infinite'
+                    }}></div>
+                    <div className="rsssl-spinner__text" style={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                    }}>{__("Loading data, please stand by...", "really-simple-ssl")}</div>
+                </div>
+            </div>
+            }
             {!enabled && (
                 <div className="rsssl-locked">
                     <div className="rsssl-locked-overlay"><span
