@@ -3435,7 +3435,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const AddIpAddressModal = props => {
-  if (!props.isOpen) return null;
+  if (!props.isOpen) return;
   const {
     inputRangeValidated,
     fetchCidrData,
@@ -3450,7 +3450,7 @@ const AddIpAddressModal = props => {
   } = (0,_EventLog_EventLogDataTableStore__WEBPACK_IMPORTED_MODULE_7__["default"])();
   //we add a function to handle the range fill
   const handleRangeFill = () => {
-    //we toggle the range display
+    //we toggle the range displayß
     setRangeDisplay(!rangeDisplay);
   };
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
@@ -3492,7 +3492,7 @@ const AddIpAddressModal = props => {
       height: "100%",
       padding: "10px"
     }
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_IpAddressInput__WEBPACK_IMPORTED_MODULE_5__["default"], {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_IpAddressInput__WEBPACK_IMPORTED_MODULE_5__["default"], {
     label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("IP Address", "really-simple-ssl"),
     id: "ip-address",
     name: "ip-address",
@@ -3652,18 +3652,21 @@ __webpack_require__.r(__webpack_exports__);
 const Cidr = () => {
   const [lowestIP, setLowestIP] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)("");
   const [highestIP, setHighestIP] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)("");
+  const [validated, setValidated] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
   const {
     setIpAddress,
     validateIpRange,
     setIpRange
   } = (0,_IpAddressDataTableStore__WEBPACK_IMPORTED_MODULE_2__["default"])();
-
-  //if the lowestIP or highestIP is changed, we validate the IP range
-  (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
-    if (lowestIP || highestIP) {
-      validateIpRange(lowestIP, highestIP);
-    }
-  }, [lowestIP, highestIP]);
+  const cleanupIpAddress = ipAddress => {
+    return ipAddress.replace(/,/g, '.');
+  };
+  const handleLowestIPChange = ip => {
+    setLowestIP(cleanupIpAddress(ip));
+  };
+  const handleHighestIPChange = ip => {
+    setHighestIP(cleanupIpAddress(ip));
+  };
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-ip-address-input"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -3675,7 +3678,7 @@ const Cidr = () => {
     type: "text",
     className: "rsssl-ip-address-input__input",
     value: lowestIP,
-    onChange: e => setLowestIP(e.target.value)
+    onChange: e => handleLowestIPChange(e.target.value)
   })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-ip-address-input__inner"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -3685,8 +3688,17 @@ const Cidr = () => {
     type: "text",
     className: "rsssl-ip-address-input__input",
     value: highestIP,
-    onChange: e => setHighestIP(e.target.value)
-  }))));
+    onChange: e => handleHighestIPChange(e.target.value)
+  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: 'rsssl-container'
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: 'rsssl-container__inner'
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    className: 'button button--primary',
+    onClick: () => {
+      validateIpRange(lowestIP, highestIP);
+    }
+  }, "Validate")))));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Cidr);
 
@@ -4648,6 +4660,7 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
     if (parts.length !== 4) return false;
     for (let part of parts) {
       const num = parseInt(part, 10);
+      console.log(num);
       if (isNaN(num) || num < 0 || num > 255) return false;
     }
     return true;
@@ -4697,6 +4710,7 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
    */
   ipToNumber: ip => {
     if (get().validateIpv4(ip)) {
+      console.log('ip: ' + ip, 'number: ' + get().ipV4ToNumber(ip));
       return get().ipV4ToNumber(ip);
     } else if (get().validateIpv6(get().extendIpV6(ip))) {
       return get().ipV6ToNumber(get().extendIpV6(ip));
@@ -4708,7 +4722,7 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
    * @returns {*}
    */
   ipV4ToNumber: ip => {
-    return ip.split(".").reduce((acc, cur) => (acc << 8) + parseInt(cur, 10), 0);
+    return ip.split(".").reduce((acc, cur) => acc * 256 + parseInt(cur, 10) >>> 0, 0);
   },
   /**
    * This function converts the ip address to a number if it is a ipv6 address
@@ -4737,6 +4751,9 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
    * @param highest
    */
   validateIpRange: (lowest, highest) => {
+    set({
+      inputRangeValidated: false
+    });
     let from = '';
     let to = '';
     console.log('validateIpRange');
@@ -4784,6 +4801,7 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
           highest
         }
       });
+      get().fetchCidrData('get_mask_from_range');
     }
   },
   /**
@@ -5259,6 +5277,16 @@ const IpAddressDatatable = props => {
     className: "rsssl-task-status rsssl-open"
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Disabled', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Limit login attempts to enable this block.', 'really-simple-ssl')))));
 };
+
+// function IpAddressDatatableApp(props) {
+//     return (
+//         <StrictMode>
+//             <IpAddressDatatable {...props} />
+//         </StrictMode>
+//     );
+// }
+//
+// export default IpAddressDatatableApp;
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (IpAddressDatatable);
 function buildColumn(column) {
   return {
@@ -5324,7 +5352,12 @@ const IpAddressInput = props => {
     value: props.value,
     className: `rsssl-input full ${maskError ? 'rsssl-error' : 'rsssl-success'}`,
     onChange: props.onChange
-  }), props.showSwitch && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }), props.showSwitch && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    style: {
+      marginTop: '10px',
+      marginBottom: '10px'
+    }
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "components-base-control components-toggle-control"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "components-base-control__field"
@@ -5333,7 +5366,7 @@ const IpAddressInput = props => {
     className: "components-flex components-h-stack"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
     className: "components-toggle-control__label"
-  }, props.switchTitle), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+  }, props.switchTitle, "  "), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     className: "components-form-toggle " + is_checked
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
     onKeyDown: props.switchAction,
@@ -5345,7 +5378,7 @@ const IpAddressInput = props => {
     className: "components-form-toggle__track"
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     className: "components-form-toggle__thumb"
-  }))))))), maskError && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+  })))))))), maskError && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     style: {
       color: 'red',
       marginLeft: '10px'
@@ -25068,4 +25101,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.c0705a85599963bd4c0b.js.map
+//# sourceMappingURL=src_Settings_Field_js.dab75bcd2a45eb361484.js.map

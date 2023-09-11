@@ -1,5 +1,5 @@
 import {__} from '@wordpress/i18n';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState, StrictMode} from 'react';
 import DataTable, {createTheme} from "react-data-table-component";
 import IpAddressDataTableStore from "./IpAddressDataTableStore";
 import EventLogDataTableStore from "../EventLog/EventLogDataTableStore";
@@ -47,6 +47,8 @@ const IpAddressDatatable = (props) => {
         let newItem = buildColumn(item)
         columns.push(newItem);
     });
+
+
 
     //get data if field was already enabled, so not changed right now.
     useEffect(() => {
@@ -447,6 +449,16 @@ const IpAddressDatatable = (props) => {
     );
 
 }
+
+// function IpAddressDatatableApp(props) {
+//     return (
+//         <StrictMode>
+//             <IpAddressDatatable {...props} />
+//         </StrictMode>
+//     );
+// }
+//
+// export default IpAddressDatatableApp;
 export default IpAddressDatatable;
 
 function buildColumn(column) {

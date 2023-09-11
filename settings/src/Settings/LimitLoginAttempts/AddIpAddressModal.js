@@ -7,13 +7,13 @@ import Cidr from "./Cidr";
 import EventLogDataTableStore from "../EventLog/EventLogDataTableStore";
 
 const AddIpAddressModal = (props) => {
-    if (!props.isOpen) return null;
+    if (!props.isOpen) return;
     const { inputRangeValidated, fetchCidrData, ipAddress, setIpAddress, maskError, addRow} = IpAddressDataTableStore();
     const [rangeDisplay, setRangeDisplay] = useState(false);
     const {fetchDynamicData} = EventLogDataTableStore();
     //we add a function to handle the range fill
     const handleRangeFill = () => {
-        //we toggle the range display
+        //we toggle the range displayß
         setRangeDisplay(!rangeDisplay);
     }
 
@@ -60,7 +60,7 @@ const AddIpAddressModal = (props) => {
                             padding: "10px",
                         }}
                     >
-                        <p>
+                        <div>
                             <IpAddressInput
                                 label={__("IP Address", "really-simple-ssl")}
                                 id="ip-address"
@@ -72,7 +72,7 @@ const AddIpAddressModal = (props) => {
                                 switchTitle={__("Use ip ranges", "really-simple-ssl")}
                                 switchAction={handleRangeFill}
                             />
-                        </p>
+                        </div>
                     </div>
                     {rangeDisplay && (
                         <>
@@ -87,7 +87,7 @@ const AddIpAddressModal = (props) => {
                         <p>
                             {__("This tool calculates CIDR notation for IP ranges. If you're unfamiliar with this concept, please consult a network professional. Incorrect usage may cause network issues. Proceed with caution! ", "really-simple-ssl")}
                         </p>
-                        <Cidr/>
+                            <Cidr/>
                     </div>
                     </>
                     )}
