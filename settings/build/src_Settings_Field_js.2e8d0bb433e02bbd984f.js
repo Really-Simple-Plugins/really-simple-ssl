@@ -3479,12 +3479,19 @@ const AddIpAddressModal = props => {
     ipAddress,
     setIpAddress,
     maskError,
+<<<<<<<< HEAD:settings/build/src_Settings_Field_js.2e8d0bb433e02bbd984f.js
     addRow
+========
+    dataLoaded,
+    addRow,
+    resetRange
+>>>>>>>> 070f831e1 (fixed reset function, however could not resolve warning React issue??):settings/build/src_Settings_Field_js.c881cc9d8901c328bd91.js
   } = (0,_IpAddressDataTableStore__WEBPACK_IMPORTED_MODULE_3__["default"])();
   const [rangeDisplay, setRangeDisplay] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
   const {
     fetchDynamicData
   } = (0,_EventLog_EventLogDataTableStore__WEBPACK_IMPORTED_MODULE_7__["default"])();
+  const [resetFlag, setResetFlag] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
   //we add a function to handle the range fill
   const handleRangeFill = () => {
     //we toggle the range displayß
@@ -3503,11 +3510,26 @@ const AddIpAddressModal = props => {
     if (ipAddress && maskError === false) {
       addRow(ipAddress, status);
       //we clear the input
+<<<<<<<< HEAD:settings/build/src_Settings_Field_js.2e8d0bb433e02bbd984f.js
       setIpAddress('');
       //we close the modal
       props.onRequestClose();
+========
+      resetRange();
+      //we close the modal
+      props.onRequestClose();
+      //we fetch the data again
+>>>>>>>> 070f831e1 (fixed reset function, however could not resolve warning React issue??):settings/build/src_Settings_Field_js.c881cc9d8901c328bd91.js
       fetchDynamicData('event_log');
     }
+  }
+  function handleCancel() {
+    // Reset all local state
+    setRangeDisplay(false);
+    resetRange();
+
+    // Close the modal
+    props.onRequestClose();
   }
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Modal, {
     title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Add IP Address", "really-simple-ssl"),
@@ -3557,7 +3579,7 @@ const AddIpAddressModal = props => {
     }
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
     isSecondary: true,
-    onClick: props.onRequestClose,
+    onClick: handleCancel,
     style: {
       marginRight: '10px'
     }
@@ -4529,6 +4551,12 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
     total: 2,
     totalRows: 2
   },
+  setMaskError: maskError => {
+    console.log('setMaskError', maskError);
+    set({
+      maskError
+    });
+  },
   /*
   * This function fetches the data from the server and fills the property IpDataTable
   * Note this function works with the DataTable class on serverside
@@ -4658,6 +4686,23 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
     let finalIp = mask ? `${ip}/${mask}` : ip;
     set({
       ipAddress: finalIp
+    });
+  },
+  resetRange: () => {
+    set({
+      inputRangeValidated: false
+    });
+    set({
+      highestIP: ''
+    });
+    set({
+      lowestIP: ''
+    });
+    set({
+      ipAddress: ''
+    });
+    set({
+      maskError: false
     });
   },
   /*
@@ -5450,7 +5495,8 @@ const IpAddressInput = props => {
   const [value, setValue] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)("");
   const [error, setError] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
   const {
-    maskError
+    maskError,
+    setMaskError
   } = (0,_IpAddressDataTableStore__WEBPACK_IMPORTED_MODULE_4__["default"])();
   let is_checked = props.switchValue ? 'is-checked' : '';
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
@@ -25214,4 +25260,8 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
+<<<<<<<< HEAD:settings/build/src_Settings_Field_js.2e8d0bb433e02bbd984f.js
 //# sourceMappingURL=src_Settings_Field_js.2e8d0bb433e02bbd984f.js.map
+========
+//# sourceMappingURL=src_Settings_Field_js.c881cc9d8901c328bd91.js.map
+>>>>>>>> 070f831e1 (fixed reset function, however could not resolve warning React issue??):settings/build/src_Settings_Field_js.c881cc9d8901c328bd91.js

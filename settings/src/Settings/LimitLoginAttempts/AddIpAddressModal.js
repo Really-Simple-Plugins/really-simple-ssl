@@ -8,9 +8,10 @@ import EventLogDataTableStore from "../EventLog/EventLogDataTableStore";
 
 const AddIpAddressModal = (props) => {
     if (!props.isOpen) return;
-    const { inputRangeValidated, fetchCidrData, ipAddress, setIpAddress, maskError, dataLoaded, addRow} = IpAddressDataTableStore();
+    const { inputRangeValidated, fetchCidrData, ipAddress, setIpAddress, maskError, dataLoaded, addRow, resetRange} = IpAddressDataTableStore();
     const [rangeDisplay, setRangeDisplay] = useState(false);
     const {fetchDynamicData} = EventLogDataTableStore();
+    const [resetFlag, setResetFlag] = useState(false);
     //we add a function to handle the range fill
     const handleRangeFill = () => {
         //we toggle the range displayß
@@ -31,15 +32,21 @@ const AddIpAddressModal = (props) => {
         if (ipAddress && maskError === false) {
             addRow(ipAddress, status);
             //we clear the input
-
+            resetRange();
             //we close the modal
             props.onRequestClose();
-            //we reset all data used for the range an ip address
-            setRangeDisplay(false);
-            setIpAddress('');
             //we fetch the data again
             fetchDynamicData('event_log')
         }
+    }
+
+    function handleCancel() {
+        // Reset all local state
+        setRangeDisplay(false);
+        resetRange();
+
+        // Close the modal
+        props.onRequestClose();
     }
 
     return (
@@ -112,7 +119,7 @@ const AddIpAddressModal = (props) => {
                     >
                         <Button
                             isSecondary
-                            onClick={props.onRequestClose}
+                            onClick={handleCancel}
                             style={{ marginRight: '10px' }}
 
                         >

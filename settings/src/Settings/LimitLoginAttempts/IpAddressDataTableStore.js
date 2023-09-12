@@ -51,6 +51,11 @@ const IpAddressDataTableStore = create((set, get) => ({
         totalRows: 2,
     },
 
+    setMaskError: (maskError) => {
+        console.log('setMaskError', maskError);
+        set({maskError});
+    },
+
     /*
     * This function fetches the data from the server and fills the property IpDataTable
     * Note this function works with the DataTable class on serverside
@@ -156,6 +161,13 @@ const IpAddressDataTableStore = create((set, get) => ({
         // Construct the final IP address by optionally appending the CIDR mask
         let finalIp = mask ? `${ip}/${mask}` : ip;
         set({ ipAddress: finalIp })
+    },
+    resetRange: () => {
+        set({inputRangeValidated: false});
+        set({highestIP: ''});
+        set({lowestIP: ''});
+        set({ipAddress: ''});
+        set({maskError: false});
     },
 
     /*

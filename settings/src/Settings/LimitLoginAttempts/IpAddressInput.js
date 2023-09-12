@@ -15,7 +15,7 @@ const IpAddressInput = (props) => {
 
     const [value, setValue] = useState("");
     const [error, setError] = useState(false);
-    const {maskError} = IpAddressDataTableStore();
+    const {maskError, setMaskError} = IpAddressDataTableStore();
 
     let is_checked = props.switchValue ? 'is-checked' : '';
 
