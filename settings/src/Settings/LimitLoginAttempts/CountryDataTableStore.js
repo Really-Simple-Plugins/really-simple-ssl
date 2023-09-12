@@ -40,7 +40,6 @@ const CountryDataTableStore = create((set, get) => ({
         totalRows: 2,
     },
 
-
     fetchCountryData: async (action) => {
         set({processing: true});
         set({dataLoaded: false});
@@ -188,23 +187,29 @@ const CountryDataTableStore = create((set, get) => ({
     },
 
     addRegion: async (region, status) => {
-        set({processing: true});
         try {
             const response = await rsssl_api.doAction('add_region_to_list', {region, status});
-            // Consider checking the response structure for any specific success or failure signals
             if (response && response.request_success) {
-                await get().fetchCountryData('country_list');
-                // Potentially notify the user of success, if needed.
+                // Do any immediate operations here if needed
             } else {
-                // Handle any unsuccessful response if needed.
                 console.error("Failed to add region: ", response.message);
             }
         } catch (e) {
             console.error(e);
-            // Notify the user of an error.
-        } finally {
-            set({processing: false});
         }
+    },
+    addRegions: async (regions, status) => {
+        try {
+            const response = await rsssl_api.doAction('add_regions_to_list', {regions, status});
+            if (response && response.request_success) {
+                // Do any immediate operations here if needed
+            } else {
+                console.error("Failed to add regions: ", response.message);
+            }
+        } catch (e) {
+            console.error(e);
+        }
+
     },
     removeRegion: async (region, status) => {
         set({processing: true});
@@ -217,6 +222,22 @@ const CountryDataTableStore = create((set, get) => ({
             } else {
                 // Handle any unsuccessful response if needed.
                 console.error("Failed to remove region: ", response.message);
+            }
+        } catch (e) {
+            console.error(e);
+            // Notify the user of an error.
+        }
+    },
+    removeRegions: async (regions, status) => {
+        set({processing: true});
+        try {
+            const response = await rsssl_api.doAction('remove_regions_from_list', {regions, status});
+            // Consider checking the response structure for any specific success or failure signals
+            if (response && response.request_success) {
+                // Potentially notify the user of success, if needed.
+            } else {
+                // Handle any unsuccessful response if needed.
+                console.error("Failed to remove regions: ", response.message);
             }
         } catch (e) {
             console.error(e);

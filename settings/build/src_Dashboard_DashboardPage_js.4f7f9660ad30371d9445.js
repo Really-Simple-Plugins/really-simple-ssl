@@ -1518,6 +1518,7 @@ const Vulnerabilities = () => {
   const [vulnerabilityWord, setVulnerabilityWord] = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)('');
   const [updateWord, setUpdateWord] = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)('');
   const [updateWordCapitalized, setUpdateWordCapitalized] = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)('');
+  const [vulnerabilityWordCapitalized, setVulnerabilityWordCapitalized] = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)('');
   const [updateString, setUpdateString] = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)('');
   const [hardeningWord, setHardeningWord] = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)('');
   const [notEnabledHardeningFields, setNotEnabledHardeningFields] = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)(0);
@@ -1535,6 +1536,7 @@ const Vulnerabilities = () => {
   (0,react__WEBPACK_IMPORTED_MODULE_3__.useEffect)(() => {
     //singular or plural of the word vulnerability
     const v = vulnerabilities === 1 ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("vulnerability", "really-simple-ssl") : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("vulnerabilities", "really-simple-ssl");
+    setVulnerabilityWordCapitalized(v.charAt(0).toUpperCase() + v.slice(1));
     setVulnerabilityWord(v);
     const u = updates === 1 ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("update", "really-simple-ssl") : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("updates", "really-simple-ssl");
     const s = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__._n)('You have %s update pending', 'You have %s updates pending', updates, 'really-simple-ssl').replace('%s', updates);
@@ -1738,7 +1740,7 @@ const Vulnerabilities = () => {
     name: "satellite-dish-duotone"
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", null, vulEnabled ? vulnerabilities : '?'), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     className: "rsssl-badge " + badgeVulStyle
-  }, updateWordCapitalized)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, vulnerabilityWordCapitalized)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-hardening-select-item"
   }, updates ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_1__["default"], {
     size: 23,
@@ -1766,7 +1768,7 @@ const Vulnerabilities = () => {
     name: "radar-duotone"
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", null, "0"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     className: "rsssl-badge rsp-default"
-  }, updateWordCapitalized)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, vulnerabilityWordCapitalized)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-hardening-select-item"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_1__["default"], {
     size: 23,
@@ -2953,4 +2955,4 @@ const getRelativeTime = function (relativeDate) {
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Dashboard_DashboardPage_js.cc315f71743912c1ce7b.js.map
+//# sourceMappingURL=src_Dashboard_DashboardPage_js.4f7f9660ad30371d9445.js.map

@@ -252,6 +252,7 @@ const UseLicenseData = (0,zustand__WEBPACK_IMPORTED_MODULE_0__.create)((set, get
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   ScrollProgress: () => (/* binding */ ScrollProgress),
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
@@ -317,6 +318,8 @@ const Settings = () => {
   const saveData = async isSaveAndContinueButton => {
     if (!isSaveAndContinueButton && isTestsOnlyMenu()) {
       setRefreshTests(true);
+    } else if (isSaveAndContinueButton) {
+      await saveFields(true, false);
     } else {
       await saveFields(true, true);
     }
@@ -370,7 +373,8 @@ const Settings = () => {
     }
   }
   let continueLink = nextButtonDisabled ? `#${selectedMainMenuItem}/${selectedSubMenuItem}` : `#${selectedMainMenuItem}/${nextMenuItem}`;
-  // let btnSaveText = isTestsOnlyMenu() ? __('Refresh', 'really-simple-ssl') : __('Save', 'really-simple-ssl');
+  // let btnSaveText = isTestsOnlyMenu() ? __('Refresh', 'really-simple-ssl') :
+  // __('Save', 'really-simple-ssl');
   let btnSaveText = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)('Save', 'really-simple-ssl');
   for (const menuItem of menuItems) {
     if (menuItem.id === selectedSubMenuItem && menuItem.tests_only) {
@@ -380,12 +384,16 @@ const Settings = () => {
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-wizard-settings"
   }, groups.map((group, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_SettingsGroup__WEBPACK_IMPORTED_MODULE_3__["default"], {
-    key: "settingsGroup-" + i,
+    key: 'settingsGroup-' + i,
     index: i,
     group: group,
     fields: selectedFields
   })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-grid-item-footer-container"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ScrollProgress, null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-grid-item-footer"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: 'rsssl-grid-item-footer-buttons'
   }, selectedSubMenuItem !== menuItems[0].id && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
     className: "button button-secondary",
     href: `#${selectedMainMenuItem}/${previousMenuItem}`
@@ -397,16 +405,16 @@ const Settings = () => {
     className: "button button-primary",
     href: continueLink,
     onClick: e => saveData(true)
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)('Save and Continue', 'complianz-gdpr'))))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)('Save and Continue', 'complianz-gdpr'))))))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-wizard-help"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-help-header"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-help-title rsssl-h4"
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("Notifications", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)('Notifications', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-help-control",
     onClick: () => toggleNotices()
-  }, !noticesExpanded && (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("Expand all", "really-simple-ssl"), noticesExpanded && (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("Collapse all", "really-simple-ssl"))), notices.map((field, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Help__WEBPACK_IMPORTED_MODULE_4__["default"], {
+  }, !noticesExpanded && (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)('Expand all', 'really-simple-ssl'), noticesExpanded && (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)('Collapse all', 'really-simple-ssl'))), notices.map((field, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Help__WEBPACK_IMPORTED_MODULE_4__["default"], {
     key: i,
     noticesExpanded: noticesExpanded,
     index: i,
@@ -415,6 +423,35 @@ const Settings = () => {
   }))));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Settings);
+const ScrollProgress = () => {
+  // calculate the scroll progress
+  const [scrollProgress, setScrollProgress] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(0);
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    window.addEventListener('scroll', () => {
+      let scrollableHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      let scrollProgressPercentage = Math.round(window.scrollY / scrollableHeight * 100);
+      // start at 5% and end at 100%
+      scrollProgressPercentage = Math.max(5, scrollProgressPercentage);
+      setScrollProgress(scrollProgressPercentage);
+    });
+  }, []);
+
+  // if you can't scroll return null
+  if (document.documentElement.scrollHeight <= document.documentElement.clientHeight) {
+    return null;
+  }
+  return (
+    // add width to span
+    (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+      className: 'rsssl-grid-item-footer-scroll-progress-container'
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+      className: 'rsssl-grid-item-footer-scroll-progress',
+      style: {
+        width: scrollProgress + '%'
+      }
+    }, scrollProgress, "%"))
+  );
+};
 
 /***/ }),
 
@@ -474,7 +511,7 @@ const SettingsGroup = props => {
   } = (0,_Menu_MenuData__WEBPACK_IMPORTED_MODULE_6__["default"])();
   const [Field, setField] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-    Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_material-ui_core_esm_TextField_TextField_js-node_modules_react-data-tabl-8e8716"), __webpack_require__.e("src_Settings_Field_js")]).then(__webpack_require__.bind(__webpack_require__, /*! ./Field */ "./src/Settings/Field.js")).then(_ref => {
+    Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_material-ui_core_esm_TextField_TextField_js-node_modules_react-toastify_-1fccac"), __webpack_require__.e("src_Settings_Field_js")]).then(__webpack_require__.bind(__webpack_require__, /*! ./Field */ "./src/Settings/Field.js")).then(_ref => {
       let {
         default: Field
       } = _ref;
@@ -1339,4 +1376,4 @@ const errorMsg = error => {
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Settings_js.902ea4078780eff558ca.js.map
+//# sourceMappingURL=src_Settings_Settings_js.b2e4e831a6e4dfefbb5c.js.map
