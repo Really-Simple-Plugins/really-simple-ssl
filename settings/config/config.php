@@ -34,8 +34,8 @@ function rsssl_fields( $load_values = true ) {
 		],
 		[
 			'id'               => 'redirect',
-            'menu_id'          => 'general',
-			'group_id'         => 'general',
+            'menu_id'          => 'encryption-redirect',
+			'group_id'         => 'encryption-redirect',
 			'type'             => 'select',
 			'tooltip'  => __( "Changing redirect methods should be done with caution. Please make sure you have read our instructions beforehand at the right-hand side.", 'really-simple-ssl' ),
 			'label'            => __( "Redirect method", 'really-simple-ssl' ),
@@ -62,6 +62,38 @@ function rsssl_fields( $load_values = true ) {
 					'ssl_enabled' => '1',
 				]
 			],
+			'default'          => false,
+		],
+		[
+			'id'               => 'letsencrypt',
+            'menu_id'          => 'lets-encrypt',
+			'group_id'         => 'lets-encrypt',
+			'type'             => 'select',
+//			'tooltip'  => __( "Changing redirect methods should be done with caution. Please make sure you have read our instructions beforehand at the right-hand side.", 'really-simple-ssl' ),
+//			'label'            => __( "Redirect method", 'really-simple-ssl' ),
+//			'warning'     			=> true,
+//			'options'          => [
+//				'none'         => __( "No redirect", "really-simple-ssl" ),
+//				'wp_redirect'  => __( "301 PHP redirect", "really-simple-ssl" ),
+//				'htaccess'     => __( "301 .htaccess redirect (read instructions first)", "really-simple-ssl" ),
+//			],
+//			'help'             => [
+//				'label' => 'default',
+//				'title' => __( "Redirect method", 'really-simple-ssl' ),
+//				'text'  => __( 'Redirects your site to https with a SEO friendly 301 redirect if it is requested over http.', 'really-simple-ssl' ),
+//			],
+//            'email'            => [
+//                'title'   => __( "Settings update: .htaccess redirect", 'really-simple-ssl' ),
+//                'message' => __( "The .htaccess redirect has been enabled on your site. If the server configuration is non-standard, this might cause issues. Please check if all pages on your site are functioning properly.", 'really-simple-ssl' ),
+//                'url'     => 'https://really-simple-ssl.com/remove-htaccess-redirect-site-lockout/',
+//                'condition'  => ['redirect' => 'htaccess']
+//            ],
+//			'react_conditions' => [
+//				'relation' => 'AND',
+//				[
+//					'ssl_enabled' => '1',
+//				]
+//			],
 			'default'          => false,
 		],
 		[
@@ -926,6 +958,46 @@ function rsssl_fields( $load_values = true ) {
 			'label'    => __( "Cross Origin Opener Policy", "really-simple-ssl-pro" ),
 			'disabled' => false,
 			'default'  => 'disabled',
+		],
+		[
+			'id'       => 'menu_items_test_two',
+			'menu_id'  => 'menu-item-testtwo',
+			'group_id' => 'menu-item-group-one',
+			'type'     => 'checkbox',
+			'label'    => __( "Checkbox 2", "really-simple-ssl-pro" ),
+//			'disabled' => false,
+//			'default'  => 'disabled',
+		],
+		[
+			'id'       => 'menu_items_test_three',
+			'menu_id'  => 'menu-item-testthree',
+			'group_id' => 'menu-items-group-two',
+			'type'     => 'select',
+			'options'  => [
+				'disabled'                 => __( 'Off', 'really-simple-ssl' ),
+				'unsafe-none'              => 'unsafe-none',
+				'same-origin-allow-popups' => 'same-origin-allow-popups',
+				'same-origin'              => 'same-origin',
+			],
+			'help'     => [
+				'label' => 'default',
+				'url'   => 'https://really-simple-ssl.com/definition/what-is-a-cross-origin-policy/?mtm_campaign=definition&mtm_source=free',
+				'title' => __( "Select 3", 'really-simple-ssl' ),
+				'text'  => __( 'One of the most powerful features, and therefore the most complex are the Cross-Origin headers that can isolate your website so any data leaks are minimized.',
+					'really-simple-ssl' ),
+			],
+			'label'    => __( "Select 3", "really-simple-ssl-pro" ),
+			'disabled' => false,
+			'default'  => 'disabled',
+		],
+		[
+			'id'       => 'menu_items_test_four',
+			'menu_id'  => 'menu-item-testfour',
+			'group_id' => 'menu-item-group-four',
+			'type'     => 'checkbox',
+			'label'    => __( "Checkbox 4", "really-simple-ssl-pro" ),
+//			'disabled' => false,
+//			'default'  => 'disabled',
 		],
 		[
 			'id'       => 'cross_origin_resource_policy',

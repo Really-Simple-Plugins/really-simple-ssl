@@ -108,6 +108,11 @@ const getPreviousAndNextMenuItems = (menu, selectedSubMenuItem, fields) => {
 }
 
 const dropEmptyMenuItems = (menuItems, fields) => {
+
+    if (!Array.isArray(fields)) {
+        return menuItems;  // return the original menuItems unchanged
+    }
+
     const newMenuItems = menuItems;
     for (const [index, menuItem] of menuItems.entries()) {
         let menuItemFields = fields.filter((field) => {
@@ -118,9 +123,13 @@ const dropEmptyMenuItems = (menuItems, fields) => {
             return ( field.visible )
         });
         if ( menuItemFields.length === 0 && !menuItem.hasOwnProperty('menu_items') )  {
-            newMenuItems[index].visible = false;
+            if (typeof newMenuItems[index] === 'object' && newMenuItems[index] !== null) {
+                newMenuItems[index].visible = false;
+            }
         } else {
-            newMenuItems[index].visible = true;
+            if (typeof newMenuItems[index] === 'object' && newMenuItems[index] !== null) {
+                newMenuItems[index].visible = true;
+            }
             if( menuItem.hasOwnProperty('menu_items') ) {
                 newMenuItems[index].menu_items = dropEmptyMenuItems(menuItem.menu_items, fields);
             }
@@ -219,15 +228,19 @@ const getMenuItemByName = (name, menuItems) => {
 }
 
 const addVisibleToMenuItems = (menu) => {
-    let newMenuItems = menu.menu_items;
-    for (let [index, menuItem] of menu.menu_items.entries()) {
-        menuItem.visible = true;
-        if( menuItem.hasOwnProperty('menu_items') ) {
-            menuItem = addVisibleToMenuItems(menuItem);
+    let newMenuItems = Array.isArray(menu.menu_items) ? menu.menu_items : Object.values(menu.menu_items);
+
+    for (let [index, menuItem] of newMenuItems.entries()) {
+        if (typeof menuItem === 'object' && menuItem !== null) {
+            menuItem.visible = true;
+            if (menuItem.hasOwnProperty('menu_items')) {
+                menuItem = addVisibleToMenuItems(menuItem);
+            }
+            newMenuItems[index] = menuItem;
         }
-        newMenuItems[index] = menuItem;
     }
     menu.menu_items = newMenuItems;
     menu.visible = true;
     return menu;
 }
+
