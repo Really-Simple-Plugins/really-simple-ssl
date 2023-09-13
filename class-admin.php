@@ -43,10 +43,6 @@ class rsssl_admin
             add_action('admin_footer', array($this, 'deactivate_popup'), 40);
         }
 
-		//external scripts for the plugin page only
-        add_action( 'admin_enqueue_scripts', 'enqueue_react_scripts' );
-
-
 	    //callbacks for the ajax dismiss buttons
 	    add_action('wp_ajax_rsssl_dismiss_review_notice', array($this, 'dismiss_review_notice_callback'));
 
@@ -3165,15 +3161,18 @@ if ( !function_exists('rsssl_ssl_detection_overridden' ) ) {
 if (! function_exists('enqueue_react_scripts' ) ) {
     function enqueue_react_scripts($hook)
     {
-        if ('plugins.php' != $hook) {
+        if ('plugins.php' !== $hook) {
             return;
         }
-		wp_enqueue_script('wp-element');
-        wp_enqueue_script('rsssl-event-listener', rsssl_url . 'assets/js/eventlistener.js', array('wp-element'), rsssl_version, true);
-		//RSSSL minified react components
-		wp_enqueue_script('rsssl-react-components', rsssl_url . 'assets/js/build/rsssl-plugin.min.js', ['wp-element'], rsssl_version, true);
 
+        // Register the scripts first
+        wp_register_script('rsssl-event-listener', rsssl_url . 'assets/js/eventlistener.js', array(), rsssl_version, true);
+        wp_register_script('rsssl-react-components', rsssl_url . 'assets/js/build/rsssl-plugin.min.js', array('wp-element', 'rsssl-event-listener'), rsssl_version, true);
+
+        // Then enqueue them
+        wp_enqueue_script('rsssl-react-components');
     }
+    add_action('admin_enqueue_scripts', 'enqueue_react_scripts');
 
     function rsssl_add_modal_root_div() {
         // Check if we're on the plugins.php page
