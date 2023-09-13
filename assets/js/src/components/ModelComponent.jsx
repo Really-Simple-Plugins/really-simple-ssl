@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-
+/** @jsx wp.element.createElement */
+const { useState, useEffect } = wp.element;
 function Modal({ isOpen, onClose, title, children }) {
     if (!isOpen) return null;
 
@@ -40,6 +40,8 @@ const modalStyle = {
 function RssslModal() {
     const [ isOpen, setOpen ] = useState(false);
 
+    console.log("RssslModal component rendered");
+
     useEffect(() => {
         const showModalListener = () => {
             console.log("showMyPluginModalEvent detected");
@@ -53,9 +55,6 @@ function RssslModal() {
             document.removeEventListener('showRssslModalEvent', showModalListener);
         };
     }, []);
-
-    console.log("MyModal component rendered");
-
     return (
         <Modal
             isOpen={isOpen}

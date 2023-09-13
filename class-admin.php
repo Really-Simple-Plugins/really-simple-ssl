@@ -3168,12 +3168,11 @@ if (! function_exists('enqueue_react_scripts' ) ) {
         if ('plugins.php' != $hook) {
             return;
         }
+		wp_enqueue_script('wp-element');
+        wp_enqueue_script('rsssl-event-listener', rsssl_url . 'assets/js/eventlistener.js', array('wp-element'), rsssl_version, true);
+		//RSSSL minified react components
+		wp_enqueue_script('rsssl-react-components', rsssl_url . 'assets/js/build/rsssl-plugin.min.js', ['wp-element'], rsssl_version, true);
 
-        // Enqueue your built React script
-        wp_enqueue_script('react_modal', plugins_url('/assets/js/build/rsssl-plugin.js', __FILE__),
-            array('wp-element'), '1.0.0', true);
-
-        wp_enqueue_script( 'event-listener', plugins_url( 'assets/js/eventListener.js', __FILE__ ), array(), '1.0.0', true );
     }
 
     function rsssl_add_modal_root_div() {

@@ -1415,7 +1415,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
             //date format is named month day year
             $mailer = new rsssl_mailer();
             $mailer->subject = sprintf(__("Vulnerability Alert: %s", "really-simple-ssl"), $this->site_url() );
-            $mailer->title = sprintf(__("%s: %s vulnerabilities found", "really-simple-ssl"), $this->date(), $total);
+	        $mailer->title = sprintf(_n("%s: %s vulnerability found", "%s: %s vulnerabilities found", $total, "really-simple-ssl"), $this->date(), $total);
             $message = sprintf(__("This is a vulnerability alert from Really Simple SSL for %s. ","really-simple-ssl"), $this->domain() );
             $mailer->message = $message;
             $mailer->warning_blocks = $blocks;
@@ -1490,7 +1490,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	     * @return string
 	     */
 	    public function date(): string {
-		    return date(get_option('date_format'));
+		    return date_i18n( get_option( 'date_format' ));
 	    }
 
         /**

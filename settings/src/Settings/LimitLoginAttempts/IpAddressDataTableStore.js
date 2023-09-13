@@ -51,11 +51,18 @@ const IpAddressDataTableStore = create((set, get) => ({
         totalRows: 2,
     },
 
+    setMaskError: (maskError) => {
+        console.log('setMaskError', maskError);
+        set({maskError});
+    },
+
     /*
     * This function fetches the data from the server and fills the property IpDataTable
     * Note this function works with the DataTable class on serverside
      */
     fetchIpData: async (action) => {
+        set({processing: true});
+        set({dataLoaded: false});
         try {
             const response = await rsssl_api.doAction(
                 action,
@@ -155,6 +162,13 @@ const IpAddressDataTableStore = create((set, get) => ({
         let finalIp = mask ? `${ip}/${mask}` : ip;
         set({ ipAddress: finalIp })
     },
+    resetRange: () => {
+        set({inputRangeValidated: false});
+        set({highestIP: ''});
+        set({lowestIP: ''});
+        set({ipAddress: ''});
+        set({maskError: false});
+    },
 
     /*
     * This function sets the status selected and is used by Cidr and IpAddressInput and from the options
@@ -203,12 +217,16 @@ const IpAddressDataTableStore = create((set, get) => ({
             } else {
                 // Handle any unsuccessful response if needed.
                 console.log("Failed to add IP address: ", response.message);
+                //we also clear the form
+                set({ipAddress: ''});
             }
         } catch (e) {
             console.log(e);
             // Notify the user of an error.
         } finally {
             set({processing: false});
+            //we also clear the form
+            set({ipAddress: ''});
         }
     },
 
@@ -224,6 +242,7 @@ const IpAddressDataTableStore = create((set, get) => ({
         if (parts.length !== 4) return false;
         for (let part of parts) {
             const num = parseInt(part, 10);
+            console.log(num);
             if (isNaN(num) || num < 0 || num > 255) return false;
         }
         return true;
@@ -279,6 +298,7 @@ const IpAddressDataTableStore = create((set, get) => ({
      */
     ipToNumber: (ip) => {
         if (get().validateIpv4(ip)) {
+            console.log('ip: ' + ip, 'number: ' + get().ipV4ToNumber(ip));
             return get().ipV4ToNumber(ip);
         } else if (get().validateIpv6(get().extendIpV6(ip))) {
             return get().ipV6ToNumber(get().extendIpV6(ip));
@@ -291,7 +311,7 @@ const IpAddressDataTableStore = create((set, get) => ({
      * @returns {*}
      */
     ipV4ToNumber: (ip) => {
-        return ip.split(".").reduce((acc, cur) => (acc << 8) + parseInt(cur, 10), 0);
+        return ip.split(".").reduce((acc, cur) => (acc * 256 + parseInt(cur, 10)) >>> 0, 0);
     },
 
     /**
@@ -321,6 +341,7 @@ const IpAddressDataTableStore = create((set, get) => ({
      * @param highest
      */
     validateIpRange: (lowest, highest) => {
+        set({inputRangeValidated: false});
         let from = '';
         let to = '';
         console.log('validateIpRange');
@@ -355,6 +376,7 @@ const IpAddressDataTableStore = create((set, get) => ({
             let lowest = from;
             let highest = to;
             set({ipRange: {lowest, highest}});
+            get().fetchCidrData('get_mask_from_range');
         }
     },
 

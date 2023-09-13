@@ -4,6 +4,7 @@ import * as rsssl_api from "../utils/api";
 import sleeper from "../utils/sleeper.js";
 import {__} from '@wordpress/i18n';
 import {dispatch} from '@wordpress/data';
+import {toast} from 'react-toastify';
 
 const fetchFields = () => {
     return rsssl_api.getFields().then((response) => {
@@ -244,18 +245,8 @@ const handleShowSavedSettingsNotice = (text) => {
     if (typeof text === 'undefined') {
         text = __( 'Settings Saved', 'really-simple-ssl' );
     }
-    dispatch('core/notices').createNotice(
-        'success',
-        text,
-        {
-            __unstableHTML: true,
-            id: 'rsssl_settings_saved',
-            type: 'snackbar',
-            isDismissible: false,
-        }
-    ).then(sleeper(2000)).then(( response ) => {
-        dispatch('core/notices').removeNotice('rsssl_settings_saved');
-    });
+
+    toast.success(text);
 }
 
 

@@ -121,12 +121,6 @@ function rsssl_fields( $load_values = true ) {
             'label'       => __( "Email verification", 'really-simple-ssl' ),
             'disabled'    => rsssl_is_email_verified(),
             'tooltip'  => __( "Verify your e-mail address to get the most out of Really Simple SSL.", 'really-simple-ssl' ),
-            'react_conditions' => [
-	            'relation' => 'AND',
-	            [
-		            'send_notifications_email' => 1,
-            ]
-            ],
         ],
         [
             'id'               => 'notifications_email_address',
@@ -136,13 +130,6 @@ function rsssl_fields( $load_values = true ) {
             'label'            => __("Email address", 'really-simple-ssl'),
             'disabled'         => false,
             'default'          => get_bloginfo('admin_email'),
-            'condition_action' => 'hide',
-            'react_conditions' => [
-                'relation' => 'AND',
-                [
-                    'send_notifications_email' => 1,
-                ]
-            ],
         ],
 
             ['id'               => 'send_notifications_email',
@@ -817,6 +804,7 @@ function rsssl_fields( $load_values = true ) {
                 '60'  => '1 '.__(' hour', 'really-simple-ssl'),
                 '120' => '2 '.__(' hours', 'really-simple-ssl'),
                 '240' => '4 '.__(' hours', 'really-simple-ssl'),
+                '1440' => '1 '.__(' day', 'really-simple-ssl'),
             ],
             'disabled'         => false,
             'default'          => '30',
@@ -837,7 +825,8 @@ function rsssl_fields( $load_values = true ) {
                 '15'  => '15'.__(' minutes', 'really-simple-ssl'),
                 '30'  => '30 '.__(' minutes', 'really-simple-ssl'),
                 '60' => '1 '.__(' hour', 'really-simple-ssl'),
-                '120' => '2 '.__(' hours', 'really-simple-ssl'),
+                '240' => '4 '.__(' hours', 'really-simple-ssl'),
+                '1440' => '1 '.__(' day', 'really-simple-ssl'),
             ],
             'disabled'         => false,
             'default'          => '30',

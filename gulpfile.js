@@ -97,7 +97,7 @@ function defaultTask(cb) {
         jsPluginTasks();
     });
 
-//   gulp.watch('./assets/js/**/*.js', { ignoreInitial: false }, jsTask);
+  gulp.watch('./assets/js/**/*.js', { ignoreInitial: false }, jsTask);
     spawn('npm', ['start'], {cwd: 'settings', stdio: 'inherit'})
     cb();
 }

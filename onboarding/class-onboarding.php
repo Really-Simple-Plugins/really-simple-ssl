@@ -187,6 +187,7 @@ class rsssl_onboarding {
 		if ($refresh) {
 			delete_transient('rsssl_certinfo');
 		}
+
 		return [
 			"request_success" =>true,
 			"steps" => $steps,

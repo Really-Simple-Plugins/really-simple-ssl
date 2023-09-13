@@ -1,8 +1,78 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import RssslModal from './components/ModelComponent.jsx';
+/** @jsx wp.element.createElement */
 console.log("RssslModal component should be rendered now.");
 document.addEventListener('DOMContentLoaded', function() {
-    ReactDOM.render(<RssslModal />, document.getElementById('rsssl-modal-root'));
+    const root = wp.element.createRoot(document.getElementById('rsssl-modal-root'));
+    root.render(<RssslModal />);
     console.log("RssslModal component should be rendered now.");
 });
+
+
+/** @jsx wp.element.createElement */
+const { useState, useEffect } = wp.element;
+function Modal({ isOpen, onClose, title, children }) {
+    if (!isOpen) return null;
+
+    return (
+        <div style={overlayStyle}>
+            <div style={modalStyle}>
+                <h2>{title}</h2>
+                <button onClick={onClose}>Close</button>
+                {children}
+            </div>
+        </div>
+    );
+}
+
+const overlayStyle = {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1000
+};
+
+const modalStyle = {
+    backgroundColor: '#fff',
+    padding: '20px',
+    borderRadius: '5px',
+    maxWidth: '500px',
+    minHeight: '300px',
+    margin: '0 auto',
+    zIndex: 1001
+};
+
+function RssslModal() {
+    const [ isOpen, setOpen ] = useState(false);
+
+    console.log("RssslModal component rendered");
+
+    useEffect(() => {
+        const showModalListener = () => {
+            console.log("showMyPluginModalEvent detected");
+            setOpen(true);
+        };
+
+        document.addEventListener('showRssslModalEvent', showModalListener);
+
+        // Cleanup the listener on component unmount
+        return () => {
+            document.removeEventListener('showRssslModalEvent', showModalListener);
+        };
+    }, []);
+    return (
+        <Modal
+            isOpen={isOpen}
+            title={"Are you sure?"}
+            onClose={() => setOpen(false)}
+        >
+            {/* Your modal content here */}
+        </Modal>
+    );
+}
+
+export default RssslModal;
