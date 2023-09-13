@@ -7,11 +7,11 @@ import useMenu from "../Menu/MenuData";
 import useLicense from "./License/LicenseData";
 import {useEffect,useState} from '@wordpress/element';
 
-
 /**
  * Render a grouped block of settings
  */
 const SettingsGroup = (props) => {
+    
     const {fields} = useFields();
     const {licenseStatus} = useLicense();
     const {selectedSubMenuItem, subMenu} = useMenu();
@@ -45,31 +45,45 @@ const SettingsGroup = (props) => {
     }
 
     let activeGroup;
-    //first, set the selected menu item as activate group, so we have a default in case there are no groups
-    for (const item of subMenu.menu_items){
-        if (item.id === selectedSubMenuItem ) {
-            activeGroup = item;
-        } else if (item.menu_items) {
-            activeGroup = item.menu_items.filter(menuItem => menuItem.id === selectedSubMenuItem)[0];
+
+    for (const item of subMenu.menu_items) {
+        if (item.id === selectedSubMenuItem && item.hasOwnProperty('groups')) {
+            for (const group of item.groups) {
+                if (group.group_id === props.group) {
+                    activeGroup = group;
+                    break;
+                }
+            }
         }
-        if ( activeGroup ) {
-            break;
-        }
+        if (activeGroup) break; // Exit the loop once a match is found.
     }
 
-    //now check if we have actual groups
-    for (const item of subMenu.menu_items){
-        if (item.id === selectedSubMenuItem && item.hasOwnProperty('groups')) {
-            let currentGroup = item.groups.filter(group => group.id === props.group);
-            if (currentGroup.length>0) {
-                activeGroup = currentGroup[0];
+// If activeGroup is not set, then default to the parent menu item.
+    if (!activeGroup) {
+        for (const item of subMenu.menu_items) {
+            if (item.id === selectedSubMenuItem) {
+                activeGroup = item;
+                break;
+            }
+            // Handle the case where there are nested menu items.
+            if (item.menu_items) {
+                const nestedItem = item.menu_items.find(menuItem => menuItem.id === selectedSubMenuItem);
+                if (nestedItem) {
+                    activeGroup = nestedItem;
+                    break;
+                }
             }
         }
     }
 
-    if ( !activeGroup ) {
-        return (<></>);
+    // Check for nested groups in the activeGroup.
+    if (activeGroup && activeGroup.groups) {
+        const nestedGroup = activeGroup.groups.find(group => group.group_id === props.group);
+        if (nestedGroup) {
+            activeGroup = nestedGroup;
+        }
     }
+
     let msg = activeGroup.premium_text ? activeGroup.premium_text : __("Learn more about %sPremium%s", "really-simple-ssl");
     if ( rsssl_settings.pro_plugin_active ) {
         if ( licenseStatus === 'empty' || licenseStatus === 'deactivated' ) {
