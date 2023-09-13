@@ -1,50 +1,13 @@
 /** @jsx wp.element.createElement */
+const { Modal, Button } = wp.components;
 const { useState, useEffect } = wp.element;
-function Modal({ isOpen, onClose, title, children }) {
-    if (!isOpen) return null;
-
-    return (
-        <div style={overlayStyle}>
-            <div style={modalStyle}>
-                <h2>{title}</h2>
-                <button onClick={onClose}>Close</button>
-                {children}
-            </div>
-        </div>
-    );
-}
-
-const overlayStyle = {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 1000
-};
-
-const modalStyle = {
-    backgroundColor: '#fff',
-    padding: '20px',
-    borderRadius: '5px',
-    maxWidth: '500px',
-    minHeight: '300px',
-    margin: '0 auto',
-    zIndex: 1001
-};
 
 function RssslModal() {
-    const [ isOpen, setOpen ] = useState(false);
-
-    console.log("RssslModal component rendered");
+    const [isOpen, setOpen] = useState(false);
 
     useEffect(() => {
         const showModalListener = () => {
-            console.log("showMyPluginModalEvent detected");
+            console.log("showRssslModalEvent detected we should open the modal");
             setOpen(true);
         };
 
@@ -54,15 +17,20 @@ function RssslModal() {
         return () => {
             document.removeEventListener('showRssslModalEvent', showModalListener);
         };
-    }, []);
+    }, []);  // Removed [isOpen] to avoid unnecessary re-registrations of the event listener
+
     return (
-        <Modal
-            isOpen={isOpen}
-            title={"Are you sure?"}
-            onClose={() => setOpen(false)}
-        >
-            {/* Your modal content here */}
-        </Modal>
+        <div>
+            {isOpen && (
+                <Modal
+                    title="My Modal Title"
+                    onRequestClose={() => setOpen(false)}
+                >
+                    <p>This is the modal content.</p>
+                    <Button onClick={() => setOpen(false)}>Close Modal</Button>
+                </Modal>
+            )}
+        </div>
     );
 }
 

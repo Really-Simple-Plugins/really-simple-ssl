@@ -3165,14 +3165,34 @@ if (! function_exists('enqueue_react_scripts' ) ) {
             return;
         }
 
-        // Register the scripts first
+		//register the event listener
         wp_register_script('rsssl-event-listener', rsssl_url . 'assets/js/eventlistener.js', array(), rsssl_version, true);
-        wp_register_script('rsssl-react-components', rsssl_url . 'assets/js/build/rsssl-plugin.min.js', array('wp-element', 'rsssl-event-listener'), rsssl_version, true);
+
+        // Register the scripts first
+        wp_register_script('rsssl-react-components', rsssl_url . 'assets/js/build/rsssl-plugin.min.js',
+			array(
+					'wp-element',
+                	'wp-components',
+					'rsssl-event-listener'
+			), rsssl_version, true);
 
         // Then enqueue them
         wp_enqueue_script('rsssl-react-components');
     }
     add_action('admin_enqueue_scripts', 'enqueue_react_scripts');
+
+    function enqueue_admin_styles_scripts($hook) {
+        if ('plugins.php' !== $hook) {
+            return;
+        }
+
+        // Enqueue block editor styles.
+        wp_enqueue_style('wp-components'); // Styles for wp.components
+        wp_enqueue_style('wp-element'); // Styles for wp.element
+
+        // Continue with your script enqueuing...
+    }
+    add_action('admin_enqueue_scripts', 'enqueue_admin_styles_scripts');
 
     function rsssl_add_modal_root_div() {
         // Check if we're on the plugins.php page

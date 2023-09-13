@@ -47,6 +47,7 @@ function jsPluginTasks(cb) {
     console.log('jsPluginTasks');
     // compile js, transpile React JSX and minify
     return browserify({
+        // Add eventlistener.js to the entries array
         entries: ['./assets/js/src/rsssl-plugin.jsx'],
         extensions: ['.jsx', '.js'],
         debug: true
@@ -65,9 +66,9 @@ function jsPluginTasks(cb) {
             console.error(err);
             this.emit('end');
         });
-    console.log('jsPluginTasks done');
     cb();
 }
+
 
 exports.jsPlugin = jsPluginTasks;
 
@@ -93,7 +94,6 @@ function defaultTask(cb) {
     gulp.watch('./assets/css/**/*.scss', {ignoreInitial: false}, scssTask);
     gulp.watch('./assets/css/**/*.scss', {ignoreInitial: false}, scssPluginTask);
     gulp.watch(['./assets/js/src/**/*.js', './assets/js/src/**/*.jsx'], function () {
-        console.log('JS or JSX file changed. Running jsPluginTasks...');
         jsPluginTasks();
     });
 
