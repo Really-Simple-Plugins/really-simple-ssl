@@ -96,7 +96,7 @@ function rsssl_get_legacy_option( $options, string $name): array {
 
 function check_if_email_essential_feature() {
 	$essential_features = array(
-		'limit_login_attempts' => rsssl_get_option('limit_login_attempts') == 1,
+		'limit_login_attempts' => rsssl_get_option('enable_limited_login_attempts') == 1,
 		'two_fa_email_code' => rsssl_get_option('two_fa_email_code') == 1
 	);
 

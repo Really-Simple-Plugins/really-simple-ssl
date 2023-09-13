@@ -27,6 +27,7 @@ if ( !class_exists('rsssl_mailer') ) {
 			$this->sent_by_text = __("This email is part of the Really Simple SSL Notification System", "really-simple-ssl");
 			$this->subject = __("Notification by Really Simple SSL", "really-simple-ssl");
 			$this->button_text = __("Learn more", "really-simple-ssl");
+			$this->to = rsssl_get_option('notifications_email_address', get_bloginfo('admin_email') );
 			$this->title = __("Learn more about our features!", "really-simple-ssl");
 			$this->sent_to_text = __("This email was sent to", "really-simple-ssl");
 			$this->what_now_text = __( "Learn more", "really-simple-ssl");
@@ -125,7 +126,6 @@ if ( !class_exists('rsssl_mailer') ) {
 				$this->error = __("Email could not be sent. No message or subject set.", "really-simple-ssl");
 			}
 
-			$this->to = rsssl_get_option('notifications_email_address', get_bloginfo('admin_email') );
 			if ( !is_email($this->to) ) {
 				$this->error = __("Email address not valid", "really-simple-ssl");
 			}

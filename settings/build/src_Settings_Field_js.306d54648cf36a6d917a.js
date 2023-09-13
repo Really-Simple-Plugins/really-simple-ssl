@@ -8084,6 +8084,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _TwoFaDataTableStore__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./TwoFaDataTableStore */ "./src/Settings/TwoFA/TwoFaDataTableStore.js");
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _FilterData__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../FilterData */ "./src/Settings/FilterData.js");
+
 
 
 
@@ -8096,6 +8098,7 @@ const DynamicDataTable = props => {
   const {
     twoFAMethods,
     setTwoFAMethods,
+    handleUsersTableFilter,
     DynamicDataTable,
     dataLoaded,
     pagination,
@@ -8108,12 +8111,13 @@ const DynamicDataTable = props => {
     handleTableSearch,
     updateUserMeta
   } = (0,_TwoFaDataTableStore__WEBPACK_IMPORTED_MODULE_6__["default"])();
-
-  // const {
-  //     selectedRoles,
-  //     setSelectedRoles
-  // } = TwoFaRolesDropDown();
-
+  const {
+    selectedFilter,
+    setSelectedFilter,
+    activeGroupId,
+    getCurrentFilter
+  } = (0,_FilterData__WEBPACK_IMPORTED_MODULE_8__["default"])();
+  const moduleName = 'rsssl-group-filter-two_fa_users';
   let field = props.field;
   const [enabled, setEnabled] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(false);
   const {
@@ -8128,6 +8132,18 @@ const DynamicDataTable = props => {
     twoFAEnabledRef.current = getFieldValue('two_fa_enabled');
     saveFields(true, false);
   }, [getFieldValue('two_fa_enabled')]);
+  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
+    const currentFilter = getCurrentFilter(moduleName);
+    if (!currentFilter) {
+      console.log(moduleName);
+      setSelectedFilter('email', moduleName);
+    }
+    handleUsersTableFilter('status_for_user', currentFilter);
+    setTimeout(() => {
+      setRowCleared(true);
+      setTimeout(() => setRowCleared(false), 100);
+    }, 100);
+  }, [selectedFilter, moduleName, handleUsersTableFilter, getCurrentFilter, setSelectedFilter]);
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
     const value = getFieldValue('two_fa_enabled');
     setEnabled(value);
@@ -8151,11 +8167,6 @@ const DynamicDataTable = props => {
     }
   }, [dataLoaded, field.action, fetchDynamicData, getFieldValue('two_fa_enabled')]); // Add getFieldValue('two_fa_enabled') as a dependency
 
-  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
-    if (dataActions) {
-      fetchDynamicData(field.action);
-    }
-  }, [dataActions]);
   function buildColumn(column) {
     let newColumn = {
       name: column.name,
@@ -8448,6 +8459,7 @@ const DynamicDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_2__.create)((s
         searchColumns
       };
     }));
+    await get().fetchDynamicData('two_fa_table');
   },
   handleTablePageChange: async (page, pageSize) => {
     //Add the page and pageSize to the dataActions
@@ -8458,6 +8470,7 @@ const DynamicDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_2__.create)((s
         pageSize
       };
     }));
+    await get().fetchDynamicData('two_fa_table');
   },
   handleTableRowsChange: async (currentRowsPerPage, currentPage) => {
     //Add the page and pageSize to the dataActions
@@ -8468,6 +8481,7 @@ const DynamicDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_2__.create)((s
         currentPage
       };
     }));
+    await get().fetchDynamicData('two_fa_table');
   },
   //this handles all pagination and sorting
   handleTableSort: async (column, sortDirection) => {
@@ -8479,6 +8493,7 @@ const DynamicDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_2__.create)((s
         sortDirection
       };
     }));
+    await get().fetchDynamicData('two_fa_table');
   },
   updateUserMeta: async (userId, updatedMeta) => {
     set((0,immer__WEBPACK_IMPORTED_MODULE_3__.produce)(state => {
@@ -8491,6 +8506,19 @@ const DynamicDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_2__.create)((s
     data.userId = userId;
     data.method = updatedMeta;
     const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('store_two_fa_usermeta', data);
+  },
+  handleUsersTableFilter: async (column, filterValue) => {
+    //Add the column and sortDirection to the dataActions
+    set((0,immer__WEBPACK_IMPORTED_MODULE_3__.produce)(state => {
+      state.dataActions = {
+        ...state.dataActions,
+        filterColumn: column,
+        filterValue
+      };
+    }));
+    console.log('action', get().dataActions);
+    // //we fetch the data again
+    await get().fetchDynamicData('two_fa_table');
   }
 }));
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (DynamicDataTableStore);
@@ -25308,4 +25336,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.c881cc9d8901c328bd91.js.map
+//# sourceMappingURL=src_Settings_Field_js.306d54648cf36a6d917a.js.map

@@ -5,11 +5,13 @@ import apiFetch from '@wordpress/api-fetch';
 import useFields from "../FieldsData";
 import TwoFaDataTableStore from "./TwoFaDataTableStore";
 import {Button} from "@wordpress/components";
+import FilterData from "../FilterData";
 
 const DynamicDataTable = (props) => {
     const {
         twoFAMethods,
         setTwoFAMethods,
+        handleUsersTableFilter,
         DynamicDataTable,
         dataLoaded,
         pagination,
@@ -23,10 +25,14 @@ const DynamicDataTable = (props) => {
         updateUserMeta,
     } = TwoFaDataTableStore();
 
-    // const {
-    //     selectedRoles,
-    //     setSelectedRoles
-    // } = TwoFaRolesDropDown();
+    const {
+        selectedFilter,
+        setSelectedFilter,
+        activeGroupId,
+        getCurrentFilter
+    } = FilterData();
+
+    const moduleName = 'rsssl-group-filter-two_fa_users';
 
     let field = props.field;
     const [enabled, setEnabled] = useState(false);
@@ -40,6 +46,20 @@ const DynamicDataTable = (props) => {
         twoFAEnabledRef.current = getFieldValue('two_fa_enabled');
         saveFields(true, false)
     }, [getFieldValue('two_fa_enabled')]);
+
+    useEffect(() => {
+        const currentFilter = getCurrentFilter(moduleName);
+        if (!currentFilter) {
+            console.log(moduleName);
+            setSelectedFilter('email', moduleName);
+        }
+        handleUsersTableFilter('status_for_user', currentFilter);
+        setTimeout(() => {
+            setRowCleared(true);
+            setTimeout(() => setRowCleared(false), 100);
+        }, 100);
+
+    }, [selectedFilter, moduleName, handleUsersTableFilter, getCurrentFilter, setSelectedFilter]);
 
     useEffect(() => {
         const value = getFieldValue('two_fa_enabled');
@@ -64,15 +84,8 @@ const DynamicDataTable = (props) => {
                 .catch(err => {
                     console.error(err); // Log any errors
                 });
-        }
+         }
     }, [dataLoaded, field.action, fetchDynamicData, getFieldValue('two_fa_enabled')]); // Add getFieldValue('two_fa_enabled') as a dependency
-
-
-    useEffect(() => {
-        if (dataActions) {
-            fetchDynamicData(field.action);
-        }
-    }, [dataActions]);
 
 
     function buildColumn(column) {
