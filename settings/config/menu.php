@@ -45,6 +45,7 @@ function rsssl_menu() {
                     'id' => 'encryption',
                     'title' => 'Encryption',
                     'featured' => false,
+	                'new' => true,
                     'menu_items' => [
                         [
                             'id' => 'encryption_redirect',
@@ -135,19 +136,21 @@ function rsssl_menu() {
                             'helpLink' => 'https://really-simple-ssl.com/instructions/about-vulnerabilities#notifications',
                         ],
                         [
-                            'id' => 'vulnerabilities_measures',
-                            'group_id' => 'vulnerabilities_measures',
+                            'id' => 'vulnerabilities_measures_overview',
+                            'group_id' => 'vulnerabilities_measures_overview',
                             'title' => __( 'Measures', 'really-simple-ssl' ),
                             // @todo groups missen intro
                             'groups'  => [
                                 [
 							        'id'       => 'vulnerabilities_overview',
+	                                'group_id' => 'vulnerabilities_overview',
                                     'title' => __( 'Overview', 'really-simple-ssl' ),
                                     'intro' => __( 'This is the vulnerability overview. Here you will find current known vulnerabilities on your system. You can find more information and helpful, actionable insights for every vulnerability under details.', 'really-simple-ssl' ),
                                     'helpLink' => 'https://really-simple-ssl.com/instructions/about-vulnerabilities#components',
                                 ],
                                 [
                                     'id'       => 'vulnerabilities_measures',
+                                    'group_id' => 'vulnerabilities_measures',
                                     'title' => __( 'Measures', 'really-simple-ssl' ),
                                     'intro' => __( 'You can choose to automate the most common actions for a vulnerability. Each action is set to a minimum risk level, similar to the notifications. Please read the instructions to learn more about the process.', 'really-simple-ssl' ),
                                     'premium' => true,
@@ -222,7 +225,7 @@ function rsssl_menu() {
                                     'title'                => 'Frame Ancestors',
                                 ],
                                 [
-                                    'id'                   => 'content_security_policy',
+                                    'id'                   => 'content_security_policy_source_directives',
                                     'networkwide_required' => true,
                                     'helpLink'             => 'https://really-simple-ssl.com/instructions/source-directives/',
                                     'premium'              => true,
@@ -231,7 +234,7 @@ function rsssl_menu() {
                                     'title'                => 'Source Directives',
                                 ]
                             ],
-                            ],
+                        ],
                         [
                             'id' => 'cross_origin_policy',
                             'group_id' => 'cross_origin_policy',

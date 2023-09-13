@@ -1517,83 +1517,83 @@
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(1) {
-    width: 99%;
+    width: 84%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(2) {
-    width: 95%;
+    width: 97%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(3) {
-    width: 98%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(4) {
-    width: 85%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(5) {
-    width: 62%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(6) {
-    width: 91%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(7) {
-    width: 93%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
-    width: 76%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
-    width: 79%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
-    width: 64%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
-    width: 98%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
     width: 70%;
 }
 
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
-    width: 92%;
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(4) {
+    width: 65%;
 }
 
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(14) {
-    width: 95%;
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(5) {
+    width: 90%;
 }
 
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
-    width: 64%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(16) {
-    width: 80%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(17) {
-    width: 76%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(18) {
-    width: 80%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(19) {
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(6) {
     width: 98%;
 }
 
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(7) {
+    width: 87%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
+    width: 88%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
+    width: 63%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
+    width: 71%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
+    width: 76%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
+    width: 83%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
+    width: 86%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(14) {
+    width: 62%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
+    width: 74%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(16) {
+    width: 73%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(17) {
+    width: 88%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(18) {
+    width: 78%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(19) {
+    width: 96%;
+}
+
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(20) {
-    width: 81%;
+    width: 100%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line ~ .rsssl-placeholder-line {
@@ -1999,6 +1999,10 @@
     padding-bottom: var(--rsp-spacing-l);
 }
 
+.rsssl-wizard-menu-items > .rsssl-menu-item > a {
+    font-weight: 600 !important;
+}
+
 .rsssl-wizard-menu-items .rsssl-menu-item a {
     display: flex;
     align-items: center;
@@ -2035,7 +2039,6 @@
 }
 
 .rsssl-wizard-menu-items .rsssl-menu-item.rsssl-featured a {
-    font-weight: 600;
     flex-wrap: wrap;
 }
 
@@ -2053,6 +2056,22 @@
     padding: 4px 8px;
     border-radius: var(--rsp-border-radius-xs);
     font-size: var(--rsp-fs-100);
+}
+
+.rsssl-wizard-menu-items .rsssl-menu-item.rsssl-new .rsssl-menu-item-new-pill {
+    background: var(--rsp-blue);
+    color: var(--rsp-text-color-white);
+    padding: 4px 8px;
+    border-radius: var(--rsp-border-radius-xs);
+    font-size: var(--rsp-fs-100);
+}
+
+.rsssl-wizard-menu-items .rsssl-menu-item.rsssl-new.rsssl-active .rsssl-menu-item-new-pill {
+    color: var(--rsp-text-color-white);
+}
+
+.rsssl-wizard-menu-items .rsssl-menu-item.rsssl-new a {
+    flex-wrap: wrap;
 }
 
 .rsssl-wizard-menu-items .rsssl-menu-item.rsssl-premium a {

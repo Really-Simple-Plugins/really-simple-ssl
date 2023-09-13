@@ -665,8 +665,8 @@ function rsssl_fields( $load_values = true ) {
         ],
         [
             'id'    => 'vulnerabilities-overview',
-            'menu_id' => 'vulnerabilities_measures',
-            'group_id' => 'vulnerabilities_measures',
+            'menu_id' => 'vulnerabilities_measures_overview',
+            'group_id' => 'vulnerabilities_overview',
             'type' => 'vulnerabilitiestable',
 
             'label' => __('Vulnerabilities Overview', 'really-simple-ssl'),
@@ -709,7 +709,7 @@ function rsssl_fields( $load_values = true ) {
         ],
         [
             'id'               => 'vulnerabilities_measures',
-            'menu_id'          => 'vulnerabilities_measures',
+            'menu_id'          => 'vulnerabilities_measures_overview',
             'group_id'         => 'vulnerabilities_measures',
             'type'             => 'riskcomponent',
             'options'          => [
@@ -1181,7 +1181,7 @@ function rsssl_fields( $load_values = true ) {
 			'default'  => false,
 		],
 		[
-			'id'            => 'content_security_policy',
+			'id'            => 'content_security_policy_source_directives',
 			'control_field' => 'csp_status',
 			'menu_id'       => 'content_security_policy',
 			'group_id'      => 'content_security_policy',

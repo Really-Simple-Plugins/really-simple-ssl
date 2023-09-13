@@ -461,15 +461,14 @@ const SettingsGroup = props => {
     }
   }
   let activeGroup;
+
   //first, set the selected menu item as activate group, so we have a default in case there are no groups
   for (const item of subMenu.menu_items) {
     if (item.id === selectedSubMenuItem) {
       activeGroup = item;
     } else if (item.menu_items) {
-      activeGroup = item.menu_items.filter(menuItem => menuItem.id === selectedSubMenuItem)[0];
-    }
-    if (activeGroup) {
-      break;
+      let matchedItem = item.menu_items.filter(menuItem => menuItem.id === selectedSubMenuItem)[0];
+      if (matchedItem) activeGroup = matchedItem;
     }
   }
 
@@ -1282,4 +1281,4 @@ const errorMsg = error => {
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Settings_js.d9cc33c0fa0ebd78210a.js.map
+//# sourceMappingURL=src_Settings_Settings_js.2d8c1f9dca926998f539.js.map
