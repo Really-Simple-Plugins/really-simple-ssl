@@ -2279,7 +2279,7 @@ button.button .cmplz-icon.rsssl-icon-loading > div {
   width: 90%;
 }
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
-  width: 81%;
+  width: 100%;
 }
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
   width: 73%;
