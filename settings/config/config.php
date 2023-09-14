@@ -800,9 +800,9 @@ function rsssl_fields( $load_values = true ) {
             'type'             => 'select',
             'label'            => __('Interval', 'really-simple-ssl'),
             'options'          => [
+                '15'  => '15'.__(' minutes', 'really-simple-ssl'),
                 '30'  => '30'.__(' minutes', 'really-simple-ssl'),
                 '60'  => '1 '.__(' hour', 'really-simple-ssl'),
-                '120' => '2 '.__(' hours', 'really-simple-ssl'),
                 '240' => '4 '.__(' hours', 'really-simple-ssl'),
                 '1440' => '1 '.__(' day', 'really-simple-ssl'),
             ],
