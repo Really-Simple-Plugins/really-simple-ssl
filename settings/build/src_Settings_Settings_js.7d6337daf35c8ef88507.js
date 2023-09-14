@@ -422,7 +422,6 @@ __webpack_require__.r(__webpack_exports__);
  * Render a grouped block of settings
  */
 const SettingsGroup = props => {
-  console.log('props.group value:', props.group);
   const {
     fields
   } = (0,_Settings_FieldsData__WEBPACK_IMPORTED_MODULE_5__["default"])();
@@ -1296,4 +1295,4 @@ const errorMsg = error => {
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Settings_js.f578ce3ad117066e09cd.js.map
+//# sourceMappingURL=src_Settings_Settings_js.7d6337daf35c8ef88507.js.map

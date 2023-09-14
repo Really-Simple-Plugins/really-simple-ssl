@@ -22,10 +22,10 @@ function rsssl_menu() {
 					'id'       => 'general',
 					'group_id' => 'general',
 					'title'    => __( 'General', 'really-simple-ssl' ),
-					'helpLink' => 'https://really-simple-ssl.com/instructions/about-our-general-settings/?mtm_campaign=instructions&mtm_source=free',
+//					'helpLink' => 'https://really-simple-ssl.com/instructions/about-our-general-settings/?mtm_campaign=instructions&mtm_source=free',
 					'groups'   => [
 						[
-							'id'       => 'general',
+							'id'       => 'general_settings',
 							'title'    => __( 'General', 'really-simple-ssl' ),
 							'helpLink' => 'https://really-simple-ssl.com/instructions/about-our-general-settings/?mtm_campaign=instructions&mtm_source=free',
 						],
@@ -139,7 +139,6 @@ function rsssl_menu() {
                             'id' => 'vulnerabilities_measures_overview',
                             'group_id' => 'vulnerabilities_measures_overview',
                             'title' => __( 'Measures', 'really-simple-ssl' ),
-                            // @todo groups missen intro
                             'groups'  => [
                                 [
 							        'id'       => 'vulnerabilities_overview',
@@ -208,6 +207,7 @@ function rsssl_menu() {
                             'groups'  => [
                                 [
                                     'id'                   => 'upgrade_insecure_requests',
+                                    'group_id'             => 'upgrade_insecure_requests',
                                     'networkwide_required' => true,
                                     'premium'              => true,
                                     'premium_text'         => __( "Get Upgrade Insecure Requests with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
@@ -217,6 +217,7 @@ function rsssl_menu() {
                                 ],
                                 [
                                     'id'                   => 'frame_ancestors',
+                                    'group_id'             => 'frame_ancestors',
                                     'networkwide_required' => true,
                                     'premium'              => true,
                                     'premium_text'         => __( "Get Frame Ancestors with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
@@ -226,6 +227,7 @@ function rsssl_menu() {
                                 ],
                                 [
                                     'id'                   => 'content_security_policy_source_directives',
+                                    'group_id'             => 'content_security_policy_source_directives',
                                     'networkwide_required' => true,
                                     'helpLink'             => 'https://really-simple-ssl.com/instructions/source-directives/',
                                     'premium'              => true,
