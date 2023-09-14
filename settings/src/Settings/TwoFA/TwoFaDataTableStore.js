@@ -95,8 +95,7 @@ const DynamicDataTableStore = create((set, get) => ({
                 state.dataActions = {...state.dataActions, filterColumn: column, filterValue};
             })
         );
-        console.log('action', get().dataActions);
-        // //we fetch the data again
+        // We fetch the data again
         await get().fetchDynamicData('two_fa_table');
     },
 

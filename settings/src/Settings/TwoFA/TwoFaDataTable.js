@@ -50,7 +50,6 @@ const DynamicDataTable = (props) => {
     useEffect(() => {
         const currentFilter = getCurrentFilter(moduleName);
         if (!currentFilter) {
-            console.log(moduleName);
             setSelectedFilter('email', moduleName);
         }
         handleUsersTableFilter('status_for_user', currentFilter);
@@ -254,6 +253,25 @@ const DynamicDataTable = (props) => {
         setRowsSelected(state.selectedRows);
     }
 
+    let displayData = DynamicDataTable || [];
+
+    if (DynamicDataTable && DynamicDataTable.length > 0) {
+        displayData = DynamicDataTable.map(row => {
+            if (row.status_for_user === 'Enabled') {
+                return {...row, status_for_user: __("Active", "really-simple-ssl")};
+            }
+
+            if (row.status_for_user === 'Open') {
+                return {...row, status_for_user: __("Pending", "really-simple-ssl")};
+            }
+
+            if (row.status_for_user === 'Disabled') {
+                return {...row, status_for_user: __("Disabled", "really-simple-ssl")};
+            }
+            return row;
+        });
+    }
+
     return (
         <>
             <div className="rsssl-container" style={
@@ -304,7 +322,7 @@ const DynamicDataTable = (props) => {
             {dataLoaded ?
                 <DataTable
                     columns={columns}
-                    data={DynamicDataTable}
+                    data={displayData}
                     dense
                     pagination
                     paginationServer
