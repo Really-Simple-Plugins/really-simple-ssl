@@ -48,7 +48,7 @@ const EventLogDataTable = (props) => {
 
     //we create the columns
     let columns = [];
-    //getting the fields from the props
+    //getting the fields from the propsß
     let field = props.field;
     //we loop through the fields
     field.columns.forEach(function (item, i) {
@@ -115,7 +115,13 @@ const EventLogDataTable = (props) => {
         });
     }
 
-    //we convert DynamicDataTable to an array
+    //if the dataActions are changed, we fetch the data
+    useEffect(() => {
+        //we make sure the dataActions are changed in the store before we fetch the data
+        if (dataActions) {
+            fetchDynamicData(field.action, dataActions)
+        }
+    }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search]);
 
 
     //we generate an expandable row
@@ -221,9 +227,9 @@ const EventLogDataTable = (props) => {
                 onChangePage={handleEventTablePageChange}
                 expandableRows
                 expandableRowsComponent={ExpandableRow}
-                sortServer
                 loading={dataLoaded}
                 onSort={handleEventTableSort}
+                sortServer
                 paginationRowsPerPageOptions={[5, 10, 25, 50, 100]}
                 noDataComponent={__("No results", "really-simple-ssl")}
                 persistTableHead

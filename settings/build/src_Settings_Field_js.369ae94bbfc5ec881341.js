@@ -1879,7 +1879,7 @@ const EventLogDataTable = props => {
 
   //we create the columns
   let columns = [];
-  //getting the fields from the props
+  //getting the fields from the propsß
   let field = props.field;
   //we loop through the fields
   field.columns.forEach(function (item, i) {
@@ -1945,7 +1945,13 @@ const EventLogDataTable = props => {
     });
   }
 
-  //we convert DynamicDataTable to an array
+  //if the dataActions are changed, we fetch the data
+  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
+    //we make sure the dataActions are changed in the store before we fetch the data
+    if (dataActions) {
+      fetchDynamicData(field.action, dataActions);
+    }
+  }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search]);
 
   //we generate an expandable row
   const ExpandableRow = _ref => {
@@ -2046,9 +2052,9 @@ const EventLogDataTable = props => {
     onChangePage: handleEventTablePageChange,
     expandableRows: true,
     expandableRowsComponent: ExpandableRow,
-    sortServer: true,
     loading: dataLoaded,
     onSort: handleEventTableSort,
+    sortServer: true,
     paginationRowsPerPageOptions: [5, 10, 25, 50, 100],
     noDataComponent: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("No results", "really-simple-ssl"),
     persistTableHead: true,
@@ -2134,35 +2140,8 @@ const EventLogDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((
   pagination: {},
   dataActions: {},
   DynamicDataTable: [],
-  //for faking data we add a dymmmyData
-  dummyData: {
-    data: [{
-      "id": 1,
-      "datetime": "10:02, August 16",
-      "severity": "warning",
-      "description": "This is a warning message",
-      "event_type": "Login protection",
-      "source_ip": "1.1.1.1",
-      "username": "admin",
-      "iso2_code": "NL"
-    }, {
-      "datetime": "10:02, August 16",
-      "severity": "warning",
-      "description": "This is a warning message",
-      "event_type": "Login protection",
-      "source_ip": "1.1.1.1",
-      "username": "admin",
-      "iso2_code": "NL"
-    }]
-  },
-  dummyPagination: {
-    currentPage: 1,
-    lastPage: 1,
-    perPage: 10,
-    total: 2,
-    totalRows: 2
-  },
-  fetchDynamicData: async action => {
+  sorting: [],
+  fetchDynamicData: async (action, dataActions) => {
     //cool we can fetch the data so first we set the processing to true
     set({
       processing: true
@@ -2172,17 +2151,15 @@ const EventLogDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((
     });
     //now we fetch the data
     try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction(action, get().dataActions);
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction(action, dataActions);
       // now we set the EventLog
       if (response) {
-        // if the response is empty we set the dummyData
-        const data = typeof response.pagination === 'undefined' ? get().dummyData : response;
-        const pagination = typeof response.pagination === 'undefined' ? get().dummyPagination : response.pagination;
         set({
-          DynamicDataTable: data,
+          DynamicDataTable: response,
           dataLoaded: true,
           processing: false,
-          pagination
+          pagination: response.pagination,
+          sorting: response.sorting
         });
       }
     } catch (e) {
@@ -2198,7 +2175,6 @@ const EventLogDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((
         searchColumns
       };
     }));
-    get().fetchDynamicData('event_log');
   },
   handleEventTablePageChange: async (page, pageSize) => {
     //Add the page and pageSize to the dataActions
@@ -2209,7 +2185,6 @@ const EventLogDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((
         pageSize
       };
     }));
-    get().fetchDynamicData('event_log');
   },
   handleEventTableRowsChange: async (currentRowsPerPage, currentPage) => {
     //Add the page and pageSize to the dataActions
@@ -2220,11 +2195,9 @@ const EventLogDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((
         currentPage
       };
     }));
-    get().fetchDynamicData('event_log');
   },
   //this handles all pagination and sorting
   handleEventTableSort: async (column, sortDirection) => {
-    //Add the column and sortDirection to the dataActions
     set((0,immer__WEBPACK_IMPORTED_MODULE_4__.produce)(state => {
       state.dataActions = {
         ...state.dataActions,
@@ -2232,7 +2205,6 @@ const EventLogDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((
         sortDirection
       };
     }));
-    get().fetchDynamicData('event_log');
   },
   handleEventTableFilter: async (column, filterValue) => {
     //Add the column and sortDirection to the dataActions
@@ -2243,8 +2215,6 @@ const EventLogDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((
         filterValue
       };
     }));
-    //we prefetch the data
-    get().fetchDynamicData('event_log');
   }
 }));
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (EventLogDataTableStore);
@@ -25350,4 +25320,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.55acbc06b42ce2f3f929.js.map
+//# sourceMappingURL=src_Settings_Field_js.369ae94bbfc5ec881341.js.map
