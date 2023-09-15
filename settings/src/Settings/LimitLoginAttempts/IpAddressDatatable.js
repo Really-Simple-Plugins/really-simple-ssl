@@ -289,7 +289,7 @@ const IpAddressDatatable = (props) => {
                             </button>
                         </div>
                     )}
-                    {/* if the id is new we show the Reset button */}
+                    {/* if the id is new we show the Delete button */}
                     <div className="rsssl-action-buttons__inner">
                         <button
                             className="button button-red button-datatable rsssl-action-buttons__button"
@@ -298,7 +298,7 @@ const IpAddressDatatable = (props) => {
                             }
                             }
                         >
-                            {__("Reset", "really-simple-ssl")}
+                            {__("Delete", "really-simple-ssl")}
                         </button>
                     </div>
                 </div>
@@ -413,7 +413,7 @@ const IpAddressDatatable = (props) => {
                                     </button>
                                 </div>
                             )}
-                            {/* if the id is new we show the Reset button */}
+                            {/* if the id is new we show the Delete button */}
                             <div className="rsssl-action-buttons__inner">
                                 <button
                                     className="button button-red button-datatable rsssl-action-buttons__button"
@@ -421,7 +421,7 @@ const IpAddressDatatable = (props) => {
                                         resetIpAddresses(rowsSelected);
                                     }}
                                 >
-                                    {__("Reset", "really-simple-ssl")}
+                                    {__("Delete", "really-simple-ssl")}
                                 </button>
                             </div>
                         </div>
