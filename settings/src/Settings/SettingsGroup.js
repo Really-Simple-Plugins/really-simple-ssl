@@ -15,16 +15,21 @@ import ErrorBoundary from "../utils/ErrorBoundary";
 const SettingsGroup = (props) => {
     const {fields} = useFields();
     const {selectedFilter, setSelectedFilter} = filterData();
+    const {setActiveGroupId, activeGroupId} = useMenu();
     const {licenseStatus} = useLicense();
     const {selectedSubMenuItem, subMenu} = useMenu();
     const [Field, setField] = useState(null);
+    const [updatedIntro, setUpdatedIntro] = useState(null);
 
     useEffect(() => {
         import("./Field").then(({default: Field}) => {
             setField(() => Field);
         });
+        if (activeGroup && activeGroup.intro && typeof activeGroup.intro === 'object') {
+            setUpdatedIntro(activeGroup.intro[selectedFilter[filterId]]);
+        }
 
-    }, []);
+    }, [selectedFilter]);
 
 
     let upgrade = 'https://really-simple-ssl.com/pro/?mtm_campaign=fallback&mtm_source=free&mtm_content=upgrade';
@@ -140,10 +145,10 @@ const SettingsGroup = (props) => {
                 </div>}
             </div>}
             <div className="rsssl-grid-item-content">
-                {activeGroup.intro && <ErrorBoundary fallback={"Could not load group intro"}>
+                {(activeGroup.intro && typeof activeGroup.intro === 'string') && <ErrorBoundary fallback={"Could not load group intro"}>
                     <div className="rsssl-settings-block-intro">{activeGroup.intro}</div>
-                </ErrorBoundary>
-                }
+                </ErrorBoundary>}
+                {(activeGroup.intro &&  typeof activeGroup.intro === 'object') && <div className="rsssl-settings-block-intro">{updatedIntro}</div>}
                 {Field && selectedFields.map((field, i) =>
                     <ErrorBoundary key={"selectedFields-" + i} fallback={"Could not load field "+field.id}>
                         <Field index={i} field={field} fields={selectedFields}/>

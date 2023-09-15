@@ -5221,7 +5221,7 @@ const IpAddressDatatable = props => {
       onClick: () => {
         resetIpAddresses(id);
       }
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Reset", "really-simple-ssl")))));
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Delete", "really-simple-ssl")))));
   }
 
   //if the dataActions are changed, we fetch the data
@@ -5298,7 +5298,7 @@ const IpAddressDatatable = props => {
     onClick: () => {
       resetIpAddresses(rowsSelected);
     }
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Reset", "really-simple-ssl")))))), dataLoaded ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Delete", "really-simple-ssl")))))), dataLoaded ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
     columns: columns,
     data: data,
     dense: true,
@@ -25209,6 +25209,7 @@ __webpack_require__.r(__webpack_exports__);
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
+<<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 //# sourceMappingURL=src_Settings_Field_js.71728f3a274feb041ab6.js.map
 ========
 //# sourceMappingURL=src_Settings_Field_js.2a9f68f4c72b1ac2b97c.js.map
@@ -25234,3 +25235,6 @@ __webpack_require__.r(__webpack_exports__);
 ========
 //# sourceMappingURL=src_Settings_Field_js.092b69202ddf0f282672.js.map
 >>>>>>>> 3004c8a13 (fixed a load of issues with ip address datatable):settings/build/src_Settings_Field_js.092b69202ddf0f282672.js
+========
+//# sourceMappingURL=src_Settings_Field_js.1e282662c528ad1e2673.js.map
+>>>>>>>> 8e5ee9105 (added functionality to change intro based on filter):settings/build/src_Settings_Field_js.1e282662c528ad1e2673.js

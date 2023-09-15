@@ -150,21 +150,25 @@ function rsssl_menu()
                                 'options' => [
                                     [
                                         'id'    => 'blocked',
-                                        'title' => __('Blocked', 'really-simple-ssl'),
+                                        'title' => __('Permanent block', 'really-simple-ssl'),
                                     ],
                                     [
                                         'id'    => 'allowed',
-                                        'title' => __('Allowed', 'really-simple-ssl'),
+                                        'title' => __('Trusted', 'really-simple-ssl'),
                                     ],
                                     [
                                         'id'    => 'locked',
-                                        'title' => __('Locked-out', 'really-simple-ssl'),
-                                    ]
+                                        'title' => __('Temporary block', 'really-simple-ssl'),
+                                    ],
                                 ],
                             ],
                             'title'        => __('Users', 'really-simple-ssl'),
-                            'intro'        => __('Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et',
-                                'really-simple-ssl'),
+                            'intro'        => [
+                                'locked' => __('Blocked usernames will be automatically unblocked after the above-configured interval. In the table below you can instantly unblock usernames.',
+                                    'really-simple-ssl'),
+                                'allowed' => __('You can prevent usernames from being temporarily blocked by adding them to this list. The IP address that triggers false logins will still be blocked.', 'really-simple-ssl'),
+                                'blocked' => __('You can add any non-existing username to this table, to instantly block IP addresses that try common usernames like "admin".','really-simple-ssl'),
+                            ],
                             'premium_text' => __('Get Limit Login Attempts with %sReally Simple SSL Pro%s',
                                 'really-simple-ssl'),
                         ],
@@ -177,21 +181,25 @@ function rsssl_menu()
                                 'options' => [
                                     [
                                         'id'    => 'blocked',
-                                        'title' => __('Blocked', 'really-simple-ssl'),
+                                        'title' => __('Permanent block', 'really-simple-ssl'),
                                     ],
                                     [
                                         'id'    => 'allowed',
-                                        'title' => __('Allowed', 'really-simple-ssl'),
+                                        'title' => __('Trusted', 'really-simple-ssl'),
                                     ],
                                     [
                                         'id'    => 'locked',
-                                        'title' => __('Locked-out', 'really-simple-ssl'),
+                                        'title' => __('Temporary block', 'really-simple-ssl'),
                                     ],
                                 ],
                             ],
                             'title'        => __('IP Addresses', 'really-simple-ssl'),
-                            'intro'        => __('Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et',
+                            'intro'        => [
+                                'locked' => __('Blocked IP addresses will be automatically unblocked after the above-configured interval. In the table below you can instantly unblock IP addresses.',
                                 'really-simple-ssl'),
+                                'allowed' => __('You can prevent IP addresses from being temporarily blocked by adding them to this list. This can be convenient if you share an IP address with other site users. Usernames that trigger false logins will still be blocked.', 'really-simple-ssl'),
+                                'blocked' => __('You can indefinitely block known abusive IP addresses, to completely prevent them from trying to login.','really-simple-ssl'),
+                            ],
                             'premium_text' => __('Get Limit Login Attempts with %sReally Simple SSL Pro%s',
                                 'really-simple-ssl'),
                         ],
