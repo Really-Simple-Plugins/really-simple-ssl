@@ -1951,7 +1951,7 @@ const EventLogDataTable = props => {
     if (dataActions) {
       fetchDynamicData(field.action, dataActions);
     }
-  }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search]);
+  }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page]);
 
   //we generate an expandable row
   const ExpandableRow = _ref => {
@@ -25174,6 +25174,7 @@ __webpack_require__.r(__webpack_exports__);
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
+<<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 //# sourceMappingURL=src_Settings_Field_js.71728f3a274feb041ab6.js.map
 ========
 //# sourceMappingURL=src_Settings_Field_js.2a9f68f4c72b1ac2b97c.js.map
@@ -25187,3 +25188,6 @@ __webpack_require__.r(__webpack_exports__);
 ========
 //# sourceMappingURL=src_Settings_Field_js.da5e9d4a892c8646ddd5.js.map
 >>>>>>>> 29a4a9d08 (fixed sorting and pagination in CountryTable):settings/build/src_Settings_Field_js.da5e9d4a892c8646ddd5.js
+========
+//# sourceMappingURL=src_Settings_Field_js.2badb76fe17e0f5ae377.js.map
+>>>>>>>> d27cc5e94 (applied fix to pagination eventlog as well):settings/build/src_Settings_Field_js.2badb76fe17e0f5ae377.js
