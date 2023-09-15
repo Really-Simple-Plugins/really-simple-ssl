@@ -2279,7 +2279,7 @@ button.button .cmplz-icon.rsssl-icon-loading > div {
   width: 90%;
 }
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
-  width: 100%;
+  width: 72%;
 }
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
   width: 73%;
@@ -2298,6 +2298,9 @@ button.button .cmplz-icon.rsssl-icon-loading > div {
 }
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
   width: 85%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
+  width: 70%;
 }
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(16) {
   width: 86%;

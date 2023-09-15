@@ -3742,32 +3742,7 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
   pagination: {},
   dataActions: {},
   CountryDataTable: [],
-  //for faking data we add a dymmmyData
-  dummyData: {
-    data: [{
-      "id": 1,
-      "iso2_code": "US",
-      "iso3_code": "USA",
-      "country_name": "United States",
-      "region": "North America",
-      "region_code": "NA"
-    }, {
-      "id": 2,
-      "iso2_code": "CA",
-      "iso3_code": "CAN",
-      "country_name": "Canada",
-      "region": "North America",
-      "region_code": "NA"
-    }]
-  },
-  dummyPagination: {
-    currentPage: 1,
-    lastPage: 1,
-    perPage: 10,
-    total: 2,
-    totalRows: 2
-  },
-  fetchCountryData: async action => {
+  fetchCountryData: async (action, dataActions) => {
     set({
       processing: true
     });
@@ -3775,24 +3750,15 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
       dataLoaded: false
     });
     try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction(action, get().dataActions);
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction(action, dataActions);
       //now we set the EventLog
       if (response) {
-        if (typeof response.pagination === 'undefined') {
-          set({
-            CountryDataTable: get().dummyData,
-            dataLoaded: true,
-            processing: false,
-            pagination: get().dummyPagination
-          });
-        } else {
-          set({
-            CountryDataTable: response,
-            dataLoaded: true,
-            processing: false,
-            pagination: response.pagination
-          });
-        }
+        set({
+          CountryDataTable: response,
+          dataLoaded: true,
+          processing: false,
+          pagination: response.pagination
+        });
       }
     } catch (e) {
       console.log(e);
@@ -3807,7 +3773,6 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
         searchColumns
       };
     }));
-    get().fetchCountryData('country_list');
   },
   handleCountryTablePageChange: async (page, pageSize) => {
     //Add the page and pageSize to the dataActions
@@ -3818,7 +3783,6 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
         pageSize
       };
     }));
-    get().fetchCountryData('country_list');
   },
   handleCountryTableRowsChange: async (currentRowsPerPage, currentPage) => {
     //Add the page and pageSize to the dataActions
@@ -3829,7 +3793,6 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
         currentPage
       };
     }));
-    get().fetchCountryData('country_list');
   },
   //this handles all pagination and sorting
   handleCountryTableSort: async (column, sortDirection) => {
@@ -3841,7 +3804,6 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
         sortDirection
       };
     }));
-    get().fetchCountryData('country_list');
   },
   handleCountryTableFilter: async (column, filterValue) => {
     //Add the column and sortDirection to the dataActions
@@ -3852,7 +3814,6 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
         filterValue
       };
     }));
-    get().fetchCountryData('country_list');
   },
   /*
   * This function add a new row to the table
@@ -4093,7 +4054,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const CountryDatatable = props => {
-  var _pagination$totalRows;
+  var _pagination$perPage;
   const {
     CountryDataTable,
     dataLoaded,
@@ -4111,7 +4072,8 @@ const CountryDatatable = props => {
     addRowMultiple,
     removeRowMultiple,
     resetRow,
-    resetMultiRow
+    resetMultiRow,
+    dataActions
   } = (0,_CountryDataTableStore__WEBPACK_IMPORTED_MODULE_3__["default"])();
   const {
     DynamicDataTable,
@@ -4142,18 +4104,9 @@ const CountryDatatable = props => {
     column: column.column,
     selector: row => row[column.column]
   }), []);
-  const columns = props.field.columns.map(buildColumn);
+  let field = props.field;
+  const columns = field.columns.map(buildColumn);
   const searchableColumns = columns.filter(column => column.searchable).map(column => column.column);
-
-  //get data if field was already enabled, so not changed right now.
-  (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
-    if (fieldAlreadyEnabled && !dataLoaded) {
-      fetchCountryData(props.field.action);
-    }
-  }, [fieldAlreadyEnabled, dataLoaded, fetchCountryData, props.field.action]);
-  (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
-    // code to execute after DynamicDataTable has been updated
-  }, [DynamicDataTable]);
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     const currentFilter = getCurrentFilter(moduleName);
     if (!currentFilter) {
@@ -4170,10 +4123,20 @@ const CountryDatatable = props => {
     setRowsSelected([]);
   }, [CountryDataTable]);
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
-    if (!dataLoaded) {
-      fetchCountryData(props.field.action);
+    if (fieldAlreadyEnabled) {
+      if (!dataLoaded) {
+        fetchDynamicData(field.action);
+      }
     }
-  }, [dataLoaded, props.field.action, fetchCountryData]);
+  }, [fields]);
+
+  //if the dataActions are changed, we fetch the data
+  (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
+    //we make sure the dataActions are changed in the store before we fetch the data
+    if (dataActions) {
+      fetchCountryData(field.action, dataActions);
+    }
+  }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page]);
   let enabled = false;
   fields.forEach(function (item, i) {
     if (item.id === 'enable_limited_login_attempts') {
@@ -4382,7 +4345,16 @@ const CountryDatatable = props => {
     dense: true,
     pagination: true,
     paginationServer: true,
-    paginationTotalRows: (_pagination$totalRows = pagination.totalRows) !== null && _pagination$totalRows !== void 0 ? _pagination$totalRows : 0,
+    paginationTotalRows: pagination.totalRows,
+    paginationPerPage: (_pagination$perPage = pagination.perPage) !== null && _pagination$perPage !== void 0 ? _pagination$perPage : 10,
+    paginationDefaultPage: pagination.currentPage,
+    paginationComponentOptions: {
+      rowsPerPageText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)('Rows per page:', 'really-simple-ssl'),
+      rangeSeparatorText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)('of', 'really-simple-ssl'),
+      noRowsPerPage: false,
+      selectAllRowsItem: false,
+      selectAllRowsItemText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)('All', 'really-simple-ssl')
+    },
     onChangeRowsPerPage: handleCountryTableRowsChange,
     onChangePage: handleCountryTablePageChange,
     sortServer: true,
@@ -25201,6 +25173,7 @@ __webpack_require__.r(__webpack_exports__);
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
+<<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 //# sourceMappingURL=src_Settings_Field_js.71728f3a274feb041ab6.js.map
 ========
 //# sourceMappingURL=src_Settings_Field_js.2a9f68f4c72b1ac2b97c.js.map
@@ -25211,3 +25184,6 @@ __webpack_require__.r(__webpack_exports__);
 ========
 //# sourceMappingURL=src_Settings_Field_js.369ae94bbfc5ec881341.js.map
 >>>>>>>> 79d2a7197 (fixed the sorting bug):settings/build/src_Settings_Field_js.369ae94bbfc5ec881341.js
+========
+//# sourceMappingURL=src_Settings_Field_js.da5e9d4a892c8646ddd5.js.map
+>>>>>>>> 29a4a9d08 (fixed sorting and pagination in CountryTable):settings/build/src_Settings_Field_js.da5e9d4a892c8646ddd5.js
