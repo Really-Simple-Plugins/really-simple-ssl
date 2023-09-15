@@ -5566,34 +5566,24 @@ const UserDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set,
   pagination: {},
   dataActions: {},
   UserDataTable: [],
-  dummyPagination: {
-    currentPage: 1,
-    lastPage: 1,
-    perPage: 10,
-    total: 2,
-    totalRows: 2
-  },
-  fetchUserData: async action => {
+  fetchUserData: async (action, dataActions) => {
+    set({
+      processing: true
+    });
+    set({
+      dataLoaded: false
+    });
     try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction(action, get().dataActions);
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction(action, dataActions);
       //now we set the EventLog
       if (response) {
         //if the response is empty we set the dummyData
-        if (typeof response.pagination === 'undefined') {
-          set({
-            UserDataTable: response,
-            dataLoaded: true,
-            processing: false,
-            pagination: get().dummyPagination
-          });
-        } else {
-          set({
-            UserDataTable: response,
-            dataLoaded: true,
-            processing: false,
-            pagination: response.pagination
-          });
-        }
+        set({
+          UserDataTable: response,
+          dataLoaded: true,
+          processing: false,
+          pagination: response.pagination
+        });
       }
     } catch (e) {
       console.log(e);
@@ -5608,7 +5598,6 @@ const UserDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set,
         searchColumns
       };
     }));
-    get().fetchUserData('user_list');
   },
   handleUserTablePageChange: async (page, pageSize) => {
     //Add the page and pageSize to the dataActions
@@ -5619,7 +5608,6 @@ const UserDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set,
         pageSize
       };
     }));
-    get().fetchUserData('user_list');
   },
   handleUserTableRowsChange: async (currentRowsPerPage, currentPage) => {
     //Add the page and pageSize to the dataActions
@@ -5630,7 +5618,6 @@ const UserDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set,
         currentPage
       };
     }));
-    get().fetchUserData('user_list');
   },
   //this handles all pagination and sorting
   handleUserTableSort: async (column, sortDirection) => {
@@ -5642,7 +5629,6 @@ const UserDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set,
         sortDirection
       };
     }));
-    get().fetchUserData('user_list');
   },
   handleUserTableFilter: async (column, filterValue) => {
     //Add the column and sortDirection to the dataActions
@@ -5653,7 +5639,6 @@ const UserDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set,
         filterValue
       };
     }));
-    get().fetchUserData('user_list');
   },
   /*
   * This function add a new row to the table
@@ -5845,20 +5830,24 @@ const UserDatatable = props => {
   });
 
   //get data if field was already enabled, so not changed right now.
-  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
-    if (fieldAlreadyEnabled) {
-      if (!dataLoaded) {
-        fetchUserData(field.action);
-      }
-    }
-  }, [fields]);
+  // useEffect(() => {
+  //     if (fieldAlreadyEnabled) {
+  //         if (!dataLoaded) {
+  //             fetchUserData(field.action);
+  //         }
+  //     }
+  // }, [fields]);
+
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
     const currentFilter = getCurrentFilter(moduleName);
     if (!currentFilter) {
       setSelectedFilter('locked', moduleName);
+    } else if (dataActions.sortDirection || dataActions.filterValue || dataActions.search || dataActions.page) {
+      // Fetch the user data only if dataActions are not empty
+      fetchUserData(field.action, dataActions);
     }
     handleUserTableFilter('status', currentFilter);
-  }, [selectedFilter, moduleName]);
+  }, [selectedFilter, dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, moduleName]);
   let enabled = false;
   fields.forEach(function (item, i) {
     if (item.id === 'enable_limited_login_attempts') {
@@ -6083,7 +6072,7 @@ const UserDatatable = props => {
     onClick: () => {
       resetUsers(rowsSelected);
     }
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Reset", "really-simple-ssl")))))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Reset", "really-simple-ssl")))))), dataLoaded ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
     columns: columns,
     data: Object.values(data),
     dense: true,
@@ -6102,7 +6091,35 @@ const UserDatatable = props => {
     persistTableHead: true,
     theme: "really-simple-plugins",
     customStyles: customStyles
-  }), !enabled && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }) : (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-spinner",
+    style: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginTop: "100px"
+    }
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-spinner__inner"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-spinner__icon",
+    style: {
+      border: '8px solid white',
+      borderTop: '8px solid #f4bf3e',
+      borderRadius: '50%',
+      width: '120px',
+      height: '120px',
+      animation: 'spin 2s linear infinite'
+    }
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-spinner__text",
+    style: {
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)'
+    }
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Loading data, please stand by...", "really-simple-ssl")))), !enabled && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-locked"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-locked-overlay"
@@ -25291,4 +25308,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.1e282662c528ad1e2673.js.map
+//# sourceMappingURL=src_Settings_Field_js.e993efc015daf4c7aefc.js.map
