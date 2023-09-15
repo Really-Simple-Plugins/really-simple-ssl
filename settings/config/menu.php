@@ -119,15 +119,14 @@ function rsssl_menu()
                 [
                     'id'      => 'limit_login_attempts',
                     'title'   => __('Limit Login Attempts', 'really-simple-ssl'),
-                    'premium' => false,
-                    'featured' => true,
+                    'premium' => true,
                     'groups'  => [
                         [
                             'id'           => 'limit_login_attempts_general',
                             'helpLink'     => 'https://really-simple-ssl.com/knowledge-base/limit-login-attempts/?mtm_campaign=instructions&mtm_source=free',
                             'premium'      => true,
                             'title'        => __('General', 'really-simple-ssl'),
-                            'intro'        => __('Protect your site against brute force login attacks by limiting the number of login attempts. Enabling this feature will temporary lock-out a username and the IP address that tries to login, after the set number of false logins. Read more [URL=https://really-simple-ssl.com/knowledge-base/limit-login-attempts/]',
+                            'intro'        => __('Protect your site against brute force login attacks by limiting the number of login attempts. Enabling this feature will temporary lock-out a username and the IP address that tries to login, after the set number of false logins please use the instructions linked in the top-right corner.',
                                 'really-simple-ssl'),
                             'premium_text' => __('Get Limit Login Attempts with %sReally Simple SSL Pro%s',
                                 'really-simple-ssl'),
@@ -240,7 +239,7 @@ function rsssl_menu()
                                     ],
                                 ],
                             ],
-                            'title'    => __('Countries', 'really-simple-ssl'),
+                            'title'    => __('Regions', 'really-simple-ssl'),
                             'intro'    => __('If your site is only intended for users to login from specific geographical regions, you can entirely prevent logins from certain continents or countries.',
                                 'really-simple-ssl'),
                             'premium_text' => __('Get Limit Login Attempts with %sReally Simple SSL Pro%s',
