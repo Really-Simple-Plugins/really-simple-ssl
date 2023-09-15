@@ -5282,7 +5282,7 @@ const IpAddressDatatable = props => {
       onClick: () => {
         resetIpAddresses(id);
       }
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Reset", "really-simple-ssl")))));
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Delete", "really-simple-ssl")))));
   }
 
   //if the dataActions are changed, we fetch the data
@@ -5359,7 +5359,7 @@ const IpAddressDatatable = props => {
     onClick: () => {
       resetIpAddresses(rowsSelected);
     }
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Reset", "really-simple-ssl")))))), dataLoaded ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Delete", "really-simple-ssl")))))), dataLoaded ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
     columns: columns,
     data: data,
     dense: true,
@@ -25291,4 +25291,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.092b69202ddf0f282672.js.map
+//# sourceMappingURL=src_Settings_Field_js.1e282662c528ad1e2673.js.map
