@@ -51,24 +51,19 @@ const IpAddressDatatable = (props) => {
     });
 
 
-
-    //get data if field was already enabled, so not changed right now.
-    useEffect(() => {
-        if (fieldAlreadyEnabled) {
-            if (!dataLoaded) {
-                fetchIpData(field.action);
-            }
-        }
-    }, [fields]);
-
     useEffect(() => {
         const currentFilter = getCurrentFilter(moduleName);
 
         if (!currentFilter) {
             setSelectedFilter('locked', moduleName);
+        } else if (dataActions.sortDirection || dataActions.filterValue || dataActions.search || dataActions.page) {
+            // Fetch the user data only if dataActions are not empty
+            fetchIpData(field.action, dataActions);
         }
+
         handleIpTableFilter('status', currentFilter);
-    }, [selectedFilter, moduleName]);
+    }, [selectedFilter, dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, moduleName]);
+
 
 
     const customStyles = {
@@ -305,15 +300,6 @@ const IpAddressDatatable = (props) => {
             </>
         );
     }
-
-    //if the dataActions are changed, we fetch the data
-    useEffect(() => {
-        //we make sure the dataActions are changed in the store before we fetch the data
-        if (dataActions) {
-            fetchIpData(field.action, dataActions)
-        }
-    }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page]);
-
 
     for (const key in data) {
         let dataItem = {...data[key]}
