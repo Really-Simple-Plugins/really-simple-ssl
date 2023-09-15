@@ -13,48 +13,18 @@ const CountryDataTableStore = create((set, get) => ({
     pagination: {},
     dataActions: {},
     CountryDataTable: [],
-    //for faking data we add a dymmmyData
-    dummyData: { data: [
-        {
-            "id": 1,
-            "iso2_code": "US",
-            "iso3_code": "USA",
-            "country_name": "United States",
-            "region": "North America",
-            "region_code": "NA",
-        },
-        {
-            "id": 2,
-            "iso2_code": "CA",
-            "iso3_code": "CAN",
-            "country_name": "Canada",
-            "region": "North America",
-            "region_code": "NA",
-        },
-        ]},
-    dummyPagination: {
-        currentPage: 1,
-        lastPage: 1,
-        perPage: 10,
-        total: 2,
-        totalRows: 2,
-    },
 
-    fetchCountryData: async (action) => {
+    fetchCountryData: async (action, dataActions) => {
         set({processing: true});
         set({dataLoaded: false});
         try {
             const response = await rsssl_api.doAction(
                 action,
-                get().dataActions
+                dataActions
             );
             //now we set the EventLog
             if (response) {
-                if (typeof response.pagination === 'undefined') {
-                    set({CountryDataTable: get().dummyData, dataLoaded: true, processing: false, pagination: get().dummyPagination});
-                } else {
-                    set({CountryDataTable: response, dataLoaded: true, processing: false, pagination: response.pagination});
-                }
+                set({CountryDataTable: response, dataLoaded: true, processing: false, pagination: response.pagination});
             }
         } catch (e) {
             console.log(e);
@@ -67,7 +37,6 @@ const CountryDataTableStore = create((set, get) => ({
                 state.dataActions = {...state.dataActions, search, searchColumns};
             })
         );
-        get().fetchCountryData('country_list');
     },
 
     handleCountryTablePageChange: async (page, pageSize) => {
@@ -76,7 +45,6 @@ const CountryDataTableStore = create((set, get) => ({
                 state.dataActions = {...state.dataActions, page, pageSize};
             })
         );
-        get().fetchCountryData('country_list');
     },
 
     handleCountryTableRowsChange: async (currentRowsPerPage, currentPage) => {
@@ -85,7 +53,6 @@ const CountryDataTableStore = create((set, get) => ({
                 state.dataActions = {...state.dataActions, currentRowsPerPage, currentPage};
             })
         );
-        get().fetchCountryData('country_list');
     },
 
     //this handles all pagination and sorting
@@ -95,7 +62,6 @@ const CountryDataTableStore = create((set, get) => ({
                 state.dataActions = {...state.dataActions, sortColumn: column, sortDirection};
             })
         );
-        get().fetchCountryData('country_list');
     },
 
     handleCountryTableFilter: async (column, filterValue) => {
@@ -104,7 +70,6 @@ const CountryDataTableStore = create((set, get) => ({
                 state.dataActions = {...state.dataActions, filterColumn: column, filterValue};
             })
         );
-        get().fetchCountryData('country_list');
     },
 
     /*
@@ -131,7 +96,7 @@ const CountryDataTableStore = create((set, get) => ({
     },
 
     addRowMultiple: async (countries, status) => {
-        set( {processing: true});
+        set({processing: true});
         try {
             const response = await rsssl_api.doAction('add_countries_to_list', {countries, status});
             // Consider checking the response structure for any specific success or failure signals

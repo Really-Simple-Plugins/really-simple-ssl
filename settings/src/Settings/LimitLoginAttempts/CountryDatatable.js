@@ -32,6 +32,7 @@ const CountryDatatable = (props) => {
         removeRowMultiple,
         resetRow,
         resetMultiRow,
+        dataActions,
     } = CountryDataTableStore();
 
     const {
@@ -62,23 +63,12 @@ const CountryDatatable = (props) => {
         column: column.column,
         selector: row => row[column.column],
     }), []);
-
-    const columns = props.field.columns.map(buildColumn);
+    let field = props.field;
+    const columns = field.columns.map(buildColumn);
 
     const searchableColumns = columns
         .filter(column => column.searchable)
         .map(column => column.column);
-
-    //get data if field was already enabled, so not changed right now.
-    useEffect(() => {
-        if (fieldAlreadyEnabled && !dataLoaded) {
-            fetchCountryData(props.field.action);
-        }
-    }, [fieldAlreadyEnabled, dataLoaded, fetchCountryData, props.field.action]);
-
-    useEffect(() => {
-        // code to execute after DynamicDataTable has been updated
-    }, [DynamicDataTable]);
 
     useEffect(() => {
         const currentFilter = getCurrentFilter(moduleName);
@@ -99,10 +89,20 @@ const CountryDatatable = (props) => {
     }, [CountryDataTable]);
 
     useEffect(() => {
-        if (!dataLoaded) {
-            fetchCountryData(props.field.action);
+        if (fieldAlreadyEnabled) {
+            if (!dataLoaded) {
+                fetchDynamicData(field.action);
+            }
         }
-    }, [dataLoaded, props.field.action, fetchCountryData]);
+    }, [fields]);
+
+    //if the dataActions are changed, we fetch the data
+    useEffect(() => {
+        //we make sure the dataActions are changed in the store before we fetch the data
+        if (dataActions) {
+            fetchCountryData(field.action, dataActions)
+        }
+    }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page]);
 
     let enabled = false;
 
@@ -392,7 +392,17 @@ const CountryDatatable = (props) => {
                 dense
                 pagination
                 paginationServer
-                paginationTotalRows={pagination.totalRows ?? 0}
+                paginationTotalRows={pagination.totalRows}
+                paginationPerPage={pagination.perPage ?? 10}
+                paginationDefaultPage={pagination.currentPage}
+                paginationComponentOptions={{
+                    rowsPerPageText: __('Rows per page:', 'really-simple-ssl'),
+                    rangeSeparatorText: __('of', 'really-simple-ssl'),
+                    noRowsPerPage: false,
+                    selectAllRowsItem: false,
+                    selectAllRowsItemText: __('All', 'really-simple-ssl'),
+
+                }}
                 onChangeRowsPerPage={handleCountryTableRowsChange}
                 onChangePage={handleCountryTablePageChange}
                 sortServer
