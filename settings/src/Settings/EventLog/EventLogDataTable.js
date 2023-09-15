@@ -121,7 +121,7 @@ const EventLogDataTable = (props) => {
         if (dataActions) {
             fetchDynamicData(field.action, dataActions)
         }
-    }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search]);
+    }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page]);
 
 
     //we generate an expandable row
