@@ -50,22 +50,26 @@ const UserDatatable = (props) => {
     });
 
     //get data if field was already enabled, so not changed right now.
-    useEffect(() => {
-        if (fieldAlreadyEnabled) {
-            if (!dataLoaded) {
-                fetchUserData(field.action);
-            }
-        }
-    }, [fields]);
+    // useEffect(() => {
+    //     if (fieldAlreadyEnabled) {
+    //         if (!dataLoaded) {
+    //             fetchUserData(field.action);
+    //         }
+    //     }
+    // }, [fields]);
 
     useEffect(() => {
         const currentFilter = getCurrentFilter(moduleName);
 
         if (!currentFilter) {
             setSelectedFilter('locked', moduleName);
+        } else if (dataActions.sortDirection || dataActions.filterValue || dataActions.search || dataActions.page) {
+            // Fetch the user data only if dataActions are not empty
+            fetchUserData(field.action, dataActions);
         }
+
         handleUserTableFilter('status', currentFilter);
-    }, [selectedFilter, moduleName]);
+    }, [selectedFilter, dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, moduleName]);
 
     let enabled = false;
 
@@ -362,6 +366,7 @@ const UserDatatable = (props) => {
                 </div>
             )}
             {/*Display the datatable*/}
+            {dataLoaded ?
             <DataTable
                 columns={columns}
                 data={Object.values(data)}
@@ -382,6 +387,31 @@ const UserDatatable = (props) => {
                 theme="really-simple-plugins"
                 customStyles={customStyles}
             ></DataTable>
+                :
+                <div className="rsssl-spinner" style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginTop: "100px"
+                }}>
+                    <div className="rsssl-spinner__inner">
+                        <div className="rsssl-spinner__icon" style={{
+                            border: '8px solid white',
+                            borderTop: '8px solid #f4bf3e',
+                            borderRadius: '50%',
+                            width: '120px',
+                            height: '120px',
+                            animation: 'spin 2s linear infinite'
+                        }}></div>
+                        <div className="rsssl-spinner__text" style={{
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                        }}>{__("Loading data, please stand by...", "really-simple-ssl")}</div>
+                    </div>
+                </div>
+            }
             {!enabled && (
                 <div className="rsssl-locked">
                     <div className="rsssl-locked-overlay"><span
