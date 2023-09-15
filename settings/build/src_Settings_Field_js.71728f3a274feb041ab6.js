@@ -4285,6 +4285,7 @@ const CountryDatatable = props => {
       dataItem.action = generateActionButtons(dataItem.id);
     }
     dataItem.attempt_value = generateFlag(dataItem.attempt_value, dataItem.country_name);
+    dataItem.status = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)(dataItem.status = dataItem.status.charAt(0).toUpperCase() + dataItem.status.slice(1), 'really-simple-ssl');
     data[key] = dataItem;
   }
   if (!dataLoaded && columns.length === 0 && CountryDataTable.length === 0) {
@@ -25175,6 +25176,7 @@ __webpack_require__.r(__webpack_exports__);
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
+<<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 //# sourceMappingURL=src_Settings_Field_js.71728f3a274feb041ab6.js.map
 ========
 //# sourceMappingURL=src_Settings_Field_js.2a9f68f4c72b1ac2b97c.js.map
@@ -25191,3 +25193,6 @@ __webpack_require__.r(__webpack_exports__);
 ========
 //# sourceMappingURL=src_Settings_Field_js.2badb76fe17e0f5ae377.js.map
 >>>>>>>> d27cc5e94 (applied fix to pagination eventlog as well):settings/build/src_Settings_Field_js.2badb76fe17e0f5ae377.js
+========
+//# sourceMappingURL=src_Settings_Field_js.7ba1f0e62fb35091748b.js.map
+>>>>>>>> f9bd341d4 (added some more translatable strings and capitalized some strings):settings/build/src_Settings_Field_js.7ba1f0e62fb35091748b.js
