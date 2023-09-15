@@ -220,7 +220,7 @@ const UserDatatable = (props) => {
                         </button>
                     </div>
                     )}
-                    {/* if the id is new we show the Reset button */}
+                    {/* if the id is new we show the Delete button */}
                     <div className="rsssl-action-buttons__inner">
                         <button
                             className="button button-red rsssl-action-buttons__button"
@@ -228,7 +228,7 @@ const UserDatatable = (props) => {
                                 resetUsers(id);
                             }}
                         >
-                            {__("Reset", "really-simple-ssl")}
+                            {__("Delete", "really-simple-ssl")}
                         </button>
                     </div>
                 </div>
@@ -288,10 +288,10 @@ const UserDatatable = (props) => {
                             onClick={handleOpen}
                         >
                             {getCurrentFilter(moduleName) === 'blocked' && (
-                                <>{__("Block User", "really-simple-ssl")}</>
+                                <>{__("Block username", "really-simple-ssl")}</>
                             )}
                             {getCurrentFilter(moduleName) === 'allowed' && (
-                                <>{__("Allow User", "really-simple-ssl")}</>
+                                <>{__("Trust username", "really-simple-ssl")}</>
                             )}
                         </button>
                     </div>
@@ -349,7 +349,7 @@ const UserDatatable = (props) => {
                                 </button>
                             </div>
                             )}
-                            {/* if the id is new we show the Reset button */}
+                            {/* if the id is new we show the Delete button */}
                             <div className="rsssl-action-buttons__inner">
                                 <button
                                     className="button button-red rsssl-action-buttons__button"
@@ -358,7 +358,7 @@ const UserDatatable = (props) => {
                                     }
                                     }
                                 >
-                                    {__("Reset", "really-simple-ssl")}
+                                    {__("Delete", "really-simple-ssl")}
                                 </button>
                             </div>
                         </div>

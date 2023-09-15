@@ -5007,22 +5007,16 @@ const IpAddressDatatable = props => {
     let newItem = buildColumn(item);
     columns.push(newItem);
   });
-
-  //get data if field was already enabled, so not changed right now.
-  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
-    if (fieldAlreadyEnabled) {
-      if (!dataLoaded) {
-        fetchIpData(field.action);
-      }
-    }
-  }, [fields]);
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
     const currentFilter = getCurrentFilter(moduleName);
     if (!currentFilter) {
       setSelectedFilter('locked', moduleName);
+    } else if (dataActions.sortDirection || dataActions.filterValue || dataActions.search || dataActions.page) {
+      // Fetch the user data only if dataActions are not empty
+      fetchIpData(field.action, dataActions);
     }
     handleIpTableFilter('status', currentFilter);
-  }, [selectedFilter, moduleName]);
+  }, [selectedFilter, dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, moduleName]);
   const customStyles = {
     headCells: {
       style: {
@@ -5223,14 +5217,6 @@ const IpAddressDatatable = props => {
       }
     }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Delete", "really-simple-ssl")))));
   }
-
-  //if the dataActions are changed, we fetch the data
-  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
-    //we make sure the dataActions are changed in the store before we fetch the data
-    if (dataActions) {
-      fetchIpData(field.action, dataActions);
-    }
-  }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page]);
   for (const key in data) {
     let dataItem = {
       ...data[key]
@@ -5922,7 +5908,7 @@ const UserDatatable = props => {
       onClick: () => {
         resetUsers(id);
       }
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Reset", "really-simple-ssl")))));
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Delete", "really-simple-ssl")))));
   }
 
   //we convert the data to an array
@@ -5969,7 +5955,7 @@ const UserDatatable = props => {
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
     className: "button button-secondary rsssl-add-button__button",
     onClick: handleOpen
-  }, getCurrentFilter(moduleName) === 'blocked' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Block User", "really-simple-ssl")), getCurrentFilter(moduleName) === 'allowed' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Allow User", "really-simple-ssl"))))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, getCurrentFilter(moduleName) === 'blocked' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Block username", "really-simple-ssl")), getCurrentFilter(moduleName) === 'allowed' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Trust username", "really-simple-ssl"))))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-search-bar"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-search-bar__inner"
@@ -6010,7 +5996,7 @@ const UserDatatable = props => {
     onClick: () => {
       resetUsers(rowsSelected);
     }
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Reset", "really-simple-ssl")))))), dataLoaded ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Delete", "really-simple-ssl")))))), dataLoaded ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
     columns: columns,
     data: Object.values(data),
     dense: true,
@@ -25228,6 +25214,7 @@ __webpack_require__.r(__webpack_exports__);
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
+<<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 //# sourceMappingURL=src_Settings_Field_js.71728f3a274feb041ab6.js.map
 ========
 //# sourceMappingURL=src_Settings_Field_js.2a9f68f4c72b1ac2b97c.js.map
@@ -25259,3 +25246,6 @@ __webpack_require__.r(__webpack_exports__);
 ========
 //# sourceMappingURL=src_Settings_Field_js.e993efc015daf4c7aefc.js.map
 >>>>>>>> 11330fd6f (fixed ghosting in users):settings/build/src_Settings_Field_js.e993efc015daf4c7aefc.js
+========
+//# sourceMappingURL=src_Settings_Field_js.109726b673f28fcc61b9.js.map
+>>>>>>>> 83a2888c5 (added some textual improvements):settings/build/src_Settings_Field_js.109726b673f28fcc61b9.js
