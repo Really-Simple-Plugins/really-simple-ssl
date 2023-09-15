@@ -4518,32 +4518,7 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
   dataActions: {},
   IpDataTable: [],
   maskError: false,
-  dummyData: {
-    data: [{
-      attempt_type: "source_ip",
-      attempt_value: "192.168.10.13/27",
-      datetime: "13:33, August 16",
-      id: 1,
-      last_failed: "1692192816",
-      status: "blocked"
-    }, {
-      attempt_type: "source_ip",
-      attempt_value: "::1",
-      datetime: "13:33, August 16",
-      id: 2,
-      last_failed: "1692192916",
-      status: "blocked"
-    }]
-  },
-  dummyPagination: {
-    currentPage: 1,
-    lastPage: 1,
-    perPage: 10,
-    total: 2,
-    totalRows: 2
-  },
   setMaskError: maskError => {
-    console.log('setMaskError', maskError);
     set({
       maskError
     });
@@ -4564,21 +4539,12 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
       //now we set the EventLog
       if (response) {
         //if the response is empty we set the dummyData
-        if (typeof response.pagination === 'undefined') {
-          set({
-            IpDataTable: get().dummyData,
-            dataLoaded: true,
-            processing: false,
-            pagination: get().dummyPagination
-          });
-        } else {
-          set({
-            IpDataTable: response,
-            dataLoaded: true,
-            processing: false,
-            pagination: response.pagination
-          });
-        }
+        set({
+          IpDataTable: response,
+          dataLoaded: true,
+          processing: false,
+          pagination: response.pagination
+        });
       }
     } catch (e) {
       console.log(e);
@@ -4596,7 +4562,6 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
         searchColumns
       };
     }));
-    await get().fetchIpData('ip_list');
   },
   /*
   * This function handles the page change, it is called from the DataTable class
@@ -4610,7 +4575,6 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
         pageSize
       };
     }));
-    await get().fetchIpData('ip_list');
   },
   /*
   * This function handles the rows change, it is called from the DataTable class
@@ -4624,7 +4588,6 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
         currentPage
       };
     }));
-    await get().fetchIpData('ip_list');
   },
   /*
   * This function handles the sort, it is called from the DataTable class
@@ -4638,7 +4601,6 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
         sortDirection
       };
     }));
-    await get().fetchIpData('ip_list');
   },
   /*
   * This function handles the filter, it is called from the GroupSetting class
@@ -4652,32 +4614,49 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
         filterValue
       };
     }));
-    await get().fetchIpData('ip_list');
   },
   /*
   * This function sets the ip address and is used by Cidr and IpAddressInput
    */
   setIpAddress: ipAddress => {
-    // Split the input into IP and CIDR mask
-    let [ip, mask] = ipAddress.split('/');
-    //if , we change it to .
-    ip = ip.replace(/,/g, '.');
     let ipRegex = /^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$|^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,4}|((25[0-5]|(2[0-4]|1{0,1}[0-9])?[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9])?[0-9]))|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9])?[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9])?[0-9]))$/;
-    if (!ipRegex.test(ip)) {
+    if (ipAddress.includes('/')) {
+      let finalIp = '';
+      // Split the input into IP and CIDR mask
+      let [ip, mask] = ipAddress.split('/');
+      //if , we change it to .
+      ip = ip.replace(/,/g, '.');
+      if (mask.length <= 0) {
+        if (!ipRegex.test(ip)) {
+          set({
+            maskError: true
+          });
+        } else {
+          set({
+            maskError: false
+          });
+        }
+        finalIp = `${ip}/${mask}`;
+      } else {
+        finalIp = mask ? `${ip}/${mask}` : ip;
+      }
       set({
-        maskError: true
+        ipAddress: finalIp
       });
     } else {
+      if (!ipRegex.test(ipAddress)) {
+        set({
+          maskError: true
+        });
+      } else {
+        set({
+          maskError: false
+        });
+      }
       set({
-        maskError: false
+        ipAddress: ipAddress.replace(/,/g, '.')
       });
     }
-
-    // Construct the final IP address by optionally appending the CIDR mask
-    let finalIp = mask ? `${ip}/${mask}` : ip;
-    set({
-      ipAddress: finalIp
-    });
   },
   resetRange: () => {
     set({
@@ -4794,7 +4773,6 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
    * @returns {boolean}
    */
   validateIpv6: ip => {
-    console.log('validating ipv6', ip);
     const parts = ip.split(":");
     if (parts.length !== 8) return false;
     for (let part of parts) {
@@ -4803,7 +4781,6 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
     return true;
   },
   extendIpV6: ip => {
-    console.log('extendIpV6', ip);
     // Handle the special case of '::' at the start or end
     if (ip === '::') ip = '0::0';
 
@@ -25293,4 +25270,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.7ba1f0e62fb35091748b.js.map
+//# sourceMappingURL=src_Settings_Field_js.aa2831b77222f8346fb7.js.map

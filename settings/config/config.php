@@ -884,55 +884,55 @@ function rsssl_fields( $load_values = true ) {
 //
 //            ],
 //        ],
-//        [
-//            'id'               => 'limit_login_attempts_ip_view',
-//            'menu_id'          => 'limit_login_attempts',
-//            'group_id'         => 'limit_login_attempts_ip_address',
-//            'type'             => 'ip-address-datatable',
-//            'action'           => 'ip_list',
-//            'options'          => [
-//                'blocked' => __('Blocked', 'really-simple-ssl'),
-//                'locked'  => __('Locked-out', 'really-simple-ssl'),
-//                'trusted' => __('Trusted', 'really-simple-ssl'),
-//            ],
-//            'label'            => __('Enable open source blocklist API etc.', 'really-simple-ssl'),
-//            'disabled'         => false,
-//            'default'          => false,
-//            'react_conditions' => [
-//                'relation' => 'AND',
-//                [
-//                    'enable_limited_login_attempts' => true,
-//                ]
-//            ],
-//            'columns'          => [
-//                [
-//                    'name'       => __('Ip Address', 'really-simple-ssl'),
-//                    'sortable'   => true,
-//                    'searchable' => true,
-//                    'column'     => 'attempt_value',
-//                    'width'      => '20%',
-//                ],
-//                [
-//                    'name'     => __('Status', 'really-simple-ssl'),
-//                    'sortable' => false,
-//                    'column'   => 'status',
-//                    'width'    => '10%',
-//                ],
-//                [
-//                    'name'     => __('Date', 'really-simple-ssl'),
-//                    'sortable' => true,
-//                    'column'   => 'datetime',
-//                ],
-//                [
-//                    'name'     => '',
-//                    'sortable' => false,
-//                    'column'   => 'action',
-//                    'width'    => '70%',
-//                ],
-//                ['width' => '1px'],
-//
-//            ],
-//        ],
+        [
+            'id'               => 'limit_login_attempts_ip_view',
+            'menu_id'          => 'limit_login_attempts',
+            'group_id'         => 'limit_login_attempts_ip_address',
+            'type'             => 'ip-address-datatable',
+            'action'           => 'ip_list',
+            'options'          => [
+                'blocked' => __('Blocked', 'really-simple-ssl'),
+                'locked'  => __('Locked-out', 'really-simple-ssl'),
+                'trusted' => __('Trusted', 'really-simple-ssl'),
+            ],
+            'label'            => __('Enable open source blocklist API etc.', 'really-simple-ssl'),
+            'disabled'         => false,
+            'default'          => false,
+            'react_conditions' => [
+                'relation' => 'AND',
+                [
+                    'enable_limited_login_attempts' => true,
+                ]
+            ],
+            'columns'          => [
+                [
+                    'name'       => __('Ip Address', 'really-simple-ssl'),
+                    'sortable'   => true,
+                    'searchable' => true,
+                    'column'     => 'attempt_value',
+                    'width'      => '20%',
+                ],
+                [
+                    'name'     => __('Status', 'really-simple-ssl'),
+                    'sortable' => false,
+                    'column'   => 'status',
+                    'width'    => '10%',
+                ],
+                [
+                    'name'     => __('Date', 'really-simple-ssl'),
+                    'sortable' => true,
+                    'column'   => 'datetime',
+                ],
+                [
+                    'name'     => '',
+                    'sortable' => false,
+                    'column'   => 'action',
+                    'width'    => '70%',
+                ],
+                ['width' => '1px'],
+
+            ],
+        ],
         [
             'id'               => 'limit_login_attempts_country_view',
             'menu_id'          => 'limit_login_attempts',
