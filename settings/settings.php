@@ -572,11 +572,11 @@ function rsssl_sanitize_field_type($type)
         'vulnerablemeasures',
         'LetsEncrypt',
         'postdropdown',
-        'two_fa_dropdown',
+        'two_fa_roles',
 //        'two_fa_table',
 //        'verify_email',
     ];
-    if (in_array($type, $types)) {
+    if ( in_array( $type, $types, true ) ) {
         return $type;
     }
     return 'checkbox';
@@ -783,7 +783,7 @@ function rsssl_rest_api_fields_get()
  */
 function rsssl_sanitize_field($value, string $type, string $id)
 {
-    switch ($type) {
+	switch ($type) {
         case 'checkbox':
         case 'number':
             return (int)$value;
@@ -813,9 +813,18 @@ function rsssl_sanitize_field($value, string $type, string $id)
             return rsssl_sanitize_datatable($value, $type, $id);
         case 'mixedcontentscan':
             return $value;
-        case 'two_fa_dropdown':
+        case 'two_fa_roles':
 	        $value = !is_array($value) ? [] : $value;
-            return array_map('sanitize_text_field', $value);
+            $roles = rsssl_get_roles([]);
+	        $roles = $roles['roles'];
+            error_log(print_r($roles, true));
+            error_log(print_r($value, true));
+            foreach ($value as $index => $role) {
+                if (! in_array( $role, $roles, true ) ) {
+                    unset($value[$index]);
+                }
+            }
+            return $value;
         default:
             return sanitize_text_field($value);
     }
@@ -1089,9 +1098,8 @@ function rsssl_conditions_apply(array $conditions)
  * @return array An array of roles, each role being an associative array with 'label' and 'value' keys.
  */
 function rsssl_get_roles( $data ) {
-
-	if ( ! wp_verify_nonce( $data['nonce'], 'rsssl_nonce' ) ) {
-		return;
+	if ( ! rsssl_admin_logged_in() ) {
+		return [];
 	}
 
 	global $wp_roles;
@@ -1106,7 +1114,6 @@ function rsssl_get_roles( $data ) {
 
 		// Extract unique role values from the role names
 		$roles = array_values( array_unique( $roles_names ));
-
 		// Set the roles in cache for future use
 		wp_cache_set( 'rsssl_roles', $roles );
 	}

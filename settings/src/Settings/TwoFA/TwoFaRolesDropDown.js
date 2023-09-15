@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 import useFields from "../FieldsData";
 import useTwoFaData from './TwoFaStore';
-import * as rsssl_api from "../../utils/api";
 import {__} from "@wordpress/i18n";
 /**
  * TwoFaRolesDropDown component represents a dropdown select for excluding roles
@@ -11,38 +10,16 @@ import {__} from "@wordpress/i18n";
  */
 const TwoFaRolesDropDown = ({ field }) => {
     const {fetchRoles, roles, rolesLoaded} = useTwoFaData();
-    const [selectedRoles, setSelectedRoles] = useState([]);
+    const [selectedRoles, setSelectedRoles] = useState(field.value.map(value => ({ value, label: value.charAt(0).toUpperCase() + value.slice(1) })));
 
     // Custom hook to manage form fields
     const { fields, updateField, setChangedField } = useFields();
     let enabled = false;
 
     useEffect(() => {
-        const run = async () => {
-            await fetchRoles(field.id);
+        if (!rolesLoaded) {
+            fetchRoles(field.id);
         }
-        run();
-    }, []);
-
-    /**
-     * Fetches the roles from the server on component mount.
-     */
-    useEffect(() => {
-        const run = async () => {
-            try {
-                // replace `get_roles` with your actual action
-                const response = await rsssl_api.doAction('get_roles', { id: field.id });
-
-                // Set the selectedRoles state based on the field value
-                const selectedRolesFromField = field.value.map(value => ({ value, label: value }));
-                setSelectedRoles(selectedRolesFromField);
-            } catch (err) {
-                console.error(err);
-            } finally {
-                // setLoading(false);
-            }
-        }
-        run();
     }, [rolesLoaded]);
 
     /**

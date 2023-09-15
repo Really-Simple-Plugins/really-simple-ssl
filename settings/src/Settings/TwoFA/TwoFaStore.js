@@ -24,7 +24,8 @@ const TwoFaData = create(( set, get ) => ({
             const dataArray = Object.values(data);
 
             // Format the data into options array for react-select
-            const formattedData = dataArray.map((role, index) => ({ value: role, label: role }));
+
+            const formattedData = dataArray.map((role, index) => ({ value: role, label: role.charAt(0).toUpperCase() + role.slice(1) }));
 
             // Set the roles state with formatted data
             set({roles: formattedData,rolesLoaded:true  });

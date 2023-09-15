@@ -474,7 +474,7 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
 		 */
 		public function two_factor_users_data( array $response, string $action, $data ) {
 
-			if ( $action == 'two_fa_table' ) {
+			if ( $action === 'two_fa_table' ) {
 
 				$response['data'] = [
 					[

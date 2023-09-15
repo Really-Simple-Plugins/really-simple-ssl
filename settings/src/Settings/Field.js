@@ -363,7 +363,7 @@ const Field = (props) => {
         )
     }
 
-    if (field.type === 'two_fa_dropdown') {
+    if (field.type === 'two_fa_roles') {
         return (
             <div className={highLightClass} ref={scrollAnchor}>
                 <label htmlFor="rsssl-two-fa-dropdown-{field.id}">
