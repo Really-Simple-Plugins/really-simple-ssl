@@ -294,6 +294,7 @@ const CountryDatatable = (props) => {
             dataItem.action = generateActionButtons(dataItem.id);
         }
         dataItem.attempt_value = generateFlag(dataItem.attempt_value, dataItem.country_name);
+        dataItem.status = __(dataItem.status = dataItem.status.charAt(0).toUpperCase() + dataItem.status.slice(1), 'really-simple-ssl');
         data[key] = dataItem;
     }
 
