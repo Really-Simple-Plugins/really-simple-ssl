@@ -4483,7 +4483,7 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
   * This function fetches the data from the server and fills the property IpDataTable
   * Note this function works with the DataTable class on serverside
    */
-  fetchIpData: async action => {
+  fetchIpData: async (action, dataActions) => {
     set({
       processing: true
     });
@@ -4491,7 +4491,7 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
       dataLoaded: false
     });
     try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction(action, get().dataActions);
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction(action, dataActions);
       //now we set the EventLog
       if (response) {
         //if the response is empty we set the dummyData
@@ -4963,6 +4963,7 @@ const IpAddressDatatable = props => {
   const {
     IpDataTable,
     dataLoaded,
+    dataActions,
     handleIpTableRowsChange,
     updateMultiRow,
     fetchIpData,
@@ -4972,6 +4973,7 @@ const IpAddressDatatable = props => {
     handleIpTableFilter,
     ipAddress,
     updateRow,
+    pagination,
     resetRow,
     resetMultiRow,
     setStatusSelected
@@ -5221,11 +5223,20 @@ const IpAddressDatatable = props => {
       }
     }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Reset", "really-simple-ssl")))));
   }
+
+  //if the dataActions are changed, we fetch the data
+  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
+    //we make sure the dataActions are changed in the store before we fetch the data
+    if (dataActions) {
+      fetchIpData(field.action, dataActions);
+    }
+  }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page]);
   for (const key in data) {
     let dataItem = {
       ...data[key]
     };
     dataItem.action = generateActionbuttons(dataItem.id);
+    dataItem.status = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)(dataItem.status = dataItem.status.charAt(0).toUpperCase() + dataItem.status.slice(1), 'really-simple-ssl');
     data[key] = dataItem;
   }
   function handleSelection(state) {
@@ -5291,9 +5302,19 @@ const IpAddressDatatable = props => {
     columns: columns,
     data: data,
     dense: true,
-    pagination: true,
     paginationServer: true,
-    paginationTotalRows: Object.values(data).length,
+    paginationTotalRows: pagination.totalRows,
+    paginationPerPage: pagination.perPage,
+    paginationDefaultPage: pagination.currentPage,
+    paginationComponentOptions: {
+      rowsPerPageText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Rows per page:', 'really-simple-ssl'),
+      rangeSeparatorText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('of', 'really-simple-ssl'),
+      noRowsPerPage: false,
+      selectAllRowsItem: false,
+      selectAllRowsItemText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('All', 'really-simple-ssl')
+    },
+    loading: dataLoaded,
+    pagination: true,
     onChangeRowsPerPage: handleIpTableRowsChange,
     onChangePage: handleIpTablePageChange,
     sortServer: true,
@@ -25187,6 +25208,7 @@ __webpack_require__.r(__webpack_exports__);
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
+<<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 //# sourceMappingURL=src_Settings_Field_js.71728f3a274feb041ab6.js.map
 ========
 //# sourceMappingURL=src_Settings_Field_js.2a9f68f4c72b1ac2b97c.js.map
@@ -25209,3 +25231,6 @@ __webpack_require__.r(__webpack_exports__);
 ========
 //# sourceMappingURL=src_Settings_Field_js.aa2831b77222f8346fb7.js.map
 >>>>>>>> a8fb88908 (fixed ip input):settings/build/src_Settings_Field_js.aa2831b77222f8346fb7.js
+========
+//# sourceMappingURL=src_Settings_Field_js.092b69202ddf0f282672.js.map
+>>>>>>>> 3004c8a13 (fixed a load of issues with ip address datatable):settings/build/src_Settings_Field_js.092b69202ddf0f282672.js

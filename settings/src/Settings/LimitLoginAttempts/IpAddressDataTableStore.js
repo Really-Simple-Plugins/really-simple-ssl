@@ -32,13 +32,13 @@ const IpAddressDataTableStore = create((set, get) => ({
     * This function fetches the data from the server and fills the property IpDataTable
     * Note this function works with the DataTable class on serverside
      */
-    fetchIpData: async (action) => {
+    fetchIpData: async (action, dataActions) => {
         set({processing: true});
         set({dataLoaded: false});
         try {
             const response = await rsssl_api.doAction(
                 action,
-                get().dataActions
+                dataActions
             );
             //now we set the EventLog
             if (response) {
