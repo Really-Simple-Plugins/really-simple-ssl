@@ -1879,7 +1879,7 @@ const EventLogDataTable = props => {
 
   //we create the columns
   let columns = [];
-  //getting the fields from the props
+  //getting the fields from the propsß
   let field = props.field;
   //we loop through the fields
   field.columns.forEach(function (item, i) {
@@ -1945,7 +1945,13 @@ const EventLogDataTable = props => {
     });
   }
 
-  //we convert DynamicDataTable to an array
+  //if the dataActions are changed, we fetch the data
+  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
+    //we make sure the dataActions are changed in the store before we fetch the data
+    if (dataActions) {
+      fetchDynamicData(field.action, dataActions);
+    }
+  }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page]);
 
   //we generate an expandable row
   const ExpandableRow = _ref => {
@@ -2046,9 +2052,9 @@ const EventLogDataTable = props => {
     onChangePage: handleEventTablePageChange,
     expandableRows: true,
     expandableRowsComponent: ExpandableRow,
-    sortServer: true,
     loading: dataLoaded,
     onSort: handleEventTableSort,
+    sortServer: true,
     paginationRowsPerPageOptions: [5, 10, 25, 50, 100],
     noDataComponent: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("No results", "really-simple-ssl"),
     persistTableHead: true,
@@ -2134,35 +2140,8 @@ const EventLogDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((
   pagination: {},
   dataActions: {},
   DynamicDataTable: [],
-  //for faking data we add a dymmmyData
-  dummyData: {
-    data: [{
-      "id": 1,
-      "datetime": "10:02, August 16",
-      "severity": "warning",
-      "description": "This is a warning message",
-      "event_type": "Login protection",
-      "source_ip": "1.1.1.1",
-      "username": "admin",
-      "iso2_code": "NL"
-    }, {
-      "datetime": "10:02, August 16",
-      "severity": "warning",
-      "description": "This is a warning message",
-      "event_type": "Login protection",
-      "source_ip": "1.1.1.1",
-      "username": "admin",
-      "iso2_code": "NL"
-    }]
-  },
-  dummyPagination: {
-    currentPage: 1,
-    lastPage: 1,
-    perPage: 10,
-    total: 2,
-    totalRows: 2
-  },
-  fetchDynamicData: async action => {
+  sorting: [],
+  fetchDynamicData: async (action, dataActions) => {
     //cool we can fetch the data so first we set the processing to true
     set({
       processing: true
@@ -2172,17 +2151,15 @@ const EventLogDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((
     });
     //now we fetch the data
     try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction(action, get().dataActions);
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction(action, dataActions);
       // now we set the EventLog
       if (response) {
-        // if the response is empty we set the dummyData
-        const data = typeof response.pagination === 'undefined' ? get().dummyData : response;
-        const pagination = typeof response.pagination === 'undefined' ? get().dummyPagination : response.pagination;
         set({
-          DynamicDataTable: data,
+          DynamicDataTable: response,
           dataLoaded: true,
           processing: false,
-          pagination
+          pagination: response.pagination,
+          sorting: response.sorting
         });
       }
     } catch (e) {
@@ -2198,7 +2175,6 @@ const EventLogDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((
         searchColumns
       };
     }));
-    get().fetchDynamicData('event_log');
   },
   handleEventTablePageChange: async (page, pageSize) => {
     //Add the page and pageSize to the dataActions
@@ -2209,7 +2185,6 @@ const EventLogDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((
         pageSize
       };
     }));
-    get().fetchDynamicData('event_log');
   },
   handleEventTableRowsChange: async (currentRowsPerPage, currentPage) => {
     //Add the page and pageSize to the dataActions
@@ -2220,11 +2195,9 @@ const EventLogDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((
         currentPage
       };
     }));
-    get().fetchDynamicData('event_log');
   },
   //this handles all pagination and sorting
   handleEventTableSort: async (column, sortDirection) => {
-    //Add the column and sortDirection to the dataActions
     set((0,immer__WEBPACK_IMPORTED_MODULE_4__.produce)(state => {
       state.dataActions = {
         ...state.dataActions,
@@ -2232,7 +2205,6 @@ const EventLogDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((
         sortDirection
       };
     }));
-    get().fetchDynamicData('event_log');
   },
   handleEventTableFilter: async (column, filterValue) => {
     //Add the column and sortDirection to the dataActions
@@ -2243,8 +2215,6 @@ const EventLogDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((
         filterValue
       };
     }));
-    //we prefetch the data
-    get().fetchDynamicData('event_log');
   }
 }));
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (EventLogDataTableStore);
@@ -3784,32 +3754,7 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
   pagination: {},
   dataActions: {},
   CountryDataTable: [],
-  //for faking data we add a dymmmyData
-  dummyData: {
-    data: [{
-      "id": 1,
-      "iso2_code": "US",
-      "iso3_code": "USA",
-      "country_name": "United States",
-      "region": "North America",
-      "region_code": "NA"
-    }, {
-      "id": 2,
-      "iso2_code": "CA",
-      "iso3_code": "CAN",
-      "country_name": "Canada",
-      "region": "North America",
-      "region_code": "NA"
-    }]
-  },
-  dummyPagination: {
-    currentPage: 1,
-    lastPage: 1,
-    perPage: 10,
-    total: 2,
-    totalRows: 2
-  },
-  fetchCountryData: async action => {
+  fetchCountryData: async (action, dataActions) => {
     set({
       processing: true
     });
@@ -3817,24 +3762,15 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
       dataLoaded: false
     });
     try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction(action, get().dataActions);
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction(action, dataActions);
       //now we set the EventLog
       if (response) {
-        if (typeof response.pagination === 'undefined') {
-          set({
-            CountryDataTable: get().dummyData,
-            dataLoaded: true,
-            processing: false,
-            pagination: get().dummyPagination
-          });
-        } else {
-          set({
-            CountryDataTable: response,
-            dataLoaded: true,
-            processing: false,
-            pagination: response.pagination
-          });
-        }
+        set({
+          CountryDataTable: response,
+          dataLoaded: true,
+          processing: false,
+          pagination: response.pagination
+        });
       }
     } catch (e) {
       console.log(e);
@@ -3849,7 +3785,6 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
         searchColumns
       };
     }));
-    get().fetchCountryData('country_list');
   },
   handleCountryTablePageChange: async (page, pageSize) => {
     //Add the page and pageSize to the dataActions
@@ -3860,7 +3795,6 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
         pageSize
       };
     }));
-    get().fetchCountryData('country_list');
   },
   handleCountryTableRowsChange: async (currentRowsPerPage, currentPage) => {
     //Add the page and pageSize to the dataActions
@@ -3871,7 +3805,6 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
         currentPage
       };
     }));
-    get().fetchCountryData('country_list');
   },
   //this handles all pagination and sorting
   handleCountryTableSort: async (column, sortDirection) => {
@@ -3883,7 +3816,6 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
         sortDirection
       };
     }));
-    get().fetchCountryData('country_list');
   },
   handleCountryTableFilter: async (column, filterValue) => {
     //Add the column and sortDirection to the dataActions
@@ -3894,7 +3826,6 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
         filterValue
       };
     }));
-    get().fetchCountryData('country_list');
   },
   /*
   * This function add a new row to the table
@@ -4167,7 +4098,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const CountryDatatable = props => {
-  var _pagination$totalRows;
+  var _pagination$perPage;
   const {
     CountryDataTable,
     dataLoaded,
@@ -4187,7 +4118,8 @@ const CountryDatatable = props => {
     addRowMultiple,
     removeRowMultiple,
     resetRow,
-    resetMultiRow
+    resetMultiRow,
+    dataActions
   } = (0,_CountryDataTableStore__WEBPACK_IMPORTED_MODULE_3__["default"])();
   const {
     DynamicDataTable,
@@ -4218,18 +4150,9 @@ const CountryDatatable = props => {
     column: column.column,
     selector: row => row[column.column]
   }), []);
-  const columns = props.field.columns.map(buildColumn);
+  let field = props.field;
+  const columns = field.columns.map(buildColumn);
   const searchableColumns = columns.filter(column => column.searchable).map(column => column.column);
-
-  //get data if field was already enabled, so not changed right now.
-  (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
-    if (fieldAlreadyEnabled && !dataLoaded) {
-      fetchCountryData(props.field.action);
-    }
-  }, [fieldAlreadyEnabled, dataLoaded, fetchCountryData, props.field.action]);
-  (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
-    // code to execute after DynamicDataTable has been updated
-  }, [DynamicDataTable]);
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     const currentFilter = getCurrentFilter(moduleName);
     if (!currentFilter) {
@@ -4246,10 +4169,20 @@ const CountryDatatable = props => {
     setRowsSelected([]);
   }, [CountryDataTable]);
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
-    if (!dataLoaded) {
-      fetchCountryData(props.field.action);
+    if (fieldAlreadyEnabled) {
+      if (!dataLoaded) {
+        fetchDynamicData(field.action);
+      }
     }
-  }, [dataLoaded, props.field.action, fetchCountryData]);
+  }, [fields]);
+
+  //if the dataActions are changed, we fetch the data
+  (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
+    //we make sure the dataActions are changed in the store before we fetch the data
+    if (dataActions) {
+      fetchCountryData(field.action, dataActions);
+    }
+  }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page]);
   let enabled = false;
   fields.forEach(function (item, i) {
     if (item.id === 'enable_limited_login_attempts') {
@@ -4410,6 +4343,7 @@ const CountryDatatable = props => {
       dataItem.action = generateActionButtons(dataItem.id);
     }
     dataItem.attempt_value = generateFlag(dataItem.attempt_value, dataItem.country_name);
+    dataItem.status = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)(dataItem.status = dataItem.status.charAt(0).toUpperCase() + dataItem.status.slice(1), 'really-simple-ssl');
     data[key] = dataItem;
   }
   if (!dataLoaded && columns.length === 0 && CountryDataTable.length === 0) {
@@ -4482,7 +4416,16 @@ const CountryDatatable = props => {
     dense: true,
     pagination: true,
     paginationServer: true,
-    paginationTotalRows: (_pagination$totalRows = pagination.totalRows) !== null && _pagination$totalRows !== void 0 ? _pagination$totalRows : 0,
+    paginationTotalRows: pagination.totalRows,
+    paginationPerPage: (_pagination$perPage = pagination.perPage) !== null && _pagination$perPage !== void 0 ? _pagination$perPage : 10,
+    paginationDefaultPage: pagination.currentPage,
+    paginationComponentOptions: {
+      rowsPerPageText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)('Rows per page:', 'really-simple-ssl'),
+      rangeSeparatorText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)('of', 'really-simple-ssl'),
+      noRowsPerPage: false,
+      selectAllRowsItem: false,
+      selectAllRowsItemText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)('All', 'really-simple-ssl')
+    },
     onChangeRowsPerPage: handleCountryTableRowsChange,
     onChangePage: handleCountryTablePageChange,
     sortServer: true,
@@ -4575,32 +4518,7 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
   dataActions: {},
   IpDataTable: [],
   maskError: false,
-  dummyData: {
-    data: [{
-      attempt_type: "source_ip",
-      attempt_value: "192.168.10.13/27",
-      datetime: "13:33, August 16",
-      id: 1,
-      last_failed: "1692192816",
-      status: "blocked"
-    }, {
-      attempt_type: "source_ip",
-      attempt_value: "::1",
-      datetime: "13:33, August 16",
-      id: 2,
-      last_failed: "1692192916",
-      status: "blocked"
-    }]
-  },
-  dummyPagination: {
-    currentPage: 1,
-    lastPage: 1,
-    perPage: 10,
-    total: 2,
-    totalRows: 2
-  },
   setMaskError: maskError => {
-    console.log('setMaskError', maskError);
     set({
       maskError
     });
@@ -4609,7 +4527,7 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
   * This function fetches the data from the server and fills the property IpDataTable
   * Note this function works with the DataTable class on serverside
    */
-  fetchIpData: async action => {
+  fetchIpData: async (action, dataActions) => {
     set({
       processing: true
     });
@@ -4617,25 +4535,16 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
       dataLoaded: false
     });
     try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction(action, get().dataActions);
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction(action, dataActions);
       //now we set the EventLog
       if (response) {
         //if the response is empty we set the dummyData
-        if (typeof response.pagination === 'undefined') {
-          set({
-            IpDataTable: get().dummyData,
-            dataLoaded: true,
-            processing: false,
-            pagination: get().dummyPagination
-          });
-        } else {
-          set({
-            IpDataTable: response,
-            dataLoaded: true,
-            processing: false,
-            pagination: response.pagination
-          });
-        }
+        set({
+          IpDataTable: response,
+          dataLoaded: true,
+          processing: false,
+          pagination: response.pagination
+        });
       }
     } catch (e) {
       console.log(e);
@@ -4653,7 +4562,6 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
         searchColumns
       };
     }));
-    await get().fetchIpData('ip_list');
   },
   /*
   * This function handles the page change, it is called from the DataTable class
@@ -4667,7 +4575,6 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
         pageSize
       };
     }));
-    await get().fetchIpData('ip_list');
   },
   /*
   * This function handles the rows change, it is called from the DataTable class
@@ -4681,7 +4588,6 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
         currentPage
       };
     }));
-    await get().fetchIpData('ip_list');
   },
   /*
   * This function handles the sort, it is called from the DataTable class
@@ -4695,7 +4601,6 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
         sortDirection
       };
     }));
-    await get().fetchIpData('ip_list');
   },
   /*
   * This function handles the filter, it is called from the GroupSetting class
@@ -4709,32 +4614,49 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
         filterValue
       };
     }));
-    await get().fetchIpData('ip_list');
   },
   /*
   * This function sets the ip address and is used by Cidr and IpAddressInput
    */
   setIpAddress: ipAddress => {
-    // Split the input into IP and CIDR mask
-    let [ip, mask] = ipAddress.split('/');
-    //if , we change it to .
-    ip = ip.replace(/,/g, '.');
     let ipRegex = /^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$|^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,4}|((25[0-5]|(2[0-4]|1{0,1}[0-9])?[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9])?[0-9]))|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9])?[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9])?[0-9]))$/;
-    if (!ipRegex.test(ip)) {
+    if (ipAddress.includes('/')) {
+      let finalIp = '';
+      // Split the input into IP and CIDR mask
+      let [ip, mask] = ipAddress.split('/');
+      //if , we change it to .
+      ip = ip.replace(/,/g, '.');
+      if (mask.length <= 0) {
+        if (!ipRegex.test(ip)) {
+          set({
+            maskError: true
+          });
+        } else {
+          set({
+            maskError: false
+          });
+        }
+        finalIp = `${ip}/${mask}`;
+      } else {
+        finalIp = mask ? `${ip}/${mask}` : ip;
+      }
       set({
-        maskError: true
+        ipAddress: finalIp
       });
     } else {
+      if (!ipRegex.test(ipAddress)) {
+        set({
+          maskError: true
+        });
+      } else {
+        set({
+          maskError: false
+        });
+      }
       set({
-        maskError: false
+        ipAddress: ipAddress.replace(/,/g, '.')
       });
     }
-
-    // Construct the final IP address by optionally appending the CIDR mask
-    let finalIp = mask ? `${ip}/${mask}` : ip;
-    set({
-      ipAddress: finalIp
-    });
   },
   resetRange: () => {
     set({
@@ -4851,7 +4773,6 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
    * @returns {boolean}
    */
   validateIpv6: ip => {
-    console.log('validating ipv6', ip);
     const parts = ip.split(":");
     if (parts.length !== 8) return false;
     for (let part of parts) {
@@ -4860,7 +4781,6 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
     return true;
   },
   extendIpV6: ip => {
-    console.log('extendIpV6', ip);
     // Handle the special case of '::' at the start or end
     if (ip === '::') ip = '0::0';
 
@@ -5104,6 +5024,7 @@ const IpAddressDatatable = props => {
   const {
     IpDataTable,
     dataLoaded,
+    dataActions,
     handleIpTableRowsChange,
     updateMultiRow,
     fetchIpData,
@@ -5113,6 +5034,7 @@ const IpAddressDatatable = props => {
     handleIpTableFilter,
     ipAddress,
     updateRow,
+    pagination,
     resetRow,
     resetMultiRow,
     setStatusSelected
@@ -5146,22 +5068,16 @@ const IpAddressDatatable = props => {
     let newItem = buildColumn(item);
     columns.push(newItem);
   });
-
-  //get data if field was already enabled, so not changed right now.
-  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
-    if (fieldAlreadyEnabled) {
-      if (!dataLoaded) {
-        fetchIpData(field.action);
-      }
-    }
-  }, [fields]);
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
     const currentFilter = getCurrentFilter(moduleName);
     if (!currentFilter) {
       setSelectedFilter('locked', moduleName);
+    } else if (dataActions.sortDirection || dataActions.filterValue || dataActions.search || dataActions.page) {
+      // Fetch the user data only if dataActions are not empty
+      fetchIpData(field.action, dataActions);
     }
     handleIpTableFilter('status', currentFilter);
-  }, [selectedFilter, moduleName]);
+  }, [selectedFilter, dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, moduleName]);
   const customStyles = {
     headCells: {
       style: {
@@ -5360,13 +5276,14 @@ const IpAddressDatatable = props => {
       onClick: () => {
         resetIpAddresses(id);
       }
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Reset", "really-simple-ssl")))));
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Delete", "really-simple-ssl")))));
   }
   for (const key in data) {
     let dataItem = {
       ...data[key]
     };
     dataItem.action = generateActionbuttons(dataItem.id);
+    dataItem.status = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)(dataItem.status = dataItem.status.charAt(0).toUpperCase() + dataItem.status.slice(1), 'really-simple-ssl');
     data[key] = dataItem;
   }
   function handleSelection(state) {
@@ -5428,13 +5345,23 @@ const IpAddressDatatable = props => {
     onClick: () => {
       resetIpAddresses(rowsSelected);
     }
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Reset", "really-simple-ssl")))))), dataLoaded ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Delete", "really-simple-ssl")))))), dataLoaded ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
     columns: columns,
     data: data,
     dense: true,
-    pagination: true,
     paginationServer: true,
-    paginationTotalRows: Object.values(data).length,
+    paginationTotalRows: pagination.totalRows,
+    paginationPerPage: pagination.perPage,
+    paginationDefaultPage: pagination.currentPage,
+    paginationComponentOptions: {
+      rowsPerPageText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Rows per page:', 'really-simple-ssl'),
+      rangeSeparatorText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('of', 'really-simple-ssl'),
+      noRowsPerPage: false,
+      selectAllRowsItem: false,
+      selectAllRowsItemText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('All', 'really-simple-ssl')
+    },
+    loading: dataLoaded,
+    pagination: true,
     onChangeRowsPerPage: handleIpTableRowsChange,
     onChangePage: handleIpTablePageChange,
     sortServer: true,
@@ -5625,34 +5552,24 @@ const UserDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set,
   pagination: {},
   dataActions: {},
   UserDataTable: [],
-  dummyPagination: {
-    currentPage: 1,
-    lastPage: 1,
-    perPage: 10,
-    total: 2,
-    totalRows: 2
-  },
-  fetchUserData: async action => {
+  fetchUserData: async (action, dataActions) => {
+    set({
+      processing: true
+    });
+    set({
+      dataLoaded: false
+    });
     try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction(action, get().dataActions);
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction(action, dataActions);
       //now we set the EventLog
       if (response) {
         //if the response is empty we set the dummyData
-        if (typeof response.pagination === 'undefined') {
-          set({
-            UserDataTable: response,
-            dataLoaded: true,
-            processing: false,
-            pagination: get().dummyPagination
-          });
-        } else {
-          set({
-            UserDataTable: response,
-            dataLoaded: true,
-            processing: false,
-            pagination: response.pagination
-          });
-        }
+        set({
+          UserDataTable: response,
+          dataLoaded: true,
+          processing: false,
+          pagination: response.pagination
+        });
       }
     } catch (e) {
       console.log(e);
@@ -5667,7 +5584,6 @@ const UserDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set,
         searchColumns
       };
     }));
-    get().fetchUserData('user_list');
   },
   handleUserTablePageChange: async (page, pageSize) => {
     //Add the page and pageSize to the dataActions
@@ -5678,7 +5594,6 @@ const UserDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set,
         pageSize
       };
     }));
-    get().fetchUserData('user_list');
   },
   handleUserTableRowsChange: async (currentRowsPerPage, currentPage) => {
     //Add the page and pageSize to the dataActions
@@ -5689,7 +5604,6 @@ const UserDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set,
         currentPage
       };
     }));
-    get().fetchUserData('user_list');
   },
   //this handles all pagination and sorting
   handleUserTableSort: async (column, sortDirection) => {
@@ -5701,7 +5615,6 @@ const UserDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set,
         sortDirection
       };
     }));
-    get().fetchUserData('user_list');
   },
   handleUserTableFilter: async (column, filterValue) => {
     //Add the column and sortDirection to the dataActions
@@ -5712,7 +5625,6 @@ const UserDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set,
         filterValue
       };
     }));
-    get().fetchUserData('user_list');
   },
   /*
   * This function add a new row to the table
@@ -5904,20 +5816,24 @@ const UserDatatable = props => {
   });
 
   //get data if field was already enabled, so not changed right now.
-  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
-    if (fieldAlreadyEnabled) {
-      if (!dataLoaded) {
-        fetchUserData(field.action);
-      }
-    }
-  }, [fields]);
+  // useEffect(() => {
+  //     if (fieldAlreadyEnabled) {
+  //         if (!dataLoaded) {
+  //             fetchUserData(field.action);
+  //         }
+  //     }
+  // }, [fields]);
+
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
     const currentFilter = getCurrentFilter(moduleName);
     if (!currentFilter) {
       setSelectedFilter('locked', moduleName);
+    } else if (dataActions.sortDirection || dataActions.filterValue || dataActions.search || dataActions.page) {
+      // Fetch the user data only if dataActions are not empty
+      fetchUserData(field.action, dataActions);
     }
     handleUserTableFilter('status', currentFilter);
-  }, [selectedFilter, moduleName]);
+  }, [selectedFilter, dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, moduleName]);
   let enabled = false;
   fields.forEach(function (item, i) {
     if (item.id === 'enable_limited_login_attempts') {
@@ -6054,7 +5970,7 @@ const UserDatatable = props => {
       onClick: () => {
         resetUsers(id);
       }
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Reset", "really-simple-ssl")))));
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Delete", "really-simple-ssl")))));
   }
 
   //we convert the data to an array
@@ -6101,7 +6017,7 @@ const UserDatatable = props => {
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
     className: "button button-secondary rsssl-add-button__button",
     onClick: handleOpen
-  }, getCurrentFilter(moduleName) === 'blocked' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Block User", "really-simple-ssl")), getCurrentFilter(moduleName) === 'allowed' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Allow User", "really-simple-ssl"))))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, getCurrentFilter(moduleName) === 'blocked' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Block username", "really-simple-ssl")), getCurrentFilter(moduleName) === 'allowed' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Trust username", "really-simple-ssl"))))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-search-bar"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-search-bar__inner"
@@ -6142,7 +6058,7 @@ const UserDatatable = props => {
     onClick: () => {
       resetUsers(rowsSelected);
     }
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Reset", "really-simple-ssl")))))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Delete", "really-simple-ssl")))))), dataLoaded ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
     columns: columns,
     data: Object.values(data),
     dense: true,
@@ -6161,7 +6077,35 @@ const UserDatatable = props => {
     persistTableHead: true,
     theme: "really-simple-plugins",
     customStyles: customStyles
-  }), !enabled && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }) : (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-spinner",
+    style: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginTop: "100px"
+    }
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-spinner__inner"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-spinner__icon",
+    style: {
+      border: '8px solid white',
+      borderTop: '8px solid #f4bf3e',
+      borderRadius: '50%',
+      width: '120px',
+      height: '120px',
+      animation: 'spin 2s linear infinite'
+    }
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-spinner__text",
+    style: {
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)'
+    }
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Loading data, please stand by...", "really-simple-ssl")))), !enabled && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-locked"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-locked-overlay"
@@ -25350,4 +25294,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.55acbc06b42ce2f3f929.js.map
+//# sourceMappingURL=src_Settings_Field_js.109726b673f28fcc61b9.js.map

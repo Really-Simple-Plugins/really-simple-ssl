@@ -1,4 +1,15 @@
-console.log('eventlistener.js is loaded');
+/** @jsx wp.element.createElement */
+import {
+    render, createRoot
+} from '@wordpress/element';
+import RssslModal from "./components/RssslModal";
+
+document.addEventListener( 'DOMContentLoaded', () => {
+    const root = wp.element.createRoot(document.getElementById('rsssl-modal-root'));
+    root.render(<RssslModal />);
+});
+
+
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initEventListener);
 } else {
@@ -18,7 +29,6 @@ window.showRssslModal = function() {
         targetPluginLink.addEventListener('click', function(e) {
             e.preventDefault();
             window.showRssslModal();
-            console.log('showRssslModalEvent');
         });
     }
 }

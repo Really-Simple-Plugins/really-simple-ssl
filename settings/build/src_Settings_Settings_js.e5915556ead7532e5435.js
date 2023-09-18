@@ -510,6 +510,7 @@ const SettingsGroup = props => {
     subMenu
   } = (0,_Menu_MenuData__WEBPACK_IMPORTED_MODULE_6__["default"])();
   const [Field, setField] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
+  const [updatedIntro, setUpdatedIntro] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_material-ui_core_esm_TextField_TextField_js-node_modules_react-toastify_-1fccac"), __webpack_require__.e("src_Settings_Field_js")]).then(__webpack_require__.bind(__webpack_require__, /*! ./Field */ "./src/Settings/Field.js")).then(_ref => {
       let {
@@ -517,7 +518,10 @@ const SettingsGroup = props => {
       } = _ref;
       setField(() => Field);
     });
-  }, []);
+    if (activeGroup && activeGroup.intro && typeof activeGroup.intro === 'object') {
+      setUpdatedIntro(activeGroup.intro[selectedFilter[filterId]]);
+    }
+  }, [selectedFilter]);
   let upgrade = 'https://really-simple-ssl.com/pro/?mtm_campaign=fallback&mtm_source=free&mtm_content=upgrade';
 
   /*
@@ -618,9 +622,11 @@ const SettingsGroup = props => {
     onClick: e => handleLetsEncryptReset(e)
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Reset Let's Encrypt", "really-simple-ssl")))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-grid-item-content"
-  }, activeGroup.intro && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, activeGroup.intro && typeof activeGroup.intro === 'string' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-settings-block-intro"
-  }, activeGroup.intro), Field && selectedFields.map((field, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Field, {
+  }, activeGroup.intro), activeGroup.intro && typeof activeGroup.intro === 'object' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-settings-block-intro"
+  }, updatedIntro), Field && selectedFields.map((field, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Field, {
     key: "selectedFields-" + i,
     index: i,
     field: field,
@@ -1376,4 +1382,4 @@ const errorMsg = error => {
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Settings_js.b2e4e831a6e4dfefbb5c.js.map
+//# sourceMappingURL=src_Settings_Settings_js.e5915556ead7532e5435.js.map

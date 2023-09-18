@@ -7,7 +7,6 @@ function RssslModal() {
 
     useEffect(() => {
         const showModalListener = () => {
-            console.log("showRssslModalEvent detected we should open the modal");
             setOpen(true);
         };
 
@@ -17,7 +16,7 @@ function RssslModal() {
         return () => {
             document.removeEventListener('showRssslModalEvent', showModalListener);
         };
-    }, []);  // Removed [isOpen] to avoid unnecessary re-registrations of the event listener
+    }, [isOpen]); // Add isOpen as a dependency
 
     return (
         <div>
@@ -27,7 +26,6 @@ function RssslModal() {
                     onRequestClose={() => setOpen(false)}
                 >
                     <p>This is the modal content.</p>
-                    <Button onClick={() => setOpen(false)}>Close Modal</Button>
                 </Modal>
             )}
         </div>

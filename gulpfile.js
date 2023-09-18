@@ -43,35 +43,6 @@ function scssPluginTask(cb) {
 
 exports.scssPlugin = scssPluginTask
 
-function jsPluginTasks(cb) {
-    console.log('jsPluginTasks');
-    // compile js, transpile React JSX and minify
-    return browserify({
-        // Add eventlistener.js to the entries array
-        entries: ['./assets/js/src/rsssl-plugin.jsx'],
-        extensions: ['.jsx', '.js'],
-        debug: true
-    })
-        .transform(babelify.configure({
-            presets: ['@babel/preset-env', '@babel/preset-react']
-        }))
-        .bundle()
-        .pipe(source('rsssl-plugin.js'))
-        .pipe(buffer())
-        .pipe(gulp.dest('./assets/js/build'))
-        .pipe(concat('rsssl-plugin.min.js'))
-        .pipe(jsuglify())
-        .pipe(gulp.dest('./assets/js/build'))
-        .on('error', function (err) {
-            console.error(err);
-            this.emit('end');
-        });
-    cb();
-}
-
-
-exports.jsPlugin = jsPluginTasks;
-
 gulp.task('default', function () {
     return
 });
@@ -93,9 +64,6 @@ exports.js = jsTask
 function defaultTask(cb) {
     gulp.watch('./assets/css/**/*.scss', {ignoreInitial: false}, scssTask);
     gulp.watch('./assets/css/**/*.scss', {ignoreInitial: false}, scssPluginTask);
-    gulp.watch(['./assets/js/src/**/*.js', './assets/js/src/**/*.jsx'], function () {
-        jsPluginTasks();
-    });
 
   gulp.watch('./assets/js/**/*.js', { ignoreInitial: false }, jsTask);
     spawn('npm', ['start'], {cwd: 'settings', stdio: 'inherit'})

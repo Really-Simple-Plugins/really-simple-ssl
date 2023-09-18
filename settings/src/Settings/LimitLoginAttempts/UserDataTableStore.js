@@ -12,28 +12,20 @@ const UserDataTableStore = create((set, get) => ({
     pagination: {},
     dataActions: {},
     UserDataTable: [],
-    dummyPagination: {
-        currentPage: 1,
-        lastPage: 1,
-        perPage: 10,
-        total: 2,
-        totalRows: 2,
-    },
 
-    fetchUserData: async (action) => {
+
+    fetchUserData: async (action, dataActions) => {
+        set({processing: true});
+        set({dataLoaded: false});
         try {
             const response = await rsssl_api.doAction(
                 action,
-                get().dataActions
+                dataActions
             );
             //now we set the EventLog
             if (response) {
                 //if the response is empty we set the dummyData
-                if (typeof response.pagination === 'undefined') {
-                    set({UserDataTable: response, dataLoaded: true, processing: false, pagination: get().dummyPagination});
-                } else {
-                    set({UserDataTable: response, dataLoaded: true, processing: false, pagination: response.pagination});
-                }
+                set({UserDataTable: response, dataLoaded: true, processing: false, pagination: response.pagination});
             }
         } catch (e) {
             console.log(e);
@@ -46,7 +38,6 @@ const UserDataTableStore = create((set, get) => ({
                 state.dataActions = {...state.dataActions, search, searchColumns};
             })
         );
-        get().fetchUserData('user_list');
     },
 
     handleUserTablePageChange: async (page, pageSize) => {
@@ -55,7 +46,6 @@ const UserDataTableStore = create((set, get) => ({
                 state.dataActions = {...state.dataActions, page, pageSize};
             })
         );
-        get().fetchUserData('user_list');
     },
 
     handleUserTableRowsChange: async (currentRowsPerPage, currentPage) => {
@@ -64,7 +54,6 @@ const UserDataTableStore = create((set, get) => ({
                 state.dataActions = {...state.dataActions, currentRowsPerPage, currentPage};
             })
         );
-        get().fetchUserData('user_list');
     },
 
     //this handles all pagination and sorting
@@ -74,7 +63,6 @@ const UserDataTableStore = create((set, get) => ({
                 state.dataActions = {...state.dataActions, sortColumn: column, sortDirection};
             })
         );
-        get().fetchUserData('user_list');
     },
 
     handleUserTableFilter: async (column, filterValue) => {
@@ -83,7 +71,6 @@ const UserDataTableStore = create((set, get) => ({
                 state.dataActions = {...state.dataActions, filterColumn: column, filterValue};
             })
         );
-        get().fetchUserData('user_list');
     },
 
     /*

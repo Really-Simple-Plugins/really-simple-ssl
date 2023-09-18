@@ -15,6 +15,7 @@ const IpAddressDatatable = (props) => {
     const {
         IpDataTable,
         dataLoaded,
+        dataActions,
         handleIpTableRowsChange,
         updateMultiRow,
         fetchIpData,
@@ -24,6 +25,7 @@ const IpAddressDatatable = (props) => {
         handleIpTableFilter,
         ipAddress,
         updateRow,
+        pagination,
         resetRow,
         resetMultiRow,
         setStatusSelected,
@@ -49,24 +51,19 @@ const IpAddressDatatable = (props) => {
     });
 
 
-
-    //get data if field was already enabled, so not changed right now.
-    useEffect(() => {
-        if (fieldAlreadyEnabled) {
-            if (!dataLoaded) {
-                fetchIpData(field.action);
-            }
-        }
-    }, [fields]);
-
     useEffect(() => {
         const currentFilter = getCurrentFilter(moduleName);
 
         if (!currentFilter) {
             setSelectedFilter('locked', moduleName);
+        } else if (dataActions.sortDirection || dataActions.filterValue || dataActions.search || dataActions.page) {
+            // Fetch the user data only if dataActions are not empty
+            fetchIpData(field.action, dataActions);
         }
+
         handleIpTableFilter('status', currentFilter);
-    }, [selectedFilter, moduleName]);
+    }, [selectedFilter, dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, moduleName]);
+
 
 
     const customStyles = {
@@ -287,7 +284,7 @@ const IpAddressDatatable = (props) => {
                             </button>
                         </div>
                     )}
-                    {/* if the id is new we show the Reset button */}
+                    {/* if the id is new we show the Delete button */}
                     <div className="rsssl-action-buttons__inner">
                         <button
                             className="button button-red button-datatable rsssl-action-buttons__button"
@@ -296,7 +293,7 @@ const IpAddressDatatable = (props) => {
                             }
                             }
                         >
-                            {__("Reset", "really-simple-ssl")}
+                            {__("Delete", "really-simple-ssl")}
                         </button>
                     </div>
                 </div>
@@ -308,6 +305,7 @@ const IpAddressDatatable = (props) => {
         let dataItem = {...data[key]}
 
         dataItem.action = generateActionbuttons(dataItem.id);
+        dataItem.status = __(dataItem.status = dataItem.status.charAt(0).toUpperCase() + dataItem.status.slice(1), 'really-simple-ssl');
 
         data[key] = dataItem;
     }
@@ -401,7 +399,7 @@ const IpAddressDatatable = (props) => {
                                     </button>
                                 </div>
                             )}
-                            {/* if the id is new we show the Reset button */}
+                            {/* if the id is new we show the Delete button */}
                             <div className="rsssl-action-buttons__inner">
                                 <button
                                     className="button button-red button-datatable rsssl-action-buttons__button"
@@ -409,7 +407,7 @@ const IpAddressDatatable = (props) => {
                                         resetIpAddresses(rowsSelected);
                                     }}
                                 >
-                                    {__("Reset", "really-simple-ssl")}
+                                    {__("Delete", "really-simple-ssl")}
                                 </button>
                             </div>
                         </div>
@@ -423,9 +421,20 @@ const IpAddressDatatable = (props) => {
                 columns={columns}
                 data={data}
                 dense
-                pagination
                 paginationServer
-                paginationTotalRows={Object.values(data).length}
+                paginationTotalRows={pagination.totalRows}
+                paginationPerPage={pagination.perPage}
+                paginationDefaultPage={pagination.currentPage}
+                paginationComponentOptions={{
+                    rowsPerPageText: __('Rows per page:', 'really-simple-ssl'),
+                    rangeSeparatorText: __('of', 'really-simple-ssl'),
+                    noRowsPerPage: false,
+                    selectAllRowsItem: false,
+                    selectAllRowsItemText: __('All', 'really-simple-ssl'),
+
+                }}
+                loading={dataLoaded}
+                pagination
                 onChangeRowsPerPage={handleIpTableRowsChange}
                 onChangePage={handleIpTablePageChange}
                 sortServer
