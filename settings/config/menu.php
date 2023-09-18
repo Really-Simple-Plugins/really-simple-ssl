@@ -203,6 +203,8 @@ function rsssl_menu() {
                             'group_id' => 'content_security_policy',
                             'title' => __( 'Content Security Policy', 'really-simple-ssl' ),
                             'intro' => __( 'Content Security Policy Headers', 'really-simple-ssl' ),
+	                        'premium' => true,
+                            'networkwide_required' => true,
                             'helpLink' => 'https://really-simple-ssl.com/instructions/configuring-the-content-security-policy/?mtm_campaign=instructions&mtm_source=free',
                             'groups'  => [
                                 [
@@ -256,7 +258,7 @@ function rsssl_menu() {
 			"id"             => "letsencrypt",
 			'default_hidden' => true,
 			"title"          => "Let's Encrypt",
-//			'group_id'       => 'lets-encrypt',
+			'group_id'       => 'lets-encrypt',
 			'intro'          => sprintf( __( 'We have tried to make our Wizard as simple and fast as possible. Although these questions are all necessary, if there’s any way you think we can improve the plugin, please let us %sknow%s!',
 					'really-simple-ssl' ), '<a target="_blank" href="https://really-simple-ssl.com/contact/?mtm_campaign=instructions&mtm_source=free">', '</a>' ) .
 			                    sprintf( __( ' Please note that you can always save and finish the wizard later, use our %sdocumentation%s for additional information or log a %ssupport ticket%s if you need our assistance.',
