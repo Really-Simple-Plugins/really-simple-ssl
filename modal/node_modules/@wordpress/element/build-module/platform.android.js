@@ -1,0 +1,20 @@
+/**
+ * External dependencies
+ */
+import { Platform as OriginalPlatform } from 'react-native';
+const Platform = {
+  ...OriginalPlatform,
+  OS: 'native',
+  select: spec => {
+    if ('android' in spec) {
+      return spec.android;
+    } else if ('native' in spec) {
+      return spec.native;
+    }
+    return spec.default;
+  },
+  isNative: true,
+  isAndroid: true
+};
+export default Platform;
+//# sourceMappingURL=platform.android.js.map

@@ -1,0 +1,63 @@
+{
+  "name": "find-process",
+  "version": "1.4.7",
+  "description": "find process info by port/pid/name etc.",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "test": "mocha test/*.test.js && standard",
+    "lint": "standard --fix && npm-ensure -t deps"
+  },
+  "bin": {
+    "find-process": "bin/find-process.js"
+  },
+  "ensure": {
+    "deps": {
+      "checkDirs": [
+        "lib/*",
+        "bin/*",
+        "*.js"
+      ]
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yibn2008/find-process.git"
+  },
+  "keywords": [
+    "node",
+    "process",
+    "pid",
+    "port"
+  ],
+  "standard": {
+    "globals": [
+      "describe",
+      "beforeEach",
+      "afterEach",
+      "it"
+    ],
+    "ignore": [
+      "/node_modules",
+      "/doc",
+      "/example",
+      "/test"
+    ]
+  },
+  "author": "zoujie <yibn2008@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yibn2008/find-process/issues"
+  },
+  "homepage": "https://github.com/yibn2008/find-process#readme",
+  "dependencies": {
+    "chalk": "^4.0.0",
+    "commander": "^5.1.0",
+    "debug": "^4.1.1"
+  },
+  "devDependencies": {
+    "mocha": "^7.2.0",
+    "npm-ensure": "^1.2.0",
+    "standard": "^14.3.4"
+  }
+}
