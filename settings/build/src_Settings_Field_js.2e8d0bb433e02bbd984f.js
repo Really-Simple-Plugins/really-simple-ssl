@@ -8154,7 +8154,8 @@ const DynamicDataTable = props => {
         paddingLeft: '0',
         paddingRight: '0'
       }
-    }
+    },
+    padding: '0'
   };
   (0,react_data_table_component__WEBPACK_IMPORTED_MODULE_3__.createTheme)('really-simple-plugins', {
     divider: {
@@ -8248,6 +8249,14 @@ const DynamicDataTable = props => {
       }
     }
   }
+  const rowStyles = {
+    cursor: 'pointer',
+    // Change cursor on hover
+    backgroundColor: '#f0f0f0',
+    // Change background color
+    color: 'blue' // Change text color
+  };
+
   function handleSelection(state) {
     setRowCleared(false);
     setRowsSelected(state.selectedRows);
@@ -8286,6 +8295,7 @@ const DynamicDataTable = props => {
     columns: columns,
     data: DynamicDataTable,
     dense: true,
+    className: 'pietje_puk',
     pagination: true,
     paginationServer: true,
     onChangeRowsPerPage: handleTableRowsChange,
@@ -8298,9 +8308,9 @@ const DynamicDataTable = props => {
     selectableRows: true,
     selectableRowsHighlight: true,
     onSelectedRowsChange: handleSelection,
-    clearSelectedRows: rowCleared,
-    theme: "really-simple-plugins",
-    customStyles: customStyles
+    clearSelectedRows: rowCleared
+    //      theme="really-simple-plugins"
+    //        customStyles={customStyles}
   }) : (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-spinner",
     style: {
@@ -25261,7 +25271,11 @@ __webpack_require__.r(__webpack_exports__);
 
 }]);
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.2e8d0bb433e02bbd984f.js
+<<<<<<<< HEAD:settings/build/src_Settings_Field_js.2e8d0bb433e02bbd984f.js
 //# sourceMappingURL=src_Settings_Field_js.2e8d0bb433e02bbd984f.js.map
 ========
 //# sourceMappingURL=src_Settings_Field_js.c881cc9d8901c328bd91.js.map
 >>>>>>>> 070f831e1 (fixed reset function, however could not resolve warning React issue??):settings/build/src_Settings_Field_js.c881cc9d8901c328bd91.js
+========
+//# sourceMappingURL=src_Settings_Field_js.2ef95181fe46df89146e.js.map
+>>>>>>>> 9d333e479 (added some styling for selectable rows):settings/build/src_Settings_Field_js.2ef95181fe46df89146e.js

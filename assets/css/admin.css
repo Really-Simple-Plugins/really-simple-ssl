@@ -3171,8 +3171,13 @@ Admin notice
 .rsssl-field-wrap .rdt_TableCol, .rsssl-field-wrap .rdt_TableCell {
   min-width: 100px;
 }
-.rsssl-field-wrap .rdt_TableCol:first-child, .rsssl-field-wrap .rdt_TableCell:first-child {
-  min-width: initial;
+.rsssl-field-wrap .rdt_TableCell:has(input[type=checkbox]) {
+  padding: 0; /* Remove padding */
+  min-width: 20px; /* Set width to 20px */
+}
+.rsssl-field-wrap .rdt_TableCol:has(input[type=checkbox]) {
+  padding: 0; /* Remove padding */
+  min-width: 20px; /* Set width to 20px */
 }
 .rsssl-field-wrap .rdt_TableHeadRow .rdt_TableCol:last-child {
   flex-grow: 0;

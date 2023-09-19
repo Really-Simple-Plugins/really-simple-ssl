@@ -2,6 +2,14 @@
   .rdt_TableCol, .rdt_TableCell {
     min-width:100px;
   }
+  .rdt_TableCell:has(input[type="checkbox"]) {
+    padding: 0; /* Remove padding */
+    min-width: 20px; /* Set width to 20px */
+  }
+  .rdt_TableCol:has(input[type="checkbox"]) {
+    padding: 0; /* Remove padding */
+    min-width: 20px; /* Set width to 20px */
+  }
   .rdt_TableCol:first-child, .rdt_TableCell:first-child {
     min-width:initial;
   }
