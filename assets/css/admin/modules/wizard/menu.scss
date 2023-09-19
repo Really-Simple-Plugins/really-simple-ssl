@@ -1,5 +1,10 @@
 .rsssl-wizard-menu{
   height: fit-content;
+  background: none !important;
+  box-shadow: none !important;
+  .rsssl-grid-item-header {
+    padding: 0;
+  }
   .rsssl-grid-item-content{
     padding: 0;
     padding-bottom: var(--rsp-spacing-l);
@@ -19,16 +24,20 @@
       color: var(--rsp-text-color);
       font-size: var(--rsp-fs-400);
       padding-block: var(--rsp-spacing-xs);
+      padding-inline: var(--rsp-spacing-xs);
       @include rsssl-inline-block-padding;
       transition: all 0.2s ease-in-out;
       border-left: 4px solid transparent;
+      &:hover {
+        text-decoration: underline;
+      }
     }
     &.rsssl-active{
       > a{
         //text-decoration: underline;
         color: var(--rsp-dark-blue);
         font-weight: 600;
-        border-left: 4px solid var(--rsp-dark-blue);
+        //border-left: 4px solid var(--rsp-dark-blue);
         //background-color: #f2e6c966;
       }
     }
@@ -40,7 +49,6 @@
         }
       }
       a{
-        font-weight: 600;
         flex-wrap: wrap;
         .rsssl-menu-item-featured-pill{
             background: var(--rsp-green);
@@ -114,6 +122,21 @@
     a{
       padding-left: calc(var(--rsp-spacing-l) + var(--rsp-spacing-m));
       font-size: var(--rsp-fs-300);
+    }
+    .rsssl-active {
+      a {
+        text-decoration: none;
+        position: relative;
+
+        &::before {
+          content: '\2022';
+          color: var(--rsp-dark-blue);
+          font-size: 3em;
+          position: absolute;
+          left: var(--rsp-spacing-l);
+          margin-bottom: 7px;
+        }
+      }
     }
   }
 }
