@@ -142,6 +142,7 @@ const DynamicDataTable = (props) => {
                 paddingRight: '0',
             },
         },
+        padding: '0'
     };
     createTheme('really-simple-plugins', {
         divider: {
@@ -249,6 +250,12 @@ const DynamicDataTable = (props) => {
         }
     }
 
+    const rowStyles = {
+        cursor: 'pointer', // Change cursor on hover
+        backgroundColor: '#f0f0f0', // Change background color
+        color: 'blue', // Change text color
+    };
+
     function handleSelection(state) {
         setRowCleared(false);
         setRowsSelected(state.selectedRows);
@@ -300,12 +307,12 @@ const DynamicDataTable = (props) => {
                     </div>
                 </div>
             )}
-
             {dataLoaded ?
                 <DataTable
                     columns={columns}
                     data={DynamicDataTable}
                     dense
+                    className={'pietje_puk'}
                     pagination
                     paginationServer
                     onChangeRowsPerPage={handleTableRowsChange}
@@ -319,8 +326,8 @@ const DynamicDataTable = (props) => {
                     selectableRowsHighlight={true}
                     onSelectedRowsChange={handleSelection}
                     clearSelectedRows={rowCleared}
-                    theme="really-simple-plugins"
-                    customStyles={customStyles}
+              //      theme="really-simple-plugins"
+            //        customStyles={customStyles}
                 ></DataTable>
                 :
                 <div className="rsssl-spinner" style={{

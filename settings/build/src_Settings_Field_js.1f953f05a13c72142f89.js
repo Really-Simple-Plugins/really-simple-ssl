@@ -8171,7 +8171,8 @@ const DynamicDataTable = props => {
         paddingLeft: '0',
         paddingRight: '0'
       }
-    }
+    },
+    padding: '0'
   };
   (0,react_data_table_component__WEBPACK_IMPORTED_MODULE_3__.createTheme)('really-simple-plugins', {
     divider: {
@@ -8265,6 +8266,14 @@ const DynamicDataTable = props => {
       }
     }
   }
+  const rowStyles = {
+    cursor: 'pointer',
+    // Change cursor on hover
+    backgroundColor: '#f0f0f0',
+    // Change background color
+    color: 'blue' // Change text color
+  };
+
   function handleSelection(state) {
     setRowCleared(false);
     setRowsSelected(state.selectedRows);
@@ -8303,6 +8312,7 @@ const DynamicDataTable = props => {
     columns: columns,
     data: DynamicDataTable,
     dense: true,
+    className: 'pietje_puk',
     pagination: true,
     paginationServer: true,
     onChangeRowsPerPage: handleTableRowsChange,
@@ -8315,9 +8325,9 @@ const DynamicDataTable = props => {
     selectableRows: true,
     selectableRowsHighlight: true,
     onSelectedRowsChange: handleSelection,
-    clearSelectedRows: rowCleared,
-    theme: "really-simple-plugins",
-    customStyles: customStyles
+    clearSelectedRows: rowCleared
+    //      theme="really-simple-plugins"
+    //        customStyles={customStyles}
   }) : (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-spinner",
     style: {
@@ -25294,4 +25304,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.109726b673f28fcc61b9.js.map
+//# sourceMappingURL=src_Settings_Field_js.1f953f05a13c72142f89.js.map
