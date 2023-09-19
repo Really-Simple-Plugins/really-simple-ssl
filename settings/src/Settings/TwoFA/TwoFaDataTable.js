@@ -1,28 +1,27 @@
 import {__} from '@wordpress/i18n';
 import React, {useRef, useEffect, useState} from 'react';
 import DataTable, {createTheme} from "react-data-table-component";
-import apiFetch from '@wordpress/api-fetch';
 import useFields from "../FieldsData";
 import TwoFaDataTableStore from "./TwoFaDataTableStore";
-import {Button} from "@wordpress/components";
 import FilterData from "../FilterData";
 
 const DynamicDataTable = (props) => {
     const {
-        twoFAMethods,
+        resetUserMethod,
         setTwoFAMethods,
         handleUsersTableFilter,
+        handleRowsPerPageChange,
+        totalRecords,
         DynamicDataTable,
+        setDataLoaded,
         dataLoaded,
         pagination,
         dataActions,
-        handleTableRowsChange,
         fetchDynamicData,
         // setDynamicData,
         handleTableSort,
-        handleTablePageChange,
+        handlePageChange,
         handleTableSearch,
-        updateUserMeta,
     } = TwoFaDataTableStore();
 
     const {
@@ -36,23 +35,40 @@ const DynamicDataTable = (props) => {
 
     let field = props.field;
     const [enabled, setEnabled] = useState(false);
-    const {fields, getFieldValue, saveFields} = useFields();
+    const [reloadWhenSaved, setReloadWhenSaved] = useState(false);
+    const {fields, getFieldValue, saveFields, changedFields} = useFields();
     const [rowsSelected, setRowsSelected] = useState([]);
     const [rowCleared, setRowCleared] = useState(false);
-
     const twoFAEnabledRef = useRef();
 
     useEffect(() => {
-        twoFAEnabledRef.current = getFieldValue('two_fa_enabled');
+        twoFAEnabledRef.current = getFieldValue('login_protection_enabled');
         saveFields(true, false)
-    }, [getFieldValue('two_fa_enabled')]);
+    }, [getFieldValue('login_protection_enabled')]);
+
+    //we want to reload the table, but only after the save action has completed. So we store this for now.
+    useEffect(() => {
+        setReloadWhenSaved(true);
+    }, [getFieldValue('two_fa_forced_roles'), getFieldValue('two_fa_optional_roles')]);
+
+    //when the data is saved, changefields=0 again,
+    useEffect(() => {
+        if (!reloadWhenSaved) {
+            return;
+        }
+        if (changedFields.length===0) {
+            setDataLoaded(false);
+            setReloadWhenSaved(false);
+            fetchDynamicData();
+        }
+    }, [changedFields]);
 
     useEffect(() => {
         const currentFilter = getCurrentFilter(moduleName);
         if (!currentFilter) {
-            setSelectedFilter('email', moduleName);
+            setSelectedFilter('active', moduleName);
         }
-        handleUsersTableFilter('status_for_user', currentFilter);
+        handleUsersTableFilter('rsssl_two_fa_status', currentFilter);
         setTimeout(() => {
             setRowCleared(true);
             setTimeout(() => setRowCleared(false), 100);
@@ -61,30 +77,29 @@ const DynamicDataTable = (props) => {
     }, [selectedFilter, moduleName, handleUsersTableFilter, getCurrentFilter, setSelectedFilter]);
 
     useEffect(() => {
-        const value = getFieldValue('two_fa_enabled');
+        const value = getFieldValue('login_protection_enabled');
         setEnabled(value);
     }, [fields]);
 
     useEffect(() => {
-        if (!dataLoaded || enabled !== getFieldValue('two_fa_enabled')) {
-            fetchDynamicData(field.action)
+        if (!dataLoaded || enabled !== getFieldValue('login_protection_enabled')) {
+            fetchDynamicData()
                 .then(response => {
                     // Check if response.data is defined and is an array before calling reduce
+                    let data = Array.isArray(response.data) ? response.data : [];
                     if (response.data && Array.isArray(response.data)) {
-                        const methods = response.data.reduce((acc, user) => ({
+                        const methods = data.reduce((acc, user) => ({
                             ...acc,
-                            [user.id]: user.rsssl_two_fa_method
+                            [user.id]: user.rsssl_two_fa_status
                         }), {});
                         setTwoFAMethods(methods);
-                    } else {
-                        console.error('Unexpected response:', response);
                     }
                 })
                 .catch(err => {
                     console.error(err); // Log any errors
                 });
          }
-    }, [dataLoaded, field.action, fetchDynamicData, getFieldValue('two_fa_enabled')]); // Add getFieldValue('two_fa_enabled') as a dependency
+    }, [dataLoaded, field.action, fetchDynamicData, getFieldValue('login_protection_enabled')]); // Add getFieldValue('login_protection_enabled') as a dependency
 
 
     function buildColumn(column) {
@@ -98,20 +113,6 @@ const DynamicDataTable = (props) => {
             selector: row => row[column.column],
         };
 
-        if (newColumn.name === 'Action') {
-            newColumn.cell = row => (
-                <div className="rsssl-action-buttons">
-                    <div className="rsssl-action-buttons__inner">
-                        <button
-                            className="button button-red rsssl-action-buttons__button"
-                            onClick={() => handleTwoFAMethodChange(row.id, 'reset')}
-                        >
-                            {__("Reset", "really-simple-ssl")}
-                        </button>
-                    </div>
-                </div>
-            );
-        }
         return newColumn;
     }
 
@@ -148,103 +149,17 @@ const DynamicDataTable = (props) => {
         },
     }, 'light');
 
-    function handleTwoFAMethodChange(userId, newMethod, reload = true) {
-
+    function handleTwoFAMethodChange (userId, newMethod, reload = true) {
         // Function to handle reset logic
-        const resetUserMethod = (id) => {
-            return apiFetch({
-                path: `/wp/v2/users/${id}`,
-                method: 'GET',
-            })
-                .then(async (response) => {
-                    const userRoles = response.roles;
-                    const forcedRoles = getFieldValue('two_fa_forced_roles');
-                    const optionalRoles = getFieldValue('two_fa_optional_roles');
-
-                    // if any of userRoles is in forcedRoles, newMethod = 'email'
-                    if (userRoles.some(role => forcedRoles.includes(role))) {
-                        newMethod = 'email';
-                    }
-                    // if any of userRoles is in optionalRoles, newMethod = 'open'
-                    else if (userRoles.some(role => optionalRoles.includes(role))) {
-                        newMethod = 'open';
-                    }
-                    // if none of the roles match, you can set a default method or throw an error
-                    else {
-                        newMethod = 'disabled';
-                    }
-
-                    // Now, update the user's 2FA method
-                    return apiFetch({
-                        path: `/wp/v2/users/${id}`,
-                        method: 'POST',
-                        data: {
-                            meta: {
-                                rsssl_two_fa_method: newMethod,
-                            },
-                        },
-                    });
-                })
-                .then(() => {
-                    fetchDynamicData(field.action);
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
-                });
-        }
-
+        const resetRoles = getFieldValue('two_fa_optional_roles');
         if (Array.isArray(userId)) {
-            const promises = userId.map((user) => {
-                if (newMethod === 'reset') {
-                    return resetUserMethod(user.id)
-                        .then(() => {
-                            setRowsSelected([]);
-                            setRowCleared(true);
-                        });
-                } else {
-                    return handleTwoFAMethodChange(user.id, newMethod, false)
-                        .then(() => {
-                            setRowsSelected([]);
-                            setRowCleared(true);
-                        });
-                }
+            userId.map(async (user) => {
+                await resetUserMethod(user.id, resetRoles);
+                setRowsSelected([]);
+                setRowCleared(true);
             });
-
-            Promise.all(promises)
-                .then(() => {
-                    setRowsSelected([]);
-                    setRowCleared(true);
-                    fetchDynamicData(field.action);
-                });
-
         } else {
-            if (newMethod === 'reset') {
-                resetUserMethod(userId);
-            } else {
-                setTwoFAMethods({
-                    ...twoFAMethods,
-                    [userId]: newMethod
-                });
-
-                return apiFetch({
-                    path: `/wp/v2/users/${userId}`,
-                    method: 'POST',
-                    data: {
-                        meta: {
-                            rsssl_two_fa_method: newMethod,
-                        },
-                    },
-                })
-                    .then((response) => {
-                        updateUserMeta(userId, newMethod);
-                        if (reload) {
-                            fetchDynamicData(field.action);
-                        }
-                    })
-                    .catch((error) => {
-                        console.error('Error updating user meta:', error);
-                    });
-            }
+            resetUserMethod(userId, resetRoles);
         }
     }
 
@@ -252,26 +167,8 @@ const DynamicDataTable = (props) => {
         setRowCleared(false);
         setRowsSelected(state.selectedRows);
     }
-
+   let resetDisabled =  rowsSelected.length===1 && rowsSelected[0].user_role==='Administrator';
     let displayData = DynamicDataTable || [];
-
-    if (DynamicDataTable && DynamicDataTable.length > 0) {
-        displayData = DynamicDataTable.map(row => {
-            if (row.status_for_user === 'Enabled') {
-                return {...row, status_for_user: __("Active", "really-simple-ssl")};
-            }
-
-            if (row.status_for_user === 'Open') {
-                return {...row, status_for_user: __("Pending", "really-simple-ssl")};
-            }
-
-            if (row.status_for_user === 'Disabled') {
-                return {...row, status_for_user: __("Disabled", "really-simple-ssl")};
-            }
-            return row;
-        });
-    }
-
     return (
         <>
             <div className="rsssl-container" style={
@@ -307,9 +204,9 @@ const DynamicDataTable = (props) => {
                         </div>
                         <div className="rsssl-action-buttons">
                             <div className="rsssl-action-buttons__inner">
-                                <button
+                                <button disabled={resetDisabled}
                                     className="button button-red rsssl-action-buttons__button"
-                                    onClick={() => handleTwoFAMethodChange(rowsSelected, 'reset')}
+                                    onClick={() => handleTwoFAMethodChange(rowsSelected)}
                                 >
                                     {__("Reset", "really-simple-ssl")}
                                 </button>
@@ -319,18 +216,21 @@ const DynamicDataTable = (props) => {
                 </div>
             )}
 
-            {dataLoaded ?
+            {dataLoaded &&
                 <DataTable
                     columns={columns}
                     data={displayData}
                     dense
                     pagination
                     paginationServer
-                    onChangeRowsPerPage={handleTableRowsChange}
-                    onChangePage={handleTablePageChange}
+                    onChangePage={handlePageChange}
+                    onChangeRowsPerPage={handleRowsPerPageChange}
+                    paginationTotalRows={totalRecords}
+                    paginationRowsPerPageOptions={[5, 25, 50, 100]}
+                    paginationPerPage={dataActions.currentRowsPerPage}
+                    paginationState={pagination}
                     sortServer
                     onSort={handleTableSort}
-                    paginationRowsPerPageOptions={[10, 25, 50, 100]}
                     noDataComponent={__("No results", "really-simple-ssl")}
                     persistTableHead
                     selectableRows
@@ -340,30 +240,6 @@ const DynamicDataTable = (props) => {
                     theme="really-simple-plugins"
                     customStyles={customStyles}
                 ></DataTable>
-                :
-                <div className="rsssl-spinner" style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    marginTop: "100px"
-                }}>
-                    <div className="rsssl-spinner__inner">
-                        <div className="rsssl-spinner__icon" style={{
-                            border: '8px solid white',
-                            borderTop: '8px solid #f4bf3e',
-                            borderRadius: '50%',
-                            width: '120px',
-                            height: '120px',
-                            animation: 'spin 2s linear infinite'
-                        }}></div>
-                        <div className="rsssl-spinner__text" style={{
-                            position: 'absolute',
-                            top: '50%',
-                            left: '50%',
-                            transform: 'translate(-50%, -50%)',
-                        }}>{__("Loading data, please stand by...", "really-simple-ssl")}</div>
-                    </div>
-                </div>
             }
             {!enabled &&
                 <div className="rsssl-locked">

@@ -480,37 +480,37 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
 					[
 						'id'                  => 1,
 						'user'                => 'User1',
-						'rsssl_two_fa_method' => 'Active',
+						'rsssl_two_fa_status' => 'Active',
 						'user_role'           => 'Administrator',
 						'status_for_user'     => 'Enabled'
 					],
 					[
 						'id'                  => 2,
 						'user'                => 'User2',
-						'rsssl_two_fa_method' => 'open',
+						'rsssl_two_fa_status' => 'open',
 						'user_role'           => 'Editor',
-						'status_for_user'     => 'Pending'
+						'status_for_user'     => 'open'
 					],
 					[
 						'id'                  => 3,
 						'user'                => 'User3',
-						'rsssl_two_fa_method' => 'disabled',
+						'rsssl_two_fa_status' => 'disabled',
 						'user_role'           => 'Subscriber',
 						'status_for_user'     => 'Disabled'
 					],
 					[
 						'id'                  => 4,
 						'user'                => 'User4',
-						'rsssl_two_fa_method' => 'email',
+						'rsssl_two_fa_status' => 'Active',
 						'user_role'           => 'Contributor',
 						'status_for_user'     => 'Active'
 					],
 					[
 						'id'                  => 5,
 						'user'                => 'User5',
-						'rsssl_two_fa_method' => 'open',
+						'rsssl_two_fa_status' => 'open',
 						'user_role'           => 'Author',
-						'status_for_user'     => 'Pending'
+						'status_for_user'     => 'open'
 					],
 				];
 

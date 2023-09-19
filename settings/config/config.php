@@ -1265,7 +1265,7 @@ function rsssl_fields( $load_values = true ) {
             'default'  => 'disabled',
         ],
         [
-            'id'       => 'two_fa_enabled',
+            'id'       => 'login_protection_enabled',
             'menu_id'  => 'two_fa',
             'group_id' => 'two_fa_general',
 			'type'     => 'checkbox',
@@ -1274,7 +1274,7 @@ function rsssl_fields( $load_values = true ) {
 			'default'  => 'disabled',
 		],
 		[
-			'id'       => 'two_fa_email_code',
+			'id'       => 'two_fa_enabled',
 			'menu_id'  => 'two_fa',
 			'group_id' => 'two_fa_email',
 			'type'     => 'checkbox',
@@ -1319,36 +1319,22 @@ function rsssl_fields( $load_values = true ) {
                     'width'    => '20%',
                 ],
                 [
-                    'name'     => __( 'Status', 'really-simple-ssl' ),
-                    'sortable' => false,
-                    'searchable' => false,
-                    'visible' => true,
-                    'column'   => 'status_for_user',
-                    'width'    => '20%',
-                ],
-                [
                     'name'     => __( 'User role', 'really-simple-ssl' ),
                     'sortable' => false,
                     'searchable' => false,
                     'visible' => true,
                     'column'   => 'user_role',
-                    'width'    => '20%',
+                    'width'    => '60%',
                 ],
                 [
-                    'name'     => __( 'Action', 'really-simple-ssl' ),
+                    'name'     => __( 'Status', 'really-simple-ssl' ),
                     'sortable' => false,
                     'searchable' => false,
                     'visible' => true,
-	                'width'     => '70%',
-                    'column'   => 'rsssl_two_fa_method',
+	                'width'     => '20%',
+                    'column'   => 'rsssl_two_fa_status',
                 ],
             ],
-//            'react_conditions' => [
-//				'relation' => 'AND',
-//					[
-//						'two_fa_email_code' => true,
-//					]
-//			],
         ],
 		[
 			'id'          => 'mixedcontentscan',

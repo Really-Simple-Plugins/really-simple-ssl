@@ -943,6 +943,7 @@
 }
 
 .rsssl a.button, .rsssl button.button, .rsssl input.button, .rsssl span.button {
+    display: flex;
     font-size: var(--rsp-fs-300);
     font-weight: 400;
     transition: all 0.3s ease;
@@ -951,6 +952,11 @@
 
 .rsssl a.button.button-secondary, .rsssl a.button.button-default, .rsssl button.button.button-secondary, .rsssl button.button.button-default, .rsssl input.button.button-secondary, .rsssl input.button.button-default, .rsssl span.button.button-secondary, .rsssl span.button.button-default {
     background: transparent;
+}
+
+.rsssl a.button .rsssl-icon, .rsssl button.button .rsssl-icon, .rsssl input.button .rsssl-icon, .rsssl span.button .rsssl-icon {
+    padding-top: 7px;
+    padding-left: 7px;
 }
 
 .rsssl a.button.button-black, .rsssl button.button.button-black, .rsssl input.button.button-black, .rsssl span.button.button-black {
@@ -1073,6 +1079,27 @@
 }
 .rsssl-icon svg {
   fill: currentColor;
+}
+.rsssl-icon-loading svg {
+  animation: spin 2s linear infinite;
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.rsssl-icon.rsssl-click-animation {
+  animation: beat 0.4s ease-out;
+}
+
+button.button .cmplz-icon.rsssl-icon-loading {
+  padding-top: 6px;
+}
+button.button .cmplz-icon.rsssl-icon-loading > div {
+  line-height: inherit;
 }
 
 .rsssl .rsssl-badge {
@@ -1504,64 +1531,64 @@
   margin-bottom: 24px;
 }
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(1) {
-  width: 89%;
+  width: 79%;
 }
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(2) {
-  width: 89%;
+  width: 92%;
 }
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(3) {
-  width: 93%;
+  width: 73%;
 }
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(4) {
-  width: 81%;
+  width: 76%;
 }
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(5) {
-  width: 62%;
+  width: 78%;
 }
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(6) {
-  width: 95%;
+  width: 92%;
 }
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(7) {
-  width: 96%;
+  width: 70%;
 }
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
-  width: 63%;
-}
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
-  width: 69%;
-}
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
-  width: 61%;
-}
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
-  width: 98%;
-}
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
-  width: 61%;
-}
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
-  width: 81%;
-}
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(14) {
-  width: 68%;
-}
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
-  width: 97%;
-}
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(16) {
   width: 91%;
 }
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
+  width: 64%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
+  width: 73%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
+  width: 95%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
+  width: 74%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
+  width: 88%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(14) {
+  width: 77%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
+  width: 84%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(16) {
+  width: 67%;
+}
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(17) {
-  width: 66%;
+  width: 86%;
 }
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(18) {
-  width: 87%;
+  width: 92%;
 }
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(19) {
-  width: 100%;
+  width: 72%;
 }
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(20) {
-  width: 93%;
+  width: 69%;
 }
 .rsssl-placeholder .rsssl-placeholder-line ~ .rsssl-placeholder-line {
   background-color: #ddd;

@@ -400,16 +400,16 @@ function rsssl_menu()
                             'title'    => __( 'Users', 'really-simple-ssl' ),
                             'intro'    => __( 'Here you can see which users have enabled two-step login, or change the status per user.', 'really-simple-ssl' ),
                             'groupFilter'  => [
-	                            'default' => 'two_fa_user_filter_all',
+	                            'default' => 'active',
 	                            'id'      => 'two_fa_user_filter',
 	                            'options' => [
 		                            [
-			                            'id'    => 'email',
+			                            'id'    => 'active',
 			                            'title' => __('Active', 'really-simple-ssl'),
 		                            ],
 		                            [
 			                            'id'    => 'open',
-			                            'title' => __('Pending', 'really-simple-ssl'),
+			                            'title' => __('Open', 'really-simple-ssl'),
 		                            ],
 		                            [
 			                            'id'    => 'disabled',

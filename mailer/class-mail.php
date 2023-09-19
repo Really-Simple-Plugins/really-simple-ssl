@@ -67,7 +67,7 @@ if ( !class_exists('rsssl_mailer') ) {
 		}
 
         public function send_verification_mail( $email ) {
-
+			error_log("send_verification_mail");
             if ( !rsssl_user_can_manage() ) {
                 return ['success' => false, 'message' => 'Not allowed'];
             }

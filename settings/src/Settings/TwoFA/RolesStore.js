@@ -1,6 +1,6 @@
 import {create} from 'zustand';
 import * as rsssl_api from "../../utils/api";
-const TwoFaData = create(( set, get ) => ({
+const useRolesData = create(( set, get ) => ({
     roles: [],
     rolesLoaded:false,
     fetchRoles: async ( id ) => {
@@ -9,7 +9,7 @@ const TwoFaData = create(( set, get ) => ({
             const response = await rsssl_api.doAction('get_roles', { id: id });
 
             // Handle the response
-            if (!response) {
+            if ( !response ) {
                 console.error('No response received from the server.');
                 return;
             }
@@ -37,5 +37,5 @@ const TwoFaData = create(( set, get ) => ({
     }
 }));
 
-export default TwoFaData;
+export default useRolesData;
 

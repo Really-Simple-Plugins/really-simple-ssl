@@ -13,21 +13,22 @@ const DynamicDataTableStore = create((set, get) => ({
     pagination: {},
     dataActions: {},
     DynamicDataTable: [],
-
     fetchDynamicData: async (action) => {
         try {
             const response = await rsssl_api.doAction(
                 action,
                 get().dataActions
             );
+            let data = Array.isArray(response.data) ? response.data : [];
+            let pagination = response.pagination ? response.pagination : 1;
             //now we set the EventLog
-            if (response) {
+            if ( response ) {
                 set(state => ({
                     ...state,
-                    DynamicDataTable: response.data,
+                    DynamicDataTable: data,
                     dataLoaded: true,
                     processing: false,
-                    pagination: response.pagination,
+                    pagination: pagination,
                     // Removed the twoFAMethods set from here...
                 }));
                 // Return the response for the calling function to use
@@ -69,20 +70,6 @@ const DynamicDataTableStore = create((set, get) => ({
                 state.dataActions = {...state.dataActions, sortColumn: column, sortDirection};
             })
         );
-    },
-
-    updateUserMeta: async (userId, updatedMeta) => {
-        set(produce((state) => {
-            const userIndex = state.DynamicDataTable.findIndex(user => user.id === userId);
-            if (userIndex !== -1) {
-                state.DynamicDataTable[userIndex].rsssl_two_fa_method = updatedMeta;
-            }
-        }));
-
-        let data = {};
-        data.userId = userId;
-        data.method = updatedMeta;
-        const response = await rsssl_api.doAction('store_two_fa_usermeta', data);
     },
 
 }));

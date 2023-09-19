@@ -96,29 +96,35 @@ const useFields = create(( set, get ) => ({
             })
         )
     },
-
+    removeHelpNotice: (id) => {
+        set(
+            produce((state) => {
+                const fieldIndex = state.fields.findIndex(field => {
+                    return field.id===id;
+                });
+                state.fields[fieldIndex].help = false;
+            })
+        )
+    },
     addHelpNotice : (id, label, text, title, url) => {
+        get().removeHelpNotice(id);
         //create help object
+
         let help = {};
         help.label=label;
         help.text=text;
         if (url) help.url=url;
         if (title) help.title=title;
-        let fields = get().fields;
-        let newFields = [];
-        //add to selected field
-        let fieldEdited = false;
-        fields.forEach(function(fieldItem, i) {
-            let newFieldItem = {...fieldItem};
-            if (fieldItem.id === id && !fieldItem.help ){
-                fieldEdited = true;
-                newFieldItem.help = help;
-            }
-            newFields.push(newFieldItem);
-        });
-        if (fieldEdited) {
-            set( {fields: newFields} );
-        }
+        set(
+            produce((state) => {
+                const fieldIndex = state.fields.findIndex(field => {
+                    return field.id===id;
+                });
+                if (fieldIndex!==-1) {
+                    state.fields[fieldIndex].help = help;
+                }
+            })
+        )
     },
     fieldAlreadyEnabled: (id) => {
         let fieldIsChanged = get().changedFields.filter(field => field.id === id ).length>0;
