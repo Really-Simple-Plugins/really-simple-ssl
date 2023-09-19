@@ -1332,7 +1332,7 @@ function rsssl_fields( $load_values = true ) {
                     'searchable' => false,
                     'visible' => true,
 	                'width'     => '20%',
-                    'column'   => 'rsssl_two_fa_status',
+                    'column'   => 'status_for_user',
                 ],
             ],
         ],

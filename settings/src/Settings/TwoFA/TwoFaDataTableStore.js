@@ -5,8 +5,6 @@ import {produce} from "immer";
 import apiFetch from "@wordpress/api-fetch";
 
 const DynamicDataTableStore = create((set, get) => ({
-    twoFAMethods: {},
-    setTwoFAMethods: (methods) => set((state) => ({ ...state, twoFAMethods: methods })),
     processing: false,
     dataLoaded: false,
     pagination: {},

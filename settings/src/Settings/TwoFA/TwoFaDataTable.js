@@ -8,7 +8,6 @@ import FilterData from "../FilterData";
 const DynamicDataTable = (props) => {
     const {
         resetUserMethod,
-        setTwoFAMethods,
         handleUsersTableFilter,
         handleRowsPerPageChange,
         totalRecords,
@@ -18,16 +17,13 @@ const DynamicDataTable = (props) => {
         pagination,
         dataActions,
         fetchDynamicData,
-        // setDynamicData,
         handleTableSort,
         handlePageChange,
         handleTableSearch,
     } = TwoFaDataTableStore();
 
     const {
-        selectedFilter,
         setSelectedFilter,
-        activeGroupId,
         getCurrentFilter
     } = FilterData();
 
@@ -65,16 +61,12 @@ const DynamicDataTable = (props) => {
 
     useEffect(() => {
         const currentFilter = getCurrentFilter(moduleName);
-        if (!currentFilter) {
+        if ( !currentFilter ) {
             setSelectedFilter('active', moduleName);
         }
+        setRowCleared(true);
         handleUsersTableFilter('rsssl_two_fa_status', currentFilter);
-        setTimeout(() => {
-            setRowCleared(true);
-            setTimeout(() => setRowCleared(false), 100);
-        }, 100);
-
-    }, [selectedFilter, moduleName, handleUsersTableFilter, getCurrentFilter, setSelectedFilter]);
+    }, [getCurrentFilter(moduleName)]);
 
     useEffect(() => {
         const value = getFieldValue('login_protection_enabled');
@@ -84,23 +76,8 @@ const DynamicDataTable = (props) => {
     useEffect(() => {
         if (!dataLoaded || enabled !== getFieldValue('login_protection_enabled')) {
             fetchDynamicData()
-                .then(response => {
-                    // Check if response.data is defined and is an array before calling reduce
-                    let data = Array.isArray(response.data) ? response.data : [];
-                    if (response.data && Array.isArray(response.data)) {
-                        const methods = data.reduce((acc, user) => ({
-                            ...acc,
-                            [user.id]: user.rsssl_two_fa_status
-                        }), {});
-                        setTwoFAMethods(methods);
-                    }
-                })
-                .catch(err => {
-                    console.error(err); // Log any errors
-                });
          }
-    }, [dataLoaded, field.action, fetchDynamicData, getFieldValue('login_protection_enabled')]); // Add getFieldValue('login_protection_enabled') as a dependency
-
+    }, [dataLoaded, getFieldValue('login_protection_enabled')]); // Add getFieldValue('login_protection_enabled') as a dependency
 
     function buildColumn(column) {
         let newColumn = {
@@ -200,7 +177,7 @@ const DynamicDataTable = (props) => {
                 >
                     <div className={"rsssl-multiselect-datatable-form rsssl-primary"}>
                         <div>
-                            {__("You have selected", "really-simple-ssl")} {rowsSelected.length} {__("rows", "really-simple-ssl")}
+                            {__("You have selected %s users", "really-simple-ssl").replace("%s", rowsSelected.length)}
                         </div>
                         <div className="rsssl-action-buttons">
                             <div className="rsssl-action-buttons__inner">
