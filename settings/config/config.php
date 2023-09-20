@@ -1251,7 +1251,7 @@ function rsssl_fields( $load_values = true ) {
             'default'  => 'disabled',
         ],
         [
-            'id'       => 'two_fa_enabled',
+            'id'       => 'login_protection_enabled',
             'menu_id'  => 'two_fa',
             'group_id' => 'two_fa_general',
 			'type'     => 'checkbox',
@@ -1260,7 +1260,7 @@ function rsssl_fields( $load_values = true ) {
 			'default'  => 'disabled',
 		],
 		[
-			'id'       => 'two_fa_email_code',
+			'id'       => 'two_fa_enabled',
 			'menu_id'  => 'two_fa',
 			'group_id' => 'two_fa_email',
 			'type'     => 'checkbox',

@@ -44,8 +44,8 @@ function rsssl_remove_fields($fields){
 		$fields = array_values($fields);
 	}
 
-	if ( ! rsssl_is_email_verified() && rsssl_get_option('two_fa_email_code') == '1' ) {
-		$index = array_search( 'two_fa_email_code', array_column( $fields, 'id' ), true );
+	if ( ! rsssl_is_email_verified() && rsssl_get_option('two_fa_enabled') == '1' ) {
+		$index = array_search( 'two_fa_enabled', array_column( $fields, 'id' ), true );
 		$fields[$index]['help'] = rsssl_email_help_text();
 		$fields = array_values($fields);
 	}
