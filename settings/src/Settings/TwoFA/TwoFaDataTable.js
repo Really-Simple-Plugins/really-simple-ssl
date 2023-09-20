@@ -20,6 +20,7 @@ const DynamicDataTable = (props) => {
         handleTableSort,
         handlePageChange,
         handleTableSearch,
+        processing
     } = TwoFaDataTableStore();
 
     const {
@@ -38,9 +39,9 @@ const DynamicDataTable = (props) => {
     const twoFAEnabledRef = useRef();
 
     useEffect(() => {
-        twoFAEnabledRef.current = getFieldValue('login_protection_enabled');
+        twoFAEnabledRef.current = getFieldValue('two_fa_enabled');
         saveFields(true, false)
-    }, [getFieldValue('login_protection_enabled')]);
+    }, [getFieldValue('two_fa_enabled')]);
 
     //we want to reload the table, but only after the save action has completed. So we store this for now.
     useEffect(() => {
@@ -60,6 +61,10 @@ const DynamicDataTable = (props) => {
     }, [changedFields]);
 
     useEffect(() => {
+        if (!dataLoaded) {
+            return;
+        }
+
         const currentFilter = getCurrentFilter(moduleName);
         if ( !currentFilter ) {
             setSelectedFilter('active', moduleName);
@@ -69,15 +74,32 @@ const DynamicDataTable = (props) => {
     }, [getCurrentFilter(moduleName)]);
 
     useEffect(() => {
-        const value = getFieldValue('login_protection_enabled');
+        const value = getFieldValue('two_fa_enabled');
         setEnabled(value);
     }, [fields]);
 
     useEffect(() => {
-        if (!dataLoaded || enabled !== getFieldValue('login_protection_enabled')) {
+        if (!dataLoaded || enabled !== getFieldValue('two_fa_enabled')) {
             fetchDynamicData()
          }
-    }, [dataLoaded, getFieldValue('login_protection_enabled')]); // Add getFieldValue('login_protection_enabled') as a dependency
+    }, [dataLoaded, getFieldValue('two_fa_enabled')]); // Add getFieldValue('login_protection_enabled') as a dependency
+
+    const hasForcedRole = (users) => {
+
+        let forcedRoles = getFieldValue('two_fa_forced_roles');
+        if (Array.isArray(users)) {
+            //for each users, check if the user has a forced role
+            for (const user of users) {
+                if (forcedRoles.includes(user.user_role.toLowerCase())) {
+                    return true;
+                }
+            }
+        } else {
+            if (forcedRoles.includes(users.user_role.toLowerCase())) {
+                return true;
+            }
+        }
+    }
 
     function buildColumn(column) {
         let newColumn = {
@@ -126,26 +148,42 @@ const DynamicDataTable = (props) => {
         },
     }, 'light');
 
-    function handleTwoFAMethodChange (userId, newMethod, reload = true) {
+    async function handleReset(users) {
         // Function to handle reset logic
         const resetRoles = getFieldValue('two_fa_optional_roles');
-        if (Array.isArray(userId)) {
-            userId.map(async (user) => {
-                await resetUserMethod(user.id, resetRoles);
-                setRowsSelected([]);
-                setRowCleared(true);
-            });
+        if (Array.isArray(users)) {
+            //loop through all users one by one, and reset the user
+            for (const user of users) {
+                await resetUserMethod(user.id, resetRoles, user.user_role.toLowerCase());
+            }
         } else {
-            resetUserMethod(userId, resetRoles);
+            await resetUserMethod(users.id, resetRoles, users.user_role.toLowerCase());
         }
+
+        await fetchDynamicData();
+        setRowsSelected([]);
+        setRowCleared(true);
     }
 
     function handleSelection(state) {
-        setRowCleared(false);
         setRowsSelected(state.selectedRows);
     }
-   let resetDisabled =  rowsSelected.length===1 && rowsSelected[0].user_role==='Administrator';
-    let displayData = DynamicDataTable || [];
+
+    let resetDisabled = hasForcedRole(rowsSelected);
+    let displayData = [];
+    DynamicDataTable.forEach(user => {
+        let recordCopy = {...user}
+        recordCopy.deleteControl = hasForcedRole(user) ? '' : <button disabled={processing}
+                                      className="button button-red rsssl-action-buttons__button"
+                                      onClick={() => handleReset(user)}
+                                    >
+                                    {__("Reset", "really-simple-ssl")}
+                                </button>
+        displayData.push(recordCopy);
+    });
+
+
+
     return (
         <>
             <div className="rsssl-container" style={
@@ -181,9 +219,9 @@ const DynamicDataTable = (props) => {
                         </div>
                         <div className="rsssl-action-buttons">
                             <div className="rsssl-action-buttons__inner">
-                                <button disabled={resetDisabled}
+                                <button disabled={resetDisabled || processing}
                                     className="button button-red rsssl-action-buttons__button"
-                                    onClick={() => handleTwoFAMethodChange(rowsSelected)}
+                                    onClick={() => handleReset(rowsSelected)}
                                 >
                                     {__("Reset", "really-simple-ssl")}
                                 </button>
