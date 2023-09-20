@@ -2,11 +2,20 @@
 <ruleset name="WordPress Coding Standards based custom ruleset for your plugin">
 	<description>Generally-applicable sniffs for WordPress plugins.</description>
 
-	<!-- /Users/rlankhorst/.composer/vendor/bin/phpcs -d memory_limit=1024M  --standard=phpcs.xml.dist . -->
+	<!-- /Users/rlankhorst/.composer/vendor/bin/phpcs -d memory_limit=1024M  -\-standard=.phpcs.xml.dist . . -->
 	<!-- What to scan -->
 	<file>.</file>
 	<exclude-pattern>/vendor/</exclude-pattern>
 	<exclude-pattern>/node_modules/</exclude-pattern>
+	<exclude-pattern>*\.js</exclude-pattern>
+	<exclude-pattern>*\.css</exclude-pattern>
+
+    <rule ref="WordPress-Extra">
+        <exclude name="WordPress.Arrays.ArrayDeclarationSpacing"/>
+        <exclude name="Generic.Arrays.DisallowShortArraySyntax"/>
+        <exclude name="WordPress.PHP.DisallowShortTernary.Found" />
+        <exclude name="Squiz.Commenting.FileComment.WrongStyle" />
+    </rule>
 
 	<!-- How to scan -->
 	<!-- Usage instructions: https://github.com/squizlabs/PHP_CodeSniffer/wiki/Usage -->
