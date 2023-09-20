@@ -3934,7 +3934,11 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
   removeRegions: async (regions, status) => {
 ========
   removeRegions: async (regions, status, dataActions) => {
+<<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 >>>>>>>> 7263a0e97 (fixed filter issue with dataActions After adding a block or removing in countries overview):settings/build/src_Settings_Field_js.733eb8894f483cb61ec9.js
+========
+    console.log("removeRegions", regions, status, dataActions);
+>>>>>>>> be0b9c90f (fixed equal kind of filter error as well for the regions):settings/build/src_Settings_Field_js.99df9dd41a1ba7767fe1.js
     set({
       processing: true
     });
@@ -4155,7 +4159,12 @@ const CountryDatatable = props => {
   const handleSelection = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)(state => {
     setRowsSelected(state.selectedRows);
   }, []);
+<<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
   const allowRegionByCode = async code => {
+========
+  const allowRegionByCode = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)(async function (code) {
+    let regionName = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+>>>>>>>> be0b9c90f (fixed equal kind of filter error as well for the regions):settings/build/src_Settings_Field_js.99df9dd41a1ba7767fe1.js
     if (Array.isArray(code)) {
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
       for (let item of code) {
@@ -4177,7 +4186,7 @@ const CountryDatatable = props => {
 >>>>>>>> a3a5b65e3 (removed multiple timeouts and promises):settings/build/src_Settings_Field_js.4decfeae1f9f8e4175b6.js
     }
     await fetchDynamicData('event_log');
-  };
+  }, [removeRegion, getCurrentFilter(moduleName), dataActions]);
   const allowMultiple = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)(rows => {
     const ids = rows.map(item => item.id);
     resetMultiRow(ids, 'blocked', dataActions);
@@ -4189,7 +4198,7 @@ const CountryDatatable = props => {
   const blockRegionByCode = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)(code => {
 ========
     resetRow(id, 'blocked', dataActions);
-  }, [resetRowgetCurrentFilter(moduleName), dataActions]);
+  }, [resetRow, getCurrentFilter(moduleName), dataActions]);
   const blockRegionByCode = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)(async function (code) {
     let region = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
 >>>>>>>> 7263a0e97 (fixed filter issue with dataActions After adding a block or removing in countries overview):settings/build/src_Settings_Field_js.733eb8894f483cb61ec9.js
@@ -4222,7 +4231,7 @@ const CountryDatatable = props => {
       await removeRow(code, 'blocked', dataActions);
     }
     await fetchDynamicData('event_log');
-  }, [removeRow, removeRowMultiple, getCurrentFilter(moduleName), dataActions]);
+  }, [removeRow, removeRowMultiple, dataActions, getCurrentFilter(moduleName)]);
   const blockCountryByCode = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)(async code => {
     if (Array.isArray(code)) {
       const ids = code.map(item => item.iso2_code);
@@ -5747,16 +5756,6 @@ const UserDatatable = props => {
     let newItem = buildColumn(item);
     columns.push(newItem);
   });
-
-  //get data if field was already enabled, so not changed right now.
-  // useEffect(() => {
-  //     if (fieldAlreadyEnabled) {
-  //         if (!dataLoaded) {
-  //             fetchUserData(field.action);
-  //         }
-  //     }
-  // }, [fields]);
-
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
     const currentFilter = getCurrentFilter(moduleName);
     if (!currentFilter) {
@@ -24558,6 +24557,7 @@ __webpack_require__.r(__webpack_exports__);
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
+<<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 //# sourceMappingURL=src_Settings_Field_js.71728f3a274feb041ab6.js.map
 ========
 //# sourceMappingURL=src_Settings_Field_js.2a9f68f4c72b1ac2b97c.js.map
@@ -24598,3 +24598,6 @@ __webpack_require__.r(__webpack_exports__);
 ========
 //# sourceMappingURL=src_Settings_Field_js.733eb8894f483cb61ec9.js.map
 >>>>>>>> 7263a0e97 (fixed filter issue with dataActions After adding a block or removing in countries overview):settings/build/src_Settings_Field_js.733eb8894f483cb61ec9.js
+========
+//# sourceMappingURL=src_Settings_Field_js.99df9dd41a1ba7767fe1.js.map
+>>>>>>>> be0b9c90f (fixed equal kind of filter error as well for the regions):settings/build/src_Settings_Field_js.99df9dd41a1ba7767fe1.js

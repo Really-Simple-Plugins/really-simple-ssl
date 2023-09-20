@@ -204,6 +204,7 @@ const CountryDataTableStore = create((set, get) => ({
         }
     },
     removeRegions: async (regions, status, dataActions) => {
+        console.log("removeRegions", regions, status, dataActions);
         set({processing: true});
         try {
             const response = await rsssl_api.doAction('remove_regions_from_list', {regions, status});

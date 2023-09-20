@@ -3913,6 +3913,7 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
   },
 
   removeRegions: async (regions, status, dataActions) => {
+    console.log("removeRegions", regions, status, dataActions);
     set({
       processing: true
     });
@@ -4136,12 +4137,12 @@ const CountryDatatable = props => {
   const handleSelection = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)(state => {
     setRowsSelected(state.selectedRows);
   }, []);
-  const allowRegionByCode = async function (code) {
+  const allowRegionByCode = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)(async function (code) {
     let regionName = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
     if (Array.isArray(code)) {
       const ids = code.map(item => item.id);
       const regions = code.map(item => item.region);
-      await removeRegions(ids, dataActions);
+      await removeRegions(ids, '', dataActions);
       let regionsString = regions.join(', ');
       notifySuccess(regionsString + ' ' + (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)('has been removed', 'really-simple-ssl'));
       setRowsSelected([]);
@@ -4150,14 +4151,14 @@ const CountryDatatable = props => {
       notifySuccess(regionName + ' ' + (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)('has been allowed', 'really-simple-ssl'));
     }
     await fetchDynamicData('event_log');
-  };
+  }, [removeRegion, getCurrentFilter(moduleName), dataActions]);
   const allowMultiple = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)(rows => {
     const ids = rows.map(item => item.id);
     resetMultiRow(ids, 'blocked', dataActions);
   }, [resetMultiRow, getCurrentFilter(moduleName), dataActions]);
   const allowById = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)(id => {
     resetRow(id, 'blocked', dataActions);
-  }, [resetRowgetCurrentFilter(moduleName), dataActions]);
+  }, [resetRow, getCurrentFilter(moduleName), dataActions]);
   const blockRegionByCode = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)(async function (code) {
     let region = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
     if (Array.isArray(code)) {
@@ -24533,4 +24534,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.a3eae0ffed449afd7080.js.map
+//# sourceMappingURL=src_Settings_Field_js.7e771796d94b0f6cfaa2.js.map
