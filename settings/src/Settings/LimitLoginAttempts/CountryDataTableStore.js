@@ -13,6 +13,7 @@ const CountryDataTableStore = create((set, get) => ({
     pagination: {},
     dataActions: {},
     CountryDataTable: [],
+    rowCleared: false,
 
     fetchCountryData: async (action, dataActions) => {
         set({processing: true});
@@ -23,11 +24,15 @@ const CountryDataTableStore = create((set, get) => ({
                 dataActions
             );
             //now we set the EventLog
-            if (response) {
+            if (response && response.request_success) {
                 set({CountryDataTable: response, dataLoaded: true, processing: false, pagination: response.pagination});
             }
+            set({ rowCleared: true });
         } catch (e) {
             console.log(e);
+        } finally {
+            set({processing: false});
+
         }
     },
 
@@ -148,6 +153,7 @@ const CountryDataTableStore = create((set, get) => ({
             // Notify the user of an error.
         } finally {
             set({processing: false});
+
         }
     },
 
@@ -156,6 +162,7 @@ const CountryDataTableStore = create((set, get) => ({
             const response = await rsssl_api.doAction('add_region_to_list', {region, status});
             if (response && response.request_success) {
                 // Do any immediate operations here if needed
+                await get().fetchCountryData('country_list', get().dataActions);
             } else {
                 console.error("Failed to add region: ", response.message);
             }
@@ -168,6 +175,7 @@ const CountryDataTableStore = create((set, get) => ({
             const response = await rsssl_api.doAction('add_regions_to_list', {regions, status});
             if (response && response.request_success) {
                 // Do any immediate operations here if needed
+                await get().fetchCountryData('country_list', get().dataActions);
             } else {
                 console.error("Failed to add regions: ", response.message);
             }
@@ -182,7 +190,7 @@ const CountryDataTableStore = create((set, get) => ({
             const response = await rsssl_api.doAction('remove_region_from_list', {region, status});
             // Consider checking the response structure for any specific success or failure signals
             if (response && response.request_success) {
-                await get().fetchCountryData('country_list');
+                await get().fetchCountryData('country_list', get().dataActions);
                 // Potentially notify the user of success, if needed.
             } else {
                 // Handle any unsuccessful response if needed.
@@ -200,6 +208,7 @@ const CountryDataTableStore = create((set, get) => ({
             // Consider checking the response structure for any specific success or failure signals
             if (response && response.request_success) {
                 // Potentially notify the user of success, if needed.
+                await get().fetchCountryData('country_list', get().dataActions);
             } else {
                 // Handle any unsuccessful response if needed.
                 console.error("Failed to remove regions: ", response.message);
@@ -218,7 +227,7 @@ const CountryDataTableStore = create((set, get) => ({
             );
             //now we set the EventLog
             if (response) {
-                await get().fetchCountryData('country_list');
+                await get().fetchCountryData('country_list', get().dataActions);
             }
         } catch (e) {
             console.log(e);
@@ -234,7 +243,7 @@ const CountryDataTableStore = create((set, get) => ({
             );
             //now we set the EventLog
             if (response) {
-                await get().fetchCountryData('country_list');
+                await get().fetchCountryData('country_list', get().dataActions);
             }
         } catch (e) {
             console.log(e);
@@ -250,7 +259,7 @@ const CountryDataTableStore = create((set, get) => ({
             );
             //now we set the EventLog
             if (response) {
-                await get().fetchCountryData('country_list');
+                await get().fetchCountryData('country_list', get().dataActions);
             }
         } catch (e) {
             console.log(e);
