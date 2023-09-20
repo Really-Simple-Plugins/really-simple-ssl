@@ -49,15 +49,6 @@ const UserDatatable = (props) => {
         columns.push(newItem);
     });
 
-    //get data if field was already enabled, so not changed right now.
-    // useEffect(() => {
-    //     if (fieldAlreadyEnabled) {
-    //         if (!dataLoaded) {
-    //             fetchUserData(field.action);
-    //         }
-    //     }
-    // }, [fields]);
-
     useEffect(() => {
         const currentFilter = getCurrentFilter(moduleName);
 
@@ -69,7 +60,7 @@ const UserDatatable = (props) => {
         }
 
         handleUserTableFilter('status', currentFilter);
-    }, [selectedFilter, dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, moduleName]);
+    }, [getCurrentFilter(moduleName), dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, moduleName]);
 
     let enabled = false;
 

@@ -78,7 +78,7 @@ const CountryDatatable = (props) => {
         }
         handleCountryTableFilter('status', currentFilter);
 
-    }, [selectedFilter, moduleName, handleCountryTableFilter, getCurrentFilter, setSelectedFilter, CountryDatatable]);
+    }, [moduleName, handleCountryTableFilter, getCurrentFilter(moduleName), setSelectedFilter, CountryDatatable]);
 
     useEffect(() => {
         setRowsSelected([]);
@@ -137,12 +137,12 @@ const CountryDatatable = (props) => {
         if (Array.isArray(code)) {
             const ids = code.map(item => item.id);
             const regions = code.map(item => item.region);
-            await removeRegions(ids);
+            await removeRegions(ids, dataActions);
             let regionsString = regions.join(', ');
             notifySuccess(regionsString + ' ' + __('has been removed', 'really-simple-ssl'));
             setRowsSelected([]);
         } else {
-            await removeRegion(code, 'blocked');
+            await removeRegion(code, 'blocked', dataActions);
             notifySuccess(regionName + ' ' + __('has been allowed', 'really-simple-ssl'));
         }
         await fetchDynamicData('event_log');
@@ -151,55 +151,55 @@ const CountryDatatable = (props) => {
 
     const allowMultiple = useCallback((rows) => {
         const ids = rows.map(item => item.id);
-        resetMultiRow(ids, 'blocked');
-    }, [resetMultiRow]);
+        resetMultiRow(ids, 'blocked', dataActions);
+    }, [resetMultiRow, getCurrentFilter(moduleName), dataActions]);
 
     const allowById = useCallback((id) => {
-        resetRow(id, 'blocked');
-    }, [resetRow]);
+        resetRow(id, 'blocked', dataActions);
+    }, [resetRow,getCurrentFilter(moduleName), dataActions]);
 
     const blockRegionByCode = useCallback(async (code, region = '') => {
         if (Array.isArray(code)) {
             const ids = code.map(item => item.id);
             const regions = code.map(item => item.region);
-            await addRegions(ids, 'blocked');
+            await addRegions(ids, 'blocked', dataActions);
             let regionsString = regions.join(', ');
             notifySuccess(regionsString + ' ' + __('has been blocked', 'really-simple-ssl'));
             setRowsSelected([]);
         } else {
-            await addRegion(code, 'blocked');
+            await addRegion(code, 'blocked', dataActions);
             notifySuccess(region + ' ' + __('has been blocked', 'really-simple-ssl'));
         }
 
         await fetchDynamicData('event_log');
 
-    }, [addRegion]);
+    }, [addRegion, getCurrentFilter(moduleName), dataActions]);
 
     const allowCountryByCode = useCallback(async (code) => {
         if (Array.isArray(code)) {
             const ids = code.map(item => item.iso2_code);
-            await removeRowMultiple(ids, 'blocked');
+            await removeRowMultiple(ids, 'blocked', dataActions );
             setRowsSelected([]);
         } else {
-            await removeRow(code, 'blocked');
+            await removeRow(code, 'blocked', dataActions);
         }
 
         await fetchDynamicData('event_log');
 
-    }, [removeRow, removeRowMultiple]);
+    }, [removeRow, removeRowMultiple, dataActions, getCurrentFilter(moduleName)]);
 
     const blockCountryByCode = useCallback(async (code) => {
         if (Array.isArray(code)) {
             const ids = code.map(item => item.iso2_code);
-            await addRowMultiple(ids, 'blocked');
+            await addRowMultiple(ids, 'blocked', dataActions);
             setRowsSelected([]);
         } else {
-            addRow(code, 'blocked');
+            await addRow(code, 'blocked', dataActions);
         }
 
         await fetchDynamicData('event_log');
 
-    }, [addRow, addRowMultiple]);
+    }, [addRow, addRowMultiple, dataActions, getCurrentFilter(moduleName)]);
 
     const data = {...CountryDataTable.data};
 

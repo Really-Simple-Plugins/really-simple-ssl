@@ -3681,6 +3681,7 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
     set({
       dataLoaded: false
     });
+    console.warn("fetchCountryData", action, dataActions);
     try {
       const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction(action, dataActions);
       //now we set the EventLog
@@ -3757,10 +3758,11 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
   /*
   * This function add a new row to the table
   */
-  addRow: async (country, status) => {
+  addRow: async (country, status, dataActions) => {
     set({
       processing: true
     });
+    console.log("addRow", country, status, dataActions);
     try {
       const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('add_country_to_list', {
         country,
@@ -3768,7 +3770,7 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
       });
       // Consider checking the response structure for any specific success or failure signals
       if (response && response.request_success) {
-        await get().fetchCountryData('country_list');
+        await get().fetchCountryData('country_list', dataActions);
         // Potentially notify the user of success, if needed.
       } else {
         // Handle any unsuccessful response if needed.
@@ -3777,13 +3779,10 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
     } catch (e) {
       console.log(e);
       // Notify the user of an error.
-    } finally {
-      set({
-        processing: false
-      });
     }
   },
-  addRowMultiple: async (countries, status) => {
+
+  addRowMultiple: async (countries, status, dataActions) => {
     set({
       processing: true
     });
@@ -3794,7 +3793,7 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
       });
       // Consider checking the response structure for any specific success or failure signals
       if (response && response.request_success) {
-        await get().fetchCountryData('country_list');
+        await get().fetchCountryData('country_list', dataActions);
         // Potentially notify the user of success, if needed.
       } else {
         // Handle any unsuccessful response if needed.
@@ -3806,7 +3805,7 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
     }
   },
 
-  removeRowMultiple: async (countries, status) => {
+  removeRowMultiple: async (countries, status, dataActions) => {
     set({
       processing: true
     });
@@ -3817,7 +3816,7 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
       });
       // Consider checking the response structure for any specific success or failure signals
       if (response && response.request_success) {
-        await get().fetchCountryData('country_list');
+        await get().fetchCountryData('country_list', dataActions);
         // Potentially notify the user of success, if needed.
       } else {
         // Handle any unsuccessful response if needed.
@@ -3826,10 +3825,13 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
     } catch (e) {
       console.error(e);
       // Notify the user of an error.
+    } finally {
+      set({
+        processing: false
+      });
     }
   },
-
-  removeRow: async (country, status) => {
+  removeRow: async (country, status, dataActions) => {
     set({
       processing: true
     });
@@ -3840,7 +3842,7 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
       });
       // Consider checking the response structure for any specific success or failure signals
       if (response && response.request_success) {
-        await get().fetchCountryData('country_list');
+        await get().fetchCountryData('country_list', dataActions);
         // Potentially notify the user of success, if needed.
       } else {
         // Handle any unsuccessful response if needed.
@@ -3855,7 +3857,7 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
       });
     }
   },
-  addRegion: async (region, status) => {
+  addRegion: async (region, status, dataActions) => {
     try {
       const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('add_region_to_list', {
         region,
@@ -3863,7 +3865,7 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
       });
       if (response && response.request_success) {
         // Do any immediate operations here if needed
-        await get().fetchCountryData('country_list');
+        await get().fetchCountryData('country_list', dataActions);
       } else {
         console.error("Failed to add region: ", response.message);
       }
@@ -3871,7 +3873,7 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
       console.error(e);
     }
   },
-  addRegions: async (regions, status) => {
+  addRegions: async (regions, status, dataActions) => {
     try {
       const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('add_regions_to_list', {
         regions,
@@ -3879,7 +3881,7 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
       });
       if (response && response.request_success) {
         // Do any immediate operations here if needed
-        await get().fetchCountryData('country_list');
+        await get().fetchCountryData('country_list', dataActions);
       } else {
         console.error("Failed to add regions: ", response.message);
       }
@@ -3887,7 +3889,7 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
       console.error(e);
     }
   },
-  removeRegion: async (region, status) => {
+  removeRegion: async (region, status, dataActions) => {
     set({
       processing: true
     });
@@ -3898,7 +3900,7 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
       });
       // Consider checking the response structure for any specific success or failure signals
       if (response && response.request_success) {
-        await get().fetchCountryData('country_list');
+        await get().fetchCountryData('country_list', dataActions);
         // Potentially notify the user of success, if needed.
       } else {
         // Handle any unsuccessful response if needed.
@@ -3910,7 +3912,7 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
     }
   },
 
-  removeRegions: async (regions, status) => {
+  removeRegions: async (regions, status, dataActions) => {
     set({
       processing: true
     });
@@ -3922,7 +3924,7 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
       // Consider checking the response structure for any specific success or failure signals
       if (response && response.request_success) {
         // Potentially notify the user of success, if needed.
-        await get().fetchCountryData('country_list');
+        await get().fetchCountryData('country_list', dataActions);
       } else {
         // Handle any unsuccessful response if needed.
         console.error("Failed to remove regions: ", response.message);
@@ -3933,7 +3935,7 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
     }
   },
 
-  updateMultiRow: async (ids, status) => {
+  updateMultiRow: async (ids, status, dataActions) => {
     set({
       processing: true
     });
@@ -3944,13 +3946,13 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
       });
       //now we set the EventLog
       if (response) {
-        await get().fetchCountryData('country_list');
+        await get().fetchCountryData('country_list', dataActions);
       }
     } catch (e) {
       console.log(e);
     }
   },
-  resetRow: async id => {
+  resetRow: async (id, dataActions) => {
     set({
       processing: true
     });
@@ -3960,13 +3962,13 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
       });
       //now we set the EventLog
       if (response) {
-        await get().fetchCountryData('country_list');
+        await get().fetchCountryData('country_list', dataActions);
       }
     } catch (e) {
       console.log(e);
     }
   },
-  resetMultiRow: async ids => {
+  resetMultiRow: async (ids, dataActions) => {
     set({
       processing: true
     });
@@ -3976,7 +3978,7 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
       });
       //now we set the EventLog
       if (response) {
-        await get().fetchCountryData('country_list');
+        await get().fetchCountryData('country_list', dataActions);
       }
     } catch (e) {
       console.log(e);
@@ -4087,7 +4089,7 @@ const CountryDatatable = props => {
       setSelectedFilter('blocked', moduleName);
     }
     handleCountryTableFilter('status', currentFilter);
-  }, [selectedFilter, moduleName, handleCountryTableFilter, getCurrentFilter, setSelectedFilter, CountryDatatable]);
+  }, [moduleName, handleCountryTableFilter, getCurrentFilter(moduleName), setSelectedFilter, CountryDatatable]);
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     setRowsSelected([]);
   }, [CountryDataTable]);
@@ -4139,58 +4141,58 @@ const CountryDatatable = props => {
     if (Array.isArray(code)) {
       const ids = code.map(item => item.id);
       const regions = code.map(item => item.region);
-      await removeRegions(ids);
+      await removeRegions(ids, dataActions);
       let regionsString = regions.join(', ');
       notifySuccess(regionsString + ' ' + (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)('has been removed', 'really-simple-ssl'));
       setRowsSelected([]);
     } else {
-      await removeRegion(code, 'blocked');
+      await removeRegion(code, 'blocked', dataActions);
       notifySuccess(regionName + ' ' + (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)('has been allowed', 'really-simple-ssl'));
     }
     await fetchDynamicData('event_log');
   };
   const allowMultiple = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)(rows => {
     const ids = rows.map(item => item.id);
-    resetMultiRow(ids, 'blocked');
-  }, [resetMultiRow]);
+    resetMultiRow(ids, 'blocked', dataActions);
+  }, [resetMultiRow, getCurrentFilter(moduleName), dataActions]);
   const allowById = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)(id => {
-    resetRow(id, 'blocked');
-  }, [resetRow]);
+    resetRow(id, 'blocked', dataActions);
+  }, [resetRow, getCurrentFilter(moduleName), dataActions]);
   const blockRegionByCode = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)(async function (code) {
     let region = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
     if (Array.isArray(code)) {
       const ids = code.map(item => item.id);
       const regions = code.map(item => item.region);
-      await addRegions(ids, 'blocked');
+      await addRegions(ids, 'blocked', dataActions);
       let regionsString = regions.join(', ');
       notifySuccess(regionsString + ' ' + (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)('has been blocked', 'really-simple-ssl'));
       setRowsSelected([]);
     } else {
-      await addRegion(code, 'blocked');
+      await addRegion(code, 'blocked', dataActions);
       notifySuccess(region + ' ' + (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)('has been blocked', 'really-simple-ssl'));
     }
     await fetchDynamicData('event_log');
-  }, [addRegion]);
+  }, [addRegion, getCurrentFilter(moduleName), dataActions]);
   const allowCountryByCode = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)(async code => {
     if (Array.isArray(code)) {
       const ids = code.map(item => item.iso2_code);
-      await removeRowMultiple(ids, 'blocked');
+      await removeRowMultiple(ids, 'blocked', dataActions);
       setRowsSelected([]);
     } else {
-      await removeRow(code, 'blocked');
+      await removeRow(code, 'blocked', dataActions);
     }
     await fetchDynamicData('event_log');
-  }, [removeRow, removeRowMultiple]);
+  }, [removeRow, removeRowMultiple, dataActions, getCurrentFilter(moduleName)]);
   const blockCountryByCode = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)(async code => {
     if (Array.isArray(code)) {
       const ids = code.map(item => item.iso2_code);
-      await addRowMultiple(ids, 'blocked');
+      await addRowMultiple(ids, 'blocked', dataActions);
       setRowsSelected([]);
     } else {
-      addRow(code, 'blocked');
+      await addRow(code, 'blocked', dataActions);
     }
     await fetchDynamicData('event_log');
-  }, [addRow, addRowMultiple]);
+  }, [addRow, addRowMultiple, dataActions, getCurrentFilter(moduleName)]);
   const data = {
     ...CountryDataTable.data
   };
@@ -4977,7 +4979,7 @@ const IpAddressDatatable = props => {
       fetchIpData(field.action, dataActions);
     }
     handleIpTableFilter('status', currentFilter);
-  }, [selectedFilter, dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, moduleName]);
+  }, [getCurrentFilter(moduleName), dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, moduleName]);
   const customStyles = {
     headCells: {
       style: {
@@ -5705,16 +5707,6 @@ const UserDatatable = props => {
     let newItem = buildColumn(item);
     columns.push(newItem);
   });
-
-  //get data if field was already enabled, so not changed right now.
-  // useEffect(() => {
-  //     if (fieldAlreadyEnabled) {
-  //         if (!dataLoaded) {
-  //             fetchUserData(field.action);
-  //         }
-  //     }
-  // }, [fields]);
-
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
     const currentFilter = getCurrentFilter(moduleName);
     if (!currentFilter) {
@@ -5724,7 +5716,7 @@ const UserDatatable = props => {
       fetchUserData(field.action, dataActions);
     }
     handleUserTableFilter('status', currentFilter);
-  }, [selectedFilter, dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, moduleName]);
+  }, [getCurrentFilter(moduleName), dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, moduleName]);
   let enabled = false;
   fields.forEach(function (item, i) {
     if (item.id === 'enable_limited_login_attempts') {
@@ -24541,4 +24533,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.4decfeae1f9f8e4175b6.js.map
+//# sourceMappingURL=src_Settings_Field_js.cfe759df835f1462abfe.js.map
