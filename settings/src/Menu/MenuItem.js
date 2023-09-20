@@ -2,7 +2,9 @@ import { __ } from '@wordpress/i18n';
 import useMenu from "./MenuData";
 
 const MenuItem = (props) => {
-    const {selectedSubMenuItem, selectedMainMenuItem, subMenu, menu} = useMenu();
+    const {selectedSubMenuItem, selectedMainMenuItem, setSelectedSubMenuItem, subMenu, menu} = useMenu();
+
+    // const {selectedSubMenuItem, selectedMainMenuItem, subMenu, menu} = useMenu();
 
     /*
      * Menu is selected if the item is the same, or if it is a child.
@@ -20,6 +22,36 @@ const MenuItem = (props) => {
         return Array.isArray(data) ? data : [data];
     }
 
+    /**
+     *
+     * @param menuItem
+     * @param event
+     *
+     * Open first submenu item automatically
+     */
+    const handleMainMenuItemClick = (menuItem, event) => {
+        let firstSubMenuItemId = null;
+
+        // Function to find the first submenu item recursively
+        const findFirstSubMenuItem = (item) => {
+            if (item.menu_items && item.menu_items.length > 0) {
+                firstSubMenuItemId = item.menu_items[0].id;
+                if (item.menu_items[0].menu_items) {
+                    findFirstSubMenuItem(item.menu_items[0]);
+                }
+            }
+        };
+
+        findFirstSubMenuItem(menuItem);
+
+        // If a submenu item is found, prevent default and stop propagation
+        if (firstSubMenuItemId) {
+            event.preventDefault();
+            event.stopPropagation();
+            setSelectedSubMenuItem(firstSubMenuItemId);
+        }
+    }
+
     let menuClass = menuIsSelected ? ' rsssl-active' : '';
     menuClass += props.menuItem.featured ? ' rsssl-featured' : '';
     menuClass += props.menuItem.new ? ' rsssl-new' : '';
@@ -28,11 +60,10 @@ const MenuItem = (props) => {
 
     let menuLink = props.menuItem.directLink || '#'+selectedMainMenuItem+'/'+props.menuItem.id;
 
-
     return (
         <>
             {props.menuItem.visible && <div className={"rsssl-menu-item" + menuClass}>
-                <a href={menuLink} >
+                <a href={menuLink} onClick={(event) => handleMainMenuItemClick(props.menuItem, event)}>
                     <span>{props.menuItem.title}</span>
                     {props.menuItem.featured && <><span className='rsssl-menu-item-beta-pill'>{__('Beta', 'really-simple-ssl')}</span></>}
                     {props.menuItem.new && <><span className='rsssl-menu-item-new-pill'>{__('New', 'really-simple-ssl')}</span></>}
