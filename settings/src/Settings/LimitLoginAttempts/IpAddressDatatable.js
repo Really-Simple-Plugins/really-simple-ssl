@@ -62,7 +62,7 @@ const IpAddressDatatable = (props) => {
         }
 
         handleIpTableFilter('status', currentFilter);
-    }, [selectedFilter, dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, moduleName]);
+    }, [getCurrentFilter(moduleName), dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, moduleName]);
 
 
 
