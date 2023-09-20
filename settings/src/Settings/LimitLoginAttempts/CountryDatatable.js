@@ -133,11 +133,11 @@ const CountryDatatable = (props) => {
         setRowsSelected(state.selectedRows);
     }, []);
 
-    const allowRegionByCode = async (code, regionName = '') => {
+    const allowRegionByCode = useCallback(async (code, regionName = '') => {
         if (Array.isArray(code)) {
             const ids = code.map(item => item.id);
             const regions = code.map(item => item.region);
-            await removeRegions(ids, dataActions);
+            await removeRegions(ids, '',dataActions);
             let regionsString = regions.join(', ');
             notifySuccess(regionsString + ' ' + __('has been removed', 'really-simple-ssl'));
             setRowsSelected([]);
@@ -146,7 +146,7 @@ const CountryDatatable = (props) => {
             notifySuccess(regionName + ' ' + __('has been allowed', 'really-simple-ssl'));
         }
         await fetchDynamicData('event_log');
-    };
+    }, [removeRegion, getCurrentFilter(moduleName), dataActions]);
 
 
     const allowMultiple = useCallback((rows) => {
