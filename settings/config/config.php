@@ -70,6 +70,12 @@ function rsssl_fields( $load_values = true ) {
 			'group_id'         => 'encryption_lets_encrypt',
 			'type'             => 'lets-encrypt',
 			'default'          => false,
+			'server_conditions'    => [
+				'relation' => 'AND',
+				[
+					'rsssl_letsencrypt_generation_allowed' => true,
+				]
+			],
 		],
 		[
 			'id'       => 'mixed_content_fixer',

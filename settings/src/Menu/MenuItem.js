@@ -25,10 +25,14 @@ const MenuItem = (props) => {
     menuClass += props.menuItem.new ? ' rsssl-new' : '';
     menuClass += props.menuItem.premium && !rsssl_settings.pro_plugin_active ? ' rsssl-premium' : '';
     let href = '#'+selectedMainMenuItem+'/'+props.menuItem.id;
+
+    let menuLink = props.menuItem.directLink || '#'+selectedMainMenuItem+'/'+props.menuItem.id;
+
+
     return (
         <>
             {props.menuItem.visible && <div className={"rsssl-menu-item" + menuClass}>
-                <a href={href} >
+                <a href={menuLink} >
                     <span>{props.menuItem.title}</span>
                     {props.menuItem.featured && <><span className='rsssl-menu-item-beta-pill'>{__('Beta', 'really-simple-ssl')}</span></>}
                     {props.menuItem.new && <><span className='rsssl-menu-item-new-pill'>{__('New', 'really-simple-ssl')}</span></>}

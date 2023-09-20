@@ -21,7 +21,7 @@ function rsssl_menu() {
 					'id'       => 'general',
 					'group_id' => 'general',
 					'title'    => __( 'General', 'really-simple-ssl' ),
-//					'helpLink' => 'https://really-simple-ssl.com/instructions/about-our-general-settings/?mtm_campaign=instructions&mtm_source=free',
+					'helpLink' => 'https://really-simple-ssl.com/instructions/about-our-general-settings/?mtm_campaign=instructions&mtm_source=free',
 					'groups'   => [
 						[
 							'id'       => 'general_settings',
@@ -60,7 +60,7 @@ function rsssl_menu() {
 							'group_id' => 'encryption_redirect',
 							'title' => __( 'Redirection', 'really-simple-ssl' ),
 							'intro' => __( 'Redirection.', 'really-simple-ssl' ),
-							'helpLink' => 'https://really-simple-ssl.com/about-lets-encrypt/?mtm_campaign=letsencrypt&mtm_source=free',
+							'helpLink' => 'https://really-simple-ssl.com/remove-htaccess-redirect-site-lockout/&mtm_source=free',
 						],
 						[
 							'id' => 'encryption_lets_encrypt',
@@ -68,6 +68,7 @@ function rsssl_menu() {
 							'title' => __( 'Let\'s Encrypt', 'really-simple-ssl' ),
 							'intro' => __( 'Let\'s Encrypt.', 'really-simple-ssl' ),
 							'helpLink' => 'https://really-simple-ssl.com/about-lets-encrypt/?mtm_campaign=letsencrypt&mtm_source=free',
+							'directLink' => rsssl_letsencrypt_wizard_url(),
 						],
 						[
 							'id' => 'mixedcontentscan',
@@ -557,63 +558,63 @@ function rsssl_menu() {
                 ],
 				],
 			],
+			[
+				"id"             => "letsencrypt",
+				'default_hidden' => true,
+				"title"          => "Let's Encrypt",
+				'intro'          => sprintf( __( 'We have tried to make our Wizard as simple and fast as possible. Although these questions are all necessary, if there’s any way you think we can improve the plugin, please let us %sknow%s!',
+						'really-simple-ssl' ), '<a target="_blank" href="https://really-simple-ssl.com/contact/?mtm_campaign=instructions&mtm_source=free">', '</a>' ) .
+				                    sprintf( __( ' Please note that you can always save and finish the wizard later, use our %sdocumentation%s for additional information or log a %ssupport ticket%s if you need our assistance.',
+					                    'really-simple-ssl' ), '<a target="_blank" href="https://really-simple-ssl.com/install-ssl-certificate/?mtm_campaign=instructions&mtm_source=free">', '</a>',
+					                    '<a target="_blank" href="https://wordpress.org/support/plugin/really-simple-ssl/">', '</a>' ),
+				'menu_items' => [
+					[
+						'id'         => 'le-system-status',
+						'group_id'         => 'le-system-status',
+						'title'      => __('System Status', 'really-simple-ssl'),
+						'intro'      => __('Letʼs Encrypt is a free, automated and open certificate authority brought to you by the nonprofit Internet Security Research Group (ISRG).',
+							'really-simple-ssl'),
+						'helpLink'   => 'https://really-simple-ssl.com/about-lets-encrypt/?mtm_campaign=letsencrypt&mtm_source=free',
+						'tests_only' => true,
+					],
+					[
+						'id'    => 'le-general',
+						'title' => __('General Settings', 'really-simple-ssl'),
+					],
+					[
+						'id'    => 'le-hosting',
+						'title' => __('Hosting', 'really-simple-ssl'),
+						'intro' => __('Below you will find the instructions for different hosting environments and configurations. If you start the process with the necessary instructions and credentials the next view steps will be done in no time.',
+							'really-simple-ssl'),
+					],
+					[
+						'id'         => 'le-directories',
+						'title'      => __('Directories', 'really-simple-ssl'),
+						'tests_only' => true,
+					],
+					[
+						'id'         => 'le-dns-verification',
+						'title'      => __('DNS verification', 'really-simple-ssl'),
+						'tests_only' => true,
+					],
+					[
+						'id'         => 'le-generation',
+						'title'      => __('Generation', 'really-simple-ssl'),
+						'tests_only' => true,
+					],
+					[
+						'id'         => 'le-installation',
+						'title'      => __('Installation', 'really-simple-ssl'),
+						'tests_only' => true,
+					],
+					[
+						'id'         => 'le-activate_ssl',
+						'title'      => __('Activate', 'really-simple-ssl'),
+						'tests_only' => true,
+					],
+				],
+			],
 		];
-		[
-			"id"             => "letsencrypt",
-			'default_hidden' => true,
-			"title"          => "Let's Encrypt",
-			'group_id'       => 'lets-encrypt',
-			'intro'          => sprintf( __( 'We have tried to make our Wizard as simple and fast as possible. Although these questions are all necessary, if there’s any way you think we can improve the plugin, please let us %sknow%s!',
-					'really-simple-ssl' ), '<a target="_blank" href="https://really-simple-ssl.com/contact/?mtm_campaign=instructions&mtm_source=free">', '</a>' ) .
-			                    sprintf( __( ' Please note that you can always save and finish the wizard later, use our %sdocumentation%s for additional information or log a %ssupport ticket%s if you need our assistance.',
-				                    'really-simple-ssl' ), '<a target="_blank" href="https://really-simple-ssl.com/install-ssl-certificate/?mtm_campaign=instructions&mtm_source=free">', '</a>',
-				                    '<a target="_blank" href="https://wordpress.org/support/plugin/really-simple-ssl/">', '</a>' ),
-            'menu_items' => [
-                [
-                    'id'         => 'le-system-status',
-                    'title'      => __('System Status', 'really-simple-ssl'),
-                    'intro'      => __('Letʼs Encrypt is a free, automated and open certificate authority brought to you by the nonprofit Internet Security Research Group (ISRG).',
-                        'really-simple-ssl'),
-                    'helpLink'   => 'https://really-simple-ssl.com/about-lets-encrypt/?mtm_campaign=letsencrypt&mtm_source=free',
-                    'tests_only' => true,
-                ],
-                [
-                    'id'    => 'le-general',
-                    'title' => __('General Settings', 'really-simple-ssl'),
-                ],
-                [
-                    'id'    => 'le-hosting',
-                    'title' => __('Hosting', 'really-simple-ssl'),
-                    'intro' => __('Below you will find the instructions for different hosting environments and configurations. If you start the process with the necessary instructions and credentials the next view steps will be done in no time.',
-                        'really-simple-ssl'),
-                ],
-                [
-                    'id'         => 'le-directories',
-                    'title'      => __('Directories', 'really-simple-ssl'),
-                    'tests_only' => true,
-                ],
-                [
-                    'id'         => 'le-dns-verification',
-                    'title'      => __('DNS verification', 'really-simple-ssl'),
-                    'tests_only' => true,
-                ],
-                [
-                    'id'         => 'le-generation',
-                    'title'      => __('Generation', 'really-simple-ssl'),
-                    'tests_only' => true,
-                ],
-                [
-                    'id'         => 'le-installation',
-                    'title'      => __('Installation', 'really-simple-ssl'),
-                    'tests_only' => true,
-                ],
-                [
-                    'id'         => 'le-activate_ssl',
-                    'title'      => __('Activate', 'really-simple-ssl'),
-                    'tests_only' => true,
-                ],
-            ],
-        ];
 
     return apply_filters('rsssl_menu', $menu_items);
 }

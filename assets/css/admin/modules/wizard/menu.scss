@@ -12,6 +12,7 @@
 }
 .rsssl-wizard-menu-items > .rsssl-menu-item > a {
   font-weight: 600 !important;
+  padding-inline: var(--rsp-spacing-xs) !important;
 }
 
 .rsssl-wizard-menu-items {
@@ -112,6 +113,7 @@
       color: var(--rsp-text-color);
       font-size: var(--rsp-fs-400);
       padding-block: var(--rsp-spacing-xs);
+      padding-inline: var(--rsp-spacing-xs) !important;
       @include rsssl-inline-block-padding;
       transition: all 0.2s ease-in-out;
       border-left: 4px solid transparent;

@@ -32,6 +32,7 @@ const useMenu = create(( set, get ) => ({
     },
     fetchMenuData: (fields) => {
         let menu = rsssl_settings.menu;
+
         menu = Object.values(menu);
         const selectedMainMenuItem = getAnchor('main') || 'dashboard';
         menu = menu.filter( item => !item.default_hidden || selectedMainMenuItem===item.id);
@@ -144,12 +145,14 @@ const dropEmptyMenuItems = (menuItems, fields) => {
 * filter sidebar menu from complete menu structure
 */
 const getSubMenu = (menu, selectedMainMenuItem) => {
+
     let subMenu = [];
     for (const key in menu) {
         if ( menu.hasOwnProperty(key) && menu[key].id === selectedMainMenuItem ){
             subMenu = menu[key];
         }
     }
+
     subMenu = addVisibleToMenuItems(subMenu);
     return subMenu;
 }
@@ -228,6 +231,7 @@ const getMenuItemByName = (name, menuItems) => {
 }
 
 const addVisibleToMenuItems = (menu) => {
+
     let newMenuItems = Array.isArray(menu.menu_items) ? menu.menu_items : Object.values(menu.menu_items);
 
     for (let [index, menuItem] of newMenuItems.entries()) {

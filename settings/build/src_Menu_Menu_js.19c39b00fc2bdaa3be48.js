@@ -112,10 +112,11 @@ const MenuItem = props => {
   menuClass += props.menuItem.new ? ' rsssl-new' : '';
   menuClass += props.menuItem.premium && !rsssl_settings.pro_plugin_active ? ' rsssl-premium' : '';
   let href = '#' + selectedMainMenuItem + '/' + props.menuItem.id;
+  let menuLink = props.menuItem.directLink || '#' + selectedMainMenuItem + '/' + props.menuItem.id;
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, props.menuItem.visible && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-menu-item" + menuClass
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-    href: href
+    href: menuLink
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, props.menuItem.title), props.menuItem.featured && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     className: "rsssl-menu-item-beta-pill"
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Beta', 'really-simple-ssl'))), props.menuItem.new && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
@@ -182,4 +183,4 @@ const UseLicenseData = (0,zustand__WEBPACK_IMPORTED_MODULE_0__.create)((set, get
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Menu_Menu_js.66faa934c181b3bf5b28.js.map
+//# sourceMappingURL=src_Menu_Menu_js.19c39b00fc2bdaa3be48.js.map
