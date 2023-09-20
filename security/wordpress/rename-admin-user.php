@@ -1,5 +1,5 @@
 <?php
-defined('ABSPATH') or die();
+defined( 'ABSPATH' ) or die();
 
 /**
  * Username 'admin' changed notice
@@ -7,20 +7,20 @@ defined('ABSPATH') or die();
  */
 function rsssl_admin_username_changed( $notices ) {
 	$notices['username_admin_changed'] = array(
-		'condition' => ['rsssl_username_admin_changed'],
-		'callback' => '_true_',
-		'score' => 5,
-		'output' => array(
+		'condition' => [ 'rsssl_username_admin_changed' ],
+		'callback'  => '_true_',
+		'score'     => 5,
+		'output'    => array(
 			'true' => array(
-				'msg' => sprintf(__("Username 'admin' has been changed to %s", "really-simple-ssl"),esc_html(get_site_transient('rsssl_username_admin_changed')) ),
-				'icon' => 'open',
+				'msg'         => sprintf( __( "Username 'admin' has been changed to %s", 'really-simple-ssl' ), esc_html( get_site_transient( 'rsssl_username_admin_changed' ) ) ),
+				'icon'        => 'open',
 				'dismissible' => true,
 			),
 		),
 	);
 	return $notices;
 }
-add_filter('rsssl_notices', 'rsssl_admin_username_changed');
+add_filter( 'rsssl_notices', 'rsssl_admin_username_changed' );
 
 /**
  * Add admin as not allowed username
@@ -28,7 +28,7 @@ add_filter('rsssl_notices', 'rsssl_admin_username_changed');
  *
  * @return array
  */
-function rsssl_prevent_admin_user_add(array $illegal_user_logins){
+function rsssl_prevent_admin_user_add( array $illegal_user_logins ) {
 	$illegal_user_logins[] = 'admin';
 	$illegal_user_logins[] = 'administrator';
 	return $illegal_user_logins;
@@ -40,24 +40,24 @@ add_filter( 'illegal_user_logins', 'rsssl_prevent_admin_user_add' );
  * @return bool
  */
 function rsssl_rename_admin_user() {
-	if ( !rsssl_user_can_manage() ) {
+	if ( ! rsssl_user_can_manage() ) {
 		return false;
 	}
 	//to be able to update the admin user email, we need to disable this filter temporarily
 	remove_filter( 'illegal_user_logins', 'rsssl_prevent_admin_user_add' );
 
 	// Get user data for login admin
-	$admin_user = get_user_by('login','admin');
+	$admin_user = get_user_by( 'login', 'admin' );
 	if ( $admin_user ) {
 		// Get the new user login
-		$new_user_login = trim(sanitize_user(rsssl_get_option('new_admin_user_login')));
+		$new_user_login = trim( sanitize_user( rsssl_get_option( 'new_admin_user_login' ) ) );
 		if ( rsssl_new_username_valid() ) {
 			$admin_user_id  = $admin_user->data->ID;
 			$admin_userdata = get_userdata( $admin_user_id );
 			$admin_email    = $admin_userdata->data->user_email;
 			global $wpdb;
 			//get current user hash
-			$user_hash = $wpdb->get_var($wpdb->prepare("select user_pass from {$wpdb->base_prefix}users where ID = %s", $admin_user_id) );
+			$user_hash = $wpdb->get_var( $wpdb->prepare( "select user_pass from {$wpdb->base_prefix}users where ID = %s", $admin_user_id ) );
 			//create temp email address
 			$domain = site_url();
 			$parse  = parse_url( $domain );
@@ -65,13 +65,15 @@ function rsssl_rename_admin_user() {
 			$email  = "$new_user_login@$host";
 
 			// Do not send an e-mail with this temporary e-mail address
-			add_filter('send_email_change_email', '__return_false');
+			add_filter( 'send_email_change_email', '__return_false' );
 
 			// update e-mail for existing user. Cannot have two accounts connected to the same e-mail address
-			$success = wp_update_user( array(
-				'ID'         => $admin_user_id,
-				'user_email' => $email,
-			) );
+			$success = wp_update_user(
+				array(
+					'ID'         => $admin_user_id,
+					'user_email' => $email,
+				)
+			);
 
 			if ( ! $success ) {
 				return false;
@@ -121,18 +123,18 @@ function rsssl_rename_admin_user() {
 
 			// Create new admin user
 			$new_user_id = wp_insert_user( $new_userdata );
-			if ( ! $new_user_id || is_wp_error($new_user_id) ) {
+			if ( ! $new_user_id || is_wp_error( $new_user_id ) ) {
 				return false;
 			}
 
 			//store original user hash in this user.
 			$wpdb->update(
-				$wpdb->base_prefix.'users',
-				['user_pass' => $user_hash ],
-				['ID' => $new_user_id]
+				$wpdb->base_prefix . 'users',
+				[ 'user_pass' => $user_hash ],
+				[ 'ID' => $new_user_id ]
 			);
 
-			require_once( ABSPATH . 'wp-admin/includes/user.php' );
+			require_once ABSPATH . 'wp-admin/includes/user.php';
 			wp_delete_user( $admin_user_id, $new_user_id );
 
 			// On multisite we have to update the $wpdb->prefix . sitemeta -> meta_key -> site_admins -> meta_value to the new username
@@ -157,7 +159,7 @@ function rsssl_rename_admin_user() {
 	}
 	return true;
 }
-add_action('rsssl_after_saved_fields','rsssl_rename_admin_user', 30);
+add_action( 'rsssl_after_saved_fields', 'rsssl_rename_admin_user', 30 );
 
 /**
  * @return bool
@@ -165,10 +167,9 @@ add_action('rsssl_after_saved_fields','rsssl_rename_admin_user', 30);
  * Notice condition
  */
 function rsssl_username_admin_changed() {
-	if ( get_site_transient('rsssl_username_admin_changed') ) {
+	if ( get_site_transient( 'rsssl_username_admin_changed' ) ) {
 		return true;
 	}
 
 	return false;
 }
-

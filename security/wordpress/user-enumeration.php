@@ -1,5 +1,5 @@
 <?php
-defined('ABSPATH') or die();
+defined( 'ABSPATH' ) or die();
 /**
  * Prevent User Enumeration
  * @return void
@@ -7,11 +7,11 @@ defined('ABSPATH') or die();
 function rsssl_check_user_enumeration() {
 	if ( ! is_user_logged_in() && isset( $_REQUEST['author'] ) ) {
 		if ( preg_match( '/\\d/', $_REQUEST['author'] ) > 0 ) {
-			wp_die( sprintf(__( 'forbidden - number in author name not allowed = %s', 'really-simple-ssl' ), esc_html( $_REQUEST['author'] ) ) );
+			wp_die( sprintf( __( 'forbidden - number in author name not allowed = %s', 'really-simple-ssl' ), esc_html( $_REQUEST['author'] ) ) );
 		}
 	}
 }
-add_action('init', 'rsssl_check_user_enumeration');
+add_action( 'init', 'rsssl_check_user_enumeration' );
 
 /**
  * @return bool
@@ -20,29 +20,32 @@ add_action('init', 'rsssl_check_user_enumeration');
 function rsssl_remove_author_from_yoast_sitemap( $users ) {
 	return false;
 }
-add_filter('wpseo_sitemap_exclude_author', 'rsssl_remove_author_from_yoast_sitemap', 10, 1 );
+add_filter( 'wpseo_sitemap_exclude_author', 'rsssl_remove_author_from_yoast_sitemap', 10, 1 );
 
 /**
  * Prevent WP JSON API User Enumeration
  * Do not disable in when logged in, preventing issues in the Gutenberg Editor
  */
 
-if ( !is_user_logged_in() || !current_user_can('edit_posts') ) {
-	add_filter( 'rest_endpoints', function ( $endpoints ) {
-		if ( isset( $endpoints['/wp/v2/users'] ) ) {
-			unset( $endpoints['/wp/v2/users'] );
+if ( ! is_user_logged_in() || ! current_user_can( 'edit_posts' ) ) {
+	add_filter(
+		'rest_endpoints',
+		function ( $endpoints ) {
+			if ( isset( $endpoints['/wp/v2/users'] ) ) {
+				unset( $endpoints['/wp/v2/users'] );
+			}
+			if ( isset( $endpoints['/wp/v2/users/(?P[\d]+)'] ) ) {
+				unset( $endpoints['/wp/v2/users/(?P[\d]+)'] );
+			}
+			return $endpoints;
 		}
-		if ( isset( $endpoints['/wp/v2/users/(?P[\d]+)'] ) ) {
-			unset( $endpoints['/wp/v2/users/(?P[\d]+)'] );
-		}
-		return $endpoints;
-	} );
+	);
 }
 
 //prevent xml site map user enumeration
 add_filter(
 	'wp_sitemaps_add_provider',
-	function( $provider, $name ) {
+	function ( $provider, $name ) {
 		if ( 'users' === $name ) {
 			return false;
 		}

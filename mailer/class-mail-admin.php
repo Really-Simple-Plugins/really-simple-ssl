@@ -1,11 +1,13 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * Class to send an e-mail
  */
 
-if ( !class_exists('rsssl_mailer_admin') ) {
+if ( ! class_exists( 'rsssl_mailer_admin' ) ) {
 	class rsssl_mailer_admin {
 
 		public function __construct() {
@@ -46,7 +48,7 @@ if ( !class_exists('rsssl_mailer_admin') ) {
 
 			// Handle e-mail verification
 			$verification_code = $_GET['rsssl_verification_code'];
-			$verification_code = preg_replace( "/[^0-9]/", "", $verification_code );
+			$verification_code = preg_replace( '/[^0-9]/', '', $verification_code );
 			$verification_code = substr( $verification_code, 0, 6 );
 
 			// verify code
@@ -57,13 +59,13 @@ if ( !class_exists('rsssl_mailer_admin') ) {
 			}
 
 			$current_time                  = time();
-			$saved_verification_code       = get_option('rsssl_email_verification_code');
-			$saved_verification_expiration = get_option('rsssl_email_verification_code_expiration');
+			$saved_verification_code       = get_option( 'rsssl_email_verification_code' );
+			$saved_verification_expiration = get_option( 'rsssl_email_verification_code_expiration' );
 
 			if ( $verification_code === $saved_verification_code && $saved_verification_expiration && $current_time < $saved_verification_expiration ) {
 				// If the verification code is correct and hasn't expired, update the verification status
 				update_option( 'rsssl_email_verification_status', 'completed', false );
-				set_transient('rsssl_redirect_to_settings_page', true, HOUR_IN_SECONDS );
+				set_transient( 'rsssl_redirect_to_settings_page', true, HOUR_IN_SECONDS );
 			}
 		}
 
@@ -81,7 +83,7 @@ if ( !class_exists('rsssl_mailer_admin') ) {
 				return;
 			}
 
-			$thirty_minutes_ago = $time_saved < strtotime( "-10 minutes" );
+			$thirty_minutes_ago = $time_saved < strtotime( '-10 minutes' );
 			$warning_blocks     = array_column( $fields, 'email' );
 			if ( $thirty_minutes_ago && count( $warning_blocks ) > 0 ) {
 				//clear the option
@@ -112,7 +114,6 @@ if ( !class_exists('rsssl_mailer_admin') ) {
 			if ( $status === 'email_changed' ) {
 				return false;
 			}
-
 		}
 
 		/**

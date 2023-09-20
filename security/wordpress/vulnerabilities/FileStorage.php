@@ -1,116 +1,106 @@
 <?php
 
 namespace security\wordpress\vulnerabilities;
-defined('ABSPATH') or die();
-class FileStorage
-{
-    private $hash;
+defined( 'ABSPATH' ) or die();
+class FileStorage {
 
-    /**
-     * FileStorage constructor.
-     */
-    public function __construct()
-    {
-        //Fetching the key from the database
-        $this->generateHashKey();
-    }
+	private $hash;
 
-    public Static function StoreFile($file, $data)
-    {
-        $storage = new FileStorage();
-        $storage->set($data, $file);
-    }
+	/**
+	 * FileStorage constructor.
+	 */
+	public function __construct() {
+		//Fetching the key from the database
+		$this->generateHashKey();
+	}
 
-    public Static function GetFile($file)
-    {
-        $storage = new FileStorage();
-        return $storage->get($file);
-    }
+	public static function StoreFile( $file, $data ) {
+		$storage = new FileStorage();
+		$storage->set( $data, $file );
+	}
 
-    /** Get the data from the file
-     * @param $file
-     * @return bool|mixed
-     */
-    public function get($file)
-    {
-        if (file_exists($file)) {
-            $data = file_get_contents($file);
-            $data = $this->Decode64WithHash($data);
-            return json_decode($data);
-        }
-        return false;
-    }
+	public static function GetFile( $file ) {
+		$storage = new FileStorage();
+		return $storage->get( $file );
+	}
 
-    /** Save the data to the file
-     * @param $data
-     * @param $file
-     */
-    public function set($data, $file)
-    {
-        $data = $this->Encode64WithHash(json_encode($data));
-        file_put_contents($file, $data);
-    }
+	/** Get the data from the file
+	 * @param $file
+	 * @return bool|mixed
+	 */
+	public function get( $file ) {
+		if ( file_exists( $file ) ) {
+			$data = file_get_contents( $file );
+			$data = $this->Decode64WithHash( $data );
+			return json_decode( $data );
+		}
+		return false;
+	}
 
-    /** encode the data with a hash
-     * @param $data
-     * @return string
-     */
-    private function Encode64WithHash($data): string
-    {
-        //we create a simple encoding, using the hashkey as a salt
-        $data = base64_encode($data);
-        return base64_encode($data . $this->hash);
-    }
+	/** Save the data to the file
+	 * @param $data
+	 * @param $file
+	 */
+	public function set( $data, $file ) {
+		$data = $this->Encode64WithHash( json_encode( $data ) );
+		file_put_contents( $file, $data );
+	}
 
-    /** decode the data with a hash
-     * @param $data
-     * @return string
-     */
-    private function Decode64WithHash($data): string
-    {
-        //we create a simple decoding, using the hashkey as a salt
-        $data = base64_decode($data);
-        $data = substr($data, 0, -strlen($this->hash));
-        return base64_decode($data);
-    }
+	/** encode the data with a hash
+	 * @param $data
+	 * @return string
+	 */
+	private function Encode64WithHash( $data ): string {
+		//we create a simple encoding, using the hashkey as a salt
+		$data = base64_encode( $data );
+		return base64_encode( $data . $this->hash );
+	}
 
-    /** Generate a hashkey and store it in the database
-     * @return void
-     */
-    private function generateHashKey(): void
-    {
-        if (get_option('rsssl_hashkey') && get_option('rsssl_hashkey') !== "") {
-            $this->hash = get_option('rsssl_hashkey');
-        } else {
-            $this->hash = md5(uniqid(rand(), true));
-            update_option('rsssl_hashkey', $this->hash, false);
-        }
-    }
+	/** decode the data with a hash
+	 * @param $data
+	 * @return string
+	 */
+	private function Decode64WithHash( $data ): string {
+		//we create a simple decoding, using the hashkey as a salt
+		$data = base64_decode( $data );
+		$data = substr( $data, 0, -strlen( $this->hash ) );
+		return base64_decode( $data );
+	}
 
-    public static function GetDate(string $file)
-    {
-        if (file_exists($file)) {
-            return filemtime($file);
-        }
-        return false;
-    }
+	/** Generate a hashkey and store it in the database
+	 * @return void
+	 */
+	private function generateHashKey(): void {
+		if ( get_option( 'rsssl_hashkey' ) && get_option( 'rsssl_hashkey' ) !== '' ) {
+			$this->hash = get_option( 'rsssl_hashkey' );
+		} else {
+			$this->hash = md5( uniqid( rand(), true ) );
+			update_option( 'rsssl_hashkey', $this->hash, false );
+		}
+	}
 
-    public static function DeleteAll()
-    {
-        //we get the upload folder
-        $upload_dir = wp_upload_dir();
+	public static function GetDate( string $file ) {
+		if ( file_exists( $file ) ) {
+			return filemtime( $file );
+		}
+		return false;
+	}
 
-        //we get the really-simple-ssl folder
-        $rsssl_dir = $upload_dir['basedir'] . '/really-simple-ssl';
+	public static function DeleteAll() {
+		//we get the upload folder
+		$upload_dir = wp_upload_dir();
 
-        //then we delete the following files from that folder: manifest.json, components.json and core.json
-        $files = array('manifest.json', 'components.json', 'core.json');
-        foreach ($files as $file) {
-            //we delete the file
-            $file = $rsssl_dir . '/' . $file;
-            if (file_exists($file)) {
-                unlink($file);
-            }
-        }
-    }
+		//we get the really-simple-ssl folder
+		$rsssl_dir = $upload_dir['basedir'] . '/really-simple-ssl';
+
+		//then we delete the following files from that folder: manifest.json, components.json and core.json
+		$files = array( 'manifest.json', 'components.json', 'core.json' );
+		foreach ( $files as $file ) {
+			//we delete the file
+			$file = $rsssl_dir . '/' . $file;
+			if ( file_exists( $file ) ) {
+				unlink( $file );
+			}
+		}
+	}
 }

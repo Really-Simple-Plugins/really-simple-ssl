@@ -1,10 +1,10 @@
 <?php
-defined('ABSPATH') or die();
+defined( 'ABSPATH' ) or die();
 /**
 	Schedule cron jobs if useCron is true
 	Else start the functions for testing
  */
-define('RSSSL_USE_CRON', true );
+define( 'RSSSL_USE_CRON', true );
 if ( RSSSL_USE_CRON ) {
 	add_action( 'plugins_loaded', 'rsssl_schedule_cron' );
 	function rsssl_schedule_cron() {
@@ -25,15 +25,15 @@ if ( RSSSL_USE_CRON ) {
 	}
 }
 add_action( 'rsssl_every_three_hours_hook', 'rsssl_every_three_hours_cron' );
-function rsssl_every_three_hours_cron(){
-	do_action('rsssl_every_three_hours_cron');
+function rsssl_every_three_hours_cron() {
+	do_action( 'rsssl_every_three_hours_cron' );
 }
 /**
  * Ensure the hook has a function attached to it.
  */
 add_action( 'rsssl_every_day_hook', 'rsssl_daily_cron' );
-function rsssl_daily_cron(){
-	do_action('rsssl_daily_cron');
+function rsssl_daily_cron() {
+	do_action( 'rsssl_daily_cron' );
 }
 
 add_action( 'rsssl_every_five_minutes_hook', 'rsssl_every_five_minutes_cron' );
@@ -46,32 +46,32 @@ function rsssl_week_cron() {
 	do_action( 'rsssl_weekly_cron' );
 }
 
-if ( !RSSSL_USE_CRON ) {
+if ( ! RSSSL_USE_CRON ) {
 	add_action( 'admin_init', 'rsssl_schedule_non_cron' );
-	function rsssl_schedule_non_cron(){
+	function rsssl_schedule_non_cron() {
 		do_action( 'rsssl_every_day_hook' );
 		do_action( 'rsssl_every_five_minutes_hook' );
-		do_action('rsssl_every_week_hook');
+		do_action( 'rsssl_every_week_hook' );
 	}
 }
 
 add_filter( 'cron_schedules', 'rsssl_filter_cron_schedules' );
 function rsssl_filter_cron_schedules( $schedules ) {
-	$schedules['rsssl_five_minutes'] = array(
+	$schedules['rsssl_five_minutes']      = array(
 		'interval' => 5 * MINUTE_IN_SECONDS, // seconds
-		'display' => __('Once every 5 minutes')
+		'display'  => __( 'Once every 5 minutes' ),
 	);
-	$schedules['rsssl_daily']   = array(
+	$schedules['rsssl_daily']             = array(
 		'interval' => DAY_IN_SECONDS,
-		'display'  => __( 'Once every day' )
+		'display'  => __( 'Once every day' ),
 	);
-	$schedules['rsssl_every_three_hours']   = array(
+	$schedules['rsssl_every_three_hours'] = array(
 		'interval' => 3 * HOUR_IN_SECONDS,
-		'display'  => __( 'Every three hours' )
+		'display'  => __( 'Every three hours' ),
 	);
-	$schedules['rsssl_weekly']   = array(
+	$schedules['rsssl_weekly']            = array(
 		'interval' => WEEK_IN_SECONDS,
-		'display'  => __( 'Once every week' )
+		'display'  => __( 'Once every week' ),
 	);
 	return $schedules;
 }
@@ -89,17 +89,14 @@ function rsssl_clear_scheduled_hooks() {
  * Multisite cron
  */
 
-add_action('plugins_loaded', 'rsssl_multisite_schedule_cron', 15);
-function rsssl_multisite_schedule_cron()
-{
-	if ( get_site_option('rsssl_ssl_activation_active') ) {
-		if ( !wp_next_scheduled('rsssl_ssl_process_hook') ) {
-			wp_schedule_event(time(), 'rsssl_one_minute', 'rsssl_ssl_process_hook');
+add_action( 'plugins_loaded', 'rsssl_multisite_schedule_cron', 15 );
+function rsssl_multisite_schedule_cron() {
+	if ( get_site_option( 'rsssl_ssl_activation_active' ) ) {
+		if ( ! wp_next_scheduled( 'rsssl_ssl_process_hook' ) ) {
+			wp_schedule_event( time(), 'rsssl_one_minute', 'rsssl_ssl_process_hook' );
 		}
 	} else {
-		wp_clear_scheduled_hook('rsssl_ssl_process_hook');
+		wp_clear_scheduled_hook( 'rsssl_ssl_process_hook' );
 	}
 	add_action( 'rsssl_ssl_process_hook', array( RSSSL()->multisite, 'run_ssl_process' ) );
 }
-
-
