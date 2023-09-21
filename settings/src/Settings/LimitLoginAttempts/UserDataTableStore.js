@@ -12,23 +12,30 @@ const UserDataTableStore = create((set, get) => ({
     pagination: {},
     dataActions: {},
     UserDataTable: [],
-
+    rowCleared: false,
 
     fetchUserData: async (action, dataActions) => {
+        //we check if the processing is already true, if so we return
         set({processing: true});
         set({dataLoaded: false});
+        set({rowCleared: true});
         try {
             const response = await rsssl_api.doAction(
                 action,
                 dataActions
             );
             //now we set the EventLog
-            if (response) {
-                //if the response is empty we set the dummyData
+            //now we set the EventLog
+            if (response && response.request_success) {
                 set({UserDataTable: response, dataLoaded: true, processing: false, pagination: response.pagination});
             }
+            set({ rowCleared: true });
         } catch (e) {
             console.log(e);
+        } finally {
+            set({processing: false});
+            set({rowCleared: false});
+
         }
     },
 
@@ -76,13 +83,13 @@ const UserDataTableStore = create((set, get) => ({
     /*
 * This function add a new row to the table
  */
-    addRow: async (user, status) => {
+    addRow: async (user, status, dataActions) => {
         set({processing: true});
         try {
             const response = await rsssl_api.doAction('user_add_user', {user, status});
             // Consider checking the response structure for any specific success or failure signals
             if (response && response.request_success) {
-                await get().fetchUserData('user_list');
+                await get().fetchUserData('user_list', dataActions);
                 // Potentially notify the user of success, if needed.
             } else {
                 // Handle any unsuccessful response if needed.
@@ -99,7 +106,7 @@ const UserDataTableStore = create((set, get) => ({
     /*
 * This function updates the row only changing the status
  */
-    updateRow: async (id, status) => {
+    updateRow: async (id, status, dataActions) => {
         set({processing: true});
         try {
             const response = await rsssl_api.doAction(
@@ -108,15 +115,17 @@ const UserDataTableStore = create((set, get) => ({
             );
             //now we set the EventLog
             if (response) {
-                await get().fetchUserData('user_list');
+                await get().fetchUserData('user_list', dataActions);
             }
         } catch (e) {
             console.log(e);
+        } finally {
+            set({processing: false});
         }
     },
 
 
-    updateMultiRow: async (ids, status) => {
+    updateMultiRow: async (ids, status, dataActions) => {
         set({processing: true});
         try {
             const response = await rsssl_api.doAction(
@@ -124,14 +133,16 @@ const UserDataTableStore = create((set, get) => ({
                 {ids, status}
             );
             //now we set the EventLog
-            if (response) {
-                await get().fetchUserData('user_list');
+            if (response && response.request_success) {
+                await get().fetchUserData('user_list', dataActions);
             }
         } catch (e) {
             console.log(e);
+        } finally {
+            set({processing: false});
         }
     },
-    resetRow: async (id) => {
+    resetRow: async (id, dataActions) => {
         set({processing: true});
         try {
             const response = await rsssl_api.doAction(
@@ -140,14 +151,16 @@ const UserDataTableStore = create((set, get) => ({
             );
             //now we set the EventLog
             if (response) {
-                await get().fetchUserData('user_list');
+                await get().fetchUserData('user_list', dataActions);
             }
         } catch (e) {
             console.log(e);
+        } finally {
+            set({processing: false});
         }
     },
 
-    resetMultiRow: async (ids) => {
+    resetMultiRow: async (ids, dataActions) => {
         set({processing: true});
         try {
             const response = await rsssl_api.doAction(
@@ -156,10 +169,12 @@ const UserDataTableStore = create((set, get) => ({
             );
             //now we set the EventLog
             if (response) {
-                await get().fetchUserData('user_list');
+                await get().fetchUserData('user_list', dataActions);
             }
         } catch (e) {
             console.log(e);
+        } finally {
+            set({processing: false});
         }
     }
 }));

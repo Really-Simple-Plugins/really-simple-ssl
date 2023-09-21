@@ -78,23 +78,12 @@ const CountryDatatable = (props) => {
             setSelectedFilter('blocked', moduleName);
         }
         setProcessingFilter(processing);
-        //we also want to clear the selected rows when the filter is changed
-
         handleCountryTableFilter('status', currentFilter);
-
     }, [moduleName, handleCountryTableFilter, getCurrentFilter(moduleName), setSelectedFilter, CountryDatatable, processing]);
 
     useEffect(() => {
         setRowsSelected([]);
     }, [CountryDataTable]);
-
-    useEffect(() => {
-        if (fieldAlreadyEnabled) {
-            if (!dataLoaded) {
-                fetchDynamicData(field.action);
-            }
-        }
-    }, [fields]);
 
     //if the dataActions are changed, we fetch the data
     useEffect(() => {
@@ -219,15 +208,6 @@ const CountryDatatable = (props) => {
         </>
     ), []);
 
-    const generateGoodBad = useCallback((value) => (
-        value > 0 ? (
-            <Icon name="circle-check" color='green'/>
-        ) : (
-            <Icon name="circle-times" color='red'/>
-        )
-    ), []);
-
-
     const ActionButton = ({ onClick, children, className }) => (
         <div className={`rsssl-action-buttons__inner`}>
             <button
@@ -245,7 +225,7 @@ const CountryDatatable = (props) => {
             {getCurrentFilter(moduleName) === 'blocked' && (
                 <ActionButton onClick={() => allowById(id)}
                               className="button-secondary">
-                    {__("Allow", "really-simple-ssl")}
+                    {__("Trust", "really-simple-ssl")}
                 </ActionButton>
             )}
             {getCurrentFilter(moduleName) === 'regions' && (
@@ -334,11 +314,13 @@ const CountryDatatable = (props) => {
                             type="text"
                             className="rsssl-search-bar__input"
                             placeholder={__("Search", "really-simple-ssl")}
-                            disabled={processing} onKeyUp={event => {
-                            if (event.key === 'Enter') {
-                                handleCountryTableSearch(event.target.value, searchableColumns);
-                            }
-                        }}  />
+                            disabled={processing}
+                            onKeyUp={event => {
+                                if (event.key === 'Enter') {
+                                    handleCountryTableSearch(event.target.value, searchableColumns);
+                                }
+                            }}
+                         />
                     </div>
                 </div>
             </div>
@@ -358,7 +340,7 @@ const CountryDatatable = (props) => {
                                 <>
                                     <ActionButton
                                         onClick={() => allowCountryByCode(rowsSelected)}>
-                                        {__("Allow", "really-simple-ssl")}
+                                        {__("Trust", "really-simple-ssl")}
                                     </ActionButton>
                                     <ActionButton
                                         onClick={() => blockCountryByCode(rowsSelected)}  className="button-primary">
@@ -369,14 +351,14 @@ const CountryDatatable = (props) => {
                             {getCurrentFilter(moduleName) === 'blocked' && (
                                 <ActionButton
                                     onClick={() => allowMultiple(rowsSelected)}>
-                                    {__("Allow", "really-simple-ssl")}
+                                    {__("Trust", "really-simple-ssl")}
                                 </ActionButton>
                             )}
                             {getCurrentFilter(moduleName) === 'regions' && (
                                 <>
                                     <ActionButton
                                         onClick={() => allowRegionByCode(rowsSelected)}  className="button-primary">
-                                        {__("Allow", "really-simple-ssl")}
+                                        {__("Trust", "really-simple-ssl")}
                                     </ActionButton>
                                     <ActionButton
                                         onClick={() => blockRegionByCode(rowsSelected)}>
@@ -390,7 +372,7 @@ const CountryDatatable = (props) => {
             )}
             <DataTable
                 columns={columns}
-                data={Object.values(data)}
+                data={processing? [] : Object.values(data)}
                 dense
                 pagination={!processing}
                 paginationServer

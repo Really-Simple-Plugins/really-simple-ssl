@@ -3676,9 +3676,6 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
   rowCleared: false,
   fetchCountryData: async (action, dataActions) => {
     //we check if the processing is already true, if so we return
-    if (get().processing) {
-      return;
-    }
     set({
       processing: true
     });
@@ -3742,7 +3739,6 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
         currentPage
       };
     }));
-    console.log("handleCountryTableRowsChange", get().dataActions);
   },
   //this handles all pagination and sorting
   handleCountryTableSort: async (column, sortDirection) => {
@@ -3772,7 +3768,6 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
     set({
       processing: true
     });
-    console.log("addRow", country, status, dataActions);
     try {
       const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('add_country_to_list', {
         country,
@@ -3789,9 +3784,12 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
     } catch (e) {
       console.log(e);
       // Notify the user of an error.
+    } finally {
+      set({
+        processing: false
+      });
     }
   },
-
   addRowMultiple: async (countries, status, dataActions) => {
     set({
       processing: true
@@ -3812,9 +3810,12 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
     } catch (e) {
       console.error(e);
       // Notify the user of an error.
+    } finally {
+      set({
+        processing: false
+      });
     }
   },
-
   removeRowMultiple: async (countries, status, dataActions) => {
     set({
       processing: true
@@ -3881,6 +3882,10 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
       }
     } catch (e) {
       console.error(e);
+    } finally {
+      set({
+        processing: false
+      });
     }
   },
   addRegions: async (regions, status, dataActions) => {
@@ -3897,6 +3902,10 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
       }
     } catch (e) {
       console.error(e);
+    } finally {
+      set({
+        processing: false
+      });
     }
   },
   removeRegion: async (region, status, dataActions) => {
@@ -3919,9 +3928,12 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
     } catch (e) {
       console.error(e);
       // Notify the user of an error.
+    } finally {
+      set({
+        processing: false
+      });
     }
   },
-
   removeRegions: async (regions, status, dataActions) => {
     console.log("removeRegions", regions, status, dataActions);
     set({
@@ -3943,9 +3955,12 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
     } catch (e) {
       console.error(e);
       // Notify the user of an error.
+    } finally {
+      set({
+        processing: false
+      });
     }
   },
-
   updateMultiRow: async (ids, status, dataActions) => {
     set({
       processing: true
@@ -3961,6 +3976,10 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
       }
     } catch (e) {
       console.log(e);
+    } finally {
+      set({
+        processing: false
+      });
     }
   },
   resetRow: async (id, dataActions) => {
@@ -3977,6 +3996,10 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
       }
     } catch (e) {
       console.log(e);
+    } finally {
+      set({
+        processing: false
+      });
     }
   },
   resetMultiRow: async (ids, dataActions) => {
@@ -3993,6 +4016,10 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
       }
     } catch (e) {
       console.log(e);
+    } finally {
+      set({
+        processing: false
+      });
     }
   }
 }));
@@ -4100,20 +4127,11 @@ const CountryDatatable = props => {
       setSelectedFilter('blocked', moduleName);
     }
     setProcessingFilter(processing);
-    //we also want to clear the selected rows when the filter is changed
-
     handleCountryTableFilter('status', currentFilter);
   }, [moduleName, handleCountryTableFilter, getCurrentFilter(moduleName), setSelectedFilter, CountryDatatable, processing]);
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     setRowsSelected([]);
   }, [CountryDataTable]);
-  (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
-    if (fieldAlreadyEnabled) {
-      if (!dataLoaded) {
-        fetchDynamicData(field.action);
-      }
-    }
-  }, [fields]);
 
   //if the dataActions are changed, we fetch the data
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
@@ -4217,13 +4235,6 @@ const CountryDatatable = props => {
     },
     title: title
   })), []);
-  const generateGoodBad = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)(value => value > 0 ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_12__["default"], {
-    name: "circle-check",
-    color: "green"
-  }) : (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_12__["default"], {
-    name: "circle-times",
-    color: "red"
-  }), []);
   const ActionButton = _ref => {
     let {
       onClick,
@@ -4243,7 +4254,7 @@ const CountryDatatable = props => {
   }, getCurrentFilter(moduleName) === 'blocked' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
     onClick: () => allowById(id),
     className: "button-secondary"
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)("Allow", "really-simple-ssl")), getCurrentFilter(moduleName) === 'regions' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)("Trust", "really-simple-ssl")), getCurrentFilter(moduleName) === 'regions' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
     onClick: () => blockRegionByCode(id, region_name),
     className: "button-primary"
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)("Block", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
@@ -4328,15 +4339,15 @@ const CountryDatatable = props => {
     className: "rsssl-action-buttons"
   }, getCurrentFilter(moduleName) === 'countries' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
     onClick: () => allowCountryByCode(rowsSelected)
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)("Allow", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)("Trust", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
     onClick: () => blockCountryByCode(rowsSelected),
     className: "button-primary"
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)("Block", "really-simple-ssl"))), getCurrentFilter(moduleName) === 'blocked' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
     onClick: () => allowMultiple(rowsSelected)
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)("Allow", "really-simple-ssl")), getCurrentFilter(moduleName) === 'regions' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)("Trust", "really-simple-ssl")), getCurrentFilter(moduleName) === 'regions' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
     onClick: () => allowRegionByCode(rowsSelected),
     className: "button-primary"
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)("Allow", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)("Trust", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
     onClick: () => blockRegionByCode(rowsSelected)
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)("Block", "really-simple-ssl")))))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_2__["default"], {
     columns: columns,
@@ -5440,18 +5451,23 @@ const UserDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set,
   pagination: {},
   dataActions: {},
   UserDataTable: [],
+  rowCleared: false,
   fetchUserData: async (action, dataActions) => {
+    //we check if the processing is already true, if so we return
     set({
       processing: true
     });
     set({
       dataLoaded: false
     });
+    set({
+      rowCleared: true
+    });
     try {
       const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction(action, dataActions);
       //now we set the EventLog
-      if (response) {
-        //if the response is empty we set the dummyData
+      //now we set the EventLog
+      if (response && response.request_success) {
         set({
           UserDataTable: response,
           dataLoaded: true,
@@ -5459,8 +5475,18 @@ const UserDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set,
           pagination: response.pagination
         });
       }
+      set({
+        rowCleared: true
+      });
     } catch (e) {
       console.log(e);
+    } finally {
+      set({
+        processing: false
+      });
+      set({
+        rowCleared: false
+      });
     }
   },
   handleUserTableSearch: async (search, searchColumns) => {
@@ -5517,7 +5543,7 @@ const UserDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set,
   /*
   * This function add a new row to the table
   */
-  addRow: async (user, status) => {
+  addRow: async (user, status, dataActions) => {
     set({
       processing: true
     });
@@ -5528,7 +5554,7 @@ const UserDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set,
       });
       // Consider checking the response structure for any specific success or failure signals
       if (response && response.request_success) {
-        await get().fetchUserData('user_list');
+        await get().fetchUserData('user_list', dataActions);
         // Potentially notify the user of success, if needed.
       } else {
         // Handle any unsuccessful response if needed.
@@ -5546,7 +5572,7 @@ const UserDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set,
   /*
   * This function updates the row only changing the status
   */
-  updateRow: async (id, status) => {
+  updateRow: async (id, status, dataActions) => {
     set({
       processing: true
     });
@@ -5557,13 +5583,17 @@ const UserDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set,
       });
       //now we set the EventLog
       if (response) {
-        await get().fetchUserData('user_list');
+        await get().fetchUserData('user_list', dataActions);
       }
     } catch (e) {
       console.log(e);
+    } finally {
+      set({
+        processing: false
+      });
     }
   },
-  updateMultiRow: async (ids, status) => {
+  updateMultiRow: async (ids, status, dataActions) => {
     set({
       processing: true
     });
@@ -5573,14 +5603,18 @@ const UserDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set,
         status
       });
       //now we set the EventLog
-      if (response) {
-        await get().fetchUserData('user_list');
+      if (response && response.request_success) {
+        await get().fetchUserData('user_list', dataActions);
       }
     } catch (e) {
       console.log(e);
+    } finally {
+      set({
+        processing: false
+      });
     }
   },
-  resetRow: async id => {
+  resetRow: async (id, dataActions) => {
     set({
       processing: true
     });
@@ -5590,13 +5624,17 @@ const UserDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set,
       });
       //now we set the EventLog
       if (response) {
-        await get().fetchUserData('user_list');
+        await get().fetchUserData('user_list', dataActions);
       }
     } catch (e) {
       console.log(e);
+    } finally {
+      set({
+        processing: false
+      });
     }
   },
-  resetMultiRow: async ids => {
+  resetMultiRow: async (ids, dataActions) => {
     set({
       processing: true
     });
@@ -5606,10 +5644,14 @@ const UserDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set,
       });
       //now we set the EventLog
       if (response) {
-        await get().fetchUserData('user_list');
+        await get().fetchUserData('user_list', dataActions);
       }
     } catch (e) {
       console.log(e);
+    } finally {
+      set({
+        processing: false
+      });
     }
   }
 }));
@@ -5655,60 +5697,76 @@ const UserDatatable = props => {
   const {
     UserDataTable,
     dataLoaded,
+    fetchUserData,
+    processing,
+    handleUserTableFilter,
+    handleUserTablePageChange,
     pagination,
     resetRow,
     resetMultiRow,
     dataActions,
     handleUserTableRowsChange,
-    fetchUserData,
     handleUserTableSort,
-    handleUserTablePageChange,
     handleUserTableSearch,
-    handleUserTableFilter,
     updateMultiRow,
-    updateRow
+    updateRow,
+    rowCleared
   } = (0,_UserDataTableStore__WEBPACK_IMPORTED_MODULE_4__["default"])();
-
+  const {
+    DynamicDataTable,
+    fetchDynamicData
+  } = (0,_EventLog_EventLogDataTableStore__WEBPACK_IMPORTED_MODULE_9__["default"])();
   //here we set the selectedFilter from the Settings group
   const {
     selectedFilter,
     setSelectedFilter,
     activeGroupId,
-    getCurrentFilter
+    getCurrentFilter,
+    setProcessingFilter
   } = (0,_FilterData__WEBPACK_IMPORTED_MODULE_5__["default"])();
   const [rowsSelected, setRowsSelected] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)([]);
   const [addingUser, setAddingUser] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(false);
   const [user, setUser] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)('');
-  const [rowCleared, setRowCleared] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(false);
-  const {
-    fetchDynamicData
-  } = (0,_EventLog_EventLogDataTableStore__WEBPACK_IMPORTED_MODULE_9__["default"])();
   const moduleName = 'rsssl-group-filter-limit_login_attempts_users';
   const {
     fields,
     fieldAlreadyEnabled,
     getFieldValue
   } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_10__["default"])();
-
-  //we create the columns
-  let columns = [];
+  const buildColumn = (0,react__WEBPACK_IMPORTED_MODULE_2__.useCallback)(column => ({
+    name: column.name,
+    sortable: column.sortable,
+    searchable: column.searchable,
+    width: column.width,
+    visible: column.visible,
+    column: column.column,
+    selector: row => row[column.column]
+  }), []);
   //getting the fields from the props
   let field = props.field;
   //we loop through the fields
-  field.columns.forEach(function (item, i) {
-    let newItem = buildColumn(item);
-    columns.push(newItem);
-  });
+  const columns = field.columns.map(buildColumn);
+  const searchableColumns = columns.filter(column => column.searchable).map(column => column.column);
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
     const currentFilter = getCurrentFilter(moduleName);
     if (!currentFilter) {
       setSelectedFilter('locked', moduleName);
-    } else if (dataActions.sortDirection || dataActions.filterValue || dataActions.search || dataActions.page) {
-      // Fetch the user data only if dataActions are not empty
+      console.log('filter is set to locked');
+    }
+    setProcessingFilter(processing);
+    handleUserTableFilter('status', currentFilter);
+  }, [moduleName, handleUserTableFilter, getCurrentFilter(moduleName), setSelectedFilter, UserDatatable, processing]);
+  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
+    setRowsSelected([]);
+  }, [UserDataTable]);
+
+  //if the dataActions are changed, we fetch the data
+  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
+    //we make sure the dataActions are changed in the store before we fetch the data
+    if (dataActions) {
       fetchUserData(field.action, dataActions);
     }
-    handleUserTableFilter('status', currentFilter);
-  }, [getCurrentFilter(moduleName), dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, moduleName]);
+  }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, dataActions.currentRowsPerPage]);
   let enabled = false;
   fields.forEach(function (item, i) {
     if (item.id === 'enable_limited_login_attempts') {
@@ -5736,26 +5794,6 @@ const UserDatatable = props => {
       default: 'transparent'
     }
   }, 'light');
-
-  //only show the datatable if the data is loaded
-  if (!dataLoaded && columns.length === 0 && UserDataTable.length === 0) {
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-spinner"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-spinner__inner"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-spinner__icon"
-    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-spinner__text"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Loading...", "really-simple-ssl"))));
-  }
-  let searchableColumns = [];
-  //setting the searchable columns
-  columns.map(column => {
-    if (column.searchable) {
-      searchableColumns.push(column.column);
-    }
-  });
   const handleOpen = () => {
     setAddingUser(true);
   };
@@ -5772,109 +5810,83 @@ const UserDatatable = props => {
       value: item[0]
     };
   });
-  function handleStatusChange(value, id) {}
-  function blockUsers(data) {
-    //we check if the data is an array
+  const blockUsers = (0,react__WEBPACK_IMPORTED_MODULE_2__.useCallback)(async data => {
     if (Array.isArray(data)) {
-      let ids = [];
-      data.map(item => {
-        ids.push(item.id);
-      });
-      updateMultiRow(ids, 'blocked');
-      //we emtry the rowsSelected
+      const ids = data.map(item => item.id);
+      await updateMultiRow(ids, 'blocked');
       setRowsSelected([]);
     } else {
-      updateRow(data, 'blocked');
+      await updateRow(data, 'blocked');
     }
-    fetchDynamicData('event_log');
-  }
-  function allowUsers(data) {
-    //we check if the data is an array
+    await fetchDynamicData('event_log');
+  }, [updateMultiRow, updateRow, fetchDynamicData]);
+  const allowUsers = (0,react__WEBPACK_IMPORTED_MODULE_2__.useCallback)(async data => {
     if (Array.isArray(data)) {
-      let ids = [];
-      data.map(item => {
-        ids.push(item.id);
-      });
-      updateMultiRow(ids, 'allowed');
-      //we emtry the rowsSelected
+      const ids = data.map(item => item.id);
+      await updateMultiRow(ids, 'allowed');
       setRowsSelected([]);
     } else {
-      updateRow(data, 'allowed');
+      await updateRow(data, 'allowed');
     }
-    fetchDynamicData('event_log');
-  }
-  function resetUsers(data) {
-    //we check if the data is an array
+    await fetchDynamicData('event_log');
+  }, [updateMultiRow, updateRow, fetchDynamicData]);
+  const resetUsers = (0,react__WEBPACK_IMPORTED_MODULE_2__.useCallback)(async data => {
     if (Array.isArray(data)) {
-      let ids = [];
-      data.map(item => {
-        ids.push(item.id);
-      });
-      resetMultiRow(ids);
-      //we emtry the rowsSelected
+      const ids = data.map(item => item.id);
+      await resetMultiRow(ids);
       setRowsSelected([]);
     } else {
-      resetRow(data);
+      await resetRow(data);
     }
-    fetchDynamicData('event_log');
-  }
-  function handleSelection(state) {
+    await fetchDynamicData('event_log');
+  }, [resetMultiRow, resetRow, fetchDynamicData]);
+  const handleSelection = (0,react__WEBPACK_IMPORTED_MODULE_2__.useCallback)(state => {
     setRowsSelected(state.selectedRows);
-  }
-  function generateActionbuttons(id) {
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-action-buttons"
-    }, getCurrentFilter(moduleName) === 'blocked' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-action-buttons__inner"
+  }, []);
+  const ActionButton = _ref => {
+    let {
+      onClick,
+      children,
+      className
+    } = _ref;
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: `rsssl-action-buttons__inner`
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-      className: "button button-secondary rsssl-action-buttons__button",
-      onClick: () => {
-        allowUsers(id);
-      }
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Allow", "really-simple-ssl"))), getCurrentFilter(moduleName) === 'allowed' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-action-buttons__inner"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-      className: "button button-primary rsssl-action-buttons__button",
-      onClick: () => {
-        blockUsers(id);
-      }
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Block", "really-simple-ssl"))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-action-buttons__inner"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-      className: "button button-red rsssl-action-buttons__button",
-      onClick: () => {
-        resetUsers(id);
-      }
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Delete", "really-simple-ssl")))));
-  }
+      className: `button ${className} rsssl-action-buttons__button`,
+      onClick: onClick,
+      disabled: processing
+    }, children));
+  };
+  const generateActionButtons = (0,react__WEBPACK_IMPORTED_MODULE_2__.useCallback)((id, status, region_name) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-action-buttons"
+  }, getCurrentFilter(moduleName) === 'blocked' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
+    onClick: () => {
+      allowUsers(id);
+    },
+    className: "button-secondary"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Trust", "really-simple-ssl")), getCurrentFilter(moduleName) === 'allowed' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
+    onClick: () => {
+      blockUsers(id);
+    },
+    className: "button-primary"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Block", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
+    onClick: () => {
+      resetUsers(id);
+    },
+    className: "button-red"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Delete", "really-simple-ssl"))), [getCurrentFilter(moduleName), moduleName, resetUsers, blockUsers, allowUsers]);
 
   //we convert the data to an array
   let data = {
     ...UserDataTable.data
   };
-  function generateOptions(status, id) {
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
-      className: "rsssl-select",
-      value: status,
-      onChange: event => handleStatusChange(event.target.value, id)
-    }, options.map((item, i) => {
-      let disabled = false;
-      if (item.value === 'locked') {
-        disabled = true;
-      }
-      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
-        key: i,
-        value: item.value,
-        disabled: disabled
-      }, item.label);
-    }));
-  }
   for (const key in data) {
     let dataItem = {
       ...data[key]
     };
     //we add the action buttons
-    dataItem.action = generateActionbuttons(dataItem.id);
+    dataItem.action = generateActionButtons(dataItem.id);
+    dataItem.status = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)(dataItem.status = dataItem.status.charAt(0).toUpperCase() + dataItem.status.slice(1), 'really-simple-ssl');
     data[key] = dataItem;
   }
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_AddUserModal__WEBPACK_IMPORTED_MODULE_8__["default"], {
@@ -5891,6 +5903,7 @@ const UserDatatable = props => {
     className: "rsssl-add-button__inner"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
     className: "button button-secondary rsssl-add-button__button",
+    disabled: processing,
     onClick: handleOpen
   }, getCurrentFilter(moduleName) === 'blocked' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Block username", "really-simple-ssl")), getCurrentFilter(moduleName) === 'allowed' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Trust username", "really-simple-ssl"))))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-search-bar"
@@ -5902,7 +5915,12 @@ const UserDatatable = props => {
     type: "text",
     className: "rsssl-search-bar__input",
     placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Search", "really-simple-ssl"),
-    onChange: event => handleUserTableSearch(event.target.value, searchableColumns)
+    disabled: processing,
+    onKeyUp: event => {
+      if (event.key === 'Enter') {
+        handleUserTableSearch(event.target.value, searchableColumns);
+      }
+    }
   })))), rowsSelected.length > 0 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     style: {
       marginTop: '1em',
@@ -5912,75 +5930,39 @@ const UserDatatable = props => {
     className: "rsssl-multiselect-datatable-form rsssl-primary"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("You have selected", "really-simple-ssl"), " ", rowsSelected.length, " ", (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("rows", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-action-buttons"
-  }, getCurrentFilter(moduleName) === 'blocked' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-action-buttons__inner"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-    className: "button button-secondary rsssl-action-buttons__button",
+  }, getCurrentFilter(moduleName) === 'blocked' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
     onClick: () => {
       allowUsers(rowsSelected);
     }
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Allow", "really-simple-ssl"))), getCurrentFilter(moduleName) === 'allowed' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-action-buttons__inner"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-    className: "button button-primary rsssl-action-buttons__button",
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Trust", "really-simple-ssl")), getCurrentFilter(moduleName) === 'allowed' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
     onClick: () => {
       blockUsers(rowsSelected);
     }
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Block", "really-simple-ssl"))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-action-buttons__inner"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Block", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
     className: "button button-red rsssl-action-buttons__button",
     onClick: () => {
       resetUsers(rowsSelected);
     }
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Delete", "really-simple-ssl")))))), dataLoaded ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Delete", "really-simple-ssl"))))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
     columns: columns,
-    data: Object.values(data),
+    data: processing ? [] : Object.values(data),
     dense: true,
-    pagination: true,
+    pagination: !processing,
     paginationServer: true,
     paginationTotalRows: pagination.totalRows,
     onChangeRowsPerPage: handleUserTableRowsChange,
     onChangePage: handleUserTablePageChange,
-    sortServer: true,
+    sortServer: !processing,
     onSort: handleUserTableSort,
     paginationRowsPerPageOptions: [10, 25, 50, 100],
-    selectableRows: true,
+    selectableRows: !processing,
     onSelectedRowsChange: handleSelection,
     clearSelectedRows: rowCleared,
     noDataComponent: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("No results", "really-simple-ssl"),
     persistTableHead: true,
     theme: "really-simple-plugins",
     customStyles: customStyles
-  }) : (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-spinner",
-    style: {
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      marginTop: "100px"
-    }
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-spinner__inner"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-spinner__icon",
-    style: {
-      border: '8px solid white',
-      borderTop: '8px solid #f4bf3e',
-      borderRadius: '50%',
-      width: '120px',
-      height: '120px',
-      animation: 'spin 2s linear infinite'
-    }
-  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-spinner__text",
-    style: {
-      position: 'absolute',
-      top: '50%',
-      left: '50%',
-      transform: 'translate(-50%, -50%)'
-    }
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Loading data, please stand by...", "really-simple-ssl")))), !enabled && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }), !enabled && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-locked"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-locked-overlay"
@@ -5989,17 +5971,6 @@ const UserDatatable = props => {
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Disabled', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Limit login attempts to enable this block.', 'really-simple-ssl')))));
 };
 /* harmony default export */ __webpack_exports__["default"] = (UserDatatable);
-function buildColumn(column) {
-  return {
-    name: column.name,
-    sortable: column.sortable,
-    searchable: column.searchable,
-    width: column.width,
-    visible: column.visible,
-    column: column.column,
-    selector: row => row[column.column]
-  };
-}
 
 /***/ }),
 
@@ -24525,4 +24496,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.2cbc767dad1def3f791c.js.map
+//# sourceMappingURL=src_Settings_Field_js.6ff2c1ca9ff8dff668ef.js.map

@@ -17,9 +17,6 @@ const CountryDataTableStore = create((set, get) => ({
 
     fetchCountryData: async (action, dataActions) => {
         //we check if the processing is already true, if so we return
-        if (get().processing) {
-            return;
-        }
         set({processing: true});
         set({dataLoaded: false});
         set({rowCleared: true});
@@ -64,7 +61,6 @@ const CountryDataTableStore = create((set, get) => ({
                 state.dataActions = {...state.dataActions, currentRowsPerPage, currentPage};
             })
         );
-        console.log("handleCountryTableRowsChange", get().dataActions);
     },
 
     //this handles all pagination and sorting
@@ -89,7 +85,6 @@ const CountryDataTableStore = create((set, get) => ({
  */
     addRow: async (country, status, dataActions) => {
         set({processing: true});
-        console.log("addRow", country, status, dataActions);
         try {
             const response = await rsssl_api.doAction('add_country_to_list', {country, status});
             // Consider checking the response structure for any specific success or failure signals
@@ -103,6 +98,8 @@ const CountryDataTableStore = create((set, get) => ({
         } catch (e) {
             console.log(e);
             // Notify the user of an error.
+        } finally {
+            set({processing: false});
         }
     },
 
@@ -121,6 +118,8 @@ const CountryDataTableStore = create((set, get) => ({
         } catch (e) {
             console.error(e);
             // Notify the user of an error.
+        } finally {
+            set({processing: false});
         }
     },
 
@@ -176,6 +175,8 @@ const CountryDataTableStore = create((set, get) => ({
             }
         } catch (e) {
             console.error(e);
+        } finally {
+            set({processing: false});
         }
     },
     addRegions: async (regions, status, dataActions) => {
@@ -189,6 +190,8 @@ const CountryDataTableStore = create((set, get) => ({
             }
         } catch (e) {
             console.error(e);
+        } finally {
+            set({processing: false});
         }
 
     },
@@ -207,6 +210,8 @@ const CountryDataTableStore = create((set, get) => ({
         } catch (e) {
             console.error(e);
             // Notify the user of an error.
+        } finally {
+            set({processing: false});
         }
     },
     removeRegions: async (regions, status, dataActions) => {
@@ -225,6 +230,8 @@ const CountryDataTableStore = create((set, get) => ({
         } catch (e) {
             console.error(e);
             // Notify the user of an error.
+        } finally {
+            set({processing: false});
         }
     },
     updateMultiRow: async (ids, status, dataActions) => {
@@ -240,6 +247,8 @@ const CountryDataTableStore = create((set, get) => ({
             }
         } catch (e) {
             console.log(e);
+        } finally {
+            set({processing: false});
         }
     },
 
@@ -256,6 +265,8 @@ const CountryDataTableStore = create((set, get) => ({
             }
         } catch (e) {
             console.log(e);
+        } finally {
+            set({processing: false});
         }
     },
 
@@ -272,6 +283,8 @@ const CountryDataTableStore = create((set, get) => ({
             }
         } catch (e) {
             console.log(e);
+        } finally {
+            set({processing: false});
         }
     }
 }));
