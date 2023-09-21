@@ -85,8 +85,11 @@ const DynamicDataTable = (props) => {
     }, [dataLoaded, getFieldValue('two_fa_enabled')]); // Add getFieldValue('login_protection_enabled') as a dependency
 
     const hasForcedRole = (users) => {
-
         let forcedRoles = getFieldValue('two_fa_forced_roles');
+        if (!Array.isArray(forcedRoles)) {
+            forcedRoles = [];
+        }
+
         if (Array.isArray(users)) {
             //for each users, check if the user has a forced role
             for (const user of users) {
@@ -171,7 +174,8 @@ const DynamicDataTable = (props) => {
 
     let resetDisabled = hasForcedRole(rowsSelected);
     let displayData = [];
-    DynamicDataTable.forEach(user => {
+    let inputData= DynamicDataTable ? DynamicDataTable : [];
+    inputData.forEach(user => {
         let recordCopy = {...user}
         recordCopy.deleteControl = hasForcedRole(user) ? '' : <button disabled={processing}
                                       className="button button-red rsssl-action-buttons__button"
@@ -181,8 +185,6 @@ const DynamicDataTable = (props) => {
                                 </button>
         displayData.push(recordCopy);
     });
-
-
 
     return (
         <>
