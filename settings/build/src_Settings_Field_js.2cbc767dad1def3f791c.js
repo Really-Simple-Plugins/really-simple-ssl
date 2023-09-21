@@ -3675,13 +3675,19 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
   CountryDataTable: [],
   rowCleared: false,
   fetchCountryData: async (action, dataActions) => {
+    //we check if the processing is already true, if so we return
+    if (get().processing) {
+      return;
+    }
     set({
       processing: true
     });
     set({
       dataLoaded: false
     });
-    console.warn("fetchCountryData", action, dataActions);
+    set({
+      rowCleared: true
+    });
     try {
       const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction(action, dataActions);
       //now we set the EventLog
@@ -3701,6 +3707,9 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
     } finally {
       set({
         processing: false
+      });
+      set({
+        rowCleared: false
       });
     }
   },
@@ -4061,7 +4070,8 @@ const CountryDatatable = props => {
     selectedFilter,
     setSelectedFilter,
     activeGroupId,
-    getCurrentFilter
+    getCurrentFilter,
+    setProcessingFilter
   } = (0,_FilterData__WEBPACK_IMPORTED_MODULE_7__["default"])();
   const [rowsSelected, setRowsSelected] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)([]);
   const moduleName = 'rsssl-group-filter-limit_login_attempts_country';
@@ -4089,6 +4099,9 @@ const CountryDatatable = props => {
     if (!currentFilter) {
       setSelectedFilter('blocked', moduleName);
     }
+    setProcessingFilter(processing);
+    //we also want to clear the selected rows when the filter is changed
+
     handleCountryTableFilter('status', currentFilter);
   }, [moduleName, handleCountryTableFilter, getCurrentFilter(moduleName), setSelectedFilter, CountryDatatable, processing]);
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
@@ -24512,4 +24525,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.097b697c10713e265c47.js.map
+//# sourceMappingURL=src_Settings_Field_js.2cbc767dad1def3f791c.js.map

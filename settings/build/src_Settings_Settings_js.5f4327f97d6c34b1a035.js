@@ -478,7 +478,8 @@ const SettingsGroup = props => {
   } = (0,_Settings_FieldsData__WEBPACK_IMPORTED_MODULE_5__["default"])();
   const {
     selectedFilter,
-    setSelectedFilter
+    setSelectedFilter,
+    processingFilter
   } = (0,_FilterData__WEBPACK_IMPORTED_MODULE_8__["default"])();
   const {
     setActiveGroupId,
@@ -1362,4 +1363,4 @@ const errorMsg = error => {
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Settings_js.89d1d9e96cf86e5e8733.js.map
+//# sourceMappingURL=src_Settings_Settings_js.5f4327f97d6c34b1a035.js.map

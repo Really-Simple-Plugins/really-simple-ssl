@@ -78,6 +78,8 @@ const CountryDatatable = (props) => {
             setSelectedFilter('blocked', moduleName);
         }
         setProcessingFilter(processing);
+        //we also want to clear the selected rows when the filter is changed
+
         handleCountryTableFilter('status', currentFilter);
 
     }, [moduleName, handleCountryTableFilter, getCurrentFilter(moduleName), setSelectedFilter, CountryDatatable, processing]);

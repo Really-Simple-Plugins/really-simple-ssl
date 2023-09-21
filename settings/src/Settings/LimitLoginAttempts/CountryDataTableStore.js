@@ -16,9 +16,13 @@ const CountryDataTableStore = create((set, get) => ({
     rowCleared: false,
 
     fetchCountryData: async (action, dataActions) => {
+        //we check if the processing is already true, if so we return
+        if (get().processing) {
+            return;
+        }
         set({processing: true});
         set({dataLoaded: false});
-        console.warn("fetchCountryData", action, dataActions);
+        set({rowCleared: true});
         try {
             const response = await rsssl_api.doAction(
                 action,
@@ -33,6 +37,7 @@ const CountryDataTableStore = create((set, get) => ({
             console.log(e);
         } finally {
             set({processing: false});
+            set({rowCleared: false});
 
         }
     },
