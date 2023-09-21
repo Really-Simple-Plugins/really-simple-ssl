@@ -11,6 +11,7 @@
 	<exclude-pattern>*\.css</exclude-pattern>
 
     <rule ref="WordPress-Extra">
+        <exclude name="Universal.Arrays.DisallowShortArraySyntax.Found"/>
         <exclude name="WordPress.Arrays.ArrayDeclarationSpacing"/>
         <exclude name="Generic.Arrays.DisallowShortArraySyntax"/>
         <exclude name="WordPress.PHP.DisallowShortTernary.Found" />
