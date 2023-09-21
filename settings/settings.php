@@ -168,7 +168,6 @@ function rsssl_add_option_menu()
 
     add_action("admin_print_scripts-{$page_hook_suffix}", 'rsssl_plugin_admin_scripts');
 }
-
 add_action('admin_menu', 'rsssl_add_option_menu');
 
 /**
