@@ -20,6 +20,9 @@ const CountryDataTableStore = create((set, get) => ({
         set({processing: true});
         set({dataLoaded: false});
         set({rowCleared: true});
+        if (Object.keys(dataActions).length === 0) {
+            return;
+        }
         try {
             const response = await rsssl_api.doAction(
                 action,
