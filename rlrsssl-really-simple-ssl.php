@@ -12,6 +12,7 @@
  * Text Domain: really-simple-ssl
  * Domain Path: /languages
  */
+
 /*
 	Copyright 2023  Really Simple Plugins BV  (email : support@really-simple-ssl.com)
 	This program is free software; you can redistribute it and/or modify
@@ -25,16 +26,21 @@
 	along with this program; if not, write to the Free Software
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-defined( 'ABSPATH' ) or die( 'you do not have access to this page!' );
+defined( 'ABSPATH' ) || die( 'you do not have access to this page!' );
 
 if ( ! function_exists( 'rsssl_activation_check' ) ) {
+	/**
+	 * Check if we need to show the onboarding
+	 *
+	 * @return void
+	 */
 	function rsssl_activation_check() {
 		update_option( 'rsssl_show_onboarding', true );
 		set_transient( 'rsssl_redirect_to_settings_page', true, HOUR_IN_SECONDS );
 	}
 	register_activation_hook( __FILE__, 'rsssl_activation_check' );
 }
-class REALLY_SIMPLE_SSL {
+class REALLY_SIMPLE_SSL { //phpcs:ignore
 
 	private static $instance;
 	public $front_end;
@@ -51,14 +57,22 @@ class REALLY_SIMPLE_SSL {
 	public $site_health;
 	public $vulnerabilities;
 
+	/**
+	 * REALLY_SIMPLE_SSL constructor.
+	 */
 	private function __construct() {
-		if ( isset( $_GET['rsssl_apitoken'] ) && $_GET['rsssl_apitoken'] == get_option( 'rsssl_csp_report_token' ) ) {
+		if ( isset( $_GET['rsssl_apitoken'] ) && $_GET['rsssl_apitoken'] == get_option( 'rsssl_csp_report_token' ) ) { //phpcs:ignore
 			if ( ! defined( 'RSSSL_LEARNING_MODE' ) ) {
 				define( 'RSSSL_LEARNING_MODE', true );
 			}
 		}
 	}
 
+	/**
+	 * Instantiate class
+	 *
+	 * @return REALLY_SIMPLE_SSL
+	 */
 	public static function instance() {
 		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof REALLY_SIMPLE_SSL ) ) {
 			self::$instance = new REALLY_SIMPLE_SSL();
@@ -88,6 +102,11 @@ class REALLY_SIMPLE_SSL {
 		return self::$instance;
 	}
 
+	/**
+	 * Set up constants
+	 *
+	 * @return void
+	 */
 	private function setup_constants() {
 		define( 'rsssl_url', plugin_dir_url( __FILE__ ) );
 		define( 'rsssl_path', trailingslashit( plugin_dir_path( __FILE__ ) ) );
@@ -102,7 +121,12 @@ class REALLY_SIMPLE_SSL {
 		define( 'rsssl_le_manual_generation_renewal_check', 15 );
 	}
 
-	private function includes() {
+	/**
+	 * Include files
+	 *
+	 * @return void
+	 */
+	private function includes(): void {
 		require_once rsssl_path . 'class-front-end.php';
 		require_once rsssl_path . 'functions.php';
 		require_once rsssl_path . 'class-mixed-content-fixer.php';
@@ -126,7 +150,7 @@ class REALLY_SIMPLE_SSL {
 			require_once rsssl_path . 'class-site-health.php';
 			require_once rsssl_path . 'mailer/class-mail.php';
 			require_once rsssl_path . 'lets-encrypt/letsencrypt.php';
-			if ( isset( $_GET['install_pro'] ) ) {
+			if ( isset( $_GET['install_pro'] ) ) { //phpcs:ignore
 				require_once rsssl_path . 'upgrade/upgrade-to-pro.php';
 			}
 		}
@@ -134,8 +158,12 @@ class REALLY_SIMPLE_SSL {
 		require_once rsssl_path . 'lets-encrypt/cron.php';
 		require_once rsssl_path . '/security/security.php';
 	}
-
-	private function hooks() {
+	/**
+	 * Add hooks
+	 *
+	 * @return void
+	 */
+	private function hooks(): void {
 		/**
 		 * Fire custom hook
 		 */
@@ -155,10 +183,10 @@ class REALLY_SIMPLE_SSL {
 	/**
 	 * Notice about possible compatibility issues with add ons
 	 */
-	public static function admin_notices() {
+	public static function admin_notices(): void {
 		// prevent showing on edit screen, as gutenberg removes the class which makes it editable.
 		$screen = get_current_screen();
-		if ( $screen && $screen->base === 'post' ) {
+		if ( $screen && 'post' === $screen->base ) {
 			return;
 		}
 		if ( self::has_old_addon( 'really-simple-ssl-pro/really-simple-ssl-pro.php' ) ||
