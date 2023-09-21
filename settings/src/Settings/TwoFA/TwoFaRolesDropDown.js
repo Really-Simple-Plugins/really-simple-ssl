@@ -40,10 +40,6 @@ const TwoFaRolesDropDown = ({ field }) => {
         setSelectedRoles(field.value.map((role, index) => ({ value: role, label: role.charAt(0).toUpperCase() + role.slice(1) })));
     },[fieldsLoaded]);
 
-    useEffect(() => {
-        console.log(changedFields)
-    },[changedFields]);
-
     /**
      * Handles the change event of the react-select component.
      * @param {array} selectedOptions - The selected options from the dropdown.
