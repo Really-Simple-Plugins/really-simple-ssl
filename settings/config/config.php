@@ -165,7 +165,7 @@ function rsssl_fields( $load_values = true ) {
 			'menu_id'     => 'general',
 			'group_id'    => 'general',
 			'type'        => 'button',
-			'url'         => trailingslashit( rsssl_url ) . 'system-status.php?download',
+			'url'         => trailingslashit( rsssl_url ) . 'system-status.php?download&nonce=' . wp_create_nonce( 'rsssl_download_system_status' ),
 			'button_text' => __( "Download", "really-simple-ssl" ),
 			'label'       => __( "System status", 'really-simple-ssl' ),
 			'disabled'    => false,

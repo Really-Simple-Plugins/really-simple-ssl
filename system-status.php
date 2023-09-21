@@ -1,8 +1,9 @@
 <?php
 // No need for the template engine.
 if ( ! defined( 'WP_USE_THEMES' ) ) {
-	define( 'WP_USE_THEMES', false ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound this is used in case the wp constant is not defined
+	define( 'WP_USE_THEMES', false ); //phpcs:ignore
 }
+
 // we set wp admin to true, so the backend features get loaded.
 if ( ! defined( 'RSSSL_DOING_SYSTEM_STATUS' ) ) {
 	define( 'RSSSL_DOING_SYSTEM_STATUS', true );
@@ -24,6 +25,11 @@ require_once ABSPATH . 'wp-admin/includes/plugin.php';
 
 // by deleting these we make sure these functions run again.
 delete_transient( 'rsssl_testpage' );
+/**
+ * Get the system status
+ *
+ * @return string
+ */
 function rsssl_get_system_status() {
 	$output = '';
 	global $wp_version;
@@ -78,7 +84,7 @@ function rsssl_get_system_status() {
 		$output .= "Really Simple SSL per site activated\n";
 	}
 
-	$output  .= '<br>' . '<b>' . 'SSL Configuration' . '</b>';
+	$output  .= '<br><b>SSL Configuration</b>';
 	$domain   = RSSSL()->certificate->get_domain();
 	$certinfo = RSSSL()->certificate->get_certinfo( $domain );
 	if ( ! $certinfo ) {
@@ -107,20 +113,20 @@ function rsssl_get_system_status() {
 		$output .= 'not able to fix wpconfig siteurl/homeurl.<br>';
 	}
 
-	if ( ! is_writable( RSSSL()->admin->find_wp_config_path() ) ) {
+	if ( ! is_writable( RSSSL()->admin->find_wp_config_path() ) ) { //phpcs:ignore
 		$output .= 'wp-config.php not writable<br>';
 	}
 	$output .= 'Detected SSL setup: ' . RSSSL()->admin->ssl_type . '<br>';
 	if ( file_exists( RSSSL()->admin->htaccess_file() ) ) {
 		$output .= 'htaccess file exists.<br>';
-		if ( ! is_writable( RSSSL()->admin->htaccess_file() ) ) {
+		if ( ! is_writable( RSSSL()->admin->htaccess_file() ) ) { //phpcs:ignore
 			$output .= 'htaccess file not writable.<br>';
 		}
 	} else {
 		$output .= 'no htaccess file available.<br>';
 	}
 
-	if ( 'success' === get_transient( 'rsssl_htaccess_test_success' )  ) {
+	if ( 'success' === get_transient( 'rsssl_htaccess_test_success' ) ) {
 		$output .= 'htaccess redirect tested successfully.<br>';
 	} elseif ( 'error' === get_transient( 'rsssl_htaccess_test_success' ) ) {
 		$output .= 'htaccess redirect test failed.<br>';
@@ -138,7 +144,7 @@ function rsssl_get_system_status() {
 		$output .= 'Mixed content marker not found: unknown error<br>';
 	}
 	if ( 'curl-error' === $mixed_content_fixer_detected ) {
-		// Site has has a cURL error
+		// Site has has a cURL error.
 		$output .= 'Mixed content fixer could not be detected: cURL error<br>';
 	}
 	if ( 'found' === $mixed_content_fixer_detected ) {
@@ -181,22 +187,22 @@ function rsssl_get_system_status() {
 	return $output;
 }
 
-if ( rsssl_user_can_manage() && isset( $_GET['download'] ) ) {
-	$content   = rsssl_get_system_status();
-	$fsize     = function_exists( 'mb_strlen' ) ? mb_strlen( $content, '8bit' ) : strlen( $content );
-	$file_name = 'really-simple-ssl-system-status.txt';
+if ( isset( $_GET['nonce'], $_GET['download'] ) && rsssl_user_can_manage() && wp_verify_nonce( wp_unslash( $_GET['nonce'] ), 'rsssl_download_system_status' ) ) { //phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, is a nonce
+	$rsssl_content   = rsssl_get_system_status();
+	$rsssl_fsize     = function_exists( 'mb_strlen' ) ? mb_strlen( $rsssl_content, '8bit' ) : strlen( $rsssl_content );
+	$rsssl_file_name = 'really-simple-ssl-system-status.txt';
 
 	// direct download.
 	header( 'Content-type: application/octet-stream' );
-	header( 'Content-Disposition: attachment; filename="' . $file_name . '"' );
+	header( 'Content-Disposition: attachment; filename="' . $rsssl_file_name . '"' );
 	// open in browser.
-	header( "Content-length: $fsize" );
-	header( 'Cache-Control: private', false ); // required for certain browsers
-	header( 'Pragma: public' ); // required
+	header( "Content-length: $rsssl_fsize" );
+	header( 'Cache-Control: private', false ); // required for certain browsers.
+	header( 'Pragma: public' ); // required.
 	header( 'Expires: 0' );
 	header( 'Cache-Control: must-revalidate, post-check=0, pre-check=0' );
 	header( 'Content-Transfer-Encoding: binary' );
-	echo $content;
+	echo esc_html( $rsssl_content );
 }
 
 /**
@@ -204,7 +210,6 @@ if ( rsssl_user_can_manage() && isset( $_GET['download'] ) ) {
  *
  * @return false|string
  */
-
 function rsssl_find_wordpress_base_path() {
 	$path = __DIR__;
 
@@ -216,9 +221,9 @@ function rsssl_find_wordpress_base_path() {
 			}
 
 			// wp not in this directory. Look in each folder to see if it's there.
-			if ( file_exists( $path ) && $handle = opendir( $path ) ) {
-				while ( false !== ( $file = readdir( $handle ) ) ) {
-					if ( $file !== '.' && $file !== '..' ) {
+			if ( file_exists( $path ) && $handle = opendir( $path ) ) { //phpcs:ignore
+				while ( false !== ( $file = readdir( $handle ) ) ) { //phpcs:ignore
+					if ( '.' !== $file && '..' !== $file ) {
 						$file = $path . '/' . $file;
 						if ( is_dir( $file ) && file_exists( $file . '/wp-load.php' ) ) {
 							$path = $file;
@@ -231,7 +236,7 @@ function rsssl_find_wordpress_base_path() {
 
 			return $path;
 		}
-	} while ( $path = "$path/.." );
+	} while ( $path = "$path/.." ); //phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition.FoundInWhileCondition
 
 	return false;
 }
