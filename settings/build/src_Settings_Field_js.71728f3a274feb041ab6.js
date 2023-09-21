@@ -3663,13 +3663,19 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
   CountryDataTable: [],
   rowCleared: false,
   fetchCountryData: async (action, dataActions) => {
+    //we check if the processing is already true, if so we return
+    if (get().processing) {
+      return;
+    }
     set({
       processing: true
     });
     set({
       dataLoaded: false
     });
-    console.warn("fetchCountryData", action, dataActions);
+    set({
+      rowCleared: true
+    });
     try {
       const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction(action, dataActions);
       //now we set the EventLog
@@ -3689,6 +3695,9 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
     } finally {
       set({
         processing: false
+      });
+      set({
+        rowCleared: false
       });
     }
   },
@@ -4083,8 +4092,14 @@ const CountryDatatable = props => {
     selectedFilter,
     setSelectedFilter,
     activeGroupId,
+<<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
     getCurrentFilter
   } = (0,_FilterData__WEBPACK_IMPORTED_MODULE_5__["default"])();
+========
+    getCurrentFilter,
+    setProcessingFilter
+  } = (0,_FilterData__WEBPACK_IMPORTED_MODULE_7__["default"])();
+>>>>>>>> 02387f523 (after a database call, the country table now clears all selection and block all filter buttons):settings/build/src_Settings_Field_js.2cbc767dad1def3f791c.js
   const [rowsSelected, setRowsSelected] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)([]);
   const moduleName = 'rsssl-group-filter-limit_login_attempts_country';
   const {
@@ -4111,6 +4126,9 @@ const CountryDatatable = props => {
     if (!currentFilter) {
       setSelectedFilter('blocked', moduleName);
     }
+    setProcessingFilter(processing);
+    //we also want to clear the selected rows when the filter is changed
+
     handleCountryTableFilter('status', currentFilter);
   }, [moduleName, handleCountryTableFilter, getCurrentFilter(moduleName), setSelectedFilter, CountryDatatable, processing]);
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
@@ -24578,6 +24596,7 @@ __webpack_require__.r(__webpack_exports__);
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
+<<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 //# sourceMappingURL=src_Settings_Field_js.71728f3a274feb041ab6.js.map
 ========
 //# sourceMappingURL=src_Settings_Field_js.2a9f68f4c72b1ac2b97c.js.map
@@ -24624,3 +24643,6 @@ __webpack_require__.r(__webpack_exports__);
 ========
 //# sourceMappingURL=src_Settings_Field_js.097b697c10713e265c47.js.map
 >>>>>>>> 185d13df7 (made further improvements on redusing unnessecary calls to server):settings/build/src_Settings_Field_js.097b697c10713e265c47.js
+========
+//# sourceMappingURL=src_Settings_Field_js.2cbc767dad1def3f791c.js.map
+>>>>>>>> 02387f523 (after a database call, the country table now clears all selection and block all filter buttons):settings/build/src_Settings_Field_js.2cbc767dad1def3f791c.js
