@@ -10,11 +10,11 @@ import {__} from "@wordpress/i18n";
  */
 const TwoFaRolesDropDown = ({ field }) => {
     const {fetchRoles, roles, rolesLoaded} = useRolesData();
-    const [selectedRoles, setSelectedRoles] = useState(field.value.map(value => ({ value, label: value.charAt(0).toUpperCase() + value.slice(1) })));
+    const [selectedRoles, setSelectedRoles] = useState([]);
     const [otherRoles, setOtherRoles] = useState([]);
     // Custom hook to manage form fields
-    const { updateField, getFieldValue, setChangedField, getField } = useFields();
-    let enabled = false;
+    const { updateField, getFieldValue, setChangedField, getField, changedFields, fieldsLoaded } = useFields();
+    let enabled = true;
 
     useEffect(() => {
         if (!rolesLoaded) {
@@ -23,7 +23,7 @@ const TwoFaRolesDropDown = ({ field }) => {
     }, [rolesLoaded]);
 
     useEffect(() => {
-        if (field.id==='two_fa_forced_roles') {
+        if ( field.id==='two_fa_forced_roles' ) {
             let otherField = getField('two_fa_optional_roles');
             setOtherRoles(otherField.value);
         } else {
@@ -31,6 +31,18 @@ const TwoFaRolesDropDown = ({ field }) => {
             setOtherRoles(otherField.value);
         }
     }, [selectedRoles, getField('two_fa_optional_roles'), getField('two_fa_forced_roles')]);
+
+    useEffect(() => {
+       if ( !field.value ) {
+            setChangedField(field.id, field.default);
+            updateField(field.id, field.default);
+        }
+        setSelectedRoles(field.value.map((role, index) => ({ value: role, label: role.charAt(0).toUpperCase() + role.slice(1) })));
+    },[fieldsLoaded]);
+
+    useEffect(() => {
+        console.log(changedFields)
+    },[changedFields]);
 
     /**
      * Handles the change event of the react-select component.
@@ -44,7 +56,6 @@ const TwoFaRolesDropDown = ({ field }) => {
         // Update the field and changedField using the custom hook functions
         updateField(field.id, rolesExcluded);
         setChangedField(field.id, rolesExcluded);
-
     };
 
     const customStyles = {
@@ -66,7 +77,9 @@ const TwoFaRolesDropDown = ({ field }) => {
         })
     };
 
-    enabled = getFieldValue('login_protection_enabled');
+    if (field.id === 'two_fa_optional_roles') {
+        enabled = getFieldValue('login_protection_enabled');
+    }
     const alreadySelected = selectedRoles.map(option => option.value);
     let filteredRoles = [...roles];
     //from roles, remove roles in the usedRoles array
@@ -80,27 +93,6 @@ const TwoFaRolesDropDown = ({ field }) => {
         }
     });
 
-    if ( ! enabled ) {
-        // Render the component
-        return (
-            <div style={{marginTop: '5px'}}>
-                <Select
-                    isMulti
-                    options={filteredRoles}
-                    onChange={handleChange}
-                    value={selectedRoles}
-                    menuPosition={"fixed"}
-                    styles={customStyles}
-                />
-                <div className="rsssl-locked">
-                    <div className="rsssl-locked-overlay"><span
-                        className="rsssl-task-status rsssl-open">{__('Disabled', 'really-simple-ssl')}</span><span>{__('Activate login protection to enable this block.', 'really-simple-ssl')}</span>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
     return (
         <div style={{marginTop: '5px'}}>
             <Select
@@ -111,6 +103,13 @@ const TwoFaRolesDropDown = ({ field }) => {
                 menuPosition={"fixed"}
                 styles={customStyles}
             />
+            {! enabled &&
+                <div className="rsssl-locked">
+                    <div className="rsssl-locked-overlay"><span
+                        className="rsssl-task-status rsssl-open">{__('Disabled', 'really-simple-ssl')}</span><span>{__('Activate login protection to enable this block.', 'really-simple-ssl')}</span>
+                    </div>
+                </div>
+            }
         </div>
     );
 };
