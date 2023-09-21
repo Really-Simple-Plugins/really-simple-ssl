@@ -36,6 +36,11 @@
 	<!-- https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards/wiki/Customizable-sniff-properties -->
 	<config name="minimum_supported_wp_version" value="4.6"/>
 	<rule ref="WordPress"/>
+	<rule ref="WordPress.WP.Capabilities.Unknown">
+	    <properties>
+            <property name="custom_capabilities" type="string" value="manage_security"/>
+	    </properties>
+	</rule>
 	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
 		<properties>
 			<!-- Value: replace the function, class, and variable prefixes used. Separate multiple prefixes with a comma. -->
