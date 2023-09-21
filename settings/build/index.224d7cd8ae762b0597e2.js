@@ -2974,6 +2974,7 @@ const Page = () => {
   const [DashboardPage, setDashboardPage] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
   const [Notices, setNotices] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
   const [Menu, setMenu] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
+  const [ToastContainer, setToastContainer] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     if (!modalStatusLoaded) {
       fetchOnboardingModalStatus();
@@ -3048,6 +3049,14 @@ const Page = () => {
       });
     }
   }, [showModal]);
+
+  // async load react-toastify
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    Promise.resolve(/*! import() */).then(__webpack_require__.bind(__webpack_require__, /*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs")).then(module => {
+      const ToastContainer = module.ToastContainer;
+      setToastContainer(() => ToastContainer);
+    });
+  }, []);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     if (fieldsLoaded) {
       fetchMenuData(fields);
@@ -3075,7 +3084,17 @@ const Page = () => {
     className: "rsssl-content-area rsssl-grid rsssl-" + selectedMainMenuItem
   }, selectedMainMenuItem !== 'dashboard' && Settings && Menu && Notices && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Menu, null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Settings, null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Notices, {
     className: "rsssl-wizard-notices"
-  })), selectedMainMenuItem === 'dashboard' && DashboardPage && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(DashboardPage, null))));
+  })), selectedMainMenuItem === 'dashboard' && DashboardPage && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(DashboardPage, null))), ToastContainer && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ToastContainer, {
+    position: "bottom-right",
+    autoClose: 2000,
+    limit: 3,
+    hideProgressBar: true,
+    newestOnTop: true,
+    closeOnClick: true,
+    pauseOnFocusLoss: true,
+    pauseOnHover: true,
+    theme: "light"
+  }));
 };
 /* harmony default export */ __webpack_exports__["default"] = (Page);
 
@@ -3129,22 +3148,16 @@ const PagePlaceholder = props => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-<<<<<<<< HEAD:settings/build/index.627d11fff53e9d4ef6a7.js
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/index.mjs");
-/* harmony import */ var immer__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! immer */ "./node_modules/immer/dist/immer.esm.mjs");
-========
 /* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/index.mjs");
 /* harmony import */ var immer__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! immer */ "./node_modules/immer/dist/immer.esm.mjs");
->>>>>>>> a3a5b65e3 (removed multiple timeouts and promises):settings/build/index.22271b6ea5d32ed40d8b.js
 /* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/api */ "./src/utils/api.js");
 /* harmony import */ var _utils_sleeper_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/sleeper.js */ "./src/utils/sleeper.js");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/data */ "@wordpress/data");
 /* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
+
 
 
 
@@ -3165,7 +3178,7 @@ const fetchFields = () => {
     console.error(error);
   });
 };
-const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, get) => ({
+const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_5__.create)((set, get) => ({
   fieldsLoaded: false,
   error: false,
   fields: [],
@@ -3186,7 +3199,7 @@ const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, get) => 
     nextButtonDisabled
   })),
   setChangedField: (id, value) => {
-    set((0,immer__WEBPACK_IMPORTED_MODULE_5__.produce)(state => {
+    set((0,immer__WEBPACK_IMPORTED_MODULE_6__.produce)(state => {
       //remove current reference
       const existingFieldIndex = state.changedFields.findIndex(field => {
         return field.id === id;
@@ -3206,7 +3219,7 @@ const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, get) => 
     handleShowSavedSettingsNotice(text);
   },
   updateField: (id, value) => {
-    set((0,immer__WEBPACK_IMPORTED_MODULE_5__.produce)(state => {
+    set((0,immer__WEBPACK_IMPORTED_MODULE_6__.produce)(state => {
       let index = state.fields.findIndex(fieldItem => fieldItem.id === id);
       if (index !== -1) {
         state.fields[index].value = value;
@@ -3214,7 +3227,7 @@ const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, get) => 
     }));
   },
   updateFieldAttribute: (id, attribute, value) => {
-    set((0,immer__WEBPACK_IMPORTED_MODULE_5__.produce)(state => {
+    set((0,immer__WEBPACK_IMPORTED_MODULE_6__.produce)(state => {
       let index = state.fields.findIndex(fieldItem => fieldItem.id === id);
       if (index !== -1) {
         state.fields[index][attribute] = value;
@@ -3222,7 +3235,7 @@ const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, get) => 
     }));
   },
   updateSubField: (id, subItemId, value) => {
-    set((0,immer__WEBPACK_IMPORTED_MODULE_5__.produce)(state => {
+    set((0,immer__WEBPACK_IMPORTED_MODULE_6__.produce)(state => {
       let index = state.fields.findIndex(fieldItem => fieldItem.id === id);
       let itemValue = state.fields[index].value;
       if (!Array.isArray(itemValue)) {
@@ -3317,7 +3330,7 @@ const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, get) => 
       _utils_api__WEBPACK_IMPORTED_MODULE_0__.setFields(saveFields).then(response => {
         progress = response.progress;
         fields = response.fields;
-        set((0,immer__WEBPACK_IMPORTED_MODULE_5__.produce)(state => {
+        set((0,immer__WEBPACK_IMPORTED_MODULE_6__.produce)(state => {
           state.changedFields = [];
           state.fields = fields;
           state.progress = progress;
@@ -3333,7 +3346,7 @@ const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, get) => 
     let fields = get().fields;
     fields = updateFieldsListWithConditions(fields);
     const nextButtonDisabled = isNextButtonDisabled(fields, selectedSubMenuItem);
-    set((0,immer__WEBPACK_IMPORTED_MODULE_5__.produce)(state => {
+    set((0,immer__WEBPACK_IMPORTED_MODULE_6__.produce)(state => {
       state.fields = fields;
       state.nextButtonDisabled = nextButtonDisabled;
     }));
@@ -3395,14 +3408,7 @@ const handleShowSavedSettingsNotice = text => {
   if (typeof text === 'undefined') {
     text = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Settings Saved', 'really-simple-ssl');
   }
-  (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_3__.dispatch)('core/notices').createNotice('success', text, {
-    __unstableHTML: true,
-    id: 'rsssl_settings_saved',
-    type: 'snackbar',
-    isDismissible: false
-  }).then((0,_utils_sleeper_js__WEBPACK_IMPORTED_MODULE_1__["default"])(2000)).then(response => {
-    (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_3__.dispatch)('core/notices').removeNotice('rsssl_settings_saved');
-  });
+  react_toastify__WEBPACK_IMPORTED_MODULE_4__.toast.success(text);
 };
 const validateConditions = (conditions, fields, fieldId) => {
   let relation = conditions[0].relation === 'OR' ? 'OR' : 'AND';
@@ -3941,8 +3947,6 @@ const sleeper = ms => {
 
 /***/ }),
 
-<<<<<<<< HEAD:settings/build/index.627d11fff53e9d4ef6a7.js
-========
 /***/ "./node_modules/clsx/dist/clsx.m.js":
 /*!******************************************!*\
   !*** ./node_modules/clsx/dist/clsx.m.js ***!
@@ -3958,7 +3962,6 @@ function r(e){var t,f,n="";if("string"==typeof e||"number"==typeof e)n+=e;else i
 
 /***/ }),
 
->>>>>>>> a3a5b65e3 (removed multiple timeouts and promises):settings/build/index.22271b6ea5d32ed40d8b.js
 /***/ "./node_modules/use-sync-external-store/cjs/use-sync-external-store-shim.development.js":
 /*!**********************************************************************************************!*\
   !*** ./node_modules/use-sync-external-store/cjs/use-sync-external-store-shim.development.js ***!
@@ -4542,8 +4545,6 @@ function n(n){for(var r=arguments.length,t=Array(r>1?r-1:0),e=1;e<r;e++)t[e-1]=a
 
 /***/ }),
 
-<<<<<<<< HEAD:settings/build/index.627d11fff53e9d4ef6a7.js
-========
 /***/ "./node_modules/react-toastify/dist/react-toastify.esm.mjs":
 /*!*****************************************************************!*\
   !*** ./node_modules/react-toastify/dist/react-toastify.esm.mjs ***!
@@ -4574,7 +4575,6 @@ const u=t=>"number"==typeof t&&!isNaN(t),d=t=>"string"==typeof t,p=t=>"function"
 
 /***/ }),
 
->>>>>>>> a3a5b65e3 (removed multiple timeouts and promises):settings/build/index.22271b6ea5d32ed40d8b.js
 /***/ "./node_modules/zustand/esm/index.mjs":
 /*!********************************************!*\
   !*** ./node_modules/zustand/esm/index.mjs ***!
@@ -4769,63 +4769,7 @@ var vanilla = (createState) => {
 /******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = function(chunkId) {
 /******/ 			// return url for filenames based on template
-<<<<<<<< HEAD:settings/build/index.627d11fff53e9d4ef6a7.js
-<<<<<<<< HEAD:settings/build/index.627d11fff53e9d4ef6a7.js
-<<<<<<<< HEAD:settings/build/index.627d11fff53e9d4ef6a7.js
-<<<<<<<< HEAD:settings/build/index.627d11fff53e9d4ef6a7.js
-<<<<<<<< HEAD:settings/build/index.627d11fff53e9d4ef6a7.js
-<<<<<<<< HEAD:settings/build/index.627d11fff53e9d4ef6a7.js
-<<<<<<<< HEAD:settings/build/index.627d11fff53e9d4ef6a7.js
-<<<<<<<< HEAD:settings/build/index.627d11fff53e9d4ef6a7.js
-<<<<<<<< HEAD:settings/build/index.627d11fff53e9d4ef6a7.js
-<<<<<<<< HEAD:settings/build/index.627d11fff53e9d4ef6a7.js
-<<<<<<<< HEAD:settings/build/index.627d11fff53e9d4ef6a7.js
-<<<<<<<< HEAD:settings/build/index.627d11fff53e9d4ef6a7.js
-<<<<<<<< HEAD:settings/build/index.627d11fff53e9d4ef6a7.js
-<<<<<<<< HEAD:settings/build/index.627d11fff53e9d4ef6a7.js
-/******/ 			return "" + chunkId + "." + {"vendors-node_modules_mui_material_Tooltip_Tooltip_js":"0cc86ac6c861846722b1","src_Settings_Settings_js":"902ea4078780eff558ca","src_Menu_Menu_js":"c275f909410871ede758","src_Dashboard_DashboardPage_js":"cc315f71743912c1ce7b","src_Onboarding_OnboardingModal_js":"85fbed60f8e666a7e677","src_Modal_Modal_js":"e34b60e44e1022d3fe24","vendors-node_modules_material-ui_core_esm_TextField_TextField_js-node_modules_react-data-tabl-8e8716":"64aaccd4757f22c45708","src_Settings_Field_js":"2e8d0bb433e02bbd984f","vendors-node_modules_material-ui_lab_esm_Autocomplete_index_js":"515dd4c5b9e6e345a1ea","vendors-node_modules_material-ui_core_esm_styles_index_js":"b2604edf5f43bcfce41a"}[chunkId] + ".js";
-========
-/******/ 			return "" + chunkId + "." + {"vendors-node_modules_mui_material_Tooltip_Tooltip_js":"0cc86ac6c861846722b1","src_Settings_Settings_js":"b2e4e831a6e4dfefbb5c","src_Menu_Menu_js":"c275f909410871ede758","src_Dashboard_DashboardPage_js":"4f7f9660ad30371d9445","src_Onboarding_OnboardingModal_js":"85fbed60f8e666a7e677","src_Modal_Modal_js":"e34b60e44e1022d3fe24","vendors-node_modules_material-ui_core_esm_TextField_TextField_js-node_modules_react-toastify_-1fccac":"140655a5d7db93a2497a","src_Settings_Field_js":"c881cc9d8901c328bd91","vendors-node_modules_material-ui_lab_esm_Autocomplete_index_js":"515dd4c5b9e6e345a1ea","vendors-node_modules_material-ui_core_esm_styles_index_js":"b2604edf5f43bcfce41a"}[chunkId] + ".js";
->>>>>>>> 070f831e1 (fixed reset function, however could not resolve warning React issue??):settings/build/index.aa620953ab532f245d16.js
-========
-/******/ 			return "" + chunkId + "." + {"vendors-node_modules_mui_material_Tooltip_Tooltip_js":"0cc86ac6c861846722b1","src_Settings_Settings_js":"b2e4e831a6e4dfefbb5c","src_Menu_Menu_js":"66458ee78e9eb4343d4a","src_Dashboard_DashboardPage_js":"4f7f9660ad30371d9445","src_Onboarding_OnboardingModal_js":"85fbed60f8e666a7e677","src_Modal_Modal_js":"e34b60e44e1022d3fe24","vendors-node_modules_material-ui_core_esm_TextField_TextField_js-node_modules_react-toastify_-1fccac":"140655a5d7db93a2497a","src_Settings_Field_js":"369ae94bbfc5ec881341","vendors-node_modules_material-ui_lab_esm_Autocomplete_index_js":"515dd4c5b9e6e345a1ea","vendors-node_modules_material-ui_core_esm_styles_index_js":"b2604edf5f43bcfce41a"}[chunkId] + ".js";
->>>>>>>> 79d2a7197 (fixed the sorting bug):settings/build/index.a000b00bee3981302fab.js
-========
-/******/ 			return "" + chunkId + "." + {"vendors-node_modules_mui_material_Tooltip_Tooltip_js":"0cc86ac6c861846722b1","src_Settings_Settings_js":"b2e4e831a6e4dfefbb5c","src_Menu_Menu_js":"66458ee78e9eb4343d4a","src_Dashboard_DashboardPage_js":"4f7f9660ad30371d9445","src_Onboarding_OnboardingModal_js":"85fbed60f8e666a7e677","src_Modal_Modal_js":"e34b60e44e1022d3fe24","vendors-node_modules_material-ui_core_esm_TextField_TextField_js-node_modules_react-toastify_-1fccac":"140655a5d7db93a2497a","src_Settings_Field_js":"da5e9d4a892c8646ddd5","vendors-node_modules_material-ui_lab_esm_Autocomplete_index_js":"515dd4c5b9e6e345a1ea","vendors-node_modules_material-ui_core_esm_styles_index_js":"b2604edf5f43bcfce41a"}[chunkId] + ".js";
->>>>>>>> 29a4a9d08 (fixed sorting and pagination in CountryTable):settings/build/index.181bf0df2331d42bd74f.js
-========
-/******/ 			return "" + chunkId + "." + {"vendors-node_modules_mui_material_Tooltip_Tooltip_js":"0cc86ac6c861846722b1","src_Settings_Settings_js":"b2e4e831a6e4dfefbb5c","src_Menu_Menu_js":"66458ee78e9eb4343d4a","src_Dashboard_DashboardPage_js":"4f7f9660ad30371d9445","src_Onboarding_OnboardingModal_js":"85fbed60f8e666a7e677","src_Modal_Modal_js":"e34b60e44e1022d3fe24","vendors-node_modules_material-ui_core_esm_TextField_TextField_js-node_modules_react-toastify_-1fccac":"140655a5d7db93a2497a","src_Settings_Field_js":"2badb76fe17e0f5ae377","vendors-node_modules_material-ui_lab_esm_Autocomplete_index_js":"515dd4c5b9e6e345a1ea","vendors-node_modules_material-ui_core_esm_styles_index_js":"b2604edf5f43bcfce41a"}[chunkId] + ".js";
->>>>>>>> d27cc5e94 (applied fix to pagination eventlog as well):settings/build/index.48d4bc28110e34e3de44.js
-========
-/******/ 			return "" + chunkId + "." + {"vendors-node_modules_mui_material_Tooltip_Tooltip_js":"0cc86ac6c861846722b1","src_Settings_Settings_js":"b2e4e831a6e4dfefbb5c","src_Menu_Menu_js":"66458ee78e9eb4343d4a","src_Dashboard_DashboardPage_js":"4f7f9660ad30371d9445","src_Onboarding_OnboardingModal_js":"85fbed60f8e666a7e677","src_Modal_Modal_js":"e34b60e44e1022d3fe24","vendors-node_modules_material-ui_core_esm_TextField_TextField_js-node_modules_react-toastify_-1fccac":"140655a5d7db93a2497a","src_Settings_Field_js":"7ba1f0e62fb35091748b","vendors-node_modules_material-ui_lab_esm_Autocomplete_index_js":"515dd4c5b9e6e345a1ea","vendors-node_modules_material-ui_core_esm_styles_index_js":"b2604edf5f43bcfce41a"}[chunkId] + ".js";
->>>>>>>> f9bd341d4 (added some more translatable strings and capitalized some strings):settings/build/index.3ddab66f899f8c32785d.js
-========
-/******/ 			return "" + chunkId + "." + {"vendors-node_modules_mui_material_Tooltip_Tooltip_js":"0cc86ac6c861846722b1","src_Settings_Settings_js":"b2e4e831a6e4dfefbb5c","src_Menu_Menu_js":"66458ee78e9eb4343d4a","src_Dashboard_DashboardPage_js":"4f7f9660ad30371d9445","src_Onboarding_OnboardingModal_js":"85fbed60f8e666a7e677","src_Modal_Modal_js":"e34b60e44e1022d3fe24","vendors-node_modules_material-ui_core_esm_TextField_TextField_js-node_modules_react-toastify_-1fccac":"140655a5d7db93a2497a","src_Settings_Field_js":"aa2831b77222f8346fb7","vendors-node_modules_material-ui_lab_esm_Autocomplete_index_js":"515dd4c5b9e6e345a1ea","vendors-node_modules_material-ui_core_esm_styles_index_js":"b2604edf5f43bcfce41a"}[chunkId] + ".js";
->>>>>>>> a8fb88908 (fixed ip input):settings/build/index.d0a2692b8fff6d7b5939.js
-========
-/******/ 			return "" + chunkId + "." + {"vendors-node_modules_mui_material_Tooltip_Tooltip_js":"0cc86ac6c861846722b1","src_Settings_Settings_js":"b2e4e831a6e4dfefbb5c","src_Menu_Menu_js":"66458ee78e9eb4343d4a","src_Dashboard_DashboardPage_js":"4f7f9660ad30371d9445","src_Onboarding_OnboardingModal_js":"85fbed60f8e666a7e677","src_Modal_Modal_js":"e34b60e44e1022d3fe24","vendors-node_modules_material-ui_core_esm_TextField_TextField_js-node_modules_react-toastify_-1fccac":"140655a5d7db93a2497a","src_Settings_Field_js":"092b69202ddf0f282672","vendors-node_modules_material-ui_lab_esm_Autocomplete_index_js":"515dd4c5b9e6e345a1ea","vendors-node_modules_material-ui_core_esm_styles_index_js":"b2604edf5f43bcfce41a"}[chunkId] + ".js";
->>>>>>>> 3004c8a13 (fixed a load of issues with ip address datatable):settings/build/index.87c6f127d472a8eaafa2.js
-========
-/******/ 			return "" + chunkId + "." + {"vendors-node_modules_mui_material_Tooltip_Tooltip_js":"0cc86ac6c861846722b1","src_Settings_Settings_js":"e5915556ead7532e5435","src_Menu_Menu_js":"66458ee78e9eb4343d4a","src_Dashboard_DashboardPage_js":"4f7f9660ad30371d9445","src_Onboarding_OnboardingModal_js":"85fbed60f8e666a7e677","src_Modal_Modal_js":"e34b60e44e1022d3fe24","vendors-node_modules_material-ui_core_esm_TextField_TextField_js-node_modules_react-toastify_-1fccac":"140655a5d7db93a2497a","src_Settings_Field_js":"1e282662c528ad1e2673","vendors-node_modules_material-ui_lab_esm_Autocomplete_index_js":"515dd4c5b9e6e345a1ea","vendors-node_modules_material-ui_core_esm_styles_index_js":"b2604edf5f43bcfce41a"}[chunkId] + ".js";
->>>>>>>> 8e5ee9105 (added functionality to change intro based on filter):settings/build/index.677372d72ae8b937847b.js
-========
-/******/ 			return "" + chunkId + "." + {"vendors-node_modules_mui_material_Tooltip_Tooltip_js":"0cc86ac6c861846722b1","src_Settings_Settings_js":"e5915556ead7532e5435","src_Menu_Menu_js":"66458ee78e9eb4343d4a","src_Dashboard_DashboardPage_js":"4f7f9660ad30371d9445","src_Onboarding_OnboardingModal_js":"85fbed60f8e666a7e677","src_Modal_Modal_js":"e34b60e44e1022d3fe24","vendors-node_modules_material-ui_core_esm_TextField_TextField_js-node_modules_react-toastify_-1fccac":"140655a5d7db93a2497a","src_Settings_Field_js":"e993efc015daf4c7aefc","vendors-node_modules_material-ui_lab_esm_Autocomplete_index_js":"515dd4c5b9e6e345a1ea","vendors-node_modules_material-ui_core_esm_styles_index_js":"b2604edf5f43bcfce41a"}[chunkId] + ".js";
->>>>>>>> 11330fd6f (fixed ghosting in users):settings/build/index.137d29630c84f049220f.js
-========
-/******/ 			return "" + chunkId + "." + {"vendors-node_modules_mui_material_Tooltip_Tooltip_js":"0cc86ac6c861846722b1","src_Settings_Settings_js":"e5915556ead7532e5435","src_Menu_Menu_js":"66458ee78e9eb4343d4a","src_Dashboard_DashboardPage_js":"4f7f9660ad30371d9445","src_Onboarding_OnboardingModal_js":"85fbed60f8e666a7e677","src_Modal_Modal_js":"e34b60e44e1022d3fe24","vendors-node_modules_material-ui_core_esm_TextField_TextField_js-node_modules_react-toastify_-1fccac":"140655a5d7db93a2497a","src_Settings_Field_js":"109726b673f28fcc61b9","vendors-node_modules_material-ui_lab_esm_Autocomplete_index_js":"515dd4c5b9e6e345a1ea","vendors-node_modules_material-ui_core_esm_styles_index_js":"b2604edf5f43bcfce41a"}[chunkId] + ".js";
->>>>>>>> 83a2888c5 (added some textual improvements):settings/build/index.4755c608a5cb30153b7a.js
-========
-/******/ 			return "" + chunkId + "." + {"vendors-node_modules_mui_material_Tooltip_Tooltip_js":"4f9fff4afbb906618438","src_Settings_Settings_js":"e5915556ead7532e5435","src_Menu_Menu_js":"66458ee78e9eb4343d4a","src_Dashboard_DashboardPage_js":"4f7f9660ad30371d9445","src_Onboarding_OnboardingModal_js":"85fbed60f8e666a7e677","src_Modal_Modal_js":"e34b60e44e1022d3fe24","vendors-node_modules_material-ui_core_esm_TextField_TextField_js-node_modules_react-toastify_-1fccac":"a3c46f30b7637069e560","src_Settings_Field_js":"4decfeae1f9f8e4175b6","vendors-node_modules_material-ui_lab_esm_Autocomplete_index_js":"515dd4c5b9e6e345a1ea","vendors-node_modules_material-ui_core_esm_styles_index_js":"b2604edf5f43bcfce41a"}[chunkId] + ".js";
->>>>>>>> a3a5b65e3 (removed multiple timeouts and promises):settings/build/index.22271b6ea5d32ed40d8b.js
-========
-/******/ 			return "" + chunkId + "." + {"vendors-node_modules_mui_material_Tooltip_Tooltip_js":"4f9fff4afbb906618438","src_Settings_Settings_js":"e5915556ead7532e5435","src_Menu_Menu_js":"66458ee78e9eb4343d4a","src_Dashboard_DashboardPage_js":"4f7f9660ad30371d9445","src_Onboarding_OnboardingModal_js":"85fbed60f8e666a7e677","src_Modal_Modal_js":"e34b60e44e1022d3fe24","vendors-node_modules_material-ui_core_esm_TextField_TextField_js-node_modules_react-toastify_-1fccac":"a3c46f30b7637069e560","src_Settings_Field_js":"733eb8894f483cb61ec9","vendors-node_modules_material-ui_lab_esm_Autocomplete_index_js":"515dd4c5b9e6e345a1ea","vendors-node_modules_material-ui_core_esm_styles_index_js":"b2604edf5f43bcfce41a"}[chunkId] + ".js";
->>>>>>>> 7263a0e97 (fixed filter issue with dataActions After adding a block or removing in countries overview):settings/build/index.3b86e1d694bac0720d58.js
-========
-/******/ 			return "" + chunkId + "." + {"vendors-node_modules_mui_material_Tooltip_Tooltip_js":"4f9fff4afbb906618438","src_Settings_Settings_js":"e5915556ead7532e5435","src_Menu_Menu_js":"66458ee78e9eb4343d4a","src_Dashboard_DashboardPage_js":"4f7f9660ad30371d9445","src_Onboarding_OnboardingModal_js":"85fbed60f8e666a7e677","src_Modal_Modal_js":"e34b60e44e1022d3fe24","vendors-node_modules_material-ui_core_esm_TextField_TextField_js-node_modules_react-toastify_-1fccac":"a3c46f30b7637069e560","src_Settings_Field_js":"99df9dd41a1ba7767fe1","vendors-node_modules_material-ui_lab_esm_Autocomplete_index_js":"515dd4c5b9e6e345a1ea","vendors-node_modules_material-ui_core_esm_styles_index_js":"b2604edf5f43bcfce41a"}[chunkId] + ".js";
->>>>>>>> be0b9c90f (fixed equal kind of filter error as well for the regions):settings/build/index.0c8dccfee467b90708e6.js
-========
-/******/ 			return "" + chunkId + "." + {"vendors-node_modules_mui_material_Tooltip_Tooltip_js":"4f9fff4afbb906618438","src_Settings_Settings_js":"e5915556ead7532e5435","src_Menu_Menu_js":"66458ee78e9eb4343d4a","src_Dashboard_DashboardPage_js":"4f7f9660ad30371d9445","src_Onboarding_OnboardingModal_js":"85fbed60f8e666a7e677","src_Modal_Modal_js":"e34b60e44e1022d3fe24","vendors-node_modules_material-ui_core_esm_TextField_TextField_js-node_modules_react-toastify_-1fccac":"a3c46f30b7637069e560","src_Settings_Field_js":"097b697c10713e265c47","vendors-node_modules_material-ui_lab_esm_Autocomplete_index_js":"515dd4c5b9e6e345a1ea","vendors-node_modules_material-ui_core_esm_styles_index_js":"b2604edf5f43bcfce41a"}[chunkId] + ".js";
->>>>>>>> 185d13df7 (made further improvements on redusing unnessecary calls to server):settings/build/index.ad65f11f163397bf9c71.js
+/******/ 			return "" + chunkId + "." + {"vendors-node_modules_mui_material_Tooltip_Tooltip_js":"4f9fff4afbb906618438","src_Settings_Settings_js":"89d1d9e96cf86e5e8733","src_Menu_Menu_js":"66458ee78e9eb4343d4a","src_Dashboard_DashboardPage_js":"4f7f9660ad30371d9445","src_Onboarding_OnboardingModal_js":"85fbed60f8e666a7e677","src_Modal_Modal_js":"e34b60e44e1022d3fe24","vendors-node_modules_material-ui_core_esm_TextField_TextField_js-node_modules_react-toastify_-1fccac":"a3c46f30b7637069e560","src_Settings_Field_js":"2cb1cc6545087bbee09e","vendors-node_modules_material-ui_lab_esm_Autocomplete_index_js":"515dd4c5b9e6e345a1ea","vendors-node_modules_material-ui_core_esm_styles_index_js":"b2604edf5f43bcfce41a"}[chunkId] + ".js";
 /******/ 		};
 /******/ 	}();
 /******/ 	
@@ -4834,7 +4778,7 @@ var vanilla = (createState) => {
 /******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.miniCssF = function(chunkId) {
 /******/ 			// return url for filenames based on template
-/******/ 			return undefined;
+/******/ 			return "" + chunkId + ".css";
 /******/ 		};
 /******/ 	}();
 /******/ 	
@@ -4935,8 +4879,6 @@ var vanilla = (createState) => {
 /******/ 		__webpack_require__.p = scriptUrl;
 /******/ 	}();
 /******/ 	
-<<<<<<<< HEAD:settings/build/index.627d11fff53e9d4ef6a7.js
-========
 /******/ 	/* webpack/runtime/css loading */
 /******/ 	!function() {
 /******/ 		if (typeof document === "undefined") return;
@@ -5014,7 +4956,6 @@ var vanilla = (createState) => {
 /******/ 		// no hmr
 /******/ 	}();
 /******/ 	
->>>>>>>> a3a5b65e3 (removed multiple timeouts and promises):settings/build/index.22271b6ea5d32ed40d8b.js
 /******/ 	/* webpack/runtime/jsonp chunk loading */
 /******/ 	!function() {
 /******/ 		// no baseURI
@@ -5155,60 +5096,4 @@ document.addEventListener('click', e => {
 }();
 /******/ })()
 ;
-<<<<<<<< HEAD:settings/build/index.627d11fff53e9d4ef6a7.js
-<<<<<<<< HEAD:settings/build/index.627d11fff53e9d4ef6a7.js
-<<<<<<<< HEAD:settings/build/index.627d11fff53e9d4ef6a7.js
-<<<<<<<< HEAD:settings/build/index.627d11fff53e9d4ef6a7.js
-<<<<<<<< HEAD:settings/build/index.627d11fff53e9d4ef6a7.js
-<<<<<<<< HEAD:settings/build/index.627d11fff53e9d4ef6a7.js
-<<<<<<<< HEAD:settings/build/index.627d11fff53e9d4ef6a7.js
-<<<<<<<< HEAD:settings/build/index.627d11fff53e9d4ef6a7.js
-<<<<<<<< HEAD:settings/build/index.627d11fff53e9d4ef6a7.js
-<<<<<<<< HEAD:settings/build/index.627d11fff53e9d4ef6a7.js
-<<<<<<<< HEAD:settings/build/index.627d11fff53e9d4ef6a7.js
-<<<<<<<< HEAD:settings/build/index.627d11fff53e9d4ef6a7.js
-<<<<<<<< HEAD:settings/build/index.627d11fff53e9d4ef6a7.js
-<<<<<<<< HEAD:settings/build/index.627d11fff53e9d4ef6a7.js
-//# sourceMappingURL=index.627d11fff53e9d4ef6a7.js.map
-========
-//# sourceMappingURL=index.aa620953ab532f245d16.js.map
->>>>>>>> 070f831e1 (fixed reset function, however could not resolve warning React issue??):settings/build/index.aa620953ab532f245d16.js
-========
-//# sourceMappingURL=index.a000b00bee3981302fab.js.map
->>>>>>>> 79d2a7197 (fixed the sorting bug):settings/build/index.a000b00bee3981302fab.js
-========
-//# sourceMappingURL=index.181bf0df2331d42bd74f.js.map
->>>>>>>> 29a4a9d08 (fixed sorting and pagination in CountryTable):settings/build/index.181bf0df2331d42bd74f.js
-========
-//# sourceMappingURL=index.48d4bc28110e34e3de44.js.map
->>>>>>>> d27cc5e94 (applied fix to pagination eventlog as well):settings/build/index.48d4bc28110e34e3de44.js
-========
-//# sourceMappingURL=index.3ddab66f899f8c32785d.js.map
->>>>>>>> f9bd341d4 (added some more translatable strings and capitalized some strings):settings/build/index.3ddab66f899f8c32785d.js
-========
-//# sourceMappingURL=index.d0a2692b8fff6d7b5939.js.map
->>>>>>>> a8fb88908 (fixed ip input):settings/build/index.d0a2692b8fff6d7b5939.js
-========
-//# sourceMappingURL=index.87c6f127d472a8eaafa2.js.map
->>>>>>>> 3004c8a13 (fixed a load of issues with ip address datatable):settings/build/index.87c6f127d472a8eaafa2.js
-========
-//# sourceMappingURL=index.677372d72ae8b937847b.js.map
->>>>>>>> 8e5ee9105 (added functionality to change intro based on filter):settings/build/index.677372d72ae8b937847b.js
-========
-//# sourceMappingURL=index.137d29630c84f049220f.js.map
->>>>>>>> 11330fd6f (fixed ghosting in users):settings/build/index.137d29630c84f049220f.js
-========
-//# sourceMappingURL=index.4755c608a5cb30153b7a.js.map
->>>>>>>> 83a2888c5 (added some textual improvements):settings/build/index.4755c608a5cb30153b7a.js
-========
-//# sourceMappingURL=index.22271b6ea5d32ed40d8b.js.map
->>>>>>>> a3a5b65e3 (removed multiple timeouts and promises):settings/build/index.22271b6ea5d32ed40d8b.js
-========
-//# sourceMappingURL=index.3b86e1d694bac0720d58.js.map
->>>>>>>> 7263a0e97 (fixed filter issue with dataActions After adding a block or removing in countries overview):settings/build/index.3b86e1d694bac0720d58.js
-========
-//# sourceMappingURL=index.0c8dccfee467b90708e6.js.map
->>>>>>>> be0b9c90f (fixed equal kind of filter error as well for the regions):settings/build/index.0c8dccfee467b90708e6.js
-========
-//# sourceMappingURL=index.ad65f11f163397bf9c71.js.map
->>>>>>>> 185d13df7 (made further improvements on redusing unnessecary calls to server):settings/build/index.ad65f11f163397bf9c71.js
+//# sourceMappingURL=index.224d7cd8ae762b0597e2.js.map

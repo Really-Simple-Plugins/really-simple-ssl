@@ -14,7 +14,7 @@ import ErrorBoundary from "../utils/ErrorBoundary";
  */
 const SettingsGroup = (props) => {
     const {fields} = useFields();
-    const {selectedFilter, setSelectedFilter} = filterData();
+    const {selectedFilter, setSelectedFilter, processingFilter} = filterData();
     const {setActiveGroupId, activeGroupId} = useMenu();
     const {licenseStatus} = useLicense();
     const {selectedSubMenuItem, subMenu} = useMenu();
@@ -111,6 +111,7 @@ const SettingsGroup = (props) => {
                                 id={filterId}
                                 name={filterId}
                                 value={selectedFilter[filterId]}
+                                disabled={processingFilter}
                                 onChange={(e) => {
                                     const selectedValue = e.target.value;
                                     setSelectedFilter(selectedValue, filterId);

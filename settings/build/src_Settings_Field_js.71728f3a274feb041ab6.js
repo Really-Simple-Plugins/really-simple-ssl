@@ -3721,6 +3721,7 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
         currentPage
       };
     }));
+    console.log("handleCountryTableRowsChange", get().dataActions);
   },
   //this handles all pagination and sorting
   handleCountryTableSort: async (column, sortDirection) => {
@@ -4052,7 +4053,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const CountryDatatable = props => {
-  var _pagination$perPage;
   const {
     CountryDataTable,
     dataLoaded,
@@ -4112,7 +4112,7 @@ const CountryDatatable = props => {
       setSelectedFilter('blocked', moduleName);
     }
     handleCountryTableFilter('status', currentFilter);
-  }, [moduleName, handleCountryTableFilter, getCurrentFilter(moduleName), setSelectedFilter, CountryDatatable]);
+  }, [moduleName, handleCountryTableFilter, getCurrentFilter(moduleName), setSelectedFilter, CountryDatatable, processing]);
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     setRowsSelected([]);
   }, [CountryDataTable]);
@@ -4130,7 +4130,7 @@ const CountryDatatable = props => {
     if (dataActions) {
       fetchCountryData(field.action, dataActions);
     }
-  }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page]);
+  }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, dataActions.currentRowsPerPage]);
   let enabled = false;
   fields.forEach(function (item, i) {
     if (item.id === 'enable_limited_login_attempts') {
@@ -4176,7 +4176,7 @@ const CountryDatatable = props => {
 ========
       const ids = code.map(item => item.id);
       const regions = code.map(item => item.region);
-      await removeRegions(ids, dataActions);
+      await removeRegions(ids, '', dataActions);
       let regionsString = regions.join(', ');
       notifySuccess(regionsString + ' ' + (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)('has been removed', 'really-simple-ssl'));
       setRowsSelected([]);
@@ -4266,10 +4266,11 @@ const CountryDatatable = props => {
       className
     } = _ref;
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-action-buttons__inner"
+      className: `rsssl-action-buttons__inner`
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
       className: `button ${className} rsssl-action-buttons__button`,
-      onClick: onClick
+      onClick: onClick,
+      disabled: processing
     }, children));
   };
   const generateActionButtons = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)((id, status) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -4332,8 +4333,18 @@ const CountryDatatable = props => {
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
     type: "text",
     className: "rsssl-search-bar__input",
+<<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
     placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__.__)("Search", "really-simple-ssl"),
     onChange: event => handleCountryTableSearch(event.target.value, searchableColumns)
+========
+    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)("Search", "really-simple-ssl"),
+    disabled: processing,
+    onKeyUp: event => {
+      if (event.key === 'Enter') {
+        handleCountryTableSearch(event.target.value, searchableColumns);
+      }
+    }
+>>>>>>>> 185d13df7 (made further improvements on redusing unnessecary calls to server):settings/build/src_Settings_Field_js.097b697c10713e265c47.js
   })))), rowsSelected.length > 0 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     style: {
       marginTop: '1em',
@@ -4356,17 +4367,21 @@ const CountryDatatable = props => {
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__.__)("Allow", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
     onClick: () => blockRegionByCode(rowsSelected)
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
+<<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__.__)("Block", "really-simple-ssl")))))), dataLoaded ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_2__["default"], {
 ========
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)("Block", "really-simple-ssl")))))), !processing ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_2__["default"], {
 >>>>>>>> a3a5b65e3 (removed multiple timeouts and promises):settings/build/src_Settings_Field_js.4decfeae1f9f8e4175b6.js
+========
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)("Block", "really-simple-ssl")))))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_2__["default"], {
+>>>>>>>> 185d13df7 (made further improvements on redusing unnessecary calls to server):settings/build/src_Settings_Field_js.097b697c10713e265c47.js
     columns: columns,
     data: Object.values(data),
     dense: true,
-    pagination: true,
+    pagination: !processing,
     paginationServer: true,
     paginationTotalRows: pagination.totalRows,
-    paginationPerPage: (_pagination$perPage = pagination.perPage) !== null && _pagination$perPage !== void 0 ? _pagination$perPage : 10,
+    paginationPerPage: pagination.perPage,
     paginationDefaultPage: pagination.currentPage,
     paginationComponentOptions: {
       rowsPerPageText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)('Rows per page:', 'really-simple-ssl'),
@@ -4377,16 +4392,17 @@ const CountryDatatable = props => {
     },
     onChangeRowsPerPage: handleCountryTableRowsChange,
     onChangePage: handleCountryTablePageChange,
-    sortServer: true,
+    sortServer: !processing,
     onSort: handleCountryTableSort,
     paginationRowsPerPageOptions: [10, 25, 50, 100],
     noDataComponent: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__.__)("No results", "really-simple-ssl"),
     persistTableHead: true,
-    selectableRows: true,
+    selectableRows: !processing,
     clearSelectedRows: rowCleared,
     onSelectedRowsChange: handleSelection,
     theme: "really-simple-plugins",
     customStyles: customStyles
+<<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
   }) : (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-spinner",
     style: {
@@ -4416,6 +4432,9 @@ const CountryDatatable = props => {
       transform: 'translate(-50%, -50%)'
     }
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__.__)("Loading data, please stand by...", "really-simple-ssl")))), !enabled && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+========
+  }), !enabled && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+>>>>>>>> 185d13df7 (made further improvements on redusing unnessecary calls to server):settings/build/src_Settings_Field_js.097b697c10713e265c47.js
     className: "rsssl-locked"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-locked-overlay"
@@ -24558,6 +24577,7 @@ __webpack_require__.r(__webpack_exports__);
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
+<<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 //# sourceMappingURL=src_Settings_Field_js.71728f3a274feb041ab6.js.map
 ========
 //# sourceMappingURL=src_Settings_Field_js.2a9f68f4c72b1ac2b97c.js.map
@@ -24601,3 +24621,6 @@ __webpack_require__.r(__webpack_exports__);
 ========
 //# sourceMappingURL=src_Settings_Field_js.99df9dd41a1ba7767fe1.js.map
 >>>>>>>> be0b9c90f (fixed equal kind of filter error as well for the regions):settings/build/src_Settings_Field_js.99df9dd41a1ba7767fe1.js
+========
+//# sourceMappingURL=src_Settings_Field_js.097b697c10713e265c47.js.map
+>>>>>>>> 185d13df7 (made further improvements on redusing unnessecary calls to server):settings/build/src_Settings_Field_js.097b697c10713e265c47.js

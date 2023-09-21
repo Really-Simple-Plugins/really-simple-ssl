@@ -59,6 +59,7 @@ const CountryDataTableStore = create((set, get) => ({
                 state.dataActions = {...state.dataActions, currentRowsPerPage, currentPage};
             })
         );
+        console.log("handleCountryTableRowsChange", get().dataActions);
     },
 
     //this handles all pagination and sorting

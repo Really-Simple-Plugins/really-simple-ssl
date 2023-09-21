@@ -3733,6 +3733,7 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
         currentPage
       };
     }));
+    console.log("handleCountryTableRowsChange", get().dataActions);
   },
   //this handles all pagination and sorting
   handleCountryTableSort: async (column, sortDirection) => {
@@ -4028,7 +4029,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const CountryDatatable = props => {
-  var _pagination$perPage;
   const {
     CountryDataTable,
     dataLoaded,
@@ -4061,7 +4061,8 @@ const CountryDatatable = props => {
     selectedFilter,
     setSelectedFilter,
     activeGroupId,
-    getCurrentFilter
+    getCurrentFilter,
+    setProcessingFilter
   } = (0,_FilterData__WEBPACK_IMPORTED_MODULE_7__["default"])();
   const [rowsSelected, setRowsSelected] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)([]);
   const moduleName = 'rsssl-group-filter-limit_login_attempts_country';
@@ -4089,8 +4090,9 @@ const CountryDatatable = props => {
     if (!currentFilter) {
       setSelectedFilter('blocked', moduleName);
     }
+    setProcessingFilter(processing);
     handleCountryTableFilter('status', currentFilter);
-  }, [moduleName, handleCountryTableFilter, getCurrentFilter(moduleName), setSelectedFilter, CountryDatatable]);
+  }, [moduleName, handleCountryTableFilter, getCurrentFilter(moduleName), setSelectedFilter, CountryDatatable, processing]);
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     setRowsSelected([]);
   }, [CountryDataTable]);
@@ -4108,7 +4110,7 @@ const CountryDatatable = props => {
     if (dataActions) {
       fetchCountryData(field.action, dataActions);
     }
-  }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page]);
+  }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, dataActions.currentRowsPerPage]);
   let enabled = false;
   fields.forEach(function (item, i) {
     if (item.id === 'enable_limited_login_attempts') {
@@ -4218,10 +4220,11 @@ const CountryDatatable = props => {
       className
     } = _ref;
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-action-buttons__inner"
+      className: `rsssl-action-buttons__inner`
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
       className: `button ${className} rsssl-action-buttons__button`,
-      onClick: onClick
+      onClick: onClick,
+      disabled: processing
     }, children));
   };
   const generateActionButtons = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)((id, status, region_name) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -4297,7 +4300,12 @@ const CountryDatatable = props => {
     type: "text",
     className: "rsssl-search-bar__input",
     placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)("Search", "really-simple-ssl"),
-    onChange: event => handleCountryTableSearch(event.target.value, searchableColumns)
+    disabled: processing,
+    onKeyUp: event => {
+      if (event.key === 'Enter') {
+        handleCountryTableSearch(event.target.value, searchableColumns);
+      }
+    }
   })))), rowsSelected.length > 0 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     style: {
       marginTop: '1em',
@@ -4319,14 +4327,14 @@ const CountryDatatable = props => {
     className: "button-primary"
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)("Allow", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
     onClick: () => blockRegionByCode(rowsSelected)
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)("Block", "really-simple-ssl")))))), !processing ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_2__["default"], {
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)("Block", "really-simple-ssl")))))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_2__["default"], {
     columns: columns,
     data: Object.values(data),
     dense: true,
-    pagination: true,
+    pagination: !processing,
     paginationServer: true,
     paginationTotalRows: pagination.totalRows,
-    paginationPerPage: (_pagination$perPage = pagination.perPage) !== null && _pagination$perPage !== void 0 ? _pagination$perPage : 10,
+    paginationPerPage: pagination.perPage,
     paginationDefaultPage: pagination.currentPage,
     paginationComponentOptions: {
       rowsPerPageText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)('Rows per page:', 'really-simple-ssl'),
@@ -4337,45 +4345,17 @@ const CountryDatatable = props => {
     },
     onChangeRowsPerPage: handleCountryTableRowsChange,
     onChangePage: handleCountryTablePageChange,
-    sortServer: true,
+    sortServer: !processing,
     onSort: handleCountryTableSort,
     paginationRowsPerPageOptions: [10, 25, 50, 100],
     noDataComponent: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)("No results", "really-simple-ssl"),
     persistTableHead: true,
-    selectableRows: true,
+    selectableRows: !processing,
     clearSelectedRows: rowCleared,
     onSelectedRowsChange: handleSelection,
     theme: "really-simple-plugins",
     customStyles: customStyles
-  }) : (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-spinner",
-    style: {
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      marginTop: "100px"
-    }
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-spinner__inner"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-spinner__icon",
-    style: {
-      border: '8px solid white',
-      borderTop: '8px solid #f4bf3e',
-      borderRadius: '50%',
-      width: '120px',
-      height: '120px',
-      animation: 'spin 2s linear infinite'
-    }
-  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-spinner__text",
-    style: {
-      position: 'absolute',
-      top: '50%',
-      left: '50%',
-      transform: 'translate(-50%, -50%)'
-    }
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)("Loading data, please stand by...", "really-simple-ssl")))), !enabled && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }), !enabled && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-locked"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-locked-overlay"
@@ -24534,4 +24514,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.7e771796d94b0f6cfaa2.js.map
+//# sourceMappingURL=src_Settings_Field_js.2c525a99cabfa51b3bc8.js.map
