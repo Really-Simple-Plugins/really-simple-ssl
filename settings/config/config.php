@@ -535,242 +535,387 @@ function rsssl_fields( $load_values = true ) {
 				],
 			],
 		],
-		/* Vulnerability basic Section */
+		/* section limited_login_attempts */
 		[
-			'id' => 'enable_vulnerability_scanner',
-			'menu_id' => 'vulnerabilities_basic',
-			'group_id' => 'vulnerabilities_basic',
-			'type' => 'checkbox',
-			'label' => __('Vulnerability detection', 'really-simple-ssl'),
-			'tooltip'  => __( "This feature depends on multiple standard background processes. If a process fails or is unavailable on your system, detection might not work. We run frequent tests for this purpose. We will notify you accordingly if there are any issues.", 'really-simple-ssl' ),
+			'id'       => 'enable_limited_login_attempts',
+			'menu_id'  => 'limit_login_attempts',
+			'group_id' => 'limit_login_attempts_general',
+			'type'     => 'checkbox',
+			'label'    => __('Enable limited login attempts', 'really-simple-ssl'),
 			'disabled' => false,
-			'default' => false,
-			'warning' => true,
-			'help'               => [
+			'help'      => [
 				'label' => 'default',
-				'url'   => 'https://really-simple-ssl.com/instructions/about-vulnerabilities/',
-				'title' => __( "About Vulnerabilities", 'really-simple-ssl' ),
-				'text'  => __( 'Really Simple SSL collects information about plugins, themes, and core vulnerabilities from our database powered by WPVulnerability. Anonymized data about these vulnerable components will be sent to Really Simple SSL for statistical analysis to improve open-source contributions. For more information, please read our privacy statement.', 'really-simple-ssl' ),
+				'url'   => 'https://really-simple-ssl.com/knowledge-base/enable-limited-login-attempts/',
+				'title' => __("About limited login attempts", 'really-simple-ssl'),
+				'text'  => __('This feature will limit the number of login attempts per user. If a user exceeds the number of allowed attempts, the user will be blocked for a certain amount of time. You can also block IP addresses and view a list of blocked users and IP addresses.',
+					'really-simple-ssl'),
 			],
 		],
 		[
-			'id' => 'vulnerabilities_intro_shown',
-			'menu_id' => 'vulnerabilities_basic',
-			'group_id' => 'vulnerabilities_basic',
-			'type' => 'hidden',
-			'label' => '',
-			'disabled' => false,
-			'default' => false,
-		],
-		[
-			'id' => 'enable_feedback_in_plugin',
-			'menu_id' => 'vulnerabilities_basic',
-			'group_id' => 'vulnerabilities_basic',
-			'tooltip'  => __( "If there's a vulnerability, you will also get feedback on the themes and plugin overview.", 'really-simple-ssl' ),
-			'warning' => false,
-			'type' => 'checkbox',
-			'label' => __('Feedback in plugin overview', 'really-simple-ssl'),
-			'disabled' => false,
-			'default' => false,
-			'react_conditions' => [
-				'relation' => 'AND',
-				[
-					'enable_vulnerability_scanner' => 1,
-				]
-			],
-		],
-		/* Vulnerability advanced Section */
-		[
-			'id' => 'vulnerability_notification_dashboard',
-			'menu_id' => 'vulnerabilities_notifications',
-			'group_id' => 'vulnerabilities_notifications',
-			'type' => 'select',
-			'options' => [
-				'*' => __('None', 'really-simple-ssl'),
-				'l' => __('Low-risk (default)', 'really-simple-ssl'),
-				'm' => __('Medium-risk', 'really-simple-ssl'),
-				'h' => __('High-risk', 'really-simple-ssl'),
-				'c' => __('Critical', 'really-simple-ssl'),
-			],
-			'label' => __('Really Simple SSL dashboard', 'really-simple-ssl'),
-			'disabled' => false,
-			'default' => 'l',
-			'react_conditions' => [
-				'relation' => 'AND',
-				[
-					'enable_vulnerability_scanner' => 1,
-				]
-			],
-		],
-		[
-			'id' => 'vulnerability_notification_sitewide',
-			'menu_id' => 'vulnerabilities_notifications',
-			'group_id' => 'vulnerabilities_notifications',
-			'type' => 'select',
-			'options' => [
-				'*' => __('None', 'really-simple-ssl'),
-				'l' => __('Low-risk ', 'really-simple-ssl'),
-				'm' => __('Medium-risk', 'really-simple-ssl'),
-				'h' => __('High-risk (default)', 'really-simple-ssl'),
-				'c' => __('Critical', 'really-simple-ssl'),
-			],
-			'label' => __('Site-wide, admin notification', 'really-simple-ssl'),
-			'disabled' => false,
-			'default' => 'h',
-			'react_conditions' => [
-				'relation' => 'AND',
-				[
-					'enable_vulnerability_scanner' => 1,
-				]
-			],
-		],
-		[
-			'id' => 'vulnerability_notification_email_admin',
-			'menu_id' => 'vulnerabilities_notifications',
-			'group_id' => 'vulnerabilities_notifications',
-			'type' => 'select',
-			'options' => [
-				'*' => __('None', 'really-simple-ssl'),
-				'l' => __('Low-risk', 'really-simple-ssl'),
-				'm' => __('Medium-risk', 'really-simple-ssl'),
-				'h' => __('High-risk', 'really-simple-ssl'),
-				'c' => __('Critical (default)', 'really-simple-ssl'),
-			],
-			'label' => __('Email', 'really-simple-ssl'),
-			'tooltip'  => __( "This will send emails about vulnerabilities directly from your server. Make sure you can receive emails by the testing a preview below. If this feature is disabled, please enable notifications under general settings.", 'really-simple-ssl' ),
-			'warning' => true,
-			'disabled' => false,
-			'default' => 'c',
-			'react_conditions' => [
-				'relation' => 'AND',
-				[
-					'enable_vulnerability_scanner' => 1,
-				],
-				[
-					'send_notifications_email' => 1,
-				]
-			],
-		],
-		[
-			'id' => 'vulnerabilities_test',
-			'menu_id' => 'vulnerabilities_notifications',
-			'group_id' => 'vulnerabilities_notifications',
-			'type' => 'notificationtester',
-			'action' => 'test_vulnerability_notification',
-			'label' => __('Test notifications', 'really-simple-ssl'),
-			'tooltip' => __('Test notifications can be used to test email delivery and shows how vulnerabilities will be reported on your WordPress installation.', 'really-simple-ssl'),
-			'disabled' => false,
-			'button_text' => __( "Test notifications", "really-simple-ssl" ),
-			'react_conditions' => [
-				'relation' => 'AND',
-				[
-					'enable_vulnerability_scanner' => 1,
-					'send_notifications_email' => 1,
-				]
-			],
-		],
-		[
-			'id'    => 'vulnerabilities-overview',
-			'menu_id' => 'vulnerabilities_measures_overview',
-			'group_id' => 'vulnerabilities_overview',
-			'type' => 'vulnerabilitiestable',
-
-			'label' => __('Vulnerabilities Overview', 'really-simple-ssl'),
-			'disabled' => false,
-			'default' => false,
-			'react_conditions' => [
-				'relation' => 'AND',
-				[
-					'enable_vulnerability_scanner' => 1,
-				]
-			],
-			'columns' => [
-				[
-					'id'      => 'component',
-					'name'     => __( 'Component', 'really-simple-ssl' ),
-					'sortable' => false,
-					'column'   => 'Name',
-					'width'    => '20%',
-				],
-				[
-					'id'      => 'risk',
-					'name'     => __( 'Risk', 'really-simple-ssl' ),
-					'sortable' => false,
-					'column'   => 'risk_name',
-				],
-				[
-					'id'      => 'date',
-					'name'     => __( 'Date', 'really-simple-ssl' ),
-					'sortable' => false,
-					'column'   => 'date',
-				],
-				[
-					'id'      => 'action',
-					'name'     => __( 'Action', 'really-simple-ssl' ),
-					'sortable' => false,
-					'column'   => 'vulnerability_action',
-				],[]
-
-			]
-		],
-		[
-			'id'               => 'vulnerabilities_measures',
-			'menu_id'          => 'vulnerabilities_measures_overview',
-			'group_id'         => 'vulnerabilities_measures',
-			'type'             => 'riskcomponent',
+			'id'               => 'limit_login_attempts_amount',
+			'menu_id'          => 'limit_login_attempts',
+			'group_id'         => 'limit_login_attempts_advanced',
+			'type'             => 'select',
+			'label'            => __('Login attempts', 'really-simple-ssl'),
 			'options'          => [
-				'*' => __('None', 'really-simple-ssl'),
-				'l' => __('Low-risk', 'really-simple-ssl'),
-				'm' => __('Medium-risk', 'really-simple-ssl'),
-				'h' => __('High-risk', 'really-simple-ssl'),
-				'c' => __('Critical', 'really-simple-ssl'),
+				'3'  => '3 '.__('attempts', 'really-simple-ssl'),
+				'5'  => '5 '.__('attempts', 'really-simple-ssl'),
+				'10' => '10 '.__('attempts', 'really-simple-ssl'),
+				'15' => '15 '.__('attempts', 'really-simple-ssl'),
 			],
+			'disabled'         => false,
+			'default'          => '3',
 			'react_conditions' => [
 				'relation' => 'AND',
 				[
-					'measures_enabled' => true,
+					'enable_limited_login_attempts' => true,
 				]
+			],
+		],
+		[
+			'id'               => 'limit_login_attempts_duration',
+			'menu_id'          => 'limit_login_attempts',
+			'group_id'         => 'limit_login_attempts_advanced',
+			'type'             => 'select',
+			'label'            => __('Interval', 'really-simple-ssl'),
+			'options'          => [
+				'30'  => '30'.__(' minutes', 'really-simple-ssl'),
+				'60'  => '1 '.__(' hour', 'really-simple-ssl'),
+				'120' => '2 '.__(' hours', 'really-simple-ssl'),
+				'240' => '4 '.__(' hours', 'really-simple-ssl'),
+			],
+			'disabled'         => false,
+			'default'          => '30',
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'enable_limited_login_attempts' => true,
+				]
+			],
+		],
+		[
+			'id'               => 'limit_login_attempts_locked_out_duration',
+			'menu_id'          => 'limit_login_attempts',
+			'group_id'         => 'limit_login_attempts_advanced',
+			'type'             => 'select',
+			'label'            => __('Locked out', 'really-simple-ssl'),
+			'options'          => [
+				'15'  => '15'.__(' minutes', 'really-simple-ssl'),
+				'30'  => '30 '.__(' minutes', 'really-simple-ssl'),
+				'60' => '1 '.__(' hour', 'really-simple-ssl'),
+				'120' => '2 '.__(' hours', 'really-simple-ssl'),
+			],
+			'disabled'         => false,
+			'default'          => '30',
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'enable_limited_login_attempts' => true,
+				]
+			],
+		],
+		[
+			'id'               => 'limit_login_attempts_users_view',
+			'menu_id'          => 'limit_login_attempts',
+			'group_id'         => 'limit_login_attempts_users',
+			'type'             => 'user-datatable',
+			'action'           => 'user_list',
+			'options'          => [
+				'blocked' => __('Blocked', 'really-simple-ssl'),
+				'locked'  => __('Locked-out', 'really-simple-ssl'),
+				'trusted' => __('Trusted', 'really-simple-ssl'),
 			],
 			'disabled'         => false,
 			'default'          => false,
-			'columns'          => [
-				[
-					'name'     => __( 'Action', 'really-simple-ssl' ),
-					'sortable' => false,
-					'column'   => 'name',
-					'width'    => '15%',
-				],
-				[
-					'name'     => __( 'Risk', 'really-simple-ssl' ),
-					'sortable' => false,
-					'column'   => 'riskSelection',
-					'width'         => '20%',
-				],
-				[
-					'name'     => __( 'Description', 'really-simple-ssl' ),
-					'sortable' => false,
-					'column'   => 'description',
-					'type'   => 'text',
-					'width'     => '70%',
-					'minWidth'  => '300px',
-				],
-				[]
-			],
-		],
-		[
-			'id'       => 'measures_enabled',
-			'menu_id'  => 'vulnerabilities_measures',
-			'group_id' => 'vulnerabilities_measures',
-			'type'     => 'checkbox',
-			'label'    => __("I have read and understood the risks to intervene with these measures.","really-simple-ssl"),
-			'comment' => '<a href="https://really-simple-ssl.com/instructions/about-vulnerabilities#measures" target="_blank">'.__("Read more", "really-simple-ssl") .'</a>',
-			'disabled' => false,
-			'default'  => false,
 			'react_conditions' => [
 				'relation' => 'AND',
 				[
-					'enable_vulnerability_scanner' => true,
+					'enable_limited_login_attempts' => true,
 				]
+			],
+			'columns'          => [
+				[
+					'name'       => __('Username', 'really-simple-ssl'),
+					'sortable'   => true,
+					'searchable' => true,
+					'column'     => 'attempt_value',
+					'width'      => '20%',
+				],
+				[
+					'name'     => __('Status', 'really-simple-ssl'),
+					'sortable' => false,
+					'column'   => 'status',
+					'width'    => '10%',
+				],
+				[
+					'name'     => __('Date', 'really-simple-ssl'),
+					'sortable' => true,
+					'column'   => 'datetime',
+				],
+				[
+					'name'     => '',
+					'sortable' => false,
+					'column'   => 'action',
+					'width'    => '70%',
+				],
+				['width' => '1px'],
+
+			],
+		],
+//        [
+//            'id'               => 'limit_login_attempts_open_source',
+//            'menu_id'          => 'limit_login_attempts',
+//            'group_id'         => 'limit_login_attempts_ip_address',
+//            'type'             => 'checkbox',
+//            'label'            => __('Enable open source blocklist API etc.', 'really-simple-ssl'),
+//            'disabled'         => false,
+//            'default'          => false,
+//            'react_conditions' => [
+//                'relation' => 'AND',
+//                [
+//                    'enable_limited_login_attempts' => true,
+//                ]
+//            ],
+//        ],
+		[
+			'id'               => 'limit_login_attempts_ip_view',
+			'menu_id'          => 'limit_login_attempts',
+			'group_id'         => 'limit_login_attempts_ip_address',
+			'type'             => 'ip-address-datatable',
+			'action'           => 'ip_list',
+			'options'          => [
+				'blocked' => __('Blocked', 'really-simple-ssl'),
+				'locked'  => __('Locked-out', 'really-simple-ssl'),
+				'trusted' => __('Trusted', 'really-simple-ssl'),
+			],
+			'label'            => __('Enable open source blocklist API etc.', 'really-simple-ssl'),
+			'disabled'         => false,
+			'default'          => false,
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'enable_limited_login_attempts' => true,
+				]
+			],
+			'columns'          => [
+				[
+					'name'       => __('Ip Address', 'really-simple-ssl'),
+					'sortable'   => true,
+					'searchable' => true,
+					'column'     => 'attempt_value',
+					'width'      => '20%',
+				],
+				[
+					'name'     => __('Status', 'really-simple-ssl'),
+					'sortable' => false,
+					'column'   => 'status',
+					'width'    => '10%',
+				],
+				[
+					'name'     => __('Date', 'really-simple-ssl'),
+					'sortable' => true,
+					'column'   => 'datetime',
+				],
+				[
+					'name'     => '',
+					'sortable' => false,
+					'column'   => 'action',
+					'width'    => '70%',
+				],
+				['width' => '1px'],
+
+			],
+		],
+		[
+			'id'               => 'limit_login_attempts_country_view',
+			'menu_id'          => 'limit_login_attempts',
+			'group_id'         => 'limit_login_attempts_country',
+			'type'             => 'country-datatable',
+			'action'           => 'country_list',
+			'options'          => [
+				'blocked' => __('Blocked', 'really-simple-ssl'),
+				'locked'  => __('Locked-out', 'really-simple-ssl'),
+				'trusted' => __('Trusted', 'really-simple-ssl'),
+			],
+			'disabled'         => false,
+			'default'          => false,
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'enable_limited_login_attempts' => true,
+				]
+			],
+			'columns'          => [
+				[
+					'name'       => '',
+					'sortable'   => false,
+					'searchable' => true,
+					'column'     => 'attempt_value',
+					'width'      => '2%',
+				],
+				[
+					'name'       => __('Country', 'really-simple-ssl'),
+					'sortable'   => true,
+					'searchable' => true,
+					'visible'   => false,
+					'column'     => 'country_name',
+					'width'      => '20%',
+				],
+				[
+					'name'       => __('Continent', 'really-simple-ssl'),
+					'sortable'   => true,
+					'searchable' => true,
+					'column'     => 'region',
+					'width'      => '20%',
+				],
+				[
+					'name'     => __('Status', 'really-simple-ssl'),
+					'sortable' => false,
+					'column'   => 'status',
+					'width'    => '10%',
+				],
+				[
+					'name'     => '',
+					'sortable' => false,
+					'column'   => 'action',
+					'width'    => '70%',
+				],
+				['width' => '1px'],
+			],
+		],
+		[
+			'id'               => 'event_log_viewer',
+			'menu_id'          => 'limit_login_attempts',
+			'group_id'         => 'limit_login_attempts_event_log',
+			'type'             => 'eventlog-datatable',
+			'action'           => 'event_log',
+			'label'            => __('IP address overview', 'really-simple-ssl'),
+			'disabled'         => false,
+			'default'          => false,
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'enable_limited_login_attempts' => true,
+				]
+			],
+			'columns'          => [
+				[
+					'name'     => __('Date', 'really-simple-ssl'),
+					'sortable' => true,
+					'column'   => 'datetime',
+//                    'width'         => '12%',
+				],
+				[
+					'name'       => __('User', 'really-simple-ssl'),
+					'sortable'   => true,
+					'column'     => 'username',
+					'searchable' => true,
+					'type'       => 'text',
+//                    'width'     => '12%',
+				],
+				[
+					'name'     => 'country',
+					'sortable' => true,
+					'column'   => 'iso2_code',
+					'width'    => '10%',
+				],
+				[
+					'name'       => __('Ip Address', 'really-simple-ssl'),
+					'sortable'   => true,
+					'searchable' => true,
+					'column'     => 'source_ip',
+//                    'width'    => '12%',
+				],
+				[
+					'name'     => __('Event', 'really-simple-ssl'),
+					'sortable' => true,
+					'column'   => 'event_type',
+//                    'width'         => '12%',
+				],
+
+				[
+					'width'    => '1px',
+				]
+
+			],
+		],
+		[
+			'id'       => 'two_fa_enabled',
+			'menu_id'  => 'two_fa',
+			'group_id' => 'two_fa_general',
+			'type'     => 'checkbox',
+			'label'    => __( "Enable login protection", "really-simple-ssl-pro" ),
+			'disabled' => false,
+			'default'  => 'disabled',
+		],
+		[
+			'id'       => 'two_fa_email_code',
+			'menu_id'  => 'two_fa',
+			'group_id' => 'two_fa_email',
+			'type'     => 'checkbox',
+			'label'    => __( "Enable two-step verification", "really-simple-ssl-pro" ),
+			'tooltip'  => __( "This will send emails from your server, containing a verification code to users that try to login.", 'really-simple-ssl' ),
+			'disabled' => false,
+			'default'  => 'disabled',
+		],
+		[
+			'id'       => 'two_fa_optional_roles',
+			'menu_id'  => 'two_fa',
+			'group_id' => 'two_fa_email',
+			'type'     => 'two_fa_roles',
+			'label'    => __( "Optional for:", "really-simple-ssl-pro" ),
+			'tooltip'  => __( "Two-step login will be enabled for these user roles, with the possibility to skip. If a user skips, Two-step login will be disabled for this user.", 'really-simple-ssl' ),
+		],
+		[
+			'id'       => 'two_fa_forced_roles',
+			'menu_id'  => 'two_fa',
+			'group_id' => 'two_fa_email',
+			'type'     => 'two_fa_roles',
+			'label'    => __( "Force on:", "really-simple-ssl-pro" ),
+			'tooltip'  => __( "These user roles are forced to enter the authentication code, without the possibility to skip.", 'really-simple-ssl' ),
+		],
+		[
+			'id'    => 'two_fa_users_table',
+			'menu_id' => 'two_fa',
+			'group_id' => 'two_fa_users',
+			'type' => 'twofa-datatable',
+			'action' => 'two_fa_table',
+			'label' => __('Users', 'really-simple-ssl'),
+			'disabled' => false,
+			'default' => false,
+			'columns' => [
+				[
+					'name'     => __( 'Username', 'really-simple-ssl' ),
+					'sortable' => false,
+					'searchable' => true,
+					'visible' => true,
+					'column'   => 'user',
+					'width'    => '20%',
+				],
+				[
+					'name'     => __( 'Status', 'really-simple-ssl' ),
+					'sortable' => false,
+					'searchable' => false,
+					'visible' => true,
+					'column'   => 'status_for_user',
+					'width'    => '20%',
+				],
+				[
+					'name'     => __( 'User role', 'really-simple-ssl' ),
+					'sortable' => false,
+					'searchable' => false,
+					'visible' => true,
+					'column'   => 'user_role',
+					'width'    => '20%',
+				],
+				[
+					'name'     => __( 'Action', 'really-simple-ssl' ),
+					'sortable' => false,
+					'searchable' => false,
+					'visible' => true,
+					'width'     => '70%',
+					'column'   => 'rsssl_two_fa_method',
+				],
 			],
 		],
 		/* section x_xss_protection */
@@ -1223,390 +1368,245 @@ function rsssl_fields( $load_values = true ) {
 				],
 			],
 		],
-		/* section limited_login_attempts */
+		/* Vulnerability basic Section */
 		[
-			'id'       => 'enable_limited_login_attempts',
-			'menu_id'  => 'limit_login_attempts',
-			'group_id' => 'limit_login_attempts_general',
-			'type'     => 'checkbox',
-			'label'    => __('Enable limited login attempts', 'really-simple-ssl'),
-			'disabled' => false,
-			'help'      => [
-				'label' => 'default',
-				'url'   => 'https://really-simple-ssl.com/knowledge-base/enable-limited-login-attempts/',
-				'title' => __("About limited login attempts", 'really-simple-ssl'),
-				'text'  => __('This feature will limit the number of login attempts per user. If a user exceeds the number of allowed attempts, the user will be blocked for a certain amount of time. You can also block IP addresses and view a list of blocked users and IP addresses.',
-					'really-simple-ssl'),
-			],
-		],
-		[
-			'id'               => 'limit_login_attempts_amount',
-			'menu_id'          => 'limit_login_attempts',
-			'group_id'         => 'limit_login_attempts_advanced',
-			'type'             => 'select',
-			'label'            => __('Login attempts', 'really-simple-ssl'),
-			'options'          => [
-				'3'  => '3 '.__('attempts', 'really-simple-ssl'),
-				'5'  => '5 '.__('attempts', 'really-simple-ssl'),
-				'10' => '10 '.__('attempts', 'really-simple-ssl'),
-				'15' => '15 '.__('attempts', 'really-simple-ssl'),
-			],
-			'disabled'         => false,
-			'default'          => '3',
-			'react_conditions' => [
-				'relation' => 'AND',
-				[
-					'enable_limited_login_attempts' => true,
-				]
-			],
-		],
-		[
-			'id'               => 'limit_login_attempts_duration',
-			'menu_id'          => 'limit_login_attempts',
-			'group_id'         => 'limit_login_attempts_advanced',
-			'type'             => 'select',
-			'label'            => __('Interval', 'really-simple-ssl'),
-			'options'          => [
-				'30'  => '30'.__(' minutes', 'really-simple-ssl'),
-				'60'  => '1 '.__(' hour', 'really-simple-ssl'),
-				'120' => '2 '.__(' hours', 'really-simple-ssl'),
-				'240' => '4 '.__(' hours', 'really-simple-ssl'),
-			],
-			'disabled'         => false,
-			'default'          => '30',
-			'react_conditions' => [
-				'relation' => 'AND',
-				[
-					'enable_limited_login_attempts' => true,
-				]
-			],
-		],
-		[
-			'id'               => 'limit_login_attempts_locked_out_duration',
-			'menu_id'          => 'limit_login_attempts',
-			'group_id'         => 'limit_login_attempts_advanced',
-			'type'             => 'select',
-			'label'            => __('Locked out', 'really-simple-ssl'),
-			'options'          => [
-				'15'  => '15'.__(' minutes', 'really-simple-ssl'),
-				'30'  => '30 '.__(' minutes', 'really-simple-ssl'),
-				'60' => '1 '.__(' hour', 'really-simple-ssl'),
-				'120' => '2 '.__(' hours', 'really-simple-ssl'),
-			],
-			'disabled'         => false,
-			'default'          => '30',
-			'react_conditions' => [
-				'relation' => 'AND',
-				[
-					'enable_limited_login_attempts' => true,
-				]
-			],
-		],
-		[
-			'id'               => 'limit_login_attempts_users_view',
-			'menu_id'          => 'limit_login_attempts',
-			'group_id'         => 'limit_login_attempts_users',
-			'type'             => 'user-datatable',
-			'action'           => 'user_list',
-			'options'          => [
-				'blocked' => __('Blocked', 'really-simple-ssl'),
-				'locked'  => __('Locked-out', 'really-simple-ssl'),
-				'trusted' => __('Trusted', 'really-simple-ssl'),
-			],
-			'disabled'         => false,
-			'default'          => false,
-			'react_conditions' => [
-				'relation' => 'AND',
-				[
-					'enable_limited_login_attempts' => true,
-				]
-			],
-			'columns'          => [
-				[
-					'name'       => __('Username', 'really-simple-ssl'),
-					'sortable'   => true,
-					'searchable' => true,
-					'column'     => 'attempt_value',
-					'width'      => '20%',
-				],
-				[
-					'name'     => __('Status', 'really-simple-ssl'),
-					'sortable' => false,
-					'column'   => 'status',
-					'width'    => '10%',
-				],
-				[
-					'name'     => __('Date', 'really-simple-ssl'),
-					'sortable' => true,
-					'column'   => 'datetime',
-				],
-				[
-					'name'     => '',
-					'sortable' => false,
-					'column'   => 'action',
-					'width'    => '70%',
-				],
-				['width' => '1px'],
-
-			],
-		],
-//        [
-//            'id'               => 'limit_login_attempts_open_source',
-//            'menu_id'          => 'limit_login_attempts',
-//            'group_id'         => 'limit_login_attempts_ip_address',
-//            'type'             => 'checkbox',
-//            'label'            => __('Enable open source blocklist API etc.', 'really-simple-ssl'),
-//            'disabled'         => false,
-//            'default'          => false,
-//            'react_conditions' => [
-//                'relation' => 'AND',
-//                [
-//                    'enable_limited_login_attempts' => true,
-//                ]
-//            ],
-//        ],
-		[
-			'id'               => 'limit_login_attempts_ip_view',
-			'menu_id'          => 'limit_login_attempts',
-			'group_id'         => 'limit_login_attempts_ip_address',
-			'type'             => 'ip-address-datatable',
-			'action'           => 'ip_list',
-			'options'          => [
-				'blocked' => __('Blocked', 'really-simple-ssl'),
-				'locked'  => __('Locked-out', 'really-simple-ssl'),
-				'trusted' => __('Trusted', 'really-simple-ssl'),
-			],
-			'label'            => __('Enable open source blocklist API etc.', 'really-simple-ssl'),
-			'disabled'         => false,
-			'default'          => false,
-			'react_conditions' => [
-				'relation' => 'AND',
-				[
-					'enable_limited_login_attempts' => true,
-				]
-			],
-			'columns'          => [
-				[
-					'name'       => __('Ip Address', 'really-simple-ssl'),
-					'sortable'   => true,
-					'searchable' => true,
-					'column'     => 'attempt_value',
-					'width'      => '20%',
-				],
-				[
-					'name'     => __('Status', 'really-simple-ssl'),
-					'sortable' => false,
-					'column'   => 'status',
-					'width'    => '10%',
-				],
-				[
-					'name'     => __('Date', 'really-simple-ssl'),
-					'sortable' => true,
-					'column'   => 'datetime',
-				],
-				[
-					'name'     => '',
-					'sortable' => false,
-					'column'   => 'action',
-					'width'    => '70%',
-				],
-				['width' => '1px'],
-
-			],
-		],
-		[
-			'id'               => 'limit_login_attempts_country_view',
-			'menu_id'          => 'limit_login_attempts',
-			'group_id'         => 'limit_login_attempts_country',
-			'type'             => 'country-datatable',
-			'action'           => 'country_list',
-			'options'          => [
-				'blocked' => __('Blocked', 'really-simple-ssl'),
-				'locked'  => __('Locked-out', 'really-simple-ssl'),
-				'trusted' => __('Trusted', 'really-simple-ssl'),
-			],
-			'disabled'         => false,
-			'default'          => false,
-			'react_conditions' => [
-				'relation' => 'AND',
-				[
-					'enable_limited_login_attempts' => true,
-				]
-			],
-			'columns'          => [
-				[
-					'name'       => '',
-					'sortable'   => false,
-					'searchable' => true,
-					'column'     => 'attempt_value',
-					'width'      => '2%',
-				],
-				[
-					'name'       => __('Country', 'really-simple-ssl'),
-					'sortable'   => true,
-					'searchable' => true,
-					'visible'   => false,
-					'column'     => 'country_name',
-					'width'      => '20%',
-				],
-				[
-					'name'       => __('Continent', 'really-simple-ssl'),
-					'sortable'   => true,
-					'searchable' => true,
-					'column'     => 'region',
-					'width'      => '20%',
-				],
-				[
-					'name'     => __('Status', 'really-simple-ssl'),
-					'sortable' => false,
-					'column'   => 'status',
-					'width'    => '10%',
-				],
-				[
-					'name'     => '',
-					'sortable' => false,
-					'column'   => 'action',
-					'width'    => '70%',
-				],
-				['width' => '1px'],
-			],
-		],
-		[
-			'id'               => 'event_log_viewer',
-			'menu_id'          => 'limit_login_attempts',
-			'group_id'         => 'limit_login_attempts_event_log',
-			'type'             => 'eventlog-datatable',
-			'action'           => 'event_log',
-			'label'            => __('IP address overview', 'really-simple-ssl'),
-			'disabled'         => false,
-			'default'          => false,
-			'react_conditions' => [
-				'relation' => 'AND',
-				[
-					'enable_limited_login_attempts' => true,
-				]
-			],
-			'columns'          => [
-				[
-					'name'     => __('Date', 'really-simple-ssl'),
-					'sortable' => true,
-					'column'   => 'datetime',
-//                    'width'         => '12%',
-				],
-				[
-					'name'       => __('User', 'really-simple-ssl'),
-					'sortable'   => true,
-					'column'     => 'username',
-					'searchable' => true,
-					'type'       => 'text',
-//                    'width'     => '12%',
-				],
-				[
-					'name'     => 'country',
-					'sortable' => true,
-					'column'   => 'iso2_code',
-					'width'    => '10%',
-				],
-				[
-					'name'       => __('Ip Address', 'really-simple-ssl'),
-					'sortable'   => true,
-					'searchable' => true,
-					'column'     => 'source_ip',
-//                    'width'    => '12%',
-				],
-				[
-					'name'     => __('Event', 'really-simple-ssl'),
-					'sortable' => true,
-					'column'   => 'event_type',
-//                    'width'         => '12%',
-				],
-
-				[
-					'width'    => '1px',
-				]
-
-			],
-		],
-		[
-			'id'       => 'two_fa_enabled',
-			'menu_id'  => 'two_fa',
-			'group_id' => 'two_fa_general',
-			'type'     => 'checkbox',
-			'label'    => __( "Enable login protection", "really-simple-ssl-pro" ),
-			'disabled' => false,
-			'default'  => 'disabled',
-		],
-		[
-			'id'       => 'two_fa_email_code',
-			'menu_id'  => 'two_fa',
-			'group_id' => 'two_fa_email',
-			'type'     => 'checkbox',
-			'label'    => __( "Enable two-step verification", "really-simple-ssl-pro" ),
-			'tooltip'  => __( "This will send emails from your server, containing a verification code to users that try to login.", 'really-simple-ssl' ),
-			'disabled' => false,
-			'default'  => 'disabled',
-		],
-		[
-			'id'       => 'two_fa_optional_roles',
-			'menu_id'  => 'two_fa',
-			'group_id' => 'two_fa_email',
-			'type'     => 'two_fa_roles',
-			'label'    => __( "Optional for:", "really-simple-ssl-pro" ),
-			'tooltip'  => __( "Two-step login will be enabled for these user roles, with the possibility to skip. If a user skips, Two-step login will be disabled for this user.", 'really-simple-ssl' ),
-		],
-		[
-			'id'       => 'two_fa_forced_roles',
-			'menu_id'  => 'two_fa',
-			'group_id' => 'two_fa_email',
-			'type'     => 'two_fa_roles',
-			'label'    => __( "Force on:", "really-simple-ssl-pro" ),
-			'tooltip'  => __( "These user roles are forced to enter the authentication code, without the possibility to skip.", 'really-simple-ssl' ),
-		],
-		[
-			'id'    => 'two_fa_users_table',
-			'menu_id' => 'two_fa',
-			'group_id' => 'two_fa_users',
-			'type' => 'twofa-datatable',
-			'action' => 'two_fa_table',
-			'label' => __('Users', 'really-simple-ssl'),
+			'id' => 'enable_vulnerability_scanner',
+			'menu_id' => 'vulnerabilities_basic',
+			'group_id' => 'vulnerabilities_basic',
+			'type' => 'checkbox',
+			'label' => __('Vulnerability detection', 'really-simple-ssl'),
+			'tooltip'  => __( "This feature depends on multiple standard background processes. If a process fails or is unavailable on your system, detection might not work. We run frequent tests for this purpose. We will notify you accordingly if there are any issues.", 'really-simple-ssl' ),
 			'disabled' => false,
 			'default' => false,
+			'warning' => true,
+			'help'               => [
+				'label' => 'default',
+				'url'   => 'https://really-simple-ssl.com/instructions/about-vulnerabilities/',
+				'title' => __( "About Vulnerabilities", 'really-simple-ssl' ),
+				'text'  => __( 'Really Simple SSL collects information about plugins, themes, and core vulnerabilities from our database powered by WPVulnerability. Anonymized data about these vulnerable components will be sent to Really Simple SSL for statistical analysis to improve open-source contributions. For more information, please read our privacy statement.', 'really-simple-ssl' ),
+			],
+		],
+		[
+			'id' => 'vulnerabilities_intro_shown',
+			'menu_id' => 'vulnerabilities_basic',
+			'group_id' => 'vulnerabilities_basic',
+			'type' => 'hidden',
+			'label' => '',
+			'disabled' => false,
+			'default' => false,
+		],
+		[
+			'id' => 'enable_feedback_in_plugin',
+			'menu_id' => 'vulnerabilities_basic',
+			'group_id' => 'vulnerabilities_basic',
+			'tooltip'  => __( "If there's a vulnerability, you will also get feedback on the themes and plugin overview.", 'really-simple-ssl' ),
+			'warning' => false,
+			'type' => 'checkbox',
+			'label' => __('Feedback in plugin overview', 'really-simple-ssl'),
+			'disabled' => false,
+			'default' => false,
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'enable_vulnerability_scanner' => 1,
+				]
+			],
+		],
+		/* Vulnerability advanced Section */
+		[
+			'id' => 'vulnerability_notification_dashboard',
+			'menu_id' => 'vulnerabilities_notifications',
+			'group_id' => 'vulnerabilities_notifications',
+			'type' => 'select',
+			'options' => [
+				'*' => __('None', 'really-simple-ssl'),
+				'l' => __('Low-risk (default)', 'really-simple-ssl'),
+				'm' => __('Medium-risk', 'really-simple-ssl'),
+				'h' => __('High-risk', 'really-simple-ssl'),
+				'c' => __('Critical', 'really-simple-ssl'),
+			],
+			'label' => __('Really Simple SSL dashboard', 'really-simple-ssl'),
+			'disabled' => false,
+			'default' => 'l',
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'enable_vulnerability_scanner' => 1,
+				]
+			],
+		],
+		[
+			'id' => 'vulnerability_notification_sitewide',
+			'menu_id' => 'vulnerabilities_notifications',
+			'group_id' => 'vulnerabilities_notifications',
+			'type' => 'select',
+			'options' => [
+				'*' => __('None', 'really-simple-ssl'),
+				'l' => __('Low-risk ', 'really-simple-ssl'),
+				'm' => __('Medium-risk', 'really-simple-ssl'),
+				'h' => __('High-risk (default)', 'really-simple-ssl'),
+				'c' => __('Critical', 'really-simple-ssl'),
+			],
+			'label' => __('Site-wide, admin notification', 'really-simple-ssl'),
+			'disabled' => false,
+			'default' => 'h',
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'enable_vulnerability_scanner' => 1,
+				]
+			],
+		],
+		[
+			'id' => 'vulnerability_notification_email_admin',
+			'menu_id' => 'vulnerabilities_notifications',
+			'group_id' => 'vulnerabilities_notifications',
+			'type' => 'select',
+			'options' => [
+				'*' => __('None', 'really-simple-ssl'),
+				'l' => __('Low-risk', 'really-simple-ssl'),
+				'm' => __('Medium-risk', 'really-simple-ssl'),
+				'h' => __('High-risk', 'really-simple-ssl'),
+				'c' => __('Critical (default)', 'really-simple-ssl'),
+			],
+			'label' => __('Email', 'really-simple-ssl'),
+			'tooltip'  => __( "This will send emails about vulnerabilities directly from your server. Make sure you can receive emails by the testing a preview below. If this feature is disabled, please enable notifications under general settings.", 'really-simple-ssl' ),
+			'warning' => true,
+			'disabled' => false,
+			'default' => 'c',
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'enable_vulnerability_scanner' => 1,
+				],
+				[
+					'send_notifications_email' => 1,
+				]
+			],
+		],
+		[
+			'id' => 'vulnerabilities_test',
+			'menu_id' => 'vulnerabilities_notifications',
+			'group_id' => 'vulnerabilities_notifications',
+			'type' => 'notificationtester',
+			'action' => 'test_vulnerability_notification',
+			'label' => __('Test notifications', 'really-simple-ssl'),
+			'tooltip' => __('Test notifications can be used to test email delivery and shows how vulnerabilities will be reported on your WordPress installation.', 'really-simple-ssl'),
+			'disabled' => false,
+			'button_text' => __( "Test notifications", "really-simple-ssl" ),
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'enable_vulnerability_scanner' => 1,
+					'send_notifications_email' => 1,
+				]
+			],
+		],
+		[
+			'id'    => 'vulnerabilities-overview',
+			'menu_id' => 'vulnerabilities_measures_overview',
+			'group_id' => 'vulnerabilities_overview',
+			'type' => 'vulnerabilitiestable',
+
+			'label' => __('Vulnerabilities Overview', 'really-simple-ssl'),
+			'disabled' => false,
+			'default' => false,
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'enable_vulnerability_scanner' => 1,
+				]
+			],
 			'columns' => [
 				[
-					'name'     => __( 'Username', 'really-simple-ssl' ),
+					'id'      => 'component',
+					'name'     => __( 'Component', 'really-simple-ssl' ),
 					'sortable' => false,
-					'searchable' => true,
-					'visible' => true,
-					'column'   => 'user',
+					'column'   => 'Name',
 					'width'    => '20%',
 				],
 				[
-					'name'     => __( 'Status', 'really-simple-ssl' ),
+					'id'      => 'risk',
+					'name'     => __( 'Risk', 'really-simple-ssl' ),
 					'sortable' => false,
-					'searchable' => false,
-					'visible' => true,
-					'column'   => 'status_for_user',
-					'width'    => '20%',
+					'column'   => 'risk_name',
 				],
 				[
-					'name'     => __( 'User role', 'really-simple-ssl' ),
+					'id'      => 'date',
+					'name'     => __( 'Date', 'really-simple-ssl' ),
 					'sortable' => false,
-					'searchable' => false,
-					'visible' => true,
-					'column'   => 'user_role',
-					'width'    => '20%',
+					'column'   => 'date',
 				],
+				[
+					'id'      => 'action',
+					'name'     => __( 'Action', 'really-simple-ssl' ),
+					'sortable' => false,
+					'column'   => 'vulnerability_action',
+				],[]
+
+			]
+		],
+		[
+			'id'               => 'vulnerabilities_measures',
+			'menu_id'          => 'vulnerabilities_measures_overview',
+			'group_id'         => 'vulnerabilities_measures',
+			'type'             => 'riskcomponent',
+			'options'          => [
+				'*' => __('None', 'really-simple-ssl'),
+				'l' => __('Low-risk', 'really-simple-ssl'),
+				'm' => __('Medium-risk', 'really-simple-ssl'),
+				'h' => __('High-risk', 'really-simple-ssl'),
+				'c' => __('Critical', 'really-simple-ssl'),
+			],
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'measures_enabled' => true,
+				]
+			],
+			'disabled'         => false,
+			'default'          => false,
+			'columns'          => [
 				[
 					'name'     => __( 'Action', 'really-simple-ssl' ),
 					'sortable' => false,
-					'searchable' => false,
-					'visible' => true,
-					'width'     => '70%',
-					'column'   => 'rsssl_two_fa_method',
+					'column'   => 'name',
+					'width'    => '15%',
 				],
+				[
+					'name'     => __( 'Risk', 'really-simple-ssl' ),
+					'sortable' => false,
+					'column'   => 'riskSelection',
+					'width'         => '20%',
+				],
+				[
+					'name'     => __( 'Description', 'really-simple-ssl' ),
+					'sortable' => false,
+					'column'   => 'description',
+					'type'   => 'text',
+					'width'     => '70%',
+					'minWidth'  => '300px',
+				],
+				[]
 			],
 		],
-		];
+		[
+			'id'       => 'measures_enabled',
+			'menu_id'  => 'vulnerabilities_measures',
+			'group_id' => 'vulnerabilities_measures',
+			'type'     => 'checkbox',
+			'label'    => __("I have read and understood the risks to intervene with these measures.","really-simple-ssl"),
+			'comment' => '<a href="https://really-simple-ssl.com/instructions/about-vulnerabilities#measures" target="_blank">'.__("Read more", "really-simple-ssl") .'</a>',
+			'disabled' => false,
+			'default'  => false,
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'enable_vulnerability_scanner' => true,
+				]
+			],
+		],
+	];
 
 	$fields = apply_filters( 'rsssl_fields', $fields );
 	if ( is_multisite() && rsssl_is_networkwide_active() ) {
