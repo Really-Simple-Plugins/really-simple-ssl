@@ -85,8 +85,6 @@ const menuItemParser = (parsedMenuItems, menuItems, fields) => {
     return parsedMenuItems;
 }
 
-
-
 const getPreviousAndNextMenuItems = (menu, selectedSubMenuItem, fields) => {
     let previousMenuItem;
     let nextMenuItem;

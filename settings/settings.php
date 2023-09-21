@@ -817,8 +817,6 @@ function rsssl_sanitize_field($value, string $type, string $id)
 	        $value = !is_array($value) ? [] : $value;
             $roles = rsssl_get_roles([]);
 	        $roles = $roles['roles'];
-            error_log(print_r($roles, true));
-            error_log(print_r($value, true));
             foreach ($value as $index => $role) {
                 if (! in_array( $role, $roles, true ) ) {
                     unset($value[$index]);

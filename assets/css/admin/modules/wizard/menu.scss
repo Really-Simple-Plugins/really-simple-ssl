@@ -122,7 +122,7 @@
 
   .rsssl-submenu-item{
     a{
-      padding-left: calc(var(--rsp-spacing-l) + var(--rsp-spacing-m));
+      padding-left: calc(var(--rsp-spacing-xs) + var(--rsp-spacing-s)) !important;
       font-size: var(--rsp-fs-300);
     }
     .rsssl-active {
@@ -135,7 +135,7 @@
           color: var(--rsp-dark-blue);
           font-size: 3em;
           position: absolute;
-          left: var(--rsp-spacing-l);
+          left: var(--rsp-spacing-xxs) !important;
           margin-bottom: 7px;
         }
       }
