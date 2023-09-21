@@ -63,6 +63,8 @@ const CountryDatatable = (props) => {
     let field = props.field;
     const columns = field.columns.map(buildColumn);
 
+    console.log(columns);
+
     const searchableColumns = columns
         .filter(column => column.searchable)
         .map(column => column.column);
@@ -127,11 +129,13 @@ const CountryDatatable = (props) => {
             const regions = code.map(item => item.region);
             await removeRegions(ids, '',dataActions);
             let regionsString = regions.join(', ');
-            notifySuccess(regionsString + ' ' + __('has been removed', 'really-simple-ssl'));
+            notifySuccess(__('%s has been removed', 'really-simple-ssl')
+                .replace('%s',regionsString));
             setRowsSelected([]);
         } else {
             await removeRegion(code, 'blocked', dataActions);
-            notifySuccess(regionName + ' ' + __('has been allowed', 'really-simple-ssl'));
+            notifySuccess(__('%s is now trusted', 'really-simple-ssl')
+                .replace('%s',regionsString));
         }
         await fetchDynamicData('event_log');
     }, [removeRegion, getCurrentFilter(moduleName), dataActions]);
@@ -267,18 +271,6 @@ const CountryDatatable = (props) => {
         data[key] = dataItem;
     }
 
-
-    if (!dataLoaded && columns.length === 0 && CountryDataTable.length === 0) {
-        return (
-            <div className="rsssl-spinner">
-                <div className="rsssl-spinner__inner">
-                    <div className="rsssl-spinner__icon"></div>
-                    <div className="rsssl-spinner__text">{__("Loading...", "really-simple-ssl")}</div>
-                </div>
-            </div>
-        );
-    }
-
     const options = Object.entries(props.field.options).map(([value, label]) => ({ value, label }));
 
     const notifySuccess = (message) => toast.success(message);
@@ -328,7 +320,7 @@ const CountryDatatable = (props) => {
                 >
                     <div className={"rsssl-multiselect-datatable-form rsssl-primary"}>
                         <div>
-                            {__("You have selected", "really-simple-ssl")} {rowsSelected.length} {__("rows", "really-simple-ssl")}
+                            {__("You have selected %s rows", "really-simple-ssl").replace('%s', rowsSelected.length)}
                         </div>
                         <div className="rsssl-action-buttons">
                             {getCurrentFilter(moduleName) === 'countries' && (

@@ -15,13 +15,13 @@ const EventLogDataTableStore = create((set, get) => ({
     sorting: [],
     rowCleared: false,
 
-    fetchDynamicData: async (action, dataActions) => {
+    fetchDynamicData: async (action, dataActions = {}) => {
         //cool we can fetch the data so first we set the processing to true
         set({processing: true});
         set({dataLoaded: false});
         set({rowCleared: true});
         if (Object.keys(dataActions).length === 0) {
-            return;
+            dataActions = get().dataActions;
         }
         //now we fetch the data
         try {

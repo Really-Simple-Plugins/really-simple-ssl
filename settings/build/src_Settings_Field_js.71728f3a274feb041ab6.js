@@ -1982,7 +1982,7 @@ const EventLogDataTable = props => {
     className: "rsssl-search-bar__input",
     placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Search", "really-simple-ssl"),
     onChange: event => handleEventTableSearch(event.target.value, searchableColumns)
-  })))), dataLoaded ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
+  })))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
     columns: columns,
     data: processing ? [] : data,
     dense: true,
@@ -2010,35 +2010,7 @@ const EventLogDataTable = props => {
     persistTableHead: true,
     theme: "really-simple-plugins",
     customStyles: customStyles
-  }) : (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-spinner",
-    style: {
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      marginTop: "100px"
-    }
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-spinner__inner"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-spinner__icon",
-    style: {
-      border: '8px solid white',
-      borderTop: '8px solid #f4bf3e',
-      borderRadius: '50%',
-      width: '120px',
-      height: '120px',
-      animation: 'spin 2s linear infinite'
-    }
-  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-spinner__text",
-    style: {
-      position: 'absolute',
-      top: '50%',
-      left: '50%',
-      transform: 'translate(-50%, -50%)'
-    }
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Loading data, please stand by...", "really-simple-ssl")))), !enabled && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }), !enabled && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-locked"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-locked-overlay"
@@ -2089,7 +2061,8 @@ const EventLogDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((
   DynamicDataTable: [],
   sorting: [],
   rowCleared: false,
-  fetchDynamicData: async (action, dataActions) => {
+  fetchDynamicData: async function (action) {
+    let dataActions = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     //cool we can fetch the data so first we set the processing to true
     set({
       processing: true
@@ -2101,7 +2074,7 @@ const EventLogDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((
       rowCleared: true
     });
     if (Object.keys(dataActions).length === 0) {
-      return;
+      dataActions = get().dataActions;
     }
     //now we fetch the data
     try {
@@ -3443,17 +3416,8 @@ const AddIpAddressModal = props => {
     name: "ip-address",
     showSwitch: true,
     value: ipAddress,
-    onChange: e => setIpAddress(e.target.value),
-    switchValue: rangeDisplay,
-    switchTitle: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Use ip ranges", "really-simple-ssl"),
-    switchAction: handleRangeFill
-  }))), rangeDisplay && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("hr", null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    style: {
-      width: "95%",
-      height: "100%",
-      padding: "10px"
-    }
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("This tool calculates CIDR notation for IP ranges. If you're unfamiliar with this concept, please consult a network professional. Incorrect usage may cause network issues. Proceed with caution! ", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Cidr__WEBPACK_IMPORTED_MODULE_6__["default"], null)))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    onChange: e => setIpAddress(e.target.value)
+  })))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "modal-footer"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: 'rsssl-grid-item-footer',
@@ -4174,6 +4138,7 @@ const CountryDatatable = props => {
   }), []);
   let field = props.field;
   const columns = field.columns.map(buildColumn);
+  console.log(columns);
   const searchableColumns = columns.filter(column => column.searchable).map(column => column.column);
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     const currentFilter = getCurrentFilter(moduleName);
@@ -4241,12 +4206,16 @@ const CountryDatatable = props => {
       const regions = code.map(item => item.region);
       await removeRegions(ids, '', dataActions);
       let regionsString = regions.join(', ');
-      notifySuccess(regionsString + ' ' + (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)('has been removed', 'really-simple-ssl'));
+      notifySuccess((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)('%s has been removed', 'really-simple-ssl').replace('%s', regionsString));
       setRowsSelected([]);
     } else {
       await removeRegion(code, 'blocked', dataActions);
+<<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
       notifySuccess(regionName + ' ' + (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)('has been allowed', 'really-simple-ssl'));
 >>>>>>>> a3a5b65e3 (removed multiple timeouts and promises):settings/build/src_Settings_Field_js.4decfeae1f9f8e4175b6.js
+========
+      notifySuccess((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)('%s is now trusted', 'really-simple-ssl').replace('%s', regionsString));
+>>>>>>>> 2ac80d498 (fixed columns width to display ipv6):settings/build/src_Settings_Field_js.0ab6a56381cf96fc1ff4.js
     }
     await fetchDynamicData('event_log');
   }, [removeRegion, getCurrentFilter(moduleName), dataActions]);
@@ -4375,6 +4344,7 @@ const CountryDatatable = props => {
     dataItem.status = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)(dataItem.status = dataItem.status.charAt(0).toUpperCase() + dataItem.status.slice(1), 'really-simple-ssl');
     data[key] = dataItem;
   }
+<<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
   if (!dataLoaded && columns.length === 0 && CountryDataTable.length === 0) {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-spinner"
@@ -4386,6 +4356,8 @@ const CountryDatatable = props => {
       className: "rsssl-spinner__text"
     }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__.__)("Loading...", "really-simple-ssl"))));
   }
+========
+>>>>>>>> 2ac80d498 (fixed columns width to display ipv6):settings/build/src_Settings_Field_js.0ab6a56381cf96fc1ff4.js
   const options = Object.entries(props.field.options).map(_ref2 => {
     let [value, label] = _ref2;
     return {
@@ -4423,7 +4395,11 @@ const CountryDatatable = props => {
     }
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-multiselect-datatable-form rsssl-primary"
+<<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__.__)("You have selected", "really-simple-ssl"), " ", rowsSelected.length, " ", (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__.__)("rows", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+========
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)("You have selected %s rows", "really-simple-ssl").replace('%s', rowsSelected.length)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+>>>>>>>> 2ac80d498 (fixed columns width to display ipv6):settings/build/src_Settings_Field_js.0ab6a56381cf96fc1ff4.js
     className: "rsssl-action-buttons"
   }, getCurrentFilter(moduleName) === 'countries' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
     onClick: () => allowCountryByCode(rowsSelected)
@@ -4710,6 +4686,9 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
   * This function sets the ip address and is used by Cidr and IpAddressInput
    */
   setIpAddress: ipAddress => {
+    if (ipAddress.length === 0) {
+      return;
+    }
     let ipRegex = /^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$|^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,4}|((25[0-5]|(2[0-4]|1{0,1}[0-9])?[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9])?[0-9]))|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9])?[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9])?[0-9]))$/;
     if (ipAddress.includes('/')) {
       let finalIp = '';
@@ -5328,17 +5307,7 @@ const IpAddressDatatable = props => {
   function generateActionbuttons(id) {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-action-buttons"
-    }, getCurrentFilter(moduleName) === 'blocked' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
-      className: "button-secondary",
-      onClick: () => {
-        allowIpAddresses(id);
-      }
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Trust", "really-simple-ssl")), getCurrentFilter(moduleName) === 'allowed' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
-      className: "button-primary",
-      onClick: () => {
-        blockIpAddresses(id);
-      }
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Block", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
       className: "button-red",
       onClick: () => {
         resetIpAddresses(id);
@@ -5395,19 +5364,9 @@ const IpAddressDatatable = props => {
     }
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-multiselect-datatable-form rsssl-primary"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("You have selected", "really-simple-ssl"), " ", rowsSelected.length, " ", (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("rows", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("You have selected %s rows", "really-simple-ssl").replace('%s', rowsSelected.length)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-action-buttons"
-  }, getCurrentFilter(moduleName) === 'blocked' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
-    className: "button-secondary",
-    onClick: () => {
-      allowIpAddresses(rowsSelected);
-    }
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Trust", "really-simple-ssl")), getCurrentFilter(moduleName) === 'allowed' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
-    className: "button-primary",
-    onClick: () => {
-      blockIpAddresses(rowsSelected);
-    }
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Block", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
     className: "button-red",
     onClick: () => {
       resetIpAddresses(rowsSelected);
@@ -5487,7 +5446,6 @@ const IpAddressInput = props => {
   const {
     maskError
   } = (0,_IpAddressDataTableStore__WEBPACK_IMPORTED_MODULE_4__["default"])();
-  let is_checked = props.switchValue ? 'is-checked' : '';
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
     htmlFor: props.id,
     className: "rsssl-label"
@@ -5500,33 +5458,7 @@ const IpAddressInput = props => {
     value: props.value,
     className: `rsssl-input full ${maskError ? 'rsssl-error' : 'rsssl-success'}`,
     onChange: props.onChange
-  }), props.showSwitch && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    style: {
-      marginTop: '10px',
-      marginBottom: '10px'
-    }
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "components-base-control components-toggle-control"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "components-base-control__field"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    "data-wp-component": "HStack",
-    className: "components-flex components-h-stack"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
-    className: "components-toggle-control__label"
-  }, props.switchTitle, "  "), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-    className: "components-form-toggle " + is_checked
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-    onKeyDown: props.switchAction,
-    checked: props.switchValue,
-    className: "components-form-toggle__input",
-    onChange: props.switchAction,
-    type: "checkbox"
-  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-    className: "components-form-toggle__track"
-  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-    className: "components-form-toggle__thumb"
-  })))))))), maskError && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+  })), maskError && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     style: {
       color: 'red',
       marginLeft: '10px'
@@ -5973,17 +5905,7 @@ const UserDatatable = props => {
   };
   const generateActionButtons = (0,react__WEBPACK_IMPORTED_MODULE_2__.useCallback)((id, status, region_name) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-action-buttons"
-  }, getCurrentFilter(moduleName) === 'blocked' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
-    onClick: () => {
-      allowUsers(id);
-    },
-    className: "button-secondary"
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Trust", "really-simple-ssl")), getCurrentFilter(moduleName) === 'allowed' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
-    onClick: () => {
-      blockUsers(id);
-    },
-    className: "button-primary"
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Block", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
     onClick: () => {
       resetUsers(id);
     },
@@ -6042,7 +5964,7 @@ const UserDatatable = props => {
     }
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-multiselect-datatable-form rsssl-primary"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("You have selected", "really-simple-ssl"), " ", rowsSelected.length, " ", (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("rows", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("You have selected %s rows", "really-simple-ssl").replace('%s', rowsSelected.length)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-action-buttons"
   }, getCurrentFilter(moduleName) === 'blocked' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
     onClick: () => {
@@ -24591,6 +24513,7 @@ __webpack_require__.r(__webpack_exports__);
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
+<<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 //# sourceMappingURL=src_Settings_Field_js.71728f3a274feb041ab6.js.map
 ========
 //# sourceMappingURL=src_Settings_Field_js.2a9f68f4c72b1ac2b97c.js.map
@@ -24649,3 +24572,6 @@ __webpack_require__.r(__webpack_exports__);
 ========
 //# sourceMappingURL=src_Settings_Field_js.7d1eada2a1bab7b82806.js.map
 >>>>>>>> 7c7a08be9 (fixed a few issues with the eventlog):settings/build/src_Settings_Field_js.7d1eada2a1bab7b82806.js
+========
+//# sourceMappingURL=src_Settings_Field_js.0ab6a56381cf96fc1ff4.js.map
+>>>>>>>> 2ac80d498 (fixed columns width to display ipv6):settings/build/src_Settings_Field_js.0ab6a56381cf96fc1ff4.js
