@@ -84,77 +84,77 @@ function rsssl_get_system_status() {
 		$output .= "Really Simple SSL per site activated\n";
 	}
 
-	$output  .= '<br><b>SSL Configuration</b>';
+	$output  .= "\n".'SSL Configuration'."\n";
 	$domain   = RSSSL()->certificate->get_domain();
 	$certinfo = RSSSL()->certificate->get_certinfo( $domain );
 	if ( ! $certinfo ) {
-		$output .= 'SSL certificate not valid<br>';
+		$output .= 'SSL certificate not valid'."\n";
 	}
 
 	$domain_valid = RSSSL()->certificate->is_domain_valid( $certinfo, $domain );
 	if ( ! $domain_valid ) {
-		$output .= "Domain on certificate does not match website's domain<br>";
+		$output .= "Domain on certificate does not match website's domain"."\n";
 	}
 
 	$date_valid = RSSSL()->certificate->is_date_valid( $certinfo );
 	if ( ! $date_valid ) {
-		$output .= 'Date on certificate expired or not valid<br>';
+		$output .= 'Date on certificate expired or not valid'."\n";
 	}
 	$filecontents = get_transient( 'rsssl_testpage' );
 	if ( strpos( $filecontents, '#SSL TEST PAGE#' ) !== false ) {
-		$output .= 'SSL test page loaded successfully<br>';
+		$output .= 'SSL test page loaded successfully'."\n";
 	} else {
-		$output .= 'Could not open testpage<br>';
+		$output .= 'Could not open testpage'."\n";
 	}
 	if ( RSSSL()->admin->wpconfig_siteurl_not_fixed ) {
-		$output .= 'siteurl or home url defines found in wpconfig<br>';
+		$output .= 'siteurl or home url defines found in wpconfig'."\n";
 	}
 	if ( RSSSL()->admin->wpconfig_siteurl_not_fixed ) {
-		$output .= 'not able to fix wpconfig siteurl/homeurl.<br>';
+		$output .= 'not able to fix wpconfig siteurl/homeurl'."\n";
 	}
 
 	if ( ! is_writable( RSSSL()->admin->find_wp_config_path() ) ) { //phpcs:ignore
-		$output .= 'wp-config.php not writable<br>';
+		$output .= 'wp-config.php not writable'."\n";
 	}
-	$output .= 'Detected SSL setup: ' . RSSSL()->admin->ssl_type . '<br>';
+	$output .= 'Detected SSL setup: ' . RSSSL()->admin->ssl_type ."\n";
 	if ( file_exists( RSSSL()->admin->htaccess_file() ) ) {
-		$output .= 'htaccess file exists.<br>';
+		$output .= 'htaccess file exists.'."\n";
 		if ( ! is_writable( RSSSL()->admin->htaccess_file() ) ) { //phpcs:ignore
-			$output .= 'htaccess file not writable.<br>';
+			$output .= 'htaccess file not writable.'."\n";
 		}
 	} else {
-		$output .= 'no htaccess file available.<br>';
+		$output .= 'no htaccess file available.'."\n";
 	}
 
 	if ( 'success' === get_transient( 'rsssl_htaccess_test_success' ) ) {
-		$output .= 'htaccess redirect tested successfully.<br>';
+		$output .= 'htaccess redirect tested successfully.'."\n";
 	} elseif ( 'error' === get_transient( 'rsssl_htaccess_test_success' ) ) {
-		$output .= 'htaccess redirect test failed.<br>';
+		$output .= 'htaccess redirect test failed.'."\n";
 	} elseif ( 'no-response' === get_transient( 'rsssl_htaccess_test_success' ) ) {
-		$output .= 'htaccess redirect test failed: no response from server.<br>';
+		$output .= 'htaccess redirect test failed: no response from server.'."\n";
 	}
 	$mixed_content_fixer_detected = get_transient( 'rsssl_mixed_content_fixer_detected' );
 	if ( 'no-response' === $mixed_content_fixer_detected ) {
-		$output .= 'Could not connect to webpage to detect mixed content fixer<br>';
+		$output .= 'Could not connect to webpage to detect mixed content fixer'."\n";
 	}
 	if ( 'not-found' === $mixed_content_fixer_detected ) {
-		$output .= 'Mixed content marker not found in websource<br>';
+		$output .= 'Mixed content marker not found in websource'."\n";
 	}
 	if ( 'error' === $mixed_content_fixer_detected ) {
-		$output .= 'Mixed content marker not found: unknown error<br>';
+		$output .= 'Mixed content marker not found: unknown error'."\n";
 	}
 	if ( 'curl-error' === $mixed_content_fixer_detected ) {
 		// Site has has a cURL error.
-		$output .= 'Mixed content fixer could not be detected: cURL error<br>';
+		$output .= 'Mixed content fixer could not be detected: cURL error'."\n";
 	}
 	if ( 'found' === $mixed_content_fixer_detected ) {
-		$output .= 'Mixed content fixer successfully detected<br>';
+		$output .= 'Mixed content fixer successfully detected'."\n";
 	}
 	if ( ! rsssl_get_option( 'mixed_content_fixer' ) ) {
-		$output .= 'Mixed content fixer not enabled<br>';
+		$output .= 'Mixed content fixer not enabled'."\n";
 	}
 	if ( ! RSSSL()->admin->htaccess_contains_redirect_rules() ) {
-		$output .= '.htaccess does not contain default Really Simple SSL redirect.<br>';
+		$output .= '.htaccess does not contain default Really Simple SSL redirect.'."\n";
 	}
 
 	$output .= "\nConstants\n";
@@ -202,7 +202,7 @@ if ( isset( $_GET['nonce'], $_GET['download'] ) && rsssl_user_can_manage() && wp
 	header( 'Expires: 0' );
 	header( 'Cache-Control: must-revalidate, post-check=0, pre-check=0' );
 	header( 'Content-Transfer-Encoding: binary' );
-	echo esc_html( $rsssl_content );
+	echo wp_kses_post( $rsssl_content );
 }
 
 /**
