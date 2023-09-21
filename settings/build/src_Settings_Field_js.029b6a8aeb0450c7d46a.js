@@ -1800,16 +1800,19 @@ const EventLogDataTable = props => {
     handleEventTableSort,
     handleEventTablePageChange,
     handleEventTableSearch,
-    handleEventTableFilter
+    handleEventTableFilter,
+    processing,
+    rowCleared
   } = (0,_EventLogDataTableStore__WEBPACK_IMPORTED_MODULE_4__["default"])();
-  const moduleName = 'rsssl-group-filter-limit_login_attempts_event_log';
   //here we set the selectedFilter from the Settings group
   const {
     selectedFilter,
     setSelectedFilter,
     activeGroupId,
-    getCurrentFilter
+    getCurrentFilter,
+    setProcessingFilter
   } = (0,_FilterData__WEBPACK_IMPORTED_MODULE_5__["default"])();
+  const moduleName = 'rsssl-group-filter-limit_login_attempts_event_log';
   const {
     fields,
     fieldAlreadyEnabled,
@@ -1820,17 +1823,17 @@ const EventLogDataTable = props => {
     if (!currentFilter) {
       setSelectedFilter('all', moduleName);
     }
-    handleEventTableFilter('severity', currentFilter, moduleName);
-  }, [selectedFilter, moduleName]);
+    setProcessingFilter(processing);
+    handleEventTableFilter('severity', currentFilter);
+  }, [moduleName, handleEventTableFilter, getCurrentFilter(moduleName), setSelectedFilter, moduleName, DynamicDataTable, processing]);
 
-  //get data if field was already enabled, so not changed right now.
+  //if the dataActions are changed, we fetch the data
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
-    if (fieldAlreadyEnabled) {
-      if (!dataLoaded) {
-        fetchDynamicData(field.action);
-      }
+    //we make sure the dataActions are changed in the store before we fetch the data
+    if (dataActions) {
+      fetchDynamicData(field.action, dataActions);
     }
-  }, [fields]);
+  }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, dataActions.currentRowsPerPage]);
 
   //we create the columns
   let columns = [];
@@ -1899,14 +1902,6 @@ const EventLogDataTable = props => {
       return newItem;
     });
   }
-
-  //if the dataActions are changed, we fetch the data
-  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
-    //we make sure the dataActions are changed in the store before we fetch the data
-    if (dataActions) {
-      fetchDynamicData(field.action, dataActions);
-    }
-  }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page]);
 
   //we generate an expandable row
   const ExpandableRow = _ref => {
@@ -1987,11 +1982,11 @@ const EventLogDataTable = props => {
     className: "rsssl-search-bar__input",
     placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Search", "really-simple-ssl"),
     onChange: event => handleEventTableSearch(event.target.value, searchableColumns)
-  })))), dataLoaded ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
+  })))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
     columns: columns,
-    data: data,
+    data: processing ? [] : data,
     dense: true,
-    pagination: true,
+    pagination: !processing,
     paginationServer: true,
     paginationTotalRows: pagination.totalRows,
     paginationPerPage: pagination.perPage,
@@ -2005,45 +2000,17 @@ const EventLogDataTable = props => {
     },
     onChangeRowsPerPage: handleEventTableRowsChange,
     onChangePage: handleEventTablePageChange,
-    expandableRows: true,
+    expandableRows: !processing,
     expandableRowsComponent: ExpandableRow,
     loading: dataLoaded,
     onSort: handleEventTableSort,
-    sortServer: true,
+    sortServer: !processing,
     paginationRowsPerPageOptions: [5, 10, 25, 50, 100],
     noDataComponent: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("No results", "really-simple-ssl"),
     persistTableHead: true,
     theme: "really-simple-plugins",
     customStyles: customStyles
-  }) : (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-spinner",
-    style: {
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      marginTop: "100px"
-    }
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-spinner__inner"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-spinner__icon",
-    style: {
-      border: '8px solid white',
-      borderTop: '8px solid #f4bf3e',
-      borderRadius: '50%',
-      width: '120px',
-      height: '120px',
-      animation: 'spin 2s linear infinite'
-    }
-  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-spinner__text",
-    style: {
-      position: 'absolute',
-      top: '50%',
-      left: '50%',
-      transform: 'translate(-50%, -50%)'
-    }
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Loading data, please stand by...", "really-simple-ssl")))), !enabled && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }), !enabled && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-locked"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-locked-overlay"
@@ -2093,6 +2060,7 @@ const EventLogDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((
   dataActions: {},
   DynamicDataTable: [],
   sorting: [],
+  rowCleared: false,
   fetchDynamicData: async (action, dataActions) => {
     //cool we can fetch the data so first we set the processing to true
     set({
@@ -2101,6 +2069,12 @@ const EventLogDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((
     set({
       dataLoaded: false
     });
+    set({
+      rowCleared: true
+    });
+    if (Object.keys(dataActions).length === 0) {
+      return;
+    }
     //now we fetch the data
     try {
       const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction(action, dataActions);
@@ -2116,6 +2090,13 @@ const EventLogDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((
       }
     } catch (e) {
       console.log(e);
+    } finally {
+      set({
+        processing: false
+      });
+      set({
+        rowCleared: false
+      });
     }
   },
   handleEventTableSearch: async (search, searchColumns) => {
@@ -2167,6 +2148,7 @@ const EventLogDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((
         filterValue
       };
     }));
+    console.log(filterValue);
   }
 }));
 /* harmony default export */ __webpack_exports__["default"] = (EventLogDataTableStore);
@@ -5719,7 +5701,6 @@ const UserDatatable = props => {
     const currentFilter = getCurrentFilter(moduleName);
     if (!currentFilter) {
       setSelectedFilter('locked', moduleName);
-      console.log('filter is set to locked');
     }
     setProcessingFilter(processing);
     handleUserTableFilter('status', currentFilter);
@@ -24464,4 +24445,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.f305d7c586a2657a21ae.js.map
+//# sourceMappingURL=src_Settings_Field_js.029b6a8aeb0450c7d46a.js.map

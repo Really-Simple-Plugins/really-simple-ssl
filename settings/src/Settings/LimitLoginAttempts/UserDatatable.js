@@ -73,7 +73,6 @@ const UserDatatable = (props) => {
         const currentFilter = getCurrentFilter(moduleName);
         if (!currentFilter) {
             setSelectedFilter('locked', moduleName);
-            console.log('filter is set to locked')
         }
         setProcessingFilter(processing);
         handleUserTableFilter('status', currentFilter);

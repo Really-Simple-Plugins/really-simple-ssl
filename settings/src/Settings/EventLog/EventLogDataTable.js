@@ -21,11 +21,20 @@ const EventLogDataTable = (props) => {
         handleEventTablePageChange,
         handleEventTableSearch,
         handleEventTableFilter,
+        processing,
+        rowCleared,
     } = EventLogDataTableStore()
+    //here we set the selectedFilter from the Settings group
+    const {
+        selectedFilter,
+        setSelectedFilter,
+        activeGroupId,
+        getCurrentFilter,
+        setProcessingFilter,
+    } = FilterData();
 
     const moduleName = 'rsssl-group-filter-limit_login_attempts_event_log';
-    //here we set the selectedFilter from the Settings group
-    const {selectedFilter, setSelectedFilter, activeGroupId, getCurrentFilter} = FilterData();
+
     const {fields, fieldAlreadyEnabled, getFieldValue} = useFields();
 
     useEffect(() => {
@@ -34,17 +43,20 @@ const EventLogDataTable = (props) => {
         if (!currentFilter) {
             setSelectedFilter('all', moduleName);
         }
-        handleEventTableFilter('severity', currentFilter, moduleName);
-    }, [selectedFilter, moduleName]);
+        setProcessingFilter(processing);
+        handleEventTableFilter('severity', currentFilter);
+    }, [moduleName, handleEventTableFilter, getCurrentFilter(moduleName), setSelectedFilter, moduleName, DynamicDataTable, processing]);
 
-    //get data if field was already enabled, so not changed right now.
+
+    //if the dataActions are changed, we fetch the data
     useEffect(() => {
-        if (fieldAlreadyEnabled) {
-            if (!dataLoaded) {
-                fetchDynamicData(field.action);
-            }
+        //we make sure the dataActions are changed in the store before we fetch the data
+        if (dataActions) {
+            fetchDynamicData(field.action, dataActions)
         }
-    }, [fields]);
+    }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, dataActions.currentRowsPerPage]);
+
+
 
     //we create the columns
     let columns = [];
@@ -114,15 +126,6 @@ const EventLogDataTable = (props) => {
             return newItem;
         });
     }
-
-    //if the dataActions are changed, we fetch the data
-    useEffect(() => {
-        //we make sure the dataActions are changed in the store before we fetch the data
-        if (dataActions) {
-            fetchDynamicData(field.action, dataActions)
-        }
-    }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page]);
-
 
     //we generate an expandable row
     const ExpandableRow = ({data}) => {
@@ -205,12 +208,11 @@ const EventLogDataTable = (props) => {
                 </div>
             </div>
             {/*Display the datatable*/}
-            {dataLoaded ?
             <DataTable
                 columns={columns}
-                data={data}
+                data={processing? [] : data}
                 dense
-                pagination
+                pagination={!processing}
                 paginationServer
                 paginationTotalRows={pagination.totalRows}
                 paginationPerPage={pagination.perPage}
@@ -225,42 +227,17 @@ const EventLogDataTable = (props) => {
                 }}
                 onChangeRowsPerPage={handleEventTableRowsChange}
                 onChangePage={handleEventTablePageChange}
-                expandableRows
+                expandableRows={!processing}
                 expandableRowsComponent={ExpandableRow}
                 loading={dataLoaded}
                 onSort={handleEventTableSort}
-                sortServer
+                sortServer={!processing}
                 paginationRowsPerPageOptions={[5, 10, 25, 50, 100]}
                 noDataComponent={__("No results", "really-simple-ssl")}
                 persistTableHead
                 theme="really-simple-plugins"
                 customStyles={customStyles}
             ></DataTable>
-         :
-            <div className="rsssl-spinner" style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginTop: "100px"
-            }}>
-                <div className="rsssl-spinner__inner">
-                    <div className="rsssl-spinner__icon" style={{
-                        border: '8px solid white',
-                        borderTop: '8px solid #f4bf3e',
-                        borderRadius: '50%',
-                        width: '120px',
-                        height: '120px',
-                        animation: 'spin 2s linear infinite'
-                    }}></div>
-                    <div className="rsssl-spinner__text" style={{
-                        position: 'absolute',
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -50%)',
-                    }}>{__("Loading data, please stand by...", "really-simple-ssl")}</div>
-                </div>
-            </div>
-            }
             {!enabled && (
                 <div className="rsssl-locked">
                     <div className="rsssl-locked-overlay"><span
