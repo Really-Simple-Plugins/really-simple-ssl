@@ -110,13 +110,8 @@ const IpAddressDatatable = (props) => {
         },
     }, 'light');
 
-    let enabled = false;
 
-    fields.forEach(function (item, i) {
-        if (item.id === 'enable_limited_login_attempts') {
-            enabled = item.value;
-        }
-    });
+    let enabled = getFieldValue('enable_limited_login_attempts');
 
     const handleOpen = () => {
         setAddingIpAddress(true);
