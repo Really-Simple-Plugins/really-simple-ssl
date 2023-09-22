@@ -286,20 +286,6 @@ return (
                     </div>
 
                     <div className="rsssl-action-buttons">
-                        {/* if the id is new we show the Allow button */}
-                        {getCurrentFilter(moduleName) === 'blocked' && (
-                            <ActionButton
-                                onClick={() => {allowUsers(rowsSelected)}}>
-                                {__("Trust", "really-simple-ssl")}
-                            </ActionButton>
-                        )}
-                        {/* if the id is new we show the Block button */}
-                        {getCurrentFilter(moduleName) === 'allowed' && (
-                            <ActionButton
-                                onClick={() => {blockUsers(rowsSelected)}}>
-                                {__("Block", "really-simple-ssl")}
-                            </ActionButton>
-                        )}
                         {/* if the id is new we show the Delete button */}
                         <ActionButton
                             className="button button-red rsssl-action-buttons__button"

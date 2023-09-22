@@ -5809,15 +5809,7 @@ const UserDatatable = props => {
     className: "rsssl-multiselect-datatable-form rsssl-primary"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("You have selected %s rows", "really-simple-ssl").replace('%s', rowsSelected.length)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-action-buttons"
-  }, getCurrentFilter(moduleName) === 'blocked' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
-    onClick: () => {
-      allowUsers(rowsSelected);
-    }
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Trust", "really-simple-ssl")), getCurrentFilter(moduleName) === 'allowed' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
-    onClick: () => {
-      blockUsers(rowsSelected);
-    }
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Block", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
     className: "button button-red rsssl-action-buttons__button",
     onClick: () => {
       resetUsers(rowsSelected);
@@ -24375,4 +24367,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.07c116c4870fd8373804.js.map
+//# sourceMappingURL=src_Settings_Field_js.a8b100e191cf3dfec7c1.js.map
