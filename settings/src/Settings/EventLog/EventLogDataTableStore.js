@@ -77,7 +77,6 @@ const EventLogDataTableStore = create((set, get) => ({
                 state.dataActions = {...state.dataActions, filterColumn: column, filterValue};
             })
         );
-        console.log(filterValue);
     },
 
 
