@@ -904,7 +904,7 @@ function rsssl_fields( $load_values = true ) {
             ],
             'columns'          => [
                 [
-                    'name'       => __('Ip Address', 'really-simple-ssl'),
+                    'name'       => __('IP Address', 'really-simple-ssl'),
                     'sortable'   => true,
                     'searchable' => true,
                     'column'     => 'attempt_value',

@@ -155,7 +155,7 @@ const IpAddressDatatable = (props) => {
         //we check if the data is an array
         if (Array.isArray(data)) {
             const ids = data.map((item) => item.id);
-            await updateMultiRow(ids, 'vlocked');
+            await updateMultiRow(ids, 'blocked');
             setRowsSelected([]);
         } else {
             await updateRow(data, 'blocked');
@@ -249,28 +249,6 @@ const IpAddressDatatable = (props) => {
         return (
             <>
                 <div className="rsssl-action-buttons">
-                    {/* if the id is new we show the Allow button */}
-                    {/*{getCurrentFilter(moduleName) === 'blocked' && (*/}
-                    {/*    <ActionButton*/}
-                    {/*        className="button-secondary"*/}
-                    {/*        onClick={() => {*/}
-                    {/*            allowIpAddresses(id);*/}
-                    {/*        }}*/}
-                    {/*    >*/}
-                    {/*        {__("Trust", "really-simple-ssl")}*/}
-                    {/*    </ActionButton>*/}
-                    {/*)}*/}
-                    {/*/!* if the id is new we show the Block button *!/*/}
-                    {/*{getCurrentFilter(moduleName) === 'allowed' && (*/}
-                    {/*    <ActionButton*/}
-                    {/*        className="button-primary"*/}
-                    {/*        onClick={() => {*/}
-                    {/*            blockIpAddresses(id);*/}
-                    {/*        }}>*/}
-                    {/*        {__("Block", "really-simple-ssl")}*/}
-                    {/*    </ActionButton>*/}
-                    {/*)}*/}
-                    {/* if the id is new we show the Delete button */}
                     <ActionButton
                         className="button-red"
                         onClick={() => {
@@ -362,28 +340,6 @@ const IpAddressDatatable = (props) => {
                         </div>
 
                         <div className="rsssl-action-buttons">
-                            {/* if the id is new we show the Allow button */}
-                            {/*{getCurrentFilter(moduleName) === 'blocked' && (*/}
-                            {/*    <ActionButton*/}
-                            {/*        className="button-secondary"*/}
-                            {/*        onClick={() => {*/}
-                            {/*            allowIpAddresses(rowsSelected);*/}
-                            {/*        }}*/}
-                            {/*    >*/}
-                            {/*        {__("Trust", "really-simple-ssl")}*/}
-                            {/*    </ActionButton>*/}
-                            {/*)}*/}
-                            {/*/!* if the id is new we show the Block button *!/*/}
-                            {/*{getCurrentFilter(moduleName) === 'allowed' && (*/}
-                            {/*    <ActionButton*/}
-                            {/*        className="button-primary"*/}
-                            {/*        onClick={() => {*/}
-                            {/*            blockIpAddresses(rowsSelected);*/}
-                            {/*        }}>*/}
-                            {/*        {__("Block", "really-simple-ssl")}*/}
-                            {/*    </ActionButton>*/}
-                            {/*)}*/}
-                            {/* if the id is new we show the Delete button */}
                             <ActionButton
                                 className="button-red"
                                 onClick={() => {
