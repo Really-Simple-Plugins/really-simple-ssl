@@ -15,7 +15,7 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
 			if ( ! class_exists('REALLY_SIMPLE_SSL_PRO' ) ) {
 				add_filter( 'rsssl_do_action', array( $this, 'two_factor_users_data' ), 11, 3 );
 			}
-            if ( ! is_plugin_active( 'really-simple-ssl-pro/really-simple-ssl-pro.php' ) ) {
+            if ( ! is_plugin_active( 'really-simple-ssl-pro/really-simple-ssl-pro.php' ) || !rsssl_get_option('enable_limited_login_attempts') ) {
                 // really-simple-ssl-pro plugin is active
                 add_filter( 'rsssl_do_action', array( $this, 'limit_login_attempts_data' ), 11, 3 );
             }
@@ -308,7 +308,7 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
             }
 
             $response['pagination'] =  [
-                'total' => 2,
+                'totalRow' => 2,
                 'per_page' => 10,
                 'current_page' => 1,
                 'last_page' => 1,

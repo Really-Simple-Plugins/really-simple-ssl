@@ -4791,6 +4791,7 @@ var vanilla = (createState) => {
 <<<<<<<< HEAD:settings/build/index.627d11fff53e9d4ef6a7.js
 <<<<<<<< HEAD:settings/build/index.627d11fff53e9d4ef6a7.js
 <<<<<<<< HEAD:settings/build/index.627d11fff53e9d4ef6a7.js
+<<<<<<<< HEAD:settings/build/index.627d11fff53e9d4ef6a7.js
 /******/ 			return "" + chunkId + "." + {"vendors-node_modules_mui_material_Tooltip_Tooltip_js":"0cc86ac6c861846722b1","src_Settings_Settings_js":"902ea4078780eff558ca","src_Menu_Menu_js":"c275f909410871ede758","src_Dashboard_DashboardPage_js":"cc315f71743912c1ce7b","src_Onboarding_OnboardingModal_js":"85fbed60f8e666a7e677","src_Modal_Modal_js":"e34b60e44e1022d3fe24","vendors-node_modules_material-ui_core_esm_TextField_TextField_js-node_modules_react-data-tabl-8e8716":"64aaccd4757f22c45708","src_Settings_Field_js":"2e8d0bb433e02bbd984f","vendors-node_modules_material-ui_lab_esm_Autocomplete_index_js":"515dd4c5b9e6e345a1ea","vendors-node_modules_material-ui_core_esm_styles_index_js":"b2604edf5f43bcfce41a"}[chunkId] + ".js";
 ========
 /******/ 			return "" + chunkId + "." + {"vendors-node_modules_mui_material_Tooltip_Tooltip_js":"0cc86ac6c861846722b1","src_Settings_Settings_js":"b2e4e831a6e4dfefbb5c","src_Menu_Menu_js":"c275f909410871ede758","src_Dashboard_DashboardPage_js":"4f7f9660ad30371d9445","src_Onboarding_OnboardingModal_js":"85fbed60f8e666a7e677","src_Modal_Modal_js":"e34b60e44e1022d3fe24","vendors-node_modules_material-ui_core_esm_TextField_TextField_js-node_modules_react-toastify_-1fccac":"140655a5d7db93a2497a","src_Settings_Field_js":"c881cc9d8901c328bd91","vendors-node_modules_material-ui_lab_esm_Autocomplete_index_js":"515dd4c5b9e6e345a1ea","vendors-node_modules_material-ui_core_esm_styles_index_js":"b2604edf5f43bcfce41a"}[chunkId] + ".js";
@@ -4858,6 +4859,9 @@ var vanilla = (createState) => {
 ========
 /******/ 			return "" + chunkId + "." + {"vendors-node_modules_mui_material_Tooltip_Tooltip_js":"4f9fff4afbb906618438","src_Settings_Settings_js":"5f4327f97d6c34b1a035","src_Menu_Menu_js":"66458ee78e9eb4343d4a","src_Dashboard_DashboardPage_js":"4f7f9660ad30371d9445","src_Onboarding_OnboardingModal_js":"85fbed60f8e666a7e677","src_Modal_Modal_js":"e34b60e44e1022d3fe24","vendors-node_modules_material-ui_core_esm_TextField_TextField_js-node_modules_react-toastify_-1fccac":"a3c46f30b7637069e560","src_Settings_Field_js":"a8b100e191cf3dfec7c1","vendors-node_modules_material-ui_lab_esm_Autocomplete_index_js":"515dd4c5b9e6e345a1ea","vendors-node_modules_material-ui_core_esm_styles_index_js":"b2604edf5f43bcfce41a"}[chunkId] + ".js";
 >>>>>>>> a17ee3555 (forgot to remove the Allow and Block buttons to remove in UserDatatable):settings/build/index.8d8e7c9b3e8f23ef4042.js
+========
+/******/ 			return "" + chunkId + "." + {"vendors-node_modules_mui_material_Tooltip_Tooltip_js":"4f9fff4afbb906618438","src_Settings_Settings_js":"15265c730a91665496dc","src_Menu_Menu_js":"66458ee78e9eb4343d4a","src_Dashboard_DashboardPage_js":"4f7f9660ad30371d9445","src_Onboarding_OnboardingModal_js":"85fbed60f8e666a7e677","src_Modal_Modal_js":"e34b60e44e1022d3fe24","vendors-node_modules_material-ui_core_esm_TextField_TextField_js-node_modules_react-data-tabl-8e8716":"871a113c220949ea52de","src_Settings_Field_js":"0e47b013cdcfa815c38b","vendors-node_modules_material-ui_lab_esm_Autocomplete_index_js":"515dd4c5b9e6e345a1ea","vendors-node_modules_material-ui_core_esm_styles_index_js":"b2604edf5f43bcfce41a"}[chunkId] + ".js";
+>>>>>>>> f8c014bce (added autosaving in countrytable to enable server backend):settings/build/index.168ca94d87dc05b72a4d.js
 /******/ 		};
 /******/ 	}();
 /******/ 	
@@ -4968,6 +4972,7 @@ var vanilla = (createState) => {
 /******/ 	}();
 /******/ 	
 <<<<<<<< HEAD:settings/build/index.627d11fff53e9d4ef6a7.js
+<<<<<<<< HEAD:settings/build/index.627d11fff53e9d4ef6a7.js
 ========
 /******/ 	/* webpack/runtime/css loading */
 /******/ 	!function() {
@@ -5047,6 +5052,8 @@ var vanilla = (createState) => {
 /******/ 	}();
 /******/ 	
 >>>>>>>> a3a5b65e3 (removed multiple timeouts and promises):settings/build/index.22271b6ea5d32ed40d8b.js
+========
+>>>>>>>> f8c014bce (added autosaving in countrytable to enable server backend):settings/build/index.168ca94d87dc05b72a4d.js
 /******/ 	/* webpack/runtime/jsonp chunk loading */
 /******/ 	!function() {
 /******/ 		// no baseURI
@@ -5209,6 +5216,7 @@ document.addEventListener('click', e => {
 <<<<<<<< HEAD:settings/build/index.627d11fff53e9d4ef6a7.js
 <<<<<<<< HEAD:settings/build/index.627d11fff53e9d4ef6a7.js
 <<<<<<<< HEAD:settings/build/index.627d11fff53e9d4ef6a7.js
+<<<<<<<< HEAD:settings/build/index.627d11fff53e9d4ef6a7.js
 //# sourceMappingURL=index.627d11fff53e9d4ef6a7.js.map
 ========
 //# sourceMappingURL=index.aa620953ab532f245d16.js.map
@@ -5276,3 +5284,6 @@ document.addEventListener('click', e => {
 ========
 //# sourceMappingURL=index.8d8e7c9b3e8f23ef4042.js.map
 >>>>>>>> a17ee3555 (forgot to remove the Allow and Block buttons to remove in UserDatatable):settings/build/index.8d8e7c9b3e8f23ef4042.js
+========
+//# sourceMappingURL=index.168ca94d87dc05b72a4d.js.map
+>>>>>>>> f8c014bce (added autosaving in countrytable to enable server backend):settings/build/index.168ca94d87dc05b72a4d.js

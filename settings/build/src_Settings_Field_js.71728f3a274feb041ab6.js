@@ -4059,6 +4059,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var react_data_table_component__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-data-table-component */ "./node_modules/react-data-table-component/dist/index.cjs.js");
+<<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 /* harmony import */ var _CountryDataTableStore__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./CountryDataTableStore */ "./src/Settings/LimitLoginAttempts/CountryDataTableStore.js");
 /* harmony import */ var _EventLog_EventLogDataTableStore__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../EventLog/EventLogDataTableStore */ "./src/Settings/EventLog/EventLogDataTableStore.js");
 /* harmony import */ var _FilterData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../FilterData */ "./src/Settings/FilterData.js");
@@ -4068,6 +4069,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__);
 /* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../FieldsData */ "./src/Settings/FieldsData.js");
+========
+/* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../FieldsData */ "./src/Settings/FieldsData.js");
+/* harmony import */ var _CountryDataTableStore__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./CountryDataTableStore */ "./src/Settings/LimitLoginAttempts/CountryDataTableStore.js");
+/* harmony import */ var _EventLog_EventLogDataTableStore__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../EventLog/EventLogDataTableStore */ "./src/Settings/EventLog/EventLogDataTableStore.js");
+/* harmony import */ var _FilterData__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../FilterData */ "./src/Settings/FilterData.js");
+/* harmony import */ var _utils_Flag_Flag__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../utils/Flag/Flag */ "./src/utils/Flag/Flag.js");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../utils/Icon */ "./src/utils/Icon.js");
+
+
+>>>>>>>> f8c014bce (added autosaving in countrytable to enable server backend):settings/build/src_Settings_Field_js.0e47b013cdcfa815c38b.js
 
 
 
@@ -4100,11 +4115,15 @@ const CountryDatatable = props => {
     resetMultiRow,
     dataActions,
     rowCleared
-  } = (0,_CountryDataTableStore__WEBPACK_IMPORTED_MODULE_3__["default"])();
+  } = (0,_CountryDataTableStore__WEBPACK_IMPORTED_MODULE_4__["default"])();
+  const {
+    showSavedSettingsNotice,
+    saveFields
+  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_3__["default"])();
   const {
     DynamicDataTable,
     fetchDynamicData
-  } = (0,_EventLog_EventLogDataTableStore__WEBPACK_IMPORTED_MODULE_4__["default"])();
+  } = (0,_EventLog_EventLogDataTableStore__WEBPACK_IMPORTED_MODULE_5__["default"])();
   const {
     selectedFilter,
     setSelectedFilter,
@@ -4115,15 +4134,23 @@ const CountryDatatable = props => {
 ========
     getCurrentFilter,
     setProcessingFilter
+<<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
   } = (0,_FilterData__WEBPACK_IMPORTED_MODULE_7__["default"])();
 >>>>>>>> 02387f523 (after a database call, the country table now clears all selection and block all filter buttons):settings/build/src_Settings_Field_js.2cbc767dad1def3f791c.js
+========
+  } = (0,_FilterData__WEBPACK_IMPORTED_MODULE_6__["default"])();
+>>>>>>>> f8c014bce (added autosaving in countrytable to enable server backend):settings/build/src_Settings_Field_js.0e47b013cdcfa815c38b.js
   const [rowsSelected, setRowsSelected] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)([]);
   const moduleName = 'rsssl-group-filter-limit_login_attempts_country';
   const {
     fields,
     fieldAlreadyEnabled,
     getFieldValue
+<<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
   } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_9__["default"])();
+========
+  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_3__["default"])();
+>>>>>>>> f8c014bce (added autosaving in countrytable to enable server backend):settings/build/src_Settings_Field_js.0e47b013cdcfa815c38b.js
   const buildColumn = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)(column => ({
     //if the filter is set to region and the columns = status we do not want to show the column
     omit: getCurrentFilter(moduleName) === 'regions' && column.column === 'status',
@@ -4156,13 +4183,18 @@ const CountryDatatable = props => {
     if (dataActions) {
       fetchCountryData(field.action, dataActions);
     }
-  }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, dataActions.currentRowsPerPage]);
+  }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, dataActions.currentRowsPerPage, fieldAlreadyEnabled('enable_limited_login_attempts')]);
   let enabled = false;
   fields.forEach(function (item, i) {
     if (item.id === 'enable_limited_login_attempts') {
       enabled = item.value;
     }
   });
+  (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
+    return () => {
+      saveFields(false, false);
+    };
+  }, [enabled]);
   const customStyles = {
     headCells: {
       style: {
@@ -4204,16 +4236,20 @@ const CountryDatatable = props => {
       const regions = code.map(item => item.region);
       await removeRegions(ids, '', dataActions);
       let regionsString = regions.join(', ');
-      notifySuccess((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)('%s has been removed', 'really-simple-ssl').replace('%s', regionsString));
+      showSavedSettingsNotice((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__.__)('%s is now trusted', 'really-simple-ssl').replace('%s', regionsString));
       setRowsSelected([]);
     } else {
       await removeRegion(code, 'blocked', dataActions);
+<<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
       notifySuccess(regionName + ' ' + (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)('has been allowed', 'really-simple-ssl'));
 >>>>>>>> a3a5b65e3 (removed multiple timeouts and promises):settings/build/src_Settings_Field_js.4decfeae1f9f8e4175b6.js
 ========
       notifySuccess((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)('%s is now trusted', 'really-simple-ssl').replace('%s', regionsString));
 >>>>>>>> 2ac80d498 (fixed columns width to display ipv6):settings/build/src_Settings_Field_js.0ab6a56381cf96fc1ff4.js
+========
+      showSavedSettingsNotice((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__.__)('%s is now trusted', 'really-simple-ssl').replace('%s', regionName));
+>>>>>>>> f8c014bce (added autosaving in countrytable to enable server backend):settings/build/src_Settings_Field_js.0e47b013cdcfa815c38b.js
     }
     await fetchDynamicData('event_log');
   }, [removeRegion, getCurrentFilter(moduleName), dataActions]);
@@ -4243,12 +4279,16 @@ const CountryDatatable = props => {
       const regions = code.map(item => item.region);
       await addRegions(ids, 'blocked', dataActions);
       let regionsString = regions.join(', ');
-      notifySuccess(regionsString + ' ' + (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)('has been blocked', 'really-simple-ssl'));
+      showSavedSettingsNotice((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__.__)('%s has been blocked', 'really-simple-ssl').replace('%s', regionsString));
       setRowsSelected([]);
     } else {
       await addRegion(code, 'blocked', dataActions);
+<<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
       notifySuccess(region + ' ' + (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)('has been blocked', 'really-simple-ssl'));
 >>>>>>>> a3a5b65e3 (removed multiple timeouts and promises):settings/build/src_Settings_Field_js.4decfeae1f9f8e4175b6.js
+========
+      showSavedSettingsNotice((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__.__)('%s has been blocked', 'really-simple-ssl').replace('%s', region));
+>>>>>>>> f8c014bce (added autosaving in countrytable to enable server backend):settings/build/src_Settings_Field_js.0e47b013cdcfa815c38b.js
     }
     await fetchDynamicData('event_log');
   }, [addRegion, getCurrentFilter(moduleName), dataActions]);
@@ -4275,7 +4315,11 @@ const CountryDatatable = props => {
   const data = {
     ...CountryDataTable.data
   };
+<<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
   const generateFlag = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)((flag, title) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Flag_Flag__WEBPACK_IMPORTED_MODULE_6__["default"], {
+========
+  const generateFlag = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)((flag, title) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Flag_Flag__WEBPACK_IMPORTED_MODULE_7__["default"], {
+>>>>>>>> f8c014bce (added autosaving in countrytable to enable server backend):settings/build/src_Settings_Field_js.0e47b013cdcfa815c38b.js
     countryCode: flag,
     style: {
       fontSize: '2em'
@@ -4312,13 +4356,18 @@ const CountryDatatable = props => {
     onClick: () => allowById(id),
     className: "button-secondary"
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
+<<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__.__)("Allow", "really-simple-ssl")), getCurrentFilter(moduleName) === 'regions' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
     onClick: () => blockRegionByCode(id),
 ========
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)("Trust", "really-simple-ssl")), getCurrentFilter(moduleName) === 'regions' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
+========
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__.__)("Trust", "really-simple-ssl")), getCurrentFilter(moduleName) === 'regions' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
+>>>>>>>> f8c014bce (added autosaving in countrytable to enable server backend):settings/build/src_Settings_Field_js.0e47b013cdcfa815c38b.js
     onClick: () => blockRegionByCode(id, region_name),
 >>>>>>>> da6fcef0b (added an extra value to not display rows if processing):settings/build/src_Settings_Field_js.6ff2c1ca9ff8dff668ef.js
     className: "button-primary"
+<<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__.__)("Block", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
     onClick: () => allowRegionByCode(id),
     className: "button-secondary"
@@ -4329,6 +4378,18 @@ const CountryDatatable = props => {
     onClick: () => blockCountryByCode(id),
     className: "button-primary"
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__.__)("Block", "really-simple-ssl")))), [getCurrentFilter, moduleName, allowById, blockRegionByCode, allowRegionByCode, blockCountryByCode, allowCountryByCode]);
+========
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__.__)("Block", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
+    onClick: () => allowRegionByCode(id, region_name),
+    className: "button-secondary"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__.__)("Trust", "really-simple-ssl"))), getCurrentFilter(moduleName) === 'countries' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, status === 'blocked' ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
+    onClick: () => allowCountryByCode(id),
+    className: "button-secondary"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__.__)("Trust", "really-simple-ssl")) : (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
+    onClick: () => blockCountryByCode(id),
+    className: "button-primary"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__.__)("Block", "really-simple-ssl")))), [getCurrentFilter, moduleName, allowById, blockRegionByCode, allowRegionByCode, blockCountryByCode, allowCountryByCode]);
+>>>>>>>> f8c014bce (added autosaving in countrytable to enable server backend):settings/build/src_Settings_Field_js.0e47b013cdcfa815c38b.js
   for (const key in data) {
     const dataItem = {
       ...data[key]
@@ -4339,7 +4400,7 @@ const CountryDatatable = props => {
       dataItem.action = generateActionButtons(dataItem.id);
     }
     dataItem.attempt_value = generateFlag(dataItem.attempt_value, dataItem.country_name);
-    dataItem.status = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)(dataItem.status = dataItem.status.charAt(0).toUpperCase() + dataItem.status.slice(1), 'really-simple-ssl');
+    dataItem.status = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__.__)(dataItem.status = dataItem.status.charAt(0).toUpperCase() + dataItem.status.slice(1), 'really-simple-ssl');
     data[key] = dataItem;
   }
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
@@ -4375,10 +4436,14 @@ const CountryDatatable = props => {
     type: "text",
     className: "rsssl-search-bar__input",
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
+<<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
     placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__.__)("Search", "really-simple-ssl"),
     onChange: event => handleCountryTableSearch(event.target.value, searchableColumns)
 ========
     placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)("Search", "really-simple-ssl"),
+========
+    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__.__)("Search", "really-simple-ssl"),
+>>>>>>>> f8c014bce (added autosaving in countrytable to enable server backend):settings/build/src_Settings_Field_js.0e47b013cdcfa815c38b.js
     disabled: processing,
     onKeyUp: event => {
       if (event.key === 'Enter') {
@@ -4393,6 +4458,7 @@ const CountryDatatable = props => {
     }
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-multiselect-datatable-form rsssl-primary"
+<<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__.__)("You have selected", "really-simple-ssl"), " ", rowsSelected.length, " ", (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__.__)("rows", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
 ========
@@ -4431,6 +4497,23 @@ const CountryDatatable = props => {
 ========
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)("Block", "really-simple-ssl")))))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_2__["default"], {
 >>>>>>>> 185d13df7 (made further improvements on redusing unnessecary calls to server):settings/build/src_Settings_Field_js.097b697c10713e265c47.js
+========
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__.__)("You have selected %s rows", "really-simple-ssl").replace('%s', rowsSelected.length)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-action-buttons"
+  }, getCurrentFilter(moduleName) === 'countries' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
+    onClick: () => allowCountryByCode(rowsSelected)
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__.__)("Trust", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
+    onClick: () => blockCountryByCode(rowsSelected),
+    className: "button-primary"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__.__)("Block", "really-simple-ssl"))), getCurrentFilter(moduleName) === 'blocked' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
+    onClick: () => allowMultiple(rowsSelected)
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__.__)("Trust", "really-simple-ssl")), getCurrentFilter(moduleName) === 'regions' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
+    onClick: () => allowRegionByCode(rowsSelected),
+    className: "button-primary"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__.__)("Trust", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
+    onClick: () => blockRegionByCode(rowsSelected)
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__.__)("Block", "really-simple-ssl")))))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_2__["default"], {
+>>>>>>>> f8c014bce (added autosaving in countrytable to enable server backend):settings/build/src_Settings_Field_js.0e47b013cdcfa815c38b.js
     columns: columns,
     data: processing ? [] : Object.values(data),
     dense: true,
@@ -4440,18 +4523,22 @@ const CountryDatatable = props => {
     paginationPerPage: pagination.perPage,
     paginationDefaultPage: pagination.currentPage,
     paginationComponentOptions: {
-      rowsPerPageText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)('Rows per page:', 'really-simple-ssl'),
-      rangeSeparatorText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)('of', 'really-simple-ssl'),
+      rowsPerPageText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__.__)('Rows per page:', 'really-simple-ssl'),
+      rangeSeparatorText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__.__)('of', 'really-simple-ssl'),
       noRowsPerPage: false,
       selectAllRowsItem: false,
-      selectAllRowsItemText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)('All', 'really-simple-ssl')
+      selectAllRowsItemText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__.__)('All', 'really-simple-ssl')
     },
     onChangeRowsPerPage: handleCountryTableRowsChange,
     onChangePage: handleCountryTablePageChange,
     sortServer: !processing,
     onSort: handleCountryTableSort,
     paginationRowsPerPageOptions: [10, 25, 50, 100],
+<<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
     noDataComponent: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__.__)("No results", "really-simple-ssl"),
+========
+    noDataComponent: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__.__)("No results", "really-simple-ssl"),
+>>>>>>>> f8c014bce (added autosaving in countrytable to enable server backend):settings/build/src_Settings_Field_js.0e47b013cdcfa815c38b.js
     persistTableHead: true,
     selectableRows: !processing,
     clearSelectedRows: rowCleared,
@@ -4496,7 +4583,11 @@ const CountryDatatable = props => {
     className: "rsssl-locked-overlay"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     className: "rsssl-task-status rsssl-open"
+<<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__.__)('Disabled', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__.__)('Limit login attempts to enable this block.', 'really-simple-ssl')))));
+========
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__.__)('Disabled', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__.__)('Limit login attempts to enable this block.', 'really-simple-ssl')))));
+>>>>>>>> f8c014bce (added autosaving in countrytable to enable server backend):settings/build/src_Settings_Field_js.0e47b013cdcfa815c38b.js
 };
 /* harmony default export */ __webpack_exports__["default"] = (CountryDatatable);
 
@@ -24511,6 +24602,7 @@ __webpack_require__.r(__webpack_exports__);
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
+<<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 //# sourceMappingURL=src_Settings_Field_js.71728f3a274feb041ab6.js.map
 ========
 //# sourceMappingURL=src_Settings_Field_js.2a9f68f4c72b1ac2b97c.js.map
@@ -24581,3 +24673,6 @@ __webpack_require__.r(__webpack_exports__);
 ========
 //# sourceMappingURL=src_Settings_Field_js.a8b100e191cf3dfec7c1.js.map
 >>>>>>>> a17ee3555 (forgot to remove the Allow and Block buttons to remove in UserDatatable):settings/build/src_Settings_Field_js.a8b100e191cf3dfec7c1.js
+========
+//# sourceMappingURL=src_Settings_Field_js.0e47b013cdcfa815c38b.js.map
+>>>>>>>> f8c014bce (added autosaving in countrytable to enable server backend):settings/build/src_Settings_Field_js.0e47b013cdcfa815c38b.js
