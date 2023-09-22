@@ -68,14 +68,8 @@ const EventLogDataTable = (props) => {
         columns.push(newItem);
     });
 
-    let enabled = false;
 
-    fields.forEach(function (item, i) {
-        if (item.id === 'enable_limited_login_attempts') {
-            enabled = item.value;
-        }
-    });
-
+    let enabled = getFieldValue('enable_limited_login_attempts');;
 
     const customStyles = {
         headCells: {
