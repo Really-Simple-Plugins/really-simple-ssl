@@ -2149,7 +2149,6 @@ const EventLogDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((
         filterValue
       };
     }));
-    console.log(filterValue);
   }
 }));
 /* harmony default export */ __webpack_exports__["default"] = (EventLogDataTableStore);
@@ -3382,7 +3381,7 @@ const AddIpAddressModal = props => {
     let status = props.status;
     // we check if statusSelected is not empty
     if (ipAddress && maskError === false) {
-      addRow(ipAddress, status);
+      addRow(ipAddress, status, props.dataActions);
       //we clear the input
       setIpAddress('');
       //we close the modal
@@ -4138,7 +4137,6 @@ const CountryDatatable = props => {
   }), []);
   let field = props.field;
   const columns = field.columns.map(buildColumn);
-  console.log(columns);
   const searchableColumns = columns.filter(column => column.searchable).map(column => column.column);
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     const currentFilter = getCurrentFilter(moduleName);
@@ -4782,7 +4780,7 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
       });
       // Consider checking the response structure for any specific success or failure signals
       if (response && response.request_success) {
-        await get().fetchIpData('ip_list');
+        await get().fetchIpData('ip_list', dataActions);
         // Potentially notify the user of success, if needed.
       } else {
         // Handle any unsuccessful response if needed.
@@ -5015,7 +5013,9 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
       });
       //now we set the EventLog
       if (response && response.request_success) {
-        await get().fetchIpData('ip_list', dataActions);
+        await get().fetchIpData('ip_list', get().dataActions);
+      } else {
+        console.log("Failed to remove IP address: ", response.message);
       }
     } catch (e) {
       console.log(e);
@@ -5035,7 +5035,7 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
       });
       //now we set the EventLog
       if (response && response.request_success) {
-        await get().fetchIpData('ip_list', dataActions);
+        await get().fetchIpData('ip_list', get().dataActions);
       }
     } catch (e) {
       console.log(e);
@@ -5250,11 +5250,11 @@ const IpAddressDatatable = props => {
     //we check if the data is an array
     if (Array.isArray(data)) {
       const ids = data.map(item => item.id);
-      await resetMultiRow(ids);
+      await resetMultiRow(ids, dataActions);
       //we emtry the rowsSelected
       setRowsSelected([]);
     } else {
-      await resetRow(data);
+      await resetRow(data, dataActions);
     }
     fetchDynamicData('event_log');
   }, [resetMultiRow, resetRow, fetchDynamicData]);
@@ -5330,7 +5330,8 @@ const IpAddressDatatable = props => {
     onRequestClose: handleClose,
     options: options,
     value: ipAddress,
-    status: getCurrentFilter(moduleName)
+    status: getCurrentFilter(moduleName),
+    dataActions: dataActions
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-container"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -24514,6 +24515,7 @@ __webpack_require__.r(__webpack_exports__);
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
+<<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 //# sourceMappingURL=src_Settings_Field_js.71728f3a274feb041ab6.js.map
 ========
 //# sourceMappingURL=src_Settings_Field_js.2a9f68f4c72b1ac2b97c.js.map
@@ -24575,3 +24577,6 @@ __webpack_require__.r(__webpack_exports__);
 ========
 //# sourceMappingURL=src_Settings_Field_js.0ab6a56381cf96fc1ff4.js.map
 >>>>>>>> 2ac80d498 (fixed columns width to display ipv6):settings/build/src_Settings_Field_js.0ab6a56381cf96fc1ff4.js
+========
+//# sourceMappingURL=src_Settings_Field_js.0522c6cfa0b95d68587e.js.map
+>>>>>>>> 21938e929 (fixed a few minor Bugs):settings/build/src_Settings_Field_js.0522c6cfa0b95d68587e.js
