@@ -69,7 +69,7 @@ const EventLogDataTable = (props) => {
     });
 
 
-    let enabled = getFieldValue('enable_limited_login_attempts');;
+    let enabled = getFieldValue('enable_limited_login_attempts');
 
     const customStyles = {
         headCells: {
@@ -116,6 +116,12 @@ const EventLogDataTable = (props) => {
         data = DynamicDataTable.data.map((dataItem) => {
             let newItem = {...dataItem};
             newItem.iso2_code = generateFlag(newItem.iso2_code, newItem.country_name);
+            if (newItem.username === '' || newItem.username === null) {
+                newItem.username = '—';
+            }
+            if (newItem.source_ip === '' || newItem.source_ip === null) {
+                newItem.source_ip = '—';
+            }
             newItem.expandableRows = true;
             return newItem;
         });
@@ -171,19 +177,6 @@ const EventLogDataTable = (props) => {
         )
     }
 
-    function generateGoodBad(value) {
-        ``
-        if (value > 0) {
-            return (
-                <Icon name="circle-check" color='green'/>
-            )
-        } else {
-            return (
-                <Icon name="circle-times" color='red'/>
-            )
-        }
-    }
-
     return (
         <>
             <div className="rsssl-container">
@@ -196,6 +189,7 @@ const EventLogDataTable = (props) => {
                             type="text"
                             className="rsssl-search-bar__input"
                             placeholder={__("Search", "really-simple-ssl")}
+                            disabled={processing}
                             onChange={event => handleEventTableSearch(event.target.value, searchableColumns)}
                         />
                     </div>

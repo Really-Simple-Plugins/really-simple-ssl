@@ -91,7 +91,7 @@ const CountryDatatable = (props) => {
         }
     }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, dataActions.currentRowsPerPage, fieldAlreadyEnabled('enable_limited_login_attempts')]);
 
-    let enabled = getFieldValue('enable_limited_login_attempts');;
+    let enabled = getFieldValue('enable_limited_login_attempts');
 
 
     useEffect(() => {
