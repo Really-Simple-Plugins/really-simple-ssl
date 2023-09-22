@@ -1,6 +1,6 @@
 .rsssl-field-wrap {
   .rdt_TableCol, .rdt_TableCell {
-    min-width:50px;
+    min-width:100px;
   }
   .rdt_TableCell:has(input[type="checkbox"]) {
     padding: 0; /* Remove padding */
