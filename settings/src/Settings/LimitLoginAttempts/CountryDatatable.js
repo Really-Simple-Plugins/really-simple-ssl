@@ -1,9 +1,8 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import DataTable, { createTheme } from "react-data-table-component";
+import FieldsData from "../FieldsData";
 import CountryDataTableStore from "./CountryDataTableStore";
 import EventLogDataTableStore from "../EventLog/EventLogDataTableStore";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import FilterData from "../FilterData";
 import Flag from "../../utils/Flag/Flag";
 import { button } from "@wordpress/components";
@@ -36,6 +35,8 @@ const CountryDatatable = (props) => {
         dataActions,
         rowCleared,
     } = CountryDataTableStore();
+
+    const {showSavedSettingsNotice, saveFields} = FieldsData();
 
     const {
         DynamicDataTable,
@@ -91,7 +92,7 @@ const CountryDatatable = (props) => {
         if (dataActions) {
             fetchCountryData(field.action, dataActions)
         }
-    }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, dataActions.currentRowsPerPage]);
+    }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, dataActions.currentRowsPerPage, fieldAlreadyEnabled('enable_limited_login_attempts')]);
 
     let enabled = false;
 
@@ -100,6 +101,13 @@ const CountryDatatable = (props) => {
             enabled = item.value;
         }
     });
+
+    useEffect(() => {
+        return () => {
+            saveFields(false, false)
+        };
+    }, [enabled]);
+
 
     const customStyles = {
         headCells: {
@@ -132,13 +140,13 @@ const CountryDatatable = (props) => {
             const regions = code.map(item => item.region);
             await removeRegions(ids, '',dataActions);
             let regionsString = regions.join(', ');
-            notifySuccess(__('%s has been removed', 'really-simple-ssl')
+            showSavedSettingsNotice(__('%s is now trusted', 'really-simple-ssl')
                 .replace('%s',regionsString));
             setRowsSelected([]);
         } else {
             await removeRegion(code, 'blocked', dataActions);
-            notifySuccess(__('%s is now trusted', 'really-simple-ssl')
-                .replace('%s',regionsString));
+            showSavedSettingsNotice(__('%s is now trusted', 'really-simple-ssl')
+                .replace('%s',regionName));
         }
         await fetchDynamicData('event_log');
     }, [removeRegion, getCurrentFilter(moduleName), dataActions]);
@@ -159,11 +167,13 @@ const CountryDatatable = (props) => {
             const regions = code.map(item => item.region);
             await addRegions(ids, 'blocked', dataActions);
             let regionsString = regions.join(', ');
-            notifySuccess(regionsString + ' ' + __('has been blocked', 'really-simple-ssl'));
+            showSavedSettingsNotice(__('%s has been blocked', 'really-simple-ssl')
+                .replace('%s',regionsString));
             setRowsSelected([]);
         } else {
             await addRegion(code, 'blocked', dataActions);
-            notifySuccess(region + ' ' + __('has been blocked', 'really-simple-ssl'));
+            showSavedSettingsNotice(__('%s has been blocked', 'really-simple-ssl')
+                .replace('%s',region));
         }
 
         await fetchDynamicData('event_log');
@@ -238,7 +248,7 @@ const CountryDatatable = (props) => {
                     </ActionButton>
                     <ActionButton
                         onClick={() => allowRegionByCode(id, region_name)} className="button-secondary">
-                        {__("Allow", "really-simple-ssl")}
+                        {__("Trust", "really-simple-ssl")}
                     </ActionButton>
                 </>
             )}
@@ -247,7 +257,7 @@ const CountryDatatable = (props) => {
                     {status === 'blocked' ? (
                         <ActionButton
                             onClick={() => allowCountryByCode(id)} className="button-secondary">
-                            {__("Allow", "really-simple-ssl")}
+                            {__("Trust", "really-simple-ssl")}
                         </ActionButton>
                     ) : (
                         <ActionButton
@@ -276,23 +286,8 @@ const CountryDatatable = (props) => {
 
     const options = Object.entries(props.field.options).map(([value, label]) => ({ value, label }));
 
-    const notifySuccess = (message) => toast.success(message);
-    const notifyError = (message) => toast.error(message);
-
     return (
         <>
-            {ToastContainer && (
-                <ToastContainer
-                    position="bottom-right"
-                    autoClose={10000}
-                    limit={3}
-                    hideProgressBar
-                    newestOnTop
-                    closeOnClick
-                    pauseOnFocusLoss
-                    pauseOnHover
-                    theme="light"
-                /> )}
             <div className="rsssl-container">
                 <div>
                     {/* reserved for left side buttons */}
