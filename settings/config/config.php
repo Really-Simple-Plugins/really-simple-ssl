@@ -1003,6 +1003,12 @@ function rsssl_fields( $load_values = true ) {
                 ]
             ],
             'columns'          => [
+	            [
+		            'name'     => __('Country', 'really-simple-ssl'),
+		            'sortable' => true,
+		            'column'   => 'iso2_code',
+		            'width'    => '8%',
+	            ],
                 [
                     'name'     => __('Date', 'really-simple-ssl'),
                     'sortable' => true,
@@ -1018,23 +1024,17 @@ function rsssl_fields( $load_values = true ) {
                     'width'     => '12%',
                 ],
                 [
-                    'name'     => 'country',
-                    'sortable' => true,
-                    'column'   => 'iso2_code',
-                    'width'    => '10%',
-                ],
-                [
-                    'name'       => __('Ip Address', 'really-simple-ssl'),
+                    'name'       => __('IP Address', 'really-simple-ssl'),
                     'sortable'   => true,
                     'searchable' => true,
                     'column'     => 'source_ip',
-                    'width'    => '50%',
+                    'width'    => '45%',
                 ],
                 [
                     'name'     => __('Event', 'really-simple-ssl'),
                     'sortable' => true,
-                    'column'   => 'event_type',
-                    'width'         => '12%',
+                    'column'   => 'event_name',
+                    'width'         => '20%',
                 ],
 
                 [

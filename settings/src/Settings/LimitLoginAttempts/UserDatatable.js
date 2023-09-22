@@ -90,10 +90,7 @@ const UserDatatable = (props) => {
         }
     }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, dataActions.currentRowsPerPage]);
 
-    let enabled = false;
-
-
-    let enabled = getFieldValue('enable_limited_login_attempts');;
+    let enabled = getFieldValue('enable_limited_login_attempts');
 
     const customStyles = {
         headCells: {

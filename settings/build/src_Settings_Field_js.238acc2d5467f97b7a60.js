@@ -1844,12 +1844,7 @@ const EventLogDataTable = props => {
     let newItem = buildColumn(item);
     columns.push(newItem);
   });
-  let enabled = false;
-  fields.forEach(function (item, i) {
-    if (item.id === 'enable_limited_login_attempts') {
-      enabled = item.value;
-    }
-  });
+  let enabled = getFieldValue('enable_limited_login_attempts');
   const customStyles = {
     headCells: {
       style: {
@@ -1898,6 +1893,12 @@ const EventLogDataTable = props => {
         ...dataItem
       };
       newItem.iso2_code = generateFlag(newItem.iso2_code, newItem.country_name);
+      if (newItem.username === '' || newItem.username === null) {
+        newItem.username = '—';
+      }
+      if (newItem.source_ip === '' || newItem.source_ip === null) {
+        newItem.source_ip = '—';
+      }
       newItem.expandableRows = true;
       return newItem;
     });
@@ -1954,20 +1955,6 @@ const EventLogDataTable = props => {
       },
       title: title
     }));
-  }
-  function generateGoodBad(value) {
-    ``;
-    if (value > 0) {
-      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_9__["default"], {
-        name: "circle-check",
-        color: "green"
-      });
-    } else {
-      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_9__["default"], {
-        name: "circle-times",
-        color: "red"
-      });
-    }
   }
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-container"
@@ -4117,12 +4104,7 @@ const CountryDatatable = props => {
       fetchCountryData(field.action, dataActions);
     }
   }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, dataActions.currentRowsPerPage, fieldAlreadyEnabled('enable_limited_login_attempts')]);
-  let enabled = false;
-  fields.forEach(function (item, i) {
-    if (item.id === 'enable_limited_login_attempts') {
-      enabled = item.value;
-    }
-  });
+  let enabled = getFieldValue('enable_limited_login_attempts');
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     return () => {
       saveFields(false, false);
@@ -5015,12 +4997,7 @@ const IpAddressDatatable = props => {
       default: 'transparent'
     }
   }, 'light');
-  let enabled = false;
-  fields.forEach(function (item, i) {
-    if (item.id === 'enable_limited_login_attempts') {
-      enabled = item.value;
-    }
-  });
+  let enabled = getFieldValue('enable_limited_login_attempts');
   const handleOpen = () => {
     setAddingIpAddress(true);
   };
@@ -5649,12 +5626,7 @@ const UserDatatable = props => {
       fetchUserData(field.action, dataActions);
     }
   }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, dataActions.currentRowsPerPage]);
-  let enabled = false;
-  fields.forEach(function (item, i) {
-    if (item.id === 'enable_limited_login_attempts') {
-      enabled = item.value;
-    }
-  });
+  let enabled = getFieldValue('enable_limited_login_attempts');
   const customStyles = {
     headCells: {
       style: {
@@ -24361,4 +24333,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.0e47b013cdcfa815c38b.js.map
+//# sourceMappingURL=src_Settings_Field_js.238acc2d5467f97b7a60.js.map
