@@ -5968,15 +5968,7 @@ const UserDatatable = props => {
     className: "rsssl-multiselect-datatable-form rsssl-primary"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("You have selected %s rows", "really-simple-ssl").replace('%s', rowsSelected.length)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-action-buttons"
-  }, getCurrentFilter(moduleName) === 'blocked' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
-    onClick: () => {
-      allowUsers(rowsSelected);
-    }
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Trust", "really-simple-ssl")), getCurrentFilter(moduleName) === 'allowed' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
-    onClick: () => {
-      blockUsers(rowsSelected);
-    }
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Block", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
     className: "button button-red rsssl-action-buttons__button",
     onClick: () => {
       resetUsers(rowsSelected);
@@ -24518,6 +24510,7 @@ __webpack_require__.r(__webpack_exports__);
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
+<<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 //# sourceMappingURL=src_Settings_Field_js.71728f3a274feb041ab6.js.map
 ========
 //# sourceMappingURL=src_Settings_Field_js.2a9f68f4c72b1ac2b97c.js.map
@@ -24585,3 +24578,6 @@ __webpack_require__.r(__webpack_exports__);
 ========
 //# sourceMappingURL=src_Settings_Field_js.07c116c4870fd8373804.js.map
 >>>>>>>> a05816b35 (fixed an error when updating users after being added or updated):settings/build/src_Settings_Field_js.07c116c4870fd8373804.js
+========
+//# sourceMappingURL=src_Settings_Field_js.a8b100e191cf3dfec7c1.js.map
+>>>>>>>> a17ee3555 (forgot to remove the Allow and Block buttons to remove in UserDatatable):settings/build/src_Settings_Field_js.a8b100e191cf3dfec7c1.js
