@@ -158,13 +158,13 @@ const UserDatatable = (props) => {
     const resetUsers = useCallback(async (data) => {
         if (Array.isArray(data)) {
             const ids = data.map((item) => item.id);
-            await resetMultiRow(ids);
+            await resetMultiRow(ids, dataActions);
             setRowsSelected([]);
         } else {
-            await resetRow(data);
+            await resetRow(data, dataActions);
         }
         await fetchDynamicData('event_log');
-    }, [resetMultiRow, resetRow, fetchDynamicData]);
+    }, [resetMultiRow, resetRow, fetchDynamicData, dataActions]);
 
     const handleSelection = useCallback((state) => {
         setRowsSelected(state.selectedRows);
@@ -232,6 +232,7 @@ return (
             options={options}
             value={user}
             status={getCurrentFilter(moduleName)}
+            dataActions={dataActions}
         >
         </AddUserModal>
         <div className="rsssl-container">

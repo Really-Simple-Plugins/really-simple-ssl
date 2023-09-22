@@ -14,7 +14,7 @@ const AddUserModal = (props) => {
         let status = props.status;
         // we check if statusSelected is not empty
         if (user !== '') {
-            addRow(user, status);
+            addRow(user, status, props.dataActions);
             //we clear the input
             setUser('');
             //we close the modal

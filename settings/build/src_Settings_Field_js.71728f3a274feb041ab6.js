@@ -3473,7 +3473,7 @@ const AddUserModal = props => {
     let status = props.status;
     // we check if statusSelected is not empty
     if (user !== '') {
-      addRow(user, status);
+      addRow(user, status, props.dataActions);
       //we clear the input
       setUser('');
       //we close the modal
@@ -5880,13 +5880,13 @@ const UserDatatable = props => {
   const resetUsers = (0,react__WEBPACK_IMPORTED_MODULE_2__.useCallback)(async data => {
     if (Array.isArray(data)) {
       const ids = data.map(item => item.id);
-      await resetMultiRow(ids);
+      await resetMultiRow(ids, dataActions);
       setRowsSelected([]);
     } else {
-      await resetRow(data);
+      await resetRow(data, dataActions);
     }
     await fetchDynamicData('event_log');
-  }, [resetMultiRow, resetRow, fetchDynamicData]);
+  }, [resetMultiRow, resetRow, fetchDynamicData, dataActions]);
   const handleSelection = (0,react__WEBPACK_IMPORTED_MODULE_2__.useCallback)(state => {
     setRowsSelected(state.selectedRows);
   }, []);
@@ -5931,7 +5931,8 @@ const UserDatatable = props => {
     onRequestClose: handleClose,
     options: options,
     value: user,
-    status: getCurrentFilter(moduleName)
+    status: getCurrentFilter(moduleName),
+    dataActions: dataActions
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-container"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -24516,6 +24517,7 @@ __webpack_require__.r(__webpack_exports__);
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
+<<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 //# sourceMappingURL=src_Settings_Field_js.71728f3a274feb041ab6.js.map
 ========
 //# sourceMappingURL=src_Settings_Field_js.2a9f68f4c72b1ac2b97c.js.map
@@ -24580,3 +24582,6 @@ __webpack_require__.r(__webpack_exports__);
 ========
 //# sourceMappingURL=src_Settings_Field_js.0522c6cfa0b95d68587e.js.map
 >>>>>>>> 21938e929 (fixed a few minor Bugs):settings/build/src_Settings_Field_js.0522c6cfa0b95d68587e.js
+========
+//# sourceMappingURL=src_Settings_Field_js.07c116c4870fd8373804.js.map
+>>>>>>>> a05816b35 (fixed an error when updating users after being added or updated):settings/build/src_Settings_Field_js.07c116c4870fd8373804.js
