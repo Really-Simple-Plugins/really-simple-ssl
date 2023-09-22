@@ -184,11 +184,11 @@ const IpAddressDatatable = (props) => {
         //we check if the data is an array
         if (Array.isArray(data)) {
             const ids = data.map((item) => item.id);
-            await resetMultiRow(ids);
+            await resetMultiRow(ids, dataActions);
             //we emtry the rowsSelected
             setRowsSelected([]);
         } else {
-            await resetRow(data);
+            await resetRow(data, dataActions);
         }
         fetchDynamicData('event_log')
     }, [resetMultiRow, resetRow, fetchDynamicData]);
@@ -309,6 +309,7 @@ const IpAddressDatatable = (props) => {
                 options={options}
                 value={ipAddress}
                 status={getCurrentFilter(moduleName)}
+                dataActions={dataActions}
             >
             </AddIpAddressModal>
             <div className="rsssl-container">

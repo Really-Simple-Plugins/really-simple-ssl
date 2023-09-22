@@ -30,7 +30,7 @@ const AddIpAddressModal = (props) => {
         let status = props.status;
         // we check if statusSelected is not empty
         if (ipAddress && maskError === false) {
-            addRow(ipAddress, status);
+            addRow(ipAddress, status, props.dataActions);
             //we clear the input
             resetRange();
             //we close the modal

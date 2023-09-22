@@ -203,7 +203,7 @@ const IpAddressDataTableStore = create((set, get) => ({
             const response = await rsssl_api.doAction('ip_add_ip_address', {ipAddress, status});
             // Consider checking the response structure for any specific success or failure signals
             if (response && response.request_success) {
-                await get().fetchIpData('ip_list');
+                await get().fetchIpData('ip_list', dataActions);
                 // Potentially notify the user of success, if needed.
             } else {
                 // Handle any unsuccessful response if needed.
@@ -415,13 +415,12 @@ const IpAddressDataTableStore = create((set, get) => ({
     resetRow: async (id, dataActions) => {
         set({processing: true});
         try {
-            const response = await rsssl_api.doAction(
-                'delete_entry',
-                {id}
-            );
+            const response = await rsssl_api.doAction('delete_entry', {id} );
             //now we set the EventLog
             if (response && response.request_success) {
-                await get().fetchIpData('ip_list', dataActions);
+                await get().fetchIpData('ip_list', get().dataActions);
+            } else {
+                console.log("Failed to remove IP address: ", response.message);
             }
         } catch (e) {
             console.log(e);
@@ -439,7 +438,7 @@ const IpAddressDataTableStore = create((set, get) => ({
             );
             //now we set the EventLog
             if (response && response.request_success) {
-                await get().fetchIpData('ip_list', dataActions);
+                await get().fetchIpData('ip_list', get().dataActions);
             }
         } catch (e) {
             console.log(e);
