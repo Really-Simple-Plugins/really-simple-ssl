@@ -68,8 +68,6 @@ const CountryDatatable = (props) => {
     let field = props.field;
     const columns = field.columns.map(buildColumn);
 
-    console.log(columns);
-
     const searchableColumns = columns
         .filter(column => column.searchable)
         .map(column => column.column);
