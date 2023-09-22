@@ -3485,7 +3485,7 @@ const AddUserModal = props => {
     let status = props.status;
     // we check if statusSelected is not empty
     if (user !== '') {
-      addRow(user, status);
+      addRow(user, status, props.dataActions);
       //we clear the input
       setUser('');
       //we close the modal
@@ -5721,13 +5721,13 @@ const UserDatatable = props => {
   const resetUsers = (0,react__WEBPACK_IMPORTED_MODULE_2__.useCallback)(async data => {
     if (Array.isArray(data)) {
       const ids = data.map(item => item.id);
-      await resetMultiRow(ids);
+      await resetMultiRow(ids, dataActions);
       setRowsSelected([]);
     } else {
-      await resetRow(data);
+      await resetRow(data, dataActions);
     }
     await fetchDynamicData('event_log');
-  }, [resetMultiRow, resetRow, fetchDynamicData]);
+  }, [resetMultiRow, resetRow, fetchDynamicData, dataActions]);
   const handleSelection = (0,react__WEBPACK_IMPORTED_MODULE_2__.useCallback)(state => {
     setRowsSelected(state.selectedRows);
   }, []);
@@ -5772,7 +5772,8 @@ const UserDatatable = props => {
     onRequestClose: handleClose,
     options: options,
     value: user,
-    status: getCurrentFilter(moduleName)
+    status: getCurrentFilter(moduleName),
+    dataActions: dataActions
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-container"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -24374,4 +24375,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.0522c6cfa0b95d68587e.js.map
+//# sourceMappingURL=src_Settings_Field_js.07c116c4870fd8373804.js.map
