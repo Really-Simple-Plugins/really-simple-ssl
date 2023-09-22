@@ -132,12 +132,12 @@ const CountryDatatable = (props) => {
             const regions = code.map(item => item.region);
             await removeRegions(ids, '',dataActions);
             let regionsString = regions.join(', ');
-            showSavedSettingsNotice(__('%s is now trusted', 'really-simple-ssl')
+            showSavedSettingsNotice(__('%s is now allowed', 'really-simple-ssl')
                 .replace('%s',regionsString));
             setRowsSelected([]);
         } else {
             await removeRegion(code, 'blocked', dataActions);
-            showSavedSettingsNotice(__('%s is now trusted', 'really-simple-ssl')
+            showSavedSettingsNotice(__('%s is now allowed', 'really-simple-ssl')
                 .replace('%s',regionName));
         }
         await fetchDynamicData('event_log');
@@ -229,7 +229,7 @@ const CountryDatatable = (props) => {
             {getCurrentFilter(moduleName) === 'blocked' && (
                 <ActionButton onClick={() => allowById(id)}
                               className="button-secondary">
-                    {__("Trust", "really-simple-ssl")}
+                    {__("Allow", "really-simple-ssl")}
                 </ActionButton>
             )}
             {getCurrentFilter(moduleName) === 'regions' && (
@@ -240,7 +240,7 @@ const CountryDatatable = (props) => {
                     </ActionButton>
                     <ActionButton
                         onClick={() => allowRegionByCode(id, region_name)} className="button-secondary">
-                        {__("Trust", "really-simple-ssl")}
+                        {__("Allow", "really-simple-ssl")}
                     </ActionButton>
                 </>
             )}
@@ -249,7 +249,7 @@ const CountryDatatable = (props) => {
                     {status === 'blocked' ? (
                         <ActionButton
                             onClick={() => allowCountryByCode(id)} className="button-secondary">
-                            {__("Trust", "really-simple-ssl")}
+                            {__("Allow", "really-simple-ssl")}
                         </ActionButton>
                     ) : (
                         <ActionButton
@@ -317,7 +317,7 @@ const CountryDatatable = (props) => {
                                 <>
                                     <ActionButton
                                         onClick={() => allowCountryByCode(rowsSelected)}>
-                                        {__("Trust", "really-simple-ssl")}
+                                        {__("Allow", "really-simple-ssl")}
                                     </ActionButton>
                                     <ActionButton
                                         onClick={() => blockCountryByCode(rowsSelected)}  className="button-primary">
@@ -328,14 +328,14 @@ const CountryDatatable = (props) => {
                             {getCurrentFilter(moduleName) === 'blocked' && (
                                 <ActionButton
                                     onClick={() => allowMultiple(rowsSelected)}>
-                                    {__("Trust", "really-simple-ssl")}
+                                    {__("Allow", "really-simple-ssl")}
                                 </ActionButton>
                             )}
                             {getCurrentFilter(moduleName) === 'regions' && (
                                 <>
                                     <ActionButton
                                         onClick={() => allowRegionByCode(rowsSelected)}  className="button-primary">
-                                        {__("Trust", "really-simple-ssl")}
+                                        {__("Allow", "really-simple-ssl")}
                                     </ActionButton>
                                     <ActionButton
                                         onClick={() => blockRegionByCode(rowsSelected)}>

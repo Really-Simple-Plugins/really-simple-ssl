@@ -4219,10 +4219,11 @@ const CountryDatatable = props => {
       const regions = code.map(item => item.region);
       await removeRegions(ids, '', dataActions);
       let regionsString = regions.join(', ');
-      showSavedSettingsNotice((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__.__)('%s is now trusted', 'really-simple-ssl').replace('%s', regionsString));
+      showSavedSettingsNotice((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__.__)('%s is now allowed', 'really-simple-ssl').replace('%s', regionsString));
       setRowsSelected([]);
     } else {
       await removeRegion(code, 'blocked', dataActions);
+<<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
       notifySuccess(regionName + ' ' + (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__.__)('has been allowed', 'really-simple-ssl'));
@@ -4233,6 +4234,9 @@ const CountryDatatable = props => {
 ========
       showSavedSettingsNotice((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__.__)('%s is now trusted', 'really-simple-ssl').replace('%s', regionName));
 >>>>>>>> f8c014bce (added autosaving in countrytable to enable server backend):settings/build/src_Settings_Field_js.0e47b013cdcfa815c38b.js
+========
+      showSavedSettingsNotice((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__.__)('%s is now allowed', 'really-simple-ssl').replace('%s', regionName));
+>>>>>>>> f46085d99 (made Ip, ip into IP):settings/build/src_Settings_Field_js.109bbb99c93e19bde109.js
     }
     await fetchDynamicData('event_log');
   }, [removeRegion, getCurrentFilter(moduleName), dataActions]);
@@ -4340,6 +4344,7 @@ const CountryDatatable = props => {
     className: "button-secondary"
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
+<<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__.__)("Allow", "really-simple-ssl")), getCurrentFilter(moduleName) === 'regions' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
     onClick: () => blockRegionByCode(id),
 ========
@@ -4347,6 +4352,9 @@ const CountryDatatable = props => {
 ========
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__.__)("Trust", "really-simple-ssl")), getCurrentFilter(moduleName) === 'regions' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
 >>>>>>>> f8c014bce (added autosaving in countrytable to enable server backend):settings/build/src_Settings_Field_js.0e47b013cdcfa815c38b.js
+========
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__.__)("Allow", "really-simple-ssl")), getCurrentFilter(moduleName) === 'regions' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
+>>>>>>>> f46085d99 (made Ip, ip into IP):settings/build/src_Settings_Field_js.109bbb99c93e19bde109.js
     onClick: () => blockRegionByCode(id, region_name),
 >>>>>>>> da6fcef0b (added an extra value to not display rows if processing):settings/build/src_Settings_Field_js.6ff2c1ca9ff8dff668ef.js
     className: "button-primary"
@@ -4365,10 +4373,10 @@ const CountryDatatable = props => {
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__.__)("Block", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
     onClick: () => allowRegionByCode(id, region_name),
     className: "button-secondary"
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__.__)("Trust", "really-simple-ssl"))), getCurrentFilter(moduleName) === 'countries' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, status === 'blocked' ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__.__)("Allow", "really-simple-ssl"))), getCurrentFilter(moduleName) === 'countries' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, status === 'blocked' ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
     onClick: () => allowCountryByCode(id),
     className: "button-secondary"
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__.__)("Trust", "really-simple-ssl")) : (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__.__)("Allow", "really-simple-ssl")) : (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
     onClick: () => blockCountryByCode(id),
     className: "button-primary"
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__.__)("Block", "really-simple-ssl")))), [getCurrentFilter, moduleName, allowById, blockRegionByCode, allowRegionByCode, blockCountryByCode, allowCountryByCode]);
@@ -4485,15 +4493,15 @@ const CountryDatatable = props => {
     className: "rsssl-action-buttons"
   }, getCurrentFilter(moduleName) === 'countries' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
     onClick: () => allowCountryByCode(rowsSelected)
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__.__)("Trust", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__.__)("Allow", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
     onClick: () => blockCountryByCode(rowsSelected),
     className: "button-primary"
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__.__)("Block", "really-simple-ssl"))), getCurrentFilter(moduleName) === 'blocked' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
     onClick: () => allowMultiple(rowsSelected)
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__.__)("Trust", "really-simple-ssl")), getCurrentFilter(moduleName) === 'regions' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__.__)("Allow", "really-simple-ssl")), getCurrentFilter(moduleName) === 'regions' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
     onClick: () => allowRegionByCode(rowsSelected),
     className: "button-primary"
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__.__)("Trust", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__.__)("Allow", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
     onClick: () => blockRegionByCode(rowsSelected)
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__.__)("Block", "really-simple-ssl")))))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_2__["default"], {
 >>>>>>>> f8c014bce (added autosaving in countrytable to enable server backend):settings/build/src_Settings_Field_js.0e47b013cdcfa815c38b.js
@@ -5297,7 +5305,7 @@ const IpAddressDatatable = props => {
     //we check if the data is an array
     if (Array.isArray(data)) {
       const ids = data.map(item => item.id);
-      await updateMultiRow(ids, 'vlocked');
+      await updateMultiRow(ids, 'blocked');
       setRowsSelected([]);
     } else {
       await updateRow(data, 'blocked');
@@ -24577,6 +24585,7 @@ __webpack_require__.r(__webpack_exports__);
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
+<<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 //# sourceMappingURL=src_Settings_Field_js.71728f3a274feb041ab6.js.map
 ========
 //# sourceMappingURL=src_Settings_Field_js.2a9f68f4c72b1ac2b97c.js.map
@@ -24653,3 +24662,6 @@ __webpack_require__.r(__webpack_exports__);
 ========
 //# sourceMappingURL=src_Settings_Field_js.040b0be1a64621b3a720.js.map
 >>>>>>>> 63439e701 (made some final addons for eventlog):settings/build/src_Settings_Field_js.040b0be1a64621b3a720.js
+========
+//# sourceMappingURL=src_Settings_Field_js.109bbb99c93e19bde109.js.map
+>>>>>>>> f46085d99 (made Ip, ip into IP):settings/build/src_Settings_Field_js.109bbb99c93e19bde109.js
