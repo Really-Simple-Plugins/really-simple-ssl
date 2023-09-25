@@ -49,7 +49,7 @@ const IpAddressDatatable = (props) => {
 
     const [addingIpAddress, setAddingIpAddress] = useState(false);
     const [rowsSelected, setRowsSelected] = useState([]);
-    const {fields, fieldAlreadyEnabled, getFieldValue} = useFields();
+    const {fields, fieldAlreadyEnabled, getFieldValue, saveFields} = useFields();
 
     const moduleName = 'rsssl-group-filter-limit_login_attempts_ip_address';
 
@@ -87,7 +87,7 @@ const IpAddressDatatable = (props) => {
         if (dataActions) {
             fetchIpData(field.action, dataActions);
         }
-    }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, dataActions.currentRowsPerPage]);
+    }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, dataActions.currentRowsPerPage, fieldAlreadyEnabled('enable_limited_login_attempts')]);
 
 
     const customStyles = {
@@ -112,6 +112,11 @@ const IpAddressDatatable = (props) => {
 
 
     let enabled = getFieldValue('enable_limited_login_attempts');
+
+
+    useEffect(() => {
+        console.log('enabled ips', enabled);
+    }, [enabled]);
 
     const handleOpen = () => {
         setAddingIpAddress(true);
@@ -274,6 +279,11 @@ const IpAddressDatatable = (props) => {
         setRowsSelected(state.selectedRows);
     }
 
+    let paginationSet = true;
+    if (typeof pagination === 'undefined') {
+        paginationSet = false;
+    }
+
     return (
         <>
             <AddIpAddressModal
@@ -359,9 +369,9 @@ const IpAddressDatatable = (props) => {
                 data={processing ? [] : data}
                 dense
                 paginationServer
-                paginationTotalRows={pagination.totalRows}
-                paginationPerPage={pagination.perPage}
-                paginationDefaultPage={pagination.currentPage}
+                paginationTotalRows={paginationSet? pagination.totalRows: 10}
+                paginationPerPage={paginationSet? pagination.perPage: 10}
+                paginationDefaultPage={paginationSet?pagination.currentPage: 1}
                 paginationComponentOptions={{
                     rowsPerPageText: __('Rows per page:', 'really-simple-ssl'),
                     rangeSeparatorText: __('of', 'really-simple-ssl'),

@@ -49,7 +49,7 @@ const UserDatatable = (props) => {
     const [user, setUser] = useState('');
 
     const moduleName = 'rsssl-group-filter-limit_login_attempts_users';
-    const {fields, fieldAlreadyEnabled, getFieldValue} = useFields();
+    const {fields, fieldAlreadyEnabled, getFieldValue, saveFields} = useFields();
 
     const buildColumn = useCallback((column) => ({
         name: column.name,
@@ -88,9 +88,10 @@ const UserDatatable = (props) => {
         if (dataActions) {
             fetchUserData(field.action, dataActions)
         }
-    }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, dataActions.currentRowsPerPage]);
+    }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, dataActions.currentRowsPerPage, fieldAlreadyEnabled('enable_limited_login_attempts')]);
 
     let enabled = getFieldValue('enable_limited_login_attempts');
+
 
     const customStyles = {
         headCells: {
@@ -199,6 +200,11 @@ for (const key in data) {
     data[key] = dataItem;
 }
 
+let paginationSet = true;
+if (typeof pagination === 'undefined') {
+    paginationSet = false;
+}
+
 return (
     <>
         <AddUserModal
@@ -274,11 +280,11 @@ return (
         {/*Display the datatable*/}
             <DataTable
                 columns={columns}
-                data={processing? [] : Object.values(data)}
+                data={processing && !dataLoaded? [] : Object.values(data)}
                 dense
                 pagination={!processing}
                 paginationServer
-                paginationTotalRows={pagination.totalRows}
+                paginationTotalRows={paginationSet? pagination.totalRows: 10}
                 onChangeRowsPerPage={handleUserTableRowsChange}
                 onChangePage={handleUserTablePageChange}
                 sortServer={!processing}
