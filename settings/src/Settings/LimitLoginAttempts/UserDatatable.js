@@ -178,25 +178,6 @@ const UserDatatable = (props) => {
 
     const generateActionButtons = useCallback((id, status, region_name) => (
         <div className="rsssl-action-buttons">
-            {/* if the id is new we show the Allow button */}
-            {/*{getCurrentFilter(moduleName) === 'blocked' && (*/}
-            {/*    <ActionButton onClick={() => {*/}
-            {/*        allowUsers(id);*/}
-            {/*    }}*/}
-            {/*                  className="button-secondary">*/}
-            {/*        {__("Trust", "really-simple-ssl")}*/}
-            {/*    </ActionButton>*/}
-            {/*)}*/}
-            {/*/!* if the id is new we show the Block button *!/*/}
-            {/*{getCurrentFilter(moduleName) === 'allowed' && (*/}
-            {/*    <ActionButton onClick={() => {*/}
-            {/*        blockUsers(id);*/}
-            {/*    }}*/}
-            {/*                  className="button-primary">*/}
-            {/*        {__("Block", "really-simple-ssl")}*/}
-            {/*    </ActionButton>*/}
-            {/*)}*/}
-            {/* if the id is new we show the Delete button */}
             <ActionButton onClick={() => {
                 resetUsers(id);
             }}

@@ -3443,8 +3443,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _UserDataTableStore__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./UserDataTableStore */ "./src/Settings/LimitLoginAttempts/UserDataTableStore.js");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _EventLog_EventLogDataTableStore__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../EventLog/EventLogDataTableStore */ "./src/Settings/EventLog/EventLogDataTableStore.js");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__);
+
 
 
 
@@ -3456,20 +3458,24 @@ const AddUserModal = props => {
     addRow,
     maskError
   } = (0,_UserDataTableStore__WEBPACK_IMPORTED_MODULE_3__["default"])();
+  const {
+    fetchDynamicData
+  } = (0,_EventLog_EventLogDataTableStore__WEBPACK_IMPORTED_MODULE_4__["default"])();
   const [user, setUser] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)('');
-  function handleSubmit() {
+  async function handleSubmit() {
     let status = props.status;
     // we check if statusSelected is not empty
     if (user !== '') {
-      addRow(user, status, props.dataActions);
+      await addRow(user, status, props.dataActions);
       //we clear the input
       setUser('');
+      await fetchDynamicData('event_log');
       //we close the modal
       props.onRequestClose();
     }
   }
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Modal, {
-    title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Add User", "really-simple-ssl"),
+    title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)("Add User", "really-simple-ssl"),
     shouldCloseOnClickOutside: true,
     shouldCloseOnEsc: true,
     overlayClassName: "rsssl-modal-overlay",
@@ -3491,7 +3497,7 @@ const AddUserModal = props => {
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
     htmlFor: "username",
     className: "rsssl-label"
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Username", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)("Username", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
     type: "text",
     className: "rsssl-input full",
     id: "username",
@@ -3513,10 +3519,10 @@ const AddUserModal = props => {
     style: {
       marginRight: '10px'
     }
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Cancel", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)("Cancel", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
     isPrimary: true,
     onClick: handleSubmit
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Add", "really-simple-ssl"))))));
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)("Add", "really-simple-ssl"))))));
 };
 /* harmony default export */ __webpack_exports__["default"] = (AddUserModal);
 
@@ -24586,6 +24592,7 @@ __webpack_require__.r(__webpack_exports__);
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
+<<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 //# sourceMappingURL=src_Settings_Field_js.71728f3a274feb041ab6.js.map
 ========
 //# sourceMappingURL=src_Settings_Field_js.2a9f68f4c72b1ac2b97c.js.map
@@ -24665,3 +24672,6 @@ __webpack_require__.r(__webpack_exports__);
 ========
 //# sourceMappingURL=src_Settings_Field_js.109bbb99c93e19bde109.js.map
 >>>>>>>> f46085d99 (made Ip, ip into IP):settings/build/src_Settings_Field_js.109bbb99c93e19bde109.js
+========
+//# sourceMappingURL=src_Settings_Field_js.7ab9ea32bc33bd2f2974.js.map
+>>>>>>>> 4db164963 (fixed an issue where eventlog was nog updated ater a user was added):settings/build/src_Settings_Field_js.7ab9ea32bc33bd2f2974.js
