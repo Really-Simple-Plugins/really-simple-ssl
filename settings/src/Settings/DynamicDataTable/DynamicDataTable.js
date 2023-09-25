@@ -19,7 +19,6 @@ const DynamicDataTable = (props) => {
         handleTableSort,
         handleTablePageChange,
         handleTableSearch,
-        updateUserMeta
     } = DynamicDataTableStore();
 
     let field = props.field;
@@ -29,22 +28,22 @@ const DynamicDataTable = (props) => {
     const twoFAEnabledRef = useRef();
 
     useEffect(() => {
-        twoFAEnabledRef.current = getFieldValue('two_fa_enabled');
+        twoFAEnabledRef.current = getFieldValue('login_protection_enabled');
         saveFields(true, false)
-    }, [getFieldValue('two_fa_enabled')]);
+    }, [getFieldValue('login_protection_enabled')]);
 
     useEffect(() => {
-        const value = getFieldValue('two_fa_enabled');
+        const value = getFieldValue('login_protection_enabled');
         setEnabled(value);
     }, [fields]);
 
     useEffect(() => {
-        if (!dataLoaded || enabled !== getFieldValue('two_fa_enabled')) {
+        if (!dataLoaded || enabled !== getFieldValue('login_protection_enabled')) {
             fetchDynamicData(field.action)
                 .then(response => {
                     // Check if response.data is defined and is an array before calling reduce
                     if(response.data && Array.isArray(response.data)) {
-                        const methods = response.data.reduce((acc, user) => ({...acc, [user.id]: user.rsssl_two_fa_method}), {});
+                        const methods = response.data.reduce((acc, user) => ({...acc, [user.id]: user.rsssl_two_fa_status}), {});
                         setTwoFAMethods(methods);
                     } else {
                         console.error('Unexpected response:', response);
@@ -54,37 +53,13 @@ const DynamicDataTable = (props) => {
                     console.error(err); // Log any errors
                 });
         }
-    }, [dataLoaded, field.action, fetchDynamicData, getFieldValue('two_fa_enabled')]); // Add getFieldValue('two_fa_enabled') as a dependency
-
+    }, [dataLoaded, field.action, fetchDynamicData, getFieldValue('login_protection_enabled')]); // Add getFieldValue('login_protection_enabled') as a dependency
 
     useEffect(() => {
         if (dataActions) {
             fetchDynamicData(field.action);
         }
     }, [dataActions]);
-
-    function handleTwoFAMethodChange(userId, newMethod) {
-        setTwoFAMethods({
-            ...twoFAMethods,
-            [userId]: newMethod
-        });
-
-        apiFetch({
-            path: `/wp/v2/users/${userId}`,
-            method: 'POST',
-            data: {
-                meta: {
-                    rsssl_two_fa_method: newMethod,
-                },
-            },
-        })
-            .then((response) => {
-                updateUserMeta(userId, newMethod);
-            })
-            .catch((error) => {
-                console.error('Error updating user meta:', error);
-            });
-    }
 
     function buildColumn(column) {
         let newColumn = {
@@ -97,19 +72,6 @@ const DynamicDataTable = (props) => {
             selector: row => row[column.column],
         };
 
-        if (newColumn.name === 'Action') {
-
-            newColumn.cell = row => (
-                <select
-                    value={twoFAMethods[row.id]}
-                    onChange={event => handleTwoFAMethodChange(row.id, event.target.value)}
-                >
-                    <option value="open">{__("Choose", "really-simple-ssl")}</option>
-                    <option value="disabled">{__("Disabled", "really-simple-ssl")}</option>
-                    <option value="email">Email</option>
-                </select>
-            );
-        }
         return newColumn;
     }
 

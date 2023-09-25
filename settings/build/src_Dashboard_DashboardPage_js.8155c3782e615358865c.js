@@ -2461,6 +2461,21 @@ const Icon = props => {
       }))
     };
   }
+  if (iconName === 'loading') {
+    renderedIcon = {
+      html: (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("svg", {
+        xmlns: "http://www.w3.org/2000/svg",
+        focusable: "false",
+        role: "img",
+        xmlns: "http://www.w3.org/2000/svg",
+        viewBox: "0 0 512 512",
+        height: iconSize
+      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("path", {
+        fill: iconColors[color],
+        d: "M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"
+      }))
+    };
+  }
   if (iconName === 'file-download') {
     renderedIcon = {
       html: (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("svg", {
@@ -2888,4 +2903,4 @@ const getRelativeTime = function (relativeDate) {
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Dashboard_DashboardPage_js.4f7f9660ad30371d9445.js.map
+//# sourceMappingURL=src_Dashboard_DashboardPage_js.8155c3782e615358865c.js.map

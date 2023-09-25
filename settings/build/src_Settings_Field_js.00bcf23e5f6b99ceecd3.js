@@ -1308,6 +1308,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_Hyperlink__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/Hyperlink */ "./src/utils/Hyperlink.js");
 /* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/api */ "./src/utils/api.js");
 /* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./FieldsData */ "./src/Settings/FieldsData.js");
+/* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils/Icon */ "./src/utils/Icon.js");
+
+
 
 
 
@@ -1321,13 +1324,17 @@ const Button = props => {
   const {
     addHelpNotice
   } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_4__["default"])();
+  const [processing, setProcessing] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   const onClickHandler = action => {
     let data = {};
+    console.log("send mail");
+    setProcessing(true);
     _utils_api__WEBPACK_IMPORTED_MODULE_3__.doAction(action, data).then(response => {
       let label = response.success ? 'success' : 'warning';
       let title = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Test notification by email", 'really-simple-ssl');
       let text = response.message;
       addHelpNotice(props.field.id, label, text, title, false);
+      setProcessing(false);
     });
   };
   let is_disabled = !!props.field.disabled;
@@ -1340,7 +1347,10 @@ const Button = props => {
     onClick: () => onClickHandler(props.field.action),
     className: "button button-default",
     disabled: is_disabled
-  }, props.field.button_text));
+  }, props.field.button_text, processing && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_5__["default"], {
+    name: "loading",
+    color: "grey"
+  })));
 };
 /* harmony default export */ __webpack_exports__["default"] = (Button);
 
@@ -1428,332 +1438,6 @@ const CheckboxControl = props => {
   }, props.label)))));
 };
 /* harmony default export */ __webpack_exports__["default"] = (CheckboxControl);
-
-/***/ }),
-
-/***/ "./src/Settings/DynamicDataTable/DynamicDataTable.js":
-/*!***********************************************************!*\
-  !*** ./src/Settings/DynamicDataTable/DynamicDataTable.js ***!
-  \***********************************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var react_data_table_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-data-table-component */ "./node_modules/react-data-table-component/dist/index.cjs.js");
-/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/api-fetch */ "@wordpress/api-fetch");
-/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../FieldsData */ "./src/Settings/FieldsData.js");
-/* harmony import */ var _DynamicDataTableStore__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./DynamicDataTableStore */ "./src/Settings/DynamicDataTable/DynamicDataTableStore.js");
-
-
-
-
-
-
-
-const DynamicDataTable = props => {
-  const {
-    twoFAMethods,
-    setTwoFAMethods,
-    DynamicDataTable,
-    dataLoaded,
-    pagination,
-    dataActions,
-    handleTableRowsChange,
-    fetchDynamicData,
-    // setDynamicData,
-    handleTableSort,
-    handleTablePageChange,
-    handleTableSearch,
-    updateUserMeta
-  } = (0,_DynamicDataTableStore__WEBPACK_IMPORTED_MODULE_6__["default"])();
-  let field = props.field;
-  const [enabled, setEnabled] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(false);
-  const {
-    fields,
-    getFieldValue,
-    saveFields
-  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_5__["default"])();
-  const twoFAEnabledRef = (0,react__WEBPACK_IMPORTED_MODULE_2__.useRef)();
-  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
-    twoFAEnabledRef.current = getFieldValue('two_fa_enabled');
-    saveFields(true, false);
-  }, [getFieldValue('two_fa_enabled')]);
-  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
-    const value = getFieldValue('two_fa_enabled');
-    setEnabled(value);
-  }, [fields]);
-  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
-    if (!dataLoaded || enabled !== getFieldValue('two_fa_enabled')) {
-      fetchDynamicData(field.action).then(response => {
-        // Check if response.data is defined and is an array before calling reduce
-        if (response.data && Array.isArray(response.data)) {
-          const methods = response.data.reduce((acc, user) => ({
-            ...acc,
-            [user.id]: user.rsssl_two_fa_method
-          }), {});
-          setTwoFAMethods(methods);
-        } else {
-          console.error('Unexpected response:', response);
-        }
-      }).catch(err => {
-        console.error(err); // Log any errors
-      });
-    }
-  }, [dataLoaded, field.action, fetchDynamicData, getFieldValue('two_fa_enabled')]); // Add getFieldValue('two_fa_enabled') as a dependency
-
-  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
-    if (dataActions) {
-      fetchDynamicData(field.action);
-    }
-  }, [dataActions]);
-  function handleTwoFAMethodChange(userId, newMethod) {
-    setTwoFAMethods({
-      ...twoFAMethods,
-      [userId]: newMethod
-    });
-    _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_4___default()({
-      path: `/wp/v2/users/${userId}`,
-      method: 'POST',
-      data: {
-        meta: {
-          rsssl_two_fa_method: newMethod
-        }
-      }
-    }).then(response => {
-      updateUserMeta(userId, newMethod);
-    }).catch(error => {
-      console.error('Error updating user meta:', error);
-    });
-  }
-  function buildColumn(column) {
-    let newColumn = {
-      name: column.name,
-      column: column.column,
-      sortable: column.sortable,
-      searchable: column.searchable,
-      width: column.width,
-      visible: column.visible,
-      selector: row => row[column.column]
-    };
-    if (newColumn.name === 'Action') {
-      newColumn.cell = row => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
-        value: twoFAMethods[row.id],
-        onChange: event => handleTwoFAMethodChange(row.id, event.target.value)
-      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
-        value: "open"
-      }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Choose", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
-        value: "disabled"
-      }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Disabled", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
-        value: "email"
-      }, "Email"));
-    }
-    return newColumn;
-  }
-  let columns = [];
-  field.columns.forEach(function (item, i) {
-    var _newItem$visible;
-    let newItem = {
-      ...item,
-      key: item.column
-    };
-    newItem = buildColumn(newItem);
-    newItem.visible = (_newItem$visible = newItem.visible) !== null && _newItem$visible !== void 0 ? _newItem$visible : true;
-    columns.push(newItem);
-  });
-  let searchableColumns = columns.filter(column => column.searchable).map(column => column.column);
-  const customStyles = {
-    headCells: {
-      style: {
-        paddingLeft: '0',
-        paddingRight: '0'
-      }
-    },
-    cells: {
-      style: {
-        paddingLeft: '0',
-        paddingRight: '0'
-      }
-    }
-  };
-  (0,react_data_table_component__WEBPACK_IMPORTED_MODULE_3__.createTheme)('really-simple-plugins', {
-    divider: {
-      default: 'transparent'
-    }
-  }, 'light');
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-search-bar"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-search-bar__inner"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-search-bar__icon"
-  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-    type: "text",
-    className: "rsssl-search-bar__input",
-    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Search", "really-simple-ssl"),
-    onChange: event => handleTableSearch(event.target.value, searchableColumns)
-  }))), dataLoaded ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
-    columns: columns,
-    data: DynamicDataTable,
-    dense: true,
-    pagination: true,
-    paginationServer: true,
-    onChangeRowsPerPage: handleTableRowsChange,
-    onChangePage: handleTablePageChange,
-    sortServer: true,
-    onSort: handleTableSort,
-    paginationRowsPerPageOptions: [10, 25, 50, 100],
-    noDataComponent: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("No results", "really-simple-ssl"),
-    persistTableHead: true,
-    theme: "really-simple-plugins",
-    customStyles: customStyles
-  }) : (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-spinner",
-    style: {
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      marginTop: "100px"
-    }
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-spinner__inner"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-spinner__icon",
-    style: {
-      border: '8px solid white',
-      borderTop: '8px solid #f4bf3e',
-      borderRadius: '50%',
-      width: '120px',
-      height: '120px',
-      animation: 'spin 2s linear infinite'
-    }
-  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-spinner__text",
-    style: {
-      position: 'absolute',
-      top: '50%',
-      left: '50%',
-      transform: 'translate(-50%, -50%)'
-    }
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Loading data, please stand by...", "really-simple-ssl")))), !enabled && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-locked"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-locked-overlay"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-    className: "rsssl-task-status rsssl-open"
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Disabled', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Activate login protection to enable this block.', 'really-simple-ssl')))));
-};
-/* harmony default export */ __webpack_exports__["default"] = (DynamicDataTable);
-
-/***/ }),
-
-/***/ "./src/Settings/DynamicDataTable/DynamicDataTableStore.js":
-/*!****************************************************************!*\
-  !*** ./src/Settings/DynamicDataTable/DynamicDataTableStore.js ***!
-  \****************************************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/index.mjs");
-/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils/api */ "./src/utils/api.js");
-/* harmony import */ var immer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! immer */ "./node_modules/immer/dist/immer.esm.mjs");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
-/* Creates A Store For Risk Data using Zustand */
-
-
-
-
-const DynamicDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_2__.create)((set, get) => ({
-  twoFAMethods: {},
-  setTwoFAMethods: methods => set(state => ({
-    ...state,
-    twoFAMethods: methods
-  })),
-  processing: false,
-  dataLoaded: false,
-  pagination: {},
-  dataActions: {},
-  DynamicDataTable: [],
-  fetchDynamicData: async action => {
-    try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction(action, get().dataActions);
-      //now we set the EventLog
-      if (response) {
-        set(state => ({
-          ...state,
-          DynamicDataTable: response.data,
-          dataLoaded: true,
-          processing: false,
-          pagination: response.pagination
-          // Removed the twoFAMethods set from here...
-        }));
-        // Return the response for the calling function to use
-        return response;
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  handleTableSearch: async (search, searchColumns) => {
-    set((0,immer__WEBPACK_IMPORTED_MODULE_3__.produce)(state => {
-      state.dataActions = {
-        ...state.dataActions,
-        search,
-        searchColumns
-      };
-    }));
-  },
-  handleTablePageChange: async (page, pageSize) => {
-    //Add the page and pageSize to the dataActions
-    set((0,immer__WEBPACK_IMPORTED_MODULE_3__.produce)(state => {
-      state.dataActions = {
-        ...state.dataActions,
-        page,
-        pageSize
-      };
-    }));
-  },
-  handleTableRowsChange: async (currentRowsPerPage, currentPage) => {
-    //Add the page and pageSize to the dataActions
-    set((0,immer__WEBPACK_IMPORTED_MODULE_3__.produce)(state => {
-      state.dataActions = {
-        ...state.dataActions,
-        currentRowsPerPage,
-        currentPage
-      };
-    }));
-  },
-  //this handles all pagination and sorting
-  handleTableSort: async (column, sortDirection) => {
-    //Add the column and sortDirection to the dataActions
-    set((0,immer__WEBPACK_IMPORTED_MODULE_3__.produce)(state => {
-      state.dataActions = {
-        ...state.dataActions,
-        sortColumn: column,
-        sortDirection
-      };
-    }));
-  },
-  updateUserMeta: async (userId, updatedMeta) => {
-    set((0,immer__WEBPACK_IMPORTED_MODULE_3__.produce)(state => {
-      const userIndex = state.DynamicDataTable.findIndex(user => user.id === userId);
-      if (userIndex !== -1) {
-        state.DynamicDataTable[userIndex].rsssl_two_fa_method = updatedMeta;
-      }
-    }));
-    let data = {};
-    data.userId = userId;
-    data.method = updatedMeta;
-    const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('store_two_fa_usermeta', data);
-  }
-}));
-/* harmony default export */ __webpack_exports__["default"] = (DynamicDataTableStore);
 
 /***/ }),
 
@@ -2185,9 +1869,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Menu_MenuData__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ../Menu/MenuData */ "./src/Menu/MenuData.js");
 /* harmony import */ var _LimitLoginAttempts_UserDatatable__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./LimitLoginAttempts/UserDatatable */ "./src/Settings/LimitLoginAttempts/UserDatatable.js");
 /* harmony import */ var _LimitLoginAttempts_CountryDatatable__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./LimitLoginAttempts/CountryDatatable */ "./src/Settings/LimitLoginAttempts/CountryDatatable.js");
-/* harmony import */ var _DynamicDataTable_DynamicDataTable__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./DynamicDataTable/DynamicDataTable */ "./src/Settings/DynamicDataTable/DynamicDataTable.js");
-/* harmony import */ var _TwoFA_TwoFaDataTable__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./TwoFA/TwoFaDataTable */ "./src/Settings/TwoFA/TwoFaDataTable.js");
-/* harmony import */ var _EventLog_EventLogDataTable__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./EventLog/EventLogDataTable */ "./src/Settings/EventLog/EventLogDataTable.js");
+/* harmony import */ var _TwoFA_TwoFaDataTable__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./TwoFA/TwoFaDataTable */ "./src/Settings/TwoFA/TwoFaDataTable.js");
+/* harmony import */ var _EventLog_EventLogDataTable__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./EventLog/EventLogDataTable */ "./src/Settings/EventLog/EventLogDataTable.js");
 
 
 
@@ -2217,7 +1900,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
+// import DynamicDataTable from "./DynamicDataTable/DynamicDataTable";
 
 
 const Field = props => {
@@ -2549,7 +2232,7 @@ const Field = props => {
       field: props.field
     }));
   }
-  if (field.type === 'two_fa_dropdown') {
+  if (field.type === 'two_fa_roles') {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: highLightClass,
       ref: scrollAnchor
@@ -2563,7 +2246,7 @@ const Field = props => {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: highLightClass,
       ref: scrollAnchor
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_EventLog_EventLogDataTable__WEBPACK_IMPORTED_MODULE_30__["default"], {
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_EventLog_EventLogDataTable__WEBPACK_IMPORTED_MODULE_29__["default"], {
       field: props.field,
       action: props.field.action
     }));
@@ -2572,20 +2255,22 @@ const Field = props => {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: highLightClass,
       ref: scrollAnchor
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_TwoFA_TwoFaDataTable__WEBPACK_IMPORTED_MODULE_29__["default"], {
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_TwoFA_TwoFaDataTable__WEBPACK_IMPORTED_MODULE_28__["default"], {
       field: props.field,
       action: props.field.action
     }));
   }
-  if (field.type === 'dynamic-datatable') {
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: highLightClass,
-      ref: scrollAnchor
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_DynamicDataTable_DynamicDataTable__WEBPACK_IMPORTED_MODULE_28__["default"], {
-      field: props.field,
-      action: props.field.action
-    }));
-  }
+  // if (field.type === 'dynamic-datatable') {
+  //     return (
+  //         <div className={highLightClass} ref={scrollAnchor}>
+  //             <DynamicDataTable
+  //                 field={props.field}
+  //                 action={props.field.action}
+  //             />
+  //         </div>
+  //     )
+  // }
+
   if (field.type === 'ip-address-datatable') {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: highLightClass,
@@ -7696,6 +7381,62 @@ const Support = () => {
 
 /***/ }),
 
+/***/ "./src/Settings/TwoFA/RolesStore.js":
+/*!******************************************!*\
+  !*** ./src/Settings/TwoFA/RolesStore.js ***!
+  \******************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/index.mjs");
+/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils/api */ "./src/utils/api.js");
+
+
+const useRolesData = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, get) => ({
+  roles: [],
+  rolesLoaded: false,
+  fetchRoles: async id => {
+    try {
+      // Fetch the roles from the server using rsssl_api.getUserRoles()
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('get_roles', {
+        id: id
+      });
+
+      // Handle the response
+      if (!response) {
+        console.error('No response received from the server.');
+        return;
+      }
+      const data = response.roles;
+      if (typeof data !== 'object') {
+        console.error('Invalid data received in the server response. Expected an object.');
+        return;
+      }
+
+      // Convert the object to an array
+      const dataArray = Object.values(data);
+
+      // Format the data into options array for react-select
+
+      const formattedData = dataArray.map((role, index) => ({
+        value: role,
+        label: role.charAt(0).toUpperCase() + role.slice(1)
+      }));
+
+      // Set the roles state with formatted data
+      set({
+        roles: formattedData,
+        rolesLoaded: true
+      });
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+}));
+/* harmony default export */ __webpack_exports__["default"] = (useRolesData);
+
+/***/ }),
+
 /***/ "./src/Settings/TwoFA/TwoFaDataTable.js":
 /*!**********************************************!*\
   !*** ./src/Settings/TwoFA/TwoFaDataTable.js ***!
@@ -7710,15 +7451,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var react_data_table_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-data-table-component */ "./node_modules/react-data-table-component/dist/index.cjs.js");
-/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/api-fetch */ "@wordpress/api-fetch");
-/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../FieldsData */ "./src/Settings/FieldsData.js");
-/* harmony import */ var _TwoFaDataTableStore__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./TwoFaDataTableStore */ "./src/Settings/TwoFA/TwoFaDataTableStore.js");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony import */ var _FilterData__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../FilterData */ "./src/Settings/FilterData.js");
-
-
+/* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../FieldsData */ "./src/Settings/FieldsData.js");
+/* harmony import */ var _TwoFaDataTableStore__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./TwoFaDataTableStore */ "./src/Settings/TwoFA/TwoFaDataTableStore.js");
+/* harmony import */ var _FilterData__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../FilterData */ "./src/Settings/FilterData.js");
 
 
 
@@ -7728,35 +7463,35 @@ __webpack_require__.r(__webpack_exports__);
 
 const DynamicDataTable = props => {
   const {
-    twoFAMethods,
-    setTwoFAMethods,
+    resetUserMethod,
     handleUsersTableFilter,
+    handleRowsPerPageChange,
+    totalRecords,
     DynamicDataTable,
+    setDataLoaded,
     dataLoaded,
     pagination,
     dataActions,
-    handleTableRowsChange,
     fetchDynamicData,
-    // setDynamicData,
     handleTableSort,
-    handleTablePageChange,
+    handlePageChange,
     handleTableSearch,
-    updateUserMeta
-  } = (0,_TwoFaDataTableStore__WEBPACK_IMPORTED_MODULE_6__["default"])();
+    processing
+  } = (0,_TwoFaDataTableStore__WEBPACK_IMPORTED_MODULE_5__["default"])();
   const {
-    selectedFilter,
     setSelectedFilter,
-    activeGroupId,
     getCurrentFilter
-  } = (0,_FilterData__WEBPACK_IMPORTED_MODULE_8__["default"])();
+  } = (0,_FilterData__WEBPACK_IMPORTED_MODULE_6__["default"])();
   const moduleName = 'rsssl-group-filter-two_fa_users';
   let field = props.field;
   const [enabled, setEnabled] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(false);
+  const [reloadWhenSaved, setReloadWhenSaved] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(false);
   const {
     fields,
     getFieldValue,
-    saveFields
-  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_5__["default"])();
+    saveFields,
+    changedFields
+  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_4__["default"])();
   const [rowsSelected, setRowsSelected] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)([]);
   const [rowCleared, setRowCleared] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(false);
   const twoFAEnabledRef = (0,react__WEBPACK_IMPORTED_MODULE_2__.useRef)();
@@ -7764,41 +7499,62 @@ const DynamicDataTable = props => {
     twoFAEnabledRef.current = getFieldValue('two_fa_enabled');
     saveFields(true, false);
   }, [getFieldValue('two_fa_enabled')]);
+
+  //we want to reload the table, but only after the save action has completed. So we store this for now.
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
+    setReloadWhenSaved(true);
+  }, [getFieldValue('two_fa_forced_roles'), getFieldValue('two_fa_optional_roles')]);
+
+  //when the data is saved, changefields=0 again,
+  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
+    if (!reloadWhenSaved) {
+      return;
+    }
+    if (changedFields.length === 0) {
+      setDataLoaded(false);
+      setReloadWhenSaved(false);
+      fetchDynamicData();
+    }
+  }, [changedFields]);
+  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
+    if (!dataLoaded) {
+      return;
+    }
     const currentFilter = getCurrentFilter(moduleName);
     if (!currentFilter) {
-      console.log(moduleName);
-      setSelectedFilter('email', moduleName);
+      setSelectedFilter('active', moduleName);
     }
-    handleUsersTableFilter('status_for_user', currentFilter);
-    setTimeout(() => {
-      setRowCleared(true);
-      setTimeout(() => setRowCleared(false), 100);
-    }, 100);
-  }, [selectedFilter, moduleName, handleUsersTableFilter, getCurrentFilter, setSelectedFilter]);
+    setRowCleared(true);
+    handleUsersTableFilter('rsssl_two_fa_status', currentFilter);
+  }, [getCurrentFilter(moduleName)]);
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
     const value = getFieldValue('two_fa_enabled');
     setEnabled(value);
   }, [fields]);
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
     if (!dataLoaded || enabled !== getFieldValue('two_fa_enabled')) {
-      fetchDynamicData(field.action).then(response => {
-        // Check if response.data is defined and is an array before calling reduce
-        if (response.data && Array.isArray(response.data)) {
-          const methods = response.data.reduce((acc, user) => ({
-            ...acc,
-            [user.id]: user.rsssl_two_fa_method
-          }), {});
-          setTwoFAMethods(methods);
-        } else {
-          console.error('Unexpected response:', response);
-        }
-      }).catch(err => {
-        console.error(err); // Log any errors
-      });
+      fetchDynamicData();
     }
-  }, [dataLoaded, field.action, fetchDynamicData, getFieldValue('two_fa_enabled')]); // Add getFieldValue('two_fa_enabled') as a dependency
+  }, [dataLoaded, getFieldValue('two_fa_enabled')]); // Add getFieldValue('login_protection_enabled') as a dependency
 
+  const hasForcedRole = users => {
+    let forcedRoles = getFieldValue('two_fa_forced_roles');
+    if (!Array.isArray(forcedRoles)) {
+      forcedRoles = [];
+    }
+    if (Array.isArray(users)) {
+      //for each users, check if the user has a forced role
+      for (const user of users) {
+        if (forcedRoles.includes(user.user_role.toLowerCase())) {
+          return true;
+        }
+      }
+    } else {
+      if (forcedRoles.includes(users.user_role.toLowerCase())) {
+        return true;
+      }
+    }
+  };
   function buildColumn(column) {
     let newColumn = {
       name: column.name,
@@ -7809,16 +7565,6 @@ const DynamicDataTable = props => {
       visible: column.visible,
       selector: row => row[column.column]
     };
-    if (newColumn.name === 'Action') {
-      newColumn.cell = row => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-        className: "rsssl-action-buttons"
-      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-        className: "rsssl-action-buttons__inner"
-      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-        className: "button button-red rsssl-action-buttons__button",
-        onClick: () => handleTwoFAMethodChange(row.id, 'reset')
-      }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Reset", "really-simple-ssl"))));
-    }
     return newColumn;
   }
   let columns = [];
@@ -7845,113 +7591,45 @@ const DynamicDataTable = props => {
         paddingLeft: '0',
         paddingRight: '0'
       }
-    },
-    padding: '0'
+    }
   };
   (0,react_data_table_component__WEBPACK_IMPORTED_MODULE_3__.createTheme)('really-simple-plugins', {
     divider: {
       default: 'transparent'
     }
   }, 'light');
-  function handleTwoFAMethodChange(userId, newMethod) {
-    let reload = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+  async function handleReset(users) {
     // Function to handle reset logic
-    const resetUserMethod = id => {
-      return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_4___default()({
-        path: `/wp/v2/users/${id}`,
-        method: 'GET'
-      }).then(async response => {
-        const userRoles = response.roles;
-        const forcedRoles = getFieldValue('two_fa_forced_roles');
-        const optionalRoles = getFieldValue('two_fa_optional_roles');
-
-        // if any of userRoles is in forcedRoles, newMethod = 'email'
-        if (userRoles.some(role => forcedRoles.includes(role))) {
-          newMethod = 'email';
-        }
-        // if any of userRoles is in optionalRoles, newMethod = 'open'
-        else if (userRoles.some(role => optionalRoles.includes(role))) {
-          newMethod = 'open';
-        }
-        // if none of the roles match, you can set a default method or throw an error
-        else {
-          newMethod = 'disabled';
-        }
-
-        // Now, update the user's 2FA method
-        return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_4___default()({
-          path: `/wp/v2/users/${id}`,
-          method: 'POST',
-          data: {
-            meta: {
-              rsssl_two_fa_method: newMethod
-            }
-          }
-        });
-      }).then(() => {
-        fetchDynamicData(field.action);
-      }).catch(error => {
-        console.error('Error:', error);
-      });
-    };
-    if (Array.isArray(userId)) {
-      const promises = userId.map(user => {
-        if (newMethod === 'reset') {
-          return resetUserMethod(user.id).then(() => {
-            setRowsSelected([]);
-            setRowCleared(true);
-          });
-        } else {
-          return handleTwoFAMethodChange(user.id, newMethod, false).then(() => {
-            setRowsSelected([]);
-            setRowCleared(true);
-          });
-        }
-      });
-      Promise.all(promises).then(() => {
-        setRowsSelected([]);
-        setRowCleared(true);
-        fetchDynamicData(field.action);
-      });
-    } else {
-      if (newMethod === 'reset') {
-        resetUserMethod(userId);
-      } else {
-        setTwoFAMethods({
-          ...twoFAMethods,
-          [userId]: newMethod
-        });
-        return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_4___default()({
-          path: `/wp/v2/users/${userId}`,
-          method: 'POST',
-          data: {
-            meta: {
-              rsssl_two_fa_method: newMethod
-            }
-          }
-        }).then(response => {
-          updateUserMeta(userId, newMethod);
-          if (reload) {
-            fetchDynamicData(field.action);
-          }
-        }).catch(error => {
-          console.error('Error updating user meta:', error);
-        });
+    const resetRoles = getFieldValue('two_fa_optional_roles');
+    if (Array.isArray(users)) {
+      //loop through all users one by one, and reset the user
+      for (const user of users) {
+        await resetUserMethod(user.id, resetRoles, user.user_role.toLowerCase());
       }
+    } else {
+      await resetUserMethod(users.id, resetRoles, users.user_role.toLowerCase());
     }
+    await fetchDynamicData();
+    setRowsSelected([]);
+    setRowCleared(true);
   }
-  const rowStyles = {
-    cursor: 'pointer',
-    // Change cursor on hover
-    backgroundColor: '#f0f0f0',
-    // Change background color
-    color: 'blue' // Change text color
-  };
-
   function handleSelection(state) {
-    setRowCleared(false);
     setRowsSelected(state.selectedRows);
   }
+  let resetDisabled = hasForcedRole(rowsSelected);
+  let displayData = [];
+  let inputData = DynamicDataTable ? DynamicDataTable : [];
+  inputData.forEach(user => {
+    let recordCopy = {
+      ...user
+    };
+    recordCopy.deleteControl = hasForcedRole(user) ? '' : (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+      disabled: processing,
+      className: "button button-red rsssl-action-buttons__button",
+      onClick: () => handleReset(user)
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Reset", "really-simple-ssl"));
+    displayData.push(recordCopy);
+  });
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-container",
     style: {
@@ -7975,62 +7653,37 @@ const DynamicDataTable = props => {
     }
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-multiselect-datatable-form rsssl-primary"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("You have selected", "really-simple-ssl"), " ", rowsSelected.length, " ", (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("rows", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("You have selected %s users", "really-simple-ssl").replace("%s", rowsSelected.length)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-action-buttons"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-action-buttons__inner"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    disabled: resetDisabled || processing,
     className: "button button-red rsssl-action-buttons__button",
-    onClick: () => handleTwoFAMethodChange(rowsSelected, 'reset')
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Reset", "really-simple-ssl")))))), dataLoaded ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    onClick: () => handleReset(rowsSelected)
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Reset", "really-simple-ssl")))))), dataLoaded && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
     columns: columns,
-    data: DynamicDataTable,
+    data: displayData,
     dense: true,
-    className: 'pietje_puk',
     pagination: true,
     paginationServer: true,
-    onChangeRowsPerPage: handleTableRowsChange,
-    onChangePage: handleTablePageChange,
+    onChangePage: handlePageChange,
+    onChangeRowsPerPage: handleRowsPerPageChange,
+    paginationTotalRows: totalRecords,
+    paginationRowsPerPageOptions: [5, 25, 50, 100],
+    paginationPerPage: dataActions.currentRowsPerPage,
+    paginationState: pagination,
     sortServer: true,
     onSort: handleTableSort,
-    paginationRowsPerPageOptions: [10, 25, 50, 100],
     noDataComponent: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("No results", "really-simple-ssl"),
     persistTableHead: true,
     selectableRows: true,
     selectableRowsHighlight: true,
     onSelectedRowsChange: handleSelection,
-    clearSelectedRows: rowCleared
-    //      theme="really-simple-plugins"
-    //        customStyles={customStyles}
-  }) : (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-spinner",
-    style: {
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      marginTop: "100px"
-    }
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-spinner__inner"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-spinner__icon",
-    style: {
-      border: '8px solid white',
-      borderTop: '8px solid #f4bf3e',
-      borderRadius: '50%',
-      width: '120px',
-      height: '120px',
-      animation: 'spin 2s linear infinite'
-    }
-  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-spinner__text",
-    style: {
-      position: 'absolute',
-      top: '50%',
-      left: '50%',
-      transform: 'translate(-50%, -50%)'
-    }
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Loading data, please stand by...", "really-simple-ssl")))), !enabled && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    clearSelectedRows: rowCleared,
+    theme: "really-simple-plugins",
+    customStyles: customStyles
+  }), !enabled && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-locked"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-locked-overlay"
@@ -8052,36 +7705,68 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/index.mjs");
 /* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils/api */ "./src/utils/api.js");
 /* harmony import */ var immer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! immer */ "./node_modules/immer/dist/immer.esm.mjs");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/api-fetch */ "@wordpress/api-fetch");
+/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_1__);
 /* Creates A Store For Risk Data using Zustand */
 
 
 
 
 const DynamicDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_2__.create)((set, get) => ({
-  twoFAMethods: {},
-  setTwoFAMethods: methods => set(state => ({
-    ...state,
-    twoFAMethods: methods
-  })),
   processing: false,
   dataLoaded: false,
   pagination: {},
-  dataActions: {},
+  dataActions: {
+    currentPage: 1,
+    currentRowsPerPage: 5,
+    filterValue: 'active',
+    filterColumn: 'rsssl_two_fa_status'
+  },
+  totalRecords: 0,
   DynamicDataTable: [],
-  fetchDynamicData: async action => {
+  setDataLoaded: dataLoaded => set(state => ({
+    ...state,
+    dataLoaded: dataLoaded
+  })),
+  resetUserMethod: async (id, optionalRoles, currentRole) => {
+    if (get().processing) {
+      return;
+    }
+    if (optionalRoles.includes(currentRole)) {
+      set({
+        processing: true
+      });
+      const response = await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_1___default()({
+        path: `/wp/v2/users/${id}`,
+        method: 'POST',
+        data: {
+          meta: {
+            rsssl_two_fa_status: 'open'
+          }
+        }
+      }).catch(error => {
+        console.error(error);
+      });
+      set({
+        processing: false
+      });
+    }
+  },
+  fetchDynamicData: async () => {
+    if (get().processing) return;
+    set({
+      processing: true
+    });
     try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction(action, get().dataActions);
-      //now we set the EventLog
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('two_fa_table', get().dataActions);
       if (response) {
         set(state => ({
           ...state,
           DynamicDataTable: response.data,
           dataLoaded: true,
           processing: false,
-          pagination: response.pagination
-          // Removed the twoFAMethods set from here...
+          pagination: response.pagination,
+          totalRecords: response.totalRecords
         }));
         // Return the response for the calling function to use
         return response;
@@ -8091,27 +7776,31 @@ const DynamicDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_2__.create)((s
     }
   },
   handleTableSearch: async (search, searchColumns) => {
-    set((0,immer__WEBPACK_IMPORTED_MODULE_3__.produce)(state => {
-      state.dataActions = {
-        ...state.dataActions,
-        search,
-        searchColumns
-      };
-    }));
-    await get().fetchDynamicData('two_fa_table');
+    const typingTimer = setTimeout(async () => {
+      set((0,immer__WEBPACK_IMPORTED_MODULE_3__.produce)(state => {
+        state.dataActions = {
+          ...state.dataActions,
+          search,
+          searchColumns
+        };
+      }));
+      await get().fetchDynamicData();
+    }, 500);
+    return () => {
+      clearTimeout(typingTimer);
+    };
   },
-  handleTablePageChange: async (page, pageSize) => {
+  handlePageChange: async (page, pageSize) => {
     //Add the page and pageSize to the dataActions
     set((0,immer__WEBPACK_IMPORTED_MODULE_3__.produce)(state => {
       state.dataActions = {
         ...state.dataActions,
-        page,
-        pageSize
+        currentPage: page
       };
     }));
-    await get().fetchDynamicData('two_fa_table');
+    await get().fetchDynamicData();
   },
-  handleTableRowsChange: async (currentRowsPerPage, currentPage) => {
+  handleRowsPerPageChange: async (currentRowsPerPage, currentPage) => {
     //Add the page and pageSize to the dataActions
     set((0,immer__WEBPACK_IMPORTED_MODULE_3__.produce)(state => {
       state.dataActions = {
@@ -8120,7 +7809,7 @@ const DynamicDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_2__.create)((s
         currentPage
       };
     }));
-    await get().fetchDynamicData('two_fa_table');
+    await get().fetchDynamicData();
   },
   //this handles all pagination and sorting
   handleTableSort: async (column, sortDirection) => {
@@ -8132,19 +7821,7 @@ const DynamicDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_2__.create)((s
         sortDirection
       };
     }));
-    await get().fetchDynamicData('two_fa_table');
-  },
-  updateUserMeta: async (userId, updatedMeta) => {
-    set((0,immer__WEBPACK_IMPORTED_MODULE_3__.produce)(state => {
-      const userIndex = state.DynamicDataTable.findIndex(user => user.id === userId);
-      if (userIndex !== -1) {
-        state.DynamicDataTable[userIndex].rsssl_two_fa_method = updatedMeta;
-      }
-    }));
-    let data = {};
-    data.userId = userId;
-    data.method = updatedMeta;
-    const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('store_two_fa_usermeta', data);
+    await get().fetchDynamicData();
   },
   handleUsersTableFilter: async (column, filterValue) => {
     //Add the column and sortDirection to the dataActions
@@ -8155,9 +7832,8 @@ const DynamicDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_2__.create)((s
         filterValue
       };
     }));
-    console.log('action', get().dataActions);
-    // //we fetch the data again
-    await get().fetchDynamicData('two_fa_table');
+    // We fetch the data again
+    await get().fetchDynamicData();
   }
 }));
 /* harmony default export */ __webpack_exports__["default"] = (DynamicDataTableStore);
@@ -8175,13 +7851,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var react_select__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-select */ "./node_modules/react-select/dist/react-select.esm.js");
+/* harmony import */ var react_select__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-select */ "./node_modules/react-select/dist/react-select.esm.js");
 /* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../FieldsData */ "./src/Settings/FieldsData.js");
-/* harmony import */ var _TwoFaStore__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./TwoFaStore */ "./src/Settings/TwoFA/TwoFaStore.js");
-/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../utils/api */ "./src/utils/api.js");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__);
-
+/* harmony import */ var _RolesStore__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./RolesStore */ "./src/Settings/TwoFA/RolesStore.js");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__);
 
 
 
@@ -8201,48 +7875,43 @@ const TwoFaRolesDropDown = _ref => {
     fetchRoles,
     roles,
     rolesLoaded
-  } = (0,_TwoFaStore__WEBPACK_IMPORTED_MODULE_3__["default"])();
+  } = (0,_RolesStore__WEBPACK_IMPORTED_MODULE_3__["default"])();
   const [selectedRoles, setSelectedRoles] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)([]);
-
+  const [otherRoles, setOtherRoles] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)([]);
   // Custom hook to manage form fields
   const {
-    fields,
     updateField,
-    setChangedField
+    getFieldValue,
+    setChangedField,
+    getField,
+    changedFields,
+    fieldsLoaded
   } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_2__["default"])();
-  let enabled = false;
+  let enabled = true;
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
-    const run = async () => {
-      await fetchRoles(field.id);
-    };
-    run();
-  }, []);
-
-  /**
-   * Fetches the roles from the server on component mount.
-   */
-  (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
-    const run = async () => {
-      try {
-        // replace `get_roles` with your actual action
-        const response = await _utils_api__WEBPACK_IMPORTED_MODULE_4__.doAction('get_roles', {
-          id: field.id
-        });
-
-        // Set the selectedRoles state based on the field value
-        const selectedRolesFromField = field.value.map(value => ({
-          value,
-          label: value
-        }));
-        setSelectedRoles(selectedRolesFromField);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        // setLoading(false);
-      }
-    };
-    run();
+    if (!rolesLoaded) {
+      fetchRoles(field.id);
+    }
   }, [rolesLoaded]);
+  (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
+    if (field.id === 'two_fa_forced_roles') {
+      let otherField = getField('two_fa_optional_roles');
+      setOtherRoles(otherField.value);
+    } else {
+      let otherField = getField('two_fa_forced_roles');
+      setOtherRoles(otherField.value);
+    }
+  }, [selectedRoles, getField('two_fa_optional_roles'), getField('two_fa_forced_roles')]);
+  (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
+    if (!field.value) {
+      setChangedField(field.id, field.default);
+      updateField(field.id, field.default);
+    }
+    setSelectedRoles(field.value.map((role, index) => ({
+      value: role,
+      label: role.charAt(0).toUpperCase() + role.slice(1)
+    })));
+  }, [fieldsLoaded]);
 
   /**
    * Handles the change event of the react-select component.
@@ -8251,13 +7920,11 @@ const TwoFaRolesDropDown = _ref => {
   const handleChange = selectedOptions => {
     // Extract the values of the selected options
     const rolesExcluded = selectedOptions.map(option => option.value);
-
+    // Update the selectedRoles state
+    setSelectedRoles(selectedOptions);
     // Update the field and changedField using the custom hook functions
     updateField(field.id, rolesExcluded);
     setChangedField(field.id, rolesExcluded);
-
-    // Update the selectedRoles state
-    setSelectedRoles(selectedOptions);
   };
   const customStyles = {
     multiValue: provided => ({
@@ -8276,101 +7943,40 @@ const TwoFaRolesDropDown = _ref => {
       }
     })
   };
-  fields.forEach(function (item, i) {
-    if (item.id === 'two_fa_enabled') {
-      enabled = item.value;
+  if (field.id === 'two_fa_optional_roles') {
+    enabled = getFieldValue('login_protection_enabled');
+  }
+  const alreadySelected = selectedRoles.map(option => option.value);
+  let filteredRoles = [...roles];
+  //from roles, remove roles in the usedRoles array
+  filteredRoles.forEach(function (item, i) {
+    if (Array.isArray(otherRoles) && otherRoles.includes(item.value)) {
+      filteredRoles.splice(i, 1);
+    }
+    if (Array.isArray(alreadySelected) && alreadySelected.includes(item.value)) {
+      filteredRoles.splice(i, 1);
     }
   });
-  if (!enabled) {
-    // Render the component
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      style: {
-        marginTop: '5px'
-      }
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_select__WEBPACK_IMPORTED_MODULE_6__["default"], {
-      isMulti: true,
-      options: roles,
-      onChange: handleChange,
-      value: selectedRoles,
-      menuPosition: "fixed",
-      styles: customStyles
-    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-locked"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-locked-overlay"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-      className: "rsssl-task-status rsssl-open"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)('Disabled', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)('Activate login protection to enable this block.', 'really-simple-ssl')))));
-  }
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     style: {
       marginTop: '5px'
     }
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_select__WEBPACK_IMPORTED_MODULE_6__["default"], {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_select__WEBPACK_IMPORTED_MODULE_5__["default"], {
     isMulti: true,
-    options: roles,
+    options: filteredRoles,
     onChange: handleChange,
     value: selectedRoles,
     menuPosition: "fixed",
     styles: customStyles
-  }));
+  }), !enabled && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-locked"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-locked-overlay"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "rsssl-task-status rsssl-open"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Disabled', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Activate login protection to enable this block.', 'really-simple-ssl')))));
 };
 /* harmony default export */ __webpack_exports__["default"] = (TwoFaRolesDropDown);
-
-/***/ }),
-
-/***/ "./src/Settings/TwoFA/TwoFaStore.js":
-/*!******************************************!*\
-  !*** ./src/Settings/TwoFA/TwoFaStore.js ***!
-  \******************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/index.mjs");
-/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils/api */ "./src/utils/api.js");
-
-
-const TwoFaData = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, get) => ({
-  roles: [],
-  rolesLoaded: false,
-  fetchRoles: async id => {
-    try {
-      // Fetch the roles from the server using rsssl_api.getUserRoles()
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('get_roles', {
-        id: id
-      });
-
-      // Handle the response
-      if (!response) {
-        console.error('No response received from the server.');
-        return;
-      }
-      const data = response.roles;
-      if (typeof data !== 'object') {
-        console.error('Invalid data received in the server response. Expected an object.');
-        return;
-      }
-
-      // Convert the object to an array
-      const dataArray = Object.values(data);
-
-      // Format the data into options array for react-select
-      const formattedData = dataArray.map((role, index) => ({
-        value: role,
-        label: role
-      }));
-
-      // Set the roles state with formatted data
-      set({
-        roles: formattedData,
-        rolesLoaded: true
-      });
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  }
-}));
-/* harmony default export */ __webpack_exports__["default"] = (TwoFaData);
 
 /***/ }),
 
@@ -24369,4 +23975,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.3eb12e60aba0be3259c7.js.map
+//# sourceMappingURL=src_Settings_Field_js.00bcf23e5f6b99ceecd3.js.map

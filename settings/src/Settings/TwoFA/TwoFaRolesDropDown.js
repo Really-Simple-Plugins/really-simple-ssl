@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 import useFields from "../FieldsData";
-import useTwoFaData from './TwoFaStore';
-import * as rsssl_api from "../../utils/api";
+import useRolesData from './RolesStore';
 import {__} from "@wordpress/i18n";
 /**
  * TwoFaRolesDropDown component represents a dropdown select for excluding roles
@@ -10,40 +9,36 @@ import {__} from "@wordpress/i18n";
  * @param {object} field - The field object containing information about the field.
  */
 const TwoFaRolesDropDown = ({ field }) => {
-    const {fetchRoles, roles, rolesLoaded} = useTwoFaData();
+    const {fetchRoles, roles, rolesLoaded} = useRolesData();
     const [selectedRoles, setSelectedRoles] = useState([]);
-
+    const [otherRoles, setOtherRoles] = useState([]);
     // Custom hook to manage form fields
-    const { fields, updateField, setChangedField } = useFields();
-    let enabled = false;
+    const { updateField, getFieldValue, setChangedField, getField, changedFields, fieldsLoaded } = useFields();
+    let enabled = true;
 
     useEffect(() => {
-        const run = async () => {
-            await fetchRoles(field.id);
+        if (!rolesLoaded) {
+            fetchRoles(field.id);
         }
-        run();
-    }, []);
-
-    /**
-     * Fetches the roles from the server on component mount.
-     */
-    useEffect(() => {
-        const run = async () => {
-            try {
-                // replace `get_roles` with your actual action
-                const response = await rsssl_api.doAction('get_roles', { id: field.id });
-
-                // Set the selectedRoles state based on the field value
-                const selectedRolesFromField = field.value.map(value => ({ value, label: value }));
-                setSelectedRoles(selectedRolesFromField);
-            } catch (err) {
-                console.error(err);
-            } finally {
-                // setLoading(false);
-            }
-        }
-        run();
     }, [rolesLoaded]);
+
+    useEffect(() => {
+        if ( field.id==='two_fa_forced_roles' ) {
+            let otherField = getField('two_fa_optional_roles');
+            setOtherRoles(otherField.value);
+        } else {
+            let otherField = getField('two_fa_forced_roles');
+            setOtherRoles(otherField.value);
+        }
+    }, [selectedRoles, getField('two_fa_optional_roles'), getField('two_fa_forced_roles')]);
+
+    useEffect(() => {
+       if ( !field.value ) {
+            setChangedField(field.id, field.default);
+            updateField(field.id, field.default);
+        }
+        setSelectedRoles(field.value.map((role, index) => ({ value: role, label: role.charAt(0).toUpperCase() + role.slice(1) })));
+    },[fieldsLoaded]);
 
     /**
      * Handles the change event of the react-select component.
@@ -52,13 +47,11 @@ const TwoFaRolesDropDown = ({ field }) => {
     const handleChange = (selectedOptions) => {
         // Extract the values of the selected options
         const rolesExcluded = selectedOptions.map(option => option.value);
-
+        // Update the selectedRoles state
+        setSelectedRoles(selectedOptions);
         // Update the field and changedField using the custom hook functions
         updateField(field.id, rolesExcluded);
         setChangedField(field.id, rolesExcluded);
-
-        // Update the selectedRoles state
-        setSelectedRoles(selectedOptions);
     };
 
     const customStyles = {
@@ -80,43 +73,39 @@ const TwoFaRolesDropDown = ({ field }) => {
         })
     };
 
-    fields.forEach(function (item, i) {
-        if (item.id === 'two_fa_enabled') {
-            enabled = item.value;
+    if (field.id === 'two_fa_optional_roles') {
+        enabled = getFieldValue('login_protection_enabled');
+    }
+    const alreadySelected = selectedRoles.map(option => option.value);
+    let filteredRoles = [...roles];
+    //from roles, remove roles in the usedRoles array
+    filteredRoles.forEach(function (item, i) {
+
+        if ( Array.isArray(otherRoles) && otherRoles.includes(item.value) ) {
+            filteredRoles.splice(i, 1);
+        }
+        if ( Array.isArray(alreadySelected) && alreadySelected.includes(item.value) ) {
+            filteredRoles.splice(i, 1);
         }
     });
-
-    if ( ! enabled ) {
-        // Render the component
-        return (
-            <div style={{marginTop: '5px'}}>
-                <Select
-                    isMulti
-                    options={roles}
-                    onChange={handleChange}
-                    value={selectedRoles}
-                    menuPosition={"fixed"}
-                    styles={customStyles}
-                />
-                <div className="rsssl-locked">
-                    <div className="rsssl-locked-overlay"><span
-                        className="rsssl-task-status rsssl-open">{__('Disabled', 'really-simple-ssl')}</span><span>{__('Activate login protection to enable this block.', 'really-simple-ssl')}</span>
-                    </div>
-                </div>
-            </div>
-        );
-    }
 
     return (
         <div style={{marginTop: '5px'}}>
             <Select
                 isMulti
-                options={roles}
+                options={filteredRoles}
                 onChange={handleChange}
                 value={selectedRoles}
                 menuPosition={"fixed"}
                 styles={customStyles}
             />
+            {! enabled &&
+                <div className="rsssl-locked">
+                    <div className="rsssl-locked-overlay"><span
+                        className="rsssl-task-status rsssl-open">{__('Disabled', 'really-simple-ssl')}</span><span>{__('Activate login protection to enable this block.', 'really-simple-ssl')}</span>
+                    </div>
+                </div>
+            }
         </div>
     );
 };

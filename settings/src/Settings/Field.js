@@ -31,7 +31,7 @@ import getAnchor from "../utils/getAnchor";
 import useMenu from "../Menu/MenuData";
 import UserDatatable from "./LimitLoginAttempts/UserDatatable";
 import CountryDatatable from "./LimitLoginAttempts/CountryDatatable";
-import DynamicDataTable from "./DynamicDataTable/DynamicDataTable";
+// import DynamicDataTable from "./DynamicDataTable/DynamicDataTable";
 import TwoFaDataTable from "./TwoFA/TwoFaDataTable";
 import EventLogDataTable from "./EventLog/EventLogDataTable";
 const Field = (props) => {
@@ -363,7 +363,7 @@ const Field = (props) => {
         )
     }
 
-    if (field.type === 'two_fa_dropdown') {
+    if (field.type === 'two_fa_roles') {
         return (
             <div className={highLightClass} ref={scrollAnchor}>
                 <label htmlFor="rsssl-two-fa-dropdown-{field.id}">
@@ -395,16 +395,16 @@ const Field = (props) => {
             </div>
         )
     }
-    if (field.type === 'dynamic-datatable') {
-        return (
-            <div className={highLightClass} ref={scrollAnchor}>
-                <DynamicDataTable
-                    field={props.field}
-                    action={props.field.action}
-                />
-            </div>
-        )
-    }
+    // if (field.type === 'dynamic-datatable') {
+    //     return (
+    //         <div className={highLightClass} ref={scrollAnchor}>
+    //             <DynamicDataTable
+    //                 field={props.field}
+    //                 action={props.field.action}
+    //             />
+    //         </div>
+    //     )
+    // }
 
     if (field.type === 'ip-address-datatable') {
         return (

@@ -12,6 +12,7 @@ if ( !class_exists('rsssl_mailer') ) {
 		public $title;
 		public $headers;
 		public $message;
+		public $branded= true;
 		public $subject;
 		public $button_text;
         public $change_text;
@@ -24,6 +25,7 @@ if ( !class_exists('rsssl_mailer') ) {
 		public $block_template_filename;
 
 		public function __construct() {
+
 			$this->sent_by_text = __("This email is part of the Really Simple SSL Notification System", "really-simple-ssl");
 			$this->subject = __("Notification by Really Simple SSL", "really-simple-ssl");
 			$this->button_text = __("Learn more", "really-simple-ssl");
@@ -32,8 +34,7 @@ if ( !class_exists('rsssl_mailer') ) {
 			$this->sent_to_text = __("This email was sent to", "really-simple-ssl");
 			$this->what_now_text = __( "Learn more", "really-simple-ssl");
 			$this->change_text = __("Why did I receive this email?", "really-simple-ssl");
-			$this->block_template_filename = apply_filters( 'rsssl_email_block_template', rsssl_path . '/mailer/templates/block.html' );
-			$this->template_filename = apply_filters( 'rsssl_email_template', rsssl_path . '/mailer/templates/email.html' );
+
 			$domain = '<a href="'.site_url().'">'.site_url().'</a>';
 			$this->message = sprintf(__("You have enabled a feature on %s. We think it's important to let you know a little bit more about this feature so you can use it without worries.","really-simple-ssl"), $domain);
 
@@ -66,7 +67,7 @@ if ( !class_exists('rsssl_mailer') ) {
 		}
 
         public function send_verification_mail( $email ) {
-
+			error_log("send_verification_mail");
             if ( !rsssl_user_can_manage() ) {
                 return ['success' => false, 'message' => 'Not allowed'];
             }
@@ -129,6 +130,10 @@ if ( !class_exists('rsssl_mailer') ) {
 			if ( !is_email($this->to) ) {
 				$this->error = __("Email address not valid", "really-simple-ssl");
 			}
+			$block_template = $this->branded ? rsssl_path . '/mailer/templates/block.html' : rsssl_path . '/mailer/templates/block-unbranded.html';
+			$email_template =  $this->branded ? rsssl_path . '/mailer/templates/email.html' : rsssl_path . '/mailer/templates/email-unbranded.html';
+			$this->block_template_filename = apply_filters( 'rsssl_email_block_template', $block_template );
+			$this->template_filename = apply_filters( 'rsssl_email_template',$email_template );
 
 			$template = file_get_contents( $this->template_filename );
 			$block_html = '';

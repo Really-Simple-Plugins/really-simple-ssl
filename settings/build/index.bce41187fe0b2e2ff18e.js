@@ -3257,32 +3257,31 @@ const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_5__.create)((set, get) => 
       }
     }));
   },
+  removeHelpNotice: id => {
+    set((0,immer__WEBPACK_IMPORTED_MODULE_6__.produce)(state => {
+      const fieldIndex = state.fields.findIndex(field => {
+        return field.id === id;
+      });
+      state.fields[fieldIndex].help = false;
+    }));
+  },
   addHelpNotice: (id, label, text, title, url) => {
+    get().removeHelpNotice(id);
     //create help object
+
     let help = {};
     help.label = label;
     help.text = text;
     if (url) help.url = url;
     if (title) help.title = title;
-    let fields = get().fields;
-    let newFields = [];
-    //add to selected field
-    let fieldEdited = false;
-    fields.forEach(function (fieldItem, i) {
-      let newFieldItem = {
-        ...fieldItem
-      };
-      if (fieldItem.id === id && !fieldItem.help) {
-        fieldEdited = true;
-        newFieldItem.help = help;
-      }
-      newFields.push(newFieldItem);
-    });
-    if (fieldEdited) {
-      set({
-        fields: newFields
+    set((0,immer__WEBPACK_IMPORTED_MODULE_6__.produce)(state => {
+      const fieldIndex = state.fields.findIndex(field => {
+        return field.id === id;
       });
-    }
+      if (fieldIndex !== -1) {
+        state.fields[fieldIndex].help = help;
+      }
+    }));
   },
   fieldAlreadyEnabled: id => {
     let fieldIsChanged = get().changedFields.filter(field => field.id === id).length > 0;
@@ -4769,7 +4768,7 @@ var vanilla = (createState) => {
 /******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = function(chunkId) {
 /******/ 			// return url for filenames based on template
-/******/ 			return "" + chunkId + "." + {"vendors-node_modules_mui_material_Tooltip_Tooltip_js":"4f9fff4afbb906618438","src_Settings_Settings_js":"15265c730a91665496dc","src_Menu_Menu_js":"66458ee78e9eb4343d4a","src_Dashboard_DashboardPage_js":"4f7f9660ad30371d9445","src_Onboarding_OnboardingModal_js":"85fbed60f8e666a7e677","src_Modal_Modal_js":"e34b60e44e1022d3fe24","vendors-node_modules_material-ui_core_esm_TextField_TextField_js-node_modules_react-data-tabl-8e8716":"871a113c220949ea52de","src_Settings_Field_js":"3eb12e60aba0be3259c7","vendors-node_modules_material-ui_lab_esm_Autocomplete_index_js":"515dd4c5b9e6e345a1ea","vendors-node_modules_material-ui_core_esm_styles_index_js":"b2604edf5f43bcfce41a"}[chunkId] + ".js";
+/******/ 			return "" + chunkId + "." + {"vendors-node_modules_mui_material_Tooltip_Tooltip_js":"4f9fff4afbb906618438","src_Settings_Settings_js":"4c11a4df18efea37321d","src_Menu_Menu_js":"66458ee78e9eb4343d4a","src_Dashboard_DashboardPage_js":"8155c3782e615358865c","src_Onboarding_OnboardingModal_js":"927b428a6fbd1c773cc5","src_Modal_Modal_js":"036298c0d24ddeb54d86","vendors-node_modules_material-ui_core_esm_TextField_TextField_js-node_modules_react-data-tabl-8e8716":"871a113c220949ea52de","src_Settings_Field_js":"00bcf23e5f6b99ceecd3","vendors-node_modules_material-ui_lab_esm_Autocomplete_index_js":"515dd4c5b9e6e345a1ea","vendors-node_modules_material-ui_core_esm_styles_index_js":"b2604edf5f43bcfce41a"}[chunkId] + ".js";
 /******/ 		};
 /******/ 	}();
 /******/ 	
@@ -5019,4 +5018,4 @@ document.addEventListener('click', e => {
 }();
 /******/ })()
 ;
-//# sourceMappingURL=index.fb6c2764ea2c14602291.js.map
+//# sourceMappingURL=index.bce41187fe0b2e2ff18e.js.map
