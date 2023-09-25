@@ -16,7 +16,7 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
 				//error_log("Not defined by why?");
 				add_filter( 'rsssl_do_action', array( $this, 'two_factor_users_data' ), 11, 3 );
 			}
-            if ( ! is_plugin_active( 'really-simple-ssl-pro/really-simple-ssl-pro.php' ) || !rsssl_get_option('enable_limited_login_attempts') ) {
+            if ( ! is_plugin_active( 'really-simple-ssl-pro/really-simple-ssl-pro.php' )) {
                 // really-simple-ssl-pro plugin is active
                 add_filter( 'rsssl_do_action', array( $this, 'limit_login_attempts_data' ), 11, 3 );
             }

@@ -281,6 +281,12 @@ const CountryDatatable = (props) => {
 
     const options = Object.entries(props.field.options).map(([value, label]) => ({ value, label }));
 
+    let paginationSet = true;
+    if (typeof pagination === 'undefined') {
+        paginationSet = false;
+    }
+
+
     return (
         <>
             <div className="rsssl-container">
@@ -356,9 +362,9 @@ const CountryDatatable = (props) => {
                 dense
                 pagination={!processing}
                 paginationServer
-                paginationTotalRows={pagination.totalRows}
-                paginationPerPage={pagination.perPage}
-                paginationDefaultPage={pagination.currentPage}
+                paginationTotalRows={paginationSet? pagination.totalRows: 10}
+                paginationPerPage={paginationSet? pagination.perPage: 10}
+                paginationDefaultPage={paginationSet?pagination.currentPage: 1}
                 paginationComponentOptions={{
                     rowsPerPageText: __('Rows per page:', 'really-simple-ssl'),
                     rangeSeparatorText: __('of', 'really-simple-ssl'),

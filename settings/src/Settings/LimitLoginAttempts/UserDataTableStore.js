@@ -20,8 +20,16 @@ const UserDataTableStore = create((set, get) => ({
         set({dataLoaded: false});
         set({rowCleared: true});
         if (Object.keys(dataActions).length === 0) {
+            let dataActions = get().dataActions;
+        }
+
+        if ( !get().processing ) {
             return;
         }
+
+        //we empty all existing data
+        set({UserDataTable: []});
+
         try {
             const response = await rsssl_api.doAction(
                 action,

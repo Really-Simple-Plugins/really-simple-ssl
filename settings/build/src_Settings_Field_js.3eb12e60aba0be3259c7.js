@@ -1956,6 +1956,10 @@ const EventLogDataTable = props => {
       title: title
     }));
   }
+  let paginationSet = true;
+  if (typeof pagination === 'undefined') {
+    paginationSet = false;
+  }
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-container"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -1976,9 +1980,9 @@ const EventLogDataTable = props => {
     dense: true,
     pagination: !processing,
     paginationServer: true,
-    paginationTotalRows: pagination.totalRows,
-    paginationPerPage: pagination.perPage,
-    paginationDefaultPage: pagination.currentPage,
+    paginationTotalRows: paginationSet ? pagination.totalRows : 10,
+    paginationPerPage: paginationSet ? pagination.perPage : 10,
+    paginationDefaultPage: paginationSet ? pagination.currentPage : 1,
     paginationComponentOptions: {
       rowsPerPageText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Rows per page:', 'really-simple-ssl'),
       rangeSeparatorText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('of', 'really-simple-ssl'),
@@ -4258,6 +4262,10 @@ const CountryDatatable = props => {
       label
     };
   });
+  let paginationSet = true;
+  if (typeof pagination === 'undefined') {
+    paginationSet = false;
+  }
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-container"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -4303,9 +4311,9 @@ const CountryDatatable = props => {
     dense: true,
     pagination: !processing,
     paginationServer: true,
-    paginationTotalRows: pagination.totalRows,
-    paginationPerPage: pagination.perPage,
-    paginationDefaultPage: pagination.currentPage,
+    paginationTotalRows: paginationSet ? pagination.totalRows : 10,
+    paginationPerPage: paginationSet ? pagination.perPage : 10,
+    paginationDefaultPage: paginationSet ? pagination.currentPage : 1,
     paginationComponentOptions: {
       rowsPerPageText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__.__)('Rows per page:', 'really-simple-ssl'),
       rangeSeparatorText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__.__)('of', 'really-simple-ssl'),
@@ -4948,7 +4956,8 @@ const IpAddressDatatable = props => {
   const {
     fields,
     fieldAlreadyEnabled,
-    getFieldValue
+    getFieldValue,
+    saveFields
   } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_11__["default"])();
   const moduleName = 'rsssl-group-filter-limit_login_attempts_ip_address';
   const buildColumn = (0,react__WEBPACK_IMPORTED_MODULE_2__.useCallback)(column => ({
@@ -4982,7 +4991,7 @@ const IpAddressDatatable = props => {
     if (dataActions) {
       fetchIpData(field.action, dataActions);
     }
-  }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, dataActions.currentRowsPerPage]);
+  }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, dataActions.currentRowsPerPage, fieldAlreadyEnabled('enable_limited_login_attempts')]);
   const customStyles = {
     headCells: {
       style: {
@@ -5005,6 +5014,9 @@ const IpAddressDatatable = props => {
     }
   }, 'light');
   let enabled = getFieldValue('enable_limited_login_attempts');
+  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
+    console.log('enabled ips', enabled);
+  }, [enabled]);
   const handleOpen = () => {
     setAddingIpAddress(true);
   };
@@ -5143,6 +5155,10 @@ const IpAddressDatatable = props => {
   function handleSelection(state) {
     setRowsSelected(state.selectedRows);
   }
+  let paginationSet = true;
+  if (typeof pagination === 'undefined') {
+    paginationSet = false;
+  }
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_AddIpAddressModal__WEBPACK_IMPORTED_MODULE_10__["default"], {
     isOpen: addingIpAddress,
     onRequestClose: handleClose,
@@ -5195,9 +5211,9 @@ const IpAddressDatatable = props => {
     data: processing ? [] : data,
     dense: true,
     paginationServer: true,
-    paginationTotalRows: pagination.totalRows,
-    paginationPerPage: pagination.perPage,
-    paginationDefaultPage: pagination.currentPage,
+    paginationTotalRows: paginationSet ? pagination.totalRows : 10,
+    paginationPerPage: paginationSet ? pagination.perPage : 10,
+    paginationDefaultPage: paginationSet ? pagination.currentPage : 1,
     paginationComponentOptions: {
       rowsPerPageText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Rows per page:', 'really-simple-ssl'),
       rangeSeparatorText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('of', 'really-simple-ssl'),
@@ -5328,8 +5344,16 @@ const UserDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set,
       rowCleared: true
     });
     if (Object.keys(dataActions).length === 0) {
+      let dataActions = get().dataActions;
+    }
+    if (!get().processing) {
       return;
     }
+
+    //we empty all existing data
+    set({
+      UserDataTable: []
+    });
     try {
       const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction(action, dataActions);
       //now we set the EventLog
@@ -5598,7 +5622,8 @@ const UserDatatable = props => {
   const {
     fields,
     fieldAlreadyEnabled,
-    getFieldValue
+    getFieldValue,
+    saveFields
   } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_10__["default"])();
   const buildColumn = (0,react__WEBPACK_IMPORTED_MODULE_2__.useCallback)(column => ({
     name: column.name,
@@ -5632,7 +5657,7 @@ const UserDatatable = props => {
     if (dataActions) {
       fetchUserData(field.action, dataActions);
     }
-  }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, dataActions.currentRowsPerPage]);
+  }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, dataActions.currentRowsPerPage, fieldAlreadyEnabled('enable_limited_login_attempts')]);
   let enabled = getFieldValue('enable_limited_login_attempts');
   const customStyles = {
     headCells: {
@@ -5740,6 +5765,10 @@ const UserDatatable = props => {
     dataItem.status = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)(dataItem.status = dataItem.status.charAt(0).toUpperCase() + dataItem.status.slice(1), 'really-simple-ssl');
     data[key] = dataItem;
   }
+  let paginationSet = true;
+  if (typeof pagination === 'undefined') {
+    paginationSet = false;
+  }
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_AddUserModal__WEBPACK_IMPORTED_MODULE_8__["default"], {
     isOpen: addingUser,
     onRequestClose: handleClose,
@@ -5789,11 +5818,11 @@ const UserDatatable = props => {
     }
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Delete", "really-simple-ssl"))))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
     columns: columns,
-    data: processing ? [] : Object.values(data),
+    data: processing && !dataLoaded ? [] : Object.values(data),
     dense: true,
     pagination: !processing,
     paginationServer: true,
-    paginationTotalRows: pagination.totalRows,
+    paginationTotalRows: paginationSet ? pagination.totalRows : 10,
     onChangeRowsPerPage: handleUserTableRowsChange,
     onChangePage: handleUserTablePageChange,
     sortServer: !processing,
@@ -24340,4 +24369,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.7ab9ea32bc33bd2f2974.js.map
+//# sourceMappingURL=src_Settings_Field_js.3eb12e60aba0be3259c7.js.map
