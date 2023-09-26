@@ -50,9 +50,13 @@ if ( !class_exists('rsssl_mailer') ) {
 			if ( !rsssl_user_can_manage() ) {
 				return ['success' => false, 'message' => 'Not allowed'];
 			}
-			$this->to = rsssl_get_option('notifications_email_address', get_bloginfo('admin_email') );
+
 			if ( !is_email($this->to) ){
-				return ['success' => false, 'message' => __('Email address not valid',"really-simple-ssl")];
+				return [
+					'success' => false,
+					'title' => __( "Test notification by email", 'really-simple-ssl' ),
+					'message' => __('Email address not valid',"really-simple-ssl"),
+				];
 			}
 			$this->title = __("Really Simple SSL - Notification Test", "really-simple-ssl");
 			$this->message = __("This email is confirmation that any security notices are likely to reach your inbox.", "really-simple-ssl");
@@ -66,13 +70,14 @@ if ( !class_exists('rsssl_mailer') ) {
 			return $this->send_mail(true);
 		}
 
-        public function send_verification_mail( $email ) {
-			error_log("send_verification_mail");
+        public function send_verification_mail( ) {
             if ( !rsssl_user_can_manage() ) {
-                return ['success' => false, 'message' => 'Not allowed'];
+                return [
+						'success' => false,
+                        'message' => 'Not allowed',
+                        'title' => __( "Test notification by email", 'really-simple-ssl' )
+                ];
             }
-
-            $this->to = $email;
 
             $verification_code = str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
             $verification_expiration = strtotime("+15 minutes");
@@ -85,7 +90,11 @@ if ( !class_exists('rsssl_mailer') ) {
             update_option('rsssl_email_verification_status', 'started', false);
 
             if ( ! is_email( $this->to ) ) {
-                return ['success' => false, 'message' => __('Email address not valid',"really-simple-ssl")];
+                return [
+					'success' => false,
+					'title' => __( "Test notification by email", 'really-simple-ssl' ),
+					'message' => __('Email address not valid',"really-simple-ssl")
+                ];
             }
 
 	        $user_id = get_current_user_id();
@@ -181,7 +190,11 @@ if ( !class_exists('rsssl_mailer') ) {
 				], $template );
 			$success = wp_mail( $this->to, sanitize_text_field($this->subject), $body, array('Content-Type: text/html; charset=UTF-8') );
             if ($success) {
-                return ['success' => true, 'message' => __('Email sent! Please check your mail', "really-simple-ssl")];
+	            return [
+					'success' => true,
+					'title' => __( "Test notification by email", 'really-simple-ssl' ),
+					'message' => __( 'Email sent! Please check your mail', "really-simple-ssl" )
+	            ];
             }
 
             if (empty($this->error)) {
@@ -189,7 +202,11 @@ if ( !class_exists('rsssl_mailer') ) {
             } else {
                 $this->error = __('An error occurred:', "really-simple-ssl").'<br>'.$this->error;
             }
-            return ['success' => false, 'message' => $this->error];
+            return [
+					'success' => false,
+                    'title' => __( "Test notification by email", 'really-simple-ssl' ),
+                    'message' => $this->error
+            ];
 		}
 
 	}

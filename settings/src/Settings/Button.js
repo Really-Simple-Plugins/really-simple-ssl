@@ -1,4 +1,3 @@
-import { __ } from '@wordpress/i18n';
 import Hyperlink from "../utils/Hyperlink";
 import * as rsssl_api from "../utils/api";
 import useFields from "./FieldsData";
@@ -11,12 +10,15 @@ import {useState} from "@wordpress/element";
 const Button = (props) => {
     const {addHelpNotice} = useFields();
     const [processing, setProcessing] = useState(false);
-    const onClickHandler = (action) => {
+    const {fields} = useFields();
+
+    const onClickHandler = async (action) => {
         let data = {};
         setProcessing(true);
-        rsssl_api.doAction(action, data).then( ( response ) => {
+        data.fields = fields;
+        await rsssl_api.doAction(action, data).then((response) => {
             let label = response.success ? 'success' : 'warning';
-            let title = __( "Test notification by email", 'really-simple-ssl' );
+            let title = response.title;
             let text = response.message;
             addHelpNotice(props.field.id, label, text, title, false);
             setProcessing(false);
