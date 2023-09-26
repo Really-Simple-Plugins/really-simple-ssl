@@ -40,6 +40,11 @@ const TwoFaRolesDropDown = ({ field }) => {
         setSelectedRoles(field.value.map((role, index) => ({ value: role, label: role.charAt(0).toUpperCase() + role.slice(1) })));
     },[fieldsLoaded]);
 
+    useEffect(() => {
+        if (!rolesLoaded) return;
+
+    },[otherRoles, selectedRoles, rolesLoaded, roles])
+
     /**
      * Handles the change event of the react-select component.
      * @param {array} selectedOptions - The selected options from the dropdown.
@@ -76,16 +81,17 @@ const TwoFaRolesDropDown = ({ field }) => {
     if (field.id === 'two_fa_optional_roles') {
         enabled = getFieldValue('login_protection_enabled');
     }
-    const alreadySelected = selectedRoles.map(option => option.value);
-    let filteredRoles = [...roles];
-    //from roles, remove roles in the usedRoles array
-    filteredRoles.forEach(function (item, i) {
 
-        if ( Array.isArray(otherRoles) && otherRoles.includes(item.value) ) {
+    const alreadySelected = selectedRoles.map(option => option.value);
+    let filteredRoles = [];
+    //from roles, remove roles in the usedRoles array
+    //merge alreadyselected and otherroles in one array
+    let inRolesInUse = [...alreadySelected, ...otherRoles];
+    roles.forEach(function (item, i) {
+        if ( Array.isArray(inRolesInUse) && inRolesInUse.includes(item.value) ) {
             filteredRoles.splice(i, 1);
-        }
-        if ( Array.isArray(alreadySelected) && alreadySelected.includes(item.value) ) {
-            filteredRoles.splice(i, 1);
+        } else {
+            filteredRoles.push(item);
         }
     });
 
