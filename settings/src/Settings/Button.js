@@ -13,7 +13,6 @@ const Button = (props) => {
     const [processing, setProcessing] = useState(false);
     const onClickHandler = (action) => {
         let data = {};
-        console.log("send mail");
         setProcessing(true);
         rsssl_api.doAction(action, data).then( ( response ) => {
             let label = response.success ? 'success' : 'warning';

@@ -27,7 +27,6 @@ const useRolesData = create(( set, get ) => ({
             // Format the data into options array for react-select
 
             const formattedData = dataArray.map((role, index) => ({ value: role, label: role.charAt(0).toUpperCase() + role.slice(1) }));
-            console.log('loaded roles ',formattedData);
             // Set the roles state with formatted data
             set({roles: formattedData,rolesLoaded:true  });
 

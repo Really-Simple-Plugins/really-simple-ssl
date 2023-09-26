@@ -3,6 +3,7 @@ import Select from 'react-select';
 import useFields from "../FieldsData";
 import useRolesData from './RolesStore';
 import {__} from "@wordpress/i18n";
+import './select.scss';
 /**
  * TwoFaRolesDropDown component represents a dropdown select for excluding roles
  * from two-factor authentication email.
