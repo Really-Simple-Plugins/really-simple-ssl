@@ -37,6 +37,7 @@
     .rdt_TableCol:last-child {
       flex-grow:0;
       min-width:initial;
+      justify-content: flex-end;
     }
     .rdt_TableCol:nth-last-child(2) {
       //flex-direction: row-reverse;
