@@ -84,7 +84,7 @@ const DynamicDataTable = (props) => {
          }
     }, [dataLoaded, getFieldValue('two_fa_enabled')]); // Add getFieldValue('login_protection_enabled') as a dependency
 
-    const hasForcedRole = (users) => {
+    const allAreForced = (users) => {
         let forcedRoles = getFieldValue('two_fa_forced_roles');
         if (!Array.isArray(forcedRoles)) {
             forcedRoles = [];
@@ -93,14 +93,32 @@ const DynamicDataTable = (props) => {
         if (Array.isArray(users)) {
             //for each users, check if the user has a forced role
             for (const user of users) {
-                if (forcedRoles.includes(user.user_role.toLowerCase())) {
-                    return true;
+                if ( !forcedRoles.includes(user.user_role.toLowerCase()) ) {
+                    return false;
                 }
             }
+            return true;
         } else {
-            if (forcedRoles.includes(users.user_role.toLowerCase())) {
-                return true;
+            return forcedRoles.includes(users.user_role.toLowerCase());
+        }
+    }
+
+    /**
+     * Check if the one, or all users have an open status
+     * @param users
+     * @returns {boolean}
+     */
+    const allAreOpen = (users) => {
+        if (Array.isArray(users)) {
+            //for each users, check if the user has a forced role
+            for (const user of users) {
+                if ( user.rsssl_two_fa_status !== 'open' ) {
+                    return false;
+                }
             }
+            return true;
+        } else {
+            return users.rsssl_two_fa_status === 'open';
         }
     }
 
@@ -172,12 +190,13 @@ const DynamicDataTable = (props) => {
         setRowsSelected(state.selectedRows);
     }
 
-    let resetDisabled = hasForcedRole(rowsSelected);
+    let resetDisabled = allAreForced(rowsSelected) || allAreOpen(rowsSelected);
     let displayData = [];
     let inputData= DynamicDataTable ? DynamicDataTable : [];
     inputData.forEach(user => {
         let recordCopy = {...user}
-        recordCopy.deleteControl = hasForcedRole(user) ? '' : <button disabled={processing}
+        //forced roles can't be reset if it's just the email method. An open status also can't be reset.
+        recordCopy.deleteControl = allAreForced(user) || allAreOpen(user) ? '' : <button disabled={processing}
                                       className="button button-red rsssl-action-buttons__button"
                                       onClick={() => handleReset(user)}
                                     >
@@ -261,7 +280,7 @@ const DynamicDataTable = (props) => {
             {!enabled &&
                 <div className="rsssl-locked">
                     <div className="rsssl-locked-overlay"><span
-                        className="rsssl-task-status rsssl-open">{__('Disabled', 'really-simple-ssl')}</span><span>{__('Activate login protection to enable this block.', 'really-simple-ssl')}</span>
+                        className="rsssl-task-status rsssl-open">{__('Disabled', 'really-simple-ssl')}</span><span>{__('Activate Two Step Verification to enable this block.', 'really-simple-ssl')}</span>
                     </div>
                 </div>
             }
