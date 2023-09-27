@@ -1366,14 +1366,15 @@ function rsssl_fields( $load_values = true ) {
 	                'width'     => '10%',
                     'column'   => 'status_for_user',
                 ],
-//	            [
-//                    'name'     => '',
-//                    'sortable' => false,
-//                    'searchable' => false,
-//                    'visible' => true,
-//	                'width'     => '10%',
-//                    'column'   => 'deleteControl',
-//                ],
+	            [
+		            'name'     => '',
+		            'sortable' => false,
+		            'searchable' => false,
+		            'visible' => true,
+		            'width'     => '10%',
+		            'column'   => 'resetControl',
+	            ],
+
             ],
         ],
 		[

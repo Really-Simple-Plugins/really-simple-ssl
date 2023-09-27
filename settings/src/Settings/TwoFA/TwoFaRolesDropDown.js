@@ -14,7 +14,7 @@ const TwoFaRolesDropDown = ({ field }) => {
     const [selectedRoles, setSelectedRoles] = useState([]);
     const [otherRoles, setOtherRoles] = useState([]);
     // Custom hook to manage form fields
-    const { updateField, getFieldValue, setChangedField, getField, changedFields, fieldsLoaded } = useFields();
+    const { updateField, getFieldValue, setChangedField, getField, fieldsLoaded } = useFields();
     let enabled = true;
 
     useEffect(() => {
@@ -42,11 +42,6 @@ const TwoFaRolesDropDown = ({ field }) => {
         }
         setSelectedRoles(field.value.map((role, index) => ({ value: role, label: role.charAt(0).toUpperCase() + role.slice(1) })));
     },[fieldsLoaded]);
-
-    useEffect(() => {
-        if (!rolesLoaded) return;
-
-    },[otherRoles, selectedRoles, rolesLoaded, roles])
 
     /**
      * Handles the change event of the react-select component.
