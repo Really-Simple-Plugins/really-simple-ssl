@@ -2,6 +2,9 @@
   .rdt_TableCol, .rdt_TableCell {
     min-width:100px;
   }
+  .rdt_TableCol:first-child, .rdt_TableCell:first-child {
+    min-width:initial;
+  }
   .rdt_TableHeadRow {
     .rdt_TableCol:last-child {
       flex-grow: 0;
@@ -123,6 +126,7 @@ nav.rdt_Pagination>div>svg {
   .rdt_TableCell, .rdt_TableCol{
     &:first-child {
       padding-left: var(--rsp-spacing-l);
+      padding-right: var(--rsp-spacing-l);
     }
     &:last-child {
       padding-right: var(--rsp-spacing-l);
