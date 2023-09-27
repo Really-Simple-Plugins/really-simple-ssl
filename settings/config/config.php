@@ -1272,12 +1272,12 @@ function rsssl_fields( $load_values = true ) {
 			'label'    => __( "Enable login protection", "really-simple-ssl" ),
 			'disabled' => false,
 			'default'  => 'disabled',
-            'server_conditions'    => [
-	            'relation' => 'AND',
-	            [
-		            'is_multisite' => false,
-	            ]
-            ],
+//            'server_conditions'    => [
+//	            'relation' => 'AND',
+//	            [
+//		            'is_multisite' => false,
+//	            ]
+//            ],
 		],
 		[
 			'id'       => 'two_fa_enabled',
@@ -1288,12 +1288,12 @@ function rsssl_fields( $load_values = true ) {
 			'tooltip'  => __( "This will send emails from your server, containing a verification code to users that try to login.", 'really-simple-ssl' ),
 			'disabled' => false,
 			'default'  => 'disabled',
-			'server_conditions'    => [
-				'relation' => 'AND',
-				[
-					'is_multisite' => false,
-				]
-			],
+//			'server_conditions'    => [
+//				'relation' => 'AND',
+//				[
+//					'is_multisite' => false,
+//				]
+//			],
 		],
 		[
 			'id'       => 'two_fa_optional_roles',
@@ -1303,12 +1303,12 @@ function rsssl_fields( $load_values = true ) {
 			'default'  => [ 'editor', 'author', 'contributor'],
             'label'    => __( "Optional for:", "really-simple-ssl" ),
 			'tooltip'  => __( "Two-step login will be enabled for these user roles, with the possibility to skip. If a user skips, Two-step login will be disabled for this user.", 'really-simple-ssl' ),
-			'server_conditions'    => [
-				'relation' => 'AND',
-				[
-					'is_multisite' => false,
-				]
-			],
+//			'server_conditions'    => [
+//				'relation' => 'AND',
+//				[
+//					'is_multisite' => false,
+//				]
+//			],
         ],
 
 		[
@@ -1319,12 +1319,12 @@ function rsssl_fields( $load_values = true ) {
 			'default'  => [ 'administrator' ],
 			'label'    => __( "Force on:", "really-simple-ssl" ),
 			'tooltip'  => __( "These user roles are forced to enter the authentication code, without the possibility to skip.", 'really-simple-ssl' ),
-			'server_conditions'    => [
-				'relation' => 'AND',
-				[
-					'is_multisite' => false,
-				]
-			],
+//			'server_conditions'    => [
+//				'relation' => 'AND',
+//				[
+//					'is_multisite' => false,
+//				]
+//			],
 		],
         [
             'id'    => 'two_fa_users_table',
@@ -1335,12 +1335,12 @@ function rsssl_fields( $load_values = true ) {
             'label' => __('Users', 'really-simple-ssl'),
             'disabled' => false,
             'default' => false,
-            'server_conditions'    => [
-	            'relation' => 'AND',
-	            [
-		            'is_multisite' => false,
-	            ]
-            ],
+//            'server_conditions'    => [
+//	            'relation' => 'AND',
+//	            [
+//		            'is_multisite' => false,
+//	            ]
+//            ],
             'columns' => [
                 [
                     'name'     => __( 'Username', 'really-simple-ssl' ),

@@ -1112,21 +1112,30 @@ function rsssl_get_roles( ): array {
 		return [];
 	}
 
-	global $wp_roles;
+    $roles = wp_cache_get( 'rsssl_roles' );
+    if ( ! $roles ) {
+	    if (!is_multisite()){
+		    $roles = rsssl_single_site_roles();
+	    } else {
+		    $roles = [];
 
-	// Try to get roles from cache
-	$roles = wp_cache_get( 'rsssl_roles' );
-
-	// If roles are not in cache, fetch and set cache
-	if ( ! $roles ) {
-		// Just return the names, not the capabilities
-		$roles_names = array_keys( $wp_roles->roles );
-
-		// Extract unique role values from the role names
-		$roles = array_values( array_unique( $roles_names ));
-		// Set the roles in cache for future use
-		wp_cache_set( 'rsssl_roles', $roles );
-	}
-
+		    foreach ( get_sites() as $blog ) {
+			    switch_to_blog( $blog->blog_id );
+			    $site_roles = rsssl_single_site_roles();
+			    $roles = array_unique($roles+$site_roles);
+			    restore_current_blog();
+		    }
+	    }
+    }
+    wp_cache_set( 'rsssl_roles', $roles );
 	return $roles;
+}
+
+function rsssl_single_site_roles(){
+    global $wp_roles;
+	// Just return the names, not the capabilities
+	$roles_names = array_keys( $wp_roles->roles );
+
+	// Extract unique role values from the role names
+	return array_values( array_unique( $roles_names ));
 }
