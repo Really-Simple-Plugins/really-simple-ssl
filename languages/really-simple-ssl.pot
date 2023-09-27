@@ -2,14 +2,14 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Really Simple SSL 7.0.9\n"
+"Project-Id-Version: Really Simple SSL 7.1.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/really-simple-ssl\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-08-30T10:36:16+00:00\n"
+"POT-Creation-Date: 2023-09-27T07:38:28+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.8.1\n"
 "X-Domain: really-simple-ssl\n"
@@ -1669,25 +1669,34 @@ msgstr ""
 msgid "Visit the plugins overview or %srenew your license%s."
 msgstr ""
 
-#: security/firewall-manager.php:147
-#: security/firewall-manager.php:153
+#: security/firewall-manager.php:169
+#: security/firewall-manager.php:175
+#: security/firewall-manager.php:191
 msgid "Firewall"
 msgstr ""
 
-#: security/firewall-manager.php:148
+#: security/firewall-manager.php:170
 msgid "A firewall rule was enabled, but the wp-config.php is not writable."
 msgstr ""
 
-#: security/firewall-manager.php:148
+#: security/firewall-manager.php:170
 msgid "Please set the wp-config.php to writable until the rule has been written."
 msgstr ""
 
-#: security/firewall-manager.php:154
+#: security/firewall-manager.php:176
 msgid "A firewall rule was enabled, but /the wp-content/ folder is not writable."
 msgstr ""
 
-#: security/firewall-manager.php:154
+#: security/firewall-manager.php:176
 msgid "Please set the wp-content folder to writable:"
+msgstr ""
+
+#: security/firewall-manager.php:192
+msgid "A firewall rule was enabled, but the firewall does not seem to get loaded correctly."
+msgstr ""
+
+#: security/firewall-manager.php:192
+msgid "Please check if the advance-headers.php file is included in the wp-config.php, and exists in the wp-content folder."
 msgstr ""
 
 #: security/hardening.php:13
