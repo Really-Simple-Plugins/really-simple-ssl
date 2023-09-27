@@ -261,7 +261,7 @@ const DynamicDataTable = (props) => {
             {!enabled &&
                 <div className="rsssl-locked">
                     <div className="rsssl-locked-overlay"><span
-                        className="rsssl-task-status rsssl-open">{__('Disabled', 'really-simple-ssl')}</span><span>{__('Activate login protection to enable this block.', 'really-simple-ssl')}</span>
+                        className="rsssl-task-status rsssl-open">{__('Disabled', 'really-simple-ssl')}</span><span>{__('Activate Two Step Verification to enable this block.', 'really-simple-ssl')}</span>
                     </div>
                 </div>
             }
