@@ -26,10 +26,12 @@ const TwoFaRolesDropDown = ({ field }) => {
     useEffect(() => {
         if ( field.id==='two_fa_forced_roles' ) {
             let otherField = getField('two_fa_optional_roles');
-            setOtherRoles(otherField.value);
+            let roles = Array.isArray(otherField.value) ? otherField.value : [];
+            setOtherRoles(roles);
         } else {
             let otherField = getField('two_fa_forced_roles');
-            setOtherRoles(otherField.value);
+            let roles = Array.isArray(otherField.value) ? otherField.value : [];
+            setOtherRoles(roles);
         }
     }, [selectedRoles, getField('two_fa_optional_roles'), getField('two_fa_forced_roles')]);
 

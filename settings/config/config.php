@@ -1275,7 +1275,7 @@ function rsssl_fields( $load_values = true ) {
             'server_conditions'    => [
 	            'relation' => 'AND',
 	            [
-		            'is_multisite' => true,
+		            'is_multisite' => false,
 	            ]
             ],
 		],
@@ -1291,7 +1291,7 @@ function rsssl_fields( $load_values = true ) {
 			'server_conditions'    => [
 				'relation' => 'AND',
 				[
-					'is_multisite' => true,
+					'is_multisite' => false,
 				]
 			],
 		],
@@ -1306,7 +1306,7 @@ function rsssl_fields( $load_values = true ) {
 			'server_conditions'    => [
 				'relation' => 'AND',
 				[
-					'is_multisite' => true,
+					'is_multisite' => false,
 				]
 			],
         ],
@@ -1319,6 +1319,12 @@ function rsssl_fields( $load_values = true ) {
 			'default'  => [ 'administrator' ],
 			'label'    => __( "Force on:", "really-simple-ssl" ),
 			'tooltip'  => __( "These user roles are forced to enter the authentication code, without the possibility to skip.", 'really-simple-ssl' ),
+			'server_conditions'    => [
+				'relation' => 'AND',
+				[
+					'is_multisite' => false,
+				]
+			],
 		],
         [
             'id'    => 'two_fa_users_table',
@@ -1329,6 +1335,12 @@ function rsssl_fields( $load_values = true ) {
             'label' => __('Users', 'really-simple-ssl'),
             'disabled' => false,
             'default' => false,
+            'server_conditions'    => [
+	            'relation' => 'AND',
+	            [
+		            'is_multisite' => false,
+	            ]
+            ],
             'columns' => [
                 [
                     'name'     => __( 'Username', 'really-simple-ssl' ),

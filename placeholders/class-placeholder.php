@@ -478,35 +478,35 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
 				$response['data'] = [
 					[
 						'id'                  => 1,
-						'user'                => 'User1',
+						'user'                => 'JaneDoe',
 						'rsssl_two_fa_status' => 'Active',
 						'user_role'           => 'Administrator',
 						'status_for_user'     => 'Enabled'
 					],
 					[
 						'id'                  => 2,
-						'user'                => 'User2',
+						'user'                => 'JohnDoe',
 						'rsssl_two_fa_status' => 'open',
 						'user_role'           => 'Editor',
 						'status_for_user'     => 'open'
 					],
 					[
 						'id'                  => 3,
-						'user'                => 'User3',
+						'user'                => 'JanieDoe',
 						'rsssl_two_fa_status' => 'disabled',
 						'user_role'           => 'Subscriber',
 						'status_for_user'     => 'Disabled'
 					],
 					[
 						'id'                  => 4,
-						'user'                => 'User4',
+						'user'                => 'JonnyDoe',
 						'rsssl_two_fa_status' => 'Active',
 						'user_role'           => 'Contributor',
 						'status_for_user'     => 'Active'
 					],
 					[
 						'id'                  => 5,
-						'user'                => 'User5',
+						'user'                => 'BabyDoe',
 						'rsssl_two_fa_status' => 'open',
 						'user_role'           => 'Author',
 						'status_for_user'     => 'open'
