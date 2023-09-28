@@ -114,7 +114,7 @@ if ( !class_exists('rsssl_mailer') ) {
 			$this->button_text = __("Confirm e-mail", "really-simple-ssl");
 	        $this->warning_blocks[] = [
 		        'title' => '',
-		        'message' => sprintf(__("Click the button below to confirm your email address, or copy the following URL: %s", "really-simple-ssl"), $verification_url),
+		        'message' => sprintf(__("Click the button below to confirm your email address, or copy the following URL: %s", "really-simple-ssl"), '{url}'),
 		        'url' => $verification_url,
 	        ];
 
