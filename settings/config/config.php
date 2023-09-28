@@ -1344,7 +1344,7 @@ function rsssl_fields( $load_values = true ) {
             'columns' => [
                 [
                     'name'     => __( 'Username', 'really-simple-ssl' ),
-                    'sortable' => false,
+                    'sortable' => true,
                     'searchable' => true,
                     'visible' => true,
                     'column'   => 'user',
