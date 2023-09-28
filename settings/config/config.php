@@ -1352,7 +1352,7 @@ function rsssl_fields( $load_values = true ) {
                 ],
                 [
                     'name'     => __( 'User role', 'really-simple-ssl' ),
-                    'sortable' => false,
+                    'sortable' => true,
                     'searchable' => false,
                     'visible' => true,
                     'column'   => 'user_role',
