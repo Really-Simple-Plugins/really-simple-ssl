@@ -12,10 +12,8 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
 			add_filter( "rsssl_run_test", array( $this, 'mixed_content_scan' ), 9, 3 );
 			add_filter( 'rsssl_do_action', array( $this, 'learningmode_table_data' ), 10, 3 );
 
-			if ( ! defined('rsssl_pro_version') ) {
-				add_filter( 'rsssl_do_action', array( $this, 'two_factor_users_data' ), 11, 3 );
-                add_filter( 'rsssl_do_action', array( $this, 'limit_login_attempts_data' ), 11, 3 );
-            }
+			add_filter( 'rsssl_do_action', array( $this, 'two_factor_users_data' ), 11, 3 );
+            add_filter( 'rsssl_do_action', array( $this, 'limit_login_attempts_data' ), 11, 3 );
 			self::$_this = $this;
 
 		}
@@ -162,6 +160,9 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
             if ( ! rsssl_user_can_manage() ) {
                 return $response;
             }
+	        if ( defined('rsssl_pro_version') ) {
+		        return $response;
+	        }
 
             switch ( $action ) {
                 case 'ip_list':
@@ -469,6 +470,9 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
 		 * Dummy data for two factor Users block
 		 */
 		public function two_factor_users_data( array $response, string $action, $data ) {
+			if ( defined('rsssl_pro_version') ) {
+				return $response;
+			}
 
 			if ( $action === 'two_fa_table' ) {
 
