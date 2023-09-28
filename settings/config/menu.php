@@ -32,7 +32,7 @@ function rsssl_menu()
                         ],
                         [
                             'id'            => 'email',
-							'title'    => __( 'E-mail', 'really-simple-ssl' ),
+							'title'    => __( 'Email', 'really-simple-ssl' ),
 							'helpLink' => 'https://really-simple-ssl.com/email-notifications/',
 						],
 						[

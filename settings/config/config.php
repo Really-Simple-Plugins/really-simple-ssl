@@ -120,7 +120,7 @@ function rsssl_fields( $load_values = true ) {
             'warning'     => true,
             'label'       => __( "Email verification", 'really-simple-ssl' ),
             'disabled'    => rsssl_is_email_verified(),
-            'tooltip'  => __( "Verify your e-mail address to get the most out of Really Simple SSL.", 'really-simple-ssl' ),
+            'tooltip'  => __( "Verify your email address to get the most out of Really Simple SSL.", 'really-simple-ssl' ),
         ],
         [
             'id'               => 'notifications_email_address',
