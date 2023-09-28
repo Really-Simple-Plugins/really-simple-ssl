@@ -1577,12 +1577,12 @@ const EventLogDataTable = props => {
         ...dataItem
       };
       newItem.iso2_code = generateFlag(newItem.iso2_code, newItem.country_name);
-      if (newItem.username === '' || newItem.username === null) {
-        newItem.username = '—';
-      }
-      if (newItem.source_ip === '' || newItem.source_ip === null) {
-        newItem.source_ip = '—';
-      }
+      // if (newItem.username === '' || newItem.username === null) {
+      //     newItem.username = '—';
+      // }
+      // if (newItem.source_ip === '' || newItem.source_ip === null) {
+      //     newItem.source_ip = '—';
+      // }
       newItem.expandableRows = true;
       return newItem;
     });
@@ -23975,4 +23975,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.00bcf23e5f6b99ceecd3.js.map
+//# sourceMappingURL=src_Settings_Field_js.51c2718f39c1bccd1546.js.map
