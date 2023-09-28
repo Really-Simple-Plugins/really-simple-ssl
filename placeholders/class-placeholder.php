@@ -12,11 +12,8 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
 			add_filter( "rsssl_run_test", array( $this, 'mixed_content_scan' ), 9, 3 );
 			add_filter( 'rsssl_do_action', array( $this, 'learningmode_table_data' ), 10, 3 );
 
-			if ( ! class_exists('REALLY_SIMPLE_SSL_PRO' ) ) {
+			if ( ! defined('rsssl_pro_version') ) {
 				add_filter( 'rsssl_do_action', array( $this, 'two_factor_users_data' ), 11, 3 );
-			}
-            if ( ! is_plugin_active( 'really-simple-ssl-pro/really-simple-ssl-pro.php' ) ) {
-                // really-simple-ssl-pro plugin is active
                 add_filter( 'rsssl_do_action', array( $this, 'limit_login_attempts_data' ), 11, 3 );
             }
 			self::$_this = $this;
