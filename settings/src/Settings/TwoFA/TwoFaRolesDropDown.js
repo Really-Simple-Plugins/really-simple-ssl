@@ -3,6 +3,7 @@ import Select from 'react-select';
 import useFields from "../FieldsData";
 import useRolesData from './RolesStore';
 import {__} from "@wordpress/i18n";
+import './select.scss';
 /**
  * TwoFaRolesDropDown component represents a dropdown select for excluding roles
  * from two-factor authentication email.
@@ -13,7 +14,7 @@ const TwoFaRolesDropDown = ({ field }) => {
     const [selectedRoles, setSelectedRoles] = useState([]);
     const [otherRoles, setOtherRoles] = useState([]);
     // Custom hook to manage form fields
-    const { updateField, getFieldValue, setChangedField, getField, changedFields, fieldsLoaded } = useFields();
+    const { updateField, getFieldValue, setChangedField, getField, fieldsLoaded } = useFields();
     let enabled = true;
 
     useEffect(() => {
@@ -25,10 +26,12 @@ const TwoFaRolesDropDown = ({ field }) => {
     useEffect(() => {
         if ( field.id==='two_fa_forced_roles' ) {
             let otherField = getField('two_fa_optional_roles');
-            setOtherRoles(otherField.value);
+            let roles = Array.isArray(otherField.value) ? otherField.value : [];
+            setOtherRoles(roles);
         } else {
             let otherField = getField('two_fa_forced_roles');
-            setOtherRoles(otherField.value);
+            let roles = Array.isArray(otherField.value) ? otherField.value : [];
+            setOtherRoles(roles);
         }
     }, [selectedRoles, getField('two_fa_optional_roles'), getField('two_fa_forced_roles')]);
 
@@ -76,16 +79,17 @@ const TwoFaRolesDropDown = ({ field }) => {
     if (field.id === 'two_fa_optional_roles') {
         enabled = getFieldValue('login_protection_enabled');
     }
-    const alreadySelected = selectedRoles.map(option => option.value);
-    let filteredRoles = [...roles];
-    //from roles, remove roles in the usedRoles array
-    filteredRoles.forEach(function (item, i) {
 
-        if ( Array.isArray(otherRoles) && otherRoles.includes(item.value) ) {
+    const alreadySelected = selectedRoles.map(option => option.value);
+    let filteredRoles = [];
+    //from roles, remove roles in the usedRoles array
+    //merge alreadyselected and otherroles in one array
+    let inRolesInUse = [...alreadySelected, ...otherRoles];
+    roles.forEach(function (item, i) {
+        if ( Array.isArray(inRolesInUse) && inRolesInUse.includes(item.value) ) {
             filteredRoles.splice(i, 1);
-        }
-        if ( Array.isArray(alreadySelected) && alreadySelected.includes(item.value) ) {
-            filteredRoles.splice(i, 1);
+        } else {
+            filteredRoles.push(item);
         }
     });
 

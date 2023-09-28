@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, {useEffect, useState, useCallback, useRef} from 'react';
 import DataTable, { createTheme } from "react-data-table-component";
 import FieldsData from "../FieldsData";
 import CountryDataTableStore from "./CountryDataTableStore";
@@ -54,6 +54,7 @@ const CountryDatatable = (props) => {
     const [rowsSelected, setRowsSelected] = useState([]);
     const moduleName = 'rsssl-group-filter-limit_login_attempts_country';
     const {fields, fieldAlreadyEnabled, getFieldValue} = useFields();
+    const searchTimeoutRef = useRef(null);
 
     const buildColumn = useCallback((column) => ({
         //if the filter is set to region and the columns = status we do not want to show the column
@@ -300,11 +301,17 @@ const CountryDatatable = (props) => {
                             type="text"
                             className="rsssl-search-bar__input"
                             placeholder={__("Search", "really-simple-ssl")}
-                            disabled={processing}
-                            onKeyUp={event => {
-                                if (event.key === 'Enter') {
-                                    handleCountryTableSearch(event.target.value, searchableColumns);
+                            onChange={event => {
+                                if (processing) return;
+                                // Clear any existing timeouts to prevent rapid calls
+                                if (searchTimeoutRef.current) {
+                                    clearTimeout(searchTimeoutRef.current);
                                 }
+
+                                // Set a new timeout
+                                searchTimeoutRef.current = setTimeout(() => {
+                                    handleCountryTableSearch(event.target.value, searchableColumns);
+                                }, 500);
                             }}
                          />
                     </div>

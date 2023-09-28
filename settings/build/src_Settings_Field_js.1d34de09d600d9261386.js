@@ -1303,13 +1303,10 @@ const Onboarding = props => {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _utils_Hyperlink__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/Hyperlink */ "./src/utils/Hyperlink.js");
-/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/api */ "./src/utils/api.js");
-/* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./FieldsData */ "./src/Settings/FieldsData.js");
-/* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils/Icon */ "./src/utils/Icon.js");
-
+/* harmony import */ var _utils_Hyperlink__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/Hyperlink */ "./src/utils/Hyperlink.js");
+/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/api */ "./src/utils/api.js");
+/* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./FieldsData */ "./src/Settings/FieldsData.js");
+/* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/Icon */ "./src/utils/Icon.js");
 
 
 
@@ -1323,22 +1320,25 @@ __webpack_require__.r(__webpack_exports__);
 const Button = props => {
   const {
     addHelpNotice
-  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_4__["default"])();
+  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_3__["default"])();
   const [processing, setProcessing] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
-  const onClickHandler = action => {
+  const {
+    fields
+  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_3__["default"])();
+  const onClickHandler = async action => {
     let data = {};
-    console.log("send mail");
     setProcessing(true);
-    _utils_api__WEBPACK_IMPORTED_MODULE_3__.doAction(action, data).then(response => {
+    data.fields = fields;
+    await _utils_api__WEBPACK_IMPORTED_MODULE_2__.doAction(action, data).then(response => {
       let label = response.success ? 'success' : 'warning';
-      let title = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Test notification by email", 'really-simple-ssl');
+      let title = response.title;
       let text = response.message;
       addHelpNotice(props.field.id, label, text, title, false);
       setProcessing(false);
     });
   };
   let is_disabled = !!props.field.disabled;
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, props.field.url && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Hyperlink__WEBPACK_IMPORTED_MODULE_2__["default"], {
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, props.field.url && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Hyperlink__WEBPACK_IMPORTED_MODULE_1__["default"], {
     className: "button button-default",
     disabled: is_disabled,
     text: props.field.button_text,
@@ -1347,7 +1347,7 @@ const Button = props => {
     onClick: () => onClickHandler(props.field.action),
     className: "button button-default",
     disabled: is_disabled
-  }, props.field.button_text, processing && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_5__["default"], {
+  }, props.field.button_text, processing && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_4__["default"], {
     name: "loading",
     color: "grey"
   })));
@@ -1502,6 +1502,7 @@ const EventLogDataTable = props => {
     fieldAlreadyEnabled,
     getFieldValue
   } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_10__["default"])();
+  const searchTimeoutRef = (0,react__WEBPACK_IMPORTED_MODULE_2__.useRef)(null);
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
     const currentFilter = getCurrentFilter(moduleName);
     if (!currentFilter) {
@@ -1521,7 +1522,7 @@ const EventLogDataTable = props => {
 
   //we create the columns
   let columns = [];
-  //getting the fields from the propsß
+  //getting the fields from the props
   let field = props.field;
   //we loop through the fields
   field.columns.forEach(function (item, i) {
@@ -1577,15 +1578,15 @@ const EventLogDataTable = props => {
         ...dataItem
       };
       newItem.iso2_code = generateFlag(newItem.iso2_code, newItem.country_name);
-      // if (newItem.username === '' || newItem.username === null) {
-      //     newItem.username = '—';
-      // }
-      // if (newItem.source_ip === '' || newItem.source_ip === null) {
-      //     newItem.source_ip = '—';
-      // }
+      newItem.event_name = eventName(newItem);
       newItem.expandableRows = true;
       return newItem;
     });
+  }
+  function eventName(data) {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+      className: 'description'
+    }, data.event_name);
   }
 
   //we generate an expandable row
@@ -1656,8 +1657,18 @@ const EventLogDataTable = props => {
     type: "text",
     className: "rsssl-search-bar__input",
     placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Search", "really-simple-ssl"),
-    disabled: processing,
-    onChange: event => handleEventTableSearch(event.target.value, searchableColumns)
+    onChange: event => {
+      if (processing) return;
+      // Clear any existing timeouts to prevent rapid calls
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+
+      // Set a new timeout
+      searchTimeoutRef.current = setTimeout(() => {
+        handleEventTableSearch(event.target.value, searchableColumns);
+      }, 500);
+    }
   })))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
     columns: columns,
     data: processing ? [] : data,
@@ -3767,6 +3778,7 @@ const CountryDatatable = props => {
     fieldAlreadyEnabled,
     getFieldValue
   } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_3__["default"])();
+  const searchTimeoutRef = (0,react__WEBPACK_IMPORTED_MODULE_1__.useRef)(null);
   const buildColumn = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)(column => ({
     //if the filter is set to region and the columns = status we do not want to show the column
     omit: getCurrentFilter(moduleName) === 'regions' && column.column === 'status',
@@ -3963,11 +3975,17 @@ const CountryDatatable = props => {
     type: "text",
     className: "rsssl-search-bar__input",
     placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__.__)("Search", "really-simple-ssl"),
-    disabled: processing,
-    onKeyUp: event => {
-      if (event.key === 'Enter') {
-        handleCountryTableSearch(event.target.value, searchableColumns);
+    onChange: event => {
+      if (processing) return;
+      // Clear any existing timeouts to prevent rapid calls
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
       }
+
+      // Set a new timeout
+      searchTimeoutRef.current = setTimeout(() => {
+        handleCountryTableSearch(event.target.value, searchableColumns);
+      }, 500);
     }
   })))), rowsSelected.length > 0 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     style: {
@@ -4644,6 +4662,7 @@ const IpAddressDatatable = props => {
     getFieldValue,
     saveFields
   } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_11__["default"])();
+  const searchTimeoutRef = (0,react__WEBPACK_IMPORTED_MODULE_2__.useRef)(null);
   const moduleName = 'rsssl-group-filter-limit_login_attempts_ip_address';
   const buildColumn = (0,react__WEBPACK_IMPORTED_MODULE_2__.useCallback)(column => ({
     name: column.name,
@@ -4871,11 +4890,17 @@ const IpAddressDatatable = props => {
     type: "text",
     className: "rsssl-search-bar__input",
     placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Search", "really-simple-ssl"),
-    disabled: processing,
-    onKeyUp: event => {
-      if (event.key === 'Enter') {
-        handleIpTableSearch(event.target.value, searchableColumns);
+    onChange: event => {
+      if (processing) return;
+      // Clear any existing timeouts to prevent rapid calls
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
       }
+
+      // Set a new timeout
+      searchTimeoutRef.current = setTimeout(() => {
+        handleIpTableSearch(event.target.value, searchableColumns);
+      }, 500);
     }
   })))), rowsSelected.length > 0 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     style: {
@@ -5310,6 +5335,7 @@ const UserDatatable = props => {
     getFieldValue,
     saveFields
   } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_10__["default"])();
+  const searchTimeoutRef = (0,react__WEBPACK_IMPORTED_MODULE_2__.useRef)(null);
   const buildColumn = (0,react__WEBPACK_IMPORTED_MODULE_2__.useCallback)(column => ({
     name: column.name,
     sortable: column.sortable,
@@ -5481,11 +5507,17 @@ const UserDatatable = props => {
     type: "text",
     className: "rsssl-search-bar__input",
     placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Search", "really-simple-ssl"),
-    disabled: processing,
-    onKeyUp: event => {
-      if (event.key === 'Enter') {
-        handleUserTableSearch(event.target.value, searchableColumns);
+    onChange: event => {
+      if (processing) return;
+      // Clear any existing timeouts to prevent rapid calls
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
       }
+
+      // Set a new timeout
+      searchTimeoutRef.current = setTimeout(() => {
+        handleUserTableSearch(event.target.value, searchableColumns);
+      }, 500);
     }
   })))), rowsSelected.length > 0 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     style: {
@@ -7392,6 +7424,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils/api */ "./src/utils/api.js");
 
 
+
 const useRolesData = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, get) => ({
   roles: [],
   rolesLoaded: false,
@@ -7422,7 +7455,6 @@ const useRolesData = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, get) 
         value: role,
         label: role.charAt(0).toUpperCase() + role.slice(1)
       }));
-
       // Set the roles state with formatted data
       set({
         roles: formattedData,
@@ -7537,7 +7569,7 @@ const DynamicDataTable = props => {
     }
   }, [dataLoaded, getFieldValue('two_fa_enabled')]); // Add getFieldValue('login_protection_enabled') as a dependency
 
-  const hasForcedRole = users => {
+  const allAreForced = users => {
     let forcedRoles = getFieldValue('two_fa_forced_roles');
     if (!Array.isArray(forcedRoles)) {
       forcedRoles = [];
@@ -7545,14 +7577,32 @@ const DynamicDataTable = props => {
     if (Array.isArray(users)) {
       //for each users, check if the user has a forced role
       for (const user of users) {
-        if (forcedRoles.includes(user.user_role.toLowerCase())) {
-          return true;
+        if (!forcedRoles.includes(user.user_role.toLowerCase())) {
+          return false;
         }
       }
+      return true;
     } else {
-      if (forcedRoles.includes(users.user_role.toLowerCase())) {
-        return true;
+      return forcedRoles.includes(users.user_role.toLowerCase());
+    }
+  };
+
+  /**
+   * Check if the one, or all users have an open status
+   * @param users
+   * @returns {boolean}
+   */
+  const allAreOpen = users => {
+    if (Array.isArray(users)) {
+      //for each users, check if the user has a forced role
+      for (const user of users) {
+        if (user.rsssl_two_fa_status !== 'open') {
+          return false;
+        }
       }
+      return true;
+    } else {
+      return users.rsssl_two_fa_status === 'open';
     }
   };
   function buildColumn(column) {
@@ -7616,15 +7666,17 @@ const DynamicDataTable = props => {
   function handleSelection(state) {
     setRowsSelected(state.selectedRows);
   }
-  let resetDisabled = hasForcedRole(rowsSelected);
+  let resetDisabled = allAreForced(rowsSelected) || allAreOpen(rowsSelected);
   let displayData = [];
   let inputData = DynamicDataTable ? DynamicDataTable : [];
   inputData.forEach(user => {
     let recordCopy = {
       ...user
     };
-    recordCopy.deleteControl = hasForcedRole(user) ? '' : (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-      disabled: processing,
+    //forced roles can't be reset if it's just the email method. An open status also can't be reset.
+    let btnDisabled = allAreForced(user) || allAreOpen(user);
+    recordCopy.resetControl = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+      disabled: processing || btnDisabled,
       className: "button button-red rsssl-action-buttons__button",
       onClick: () => handleReset(user)
     }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Reset", "really-simple-ssl"));
@@ -7689,7 +7741,7 @@ const DynamicDataTable = props => {
     className: "rsssl-locked-overlay"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     className: "rsssl-task-status rsssl-open"
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Disabled', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Activate login protection to enable this block.', 'really-simple-ssl')))));
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Disabled', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Activate Two Step Verification to enable this block.', 'really-simple-ssl')))));
 };
 /* harmony default export */ __webpack_exports__["default"] = (DynamicDataTable);
 
@@ -7851,11 +7903,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var react_select__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-select */ "./node_modules/react-select/dist/react-select.esm.js");
+/* harmony import */ var react_select__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-select */ "./node_modules/react-select/dist/react-select.esm.js");
 /* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../FieldsData */ "./src/Settings/FieldsData.js");
 /* harmony import */ var _RolesStore__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./RolesStore */ "./src/Settings/TwoFA/RolesStore.js");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _select_scss__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./select.scss */ "./src/Settings/TwoFA/select.scss");
+
 
 
 
@@ -7884,7 +7938,6 @@ const TwoFaRolesDropDown = _ref => {
     getFieldValue,
     setChangedField,
     getField,
-    changedFields,
     fieldsLoaded
   } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_2__["default"])();
   let enabled = true;
@@ -7896,10 +7949,12 @@ const TwoFaRolesDropDown = _ref => {
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     if (field.id === 'two_fa_forced_roles') {
       let otherField = getField('two_fa_optional_roles');
-      setOtherRoles(otherField.value);
+      let roles = Array.isArray(otherField.value) ? otherField.value : [];
+      setOtherRoles(roles);
     } else {
       let otherField = getField('two_fa_forced_roles');
-      setOtherRoles(otherField.value);
+      let roles = Array.isArray(otherField.value) ? otherField.value : [];
+      setOtherRoles(roles);
     }
   }, [selectedRoles, getField('two_fa_optional_roles'), getField('two_fa_forced_roles')]);
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
@@ -7947,21 +8002,22 @@ const TwoFaRolesDropDown = _ref => {
     enabled = getFieldValue('login_protection_enabled');
   }
   const alreadySelected = selectedRoles.map(option => option.value);
-  let filteredRoles = [...roles];
+  let filteredRoles = [];
   //from roles, remove roles in the usedRoles array
-  filteredRoles.forEach(function (item, i) {
-    if (Array.isArray(otherRoles) && otherRoles.includes(item.value)) {
+  //merge alreadyselected and otherroles in one array
+  let inRolesInUse = [...alreadySelected, ...otherRoles];
+  roles.forEach(function (item, i) {
+    if (Array.isArray(inRolesInUse) && inRolesInUse.includes(item.value)) {
       filteredRoles.splice(i, 1);
-    }
-    if (Array.isArray(alreadySelected) && alreadySelected.includes(item.value)) {
-      filteredRoles.splice(i, 1);
+    } else {
+      filteredRoles.push(item);
     }
   });
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     style: {
       marginTop: '5px'
     }
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_select__WEBPACK_IMPORTED_MODULE_5__["default"], {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_select__WEBPACK_IMPORTED_MODULE_6__["default"], {
     isMulti: true,
     options: filteredRoles,
     onChange: handleChange,
@@ -23972,7 +24028,19 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+/***/ }),
+
+/***/ "./src/Settings/TwoFA/select.scss":
+/*!****************************************!*\
+  !*** ./src/Settings/TwoFA/select.scss ***!
+  \****************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.51c2718f39c1bccd1546.js.map
+//# sourceMappingURL=src_Settings_Field_js.1d34de09d600d9261386.js.map

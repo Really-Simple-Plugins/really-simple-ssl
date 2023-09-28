@@ -126,7 +126,7 @@ function rsssl_menu()
                             'helpLink'     => 'https://really-simple-ssl.com/knowledge-base/limit-login-attempts/?mtm_campaign=instructions&mtm_source=free',
                             'premium'      => true,
                             'title'        => __('General', 'really-simple-ssl'),
-                            'intro'        => __('Protect your site against brute force login attacks by limiting the number of login attempts. Enabling this feature will temporary lock-out a username and the IP address that tries to login, after the set number of false logins please use the instructions linked in the top-right corner.',
+                            'intro'        => __('Protect your site against brute force login attacks by limiting the number of login attempts. Enabling this feature will temporary lock-out a username and the IP address that tries to login, after the set number of false logins.',
                                 'really-simple-ssl'),
                             'premium_text' => __('Get Limit Login Attempts with %sReally Simple SSL Pro%s',
                                 'really-simple-ssl'),
@@ -380,7 +380,7 @@ function rsssl_menu()
 					'premium'              => true,
 					'premium_text'         => __( 'Get two-factor authentication with %sReally Simple SSL Pro%s', 'really-simple-ssl' ),
 					'upgrade'              => 'https://really-simple-ssl.com/pro/?mtm_campaign=cops&mtm_source=free&mtm_content=upgrade',
-					'title'                => 'Login Protection',
+					'title'                => __('Two-Step Verification', 'really-simple-ssl'),
 					'helpLink'             => 'https://really-simple-ssl.com/instructions/two-factor-authentication/?mtm_campaign=instructions&mtm_source=free',
                     'groups'  => [
                         [

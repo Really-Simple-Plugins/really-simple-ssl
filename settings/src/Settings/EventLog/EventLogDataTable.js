@@ -36,6 +36,7 @@ const EventLogDataTable = (props) => {
     const moduleName = 'rsssl-group-filter-limit_login_attempts_event_log';
 
     const {fields, fieldAlreadyEnabled, getFieldValue} = useFields();
+    const searchTimeoutRef = useRef(null);
 
     useEffect(() => {
         const currentFilter = getCurrentFilter(moduleName);
@@ -60,7 +61,7 @@ const EventLogDataTable = (props) => {
 
     //we create the columns
     let columns = [];
-    //getting the fields from the propsß
+    //getting the fields from the props
     let field = props.field;
     //we loop through the fields
     field.columns.forEach(function (item, i) {
@@ -116,15 +117,16 @@ const EventLogDataTable = (props) => {
         data = DynamicDataTable.data.map((dataItem) => {
             let newItem = {...dataItem};
             newItem.iso2_code = generateFlag(newItem.iso2_code, newItem.country_name);
-            // if (newItem.username === '' || newItem.username === null) {
-            //     newItem.username = '—';
-            // }
-            // if (newItem.source_ip === '' || newItem.source_ip === null) {
-            //     newItem.source_ip = '—';
-            // }
+            newItem.event_name = eventName(newItem);
             newItem.expandableRows = true;
             return newItem;
         });
+    }
+
+    function eventName(data) {
+        return (
+            <span className={'description'}>{data.event_name}</span>
+        )
     }
 
     //we generate an expandable row
@@ -194,8 +196,18 @@ const EventLogDataTable = (props) => {
                             type="text"
                             className="rsssl-search-bar__input"
                             placeholder={__("Search", "really-simple-ssl")}
-                            disabled={processing}
-                            onChange={event => handleEventTableSearch(event.target.value, searchableColumns)}
+                            onChange={event => {
+                                if (processing) return;
+                                // Clear any existing timeouts to prevent rapid calls
+                                if (searchTimeoutRef.current) {
+                                    clearTimeout(searchTimeoutRef.current);
+                                }
+
+                                // Set a new timeout
+                                searchTimeoutRef.current = setTimeout(() => {
+                                    handleEventTableSearch(event.target.value, searchableColumns);
+                                }, 500);
+                            }}
                         />
                     </div>
                 </div>
