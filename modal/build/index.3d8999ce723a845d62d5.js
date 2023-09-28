@@ -2,15 +2,16 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./src/components/RssslModal.jsx":
-/*!***************************************!*\
-  !*** ./src/components/RssslModal.jsx ***!
-  \***************************************/
+/***/ "./src/components/Modal/RssslModal.jsx":
+/*!*********************************************!*\
+  !*** ./src/components/Modal/RssslModal.jsx ***!
+  \*********************************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _modal_scss__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modal.scss */ "./src/components/Modal/modal.scss");
 
 /** @jsx wp.element.createElement */
 const {
@@ -21,8 +22,13 @@ const {
   useState,
   useEffect
 } = wp.element;
+const {
+  __
+} = wp.i18n;
+
 function RssslModal() {
   const [isOpen, setOpen] = useState(false);
+  const handleOpen = () => {};
   useEffect(() => {
     const showModalListener = () => {
       setOpen(true);
@@ -35,12 +41,38 @@ function RssslModal() {
     };
   }, [isOpen]); // Add isOpen as a dependency
 
-  return wp.element.createElement("div", null, isOpen && wp.element.createElement(Modal, {
-    title: "My Modal Title",
-    onRequestClose: () => setOpen(false)
-  }, wp.element.createElement("p", null, "This is the modal content.")));
+  return wp.element.createElement("div", {
+    className: "rsssl-modal"
+  }, isOpen && wp.element.createElement(Modal, {
+    title: __("Are you sure?", "really-simple-ssl"),
+    onRequestClose: () => setOpen(false),
+    open: handleOpen()
+  }, wp.element.createElement("div", {
+    className: "rsssl-modal-body"
+  }, wp.element.createElement("p", null, "My Modal Content")), wp.element.createElement("div", {
+    className: "rsssl-modal-footer"
+  }, wp.element.createElement("img", {
+    className: "rsssl-logo",
+    src: rsssl_modal.plugin_url + "assets/img/really-simple-ssl-logo.svg",
+    alt: "Really Simple SSL"
+  }), wp.element.createElement(Button, {
+    isPrimary: true,
+    onClick: () => setOpen(false)
+  }, __("Cancel", "really-simple-ssl")))));
 }
 /* harmony default export */ __webpack_exports__["default"] = (RssslModal);
+
+/***/ }),
+
+/***/ "./src/components/Modal/modal.scss":
+/*!*****************************************!*\
+  !*** ./src/components/Modal/modal.scss ***!
+  \*****************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
 
 /***/ }),
 
@@ -131,14 +163,14 @@ var __webpack_exports__ = {};
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _components_RssslModal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/RssslModal */ "./src/components/RssslModal.jsx");
+/* harmony import */ var _components_Modal_RssslModal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/Modal/RssslModal */ "./src/components/Modal/RssslModal.jsx");
 
 /** @jsx wp.element.createElement */
 
 
 document.addEventListener('DOMContentLoaded', () => {
   const root = wp.element.createRoot(document.getElementById('rsssl-modal-root'));
-  root.render(wp.element.createElement(_components_RssslModal__WEBPACK_IMPORTED_MODULE_1__["default"], null));
+  root.render(wp.element.createElement(_components_Modal_RssslModal__WEBPACK_IMPORTED_MODULE_1__["default"], null));
 });
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initEventListener);
@@ -165,4 +197,4 @@ function initEventListener() {
 }();
 /******/ })()
 ;
-//# sourceMappingURL=index.da9a4698a215dc28bf2c.js.map
+//# sourceMappingURL=index.3d8999ce723a845d62d5.js.map

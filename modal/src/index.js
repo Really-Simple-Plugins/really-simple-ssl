@@ -1,14 +1,11 @@
 /** @jsx wp.element.createElement */
-import {
-    render, createRoot
-} from '@wordpress/element';
-import RssslModal from "./components/RssslModal";
+
+import RssslModal from "./components/Modal/RssslModal";
 
 document.addEventListener( 'DOMContentLoaded', () => {
     const root = wp.element.createRoot(document.getElementById('rsssl-modal-root'));
     root.render(<RssslModal />);
 });
-
 
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initEventListener);

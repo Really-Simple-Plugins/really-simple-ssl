@@ -1,0 +1,13 @@
+.rsssl-modal {
+  background-color:blue;
+  .components-modal__content {
+    width:600px;
+    min-height:250px;
+  }
+  .rsssl-modal-footer {
+    display:flex;
+    img {
+      width:150px;
+    }
+  }
+}
