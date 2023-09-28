@@ -1652,3 +1652,4 @@ function rsssl_fields( $load_values = true ) {
 
     return array_values($fields);
 }
+

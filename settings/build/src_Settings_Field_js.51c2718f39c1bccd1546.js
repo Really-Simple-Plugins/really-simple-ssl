@@ -1893,12 +1893,12 @@ const EventLogDataTable = props => {
         ...dataItem
       };
       newItem.iso2_code = generateFlag(newItem.iso2_code, newItem.country_name);
-      if (newItem.username === '' || newItem.username === null) {
-        newItem.username = '—';
-      }
-      if (newItem.source_ip === '' || newItem.source_ip === null) {
-        newItem.source_ip = '—';
-      }
+      // if (newItem.username === '' || newItem.username === null) {
+      //     newItem.username = '—';
+      // }
+      // if (newItem.source_ip === '' || newItem.source_ip === null) {
+      //     newItem.source_ip = '—';
+      // }
       newItem.expandableRows = true;
       return newItem;
     });
@@ -24623,6 +24623,7 @@ __webpack_require__.r(__webpack_exports__);
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 <<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
+<<<<<<<< HEAD:settings/build/src_Settings_Field_js.71728f3a274feb041ab6.js
 //# sourceMappingURL=src_Settings_Field_js.71728f3a274feb041ab6.js.map
 ========
 //# sourceMappingURL=src_Settings_Field_js.2a9f68f4c72b1ac2b97c.js.map
@@ -24708,3 +24709,6 @@ __webpack_require__.r(__webpack_exports__);
 ========
 //# sourceMappingURL=src_Settings_Field_js.3eb12e60aba0be3259c7.js.map
 >>>>>>>> cb7606fdb (found an issue where data was ghosting, solved this issue):settings/build/src_Settings_Field_js.3eb12e60aba0be3259c7.js
+========
+//# sourceMappingURL=src_Settings_Field_js.51c2718f39c1bccd1546.js.map
+>>>>>>>> da3ad957a (fixed an issue with config):settings/build/src_Settings_Field_js.51c2718f39c1bccd1546.js
