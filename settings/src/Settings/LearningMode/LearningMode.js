@@ -5,10 +5,12 @@ import Delete from "./Delete";
 import Icon from "../../utils/Icon";
 import useFields from "./../FieldsData";
 import useLearningMode from "./LearningModeData";
+import {Button} from "@wordpress/components";
+import React from "react";
 
 const LearningMode = (props) => {
     const {updateField, getFieldValue, getField, setChangedField, highLightField, saveFields} = useFields();
-    const {fetchLearningModeData, learningModeData, dataLoaded} = useLearningMode();
+    const {fetchLearningModeData, learningModeData, dataLoaded, updateStatus, deleteData } = useLearningMode();
 
     //used to show if a feature is already enforced by a third party
     const [enforcedByThirdparty, setEnforcedByThirdparty] = useState(0);
@@ -25,6 +27,9 @@ const LearningMode = (props) => {
     const [filterValue, setFilterValue] = useState(-1);
     //the value that is used to enable or disable this feature. On or of.
     const [controlField, setControlField] = useState(false);
+    // the value that is used to select and deselect rows
+    const [rowsSelected, setRowsSelected] = useState([]);
+    const [rowCleared, setRowCleared] = useState(false);
 
     const [DataTable, setDataTable] = useState(null);
     const [theme, setTheme] = useState(null);
@@ -171,8 +176,33 @@ const LearningMode = (props) => {
         item.deleteControl = <Delete item={item} field={props.field}/>;
     }
 
-    if (!DataTable || !theme) return null;
+    const handleMultiRowStatus = (status, selectedRows, type) => {
+        selectedRows.forEach(row => {
+            //the updateItemId allows us to update one specific item in a field set.
+            updateStatus(status, row, type);
+        });
+        setRowCleared(true);
+        setRowsSelected([]);
+        // Reset rowCleared back to false after the DataTable has re-rendered
+        setTimeout(() => setRowCleared(false), 0);
+    }
 
+    const handleMultiRowDelete = (  selectedRows, type) => {
+        selectedRows.forEach(row => {
+            //the updateItemId allows us to update one specific item in a field set.
+            deleteData( row, type );
+        });
+        setRowCleared(true);
+        setRowsSelected([]);
+        // Reset rowCleared back to false after the DataTable has re-rendered
+        setTimeout(() => setRowCleared(false), 0);
+    }
+    function handleSelection(state) {
+        setRowCleared(false);
+        setRowsSelected(state.selectedRows);
+    }
+
+    if (!DataTable || !theme) return null;
     return (
         <>
             <div>
@@ -181,6 +211,56 @@ const LearningMode = (props) => {
                         <div></div><div></div><div></div><div></div>
                     </div>
                 </>}
+                {rowsSelected.length > 0 && (
+                    <div
+                        style={{
+                            marginTop: '1em',
+                            marginBottom: '1em',
+                        }}
+                    >
+                        <div
+                            className={"rsssl-multiselect-datatable-form rsssl-primary"}
+                        >
+                            <div>
+                                {__("You have selected", "really-simple-ssl")} {rowsSelected.length} {__("rows", "really-simple-ssl")}
+                            </div>
+
+                            <div className="rsssl-action-buttons">
+                                {(Number(filterValue) === -1 || Number(filterValue) === 0 ) &&
+                                <div className="rsssl-action-buttons__inner">
+                                    <Button
+                                        // className={"button button-red rsssl-action-buttons__button"}
+                                        className={"button button-secondary rsssl-status-allowed rsssl-action-buttons__button"}
+                                        onClick={ () => handleMultiRowStatus( 0, rowsSelected, props.field.id ) }
+                                    >
+                                        {__('Allow', 'really-simple-ssl')}
+                                    </Button>
+                                </div>
+                                }
+                                {(Number(filterValue) === -1 || Number(filterValue) === 1 ) &&
+                                    <div className="rsssl-action-buttons__inner">
+                                        <Button
+                                            // className={"button button-red rsssl-action-buttons__button"}
+                                            className={"button button-primary rsssl-action-buttons__button"}
+                                            onClick={ () => handleMultiRowStatus( 1, rowsSelected, props.field.id ) }
+                                        >
+                                            {__('Revoke', 'really-simple-ssl')}
+                                        </Button>
+                                    </div>
+                                }
+                                <div className="rsssl-action-buttons__inner">
+                                    <Button
+                                        // className={"button button-red rsssl-action-buttons__button"}
+                                        className={"button button-red rsssl-action-buttons__button"}
+                                        onClick={ () => handleMultiRowDelete( rowsSelected, props.field.id ) }
+                                    >
+                                        {__('Remove', 'really-simple-ssl')}
+                                    </Button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
                 {data.length>0 && <>
                     <DataTable
                         columns={columns}
@@ -192,6 +272,10 @@ const LearningMode = (props) => {
                         theme={theme}
                         customStyles={customStyles}
                         conditionalRowStyles={conditionalRowStyles}
+                        selectableRows
+                        selectableRowsHighlight={true}
+                        onSelectedRowsChange={handleSelection}
+                        clearSelectedRows={rowCleared}
                     /></>
                 }
               <div key="2" className={"rsssl-learning-mode-footer "}>

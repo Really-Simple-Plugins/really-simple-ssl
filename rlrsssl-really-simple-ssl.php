@@ -24,6 +24,10 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
+use security\wordpress\DynamicTables\DataTable;
+use security\wordpress\DynamicTables\QueryBuilder;
+
 defined('ABSPATH') or die("you do not have access to this page!");
 
 if (!function_exists('rsssl_activation_check')) {
@@ -48,6 +52,7 @@ class REALLY_SIMPLE_SSL
 	public $placeholder;
 	public $certificate;
 	public $wp_cli;
+    public $mailer_admin;
 	public $site_health;
     public $vulnerabilities;
 
@@ -75,6 +80,7 @@ class REALLY_SIMPLE_SSL
 				self::$instance->placeholder = new rsssl_placeholder();
 				self::$instance->server = new rsssl_server();
 				self::$instance->admin = new rsssl_admin();
+				self::$instance->mailer_admin = new rsssl_mailer_admin();
 				self::$instance->onboarding = new rsssl_onboarding();
 				self::$instance->progress = new rsssl_progress();
 				self::$instance->certificate = new rsssl_certificate();
@@ -121,6 +127,7 @@ class REALLY_SIMPLE_SSL
             require_once( rsssl_path . 'onboarding/class-onboarding.php' );
             require_once( rsssl_path . 'placeholders/class-placeholder.php' );
             require_once( rsssl_path . 'class-admin.php');
+            require_once( rsssl_path . 'mailer/class-mail-admin.php');
 			require_once( rsssl_path . 'class-cache.php');
 			require_once( rsssl_path . 'class-server.php');
             require_once( rsssl_path . 'progress/class-progress.php');
@@ -132,6 +139,11 @@ class REALLY_SIMPLE_SSL
 				require_once( rsssl_path . 'upgrade/upgrade-to-pro.php');
 			}
 		}
+
+        // if not logged in and on log-in page, include mailer for 2FA e-mails
+        if ( ! rsssl_admin_logged_in() && is_login() ) {
+            require_once(rsssl_path . 'mailer/class-mail.php');
+        }
 
         require_once( rsssl_path . 'lets-encrypt/cron.php' );
 		require_once( rsssl_path . '/security/security.php');
@@ -253,3 +265,23 @@ if ( !function_exists('rsssl_is_logged_in_rest')){
         return is_user_logged_in();
 	}
 }
+
+/**
+ * Add rsssl_two_fa_status usermeta field
+ *
+ * @return void
+ */
+function rsssl_register_user_meta() {
+    register_meta('user', 'rsssl_two_fa_status', [
+        'show_in_rest' => true,
+        'single' => true,
+        'type' => 'string',
+        'description' => 'The method of two-factor authentication for the user.',
+        'default' => 'disabled',
+        'auth_callback' => function() {
+            return rsssl_user_can_manage();
+        },
+    ]);
+}
+
+add_action( 'init' , 'rsssl_register_user_meta' );

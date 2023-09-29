@@ -28,14 +28,49 @@ function rsssl_remove_fields($fields){
 
 	if ( is_multisite() && !rsssl_is_networkwide_active() ){
 		unset($fields[$redirect_index]['options']['htaccess']);
+		$fields = array_values($fields);
 	}
 
 	if ( !rsssl_get_option('do_not_edit_htaccess') ){
 		$index = array_search( 'do_not_edit_htaccess', array_column( $fields, 'id' ), true );
 		unset($fields[$index]);
+		$fields = array_values($fields);
 	}
+
+	// 2FA and LLA e-mail verification help texts
+	if ( ! rsssl_is_email_verified() ) {
+		$index = array_search( 'send_verification_email', array_column( $fields, 'id' ), true );
+		$fields[$index]['help'] = rsssl_email_help_text();
+		$fields = array_values($fields);
+	}
+
+	if ( ! rsssl_is_email_verified() && rsssl_get_option('two_fa_enabled') == '1' ) {
+		$index = array_search( 'two_fa_enabled', array_column( $fields, 'id' ), true );
+		$fields[$index]['help'] = rsssl_email_help_text();
+		$fields = array_values($fields);
+	}
+
+	if ( ! rsssl_is_email_verified() && rsssl_get_option('enable_limited_login_attempts') == '1' ) {
+		$index = array_search( 'limit_login_attempts_amount', array_column( $fields, 'id' ), true );
+		$fields[$index]['help'] = rsssl_email_help_text();
+		$fields = array_values($fields);
+	}
+
 	return $fields;
 }
 add_filter('rsssl_fields', 'rsssl_remove_fields', 10, 1);
 
+function rsssl_email_help_text() {
 
+	return [
+		'label' => rsssl_is_email_verified() ? 'success' : 'warning',
+		'title' => __( "Email validation", 'really-simple-ssl' ),
+		'url'   => add_query_arg( [ 'page' => 'really-simple-security#settings/general/email' ], rsssl_admin_url() ),
+		'text'  => rsssl_is_email_verified()
+			? __( "Email validation completed", 'really-simple-ssl' )
+			: ( check_if_email_essential_feature()
+				? __( "You're using a feature where email is an essential part of the functionality. Please validate that you can send emails on your server.", 'really-simple-ssl' )
+				: __("Email not verified yet. Verify your email address to get the most out of Really Simple SSL", "really-simple-ssl")
+			),
+	];
+}

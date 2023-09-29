@@ -1,16 +1,20 @@
 import {
+    Button,
     SelectControl,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import {useState,useEffect} from '@wordpress/element';
 import Icon from "../utils/Icon";
 import useFields from "./FieldsData";
+import React from "react";
 
 const PermissionsPolicy = (props) => {
     const {fields, updateField, updateSubField, setChangedField, saveFields} = useFields();
     const [enablePermissionsPolicy, setEnablePermissionsPolicy] = useState(0);
     const [DataTable, setDataTable] = useState(null);
     const [theme, setTheme] = useState(null);
+    const [rowsSelected, setRowsSelected] = useState([]);
+    const [rowCleared, setRowCleared] = useState(false);
     useEffect( () => {
         import('react-data-table-component').then(({ default: DataTable, createTheme }) => {
             setDataTable(() => DataTable);
@@ -40,6 +44,26 @@ const PermissionsPolicy = (props) => {
         saveFields(true, false);
     }
 
+    const OnClickHandler = (selectedRows, value) => {
+        let field= props.field;
+        if (typeof field.value === 'object') {
+            updateField(field.id, Object.values(field.value))
+        }
+
+        selectedRows.forEach(row => {
+            //the updateItemId allows us to update one specific item in a field set.
+            updateSubField(field.id, row.id, value);
+            setChangedField(field.id, value);
+        });
+        saveFields(true, false);
+
+        setRowCleared(true);
+        setRowsSelected([]);
+        // Reset rowCleared back to false after the DataTable has re-rendered
+        setTimeout(() => setRowCleared(false), 0);
+    }
+
+
     const togglePermissionsPolicyStatus = (e, enforce) => {
          e.preventDefault();
         //look up permissions policy enable field //enable_permissions_policy
@@ -53,7 +77,17 @@ const PermissionsPolicy = (props) => {
 
     let field = props.field;
     let fieldValue = field.value;
-    let options = props.options;
+    const buttons = [
+        'button-secondary',
+        'button-primary',
+        'button-red',
+    ];
+    //we add a button property to the options
+
+    let options = props.options.map((option, index) => {
+        option.button = buttons[index];
+        return option;
+    });
 
     columns = [];
     field.columns.forEach(function(item, i) {
@@ -102,10 +136,46 @@ const PermissionsPolicy = (props) => {
         },
     };
 
+    function handleSelection(state) {
+        setRowCleared(false);
+        setRowsSelected(state.selectedRows);
+    }
+
     if (!DataTable || !theme) return null;
+
 
     return (
         <div>
+            {rowsSelected.length > 0 && (
+            <div
+                style={{
+                    marginTop: '1em',
+                    marginBottom: '1em',
+                }}
+            >
+                <div
+                    className={"rsssl-multiselect-datatable-form rsssl-primary"}
+                >
+                    <div>
+                        {__("You have selected", "really-simple-ssl")} {rowsSelected.length} {__("rows", "really-simple-ssl")}
+                    </div>
+
+                    <div className="rsssl-action-buttons">
+                        {options.map((option) => (
+                            <div className="rsssl-action-buttons__inner" key={option.value}>
+                                <Button
+                                    // className={"button button-red rsssl-action-buttons__button"}
+                                    className={"button " + option.button + " rsssl-action-buttons__button"}
+                                    onClick={ ( fieldValue ) => OnClickHandler( rowsSelected, option.value ) }
+                                >
+                                    {option.value === 'self' ? __("Reset", "really-simple-ssl") : __(option.label, "really-simple-ssl")}
+                                </Button>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        )}
                 <DataTable
                     columns={columns}
                     data={outputData}
@@ -113,6 +183,10 @@ const PermissionsPolicy = (props) => {
                     pagination={false}
                     customStyles={customStyles}
                     theme={theme}
+                    selectableRows
+                    selectableRowsHighlight={true}
+                    onSelectedRowsChange={handleSelection}
+                    clearSelectedRows={rowCleared}
                 />
                 { enablePermissionsPolicy!=1 && <button className="button button-primary" onClick={ (e) => togglePermissionsPolicyStatus(e, true ) }>{__("Enforce","really-simple-ssl")}</button> }
                 { enablePermissionsPolicy==1 && <div className="rsssl-locked">

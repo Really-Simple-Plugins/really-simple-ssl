@@ -151,6 +151,13 @@
     //min-height: 200px;//seems odd for blocks with only one item: lots of white space
     grid-column: span 1;
     grid-row: span 1;
+    &.rsssl-two_fa_users {
+      .rsssl-grid-item-content {
+        .rsssl-field-wrap {
+          margin-top: -50px;
+        }
+      }
+    }
 
     @media(max-width: $rsp-break-s) {
       grid-column: span 4;

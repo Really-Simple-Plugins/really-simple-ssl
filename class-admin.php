@@ -64,9 +64,8 @@ class rsssl_admin
             add_action( 'admin_init', array($this, 'recheck_certificate') );
         }
 
-	    add_filter( 'rsssl_htaccess_security_rules', array($this, 'add_htaccess_redirect') );
+        add_filter( 'rsssl_htaccess_security_rules', array($this, 'add_htaccess_redirect') );
 	    add_filter( 'before_rocket_htaccess_rules', array($this, 'add_htaccess_redirect_before_wp_rocket' ) );
-	    add_filter( 'rsssl_five_minutes_cron', array($this, 'maybe_send_mail' ) );
 	    add_action( 'rocket_activation', 'rsssl_wrap_htaccess' );
 	    add_action( 'rocket_deactivation' , 'rsssl_wrap_htaccess' );
     }
@@ -74,32 +73,6 @@ class rsssl_admin
     static function this()
     {
         return self::$_this;
-    }
-
-	/**
-	 * @return void
-	 */
-    public function maybe_send_mail(){
-        if ( !rsssl_get_option('send_notifications_email') ) {
-            return;
-        }
-
-	    $fields = get_option('rsssl_email_warning_fields', []);
-        $time_saved = get_option('rsssl_email_warning_fields_saved');
-        if ( !$time_saved ) {
-            return;
-        }
-
-	    $thirty_minutes_ago = $time_saved < strtotime("-10 minutes");
-	    $warning_blocks = array_column($fields, 'email');
-	    if ( $thirty_minutes_ago && count($warning_blocks)>0 ) {
-		    //clear the option
-		    delete_option('rsssl_email_warning_fields', []);
-		    delete_option('rsssl_email_warning_fields_saved');
-		    $mailer = new rsssl_mailer();
-            $mailer->warning_blocks = $warning_blocks;
-		    $mailer->send_mail();
-	    }
     }
 
 	/**
@@ -2340,7 +2313,29 @@ class rsssl_admin
 			        ),
 		        ),
 	        ),
+	        'email_verification_not_verified' => array(
+		        'callback' => 'RSSSL()->mailer_admin->email_verification_completed',
+		        'output' => array(
+			        'false' => array(
+				        'msg' => __( "Email verification has not been completed yet. Check your email and click the link", 'really-simple-ssl' ),
+				        'icon' => 'open',
+				        'admin_notice' => false,
+				        'url' => 'https://really-simple-ssl.com/email-verification/',
+				        'dismissible' => true,
+				        'plusone' => true,
+			        ),
+			        'true' => array(
+				        'msg' => __( "Email address successfully verified", 'really-simple-ssl' ),
+				        'icon' => 'success',
+				        'admin_notice' => false,
+				        'url' => 'https://really-simple-ssl.com/email-verification/',
+				        'dismissible' => true,
+				        'plusone' => false,
+			        ),
+		        ),
+	        ),
         );
+
         //on multisite, don't show the notice on subsites.
         //we can't make different sets for network admin and for subsites (at least not for admin notices), as these notices are cached,
         //so the same cache will be used on both types of site
