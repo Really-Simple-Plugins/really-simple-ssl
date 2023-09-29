@@ -133,13 +133,13 @@ const Settings = () => {
               <div className={'rsssl-grid-item-footer-buttons'}>
                 {/*This will be shown only if current step is not the first one*/}
                 {selectedSubMenuItem !== menuItems[0].id &&
-                    <a className="button button-secondary"
+                    <a className="rsssl-previous"
                        href={`#${selectedMainMenuItem}/${previousMenuItem}`}>
                       {__('Previous', 'complianz-gdpr')}
                     </a>
                 }
                 <button
-                    className="button button-primary"
+                    className="button button-secondary"
                     onClick={(e) => saveData(false)}>
                   {btnSaveText}
                 </button>

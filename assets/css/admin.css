@@ -2240,19 +2240,19 @@
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(1) {
-    width: 83%;
+    width: 61%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(2) {
-    width: 85%;
+    width: 62%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(3) {
-    width: 68%;
+    width: 77%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(4) {
-    width: 70%;
+    width: 89%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(5) {
@@ -2260,63 +2260,63 @@
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(6) {
-    width: 62%;
+    width: 77%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(7) {
-    width: 75%;
+    width: 97%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
-    width: 86%;
+    width: 76%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
-    width: 65%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
-    width: 92%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
-    width: 82%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
     width: 73%;
 }
 
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
+    width: 81%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
+    width: 90%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
+    width: 90%;
+}
+
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
-    width: 74%;
+    width: 79%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(14) {
-    width: 86%;
+    width: 73%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
-    width: 67%;
+    width: 100%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(16) {
-    width: 66%;
+    width: 76%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(17) {
-    width: 67%;
+    width: 89%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(18) {
-    width: 66%;
+    width: 99%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(19) {
-    width: 86%;
+    width: 76%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(20) {
-    width: 87%;
+    width: 98%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line ~ .rsssl-placeholder-line {
@@ -2596,6 +2596,14 @@
     display: flex;
     flex-direction: column;
     z-index: 12;
+}
+
+.rsssl div[class^=rsssl-wizard-] .rsssl-grid-item-footer-container .rsssl-grid-item-footer-buttons a.button, .rsssl div[class^=rsssl-wizard-] .rsssl-grid-item-footer-container .rsssl-grid-item-footer-buttons button {
+    box-shadow: none !important;
+}
+
+.rsssl div[class^=rsssl-wizard-] .rsssl-grid-item-footer-container .rsssl-grid-item-footer-buttons a.button:focus, .rsssl div[class^=rsssl-wizard-] .rsssl-grid-item-footer-container .rsssl-grid-item-footer-buttons a.button:active, .rsssl div[class^=rsssl-wizard-] .rsssl-grid-item-footer-container .rsssl-grid-item-footer-buttons button:focus, .rsssl div[class^=rsssl-wizard-] .rsssl-grid-item-footer-container .rsssl-grid-item-footer-buttons button:active {
+    box-shadow: none !important;
 }
 
 .rsssl div[class^=rsssl-wizard-] .rsssl-grid-item-footer-scroll-progress-container {
