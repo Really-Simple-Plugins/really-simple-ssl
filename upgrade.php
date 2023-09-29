@@ -172,6 +172,10 @@ function rsssl_upgrade() {
 		delete_option('rsssl_6_upgrade_completed' );
 	}
 
+	if ( $prev_version && version_compare( $prev_version, '7.1.0', '<' ) ) {
+		do_action( "rsssl_update_rules" );
+	}
+
 	//don't clear on each update.
 	//RSSSL()->admin->clear_admin_notices_cache();
 

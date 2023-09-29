@@ -6,7 +6,7 @@ Requires at least: 5.8
 License: GPL2
 Tested up to: 6.3
 Requires PHP: 7.2
-Stable tag: 7.0.8
+Stable tag: 7.1.0
 
 The easiest way to improve security! Leverage your SSL certificate and protect your website visitors.
 
@@ -111,6 +111,14 @@ The plugin checks your certificate before enabling, but if, for example, you mig
 If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions](https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/) instead.
 
 == Changelog ==
+= 7.1.0 =
+* September 26th 2023
+* Improvement: detection if advanced-headers.php file is running
+
+= 7.0.9 =
+* September 5th 2023
+* Improvement: typo update word
+* Improvement: translatability in several strings.
 
 = 7.0.8 =
 * August 8th 2023

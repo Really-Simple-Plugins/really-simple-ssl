@@ -16,6 +16,7 @@ const Vulnerabilities = () => {
     const [vulnerabilityWord, setVulnerabilityWord] = useState('');
     const [updateWord, setUpdateWord] = useState('');
     const [updateWordCapitalized, setUpdateWordCapitalized] = useState('');
+    const [vulnerabilityWordCapitalized, setVulnerabilityWordCapitalized] = useState('');
     const [updateString, setUpdateString] = useState('');
     const [hardeningWord, setHardeningWord] = useState('');
     const [notEnabledHardeningFields, setNotEnabledHardeningFields] = useState(0);
@@ -35,6 +36,7 @@ const Vulnerabilities = () => {
     useEffect(() => {
         //singular or plural of the word vulnerability
         const v = (vulnerabilities === 1) ? __("vulnerability", "really-simple-ssl") : __("vulnerabilities", "really-simple-ssl");
+        setVulnerabilityWordCapitalized(v.charAt(0).toUpperCase() + v.slice(1));
         setVulnerabilityWord(v);
         const u = (updates === 1) ? __("update", "really-simple-ssl") : __("updates", "really-simple-ssl");
         const s = _n('You have %s update pending', 'You have %s updates pending', updates, 'really-simple-ssl').replace('%s', updates);
@@ -175,6 +177,7 @@ const Vulnerabilities = () => {
                 </>
             )
         }
+
         if (vulnerabilities) {
             return (
                 <>
@@ -256,7 +259,7 @@ const Vulnerabilities = () => {
                     <div className="rsssl-hardening-select-item">
                         {vulEnabled ? <Icon color={iconVulColor} size={23} name="radar-duotone"></Icon> : <Icon size={23}  color={iconVulEnabledColor} name="satellite-dish-duotone"></Icon>}
                         <h2>{vulEnabled ? vulnerabilities : '?'}</h2>
-                        <span className={"rsssl-badge " + badgeVulStyle}>{updateWordCapitalized}</span>
+                        <span className={"rsssl-badge " + badgeVulStyle}>{vulnerabilityWordCapitalized}</span>
                     </div>
                     <div className="rsssl-hardening-select-item">
                         { updates ? <Icon size={23} color={iconUpdateColor} name="rotate-exclamation-light"></Icon> : <Icon size={23} color={'black'} name="rotate-light"></Icon>}
@@ -277,7 +280,7 @@ const Vulnerabilities = () => {
                         <div className="rsssl-hardening-select-item">
                             <Icon size={23} color={'grey'} name="radar-duotone"></Icon>
                             <h2>0</h2>
-                            <span className={"rsssl-badge rsp-default"}>{updateWordCapitalized}</span>
+                            <span className={"rsssl-badge rsp-default"}>{vulnerabilityWordCapitalized}</span>
                         </div>
                         <div className="rsssl-hardening-select-item">
                             <Icon size={23} color={'grey'} name="rotate-exclamation-light"></Icon>
