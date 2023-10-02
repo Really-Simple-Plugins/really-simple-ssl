@@ -7,7 +7,7 @@ import useMenu from "../Menu/MenuData";
 import useLicense from "./License/LicenseData";
 import filterData from "./FilterData";
 import {useEffect, useState} from '@wordpress/element';
-
+import ErrorBoundary from "../utils/ErrorBoundary";
 
 /**
  * Render a grouped block of settings
@@ -15,7 +15,6 @@ import {useEffect, useState} from '@wordpress/element';
 const SettingsGroup = (props) => {
     const {fields} = useFields();
     const {selectedFilter, setSelectedFilter} = filterData();
-    const {setActiveGroupId, activeGroupId} = useMenu();
     const {licenseStatus} = useLicense();
     const {selectedSubMenuItem, subMenu} = useMenu();
     const [Field, setField] = useState(null);
@@ -100,8 +99,8 @@ const SettingsGroup = (props) => {
             {activeGroup.title && <div className="rsssl-grid-item-header">
                 <h3 className="rsssl-h4">{activeGroup.title}</h3>
                 {activeGroup.groupFilter && (
-                    <div className="rsssl-grid-item-controls">
-                        {activeGroup.groupFilter && (
+                    <ErrorBoundary fallback={"Could not load group filter"}>
+                        <div className="rsssl-grid-item-controls">
                             <select
                                 className="rsssl-group-filter"
                                 id={filterId}
@@ -122,8 +121,8 @@ const SettingsGroup = (props) => {
                                     </option>
                                 ))}
                             </select>
-                        )}
                     </div>
+                    </ErrorBoundary>
                 )}
                 {activeGroup.helpLink && anchor !== 'letsencrypt' && (
                     <div className="rsssl-grid-item-controls">
@@ -141,9 +140,15 @@ const SettingsGroup = (props) => {
                 </div>}
             </div>}
             <div className="rsssl-grid-item-content">
-                {activeGroup.intro && <div className="rsssl-settings-block-intro">{activeGroup.intro}</div>}
+                {activeGroup.intro && <ErrorBoundary fallback={"Could not load group intro"}>
+                    <div className="rsssl-settings-block-intro">{activeGroup.intro}</div>
+                </ErrorBoundary>
+                }
                 {Field && selectedFields.map((field, i) =>
-                    <Field key={"selectedFields-" + i} index={i} field={field} fields={selectedFields}/>)}
+                    <ErrorBoundary key={"selectedFields-" + i} fallback={"Could not load field "+field.id}>
+                        <Field index={i} field={field} fields={selectedFields}/>
+                    </ErrorBoundary>
+                )}
             </div>
             {disabled && !networkwide_error && <div className="rsssl-locked">
                 <div className="rsssl-locked-overlay">

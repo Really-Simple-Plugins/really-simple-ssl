@@ -7,6 +7,7 @@ import useMenu from "./Menu/MenuData";
 import useOnboardingData from "./Onboarding/OnboardingData";
 import useModal from "./Modal/ModalData";
 import {setLocaleData} from "@wordpress/i18n";
+import ErrorBoundary from "./utils/ErrorBoundary";
 
 const Page = () => {
     const {error, fields, changedFields, fetchFieldsData, updateFieldsData, fieldsLoaded} = useFields();
@@ -111,22 +112,22 @@ const Page = () => {
     }
     return (
         <div className="rsssl-wrapper">
-            {OnboardingModal && <OnboardingModal />}
+            {OnboardingModal && <ErrorBoundary fallback={"Could not load onboarding modal"}><OnboardingModal /></ErrorBoundary>}
 
-            {Modal && <Modal/>}
+            {Modal && <ErrorBoundary fallback={"Could not load modal"}><Modal/></ErrorBoundary>}
             {
                     <>
                         <Header />
                         <div className={"rsssl-content-area rsssl-grid rsssl-" + selectedMainMenuItem}>
                             { selectedMainMenuItem !== 'dashboard' && Settings && Menu && Notices &&
                                <>
-                                   <Menu />
-                                   <Settings/>
-                                   <Notices className="rsssl-wizard-notices"/>
+                                   <ErrorBoundary fallback={"Could not load menu"}><Menu /></ErrorBoundary>
+                                   <ErrorBoundary fallback={"Could not load settings"}><Settings/></ErrorBoundary>
+                                   <ErrorBoundary fallback={"Could not load notices"}><Notices className="rsssl-wizard-notices"/></ErrorBoundary>
                                </>
                             }
                             { selectedMainMenuItem === 'dashboard' && DashboardPage &&
-                                <DashboardPage />
+                                <ErrorBoundary fallback={"Could not load menu"}><DashboardPage /></ErrorBoundary>
                             }
                         </div>
                     </>

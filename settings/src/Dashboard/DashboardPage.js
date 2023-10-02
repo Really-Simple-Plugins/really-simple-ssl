@@ -15,6 +15,7 @@ import OtherPlugins from "./OtherPlugins/OtherPlugins";
 import { __ } from '@wordpress/i18n';
 import DashboardPlaceholder from "../Placeholder/DashboardPlaceholder";
 import useFields from "../Settings/FieldsData";
+import ErrorBoundary from "../utils/ErrorBoundary";
 
 const DashboardPage = () => {
     const {fieldsLoaded} = useFields();
@@ -58,7 +59,7 @@ const DashboardPage = () => {
     return (
         <>
             {!fieldsLoaded && <DashboardPlaceholder></DashboardPlaceholder>}
-            {fieldsLoaded && blocks.map((block, i) => <GridBlock key={"grid_"+i} block={block}/>)}
+            {fieldsLoaded && blocks.map((block, i) => <ErrorBoundary key={"grid_"+i} fallback={"Could not load dashboard block"}><GridBlock  block={block}/></ErrorBoundary>)}
         </>
     );
 
