@@ -152,12 +152,9 @@ function rsssl_integrations() {
 		}
 	}
 }
-if (!rsssl_admin_logged_in()) {
-	add_action( 'init', 'rsssl_integrations', 10 );
-} else {
-	//also run when fields are saved.
-	add_action( 'rsssl_after_saved_fields', 'rsssl_integrations', 20 );
-}
+
+add_action( 'init', 'rsssl_integrations', 10 );
+add_action( 'rsssl_after_saved_fields', 'rsssl_integrations', 20 );
 
 /**
  * Check if a plugin is on the deactivation list
