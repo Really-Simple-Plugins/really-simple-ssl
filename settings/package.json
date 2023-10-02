@@ -31,6 +31,7 @@
     "react-data-table-component": "^7.5.2",
     "react-modal": "^3.16.1",
     "react-select": "^5.7.3",
+    "react-tooltip": "^5.21.5",
     "react-transition-group": "^4.4.2",
     "react-use": "^17.4.0",
     "reusify": "^1.0.4",
