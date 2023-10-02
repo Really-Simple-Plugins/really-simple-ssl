@@ -193,3 +193,12 @@ nav.rdt_Pagination>div>svg {
   padding: 1em 2em;
   background: var(--rsp-blue-faded);
 }
+
+.rdt_TableRow .rdt_TableCell:last-child {
+  min-width: 20px;
+}
+
+.rdt_TableRow .rdt_TableCell:last-child button,
+.rdt_TableRow .rdt_TableCell:last-child span {
+  min-width: 20px;
+}
