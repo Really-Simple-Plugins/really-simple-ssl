@@ -126,7 +126,6 @@ function rsssl_is_integration_enabled( $plugin, $details ) {
  */
 
 function rsssl_integrations() {
-	error_log("after save fields in integrations");
 	global $rsssl_integrations_list;
 	foreach ( $rsssl_integrations_list as $plugin => $details ) {
 		$details = wp_parse_args($details,
