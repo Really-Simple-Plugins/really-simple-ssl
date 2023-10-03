@@ -186,7 +186,6 @@ function rsssl_menu() {
 				[
 					'id'        => 'vulnerabilities',
 					'title'     => __( 'Vulnerabilities', 'really-simple-ssl' ),
-					'featured'  => true,
 					'menu_items' => [
 						[
 							'id' => 'vulnerabilities_basic',
@@ -194,6 +193,7 @@ function rsssl_menu() {
 							'title' => __( 'Detection', 'really-simple-ssl' ),
 							'intro' => __( 'Here you can configure vulnerability detection, notifications and measures. To learn more about the features displayed, please use the instructions linked in the top-right corner.', 'really-simple-ssl' ),
 							'helpLink' => 'https://really-simple-ssl.com/instructions/about-vulnerabilities/',
+							'featured'  => true,
 						],
 						[
 							'id' => 'vulnerabilities_notifications',

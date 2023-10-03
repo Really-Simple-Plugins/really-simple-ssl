@@ -3,7 +3,7 @@
   background: none !important;
   box-shadow: none !important;
   .rsssl-grid-item-header {
-    padding: 0;
+    padding-left: var(--rsp-spacing-xs);
   }
   .rsssl-grid-item-content{
     padding: 0;
@@ -16,6 +16,21 @@
 }
 
 .rsssl-wizard-menu-items {
+  .rsssl-main-menu {
+    .rsssl-active {
+      border-radius: var(--rsp-border-radius-s);
+      background: var(--rsp-yellow-faded);
+      box-shadow: var(--rsp-box-shadow);
+    }
+
+    .rsssl-menu-item {
+      a {
+        span {
+          font-weight: 600;
+        }
+      }
+    }
+  }
   .rsssl-menu-item{
     a{
       display: flex;
@@ -25,28 +40,27 @@
       color: var(--rsp-text-color);
       font-size: var(--rsp-fs-400);
       padding-block: var(--rsp-spacing-xs);
-      padding-inline: var(--rsp-spacing-xs);
-      @include rsssl-inline-block-padding;
       transition: all 0.2s ease-in-out;
-      border-left: 4px solid transparent;
+      padding-left: var(--rsp-spacing-xs);
       &:hover {
         text-decoration: underline;
       }
     }
     &.rsssl-active{
       > a{
-        //text-decoration: underline;
-        color: var(--rsp-dark-blue);
         font-weight: 600;
-        //border-left: 4px solid var(--rsp-dark-blue);
-        //background-color: #f2e6c966;
+      }
+      a {
+        &:focus {
+          box-shadow: none !important;
+        }
       }
     }
     &.rsssl-featured{
 
       &.rsssl-active {
         .rsssl-menu-item-beta-pill {
-          color: var(--rsp-black);
+          color: var(--rsp-dark-blue);
         }
       }
       a{
@@ -59,11 +73,7 @@
             font-size: var(--rsp-fs-100);
         }
         .rsssl-menu-item-beta-pill{
-          background: var(--rsp-yellow);
-          color: var(--rsp-text-color-black);
-          padding: 4px 8px;
-          border-radius: var(--rsp-border-radius-xs);
-          font-size: var(--rsp-fs-100);
+          color: var(--rsp-dark-blue);
         }
       }
     }
@@ -113,7 +123,6 @@
       color: var(--rsp-text-color);
       font-size: var(--rsp-fs-400);
       padding-block: var(--rsp-spacing-xs);
-      padding-inline: var(--rsp-spacing-xs) !important;
       @include rsssl-inline-block-padding;
       transition: all 0.2s ease-in-out;
       border-left: 4px solid transparent;
@@ -129,6 +138,9 @@
       a {
         text-decoration: none;
         position: relative;
+        span {
+          color: initial;
+        }
 
         &::before {
           content: '\2022';
