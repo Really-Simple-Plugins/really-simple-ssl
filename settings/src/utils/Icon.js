@@ -444,32 +444,6 @@ const IconHtml = React.forwardRef(function IconHtml(props, ref){
                       d="M369.1 75A48 48 0 1 1 437 142.9 48 48 0 1 1 369.1 75zM416 256a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zM208 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zM75 369.1A48 48 0 1 1 142.9 437 48 48 0 1 1 75 369.1zm294.2 0A48 48 0 1 1 437 437a48 48 0 1 1 -67.9-67.9z"/>
             </svg>
     }
-    // const StyledTooltip = styled(({className, ...props}) => (
-    //     <Tooltip {...props} classes={{popper: className}}/>
-    // ))(({theme}) => ({
-    //     [`& .MuiTooltip-tooltip`]: {
-    //         padding: "10px 20px",
-    //         fontWeight: "340",
-    //         fontSize: "var(--rsp-fs-200)",
-    //         fontFamily: "unset",
-    //         backgroundColor: "var(--rsp-black)",
-    //     }
-    // }));
-
-    //https://smartdevpreneur.com/how-to-style-the-material-ui-tooltip/#Resources_and_Related_Posts
-    // return (
-    //     <StyledTooltip
-    //         arrow
-    //         enterDelay={200}
-    //         title={props.tooltip}
-    //         //leaveDelay={2000000} //set to 100000000  to be able to examine the DOM
-    //         placement="bottom"
-    //     >
-    //         <div className={'rsssl-icon rsssl-icon-' + iconName}>
-    //             {renderedIcon.html}
-    //         </div>
-    //     </StyledTooltip>
-    // );
 
     return (
         <div {...props} ref={ref}>{renderedIcon}</div>
