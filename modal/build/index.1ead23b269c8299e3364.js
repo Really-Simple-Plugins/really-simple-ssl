@@ -41,8 +41,9 @@ function RssslModal() {
     };
   }, [isOpen]); // Add isOpen as a dependency
 
-  return wp.element.createElement(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, isOpen && wp.element.createElement(Modal, {
-    className: "rsssl-modal",
+  return wp.element.createElement(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, isOpen && wp.element.createElement("div", {
+    className: "rsssl-modal"
+  }, wp.element.createElement(Modal, {
     title: __("Are you sure?", "really-simple-ssl"),
     onRequestClose: () => setOpen(false),
     open: handleOpen()
@@ -50,14 +51,14 @@ function RssslModal() {
     className: "rsssl-modal-body"
   }, wp.element.createElement("p", null, "My Modal Content")), wp.element.createElement("div", {
     className: "rsssl-modal-footer"
-  }, wp.element.createElement("img", {
+  }, wp.element.createElement("div", null, wp.element.createElement("img", {
     className: "rsssl-logo",
     src: rsssl_modal.plugin_url + "assets/img/really-simple-ssl-logo.svg",
     alt: "Really Simple SSL"
-  }), wp.element.createElement(Button, {
+  })), wp.element.createElement("div", null, wp.element.createElement(Button, {
     isPrimary: true,
     onClick: () => setOpen(false)
-  }, __("Cancel", "really-simple-ssl")))));
+  }, __("Cancel", "really-simple-ssl")))))));
 }
 /* harmony default export */ __webpack_exports__["default"] = (RssslModal);
 
@@ -196,4 +197,4 @@ function initEventListener() {
 }();
 /******/ })()
 ;
-//# sourceMappingURL=index.17f696faa08080b40016.js.map
+//# sourceMappingURL=index.1ead23b269c8299e3364.js.map

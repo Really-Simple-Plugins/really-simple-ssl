@@ -26,20 +26,26 @@ function RssslModal() {
     return (
         <>
             {isOpen && (
-                    <Modal
-                        className="rsssl-modal"
-                        title={__("Are you sure?", "really-simple-ssl")}
-                        onRequestClose={() => setOpen(false)}
-                        open={handleOpen()}>
-                        <div className="rsssl-modal-body">
-                            <p>My Modal Content</p>
-                        </div>
-                        <div className="rsssl-modal-footer">
-                            <img className="rsssl-logo" src={rsssl_modal.plugin_url+"assets/img/really-simple-ssl-logo.svg"} alt="Really Simple SSL" />
+                    <div className="rsssl-modal">
+                        <Modal
+                            title={__("Are you sure?", "really-simple-ssl")}
+                            onRequestClose={() => setOpen(false)}
+                            open={handleOpen()}>
+                            <div className="rsssl-modal-body">
+                                <p>My Modal Content</p>
+                            </div>
+                            <div className="rsssl-modal-footer">
+                                <div>
+                                    <img className="rsssl-logo" src={rsssl_modal.plugin_url+"assets/img/really-simple-ssl-logo.svg"} alt="Really Simple SSL" />
+                                </div>
+                                <div>
+                                    <Button isPrimary onClick={() => setOpen(false)}>{__("Cancel", "really-simple-ssl")}</Button>
+                                </div>
 
-                            <Button isPrimary onClick={() => setOpen(false)}>{__("Cancel", "really-simple-ssl")}</Button>
-                        </div>
-                    </Modal>
+                            </div>
+                        </Modal>
+                    </div>
+
 
         )}
             </>

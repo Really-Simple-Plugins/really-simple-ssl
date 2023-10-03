@@ -1,13 +1,21 @@
-.rsssl-modal {
-  background-color:blue;
   .components-modal__content {
     width:600px;
     min-height:250px;
+    & > div:nth-child(2) {
+      display: flex;
+      height:100%;
+      flex-direction: column;
+    }
+  }
+  .rsssl-modal-body {
+    flex-grow: 1;
   }
   .rsssl-modal-footer {
     display:flex;
+    justify-content: space-between;
+    align-items: center;
     img {
       width:150px;
     }
   }
-}
+

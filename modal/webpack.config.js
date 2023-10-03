@@ -6,5 +6,5 @@ module.exports = {
         ...defaultConfig.output,
         filename: '[name].[contenthash].js',
         chunkFilename: '[name].[contenthash].js',
-    },
+    }
 };
