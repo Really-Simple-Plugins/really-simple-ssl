@@ -4,33 +4,19 @@ const { useState, useEffect } = wp.element;
 const { __ } = wp.i18n;
 import './RssslModal.scss';
 
-function RssslModal() {
-    const [isOpen, setOpen] = useState(false);
+const RssslModal = ({title, content, cancelBtnTxt, confirmBtnTxt, onConfirm, isOpen, setOpen}) => {
     const handleOpen = () => {
 
     }
-
-    useEffect(() => {
-        const showModalListener = () => {
-            setOpen(true);
-        };
-
-        document.addEventListener('showRssslModalEvent', showModalListener);
-
-        // Cleanup the listener on component unmount
-        return () => {
-            document.removeEventListener('showRssslModalEvent', showModalListener);
-        };
-    }, [isOpen]); // Add isOpen as a dependency
 
     return (
         <>
             {isOpen && (
                     <div className="rsssl-modal">
                         <Modal
-                            title={__("Are you sure?", "really-simple-ssl")}
+                            title={title}
                             onRequestClose={() => setOpen(false)}
-                            open={handleOpen()}>
+                            open={isOpen}>
                             <div className="rsssl-modal-body">
                                 <p>My Modal Content</p>
                             </div>
