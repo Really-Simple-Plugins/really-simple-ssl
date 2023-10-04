@@ -112,7 +112,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 
 == Changelog ==
 = 7.1.0 =
-* September 26th 2023
+* October 4th 2023
 * Improvement: detection if advanced-headers.php file is running
 
 = 7.0.9 =
