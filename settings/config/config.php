@@ -120,7 +120,7 @@ function rsssl_fields( $load_values = true ) {
             'warning'     => true,
             'label'       => __( "Email verification", 'really-simple-ssl' ),
             'disabled'    => rsssl_is_email_verified(),
-            'tooltip'  => __( "Verify your e-mail address to get the most out of Really Simple SSL.", 'really-simple-ssl' ),
+            'tooltip'  => __( "Verify your email address to get the most out of Really Simple SSL.", 'really-simple-ssl' ),
         ],
         [
             'id'               => 'notifications_email_address',
@@ -1028,7 +1028,7 @@ function rsssl_fields( $load_values = true ) {
                     'sortable'   => true,
                     'searchable' => true,
                     'column'     => 'source_ip',
-                    'width'    => '20%',
+                    'width'    => '45%',
                 ],
                 [
                     'name'     => __('Event', 'really-simple-ssl'),
@@ -1036,6 +1036,11 @@ function rsssl_fields( $load_values = true ) {
                     'column'   => 'event_name',
                     'width'         => '20%',
                 ],
+
+                [
+                    'width'    => '1px',
+                ]
+
             ],
         ],
 
@@ -1248,6 +1253,13 @@ function rsssl_fields( $load_values = true ) {
             'group_id' => 'two_fa_general',
 			'type'     => 'checkbox',
 			'label'    => __( "Enable login protection", "really-simple-ssl" ),
+			'help'     => [
+					'label' => 'default',
+					'url'   => 'https://really-simple-ssl.com/instructions/about-login-protection/?mtm_campaign=instructions&mtm_source=2fa',
+					'title' => __("About Login Protection", 'really-simple-ssl'),
+					'text'  => __('Two-step verification is the first feature we regard as login protection. Want to know more about this feature, and what is to come?',
+							'really-simple-ssl'),
+			],
 			'disabled' => false,
 			'default'  => 'disabled',
             'server_conditions'    => [
@@ -1263,9 +1275,11 @@ function rsssl_fields( $load_values = true ) {
 			'group_id' => 'two_fa_email',
 			'type'     => 'checkbox',
 			'label'    => __( "Enable two-step verification", "really-simple-ssl" ),
-			'tooltip'  => __( "This will send emails from your server, containing a verification code to users that try to login.", 'really-simple-ssl' ),
+			'tooltip'  => __( "By enabling this feature you understand that email validation is required, and you can send email from your server reliably.", 'really-simple-ssl' ),
 			'disabled' => false,
+			'warning'  => true,
 			'default'  => 'disabled',
+
 			'server_conditions'    => [
 				'relation' => 'AND',
 				[
@@ -1280,7 +1294,7 @@ function rsssl_fields( $load_values = true ) {
 			'type'     => 'two_fa_roles',
 			'default'  => [ 'editor', 'author', 'contributor'],
             'label'    => __( "Optional for:", "really-simple-ssl" ),
-			'tooltip'  => __( "Two-step login will be enabled for these user roles, with the possibility to skip. If a user skips, Two-step login will be disabled for this user.", 'really-simple-ssl' ),
+			'tooltip'  => __( "Two-step verification will be optional for these user roles, and they can disable it on first login.", 'really-simple-ssl' ),
 			'server_conditions'    => [
 				'relation' => 'AND',
 				[
@@ -1296,7 +1310,7 @@ function rsssl_fields( $load_values = true ) {
 			'type'     => 'two_fa_roles',
 			'default'  => [ 'administrator' ],
 			'label'    => __( "Force on:", "really-simple-ssl" ),
-			'tooltip'  => __( "These user roles are forced to enter the authentication code, without the possibility to skip.", 'really-simple-ssl' ),
+			'tooltip'  => __( "These user roles are forced to enter the authentication code.", 'really-simple-ssl' ),
 			'server_conditions'    => [
 				'relation' => 'AND',
 				[
@@ -1604,6 +1618,49 @@ function rsssl_fields( $load_values = true ) {
 //                ],
             ],
         ],
+		[
+			'id'       => 'enforce_password_security_enabled',
+			'menu_id'  => 'password_security',
+			'group_id' => 'password_security_passwords',
+			'type'     => 'checkbox',
+			'label'    => __( "Enforce strong passwords", "really-simple-ssl-pro" ),
+			'disabled' => false,
+			'default'  => 'disabled',
+			'tooltip'  => __( "This adds extra requirements for strong passwords for new users and updated passwords.",
+				'really-simple-ssl' ),
+		],
+		[
+			'id'       => 'enforce_frequent_password_change',
+			'menu_id'  => 'password_security',
+			'group_id' => 'password_security_passwords',
+			'type'     => 'checkbox',
+			'label'    => __( "Enforce frequent password change", "really-simple-ssl-pro" ),
+			'disabled' => false,
+			'default'  => 'disabled',
+		],
+		[
+			'id'       => 'password_change_roles',
+			'menu_id'  => 'password_security',
+			'group_id' => 'password_security_passwords',
+			'type'     => 'roles_dropdown',
+			'default'  => [ 'administrator'],
+			'label'    => __( "User roles for password change", "really-simple-ssl-pro" ),
+			'tooltip'  => __( "Lorum ipsum some magnificent text again ipsum genearator kaput.",
+				'really-simple-ssl' ),
+		],
+		[
+			'id'       => 'password_change_frequency',
+			'menu_id'  => 'password_security',
+			'group_id' => 'password_security_passwords',
+			'type'     => 'select',
+			'default'  => '12',
+			'options'   => [
+				'6' => __( "6 months", "really-simple-ssl-pro" ),
+				'12' => __( "1 year", "really-simple-ssl-pro" ),
+				'24' => __( "2 years", "really-simple-ssl-pro" ),
+			],
+			'label'    => __( "Change passwords every", "really-simple-ssl-pro" ),
+		],
     ];
 
     $fields = apply_filters('rsssl_fields', $fields);

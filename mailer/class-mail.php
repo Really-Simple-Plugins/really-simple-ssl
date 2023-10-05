@@ -108,11 +108,11 @@ if ( !class_exists('rsssl_mailer') ) {
 		        rsssl_admin_url() . '#settings/general'
 	        );
 
-            $this->subject = __("Really Simple SSL - Verify your e-mail address", "really-simple-ssl");
-            $this->title = __("Confirm your e-mail address", "really-simple-ssl");
-            $this->message = '';
-			$this->button_text = __("Confirm e-mail", "really-simple-ssl");
-	        $this->warning_blocks[] = [
+            $this->subject = __("Really Simple SSL - Verify your email address", "really-simple-ssl");
+            $this->title = __("Please verify your email", "really-simple-ssl");
+            $this->message = 'To use certain features in Really Simple SSL we need to confirm emails are delivered without issues.';
+						$this->button_text = __("Verify email", "really-simple-ssl");
+	        	$this->warning_blocks[] = [
 		        'title' => '',
 		        'message' => sprintf(__("Click the button below to confirm your email address, or copy the following URL: %s", "really-simple-ssl"), '{url}'),
 		        'url' => $verification_url,

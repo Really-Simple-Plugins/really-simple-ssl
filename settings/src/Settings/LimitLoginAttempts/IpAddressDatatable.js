@@ -50,7 +50,6 @@ const IpAddressDatatable = (props) => {
     const [addingIpAddress, setAddingIpAddress] = useState(false);
     const [rowsSelected, setRowsSelected] = useState([]);
     const {fields, fieldAlreadyEnabled, getFieldValue, saveFields} = useFields();
-    const searchTimeoutRef = useRef(null);
 
     const moduleName = 'rsssl-group-filter-limit_login_attempts_ip_address';
 
@@ -326,17 +325,11 @@ const IpAddressDatatable = (props) => {
                             type="text"
                             className="rsssl-search-bar__input"
                             placeholder={__("Search", "really-simple-ssl")}
-                            onChange={event => {
-                                if (processing) return;
-                                // Clear any existing timeouts to prevent rapid calls
-                                if (searchTimeoutRef.current) {
-                                    clearTimeout(searchTimeoutRef.current);
-                                }
-
-                                // Set a new timeout
-                                searchTimeoutRef.current = setTimeout(() => {
+                            disabled={processing}
+                            onKeyUp={(event) => {
+                                if (event.key === 'Enter') {
                                     handleIpTableSearch(event.target.value, searchableColumns);
-                                }, 500);
+                                }
                             }}
                         />
                     </div>

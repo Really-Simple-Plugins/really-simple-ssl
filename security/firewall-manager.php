@@ -49,6 +49,15 @@ class rsssl_firewall_manager {
 	}
 
 	/**
+	 * Check if any rules were added
+	 * @return bool
+	 */
+	public function has_rules(){
+		$rules    = apply_filters('rsssl_firewall_rules', '');
+		return !empty(trim($rules));
+	}
+
+	/**
 	 * Generate security rules, and advanced-headers.php file
 	 *
 	 */
@@ -80,6 +89,7 @@ class rsssl_firewall_manager {
 		$contents .= "defined('ABSPATH') or die();" . "\n\n";
 		//allow disabling of headers for detection purposes
 		$contents .= 'if ( isset($_GET["rsssl_header_test"]) && (int) $_GET["rsssl_header_test"] ===  ' . $this->get_headers_nonce() . ' ) return;' . "\n\n";
+		$contents .= 'if (!defined("RSSSL_HEADERS_ACTIVE")) define("RSSSL_HEADERS_ACTIVE", true);'."\n";
 		$contents .= "//RULES START\n".$rules;
 
 		// write to advanced-header.php file
@@ -133,6 +143,18 @@ class rsssl_firewall_manager {
 	}
 
 	/**
+	 * Get the status for the firewall
+	 *
+	 * @return bool
+	 */
+	public function firewall_active_error(){
+		if (!$this->has_rules()) {
+			return false;
+		}
+		return !defined('RSSSL_HEADERS_ACTIVE');
+	}
+
+	/**
 	 * Show some notices
 	 * @param array $notices
 	 *
@@ -152,6 +174,22 @@ class rsssl_firewall_manager {
 				'advanced-headers-notwritable' => array(
 						'title' => __("Firewall", "really-simple-ssl"),
 						'msg' => __("A firewall rule was enabled, but /the wp-content/ folder is not writable.", "really-simple-ssl").' '.__("Please set the wp-content folder to writable:", "really-simple-ssl"),
+					'icon' => 'open',
+					'dismissible' => true,
+				),
+			),
+			'show_with_options' => [
+				'disable_http_methods',
+			]
+		);
+		$notices['firewall-active'] = array(
+			'condition' => ['RSSSL_SECURITY()->firewall_manager->firewall_active_error'],
+			'callback' => '_true_',
+			'score' => 5,
+			'output' => array(
+				'true' => array(
+					'title' => __("Firewall", "really-simple-ssl"),
+					'msg' => __("A firewall rule was enabled, but the firewall does not seem to get loaded correctly.", "really-simple-ssl").' '.__("Please check if the advance-headers.php file is included in the wp-config.php, and exists in the wp-content folder.", "really-simple-ssl"),
 					'icon' => 'open',
 					'dismissible' => true,
 				),

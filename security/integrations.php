@@ -90,6 +90,22 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         'option_id'            => 'enable_vulnerability_scanner',
 	    'admin_only'           => true,
     ),
+    'limit-login-attempts' => array(
+        'label'                => 'Limit login attempts',
+        'folder'               => 'wordpress',
+        'impact'               => 'medium',
+        'risk'                 => 'medium',
+        'option_id'            => 'limit_login_attempts',
+    ),
+    'two-factor' => array(
+        'label'                => '2FA',
+        'folder'               => 'wordpress/two_fa',
+        'impact'               => 'medium',
+        'risk'                 => 'low',
+        'option_id'            => 'two_fa_enabled',
+        'always_include'       => false,
+    ),
+
 ) );
 
 /**
@@ -114,7 +130,7 @@ function rsssl_is_integration_enabled( $plugin, $details ) {
 		return true;
 	}
 
-	$field_id = isset($details['option_id']) ? $details['option_id'] : false;
+	$field_id = $details['option_id'] ?? false;
 	if ($field_id && rsssl_get_option($field_id) ) {
 		return true;
 	}
@@ -151,8 +167,8 @@ function rsssl_integrations() {
 		}
 	}
 }
+
 add_action( 'plugins_loaded', 'rsssl_integrations', 10 );
-//also run when fields are saved.
 add_action( 'rsssl_after_saved_fields', 'rsssl_integrations', 20 );
 
 /**
