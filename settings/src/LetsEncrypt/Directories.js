@@ -1,7 +1,6 @@
 import {__} from '@wordpress/i18n';
 import * as rsssl_api from "../utils/api";
 import {dispatch} from '@wordpress/data';
-import {useUpdateEffect} from 'react-use';
 import sleeper from "../utils/sleeper";
 import Hyperlink from "../utils/Hyperlink";
 import {
@@ -9,6 +8,7 @@ import {
 } from '@wordpress/components';
 import useFields from "../Settings/FieldsData";
 import useMenu from "../Menu/MenuData";
+import {useEffect, useState} from '@wordpress/element';
 
 const Directories = (props) => {
     const {addHelpNotice, updateField, setChangedField, saveFields, fetchFieldsData} = useFields();
@@ -16,7 +16,7 @@ const Directories = (props) => {
 
     let action = props.action;
 
-    useUpdateEffect(() => {
+    useEffect(() => {
         if ((action && action.action === 'challenge_directory_reachable' && action.status === 'error')) {
             addHelpNotice(
                 props.field.id,
@@ -40,7 +40,7 @@ const Directories = (props) => {
                 __("The certificate will get stored in this directory.", "really-simple-ssl") + ' ' + __("By placing it outside the root folder, it is not publicly accessible.", "really-simple-ssl"),
             );
         }
-    });
+    }, [action]);
 
 
     if ( !action ) {

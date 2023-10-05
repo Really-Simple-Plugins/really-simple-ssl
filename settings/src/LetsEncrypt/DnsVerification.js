@@ -2,7 +2,6 @@ import {useState, useEffect} from "@wordpress/element";
 import { __ } from '@wordpress/i18n';
 import {dispatch} from '@wordpress/data';
 import Hyperlink from "../utils/Hyperlink";
-import {useUpdateEffect} from 'react-use';
 import {
     Button,
 } from '@wordpress/components';
@@ -17,7 +16,7 @@ const DnsVerification = (props) => {
     const [tokens, setTokens] = useState(false);
     let action = props.action;
 
-     useUpdateEffect(()=> {
+     useEffect(()=> {
         if (action && action.action==='challenge_directory_reachable' && action.status==='error') {
             addHelpNotice(
                 props.field.id,
@@ -32,7 +31,7 @@ const DnsVerification = (props) => {
          if ( newTokens ) {
              setTokens(newTokens);
          }
-     });
+     }, [action]);
 
     const handleSwitchToDir = async () => {
         await setSelectedSubMenuItem('le-directories');

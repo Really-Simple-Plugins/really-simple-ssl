@@ -42,10 +42,6 @@ const LetsEncrypt = (props) => {
         }
     }, [actionsList])
 
-    useEffect(() => {
-        // startInterval();
-    }, [])
-
     const startInterval = () => {
         intervalId.current = setInterval(() => {
             if (refProgress.current<100) {
