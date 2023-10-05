@@ -9,8 +9,11 @@ import useFields from "../Settings/FieldsData";
 import useMenu from "../Menu/MenuData";
 import * as rsssl_api from "../utils/api";
 import sleeper from "../utils/sleeper";
+import useLetsEncryptData from "./letsEncryptData";
 
 const DnsVerification = (props) => {
+    const {updateVerificationType} = useLetsEncryptData();
+
     const {fields, addHelpNotice, updateField, setChangedField, saveFields, fetchFieldsData, getFieldValue} = useFields();
     const {selectedSubMenuItem, setSelectedSubMenuItem} = useMenu();
     const [tokens, setTokens] = useState(false);
@@ -38,43 +41,14 @@ const DnsVerification = (props) => {
         await updateField('verification_type', 'dir');
         await setChangedField('verification_type', 'dir');
         await saveFields(true, true);
-        await rsssl_api.runLetsEncryptTest('update_verification_type', 'dir').then((response) => {
-            const notice = dispatch('core/notices').createNotice(
-                'success',
-                __('Switched to Directory', 'really-simple-ssl'),
-                {
-                    __unstableHTML: true,
-                    id: 'rsssl_switched_to_dns',
-                    type: 'snackbar',
-                    isDismissible: true,
-                }
-            ).then(sleeper(3000)).then((response) => {
-                dispatch('core/notices').removeNotice('rsssl_switched_to_dns');
-            });
-        });
+        await updateVerificationType('dir');
         await fetchFieldsData('le-directories');
     }
 
     const handleSwitchToDNS = async () => {
-
-        await rsssl_api.runLetsEncryptTest('update_verification_type', 'dns').then((response) => {
-
-            const notice = dispatch('core/notices').createNotice(
-                'success',
-                __('Switched to DNS', 'really-simple-ssl'),
-                {
-                    __unstableHTML: true,
-                    id: 'rsssl_switched_to_dns',
-                    type: 'snackbar',
-                    isDismissible: true,
-                }
-            ).then(sleeper(3000)).then((response) => {
-                dispatch('core/notices').removeNotice('rsssl_switched_to_dns');
-            });
-        });
+        await updateVerificationType('dns');
         await setSelectedSubMenuItem('le-dns-verification');
     }
-
 
     let verificationType = getFieldValue('verification_type');
     if (verificationType==='dir') {
