@@ -36,6 +36,10 @@ before_script:
   - curl -sS https://getcomposer.org/installer | php
 
   # Install project dependencies
+  # Conditionally use the right composer.json based on PHP version
+  - if [ "$PHP_VERSION" == "7.2" ]; then cp tests/config/composer.7.2.json composer.json; fi
+  - if [ "$PHP_VERSION" == "8.2" ]; then cp tests/config/composer.8.2.json composer.json; fi
+  
   - php composer.phar install --ignore-platform-reqs
   - php composer.phar update
   # Set up WordPress test environment
