@@ -585,6 +585,7 @@ function rsssl_sanitize_field_type($type)
         'LetsEncrypt',
         'postdropdown',
         'two_fa_roles',
+		'roles_dropdown',
 //        'two_fa_table',
 //        'verify_email',
     ];
@@ -825,6 +826,7 @@ function rsssl_sanitize_field($value, string $type, string $id)
             return rsssl_sanitize_datatable($value, $type, $id);
         case 'mixedcontentscan':
             return $value;
+		case 'roles_dropdown':
         case 'two_fa_roles':
 	        $value = !is_array($value) ? [] : $value;
             $roles = rsssl_get_roles();
