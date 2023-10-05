@@ -31,10 +31,10 @@ const RssslModal = ({title, content, list, confirmAction, confirmText, alternati
                             </ul>}
                         </div>
                         <div className="rsssl-modal-footer">
-                            <div>
+                            <div className="rsssl-modal-footer-image">
                                 <img className="rsssl-logo" src={rsssl_modal.plugin_url+"assets/img/really-simple-ssl-logo.svg"} alt="Really Simple SSL" />
                             </div>
-                            <div>
+                            <div className="rsssl-modal-footer-buttons">
                                 <Button className='rsssl-modal-cancel' onClick={() => setOpen(false)}>{__("Cancel", "really-simple-ssl")}</Button>
                                 {alternativeText && <Button className={alternativeClassName} onClick={() => alternativeAction()}>{alternativeText}</Button>}
                                 {confirmText && <Button isPrimary onClick={()=> confirmAction() }>{confirmText}</Button>}
