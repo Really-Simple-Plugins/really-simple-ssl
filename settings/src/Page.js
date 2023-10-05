@@ -7,7 +7,6 @@ import useMenu from "./Menu/MenuData";
 import useOnboardingData from "./Onboarding/OnboardingData";
 import useModal from "./Modal/ModalData";
 import {setLocaleData} from "@wordpress/i18n";
-
 const Page = () => {
     const {error, fields, changedFields, fetchFieldsData, updateFieldsData, fieldsLoaded} = useFields();
     const {showOnboardingModal, fetchOnboardingModalStatus, modalStatusLoaded,} = useOnboardingData();

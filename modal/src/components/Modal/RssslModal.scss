@@ -1,21 +1,74 @@
+  :root {
+    --rsp-red: #D7263D;
+    --rsp-grey-200: #f7f7f7;
+    --rsp-grey-400: #c6c6c6;
+  }
+.rsssl-modal {
   .components-modal__content {
-    width:600px;
-    min-height:250px;
+    width: 600px;
+    min-height: 250px;
+    //reset default padding so we can add a footer with background
+    padding:0;
+
     & > div:nth-child(2) {
       display: flex;
-      height:100%;
+      height: 100%;
       flex-direction: column;
     }
   }
+
   .rsssl-modal-body {
     flex-grow: 1;
-  }
-  .rsssl-modal-footer {
-    display:flex;
-    justify-content: space-between;
-    align-items: center;
-    img {
-      width:150px;
+    padding: 12px 32px 80px 32px; //80 is for the complete footer height + margin
+    ul {
+      column-count: 2;
+      column-gap: 20px;
+
+      li {
+        display: flex;
+        padding-bottom: 5px;
+
+        .rsssl-icon {
+          margin-top: 2px;
+          margin-right: 10px;
+        }
+      }
     }
   }
+
+  .rsssl-modal-footer {
+    background-color: var(--rsp-grey-200);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--rsp-grey-400);
+    padding: 20px 32px;
+    //ensure the footer doesn't scroll out of sight on smaller screens.
+    bottom: 0;
+    position: absolute;
+    left: 0;
+    right: 0;
+    img {
+      width: 150px;
+    }
+
+    button + button {
+      margin-left: 10px;
+    }
+
+    button {
+      &.rsssl-modal-cancel {
+        border: 1px solid var(--wp-admin-theme-color, #3858e9);
+        color: var(--wp-admin-theme-color, #3858e9);
+        background-color: transparent;
+      }
+
+      &.rsssl-modal-warning {
+        border: 1px solid var(--rsp-red);
+        color: var(--rsp-red);
+        background-color: transparent;
+      }
+    }
+  }
+}
 

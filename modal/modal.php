@@ -1,5 +1,4 @@
 <?php
-
 if ( ! defined('ABSPATH')) {
     exit;
 }
@@ -16,14 +15,8 @@ if ( ! function_exists('rsssl_plugin_plugin_page_scripts')) {
 			return;
 		}
 
-        // Enqueue wp-element and wp-components
-//        wp_enqueue_script('wp-element');
-        wp_enqueue_script('wp-components');
-	    wp_enqueue_style('wp-components'); // Styles for wp.components
-//	    wp_enqueue_style('wp-element'); // Styles for wp.element
-
+	    wp_enqueue_style('wp-components');
         $handle = 'rsssl-modal';
-
         wp_enqueue_script(
 	        $handle,
             plugins_url('build/' . $js_data['js_file'], __FILE__),
@@ -32,15 +25,19 @@ if ( ! function_exists('rsssl_plugin_plugin_page_scripts')) {
             true
         );
         wp_set_script_translations($handle, 'really-simple-ssl');
-        wp_localize_script(
+	    $token = wp_create_nonce('rsssl_deactivate_plugin');
+	    $deactivate_keep_ssl_link = add_query_arg( [ 'page' => 'really-simple-security', 'action' => 'uninstall_keep_ssl', 'token' => $token ], rsssl_admin_url() );
+
+	    wp_localize_script(
 	        $handle,
             'rsssl_modal',
             apply_filters('rsssl_localize_script', [
                 'json_translations' => $js_data['json_translations'],
                 'plugin_url' => rsssl_url,
+                'deactivate_keep_https' => $deactivate_keep_ssl_link,
+                'pro_plugin_active' => defined('rsssl_pro_version'),
             ])
         );
-		wp_enqueue_style('rsssl-modal', plugins_url('build/index.css' , __FILE__) );
 
         function rsssl_add_modal_root_div()
         {
