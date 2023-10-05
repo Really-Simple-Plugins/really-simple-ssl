@@ -72,9 +72,9 @@ variables:
   WP_VERSION: latest
   WP_MULTISITE: "0"
 
-# We test PHP 7.2
-test:php7.2:
-  image: php:7.2
+# We test PHP 7.4
+test:php7.4:
+  image: php:7.4
   variables:
     XDEBUG_VERSION: "3.1.6"
   script:
@@ -83,9 +83,9 @@ test:php7.2:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
     - if: $CI_COMMIT_BRANCH == 'master'
 
-# We test PHP 7.2 with multisite
-test:php7.2:multisite:
-  image: php:7.2
+# We test PHP 7.4 with multisite
+test:php7.4:multisite:
+  image: php:7.4
   variables:
     WP_MULTISITE: "1"
     XDEBUG_VERSION: "3.1.6"
