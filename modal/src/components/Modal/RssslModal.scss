@@ -20,10 +20,13 @@
   .rsssl-modal-body {
     flex-grow: 1;
     padding: 12px 32px 80px 32px; //80 is for the complete footer height + margin
+    p {
+      margin-top:0;
+    }
     ul {
       column-count: 2;
       column-gap: 20px;
-
+      margin-bottom:0;
       li {
         display: flex;
         padding-bottom: 5px;
