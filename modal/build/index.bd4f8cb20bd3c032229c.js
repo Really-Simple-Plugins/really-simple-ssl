@@ -2,6 +2,58 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./src/components/DeactivationModal/DeactivationModal.js":
+/*!***************************************************************!*\
+  !*** ./src/components/DeactivationModal/DeactivationModal.js ***!
+  \***************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _Modal_RssslModal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Modal/RssslModal */ "./src/components/Modal/RssslModal.js");
+
+
+const {
+  __
+} = wp.i18n;
+const {
+  useState,
+  useEffect
+} = wp.element;
+const DeactivationModal = () => {
+  console.log("test");
+  const [isOpen, setOpen] = useState(true);
+  useEffect(() => {
+    // Add an event listener to elements with the "my-link" class
+
+    const handleClick = event => {
+      event.preventDefault();
+      setOpen(true);
+    };
+
+    // Attach the click event listener to each link element
+    const targetPluginLink = document.getElementById('deactivate-really-simple-ssl');
+    console.log(targetPluginLink);
+    targetPluginLink.addEventListener('click', handleClick);
+
+    // Clean up the event listeners when the component unmounts
+    return () => {
+      targetPluginLink.removeEventListener('click', handleClick);
+    };
+  }, []);
+  let content = "TEST";
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Modal_RssslModal__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    title: __("Are you sure?", "really-simple-ssl"),
+    content: content,
+    isOpen: isOpen,
+    setOpen: setOpen
+  }));
+};
+/* harmony default export */ __webpack_exports__["default"] = (DeactivationModal);
+
+/***/ }),
+
 /***/ "./src/components/Modal/RssslModal.js":
 /*!********************************************!*\
   !*** ./src/components/Modal/RssslModal.js ***!
@@ -26,30 +78,23 @@ const {
   __
 } = wp.i18n;
 
-function RssslModal() {
-  const [isOpen, setOpen] = useState(false);
-  const handleOpen = () => {};
-  useEffect(() => {
-    const showModalListener = () => {
-      setOpen(true);
-    };
-    document.addEventListener('showRssslModalEvent', showModalListener);
-
-    // Cleanup the listener on component unmount
-    return () => {
-      document.removeEventListener('showRssslModalEvent', showModalListener);
-    };
-  }, [isOpen]); // Add isOpen as a dependency
-
+const RssslModal = ({
+  title,
+  content,
+  confirmBtnTxt,
+  onConfirm,
+  isOpen,
+  setOpen
+}) => {
   return wp.element.createElement(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, isOpen && wp.element.createElement("div", {
     className: "rsssl-modal"
   }, wp.element.createElement(Modal, {
-    title: __("Are you sure?", "really-simple-ssl"),
+    title: title,
     onRequestClose: () => setOpen(false),
-    open: handleOpen()
+    open: isOpen
   }, wp.element.createElement("div", {
     className: "rsssl-modal-body"
-  }, wp.element.createElement("p", null, "My Modal Content")), wp.element.createElement("div", {
+  }, content), wp.element.createElement("div", {
     className: "rsssl-modal-footer"
   }, wp.element.createElement("div", null, wp.element.createElement("img", {
     className: "rsssl-logo",
@@ -59,7 +104,7 @@ function RssslModal() {
     isPrimary: true,
     onClick: () => setOpen(false)
   }, __("Cancel", "really-simple-ssl")))))));
-}
+};
 /* harmony default export */ __webpack_exports__["default"] = (RssslModal);
 
 /***/ }),
@@ -163,38 +208,35 @@ var __webpack_exports__ = {};
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _components_Modal_RssslModal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/Modal/RssslModal */ "./src/components/Modal/RssslModal.js");
+/* harmony import */ var _components_DeactivationModal_DeactivationModal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/DeactivationModal/DeactivationModal */ "./src/components/DeactivationModal/DeactivationModal.js");
 
 /** @jsx wp.element.createElement */
 
 
 document.addEventListener('DOMContentLoaded', () => {
-  const root = wp.element.createRoot(document.getElementById('rsssl-modal-root'));
-  root.render(wp.element.createElement(_components_Modal_RssslModal__WEBPACK_IMPORTED_MODULE_1__["default"], null));
+  const container = document.getElementById('rsssl-modal-root');
+  if (container) {
+    console.log("found container");
+    if (_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createRoot) {
+      (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createRoot)(container).render(wp.element.createElement(_components_DeactivationModal_DeactivationModal__WEBPACK_IMPORTED_MODULE_1__["default"], null));
+    } else {
+      (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.render)(wp.element.createElement(_components_DeactivationModal_DeactivationModal__WEBPACK_IMPORTED_MODULE_1__["default"], null), container);
+    }
+  }
 });
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initEventListener);
-} else {
-  initEventListener();
-}
-window.showRssslModal = function () {
-  const event = new Event('showRssslModalEvent');
-  document.dispatchEvent(event);
-};
-
 /*
     * This event listener is used to open the modal window when the user clicks on the "Deactivate" link
  */
-function initEventListener() {
-  const targetPluginLink = document.getElementById('deactivate-really-simple-ssl');
-  if (targetPluginLink) {
-    targetPluginLink.addEventListener('click', function (e) {
-      e.preventDefault();
-      window.showRssslModal();
-    });
-  }
-}
+// function initEventListener() {
+//     const targetPluginLink = document.getElementById('deactivate-really-simple-ssl');
+//     if (targetPluginLink) {
+//         targetPluginLink.addEventListener('click', function(e) {
+//             e.preventDefault();
+//             window.showRssslModal();
+//         });
+//     }
+// }
 }();
 /******/ })()
 ;
-//# sourceMappingURL=index.1ead23b269c8299e3364.js.map
+//# sourceMappingURL=index.bd4f8cb20bd3c032229c.js.map
