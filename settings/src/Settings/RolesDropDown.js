@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
-import useFields from "../FieldsData";
-import useRolesData from './RolesStore';
+import useFields from "./FieldsData";
+import useRolesData from './TwoFA/RolesStore';
 import {__} from "@wordpress/i18n";
-import './select.scss';
+import './TwoFA/select.scss';
 /**
- * TwoFaRolesDropDown component represents a dropdown select for excluding roles
+ * RolesDropDown component represents a dropdown select for excluding roles
  * from two-factor authentication email.
  * @param {object} field - The field object containing information about the field.
  */
-const TwoFaRolesDropDown = ({ field }) => {
+const RolesDropDown = ({ field }) => {
     const {fetchRoles, roles, rolesLoaded} = useRolesData();
     const [selectedRoles, setSelectedRoles] = useState([]);
-    const [otherRoles, setOtherRoles] = useState([]);
+
     // Custom hook to manage form fields
-    const { updateField, getFieldValue, setChangedField, getField, fieldsLoaded } = useFields();
+    const { updateField, setChangedField, fieldsLoaded } = useFields();
     let enabled = true;
 
     useEffect(() => {
@@ -24,26 +24,12 @@ const TwoFaRolesDropDown = ({ field }) => {
     }, [rolesLoaded]);
 
     useEffect(() => {
-        if ( field.id==='two_fa_forced_roles' ) {
-            let otherField = getField('two_fa_optional_roles');
-            let roles = Array.isArray(otherField.value) ? otherField.value : [];
-            setOtherRoles(roles);
-        } else {
-            let otherField = getField('two_fa_forced_roles');
-            let roles = Array.isArray(otherField.value) ? otherField.value : [];
-            setOtherRoles(roles);
-        }
-    }, [selectedRoles, getField('two_fa_optional_roles'), getField('two_fa_forced_roles')]);
-
-    useEffect(() => {
-       if ( !field.value ) {
+        if ( !field.value ) {
             setChangedField(field.id, field.default);
             updateField(field.id, field.default);
-            setSelectedRoles(field.default.map((role, index) => ({ value: role, label: role.charAt(0).toUpperCase() + role.slice(1) })));
-       } else {
-           setSelectedRoles(field.value.map((role, index) => ({ value: role, label: role.charAt(0).toUpperCase() + role.slice(1) })));
-
-       }
+            setSelectedRoles( field.default.map((role, index) => ({ value: role, label: role.charAt(0).toUpperCase() + role.slice(1) })));
+        }
+        setSelectedRoles( field.value.map((role, index) => ({ value: role, label: role.charAt(0).toUpperCase() + role.slice(1) })));
     },[fieldsLoaded]);
 
     /**
@@ -64,8 +50,7 @@ const TwoFaRolesDropDown = ({ field }) => {
         multiValue: (provided) => ({
             ...provided,
             borderRadius: '10px',
-            backgroundColor: field.id === 'two_fa_forced_roles' ? '#F5CD54' :
-                field.id === 'two_fa_optional_roles' ? '#FDF5DC' : 'default',
+            backgroundColor: '#F5CD54',
         }),
         multiValueRemove: (base, state) => ({
             ...base,
@@ -79,28 +64,15 @@ const TwoFaRolesDropDown = ({ field }) => {
         })
     };
 
-    if (field.id === 'two_fa_optional_roles') {
-        enabled = getFieldValue('login_protection_enabled');
-    }
-
-    const alreadySelected = selectedRoles.map(option => option.value);
-    let filteredRoles = [];
-    //from roles, remove roles in the usedRoles array
-    //merge alreadyselected and otherroles in one array
-    let inRolesInUse = [...alreadySelected, ...otherRoles];
-    roles.forEach(function (item, i) {
-        if ( Array.isArray(inRolesInUse) && inRolesInUse.includes(item.value) ) {
-            filteredRoles.splice(i, 1);
-        } else {
-            filteredRoles.push(item);
-        }
-    });
+    // if (field.id === 'password_change_roles') {
+    //     enabled = getFieldValue('enforce_password_protection_enabled');
+    // }
 
     return (
         <div style={{marginTop: '5px'}}>
             <Select
                 isMulti
-                options={filteredRoles}
+                options={roles}
                 onChange={handleChange}
                 value={selectedRoles}
                 menuPosition={"fixed"}
@@ -117,4 +89,4 @@ const TwoFaRolesDropDown = ({ field }) => {
     );
 };
 
-export default TwoFaRolesDropDown;
+export default RolesDropDown;

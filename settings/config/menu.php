@@ -32,7 +32,7 @@ function rsssl_menu()
                         ],
                         [
                             'id'            => 'email',
-							'title'    => __( 'E-mail', 'really-simple-ssl' ),
+							'title'    => __( 'Email', 'really-simple-ssl' ),
 							'helpLink' => 'https://really-simple-ssl.com/email-notifications/',
 						],
 						[
@@ -126,7 +126,7 @@ function rsssl_menu()
                             'helpLink'     => 'https://really-simple-ssl.com/knowledge-base/limit-login-attempts/?mtm_campaign=instructions&mtm_source=free',
                             'premium'      => true,
                             'title'        => __('General', 'really-simple-ssl'),
-                            'intro'        => __('Protect your site against brute force login attacks by limiting the number of login attempts. Enabling this feature will temporary lock-out a username and the IP address that tries to login, after the set number of false logins.',
+                            'intro'        => __('Protect your site against brute force login attacks by limiting the number of login attempts. Enabling this feature will temporary lock-out a username and the IP address that tries to login, after the set number of false logins please use the instructions linked in the top-right corner.',
                                 'really-simple-ssl'),
                             'premium_text' => __('Get Limit Login Attempts with %sReally Simple SSL Pro%s',
                                 'really-simple-ssl'),
@@ -389,7 +389,7 @@ function rsssl_menu()
                             'premium_text'         => __( "Get Login Protection with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
                             'helpLink' => 'https://really-simple-ssl.com/instructions/two-factor-authentication',
                             'title'    => __( 'General', 'really-simple-ssl' ),
-                            'intro'    => __( 'Bad password and login management is the number one cause for account theft. Enhance login security per user role to prevent account theft.', 'really-simple-ssl' ),
+                            'intro'    => __( 'Enhancing the authentication process and optimizing user management makes Login Protection a foundational element in securing your website.', 'really-simple-ssl' ),
                         ],
                         [
                             'id'       => 'two_fa_email',
@@ -397,7 +397,7 @@ function rsssl_menu()
                             'premium_text'         => __( "Get Login Protection with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
                             'helpLink' => 'https://really-simple-ssl.com/instructions/two-factor-authentication',
                             'title'    => __( 'Email', 'really-simple-ssl' ),
-                            'intro'    => __( 'Two-step verification will enhance the authentication process by adding an additional layer. Selected users will be required to enter their correct credentials first, and then they must provide a one-time code sent to their email as an extra step.', 'really-simple-ssl' ),
+                            'intro'    => __( 'Two-step verification will enhance the authentication process by adding an additional security layer. Selected users will be required to enter their credentials first, and then they must provide a one-time code sent to their email as an extra step.', 'really-simple-ssl' ),
                         ],
                         [
                             'id'       => 'two_fa_users',
@@ -405,7 +405,7 @@ function rsssl_menu()
                             'premium_text'         => __( "Get Login Protection with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
 //                            'helpLink' => 'https://really-simple-ssl.com/instructions/two-factor-authentication',
                             'title'    => __( 'Users', 'really-simple-ssl' ),
-                            'intro'    => __( 'Here you can see which users have enabled two-step login, or change the status per user.', 'really-simple-ssl' ),
+                            'intro'    => __( 'Below you will find the users that you have selected for an additional verification method and their subsequent status. A reset is possible to revert a choice made by a user.', 'really-simple-ssl' ),
                             'groupFilter'  => [
 	                            'default' => 'active',
 	                            'id'      => 'two_fa_user_filter',
@@ -428,8 +428,31 @@ function rsssl_menu()
                     ],
 
 				],
+	            [
+		            'id'                   => 'password_security',
+		            'networkwide_required' => true,
+		            'premium'              => true,
+		            'premium_text'         => __( 'Get Password Security with %sReally Simple SSL Pro%s',
+			            'really-simple-ssl' ),
+		            'upgrade'              => 'https://really-simple-ssl.com/pro/?mtm_campaign=passwordsecurity&mtm_source=free&mtm_content=upgrade',
+		            'title'                => 'Password Security',
+		            'helpLink'             => 'https://really-simple-ssl.com/instructions/password-security/?mtm_campaign=instructions&mtm_source=free',
+		            'groups'               => [
+			            [
+				            'id'           => 'password_security_passwords',
+				            'premium'      => true,
+				            'premium_text' => __( "Get Password Security with %sReally Simple SSL Pro%s",
+					            'really-simple-ssl' ),
+				            'helpLink'     => 'https://really-simple-ssl.com/instructions/password-security/?mtm_campaign=instructions&mtm_source=free',
+				            'title'        => __( 'Passwords', 'really-simple-ssl' ),
+				            'intro'        => __( 'Lorum ipsum.... bla bla generator was kaput....',
+					            'really-simple-ssl' ),
+			            ],
+		            ]
+	            ],
 			],
 		],
+
         [
             "id"             => "letsencrypt",
             'default_hidden' => true,

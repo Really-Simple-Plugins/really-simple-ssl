@@ -89,10 +89,10 @@ const DynamicDataTableStore = create((set, get) => ({
     },
 
     //this handles all pagination and sorting
-    handleTableSort: async (column, sortDirection) => {
+    handleTableSort: async (sortColumn, sortDirection) => {
         //Add the column and sortDirection to the dataActions
         set(produce((state) => {
-                state.dataActions = {...state.dataActions, sortColumn: column, sortDirection};
+                state.dataActions = {...state.dataActions, sortColumn: sortColumn.column, sortDirection};
             })
         );
         await get().fetchDynamicData();
