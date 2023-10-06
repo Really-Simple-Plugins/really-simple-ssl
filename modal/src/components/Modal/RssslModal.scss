@@ -6,6 +6,8 @@
   box-shadow:var(--rsp-box-shadow);
   border-radius:0 0 var(--rsp-border-radius) var(--rsp-border-radius);
   border-top:1px solid var(--rsp-grey-300);
+  max-height: calc(100% - 120px); //the default wp modal limits this to minimum 600px, but this creates an ugly modal.
+  margin:auto;//the default wp modal limits this to minimum 600px, but this creates an ugly modal.
   @media (max-width: 768px) {
     width: 100%;
   }
