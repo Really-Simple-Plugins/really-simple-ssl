@@ -1,10 +1,11 @@
-  :root {
-    --rsp-red: #D7263D;
-    --rsp-grey-200: #f7f7f7;
-    --rsp-grey-400: #c6c6c6;
-  }
+@import '../../../../assets/css/variables.scss';
 .rsssl-modal {
   width: 700px;
+  background:var(--rsp-grey-100);
+  padding:var(--rsp-spacing-m) var(--rsp-spacing-l);
+  box-shadow:var(--rsp-box-shadow);
+  border-radius:0 0 var(--rsp-border-radius) var(--rsp-border-radius);
+  border-top:1px solid var(--rsp-grey-300);
   @media (max-width: 768px) {
     width: 100%;
   }
@@ -23,9 +24,9 @@
 
   .rsssl-modal-body {
     flex-grow: 1;
-    padding: 12px 32px 80px 32px; //80 is for the complete footer height + margin
+    padding: 12px 8px 80px 8px; //80 is for the complete footer height + margin
     @media (max-width: 768px) {
-      padding: 12px 32px 180px 32px;
+      padding: 12px 8px 180px 8px;
 
     }
     p {
