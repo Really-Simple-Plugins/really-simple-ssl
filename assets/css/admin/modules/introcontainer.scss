@@ -44,18 +44,11 @@
 
   .rsssl-ssl-intro-container {
     .rsssl-details {
-      padding: var(--rsp-spacing-m) 0;
-
-      > div {
-        float: left;
-      }
-
-      .rsssl-detail-icon {
-        width: 10%;
-      }
-
-      .rsssl-detail {
-        width: 90%;
+      display:flex;
+      padding: var(--rsp-spacing-xs) var(--rsp-spacing-m);
+      gap: var(--rsp-spacing-xs);
+      .rsssl-icon {
+        min-width:25px;
       }
     }
   }
