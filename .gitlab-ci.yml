@@ -36,12 +36,9 @@ before_script:
   - curl -sS https://getcomposer.org/installer | php
 
   # Install project dependencies
-  # Conditionally use the right composer.json based on PHP version
-  - if [ "$PHP_VERSION" == "7.2" ]; then cp tests/config/composer.7.2.json composer.json; fi
-  - if [ "$PHP_VERSION" == "8.2" ]; then cp tests/config/composer.8.2.json composer.json; fi
-
   - php composer.phar install --ignore-platform-reqs
-#  - php composer.phar update
+  - php composer.phar update
+
   # Set up WordPress test environment
   - bash bin/install-wp-tests.sh wordpress_test root mysql mysql $WP_VERSION
 
@@ -76,9 +73,9 @@ variables:
   WP_VERSION: latest
   WP_MULTISITE: "0"
 
-# We test PHP 7.2
-test:php7.2:
-  image: php:7.2
+# We test PHP 7.4
+test:php7.4:
+  image: php:7.4
   variables:
     XDEBUG_VERSION: "3.1.6"
   script:
@@ -87,9 +84,9 @@ test:php7.2:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
     - if: $CI_COMMIT_BRANCH == 'master'
 
-# We test PHP 7.2 with multisite
-test:php7.2:multisite:
-  image: php:7.2
+# We test PHP 7.4 with multisite
+test:php7.4:multisite:
+  image: php:7.4
   variables:
     WP_MULTISITE: "1"
     XDEBUG_VERSION: "3.1.6"
