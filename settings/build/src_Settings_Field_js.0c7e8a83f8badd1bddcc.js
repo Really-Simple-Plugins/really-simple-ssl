@@ -1616,12 +1616,6 @@ const EventLogDataTable = props => {
         ...dataItem
       };
       newItem.iso2_code = generateFlag(newItem.iso2_code, newItem.country_name);
-      // if (newItem.username === '' || newItem.username === null) {
-      //     newItem.username = '—';
-      // }
-      // if (newItem.source_ip === '' || newItem.source_ip === null) {
-      //     newItem.source_ip = '—';
-      // }
       newItem.expandableRows = true;
       return newItem;
     });
@@ -1735,6 +1729,7 @@ const EventLogDataTable = props => {
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (EventLogDataTable);
 function buildColumn(column) {
+  console.log(column);
   return {
     name: column.name,
     sortable: column.sortable,
@@ -2489,6 +2484,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _LearningModeData__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./LearningModeData */ "./src/Settings/LearningMode/LearningModeData.js");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
+
 
 
 const Delete = props => {
@@ -2497,19 +2495,9 @@ const Delete = props => {
   } = (0,_LearningModeData__WEBPACK_IMPORTED_MODULE_1__["default"])();
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
     type: "button",
-    className: " rsssl-learning-mode-delete",
+    className: "button button-red rsssl-learning-mode-delete",
     onClick: () => deleteData(props.item, props.field.id)
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("svg", {
-    "aria-hidden": "true",
-    focusable: "false",
-    role: "img",
-    xmlns: "http://www.w3.org/2000/svg",
-    viewBox: "0 0 320 512",
-    height: "16"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("path", {
-    fill: "#000000",
-    d: "M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"
-  })));
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Delete", "really-simple-ssl"));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Delete);
 
@@ -2724,6 +2712,15 @@ const LearningMode = props => {
       item: item,
       field: props.field
     });
+    item.grouped = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-action-buttons"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_ChangeStatus__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      item: item,
+      field: props.field
+    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Delete__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      item: item,
+      field: props.field
+    }));
   }
   const handleMultiRowStatus = (status, selectedRows, type) => {
     selectedRows.forEach(row => {
@@ -3987,14 +3984,17 @@ const CountryDatatable = props => {
       children,
       className
     } = _ref;
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: `rsssl-action-buttons__inner`
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-      className: `button ${className} rsssl-action-buttons__button`,
-      onClick: onClick,
-      disabled: processing
-    }, children));
+    return (
+      // <div className={`rsssl-action-buttons__inner`}>
+      (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+        className: `button ${className} rsssl-action-buttons__button`,
+        onClick: onClick,
+        disabled: processing
+      }, children)
+      // </div>
+    );
   };
+
   const generateActionButtons = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)((id, status, region_name) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-action-buttons"
   }, getCurrentFilter(moduleName) === 'blocked' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
@@ -24908,4 +24908,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.2cf855fc0803a4278cfc.js.map
+//# sourceMappingURL=src_Settings_Field_js.0c7e8a83f8badd1bddcc.js.map

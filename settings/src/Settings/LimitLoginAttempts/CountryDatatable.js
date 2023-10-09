@@ -213,7 +213,7 @@ const CountryDatatable = (props) => {
     ), []);
 
     const ActionButton = ({ onClick, children, className }) => (
-        <div className={`rsssl-action-buttons__inner`}>
+        // <div className={`rsssl-action-buttons__inner`}>
             <button
                 className={`button ${className} rsssl-action-buttons__button`}
                 onClick={onClick}
@@ -221,7 +221,7 @@ const CountryDatatable = (props) => {
             >
                 {children}
             </button>
-        </div>
+        // </div>
     );
 
     const generateActionButtons = useCallback((id, status, region_name) => (

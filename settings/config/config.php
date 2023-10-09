@@ -495,16 +495,23 @@ function rsssl_fields( $load_values = true ) {
                     'sortable' => false,
                     'column'   => 'count',
                 ],
-                [
-                    'name'     => __('Action', 'really-simple-ssl'),
-                    'sortable' => false,
-                    'column'   => 'statusControl',
-                ],
-                [
-                    'name'     => __('Delete', 'really-simple-ssl'),
-                    'sortable' => false,
-                    'column'   => 'deleteControl',
-                ],
+//                [
+//                    'name'     => __('Action', 'really-simple-ssl'),
+//                    'sortable' => false,
+//                    'column'   => 'statusControl',
+//	                'visible'  => false,
+//                ],
+//                [
+//                    'name'     => __('Delete', 'really-simple-ssl'),
+//                    'sortable' => false,
+//                    'column'   => 'deleteControl',
+//	                'visible'  => false,
+//                ],
+	            [
+					'name',
+		            'sortable' => false,
+		            'column'   => 'grouped',
+	            ]
             ],
         ],
         /* Vulnerability basic Section */
@@ -953,7 +960,7 @@ function rsssl_fields( $load_values = true ) {
                     'sortable'   => false,
                     'searchable' => true,
                     'column'     => 'attempt_value',
-                    'width'      => '2%',
+                    'width'      => '4%',
                 ],
                 [
                     'name'       => __('Country', 'really-simple-ssl'),
@@ -980,11 +987,7 @@ function rsssl_fields( $load_values = true ) {
                     'name'     => '',
                     'sortable' => false,
                     'column'   => 'action',
-	                'width'    => '40%',
                 ],
-	            [
-		            'width' => '0px',
-	            ]
             ],
         ],
         [
@@ -1028,18 +1031,19 @@ function rsssl_fields( $load_values = true ) {
                     'sortable'   => true,
                     'searchable' => true,
                     'column'     => 'source_ip',
-                    'width'    => '45%',
+	                'type'     => 'text',
+                    'width'    => '32%',
                 ],
                 [
                     'name'     => __('Event', 'really-simple-ssl'),
                     'sortable' => true,
                     'column'   => 'event_name',
-                    'width'         => '20%',
-                ],
-
-                [
-                    'width'    => '1px',
+                    'width'         => '28%',
                 ]
+//
+//                [
+//                    'width'    => '1px',
+//                ]
 
             ],
         ],
