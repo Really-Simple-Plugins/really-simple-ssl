@@ -1,6 +1,11 @@
 .rsssl-field-wrap {
-  .rdt_TableCol, .rdt_TableCell {
-    min-width:100px;
+  ., .rdt_TableCell, .rdt_TableCol_Sortable {
+    //min-width:100px;
+    //all text to the left
+    background: #fde69b;
+    padding: 0;
+    margin: 0;
+    flex-direction: row;
   }
   .rdt_TableCell:has(input[type="checkbox"]) {
     padding: 0; /* Remove padding */
