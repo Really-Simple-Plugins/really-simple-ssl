@@ -155,7 +155,11 @@ input.rsssl-input {
     }
   }
 }
-
+.wp-core-ui select {
+  /* Your styles here */
+  flex-grow: 1 !important;
+  max-width: 25%;
+}
 .icon-button {
   position: absolute;
   right: 10px;

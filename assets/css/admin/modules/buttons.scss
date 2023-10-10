@@ -91,3 +91,27 @@
 .rsssl-action-buttons__inner:last-child {
   margin-right: 0;
 }
+
+/**
+  For the mixed content scan we need to do some extra tweaking
+ */
+.rsssl-mixedcontentscan {
+  .rsssl-grid-item-content-footer {
+    margin-left: 0;
+    margin-right: 0;
+    padding-left:25px;
+    .button {
+      display: block;
+      margin-right: 0;
+      margin-left: 0;
+    }
+    .components-toggle-control {
+      margin-top: calc(12px);
+    }
+    label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}

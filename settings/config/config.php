@@ -1439,6 +1439,7 @@ function rsssl_fields( $load_values = true ) {
                     'name'     => __('Feature', 'really-simple-ssl'),
                     'sortable' => true,
                     'column'   => 'title',
+	                'width'    => '70%',
                 ],
                 [
                     'name'     => __('Options', 'really-simple-ssl'),
@@ -1596,7 +1597,7 @@ function rsssl_fields( $load_values = true ) {
                     'name'     => __('Location', 'really-simple-ssl'),
                     'sortable' => false,
                     'column'   => 'documenturi',
-                    'width'   => '30%',
+                    'width'   => '25%',
                 ],
                 [
                     'name'     => __('Directive', 'really-simple-ssl'),
@@ -1608,7 +1609,7 @@ function rsssl_fields( $load_values = true ) {
                     'name'     => __('Source', 'really-simple-ssl'),
                     'sortable' => false,
                     'column'   => 'blockeduri',
-                    'width'   => '30%',
+                    'width'   => '40%',
                 ],
                 [
                     'name'     => __('Options', 'really-simple-ssl'),
