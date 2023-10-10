@@ -8,20 +8,19 @@ const PremiumOverlay = (props) => {
             <div className="rsssl-locked-overlay">
                 {/* header */}
                 <div className="rsssl-locked-header">
-                    <h3>Titel</h3>
+                    <h5 className={'rsssl-locked-header-title'}>{props.title}</h5>
                 </div>
                 <div className="rsssl-locked-content">
-                   text
+                    {props.msg}
                 </div>
                 <div className="rsssl-locked-footer">
                     {/* We place a button on the left side */}
                     <div className="rsssl-grid-item-footer-buttons">
                         <a
                             target="_blank"
-                            className="button button-primary"
-                            text={__("Upgrade", "really-simple-ssl")}
+                            className="button button-premium"
                             url="props.url"
-                        />
+                        >{__("Go Pro", "really-simple-ssl")}</a>
                     </div>
                 </div>
             </div>

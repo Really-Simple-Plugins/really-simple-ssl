@@ -276,18 +276,19 @@ const PremiumOverlay = props => {
     className: "rsssl-locked-overlay"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-locked-header"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", null, "Titel")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h5", {
+    className: 'rsssl-locked-header-title'
+  }, props.title)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-locked-content"
-  }, "text"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, props.msg), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-locked-footer"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-grid-item-footer-buttons"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
     target: "_blank",
-    className: "button button-primary",
-    text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Upgrade", "really-simple-ssl"),
+    className: "button button-premium",
     url: "props.url"
-  })))));
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Go Pro", "really-simple-ssl"))))));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (PremiumOverlay);
 
@@ -699,6 +700,7 @@ const SettingsGroup = props => {
     fields: selectedFields
   })))), disabled && !networkwide_error && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_PremiumOverlay__WEBPACK_IMPORTED_MODULE_9__["default"], {
     msg: msg,
+    title: activeGroup.title,
     upgrade: upgrade,
     pro_plugin_active: rsssl_settings.pro_plugin_active
   }), networkwide_error && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -1454,4 +1456,4 @@ const errorMsg = error => {
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Settings_js.c0c941b33f435c01f9fe.js.map
+//# sourceMappingURL=src_Settings_Settings_js.52612ca7cc45ff30c811.js.map

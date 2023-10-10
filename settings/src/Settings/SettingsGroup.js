@@ -160,6 +160,7 @@ const SettingsGroup = (props) => {
             </div>
             {disabled && !networkwide_error && <PremiumOverlay
                 msg={msg}
+                title={activeGroup.title}
                 upgrade={upgrade}
                 pro_plugin_active={rsssl_settings.pro_plugin_active}
             />}
