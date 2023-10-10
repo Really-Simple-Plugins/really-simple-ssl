@@ -237,7 +237,6 @@ const IpAddressDataTableStore = create((set, get) => ({
      * @returns {boolean}
      */
     validateIpv6: (ip) => {
-        console.log('validating ipv6', ip);
         const parts = ip.split(":");
         if (parts.length !== 8) return false;
 
@@ -249,7 +248,6 @@ const IpAddressDataTableStore = create((set, get) => ({
     },
 
     extendIpV6: (ip) => {
-        console.log('extendIpV6', ip);
         // Handle the special case of '::' at the start or end
         if (ip === '::') ip = '0::0';
 
@@ -323,12 +321,9 @@ const IpAddressDataTableStore = create((set, get) => ({
     validateIpRange: (lowest, highest) => {
         let from = '';
         let to = '';
-        console.log('validateIpRange');
         //first we determine if the IP is ipv4 or ipv6
         if (lowest && highest) {
-            console.log('lowest and highest validation')
             if (get().validateIpv4(lowest) && get().validateIpv4(highest)) {
-                console.log('ipv4 validated');
                 //now we check if the lowest is lower than the highest
                 if (get().ipToNumber(lowest) > get().ipToNumber(highest)) {
                     console.warn('lowest is higher than highest');
