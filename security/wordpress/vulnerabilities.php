@@ -784,10 +784,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 return json_decode($json);
             }
 
-	        if ( defined('WP_DEBUG') && WP_DEBUG ) {
-                error_log('Could not download file from ' . $url);
-            }
-
 	        return null;
         }
 
@@ -803,9 +799,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
 			    return strpos($headers[0], '200') !== false;
 			    // Rest of your code handling $headers goes here
 		    } catch (Exception $e) {
-                if ( defined('WP_DEBUG') && WP_DEBUG ) {
-                    error_log('Could not check if file exists: ' . $e->getMessage());
-                }
 			    return false;
             }
 
