@@ -355,8 +355,18 @@ function rsssl_do_action($request, $ajax_data = false)
             $response = $mailer->send_test_mail();
             break;
         case 'send_verification_mail':
+            //get fields from data. The new email might not be saved yet. We need to get it from the data.
+	        $data = $ajax_data ?: $request->get_json_params();
+            $fields = $data['fields'] ?? [];
+            $email = get_bloginfo('admin_email');
+            foreach($fields as $field ){
+                if ( $field['id'] === 'notifications_email_address' ){
+                    $email = $field['value'];
+                }
+            }
             $mailer = new rsssl_mailer();
-            $response = $mailer->send_verification_mail( rsssl_get_option('notifications_email_address') );
+            $mailer->to = sanitize_email($email);
+            $response = $mailer->send_verification_mail( );
             break;
         case 'plugin_actions':
             $response = rsssl_plugin_actions($data);
@@ -575,6 +585,7 @@ function rsssl_sanitize_field_type($type)
         'LetsEncrypt',
         'postdropdown',
         'two_fa_roles',
+		'roles_dropdown',
 //        'two_fa_table',
 //        'verify_email',
     ];
@@ -815,6 +826,7 @@ function rsssl_sanitize_field($value, string $type, string $id)
             return rsssl_sanitize_datatable($value, $type, $id);
         case 'mixedcontentscan':
             return $value;
+		case 'roles_dropdown':
         case 'two_fa_roles':
 	        $value = !is_array($value) ? [] : $value;
             $roles = rsssl_get_roles();

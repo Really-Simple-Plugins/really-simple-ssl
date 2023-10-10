@@ -116,12 +116,6 @@ const EventLogDataTable = (props) => {
         data = DynamicDataTable.data.map((dataItem) => {
             let newItem = {...dataItem};
             newItem.iso2_code = generateFlag(newItem.iso2_code, newItem.country_name);
-            if (newItem.username === '' || newItem.username === null) {
-                newItem.username = '—';
-            }
-            if (newItem.source_ip === '' || newItem.source_ip === null) {
-                newItem.source_ip = '—';
-            }
             newItem.expandableRows = true;
             return newItem;
         });
@@ -245,6 +239,7 @@ const EventLogDataTable = (props) => {
 export default EventLogDataTable;
 
 function buildColumn(column) {
+    console.log(column);
     return {
         name: column.name,
         sortable: column.sortable,

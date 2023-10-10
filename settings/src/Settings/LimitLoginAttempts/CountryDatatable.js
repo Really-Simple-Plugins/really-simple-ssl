@@ -8,7 +8,6 @@ import Flag from "../../utils/Flag/Flag";
 import { button } from "@wordpress/components";
 import { __ } from '@wordpress/i18n';
 import useFields from "../FieldsData";
-import Icon from "../../utils/Icon";
 
 const CountryDatatable = (props) => {
     const {
@@ -25,9 +24,7 @@ const CountryDatatable = (props) => {
         handleCountryTableSort,
         handleCountryTableSearch,
         addRegion,
-        addRegions,
         removeRegion,
-        removeRegions,
         addRowMultiple,
         removeRowMultiple,
         resetRow,
@@ -216,7 +213,7 @@ const CountryDatatable = (props) => {
     ), []);
 
     const ActionButton = ({ onClick, children, className }) => (
-        <div className={`rsssl-action-buttons__inner`}>
+        // <div className={`rsssl-action-buttons__inner`}>
             <button
                 className={`button ${className} rsssl-action-buttons__button`}
                 onClick={onClick}
@@ -224,7 +221,7 @@ const CountryDatatable = (props) => {
             >
                 {children}
             </button>
-        </div>
+        // </div>
     );
 
     const generateActionButtons = useCallback((id, status, region_name) => (

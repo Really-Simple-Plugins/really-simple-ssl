@@ -9,6 +9,7 @@ import filterData from "./FilterData";
 import {useEffect, useState} from '@wordpress/element';
 import PremiumOverlay from "./PremiumOverlay";
 
+import ErrorBoundary from "../utils/ErrorBoundary";
 
 /**
  * Render a grouped block of settings
@@ -105,8 +106,8 @@ const SettingsGroup = (props) => {
             {activeGroup.title && <div className="rsssl-grid-item-header">
                 <h3 className="rsssl-h4">{activeGroup.title}</h3>
                 {activeGroup.groupFilter && (
-                    <div className="rsssl-grid-item-controls">
-                        {activeGroup.groupFilter && (
+                    <ErrorBoundary fallback={"Could not load group filter"}>
+                        <div className="rsssl-grid-item-controls">
                             <select
                                 className="rsssl-group-filter"
                                 id={filterId}
@@ -128,8 +129,8 @@ const SettingsGroup = (props) => {
                                     </option>
                                 ))}
                             </select>
-                        )}
                     </div>
+                    </ErrorBoundary>
                 )}
                 {activeGroup.helpLink && anchor !== 'letsencrypt' && (
                     <div className="rsssl-grid-item-controls">
@@ -147,10 +148,15 @@ const SettingsGroup = (props) => {
                 </div>}
             </div>}
             <div className="rsssl-grid-item-content">
-                {(activeGroup.intro && typeof activeGroup.intro === 'string') && <div className="rsssl-settings-block-intro">{activeGroup.intro}</div>}
+                {(activeGroup.intro && typeof activeGroup.intro === 'string') && <ErrorBoundary fallback={"Could not load group intro"}>
+                    <div className="rsssl-settings-block-intro">{activeGroup.intro}</div>
+                </ErrorBoundary>}
                 {(activeGroup.intro &&  typeof activeGroup.intro === 'object') && <div className="rsssl-settings-block-intro">{updatedIntro}</div>}
                 {Field && selectedFields.map((field, i) =>
-                    <Field key={"selectedFields-" + i} index={i} field={field} fields={selectedFields}/>)}
+                    <ErrorBoundary key={"selectedFields-" + i} fallback={"Could not load field "+field.id}>
+                        <Field index={i} field={field} fields={selectedFields}/>
+                    </ErrorBoundary>
+                )}
             </div>
             {disabled && !networkwide_error && <PremiumOverlay
                 msg={msg}
