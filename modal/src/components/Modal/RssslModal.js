@@ -4,7 +4,7 @@ import {useEffect, useState} from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import './RssslModal.scss';
 
-const RssslModal = ({title, content, list, confirmAction, confirmText, alternativeAction, alternativeText, alternativeClassName, isOpen, setOpen}) => {
+const RssslModal = ({title, subTitle, content, list, confirmAction, confirmText, alternativeAction, alternativeText, alternativeClassName, isOpen, setOpen}) => {
     const [Icon, setIcon] = useState(null);
 
     alternativeClassName = alternativeClassName ? alternativeClassName : 'rsssl-warning';
@@ -15,6 +15,8 @@ const RssslModal = ({title, content, list, confirmAction, confirmText, alternati
             });
         }
     }, []);
+    subTitle = "Dit is een test";
+    console.log(subTitle)
     return (
         <>
             {isOpen && (
@@ -24,7 +26,8 @@ const RssslModal = ({title, content, list, confirmAction, confirmText, alternati
                         title={title}
                         onRequestClose={() => setOpen(false)}
                         open={isOpen}>
-                        <div className="rsssl-modal-body">
+                        <div className="rsssl-modal-body">d
+                            {subTitle && <h3>{subTitle}</h3>}
                             {content && <p>{content}</p>}
                             {list && Icon && <ul>
                                 {list.map((item, index) => <li key={index}><Icon name="circle-times" color="red"/>{item}</li>)}

@@ -87,7 +87,7 @@ const useOnboardingData = create(( set, get ) => ({
     fetchOnboardingModalStatus: async () => {
         rsssl_api.doAction('get_modal_status').then((response) => {
             set({
-                showOnboardingModal: !response.dismissed,
+                showOnboardingModal: true,//!response.dismissed,
                 modalStatusLoaded: true,
             })
         });

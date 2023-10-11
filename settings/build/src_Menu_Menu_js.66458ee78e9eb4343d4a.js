@@ -5,12 +5,9 @@
 /*!**************************!*\
   !*** ./src/Menu/Menu.js ***!
   \**************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _Placeholder_MenuPlaceholder__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Placeholder/MenuPlaceholder */ "./src/Placeholder/MenuPlaceholder.js");
@@ -63,7 +60,7 @@ const Menu = () => {
     className: "rsssl-grid-item-footer"
   }));
 };
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Menu);
+/* harmony default export */ __webpack_exports__["default"] = (Menu);
 
 /***/ }),
 
@@ -71,12 +68,9 @@ const Menu = () => {
 /*!******************************!*\
   !*** ./src/Menu/MenuItem.js ***!
   \******************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
@@ -121,7 +115,7 @@ const MenuItem = props => {
     menuItem: subMenuItem
   })))));
 };
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (MenuItem);
+/* harmony default export */ __webpack_exports__["default"] = (MenuItem);
 
 /***/ }),
 
@@ -129,12 +123,9 @@ const MenuItem = props => {
 /*!********************************************!*\
   !*** ./src/Placeholder/MenuPlaceholder.js ***!
   \********************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
 
@@ -149,7 +140,7 @@ const MenuPlaceholder = () => {
     className: "rsssl-grid-item-content"
   }));
 };
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (MenuPlaceholder);
+/* harmony default export */ __webpack_exports__["default"] = (MenuPlaceholder);
 
 /***/ }),
 
@@ -157,12 +148,9 @@ const MenuPlaceholder = () => {
 /*!*********************************************!*\
   !*** ./src/Settings/License/LicenseData.js ***!
   \*********************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
 /* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/index.mjs");
 
 const UseLicenseData = (0,zustand__WEBPACK_IMPORTED_MODULE_0__.create)((set, get) => ({
@@ -171,7 +159,7 @@ const UseLicenseData = (0,zustand__WEBPACK_IMPORTED_MODULE_0__.create)((set, get
     licenseStatus
   }))
 }));
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (UseLicenseData);
+/* harmony default export */ __webpack_exports__["default"] = (UseLicenseData);
 
 /***/ })
 

@@ -24,6 +24,12 @@ const OnboardingModal = () => {
             rsssl_api.doAction('dismiss_modal', data);
         }
     });
+    // return (
+    //     <>
+    //         { showOnboardingModal &&
+    //             <RssslModal title={currentStep.title}/>}
+    //     </>
+    // )
     return (
         <>
             { (showOnboardingModal) && <>
