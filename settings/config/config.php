@@ -1642,6 +1642,12 @@ function rsssl_fields( $load_values = true ) {
 			'label'    => __( "Enforce frequent password change", "really-simple-ssl-pro" ),
 			'disabled' => false,
 			'default'  => 'disabled',
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'enforce_password_security_enabled' => 1,
+				]
+			],
 		],
 		[
 			'id'       => 'password_change_roles',
@@ -1652,6 +1658,12 @@ function rsssl_fields( $load_values = true ) {
 			'label'    => __( "User roles for password change", "really-simple-ssl-pro" ),
 			'tooltip'  => __( "Lorum ipsum some magnificent text again ipsum genearator kaput.",
 				'really-simple-ssl' ),
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'enforce_password_security_enabled' => 1,
+				]
+			],
 		],
 		[
 			'id'       => 'password_change_frequency',
@@ -1665,6 +1677,12 @@ function rsssl_fields( $load_values = true ) {
 				'24' => __( "2 years", "really-simple-ssl-pro" ),
 			],
 			'label'    => __( "Change passwords every", "really-simple-ssl-pro" ),
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'enforce_password_security_enabled' => 1,
+				]
+			],
 		],
     ];
 
