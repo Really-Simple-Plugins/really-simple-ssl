@@ -101,7 +101,7 @@ if ( !class_exists('rsssl_mailer_admin') ) {
 		public function email_verification_completed() {
 			$status = get_option( 'rsssl_email_verification_status' );
 
-			if ( $status == 'started' ) {
+			if ( $status === 'started' ) {
 				return false;
 			}
 

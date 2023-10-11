@@ -114,7 +114,7 @@ function rsssl_is_integration_enabled( $plugin, $details ) {
 		return true;
 	}
 
-	$field_id = isset($details['option_id']) ? $details['option_id'] : false;
+	$field_id = $details['option_id'] ?? false;
 	if ($field_id && rsssl_get_option($field_id) ) {
 		return true;
 	}
@@ -151,8 +151,8 @@ function rsssl_integrations() {
 		}
 	}
 }
+
 add_action( 'plugins_loaded', 'rsssl_integrations', 10 );
-//also run when fields are saved.
 add_action( 'rsssl_after_saved_fields', 'rsssl_integrations', 20 );
 
 /**

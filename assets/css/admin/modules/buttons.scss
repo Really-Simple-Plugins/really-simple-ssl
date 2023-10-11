@@ -1,4 +1,9 @@
 .rsssl {
+  .rsssl-email {
+    button.button {
+      display:flex;
+    }
+  }
   a.button, button.button, input.button, span.button {
     font-size: var(--rsp-fs-300);
     font-weight: 400;
@@ -8,7 +13,10 @@
     &.button-secondary, &.button-default{
       background: transparent;
     }
-
+    .rsssl-icon {
+      padding-top: 7px;
+      padding-left: 7px;
+    }
     &.button-black {
       border: 1px solid var(--rsp-black);
       background: var(--rsp-black);

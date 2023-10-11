@@ -317,12 +317,9 @@ const IpAddressDataTableStore = create((set, get) => ({
         set({inputRangeValidated: false});
         let from = '';
         let to = '';
-        console.log('validateIpRange');
         //first we determine if the IP is ipv4 or ipv6
         if (lowest && highest) {
-            console.log('lowest and highest validation')
             if (get().validateIpv4(lowest) && get().validateIpv4(highest)) {
-                console.log('ipv4 validated');
                 //now we check if the lowest is lower than the highest
                 if (get().ipToNumber(lowest) > get().ipToNumber(highest)) {
                     console.warn('lowest is higher than highest');

@@ -2312,7 +2312,7 @@ class rsssl_admin
 		        'callback' => 'RSSSL()->mailer_admin->email_verification_completed',
 		        'output' => array(
 			        'false' => array(
-				        'msg' => __( "E-mail verification has not been completed yet. Check your e-mail and click the link", 'really-simple-ssl' ),
+				        'msg' => __( "Email verification has not been completed yet. Check your email and click the link", 'really-simple-ssl' ),
 				        'icon' => 'open',
 				        'admin_notice' => false,
 				        'url' => 'https://really-simple-ssl.com/email-verification/',
@@ -2320,7 +2320,7 @@ class rsssl_admin
 				        'plusone' => true,
 			        ),
 			        'true' => array(
-				        'msg' => __( "E-mail address successfully verified", 'really-simple-ssl' ),
+				        'msg' => __( "Email address successfully verified", 'really-simple-ssl' ),
 				        'icon' => 'success',
 				        'admin_notice' => false,
 				        'url' => 'https://really-simple-ssl.com/email-verification/',

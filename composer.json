@@ -13,6 +13,13 @@
     "autoload": {
         "classmap": [
             "wp-tests-lib"
-        ]
+        ],
+        "composer": "^2.4",
+        "phpcompatibility/phpcompatibility-wp": "*"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
     }
 }

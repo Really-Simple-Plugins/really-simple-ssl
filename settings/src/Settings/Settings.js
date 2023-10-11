@@ -1,12 +1,13 @@
-import {useState, useEffect} from '@wordpress/element';
-import SettingsPlaceholder from '../Placeholder/SettingsPlaceholder';
-import {in_array} from '../utils/lib';
-import SettingsGroup from './SettingsGroup';
-import Help from './Help';
-import useFields from './FieldsData';
-import useMenu from '../Menu/MenuData';
-import {__} from '@wordpress/i18n';
-import useLetsEncryptData from '../LetsEncrypt/letsEncryptData';
+import { useState} from "@wordpress/element";
+import SettingsPlaceholder from "../Placeholder/SettingsPlaceholder";
+import {in_array} from "../utils/lib";
+import SettingsGroup from "./SettingsGroup";
+import Help from "./Help";
+import useFields from "./FieldsData";
+import useMenu from "../Menu/MenuData";
+import { __ } from '@wordpress/i18n';
+import useLetsEncryptData from "../LetsEncrypt/letsEncryptData";
+import ErrorBoundary from "../utils/ErrorBoundary";
 
 /**
  * Renders the selected settings
@@ -170,8 +171,8 @@ const Settings = () => {
             </div>
           </div>
           {notices.map(
-              (field, i) => <Help key={i} noticesExpanded={noticesExpanded}
-                                  index={i} help={field} fieldId={field.id}/>)}
+              (field, i) => <ErrorBoundary key={i} fallback={"Could not load notices"}><Help key={i} noticesExpanded={noticesExpanded}
+                                  index={i} help={field} fieldId={field.id}/></ErrorBoundary>)}
         </div>
 
 

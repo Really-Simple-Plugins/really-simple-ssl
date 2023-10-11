@@ -27,7 +27,7 @@ html {
       box-sizing: border-box;
       display: inherit;
       max-width: 100%;
-      z-index: 1;
+      //z-index: 1; => this conflicts with the tooltip z-index
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;

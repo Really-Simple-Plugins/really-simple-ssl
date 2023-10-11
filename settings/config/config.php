@@ -120,7 +120,7 @@ function rsssl_fields( $load_values = true ) {
             'warning'     => true,
             'label'       => __( "Email verification", 'really-simple-ssl' ),
             'disabled'    => rsssl_is_email_verified(),
-            'tooltip'  => __( "Verify your e-mail address to get the most out of Really Simple SSL.", 'really-simple-ssl' ),
+            'tooltip'  => __( "Verify your email address to get the most out of Really Simple SSL.", 'really-simple-ssl' ),
         ],
         [
             'id'               => 'notifications_email_address',
@@ -1055,7 +1055,7 @@ function rsssl_fields( $load_values = true ) {
             'menu_id'  => 'recommended_security_headers',
             'group_id' => 'recommended_security_headers',
             'type'     => 'select',
-            'label'    => __("X-XSS-Protection", "really-simple-ssl-pro"),
+            'label'    => __("X-XSS-Protection", "really-simple-ssl"),
             'options'  => [
                 'disabled'   => __("disabled", "really-simple-ssl"),
                 'zero'       => "0 ".__("(recommended)", "really-simple-ssl"),
@@ -1077,7 +1077,7 @@ function rsssl_fields( $load_values = true ) {
             'menu_id'  => 'recommended_security_headers',
             'group_id' => 'recommended_security_headers',
             'type'     => 'checkbox',
-            'label'    => __("X-Content-Type options", "really-simple-ssl-pro"),
+            'label'    => __("X-Content-Type options", "really-simple-ssl"),
             'disabled' => false,
             'default'  => false,
         ],
@@ -1091,7 +1091,7 @@ function rsssl_fields( $load_values = true ) {
                 'DENY'       => 'DENY',
                 'SAMEORIGIN' => 'SAMEORIGIN',
             ],
-            'label'    => __("X-Frame options", "really-simple-ssl-pro"),
+            'label'    => __("X-Frame options", "really-simple-ssl"),
             'disabled' => false,
             'default'  => false,
         ],
@@ -1112,7 +1112,7 @@ function rsssl_fields( $load_values = true ) {
                 'strict-origin'                   => 'strict-origin',
                 'same-origin'                     => 'same-origin',
             ],
-            'label'    => __("Referrer Policy", "really-simple-ssl-pro"),
+            'label'    => __("Referrer Policy", "really-simple-ssl"),
             'disabled' => false,
             'default'  => 'strict-origin-when-cross-origin',
         ],
@@ -1121,7 +1121,7 @@ function rsssl_fields( $load_values = true ) {
             'menu_id'          => 'hsts',
             'group_id'         => 'hsts',
             'type'             => 'checkbox',
-            'label'            => __("HTTP Strict Transport Security", "really-simple-ssl-pro"),
+            'label'            => __("HTTP Strict Transport Security", "really-simple-ssl"),
             'disabled'         => false,
             'default'          => false,
             'help'             => [
@@ -1143,9 +1143,9 @@ function rsssl_fields( $load_values = true ) {
             'menu_id'                 => 'hsts',
             'group_id'                => 'hsts',
             'type'                    => 'checkbox',
-            'label'                   => __("Include preload", "really-simple-ssl-pro"),
+            'label'                   => __("Include preload", "really-simple-ssl"),
             'comment'                 => sprintf(__("After enabling this feature, you can submit your site to %shstspreload.org%s",
-                "really-simple-ssl-pro"), '<a target="_blank" href="https://hstspreload.org?domain='.site_url().'">',
+                "really-simple-ssl"), '<a target="_blank" href="https://hstspreload.org?domain='.site_url().'">',
                 "</a>"),
             'react_conditions'        => [
                 'relation' => 'AND',
@@ -1168,7 +1168,7 @@ function rsssl_fields( $load_values = true ) {
             'menu_id'          => 'hsts',
             'group_id'         => 'hsts',
             'type'             => 'checkbox',
-            'label'            => __("Include subdomains", "really-simple-ssl-pro"),
+            'label'            => __("Include subdomains", "really-simple-ssl"),
             'react_conditions' => [
                 'relation' => 'AND',
                 [
@@ -1188,7 +1188,7 @@ function rsssl_fields( $load_values = true ) {
                 '31536000' => __('One year', 'really-simple-ssl'),
                 '63072000' => __('Two years (required for preload)', 'really-simple-ssl'),
             ],
-            'label'            => __("Choose the max-age for HSTS", "really-simple-ssl-pro"),
+            'label'            => __("Choose the max-age for HSTS", "really-simple-ssl"),
             'react_conditions' => [
                 'relation' => 'AND',
                 [
@@ -1216,7 +1216,7 @@ function rsssl_fields( $load_values = true ) {
                 'text'  => __('One of the most powerful features, and therefore the most complex are the Cross-Origin headers that can isolate your website so any data leaks are minimized.',
                     'really-simple-ssl'),
             ],
-            'label'    => __("Cross Origin Opener Policy", "really-simple-ssl-pro"),
+            'label'    => __("Cross Origin Opener Policy", "really-simple-ssl"),
             'disabled' => false,
             'default'  => 'disabled',
         ],
@@ -1231,7 +1231,7 @@ function rsssl_fields( $load_values = true ) {
                 'same-origin'  => 'same-origin',
                 'cross-origin' => 'cross-origin',
             ],
-            'label'    => __("Cross Origin Resource Policy", "really-simple-ssl-pro"),
+            'label'    => __("Cross Origin Resource Policy", "really-simple-ssl"),
             'disabled' => false,
             'default'  => 'disabled',
         ],
@@ -1246,7 +1246,7 @@ function rsssl_fields( $load_values = true ) {
                 'same-origin'  => 'same-origin',
                 'unsafe-none'  => 'unsafe-none',
             ],
-            'label'    => __("Cross Origin Embedder Policy", "really-simple-ssl-pro"),
+            'label'    => __("Cross Origin Embedder Policy", "really-simple-ssl"),
             'disabled' => false,
             'default'  => 'disabled',
         ],
@@ -1255,36 +1255,71 @@ function rsssl_fields( $load_values = true ) {
             'menu_id'  => 'two_fa',
             'group_id' => 'two_fa_general',
 			'type'     => 'checkbox',
-			'label'    => __( "Enable login protection", "really-simple-ssl-pro" ),
+			'label'    => __( "Enable login protection", "really-simple-ssl" ),
+			'help'     => [
+					'label' => 'default',
+					'url'   => 'https://really-simple-ssl.com/instructions/about-login-protection/?mtm_campaign=instructions&mtm_source=2fa',
+					'title' => __("About Login Protection", 'really-simple-ssl'),
+					'text'  => __('Two-step verification is the first feature we regard as login protection. Want to know more about this feature, and what is to come?',
+							'really-simple-ssl'),
+			],
 			'disabled' => false,
 			'default'  => 'disabled',
+            'server_conditions'    => [
+	            'relation' => 'AND',
+	            [
+		            'is_multisite' => false,
+	            ]
+            ],
 		],
 		[
 			'id'       => 'two_fa_enabled',
 			'menu_id'  => 'two_fa',
 			'group_id' => 'two_fa_email',
 			'type'     => 'checkbox',
-			'label'    => __( "Enable two-step verification", "really-simple-ssl-pro" ),
-			'tooltip'  => __( "This will send emails from your server, containing a verification code to users that try to login.", 'really-simple-ssl' ),
+			'label'    => __( "Enable two-step verification", "really-simple-ssl" ),
+			'tooltip'  => __( "By enabling this feature you understand that email validation is required, and you can send email from your server reliably.", 'really-simple-ssl' ),
 			'disabled' => false,
+			'warning'  => true,
 			'default'  => 'disabled',
+
+			'server_conditions'    => [
+				'relation' => 'AND',
+				[
+					'is_multisite' => false,
+				]
+			],
 		],
 		[
 			'id'       => 'two_fa_optional_roles',
 			'menu_id'  => 'two_fa',
 			'group_id' => 'two_fa_email',
-			'type'     => 'two_fa_dropdown',
-            'label'    => __( "Optional for:", "really-simple-ssl-pro" ),
-			'tooltip'  => __( "Two-step login will be enabled for these user roles, with the possibility to skip. If a user skips, Two-step login will be disabled for this user.", 'really-simple-ssl' ),
+			'type'     => 'two_fa_roles',
+			'default'  => [ 'editor', 'author', 'contributor'],
+            'label'    => __( "Optional for:", "really-simple-ssl" ),
+			'tooltip'  => __( "Two-step verification will be optional for these user roles, and they can disable it on first login.", 'really-simple-ssl' ),
+			'server_conditions'    => [
+				'relation' => 'AND',
+				[
+					'is_multisite' => false,
+				]
+			],
         ],
 
 		[
 			'id'       => 'two_fa_forced_roles',
 			'menu_id'  => 'two_fa',
 			'group_id' => 'two_fa_email',
-			'type'     => 'two_fa_dropdown',
-			'label'    => __( "Force on:", "really-simple-ssl-pro" ),
-			'tooltip'  => __( "These user roles are forced to enter the authentication code, without the possibility to skip.", 'really-simple-ssl' ),
+			'type'     => 'two_fa_roles',
+			'default'  => [ 'administrator' ],
+			'label'    => __( "Force on:", "really-simple-ssl" ),
+			'tooltip'  => __( "These user roles are forced to enter the authentication code.", 'really-simple-ssl' ),
+			'server_conditions'    => [
+				'relation' => 'AND',
+				[
+					'is_multisite' => false,
+				]
+			],
 		],
         [
             'id'    => 'two_fa_users_table',
@@ -1295,21 +1330,19 @@ function rsssl_fields( $load_values = true ) {
             'label' => __('Users', 'really-simple-ssl'),
             'disabled' => false,
             'default' => false,
+            'server_conditions'    => [
+	            'relation' => 'AND',
+	            [
+		            'is_multisite' => false,
+	            ]
+            ],
             'columns' => [
                 [
                     'name'     => __( 'Username', 'really-simple-ssl' ),
-                    'sortable' => false,
+                    'sortable' => true,
                     'searchable' => true,
                     'visible' => true,
                     'column'   => 'user',
-                    'width'    => '25%',
-                ],
-                [
-                    'name'     => __( 'Status', 'really-simple-ssl' ),
-                    'sortable' => false,
-                    'searchable' => false,
-                    'visible' => true,
-                    'column'   => 'status_for_user',
                     'width'    => '20%',
                 ],
                 [
@@ -1318,29 +1351,33 @@ function rsssl_fields( $load_values = true ) {
                     'searchable' => false,
                     'visible' => true,
                     'column'   => 'user_role',
-                    'width'    => '20%',
+                    'width'    => '60%',
                 ],
                 [
-                    'name'     => __( 'Action', 'really-simple-ssl' ),
+                    'name'     => __( 'Status', 'really-simple-ssl' ),
                     'sortable' => false,
                     'searchable' => false,
                     'visible' => true,
-                    'column'   => 'rsssl_two_fa_method',
+	                'width'     => '10%',
+                    'column'   => 'status_for_user',
                 ],
+	            [
+		            'name'     => '',
+		            'sortable' => false,
+		            'searchable' => false,
+		            'visible' => true,
+		            'width'     => '10%',
+		            'column'   => 'resetControl',
+	            ],
+
             ],
-//            'react_conditions' => [
-//				'relation' => 'AND',
-//					[
-//						'two_fa_email_code' => true,
-//					]
-//			],
         ],
 		[
 			'id'          => 'mixedcontentscan',
             'menu_id'  => 'mixed_content_scan',
             'group_id' => 'mixedcontentscan',
             'type'     => 'mixedcontentscan',
-            'label'    => __("Mixed content scan", "really-simple-ssl-pro"),
+            'label'    => __("Mixed content scan", "really-simple-ssl"),
             'help'     => [
                 'label' => 'default',
                 'url'   => 'https://really-simple-ssl.com/definition/what-is-mixed-content/?mtm_campaign=definition&mtm_source=free',

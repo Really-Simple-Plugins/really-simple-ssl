@@ -32,7 +32,7 @@ function rsssl_menu()
                         ],
                         [
                             'id'            => 'email',
-							'title'    => __( 'E-mail', 'really-simple-ssl' ),
+							'title'    => __( 'Email', 'really-simple-ssl' ),
 							'helpLink' => 'https://really-simple-ssl.com/email-notifications/',
 						],
 						[
@@ -116,145 +116,137 @@ function rsssl_menu()
                         ],
                     ],
                 ],
-                [
-                    'id'      => 'limit_login_attempts',
-                    'title'   => __('Limit Login Attempts', 'really-simple-ssl'),
-                    'premium' => true,
-                    'groups'  => [
-                        [
-                            'id'           => 'limit_login_attempts_general',
-                            'helpLink'     => 'https://really-simple-ssl.com/knowledge-base/limit-login-attempts/?mtm_campaign=instructions&mtm_source=free',
-                            'premium'      => true,
-                            'title'        => __('General', 'really-simple-ssl'),
-                            'intro'        => __('Protect your site against brute force login attacks by limiting the number of login attempts. Enabling this feature will temporary lock-out a username and the IP address that tries to login, after the set number of false logins please use the instructions linked in the top-right corner.',
-                                'really-simple-ssl'),
-                            'premium_text' => __('Get Limit Login Attempts with %sReally Simple SSL Pro%s',
-                                'really-simple-ssl'),
-                        ],
-                        [
-                            'id'           => 'limit_login_attempts_advanced',
-                            'premium'      => true,
-                            'helpLink'     => 'https://really-simple-ssl.com/knowledge-base/limit-login-attempts/?mtm_campaign=instructions&mtm_source=free',
-                            'title'        => __('Limit Attempts', 'really-simple-ssl'),
-                            'intro'        => __('The settings below determine how strict your site will be protected. You can leave these settings on their default values, unless you experience issues.',
-                                'really-simple-ssl'),
-                            'premium_text' => __('Get Limit Login Attempts with %sReally Simple SSL Pro%s',
-                                'really-simple-ssl'),
-                        ],
-                        [
-                            'id'           => 'limit_login_attempts_users',
-                            'premium'      => true,
-                            'groupFilter'  => [
-                                'default' => 'limit_login_attempts_advanced_filter_log',
-                                'id'      => 'limit_login_attempts_advanced_filter',
-                                'options' => [
-                                    [
-                                        'id'    => 'blocked',
-                                        'title' => __('Permanent block', 'really-simple-ssl'),
-                                    ],
-                                    [
-                                        'id'    => 'allowed',
-                                        'title' => __('Trusted', 'really-simple-ssl'),
-                                    ],
-                                    [
-                                        'id'    => 'locked',
-                                        'title' => __('Temporary block', 'really-simple-ssl'),
-                                    ],
-                                ],
-                            ],
-                            'title'        => __('Users', 'really-simple-ssl'),
-                            'intro'        => [
-                                'locked' => __('Blocked usernames will be automatically unblocked after the above-configured interval. In the table below you can instantly unblock usernames.',
-                                    'really-simple-ssl'),
-                                'allowed' => __('You can prevent usernames from being temporarily blocked by adding them to this list. The IP address that triggers false logins will still be blocked.', 'really-simple-ssl'),
-                                'blocked' => __('You can add any non-existing username to this table, to instantly block IP addresses that try common usernames like "admin".','really-simple-ssl'),
-                            ],
-                            'premium_text' => __('Get Limit Login Attempts with %sReally Simple SSL Pro%s',
-                                'really-simple-ssl'),
-                        ],
-                        [
-                            'id'           => 'limit_login_attempts_ip_address',
-                            'premium'      => true,
-                            'groupFilter'  => [
-                                'default' => 'limit_login_attempts_advanced_filter_log',
-                                'id'      => 'limit_login_attempts_advanced_filter',
-                                'options' => [
-                                    [
-                                        'id'    => 'blocked',
-                                        'title' => __('Permanent block', 'really-simple-ssl'),
-                                    ],
-                                    [
-                                        'id'    => 'allowed',
-                                        'title' => __('Trusted', 'really-simple-ssl'),
-                                    ],
-                                    [
-                                        'id'    => 'locked',
-                                        'title' => __('Temporary block', 'really-simple-ssl'),
-                                    ],
-                                ],
-                            ],
-                            'title'        => __('IP Addresses', 'really-simple-ssl'),
-                            'intro'        => [
-                                'locked' => __('Blocked IP addresses will be automatically unblocked after the above-configured interval. In the table below you can instantly unblock IP addresses.',
-                                'really-simple-ssl'),
-                                'allowed' => __('You can prevent IP addresses from being temporarily blocked by adding them to this list. This can be convenient if you share an IP address with other site users. Usernames that trigger false logins will still be blocked.', 'really-simple-ssl'),
-                                'blocked' => __('You can indefinitely block known abusive IP addresses, to completely prevent them from trying to login.','really-simple-ssl'),
-                            ],
-                            'premium_text' => __('Get Limit Login Attempts with %sReally Simple SSL Pro%s',
-                                'really-simple-ssl'),
-                        ],
-                        [
-                            'id'       => 'limit_login_attempts_event_log',
-                            'premium'  => true,
-                            'groupFilter'  => [
-                                'default' => 'limit_login_attempts_advanced_filter_log',
-                                'id'      => 'limit_login_attempts_advanced_filter',
-                                'options' => [
-                                    [
-                                        'id'    => 'warning',
-                                        'title' => __('Warnings', 'really-simple-ssl'),
-                                    ],
-                                    [
-                                        'id'    => 'all',
-                                        'title' => __('All', 'really-simple-ssl'),
-                                    ],
-                                ],
-                            ],
-                            'title'    => __('Event Log', 'really-simple-ssl'),
-                            'intro'    => __('The Event Log shows all relevant events related to limit login attempts. You can filter the log using the dropdown on the top-right to only show warnings.',
-                                'really-simple-ssl'),
-                            'premium_text' => __('Get Limit Login Attempts with %sReally Simple SSL Pro%s',
-                                'really-simple-ssl'),
-                        ],
-                        [
-                            'id'       => 'limit_login_attempts_country',
-                            'premium'  => true,
-                            'groupFilter'  => [
-                                'default' => 'limit_login_attempts_advanced_filter_log',
-                                'id'      => 'limit_login_attempts_advanced_filter',
-                                'options' => [
-                                    [
-                                        'id'    => 'blocked',
-                                        'title' => __('Blocked', 'really-simple-ssl'),
-                                    ],
-                                    [
-                                        'id'    => 'regions',
-                                        'title' => __('Continents', 'really-simple-ssl'),
-                                    ],
-                                    [
-                                        'id'    => 'countries',
-                                        'title' => __('Countries', 'really-simple-ssl'),
-                                    ],
-                                ],
-                            ],
-                            'title'    => __('Regions', 'really-simple-ssl'),
-                            'intro'    => __('If your site is only intended for users to login from specific geographical regions, you can entirely prevent logins from certain continents or countries.',
-                                'really-simple-ssl'),
-                            'premium_text' => __('Get Limit Login Attempts with %sReally Simple SSL Pro%s',
-                                'really-simple-ssl'),
-                        ]
-                    ],
-                ],
+//                [
+//                    'id'      => 'limit_login_attempts',
+//                    'title'   => __('Limit Login Attempts', 'really-simple-ssl'),
+//                    'premium' => false,
+//                    'groups'  => [
+//                        [
+//                            'id'           => 'limit_login_attempts_general',
+//                            'helpLink'     => 'https://really-simple-ssl.com/knowledge-base/limit-login-attempts/?mtm_campaign=instructions&mtm_source=free',
+//                            'premium'      => true,
+//                            'title'        => __('General', 'really-simple-ssl'),
+//                            'intro'        => __('Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et.',
+//                                'really-simple-ssl'),
+//                            'premium_text' => __('Get Limit Login Attempts with %sReally Simple SSL Pro%s',
+//                                'really-simple-ssl'),
+//                        ],
+//                        [
+//                            'id'           => 'limit_login_attempts_advanced',
+//                            'premium'      => true,
+//                            'helpLink'     => 'https://really-simple-ssl.com/knowledge-base/limit-login-attempts/?mtm_campaign=instructions&mtm_source=free',
+//                            'title'        => __('Limit Attempts', 'really-simple-ssl'),
+//                            'intro'        => __('.feugait aptent adhuc conceptam risus regione epicurei ne litora simul suspendisse magna luctus risus senserit inceptos omittantur tritani iisque scripta pri fabellas latine dicant sale',
+//                                'really-simple-ssl'),
+//                            'premium_text' => __('Get Limit Login Attempts with %sReally Simple SSL Pro%s',
+//                                'really-simple-ssl'),
+//                        ],
+//                        [
+//                            'id'           => 'limit_login_attempts_users',
+//                            'premium'      => true,
+//                            'groupFilter'  => [
+//                                'default' => 'limit_login_attempts_advanced_filter_log',
+//                                'id'      => 'limit_login_attempts_advanced_filter',
+//                                'options' => [
+//                                    [
+//                                        'id'    => 'blocked',
+//                                        'title' => __('Blocked', 'really-simple-ssl'),
+//                                    ],
+//                                    [
+//                                        'id'    => 'allowed',
+//                                        'title' => __('Allowed', 'really-simple-ssl'),
+//                                    ],
+//                                    [
+//                                        'id'    => 'locked',
+//                                        'title' => __('Locked-out', 'really-simple-ssl'),
+//                                    ]
+//                                ],
+//                            ],
+//                            'title'        => __('Users', 'really-simple-ssl'),
+//                            'intro'        => __('Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et',
+//                                'really-simple-ssl'),
+//                            'premium_text' => __('Get Limit Login Attempts with %sReally Simple SSL Pro%s',
+//                                'really-simple-ssl'),
+//                        ],
+//                        [
+//                            'id'           => 'limit_login_attempts_ip_address',
+//                            'premium'      => true,
+//                            'groupFilter'  => [
+//                                'default' => 'limit_login_attempts_advanced_filter_log',
+//                                'id'      => 'limit_login_attempts_advanced_filter',
+//                                'options' => [
+//                                    [
+//                                        'id'    => 'blocked',
+//                                        'title' => __('Blocked', 'really-simple-ssl'),
+//                                    ],
+//                                    [
+//                                        'id'    => 'allowed',
+//                                        'title' => __('Allowed', 'really-simple-ssl'),
+//                                    ],
+//                                    [
+//                                        'id'    => 'locked',
+//                                        'title' => __('Locked-out', 'really-simple-ssl'),
+//                                    ],
+//                                ],
+//                            ],
+//                            'title'        => __('IP Addresses', 'really-simple-ssl'),
+//                            'intro'        => __('Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et',
+//                                'really-simple-ssl'),
+//                            'premium_text' => __('Get Limit Login Attempts with %sReally Simple SSL Pro%s',
+//                                'really-simple-ssl'),
+//                        ],
+//                        [
+//                            'id'       => 'limit_login_attempts_event_log',
+//                            'premium'  => true,
+//                            'groupFilter'  => [
+//                                'default' => 'limit_login_attempts_advanced_filter_log',
+//                                'id'      => 'limit_login_attempts_advanced_filter',
+//                                'options' => [
+//                                    [
+//                                        'id'    => 'warning',
+//                                        'title' => __('Warnings', 'really-simple-ssl'),
+//                                    ],
+//                                    [
+//                                        'id'    => 'all',
+//                                        'title' => __('All', 'really-simple-ssl'),
+//                                    ],
+//                                ],
+//                            ],
+//                            'title'    => __('Event Log', 'really-simple-ssl'),
+//                            'intro'    => __('Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna.',
+//                                'really-simple-ssl'),
+//                            'premium_text' => __('Get Limit Login Attempts with %sReally Simple SSL Pro%s',
+//                                'really-simple-ssl'),
+//                        ],
+//                        [
+//                            'id'       => 'limit_login_attempts_country',
+//                            'premium'  => true,
+//                            'groupFilter'  => [
+//                                'default' => 'limit_login_attempts_advanced_filter_log',
+//                                'id'      => 'limit_login_attempts_advanced_filter',
+//                                'options' => [
+//                                    [
+//                                        'id'    => 'blocked',
+//                                        'title' => __('Blocked', 'really-simple-ssl'),
+//                                    ],
+//                                    [
+//                                        'id'    => 'regions',
+//                                        'title' => __('Continents', 'really-simple-ssl'),
+//                                    ],
+//                                    [
+//                                        'id'    => 'countries',
+//                                        'title' => __('Countries', 'really-simple-ssl'),
+//                                    ],
+//                                ],
+//                            ],
+//                            'title'    => __('Countries', 'really-simple-ssl'),
+//                            'intro'    => __('Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna.',
+//                                'really-simple-ssl'),
+//                            'premium_text' => __('Get Limit Login Attempts with %sReally Simple SSL Pro%s',
+//                                'really-simple-ssl'),
+//                        ]
+//                    ],
+//                ],
                 [
                     'id'           => 'mixed_content_scan',
                     'title'        => __('Mixed Content Scan', 'really-simple-ssl'),
@@ -380,7 +372,7 @@ function rsssl_menu()
 					'premium'              => true,
 					'premium_text'         => __( 'Get two-factor authentication with %sReally Simple SSL Pro%s', 'really-simple-ssl' ),
 					'upgrade'              => 'https://really-simple-ssl.com/pro/?mtm_campaign=cops&mtm_source=free&mtm_content=upgrade',
-					'title'                => 'Login Protection',
+					'title'                => __('Two-Step Verification', 'really-simple-ssl'),
 					'helpLink'             => 'https://really-simple-ssl.com/instructions/two-factor-authentication/?mtm_campaign=instructions&mtm_source=free',
                     'groups'  => [
                         [
@@ -389,7 +381,7 @@ function rsssl_menu()
                             'premium_text'         => __( "Get Login Protection with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
                             'helpLink' => 'https://really-simple-ssl.com/instructions/two-factor-authentication',
                             'title'    => __( 'General', 'really-simple-ssl' ),
-                            'intro'    => __( 'Bad password and login management is the number one cause for account theft. Enhance login security per user role to prevent account theft.', 'really-simple-ssl' ),
+                            'intro'    => __( 'Enhancing the authentication process and optimizing user management makes Login Protection a foundational element in securing your website.', 'really-simple-ssl' ),
                         ],
                         [
                             'id'       => 'two_fa_email',
@@ -397,7 +389,7 @@ function rsssl_menu()
                             'premium_text'         => __( "Get Login Protection with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
                             'helpLink' => 'https://really-simple-ssl.com/instructions/two-factor-authentication',
                             'title'    => __( 'Email', 'really-simple-ssl' ),
-                            'intro'    => __( 'Two-step verification will enhance the authentication process by adding an additional layer. Selected users will be required to enter their correct credentials first, and then they must provide a one-time code sent to their email as an extra step.', 'really-simple-ssl' ),
+                            'intro'    => __( 'Two-step verification will enhance the authentication process by adding an additional security layer. Selected users will be required to enter their credentials first, and then they must provide a one-time code sent to their email as an extra step.', 'really-simple-ssl' ),
                         ],
                         [
                             'id'       => 'two_fa_users',
@@ -405,18 +397,18 @@ function rsssl_menu()
                             'premium_text'         => __( "Get Login Protection with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
 //                            'helpLink' => 'https://really-simple-ssl.com/instructions/two-factor-authentication',
                             'title'    => __( 'Users', 'really-simple-ssl' ),
-                            'intro'    => __( 'Here you can see which users have enabled two-step login, or change the status per user.', 'really-simple-ssl' ),
+                            'intro'    => __( 'Below you will find the users that you have selected for an additional verification method and their subsequent status. A reset is possible to revert a choice made by a user.', 'really-simple-ssl' ),
                             'groupFilter'  => [
-	                            'default' => 'two_fa_user_filter_all',
+	                            'default' => 'active',
 	                            'id'      => 'two_fa_user_filter',
 	                            'options' => [
 		                            [
-			                            'id'    => 'email',
+			                            'id'    => 'active',
 			                            'title' => __('Active', 'really-simple-ssl'),
 		                            ],
 		                            [
 			                            'id'    => 'open',
-			                            'title' => __('Pending', 'really-simple-ssl'),
+			                            'title' => __('Open', 'really-simple-ssl'),
 		                            ],
 		                            [
 			                            'id'    => 'disabled',

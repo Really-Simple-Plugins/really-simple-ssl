@@ -8,14 +8,12 @@ import useLicense from "./License/LicenseData";
 import filterData from "./FilterData";
 import {useEffect, useState} from '@wordpress/element';
 
-
 /**
  * Render a grouped block of settings
  */
 const SettingsGroup = (props) => {
     const {fields} = useFields();
     const {selectedFilter, setSelectedFilter} = filterData();
-    const {setActiveGroupId, activeGroupId} = useMenu();
     const {licenseStatus} = useLicense();
     const {selectedSubMenuItem, subMenu} = useMenu();
     const [Field, setField] = useState(null);
@@ -104,8 +102,7 @@ const SettingsGroup = (props) => {
             {activeGroup.title && <div className="rsssl-grid-item-header">
                 <h3 className="rsssl-h4">{activeGroup.title}</h3>
                 {activeGroup.groupFilter && (
-                    <div className="rsssl-grid-item-controls">
-                        {activeGroup.groupFilter && (
+                        <div className="rsssl-grid-item-controls">
                             <select
                                 className="rsssl-group-filter"
                                 id={filterId}
@@ -126,7 +123,6 @@ const SettingsGroup = (props) => {
                                     </option>
                                 ))}
                             </select>
-                        )}
                     </div>
                 )}
                 {activeGroup.helpLink && anchor !== 'letsencrypt' && (
@@ -148,7 +144,8 @@ const SettingsGroup = (props) => {
                 {(activeGroup.intro && typeof activeGroup.intro === 'string') && <div className="rsssl-settings-block-intro">{activeGroup.intro}</div>}
                 {(activeGroup.intro &&  typeof activeGroup.intro === 'object') && <div className="rsssl-settings-block-intro">{updatedIntro}</div>}
                 {Field && selectedFields.map((field, i) =>
-                    <Field key={"selectedFields-" + i} index={i} field={field} fields={selectedFields}/>)}
+                        <Field key={"selectedFields-" + i} index={i} field={field} fields={selectedFields}/>
+                )}
             </div>
             {disabled && !networkwide_error && <div className="rsssl-locked">
                 <div className="rsssl-locked-overlay">
