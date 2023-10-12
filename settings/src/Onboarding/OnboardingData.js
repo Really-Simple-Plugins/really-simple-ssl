@@ -46,12 +46,12 @@ const useOnboardingData = create(( set, get ) => ({
     },
     dismissModal: async (dismiss) => {
         let data={};
+        console.log("dismissModal", dismiss);
         data.dismiss = dismiss;
         let showOnboardingModal = get().showOnboardingModal;
         //dismiss is opposite of showOnboardingModal, so we check the inverse.
-        if ( showOnboardingModal === dismiss ) {
-            set(() => ({showOnboardingModal: !dismiss}));
-        }
+        set(() => ({showOnboardingModal: !dismiss}));
+
         await rsssl_api.doAction('dismiss_modal', data);
     },
     activateSSL: () => {

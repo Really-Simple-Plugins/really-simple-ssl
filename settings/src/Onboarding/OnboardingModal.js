@@ -55,7 +55,7 @@ const OnboardingModal = () => {
                     content={modalContent()}
                     isOpen={showOnboardingModal}
                     setOpen={setOpen}
-                    buttons=<OnboardingControls />
+                    buttons=<OnboardingControls isModal={true}/>
                 />
         </>
     )

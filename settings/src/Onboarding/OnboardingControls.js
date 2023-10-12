@@ -24,7 +24,12 @@ const OnboardingControls = ({isModal}) => {
     } = useOnboardingData();
 
     const goToDashboard = () => {
-        if ( isModal ) dismissModal(true);
+        if ( isModal ) {
+            console.log('dismissModal');
+            dismissModal(true);
+        } else {
+            console.log("is not modal");
+        }
         setSelectedMainMenuItem('dashboard');
     }
 
@@ -52,7 +57,7 @@ const OnboardingControls = ({isModal}) => {
             <>
                 <Button disabled={processing || (!certificateValid && !overrideSSL) } isPrimary onClick={() => {handleActivateSSL()}}>{ActivateSSLText}</Button>
                 { isModal && !certificateValid && <Button onClick={() => {goToLetsEncrypt()}}>{__("Install SSL", "really-simple-ssl")}</Button>}
-                { certificateValid && !rsssl_settings.pro_plugin_active && <a target="_blank" href={rsssl_settings.upgrade_link} className="button button-default" >{__("Improve Security with PRO", "really-simple-ssl")}</a>}
+                { certificateValid && !rsssl_settings.pro_plugin_active && <Button onClick={(e) => {window.location.href=rsssl_settings.upgrade_link}}>{__("Improve Security with PRO", "really-simple-ssl")}</Button>}
             </>
         );
     }
