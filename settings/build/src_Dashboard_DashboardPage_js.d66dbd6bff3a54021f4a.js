@@ -2114,15 +2114,15 @@ const UseRiskData = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, get) =
         vulList.forEach(function (item, i) {
           let updateUrl = item.update_available ? rsssl_settings.plugins_url + "?plugin_status=upgrade" : '#settings/vulnerabilities';
           item.vulnerability_action = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-            className: "rsssl-vulnerability-action"
+            className: "rsssl-action-buttons"
           }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-            className: "button",
+            className: "rsssl-button button-secondary",
             href: "https://really-simple-ssl.com/vulnerabilities/" + item.rss_identifier,
             target: "_blank"
           }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Details", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
             disabled: !item.update_available,
             href: updateUrl,
-            className: "button button-primary"
+            className: "rsssl-button button-primary"
           }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Update", "really-simple-ssl")));
         });
       }
@@ -2974,4 +2974,4 @@ const getRelativeTime = function (relativeDate) {
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Dashboard_DashboardPage_js.62df55101bd803507365.js.map
+//# sourceMappingURL=src_Dashboard_DashboardPage_js.d66dbd6bff3a54021f4a.js.map
