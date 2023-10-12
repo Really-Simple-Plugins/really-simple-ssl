@@ -1,4 +1,4 @@
-import {useEffect, useState} from "@wordpress/element";
+import {useEffect} from "@wordpress/element";
 import Onboarding from "./Onboarding";
 import Placeholder from '../Placeholder/Placeholder';
 import { __ } from '@wordpress/i18n';
@@ -7,7 +7,7 @@ import useOnboardingData from "./OnboardingData";
 import useFields from "../Settings/FieldsData";
 import './onboarding.scss';
 import RssslModal from "../../../modal/src/components/Modal/RssslModal";
-import OnboardingButtons from "./OnboardingButtons";
+import OnboardingControls from "./OnboardingControls";
 
 const OnboardingModal = () => {
     const {showOnboardingModal, fetchOnboardingModalStatus, modalStatusLoaded, currentStep, dismissModal} = useOnboardingData();
@@ -42,19 +42,20 @@ const OnboardingModal = () => {
     }
     const setOpen = (open) => {
         if ( !open ) {
-            dismissModal();
+            dismissModal(true);
         }
     }
 
     return (
         <>
                 <RssslModal
+                    className={"rsssl-onboarding-modal"}
                     title={currentStep.title}
                     subTitle={currentStep.subtitle}
                     content={modalContent()}
                     isOpen={showOnboardingModal}
                     setOpen={setOpen}
-                    buttons=<OnboardingButtons />
+                    buttons=<OnboardingControls />
                 />
         </>
     )

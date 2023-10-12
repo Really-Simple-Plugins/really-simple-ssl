@@ -1,4 +1,4 @@
-.rsssl-modal {
+.rsssl-modal.rsssl-onboarding-modal {
   .rsssl-modal-body {
 
     .rsssl-override-detection-toggle {
@@ -20,10 +20,10 @@
         align-items: flex-start;
         margin-bottom: var(--rsp-spacing-xxs);
         &.rsssl-is-plugin{
-          background-color: var(--rsp-grey-100);
+          background-color: var(--rsp-grey-300);
           border: none;
           margin: 10px 0 0 0;
-          padding:2px 0;
+          padding:5px 0;
           position:relative;
         }
         .rsssl-icon{

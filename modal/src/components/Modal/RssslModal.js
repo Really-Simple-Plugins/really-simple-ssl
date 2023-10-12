@@ -5,7 +5,7 @@ import { __ } from "@wordpress/i18n";
 import './RssslModal.scss';
 import ErrorBoundary from "../../../../settings/src/utils/ErrorBoundary";
 
-const RssslModal = ({title, subTitle, buttons, content, list, confirmAction, confirmText, alternativeAction, alternativeText, alternativeClassName, isOpen, setOpen}) => {
+const RssslModal = ({title, subTitle, buttons, content, list, confirmAction, confirmText, alternativeAction, alternativeText, alternativeClassName, isOpen, setOpen, className}) => {
     const [Icon, setIcon] = useState(null);
     let pluginUrl = typeof rsssl_modal !== 'undefined' ? rsssl_modal.plugin_url : rsssl_settings.plugin_url;
     alternativeClassName = alternativeClassName ? alternativeClassName : 'rsssl-warning';
@@ -18,14 +18,14 @@ const RssslModal = ({title, subTitle, buttons, content, list, confirmAction, con
 
 
     }, []);
-
+    let modalCustomClass = className ? ' '+className : ""
     return (
         <>
             {isOpen && (
                 <>
                     <ErrorBoundary fallback={"Error loading modal"}>
                         <Modal
-                        className="rsssl-modal"
+                        className={"rsssl-modal"+modalCustomClass}
                         title={title}
                         onRequestClose={() => setOpen(false)}
                         open={isOpen}>

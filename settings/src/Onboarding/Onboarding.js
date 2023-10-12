@@ -4,12 +4,11 @@ import * as rsssl_api from "../utils/api";
 import { __ } from '@wordpress/i18n';
 import Icon from "../utils/Icon";
 import Placeholder from '../Placeholder/Placeholder';
-import useMenu from "../Menu/MenuData";
 import useFields from "../Settings/FieldsData";
 import useProgress from "../Dashboard/Progress/ProgressData";
 import useOnboardingData from "./OnboardingData";
 import useRiskData from "../Settings/RiskConfiguration/RiskData";
-import OnboardingButtons from "./OnboardingButtons";
+import OnboardingControls from "./OnboardingControls";
 
 const Onboarding = ({isModal}) => {
     const { fetchFieldsData, getFieldValue} = useFields();
@@ -40,7 +39,6 @@ const Onboarding = ({isModal}) => {
         includeTips,
         setIncludeTips,
     } = useOnboardingData();
-    const {setSelectedMainMenuItem, selectedMainMenuItem} = useMenu();
     const statuses = {
         'inactive': {
             'icon': 'info',
@@ -59,8 +57,8 @@ const Onboarding = ({isModal}) => {
             'color': 'green',
         },
         'processing': {
-            'icon': 'file-download',
-            'color': 'red',
+            'icon': 'loading',
+            'color': 'black',
         },
     };
 
@@ -204,7 +202,7 @@ const Onboarding = ({isModal}) => {
                                 <div className="rsssl-modal-description">
                                    <a href="#" onClick={ (e) => refreshSSLStatus(e)}>
                                        { __("Refresh SSL status", "really-simple-ssl")}
-                                   </a>&nbsp;{__("The SSL detection method is not 100% accurate.", "really-simple-ssl")}&nbsp;
+                                   </a>.&nbsp;{__("The SSL detection method is not 100% accurate.", "really-simple-ssl")}&nbsp;
                                    {__("If you’re certain an SSL certificate is present, and refresh SSL status does not work, please check “Override SSL detection” to continue activating SSL.", "really-simple-ssl")}
                                 </div>
                                 <ToggleControl className="rsssl-override-detection-toggle"
@@ -217,8 +215,8 @@ const Onboarding = ({isModal}) => {
                                         rsssl_api.doAction('override_ssl_detection',data );
                                     }}
                                 />
-                                { isModal &&
-                                    <OnboardingButtons />
+                                { !isModal &&
+                                    <OnboardingControls isModal={isModal}/>
                                 }
                             </>
                         }

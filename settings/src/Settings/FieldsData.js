@@ -192,12 +192,20 @@ const useFields = create(( set, get ) => ({
     updateFieldsData: (selectedSubMenuItem) => {
         let fields = get().fields;
         fields = updateFieldsListWithConditions(fields);
-        const nextButtonDisabled = isNextButtonDisabled(fields, selectedSubMenuItem);
+
+        //only if selectedSubMenuItem is actually passed
+        if (selectedSubMenuItem) {
+            const nextButtonDisabled = isNextButtonDisabled(fields, selectedSubMenuItem);
+            set(
+                produce((state) => {
+                    state.nextButtonDisabled = nextButtonDisabled;
+                })
+            )
+        }
 
         set(
             produce((state) => {
                 state.fields = fields;
-                state.nextButtonDisabled = nextButtonDisabled;
             })
         )
     },

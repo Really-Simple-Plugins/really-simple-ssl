@@ -1,16 +1,17 @@
-import { Button, ToggleControl } from '@wordpress/components';
-import * as rsssl_api from "../utils/api";
+import { Button } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import useMenu from "../Menu/MenuData";
 import useFields from "../Settings/FieldsData";
 import useOnboardingData from "./OnboardingData";
 import useProgress from "../Dashboard/Progress/ProgressData";
-const OnboardingButtons = ({isModal}) => {
+const OnboardingControls = ({isModal}) => {
     const { getProgressData} = useProgress();
-    const { updateField, updateFieldsData} = useFields();
+    const { updateField, updateFieldsData, fetchFieldsData} = useFields();
+    const { setSelectedMainMenuItem, selectedSubMenuItem} = useMenu();
+
     const {
         dismissModal,
-        setProcessing,
+        activateSSL,
         certificateValid,
         networkwide,
         processing,
@@ -18,36 +19,19 @@ const OnboardingButtons = ({isModal}) => {
         currentStepIndex,
         setCurrentStepIndex,
         overrideSSL,
-        setNetworkActivationStatus,
         email,
         saveEmail,
     } = useOnboardingData();
-    const {setSelectedMainMenuItem} = useMenu();
-
-    const activateSSL = () => {
-        setProcessing(true);
-        rsssl_api.runTest('activate_ssl' ).then( async ( response ) => {
-            setProcessing(false);
-            setCurrentStepIndex(currentStepIndex+1);
-            //change url to https, after final check
-            if ( response.success ) {
-                if ( response.site_url_changed ) {
-                    window.location.reload();
-                } else {
-                    if ( networkwide ) {
-                        setNetworkActivationStatus('main_site_activated');
-                    }
-                }
-            }
-        }).then( async () => {
-            await getProgressData();
-            await fetchFieldsData(selectedMainMenuItem )
-        } );
-    }
 
     const goToDashboard = () => {
         if ( isModal ) dismissModal(true);
         setSelectedMainMenuItem('dashboard');
+    }
+
+    const handleActivateSSL = async () => {
+        await activateSSL();
+        await getProgressData();
+        await fetchFieldsData( );
     }
 
     const goToLetsEncrypt = () => {
@@ -57,19 +41,18 @@ const OnboardingButtons = ({isModal}) => {
 
     const saveEmailAndUpdateFields = async () => {
         await saveEmail();
-
         updateField('send_notifications_email', true );
         updateField('notifications_email_address', email );
-        updateFieldsData();
+        updateFieldsData(selectedSubMenuItem);
     }
 
     let ActivateSSLText = networkwide ? __("Activate SSL networkwide", "really-simple-ssl") : __("Activate SSL", "really-simple-ssl");
     if ( currentStepIndex === 0 ) {
         return (
             <>
-                <Button disabled={processing || (!certificateValid && !overrideSSL) } isPrimary onClick={() => {activateSSL()}}>{ActivateSSLText}</Button>
+                <Button disabled={processing || (!certificateValid && !overrideSSL) } isPrimary onClick={() => {handleActivateSSL()}}>{ActivateSSLText}</Button>
+                { isModal && !certificateValid && <Button className="rsssl-modal-default" onClick={() => {goToLetsEncrypt()}}>{__("Install SSL", "really-simple-ssl")}</Button>}
                 { certificateValid && !rsssl_settings.pro_plugin_active && <a target="_blank" href={rsssl_settings.upgrade_link} className="button button-default" >{__("Improve Security with PRO", "really-simple-ssl")}</a>}
-                { !certificateValid && <Button className="rsssl-modal-default" onClick={() => {goToLetsEncrypt()}}>{__("Install SSL", "really-simple-ssl")}</Button>}
             </>
         );
     }
@@ -77,8 +60,8 @@ const OnboardingButtons = ({isModal}) => {
     if (currentStepIndex>0 && currentStepIndex<steps.length-1) {
         return (
             <>
-                <Button disabled={processing} isPrimary onClick={() => saveEmailAndUpdateFields()}>{__('Save and continue', 'really-simple-ssl')}</Button>
                 <Button disabled={processing} className="rsssl-modal-default" onClick={() => {setCurrentStepIndex(currentStepIndex+1)}}>{__('Skip', 'really-simple-ssl')}</Button>
+                <Button disabled={processing} isPrimary onClick={() => saveEmailAndUpdateFields()}>{__('Save and continue', 'really-simple-ssl')}</Button>
             </>
         );
     }
@@ -94,4 +77,4 @@ const OnboardingButtons = ({isModal}) => {
     }
 }
 
-export default OnboardingButtons;
+export default OnboardingControls;
