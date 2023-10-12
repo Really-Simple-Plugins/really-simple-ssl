@@ -111,6 +111,9 @@ The plugin checks your certificate before enabling, but if, for example, you mig
 If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions](https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/) instead.
 
 == Changelog ==
+= 7.1.3.01 =
+Fix: remove flags .js file which was added twice, props @adamainsworth
+
 = 7.1.3 =
 * October 11th 2023
 * Fix: React ErrorBoundary preventing Let's Encrypt generation to complete.
