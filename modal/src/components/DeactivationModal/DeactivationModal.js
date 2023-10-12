@@ -60,20 +60,68 @@ const DeactivationModal = () => {
     }
 
     const list = isPremium ? [
-            __("Performant HTTPS redirection", "really-simple-ssl"),
-            __("Vulnerability detection", "really-simple-ssl"),
-            __("Advanced WordPress hardening", "really-simple-ssl"),
-            __("Two-Factor authentication", "really-simple-ssl"),
-            __("Security Headers", "really-simple-ssl"),
-            __("Login Protection", "really-simple-ssl"),
-            __("WordPress hardening", "really-simple-ssl"),
-            __("Two-step verification", "really-simple-ssl"),
+            {
+                'icon':'circle-times',
+                'color':'red',
+                'text': __("Performant HTTPS redirection", "really-simple-ssl"),
+            },
+            {
+                'icon':'circle-times',
+                'color':'red',
+                'text': __("Vulnerability detection", "really-simple-ssl"),
+            },
+            {
+                'icon':'circle-times',
+                'color':'red',
+                'text': __("Advanced WordPress hardening", "really-simple-ssl"),
+            },
+            {
+                'icon':'circle-times',
+                'color':'red',
+                'text': __("Two-Factor authentication", "really-simple-ssl"),
+            },
+            {
+                'icon':'circle-times',
+                'color':'red',
+                'text': __("Security Headers", "really-simple-ssl"),
+            },
+            {
+                'icon':'circle-times',
+                'color':'red',
+                'text': __("Login Protection", "really-simple-ssl"),
+            },
+            {
+                'icon':'circle-times',
+                'color':'red',
+                'text': __("WordPress hardening", "really-simple-ssl"),
+            },
+            {
+                'icon':'circle-times',
+                'color':'red',
+                'text': __("Two-step verification", "really-simple-ssl"),
+            },
         ] :
         [
-            __("Performant HTTPS redirection", "really-simple-ssl"),
-            __("Vulnerability detection", "really-simple-ssl"),
-            __("WordPress hardening", "really-simple-ssl"),
-            __("Two-step verification", "really-simple-ssl"),
+            {
+                'icon':'circle-times',
+                'color':'red',
+                'text': __("Performant HTTPS redirection", "really-simple-ssl"),
+            },
+            {
+                'icon':'circle-times',
+                'color':'red',
+                'text': __("Vulnerability detection", "really-simple-ssl"),
+            },
+            {
+                'icon':'circle-times',
+                'color':'red',
+                'text': __("WordPress hardening", "really-simple-ssl"),
+            },
+            {
+                'icon':'circle-times',
+                'color':'red',
+                'text': __("Two-step verification", "really-simple-ssl"),
+            },
         ];
     return (
         <>

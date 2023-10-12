@@ -1,4 +1,4 @@
-import { useState} from "@wordpress/element";
+import { useState, useEffect} from "@wordpress/element";
 import SettingsPlaceholder from "../Placeholder/SettingsPlaceholder";
 import {in_array} from "../utils/lib";
 import SettingsGroup from "./SettingsGroup";

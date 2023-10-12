@@ -47,12 +47,11 @@ const useOnboardingData = create(( set, get ) => ({
         const currentStep = get().steps[currentStepIndex];
         set(state => ({ currentStepIndex, currentStep }))
     },
-    dismissModal: () => {
+    dismissModal: async (dismiss) => {
         let data={};
-        data.dismiss = true;
-        set((state) => ({showOnboardingModal: false}));
-        rsssl_api.doAction('dismiss_modal', data).then(( response ) => {
-        });
+        data.dismiss = dismiss;
+        set(() => ({showOnboardingModal: false}));
+        await rsssl_api.doAction('dismiss_modal', data);
     },
     saveEmail:() => {
         let data={};

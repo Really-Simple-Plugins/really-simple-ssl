@@ -3,10 +3,11 @@ import { Modal, Button } from "@wordpress/components";
 import {useEffect, useState} from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import './RssslModal.scss';
+import ErrorBoundary from "../../../../settings/src/utils/ErrorBoundary";
 
-const RssslModal = ({title, subTitle, content, list, confirmAction, confirmText, alternativeAction, alternativeText, alternativeClassName, isOpen, setOpen}) => {
+const RssslModal = ({title, subTitle, buttons, content, list, confirmAction, confirmText, alternativeAction, alternativeText, alternativeClassName, isOpen, setOpen}) => {
     const [Icon, setIcon] = useState(null);
-
+    let pluginUrl = typeof rsssl_modal !== 'undefined' ? rsssl_modal.plugin_url : rsssl_settings.plugin_url;
     alternativeClassName = alternativeClassName ? alternativeClassName : 'rsssl-warning';
     useEffect( () => {
         if (!Icon) {
@@ -14,37 +15,44 @@ const RssslModal = ({title, subTitle, content, list, confirmAction, confirmText,
                 setIcon(() => Icon);
             });
         }
+
+
     }, []);
-    subTitle = "Dit is een test";
-    console.log(subTitle)
+
     return (
         <>
             {isOpen && (
                 <>
-                    <Modal
+                    <ErrorBoundary fallback={"Error loading modal"}>
+                        <Modal
                         className="rsssl-modal"
                         title={title}
                         onRequestClose={() => setOpen(false)}
                         open={isOpen}>
-                        <div className="rsssl-modal-body">d
-                            {subTitle && <h3>{subTitle}</h3>}
-                            {content && <p>{content}</p>}
+                        <div className="rsssl-modal-body">
+                            {subTitle && <p>{subTitle}</p>}
+                            {content && <>{content}</>}
                             {list && Icon && <ul>
-                                {list.map((item, index) => <li key={index}><Icon name="circle-times" color="red"/>{item}</li>)}
+                                {list.map((item, index) => <li key={index}><Icon name={item.icon} color={item.color}/>{item.text}</li>)}
                             </ul>}
                         </div>
                         <div className="rsssl-modal-footer">
                             <div className="rsssl-modal-footer-image">
-                                <img className="rsssl-logo" src={rsssl_modal.plugin_url+"assets/img/really-simple-ssl-logo.svg"} alt="Really Simple SSL" />
+                                <img className="rsssl-logo" src={pluginUrl+"assets/img/really-simple-ssl-logo.svg"} alt="Really Simple SSL" />
                             </div>
                             <div className="rsssl-modal-footer-buttons">
-                                <Button className='rsssl-modal-cancel' onClick={() => setOpen(false)}>{__("Cancel", "really-simple-ssl")}</Button>
-                                {alternativeText && <Button className={alternativeClassName} onClick={() => alternativeAction()}>{alternativeText}</Button>}
-                                {confirmText && <Button isPrimary onClick={()=> confirmAction() }>{confirmText}</Button>}
+                                <Button className='rsssl-modal-default' onClick={() => setOpen(false)}>{__("Cancel", "really-simple-ssl")}</Button>
+                                { buttons && <>{buttons}</>}
+                                { !buttons && <>
+                                        {alternativeText && <Button className={alternativeClassName} onClick={() => alternativeAction()}>{alternativeText}</Button>}
+                                        {confirmText && <Button isPrimary onClick={()=> confirmAction() }>{confirmText}</Button>}
+                                    </>
+                                }
                             </div>
 
                         </div>
                     </Modal>
+                    </ErrorBoundary>
                 </>
 
 
