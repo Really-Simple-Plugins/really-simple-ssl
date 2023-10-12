@@ -271,7 +271,6 @@ const IpAddressDataTableStore = create((set, get) => ({
      */
     ipToNumber: (ip) => {
         if (get().validateIpv4(ip)) {
-            console.log('ip: ' + ip, 'number: ' + get().ipV4ToNumber(ip));
             return get().ipV4ToNumber(ip);
         } else if (get().validateIpv6(get().extendIpV6(ip))) {
             return get().ipV6ToNumber(get().extendIpV6(ip));
