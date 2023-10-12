@@ -5,26 +5,27 @@ import DataTable, {createTheme} from "react-data-table-component";
 import useFields from "../FieldsData";
 import VulnerabilitiesIntro from "./VulnerabilitiesIntro";
 import useProgress from "../../Dashboard/Progress/ProgressData";
-import {Button} from "@wordpress/components";
+import useRunnerData from "./RunnerData";
+import './datatable.scss';
 
 const VulnerabilitiesOverview = (props) => {
     const {getProgressData} = useProgress();
+    const {introCompleted, showIntro, setShowIntro} = useRunnerData();
+    const [enabled, setEnabled] = useState(false);
+
     const {
         dataLoaded,
         vulList,
-        introCompleted,
         fetchVulnerabilities,
         setDataLoaded,
         fetchFirstRun
     } = useRiskData();
-    const {fields, fieldAlreadyEnabled, getFieldValue} = useFields();
-    const [showIntro, setShowIntro] = useState(false);
+    const {getFieldValue, handleNextButtonDisabled, fieldAlreadyEnabled, fieldsLoaded} = useFields();
     const [searchTerm, setSearchTerm] = useState("");
     //we create the columns
     let columns = [];
     //getting the fields from the props
     let field = props.field;
-    let enabled = false;
     const customStyles = {
         headCells: {
             style: {
@@ -49,12 +50,18 @@ const VulnerabilitiesOverview = (props) => {
         return {
             name: column.name,
             sortable: column.sortable,
-            width: column.width,
             visible: column.visible,
             selector: row => row[column.column],
             searchable: column.searchable,
+            grow:column.grow
         };
     }
+
+    useEffect(() => {
+        if (!fieldsLoaded) return;
+
+        setEnabled(getFieldValue('enable_vulnerability_scanner')==1);
+    },[fieldsLoaded]);
 
     let dummyData = [['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', '']];
     field.columns.forEach(function (item, i) {
@@ -64,37 +71,50 @@ const VulnerabilitiesOverview = (props) => {
 
     //get data if field was already enabled, so not changed right now.
     useEffect(() => {
-        if (fieldAlreadyEnabled('enable_vulnerability_scanner')) {
-            if (getFieldValue('vulnerabilities_intro_shown') != 1 && !introCompleted) {
-                setShowIntro(true);
-            } else {
-                //if just enabled, but intro already shown, just get the first run data.
-                if (!dataLoaded) {
-                    initialize();
-                }
-            }
+        let vulnerabilityDetectionEnabledAndSaved = fieldAlreadyEnabled('enable_vulnerability_scanner');
+        let vulnerabilityDetectionEnabled = getFieldValue('enable_vulnerability_scanner')==1;
+
+        //if the field is just toggled on, disable the next button
+        //this prevents the user from continuing without having completed the modal.
+        if (vulnerabilityDetectionEnabled && !vulnerabilityDetectionEnabledAndSaved) {
+            handleNextButtonDisabled(true);
+        } else {
+            handleNextButtonDisabled(false);
         }
-    }, [fields, dataLoaded]);
+
+        let introShown = getFieldValue('vulnerabilities_intro_shown') == 1;
+        if ( !vulnerabilityDetectionEnabledAndSaved ) {
+            return;
+        }
+        setDataLoaded(false);
+        if ( !introShown && !introCompleted) {
+            setShowIntro(true);
+        }
+
+    }, [ getFieldValue('enable_vulnerability_scanner') ]);
 
     useEffect(() => {
-        //if this value changes, reload vulnerabilities data
-        if (getFieldValue('enable_vulnerability_scanner') == 1 && !fieldAlreadyEnabled('enable_vulnerability_scanner')) {
-            setDataLoaded(false);
+        if ( dataLoaded ) {
+            return;
         }
-    }, [fields]);
+        let introShown = getFieldValue('vulnerabilities_intro_shown') == 1;
+        if ( showIntro && !introShown ) {
+            return;
+        }
+
+        let vulnerabilityDetectionEnabledAndSaved = fieldAlreadyEnabled('enable_vulnerability_scanner');
+        if ( vulnerabilityDetectionEnabledAndSaved ) {
+            //if just enabled, but intro already shown, just get the first run data.
+            initialize();
+        }
+
+    }, [ dataLoaded ]);
 
     const initialize = async () => {
         await fetchFirstRun();
         await fetchVulnerabilities();
         await getProgressData();
     }
-
-    fields.forEach(function (item, i) {
-        if (item.id === 'enable_vulnerability_scanner') {
-            enabled = item.value;
-        }
-    });
-
     if (!enabled) {
         return (
             //If there is no data or vulnerabilities scanner is disabled we show some dummy data behind a mask
@@ -125,7 +145,7 @@ const VulnerabilitiesOverview = (props) => {
     let data = vulList.map(item => ({
         ...item,
         risk_name: <span
-            className={"rsssl-badge-large rsp-" + item.risk_name.toLowerCase().replace('-risk', '')}>{item.risk_name.replace('-risk', '')}</span>
+            className={"rsssl-badge-large rsp-risk-level-" + item.risk_level}>{item.risk_name.replace('-risk', '')}</span>
     }));
     if (searchTerm.length > 0) {
         data = data.filter(function (item) {

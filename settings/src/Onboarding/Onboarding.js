@@ -1,4 +1,4 @@
-import { useEffect} from "@wordpress/element";
+import { useEffect, useState } from "@wordpress/element";
 import { Button, ToggleControl } from '@wordpress/components';
 import * as rsssl_api from "../utils/api";
 import { __ } from '@wordpress/i18n';
@@ -13,8 +13,10 @@ import OnboardingControls from "./OnboardingControls";
 const Onboarding = ({isModal}) => {
     const { fetchFieldsData, getFieldValue} = useFields();
     const { getProgressData} = useProgress();
+    const [hardeningEnabled, setHardeningEnabled] = useState(false);
+    const [vulnerabilityDetectionEnabled, setVulnerabilityDetectionEnabled] = useState(false);
     const {
-        fetchVulnerabilities
+        fetchFirstRun, fetchVulnerabilities
     } = useRiskData();
     const {
         actionHandler,
@@ -68,6 +70,7 @@ const Onboarding = ({isModal}) => {
         }
     }, [networkActivationStatus, networkProgress])
 
+
     useEffect( () => {
         const run = async () => {
             await getSteps(false);
@@ -82,24 +85,42 @@ const Onboarding = ({isModal}) => {
         run();
     }, [])
 
+    useEffect( () => {
+        if (currentStep && currentStep.items) {
+            let hardeningItem = currentStep.items.find((item) => {
+                return item.id === 'hardening';
+            })
+            if (hardeningItem) {
+                setHardeningEnabled(hardeningItem.status === 'success');
+            }
+            let vulnerabilityDetection = currentStep.items.find((item) => {
+                return item.id === 'vulnerability_detection';
+            })
+            if (vulnerabilityDetection) {
+                setVulnerabilityDetectionEnabled(vulnerabilityDetection.status === 'success');
+            }
+        }
+    }, [currentStep]);
+
     //ensure all fields are updated, and progress is retrieved again
     useEffect( () => {
         const runUpdate = async () => {
             //in currentStep.items, find item with id 'hardening'
             //if it has status 'completed' fetchFieldsData again.
-            if (currentStep && currentStep.items) {
-                let hardeningItem = currentStep.items.find((item) => {
-                    return item.id === 'hardening';
-                })
-                if (hardeningItem && hardeningItem.status === 'success') {
-                    await fetchFieldsData('hardening');
-                    await getProgressData();
-                    await fetchVulnerabilities();
-                }
+            if ( hardeningEnabled ) {
+                await fetchFieldsData('hardening');
+                await getProgressData();
+            }
+
+            if (vulnerabilityDetectionEnabled) {
+                await fetchFieldsData('vulnerabilities');
+                await fetchFirstRun();
+                await fetchVulnerabilities();
+                await getProgressData();
             }
         }
         runUpdate();
-    }, [currentStep])
+    }, [hardeningEnabled, vulnerabilityDetectionEnabled])
 
     const parseStepItems = (items) => {
         return items && items.map( (item, index) => {

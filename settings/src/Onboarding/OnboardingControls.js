@@ -51,7 +51,7 @@ const OnboardingControls = ({isModal}) => {
         return (
             <>
                 <Button disabled={processing || (!certificateValid && !overrideSSL) } isPrimary onClick={() => {handleActivateSSL()}}>{ActivateSSLText}</Button>
-                { isModal && !certificateValid && <Button className="rsssl-modal-default" onClick={() => {goToLetsEncrypt()}}>{__("Install SSL", "really-simple-ssl")}</Button>}
+                { isModal && !certificateValid && <Button onClick={() => {goToLetsEncrypt()}}>{__("Install SSL", "really-simple-ssl")}</Button>}
                 { certificateValid && !rsssl_settings.pro_plugin_active && <a target="_blank" href={rsssl_settings.upgrade_link} className="button button-default" >{__("Improve Security with PRO", "really-simple-ssl")}</a>}
             </>
         );
@@ -60,7 +60,7 @@ const OnboardingControls = ({isModal}) => {
     if (currentStepIndex>0 && currentStepIndex<steps.length-1) {
         return (
             <>
-                <Button disabled={processing} className="rsssl-modal-default" onClick={() => {setCurrentStepIndex(currentStepIndex+1)}}>{__('Skip', 'really-simple-ssl')}</Button>
+                <Button disabled={processing} onClick={() => {setCurrentStepIndex(currentStepIndex+1)}}>{__('Skip', 'really-simple-ssl')}</Button>
                 <Button disabled={processing} isPrimary onClick={() => saveEmailAndUpdateFields()}>{__('Save and continue', 'really-simple-ssl')}</Button>
             </>
         );
@@ -70,7 +70,7 @@ const OnboardingControls = ({isModal}) => {
     if ( steps.length-1 === currentStepIndex ) {
         return (
             <>
-                <Button className="rsssl-modal-default" onClick={() => dismissModal(true)}>{__('Dismiss', 'really-simple-ssl')}</Button>
+                <Button onClick={() => dismissModal(true)}>{__('Dismiss', 'really-simple-ssl')}</Button>
                 <Button isPrimary onClick={() => {goToDashboard()}}>{__('Go to Dashboard', 'really-simple-ssl')}</Button>
             </>
         );

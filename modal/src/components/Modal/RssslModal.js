@@ -41,7 +41,7 @@ const RssslModal = ({title, subTitle, buttons, content, list, confirmAction, con
                                 <img className="rsssl-logo" src={pluginUrl+"assets/img/really-simple-ssl-logo.svg"} alt="Really Simple SSL" />
                             </div>
                             <div className="rsssl-modal-footer-buttons">
-                                <Button className='rsssl-modal-default' onClick={() => setOpen(false)}>{__("Cancel", "really-simple-ssl")}</Button>
+                                <Button onClick={() => setOpen(false)}>{__("Cancel", "really-simple-ssl")}</Button>
                                 { buttons && <>{buttons}</>}
                                 { !buttons && <>
                                         {alternativeText && <Button className={alternativeClassName} onClick={() => alternativeAction()}>{alternativeText}</Button>}

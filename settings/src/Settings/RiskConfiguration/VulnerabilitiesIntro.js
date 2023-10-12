@@ -1,97 +1,101 @@
 import {__} from "@wordpress/i18n";
-import {Button, Modal} from "@wordpress/components";
+import {Button} from "@wordpress/components";
 import {useState,useEffect} from '@wordpress/element';
-import Runner from "./Runner";
 import useRunnerData from "./RunnerData";
+import RssslModal from "../../../../modal/src/components/Modal/RssslModal";
+import useRiskData from "./RiskData";
+import useProgress from "../../Dashboard/Progress/ProgressData";
+import useFields from "../FieldsData";
+import sleeper from "../../utils/sleeper";
+import './modal.scss';
 
 const VulnerabilitiesIntro = () => {
+    const {
+        fetchFirstRun,
+        fetchVulnerabilities,
+    } = useRiskData();
+    const {getProgressData} = useProgress();
+    const {handleNextButtonDisabled, setChangedField, updateField, saveFields} = useFields();
     //first we define a state for the steps
     const [ isClosed, setClosed ] = useState( false );
-    const [ disabled, setDisabled ] = useState( true );
-    const {step} = useRunnerData();
+    const {list, disabled,setDisabled, setItemCompleted, setIntroCompleted} = useRunnerData();
 
-    useEffect (() => {
-        if (step===4) {
-            setDisabled(false);
-        }
-    },[step])
-
-    const closeOnX = () => {
+    const setOpen = () => {
         if (!disabled) {
             setClosed(true);
         }
     }
+
+    useEffect(() => {
+        if ( !isClosed ) {
+            initializeVulnerabilities();
+        }
+    },[isClosed]);
+
+    const initializeVulnerabilities = async () => {
+        await sleeper(1000);
+
+        await fetchFirstRun();
+        await setItemCompleted('initialize');
+        await sleeper(1000);
+
+        await fetchVulnerabilities();
+        await setItemCompleted('fetchVulnerabilities');
+        await sleeper(1000);
+
+        await getProgressData();
+        await setItemCompleted('scan');
+        await sleeper(1000);
+
+        setChangedField('vulnerabilities_intro_shown', true);
+        updateField('vulnerabilities_intro_shown', true);
+        setIntroCompleted(true);
+
+        await saveFields(true, false);
+        setDisabled(false);
+        await setItemCompleted('enabled');
+        handleNextButtonDisabled(false);
+    }
+
+    const Controls = () => {
+        return (
+            <>
+                <Button disabled={disabled}
+                    onClick={() => {
+                        setClosed(true);
+                    }}
+                >
+                    {__('Dismiss', 'really-simple-ssl')}
+                </Button>
+                <Button disabled={disabled}
+                        isPrimary
+                        onClick={() => {
+                            setClosed(true);
+                            //we redirect to dashboard
+                            window.location.hash = "dashboard";
+                        }}
+                >
+                    {__('Dashboard', 'really-simple-ssl')}
+                </Button>
+                </>
+        )
+    }
+
     //this function closes the modal when onClick is activated
     if(!isClosed) {
         return (
             <>
-                <Modal
+                <RssslModal
+                    className={"rsssl-vulnerabilities-modal"}
                     title={__('Introducing vulnerabilities', 'really-simple-ssl')}
-                    className="rsssl-modal"
-                    onRequestClose={() => closeOnX()}
-                    shouldCloseOnClickOutside={true}
-                    shouldCloseOnEsc={true}
-                    overlayClassName="rsssl-modal-overlay"
-                >
-                    <div className="rsssl-header-extension">
-                        <div>
-                            <p>
-                                {__("You have enabled vulnerability detection! Really Simple SSL will check your plugins, themes and WordPress core daily and report if any known vulnerabilities are found.", "really-simple-ssl")}
-                            </p>
-                            <img className="rsssl-intro-logo"
-                                 src={rsssl_settings.plugin_url+'/assets/img/really-simple-ssl-intro.svg'}>
-
-                            </img>
-                        </div>
-                    </div>
-                    <div className="rsssl-ssl-intro-container">
-                        <Runner
-                            title={__("Preparing vulnerability detection", "really-simple-ssl")}
-                            name={"first_runner"}
-                            loading={true}
-                            currentStep={1}
-                        />
-                        <Runner
-                            title={__("Collecting plugin, theme and core data", "really-simple-ssl")}
-                            name={"second_runner"}
-                            loading={true}
-                            currentStep={2}
-                        />
-                        <Runner
-                            title={__("Scanning your WordPress configuration", "really-simple-ssl")}
-                            name={"third_runner"}
-                            loading={true}
-                            currentStep={3}
-                        />
-                        <Runner
-                            title={__("Reporting enabled", "really-simple-ssl")}
-                            name={"fourth_runner"}
-                            loading={true}
-                            currentStep={4}
-                        />
-                    </div>
-                    <div className={'rsssl-modal-footer'}>
-                        <Button disabled={disabled}
-                            isPrimary
-                            onClick={() => {
-                                setClosed(true);
-                                //we redirect to dashboard
-                                window.location.hash = "dashboard";
-                            }}
-                        >
-                            {__('Dashboard', 'really-simple-ssl')}
-                        </Button>
-                        <Button disabled={disabled} isSecondary
-                                onClick={() => {
-                                    setClosed(true);
-                                }}
-                        >
-                            {__('Dismiss', 'really-simple-ssl')}
-                        </Button>
-                    </div>
-                </Modal>
+                    setOpen={() => setOpen()}
+                    content={__("You have enabled vulnerability detection! Really Simple SSL will check your plugins, themes and WordPress core daily and report if any known vulnerabilities are found.", "really-simple-ssl")}
+                    isOpen={!isClosed}
+                    buttons={Controls()}
+                    list = {list}
+                />
             </>
-        )
+        );
     }
 
     //in case the modal is closed we return null

@@ -31,7 +31,6 @@ const Settings = () => {
     previousMenuItem,
   } = useMenu();
   const {setRefreshTests} = useLetsEncryptData();
-
   const toggleNotices = () => {
     setNoticesExpanded(!noticesExpanded);
   };
@@ -148,12 +147,11 @@ const Settings = () => {
                 {selectedSubMenuItem !==
                     menuItems[menuItems.length - 1].id &&
                     <>
-                      <a disabled={nextButtonDisabled}
+                      <button disabled={nextButtonDisabled}
                          className="button button-primary"
-                         href={continueLink}
-                         onClick={(e) => saveData(true)}>
+                         onClick={(e) => {saveData(true);window.location.href=continueLink;} }>
                         {__('Save and Continue', 'complianz-gdpr')}
-                      </a>
+                      </button>
                     </>
                 }
               </div>
