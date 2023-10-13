@@ -148,6 +148,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
             //we check if upgrader_process_complete is called, so we can reload the files.
             add_action('upgrader_process_complete', array($this, 'reload_files_on_update'), 10, 2);
+            add_action('_core_updated_successfully', array($this, 'reload_files_on_update'), 10, 2);
             //After activation, we need to reload the files.
             add_action( 'activate_plugin', array($this, 'reload_files_on_update'), 10, 2);
 	        //we can also force it
