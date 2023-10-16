@@ -1449,7 +1449,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 'message' => $message . ' ' .
                              __('Based on your settings, Really Simple SSL will take appropriate action, or you will need to solve it manually.','really-simple-ssl') .' '.
                              sprintf(__('Get more information from the Really Simple SSL dashboard on %s'), $this->domain() ),
-                'url' => "https://really-simple-ssl.com/instructions/about-vulnerabilities/",
+                'url' => rsssl_admin_url(),
             ];
         }
 
