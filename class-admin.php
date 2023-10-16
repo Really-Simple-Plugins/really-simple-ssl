@@ -2252,7 +2252,7 @@ class rsssl_admin
 	            ),
             ),
 
-            'bf_notice2022' => array(
+            'bf_notice2023' => array(
 	            'condition'  => array(
                         'RSSSL()->admin->is_bf'
                 ),
