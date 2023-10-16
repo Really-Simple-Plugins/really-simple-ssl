@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/Really-Simple-Plugins/really-simple-ssl#readme",
   "devDependencies": {
+    "gulp": "^4.0.2",
     "gulp-cli": "^2.3.0",
     "gulp-concat": "^2.6.1",
     "gulp-cssbeautify": "^3.0.1",
@@ -35,8 +36,10 @@
     "@material-ui/core": "^4.12.4",
     "@material-ui/lab": "^4.0.0-alpha.61",
     "@material-ui/styles": "^4.11.5",
-    "gulp": "^4.0.2",
     "gulp-run": "^1.7.0",
     "sass": "^1.54.9"
+  },
+  "overrides": {
+    "graceful-fs": "^4.2.11"
   }
 }

@@ -1,0 +1,21 @@
+a.rsssl-skip-link {
+  display: flex;
+  justify-content: center;
+  margin: 15px 0 20px;
+}
+
+div[data-column-id="4"].rdt_TableCol {
+  display: none;
+}
+
+.rsssl-two_fa_users .rdt_TableRow .rdt_TableCell:last-child {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+.rsssl-two_fa_users .rdt_TableHeadRow .rdt_TableCol:last-child {
+  flex-grow: 1;
+  display: flex;
+  justify-content: flex-end;
+}

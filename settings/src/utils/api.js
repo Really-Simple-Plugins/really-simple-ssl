@@ -11,7 +11,7 @@ import apiFetch from '@wordpress/api-fetch';
  */
 
 export const getNonce = () => {
-	return '&nonce='+rsssl_settings.rsssl_nonce+'&token='+Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
+    return '&nonce='+rsssl_settings.rsssl_nonce+'&token='+Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
 };
 
 const usesPlainPermalinks = () => {
@@ -110,10 +110,10 @@ const siteUrl = (type) => {
     } else {
         url = rsssl_settings.admin_ajax_url
     }
-	if ( window.location.protocol === "https:" && url.indexOf('https://')===-1 ) {
-		return url.replace('http://', 'https://');
-	}
-	return  url;
+    if ( window.location.protocol === "https:" && url.indexOf('https://')===-1 ) {
+        return url.replace('http://', 'https://');
+    }
+    return  url;
 }
 
 
@@ -167,7 +167,7 @@ const apiPost = (path, data) => {
                 'X-WP-Nonce': rsssl_settings.nonce,
             }
         }
-    	return axios.post(siteUrl()+path, data, config ).then( ( response ) => {return response.data;}).catch((error) => {
+        return axios.post(siteUrl()+path, data, config ).then( ( response ) => {return response.data;}).catch((error) => {
             return ajaxPost(path, data);
         });
     } else {
@@ -199,10 +199,10 @@ export const getFields = () => {
 export const setFields = (data) => {
     //we pass the anchor, so we know when LE is loaded
     let anchor = getAnchor('main');
-	let nonce = {'nonce':rsssl_settings.rsssl_nonce};
-	data.push(nonce);
-    return apiPost('reallysimplessl/v1/fields/set'+glue()+anchor, data);
-};
+    let nonce = {'nonce': rsssl_settings.rsssl_nonce};
+    data.push(nonce);
+    return apiPost('reallysimplessl/v1/fields/set' + glue() + anchor, data);
+}
 
 export const runTest = (test, state, data ) => {
     if ( !state ){
@@ -220,7 +220,7 @@ export const runLetsEncryptTest = (test, id ) => {
 }
 
 export const doAction = (action, data) => {
-    if (typeof data === 'undefined') data = {};
-    data.nonce = rsssl_settings.rsssl_nonce;
-    return apiPost('reallysimplessl/v1/do_action/'+action, data);
+    const newData = { ...data };
+    newData.nonce = rsssl_settings.rsssl_nonce;
+    return apiPost('reallysimplessl/v1/do_action/'+action, newData);
 }

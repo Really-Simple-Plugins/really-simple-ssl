@@ -1,4 +1,9 @@
 .rsssl {
+  .rsssl-email {
+    button.button {
+      display:flex;
+    }
+  }
   a.button, button.button, input.button, span.button {
     font-size: var(--rsp-fs-300);
     font-weight: 400;
@@ -8,7 +13,10 @@
     &.button-secondary, &.button-default{
       background: transparent;
     }
-
+    .rsssl-icon {
+      padding-top: 7px;
+      padding-left: 7px;
+    }
     &.button-black {
       border: 1px solid var(--rsp-black);
       background: var(--rsp-black);
@@ -55,4 +63,18 @@
 
 .shortcode {
   cursor: pointer;
+}
+
+.rsssl-action-buttons {
+  display: flex;
+  justify-content: space-between; /* or 'flex-start' if you don't want space between them */
+}
+
+.rsssl-action-buttons__inner {
+  margin-right: 10px; /* adjust as needed */
+}
+
+/* Remove margin for the last button to ensure clean alignment */
+.rsssl-action-buttons__inner:last-child {
+  margin-right: 0;
 }

@@ -1,8 +1,7 @@
-import {useState} from "@wordpress/element";
 import { __ } from '@wordpress/i18n';
 import * as rsssl_api from "../utils/api";
 import {dispatch,} from '@wordpress/data';
-import {useUpdateEffect} from 'react-use';
+import {useEffect, useState} from '@wordpress/element';
 import sleeper from "../utils/sleeper";
 import useFields from "../Settings/FieldsData";
 
@@ -12,7 +11,7 @@ const Installation = (props) => {
     const [installationData, setInstallationData] = useState(false);
     let action = props.action;
 
-     useUpdateEffect(()=> {
+     useEffect(()=> {
         if ((action && action.status==='warning' && installationData && installationData.generated_by_rsssl )) {
             addHelpNotice(
                 props.field.id,
@@ -44,7 +43,7 @@ const Installation = (props) => {
             });
         }
 
-     });
+     }, [action]);
 
 
     const handleCopyAction = (type) => {

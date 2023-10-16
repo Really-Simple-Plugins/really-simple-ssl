@@ -11,6 +11,14 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
 
 			add_filter( "rsssl_run_test", array( $this, 'mixed_content_scan' ), 9, 3 );
 			add_filter( 'rsssl_do_action', array( $this, 'learningmode_table_data' ), 10, 3 );
+
+			if ( ! class_exists('REALLY_SIMPLE_SSL_PRO' ) ) {
+				add_filter( 'rsssl_do_action', array( $this, 'two_factor_users_data' ), 11, 3 );
+			}
+            if ( ! is_plugin_active( 'really-simple-ssl-pro/really-simple-ssl-pro.php' ) ) {
+                // really-simple-ssl-pro plugin is active
+                add_filter( 'rsssl_do_action', array( $this, 'limit_login_attempts_data' ), 11, 3 );
+            }
 			self::$_this = $this;
 
 		}
@@ -152,6 +160,165 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
 
         }
 
+        public function limit_login_attempts_data( array $response, string $action, $data ): array
+        {
+            if ( ! rsssl_user_can_manage() ) {
+                return $response;
+            }
+
+            switch ( $action ) {
+                case 'ip_list':
+                    $response['data'] = [
+                        [
+                            'id' => 12,
+                            'first_failed' => 1678903200,
+                            'last_failed' => 1678924800,
+                            'attempt_type' => 'source_ip',
+                            'attempt_value' => '192.168.1.12',
+                            'user_agent' => 'Mozilla/5.0',
+                            'status' => 'locked',
+                            'attempts' => 2,
+                            'endpoint' => 'https://example.com/wp-admin',
+                            'blocked' => 0,
+                            'datetime' => '10:51, Sep 30',
+                        ],
+                        [
+                            'id' => 13,
+                            'first_failed' => 1678906800,
+                            'last_failed' => 1678928400,
+                            'attempt_type' => 'source_ip',
+                            'attempt_value' => '192.168.1.13',
+                            'user_agent' => 'Mozilla/5.0',
+                            'status' => 'locked',
+                            'attempts' => 1,
+                            'endpoint' => 'https://example.com/wp-login.php',
+                            'blocked' => 1,
+                            'datetime' => '10:51, Sep 30',
+                        ],
+                    ];
+                    break;
+                case 'user_list':
+                    $response['data'] = [
+                        [
+                            'id' => 1,
+                            'first_failed' => 1678888800,
+                            'last_failed' => 1678910400,
+                            'attempt_type' => 'username',
+                            'attempt_value' => 'john_doe',
+                            'user_agent' => 'Mozilla/5.0',
+                            'status' => 'locked',
+                            'attempts' => 5,
+                            'endpoint' => 'https://example.com/wp-admin',
+                            'blocked' => 1,
+                            'datetime' => '10:51, Sep 30',
+                        ],
+                        [
+                            'id' => 2,
+                            'first_failed' => 1678892400,
+                            'last_failed' => 1678914000,
+                            'attempt_type' => 'username',
+                            'attempt_value' => 'john_doe2',
+                            'user_agent' => 'Mozilla/5.0',
+                            'status' => 'locked',
+                            'attempts' => 3,
+                            'endpoint' => 'https://example.com/wp-login.php',
+                            'blocked' => 1,
+                            'datetime' => '10:51, Sep 30',
+                        ],
+                    ];
+                    break;
+                case 'country_list':
+                    $response['data'] = [
+                        [
+                            'id' => 1,
+                            'first_failed' => 1678888800,
+                            'last_failed' => 1678910400,
+                            'attempt_type' => 'country',
+                            'attempt_value' => 'US',
+                            'country_name' => 'United States',
+                            'region' => 'North America',
+                            'user_agent' => 'Mozilla/5.0',
+                            'status' => 'blocked',
+                            'attempts' => 5,
+                            'endpoint' => 'https://example.com/wp-admin',
+                            'blocked' => 1,
+                            'datetime' => '10:51, Sep 30',
+                        ],
+                        [
+                            'id' => 2,
+                            'first_failed' => 1678892400,
+                            'last_failed' => 1678914000,
+                            'attempt_type' => 'country',
+                            'attempt_value' => 'US',
+                            'country_name' => 'United States',
+                            'region' => 'North America',
+                            'user_agent' => 'Mozilla/5.0',
+                            'status' => 'blocked',
+                            'attempts' => 3,
+                            'endpoint' => 'https://example.com/wp-login.php',
+                            'blocked' => 1,
+                            'datetime' => '10:51, Sep 30',
+                        ],
+                    ];
+                    break;
+                case 'event_log':
+                    $response['data'] = [
+                        [
+                            'id' => 969,
+                            'timestamp' => 1693565480,
+                            'event_id' => 1026,
+                            'event_type' => 'login-protection',
+                            'iso2_code' => 'PW',
+                            'country_name' => 'Palau',
+                            'severity' => 'informational',
+                            'username' => '',
+                            'source_ip' => '',
+                            'description' => 'Country Palau added to geo-ip blocklist (Login-protection)',
+                            'datetime' => '10:51, Sep 30',
+                        ],
+                        [
+                            'id' => 970,
+                            'timestamp' => 1693565480,
+                            'event_id' => 1026,
+                            'event_type' => 'login-protection',
+                            'iso2_code' => 'PG',
+                            'country_name' => 'Papua New Guinea',
+                            'severity' => 'informational',
+                            'username' => '',
+                            'source_ip' => '',
+                            'description' => 'Country Papua New Guinea added to geo-ip blocklist (Login-protection)',
+                            'datetime' => '10:51, Sep 30',
+                        ],
+                        [
+                            'id' => 994,
+                            'timestamp' => 1693573989,
+                            'event_id' => 1000,
+                            'event_type' => 'authentication',
+                            'iso2_code' => 'NL',
+                            'country_name' => 'Netherlands',
+                            'severity' => 'informational',
+                            'username' => 'johndoe',
+                            'source_ip' => '192.168.1.1',
+                            'description' => 'Login successful (Authentication)',
+                            'datetime' => '10:51, Sep 30',
+                        ],
+                    ];
+                default:
+                    break;
+            }
+
+            $response['pagination'] =  [
+                'total' => 2,
+                'per_page' => 10,
+                'current_page' => 1,
+                'last_page' => 1,
+                'from' => 1,
+                'to' => 4,
+            ];
+
+            return $response;
+        }
+
 		public function mixed_content_data() {
 			$data[] = [
 				'id'          => 1,
@@ -289,6 +456,68 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
 			return [ 'data' => $data, 'progress' => 80, 'state' => 'stop', 'action' => '', 'nonce' => wp_create_nonce( 'fix_mixed_content' ) ];
 		}
 
+		/**
+		 * @return void
+		 *
+		 * Dummy data for two factor Email block
+		 */
+		public function two_factor_email_data() {
+
+		}
+
+
+		/**
+		 * @return array
+		 *
+		 * Dummy data for two factor Users block
+		 */
+		public function two_factor_users_data( array $response, string $action, $data ) {
+
+			if ( $action === 'two_fa_table' ) {
+
+				$response['data'] = [
+					[
+						'id'                  => 1,
+						'user'                => 'JaneDoe',
+						'rsssl_two_fa_status' => 'Active',
+						'user_role'           => 'Administrator',
+						'status_for_user'     => 'Enabled'
+					],
+					[
+						'id'                  => 2,
+						'user'                => 'JohnDoe',
+						'rsssl_two_fa_status' => 'open',
+						'user_role'           => 'Editor',
+						'status_for_user'     => 'open'
+					],
+					[
+						'id'                  => 3,
+						'user'                => 'JanieDoe',
+						'rsssl_two_fa_status' => 'disabled',
+						'user_role'           => 'Subscriber',
+						'status_for_user'     => 'Disabled'
+					],
+					[
+						'id'                  => 4,
+						'user'                => 'JonnyDoe',
+						'rsssl_two_fa_status' => 'Active',
+						'user_role'           => 'Contributor',
+						'status_for_user'     => 'Active'
+					],
+					[
+						'id'                  => 5,
+						'user'                => 'BabyDoe',
+						'rsssl_two_fa_status' => 'open',
+						'user_role'           => 'Author',
+						'status_for_user'     => 'open'
+					],
+				];
+
+			}
+
+			return $response;
+
+		}
 
 	}
 }

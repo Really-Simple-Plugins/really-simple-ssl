@@ -15,6 +15,7 @@ const Menu = () => {
             <MenuPlaceholder />
         )
     }
+
     return (
         <div className="rsssl-wizard-menu rsssl-grid-item">
             <div className="rsssl-grid-item-header">

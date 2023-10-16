@@ -8,6 +8,12 @@
         "yoast/phpunit-polyfills": "^1.0",
         "wp-cli/wp-cli-bundle": "^2.7",
         "php": ">=7.2",
-        "composer": "^2.4"
+        "composer": "^2.4",
+        "phpcompatibility/phpcompatibility-wp": "*"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
     }
 }

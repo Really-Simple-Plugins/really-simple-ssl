@@ -27,7 +27,7 @@ html {
       box-sizing: border-box;
       display: inherit;
       max-width: 100%;
-      z-index: 1;
+      //z-index: 1; => this conflicts with the tooltip z-index
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -112,6 +112,12 @@ html {
   }
 }
 
+.rsssl-email-verified {
+ position: absolute;
+  bottom: 23px;
+  right: 35px;
+}
+
 //switch padding to top, to prevent tasks from getting stuck to text field
 .rsssl-license {
   .rsssl-task-element {
@@ -121,4 +127,41 @@ html {
   .rsssl-license-field{
     display:flex;
   }
+}
+
+.input-container {
+  position: relative;
+  display: inline-block;
+    width: 100%;
+}
+
+input.rsssl-input {
+  &.full {
+    width: 100%;
+    padding-right: 40px;
+  }
+  &.rsssl-error {
+    border: 2px solid var(--rsp-red);
+    outline: none;
+    &:focus {
+      border-color: var(--rsp-red) !important;
+    }
+  }
+  &.rsssl-success {
+    border: 2px solid var(--rsp-green);
+    outline: none;
+    &:focus {
+      border-color: var(--rsp-green) !important;
+    }
+  }
+}
+
+.icon-button {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: none;
+  cursor: pointer;
 }

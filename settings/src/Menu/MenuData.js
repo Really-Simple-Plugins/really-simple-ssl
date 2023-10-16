@@ -8,6 +8,8 @@ const useMenu = create(( set, get ) => ({
     nextMenuItem:false,
     selectedMainMenuItem:false,
     selectedSubMenuItem:false,
+    selectedFilter: false,
+    activeGroupId: false,
     hasPremiumItems:false,
     subMenu:{title:' ',menu_items:[]},
     setSelectedSubMenuItem: async (selectedSubMenuItem) => {
@@ -71,18 +73,37 @@ export default useMenu;
 
 
 // Parses menu items and nested items in single array
-const menuItemParser = (parsedMenuItems, menuItems, fields) => {
+const menuItemParser = (parsedMenuItems, menuItems = [], fields = []) => {
+    if (!Array.isArray(menuItems)) {
+        console.error('menuItems is not an array:', menuItems);
+        return parsedMenuItems;
+    }
+
     menuItems.forEach((menuItem) => {
-        if( menuItem.visible ) {
+        if (menuItem.visible) {
             parsedMenuItems.push(menuItem.id);
-            if( menuItem.hasOwnProperty('menu_items') ) {
-                menuItem.menu_items = dropEmptyMenuItems(menuItem.menu_items, fields );
+            if (menuItem.hasOwnProperty('menu_items')) {
+                menuItem.menu_items = dropEmptyMenuItems(menuItem.menu_items, fields);
                 menuItemParser(parsedMenuItems, menuItem.menu_items, fields);
             }
         }
     });
+
     return parsedMenuItems;
 }
+
+// const menuItemParser = (parsedMenuItems, menuItems, fields) => {
+//     menuItems.forEach((menuItem) => {
+//         if( menuItem.visible ) {
+//             parsedMenuItems.push(menuItem.id);
+//             if( menuItem.hasOwnProperty('menu_items') ) {
+//                 menuItem.menu_items = dropEmptyMenuItems(menuItem.menu_items, fields );
+//                 menuItemParser(parsedMenuItems, menuItem.menu_items, fields);
+//             }
+//         }
+//     });
+//     return parsedMenuItems;
+// }
 
 
 
@@ -108,28 +129,53 @@ const getPreviousAndNextMenuItems = (menu, selectedSubMenuItem, fields) => {
 }
 
 const dropEmptyMenuItems = (menuItems, fields) => {
-    const newMenuItems = menuItems;
-    for (const [index, menuItem] of menuItems.entries()) {
-        let menuItemFields = fields.filter((field) => {
-            return (field.menu_id === menuItem.id )
-        });
-
-        menuItemFields = menuItemFields.filter((field) => {
-            return ( field.visible )
-        });
-        if ( menuItemFields.length === 0 && !menuItem.hasOwnProperty('menu_items') )  {
-            newMenuItems[index].visible = false;
-        } else {
-            newMenuItems[index].visible = true;
-            if( menuItem.hasOwnProperty('menu_items') ) {
-                newMenuItems[index].menu_items = dropEmptyMenuItems(menuItem.menu_items, fields);
-            }
-        }
-
-
+    if (!Array.isArray(fields)) {
+        console.error('Fields is not an array or is undefined', fields);
+        return menuItems;  // Exit early to avoid further processing
     }
+
+    const newMenuItems = [];
+
+    for (const menuItem of menuItems) {
+        let menuItemFields = fields.filter((field) => field.menu_id === menuItem.id && field.visible);
+
+        if (menuItemFields.length === 0 && !menuItem.hasOwnProperty('menu_items')) {
+            // Do nothing. We don't push it to the newMenuItems
+        } else {
+            let newMenuItem = { ...menuItem, visible: true }; // Deep copy of menuItem with visible set to true
+            if (menuItem.hasOwnProperty('menu_items')) {
+                newMenuItem.menu_items = dropEmptyMenuItems(menuItem.menu_items, fields);
+            }
+            newMenuItems.push(newMenuItem);
+        }
+    }
+
     return newMenuItems;
 }
+
+// const dropEmptyMenuItems = (menuItems, fields) => {
+//     const newMenuItems = menuItems;
+//     for (const [index, menuItem] of menuItems.entries()) {
+//         let menuItemFields = fields.filter((field) => {
+//             return (field.menu_id === menuItem.id )
+//         });
+//
+//         menuItemFields = menuItemFields.filter((field) => {
+//             return ( field.visible )
+//         });
+//         if ( menuItemFields.length === 0 && !menuItem.hasOwnProperty('menu_items') )  {
+//             newMenuItems[index].visible = false;
+//         } else {
+//             newMenuItems[index].visible = true;
+//             if( menuItem.hasOwnProperty('menu_items') ) {
+//                 newMenuItems[index].menu_items = dropEmptyMenuItems(menuItem.menu_items, fields);
+//             }
+//         }
+//
+//
+//     }
+//     return newMenuItems;
+// }
 
 /*
 * filter sidebar menu from complete menu structure
@@ -219,15 +265,53 @@ const getMenuItemByName = (name, menuItems) => {
 }
 
 const addVisibleToMenuItems = (menu) => {
-    let newMenuItems = menu.menu_items;
-    for (let [index, menuItem] of menu.menu_items.entries()) {
-        menuItem.visible = true;
-        if( menuItem.hasOwnProperty('menu_items') ) {
-            menuItem = addVisibleToMenuItems(menuItem);
-        }
-        newMenuItems[index] = menuItem;
+    if (typeof menu === 'string') {
+        return menu; // If menu is a string, just return it as is
     }
+
+    let newMenuItems = menu.menu_items;
+
+    if (!Array.isArray(menu.menu_items)) {
+        newMenuItems = [];
+        for (const key in menu.menu_items) {
+            if (typeof menu.menu_items[key] === 'object') {
+                newMenuItems.push(menu.menu_items[key]);
+            }
+        }
+    }
+
+    for (let [index, menuItem] of newMenuItems.entries()) {
+        if (typeof menuItem === 'object') {
+            menuItem.visible = true;
+            if( menuItem.hasOwnProperty('menu_items') ) {
+                menuItem = addVisibleToMenuItems(menuItem);
+            }
+            newMenuItems[index] = menuItem;
+        }
+    }
+
     menu.menu_items = newMenuItems;
     menu.visible = true;
     return menu;
 }
+
+// const addVisibleToMenuItems = (menu) => {
+//     let newMenuItems = menu.menu_items;
+//     if (!Array.isArray(menu.menu_items)) {
+//         //wait whut not an array, well let us fix that
+//         newMenuItems = [];
+//         for (const key in menu.menu_items) {
+//             newMenuItems.push(menu.menu_items[key]);
+//         }
+//     }
+//     for (let [index, menuItem] of menu.menu_items.entries()) {
+//         menuItem.visible = true;
+//         if( menuItem.hasOwnProperty('menu_items') ) {
+//             menuItem = addVisibleToMenuItems(menuItem);
+//         }
+//         newMenuItems[index] = menuItem;
+//     }
+//     menu.menu_items = newMenuItems;
+//     menu.visible = true;
+//     return menu;
+// }

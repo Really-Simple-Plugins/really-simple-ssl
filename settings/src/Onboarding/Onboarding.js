@@ -275,10 +275,19 @@ const Onboarding = (props) => {
                             <>
                                 <div>
                                     <input type="email" value={email} placeholder={__("Your email address", "really-simple-ssl")} onChange={(e) => setEmail(e.target.value)} />
-                                </div><div>
-                                <label><input onChange={ (e) => setIncludeTips(e.target.checked)} type="checkbox" checked={includeTips} />{__("Include 6 Tips & Tricks to get started with Really Simple SSL.","really-simple-ssl")}&nbsp;<a href="https://really-simple-ssl.com/legal/privacy-statement/" target="_blank">{__("Privacy Statement", "really-simple-ssl")}</a></label>
-                                </div><div>
-                                    <label><input onChange={ (e) => setSendTestEmail(e.target.checked)} type="checkbox" checked={sendTestEmail} />{__("Send a notification test email - Notification emails are sent from your server.","really-simple-ssl")}</label>
+                                </div>
+                                <div>
+                                <label>
+                                    <input onChange={ (e) => setIncludeTips(e.target.checked)} type="checkbox" checked={includeTips} />{__("Include 6 Tips & Tricks to get started with Really Simple SSL.","really-simple-ssl")}&nbsp;<a href="https://really-simple-ssl.com/legal/privacy-statement/" target="_blank">{__("Privacy Statement", "really-simple-ssl")}</a>
+                                </label>
+                                </div>
+                                <div>
+                                    {/*<label>*/}
+                                    {/*    <input onChange={ (e) => setSendTestEmail(e.target.checked)} type="checkbox" checked={sendTestEmail} />{__("Send a notification test email - Notification emails are sent from your server.","really-simple-ssl")}*/}
+                                    {/*</label>*/}
+                                    {/*<label>*/}
+                                    {/*    <input onChange={ (e) => setSendTestEmail(e.target.checked)} type="checkbox" checked={sendTestEmail} />{__("Send a notification test email - Notification emails are sent from your server.","really-simple-ssl")}*/}
+                                    {/*</label>*/}
                                 </div>
                             </>
 

@@ -44,7 +44,7 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 						$rsssl_admin_url = is_multisite() ? network_admin_url('settings.php') : admin_url("options-general.php");
 						$this->slug = is_multisite() ? "really-simple-ssl-pro-multisite/really-simple-ssl-pro-multisite.php" :  "really-simple-ssl-pro/really-simple-ssl-pro.php";
 						$this->plugin_name = "Really Simple SSL Pro";
-						$this->plugin_constant = "rsssl_pro";
+						$this->plugin_constant = "rsssl_pro_version";
 						$this->prefix = "rsssl_";
 						$this->api_url = "https://really-simple-ssl.com";
 						$this->dashboard_url = add_query_arg(["page" => "really-simple-security"], $rsssl_admin_url );
@@ -54,10 +54,10 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 					case "brst_pro":
 						$this->slug = "burst";
 						$this->plugin_name = "Burst";
-						$this->plugin_constant = "burst_premium";
+						$this->plugin_constant = "burst_pro";
 						$this->prefix = "burst_";
 						$this->api_url = "https://burst-statistics.com";
-						$this->dashboard_url = add_query_arg(["page" => "burst"], admin_url( "admin.php" ));
+						$this->dashboard_url = add_query_arg(["page" => "burst"], admin_url( "index.php" ));
 						$this->account_url = 'https://burst-statistics.com/account';
 						$this->instructions = 'https://burst-statistics.com/how-to-install-burst-premium';
 						break;

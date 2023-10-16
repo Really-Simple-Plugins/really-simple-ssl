@@ -93,3 +93,41 @@ function rsssl_get_legacy_option( $options, string $name): array {
 	}
 	return $options;
 }
+
+function check_if_email_essential_feature() {
+	$essential_features = array(
+		'limit_login_attempts' => rsssl_get_option('enable_limited_login_attempts') == 1,
+		'two_fa_enabled' => rsssl_get_option('two_fa_enabled') == 1
+	);
+
+	// Check if the current feature is in the essential features array
+	foreach( $essential_features as $feature => $is_essential ) {
+		if ( $is_essential ) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+/**
+ * @param $response
+ * @param $user
+ * @param $request
+ *
+ * @return mixed
+ *
+ * Add user roles to /users endpoint
+ */
+function add_user_role_to_api_response( $response, $user, $request ) {
+	$headers = $request->get_headers();
+
+	if (isset($headers['referer']) && strpos($headers['referer'][0], 'really-simple-security') !== false) {
+		$data = $response->get_data();
+		$data['roles'] = $user->roles;
+		$response->set_data($data);
+	}
+
+	return $response;
+}
+add_filter('rest_prepare_user', 'add_user_role_to_api_response', 10, 3);
