@@ -114,6 +114,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 = 7.1.4 =
 * Fix: changed link to article
 * Fix: remove flags .js file which was added twice, props @adamainsworth
+* Fix: typo in missing advanced-headers.php notice
 * Improvement: new save & continue feedback
 
 = 7.1.3 =
