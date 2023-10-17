@@ -23,18 +23,6 @@ const TwoFaRolesDropDown = ({ field }) => {
         }
     }, [rolesLoaded]);
 
-    // useEffect(() => {
-    //     if ( field.id==='two_fa_forced_roles' ) {
-    //         let otherField = getField('two_fa_optional_roles');
-    //         let roles = Array.isArray(otherField.value) ? otherField.value : [];
-    //         setOtherRoles(roles);
-    //     } else {
-    //         let otherField = getField('two_fa_forced_roles');
-    //         let roles = Array.isArray(otherField.value) ? otherField.value : [];
-    //         setOtherRoles(roles);
-    //     }
-    // }, [selectedRoles, getField('two_fa_optional_roles'), getField('two_fa_forced_roles')]);
-
     useEffect(() => {
         let otherField;
         let roles = [];

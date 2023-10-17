@@ -1314,6 +1314,13 @@ function rsssl_fields( $load_values = true ) {
 			'disabled' => false,
 			'warning'  => true,
 			'default'  => 'disabled',
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'login_protection_enabled' => true,
+
+				]
+			],
 
 			'server_conditions'    => [
 				'relation' => 'AND',
@@ -1332,6 +1339,15 @@ function rsssl_fields( $load_values = true ) {
 			'disabled' => false,
 			'warning'  => true,
 			'default'  => 'disabled',
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'login_protection_enabled' => true,
+					'two_fa_enabled_totp' => true,
+
+				]
+			],
+
 
 			'server_conditions'    => [
 				'relation' => 'AND',
@@ -1350,11 +1366,18 @@ function rsssl_fields( $load_values = true ) {
 			'disabled' => false,
 			'warning'  => true,
 			'default'  => 'disabled',
-
 			'server_conditions'    => [
 				'relation' => 'AND',
 				[
 					'is_multisite' => false,
+				]
+			],
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'login_protection_enabled' => true,
+					'two_fa_enabled_totp' => true,
+					'two_fa_grace_toggle' => true
 				]
 			],
 		],
@@ -1370,6 +1393,13 @@ function rsssl_fields( $load_values = true ) {
 				'relation' => 'AND',
 				[
 					'is_multisite' => false,
+				]
+			],
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'login_protection_enabled' => true,
+					'two_fa_enabled_totp' => true,
 				]
 			],
 		],
