@@ -158,31 +158,24 @@ const Settings = () => {
                 }
               </div>
             </div>
-            <div className="rsssl-wizard-help">
-                <div className="rsssl-help-header">
-                    <div className="rsssl-help-title rsssl-h4">
-                        {__("Notifications", "really-simple-ssl")}
-                    </div>
-                    <div className="rsssl-help-control" onClick={ () => toggleNotices() }>
-                        {!noticesExpanded && __("Expand all","really-simple-ssl")}
-                        {noticesExpanded && __("Collapse all","really-simple-ssl")}
-                    </div>
-                </div>
-                { notices.map((field, i) => <ErrorBoundary key={i} fallback={"Could not load notices"}>
-                        <Help key={i} noticesExpanded={noticesExpanded} index={i} help={field} fieldId={field.id}/>
-                    </ErrorBoundary>
-                    )}</div>
-            <div className="rsssl-help-control" onClick={() => toggleNotices()}>
-              {!noticesExpanded && __('Expand all', 'really-simple-ssl')}
-              {noticesExpanded && __('Collapse all', 'really-simple-ssl')}
-            </div>
           </div>
-          {notices.map(
-              (field, i) => <Help key={i} noticesExpanded={noticesExpanded}
-                                  index={i} help={field} fieldId={field.id}/>)}
+          <div className="rsssl-wizard-help">
+              <div className="rsssl-help-header">
+                  <div className="rsssl-help-title rsssl-h4">
+                      {__("Notifications", "really-simple-ssl")}
+                  </div>
+                  <div className="rsssl-help-control" onClick={ () => toggleNotices() }>
+                      {!noticesExpanded && __("Expand all","really-simple-ssl")}
+                      {noticesExpanded && __("Collapse all","really-simple-ssl")}
+                  </div>
+              </div>
+              { notices.map((field, i) => <ErrorBoundary key={i} fallback={"Could not load notices"}>
+                      <Help key={i} noticesExpanded={noticesExpanded} index={i} help={field} fieldId={field.id}/>
+                  </ErrorBoundary>
+                  )}
+
+          </div>
         </div>
-
-
       </>
 
   );
