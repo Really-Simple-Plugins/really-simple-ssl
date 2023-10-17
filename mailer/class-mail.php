@@ -78,7 +78,7 @@ if ( ! class_exists( 'rsssl_mailer' ) ) {
 				return [
 					'success' => false,
 					'message' => 'Not allowed',
-					'title'   => __( "Verification email error", 'really-simple-ssl' )
+					'title'   => __( "Email verification error", 'really-simple-ssl' ),
 				];
 			}
 
@@ -95,7 +95,7 @@ if ( ! class_exists( 'rsssl_mailer' ) ) {
 			if ( ! is_email( $this->to ) ) {
 				return [
 					'success' => false,
-					'title'   => __( "Verification email error", 'really-simple-ssl' ),
+					'title'   => __( "Email verification error", 'really-simple-ssl' ),
 					'message' => __( 'Email address not valid', "really-simple-ssl" )
 				];
 			}
@@ -200,7 +200,7 @@ if ( ! class_exists( 'rsssl_mailer' ) ) {
 			if ( $success ) {
 				return [
 					'success' => true,
-					'title'   => __( "Verification email", 'really-simple-ssl' ),
+					'title'   => __( "Email verification", 'really-simple-ssl' ),
 					'message' => __( 'Email sent! Please check your mail', "really-simple-ssl" )
 				];
 			}
