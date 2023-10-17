@@ -762,11 +762,11 @@ function rsssl_fields( $load_values = true ) {
             'menu_id'  => 'limit_login_attempts',
             'group_id' => 'limit_login_attempts_general',
             'type'     => 'checkbox',
-            'label'    => __('Enable limited login attempts', 'really-simple-ssl'),
+            'label'    => __('Enable limit login attempts', 'really-simple-ssl'),
             'disabled' => false,
             'help'      => [
                 'label' => 'default',
-                'url'   => 'https://really-simple-ssl.com/knowledge-base/enable-limited-login-attempts/',
+                'url'   => '',
                 'title' => __("About limited login attempts", 'really-simple-ssl'),
                 'text'  => __('This feature will limit the number of login attempts per user. If a user exceeds the number of allowed attempts, the user will be blocked for a certain amount of time. You can also block IP addresses and view a list of blocked users and IP addresses.',
                     'really-simple-ssl'),
