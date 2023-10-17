@@ -159,7 +159,8 @@ const Settings = () => {
               </div>
             </div>
           </div>
-          <div className="rsssl-wizard-help">
+        </div>
+        <div className="rsssl-wizard-help">
               <div className="rsssl-help-header">
                   <div className="rsssl-help-title rsssl-h4">
                       {__("Notifications", "really-simple-ssl")}
@@ -175,7 +176,6 @@ const Settings = () => {
                   )}
 
           </div>
-        </div>
       </>
 
   );
