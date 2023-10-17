@@ -391,6 +391,14 @@ function rsssl_menu()
                             'title'    => __( 'Email', 'really-simple-ssl' ),
                             'intro'    => __( 'Two-step verification will enhance the authentication process by adding an additional security layer. Selected users will be required to enter their credentials first, and then they must provide a one-time code sent to their email as an extra step.', 'really-simple-ssl' ),
                         ],
+	                    [
+		                    'id'       => 'two_fa_totp',
+		                    'premium'              => true,
+		                    'premium_text'         => __( "Get Login Protection with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
+		                    'helpLink' => 'https://really-simple-ssl.com/instructions/two-factor-authentication',
+		                    'title'    => __( 'TOTP', 'really-simple-ssl' ),
+		                    'intro'    => __( 'ornare cubilia fabellas eirmod ocurreret convenire legere luptatum porttitor eirmod postea eruditi esse sem nostrum dapibus malorum mel senserit aliquet ocurreret feugiat id viverra dui nonumes eloquentiam deterruisset eleifend mollis', 'really-simple-ssl' ),
+	                    ],
                         [
                             'id'       => 'two_fa_users',
                             'premium'              => true,

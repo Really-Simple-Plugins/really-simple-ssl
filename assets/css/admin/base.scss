@@ -107,3 +107,8 @@
     margin: var(--rsp-grid-gap);
   }
 }
+
+.number_full input[type=number] {
+  width: 100% !important;
+  position: relative;
+}

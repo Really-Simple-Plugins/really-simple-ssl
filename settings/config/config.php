@@ -1305,6 +1305,90 @@ function rsssl_fields( $load_values = true ) {
 			],
 		],
 		[
+			'id'       => 'two_fa_enabled_totp',
+			'menu_id'  => 'two_fa',
+			'group_id' => 'two_fa_totp',
+			'type'     => 'checkbox',
+			'label'    => __( "Enable third party app authentication", "really-simple-ssl" ),
+			'tooltip'  => __( "By enabling this feature you understand that third party authentication is required, and you need an app like authy, google authenticator or microsoft authenticator.", 'really-simple-ssl' ),
+			'disabled' => false,
+			'warning'  => true,
+			'default'  => 'disabled',
+
+			'server_conditions'    => [
+				'relation' => 'AND',
+				[
+					'is_multisite' => false,
+				]
+			],
+		],
+		[
+			'id'       => 'two_fa_grace_toggle',
+			'menu_id'  => 'two_fa',
+			'group_id' => 'two_fa_totp',
+			'type'     => 'checkbox',
+			'label'    => __( "Allow grace period.", "really-simple-ssl" ),
+			'tooltip'  => __( "accusata putent accusata definiebas class repudiare dicant habeo inciderint tale primis accumsan pulvinar tempus posuere qualisque suas eget ocurreret possim netus aperiri ligula liber dicant quidam volutpat pharetra mediocrem cetero.", 'really-simple-ssl' ),
+			'disabled' => false,
+			'warning'  => true,
+			'default'  => 'disabled',
+
+			'server_conditions'    => [
+				'relation' => 'AND',
+				[
+					'is_multisite' => false,
+				]
+			],
+		],
+		[
+			'id'       => 'two_fa_grace_period',
+			'menu_id'  => 'two_fa',
+			'group_id' => 'two_fa_totp',
+			'type'     => 'number',
+			'label'    => __( "Set grace period.", "really-simple-ssl" ),
+			'tooltip'  => __( "accusata putent accusata definiebas class repudiare dicant habeo inciderint tale primis accumsan pulvinar tempus posuere qualisque suas eget ocurreret possim netus aperiri ligula liber dicant quidam volutpat pharetra mediocrem cetero.", 'really-simple-ssl' ),
+			'disabled' => false,
+			'warning'  => true,
+			'default'  => 'disabled',
+
+			'server_conditions'    => [
+				'relation' => 'AND',
+				[
+					'is_multisite' => false,
+				]
+			],
+		],
+		[
+			'id'       => 'two_fa_forced_roles_totf',
+			'menu_id'  => 'two_fa',
+			'group_id' => 'two_fa_totp',
+			'type'     => 'two_fa_roles',
+			'default'  => [ 'editor', 'author', 'contributor'],
+			'label'    => __( "Optional for:", "really-simple-ssl" ),
+			'tooltip'  => __( "Two-step verification will be optional for these user roles, and they can disable it on first login.", 'really-simple-ssl' ),
+			'server_conditions'    => [
+				'relation' => 'AND',
+				[
+					'is_multisite' => false,
+				]
+			],
+		],
+		[
+			'id'       => 'two_fa_optional_roles_totf',
+			'menu_id'  => 'two_fa',
+			'group_id' => 'two_fa_totp',
+			'type'     => 'two_fa_roles',
+			'default'  => [ 'editor', 'author', 'contributor'],
+			'label'    => __( "Optional for:", "really-simple-ssl" ),
+			'tooltip'  => __( "Two-step verification will be optional for these user roles, and they can disable it on first login.", 'really-simple-ssl' ),
+			'server_conditions'    => [
+				'relation' => 'AND',
+				[
+					'is_multisite' => false,
+				]
+			],
+		],
+		[
 			'id'       => 'two_fa_optional_roles',
 			'menu_id'  => 'two_fa',
 			'group_id' => 'two_fa_email',

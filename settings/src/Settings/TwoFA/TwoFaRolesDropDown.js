@@ -23,17 +23,44 @@ const TwoFaRolesDropDown = ({ field }) => {
         }
     }, [rolesLoaded]);
 
+    // useEffect(() => {
+    //     if ( field.id==='two_fa_forced_roles' ) {
+    //         let otherField = getField('two_fa_optional_roles');
+    //         let roles = Array.isArray(otherField.value) ? otherField.value : [];
+    //         setOtherRoles(roles);
+    //     } else {
+    //         let otherField = getField('two_fa_forced_roles');
+    //         let roles = Array.isArray(otherField.value) ? otherField.value : [];
+    //         setOtherRoles(roles);
+    //     }
+    // }, [selectedRoles, getField('two_fa_optional_roles'), getField('two_fa_forced_roles')]);
+
     useEffect(() => {
-        if ( field.id==='two_fa_forced_roles' ) {
-            let otherField = getField('two_fa_optional_roles');
-            let roles = Array.isArray(otherField.value) ? otherField.value : [];
-            setOtherRoles(roles);
-        } else {
-            let otherField = getField('two_fa_forced_roles');
-            let roles = Array.isArray(otherField.value) ? otherField.value : [];
-            setOtherRoles(roles);
+        let otherField;
+        let roles = [];
+
+        if (field.id.startsWith('two_fa_forced_roles')) {
+            const prefix = field.id.replace('two_fa_forced_roles_', '');
+            if (prefix.length === 0) {
+                otherField = getField('two_fa_optional_roles');
+            } else {
+                otherField = getField(`two_fa_optional_roles_${prefix}`);
+            }
+            roles = Array.isArray(otherField.value) ? otherField.value : [];
+        } else if (field.id.startsWith('two_fa_optional_roles')) {
+            const prefix = field.id.replace('two_fa_optional_roles_', '');
+            if (prefix.length === 0) {
+                otherField = getField('two_fa_forced_roles');
+            } else {
+                otherField = getField(`two_fa_forced_roles_${prefix}`);
+            }
+            roles = Array.isArray(otherField.value) ? otherField.value : [];
         }
-    }, [selectedRoles, getField('two_fa_optional_roles'), getField('two_fa_forced_roles')]);
+
+        setOtherRoles(roles);
+    }, [selectedRoles, getField('two_fa_optional_roles').value, getField('two_fa_forced_roles').value], getField('two_fa_optional_roles_totp').value, getField('two_fa_forced_roles_totp').value);
+
+
 
     useEffect(() => {
        if ( !field.value ) {
@@ -64,8 +91,8 @@ const TwoFaRolesDropDown = ({ field }) => {
         multiValue: (provided) => ({
             ...provided,
             borderRadius: '10px',
-            backgroundColor: field.id === 'two_fa_forced_roles' ? '#F5CD54' :
-                field.id === 'two_fa_optional_roles' ? '#FDF5DC' : 'default',
+            backgroundColor: /^two_fa_forced_roles/.test(field.id) ? '#F5CD54' :
+                /^two_fa_optional_roles/.test(field.id) ? '#FDF5DC' : 'default',
         }),
         multiValueRemove: (base, state) => ({
             ...base,
@@ -79,7 +106,7 @@ const TwoFaRolesDropDown = ({ field }) => {
         })
     };
 
-    if (field.id === 'two_fa_optional_roles') {
+    if (/^two_fa_optional_roles/.test(field.id)) {
         enabled = getFieldValue('login_protection_enabled');
     }
 
