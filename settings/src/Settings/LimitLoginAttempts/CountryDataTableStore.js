@@ -119,7 +119,6 @@ const CountryDataTableStore = create((set, get) => ({
                 // Potentially notify the user of success, if needed.
             } else {
                 // Handle any unsuccessful response if needed.
-                console.log("Failed to add country: ", response.message);
             }
         } catch (e) {
             console.log(e);
@@ -139,7 +138,6 @@ const CountryDataTableStore = create((set, get) => ({
                 // Potentially notify the user of success, if needed.
             } else {
                 // Handle any unsuccessful response if needed.
-                console.log("Failed to add countries: ", response.message);
             }
         } catch (e) {
             console.error(e);
@@ -157,7 +155,6 @@ const CountryDataTableStore = create((set, get) => ({
                 // Potentially notify the user of success, if needed.
             } else {
                 // Handle any unsuccessful response if needed.
-                console.log("Failed to remove countries: ", response.message);
             }
         } catch (e) {
             console.error(e);
@@ -175,7 +172,6 @@ const CountryDataTableStore = create((set, get) => ({
                 // Potentially notify the user of success, if needed.
             } else {
                 // Handle any unsuccessful response if needed.
-                console.log("Failed to remove country: ", response.message);
             }
         } catch (e) {
             console.log(e);

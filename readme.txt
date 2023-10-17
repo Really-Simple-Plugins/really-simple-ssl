@@ -6,7 +6,7 @@ Requires at least: 5.8
 License: GPL2
 Tested up to: 6.3
 Requires PHP: 7.2
-Stable tag: 7.1.3
+Stable tag: 7.1.4
 
 The easiest way to improve security! Leverage your SSL certificate and protect your website visitors.
 
