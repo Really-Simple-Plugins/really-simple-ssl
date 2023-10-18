@@ -80,8 +80,8 @@
     &.rsssl-new{
 
       .rsssl-menu-item-new-pill{
-        background: var(--rsp-blue);
-        color: var(--rsp-text-color-white);
+        background: var(--rsp-yellow);
+        color: var(--rsp-text-color-dark);
         padding: 4px 8px;
         border-radius: var(--rsp-border-radius-xs);
         font-size: var(--rsp-fs-100);
@@ -89,7 +89,7 @@
 
       &.rsssl-active {
         .rsssl-menu-item-new-pill {
-          color: var(--rsp-text-color-white);
+          color: var(--rsp-text-color-dark);
         }
       }
       a{
