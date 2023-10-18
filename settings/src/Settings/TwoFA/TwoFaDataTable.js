@@ -46,7 +46,7 @@ const DynamicDataTable = (props) => {
     //we want to reload the table, but only after the save action has completed. So we store this for now.
     useEffect(() => {
         setReloadWhenSaved(true);
-    }, [getFieldValue('two_fa_forced_roles'), getFieldValue('two_fa_optional_roles')]);
+    }, [getFieldValue('two_fa_forced_roles'), getFieldValue('two_fa_optional_roles'), getFieldValue('two_fa_forced_roles_totp'), getFieldValue('two_fa_optional_roles_totp')]);
 
     //when the data is saved, changefields=0 again,
     useEffect(() => {
@@ -75,31 +75,37 @@ const DynamicDataTable = (props) => {
 
     useEffect(() => {
         const value = getFieldValue('two_fa_enabled');
-        setEnabled(value);
+        const valueTotp = getFieldValue('two_fa_enabled_totp');
+        setEnabled( ( value || valueTotp ) );
     }, [fields]);
 
     useEffect(() => {
-        if (!dataLoaded || enabled !== getFieldValue('two_fa_enabled')) {
+        if (!dataLoaded || enabled !== (getFieldValue('two_fa_enabled') || getFieldValue('two_fa_enabled_totp'))) {
             fetchDynamicData()
          }
-    }, [dataLoaded, getFieldValue('two_fa_enabled')]); // Add getFieldValue('login_protection_enabled') as a dependency
+    }, [dataLoaded, getFieldValue('two_fa_enabled'), getFieldValue('two_fa_enabled_totp')]); // Add getFieldValue('login_protection_enabled') as a dependency
 
     const allAreForced = (users) => {
         let forcedRoles = getFieldValue('two_fa_forced_roles');
+        let forcedRolesTotp = getFieldValue('two_fa_forced_roles_totp');
         if (!Array.isArray(forcedRoles)) {
             forcedRoles = [];
+        }
+
+        if (!Array.isArray(forcedRolesTotp)) {
+            forcedRolesTotp = [];
         }
 
         if (Array.isArray(users)) {
             //for each users, check if the user has a forced role
             for (const user of users) {
-                if ( !forcedRoles.includes(user.user_role.toLowerCase()) ) {
+                if ( !forcedRoles.includes(user.user_role.toLowerCase() || !forcedRolesTotp.includes(user.user_role.toLowerCase())) ) {
                     return false;
                 }
             }
             return true;
         } else {
-            return forcedRoles.includes(users.user_role.toLowerCase());
+            return (forcedRoles.includes(users.user_role.toLowerCase()) || forcedRolesTotp.includes(users.user_role.toLowerCase()));
         }
     }
 
@@ -109,9 +115,11 @@ const DynamicDataTable = (props) => {
      * @returns {boolean}
      */
     const allAreOpen = (users) => {
+        console.log('running');
         if (Array.isArray(users)) {
             //for each users, check if the user has a forced role
             for (const user of users) {
+                console.log(user.rsssl_two_fa_status);
                 if ( user.rsssl_two_fa_status !== 'open' ) {
                     return false;
                 }
@@ -171,7 +179,10 @@ const DynamicDataTable = (props) => {
 
     async function handleReset(users) {
         // Function to handle reset logic
-        const resetRoles = getFieldValue('two_fa_optional_roles');
+        const resetRolesEmail = getFieldValue('two_fa_optional_roles');
+        const resetRolesTotp = getFieldValue('two_fa_optional_roles_totp');
+        const resetRoles = resetRolesEmail.concat(resetRolesTotp);
+        console.log (resetRoles);
         if (Array.isArray(users)) {
             //loop through all users one by one, and reset the user
             for (const user of users) {

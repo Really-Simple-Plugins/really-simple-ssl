@@ -9,8 +9,12 @@ const DynamicDataTableStore = create((set, get) => ({
     dataLoaded: false,
     pagination: {},
     dataActions: {currentPage:1, currentRowsPerPage:5, filterValue: 'active',filterColumn: 'rsssl_two_fa_status'},
+    dataForcedRolesLoaded: false,
+    procesforcedRoles: false,
     totalRecords:0,
     DynamicDataTable: [],
+    allForcedRoles: [],
+
     setDataLoaded: (dataLoaded) => set((state) => ({ ...state, dataLoaded: dataLoaded })),
     resetUserMethod: async (id, optionalRoles, currentRole) => {
         if (get().processing) {
@@ -48,6 +52,29 @@ const DynamicDataTableStore = create((set, get) => ({
                     processing: false,
                     pagination: response.pagination,
                     totalRecords: response.totalRecords,
+                }));
+                // Return the response for the calling function to use
+                return response;
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    },
+
+    fetchForcedRules: async (id, forcedRoles) => {
+        if (get().procesforcedRoles) return;
+        set({procesforcedRoles: true});
+        try {
+            const response = await rsssl_api.doAction(
+                'get_forced_roles',
+                {}
+            );
+            if (response) {
+                set(state => ({
+                    ...state,
+                    allForcedRoles: response.data,
+                    dataForcedRolesLoaded: true,
+                    procesforcedRoles: false,
                 }));
                 // Return the response for the calling function to use
                 return response;

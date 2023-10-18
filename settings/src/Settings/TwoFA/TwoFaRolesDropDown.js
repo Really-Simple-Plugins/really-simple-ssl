@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 import useFields from "../FieldsData";
 import useRolesData from './RolesStore';
+import DynamicDataTableStore from "./TwoFaDataTableStore";
 import {__} from "@wordpress/i18n";
 import './select.scss';
 /**
@@ -9,46 +10,45 @@ import './select.scss';
  * from two-factor authentication email.
  * @param {object} field - The field object containing information about the field.
  */
-const TwoFaRolesDropDown = ({ field }) => {
+const TwoFaRolesDropDown = ({ field, forcedRoledId, optionalRolesId }) => {
     const {fetchRoles, roles, rolesLoaded} = useRolesData();
     const [selectedRoles, setSelectedRoles] = useState([]);
     const [otherRoles, setOtherRoles] = useState([]);
     // Custom hook to manage form fields
     const { updateField, getFieldValue, setChangedField, getField, fieldsLoaded } = useFields();
+    const { procesforcedRoles, dataForcedRolesLoaded, fetchForcedRules, allForcedRoles } = DynamicDataTableStore();
+
     let enabled = true;
 
     useEffect(() => {
         if (!rolesLoaded) {
             fetchRoles(field.id);
         }
-    }, [rolesLoaded]);
-
-    useEffect(() => {
-        let otherField;
-        let roles = [];
-
-        if (field.id.startsWith('two_fa_forced_roles')) {
-            const prefix = field.id.replace('two_fa_forced_roles_', '');
-            if (prefix.length === 0) {
-                otherField = getField('two_fa_optional_roles');
-            } else {
-                otherField = getField(`two_fa_optional_roles_${prefix}`);
-            }
-            roles = Array.isArray(otherField.value) ? otherField.value : [];
-        } else if (field.id.startsWith('two_fa_optional_roles')) {
-            const prefix = field.id.replace('two_fa_optional_roles_', '');
-            if (prefix.length === 0) {
-                otherField = getField('two_fa_forced_roles');
-            } else {
-                otherField = getField(`two_fa_forced_roles_${prefix}`);
-            }
-            roles = Array.isArray(otherField.value) ? otherField.value : [];
+        if (!dataForcedRolesLoaded) {
+            fetchForcedRules();
         }
 
-        setOtherRoles(roles);
-    }, [selectedRoles, getField('two_fa_optional_roles').value, getField('two_fa_forced_roles').value], getField('two_fa_optional_roles_totp').value, getField('two_fa_forced_roles_totp').value);
+    }, [rolesLoaded, dataForcedRolesLoaded]);
+
+    useEffect(() => {
+        if (!dataForcedRolesLoaded) {
+            fetchForcedRules();
+        }
+
+    }, [dataForcedRolesLoaded, getFieldValue(forcedRoledId)]);
 
 
+    useEffect(() => {
+        if ( field.id === forcedRoledId ) {
+            let otherField = getField(optionalRolesId);
+            let roles = Array.isArray(otherField.value) ? otherField.value : [];
+            setOtherRoles(roles);
+        } else {
+            let otherField = getField(forcedRoledId);
+            let roles = Array.isArray(otherField.value) ? otherField.value : [];
+            setOtherRoles(roles);
+        }
+    }, [selectedRoles, getField(optionalRolesId), getField(forcedRoledId)]);
 
     useEffect(() => {
        if ( !field.value ) {
@@ -68,8 +68,15 @@ const TwoFaRolesDropDown = ({ field }) => {
     const handleChange = (selectedOptions) => {
         // Extract the values of the selected options
         const rolesExcluded = selectedOptions.map(option => option.value);
+
+        // Check if the field is for forced_roles, and if so, we add the forced roles to the excluded roles
+        const selectedRolesForField = field.id === forcedRoledId
+            ? rolesExcluded.concat(allForcedRoles): rolesExcluded;
+
+
         // Update the selectedRoles state
         setSelectedRoles(selectedOptions);
+
         // Update the field and changedField using the custom hook functions
         updateField(field.id, rolesExcluded);
         setChangedField(field.id, rolesExcluded);
@@ -79,8 +86,8 @@ const TwoFaRolesDropDown = ({ field }) => {
         multiValue: (provided) => ({
             ...provided,
             borderRadius: '10px',
-            backgroundColor: /^two_fa_forced_roles/.test(field.id) ? '#F5CD54' :
-                /^two_fa_optional_roles/.test(field.id) ? '#FDF5DC' : 'default',
+            backgroundColor: field.id === forcedRoledId ? '#F5CD54' :
+                field.id === optionalRolesId ? '#FDF5DC' : 'default',
         }),
         multiValueRemove: (base, state) => ({
             ...base,
@@ -94,15 +101,17 @@ const TwoFaRolesDropDown = ({ field }) => {
         })
     };
 
-    if (/^two_fa_optional_roles/.test(field.id)) {
+    if (field.id === optionalRolesId) {
         enabled = getFieldValue('login_protection_enabled');
     }
 
     const alreadySelected = selectedRoles.map(option => option.value);
     let filteredRoles = [];
-    //from roles, remove roles in the usedRoles array
-    //merge alreadyselected and otherroles in one array
     let inRolesInUse = [...alreadySelected, ...otherRoles];
+    //from roles, remove roles in the usedRoles array
+    if ( field.id === forcedRoledId ) {
+        inRolesInUse = [...alreadySelected, ...otherRoles, ...allForcedRoles];
+    }
     roles.forEach(function (item, i) {
         if ( Array.isArray(inRolesInUse) && inRolesInUse.includes(item.value) ) {
             filteredRoles.splice(i, 1);

@@ -378,7 +378,7 @@ const Field = (props) => {
                 <label htmlFor="rsssl-two-fa-dropdown-{field.id}">
                     {labelWrap(field)}
                 </label>
-                <TwoFaRolesDropDown field={props.field}
+                <TwoFaRolesDropDown field={props.field} forcedRoledId={props.field.forced_roles_id} optionalRolesId={props.field.optional_roles_id}
                 />
             </div>
         );

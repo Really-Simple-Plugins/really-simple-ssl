@@ -1382,12 +1382,31 @@ function rsssl_fields( $load_values = true ) {
 			],
 		],
 		[
-			'id'       => 'two_fa_forced_roles_totf',
+			'id'       => 'two_fa_optional_roles_totp',
+			'forced_roles_id'         => 'two_fa_forced_roles_totp',
+			'optional_roles_id' 	   => 'two_fa_optional_roles_totp',
 			'menu_id'  => 'two_fa',
 			'group_id' => 'two_fa_totp',
 			'type'     => 'two_fa_roles',
 			'default'  => [ 'editor', 'author', 'contributor'],
 			'label'    => __( "Optional for:", "really-simple-ssl" ),
+			'tooltip'  => __( "Two-step verification will be optional for these user roles, and they can disable it on first login.", 'really-simple-ssl' ),
+			'server_conditions'    => [
+				'relation' => 'AND',
+				[
+					'is_multisite' => false,
+				]
+			],
+		],
+		[
+			'id'       => 'two_fa_forced_roles_totp',
+			'forced_roles_id'         => 'two_fa_forced_roles_totp',
+			'optional_roles_id' 	   => 'two_fa_optional_roles_totp',
+			'menu_id'  => 'two_fa',
+			'group_id' => 'two_fa_totp',
+			'type'     => 'two_fa_roles',
+			'default'  => [ 'editor', 'author', 'contributor'],
+			'label'    => __( "Forced on:", "really-simple-ssl" ),
 			'tooltip'  => __( "Two-step verification will be optional for these user roles, and they can disable it on first login.", 'really-simple-ssl' ),
 			'server_conditions'    => [
 				'relation' => 'AND',
@@ -1404,22 +1423,9 @@ function rsssl_fields( $load_values = true ) {
 			],
 		],
 		[
-			'id'       => 'two_fa_optional_roles_totf',
-			'menu_id'  => 'two_fa',
-			'group_id' => 'two_fa_totp',
-			'type'     => 'two_fa_roles',
-			'default'  => [ 'editor', 'author', 'contributor'],
-			'label'    => __( "Optional for:", "really-simple-ssl" ),
-			'tooltip'  => __( "Two-step verification will be optional for these user roles, and they can disable it on first login.", 'really-simple-ssl' ),
-			'server_conditions'    => [
-				'relation' => 'AND',
-				[
-					'is_multisite' => false,
-				]
-			],
-		],
-		[
 			'id'       => 'two_fa_optional_roles',
+			'forced_roles_id'         => 'two_fa_forced_roles',
+			'optional_roles_id' 	   => 'two_fa_optional_roles',
 			'menu_id'  => 'two_fa',
 			'group_id' => 'two_fa_email',
 			'type'     => 'two_fa_roles',
@@ -1436,6 +1442,8 @@ function rsssl_fields( $load_values = true ) {
 
 		[
 			'id'       => 'two_fa_forced_roles',
+			'forced_roles_id'         => 'two_fa_forced_roles',
+			'optional_roles_id' 	   => 'two_fa_optional_roles',
 			'menu_id'  => 'two_fa',
 			'group_id' => 'two_fa_email',
 			'type'     => 'two_fa_roles',
@@ -1479,8 +1487,16 @@ function rsssl_fields( $load_values = true ) {
                     'searchable' => false,
                     'visible' => true,
                     'column'   => 'user_role',
-                    'width'    => '60%',
+                    'width'    => '30%',
                 ],
+	            [
+		            'name'     => __( 'Type', 'really-simple-ssl' ),
+		            'sortable' => false,
+		            'searchable' => true,
+		            'visible' => true,
+		            'width'     => '10%',
+		            'column'   => 'rsssl_two_fa_providers',
+	            ],
                 [
                     'name'     => __( 'Status', 'really-simple-ssl' ),
                     'sortable' => false,
