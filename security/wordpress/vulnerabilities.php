@@ -113,7 +113,8 @@ if (!class_exists("rsssl_vulnerabilities")) {
 			    return;
 		    }
 
-		    if ( isset($_GET['rsssl_check_vulnerabilities']) ) {
+		    if ( isset($_GET['rsssl_check_vulnerabilities']) || get_option('rsssl_reload_vulnerability_files') ) {
+                delete_option('rsssl_reload_vulnerability_files');
 			    $this->reload_files_on_update();
 		    }
 	    }
@@ -148,7 +149,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
             //we check if upgrader_process_complete is called, so we can reload the files.
             add_action('upgrader_process_complete', array($this, 'reload_files_on_update'), 10, 2);
-            add_action('_core_updated_successfully', array($this, 'reload_files_on_update'), 10, 2);
+            add_action('_core_updated_successfully', array($this, 'prepare_reloading_of_files'), 10, 2);
             //After activation, we need to reload the files.
             add_action( 'activate_plugin', array($this, 'reload_files_on_update'), 10, 2);
 	        //we can also force it
@@ -157,6 +158,16 @@ if (!class_exists("rsssl_vulnerabilities")) {
             //same goes for themes.
             add_action('after_switch_theme', array($this, 'reload_files_on_update'), 10, 2);
             add_action('current_screen', array($this, 'show_inline_code'));
+        }
+
+	    /**
+         * Directly hooking into the core upgrader hook doesn't work, so is too early.
+         * To force this, we save an option we can check later
+         *
+	     * @return void
+	     */
+        public function prepare_reloading_of_files(){
+            update_option("rsssl_reload_vulnerability_files", true, false);
         }
 
         /**
