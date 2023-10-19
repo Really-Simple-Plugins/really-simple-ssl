@@ -94,7 +94,6 @@ const UseRiskData = create((set, get) => ({
     fetchVulnerabilities: async () => {
         if (get().processing) return;
         set({processing:true});
-        console.log("fetch vulnerabilities data")
         let data = {};
         try {
             const fetched = await rsssl_api.doAction('hardening_data', data);
