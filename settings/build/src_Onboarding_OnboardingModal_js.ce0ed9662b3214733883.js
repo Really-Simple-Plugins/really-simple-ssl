@@ -671,15 +671,15 @@ const UseRiskData = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, get) =
         vulList.forEach(function (item, i) {
           let updateUrl = item.update_available ? rsssl_settings.plugins_url + "?plugin_status=upgrade" : '#settings/vulnerabilities';
           item.vulnerability_action = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-            className: "rsssl-vulnerability-action"
+            className: "rsssl-action-buttons"
           }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-            className: "button",
+            className: "rsssl-button button-secondary",
             href: "https://really-simple-ssl.com/vulnerabilities/" + item.rss_identifier,
             target: "_blank"
           }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Details", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
             disabled: !item.update_available,
             href: updateUrl,
-            className: "button button-primary"
+            className: "rsssl-button button-primary"
           }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Update", "really-simple-ssl")));
         });
       }
@@ -1518,4 +1518,4 @@ var useUpdateEffect = function (effect, deps) {
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Onboarding_OnboardingModal_js.927b428a6fbd1c773cc5.js.map
+//# sourceMappingURL=src_Onboarding_OnboardingModal_js.ce0ed9662b3214733883.js.map
