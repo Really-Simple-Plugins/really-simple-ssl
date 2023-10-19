@@ -140,11 +140,6 @@ class REALLY_SIMPLE_SSL
 			}
 		}
 
-        // if not logged in and on log-in page, include mailer for 2FA e-mails
-        if ( ! rsssl_admin_logged_in() ) {
-            require_once(rsssl_path . 'mailer/class-mail.php');
-        }
-
         require_once( rsssl_path . 'lets-encrypt/cron.php' );
 		require_once( rsssl_path . '/security/security.php');
 	}
