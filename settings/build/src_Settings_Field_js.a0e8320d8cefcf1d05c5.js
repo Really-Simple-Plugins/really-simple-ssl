@@ -7854,11 +7854,8 @@ const DynamicDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_2__.create)((s
     filterValue: 'active',
     filterColumn: 'rsssl_two_fa_status'
   },
-  dataForcedRolesLoaded: false,
-  procesforcedRoles: false,
   totalRecords: 0,
   DynamicDataTable: [],
-  allForcedRoles: [],
   setDataLoaded: dataLoaded => set(state => ({
     ...state,
     dataLoaded: dataLoaded
@@ -7902,27 +7899,6 @@ const DynamicDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_2__.create)((s
           processing: false,
           pagination: response.pagination,
           totalRecords: response.totalRecords
-        }));
-        // Return the response for the calling function to use
-        return response;
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  fetchForcedRules: async (id, forcedRoles) => {
-    if (get().procesforcedRoles) return;
-    set({
-      procesforcedRoles: true
-    });
-    try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('get_forced_roles', {});
-      if (response) {
-        set(state => ({
-          ...state,
-          allForcedRoles: response.data,
-          dataForcedRolesLoaded: true,
-          procesforcedRoles: false
         }));
         // Return the response for the calling function to use
         return response;
@@ -8010,14 +7986,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var react_select__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-select */ "./node_modules/react-select/dist/react-select.esm.js");
+/* harmony import */ var react_select__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-select */ "./node_modules/react-select/dist/react-select.esm.js");
 /* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../FieldsData */ "./src/Settings/FieldsData.js");
 /* harmony import */ var _RolesStore__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./RolesStore */ "./src/Settings/TwoFA/RolesStore.js");
-/* harmony import */ var _TwoFaDataTableStore__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./TwoFaDataTableStore */ "./src/Settings/TwoFA/TwoFaDataTableStore.js");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _select_scss__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./select.scss */ "./src/Settings/TwoFA/select.scss");
-
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _select_scss__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./select.scss */ "./src/Settings/TwoFA/select.scss");
 
 
 
@@ -8051,26 +8025,12 @@ const TwoFaRolesDropDown = _ref => {
     getField,
     fieldsLoaded
   } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_2__["default"])();
-  const {
-    procesforcedRoles,
-    dataForcedRolesLoaded,
-    fetchForcedRules,
-    allForcedRoles
-  } = (0,_TwoFaDataTableStore__WEBPACK_IMPORTED_MODULE_4__["default"])();
   let enabled = true;
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     if (!rolesLoaded) {
       fetchRoles(field.id);
     }
-    if (!dataForcedRolesLoaded) {
-      fetchForcedRules();
-    }
   }, [rolesLoaded, dataForcedRolesLoaded]);
-  (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
-    if (!dataForcedRolesLoaded) {
-      fetchForcedRules();
-    }
-  }, [dataForcedRolesLoaded, getFieldValue(forcedRoledId)]);
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     if (field.id === forcedRoledId) {
       let otherField = getField(optionalRolesId);
@@ -8106,9 +8066,6 @@ const TwoFaRolesDropDown = _ref => {
     // Extract the values of the selected options
     const rolesExcluded = selectedOptions.map(option => option.value);
 
-    // Check if the field is for forced_roles, and if so, we add the forced roles to the excluded roles
-    const selectedRolesForField = field.id === forcedRoledId ? rolesExcluded.concat(allForcedRoles) : rolesExcluded;
-
     // Update the selectedRoles state
     setSelectedRoles(selectedOptions);
 
@@ -8140,9 +8097,6 @@ const TwoFaRolesDropDown = _ref => {
   let filteredRoles = [];
   let inRolesInUse = [...alreadySelected, ...otherRoles];
   //from roles, remove roles in the usedRoles array
-  if (field.id === forcedRoledId) {
-    inRolesInUse = [...alreadySelected, ...otherRoles, ...allForcedRoles];
-  }
   roles.forEach(function (item, i) {
     if (Array.isArray(inRolesInUse) && inRolesInUse.includes(item.value)) {
       filteredRoles.splice(i, 1);
@@ -8154,7 +8108,7 @@ const TwoFaRolesDropDown = _ref => {
     style: {
       marginTop: '5px'
     }
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_select__WEBPACK_IMPORTED_MODULE_7__["default"], {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_select__WEBPACK_IMPORTED_MODULE_6__["default"], {
     isMulti: true,
     options: filteredRoles,
     onChange: handleChange,
@@ -8167,7 +8121,7 @@ const TwoFaRolesDropDown = _ref => {
     className: "rsssl-locked-overlay"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     className: "rsssl-task-status rsssl-open"
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)('Disabled', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)('Activate login protection to enable this block.', 'really-simple-ssl')))));
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Disabled', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Activate login protection to enable this block.', 'really-simple-ssl')))));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (TwoFaRolesDropDown);
 
@@ -24780,4 +24734,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.1679c2ae8ff24eda3ac6.js.map
+//# sourceMappingURL=src_Settings_Field_js.a0e8320d8cefcf1d05c5.js.map

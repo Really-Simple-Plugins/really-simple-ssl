@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 import useFields from "../FieldsData";
 import useRolesData from './RolesStore';
-import DynamicDataTableStore from "./TwoFaDataTableStore";
 import {__} from "@wordpress/i18n";
 import './select.scss';
 /**
@@ -16,7 +15,6 @@ const TwoFaRolesDropDown = ({ field, forcedRoledId, optionalRolesId }) => {
     const [otherRoles, setOtherRoles] = useState([]);
     // Custom hook to manage form fields
     const { updateField, getFieldValue, setChangedField, getField, fieldsLoaded } = useFields();
-    const { procesforcedRoles, dataForcedRolesLoaded, fetchForcedRules, allForcedRoles } = DynamicDataTableStore();
 
     let enabled = true;
 
@@ -24,18 +22,8 @@ const TwoFaRolesDropDown = ({ field, forcedRoledId, optionalRolesId }) => {
         if (!rolesLoaded) {
             fetchRoles(field.id);
         }
-        if (!dataForcedRolesLoaded) {
-            fetchForcedRules();
-        }
 
     }, [rolesLoaded, dataForcedRolesLoaded]);
-
-    useEffect(() => {
-        if (!dataForcedRolesLoaded) {
-            fetchForcedRules();
-        }
-
-    }, [dataForcedRolesLoaded, getFieldValue(forcedRoledId)]);
 
 
     useEffect(() => {
@@ -68,11 +56,6 @@ const TwoFaRolesDropDown = ({ field, forcedRoledId, optionalRolesId }) => {
     const handleChange = (selectedOptions) => {
         // Extract the values of the selected options
         const rolesExcluded = selectedOptions.map(option => option.value);
-
-        // Check if the field is for forced_roles, and if so, we add the forced roles to the excluded roles
-        const selectedRolesForField = field.id === forcedRoledId
-            ? rolesExcluded.concat(allForcedRoles): rolesExcluded;
-
 
         // Update the selectedRoles state
         setSelectedRoles(selectedOptions);
@@ -109,9 +92,6 @@ const TwoFaRolesDropDown = ({ field, forcedRoledId, optionalRolesId }) => {
     let filteredRoles = [];
     let inRolesInUse = [...alreadySelected, ...otherRoles];
     //from roles, remove roles in the usedRoles array
-    if ( field.id === forcedRoledId ) {
-        inRolesInUse = [...alreadySelected, ...otherRoles, ...allForcedRoles];
-    }
     roles.forEach(function (item, i) {
         if ( Array.isArray(inRolesInUse) && inRolesInUse.includes(item.value) ) {
             filteredRoles.splice(i, 1);
