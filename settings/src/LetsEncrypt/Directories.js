@@ -1,12 +1,11 @@
 import {__} from '@wordpress/i18n';
-import sleeper from "../utils/sleeper";
 import Hyperlink from "../utils/Hyperlink";
 import {
     Button,
 } from '@wordpress/components';
 import useFields from "../Settings/FieldsData";
 import useMenu from "../Menu/MenuData";
-import {useEffect, useState} from '@wordpress/element';
+import {useEffect} from '@wordpress/element';
 import useLetsEncryptData from "./letsEncryptData";
 
 const Directories = (props) => {

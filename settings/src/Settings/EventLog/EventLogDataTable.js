@@ -46,10 +46,9 @@ const EventLogDataTable = (props) => {
         }
     }, [fields]);
 
-
     //we create the columns
     let columns = [];
-    //getting the fields from the props
+    //getting the fields from the propsß
     let field = props.field;
     //we loop through the fields
     field.columns.forEach(function (item, i) {
@@ -116,7 +115,13 @@ const EventLogDataTable = (props) => {
         });
     }
 
-    //we convert DynamicDataTable to an array
+    //if the dataActions are changed, we fetch the data
+    useEffect(() => {
+        //we make sure the dataActions are changed in the store before we fetch the data
+        if (dataActions) {
+            fetchDynamicData(field.action, dataActions)
+        }
+    }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page]);
 
 
     //we generate an expandable row
@@ -200,6 +205,7 @@ const EventLogDataTable = (props) => {
                 </div>
             </div>
             {/*Display the datatable*/}
+            {dataLoaded ?
             <DataTable
                 columns={columns}
                 data={data}
@@ -221,14 +227,40 @@ const EventLogDataTable = (props) => {
                 onChangePage={handleEventTablePageChange}
                 expandableRows
                 expandableRowsComponent={ExpandableRow}
-                sortServer
+                loading={dataLoaded}
                 onSort={handleEventTableSort}
+                sortServer
                 paginationRowsPerPageOptions={[5, 10, 25, 50, 100]}
                 noDataComponent={__("No results", "really-simple-ssl")}
                 persistTableHead
                 theme="really-simple-plugins"
                 customStyles={customStyles}
             ></DataTable>
+         :
+            <div className="rsssl-spinner" style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginTop: "100px"
+            }}>
+                <div className="rsssl-spinner__inner">
+                    <div className="rsssl-spinner__icon" style={{
+                        border: '8px solid white',
+                        borderTop: '8px solid #f4bf3e',
+                        borderRadius: '50%',
+                        width: '120px',
+                        height: '120px',
+                        animation: 'spin 2s linear infinite'
+                    }}></div>
+                    <div className="rsssl-spinner__text" style={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                    }}>{__("Loading data, please stand by...", "really-simple-ssl")}</div>
+                </div>
+            </div>
+            }
             {!enabled && (
                 <div className="rsssl-locked">
                     <div className="rsssl-locked-overlay"><span

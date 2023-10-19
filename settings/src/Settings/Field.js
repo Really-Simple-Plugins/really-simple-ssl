@@ -19,7 +19,7 @@ import Support from "./Support";
 import LearningMode from "./LearningMode/LearningMode";
 import RiskComponent from "./RiskConfiguration/RiskComponent";
 import VulnerabilitiesOverview from "./RiskConfiguration/vulnerabilitiesOverview";
-import IpAddressDatatable from "./LimitLoginAttempts/IpAddressDatatable";
+import IpAddressDatatable  from "./LimitLoginAttempts/IpAddressDatatable";
 import TwoFaRolesDropDown from "./TwoFA/TwoFaRolesDropDown";
 import Button from "./Button";
 import Icon from "../utils/Icon";

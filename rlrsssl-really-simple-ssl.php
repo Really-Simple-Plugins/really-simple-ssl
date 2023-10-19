@@ -108,7 +108,6 @@ class REALLY_SIMPLE_SSL
 		define('rsssl_le_cron_generation_renewal_check', 20);
 		define('rsssl_le_manual_generation_renewal_check', 15);
 	}
-
 	private function includes()
 	{
 		require_once(rsssl_path . 'class-front-end.php');
@@ -124,6 +123,7 @@ class REALLY_SIMPLE_SSL
 			require_once( rsssl_path . 'compatibility.php');
             require_once( rsssl_path . 'upgrade.php');
 			require_once( rsssl_path . 'settings/settings.php' );
+			require_once( rsssl_path . 'modal/modal.php' );
             require_once( rsssl_path . 'onboarding/class-onboarding.php' );
             require_once( rsssl_path . 'placeholders/class-placeholder.php' );
             require_once( rsssl_path . 'class-admin.php');

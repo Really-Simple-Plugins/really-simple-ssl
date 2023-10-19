@@ -666,7 +666,7 @@ function rsssl_fields( $load_values = true ) {
                     'name'     => __('Component', 'really-simple-ssl'),
                     'sortable' => false,
                     'column'   => 'Name',
-                    'width'    => '70%',
+                    'grow'    => '6',
                     'searchable' => true,
                 ],
                 [
@@ -674,14 +674,14 @@ function rsssl_fields( $load_values = true ) {
                     'name'     => __('Date', 'really-simple-ssl'),
                     'sortable' => false,
                     'column'   => 'date',
-                    'width'    => '10%',
+                    'grow'    => '2',
                 ],
                 [
                     'id'       => 'risk',
                     'name'     => __('Risk', 'really-simple-ssl'),
                     'sortable' => false,
                     'column'   => 'risk_name',
-                    'width'    => '10%',
+                    'grow'    => '1',
                     'searchable' => true,
                 ],
                 [
@@ -689,7 +689,8 @@ function rsssl_fields( $load_values = true ) {
                     'name'     => __('Action', 'really-simple-ssl'),
                     'sortable' => false,
                     'column'   => 'vulnerability_action',
-                ], []
+                    'grow'    => '3',
+                ]
 
             ]
         ],
@@ -761,7 +762,7 @@ function rsssl_fields( $load_values = true ) {
             'menu_id'  => 'limit_login_attempts',
             'group_id' => 'limit_login_attempts_general',
             'type'     => 'checkbox',
-            'label'    => __('Enable limit login attempts', 'really-simple-ssl'),
+            'label'    => __('Enable Limit Login Attempts', 'really-simple-ssl'),
             'disabled' => false,
             'help'      => [
                 'label' => 'default',
@@ -776,6 +777,8 @@ function rsssl_fields( $load_values = true ) {
             'menu_id'          => 'limit_login_attempts',
             'group_id'         => 'limit_login_attempts_advanced',
             'type'             => 'select',
+            'tooltip'          => __("After this number of failed login attempts the user and IP address will be temporarily blocked.",
+                'really-simple-ssl'),
             'label'            => __('Login attempts', 'really-simple-ssl'),
             'options'          => [
                 '3'  => '3 '.__('attempts', 'really-simple-ssl'),
@@ -797,12 +800,15 @@ function rsssl_fields( $load_values = true ) {
             'menu_id'          => 'limit_login_attempts',
             'group_id'         => 'limit_login_attempts_advanced',
             'type'             => 'select',
+            'tooltip'          => __("If the number of failed login attempts is exceeded within this timeframe, the IP address and user will be blocked.",
+                'really-simple-ssl'),
             'label'            => __('Interval', 'really-simple-ssl'),
             'options'          => [
+                '15'  => '15'.__(' minutes', 'really-simple-ssl'),
                 '30'  => '30'.__(' minutes', 'really-simple-ssl'),
                 '60'  => '1 '.__(' hour', 'really-simple-ssl'),
-                '120' => '2 '.__(' hours', 'really-simple-ssl'),
                 '240' => '4 '.__(' hours', 'really-simple-ssl'),
+                '1440' => '1 '.__(' day', 'really-simple-ssl'),
             ],
             'disabled'         => false,
             'default'          => '30',
@@ -818,12 +824,15 @@ function rsssl_fields( $load_values = true ) {
             'menu_id'          => 'limit_login_attempts',
             'group_id'         => 'limit_login_attempts_advanced',
             'type'             => 'select',
-            'label'            => __('Locked out', 'really-simple-ssl'),
+            'tooltip'          => __("The user and IP address will be temporarily unable to login for the specified duration. You can block IP addresses indefinitely via the IP addresses block.",
+                'really-simple-ssl'),
+            'label'            => __('Lockout duration', 'really-simple-ssl'),
             'options'          => [
                 '15'  => '15'.__(' minutes', 'really-simple-ssl'),
                 '30'  => '30 '.__(' minutes', 'really-simple-ssl'),
                 '60' => '1 '.__(' hour', 'really-simple-ssl'),
-                '120' => '2 '.__(' hours', 'really-simple-ssl'),
+                '240' => '4 '.__(' hours', 'really-simple-ssl'),
+                '1440' => '1 '.__(' day', 'really-simple-ssl'),
             ],
             'disabled'         => false,
             'default'          => '30',
@@ -882,21 +891,6 @@ function rsssl_fields( $load_values = true ) {
 
             ],
         ],
-//        [
-//            'id'               => 'limit_login_attempts_open_source',
-//            'menu_id'          => 'limit_login_attempts',
-//            'group_id'         => 'limit_login_attempts_ip_address',
-//            'type'             => 'checkbox',
-//            'label'            => __('Enable open source blocklist API etc.', 'really-simple-ssl'),
-//            'disabled'         => false,
-//            'default'          => false,
-//            'react_conditions' => [
-//                'relation' => 'AND',
-//                [
-//                    'enable_limited_login_attempts' => true,
-//                ]
-//            ],
-//        ],
         [
             'id'               => 'limit_login_attempts_ip_view',
             'menu_id'          => 'limit_login_attempts',
@@ -1417,13 +1411,6 @@ function rsssl_fields( $load_values = true ) {
                     'column'   => 'locationControl',
                     'grow'     => 4,
                 ],
-
-//                [
-//                    'name'     => __('Details', 'really-simple-ssl'),
-//                    'sortable' => false,
-//                    'column'   => 'detailsControl',
-//                    'grow'     => 0,
-//                ],
                 [
                     'name'     => __('Fix', 'really-simple-ssl'),
                     'sortable' => false,
