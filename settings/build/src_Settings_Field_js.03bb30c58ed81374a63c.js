@@ -1661,7 +1661,7 @@ const EventLogDataTable = props => {
         fontSize: '1em',
         fontWeight: 'bold'
       }
-    }, data.severity), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, data.description));
+    }, data.severity.charAt(0).toUpperCase() + data.severity.slice(1)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, data.description));
   };
   function generateFlag(flag, title) {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Flag_Flag__WEBPACK_IMPORTED_MODULE_8__["default"], {
@@ -6906,15 +6906,15 @@ const UseRiskData = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, get) =
         vulList.forEach(function (item, i) {
           let updateUrl = item.update_available ? rsssl_settings.plugins_url + "?plugin_status=upgrade" : '#settings/vulnerabilities';
           item.vulnerability_action = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-            className: "rsssl-vulnerability-action"
+            className: "rsssl-action-buttons"
           }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-            className: "button",
+            className: "rsssl-button button-secondary",
             href: "https://really-simple-ssl.com/vulnerabilities/" + item.rss_identifier,
             target: "_blank"
           }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Details", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
             disabled: !item.update_available,
             href: updateUrl,
-            className: "button button-primary"
+            className: "rsssl-button button-primary"
           }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Update", "really-simple-ssl")));
         });
       }
@@ -24908,4 +24908,8 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
+<<<<<<<< HEAD:settings/build/src_Settings_Field_js.0c7e8a83f8badd1bddcc.js
 //# sourceMappingURL=src_Settings_Field_js.0c7e8a83f8badd1bddcc.js.map
+========
+//# sourceMappingURL=src_Settings_Field_js.03bb30c58ed81374a63c.js.map
+>>>>>>>> f93bd73654f4c4a495c188f847b9587c311cd19b:settings/build/src_Settings_Field_js.03bb30c58ed81374a63c.js

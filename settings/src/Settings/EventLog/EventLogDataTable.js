@@ -148,7 +148,9 @@ const EventLogDataTable = (props) => {
                 <div style={{float: 'right'}}>
                     <Icon name={icon} color={color}/>
                 </div>
-                <div style={{fontSize: '1em', fontWeight: 'bold'}}>{data.severity}</div>
+                <div style={{fontSize: '1em', fontWeight: 'bold'}}>
+                    {data.severity.charAt(0).toUpperCase() + data.severity.slice(1)}
+                </div>
                 <div>{data.description}</div>
             </div>
         );

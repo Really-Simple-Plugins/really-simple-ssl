@@ -674,7 +674,7 @@ function rsssl_fields( $load_values = true ) {
                     'name'     => __('Component', 'really-simple-ssl'),
                     'sortable' => false,
                     'column'   => 'Name',
-                    'width'    => '70%',
+                    'width'    => '60%',
                     'searchable' => true,
                 ],
                 [
@@ -682,14 +682,14 @@ function rsssl_fields( $load_values = true ) {
                     'name'     => __('Date', 'really-simple-ssl'),
                     'sortable' => false,
                     'column'   => 'date',
-                    'width'    => '10%',
+                    'width'    => '15%',
                 ],
                 [
                     'id'       => 'risk',
                     'name'     => __('Risk', 'really-simple-ssl'),
                     'sortable' => false,
                     'column'   => 'risk_name',
-                    'width'    => '10%',
+                    'width'    => '20%',
                     'searchable' => true,
                 ],
                 [
@@ -697,7 +697,7 @@ function rsssl_fields( $load_values = true ) {
                     'name'     => __('Action', 'really-simple-ssl'),
                     'sortable' => false,
                     'column'   => 'vulnerability_action',
-                ], []
+                ]
 
             ]
         ],

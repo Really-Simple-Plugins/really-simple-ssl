@@ -286,7 +286,7 @@ nav.rdt_Pagination > div > svg {
       div {
         width: 100%;
 
-        button {
+        button,a {
           margin-left: 10px;
         }
       }
@@ -296,8 +296,14 @@ nav.rdt_Pagination > div > svg {
 }
 
 /* EdgeCase: CountryTable */
-.rsssl-limit_login_attempts_country {
-
+.rsssl-vulnerabilities_measures {
+  .rdt_TableCell {
+    &:nth-child(2) {
+      select {
+        max-width: 100%;
+      }
+    }
+  }
 }
 
 /* EdgeCase: hardening_xml */

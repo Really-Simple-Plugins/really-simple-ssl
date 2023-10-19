@@ -5988,7 +5988,11 @@ var vanilla = (createState) => {
 /******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = (chunkId) => {
 /******/ 			// return url for filenames based on template
+<<<<<<<< HEAD:settings/build/index.22ee7f503d911b95edf8.js
 /******/ 			return "" + chunkId + "." + {"vendors-node_modules_mui_material_Tooltip_Tooltip_js":"38f23b052743ac65ae68","src_Settings_Settings_js":"6bfc3cfda98b677831b1","src_Menu_Menu_js":"66458ee78e9eb4343d4a","src_Dashboard_DashboardPage_js":"62df55101bd803507365","src_Onboarding_OnboardingModal_js":"927b428a6fbd1c773cc5","src_Modal_Modal_js":"036298c0d24ddeb54d86","vendors-node_modules_material-ui_core_esm_TextField_TextField_js-node_modules_react-data-tabl-8e8716":"c730c92710cbadb86f0a","src_Settings_Field_js":"0c7e8a83f8badd1bddcc","vendors-node_modules_material-ui_lab_esm_Autocomplete_index_js":"515dd4c5b9e6e345a1ea","vendors-node_modules_material-ui_core_esm_styles_index_js":"b2604edf5f43bcfce41a"}[chunkId] + ".js";
+========
+/******/ 			return "" + chunkId + "." + {"vendors-node_modules_mui_material_Tooltip_Tooltip_js":"4f9fff4afbb906618438","src_Settings_Settings_js":"4c11a4df18efea37321d","src_Menu_Menu_js":"66458ee78e9eb4343d4a","src_Dashboard_DashboardPage_js":"b394e81299ab0fe7d6fc","src_Onboarding_OnboardingModal_js":"ce0ed9662b3214733883","src_Modal_Modal_js":"036298c0d24ddeb54d86","vendors-node_modules_material-ui_core_esm_TextField_TextField_js-node_modules_react-data-tabl-8e8716":"871a113c220949ea52de","src_Settings_Field_js":"03bb30c58ed81374a63c","vendors-node_modules_material-ui_lab_esm_Autocomplete_index_js":"515dd4c5b9e6e345a1ea","vendors-node_modules_material-ui_core_esm_styles_index_js":"b2604edf5f43bcfce41a"}[chunkId] + ".js";
+>>>>>>>> f93bd73654f4c4a495c188f847b9587c311cd19b:settings/build/index.df28884f820b6c304e5f.js
 /******/ 		};
 /******/ 	})();
 /******/ 	
@@ -6316,4 +6320,8 @@ document.addEventListener('click', e => {
 
 /******/ })()
 ;
+<<<<<<<< HEAD:settings/build/index.22ee7f503d911b95edf8.js
 //# sourceMappingURL=index.22ee7f503d911b95edf8.js.map
+========
+//# sourceMappingURL=index.df28884f820b6c304e5f.js.map
+>>>>>>>> f93bd73654f4c4a495c188f847b9587c311cd19b:settings/build/index.df28884f820b6c304e5f.js
