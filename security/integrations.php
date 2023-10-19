@@ -152,7 +152,7 @@ function rsssl_integrations() {
 	}
 }
 
-add_action( 'init', 'rsssl_integrations', 10 );
+add_action( 'plugins_loaded', 'rsssl_integrations', 10 );
 add_action( 'rsssl_after_saved_fields', 'rsssl_integrations', 20 );
 
 /**

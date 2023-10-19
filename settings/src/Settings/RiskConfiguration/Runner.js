@@ -67,9 +67,9 @@ const Runner = (props) => {
 
     return (
         <div className="rsssl-details">
-            <div className={"rsssl-detail-icon " + spin} >
+            <span className={"rsssl-detail-icon " + spin} >
                 {loadingState ? <Icon name="spinner" />:<Icon name="circle-check" color="green"/>}
-            </div>
+            </span>
             <div className="rsssl-detail">
                 <div className="rsssl-detail-title">
                     {props.title}

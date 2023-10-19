@@ -60,22 +60,97 @@
       }
     }
 
-    .rsssl-grid-item-footer {
-      justify-content: flex-end;
-      padding: 0;
+    //.rsssl-grid-item-footer {
+    //  justify-content: flex-end;
+    //  padding: 0;
+    //  display: flex;
+    //  flex-wrap: wrap;
+    //  align-items: center;
+    //  gap: var(--rsp-grid-margin);
+    //  width: 100%;
+    //  min-height: 20px;
+    //  box-sizing: border-box;
+    //  align-self: flex-end;
+    //
+    //  .rsssl-legend {
+    //    display: flex;
+    //    span {
+    //      padding-left: 5px;
+    //    }
+    //  }
+    //
+    //  &:empty {
+    //    display: none;
+    //  }
+    //}
+
+    & > div:nth-last-of-type(2) {
+      margin-bottom: 0;
+      border-radius: var(--rsp-border-radius) var(--rsp-border-radius) 0 0;
+    }
+
+    .rsssl-grid-item-footer-container {
+      position: sticky;
+      bottom: 0;
       display: flex;
-      flex-wrap: wrap;
+      flex-direction: column;
+      z-index: 12; //should be above 10, for the text editor, which has 10.
+
+      .rsssl-grid-item-footer-buttons {
+        a.button, button {
+          box-shadow: none !important;
+
+          &:focus, &:active {
+            box-shadow: none !important;
+          }
+        }
+      }
+
+    }
+    .rsssl-grid-item-footer-scroll-progress-container {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: 3px;
+      background-color: var(--rsp-grey-300);
+      overflow: hidden;
+    }
+
+    .rsssl-grid-item-footer-scroll-progress {
+      height: 100%;
+      background-color: var(--rsp-blue);
+    }
+    .rsssl-grid-item-footer {
+      background: var(--rsp-grey-100);
+      @include rsssl-block-padding();
+      box-shadow: var(--rsp-box-shadow);
+      border-radius: 0 0 var(--rsp-border-radius) var(--rsp-border-radius);
+      border-top: 1px solid var(--rsp-grey-300);
+      box-sizing: border-box;
       align-items: center;
       gap: var(--rsp-grid-margin);
       width: 100%;
       min-height: 20px;
-      box-sizing: border-box;
-      align-self: flex-end;
-
+      justify-content: space-around;
+      // last item within the footer
+      & > div:last-of-type {
+        margin-left: auto;
+      }
+      &-buttons{
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: var(--rsp-spacing-s);
+      }
       .rsssl-legend {
         display: flex;
         span {
           padding-left: 5px;
+        }
+      }
+      &-upsell-bar {
+        .button {
+          display:inline-block !important;
         }
       }
 

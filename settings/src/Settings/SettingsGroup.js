@@ -7,7 +7,6 @@ import useMenu from "../Menu/MenuData";
 import useLicense from "./License/LicenseData";
 import filterData from "./FilterData";
 import {useEffect, useState} from '@wordpress/element';
-import ErrorBoundary from "../utils/ErrorBoundary";
 
 /**
  * Render a grouped block of settings
@@ -99,7 +98,6 @@ const SettingsGroup = (props) => {
             {activeGroup.title && <div className="rsssl-grid-item-header">
                 <h3 className="rsssl-h4">{activeGroup.title}</h3>
                 {activeGroup.groupFilter && (
-                    <ErrorBoundary fallback={"Could not load group filter"}>
                         <div className="rsssl-grid-item-controls">
                             <select
                                 className="rsssl-group-filter"
@@ -122,7 +120,6 @@ const SettingsGroup = (props) => {
                                 ))}
                             </select>
                     </div>
-                    </ErrorBoundary>
                 )}
                 {activeGroup.helpLink && anchor !== 'letsencrypt' && (
                     <div className="rsssl-grid-item-controls">
@@ -140,14 +137,11 @@ const SettingsGroup = (props) => {
                 </div>}
             </div>}
             <div className="rsssl-grid-item-content">
-                {activeGroup.intro && <ErrorBoundary fallback={"Could not load group intro"}>
+                {activeGroup.intro &&
                     <div className="rsssl-settings-block-intro">{activeGroup.intro}</div>
-                </ErrorBoundary>
                 }
                 {Field && selectedFields.map((field, i) =>
-                    <ErrorBoundary key={"selectedFields-" + i} fallback={"Could not load field "+field.id}>
-                        <Field index={i} field={field} fields={selectedFields}/>
-                    </ErrorBoundary>
+                        <Field key={"selectedFields-" + i} index={i} field={field} fields={selectedFields}/>
                 )}
             </div>
             {disabled && !networkwide_error && <div className="rsssl-locked">
