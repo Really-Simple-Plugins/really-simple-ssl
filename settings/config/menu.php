@@ -123,7 +123,7 @@ function rsssl_menu()
 //                    'groups'  => [
 //                        [
 //                            'id'           => 'limit_login_attempts_general',
-//                            'helpLink'     => 'https://really-simple-ssl.com/knowledge-base/limit-login-attempts/?mtm_campaign=instructions&mtm_source=free',
+//                            'helpLink'     => '',
 //                            'premium'      => true,
 //                            'title'        => __('General', 'really-simple-ssl'),
 //                            'intro'        => __('Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et.',
@@ -134,7 +134,7 @@ function rsssl_menu()
 //                        [
 //                            'id'           => 'limit_login_attempts_advanced',
 //                            'premium'      => true,
-//                            'helpLink'     => 'https://really-simple-ssl.com/knowledge-base/limit-login-attempts/?mtm_campaign=instructions&mtm_source=free',
+//                            'helpLink'     => '',
 //                            'title'        => __('Limit Attempts', 'really-simple-ssl'),
 //                            'intro'        => __('.feugait aptent adhuc conceptam risus regione epicurei ne litora simul suspendisse magna luctus risus senserit inceptos omittantur tritani iisque scripta pri fabellas latine dicant sale',
 //                                'really-simple-ssl'),
@@ -373,13 +373,13 @@ function rsssl_menu()
 					'premium_text'         => __( 'Get two-factor authentication with %sReally Simple SSL Pro%s', 'really-simple-ssl' ),
 					'upgrade'              => 'https://really-simple-ssl.com/pro/?mtm_campaign=cops&mtm_source=free&mtm_content=upgrade',
 					'title'                => __('Two-Step Verification', 'really-simple-ssl'),
-					'helpLink'             => 'https://really-simple-ssl.com/instructions/two-factor-authentication/?mtm_campaign=instructions&mtm_source=free',
+					'helpLink'             => 'https://really-simple-ssl.com/instructions/about-login-protection/?mtm_campaign=instructions&mtm_source=free',
                     'groups'  => [
                         [
                             'id'       => 'two_fa_general',
                             'premium'              => true,
                             'premium_text'         => __( "Get Login Protection with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
-                            'helpLink' => 'https://really-simple-ssl.com/instructions/two-factor-authentication',
+                            'helpLink' => 'https://really-simple-ssl.com/instructions/about-login-protection',
                             'title'    => __( 'General', 'really-simple-ssl' ),
                             'intro'    => __( 'Enhancing the authentication process and optimizing user management makes Login Protection a foundational element in securing your website.', 'really-simple-ssl' ),
                         ],
@@ -387,7 +387,7 @@ function rsssl_menu()
                             'id'       => 'two_fa_email',
                             'premium'              => true,
                             'premium_text'         => __( "Get Login Protection with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
-                            'helpLink' => 'https://really-simple-ssl.com/instructions/two-factor-authentication',
+                            'helpLink' => 'https://really-simple-ssl.com/instructions/about-login-protection',
                             'title'    => __( 'Email', 'really-simple-ssl' ),
                             'intro'    => __( 'Two-step verification will enhance the authentication process by adding an additional security layer. Selected users will be required to enter their credentials first, and then they must provide a one-time code sent to their email as an extra step.', 'really-simple-ssl' ),
                         ],
@@ -395,7 +395,6 @@ function rsssl_menu()
                             'id'       => 'two_fa_users',
                             'premium'              => true,
                             'premium_text'         => __( "Get Login Protection with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
-//                            'helpLink' => 'https://really-simple-ssl.com/instructions/two-factor-authentication',
                             'title'    => __( 'Users', 'really-simple-ssl' ),
                             'intro'    => __( 'Below you will find the users that you have selected for an additional verification method and their subsequent status. A reset is possible to revert a choice made by a user.', 'really-simple-ssl' ),
                             'groupFilter'  => [

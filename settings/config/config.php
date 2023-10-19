@@ -131,8 +131,7 @@ function rsssl_fields( $load_values = true ) {
             'disabled'         => false,
             'default'          => get_bloginfo('admin_email'),
         ],
-
-            ['id'               => 'send_notifications_email',
+		['id'               => 'send_notifications_email',
             'menu_id'          => 'general',
             'group_id'         => 'email',
             'type'             => 'checkbox',
@@ -765,6 +764,13 @@ function rsssl_fields( $load_values = true ) {
             'type'     => 'checkbox',
             'label'    => __('Enable Limit Login Attempts', 'really-simple-ssl'),
             'disabled' => false,
+            'help'      => [
+                'label' => 'default',
+                'url'   => '',
+                'title' => __("About limited login attempts", 'really-simple-ssl'),
+                'text'  => __('This feature will limit the number of login attempts per user. If a user exceeds the number of allowed attempts, the user will be blocked for a certain amount of time. You can also block IP addresses and view a list of blocked users and IP addresses.',
+                    'really-simple-ssl'),
+            ],
         ],
         [
             'id'               => 'limit_login_attempts_amount',
