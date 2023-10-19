@@ -61,9 +61,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	        //now we add the action to the cron.
 	        add_filter('rsssl_every_three_hours_cron', array($this, 'run_cron'));
 	        add_filter('rsssl_notices', [$this, 'show_help_notices'], 10, 1);
-	        add_action( 'rsssl_after_save_field', array( $this, 'maybe_enable_vulnerability_scanner' ), 10, 4 );
-
-
+//	        add_action( 'rsssl_after_save_field', array( $this, 'maybe_enable_vulnerability_scanner' ), 10, 4 );
         }
 
 //	    /**
