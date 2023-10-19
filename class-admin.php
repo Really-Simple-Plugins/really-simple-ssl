@@ -118,9 +118,11 @@ class rsssl_admin
 	 */
 
     public function is_bf(){
+
 	    if ( defined("rsssl_pro_version" ) ) {
             return false;
         }
+
 	    $start_day = 20;
         $end_day = 27;
 	    $current_year = date("Y");//e.g. 2021
@@ -2444,6 +2446,16 @@ class rsssl_admin
 			    }
 		    }
         }
+
+	    // Check if the 'black_friday_notice' exists and move it to the top of the array
+	    if ( isset( $notices['bf_notice2023'] ) ) {
+		    // Remove the 'black_friday_notice' from its current position
+		    $black_friday_notice = array( 'bf_notice2023' => $notices['bf_notice2023'] );
+		    unset( $notices['bf_notice2023'] );
+
+		    // Add the 'black_friday_notice' back at the beginning of the array
+		    $notices = $black_friday_notice + $notices;
+	    }
 
 	    //ensure an empty list is also cached
 	    $cache_notices = empty($notices) ? 'empty' : $notices;
