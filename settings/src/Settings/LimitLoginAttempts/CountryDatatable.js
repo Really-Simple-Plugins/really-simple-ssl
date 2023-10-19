@@ -8,7 +8,6 @@ import Flag from "../../utils/Flag/Flag";
 import { button } from "@wordpress/components";
 import { __ } from '@wordpress/i18n';
 import useFields from "../FieldsData";
-import Icon from "../../utils/Icon";
 
 const CountryDatatable = (props) => {
     const {
@@ -25,9 +24,7 @@ const CountryDatatable = (props) => {
         handleCountryTableSort,
         handleCountryTableSearch,
         addRegion,
-        addRegions,
         removeRegion,
-        removeRegions,
         addRowMultiple,
         removeRowMultiple,
         resetRow,
@@ -54,7 +51,6 @@ const CountryDatatable = (props) => {
     const [rowsSelected, setRowsSelected] = useState([]);
     const moduleName = 'rsssl-group-filter-limit_login_attempts_country';
     const {fields, fieldAlreadyEnabled, getFieldValue} = useFields();
-    const searchTimeoutRef = useRef(null);
 
     const buildColumn = useCallback((column) => ({
         //if the filter is set to region and the columns = status we do not want to show the column
@@ -217,7 +213,7 @@ const CountryDatatable = (props) => {
     ), []);
 
     const ActionButton = ({ onClick, children, className }) => (
-        <div className={`rsssl-action-buttons__inner`}>
+        // <div className={`rsssl-action-buttons__inner`}>
             <button
                 className={`button ${className} rsssl-action-buttons__button`}
                 onClick={onClick}
@@ -225,7 +221,7 @@ const CountryDatatable = (props) => {
             >
                 {children}
             </button>
-        </div>
+        // </div>
     );
 
     const generateActionButtons = useCallback((id, status, region_name) => (
@@ -301,17 +297,11 @@ const CountryDatatable = (props) => {
                             type="text"
                             className="rsssl-search-bar__input"
                             placeholder={__("Search", "really-simple-ssl")}
-                            onChange={event => {
-                                if (processing) return;
-                                // Clear any existing timeouts to prevent rapid calls
-                                if (searchTimeoutRef.current) {
-                                    clearTimeout(searchTimeoutRef.current);
-                                }
-
-                                // Set a new timeout
-                                searchTimeoutRef.current = setTimeout(() => {
+                            disabled={processing}
+                            onKeyUp={event => {
+                                if (event.key === 'Enter') {
                                     handleCountryTableSearch(event.target.value, searchableColumns);
-                                }, 500);
+                                }
                             }}
                          />
                     </div>

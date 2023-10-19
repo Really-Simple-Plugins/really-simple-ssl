@@ -50,7 +50,6 @@ const UserDatatable = (props) => {
 
     const moduleName = 'rsssl-group-filter-limit_login_attempts_users';
     const {fields, fieldAlreadyEnabled, getFieldValue, saveFields} = useFields();
-    const searchTimeoutRef = useRef(null);
 
     const buildColumn = useCallback((column) => ({
         name: column.name,
@@ -245,17 +244,11 @@ return (
                         type="text"
                         className="rsssl-search-bar__input"
                         placeholder={__("Search", "really-simple-ssl")}
-                        onChange={event => {
-                            if (processing) return;
-                            // Clear any existing timeouts to prevent rapid calls
-                            if (searchTimeoutRef.current) {
-                                clearTimeout(searchTimeoutRef.current);
+                        disabled={processing}
+                        onKeyUp={event => {
+                            if (event.key === 'Enter') {
+                                handleUserTableSearch(event.target.value, searchableColumns)
                             }
-
-                            // Set a new timeout
-                            searchTimeoutRef.current = setTimeout(() => {
-                                handleUserTableSearch(event.target.value, searchableColumns);
-                            }, 500);
                         }}
                     />
                 </div>
