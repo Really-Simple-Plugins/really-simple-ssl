@@ -23,7 +23,7 @@ const TwoFaRolesDropDown = ({ field, forcedRoledId, optionalRolesId }) => {
             fetchRoles(field.id);
         }
 
-    }, [rolesLoaded, dataForcedRolesLoaded]);
+    }, [rolesLoaded]);
 
 
     useEffect(() => {

@@ -8030,7 +8030,7 @@ const TwoFaRolesDropDown = _ref => {
     if (!rolesLoaded) {
       fetchRoles(field.id);
     }
-  }, [rolesLoaded, dataForcedRolesLoaded]);
+  }, [rolesLoaded]);
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     if (field.id === forcedRoledId) {
       let otherField = getField(optionalRolesId);
@@ -24734,4 +24734,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.a0e8320d8cefcf1d05c5.js.map
+//# sourceMappingURL=src_Settings_Field_js.0d76954e2cc7499f8883.js.map
