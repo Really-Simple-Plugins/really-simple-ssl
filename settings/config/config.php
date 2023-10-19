@@ -131,8 +131,7 @@ function rsssl_fields( $load_values = true ) {
             'disabled'         => false,
             'default'          => get_bloginfo('admin_email'),
         ],
-
-            ['id'               => 'send_notifications_email',
+		['id'               => 'send_notifications_email',
             'menu_id'          => 'general',
             'group_id'         => 'email',
             'type'             => 'checkbox',
