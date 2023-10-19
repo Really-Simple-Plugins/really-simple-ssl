@@ -2,25 +2,44 @@
 import {create} from 'zustand';
 import * as rsssl_api from "../../utils/api";
 import {produce} from "immer";
-import React, {useState} from "react";
+import apiFetch from "@wordpress/api-fetch";
 
 const DynamicDataTableStore = create((set, get) => ({
-
-    twoFAMethods: {},
-    setTwoFAMethods: (methods) => set((state) => ({ ...state, twoFAMethods: methods })),
     processing: false,
     dataLoaded: false,
     pagination: {},
-    dataActions: {},
+    dataActions: {currentPage:1, currentRowsPerPage:5, filterValue: 'active',filterColumn: 'rsssl_two_fa_status'},
+    totalRecords:0,
     DynamicDataTable: [],
-
-    fetchDynamicData: async (action) => {
+    setDataLoaded: (dataLoaded) => set((state) => ({ ...state, dataLoaded: dataLoaded })),
+    resetUserMethod: async (id, optionalRoles, currentRole) => {
+        if (get().processing) {
+            return;
+        }
+        if ( optionalRoles.includes(currentRole) ) {
+            set({processing: true});
+            const response = await apiFetch({
+                path: `/wp/v2/users/${id}`,
+                method: 'POST',
+                data: {
+                    meta: {
+                        rsssl_two_fa_status: 'open',
+                    },
+                },
+            }).catch((error) => {
+                console.error(error);
+            });
+            set({processing: false});
+        }
+    },
+    fetchDynamicData: async () => {
+        if (get().processing) return;
+        set({processing: true});
         try {
             const response = await rsssl_api.doAction(
-                action,
+                'two_fa_table',
                 get().dataActions
             );
-            //now we set the EventLog
             if (response) {
                 set(state => ({
                     ...state,
@@ -28,65 +47,55 @@ const DynamicDataTableStore = create((set, get) => ({
                     dataLoaded: true,
                     processing: false,
                     pagination: response.pagination,
-                    // Removed the twoFAMethods set from here...
+                    totalRecords: response.totalRecords,
                 }));
                 // Return the response for the calling function to use
                 return response;
             }
-
         } catch (e) {
             console.log(e);
         }
     },
 
     handleTableSearch: async (search, searchColumns) => {
-        set(produce((state) => {
-            state.dataActions = {...state.dataActions, search, searchColumns};
-        }));
-        await get().fetchDynamicData('two_fa_table');
+        const typingTimer = setTimeout(async () => {
+            set(produce((state) => {
+                state.dataActions = {...state.dataActions, search, searchColumns};
+            }));
+            await get().fetchDynamicData();
+        }, 500);
+
+        return () => {
+            clearTimeout(typingTimer);
+        };
     },
 
-
-    handleTablePageChange: async (page, pageSize) => {
+    handlePageChange: async (page, pageSize) => {
         //Add the page and pageSize to the dataActions
         set(produce((state) => {
-                state.dataActions = {...state.dataActions, page, pageSize};
+                state.dataActions = {...state.dataActions, currentPage: page};
             })
         );
-        await get().fetchDynamicData('two_fa_table');
+        await get().fetchDynamicData();
     },
 
-    handleTableRowsChange: async (currentRowsPerPage, currentPage) => {
+    handleRowsPerPageChange: async (currentRowsPerPage, currentPage) => {
         //Add the page and pageSize to the dataActions
         set(produce((state) => {
                 state.dataActions = {...state.dataActions, currentRowsPerPage, currentPage};
             })
         );
-        await get().fetchDynamicData('two_fa_table');
+        await get().fetchDynamicData();
     },
 
     //this handles all pagination and sorting
-    handleTableSort: async (column, sortDirection) => {
+    handleTableSort: async (sortColumn, sortDirection) => {
         //Add the column and sortDirection to the dataActions
         set(produce((state) => {
-                state.dataActions = {...state.dataActions, sortColumn: column, sortDirection};
+                state.dataActions = {...state.dataActions, sortColumn: sortColumn.column, sortDirection};
             })
         );
-        await get().fetchDynamicData('two_fa_table');
-    },
-
-    updateUserMeta: async (userId, updatedMeta) => {
-        set(produce((state) => {
-            const userIndex = state.DynamicDataTable.findIndex(user => user.id === userId);
-            if (userIndex !== -1) {
-                state.DynamicDataTable[userIndex].rsssl_two_fa_method = updatedMeta;
-            }
-        }));
-
-        let data = {};
-        data.userId = userId;
-        data.method = updatedMeta;
-        const response = await rsssl_api.doAction('store_two_fa_usermeta', data);
+        await get().fetchDynamicData();
     },
 
     handleUsersTableFilter: async (column, filterValue) => {
@@ -96,7 +105,7 @@ const DynamicDataTableStore = create((set, get) => ({
             })
         );
         // We fetch the data again
-        await get().fetchDynamicData('two_fa_table');
+        await get().fetchDynamicData();
     },
 
 }));

@@ -2,7 +2,28 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  > div {
+    display:flex;
+  }
   svg{
     fill: currentColor;
   }
+  &-loading svg{
+    animation: spin 2s linear infinite;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  &.rsssl-click-animation{
+    animation: beat 0.4s ease-out;
+  }
+}
+
+//loaders in buttons
+button.button .cmplz-icon.rsssl-icon-loading {
+  padding-top: 6px;
+  >div {line-height: inherit;}
 }

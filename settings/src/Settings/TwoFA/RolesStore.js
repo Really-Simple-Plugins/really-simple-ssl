@@ -1,6 +1,7 @@
 import {create} from 'zustand';
 import * as rsssl_api from "../../utils/api";
-const TwoFaData = create(( set, get ) => ({
+import {produce} from "immer";
+const useRolesData = create(( set, get ) => ({
     roles: [],
     rolesLoaded:false,
     fetchRoles: async ( id ) => {
@@ -9,7 +10,7 @@ const TwoFaData = create(( set, get ) => ({
             const response = await rsssl_api.doAction('get_roles', { id: id });
 
             // Handle the response
-            if (!response) {
+            if ( !response ) {
                 console.error('No response received from the server.');
                 return;
             }
@@ -26,7 +27,6 @@ const TwoFaData = create(( set, get ) => ({
             // Format the data into options array for react-select
 
             const formattedData = dataArray.map((role, index) => ({ value: role, label: role.charAt(0).toUpperCase() + role.slice(1) }));
-
             // Set the roles state with formatted data
             set({roles: formattedData,rolesLoaded:true  });
 
@@ -37,5 +37,5 @@ const TwoFaData = create(( set, get ) => ({
     }
 }));
 
-export default TwoFaData;
+export default useRolesData;
 

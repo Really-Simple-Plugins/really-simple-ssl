@@ -1,0 +1,53 @@
+$rt-namespace: 'Toastify';
+$rt-mobile: 'only screen and (max-width : 480px)' !default;
+
+:root {
+  --toastify-color-light: var(--rsp-white);
+  --toastify-color-dark: var(--rsp-black);
+  --toastify-color-info: var(--rsp-yellow);
+  --toastify-color-success: var(--rsp-green);
+  --toastify-color-warning: var(--rsp-orange);
+  --toastify-color-error: var(--rsp-red);
+  --toastify-color-transparent: rgba(255, 255, 255, 0.7);
+
+  --toastify-icon-color-info: var(--toastify-color-info);
+  --toastify-icon-color-success: var(--toastify-color-success);
+  --toastify-icon-color-warning: var(--toastify-color-warning);
+  --toastify-icon-color-error: var(--toastify-color-error);
+
+  --toastify-toast-width: 320px;
+  --toastify-toast-background: #fff;
+  --toastify-toast-min-height: 42px;
+  --toastify-toast-max-height: 800px;
+  --toastify-font-family: sans-serif;
+  --toastify-z-index: 999999;
+
+  --toastify-text-color-light: var(--rsp-text-color);
+  --toastify-text-color-dark: var(--rsp-text-color-white);
+
+  //Used only for colored theme
+  --toastify-text-color-info: #fff;
+  --toastify-text-color-success: #fff;
+  --toastify-text-color-warning: #fff;
+  --toastify-text-color-error: #fff;
+
+  --toastify-spinner-color: #616161;
+  --toastify-spinner-color-empty-area: #e0e0e0;
+
+  // Used when no type is provided
+  --toastify-color-progress-light: linear-gradient(
+    to right,
+    #4cd964,
+    #5ac8fa,
+    #007aff,
+    #34aadc,
+    #5856d6,
+    #ff2d55
+  );
+  // Used when no type is provided
+  --toastify-color-progress-dark: #bb86fc;
+  --toastify-color-progress-info: var(--toastify-color-info);
+  --toastify-color-progress-success: var(--toastify-color-success);
+  --toastify-color-progress-warning: var(--toastify-color-warning);
+  --toastify-color-progress-error: var(--toastify-color-error);
+}

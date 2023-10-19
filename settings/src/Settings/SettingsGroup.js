@@ -15,17 +15,20 @@ const SettingsGroup = (props) => {
     
     const {fields} = useFields();
     const {selectedFilter, setSelectedFilter} = filterData();
-    const {setActiveGroupId, activeGroupId} = useMenu();
     const {licenseStatus} = useLicense();
     const {selectedSubMenuItem, subMenu} = useMenu();
     const [Field, setField] = useState(null);
+    const [updatedIntro, setUpdatedIntro] = useState(null);
 
     useEffect(() => {
         import("./Field").then(({default: Field}) => {
             setField(() => Field);
         });
+        if (activeGroup && activeGroup.intro && typeof activeGroup.intro === 'object') {
+            setUpdatedIntro(activeGroup.intro[selectedFilter[filterId]]);
+        }
 
-    }, []);
+    }, [selectedFilter]);
 
 
     let upgrade = 'https://really-simple-ssl.com/pro/?mtm_campaign=fallback&mtm_source=free&mtm_content=upgrade';
@@ -114,8 +117,7 @@ const SettingsGroup = (props) => {
             {activeGroup.title && <div className="rsssl-grid-item-header">
                 <h3 className="rsssl-h4">{activeGroup.title}</h3>
                 {activeGroup.groupFilter && (
-                    <div className="rsssl-grid-item-controls">
-                        {activeGroup.groupFilter && (
+                        <div className="rsssl-grid-item-controls">
                             <select
                                 className="rsssl-group-filter"
                                 id={filterId}
@@ -136,7 +138,6 @@ const SettingsGroup = (props) => {
                                     </option>
                                 ))}
                             </select>
-                        )}
                     </div>
                 )}
                 {activeGroup.helpLink && anchor !== 'letsencrypt' && (
@@ -155,9 +156,11 @@ const SettingsGroup = (props) => {
                 </div>}
             </div>}
             <div className="rsssl-grid-item-content">
-                {activeGroup.intro && <div className="rsssl-settings-block-intro">{activeGroup.intro}</div>}
+                {(activeGroup.intro && typeof activeGroup.intro === 'string') && <div className="rsssl-settings-block-intro">{activeGroup.intro}</div>}
+                {(activeGroup.intro &&  typeof activeGroup.intro === 'object') && <div className="rsssl-settings-block-intro">{updatedIntro}</div>}
                 {Field && selectedFields.map((field, i) =>
-                    <Field key={"selectedFields-" + i} index={i} field={field} fields={selectedFields}/>)}
+                        <Field key={"selectedFields-" + i} index={i} field={field} fields={selectedFields}/>
+                )}
             </div>
             {disabled && !networkwide_error && <div className="rsssl-locked">
                 <div className="rsssl-locked-overlay">

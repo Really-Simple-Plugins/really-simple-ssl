@@ -23,52 +23,27 @@ const IpAddressDataTableStore = create((set, get) => ({
     dataActions: {},
     IpDataTable: [],
     maskError: false,
-    dummyData: {
-        data: [
-            {
-                attempt_type: "source_ip",
-                attempt_value:"192.168.10.13/27",
-                datetime: "13:33, August 16",
-                id: 1,
-                last_failed: "1692192816",
-                status: "blocked"
-            },
-            {
-                attempt_type: "source_ip",
-                attempt_value:"::1",
-                datetime: "13:33, August 16",
-                id: 2,
-                last_failed: "1692192916",
-                status: "blocked"
-            }
-        ]
-    } ,
-    dummyPagination: {
-        currentPage: 1,
-        lastPage: 1,
-        perPage: 10,
-        total: 2,
-        totalRows: 2,
+
+    setMaskError: (maskError) => {
+        set({maskError});
     },
 
     /*
     * This function fetches the data from the server and fills the property IpDataTable
     * Note this function works with the DataTable class on serverside
      */
-    fetchIpData: async (action) => {
+    fetchIpData: async (action, dataActions) => {
+        set({processing: true});
+        set({dataLoaded: false});
         try {
             const response = await rsssl_api.doAction(
                 action,
-                get().dataActions
+                dataActions
             );
             //now we set the EventLog
             if (response) {
                 //if the response is empty we set the dummyData
-                if (typeof response.pagination === 'undefined') {
-                    set({IpDataTable: get().dummyData, dataLoaded: true, processing: false, pagination: get().dummyPagination});
-                } else {
-                    set({IpDataTable: response, dataLoaded: true, processing: false, pagination: response.pagination});
-                }
+                set({IpDataTable: response, dataLoaded: true, processing: false, pagination: response.pagination});
             }
         } catch (e) {
             console.log(e);
@@ -84,7 +59,6 @@ const IpAddressDataTableStore = create((set, get) => ({
                 state.dataActions = {...state.dataActions, search, searchColumns};
             })
         );
-        await get().fetchIpData('ip_list');
     },
 
     /*
@@ -96,7 +70,6 @@ const IpAddressDataTableStore = create((set, get) => ({
                 state.dataActions = {...state.dataActions, page, pageSize};
             })
         );
-        await get().fetchIpData('ip_list');
     },
 
     /*
@@ -108,7 +81,6 @@ const IpAddressDataTableStore = create((set, get) => ({
                 state.dataActions = {...state.dataActions, currentRowsPerPage, currentPage};
             })
         );
-        await get().fetchIpData('ip_list');
     },
 
     /*
@@ -120,7 +92,6 @@ const IpAddressDataTableStore = create((set, get) => ({
                 state.dataActions = {...state.dataActions, sortColumn: column, sortDirection};
             })
         );
-        await get().fetchIpData('ip_list');
     },
 
     /*
@@ -132,28 +103,46 @@ const IpAddressDataTableStore = create((set, get) => ({
                 state.dataActions = {...state.dataActions, filterColumn: column, filterValue};
             })
         );
-        await get().fetchIpData('ip_list');
     },
 
     /*
     * This function sets the ip address and is used by Cidr and IpAddressInput
      */
     setIpAddress: (ipAddress) => {
-        // Split the input into IP and CIDR mask
-        let [ip, mask] = ipAddress.split('/');
-        //if , we change it to .
-        ip = ip.replace(/,/g, '.');
-
         let ipRegex = /^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$|^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,4}|((25[0-5]|(2[0-4]|1{0,1}[0-9])?[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9])?[0-9]))|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9])?[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9])?[0-9]))$/;
-        if (!ipRegex.test(ip)) {
-            set({maskError: true});
+        if (ipAddress.includes('/')) {
+            let finalIp = '';
+            // Split the input into IP and CIDR mask
+            let [ip, mask] = ipAddress.split('/');
+              //if , we change it to .
+            ip = ip.replace(/,/g, '.');
+            if (mask.length <= 0 ) {
+                 if (!ipRegex.test(ip)) {
+                    set({maskError: true});
+                } else {
+                    set({maskError: false});
+                 }
+                finalIp = `${ip}/${mask}`;
+            } else {
+                finalIp = mask ? `${ip}/${mask}` : ip;
+            }
+            set({ ipAddress: finalIp })
         } else {
-            set({maskError: false});
+            if (!ipRegex.test(ipAddress)) {
+                set({maskError: true});
+            } else {
+                set({maskError: false});
+            }
+            set({ ipAddress: ipAddress.replace(/,/g, '.') })
         }
+    },
 
-        // Construct the final IP address by optionally appending the CIDR mask
-        let finalIp = mask ? `${ip}/${mask}` : ip;
-        set({ ipAddress: finalIp })
+    resetRange: () => {
+        set({inputRangeValidated: false});
+        set({highestIP: ''});
+        set({lowestIP: ''});
+        set({ipAddress: ''});
+        set({maskError: false});
     },
 
     /*
@@ -203,12 +192,16 @@ const IpAddressDataTableStore = create((set, get) => ({
             } else {
                 // Handle any unsuccessful response if needed.
                 console.log("Failed to add IP address: ", response.message);
+                //we also clear the form
+                set({ipAddress: ''});
             }
         } catch (e) {
             console.log(e);
             // Notify the user of an error.
         } finally {
             set({processing: false});
+            //we also clear the form
+            set({ipAddress: ''});
         }
     },
 
@@ -224,6 +217,7 @@ const IpAddressDataTableStore = create((set, get) => ({
         if (parts.length !== 4) return false;
         for (let part of parts) {
             const num = parseInt(part, 10);
+            console.log(num);
             if (isNaN(num) || num < 0 || num > 255) return false;
         }
         return true;
@@ -237,7 +231,6 @@ const IpAddressDataTableStore = create((set, get) => ({
      * @returns {boolean}
      */
     validateIpv6: (ip) => {
-        console.log('validating ipv6', ip);
         const parts = ip.split(":");
         if (parts.length !== 8) return false;
 
@@ -249,7 +242,6 @@ const IpAddressDataTableStore = create((set, get) => ({
     },
 
     extendIpV6: (ip) => {
-        console.log('extendIpV6', ip);
         // Handle the special case of '::' at the start or end
         if (ip === '::') ip = '0::0';
 
@@ -291,7 +283,7 @@ const IpAddressDataTableStore = create((set, get) => ({
      * @returns {*}
      */
     ipV4ToNumber: (ip) => {
-        return ip.split(".").reduce((acc, cur) => (acc << 8) + parseInt(cur, 10), 0);
+        return ip.split(".").reduce((acc, cur) => (acc * 256 + parseInt(cur, 10)) >>> 0, 0);
     },
 
     /**
@@ -321,14 +313,12 @@ const IpAddressDataTableStore = create((set, get) => ({
      * @param highest
      */
     validateIpRange: (lowest, highest) => {
+        set({inputRangeValidated: false});
         let from = '';
         let to = '';
-        console.log('validateIpRange');
         //first we determine if the IP is ipv4 or ipv6
         if (lowest && highest) {
-            console.log('lowest and highest validation')
             if (get().validateIpv4(lowest) && get().validateIpv4(highest)) {
-                console.log('ipv4 validated');
                 //now we check if the lowest is lower than the highest
                 if (get().ipToNumber(lowest) > get().ipToNumber(highest)) {
                     console.warn('lowest is higher than highest');
@@ -355,6 +345,7 @@ const IpAddressDataTableStore = create((set, get) => ({
             let lowest = from;
             let highest = to;
             set({ipRange: {lowest, highest}});
+            get().fetchCidrData('get_mask_from_range');
         }
     },
 

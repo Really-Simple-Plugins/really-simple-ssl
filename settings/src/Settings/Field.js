@@ -19,7 +19,7 @@ import Support from "./Support";
 import LearningMode from "./LearningMode/LearningMode";
 import RiskComponent from "./RiskConfiguration/RiskComponent";
 import VulnerabilitiesOverview from "./RiskConfiguration/vulnerabilitiesOverview";
-import IpAddressDatatable from "./LimitLoginAttempts/IpAddressDatatable";
+import IpAddressDatatable  from "./LimitLoginAttempts/IpAddressDatatable";
 import TwoFaRolesDropDown from "./TwoFA/TwoFaRolesDropDown";
 import Button from "./Button";
 import Icon from "../utils/Icon";
@@ -31,7 +31,7 @@ import getAnchor from "../utils/getAnchor";
 import useMenu from "../Menu/MenuData";
 import UserDatatable from "./LimitLoginAttempts/UserDatatable";
 import CountryDatatable from "./LimitLoginAttempts/CountryDatatable";
-import DynamicDataTable from "./DynamicDataTable/DynamicDataTable";
+// import DynamicDataTable from "./DynamicDataTable/DynamicDataTable";
 import TwoFaDataTable from "./TwoFA/TwoFaDataTable";
 import EventLogDataTable from "./EventLog/EventLogDataTable";
 const Field = (props) => {
@@ -189,11 +189,13 @@ const Field = (props) => {
                     onChange={ ( fieldValue ) => onChangeHandler(fieldValue) }
                     value= { fieldValue }
                 />
-                <div className="rsssl-email-verified" >
+                { sendVerificationEmailField &&
+                    <div className="rsssl-email-verified" >
                     {emailIsVerified
                         ? <Icon name='circle-check' color={'green'} />
                         : <Icon name='circle-times' color={'red'} />}
                 </div>
+                }
             </div>
         );
     }
@@ -395,16 +397,16 @@ const Field = (props) => {
             </div>
         )
     }
-    if (field.type === 'dynamic-datatable') {
-        return (
-            <div className={highLightClass} ref={scrollAnchor}>
-                <DynamicDataTable
-                    field={props.field}
-                    action={props.field.action}
-                />
-            </div>
-        )
-    }
+    // if (field.type === 'dynamic-datatable') {
+    //     return (
+    //         <div className={highLightClass} ref={scrollAnchor}>
+    //             <DynamicDataTable
+    //                 field={props.field}
+    //                 action={props.field.action}
+    //             />
+    //         </div>
+    //     )
+    // }
 
     if (field.type === 'ip-address-datatable') {
         return (
