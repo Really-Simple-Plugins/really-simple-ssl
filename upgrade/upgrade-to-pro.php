@@ -52,7 +52,7 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 						$this->instructions = 'https://really-simple-ssl.com/knowledge-base/install-really-simple-ssl-pro';
 						break;
 					case "brst_pro":
-						$this->slug = "burst";
+						$this->slug = "burst-pro/burst-pro.php";
 						$this->plugin_name = "Burst";
 						$this->plugin_constant = "burst_pro";
 						$this->prefix = "burst_";
