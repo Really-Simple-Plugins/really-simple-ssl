@@ -760,30 +760,79 @@ function rsssl_fields( $load_values = true ) {
 			],
 		],
 		[
-			'id'       => 'two_fa_email_code',
+			'id'       => 'login_protection_enabled',
+			'menu_id'  => 'two-fa',
+			'group_id' => 'two_fa_general',
+			'type'     => 'checkbox',
+			'label'    => __( "Enable login protection", "really-simple-ssl" ),
+			'help'     => [
+				'label' => 'default',
+				'url'   => 'https://really-simple-ssl.com/instructions/about-login-protection/?mtm_campaign=instructions&mtm_source=2fa',
+				'title' => __("About Login Protection", 'really-simple-ssl'),
+				'text'  => __('Two-step verification is the first feature we regard as login protection. Want to know more about this feature, and what is to come?',
+					'really-simple-ssl'),
+			],
+			'disabled' => false,
+			'default'  => 'disabled',
+			'server_conditions'    => [
+				'relation' => 'AND',
+				[
+					'is_multisite' => false,
+				]
+			],
+		],
+		[
+			'id'       => 'two_fa_enabled',
 			'menu_id'  => 'two-fa',
 			'group_id' => 'two_fa_email',
 			'type'     => 'checkbox',
 			'label'    => __( "Enable two-step verification", "really-simple-ssl" ),
-			'tooltip'  => __( "This will send emails from your server, containing a verification code to users that try to login.", 'really-simple-ssl' ),
+			'tooltip'  => __( "By enabling this feature you understand that email validation is required, and you can send email from your server reliably.", 'really-simple-ssl' ),
 			'disabled' => false,
+			'warning'  => true,
 			'default'  => 'disabled',
+
+			'server_conditions'    => [
+				'relation' => 'AND',
+				[
+					'is_multisite' => false,
+				]
+			],
 		],
 		[
 			'id'       => 'two_fa_optional_roles',
+			'forced_roles_id'         => 'two_fa_forced_roles',
+			'optional_roles_id' 	   => 'two_fa_optional_roles',
 			'menu_id'  => 'two-fa',
 			'group_id' => 'two_fa_email',
 			'type'     => 'two_fa_roles',
+			'default'  => [ 'editor', 'author', 'contributor'],
 			'label'    => __( "Optional for:", "really-simple-ssl" ),
-			'tooltip'  => __( "Two-step login will be enabled for these user roles, with the possibility to skip. If a user skips, Two-step login will be disabled for this user.", 'really-simple-ssl' ),
+			'tooltip'  => __( "Two-step verification will be optional for these user roles, and they can disable it on first login.", 'really-simple-ssl' ),
+			'server_conditions'    => [
+				'relation' => 'AND',
+				[
+					'is_multisite' => false,
+				]
+			],
 		],
+
 		[
 			'id'       => 'two_fa_forced_roles',
+			'forced_roles_id'         => 'two_fa_forced_roles',
+			'optional_roles_id' 	   => 'two_fa_optional_roles',
 			'menu_id'  => 'two-fa',
 			'group_id' => 'two_fa_email',
 			'type'     => 'two_fa_roles',
+			'default'  => [ 'administrator' ],
 			'label'    => __( "Force on:", "really-simple-ssl" ),
-			'tooltip'  => __( "These user roles are forced to enter the authentication code, without the possibility to skip.", 'really-simple-ssl' ),
+			'tooltip'  => __( "These user roles are forced to enter the authentication code.", 'really-simple-ssl' ),
+			'server_conditions'    => [
+				'relation' => 'AND',
+				[
+					'is_multisite' => false,
+				]
+			],
 		],
 		[
 			'id'    => 'two_fa_users_table',

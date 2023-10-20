@@ -270,13 +270,13 @@ function rsssl_menu() {
 							'helpLink'             => 'https://really-simple-ssl.com/instructions/about-login-protection/?mtm_campaign=instructions&mtm_source=free',
 							'groups'  => [
 								[
-									'id'            => 'two_fa_general',
-									'group_id'      => 'two_fa_general',
-									'premium'       => true,
-									'premium_text'  => __( "Get Login Protection with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
-									'helpLink'      => 'https://really-simple-ssl.com/instructions/about-login-protection',
-									'title'         => __( 'General', 'really-simple-ssl' ),
-									'intro'         => __( 'Bad password and login management is the number one cause for account theft. Enhance login security per user role to prevent account theft.', 'really-simple-ssl' ),
+									'id'       => 'two_fa_general',
+									'group_id' => 'two_fa_general',
+									'premium'              => true,
+									'premium_text'         => __( "Get Login Protection with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
+									'helpLink' => 'https://really-simple-ssl.com/instructions/two-factor-authentication',
+									'title'    => __( 'General', 'really-simple-ssl' ),
+									'intro'    => __( 'Enhancing the authentication process and optimizing user management makes Login Protection a foundational element in securing your website.', 'really-simple-ssl' ),
 								],
 								[
 									'id'            => 'two_fa_email',
@@ -296,16 +296,16 @@ function rsssl_menu() {
 									'title'         => __( 'Users', 'really-simple-ssl' ),
 									'intro'         => __( 'Here you can see which users have enabled two-step login, or change the status per user.', 'really-simple-ssl' ),
 									'groupFilter'  => [
-										'default' => 'two_fa_user_filter_all',
+										'default' => 'active',
 										'id'      => 'two_fa_user_filter',
 										'options' => [
 											[
-												'id'    => 'email',
+												'id'    => 'active',
 												'title' => __('Active', 'really-simple-ssl'),
 											],
 											[
 												'id'    => 'open',
-												'title' => __('Pending', 'really-simple-ssl'),
+												'title' => __('Open', 'really-simple-ssl'),
 											],
 											[
 												'id'    => 'disabled',
