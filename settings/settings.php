@@ -54,16 +54,39 @@ add_filter('rest_url', 'rsssl_fix_rest_url_for_wpml', 10, 4);
  *
  * @return array
  */
-function rsssl_get_chunk_translations( $dir ) {
+function rsssl_get_chunk_translations() {
 	//get all files from the settings/build folder
-	$buildDirPath = rsssl_path . $dir;
+	$files = scandir(rsssl_path . 'settings/build');
+	$json_translations = [];
+	foreach ($files as $file) {
+        if (strpos($file, '.js') === false) {
+            continue;
+        }
+		$chunk_handle = 'rsssl-chunk-'.$file;
+        //temporarily register the script, so we can get a translations object.
+		wp_register_script( $chunk_handle, plugins_url('build/'.$file, __FILE__), [], true );
+        $localeData = load_script_textdomain( $chunk_handle, 'really-simple-ssl' );
+        if (!empty($localeData)){
+	        $json_translations[] = $localeData;
+        }
+		wp_deregister_script( $chunk_handle );
+	}
+    return $json_translations;
+}
+
+
+function rsssl_plugin_admin_scripts()
+{
+	// replace with the actual path to your build directory
+	$buildDirPath = plugin_dir_path(__FILE__) . '/build';
+
+	// get the filenames in the build directory
 	$filenames = scandir($buildDirPath);
 
 	// filter the filenames to get the JavaScript and asset filenames
 	$jsFilename = '';
 	$assetFilename = '';
-	$json_translations = [];
-	foreach ( $filenames as $filename ) {
+	foreach ($filenames as $filename) {
 		if (strpos($filename, 'index.') === 0) {
 			if (substr($filename, -3) === '.js') {
 				$jsFilename = $filename;
@@ -71,81 +94,51 @@ function rsssl_get_chunk_translations( $dir ) {
 				$assetFilename = $filename;
 			}
 		}
-
-		if ( strpos($filename, '.js') === false ) {
-			continue;
-		}
-
-		$chunk_handle = 'rsssl-chunk-'.$filename;
-		//temporarily register the script, so we can get a translations object.
-		wp_register_script( $chunk_handle, plugins_url('build/'.$filename, __FILE__), [], true );
-		$localeData = load_script_textdomain( $chunk_handle, 'really-simple-ssl' );
-		if (!empty($localeData)){
-			$json_translations[] = $localeData;
-		}
-		wp_deregister_script( $chunk_handle );
 	}
 
-    $asset_file =  require( $buildDirPath . '/' . $assetFilename );
-    if ( empty($jsFilename) ) {
-        return [];
-    }
-
-	return [
-		'json_translations' => $json_translations,
-		'js_file'           => $jsFilename,
-		'dependencies'      => $asset_file['dependencies'],
-		'version'           => $asset_file['version'],
-	];
-}
-
-
-function rsssl_plugin_admin_scripts()
-{
-    $js_data = rsssl_get_chunk_translations('settings/build');
-    if ( empty($js_data) ) {
-        return;
-    }
-
 	// check if the necessary files are found
-    $handle = 'rsssl-settings';
-    wp_enqueue_script(
-	    $handle,
-        plugins_url( 'build/' . $js_data['js_file'], __FILE__ ),
-	    $js_data['dependencies'],
-	    $js_data['version'],
-        true
-    );
-    wp_set_script_translations($handle, 'really-simple-ssl');
-    wp_localize_script(
-	    $handle,
-        'rsssl_settings',
-        apply_filters('rsssl_localize_script', [
-            'json_translations' => $js_data['json_translations'],
-            'menu' => rsssl_menu(),
-            'site_url' => get_rest_url(),
-            'plugins_url' => admin_url('update-core.php'),
-            'admin_ajax_url' => add_query_arg(
-                array(
-                    'type' => 'errors',
-                    'action' => 'rsssl_rest_api_fallback'
-                ),
-                admin_url('admin-ajax.php')),
-            'dashboard_url' => add_query_arg(['page' => 'really-simple-security'], rsssl_admin_url()),
-            'letsencrypt_url' => rsssl_letsencrypt_wizard_url(),
-            'le_generated_by_rsssl' => rsssl_generated_by_rsssl(),
-            'upgrade_link' => is_multisite() ? 'https://really-simple-ssl.com/pro/?mtm_campaign=fallback&mtm_source=free&mtm_content=upgrade' : 'https://really-simple-ssl.com/pro/?mtm_campaign=fallback&mtm_source=free&mtm_content=upgrade',
-            'plugin_url' => rsssl_url,
-            'network_link' => network_site_url('plugins.php'),
-            'pro_plugin_active' => defined('rsssl_pro_version'),
-            'pro_incompatible' => defined('rsssl_pro_version') && rsssl_incompatible_premium_version(),
-            'networkwide_active' => !is_multisite() || rsssl_is_networkwide_active(),//true for single sites and network wide activated
-            'nonce' => wp_create_nonce('wp_rest'),//to authenticate the logged in user
-            'rsssl_nonce' => wp_create_nonce('rsssl_nonce'),
-            'wpconfig_fix_required' => RSSSL()->admin->do_wpconfig_loadbalancer_fix() && !RSSSL()->admin->wpconfig_has_fixes(),
-        ])
-    );
-
+	if ($jsFilename !== '' && $assetFilename !== '') {
+		$assetFilePath = $buildDirPath . '/' . $assetFilename;
+		$assetFile     = require( $assetFilePath );
+		$handle = 'rsssl-settings';
+		wp_enqueue_script( $handle);
+		wp_enqueue_script(
+			'rsssl-settings',
+			plugins_url( 'build/' . $jsFilename, __FILE__ ),
+			$assetFile['dependencies'],
+			$assetFile['version'],
+			true
+		);
+		wp_set_script_translations($handle, 'really-simple-ssl');
+		wp_localize_script(
+			'rsssl-settings',
+			'rsssl_settings',
+			apply_filters('rsssl_localize_script', [
+				'json_translations' => rsssl_get_chunk_translations(),
+				'menu' => rsssl_menu(),
+				'site_url' => get_rest_url(),
+				'plugins_url' => admin_url('update-core.php'),
+				'admin_ajax_url' => add_query_arg(
+					array(
+						'type' => 'errors',
+						'action' => 'rsssl_rest_api_fallback'
+					),
+					admin_url('admin-ajax.php')),
+				'dashboard_url' => add_query_arg(['page' => 'really-simple-security'], rsssl_admin_url()),
+				'letsencrypt_url' => rsssl_letsencrypt_wizard_url(),
+				'le_generated_by_rsssl' => rsssl_generated_by_rsssl(),
+				'upgrade_link' => is_multisite() ? 'https://really-simple-ssl.com/pro/?mtm_campaign=fallback&mtm_source=free&mtm_content=upgrade' : 'https://really-simple-ssl.com/pro/?mtm_campaign=fallback&mtm_source=free&mtm_content=upgrade',
+				'plugin_url' => rsssl_url,
+				'network_link' => network_site_url('plugins.php'),
+				'pro_plugin_active' => defined('rsssl_pro_version'),
+				'pro_incompatible' => defined('rsssl_pro_version') && rsssl_incompatible_premium_version(),
+				'networkwide_active' => !is_multisite() || rsssl_is_networkwide_active(),//true for single sites and network wide activated
+				'nonce' => wp_create_nonce('wp_rest'),//to authenticate the logged in user
+				'rsssl_nonce' => wp_create_nonce('rsssl_nonce'),
+				'wpconfig_fix_required' => RSSSL()->admin->do_wpconfig_loadbalancer_fix() && !RSSSL()->admin->wpconfig_has_fixes(),
+			])
+		);
+	}
 }
 
 /**
@@ -167,8 +160,8 @@ function rsssl_add_option_menu()
     $count            = RSSSL()->admin->count_plusones();
     $update_count     = $count > 0 ? "<span class='update-plugins rsssl-update-count'><span class='update-count'>$count</span></span>" : "";
     $page_hook_suffix = add_options_page(
-        __("SSL & Security", "really-simple-ssl"),
-        __("SSL & Security", "really-simple-ssl").$update_count,
+        __("SSL settings", "really-simple-ssl"),
+        __("SSL", "really-simple-ssl").$update_count,
         'manage_security',
         'really-simple-security',
         'rsssl_settings_page'
@@ -362,18 +355,8 @@ function rsssl_do_action($request, $ajax_data = false)
             $response = $mailer->send_test_mail();
             break;
         case 'send_verification_mail':
-            //get fields from data. The new email might not be saved yet. We need to get it from the data.
-	        $data = $ajax_data ?: $request->get_json_params();
-            $fields = $data['fields'] ?? [];
-            $email = get_bloginfo('admin_email');
-            foreach($fields as $field ){
-                if ( $field['id'] === 'notifications_email_address' ){
-                    $email = $field['value'];
-                }
-            }
             $mailer = new rsssl_mailer();
-            $mailer->to = sanitize_email($email);
-            $response = $mailer->send_verification_mail( );
+            $response = $mailer->send_verification_mail( rsssl_get_option('notifications_email_address') );
             break;
         case 'plugin_actions':
             $response = rsssl_plugin_actions($data);
@@ -385,9 +368,7 @@ function rsssl_do_action($request, $ajax_data = false)
             $response = rsssl_other_plugins_data();
             break;
         case 'get_roles':
-            $roles = rsssl_get_roles();
-	        $response = [];
-	        $response['roles'] = $roles;
+            $response = rsssl_get_roles( $data );
             break;
         default:
 	        $response = apply_filters("rsssl_do_action", [], $action, $data);
@@ -834,8 +815,8 @@ function rsssl_sanitize_field($value, string $type, string $id)
             return $value;
         case 'two_fa_roles':
 	        $value = !is_array($value) ? [] : $value;
-            $roles = rsssl_get_roles();
-	        $roles = array_values($roles);
+            $roles = rsssl_get_roles([]);
+	        $roles = $roles['roles'];
             foreach ($value as $index => $role) {
                 if (! in_array( $role, $roles, true ) ) {
                     unset($value[$index]);
@@ -1114,7 +1095,7 @@ function rsssl_conditions_apply(array $conditions)
  *
  * @return array An array of roles, each role being an associative array with 'label' and 'value' keys.
  */
-function rsssl_get_roles( ): array {
+function rsssl_get_roles( $data ) {
 	if ( ! rsssl_admin_logged_in() ) {
 		return [];
 	}
@@ -1135,5 +1116,29 @@ function rsssl_get_roles( ): array {
 		wp_cache_set( 'rsssl_roles', $roles );
 	}
 
-	return $roles;
+	/*
+	// Filter out forced roles that are also in optional roles
+	$optional_roles = rsssl_get_option('two_fa_optional_roles');
+	$forced_roles = rsssl_get_option('two_fa_forced_roles');
+
+	// Make sure $optional_roles and $forced_roles are arrays
+	if ( ! is_array( $optional_roles ) ) {
+		$optional_roles = [];
+	}
+	if ( ! is_array( $forced_roles ) ) {
+		$forced_roles = [];
+	}
+
+	// If no role is selected in either dropdown, show all roles in both dropdowns
+	if ( ! empty( $optional_roles ) || ! empty( $forced_roles ) ) {
+		$roles = array_filter($roles, function($role) use ($optional_roles, $forced_roles) {
+			return !in_array($role, $optional_roles) && !in_array($role, $forced_roles);
+		});
+	}
+	*/
+
+	$output['roles'] = array_values($roles); // Reset array keys
+	$output['request_success'] = true;
+
+	return $output;
 }

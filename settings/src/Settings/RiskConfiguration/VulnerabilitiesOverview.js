@@ -3,14 +3,12 @@ import useRiskData from "./RiskData";
 import React, {useEffect, useState} from 'react';
 import DataTable, {createTheme} from "react-data-table-component";
 import useFields from "../FieldsData";
-import VulnerabilitiesIntro from "./VulnerabilitiesIntro";
 import useProgress from "../../Dashboard/Progress/ProgressData";
 import useRunnerData from "./RunnerData";
 import './datatable.scss';
 
 const VulnerabilitiesOverview = (props) => {
     const {getProgressData} = useProgress();
-    const {introCompleted, showIntro, setShowIntro} = useRunnerData();
     const [enabled, setEnabled] = useState(false);
 
     const {
@@ -82,23 +80,16 @@ const VulnerabilitiesOverview = (props) => {
             handleNextButtonDisabled(false);
         }
 
-        let introShown = getFieldValue('vulnerabilities_intro_shown') == 1;
+        // let introShown = getFieldValue('vulnerabilities_intro_shown') == 1;
         if ( !vulnerabilityDetectionEnabledAndSaved ) {
             return;
         }
         setDataLoaded(false);
-        if ( !introShown && !introCompleted) {
-            setShowIntro(true);
-        }
 
     }, [ getFieldValue('enable_vulnerability_scanner') ]);
 
     useEffect(() => {
         if ( dataLoaded ) {
-            return;
-        }
-        let introShown = getFieldValue('vulnerabilities_intro_shown') == 1;
-        if ( showIntro && !introShown ) {
             return;
         }
 
@@ -115,14 +106,11 @@ const VulnerabilitiesOverview = (props) => {
         await fetchVulnerabilities();
         await getProgressData();
     }
-    if (!enabled) {
+
+    if ( ! enabled ) {
         return (
             //If there is no data or vulnerabilities scanner is disabled we show some dummy data behind a mask
             <>
-                {showIntro && <>
-                    <VulnerabilitiesIntro/>
-                </>
-                }
                 <DataTable
                     columns={columns}
                     data={dummyData}
@@ -158,10 +146,6 @@ const VulnerabilitiesOverview = (props) => {
 
     return (
         <>
-            {showIntro && <>
-                <VulnerabilitiesIntro/>
-            </>
-            }
             {/* We add a searchbox */}
             <div className="rsssl-container">
                 <div>
