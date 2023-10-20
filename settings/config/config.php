@@ -416,15 +416,6 @@ function rsssl_fields( $load_values = true ) {
             'disabled' => false,
             'default'  => 'disabled',
         ],
-        [
-            'id'       => 'login_protection_enabled',
-            'menu_id'  => 'two_fa',
-            'group_id' => 'two_fa_general',
-			'type'     => 'checkbox',
-			'label'    => __( "Enable login protection", 'really-simple-ssl' ),
-			'disabled' => false,
-			'default'  => true,
-		],
 		[
 			'id'                   => 'do_not_edit_htaccess', //field is removed if not enabled
 			'menu_id'              => 'general',
@@ -758,6 +749,15 @@ function rsssl_fields( $load_values = true ) {
 					'column'   => 'deleteControl',
 				],
 			],
+		],
+		[
+			'id'       => 'login_protection_enabled',
+			'menu_id'  => 'two-fa',
+			'group_id' => 'two_fa_general',
+			'type'     => 'checkbox',
+			'label'    => __( "Enable login protection", 'really-simple-ssl' ),
+			'disabled' => false,
+			'default'  => true,
 		],
 		[
 			'id'       => 'two_fa_email_code',
