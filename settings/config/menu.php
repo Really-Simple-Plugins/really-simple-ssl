@@ -199,8 +199,8 @@ function rsssl_menu() {
 							'helpLink' => 'https://really-simple-ssl.com/instructions/about-vulnerabilities#notifications',
 						],
 						[
-							'id' => 'vulnerabilities_measures_overview',
-							'group_id' => 'vulnerabilities_measures_overview',
+							'id' => 'vulnerabilities-measures-overview',
+							'group_id' => 'vulnerabilities-measures-overview',
 							'title' => __( 'Measures', 'really-simple-ssl' ),
 							'groups'  => [
 								[
@@ -229,14 +229,14 @@ function rsssl_menu() {
 					'featured' => false,
 					'menu_items' => [
 						[
-							'id'        => 'hardening_basic',
-							'group_id'  => 'hardening_basic',
+							'id'        => 'hardening-basic',
+							'group_id'  => 'hardening-basic',
 							'title'     => __( 'Basic', 'really-simple-ssl' ),
 							'helpLink'  => 'https://really-simple-ssl.com/instructions/about-hardening-features/?mtm_campaign=instructions&mtm_source=free',
 						],
 						[
-							'id'        => 'hardening_extended',
-							'group_id'  => 'hardening_extended',
+							'id'        => 'hardening-extended',
+							'group_id'  => 'hardening-extended',
 							'title'     => __( 'Advanced', 'really-simple-ssl' ),
 							'premium'   => true,
 							'upgrade'   => 'https://really-simple-ssl.com/instructions/about-hardening-features#advanced/?mtm_campaign=upgrade&mtm_source=free',
@@ -244,8 +244,8 @@ function rsssl_menu() {
 							'premium_text' => __( "Get Advanced Hardening with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
 						],
 						[
-							'id'        => 'hardening_xml',
-							'group_id'  => 'hardening_xml',
+							'id'        => 'hardening-xml',
+							'group_id'  => 'hardening-xml',
 							'title'     => __( 'XML-RPC', 'really-simple-ssl' ),
 							'premium'   => true,
 							'upgrade'   => 'https://really-simple-ssl.com/instructions/about-hardening-features#xml-rpc?mtm_campaign=upgrade&mtm_source=free',
