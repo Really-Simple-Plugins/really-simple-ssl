@@ -367,9 +367,11 @@ function rsssl_do_action($request, $ajax_data = false)
         case 'otherpluginsdata':
             $response = rsssl_other_plugins_data();
             break;
-        case 'get_roles':
-            $response = rsssl_get_roles( $data );
-            break;
+	    case 'get_roles':
+		    $roles = rsssl_get_roles();
+		    $response = [];
+		    $response['roles'] = $roles;
+		    break;
         default:
 	        $response = apply_filters("rsssl_do_action", [], $action, $data);
     }
@@ -1095,7 +1097,7 @@ function rsssl_conditions_apply(array $conditions)
  *
  * @return array An array of roles, each role being an associative array with 'label' and 'value' keys.
  */
-function rsssl_get_roles( $data ) {
+function rsssl_get_roles( ): array {
 	if ( ! rsssl_admin_logged_in() ) {
 		return [];
 	}
@@ -1116,29 +1118,5 @@ function rsssl_get_roles( $data ) {
 		wp_cache_set( 'rsssl_roles', $roles );
 	}
 
-	/*
-	// Filter out forced roles that are also in optional roles
-	$optional_roles = rsssl_get_option('two_fa_optional_roles');
-	$forced_roles = rsssl_get_option('two_fa_forced_roles');
-
-	// Make sure $optional_roles and $forced_roles are arrays
-	if ( ! is_array( $optional_roles ) ) {
-		$optional_roles = [];
-	}
-	if ( ! is_array( $forced_roles ) ) {
-		$forced_roles = [];
-	}
-
-	// If no role is selected in either dropdown, show all roles in both dropdowns
-	if ( ! empty( $optional_roles ) || ! empty( $forced_roles ) ) {
-		$roles = array_filter($roles, function($role) use ($optional_roles, $forced_roles) {
-			return !in_array($role, $optional_roles) && !in_array($role, $forced_roles);
-		});
-	}
-	*/
-
-	$output['roles'] = array_values($roles); // Reset array keys
-	$output['request_success'] = true;
-
-	return $output;
+	return $roles;
 }
