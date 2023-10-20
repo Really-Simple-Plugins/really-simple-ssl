@@ -160,8 +160,8 @@ function rsssl_add_option_menu()
     $count            = RSSSL()->admin->count_plusones();
     $update_count     = $count > 0 ? "<span class='update-plugins rsssl-update-count'><span class='update-count'>$count</span></span>" : "";
     $page_hook_suffix = add_options_page(
-        __("SSL settings", "really-simple-ssl"),
-        __("SSL", "really-simple-ssl").$update_count,
+        __("SSL & Security", "really-simple-ssl"),
+        __("SSL & Security", "really-simple-ssl").$update_count,
         'manage_security',
         'really-simple-security',
         'rsssl_settings_page'
