@@ -116,6 +116,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 * Fix: remove flags .js file which was added twice, props @adamainsworth
 * Fix: typo in missing advanced-headers.php notice
 * Improvement: new save & continue feedback
+* Improvement: new react based modal
 
 = 7.1.3 =
 * October 11th 2023
