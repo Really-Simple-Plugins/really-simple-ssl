@@ -760,20 +760,11 @@ function rsssl_fields( $load_values = true ) {
 			],
 		],
 		[
-			'id'       => 'two_fa_enabled',
-			'menu_id'  => 'two-fa',
-			'group_id' => 'two_fa_general',
-			'type'     => 'checkbox',
-			'label'    => __( "Enable login protection", "really-simple-ssl-pro" ),
-			'disabled' => false,
-			'default'  => 'disabled',
-		],
-		[
 			'id'       => 'two_fa_email_code',
 			'menu_id'  => 'two-fa',
 			'group_id' => 'two_fa_email',
 			'type'     => 'checkbox',
-			'label'    => __( "Enable two-step verification", "really-simple-ssl-pro" ),
+			'label'    => __( "Enable two-step verification", "really-simple-ssl" ),
 			'tooltip'  => __( "This will send emails from your server, containing a verification code to users that try to login.", 'really-simple-ssl' ),
 			'disabled' => false,
 			'default'  => 'disabled',
@@ -783,7 +774,7 @@ function rsssl_fields( $load_values = true ) {
 			'menu_id'  => 'two-fa',
 			'group_id' => 'two_fa_email',
 			'type'     => 'two_fa_roles',
-			'label'    => __( "Optional for:", "really-simple-ssl-pro" ),
+			'label'    => __( "Optional for:", "really-simple-ssl" ),
 			'tooltip'  => __( "Two-step login will be enabled for these user roles, with the possibility to skip. If a user skips, Two-step login will be disabled for this user.", 'really-simple-ssl' ),
 		],
 		[
@@ -791,7 +782,7 @@ function rsssl_fields( $load_values = true ) {
 			'menu_id'  => 'two-fa',
 			'group_id' => 'two_fa_email',
 			'type'     => 'two_fa_roles',
-			'label'    => __( "Force on:", "really-simple-ssl-pro" ),
+			'label'    => __( "Force on:", "really-simple-ssl" ),
 			'tooltip'  => __( "These user roles are forced to enter the authentication code, without the possibility to skip.", 'really-simple-ssl' ),
 		],
 		[
@@ -843,7 +834,7 @@ function rsssl_fields( $load_values = true ) {
 			'menu_id'     => 'mixedcontentscan',
 			'group_id'    => 'mixedcontentscan',
 			'type'        => 'mixedcontentscan',
-			'label'       => __( "Mixed content scan", "really-simple-ssl-pro" ),
+			'label'       => __( "Mixed content scan", "really-simple-ssl" ),
 			'help'        => [
 				'label' => 'default',
 				'url' => 'https://really-simple-ssl.com/definition/what-is-mixed-content/?mtm_campaign=definition&mtm_source=free',
