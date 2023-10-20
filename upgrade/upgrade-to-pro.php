@@ -51,8 +51,8 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 						$this->account_url = 'https://really-simple-ssl.com/account';
 						$this->instructions = 'https://really-simple-ssl.com/knowledge-base/install-really-simple-ssl-pro';
 						break;
-					case "brst_pro":
-						$this->slug = "burst";
+					case "burst_pro":
+						$this->slug = "burst-pro/burst-pro.php";
 						$this->plugin_name = "Burst";
 						$this->plugin_constant = "burst_pro";
 						$this->prefix = "burst_";
@@ -149,7 +149,7 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 				'install_url' => 'burst%20statistics%20hesseldejong%20%20burst-statistics.com&tab=search&type=term',
 			];
 
-			if ( $plugin_to_be_installed === 'really-simple-ssl' ){
+			if ( $plugin_to_be_installed === 'really-simple-ssl' || $plugin_to_be_installed === 'burst' ){
 				$suggestion = [
 					'icon_url' => $dir_url.'complianz-gdpr.png',
 					'constant' => 'cmplz_version',

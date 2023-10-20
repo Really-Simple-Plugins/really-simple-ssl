@@ -8,7 +8,6 @@ import useOnboardingData from "./Onboarding/OnboardingData";
 import useModal from "./Modal/ModalData";
 import {setLocaleData} from "@wordpress/i18n";
 import ErrorBoundary from "./utils/ErrorBoundary";
-
 const Page = () => {
     const {error, fields, changedFields, fetchFieldsData, updateFieldsData, fieldsLoaded} = useFields();
     const {showOnboardingModal, fetchOnboardingModalStatus, modalStatusLoaded,} = useOnboardingData();
@@ -19,6 +18,7 @@ const Page = () => {
     const [DashboardPage, setDashboardPage] = useState(null);
     const [Notices, setNotices] = useState(null);
     const [Menu, setMenu] = useState(null);
+    const [ToastContainer, setToastContainer] = useState(null);
 
     useEffect(() => {
         if ( !modalStatusLoaded ) {
@@ -83,6 +83,14 @@ const Page = () => {
 
     }, [showModal]);
 
+    // async load react-toastify
+    useEffect(() => {
+        import('react-toastify').then((module) => {
+            const ToastContainer = module.ToastContainer;
+            setToastContainer(() => ToastContainer);
+        });
+    }, []);
+
     useEffect( () => {
         if ( fieldsLoaded ) {
             fetchMenuData(fields);
@@ -133,6 +141,18 @@ const Page = () => {
                     </>
 
             }
+            {ToastContainer && (
+                <ToastContainer
+                    position="bottom-right"
+                    autoClose={2000}
+                    limit={3}
+                    hideProgressBar
+                    newestOnTop
+                    closeOnClick
+                    pauseOnFocusLoss
+                    pauseOnHover
+                    theme="light"
+                /> )}
         </div>
     );
 

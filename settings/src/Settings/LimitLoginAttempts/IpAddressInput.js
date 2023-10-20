@@ -1,9 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {__} from "@wordpress/i18n";
 import Icon from "../../utils/Icon";
-import IpAddressDataTableStore   from "./IpAddressDataTableStore";
-
-
+import IpAddressDataTableStore from "./IpAddressDataTableStore";
 
 
 /**
@@ -17,7 +15,7 @@ const IpAddressInput = (props) => {
 
     const [value, setValue] = useState("");
     const [error, setError] = useState(false);
-    const { maskError } = IpAddressDataTableStore();
+    const {maskError, setMaskError} = IpAddressDataTableStore();
 
     let is_checked = props.switchValue ? 'is-checked' : '';
 
@@ -39,12 +37,16 @@ const IpAddressInput = (props) => {
                 />
                 {/* if icon is active, show it */}
                 {props.showSwitch && (
-                    <p>
-                        <div className="components-base-control components-toggle-control">
-                            <div className="components-base-control__field">
-                                <div data-wp-component="HStack" className="components-flex components-h-stack">
-                                    <label className="components-toggle-control__label">{props.switchTitle}</label>
-                                <span className={"components-form-toggle " + is_checked}>
+                    <>
+                        <div style={{
+                            marginTop: '10px',
+                            marginBottom: '10px',
+                        }}>
+                            <div className="components-base-control components-toggle-control">
+                                <div className="components-base-control__field">
+                                    <div data-wp-component="HStack" className="components-flex components-h-stack">
+                                        <label className="components-toggle-control__label">{props.switchTitle}  </label>
+                                        <span className={"components-form-toggle " + is_checked}>
                                     <input
                                         onKeyDown={props.switchAction}
                                         checked={props.switchValue}
@@ -55,10 +57,11 @@ const IpAddressInput = (props) => {
                                     <span className="components-form-toggle__track"></span>
                                     <span className="components-form-toggle__thumb"></span>
                                  </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </p>
+                    </>
 
                 )}
             </div>

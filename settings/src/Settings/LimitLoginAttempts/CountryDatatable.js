@@ -2,11 +2,14 @@ import React, { useEffect, useState, useCallback } from 'react';
 import DataTable, { createTheme } from "react-data-table-component";
 import CountryDataTableStore from "./CountryDataTableStore";
 import EventLogDataTableStore from "../EventLog/EventLogDataTableStore";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import FilterData from "../FilterData";
 import Flag from "../../utils/Flag/Flag";
 import { button } from "@wordpress/components";
 import { __ } from '@wordpress/i18n';
 import useFields from "../FieldsData";
+import Icon from "../../utils/Icon";
 
 const CountryDatatable = (props) => {
     const {
@@ -22,11 +25,14 @@ const CountryDatatable = (props) => {
         handleCountryTableSort,
         handleCountryTableSearch,
         addRegion,
+        addRegions,
         removeRegion,
+        removeRegions,
         addRowMultiple,
         removeRowMultiple,
         resetRow,
         resetMultiRow,
+        dataActions,
     } = CountryDataTableStore();
 
     const {
@@ -47,6 +53,8 @@ const CountryDatatable = (props) => {
     const {fields, fieldAlreadyEnabled, getFieldValue} = useFields();
 
     const buildColumn = useCallback((column) => ({
+        //if the filter is set to region and the columns = status we do not want to show the column
+        omit: getCurrentFilter(moduleName) === 'regions' && column.column === 'status',
         name: column.name,
         sortable: column.sortable,
         searchable: column.searchable,
@@ -55,23 +63,12 @@ const CountryDatatable = (props) => {
         column: column.column,
         selector: row => row[column.column],
     }), []);
-
-    const columns = props.field.columns.map(buildColumn);
+    let field = props.field;
+    const columns = field.columns.map(buildColumn);
 
     const searchableColumns = columns
         .filter(column => column.searchable)
         .map(column => column.column);
-
-    //get data if field was already enabled, so not changed right now.
-    useEffect(() => {
-        if (fieldAlreadyEnabled && !dataLoaded) {
-            fetchCountryData(props.field.action);
-        }
-    }, [fieldAlreadyEnabled, dataLoaded, fetchCountryData, props.field.action]);
-
-    useEffect(() => {
-        // code to execute after DynamicDataTable has been updated
-    }, [DynamicDataTable]);
 
     useEffect(() => {
         const currentFilter = getCurrentFilter(moduleName);
@@ -92,10 +89,20 @@ const CountryDatatable = (props) => {
     }, [CountryDataTable]);
 
     useEffect(() => {
-        if (!dataLoaded) {
-            fetchCountryData(props.field.action);
+        if (fieldAlreadyEnabled) {
+            if (!dataLoaded) {
+                fetchDynamicData(field.action);
+            }
         }
-    }, [dataLoaded, props.field.action, fetchCountryData]);
+    }, [fields]);
+
+    //if the dataActions are changed, we fetch the data
+    useEffect(() => {
+        //we make sure the dataActions are changed in the store before we fetch the data
+        if (dataActions) {
+            fetchCountryData(field.action, dataActions)
+        }
+    }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page]);
 
     let enabled = false;
 
@@ -130,14 +137,18 @@ const CountryDatatable = (props) => {
         setRowsSelected(state.selectedRows);
     }, []);
 
-    const allowRegionByCode = async (code) => {
+    const allowRegionByCode = async (code, regionName = '') => {
         if (Array.isArray(code)) {
-            for (let item of code) {
-                await removeRegion(item, 'blocked');
-            }
+            const ids = code.map(item => item.id);
+            const regions = code.map(item => item.region);
+            removeRegions(ids);
+            let regionsString = regions.join(', ');
+            notifySuccess(regionsString + ' ' + __('has been removed', 'really-simple-ssl'));
             setRowsSelected([]);
         } else {
-            await removeRegion(code, 'blocked');
+            await removeRegion(code, 'blocked').then(() => {
+                notifySuccess(regionName + ' ' + __('has been allowed', 'really-simple-ssl'));
+            });
         }
         setRowCleared(true);
         await new Promise(resolve => setTimeout(resolve, 100));
@@ -155,17 +166,23 @@ const CountryDatatable = (props) => {
         resetRow(id, 'blocked');
     }, [resetRow]);
 
-    const blockRegionByCode = useCallback((code) => {
+    const blockRegionByCode = useCallback(async (code, region = '') => {
         if (Array.isArray(code)) {
-            code.forEach(item => addRegion(item.attempt_value, 'blocked'));
+           const ids = code.map(item => item.id);
+           const regions = code.map(item => item.region);
+           addRegions(ids, 'blocked');
+           let regionsString = regions.join(', ');
+           notifySuccess(regionsString + ' ' + __('has been blocked', 'really-simple-ssl'));
             setRowsSelected([]);
         } else {
-            addRegion(code, 'blocked');
+            addRegion(code, 'blocked').then(() => {
+                notifySuccess(region + ' ' + __('has been blocked', 'really-simple-ssl'));
+            });
         }
         setTimeout(() => {
             setRowCleared(true);
             setTimeout(() => setRowCleared(false), 100);
-            setTimeout(() =>  fetchDynamicData('event_log'), 100);
+            setTimeout(() => fetchDynamicData('event_log'), 100);
         }, 100);
 
     }, [addRegion]);
@@ -234,7 +251,7 @@ const CountryDatatable = (props) => {
         </div>
     );
 
-    const generateActionButtons = useCallback((id, status) => (
+    const generateActionButtons = useCallback((id, status, region_name) => (
         <div className="rsssl-action-buttons">
             {getCurrentFilter(moduleName) === 'blocked' && (
                 <ActionButton onClick={() => allowById(id)} className="button-secondary">
@@ -243,10 +260,10 @@ const CountryDatatable = (props) => {
             )}
             {getCurrentFilter(moduleName) === 'regions' && (
                 <>
-                    <ActionButton onClick={() => blockRegionByCode(id)} className="button-primary">
+                    <ActionButton onClick={() => blockRegionByCode(id, region_name)} className="button-primary">
                         {__("Block", "really-simple-ssl")}
                     </ActionButton>
-                    <ActionButton onClick={() => allowRegionByCode(id)} className="button-secondary">
+                    <ActionButton onClick={() => allowRegionByCode(id, region_name)} className="button-secondary">
                         {__("Allow", "really-simple-ssl")}
                     </ActionButton>
                 </>
@@ -272,11 +289,12 @@ const CountryDatatable = (props) => {
     for (const key in data) {
         const dataItem = {...data[key]};
         if (getCurrentFilter(moduleName) === 'regions' || getCurrentFilter(moduleName) === 'countries') {
-            dataItem.action = generateActionButtons(dataItem.attempt_value, dataItem.status);
+            dataItem.action = generateActionButtons(dataItem.attempt_value, dataItem.status, dataItem.region);
         } else {
             dataItem.action = generateActionButtons(dataItem.id);
         }
         dataItem.attempt_value = generateFlag(dataItem.attempt_value, dataItem.country_name);
+        dataItem.status = __(dataItem.status = dataItem.status.charAt(0).toUpperCase() + dataItem.status.slice(1), 'really-simple-ssl');
         data[key] = dataItem;
     }
 
@@ -294,8 +312,23 @@ const CountryDatatable = (props) => {
 
     const options = Object.entries(props.field.options).map(([value, label]) => ({ value, label }));
 
+    const notifySuccess = (message) => toast.success(message);
+    const notifyError = (message) => toast.error(message);
+
     return (
         <>
+            {ToastContainer && (
+                <ToastContainer
+                    position="bottom-right"
+                    autoClose={10000}
+                    limit={3}
+                    hideProgressBar
+                    newestOnTop
+                    closeOnClick
+                    pauseOnFocusLoss
+                    pauseOnHover
+                    theme="light"
+                /> )}
             <div className="rsssl-container">
                 <div>
                     {/* reserved for left side buttons */}
@@ -353,13 +386,24 @@ const CountryDatatable = (props) => {
                     </div>
                 </div>
             )}
+            {dataLoaded ?
             <DataTable
                 columns={columns}
                 data={Object.values(data)}
                 dense
                 pagination
                 paginationServer
-                paginationTotalRows={pagination.totalRows ?? 0}
+                paginationTotalRows={pagination.totalRows}
+                paginationPerPage={pagination.perPage ?? 10}
+                paginationDefaultPage={pagination.currentPage}
+                paginationComponentOptions={{
+                    rowsPerPageText: __('Rows per page:', 'really-simple-ssl'),
+                    rangeSeparatorText: __('of', 'really-simple-ssl'),
+                    noRowsPerPage: false,
+                    selectAllRowsItem: false,
+                    selectAllRowsItemText: __('All', 'really-simple-ssl'),
+
+                }}
                 onChangeRowsPerPage={handleCountryTableRowsChange}
                 onChangePage={handleCountryTablePageChange}
                 sortServer
@@ -372,7 +416,31 @@ const CountryDatatable = (props) => {
                 onSelectedRowsChange={handleSelection}
                 theme="really-simple-plugins"
                 customStyles={customStyles}
-            />
+            /> :
+            <div className="rsssl-spinner" style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginTop: "100px"
+            }}>
+                <div className="rsssl-spinner__inner">
+                    <div className="rsssl-spinner__icon" style={{
+                        border: '8px solid white',
+                        borderTop: '8px solid #f4bf3e',
+                        borderRadius: '50%',
+                        width: '120px',
+                        height: '120px',
+                        animation: 'spin 2s linear infinite'
+                    }}></div>
+                    <div className="rsssl-spinner__text" style={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                    }}>{__("Loading data, please stand by...", "really-simple-ssl")}</div>
+                </div>
+            </div>
+            }
             {!enabled && (
                 <div className="rsssl-locked">
                     <div className="rsssl-locked-overlay"><span
