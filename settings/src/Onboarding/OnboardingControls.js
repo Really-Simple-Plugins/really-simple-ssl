@@ -25,10 +25,7 @@ const OnboardingControls = ({isModal}) => {
 
     const goToDashboard = () => {
         if ( isModal ) {
-            console.log('dismissModal');
             dismissModal(true);
-        } else {
-            console.log("is not modal");
         }
         setSelectedMainMenuItem('dashboard');
     }

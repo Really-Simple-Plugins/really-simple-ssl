@@ -26,6 +26,8 @@ const RssslModal = ({title, subTitle, buttons, content, list, confirmAction, con
                     <ErrorBoundary fallback={"Error loading modal"}>
                         <Modal
                         className={"rsssl-modal"+modalCustomClass}
+                        shouldCloseOnClickOutside={false}
+                        shouldCloseOnEsc={false}
                         title={title}
                         onRequestClose={() => setOpen(false)}
                         open={isOpen}>

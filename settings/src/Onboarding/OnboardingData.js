@@ -46,7 +46,6 @@ const useOnboardingData = create(( set, get ) => ({
     },
     dismissModal: async (dismiss) => {
         let data={};
-        console.log("dismissModal", dismiss);
         data.dismiss = dismiss;
         let showOnboardingModal = get().showOnboardingModal;
         //dismiss is opposite of showOnboardingModal, so we check the inverse.

@@ -38,6 +38,7 @@ before_script:
   # Install project dependencies
   - php composer.phar install --ignore-platform-reqs
   - php composer.phar update
+
   # Set up WordPress test environment
   - bash bin/install-wp-tests.sh wordpress_test root mysql mysql $WP_VERSION
 
@@ -83,65 +84,19 @@ test:php7.4:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
     - if: $CI_COMMIT_BRANCH == 'master'
 
-# We test PHP7.4 with multisite
+# We test PHP 7.4 with multisite
 test:php7.4:multisite:
-  variables:
-    WP_MULTISITE: "1"
-    XDEBUG_VERSION: "3.1.6"
   image: php:7.4
-  script:
-    - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
-  rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-    - if: $CI_COMMIT_BRANCH == 'master'
-
-# We test PHP8.0
-test:php8.0:
-  image: php:8.0
-  variables:
-    XDEBUG_VERSION: "3.1.6"
-  script:
-    - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover --colors=never
-  rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-    - if: $CI_COMMIT_BRANCH == 'master'
-
-# We test PHP8 with multisite
-test:php8.0:multisite:
   variables:
     WP_MULTISITE: "1"
     XDEBUG_VERSION: "3.1.6"
-  image: php:8.0
   script:
     - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
     - if: $CI_COMMIT_BRANCH == 'master'
 
-# We test PHP8.1
-test:php8.1:
-  image: php:8.1
-  variables:
-    XDEBUG_VERSION: "3.1.6"
-  script:
-    - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover --colors=never
-  rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-    - if: $CI_COMMIT_BRANCH == 'master'
-
-# We test PHP8.1 with multisite
-test:php8.1:multisite:
-  variables:
-    WP_MULTISITE: "1"
-    XDEBUG_VERSION: "3.1.6"
-  image: php:8.1
-  script:
-    - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
-  rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-    - if: $CI_COMMIT_BRANCH == 'master'
-
-  # We test PHP8.1
+# We test PHP 8.2
 test:php8.2:
   image: php:8.2
   variables:
@@ -152,12 +107,37 @@ test:php8.2:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
     - if: $CI_COMMIT_BRANCH == 'master'
 
-# We test PHP8.1 with multisite
+# We test PHP 8.2 with multisite
 test:php8.2:multisite:
+  image: php:8.2
   variables:
     WP_MULTISITE: "1"
     XDEBUG_VERSION: "3.2.1"
+  script:
+    - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: $CI_COMMIT_BRANCH == 'master'
+
+# We test WordPress 5.9 with PHP 8.2
+test:php8.2:wordpress5.9:
   image: php:8.2
+  variables:
+    XDEBUG_VERSION: "3.2.1"
+    WP_VERSION: "5.9"
+  script:
+    - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover --colors=never
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: $CI_COMMIT_BRANCH == 'master'
+
+# We test WordPress 5.9 with PHP 8.2 and multisite
+test:php8.2:wordpress5.9:multisite:
+  image: php:8.2
+  variables:
+    WP_MULTISITE: "1"
+    XDEBUG_VERSION: "3.2.1"
+    WP_VERSION: "5.9"
   script:
     - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
   rules:
