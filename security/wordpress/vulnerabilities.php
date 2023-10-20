@@ -99,7 +99,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
                     $clear_admin_notices_cache = true;
 		        }
 	        }
-            if ($clear_admin_notices_cache) {
+            if ( $clear_admin_notices_cache ) {
 	            RSSSL()->admin->clear_admin_notices_cache();
             }
         }
@@ -114,8 +114,15 @@ if (!class_exists("rsssl_vulnerabilities")) {
 		    }
 
 		    if ( isset($_GET['rsssl_check_vulnerabilities']) || get_option('rsssl_reload_vulnerability_files') ) {
-                delete_option('rsssl_reload_vulnerability_files');
+			    delete_option('rsssl_reload_vulnerability_files');
 			    $this->reload_files_on_update();
+			    update_option('rsssl_clear_vulnerability_notices', true, false);
+			    set_transient('rsssl_delay_clear', true, 1 * MINUTE_IN_SECONDS );
+		    }
+
+		    if ( get_option('rsssl_clear_vulnerability_notices') && !get_transient('rsssl_delay_clear')) {
+			    RSSSL()->admin->clear_admin_notices_cache();
+			    delete_option('rsssl_clear_vulnerability_notices');
 		    }
 	    }
 
@@ -134,6 +141,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 		    $this->download_plugin_vulnerabilities();
 		    $this->download_core_vulnerabilities();
 		    $this->check_notice_reset();
+
 	    }
 
         public function init(): void {
