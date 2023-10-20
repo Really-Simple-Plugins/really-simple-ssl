@@ -4,6 +4,7 @@ import * as rsssl_api from "../utils/api";
 import sleeper from "../utils/sleeper.js";
 import {__} from '@wordpress/i18n';
 import {dispatch} from '@wordpress/data';
+import {toast} from 'react-toastify';
 
 const fetchFields = () => {
     return rsssl_api.getFields().then((response) => {
@@ -23,6 +24,7 @@ const useFields = create(( set, get ) => ({
     changedFields:[],
     progress:[],
     nextButtonDisabled:false,
+    overrideNextButtonDisabled:false,
     refreshTests:false,
     highLightField: '',
     setHighLightField: (highLightField) => {
@@ -30,7 +32,9 @@ const useFields = create(( set, get ) => ({
     },
 
     setRefreshTests: (refreshTests) => set(state => ({ refreshTests })),
-    handleNextButtonDisabled: (nextButtonDisabled) => set(state => ({ nextButtonDisabled })),
+    handleNextButtonDisabled: (nextButtonDisabled) => {
+        set({overrideNextButtonDisabled: nextButtonDisabled});
+    },
     setChangedField: (id, value) => {
         set(
             produce((state) => {
@@ -191,12 +195,24 @@ const useFields = create(( set, get ) => ({
     updateFieldsData: (selectedSubMenuItem) => {
         let fields = get().fields;
         fields = updateFieldsListWithConditions(fields);
-        const nextButtonDisabled = isNextButtonDisabled(fields, selectedSubMenuItem);
+
+        //only if selectedSubMenuItem is actually passed
+        if (selectedSubMenuItem) {
+            let nextButtonDisabled = isNextButtonDisabled(fields, selectedSubMenuItem);
+            //if the button was set to disabled with the handleNextButtonDisabled function, we give that priority until it's released.
+            if (get().overrideNextButtonDisabled) {
+                nextButtonDisabled = get().overrideNextButtonDisabled;
+            }
+            set(
+                produce((state) => {
+                    state.nextButtonDisabled = nextButtonDisabled;
+                })
+            )
+        }
 
         set(
             produce((state) => {
                 state.fields = fields;
-                state.nextButtonDisabled = nextButtonDisabled;
             })
         )
     },
@@ -250,18 +266,8 @@ const handleShowSavedSettingsNotice = (text) => {
     if (typeof text === 'undefined') {
         text = __( 'Settings Saved', 'really-simple-ssl' );
     }
-    dispatch('core/notices').createNotice(
-        'success',
-        text,
-        {
-            __unstableHTML: true,
-            id: 'rsssl_settings_saved',
-            type: 'snackbar',
-            isDismissible: false,
-        }
-    ).then(sleeper(2000)).then(( response ) => {
-        dispatch('core/notices').removeNotice('rsssl_settings_saved');
-    });
+
+    toast.success(text);
 }
 
 

@@ -12,49 +12,21 @@ const EventLogDataTableStore = create((set, get) => ({
     pagination: {},
     dataActions: {},
     DynamicDataTable: [],
-    //for faking data we add a dymmmyData
-    dummyData: {data: [
-        {
-            "id": 1,
-            "datetime": "10:02, August 16",
-            "severity": "warning",
-            "description": "This is a warning message",
-            "event_type": "Login protection",
-            "source_ip": "1.1.1.1",
-            "username": "admin",
-            "iso2_code": "NL",
-        },
-        {
-            "datetime": "10:02, August 16",
-            "severity": "warning",
-            "description": "This is a warning message",
-            "event_type": "Login protection",
-            "source_ip": "1.1.1.1",
-            "username": "admin",
-            "iso2_code": "NL",
-        },
-    ]},
-    dummyPagination: {
-        currentPage: 1,
-        lastPage: 1,
-        perPage: 10,
-        total: 2,
-        totalRows: 2,
-    },
+    sorting: [],
 
-
-    fetchDynamicData: async (action) => {
+    fetchDynamicData: async (action, dataActions) => {
+        //cool we can fetch the data so first we set the processing to true
+        set({processing: true});
+        set({dataLoaded: false});
+        //now we fetch the data
         try {
             const response = await rsssl_api.doAction(
                 action,
-                get().dataActions
+                dataActions
             );
             // now we set the EventLog
             if (response) {
-                // if the response is empty we set the dummyData
-                const data = typeof response.pagination === 'undefined' ? get().dummyData : response;
-                const pagination = typeof response.pagination === 'undefined' ? get().dummyPagination : response.pagination;
-                set({DynamicDataTable: data, dataLoaded: true, processing: false, pagination});
+                set({DynamicDataTable: response, dataLoaded: true, processing: false, pagination: response.pagination, sorting: response.sorting});
             }
         } catch (e) {
             console.log(e);
@@ -67,7 +39,6 @@ const EventLogDataTableStore = create((set, get) => ({
                 state.dataActions = {...state.dataActions, search, searchColumns};
             })
         );
-        get().fetchDynamicData('event_log');
     },
 
     handleEventTablePageChange: async (page, pageSize) => {
@@ -76,36 +47,28 @@ const EventLogDataTableStore = create((set, get) => ({
                 state.dataActions = {...state.dataActions, page, pageSize};
             })
         );
-        get().fetchDynamicData('event_log');
     },
-
     handleEventTableRowsChange: async (currentRowsPerPage, currentPage) => {
         //Add the page and pageSize to the dataActions
         set(produce((state) => {
                 state.dataActions = {...state.dataActions, currentRowsPerPage, currentPage};
             })
         );
-        get().fetchDynamicData('event_log');
     },
 
     //this handles all pagination and sorting
     handleEventTableSort: async (column, sortDirection) => {
-        //Add the column and sortDirection to the dataActions
         set(produce((state) => {
                 state.dataActions = {...state.dataActions, sortColumn: column, sortDirection};
             })
         );
-        get().fetchDynamicData('event_log');
     },
-
     handleEventTableFilter: async (column, filterValue) => {
         //Add the column and sortDirection to the dataActions
         set(produce((state) => {
                 state.dataActions = {...state.dataActions, filterColumn: column, filterValue};
             })
         );
-        //we prefetch the data
-        get().fetchDynamicData('event_log');
     },
 
 

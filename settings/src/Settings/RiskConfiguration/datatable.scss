@@ -1,0 +1,12 @@
+.rsssl-vulnerabilities_overview {
+  div[data-column-id="4"].rdt_TableCol {
+    display:block;
+  }
+
+    .rdt_TableCell:last-child {
+      flex: auto;
+      padding-right: 20px;
+      margin-right: 0;
+    }
+
+}

@@ -355,18 +355,8 @@ function rsssl_do_action($request, $ajax_data = false)
             $response = $mailer->send_test_mail();
             break;
         case 'send_verification_mail':
-            //get fields from data. The new email might not be saved yet. We need to get it from the data.
-	        $data = $ajax_data ?: $request->get_json_params();
-            $fields = $data['fields'] ?? [];
-            $email = get_bloginfo('admin_email');
-            foreach($fields as $field ){
-                if ( $field['id'] === 'notifications_email_address' ){
-                    $email = $field['value'];
-                }
-            }
             $mailer = new rsssl_mailer();
-            $mailer->to = sanitize_email($email);
-            $response = $mailer->send_verification_mail( );
+            $response = $mailer->send_verification_mail( rsssl_get_option('notifications_email_address') );
             break;
         case 'plugin_actions':
             $response = rsssl_plugin_actions($data);
@@ -378,9 +368,7 @@ function rsssl_do_action($request, $ajax_data = false)
             $response = rsssl_other_plugins_data();
             break;
         case 'get_roles':
-            $roles = rsssl_get_roles();
-	        $response = [];
-	        $response['roles'] = $roles;
+            $response = rsssl_get_roles( $data );
             break;
         default:
 	        $response = apply_filters("rsssl_do_action", [], $action, $data);
@@ -827,8 +815,8 @@ function rsssl_sanitize_field($value, string $type, string $id)
             return $value;
         case 'two_fa_roles':
 	        $value = !is_array($value) ? [] : $value;
-            $roles = rsssl_get_roles();
-	        $roles = array_values($roles);
+            $roles = rsssl_get_roles([]);
+	        $roles = $roles['roles'];
             foreach ($value as $index => $role) {
                 if (! in_array( $role, $roles, true ) ) {
                     unset($value[$index]);
@@ -1107,7 +1095,7 @@ function rsssl_conditions_apply(array $conditions)
  *
  * @return array An array of roles, each role being an associative array with 'label' and 'value' keys.
  */
-function rsssl_get_roles( ): array {
+function rsssl_get_roles( $data ) {
 	if ( ! rsssl_admin_logged_in() ) {
 		return [];
 	}
@@ -1128,5 +1116,29 @@ function rsssl_get_roles( ): array {
 		wp_cache_set( 'rsssl_roles', $roles );
 	}
 
-	return $roles;
+	/*
+	// Filter out forced roles that are also in optional roles
+	$optional_roles = rsssl_get_option('two_fa_optional_roles');
+	$forced_roles = rsssl_get_option('two_fa_forced_roles');
+
+	// Make sure $optional_roles and $forced_roles are arrays
+	if ( ! is_array( $optional_roles ) ) {
+		$optional_roles = [];
+	}
+	if ( ! is_array( $forced_roles ) ) {
+		$forced_roles = [];
+	}
+
+	// If no role is selected in either dropdown, show all roles in both dropdowns
+	if ( ! empty( $optional_roles ) || ! empty( $forced_roles ) ) {
+		$roles = array_filter($roles, function($role) use ($optional_roles, $forced_roles) {
+			return !in_array($role, $optional_roles) && !in_array($role, $forced_roles);
+		});
+	}
+	*/
+
+	$output['roles'] = array_values($roles); // Reset array keys
+	$output['request_success'] = true;
+
+	return $output;
 }
