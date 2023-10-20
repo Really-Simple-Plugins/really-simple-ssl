@@ -80,7 +80,7 @@ const TwoFaRolesDropDown = ({ field }) => {
     };
 
     if (field.id === 'two_fa_optional_roles') {
-        enabled = getFieldValue('login_protection_enabled');
+        enabled = getFieldValue('two_fa_enabled');
     }
 
     const alreadySelected = selectedRoles.map(option => option.value);

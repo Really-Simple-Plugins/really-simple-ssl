@@ -1095,7 +1095,7 @@ function rsssl_conditions_apply(array $conditions)
  *
  * @return array An array of roles, each role being an associative array with 'label' and 'value' keys.
  */
-function rsssl_get_roles( $data ) {
+function rsssl_get_roles() {
 	if ( ! rsssl_admin_logged_in() ) {
 		return [];
 	}

@@ -416,15 +416,6 @@ function rsssl_fields( $load_values = true ) {
             'disabled' => false,
             'default'  => 'disabled',
         ],
-        [
-            'id'       => 'login_protection_enabled',
-            'menu_id'  => 'two_fa',
-            'group_id' => 'two_fa_general',
-			'type'     => 'checkbox',
-			'label'    => __( "Enable login protection", 'really-simple-ssl' ),
-			'disabled' => false,
-			'default'  => true,
-		],
 		[
 			'id'                   => 'do_not_edit_htaccess', //field is removed if not enabled
 			'menu_id'              => 'general',
@@ -785,6 +776,8 @@ function rsssl_fields( $load_values = true ) {
 			'type'     => 'two_fa_roles',
 			'label'    => __( "Optional for:", "really-simple-ssl-pro" ),
 			'tooltip'  => __( "Two-step login will be enabled for these user roles, with the possibility to skip. If a user skips, Two-step login will be disabled for this user.", 'really-simple-ssl' ),
+			'disabled' => false,
+			'default'  => 'disabled',
 		],
 		[
 			'id'       => 'two_fa_forced_roles',
@@ -793,6 +786,8 @@ function rsssl_fields( $load_values = true ) {
 			'type'     => 'two_fa_roles',
 			'label'    => __( "Force on:", "really-simple-ssl-pro" ),
 			'tooltip'  => __( "These user roles are forced to enter the authentication code, without the possibility to skip.", 'really-simple-ssl' ),
+			'disabled' => false,
+			'default'  => 'disabled',
 		],
 		[
 			'id'    => 'two_fa_users_table',
