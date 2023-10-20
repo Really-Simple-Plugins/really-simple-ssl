@@ -117,6 +117,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 * Fix: typo in missing advanced-headers.php notice
 * Improvement: new save & continue feedback
 * Improvement: new react based modal
+* Improvement: menu re-structured
 
 = 7.1.3 =
 * October 11th 2023
