@@ -118,6 +118,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 * Improvement: new save & continue feedback
 * Improvement: new react based modal
 * Improvement: menu re-structured
+* Improvement: re-check vulnerability status after core update
 
 = 7.1.3 =
 * October 11th 2023
