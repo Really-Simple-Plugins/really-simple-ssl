@@ -40,18 +40,34 @@ const useOnboardingData = create(( set, get ) => ({
     setOverrideSSL: (overrideSSL) => {
         set(state => ({ overrideSSL }))
     },
-    setNetworkActivationStatus: (networkActivationStatus) => {
-        set(state => ({ networkActivationStatus }))
-    },
     setCurrentStepIndex: (currentStepIndex) => {
         const currentStep = get().steps[currentStepIndex];
         set(state => ({ currentStepIndex, currentStep }))
     },
-    dismissModal: () => {
+    dismissModal: async (dismiss) => {
         let data={};
-        data.dismiss = true;
-        set((state) => ({showOnboardingModal: false}));
-        rsssl_api.doAction('dismiss_modal', data).then(( response ) => {
+        data.dismiss = dismiss;
+        let showOnboardingModal = get().showOnboardingModal;
+        //dismiss is opposite of showOnboardingModal, so we check the inverse.
+        set(() => ({showOnboardingModal: !dismiss}));
+
+        await rsssl_api.doAction('dismiss_modal', data);
+    },
+    activateSSL: () => {
+        set((state) => ({processing:true}));
+        rsssl_api.runTest('activate_ssl' ).then( async ( response ) => {
+            set((state) => ({processing:false}));
+            get().setCurrentStepIndex( get().currentStepIndex+1 );
+            //change url to https, after final check
+            if ( response.success ) {
+                if ( response.site_url_changed ) {
+                    window.location.reload();
+                } else {
+                    if ( get().networkwide ) {
+                        set(state => ({ networkActivationStatus:'main_site_activated' }))
+                    }
+                }
+            }
         });
     },
     saveEmail:() => {

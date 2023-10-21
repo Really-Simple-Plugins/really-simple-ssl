@@ -1,6 +1,10 @@
 .rsssl {
+  .rsssl-field-button {
+    button.button {
+      display:flex;
+    }
+  }
   a.button, button.button, input.button, span.button {
-    display: flex;
     font-size: var(--rsp-fs-300);
     font-weight: 400;
     transition: all 0.3s ease;

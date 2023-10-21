@@ -14,18 +14,7 @@
       flex-direction: column;
       width:100%;
     }
-    &-step-footer{
-      display:flex;
-      align-items: center;
-      gap: var(--rsp-spacing-m);
-      .components-toggle-control {
-        margin-top:8px;
-        .components-form-toggle{
-          margin-top:12px;
-        }
-      }
-      margin-top:auto;
-    }
+
     padding-top: var(--rsp-spacing-m);
     line-height: 2.2;
     min-height:295px;
@@ -45,10 +34,4 @@
     }
   }
 
-}
-
-.rsssl-modal-content-step-footer {
-  .components-toggle-control {
-    margin-top:8px;
-  }
 }

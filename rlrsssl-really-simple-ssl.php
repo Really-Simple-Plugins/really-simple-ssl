@@ -3,7 +3,7 @@
  * Plugin Name: Really Simple SSL
  * Plugin URI: https://really-simple-ssl.com
  * Description: Lightweight SSL & Hardening Plugin
- * Version: 7.0.9
+ * Version: 7.1.4
  * Requires at least: 5.8
  * Requires PHP: 7.2
  * Author: Really Simple Plugins
@@ -104,11 +104,10 @@ class REALLY_SIMPLE_SSL
         if ( !defined('rsssl_file') ){
             define('rsssl_file', __FILE__);
         }
-		define('rsssl_version', '7.0.9');
+		define('rsssl_version', '7.1.4');
 		define('rsssl_le_cron_generation_renewal_check', 20);
 		define('rsssl_le_manual_generation_renewal_check', 15);
 	}
-
 	private function includes()
 	{
 		require_once(rsssl_path . 'class-front-end.php');
@@ -124,6 +123,7 @@ class REALLY_SIMPLE_SSL
 			require_once( rsssl_path . 'compatibility.php');
             require_once( rsssl_path . 'upgrade.php');
 			require_once( rsssl_path . 'settings/settings.php' );
+			require_once( rsssl_path . 'modal/modal.php' );
             require_once( rsssl_path . 'onboarding/class-onboarding.php' );
             require_once( rsssl_path . 'placeholders/class-placeholder.php' );
             require_once( rsssl_path . 'class-admin.php');
@@ -139,11 +139,6 @@ class REALLY_SIMPLE_SSL
 				require_once( rsssl_path . 'upgrade/upgrade-to-pro.php');
 			}
 		}
-
-        // if not logged in and on log-in page, include mailer for 2FA e-mails
-        if ( ! rsssl_admin_logged_in() && is_login() ) {
-            require_once(rsssl_path . 'mailer/class-mail.php');
-        }
 
         require_once( rsssl_path . 'lets-encrypt/cron.php' );
 		require_once( rsssl_path . '/security/security.php');
@@ -199,7 +194,7 @@ class REALLY_SIMPLE_SSL
 		require_once(ABSPATH.'wp-admin/includes/plugin.php');
 		$data = false;
 		if ( is_plugin_active($file)) $data = get_plugin_data( trailingslashit(WP_PLUGIN_DIR) . $file, false, false );
-		if ($data && version_compare($data['Version'], '6.0.0', '<')) {
+		if ($data && version_compare($data['Version'], '7.0.6', '<')) {
 			return true;
 		}
 

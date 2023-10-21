@@ -98,27 +98,11 @@
     }
   }
 
-  .rsssl-modal-content-step-footer {
-    display:flex;
-    align-items: center;
-    margin-top: var(--rsp-spacing-l);
-    gap: var(--rsp-spacing-m);
-    .components-toggle-control .components-base-control__field{
-      margin:0;
-      flex-direction: initial;
-      .components-toggle-control__label {
-        margin-right:12px;
-      }
-    }
-    //button, a, label{
-    //  font-size: var(--rsp-fs-400);
-    //  font-weight: 500;
-    //  line-height: 1.5;
-    //}
-  }
-
   .rsssl-modal-subtitle {
     display:none;
+  }
+  .components-toggle-control {
+    margin: 20px 0;
   }
 }
 

@@ -68,22 +68,22 @@
       color: var(--rsp-white);
     }
 
-    &.rsp-low {
+    &.rsp-risk-level-l {
       background-color: var(--rsp-yellow-faded);
       color: var(--rsp-black);
     }
 
-    &.rsp-medium {
+    &.rsp-risk-level-m {
       background-color: var(--rsp-yellow);
       color: var(--rsp-black);
     }
 
-    &.rsp-high {
+    &.rsp-risk-level-h {
       background-color: var(--rsp-red-faded);
       color: var(--rsp-black);
     }
 
-    &.rsp-critical {
+    &.rsp-risk-level-c {
       background-color: var(--rsp-red);
       color: var(--rsp-white);
     }

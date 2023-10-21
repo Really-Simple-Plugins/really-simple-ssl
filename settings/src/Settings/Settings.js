@@ -7,6 +7,7 @@ import useFields from './FieldsData';
 import useMenu from '../Menu/MenuData';
 import {__} from '@wordpress/i18n';
 import useLetsEncryptData from '../LetsEncrypt/letsEncryptData';
+import ErrorBoundary from "../utils/ErrorBoundary";
 
 /**
  * Renders the selected settings
@@ -30,7 +31,6 @@ const Settings = () => {
     previousMenuItem,
   } = useMenu();
   const {setRefreshTests} = useLetsEncryptData();
-
   const toggleNotices = () => {
     setNoticesExpanded(!noticesExpanded);
   };
@@ -133,13 +133,13 @@ const Settings = () => {
               <div className={'rsssl-grid-item-footer-buttons'}>
                 {/*This will be shown only if current step is not the first one*/}
                 {selectedSubMenuItem !== menuItems[0].id &&
-                    <a className="button button-secondary"
+                    <a className="rsssl-previous"
                        href={`#${selectedMainMenuItem}/${previousMenuItem}`}>
                       {__('Previous', 'complianz-gdpr')}
                     </a>
                 }
                 <button
-                    className="button button-primary"
+                    className="button button-secondary"
                     onClick={(e) => saveData(false)}>
                   {btnSaveText}
                 </button>
@@ -147,12 +147,11 @@ const Settings = () => {
                 {selectedSubMenuItem !==
                     menuItems[menuItems.length - 1].id &&
                     <>
-                      <a disabled={nextButtonDisabled}
+                      <button disabled={nextButtonDisabled}
                          className="button button-primary"
-                         href={continueLink}
-                         onClick={(e) => saveData(true)}>
+                         onClick={(e) => {saveData(true);window.location.href=continueLink;} }>
                         {__('Save and Continue', 'complianz-gdpr')}
-                      </a>
+                      </button>
                     </>
                 }
               </div>
@@ -160,21 +159,21 @@ const Settings = () => {
           </div>
         </div>
         <div className="rsssl-wizard-help">
-          <div className="rsssl-help-header">
-            <div className="rsssl-help-title rsssl-h4">
-              {__('Notifications', 'really-simple-ssl')}
-            </div>
-            <div className="rsssl-help-control" onClick={() => toggleNotices()}>
-              {!noticesExpanded && __('Expand all', 'really-simple-ssl')}
-              {noticesExpanded && __('Collapse all', 'really-simple-ssl')}
-            </div>
+              <div className="rsssl-help-header">
+                  <div className="rsssl-help-title rsssl-h4">
+                      {__("Notifications", "really-simple-ssl")}
+                  </div>
+                  <div className="rsssl-help-control" onClick={ () => toggleNotices() }>
+                      {!noticesExpanded && __("Expand all","really-simple-ssl")}
+                      {noticesExpanded && __("Collapse all","really-simple-ssl")}
+                  </div>
+              </div>
+              { notices.map((field, i) => <ErrorBoundary key={i} fallback={"Could not load notices"}>
+                      <Help key={i} noticesExpanded={noticesExpanded} index={i} help={field} fieldId={field.id}/>
+                  </ErrorBoundary>
+                  )}
+
           </div>
-          {notices.map(
-              (field, i) => <Help key={i} noticesExpanded={noticesExpanded}
-                                  index={i} help={field} fieldId={field.id}/>)}
-        </div>
-
-
       </>
 
   );

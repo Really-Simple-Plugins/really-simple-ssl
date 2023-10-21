@@ -95,6 +95,17 @@
       display: flex;
       flex-direction: column;
       z-index: 12; //should be above 10, for the text editor, which has 10.
+
+      .rsssl-grid-item-footer-buttons {
+        a.button, button {
+          box-shadow: none !important;
+
+          &:focus, &:active {
+            box-shadow: none !important;
+          }
+        }
+      }
+
     }
     .rsssl-grid-item-footer-scroll-progress-container {
       display: flex;
@@ -121,7 +132,6 @@
       width: 100%;
       min-height: 20px;
       justify-content: space-around;
-
       // last item within the footer
       & > div:last-of-type {
         margin-left: auto;
