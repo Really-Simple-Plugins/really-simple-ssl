@@ -1091,7 +1091,6 @@ function rsssl_fields( $load_values = true ) {
 				]
 			],
         ],
-
 		[
 			'id'       => 'two_fa_forced_roles',
 			'menu_id'  => 'two_fa',
@@ -1100,24 +1099,6 @@ function rsssl_fields( $load_values = true ) {
 			'default'  => [ 'administrator' ],
 			'label'    => __( "Force on:", "really-simple-ssl" ),
 			'tooltip'  => __( "These user roles are forced to use two step authentication.", 'really-simple-ssl' ),
-			'server_conditions'    => [
-				'relation' => 'AND',
-				[
-					'is_multisite' => false,
-				]
-			],
-		],
-
-		[
-			'id'       => 'two_fa_forced_roles',
-			'forced_roles_id'         => 'two_fa_forced_roles',
-			'optional_roles_id' 	   => 'two_fa_optional_roles',
-			'menu_id'  => 'two-fa',
-			'group_id' => 'two_fa_email',
-			'type'     => 'two_fa_roles',
-			'default'  => [ 'administrator' ],
-			'label'    => __( "Force on:", "really-simple-ssl" ),
-			'tooltip'  => __( "These user roles are forced to enter the authentication code.", 'really-simple-ssl' ),
 			'server_conditions'    => [
 				'relation' => 'AND',
 				[
