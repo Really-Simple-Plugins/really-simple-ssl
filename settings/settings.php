@@ -817,8 +817,7 @@ function rsssl_sanitize_field($value, string $type, string $id)
             return $value;
         case 'two_fa_roles':
 	        $value = !is_array($value) ? [] : $value;
-            $roles = rsssl_get_roles([]);
-	        $roles = $roles['roles'];
+            $roles = rsssl_get_roles();
             foreach ($value as $index => $role) {
                 if (! in_array( $role, $roles, true ) ) {
                     unset($value[$index]);
