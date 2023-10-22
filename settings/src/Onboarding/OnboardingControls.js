@@ -52,9 +52,8 @@ const OnboardingControls = ({isModal}) => {
     if ( currentStepIndex === 0 ) {
         return (
             <>
-                <Button disabled={processing || (!certificateValid && !overrideSSL) } isPrimary onClick={() => {handleActivateSSL()}}>{ActivateSSLText}</Button>
                 { isModal && !certificateValid && <Button onClick={() => {goToLetsEncrypt()}}>{__("Install SSL", "really-simple-ssl")}</Button>}
-                { certificateValid && !rsssl_settings.pro_plugin_active && <Button onClick={(e) => {window.location.href=rsssl_settings.upgrade_link}}>{__("Improve Security with PRO", "really-simple-ssl")}</Button>}
+                <Button disabled={processing || (!certificateValid && !overrideSSL) } isPrimary onClick={() => {handleActivateSSL()}}>{ActivateSSLText}</Button>
             </>
         );
     }
@@ -74,6 +73,7 @@ const OnboardingControls = ({isModal}) => {
             <>
                 <Button onClick={() => dismissModal(true)}>{__('Dismiss', 'really-simple-ssl')}</Button>
                 <Button isPrimary onClick={() => {goToDashboard()}}>{__('Go to Dashboard', 'really-simple-ssl')}</Button>
+                { certificateValid && !rsssl_settings.pro_plugin_active && <Button onClick={(e) => {window.location.href=rsssl_settings.upgrade_link}}>{__("Improve Security with PRO", "really-simple-ssl")}</Button>}
             </>
         );
     }

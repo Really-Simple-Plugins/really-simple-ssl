@@ -4,6 +4,7 @@ import {
 import {useRef, useEffect, memo} from "@wordpress/element";
 import useFields from "../FieldsData";
 import useHostData from "./HostData";
+import {__} from "@wordpress/i18n";
 
 const Host = ({field}) => {
     const {updateField, setChangedField, saveFields, handleNextButtonDisabled} = useFields();
@@ -16,7 +17,6 @@ const Host = ({field}) => {
         }
     }, []);
     const onChangeHandler = async (fieldValue) => {
-        let field = field;
         //force update, and get new fields.
         handleNextButtonDisabled(true);
         disabled.current = true;
@@ -31,6 +31,11 @@ const Host = ({field}) => {
 
     let loadedHosts = hostsLoaded ? hosts : [];
     let options = [];
+    let item = {
+        label: __('Optional. You can select your hosting provider if available for specific integrations.', 'really-simple-ssl'),
+        value: '',
+    };
+    options.push(item);
     for (let key in loadedHosts) {
         if (loadedHosts.hasOwnProperty(key)) {
             let item = {};
@@ -40,11 +45,9 @@ const Host = ({field}) => {
         }
     }
 
-    console.log(hosts);
-    console.log(options);
-
     return (
           <SelectControl
+              className="rsssl-select"
               label={ field.label }
               onChange={ ( fieldValue ) => onChangeHandler(fieldValue) }
               value= { field.value }

@@ -2586,6 +2586,7 @@ const useOnboardingData = (0,zustand__WEBPACK_IMPORTED_MODULE_2__.create)((set, 
   includeTips: false,
   sendTestEmail: true,
   actionStatus: '',
+  overrideSSLDetection: false,
   setIncludeTips: includeTips => {
     set(state => ({
       includeTips
@@ -2611,11 +2612,6 @@ const useOnboardingData = (0,zustand__WEBPACK_IMPORTED_MODULE_2__.create)((set, 
       processing
     }));
   },
-  setOverrideSSL: overrideSSL => {
-    set(state => ({
-      overrideSSL
-    }));
-  },
   setCurrentStepIndex: currentStepIndex => {
     const currentStep = get().steps[currentStepIndex];
     set(state => ({
@@ -2626,12 +2622,20 @@ const useOnboardingData = (0,zustand__WEBPACK_IMPORTED_MODULE_2__.create)((set, 
   dismissModal: async dismiss => {
     let data = {};
     data.dismiss = dismiss;
-    let showOnboardingModal = get().showOnboardingModal;
     //dismiss is opposite of showOnboardingModal, so we check the inverse.
     set(() => ({
       showOnboardingModal: !dismiss
     }));
     await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('dismiss_modal', data);
+  },
+  setOverrideSSL: async override => {
+    set({
+      overrideSSL: override
+    });
+    let data = {
+      overrideSSL: override
+    };
+    await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('override_ssl_detection', data);
   },
   activateSSL: () => {
     set(state => ({
@@ -5880,7 +5884,7 @@ var vanilla = (createState) => {
 /******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = function(chunkId) {
 /******/ 			// return url for filenames based on template
-/******/ 			return "" + chunkId + "." + {"vendors-node_modules_babel_runtime_helpers_esm_extends_js-node_modules_react-tooltip_dist_rea-0773da":"ee4fc675bc6fa44b8d25","src_Settings_Settings_js":"f02a67c809dd4b5a9506","src_Menu_Menu_js":"96d2f29cb074faa54885","src_Dashboard_DashboardPage_js":"40f5ca511402c76d32a7","src_Onboarding_OnboardingModal_js":"8befebd7225b69391c82","src_Modal_Modal_js":"d8500617b3aadd99ff97","vendors-node_modules_material-ui_core_esm_TextField_TextField_js-node_modules_react-toastify_-d58746":"2620852e67056eab9817","src_Settings_Field_js":"3f0a4708ce0bfeb2eede","vendors-node_modules_material-ui_lab_esm_Autocomplete_index_js":"515dd4c5b9e6e345a1ea","vendors-node_modules_material-ui_core_esm_styles_index_js":"b2604edf5f43bcfce41a"}[chunkId] + ".js";
+/******/ 			return "" + chunkId + "." + {"vendors-node_modules_babel_runtime_helpers_esm_extends_js-node_modules_react-tooltip_dist_rea-0773da":"ee4fc675bc6fa44b8d25","src_Settings_Settings_js":"f02a67c809dd4b5a9506","src_Menu_Menu_js":"96d2f29cb074faa54885","src_Dashboard_DashboardPage_js":"40f5ca511402c76d32a7","src_Onboarding_OnboardingModal_js":"c1b30de7be48b0d56145","src_Modal_Modal_js":"d8500617b3aadd99ff97","vendors-node_modules_material-ui_core_esm_TextField_TextField_js-node_modules_react-toastify_-d58746":"2620852e67056eab9817","src_Settings_Field_js":"aec461231cdd985c9707","vendors-node_modules_material-ui_lab_esm_Autocomplete_index_js":"515dd4c5b9e6e345a1ea","vendors-node_modules_material-ui_core_esm_styles_index_js":"b2604edf5f43bcfce41a"}[chunkId] + ".js";
 /******/ 		};
 /******/ 	}();
 /******/ 	
@@ -6207,4 +6211,4 @@ document.addEventListener('click', e => {
 }();
 /******/ })()
 ;
-//# sourceMappingURL=index.32ab78a201048dab4bc0.js.map
+//# sourceMappingURL=index.09b1e383c508fc18fb58.js.map

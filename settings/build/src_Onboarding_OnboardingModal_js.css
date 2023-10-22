@@ -3,7 +3,6 @@
   \*******************************************************************************************************************************************************************************************************************************************************/
 .rsssl-modal.rsssl-onboarding-modal .rsssl-modal-body .rsssl-override-detection-toggle {
   margin-bottom: -15px;
-  float: right;
 }
 .rsssl-modal.rsssl-onboarding-modal .rsssl-modal-body input[type=email] {
   width: 100%;
@@ -12,8 +11,13 @@
   height: 50px;
   border-color: var(--rsp-grey-300);
 }
-.rsssl-modal.rsssl-onboarding-modal .rsssl-modal-body .components-flex-item {
+.rsssl-modal.rsssl-onboarding-modal .rsssl-modal-body .rsssl-select label {
   display: none;
+}
+.rsssl-modal.rsssl-onboarding-modal .rsssl-modal-body .rsssl-select .components-select-control__input {
+  height: 45px;
+  padding: 8px 20px;
+  color: var(--rsp-grey-700);
 }
 .rsssl-modal.rsssl-onboarding-modal .rsssl-modal-body ul {
   -moz-column-count: 1;

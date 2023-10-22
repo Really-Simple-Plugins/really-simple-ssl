@@ -173,8 +173,8 @@ class rsssl_onboarding {
 		$steps = [
 			[
 				"id" => 'activate_ssl',
-				"title" => __( "Almost ready to migrate to SSL!", 'really-simple-ssl' ),
-				"subtitle" => __("Before you migrate, please check for:", "really-simple-ssl"),
+				"title" => __( "Really Simple SSL & Security", 'really-simple-ssl' ),
+				"subtitle" => __("We have added many new features to our plugin, now bearing the name Really Simple SSL & Security. But we start like we did almost 10 years ago. Optimising your Encryption with SSL", "really-simple-ssl"),
 				"items" => $this->first_step(),
 				"info_text" => $info,
 			],
@@ -213,20 +213,15 @@ class rsssl_onboarding {
 	 * @return array[]
 	 */
 	function first_step () {
-		$items = [
-			[
-				"title" => __("Http references in your .css and .js files: change any http:// into https://", "really-simple-ssl"),
+		$items = [];
+
+		//if the site url is not yet https, the user may need to login again
+		if ( strpos( site_url(), 'https://') === false ) {
+			$items[] = [
+				"title" => __("You may need to login in again, have your credentials prepared.", "really-simple-ssl"),
 				"status" => "inactive",
-			],
-			[
-				"title" => __("Images, stylesheets or scripts from a domain without an SSL certificate: remove them or move to your own server.", "really-simple-ssl"),
-				"status" => "inactive",
-			],
-			[
-				"title" => __("You may need to login in again.", "really-simple-ssl"),
-				"status" => "inactive",
-			],
-		];
+			];
+		}
 
 		if ( RSSSL()->certificate->is_valid() ) {
 			$items[] = [

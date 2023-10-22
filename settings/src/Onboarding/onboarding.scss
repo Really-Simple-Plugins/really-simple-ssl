@@ -3,7 +3,6 @@
 
     .rsssl-override-detection-toggle {
       margin-bottom: -15px;
-      float: right;
     }
     input[type=email] {
       width: 100%;
@@ -13,9 +12,17 @@
       border-color: var(--rsp-grey-300);
     }
     //hide select label
-    .components-flex-item {
-      display:none;
+    .rsssl-select {
+      label {
+        display: none;
+      }
+      .components-select-control__input{
+        height:45px;
+        padding: 8px 20px;
+        color: var(--rsp-grey-700);
+      }
     }
+
 
     ul {
       column-count: 1;

@@ -22,6 +22,7 @@ const useOnboardingData = create(( set, get ) => ({
     includeTips:false,
     sendTestEmail:true,
     actionStatus: '',
+    overrideSSLDetection:false,
     setIncludeTips: (includeTips) => {
         set(state => ({ includeTips }))
     },
@@ -37,9 +38,6 @@ const useOnboardingData = create(( set, get ) => ({
     setProcessing: (processing) => {
         set(state => ({ processing }))
     },
-    setOverrideSSL: (overrideSSL) => {
-        set(state => ({ overrideSSL }))
-    },
     setCurrentStepIndex: (currentStepIndex) => {
         const currentStep = get().steps[currentStepIndex];
         set(state => ({ currentStepIndex, currentStep }))
@@ -47,11 +45,16 @@ const useOnboardingData = create(( set, get ) => ({
     dismissModal: async (dismiss) => {
         let data={};
         data.dismiss = dismiss;
-        let showOnboardingModal = get().showOnboardingModal;
         //dismiss is opposite of showOnboardingModal, so we check the inverse.
         set(() => ({showOnboardingModal: !dismiss}));
-
         await rsssl_api.doAction('dismiss_modal', data);
+    },
+    setOverrideSSL: async (override) => {
+        set({overrideSSL: override});
+        let data = {
+            overrideSSL: override,
+        };
+        await rsssl_api.doAction('override_ssl_detection',data );
     },
     activateSSL: () => {
         set((state) => ({processing:true}));

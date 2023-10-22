@@ -1,6 +1,5 @@
 import { useEffect, useState } from "@wordpress/element";
 import { Button, ToggleControl } from '@wordpress/components';
-import * as rsssl_api from "../utils/api";
 import { __ } from '@wordpress/i18n';
 import Icon from "../utils/Icon";
 import Placeholder from '../Placeholder/Placeholder';
@@ -12,7 +11,7 @@ import OnboardingControls from "./OnboardingControls";
 import Host from "../Settings/Host/Host";
 
 const Onboarding = ({isModal}) => {
-    const { fetchFieldsData, getFieldValue, fields, fieldsLoaded} = useFields();
+    const { fetchFieldsData, getFieldValue, getField, fields, fieldsLoaded, updateField, setChangedField, saveFields} = useFields();
     const { getProgressData} = useProgress();
     const [hardeningEnabled, setHardeningEnabled] = useState(false);
     const [vulnerabilityDetectionEnabled, setVulnerabilityDetectionEnabled] = useState(false);
@@ -45,7 +44,7 @@ const Onboarding = ({isModal}) => {
     const statuses = {
         'inactive': {
             'icon': 'info',
-            'color': 'orange',
+            'color': 'grey',
         },
         'warning': {
             'icon': 'circle-times',
@@ -108,6 +107,12 @@ const Onboarding = ({isModal}) => {
             }
         }
     }, [currentStep]);
+
+    const onChangeCloudFlareHandler = async (fieldValue) => {
+        updateField('cloudflare_enabled', fieldValue);
+        setChangedField('cloudflare_enabled', fieldValue);
+        await saveFields(true, false);
+    }
 
     //ensure all fields are updated, and progress is retrieved again
     useEffect( () => {
@@ -194,9 +199,9 @@ const Onboarding = ({isModal}) => {
     let step = currentStep;
     let processingClass = processing ? 'rsssl-processing' : '';
     //get 'other_host_type' field from fields
-    let otherHostsField = fieldsLoaded && fields.find((field) => {
-        return field.id === 'other_host_type';
-    });
+    let otherHostsField = fieldsLoaded && getField('other_host_type');
+    let CloudFlareEnabled = fieldsLoaded && getField('cloudflare_enabled');
+
     return (
         <>
             { !dataLoaded &&
@@ -212,13 +217,15 @@ const Onboarding = ({isModal}) => {
             {
                 dataLoaded &&
                     <div className={ processingClass }>
+                        { currentStep.id === 'activate_ssl' && <>
+                            <Host field={otherHostsField}/>
+                            <label>
+                                <input onChange={ (e) => onChangeCloudFlareHandler(e.target.checked)} type="checkbox" checked={CloudFlareEnabled.value} />{__("I use CloudFlare.","really-simple-ssl")}
+                            </label>
+                        </>}
                         <ul>
                             { parseStepItems(step.items) }
                         </ul>
-                        { currentStep.id === 'activate_ssl' && <>
-                            <Host field={otherHostsField}/>
-                            HOSTS
-                        </>}
                         { currentStep.id === 'email'&&
                             <>
                                 <div>
@@ -240,16 +247,10 @@ const Onboarding = ({isModal}) => {
                                    </a>.&nbsp;{__("The SSL detection method is not 100% accurate.", "really-simple-ssl")}&nbsp;
                                    {__("If you’re certain an SSL certificate is present, and refresh SSL status does not work, please check “Override SSL detection” to continue activating SSL.", "really-simple-ssl")}
                                 </div>
-                                <ToggleControl className="rsssl-override-detection-toggle"
-                                    label={__("Override SSL detection","really-simple-ssl")}
-                                    checked={overrideSSL}
-                                    onChange={(value) => {
-                                        setOverrideSSL(value);
-                                        let data = {};
-                                        data.overrideSSL = value;
-                                        rsssl_api.doAction('override_ssl_detection',data );
-                                    }}
-                                />
+                                <label className="rsssl-override-detection-toggle">
+                                    <input
+                                        onChange={ (e) => setOverrideSSL(e.target.checked)} type="checkbox" checked={overrideSSL} />{__("Override SSL detection.","really-simple-ssl")}
+                                </label>
                                 { !isModal &&
                                     <OnboardingControls isModal={isModal}/>
                                 }
