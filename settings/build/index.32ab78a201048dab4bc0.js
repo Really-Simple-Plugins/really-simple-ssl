@@ -3107,17 +3107,12 @@ const PagePlaceholder = props => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/index.mjs");
-/* harmony import */ var immer__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! immer */ "./node_modules/immer/dist/immer.esm.mjs");
+/* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/index.mjs");
+/* harmony import */ var immer__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! immer */ "./node_modules/immer/dist/immer.esm.mjs");
 /* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/api */ "./src/utils/api.js");
-/* harmony import */ var _utils_sleeper_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/sleeper.js */ "./src/utils/sleeper.js");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/data */ "@wordpress/data");
-/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
-
-
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
 
 
 
@@ -3137,7 +3132,7 @@ const fetchFields = () => {
     console.error(error);
   });
 };
-const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_5__.create)((set, get) => ({
+const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set, get) => ({
   fieldsLoaded: false,
   error: false,
   fields: [],
@@ -3161,7 +3156,7 @@ const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_5__.create)((set, get) => 
     });
   },
   setChangedField: (id, value) => {
-    set((0,immer__WEBPACK_IMPORTED_MODULE_6__.produce)(state => {
+    set((0,immer__WEBPACK_IMPORTED_MODULE_4__.produce)(state => {
       //remove current reference
       const existingFieldIndex = state.changedFields.findIndex(field => {
         return field.id === id;
@@ -3181,7 +3176,7 @@ const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_5__.create)((set, get) => 
     handleShowSavedSettingsNotice(text);
   },
   updateField: (id, value) => {
-    set((0,immer__WEBPACK_IMPORTED_MODULE_6__.produce)(state => {
+    set((0,immer__WEBPACK_IMPORTED_MODULE_4__.produce)(state => {
       let index = state.fields.findIndex(fieldItem => fieldItem.id === id);
       if (index !== -1) {
         state.fields[index].value = value;
@@ -3189,7 +3184,7 @@ const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_5__.create)((set, get) => 
     }));
   },
   updateFieldAttribute: (id, attribute, value) => {
-    set((0,immer__WEBPACK_IMPORTED_MODULE_6__.produce)(state => {
+    set((0,immer__WEBPACK_IMPORTED_MODULE_4__.produce)(state => {
       let index = state.fields.findIndex(fieldItem => fieldItem.id === id);
       if (index !== -1) {
         state.fields[index][attribute] = value;
@@ -3197,7 +3192,7 @@ const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_5__.create)((set, get) => 
     }));
   },
   updateSubField: (id, subItemId, value) => {
-    set((0,immer__WEBPACK_IMPORTED_MODULE_6__.produce)(state => {
+    set((0,immer__WEBPACK_IMPORTED_MODULE_4__.produce)(state => {
       let index = state.fields.findIndex(fieldItem => fieldItem.id === id);
       let itemValue = state.fields[index].value;
       if (!Array.isArray(itemValue)) {
@@ -3220,7 +3215,7 @@ const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_5__.create)((set, get) => 
     }));
   },
   removeHelpNotice: id => {
-    set((0,immer__WEBPACK_IMPORTED_MODULE_6__.produce)(state => {
+    set((0,immer__WEBPACK_IMPORTED_MODULE_4__.produce)(state => {
       const fieldIndex = state.fields.findIndex(field => {
         return field.id === id;
       });
@@ -3236,7 +3231,7 @@ const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_5__.create)((set, get) => 
     help.text = text;
     if (url) help.url = url;
     if (title) help.title = title;
-    set((0,immer__WEBPACK_IMPORTED_MODULE_6__.produce)(state => {
+    set((0,immer__WEBPACK_IMPORTED_MODULE_4__.produce)(state => {
       const fieldIndex = state.fields.findIndex(field => {
         return field.id === id;
       });
@@ -3291,7 +3286,7 @@ const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_5__.create)((set, get) => 
       _utils_api__WEBPACK_IMPORTED_MODULE_0__.setFields(saveFields).then(response => {
         progress = response.progress;
         fields = response.fields;
-        set((0,immer__WEBPACK_IMPORTED_MODULE_6__.produce)(state => {
+        set((0,immer__WEBPACK_IMPORTED_MODULE_4__.produce)(state => {
           state.changedFields = [];
           state.fields = fields;
           state.progress = progress;
@@ -3314,11 +3309,11 @@ const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_5__.create)((set, get) => 
       if (get().overrideNextButtonDisabled) {
         nextButtonDisabled = get().overrideNextButtonDisabled;
       }
-      set((0,immer__WEBPACK_IMPORTED_MODULE_6__.produce)(state => {
+      set((0,immer__WEBPACK_IMPORTED_MODULE_4__.produce)(state => {
         state.nextButtonDisabled = nextButtonDisabled;
       }));
     }
-    set((0,immer__WEBPACK_IMPORTED_MODULE_6__.produce)(state => {
+    set((0,immer__WEBPACK_IMPORTED_MODULE_4__.produce)(state => {
       state.fields = fields;
     }));
   },
@@ -3377,9 +3372,9 @@ const updateFieldsListWithConditions = fields => {
 };
 const handleShowSavedSettingsNotice = text => {
   if (typeof text === 'undefined') {
-    text = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Settings Saved', 'really-simple-ssl');
+    text = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Settings Saved', 'really-simple-ssl');
   }
-  react_toastify__WEBPACK_IMPORTED_MODULE_4__.toast.success(text);
+  react_toastify__WEBPACK_IMPORTED_MODULE_2__.toast.success(text);
 };
 const validateConditions = (conditions, fields, fieldId) => {
   let relation = conditions[0].relation === 'OR' ? 'OR' : 'AND';
@@ -3957,28 +3952,6 @@ const getAnchor = level => {
   return false;
 };
 /* harmony default export */ __webpack_exports__["default"] = (getAnchor);
-
-/***/ }),
-
-/***/ "./src/utils/sleeper.js":
-/*!******************************!*\
-  !*** ./src/utils/sleeper.js ***!
-  \******************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/*
- * helper function to delay after a promise
- * @param ms
- * @returns {function(*): Promise<unknown>}
- */
-const sleeper = ms => {
-  return function (x) {
-    return new Promise(resolve => setTimeout(() => resolve(x), ms));
-  };
-};
-/* harmony default export */ __webpack_exports__["default"] = (sleeper);
 
 /***/ }),
 
@@ -5907,7 +5880,7 @@ var vanilla = (createState) => {
 /******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = function(chunkId) {
 /******/ 			// return url for filenames based on template
-/******/ 			return "" + chunkId + "." + {"vendors-node_modules_babel_runtime_helpers_esm_extends_js-node_modules_react-tooltip_dist_rea-0773da":"ee4fc675bc6fa44b8d25","src_Settings_Settings_js":"007aaef6ddc10c30be64","src_Menu_Menu_js":"96d2f29cb074faa54885","src_Dashboard_DashboardPage_js":"a28e9a6e4d95ed0f2adb","src_Onboarding_OnboardingModal_js":"b4b98d8f3e7bfd2c7d95","src_Modal_Modal_js":"d8500617b3aadd99ff97","vendors-node_modules_material-ui_core_esm_TextField_TextField_js-node_modules_react-toastify_-d58746":"2620852e67056eab9817","src_Settings_Field_js":"f14140832339675042e4","vendors-node_modules_material-ui_lab_esm_Autocomplete_index_js":"515dd4c5b9e6e345a1ea","vendors-node_modules_material-ui_core_esm_styles_index_js":"b2604edf5f43bcfce41a"}[chunkId] + ".js";
+/******/ 			return "" + chunkId + "." + {"vendors-node_modules_babel_runtime_helpers_esm_extends_js-node_modules_react-tooltip_dist_rea-0773da":"ee4fc675bc6fa44b8d25","src_Settings_Settings_js":"f02a67c809dd4b5a9506","src_Menu_Menu_js":"96d2f29cb074faa54885","src_Dashboard_DashboardPage_js":"40f5ca511402c76d32a7","src_Onboarding_OnboardingModal_js":"8befebd7225b69391c82","src_Modal_Modal_js":"d8500617b3aadd99ff97","vendors-node_modules_material-ui_core_esm_TextField_TextField_js-node_modules_react-toastify_-d58746":"2620852e67056eab9817","src_Settings_Field_js":"3f0a4708ce0bfeb2eede","vendors-node_modules_material-ui_lab_esm_Autocomplete_index_js":"515dd4c5b9e6e345a1ea","vendors-node_modules_material-ui_core_esm_styles_index_js":"b2604edf5f43bcfce41a"}[chunkId] + ".js";
 /******/ 		};
 /******/ 	}();
 /******/ 	
@@ -6234,4 +6207,4 @@ document.addEventListener('click', e => {
 }();
 /******/ })()
 ;
-//# sourceMappingURL=index.309d823ef1f42e7c430b.js.map
+//# sourceMappingURL=index.32ab78a201048dab4bc0.js.map

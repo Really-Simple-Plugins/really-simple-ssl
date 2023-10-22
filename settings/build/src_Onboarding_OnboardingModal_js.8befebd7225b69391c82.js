@@ -183,6 +183,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _OnboardingData__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./OnboardingData */ "./src/Onboarding/OnboardingData.js");
 /* harmony import */ var _Settings_RiskConfiguration_RiskData__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../Settings/RiskConfiguration/RiskData */ "./src/Settings/RiskConfiguration/RiskData.js");
 /* harmony import */ var _OnboardingControls__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./OnboardingControls */ "./src/Onboarding/OnboardingControls.js");
+/* harmony import */ var _Settings_Host_Host__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../Settings/Host/Host */ "./src/Settings/Host/Host.js");
+
 
 
 
@@ -201,7 +203,9 @@ const Onboarding = _ref => {
   } = _ref;
   const {
     fetchFieldsData,
-    getFieldValue
+    getFieldValue,
+    fields,
+    fieldsLoaded
   } = (0,_Settings_FieldsData__WEBPACK_IMPORTED_MODULE_6__["default"])();
   const {
     getProgressData
@@ -262,6 +266,11 @@ const Onboarding = _ref => {
       activateSSLNetworkWide();
     }
   }, [networkActivationStatus, networkProgress]);
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    if (!fieldsLoaded) {
+      fetchFieldsData();
+    }
+  }, []);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     const run = async () => {
       await getSteps(false);
@@ -364,6 +373,7 @@ const Onboarding = _ref => {
       }, buttonTitle), !showLink && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, buttonTitle)));
     });
   };
+  console.log(currentStep);
   if (error) {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Placeholder_Placeholder__WEBPACK_IMPORTED_MODULE_5__["default"], {
       lines: "3",
@@ -372,6 +382,10 @@ const Onboarding = _ref => {
   }
   let step = currentStep;
   let processingClass = processing ? 'rsssl-processing' : '';
+  //get 'other_host_type' field from fields
+  let otherHostsField = fieldsLoaded && fields.find(field => {
+    return field.id === 'other_host_type';
+  });
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, !dataLoaded && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-onboarding-placeholder"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_4__["default"], {
@@ -381,7 +395,9 @@ const Onboarding = _ref => {
     lines: "3"
   }))), dataLoaded && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: processingClass
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", null, parseStepItems(step.items)), currentStep.id === 'email' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", null, parseStepItems(step.items)), currentStep.id === 'activate_ssl' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Settings_Host_Host__WEBPACK_IMPORTED_MODULE_11__["default"], {
+    field: otherHostsField
+  }), "HOSTS"), currentStep.id === 'email' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
     type: "email",
     value: email,
     placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Your email address", "really-simple-ssl"),
@@ -653,6 +669,120 @@ const Placeholder = props => {
   })));
 };
 /* harmony default export */ __webpack_exports__["default"] = (Placeholder);
+
+/***/ }),
+
+/***/ "./src/Settings/Host/Host.js":
+/*!***********************************!*\
+  !*** ./src/Settings/Host/Host.js ***!
+  \***********************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../FieldsData */ "./src/Settings/FieldsData.js");
+/* harmony import */ var _HostData__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./HostData */ "./src/Settings/Host/HostData.js");
+
+
+
+
+
+const Host = _ref => {
+  let {
+    field
+  } = _ref;
+  const {
+    updateField,
+    setChangedField,
+    saveFields,
+    handleNextButtonDisabled
+  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_2__["default"])();
+  const disabled = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useRef)(false);
+  const {
+    fetchHosts,
+    hosts,
+    hostsLoaded
+  } = (0,_HostData__WEBPACK_IMPORTED_MODULE_3__["default"])();
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    if (!hostsLoaded) {
+      fetchHosts();
+    }
+  }, []);
+  const onChangeHandler = async fieldValue => {
+    let field = field;
+    //force update, and get new fields.
+    handleNextButtonDisabled(true);
+    disabled.current = true;
+    updateField(field.id, fieldValue);
+    setChangedField(field.id, fieldValue);
+    await saveFields(true, false);
+    handleNextButtonDisabled(false);
+    disabled.current = false;
+  };
+  let loadedHosts = hostsLoaded ? hosts : [];
+  let options = [];
+  for (let key in loadedHosts) {
+    if (loadedHosts.hasOwnProperty(key)) {
+      let item = {};
+      item.label = loadedHosts[key].name;
+      item.value = key;
+      options.push(item);
+    }
+  }
+  console.log(hosts);
+  console.log(options);
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.SelectControl, {
+    label: field.label,
+    onChange: fieldValue => onChangeHandler(fieldValue),
+    value: field.value,
+    options: options,
+    disabled: disabled.current
+  });
+};
+/* harmony default export */ __webpack_exports__["default"] = ((0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.memo)(Host));
+
+/***/ }),
+
+/***/ "./src/Settings/Host/HostData.js":
+/*!***************************************!*\
+  !*** ./src/Settings/Host/HostData.js ***!
+  \***************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/index.mjs");
+/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils/api */ "./src/utils/api.js");
+
+
+const useHostData = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, get) => ({
+  hosts: [],
+  hostsLoaded: false,
+  fetchHosts: async id => {
+    try {
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('get_hosts', {
+        id: id
+      });
+
+      // Handle the response
+      if (!response) {
+        console.error('No response received from the server.');
+        return;
+      }
+      let hosts = response.hosts;
+      // Set the roles state with formatted data
+      set({
+        hosts: hosts,
+        hostsLoaded: true
+      });
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+}));
+/* harmony default export */ __webpack_exports__["default"] = (useHostData);
 
 /***/ }),
 
@@ -1546,4 +1676,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Onboarding_OnboardingModal_js.b4b98d8f3e7bfd2c7d95.js.map
+//# sourceMappingURL=src_Onboarding_OnboardingModal_js.8befebd7225b69391c82.js.map

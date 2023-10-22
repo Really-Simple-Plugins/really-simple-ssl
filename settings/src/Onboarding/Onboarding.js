@@ -9,9 +9,10 @@ import useProgress from "../Dashboard/Progress/ProgressData";
 import useOnboardingData from "./OnboardingData";
 import useRiskData from "../Settings/RiskConfiguration/RiskData";
 import OnboardingControls from "./OnboardingControls";
+import Host from "../Settings/Host/Host";
 
 const Onboarding = ({isModal}) => {
-    const { fetchFieldsData, getFieldValue} = useFields();
+    const { fetchFieldsData, getFieldValue, fields, fieldsLoaded} = useFields();
     const { getProgressData} = useProgress();
     const [hardeningEnabled, setHardeningEnabled] = useState(false);
     const [vulnerabilityDetectionEnabled, setVulnerabilityDetectionEnabled] = useState(false);
@@ -69,6 +70,12 @@ const Onboarding = ({isModal}) => {
             activateSSLNetworkWide();
         }
     }, [networkActivationStatus, networkProgress])
+
+    useEffect(() => {
+        if ( !fieldsLoaded ) {
+            fetchFieldsData();
+        }
+    }, []);
 
 
     useEffect( () => {
@@ -177,8 +184,7 @@ const Onboarding = ({isModal}) => {
         })
     }
 
-
-
+    console.log(currentStep);
 
     if (error){
         return (
@@ -187,6 +193,10 @@ const Onboarding = ({isModal}) => {
     }
     let step = currentStep;
     let processingClass = processing ? 'rsssl-processing' : '';
+    //get 'other_host_type' field from fields
+    let otherHostsField = fieldsLoaded && fields.find((field) => {
+        return field.id === 'other_host_type';
+    });
     return (
         <>
             { !dataLoaded &&
@@ -205,6 +215,10 @@ const Onboarding = ({isModal}) => {
                         <ul>
                             { parseStepItems(step.items) }
                         </ul>
+                        { currentStep.id === 'activate_ssl' && <>
+                            <Host field={otherHostsField}/>
+                            HOSTS
+                        </>}
                         { currentStep.id === 'email'&&
                             <>
                                 <div>

@@ -1333,7 +1333,28 @@ const errorMsg = error => {
   return false;
 };
 
+/***/ }),
+
+/***/ "./src/utils/sleeper.js":
+/*!******************************!*\
+  !*** ./src/utils/sleeper.js ***!
+  \******************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/*
+ * helper function to delay after a promise
+ * @param ms
+ * @returns {function(*): Promise<unknown>}
+ */
+const sleeper = ms => {
+  return function (x) {
+    return new Promise(resolve => setTimeout(() => resolve(x), ms));
+  };
+};
+/* harmony default export */ __webpack_exports__["default"] = (sleeper);
+
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Settings_js.007aaef6ddc10c30be64.js.map
+//# sourceMappingURL=src_Settings_Settings_js.f02a67c809dd4b5a9506.js.map

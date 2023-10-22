@@ -8,7 +8,7 @@ import { __ } from '@wordpress/i18n';
 import License from "./License/License";
 import Password from "./Password";
 import SelectControl from "./SelectControl";
-import Host from "./Host";
+import Host from "./Host/Host";
 import Hyperlink from "../utils/Hyperlink";
 import LetsEncrypt from "../LetsEncrypt/LetsEncrypt";
 import Activate from "../LetsEncrypt/Activate";

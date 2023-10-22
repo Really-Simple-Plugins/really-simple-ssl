@@ -12,6 +12,9 @@
   height: 50px;
   border-color: var(--rsp-grey-300);
 }
+.rsssl-modal.rsssl-onboarding-modal .rsssl-modal-body .components-flex-item {
+  display: none;
+}
 .rsssl-modal.rsssl-onboarding-modal .rsssl-modal-body ul {
   -moz-column-count: 1;
        column-count: 1;

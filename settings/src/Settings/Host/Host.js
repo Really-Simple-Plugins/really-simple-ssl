@@ -1,15 +1,22 @@
 import {
     SelectControl,
 } from '@wordpress/components';
-import {useRef} from "@wordpress/element";
-import useFields from "./FieldsData";
+import {useRef, useEffect, memo} from "@wordpress/element";
+import useFields from "../FieldsData";
+import useHostData from "./HostData";
 
-const Host = (props) => {
+const Host = ({field}) => {
     const {updateField, setChangedField, saveFields, handleNextButtonDisabled} = useFields();
     const disabled = useRef(false);
+    const {fetchHosts, hosts, hostsLoaded} = useHostData();
 
+    useEffect ( () => {
+        if ( !hostsLoaded ) {
+            fetchHosts();
+        }
+    }, []);
     const onChangeHandler = async (fieldValue) => {
-        let field = props.field;
+        let field = field;
         //force update, and get new fields.
         handleNextButtonDisabled(true);
         disabled.current = true;
@@ -22,28 +29,28 @@ const Host = (props) => {
         disabled.current = false;
     }
 
-    let fieldValue = props.field.value;
-    let field = props.field;
+    let loadedHosts = hostsLoaded ? hosts : [];
     let options = [];
-    if ( field.options ) {
-        for (var key in field.options) {
-            if (field.options.hasOwnProperty(key)) {
-                let item = {};
-                item.label = field.options[key];
-                item.value = key;
-                options.push(item);
-            }
+    for (let key in loadedHosts) {
+        if (loadedHosts.hasOwnProperty(key)) {
+            let item = {};
+            item.label = loadedHosts[key].name;
+            item.value = key;
+            options.push(item);
         }
     }
+
+    console.log(hosts);
+    console.log(options);
 
     return (
           <SelectControl
               label={ field.label }
               onChange={ ( fieldValue ) => onChangeHandler(fieldValue) }
-              value= { fieldValue }
+              value= { field.value }
               options={ options }
               disabled={disabled.current}
           />
     )
 }
-export default Host;
+export default memo(Host);

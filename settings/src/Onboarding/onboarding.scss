@@ -12,6 +12,10 @@
       height: 50px;
       border-color: var(--rsp-grey-300);
     }
+    //hide select label
+    .components-flex-item {
+      display:none;
+    }
 
     ul {
       column-count: 1;

@@ -2832,7 +2832,28 @@ const getRelativeTime = function (relativeDate) {
   }
 };
 
+/***/ }),
+
+/***/ "./src/utils/sleeper.js":
+/*!******************************!*\
+  !*** ./src/utils/sleeper.js ***!
+  \******************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/*
+ * helper function to delay after a promise
+ * @param ms
+ * @returns {function(*): Promise<unknown>}
+ */
+const sleeper = ms => {
+  return function (x) {
+    return new Promise(resolve => setTimeout(() => resolve(x), ms));
+  };
+};
+/* harmony default export */ __webpack_exports__["default"] = (sleeper);
+
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Dashboard_DashboardPage_js.a28e9a6e4d95ed0f2adb.js.map
+//# sourceMappingURL=src_Dashboard_DashboardPage_js.40f5ca511402c76d32a7.js.map
