@@ -1,5 +1,5 @@
 import { useEffect, useState } from "@wordpress/element";
-import { Button, ToggleControl } from '@wordpress/components';
+import { Button } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import Icon from "../utils/Icon";
 import Placeholder from '../Placeholder/Placeholder';
@@ -8,10 +8,11 @@ import useProgress from "../Dashboard/Progress/ProgressData";
 import useOnboardingData from "./OnboardingData";
 import useRiskData from "../Settings/RiskConfiguration/RiskData";
 import OnboardingControls from "./OnboardingControls";
-import Host from "../Settings/Host/Host";
+import StepEmail from "./StepEmail";
+import StepConfig from "./StepConfig";
 
 const Onboarding = ({isModal}) => {
-    const { fetchFieldsData, getFieldValue, getField, fields, fieldsLoaded, updateField, setChangedField, saveFields} = useFields();
+    const { fetchFieldsData, fieldsLoaded, updateField, setChangedField, saveFields} = useFields();
     const { getProgressData} = useProgress();
     const [hardeningEnabled, setHardeningEnabled] = useState(false);
     const [vulnerabilityDetectionEnabled, setVulnerabilityDetectionEnabled] = useState(false);
@@ -19,7 +20,6 @@ const Onboarding = ({isModal}) => {
         fetchFirstRun, fetchVulnerabilities
     } = useRiskData();
     const {
-        actionHandler,
         getSteps,
         error,
         certificateValid,
@@ -30,39 +30,10 @@ const Onboarding = ({isModal}) => {
         currentStep,
         currentStepIndex,
         setCurrentStepIndex,
-        overrideSSL,
-        setOverrideSSL,
         networkActivationStatus,
         networkProgress,
-        refreshSSLStatus,
         activateSSLNetworkWide,
-        email,
-        setEmail,
-        includeTips,
-        setIncludeTips,
     } = useOnboardingData();
-    const statuses = {
-        'inactive': {
-            'icon': 'info',
-            'color': 'grey',
-        },
-        'warning': {
-            'icon': 'circle-times',
-            'color': 'orange',
-        },
-        'error': {
-            'icon': 'circle-times',
-            'color': 'red',
-        },
-        'success': {
-            'icon': 'circle-check',
-            'color': 'green',
-        },
-        'processing': {
-            'icon': 'loading',
-            'color': 'black',
-        },
-    };
 
     useEffect( () => {
         if (networkwide && networkActivationStatus==='main_site_activated') {
@@ -82,10 +53,6 @@ const Onboarding = ({isModal}) => {
             await getSteps(false);
             if ( dataLoaded && sslEnabled && currentStepIndex===0) {
                 setCurrentStepIndex(1)
-            }
-
-            if (getFieldValue('notifications_email_address') !== '' && email==='') {
-                setEmail(getFieldValue('notifications_email_address'))
             }
         }
         run();
@@ -108,12 +75,6 @@ const Onboarding = ({isModal}) => {
         }
     }, [currentStep]);
 
-    const onChangeCloudFlareHandler = async (fieldValue) => {
-        updateField('cloudflare_enabled', fieldValue);
-        setChangedField('cloudflare_enabled', fieldValue);
-        await saveFields(true, false);
-    }
-
     //ensure all fields are updated, and progress is retrieved again
     useEffect( () => {
         const runUpdate = async () => {
@@ -134,61 +95,6 @@ const Onboarding = ({isModal}) => {
         runUpdate();
     }, [hardeningEnabled, vulnerabilityDetectionEnabled])
 
-    const parseStepItems = (items) => {
-        return items && items.map( (item, index) => {
-            let { title, description, current_action, action, status, button, id } = item
-
-            if ( id==='ssl_enabled' && networkwide ) {
-                if ( networkProgress>=100) {
-                    status = 'success';
-                    title = __( "SSL has been activated network wide", "really-simple-ssl" );
-                } else {
-                    status = 'processing';
-                    title = __( "Processing activation of subsites networkwide", "really-simple-ssl" );
-                }
-            }
-            const statusIcon = item.status!=='success' && item.is_plugin && item.current_action === 'none' ? 'empty' : statuses[status].icon;
-            const statusColor = statuses[status].color;
-            const currentActions = {
-                'activate_setting': __('Activating...',"really-simple-ssl"),
-                'activate': __('Activating...',"really-simple-ssl"),
-                'install_plugin': __('Installing...',"really-simple-ssl"),
-                'error': __('Failed',"really-simple-ssl"),
-                'completed': __('Finished',"really-simple-ssl"),
-            };
-
-            let buttonTitle = '';
-            if ( button ) {
-                buttonTitle = button;
-                if ( current_action!=='none' ) {
-                    buttonTitle = currentActions[current_action];
-                    if ( current_action==='failed' ) {
-                        buttonTitle = currentActions['error'];
-                    }
-                }
-            }
-            let showLink = (button && button===buttonTitle);
-            let showAsPlugin = item.status!=='success' && item.is_plugin && item.current_action === 'none';
-            let isPluginClass = showAsPlugin ? 'rsssl-is-plugin' : '';
-            title = showAsPlugin ? <b>{title}</b> : title;
-            return (
-                <li key={"pluginItem-"+index} className={isPluginClass}>
-                    <Icon name = {statusIcon} color = {statusColor} />
-                    {title}{description && <>&nbsp;-&nbsp;{description}</>}
-                    {id==='ssl_enabled' && networkwide && networkActivationStatus==='main_site_activated' && <>
-                        &nbsp;-&nbsp;
-                        {networkProgress<100 && <>{__("working", "really-simple-ssl")}&nbsp;{networkProgress}%</>}
-                        {networkProgress>=100 && __("completed", "really-simple-ssl") }
-                        </>}
-                    {button && <>&nbsp;-&nbsp;
-                        {showLink && <Button isLink={true} onClick={(e) => actionHandler(id, action, e)}>{buttonTitle}</Button>}
-                        {!showLink && <>{buttonTitle}</>}
-                    </>}
-                </li>
-            )
-        })
-    }
-
     console.log(currentStep);
 
     if (error){
@@ -196,11 +102,9 @@ const Onboarding = ({isModal}) => {
             <Placeholder lines="3" error={error}></Placeholder>
         )
     }
-    let step = currentStep;
     let processingClass = processing ? 'rsssl-processing' : '';
     //get 'other_host_type' field from fields
-    let otherHostsField = fieldsLoaded && getField('other_host_type');
-    let CloudFlareEnabled = fieldsLoaded && getField('cloudflare_enabled');
+
 
     return (
         <>
@@ -208,7 +112,7 @@ const Onboarding = ({isModal}) => {
                 <>
                     <div className="rsssl-onboarding-placeholder">
                         <ul>
-                            <li><Icon name = "file-download" color = 'grey' />{__("Fetching next step...", "really-simple-ssl")}</li>
+                            <li><Icon name = "loading" color = 'grey' />{__("Fetching next step...", "really-simple-ssl")}</li>
                         </ul>
                         <Placeholder lines="3" ></Placeholder>
                     </div>
@@ -217,46 +121,26 @@ const Onboarding = ({isModal}) => {
             {
                 dataLoaded &&
                     <div className={ processingClass }>
-                        { currentStep.id === 'activate_ssl' && <>
-                            <Host field={otherHostsField}/>
-                            <label>
-                                <input onChange={ (e) => onChangeCloudFlareHandler(e.target.checked)} type="checkbox" checked={CloudFlareEnabled.value} />{__("I use CloudFlare.","really-simple-ssl")}
-                            </label>
-                        </>}
-                        <ul>
-                            { parseStepItems(step.items) }
-                        </ul>
+                        { currentStep.id === 'activate_ssl' &&
+                          <>
+                              <StepConfig />
+                          </>
+                        }
                         { currentStep.id === 'email'&&
                             <>
-                                <div>
-                                    <input type="email" value={email} placeholder={__("Your email address", "really-simple-ssl")} onChange={(e) => setEmail(e.target.value)} />
-                                </div>
-                                <div>
-                                <label>
-                                    <input onChange={ (e) => setIncludeTips(e.target.checked)} type="checkbox" checked={includeTips} />{__("Include 6 Tips & Tricks to get started with Really Simple SSL.","really-simple-ssl")}&nbsp;<a href="https://really-simple-ssl.com/legal/privacy-statement/" target="_blank">{__("Privacy Statement", "really-simple-ssl")}</a>
-                                </label>
-                                </div>
-                            </>
-                        }
-                        { certificateValid && step.info_text && <div className="rsssl-modal-description" dangerouslySetInnerHTML={{__html: step.info_text}} /> }
-                        { currentStepIndex===0 && !certificateValid &&
-                            <>
-                                <div className="rsssl-modal-description">
-                                   <a href="#" onClick={ (e) => refreshSSLStatus(e)}>
-                                       { __("Refresh SSL status", "really-simple-ssl")}
-                                   </a>.&nbsp;{__("The SSL detection method is not 100% accurate.", "really-simple-ssl")}&nbsp;
-                                   {__("If you’re certain an SSL certificate is present, and refresh SSL status does not work, please check “Override SSL detection” to continue activating SSL.", "really-simple-ssl")}
-                                </div>
-                                <label className="rsssl-override-detection-toggle">
-                                    <input
-                                        onChange={ (e) => setOverrideSSL(e.target.checked)} type="checkbox" checked={overrideSSL} />{__("Override SSL detection.","really-simple-ssl")}
-                                </label>
-                                { !isModal &&
-                                    <OnboardingControls isModal={isModal}/>
-                                }
+                                <StepEmail />
                             </>
                         }
 
+                        { currentStep.id === 'plugins' &&
+                            <>
+                                <StepPlugins />
+                            </>
+                        }
+                        { certificateValid && currentStep.info_text && <div className="rsssl-modal-description" dangerouslySetInnerHTML={{__html: currentStep.info_text}} /> }
+                        { !isModal &&
+                            <OnboardingControls isModal={false}/>
+                        }
                     </div>
             }
         </>

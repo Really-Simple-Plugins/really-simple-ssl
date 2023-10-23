@@ -17,6 +17,7 @@ const OnboardingControls = ({isModal}) => {
         processing,
         steps,
         currentStepIndex,
+        currentStep,
         setCurrentStepIndex,
         overrideSSL,
         email,
@@ -59,10 +60,12 @@ const OnboardingControls = ({isModal}) => {
     }
 
     if (currentStepIndex>0 && currentStepIndex<steps.length-1) {
+        let buttonText = __('Save and continue', 'really-simple-ssl');
+        if (currentStep.id === 'plugins') {}
         return (
             <>
                 <Button disabled={processing} onClick={() => {setCurrentStepIndex(currentStepIndex+1)}}>{__('Skip', 'really-simple-ssl')}</Button>
-                <Button disabled={processing} isPrimary onClick={() => saveEmailAndUpdateFields()}>{__('Save and continue', 'really-simple-ssl')}</Button>
+                <Button disabled={processing} isPrimary onClick={() => saveEmailAndUpdateFields()}>{buttonText}</Button>
             </>
         );
     }

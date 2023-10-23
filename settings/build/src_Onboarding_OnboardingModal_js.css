@@ -17,7 +17,7 @@
 .rsssl-modal.rsssl-onboarding-modal .rsssl-modal-body .rsssl-select .components-select-control__input {
   height: 45px;
   padding: 8px 20px;
-  color: var(--rsp-grey-700);
+  color: var(--rsp-grey-500);
 }
 .rsssl-modal.rsssl-onboarding-modal .rsssl-modal-body ul {
   -moz-column-count: 1;

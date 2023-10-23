@@ -184,6 +184,12 @@ class rsssl_onboarding {
 				"subtitle" => __("We use email notification to explain important updates in plugin settings.", "really-simple-ssl").' '.__("Add your email address below.", "really-simple-ssl"),
 			],
 			[
+				"id" => 'plugins',
+				"title" => __("Free plugins", "really-simple-ssl"),
+				"subtitle" => __("Really Simple Plugins is also the author of the below privacy-focused plugins, including consent management, legal documents and analytics!.", "really-simple-ssl"),
+				"items" => $this->plugins(),
+			],
+			[
 				"id" => 'onboarding',
 				"title" => get_option('rsssl_show_onboarding') ? __( "Thanks for updating!", 'really-simple-ssl' ) : __( "Congratulations!", 'really-simple-ssl' ),
 				"subtitle" => __("Now have a look at our new features.", "really-simple-ssl"),
@@ -243,11 +249,8 @@ class rsssl_onboarding {
 		return $items;
 	}
 
-	/**
-	 * Returns onboarding items if user upgraded plugin to 6.0 or SSL is detected
-	 * @return array
-	 */
-	public function second_step () {
+	public function plugins(){
+		$items = [];
 		$plugins_to_install = [
 			[
 				"slug" => "burst-statistics",
@@ -264,6 +267,53 @@ class rsssl_onboarding {
 				'read_more' => false,
 			]
 		];
+		foreach ($plugins_to_install as $plugin_info) {
+			require_once(rsssl_path . 'class-installer.php');
+			$plugin = new rsssl_installer($plugin_info["slug"]);
+			$premium_active = $plugin_info['constant_premium'] && defined($plugin_info['constant_premium']);
+			$free_active = $plugin->plugin_is_downloaded() && $plugin->plugin_is_activated();
+			if( $premium_active || $free_active ) {
+				$items[] = [
+					"id" => $plugin_info['slug'],
+					"is_plugin" => true,
+					"title" => sprintf(__("%s has been installed!", "really-simple-ssl"), $plugin_info["title"]),
+					"action" => "none",
+					"current_action" => "none",
+					"status" => "success",
+				];
+			} else if( !$plugin->plugin_is_downloaded() ){
+				$items[] = [
+					"id" => $plugin_info['slug'],
+					"is_plugin" => true,
+					"title" => $plugin_info["title"],
+					"description" => $plugin_info["description"],
+					"read_more" => $plugin_info["read_more"],
+					"action" => "install_plugin",
+					"current_action" => "none",
+					"status" => "warning",
+					"button" => __("Install", "really-simple-ssl"),
+				];
+			} else if ( $plugin->plugin_is_downloaded() && !$plugin->plugin_is_activated() ) {
+				$items[] = [
+					"id" => $plugin_info['slug'],
+					"is_plugin" => true,
+					"title" => sprintf(__("Activate our plugin %s", "really-simple-ssl"), $plugin_info["title"]),
+					"action" => "activate",
+					"current_action" => "none",
+					"status" => "warning",
+					"button" => __("Activate", "really-simple-ssl"),
+				];
+			}
+		}
+		return $items;
+	}
+
+	/**
+	 * Returns onboarding items if user upgraded plugin to 6.0 or SSL is detected
+	 * @return array
+	 */
+	public function second_step () {
+
 
 		$items = [];
 		$items[] = [
@@ -310,47 +360,6 @@ class rsssl_onboarding {
 				"status" => "success",
 				"id" => "hardening",
 			];
-		}
-
-		foreach ($plugins_to_install as $plugin_info) {
-			require_once(rsssl_path . 'class-installer.php');
-			$plugin = new rsssl_installer($plugin_info["slug"]);
-			$premium_active = $plugin_info['constant_premium'] && defined($plugin_info['constant_premium']);
-			$free_active = $plugin->plugin_is_downloaded() && $plugin->plugin_is_activated();
-			if( $premium_active || $free_active ) {
-				$items[] = [
-					"id" => $plugin_info['slug'],
-					"is_plugin" => true,
-					"title" => sprintf(__("%s has been installed!", "really-simple-ssl"), $plugin_info["title"]),
-					"action" => "none",
-					"current_action" => "none",
-					"status" => "success",
-				];
-			} else if( !$plugin->plugin_is_downloaded() ){
-				$items[] = [
-					"id" => $plugin_info['slug'],
-					"is_plugin" => true,
-					"title" => $plugin_info["title"],
-					"description" => $plugin_info["description"],
-					"read_more" => $plugin_info["read_more"],
-					"action" => "install_plugin",
-					"current_action" => "none",
-					"status" => "warning",
-					"button" => __("Install", "really-simple-ssl"),
-				];
-			} else if ( $plugin->plugin_is_downloaded() && !$plugin->plugin_is_activated() ) {
-				$items[] = [
-					"id" => $plugin_info['slug'],
-					"is_plugin" => true,
-					"title" => sprintf(__("Activate our plugin %s", "really-simple-ssl"), $plugin_info["title"]),
-					"action" => "activate",
-					"current_action" => "none",
-					"status" => "warning",
-					"button" => __("Activate", "really-simple-ssl"),
-				];
-			}
-
-
 		}
 
 		return $items;
