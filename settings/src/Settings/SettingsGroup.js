@@ -8,14 +8,13 @@ import useLicense from "./License/LicenseData";
 import filterData from "./FilterData";
 import {useEffect, useState} from '@wordpress/element';
 
-
 /**
  * Render a grouped block of settings
  */
 const SettingsGroup = (props) => {
+
     const {fields} = useFields();
-    const {selectedFilter, setSelectedFilter, processingFilter} = filterData();
-    const {setActiveGroupId, activeGroupId} = useMenu();
+    const {selectedFilter, setSelectedFilter} = filterData();
     const {licenseStatus} = useLicense();
     const {selectedSubMenuItem, subMenu} = useMenu();
     const [Field, setField] = useState(null);
@@ -54,31 +53,45 @@ const SettingsGroup = (props) => {
     }
 
     let activeGroup;
-    //first, set the selected menu item as activate group, so we have a default in case there are no groups
-    for (const item of subMenu.menu_items) {
-        if (item.id === selectedSubMenuItem) {
-            activeGroup = item;
-        } else if (item.menu_items) {
-            activeGroup = item.menu_items.filter(menuItem => menuItem.id === selectedSubMenuItem)[0];
-        }
-        if (activeGroup) {
-            break;
-        }
-    }
 
-    //now check if we have actual groups
     for (const item of subMenu.menu_items) {
         if (item.id === selectedSubMenuItem && item.hasOwnProperty('groups')) {
-            let currentGroup = item.groups.filter(group => group.id === props.group);
-            if (currentGroup.length > 0) {
-                activeGroup = currentGroup[0];
+            for (const group of item.groups) {
+                if (group.group_id === props.group) {
+                    activeGroup = group;
+                    break;
+                }
+            }
+        }
+        if (activeGroup) break; // Exit the loop once a match is found.
+    }
+
+// If activeGroup is not set, then default to the parent menu item.
+    if (!activeGroup) {
+        for (const item of subMenu.menu_items) {
+            if (item.id === selectedSubMenuItem) {
+                activeGroup = item;
+                break;
+            }
+            // Handle the case where there are nested menu items.
+            if (item.menu_items) {
+                const nestedItem = item.menu_items.find(menuItem => menuItem.id === selectedSubMenuItem);
+                if (nestedItem) {
+                    activeGroup = nestedItem;
+                    break;
+                }
             }
         }
     }
 
-    if (!activeGroup) {
-        return (<></>);
+    // Check for nested groups in the activeGroup.
+    if (activeGroup && activeGroup.groups) {
+        const nestedGroup = activeGroup.groups.find(group => group.group_id === props.group);
+        if (nestedGroup) {
+            activeGroup = nestedGroup;
+        }
     }
+
     let msg = activeGroup.premium_text ? activeGroup.premium_text : __("Learn more about %sPremium%s", "really-simple-ssl");
     if (rsssl_settings.pro_plugin_active) {
         if (licenseStatus === 'empty' || licenseStatus === 'deactivated') {
@@ -99,21 +112,17 @@ const SettingsGroup = (props) => {
     let anchor = getAnchor('main');
     let disabledClass = disabled || networkwide_error ? 'rsssl-disabled' : '';
     const filterId = "rsssl-group-filter-" + activeGroup.id;
-    console.log('activeGroup', activeGroup.id);
     return (
         <div className={"rsssl-grid-item rsssl-" + activeGroup.id + ' ' + disabledClass}>
             {activeGroup.title && <div className="rsssl-grid-item-header">
                 <h3 className="rsssl-h4">{activeGroup.title}</h3>
                 {activeGroup.groupFilter && (
-                    <div className="rsssl-grid-item-controls">
-                        <h1>Kut</h1>
-                        {activeGroup.groupFilter && (
+                        <div className="rsssl-grid-item-controls">
                             <select
                                 className="rsssl-group-filter"
                                 id={filterId}
                                 name={filterId}
                                 value={selectedFilter[filterId]}
-                                disabled={processingFilter}
                                 onChange={(e) => {
                                     const selectedValue = e.target.value;
                                     setSelectedFilter(selectedValue, filterId);
@@ -129,7 +138,6 @@ const SettingsGroup = (props) => {
                                     </option>
                                 ))}
                             </select>
-                        )}
                     </div>
                 )}
                 {activeGroup.helpLink && anchor !== 'letsencrypt' && (
@@ -151,7 +159,8 @@ const SettingsGroup = (props) => {
                 {(activeGroup.intro && typeof activeGroup.intro === 'string') && <div className="rsssl-settings-block-intro">{activeGroup.intro}</div>}
                 {(activeGroup.intro &&  typeof activeGroup.intro === 'object') && <div className="rsssl-settings-block-intro">{updatedIntro}</div>}
                 {Field && selectedFields.map((field, i) =>
-                    <Field key={"selectedFields-" + i} index={i} field={field} fields={selectedFields}/>)}
+                        <Field key={"selectedFields-" + i} index={i} field={field} fields={selectedFields}/>
+                )}
             </div>
             {disabled && !networkwide_error && <div className="rsssl-locked">
                 <div className="rsssl-locked-overlay">

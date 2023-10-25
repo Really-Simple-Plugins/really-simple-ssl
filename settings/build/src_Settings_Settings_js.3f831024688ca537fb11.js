@@ -510,13 +510,8 @@ const SettingsGroup = props => {
   } = (0,_Settings_FieldsData__WEBPACK_IMPORTED_MODULE_5__["default"])();
   const {
     selectedFilter,
-    setSelectedFilter,
-    processingFilter
+    setSelectedFilter
   } = (0,_FilterData__WEBPACK_IMPORTED_MODULE_8__["default"])();
-  const {
-    setActiveGroupId,
-    activeGroupId
-  } = (0,_Menu_MenuData__WEBPACK_IMPORTED_MODULE_6__["default"])();
   const {
     licenseStatus
   } = (0,_License_LicenseData__WEBPACK_IMPORTED_MODULE_7__["default"])();
@@ -557,29 +552,42 @@ const SettingsGroup = props => {
     }
   }
   let activeGroup;
-  //first, set the selected menu item as activate group, so we have a default in case there are no groups
-  for (const item of subMenu.menu_items) {
-    if (item.id === selectedSubMenuItem) {
-      activeGroup = item;
-    } else if (item.menu_items) {
-      activeGroup = item.menu_items.filter(menuItem => menuItem.id === selectedSubMenuItem)[0];
-    }
-    if (activeGroup) {
-      break;
-    }
-  }
-
-  //now check if we have actual groups
   for (const item of subMenu.menu_items) {
     if (item.id === selectedSubMenuItem && item.hasOwnProperty('groups')) {
-      let currentGroup = item.groups.filter(group => group.id === props.group);
-      if (currentGroup.length > 0) {
-        activeGroup = currentGroup[0];
+      for (const group of item.groups) {
+        if (group.group_id === props.group) {
+          activeGroup = group;
+          break;
+        }
+      }
+    }
+    if (activeGroup) break; // Exit the loop once a match is found.
+  }
+
+  // If activeGroup is not set, then default to the parent menu item.
+  if (!activeGroup) {
+    for (const item of subMenu.menu_items) {
+      if (item.id === selectedSubMenuItem) {
+        activeGroup = item;
+        break;
+      }
+      // Handle the case where there are nested menu items.
+      if (item.menu_items) {
+        const nestedItem = item.menu_items.find(menuItem => menuItem.id === selectedSubMenuItem);
+        if (nestedItem) {
+          activeGroup = nestedItem;
+          break;
+        }
       }
     }
   }
-  if (!activeGroup) {
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null);
+
+  // Check for nested groups in the activeGroup.
+  if (activeGroup && activeGroup.groups) {
+    const nestedGroup = activeGroup.groups.find(group => group.group_id === props.group);
+    if (nestedGroup) {
+      activeGroup = nestedGroup;
+    }
   }
   let msg = activeGroup.premium_text ? activeGroup.premium_text : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Learn more about %sPremium%s", "really-simple-ssl");
   if (rsssl_settings.pro_plugin_active) {
@@ -600,7 +608,6 @@ const SettingsGroup = props => {
   let anchor = (0,_utils_getAnchor__WEBPACK_IMPORTED_MODULE_2__["default"])('main');
   let disabledClass = disabled || networkwide_error ? 'rsssl-disabled' : '';
   const filterId = "rsssl-group-filter-" + activeGroup.id;
-  console.log('activeGroup', activeGroup.id);
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-grid-item rsssl-" + activeGroup.id + ' ' + disabledClass
   }, activeGroup.title && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -609,12 +616,11 @@ const SettingsGroup = props => {
     className: "rsssl-h4"
   }, activeGroup.title), activeGroup.groupFilter && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-grid-item-controls"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h1", null, "Kut"), activeGroup.groupFilter && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
     className: "rsssl-group-filter",
     id: filterId,
     name: filterId,
     value: selectedFilter[filterId],
-    disabled: processingFilter,
     onChange: e => {
       const selectedValue = e.target.value;
       setSelectedFilter(selectedValue, filterId);
@@ -1334,4 +1340,4 @@ const errorMsg = error => {
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Settings_js.889ce55d9198fed47aa2.js.map
+//# sourceMappingURL=src_Settings_Settings_js.3f831024688ca537fb11.js.map
