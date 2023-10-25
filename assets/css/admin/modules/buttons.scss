@@ -1,6 +1,10 @@
 .rsssl {
+  .rsssl-field-button {
+    button.button {
+      display:flex;
+    }
+  }
   a.button, button.button, input.button, span.button {
-    display: flex;
     font-size: var(--rsp-fs-300);
     font-weight: 400;
     transition: all 0.3s ease;
@@ -65,14 +69,7 @@
   cursor: pointer;
 }
 
-
 .rsssl-action-buttons {
-  /* Making sure we use the full width of the container */
-  display: flex;
-  justify-content: flex-end;
-}
-
-.rsssl-action-buttons__inner {
   display: flex;
   justify-content: flex-end;
 }

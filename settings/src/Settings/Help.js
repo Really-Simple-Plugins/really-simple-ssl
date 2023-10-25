@@ -4,7 +4,7 @@ import { __ } from '@wordpress/i18n';
  * Render a help notice in the sidebar
  */
 const Help = (props) => {
-    let notice = props.help;
+    let notice = {...props.help};
     if ( !notice.title ){
         notice.title = notice.text;
         notice.text = false;

@@ -1,0 +1,24 @@
+{
+  "name": "really-simple-ssl-modal",
+  "version": "1.0.1",
+  "description": "Executes the modal functionality for the plugins page for really-simple-ssl",
+  "main": "index.js",
+  "scripts": {
+    "start": "wp-scripts start",
+    "build": "set \"INLINE_RUNTIME_CHUNK=false\" && wp-scripts build"
+  },
+  "author": "Really Simple Plugins",
+  "license": "GPL-2.0-only",
+  "devDependencies": {
+    "@wordpress/scripts": "^26.12.0",
+    "sass": "^1.68.0",
+    "sass-loader": "^13.3.2",
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4"
+  },
+  "dependencies": {
+    "css-loader": "^6.8.1",
+    "style-loader": "^3.3.3",
+    "styled-components": "^6.0.8"
+  }
+}

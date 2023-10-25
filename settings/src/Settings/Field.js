@@ -190,11 +190,13 @@ const Field = (props) => {
                     onChange={ ( fieldValue ) => onChangeHandler(fieldValue) }
                     value= { fieldValue }
                 />
-                <div className="rsssl-email-verified" >
+                { sendVerificationEmailField &&
+                    <div className="rsssl-email-verified" >
                     {emailIsVerified
                         ? <Icon name='circle-check' color={'green'} />
                         : <Icon name='circle-times' color={'red'} />}
                 </div>
+                }
             </div>
         );
     }
