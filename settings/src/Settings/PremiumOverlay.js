@@ -18,7 +18,7 @@ const PremiumOverlay = (props) => {
                     <div className="rsssl-grid-item-footer-buttons">
                         <a
                             target="_blank"
-                            className="button button-premium"
+                            className="button button-primary left"
                             url="props.url"
                         >{__("Go Pro", "really-simple-ssl")}</a>
                     </div>

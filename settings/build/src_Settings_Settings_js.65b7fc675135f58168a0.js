@@ -290,7 +290,7 @@ const PremiumOverlay = props => {
     className: "rsssl-grid-item-footer-buttons"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
     target: "_blank",
-    className: "button button-premium",
+    className: "button button-primary left",
     url: "props.url"
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Go Pro", "really-simple-ssl"))))));
 };
@@ -1385,4 +1385,4 @@ const errorMsg = error => {
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Settings_js.4aca3d4de070ef6c8a43.js.map
+//# sourceMappingURL=src_Settings_Settings_js.65b7fc675135f58168a0.js.map

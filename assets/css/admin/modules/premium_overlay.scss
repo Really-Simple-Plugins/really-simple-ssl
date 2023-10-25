@@ -1,7 +1,6 @@
 .rsssl {
   .rsssl-locked-overlay {
     display: flex;
-    border: 1px solid var(--rsp-brand-secondary);
     top: calc(100% - 160px) !important;
     gap: 0 !important;
     flex-direction: column;
@@ -27,7 +26,21 @@
         }
     }
     .rsssl-locked-footer {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
       width: 100%;
+      // we want the a to be displayed on the left side
+      a {
+        position: relative;
+        float: left !important;
+      }
     }
+    .rsssl-locked-footer::after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+
   }
 }
