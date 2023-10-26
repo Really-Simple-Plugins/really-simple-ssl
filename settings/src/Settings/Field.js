@@ -19,7 +19,7 @@ import Support from "./Support";
 import LearningMode from "./LearningMode/LearningMode";
 import RiskComponent from "./RiskConfiguration/RiskComponent";
 import VulnerabilitiesOverview from "./RiskConfiguration/vulnerabilitiesOverview";
-import IpAddressDatatable from "./LimitLoginAttempts/IpAddressDatatable";
+import IpAddressDatatable  from "./LimitLoginAttempts/IpAddressDatatable";
 import TwoFaRolesDropDown from "./TwoFA/TwoFaRolesDropDown";
 import Button from "./Button";
 import Icon from "../utils/Icon";
@@ -200,24 +200,6 @@ const Field = (props) => {
         );
     }
 
-    if ( field.type==='number' ){
-        return (
-            <div className={highLightClass} ref={scrollAnchor} style={{ position: 'relative'}}>
-                <NumberControl
-                    required={ field.required }
-                    placeholder={ field.placeholder }
-                    className="number_full"
-                    disabled={ disabled }
-                    help={ field.comment }
-                    label={labelWrap(field)}
-                    onChange={ ( fieldValue ) => onChangeHandler(fieldValue) }
-                    value= { fieldValue }
-                />
-            </div>
-        );
-    }
-
-
     if (field.type==='text' ){
         return (
             <div className={highLightClass} ref={scrollAnchor} style={{position: 'relative'}}>
@@ -279,7 +261,18 @@ const Field = (props) => {
 
         );
     }
-
+    if ( field.type==='number' ){
+        return (
+            <div className={highLightClass} ref={scrollAnchor}>
+                <NumberControl
+                    onChange={ ( fieldValue ) => onChangeHandler(fieldValue) }
+                    help={ field.comment }
+                    label={ field.label }
+                    value= { fieldValue }
+                />
+            </div>
+        );
+    }
     if ( field.type==='email' ){
         return (
             <div className={this.highLightClass} ref={this.scrollAnchor}>
