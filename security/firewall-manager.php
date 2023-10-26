@@ -189,7 +189,7 @@ class rsssl_firewall_manager {
 			'output' => array(
 				'true' => array(
 					'title' => __("Firewall", "really-simple-ssl"),
-					'msg' => __("A firewall rule was enabled, but the firewall does not seem to get loaded correctly.", "really-simple-ssl").' '.__("Please check if the advance-headers.php file is included in the wp-config.php, and exists in the wp-content folder.", "really-simple-ssl"),
+					'msg' => __("A firewall rule was enabled, but the firewall does not seem to get loaded correctly.", "really-simple-ssl").' '.__("Please check if the advanced-headers.php file is included in the wp-config.php, and exists in the wp-content folder.", "really-simple-ssl"),
 					'icon' => 'open',
 					'dismissible' => true,
 				),

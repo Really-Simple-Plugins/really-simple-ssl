@@ -1,6 +1,5 @@
 import React, {useEffect,useState} from 'react';
 import UseRiskData from "./RiskData";
-import {__} from "@wordpress/i18n";
 import useFields from "../FieldsData";
 
 const RiskComponent = (props) => {
@@ -62,7 +61,7 @@ const RiskComponent = (props) => {
     });
 
     //and we add the select control to the data
-    let data = [...riskData];
+    let data = Array.isArray(riskData) ? [...riskData] : [];
     data = data.length===0 ? [...dummyRiskData] : data;
     let disabled = !vulnerabilityDetectionEnabled || !measuresEnabled;
     for (const key in data) {

@@ -24,6 +24,7 @@ const useFields = create(( set, get ) => ({
     changedFields:[],
     progress:[],
     nextButtonDisabled:false,
+    overrideNextButtonDisabled:false,
     refreshTests:false,
     highLightField: '',
     setHighLightField: (highLightField) => {
@@ -31,7 +32,9 @@ const useFields = create(( set, get ) => ({
     },
 
     setRefreshTests: (refreshTests) => set(state => ({ refreshTests })),
-    handleNextButtonDisabled: (nextButtonDisabled) => set(state => ({ nextButtonDisabled })),
+    handleNextButtonDisabled: (nextButtonDisabled) => {
+        set({overrideNextButtonDisabled: nextButtonDisabled});
+    },
     setChangedField: (id, value) => {
         set(
             produce((state) => {
@@ -192,12 +195,24 @@ const useFields = create(( set, get ) => ({
     updateFieldsData: (selectedSubMenuItem) => {
         let fields = get().fields;
         fields = updateFieldsListWithConditions(fields);
-        const nextButtonDisabled = isNextButtonDisabled(fields, selectedSubMenuItem);
+
+        //only if selectedSubMenuItem is actually passed
+        if (selectedSubMenuItem) {
+            let nextButtonDisabled = isNextButtonDisabled(fields, selectedSubMenuItem);
+            //if the button was set to disabled with the handleNextButtonDisabled function, we give that priority until it's released.
+            if (get().overrideNextButtonDisabled) {
+                nextButtonDisabled = get().overrideNextButtonDisabled;
+            }
+            set(
+                produce((state) => {
+                    state.nextButtonDisabled = nextButtonDisabled;
+                })
+            )
+        }
 
         set(
             produce((state) => {
                 state.fields = fields;
-                state.nextButtonDisabled = nextButtonDisabled;
             })
         )
     },
