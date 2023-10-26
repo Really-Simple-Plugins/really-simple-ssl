@@ -241,7 +241,6 @@ const EventLogDataTable = (props) => {
 export default EventLogDataTable;
 
 function buildColumn(column) {
-    console.log(column);
     return {
         name: column.name,
         sortable: column.sortable,
