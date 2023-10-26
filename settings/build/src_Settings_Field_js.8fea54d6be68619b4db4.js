@@ -1705,7 +1705,6 @@ const EventLogDataTable = props => {
 };
 /* harmony default export */ __webpack_exports__["default"] = (EventLogDataTable);
 function buildColumn(column) {
-  console.log(column);
   return {
     name: column.name,
     sortable: column.sortable,
@@ -24026,4 +24025,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.25539855a9973e192865.js.map
+//# sourceMappingURL=src_Settings_Field_js.8fea54d6be68619b4db4.js.map

@@ -1666,8 +1666,6 @@ function rsssl_fields( $load_values = true ) {
 			'type'     => 'roles_dropdown',
 			'default'  => [ 'administrator'],
 			'label'    => __( "User roles for password change", "really-simple-ssl-pro" ),
-			'tooltip'  => __( "Lorum ipsum some magnificent text again ipsum genearator kaput.",
-				'really-simple-ssl' ),
 			'react_conditions' => [
 				'relation' => 'AND',
 				[

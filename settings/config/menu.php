@@ -505,7 +505,7 @@ function rsssl_menu() {
 										'really-simple-ssl' ),
 									'helpLink'     => 'https://really-simple-ssl.com/instructions/password-security/?mtm_campaign=instructions&mtm_source=free',
 									'title'        => __( 'Passwords', 'really-simple-ssl' ),
-									'intro'        => __( 'Lorum ipsum.... bla bla generator was kaput....',
+									'intro'        => __( 'Improve security by requiring strong passwords and forced periodic password changes',
 										'really-simple-ssl' ),
 								],
 							]
