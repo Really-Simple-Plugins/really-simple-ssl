@@ -59,7 +59,7 @@ function rsssl_menu() {
 							'id' => 'encryption_redirect',
 							'group_id' => 'encryption_redirect',
 							'title' => __( 'Redirection', 'really-simple-ssl' ),
-							'helpLink' => 'https://really-simple-ssl.com/remove-htaccess-redirect-site-lockout/&mtm_source=free',
+							'helpLink' => 'https://really-simple-ssl.com/remove-htaccess-redirect-site-lockout&mtm_source=free',
 						],
 						[
 							'id' => 'encryption_lets_encrypt',
