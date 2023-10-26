@@ -274,7 +274,7 @@ function rsssl_menu() {
 									'group_id' => 'two_fa_general',
 									'premium'              => true,
 									'premium_text'         => __( "Get Login Protection with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
-									'helpLink' => 'https://really-simple-ssl.com/instructions/two-factor-authentication',
+									'helpLink' => 'https://really-simple-ssl.com/instructions/about-login-protection/',
 									'title'    => __( 'General', 'really-simple-ssl' ),
 									'intro'    => __( 'Enhancing the authentication process and optimizing user management makes Login Protection a foundational element in securing your website.', 'really-simple-ssl' ),
 								],
