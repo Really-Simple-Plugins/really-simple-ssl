@@ -1633,6 +1633,67 @@ function rsssl_fields( $load_values = true ) {
 				]
 			],
 		],
+		[
+			'id'       => 'enforce_password_security_enabled',
+			'menu_id'  => 'password_security',
+			'group_id' => 'password_security_passwords',
+			'type'     => 'checkbox',
+			'label'    => __( "Enforce strong passwords", "really-simple-ssl-pro" ),
+			'disabled' => false,
+			'default'  => 'disabled',
+			'tooltip'  => __( "This adds extra requirements for strong passwords for new users and updated passwords.",
+				'really-simple-ssl' ),
+		],
+		[
+			'id'       => 'enforce_frequent_password_change',
+			'menu_id'  => 'password_security',
+			'group_id' => 'password_security_passwords',
+			'type'     => 'checkbox',
+			'label'    => __( "Enforce frequent password change", "really-simple-ssl-pro" ),
+			'disabled' => false,
+			'default'  => 'disabled',
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'enforce_password_security_enabled' => 1,
+				]
+			],
+		],
+		[
+			'id'       => 'password_change_roles',
+			'menu_id'  => 'password_security',
+			'group_id' => 'password_security_passwords',
+			'type'     => 'roles_dropdown',
+			'default'  => [ 'administrator'],
+			'label'    => __( "User roles for password change", "really-simple-ssl-pro" ),
+			'tooltip'  => __( "Lorum ipsum some magnificent text again ipsum genearator kaput.",
+				'really-simple-ssl' ),
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'enforce_password_security_enabled' => 1,
+				]
+			],
+		],
+		[
+			'id'       => 'password_change_frequency',
+			'menu_id'  => 'password_security',
+			'group_id' => 'password_security_passwords',
+			'type'     => 'select',
+			'default'  => '12',
+			'options'   => [
+				'6' => __( "6 months", "really-simple-ssl-pro" ),
+				'12' => __( "1 year", "really-simple-ssl-pro" ),
+				'24' => __( "2 years", "really-simple-ssl-pro" ),
+			],
+			'label'    => __( "Change passwords every", "really-simple-ssl-pro" ),
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'enforce_password_security_enabled' => 1,
+				]
+			],
+		],
 	];
 
 	$fields = apply_filters( 'rsssl_fields', $fields );

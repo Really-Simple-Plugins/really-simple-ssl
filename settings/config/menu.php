@@ -487,6 +487,29 @@ function rsssl_menu() {
 								]
 							],
 						],
+						[
+							'id'                   => 'password_security',
+							'networkwide_required' => true,
+							'premium'              => true,
+							'premium_text'         => __( 'Get Password Security with %sReally Simple SSL Pro%s',
+								'really-simple-ssl' ),
+							'upgrade'              => 'https://really-simple-ssl.com/pro/?mtm_campaign=passwordsecurity&mtm_source=free&mtm_content=upgrade',
+							'title'                => 'Password Security',
+							'helpLink'             => 'https://really-simple-ssl.com/instructions/password-security/?mtm_campaign=instructions&mtm_source=free',
+							'groups'               => [
+								[
+									'id'           => 'password_security_passwords',
+									'group_id'     => 'password_security_passwords',
+									'premium'      => true,
+									'premium_text' => __( "Get Password Security with %sReally Simple SSL Pro%s",
+										'really-simple-ssl' ),
+									'helpLink'     => 'https://really-simple-ssl.com/instructions/password-security/?mtm_campaign=instructions&mtm_source=free',
+									'title'        => __( 'Passwords', 'really-simple-ssl' ),
+									'intro'        => __( 'Lorum ipsum.... bla bla generator was kaput....',
+										'really-simple-ssl' ),
+								],
+							]
+						],
 					],
 				],
 			],
