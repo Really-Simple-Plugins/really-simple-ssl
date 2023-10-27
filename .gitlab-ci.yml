@@ -1,6 +1,7 @@
 stages:
   - test
   - build
+  - sast
 
 # Select what we should cache
 cache:
@@ -143,3 +144,12 @@ test:php8.2:wordpress5.9:multisite:
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
     - if: $CI_COMMIT_BRANCH == 'master'
+
+sast:
+  stage: sast
+  # Use a suitable image for SAST, or keep the default PHP image if your SAST tools are PHP-based
+  script:
+    - phpcs --ignore=vendor/* --standard=phpcs.xml .
+    - echo "Running SAST..."
+include:
+  - template: Security/SAST.gitlab-ci.yml
