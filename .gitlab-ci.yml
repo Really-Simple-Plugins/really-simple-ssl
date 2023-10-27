@@ -61,7 +61,7 @@ setup:php:
     WP_MULTISITE: '0'
     XDEBUG_VERSION: 3.1.6
     SAST_DEFAULT_ANALYZERS: "nodejs-scan,phpcs-security-audit,semgrep"
-    SAST_EXCLUDED_PATHS: tests,vendor,*.min.js
+    SAST_EXCLUDED_PATHS: tests,**/vendor/**,*.min.js
 
 test:php7.4:
   image: php:7.4
