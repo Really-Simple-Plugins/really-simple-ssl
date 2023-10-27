@@ -200,6 +200,24 @@ const Field = (props) => {
         );
     }
 
+    if ( field.type==='number' ){
+        return (
+            <div className={highLightClass} ref={scrollAnchor} style={{ position: 'relative'}}>
+                <NumberControl
+                    required={ field.required }
+                    placeholder={ field.placeholder }
+                    className="number_full"
+                    disabled={ disabled }
+                    help={ field.comment }
+                    label={labelWrap(field)}
+                    onChange={ ( fieldValue ) => onChangeHandler(fieldValue) }
+                    value= { fieldValue }
+                />
+            </div>
+        );
+    }
+
+
     if (field.type==='text' ){
         return (
             <div className={highLightClass} ref={scrollAnchor} style={{position: 'relative'}}>
@@ -261,18 +279,7 @@ const Field = (props) => {
 
         );
     }
-    if ( field.type==='number' ){
-        return (
-            <div className={highLightClass} ref={scrollAnchor}>
-                <NumberControl
-                    onChange={ ( fieldValue ) => onChangeHandler(fieldValue) }
-                    help={ field.comment }
-                    label={ field.label }
-                    value= { fieldValue }
-                />
-            </div>
-        );
-    }
+
     if ( field.type==='email' ){
         return (
             <div className={this.highLightClass} ref={this.scrollAnchor}>
@@ -368,7 +375,7 @@ const Field = (props) => {
     if (field.type === 'two_fa_roles') {
         return (
             <div className={highLightClass} ref={scrollAnchor}>
-                <label htmlFor="rsssl-two-fa-dropdown-{field.id}">
+                <label htmlFor={`rsssl-two-fa-dropdown-${field.id}`}>
                     {labelWrap(field)}
                 </label>
                 <TwoFaRolesDropDown field={props.field} forcedRoledId={props.field.forced_roles_id} optionalRolesId={props.field.optional_roles_id}

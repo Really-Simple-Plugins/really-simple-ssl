@@ -2114,6 +2114,24 @@ const Field = props => {
       color: 'red'
     })));
   }
+  if (field.type === 'number') {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: highLightClass,
+      ref: scrollAnchor,
+      style: {
+        position: 'relative'
+      }
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.__experimentalNumberControl, {
+      required: field.required,
+      placeholder: field.placeholder,
+      className: "number_full",
+      disabled: disabled,
+      help: field.comment,
+      label: labelWrap(field),
+      onChange: fieldValue => onChangeHandler(fieldValue),
+      value: fieldValue
+    }));
+  }
   if (field.type === 'text') {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: highLightClass,
@@ -2170,17 +2188,6 @@ const Field = props => {
       index: props.index,
       field: field,
       fieldValue: fieldValue
-    }));
-  }
-  if (field.type === 'number') {
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: highLightClass,
-      ref: scrollAnchor
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.__experimentalNumberControl, {
-      onChange: fieldValue => onChangeHandler(fieldValue),
-      help: field.comment,
-      label: field.label,
-      value: fieldValue
     }));
   }
   if (field.type === 'email') {
@@ -2278,7 +2285,7 @@ const Field = props => {
       className: highLightClass,
       ref: scrollAnchor
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
-      htmlFor: "rsssl-two-fa-dropdown-{field.id}"
+      htmlFor: `rsssl-two-fa-dropdown-${field.id}`
     }, labelWrap(field)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_TwoFA_TwoFaRolesDropDown__WEBPACK_IMPORTED_MODULE_18__["default"], {
       field: props.field,
       forcedRoledId: props.field.forced_roles_id,
@@ -24081,4 +24088,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.882c767f6b7b834a5c8d.js.map
+//# sourceMappingURL=src_Settings_Field_js.df5a6c3b58969475f557.js.map
