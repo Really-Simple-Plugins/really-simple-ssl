@@ -1,145 +1,117 @@
+# You can override the included template(s) by including variable overrides
+# SAST customization: https://docs.gitlab.com/ee/user/application_security/sast/#customizing-the-sast-settings
+# Secret Detection customization: https://docs.gitlab.com/ee/user/application_security/secret_detection/#customizing-settings
+# Dependency Scanning customization: https://docs.gitlab.com/ee/user/application_security/dependency_scanning/#customizing-the-dependency-scanning-settings
+# Container Scanning customization: https://docs.gitlab.com/ee/user/application_security/container_scanning/#customizing-the-container-scanning-settings
+# Note that environment variables can be set in several places
+# See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
 stages:
-  - test
-  - build
-
-# Select what we should cache
+- test
+- build
 cache:
   paths:
-    - vendor/
-
+  - vendor/
 services:
-  - mysql
-
-# before_script will run on ALL PHP versions listed in test
+- mysql
 before_script:
-  # Install git, the php image doesn't have it installed
-  - apt-get update -yqq
-  - apt-get install git -yqq
-  # required for "PHP 7.4+
-  - apt-get install libonig-dev -yqq
-
-  # install the required packages for the running CI tests
-  - apt-get -yqqf install wget zip unzip subversion default-mysql-client libmcrypt-dev default-libmysqlclient-dev default-mysql-server --fix-missing
-
-  # Install mysql driver
-  - docker-php-ext-install mysqli pdo_mysql mbstring
-
-  # Install Xdebug. See https://xdebug.org/docs/compat for which version to install
-  - pecl install xdebug-${XDEBUG_VERSION}
-  # XDEBUG mode has to be set to coverage
-  - echo xdebug.mode=coverage > /usr/local/etc/php/conf.d/xdebug.ini
-
-  # PHP extensions
-  - docker-php-ext-enable mysqli pdo_mysql mbstring xdebug
-
-  # Install composer
-  - curl -sS https://getcomposer.org/installer | php
-
-  # Install project dependencies
-  - php composer.phar install --ignore-platform-reqs
-  - php composer.phar update
-
-  # Set up WordPress test environment
-  - bash bin/install-wp-tests.sh wordpress_test root mysql mysql $WP_VERSION
-
-  # Install WP-CLI and configure a WordPress installation
-  - curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-  - chmod +x wp-cli.phar
-  - mv wp-cli.phar /usr/local/bin/wp
-  - wp core download --allow-root
-  - wp core config --dbhost=mysql --dbname=$DB_NAME --dbuser=$DB_USER --dbpass=$DB_PASS --allow-root
-  - wp config list --allow-root
-  - wp core install --url=http://localhost --title=Example --admin_user=$ADMIN_USER --admin_password=$ADMIN_PASSWORD --admin_email=$ADMIN_EMAIL --allow-root
-
-  # Zip current branch to allow it to be installed using wp-cli
-  - zip -r really-simple-ssl.zip .
-  # Install, activate, deactivate and uninstall the current branch in our WordPress installation
-  - wp plugin install really-simple-ssl.zip --allow-root --force
-  - wp plugin activate really-simple-ssl --allow-root
-  - wp plugin deactivate really-simple-ssl --allow-root
-  - wp plugin uninstall really-simple-ssl --allow-root
-  # Now test an upgrade
-  # As this is a free plugin, we can grab the current live version directly from the WordPress plugin repo using WP CLI
-  - wp plugin install really-simple-ssl --allow-root
-  - wp plugin activate really-simple-ssl --allow-root
-  - wp plugin install really-simple-ssl.zip --allow-root --force
-  - wp plugin deactivate really-simple-ssl --allow-root
-  - wp plugin uninstall really-simple-ssl --allow-root
-
+- apt-get update -yqq
+- apt-get install git -yqq
+- apt-get install libonig-dev -yqq
+- apt-get -yqqf install wget zip unzip subversion default-mysql-client libmcrypt-dev
+  default-libmysqlclient-dev default-mysql-server --fix-missing
+- docker-php-ext-install mysqli pdo_mysql mbstring
+- pecl install xdebug-${XDEBUG_VERSION}
+- echo xdebug.mode=coverage > /usr/local/etc/php/conf.d/xdebug.ini
+- docker-php-ext-enable mysqli pdo_mysql mbstring xdebug
+- curl -sS https://getcomposer.org/installer | php
+- php composer.phar install --ignore-platform-reqs
+- php composer.phar update
+- bash bin/install-wp-tests.sh wordpress_test root mysql mysql $WP_VERSION
+- curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+- chmod +x wp-cli.phar
+- mv wp-cli.phar /usr/local/bin/wp
+- wp core download --allow-root
+- wp core config --dbhost=mysql --dbname=$DB_NAME --dbuser=$DB_USER --dbpass=$DB_PASS
+  --allow-root
+- wp config list --allow-root
+- wp core install --url=http://localhost --title=Example --admin_user=$ADMIN_USER
+  --admin_password=$ADMIN_PASSWORD --admin_email=$ADMIN_EMAIL --allow-root
+- zip -r really-simple-ssl.zip .
+- wp plugin install really-simple-ssl.zip --allow-root --force
+- wp plugin activate really-simple-ssl --allow-root
+- wp plugin deactivate really-simple-ssl --allow-root
+- wp plugin uninstall really-simple-ssl --allow-root
+- wp plugin install really-simple-ssl --allow-root
+- wp plugin activate really-simple-ssl --allow-root
+- wp plugin install really-simple-ssl.zip --allow-root --force
+- wp plugin deactivate really-simple-ssl --allow-root
+- wp plugin uninstall really-simple-ssl --allow-root
 variables:
-  # Configure mysql service (https://hub.docker.com/_/mysql/)
   MYSQL_DATABASE: wordpress_tests
   MYSQL_ROOT_PASSWORD: mysql
   WP_VERSION: latest
-  WP_MULTISITE: "0"
-
-# We test PHP 7.4
+  WP_MULTISITE: '0'
 test:php7.4:
   image: php:7.4
   variables:
-    XDEBUG_VERSION: "3.1.6"
+    XDEBUG_VERSION: 3.1.6
   script:
-    - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never --debug
+  - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
+    --debug
   rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-    - if: $CI_COMMIT_BRANCH == 'master'
-
-# We test PHP 7.4 with multisite
+  - if: "$CI_PIPELINE_SOURCE == 'merge_request_event'"
+  - if: "$CI_COMMIT_BRANCH == 'master'"
 test:php7.4:multisite:
   image: php:7.4
   variables:
-    WP_MULTISITE: "1"
-    XDEBUG_VERSION: "3.1.6"
+    WP_MULTISITE: '1'
+    XDEBUG_VERSION: 3.1.6
   script:
-    - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
+  - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
   rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-    - if: $CI_COMMIT_BRANCH == 'master'
-
-# We test PHP 8.2
+  - if: "$CI_PIPELINE_SOURCE == 'merge_request_event'"
+  - if: "$CI_COMMIT_BRANCH == 'master'"
 test:php8.2:
   image: php:8.2
   variables:
-    XDEBUG_VERSION: "3.2.1"
+    XDEBUG_VERSION: 3.2.1
   script:
-    - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover --colors=never
+  - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover --colors=never
   rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-    - if: $CI_COMMIT_BRANCH == 'master'
-
-# We test PHP 8.2 with multisite
+  - if: "$CI_PIPELINE_SOURCE == 'merge_request_event'"
+  - if: "$CI_COMMIT_BRANCH == 'master'"
 test:php8.2:multisite:
   image: php:8.2
   variables:
-    WP_MULTISITE: "1"
-    XDEBUG_VERSION: "3.2.1"
+    WP_MULTISITE: '1'
+    XDEBUG_VERSION: 3.2.1
   script:
-    - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
+  - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
   rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-    - if: $CI_COMMIT_BRANCH == 'master'
-
-# We test WordPress 5.9 with PHP 8.2
+  - if: "$CI_PIPELINE_SOURCE == 'merge_request_event'"
+  - if: "$CI_COMMIT_BRANCH == 'master'"
 test:php8.2:wordpress5.9:
   image: php:8.2
   variables:
-    XDEBUG_VERSION: "3.2.1"
-    WP_VERSION: "5.9"
+    XDEBUG_VERSION: 3.2.1
+    WP_VERSION: '5.9'
   script:
-    - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover --colors=never
+  - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover --colors=never
   rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-    - if: $CI_COMMIT_BRANCH == 'master'
-
-# We test WordPress 5.9 with PHP 8.2 and multisite
+  - if: "$CI_PIPELINE_SOURCE == 'merge_request_event'"
+  - if: "$CI_COMMIT_BRANCH == 'master'"
 test:php8.2:wordpress5.9:multisite:
   image: php:8.2
   variables:
-    WP_MULTISITE: "1"
-    XDEBUG_VERSION: "3.2.1"
-    WP_VERSION: "5.9"
+    WP_MULTISITE: '1'
+    XDEBUG_VERSION: 3.2.1
+    WP_VERSION: '5.9'
   script:
-    - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
+  - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
   rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-    - if: $CI_COMMIT_BRANCH == 'master'
+  - if: "$CI_PIPELINE_SOURCE == 'merge_request_event'"
+  - if: "$CI_COMMIT_BRANCH == 'master'"
+sast:
+  stage: test
+include:
+- template: Security/SAST.gitlab-ci.yml
