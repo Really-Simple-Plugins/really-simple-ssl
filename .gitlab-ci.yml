@@ -10,60 +10,58 @@ cache:
 services:
   - mysql
 
-variables: # Global variables
+#before_script:
+#  stage: setup
+#  image: php:7.4
+before_script:
+  - apt-get update -yqq
+  - apt-get install git -yqq
+  - apt-get install libonig-dev -yqq
+  - apt-get -yqqf install wget zip unzip subversion default-mysql-client libmcrypt-dev
+    default-libmysqlclient-dev default-mysql-server --fix-missing
+  - docker-php-ext-install mysqli pdo_mysql mbstring
+  - pecl install xdebug-${XDEBUG_VERSION}
+  - echo xdebug.mode=coverage > /usr/local/etc/php/conf.d/xdebug.ini
+  - docker-php-ext-enable mysqli pdo_mysql mbstring xdebug
+  - curl -sS https://getcomposer.org/installer | php
+  - php composer.phar install --ignore-platform-reqs
+  - php composer.phar update
+  - bash bin/install-wp-tests.sh wordpress_test root mysql mysql $WP_VERSION
+  - curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+  - chmod +x wp-cli.phar
+  - mv wp-cli.phar /usr/local/bin/wp
+  - wp core download --allow-root
+  - wp core config --dbhost=mysql --dbname=$DB_NAME --dbuser=$DB_USER --dbpass=$DB_PASS
+    --allow-root
+  - wp config list --allow-root
+  - wp core install --url=http://localhost --title=Example --admin_user=$ADMIN_USER
+    --admin_password=$ADMIN_PASSWORD --admin_email=$ADMIN_EMAIL --allow-root
+  - zip -r really-simple-ssl.zip .
+  - wp plugin install really-simple-ssl.zip --allow-root --force
+  - wp plugin activate really-simple-ssl --allow-root
+  - wp plugin deactivate really-simple-ssl --allow-root
+  - wp plugin uninstall really-simple-ssl --allow-root
+  - wp plugin install really-simple-ssl --allow-root
+  - wp plugin activate really-simple-ssl --allow-root
+  - wp plugin install really-simple-ssl.zip --allow-root --force
+  - wp plugin deactivate really-simple-ssl --allow-root
+  - wp plugin uninstall really-simple-ssl --allow-root
+#  artifacts:
+#    paths:
+#      - /tmp/wordpress-tests-lib/
+#      - really-simple-ssl.zip
+variables:
+  MYSQL_DATABASE: wordpress_tests
+  MYSQL_ROOT_PASSWORD: mysql
+  WP_VERSION: latest
+  WP_MULTISITE: '0'
+  XDEBUG_VERSION: 3.1.6
   SAST_EXCLUDED_PATHS: "vendor/,tests,vendor,*.min.js"
-
-setup:php:
-  stage: setup
-  image: php:7.4
-  script:
-    - apt-get update -yqq
-    - apt-get install git -yqq
-    - apt-get install libonig-dev -yqq
-    - apt-get -yqqf install wget zip unzip subversion default-mysql-client libmcrypt-dev
-      default-libmysqlclient-dev default-mysql-server --fix-missing
-    - docker-php-ext-install mysqli pdo_mysql mbstring
-    - pecl install xdebug-${XDEBUG_VERSION}
-    - echo xdebug.mode=coverage > /usr/local/etc/php/conf.d/xdebug.ini
-    - docker-php-ext-enable mysqli pdo_mysql mbstring xdebug
-    - curl -sS https://getcomposer.org/installer | php
-    - php composer.phar install --ignore-platform-reqs
-    - php composer.phar update
-    - bash bin/install-wp-tests.sh wordpress_test root mysql mysql $WP_VERSION
-    - curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-    - chmod +x wp-cli.phar
-    - mv wp-cli.phar /usr/local/bin/wp
-    - wp core download --allow-root
-    - wp core config --dbhost=mysql --dbname=$DB_NAME --dbuser=$DB_USER --dbpass=$DB_PASS
-      --allow-root
-    - wp config list --allow-root
-    - wp core install --url=http://localhost --title=Example --admin_user=$ADMIN_USER
-      --admin_password=$ADMIN_PASSWORD --admin_email=$ADMIN_EMAIL --allow-root
-    - zip -r really-simple-ssl.zip .
-    - wp plugin install really-simple-ssl.zip --allow-root --force
-    - wp plugin activate really-simple-ssl --allow-root
-    - wp plugin deactivate really-simple-ssl --allow-root
-    - wp plugin uninstall really-simple-ssl --allow-root
-    - wp plugin install really-simple-ssl --allow-root
-    - wp plugin activate really-simple-ssl --allow-root
-    - wp plugin install really-simple-ssl.zip --allow-root --force
-    - wp plugin deactivate really-simple-ssl --allow-root
-    - wp plugin uninstall really-simple-ssl --allow-root
-  artifacts:
-    paths:
-      - /tmp/wordpress-tests-lib/
-      - really-simple-ssl.zip
-  variables:
-    MYSQL_DATABASE: wordpress_tests
-    MYSQL_ROOT_PASSWORD: mysql
-    WP_VERSION: latest
-    WP_MULTISITE: '0'
-    XDEBUG_VERSION: 3.1.6
 
 test:php7.4:
   stage: test
-  needs:
-    - setup:php
+#  needs:
+#    - setup:php
   image: php:7.4
   variables:
     XDEBUG_VERSION: 3.1.6
@@ -75,10 +73,10 @@ test:php7.4:
 #  - if: "$CI_COMMIT_BRANCH == 'master'"
 test:php7.4:multisite:
   stage: test
-  needs:
-    - setup:php
-  dependencies:
-    - setup:php
+#  needs:
+#    - setup:php
+#  dependencies:
+#    - setup:php
   image: php:7.4
   variables:
     WP_MULTISITE: '1'
@@ -91,10 +89,10 @@ test:php7.4:multisite:
 #  - if: "$CI_COMMIT_BRANCH == 'master'"
 test:php8.2:
   stage: test
-  needs:
-    - setup:php
-  dependencies:
-    - setup:php
+#  needs:
+#    - setup:php
+#  dependencies:
+#    - setup:php
   image: php:8.2
   variables:
     XDEBUG_VERSION: 3.2.1
@@ -106,10 +104,10 @@ test:php8.2:
 #  - if: "$CI_COMMIT_BRANCH == 'master'"
 test:php8.2:multisite:
   stage: test
-  needs:
-    - setup:php
-  dependencies:
-    - setup:php
+#  needs:
+#    - setup:php
+#  dependencies:
+#    - setup:php
   image: php:8.2
   variables:
     WP_MULTISITE: '1'
@@ -122,10 +120,10 @@ test:php8.2:multisite:
 #  - if: "$CI_COMMIT_BRANCH == 'master'"
 test:php8.2:wordpress5.9:
   stage: test
-  needs:
-    - setup:php
-  dependencies:
-    - setup:php
+#  needs:
+#    - setup:php
+#  dependencies:
+#    - setup:php
   image: php:8.2
   variables:
     XDEBUG_VERSION: 3.2.1
@@ -138,10 +136,10 @@ test:php8.2:wordpress5.9:
 #  - if: "$CI_COMMIT_BRANCH == 'master'"
 test:php8.2:wordpress5.9:multisite:
   stage: test
-  needs:
-    - setup:php
-  dependencies:
-    - setup:php
+#  needs:
+#    - setup:php
+#  dependencies:
+#    - setup:php
   image: php:8.2
   variables:
     WP_MULTISITE: '1'
