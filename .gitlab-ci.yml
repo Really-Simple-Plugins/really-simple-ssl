@@ -62,7 +62,7 @@ setup:php:
 
 test:php7.4:
   needs:
-    - setup
+    - setup:php
   image: php:7.4
   variables:
     XDEBUG_VERSION: 3.1.6
@@ -76,7 +76,7 @@ test:php7.4:
   - if: "$CI_COMMIT_BRANCH == 'master'"
 test:php7.4:multisite:
   needs:
-    - setup
+    - setup:php
   image: php:7.4
   variables:
     WP_MULTISITE: '1'
@@ -90,7 +90,7 @@ test:php7.4:multisite:
   - if: "$CI_COMMIT_BRANCH == 'master'"
 test:php8.2:
   needs:
-    - setup
+    - setup:php
   image: php:8.2
   variables:
     XDEBUG_VERSION: 3.2.1
@@ -103,7 +103,7 @@ test:php8.2:
   - if: "$CI_COMMIT_BRANCH == 'master'"
 test:php8.2:multisite:
   needs:
-    - setup
+    - setup:php
   image: php:8.2
   variables:
     WP_MULTISITE: '1'
@@ -117,7 +117,7 @@ test:php8.2:multisite:
   - if: "$CI_COMMIT_BRANCH == 'master'"
 test:php8.2:wordpress5.9:
   needs:
-    - setup
+    - setup:php
   image: php:8.2
   variables:
     XDEBUG_VERSION: 3.2.1
@@ -131,7 +131,7 @@ test:php8.2:wordpress5.9:
   - if: "$CI_COMMIT_BRANCH == 'master'"
 test:php8.2:wordpress5.9:multisite:
   needs:
-    - setup
+    - setup:php
   image: php:8.2
   variables:
     WP_MULTISITE: '1'
