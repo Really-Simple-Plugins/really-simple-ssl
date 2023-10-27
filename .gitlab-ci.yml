@@ -73,6 +73,7 @@ variables:
   MYSQL_ROOT_PASSWORD: mysql
   WP_VERSION: latest
   WP_MULTISITE: "0"
+  SAST_EXCLUDED_PATHS: "vendor/,tests,vendor,*.min.js"
 
 # We test PHP 7.4
 test:php7.4:
@@ -147,7 +148,6 @@ test:php8.2:wordpress5.9:multisite:
 
 sast:
   stage: sast
-  # Use a suitable image for SAST, or keep the default PHP image if your SAST tools are PHP-based
   script:
     - phpcs --ignore=vendor/* --standard=phpcs.xml .
     - echo "Running SAST..."
