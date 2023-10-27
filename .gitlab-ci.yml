@@ -61,6 +61,7 @@ setup:php:
     XDEBUG_VERSION: 3.1.6
 
 test:php7.4:
+  stage: test
   needs:
     - setup:php
   image: php:7.4
@@ -75,6 +76,7 @@ test:php7.4:
   - if: "$CI_PIPELINE_SOURCE == 'merge_request_event'"
   - if: "$CI_COMMIT_BRANCH == 'master'"
 test:php7.4:multisite:
+  stage: test
   needs:
     - setup:php
   image: php:7.4
@@ -89,6 +91,7 @@ test:php7.4:multisite:
   - if: "$CI_PIPELINE_SOURCE == 'merge_request_event'"
   - if: "$CI_COMMIT_BRANCH == 'master'"
 test:php8.2:
+  stage: test
   needs:
     - setup:php
   image: php:8.2
@@ -102,6 +105,7 @@ test:php8.2:
   - if: "$CI_PIPELINE_SOURCE == 'merge_request_event'"
   - if: "$CI_COMMIT_BRANCH == 'master'"
 test:php8.2:multisite:
+  stage: test
   needs:
     - setup:php
   image: php:8.2
@@ -116,6 +120,7 @@ test:php8.2:multisite:
   - if: "$CI_PIPELINE_SOURCE == 'merge_request_event'"
   - if: "$CI_COMMIT_BRANCH == 'master'"
 test:php8.2:wordpress5.9:
+  stage: test
   needs:
     - setup:php
   image: php:8.2
@@ -130,6 +135,7 @@ test:php8.2:wordpress5.9:
   - if: "$CI_PIPELINE_SOURCE == 'merge_request_event'"
   - if: "$CI_COMMIT_BRANCH == 'master'"
 test:php8.2:wordpress5.9:multisite:
+  stage: test
   needs:
     - setup:php
   image: php:8.2
