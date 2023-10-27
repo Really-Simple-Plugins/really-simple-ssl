@@ -49,6 +49,10 @@ setup:php:
     - wp plugin install really-simple-ssl.zip --allow-root --force
     - wp plugin deactivate really-simple-ssl --allow-root
     - wp plugin uninstall really-simple-ssl --allow-root
+  artifacts:
+    paths:
+      - /tmp/wordpress-tests-lib/
+      - really-simple-ssl.zip
   variables:
     MYSQL_DATABASE: wordpress_tests
     MYSQL_ROOT_PASSWORD: mysql
@@ -63,6 +67,8 @@ test:php7.4:
   script:
   - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
     --debug
+  dependencies:
+    - setup:php
   rules:
   - if: "$CI_PIPELINE_SOURCE == 'merge_request_event'"
   - if: "$CI_COMMIT_BRANCH == 'master'"
@@ -73,6 +79,8 @@ test:php7.4:multisite:
     XDEBUG_VERSION: 3.1.6
   script:
   - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
+  dependencies:
+    - setup:php
   rules:
   - if: "$CI_PIPELINE_SOURCE == 'merge_request_event'"
   - if: "$CI_COMMIT_BRANCH == 'master'"
@@ -82,6 +90,8 @@ test:php8.2:
     XDEBUG_VERSION: 3.2.1
   script:
   - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover --colors=never
+  dependencies:
+    - setup:php
   rules:
   - if: "$CI_PIPELINE_SOURCE == 'merge_request_event'"
   - if: "$CI_COMMIT_BRANCH == 'master'"
@@ -92,6 +102,8 @@ test:php8.2:multisite:
     XDEBUG_VERSION: 3.2.1
   script:
   - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
+  dependencies:
+    - setup:php
   rules:
   - if: "$CI_PIPELINE_SOURCE == 'merge_request_event'"
   - if: "$CI_COMMIT_BRANCH == 'master'"
@@ -102,6 +114,8 @@ test:php8.2:wordpress5.9:
     WP_VERSION: '5.9'
   script:
   - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover --colors=never
+  dependencies:
+    - setup:php
   rules:
   - if: "$CI_PIPELINE_SOURCE == 'merge_request_event'"
   - if: "$CI_COMMIT_BRANCH == 'master'"
@@ -113,6 +127,8 @@ test:php8.2:wordpress5.9:multisite:
     WP_VERSION: '5.9'
   script:
   - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
+  dependencies:
+    - setup:php
   rules:
   - if: "$CI_PIPELINE_SOURCE == 'merge_request_event'"
   - if: "$CI_COMMIT_BRANCH == 'master'"
