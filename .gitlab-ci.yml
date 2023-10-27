@@ -113,5 +113,8 @@ test:php8.2:wordpress5.9:multisite:
   - if: "$CI_COMMIT_BRANCH == 'master'"
 sast:
   stage: test
+  artifacts:
+    reports:
+      sast: gl-sast-report.json
 include:
 - template: Security/SAST.gitlab-ci.yml
