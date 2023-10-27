@@ -19,7 +19,7 @@ services:
   - mysql
 
 variables:  # Global variables
-  SAST_EXCLUDED_PATHS: "vendor/,tests,./**/vendor/**,*.min.js"
+  SAST_EXCLUDED_PATHS: "vendor/,tests,vendor,*.min.js"
 
 setup:php:
   stage: setup
