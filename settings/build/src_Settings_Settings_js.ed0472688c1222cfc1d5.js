@@ -284,14 +284,25 @@ const PremiumOverlay = props => {
     className: 'rsssl-locked-header-title'
   }, props.title)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-locked-content"
-  }, props.msg), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, props.pro_plugin_active && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, props.msg, "\xA0", (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    className: "rsssl-locked-link",
+    href: "#settings/license"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Check license", "really-simple-ssl"))), !props.pro_plugin_active && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Hyperlink__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    target: "_blank",
+    text: props.msg,
+    url: props.upgrade
+  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-locked-footer"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-grid-item-footer-buttons"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+  }, !props.url && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
     target: "_blank",
     className: "button button-primary left",
-    url: "props.url"
+    href: "https://really-simple-ssl.com/pro/"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Go Pro", "really-simple-ssl")), props.url && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    target: "_blank",
+    className: "button button-primary left",
+    href: props.url
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Go Pro", "really-simple-ssl"))))));
 };
 /* harmony default export */ __webpack_exports__["default"] = (PremiumOverlay);
@@ -711,7 +722,8 @@ const SettingsGroup = props => {
     msg: msg,
     title: activeGroup.title,
     upgrade: upgrade,
-    pro_plugin_active: rsssl_settings.pro_plugin_active
+    pro_plugin_active: rsssl_settings.pro_plugin_active,
+    url: activeGroup.premium_link
   }), networkwide_error && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-locked"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -1385,4 +1397,4 @@ const errorMsg = error => {
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Settings_js.65b7fc675135f58168a0.js.map
+//# sourceMappingURL=src_Settings_Settings_js.ed0472688c1222cfc1d5.js.map

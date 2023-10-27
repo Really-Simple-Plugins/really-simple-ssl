@@ -172,6 +172,7 @@ const SettingsGroup = (props) => {
                 title={activeGroup.title}
                 upgrade={upgrade}
                 pro_plugin_active={rsssl_settings.pro_plugin_active}
+                url={activeGroup.premium_link}
             />}
             {networkwide_error && <div className="rsssl-locked">
                 <div className="rsssl-locked-overlay">

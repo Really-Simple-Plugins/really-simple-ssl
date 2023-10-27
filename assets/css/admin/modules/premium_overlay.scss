@@ -1,11 +1,14 @@
 .rsssl {
   .rsssl-locked-overlay {
     display: flex;
-    top: calc(100% - 170px) !important;
-    flex-direction: column;
+    top: calc(100% - 100px) !important;
     text-align: left;
     margin-bottom: 20px;
     padding: 0;
+    &.premium {
+      top: calc(100% - 170px) !important;
+      flex-direction: column;
+    }
     .rsssl-locked-header {
       width: 100%;
       flex-direction: row;
