@@ -5,52 +5,63 @@
 # Container Scanning customization: https://docs.gitlab.com/ee/user/application_security/container_scanning/#customizing-the-container-scanning-settings
 # Note that environment variables can be set in several places
 # See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
+
 stages:
-- test
-- build
+  - setup
+  - test
+  - sast
+
 cache:
   paths:
-  - vendor/
+    - vendor/
+
 services:
-- mysql
-before_script:
-- apt-get update -yqq
-- apt-get install git -yqq
-- apt-get install libonig-dev -yqq
-- apt-get -yqqf install wget zip unzip subversion default-mysql-client libmcrypt-dev
-  default-libmysqlclient-dev default-mysql-server --fix-missing
-- docker-php-ext-install mysqli pdo_mysql mbstring
-- pecl install xdebug-${XDEBUG_VERSION}
-- echo xdebug.mode=coverage > /usr/local/etc/php/conf.d/xdebug.ini
-- docker-php-ext-enable mysqli pdo_mysql mbstring xdebug
-- curl -sS https://getcomposer.org/installer | php
-- php composer.phar install --ignore-platform-reqs
-- php composer.phar update
-- bash bin/install-wp-tests.sh wordpress_test root mysql mysql $WP_VERSION
-- curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-- chmod +x wp-cli.phar
-- mv wp-cli.phar /usr/local/bin/wp
-- wp core download --allow-root
-- wp core config --dbhost=mysql --dbname=$DB_NAME --dbuser=$DB_USER --dbpass=$DB_PASS
-  --allow-root
-- wp config list --allow-root
-- wp core install --url=http://localhost --title=Example --admin_user=$ADMIN_USER
-  --admin_password=$ADMIN_PASSWORD --admin_email=$ADMIN_EMAIL --allow-root
-- zip -r really-simple-ssl.zip .
-- wp plugin install really-simple-ssl.zip --allow-root --force
-- wp plugin activate really-simple-ssl --allow-root
-- wp plugin deactivate really-simple-ssl --allow-root
-- wp plugin uninstall really-simple-ssl --allow-root
-- wp plugin install really-simple-ssl --allow-root
-- wp plugin activate really-simple-ssl --allow-root
-- wp plugin install really-simple-ssl.zip --allow-root --force
-- wp plugin deactivate really-simple-ssl --allow-root
-- wp plugin uninstall really-simple-ssl --allow-root
-variables:
-  MYSQL_DATABASE: wordpress_tests
-  MYSQL_ROOT_PASSWORD: mysql
-  WP_VERSION: latest
-  WP_MULTISITE: '0'
+  - mysql
+
+setup:php:
+  stage: setup
+  image: php:7.4
+  script:
+    - apt-get update -yqq
+    - apt-get install git -yqq
+    - apt-get install libonig-dev -yqq
+    - apt-get -yqqf install wget zip unzip subversion default-mysql-client libmcrypt-dev
+      default-libmysqlclient-dev default-mysql-server --fix-missing
+    - docker-php-ext-install mysqli pdo_mysql mbstring
+    - pecl install xdebug-${XDEBUG_VERSION}
+    - echo xdebug.mode=coverage > /usr/local/etc/php/conf.d/xdebug.ini
+    - docker-php-ext-enable mysqli pdo_mysql mbstring xdebug
+    - curl -sS https://getcomposer.org/installer | php
+    - php composer.phar install --ignore-platform-reqs
+    - php composer.phar update
+    - bash bin/install-wp-tests.sh wordpress_test root mysql mysql $WP_VERSION
+    - curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+    - chmod +x wp-cli.phar
+    - mv wp-cli.phar /usr/local/bin/wp
+    - wp core download --allow-root
+    - wp core config --dbhost=mysql --dbname=$DB_NAME --dbuser=$DB_USER --dbpass=$DB_PASS
+      --allow-root
+    - wp config list --allow-root
+    - wp core install --url=http://localhost --title=Example --admin_user=$ADMIN_USER
+      --admin_password=$ADMIN_PASSWORD --admin_email=$ADMIN_EMAIL --allow-root
+    - zip -r really-simple-ssl.zip .
+    - wp plugin install really-simple-ssl.zip --allow-root --force
+    - wp plugin activate really-simple-ssl --allow-root
+    - wp plugin deactivate really-simple-ssl --allow-root
+    - wp plugin uninstall really-simple-ssl --allow-root
+    - wp plugin install really-simple-ssl --allow-root
+    - wp plugin activate really-simple-ssl --allow-root
+    - wp plugin install really-simple-ssl.zip --allow-root --force
+    - wp plugin deactivate really-simple-ssl --allow-root
+    - wp plugin uninstall really-simple-ssl --allow-root
+  variables:
+    MYSQL_DATABASE: wordpress_tests
+    MYSQL_ROOT_PASSWORD: mysql
+    WP_VERSION: latest
+    WP_MULTISITE: '0'
+    XDEBUG_VERSION: 3.1.6
+    SAST_DEFAULT_ANALYZERS: "nodejs-scan,phpcs-security-audit,semgrep"
+
 test:php7.4:
   image: php:7.4
   variables:
@@ -111,10 +122,11 @@ test:php8.2:wordpress5.9:multisite:
   rules:
   - if: "$CI_PIPELINE_SOURCE == 'merge_request_event'"
   - if: "$CI_COMMIT_BRANCH == 'master'"
+
 sast:
-  stage: test
-  artifacts:
-    reports:
-      sast: gl-sast-report.json
+  stage: sast
+#  image: registry.gitlab.com/security-products/semgrep:4
+  script:
+    - echo "Running SAST..."
 include:
-- template: Security/SAST.gitlab-ci.yml
+  - template: Security/SAST.gitlab-ci.yml
