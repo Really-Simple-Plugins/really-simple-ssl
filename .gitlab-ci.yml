@@ -129,7 +129,7 @@ sast:
   stage: sast
 #  image: registry.gitlab.com/security-products/semgrep:4
   script:
-    - phpcs --standard=phpcs.xml .
+    - phpcs --ignore=vendor/* --standard=phpcs.xml .
     - echo "Running SAST..."
 include:
   - template: Security/SAST.gitlab-ci.yml
