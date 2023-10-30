@@ -945,7 +945,7 @@ function rsssl_fields( $load_values = true ) {
 		],
         [
             'id'    => 'two_fa_users_table',
-            'menu_id' => 'two_fa',
+            'menu_id' => 'two-fa',
             'group_id' => 'two_fa_users',
             'type' => 'twofa-datatable',
             'action' => 'two_fa_table',
@@ -973,14 +973,14 @@ function rsssl_fields( $load_values = true ) {
                     'searchable' => false,
                     'visible' => true,
                     'column'   => 'user_role',
-                    'width'    => '30%',
+                    'width'    => '10%',
                 ],
 	            [
 		            'name'     => __( 'Type', 'really-simple-ssl' ),
 		            'sortable' => false,
 		            'searchable' => true,
 		            'visible' => true,
-		            'width'     => '10%',
+		            'width'     => '30%',
 		            'column'   => 'rsssl_two_fa_providers',
 	            ],
                 [
