@@ -8,17 +8,14 @@ import useLicense from "./License/LicenseData";
 import filterData from "./FilterData";
 import {useEffect, useState} from '@wordpress/element';
 import PremiumOverlay from "./PremiumOverlay";
-
 import ErrorBoundary from "../utils/ErrorBoundary";
 
 /**
  * Render a grouped block of settings
  */
 const SettingsGroup = (props) => {
-
     const {fields} = useFields();
     const {selectedFilter, setSelectedFilter, processingFilter} = filterData();
-    const {setActiveGroupId, activeGroupId} = useMenu();
     const {licenseStatus} = useLicense();
     const {selectedSubMenuItem, subMenu} = useMenu();
     const [Field, setField] = useState(null);
@@ -35,7 +32,7 @@ const SettingsGroup = (props) => {
     }, [selectedFilter]);
 
 
-    let upgrade = 'https://really-simple-ssl.com/pro/?mtm_campaign=fallback&mtm_source=free&mtm_content=upgrade';
+
 
     /*
     * On reset of LE, send this info to the back-end, and redirect to the first step.
@@ -96,22 +93,10 @@ const SettingsGroup = (props) => {
         }
     }
 
-    let msg = activeGroup.premium_text ? activeGroup.premium_text : __("Learn more about %sPremium%s", "really-simple-ssl");
-    if (rsssl_settings.pro_plugin_active) {
-        if (licenseStatus === 'empty' || licenseStatus === 'deactivated') {
-            msg = rsssl_settings.messageInactive;
-        } else {
-            msg = rsssl_settings.messageInvalid;
-        }
-        if (rsssl_settings.pro_incompatible) {
-            msg = __("You are using an incompatible version of Really Simple SSL pro. Please update to the latest version.", "really-simple-ssl");
-        }
-    }
-
     let disabled = (licenseStatus !== 'valid' || rsssl_settings.pro_incompatible) && activeGroup.premium;
     //if a feature can only be used on networkwide or single site setups, pass that info here.
     let networkwide_error = !rsssl_settings.networkwide_active && activeGroup.networkwide_required;
-    upgrade = activeGroup.upgrade ? activeGroup.upgrade : upgrade;
+
     let helplinkText = activeGroup.helpLink_text ? activeGroup.helpLink_text : __("Instructions", "really-simple-ssl");
     let anchor = getAnchor('main');
     let disabledClass = disabled || networkwide_error ? 'rsssl-disabled' : '';
@@ -168,10 +153,9 @@ const SettingsGroup = (props) => {
                 )}
             </div>
             {disabled && !networkwide_error && <PremiumOverlay
-                msg={msg}
+                msg={activeGroup.premium_text}
                 title={activeGroup.title}
-                upgrade={upgrade}
-                pro_plugin_active={rsssl_settings.pro_plugin_active}
+                upgrade={activeGroup.upgrade}
                 url={activeGroup.premium_link}
             />}
             {networkwide_error && <div className="rsssl-locked">
