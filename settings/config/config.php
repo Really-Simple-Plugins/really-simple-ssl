@@ -1253,7 +1253,7 @@ function rsssl_fields( $load_values = true ) {
         ],
         [
             'id'       => 'login_protection_enabled',
-            'menu_id'  => 'two_fa',
+            'menu_id'  => 'two-fa',
             'group_id' => 'two_fa_general',
 			'type'     => 'checkbox',
 			'label'    => __( "Enable login protection", "really-simple-ssl" ),
@@ -1275,7 +1275,7 @@ function rsssl_fields( $load_values = true ) {
 		],
 		[
 			'id'       => 'two_fa_enabled',
-			'menu_id'  => 'two_fa',
+			'menu_id'  => 'two-fa',
 			'group_id' => 'two_fa_email',
 			'type'     => 'checkbox',
 			'label'    => __( "Enable two-step verification", "really-simple-ssl" ),
@@ -1293,7 +1293,7 @@ function rsssl_fields( $load_values = true ) {
 		],
 		[
 			'id'       => 'two_fa_optional_roles',
-			'menu_id'  => 'two_fa',
+			'menu_id'  => 'two-fa',
 			'group_id' => 'two_fa_email',
 			'type'     => 'two_fa_roles',
 			'default'  => [ 'editor', 'author', 'contributor'],
@@ -1309,7 +1309,7 @@ function rsssl_fields( $load_values = true ) {
 
 		[
 			'id'       => 'two_fa_forced_roles',
-			'menu_id'  => 'two_fa',
+			'menu_id'  => 'two-fa',
 			'group_id' => 'two_fa_email',
 			'type'     => 'two_fa_roles',
 			'default'  => [ 'administrator' ],
@@ -1324,7 +1324,7 @@ function rsssl_fields( $load_values = true ) {
 		],
         [
             'id'    => 'two_fa_users_table',
-            'menu_id' => 'two_fa',
+            'menu_id' => 'two-fa',
             'group_id' => 'two_fa_users',
             'type' => 'twofa-datatable',
             'action' => 'two_fa_table',
