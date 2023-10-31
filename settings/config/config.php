@@ -1672,7 +1672,7 @@ function rsssl_fields( $load_values = true ) {
 			'react_conditions' => [
 				'relation' => 'AND',
 				[
-					'enforce_password_security_enabled' => 1,
+					'enforce_frequent_password_change' => 1,
 				]
 			],
 		],
@@ -1691,7 +1691,7 @@ function rsssl_fields( $load_values = true ) {
 			'react_conditions' => [
 				'relation' => 'AND',
 				[
-					'enforce_password_security_enabled' => 1,
+					'enforce_frequent_password_change' => 1,
 				]
 			],
 		],
