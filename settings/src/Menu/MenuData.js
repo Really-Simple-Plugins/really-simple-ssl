@@ -73,39 +73,18 @@ export default useMenu;
 
 
 // Parses menu items and nested items in single array
-const menuItemParser = (parsedMenuItems, menuItems = [], fields = []) => {
-    if (!Array.isArray(menuItems)) {
-        console.error('menuItems is not an array:', menuItems);
-        return parsedMenuItems;
-    }
-
+const menuItemParser = (parsedMenuItems, menuItems, fields) => {
     menuItems.forEach((menuItem) => {
-        if (menuItem.visible) {
+        if( menuItem.visible ) {
             parsedMenuItems.push(menuItem.id);
-            if (menuItem.hasOwnProperty('menu_items')) {
-                menuItem.menu_items = dropEmptyMenuItems(menuItem.menu_items, fields);
+            if( menuItem.hasOwnProperty('menu_items') ) {
+                menuItem.menu_items = dropEmptyMenuItems(menuItem.menu_items, fields );
                 menuItemParser(parsedMenuItems, menuItem.menu_items, fields);
             }
         }
     });
-
     return parsedMenuItems;
 }
-
-// const menuItemParser = (parsedMenuItems, menuItems, fields) => {
-//     menuItems.forEach((menuItem) => {
-//         if( menuItem.visible ) {
-//             parsedMenuItems.push(menuItem.id);
-//             if( menuItem.hasOwnProperty('menu_items') ) {
-//                 menuItem.menu_items = dropEmptyMenuItems(menuItem.menu_items, fields );
-//                 menuItemParser(parsedMenuItems, menuItem.menu_items, fields);
-//             }
-//         }
-//     });
-//     return parsedMenuItems;
-// }
-
-
 
 const getPreviousAndNextMenuItems = (menu, selectedSubMenuItem, fields) => {
     let previousMenuItem;
@@ -129,64 +108,50 @@ const getPreviousAndNextMenuItems = (menu, selectedSubMenuItem, fields) => {
 }
 
 const dropEmptyMenuItems = (menuItems, fields) => {
+
     if (!Array.isArray(fields)) {
-        console.error('Fields is not an array or is undefined', fields);
-        return menuItems;  // Exit early to avoid further processing
+        return menuItems;  // return the original menuItems unchanged
     }
 
-    const newMenuItems = [];
+    const newMenuItems = menuItems;
+    for (const [index, menuItem] of menuItems.entries()) {
+        let menuItemFields = fields.filter((field) => {
+            return (field.menu_id === menuItem.id )
+        });
 
-    for (const menuItem of menuItems) {
-        let menuItemFields = fields.filter((field) => field.menu_id === menuItem.id && field.visible);
-
-        if (menuItemFields.length === 0 && !menuItem.hasOwnProperty('menu_items')) {
-            // Do nothing. We don't push it to the newMenuItems
-        } else {
-            let newMenuItem = { ...menuItem, visible: true }; // Deep copy of menuItem with visible set to true
-            if (menuItem.hasOwnProperty('menu_items')) {
-                newMenuItem.menu_items = dropEmptyMenuItems(menuItem.menu_items, fields);
+        menuItemFields = menuItemFields.filter((field) => {
+            return ( field.visible )
+        });
+        if ( menuItemFields.length === 0 && !menuItem.hasOwnProperty('menu_items') )  {
+            if (typeof newMenuItems[index] === 'object' && newMenuItems[index] !== null) {
+                newMenuItems[index].visible = false;
             }
-            newMenuItems.push(newMenuItem);
+        } else {
+            if (typeof newMenuItems[index] === 'object' && newMenuItems[index] !== null) {
+                newMenuItems[index].visible = true;
+            }
+            if( menuItem.hasOwnProperty('menu_items') ) {
+                newMenuItems[index].menu_items = dropEmptyMenuItems(menuItem.menu_items, fields);
+            }
         }
-    }
 
+
+    }
     return newMenuItems;
 }
-
-// const dropEmptyMenuItems = (menuItems, fields) => {
-//     const newMenuItems = menuItems;
-//     for (const [index, menuItem] of menuItems.entries()) {
-//         let menuItemFields = fields.filter((field) => {
-//             return (field.menu_id === menuItem.id )
-//         });
-//
-//         menuItemFields = menuItemFields.filter((field) => {
-//             return ( field.visible )
-//         });
-//         if ( menuItemFields.length === 0 && !menuItem.hasOwnProperty('menu_items') )  {
-//             newMenuItems[index].visible = false;
-//         } else {
-//             newMenuItems[index].visible = true;
-//             if( menuItem.hasOwnProperty('menu_items') ) {
-//                 newMenuItems[index].menu_items = dropEmptyMenuItems(menuItem.menu_items, fields);
-//             }
-//         }
-//
-//
-//     }
-//     return newMenuItems;
-// }
 
 /*
 * filter sidebar menu from complete menu structure
 */
 const getSubMenu = (menu, selectedMainMenuItem) => {
+
     let subMenu = [];
     for (const key in menu) {
         if ( menu.hasOwnProperty(key) && menu[key].id === selectedMainMenuItem ){
             subMenu = menu[key];
         }
     }
+
     subMenu = addVisibleToMenuItems(subMenu);
     return subMenu;
 }
@@ -265,53 +230,19 @@ const getMenuItemByName = (name, menuItems) => {
 }
 
 const addVisibleToMenuItems = (menu) => {
-    if (typeof menu === 'string') {
-        return menu; // If menu is a string, just return it as is
-    }
 
-    let newMenuItems = menu.menu_items;
-
-    if (!Array.isArray(menu.menu_items)) {
-        newMenuItems = [];
-        for (const key in menu.menu_items) {
-            if (typeof menu.menu_items[key] === 'object') {
-                newMenuItems.push(menu.menu_items[key]);
-            }
-        }
-    }
+    let newMenuItems = Array.isArray(menu.menu_items) ? menu.menu_items : Object.values(menu.menu_items);
 
     for (let [index, menuItem] of newMenuItems.entries()) {
-        if (typeof menuItem === 'object') {
+        if (typeof menuItem === 'object' && menuItem !== null) {
             menuItem.visible = true;
-            if( menuItem.hasOwnProperty('menu_items') ) {
+            if (menuItem.hasOwnProperty('menu_items')) {
                 menuItem = addVisibleToMenuItems(menuItem);
             }
             newMenuItems[index] = menuItem;
         }
     }
-
     menu.menu_items = newMenuItems;
     menu.visible = true;
     return menu;
 }
-
-// const addVisibleToMenuItems = (menu) => {
-//     let newMenuItems = menu.menu_items;
-//     if (!Array.isArray(menu.menu_items)) {
-//         //wait whut not an array, well let us fix that
-//         newMenuItems = [];
-//         for (const key in menu.menu_items) {
-//             newMenuItems.push(menu.menu_items[key]);
-//         }
-//     }
-//     for (let [index, menuItem] of menu.menu_items.entries()) {
-//         menuItem.visible = true;
-//         if( menuItem.hasOwnProperty('menu_items') ) {
-//             menuItem = addVisibleToMenuItems(menuItem);
-//         }
-//         newMenuItems[index] = menuItem;
-//     }
-//     menu.menu_items = newMenuItems;
-//     menu.visible = true;
-//     return menu;
-// }

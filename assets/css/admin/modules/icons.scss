@@ -2,6 +2,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  > div {
+    display:flex;
+  }
   svg{
     fill: currentColor;
   }
