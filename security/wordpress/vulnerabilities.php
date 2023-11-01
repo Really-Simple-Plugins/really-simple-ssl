@@ -818,12 +818,17 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	        }
 
             //now we check if the file remotely exists and then log an error if it does not.
-            if ($this->remote_file_exists($url)) {
-                $json = file_get_contents( $url );
-                return json_decode($json);
+            $response = wp_remote_get( $url );
+            if ( is_wp_error( $response ) ) {
+                return null;
             }
 
-	        return null;
+            if ( wp_remote_retrieve_response_code($response) !== 200 ) {
+                return null;
+            }
+
+            $json = wp_remote_retrieve_body($response);
+            return json_decode($json);
         }
 
 	    private function remote_file_exists($url): bool {
