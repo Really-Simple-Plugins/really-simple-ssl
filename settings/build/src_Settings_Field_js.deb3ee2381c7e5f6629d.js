@@ -7542,10 +7542,15 @@ const DynamicDataTable = props => {
   const [rowsSelected, setRowsSelected] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)([]);
   const [rowCleared, setRowCleared] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(false);
   const twoFAEnabledRef = (0,react__WEBPACK_IMPORTED_MODULE_2__.useRef)();
+  const twoFAEnabledTotpRef = (0,react__WEBPACK_IMPORTED_MODULE_2__.useRef)();
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
     twoFAEnabledRef.current = getFieldValue('two_fa_enabled');
     saveFields(true, false);
   }, [getFieldValue('two_fa_enabled')]);
+  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
+    twoFAEnabledTotpRef.current = getFieldValue('two_fa_enabled_totp');
+    saveFields(true, false);
+  }, [getFieldValue('two_fa_enabled_totp')]);
 
   //we want to reload the table, but only after the save action has completed. So we store this for now.
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
@@ -7575,9 +7580,8 @@ const DynamicDataTable = props => {
     handleUsersTableFilter('rsssl_two_fa_status', currentFilter);
   }, [getCurrentFilter(moduleName)]);
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
-    const value = getFieldValue('two_fa_enabled');
-    const valueTotp = getFieldValue('two_fa_enabled_totp');
-    setEnabled(value || valueTotp);
+    const value = getFieldValue('two_fa_enabled') || getFieldValue('two_fa_enabled_totp');
+    setEnabled(value);
   }, [fields]);
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
     if (!dataLoaded || enabled !== (getFieldValue('two_fa_enabled') || getFieldValue('two_fa_enabled_totp'))) {
@@ -7613,7 +7617,6 @@ const DynamicDataTable = props => {
    * @returns {boolean}
    */
   const allAreOpen = users => {
-    console.log('running');
     if (Array.isArray(users)) {
       //for each users, check if the user has a forced role
       for (const user of users) {
@@ -24088,4 +24091,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.df5a6c3b58969475f557.js.map
+//# sourceMappingURL=src_Settings_Field_js.deb3ee2381c7e5f6629d.js.map

@@ -37,11 +37,17 @@ const DynamicDataTable = (props) => {
     const [rowsSelected, setRowsSelected] = useState([]);
     const [rowCleared, setRowCleared] = useState(false);
     const twoFAEnabledRef = useRef();
+    const twoFAEnabledTotpRef = useRef();
 
     useEffect(() => {
         twoFAEnabledRef.current = getFieldValue('two_fa_enabled');
         saveFields(true, false)
     }, [getFieldValue('two_fa_enabled')]);
+
+    useEffect(() => {
+        twoFAEnabledTotpRef.current = getFieldValue('two_fa_enabled_totp');
+        saveFields(true, false)
+    }, [getFieldValue('two_fa_enabled_totp')]);
 
     //we want to reload the table, but only after the save action has completed. So we store this for now.
     useEffect(() => {
@@ -74,9 +80,8 @@ const DynamicDataTable = (props) => {
     }, [getCurrentFilter(moduleName)]);
 
     useEffect(() => {
-        const value = getFieldValue('two_fa_enabled');
-        const valueTotp = getFieldValue('two_fa_enabled_totp');
-        setEnabled( ( value || valueTotp ) );
+        const value = (getFieldValue('two_fa_enabled') || getFieldValue('two_fa_enabled_totp'));
+        setEnabled( ( value ) );
     }, [fields]);
 
     useEffect(() => {
@@ -115,7 +120,6 @@ const DynamicDataTable = (props) => {
      * @returns {boolean}
      */
     const allAreOpen = (users) => {
-        console.log('running');
         if (Array.isArray(users)) {
             //for each users, check if the user has a forced role
             for (const user of users) {
