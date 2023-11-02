@@ -35,6 +35,8 @@ import CountryDatatable from "./LimitLoginAttempts/CountryDatatable";
 import TwoFaDataTable from "./TwoFA/TwoFaDataTable";
 import EventLogDataTable from "./EventLog/EventLogDataTable";
 import DOMPurify from "dompurify";
+import RE2 from 're2';
+
 const Field = (props) => {
     let scrollAnchor = React.createRef();
     const {updateField, setChangedField, highLightField} = useFields();
@@ -70,7 +72,7 @@ const Field = (props) => {
         let field = props.field;
         //if there's a pattern, validate it.
         if ( field.pattern ) {
-            const regex = new RegExp(field.pattern, 'g');
+            const regex = new RE2(field.pattern, 'g');
             const allowedCharactersArray = fieldValue.match(regex);
             fieldValue = allowedCharactersArray ? allowedCharactersArray.join('') : '';
         }

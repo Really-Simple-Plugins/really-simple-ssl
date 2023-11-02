@@ -7,4 +7,20 @@ module.exports = {
     filename: '[name].[contenthash].js',
     chunkFilename: '[name].[contenthash].js',
   },
+  resolve: {
+    ...defaultConfig.resolve,
+    fallback: {
+      "path": require.resolve("path-browserify"),
+    },
+  },
+  module: {
+    ...defaultConfig.module,
+    rules: [
+      ...defaultConfig.module.rules,
+      {
+        test: /\.node$/,
+        loader: 'node-loader',
+      },
+    ],
+  },
 };
