@@ -74,7 +74,7 @@ const Directories = (props) => {
             }
             {rsssl_settings.hosting_dashboard === 'cpanel' &&
                 <><p>
-                    <Hyperlink target="_blank"
+                    <Hyperlink target="_blank" rel="noopener noreferrer"
                                text={__("If you also want to secure subdomains like mail.domain.com, cpanel.domain.com, you have to use the %sDNS%s challenge.", "really-simple-ssl")}
                                url="https://really-simple-ssl.com/lets-encrypt-authorization-with-dns"/>
                     &nbsp;{__("Please note that auto-renewal with a DNS challenge might not be possible.", "really-simple-ssl")}

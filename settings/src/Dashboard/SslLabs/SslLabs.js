@@ -315,7 +315,7 @@ const SslLabs = () => {
                             {hasErrors && errorMessage}
                             {!hasErrors && __('What does my score mean?', 'really-simple-ssl')}
                         </p>
-                        <a href="https://really-simple-ssl.com/instructions/about-ssl-labs/" target="_blank">
+                        <a href="https://really-simple-ssl.com/instructions/about-ssl-labs/" target="_blank" rel="noopener noreferrer">
                             {__('Read more', 'really-simple-ssl')}
                         </a>
                     </div>
@@ -329,7 +329,7 @@ const SslLabs = () => {
                     </div>
                     { <div className="rsssl-ssl-labs-list-item">
                         <Icon name="external-link" color="black"/>
-                        <a href={url} target="_blank">{__('View detailed report on Qualys SSL Labs', 'really-simple-ssl')}</a>
+                        <a href={url} target="_blank" rel="noopener noreferrer">{__('View detailed report on Qualys SSL Labs', 'really-simple-ssl')}</a>
                     </div> }
                 </div>
             </div>

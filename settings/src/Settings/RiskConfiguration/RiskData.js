@@ -110,7 +110,7 @@ const UseRiskData = create((set, get) => ({
                     let updateUrl = item.update_available ? rsssl_settings.plugins_url + "?plugin_status=upgrade" : '#settings/vulnerabilities';
                     item.vulnerability_action = <div className="rsssl-vulnerability-action">
                         <a className="button" href={"https://really-simple-ssl.com/vulnerabilities/" + item.rss_identifier}
-                           target={"_blank"}>{__("Details", "really-simple-ssl")}</a>
+                           target={"_blank"} rel="noopener noreferrer">{__("Details", "really-simple-ssl")}</a>
                         <a disabled={!item.update_available} href={updateUrl}
                            className="button button-primary"
                         >{__("Update", "really-simple-ssl")}</a>

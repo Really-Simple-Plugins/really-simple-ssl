@@ -38,6 +38,7 @@
     "@material-ui/core": "^4.12.4",
     "@material-ui/lab": "^4.0.0-alpha.61",
     "@material-ui/styles": "^4.11.5",
+    "dompurify": "^3.0.6",
     "gulp-run": "^1.7.0",
     "sass": "^1.54.9"
   },

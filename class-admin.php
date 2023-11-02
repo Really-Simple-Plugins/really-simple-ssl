@@ -96,7 +96,7 @@ class rsssl_admin
         }
 
         $content = sprintf(
-            __('Really Simple SSL and Really Simple SSL add-ons do not process any personal identifiable information, so the GDPR does not apply to these plugins or usage of these plugins on your website. You can find our privacy policy <a href="%s" target="_blank">here</a>.', 'really-simple-ssl'),
+            __('Really Simple SSL and Really Simple SSL add-ons do not process any personal identifiable information, so the GDPR does not apply to these plugins or usage of these plugins on your website. You can find our privacy policy <a href="%s" target="_blank" rel="noopener noreferrer">here</a>.', 'really-simple-ssl'),
             'https://really-simple-ssl.com/privacy-statement/'
         );
 
@@ -476,7 +476,7 @@ class rsssl_admin
                             <a class="button" href="<?php echo add_query_arg(['dismiss_notice'=>$dismiss_id], $url )?>"><?php _e("Dismiss", "really-simple-ssl")?></a>
                         <?php } ?>
                         <?php if ($more_info) { ?>
-                            <a class="button" <?php echo $target?> href="<?php echo esc_url_raw($more_info)?>"><?php $is_internal_link ? _e("View", "really-simple-ssl") : _e("More info", "really-simple-ssl")?></a>
+                            <a class="button" <?php echo $target?> href="<?php echo esc_url_raw($more_info)?>" rel="noopener noreferrer"><?php $is_internal_link ? _e("View", "really-simple-ssl") : _e("More info", "really-simple-ssl")?></a>
                         <?php } ?>
                     </div>
                 <?php } ?>
@@ -1617,14 +1617,14 @@ class rsssl_admin
                     <div class="rsssl-review-image"><img width=80px" src="<?php echo rsssl_url?>/assets/img/icon.png" alt="review-logo"></div>
                     <div style="margin-left:30px">
                         <?php if ( get_option("rsssl_before_review_notice_user") ){?>
-                            <p><?php printf(__('Hi, Really Simple SSL has kept your site secure for some time now, awesome! If you have a moment, please consider leaving a review on WordPress.org to spread the word. We greatly appreciate it! If you have any questions or feedback, leave us a %smessage%s.', 'really-simple-ssl'),'<a href="https://really-simple-ssl.com/contact" target="_blank">','</a>'); ?></p>
+                            <p><?php printf(__('Hi, Really Simple SSL has kept your site secure for some time now, awesome! If you have a moment, please consider leaving a review on WordPress.org to spread the word. We greatly appreciate it! If you have any questions or feedback, leave us a %smessage%s.', 'really-simple-ssl'),'<a href="https://really-simple-ssl.com/contact" target="_blank" rel="noopener noreferrer">','</a>'); ?></p>
                         <?php } else {?>
-                            <p><?php printf(__('Hi, Really Simple SSL has kept your site secure for a month now, awesome! If you have a moment, please consider leaving a review on WordPress.org to spread the word. We greatly appreciate it! If you have any questions or feedback, leave us a %smessage%s.', 'really-simple-ssl'),'<a href="https://really-simple-ssl.com/contact" target="_blank">','</a>'); ?></p>
+                            <p><?php printf(__('Hi, Really Simple SSL has kept your site secure for a month now, awesome! If you have a moment, please consider leaving a review on WordPress.org to spread the word. We greatly appreciate it! If you have any questions or feedback, leave us a %smessage%s.', 'really-simple-ssl'),'<a href="https://really-simple-ssl.com/contact" target="_blank" rel="noopener noreferrer">','</a>'); ?></p>
 	                    <?php }?>
 
                         <i>- Rogier</i>
                         <div class="rsssl-buttons-row">
-                            <a class="button button-primary" target="_blank"
+                            <a class="button button-primary" target="_blank" rel="noopener noreferrer"
                                href="https://wordpress.org/support/plugin/really-simple-ssl/reviews/#new-post"><?php _e('Leave a review', 'really-simple-ssl'); ?></a>
                             <div class="dashicons dashicons-calendar"></div><a href="<?php echo esc_url(add_query_arg(array("page"=>"really-simple-security", "rsssl_review_notice"=>'later'), rsssl_admin_url() ) );?>"><?php _e('Maybe later', 'really-simple-ssl'); ?></a>
                             <div class="dashicons dashicons-no-alt"></div><a href="<?php echo esc_url(add_query_arg(array("page"=>"really-simple-security", "rsssl_review_notice"=>'dismiss'), rsssl_admin_url() ) );?>"><?php _e('Don\'t show again', 'really-simple-ssl'); ?></a>
@@ -2010,7 +2010,7 @@ class rsssl_admin
 		            'about-to-expire' => array(
 			            'title' => __("Your SSL certificate will expire soon.", "really-simple-ssl"),
 			            'msg' => sprintf(__("SSL certificate will expire on %s.","really-simple-ssl"), $expiry_date).'&nbsp;'.__("If your hosting provider auto-renews your certificate, no action is required. Alternatively, you have the option to generate an SSL certificate with Really Simple SSL.","really-simple-ssl").'&nbsp;'.
-                                 sprintf(__("Depending on your hosting provider, %smanual installation%s may be required.", "really-simple-ssl"),'<a target="_blank" href="https://really-simple-ssl.com/install-ssl-certificate">','</a>').
+                                 sprintf(__("Depending on your hosting provider, %smanual installation%s may be required.", "really-simple-ssl"),'<a target="_blank" rel="noopener noreferrer" href="https://really-simple-ssl.com/install-ssl-certificate">','</a>').
 			                     '<br><br><form action="" method="POST"><a href="'.add_query_arg(array("page" => "really-simple-security", "letsencrypt"=>1), rsssl_admin_url() ) .'#letsencrypt" type="submit" class="button button-default">'.__("Install SSL certificate", "really-simple-ssl").'</a>'.
 			                     '&nbsp;<input type="submit" class="button button-default" value="'.__("Re-check", "really-simple-ssl").'" id="rsssl_recheck_certificate" name="rsssl_recheck_certificate"></form>',
 			            'icon' => 'warning',
@@ -2625,11 +2625,11 @@ class rsssl_admin
         }
 
         //support
-	    $support = apply_filters('rsssl_support_link', '<a target="_blank" href="https://wordpress.org/support/plugin/really-simple-ssl/">' . __('Support', 'really-simple-ssl') . '</a>');
+	    $support = apply_filters('rsssl_support_link', '<a target="_blank" rel="noopener noreferrer" href="https://wordpress.org/support/plugin/really-simple-ssl/">' . __('Support', 'really-simple-ssl') . '</a>');
 	    array_unshift($links, $support);
 
 	    if ( ! defined( 'rsssl_pro_version' ) ) {
-	        $upgrade_link = '<a style="color:#2271b1;font-weight:bold" target="_blank" href="'.$this->pro_url.'">'
+	        $upgrade_link = '<a style="color:#2271b1;font-weight:bold" target="_blank" rel="noopener noreferrer" href="'.$this->pro_url.'">'
 		      . __( 'Improve security - Upgrade', 'really-simple-ssl' ) . '</a>';
 	        array_unshift( $links, $upgrade_link );
 	    }

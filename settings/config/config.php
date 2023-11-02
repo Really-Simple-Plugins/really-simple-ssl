@@ -311,7 +311,7 @@ function rsssl_fields( $load_values = true ) {
             'type'                    => 'checkbox',
             'label'                   => __("Include preload", "really-simple-ssl"),
             'comment'                 => sprintf(__("After enabling this feature, you can submit your site to %shstspreload.org%s",
-                "really-simple-ssl"), '<a target="_blank" href="https://hstspreload.org?domain='.site_url().'">',
+                "really-simple-ssl"), '<a target="_blank" rel="noopener noreferrer" href="https://hstspreload.org?domain='.site_url().'">',
                 "</a>"),
             'react_conditions'        => [
                 'relation' => 'AND',
@@ -1343,7 +1343,7 @@ function rsssl_fields( $load_values = true ) {
 			'group_id' => 'vulnerabilities_measures',
 			'type'     => 'checkbox',
 			'label'    => __("I have read and understood the risks to intervene with these measures.","really-simple-ssl"),
-			'comment' => '<a href="https://really-simple-ssl.com/instructions/about-vulnerabilities#measures" target="_blank">'.__("Read more", "really-simple-ssl") .'</a>',
+			'comment' => '<a href="https://really-simple-ssl.com/instructions/about-vulnerabilities#measures" target="_blank" rel="noopener noreferrer">'.__("Read more", "really-simple-ssl") .'</a>',
 			'disabled' => false,
 			'default'  => false,
 			'react_conditions' => [

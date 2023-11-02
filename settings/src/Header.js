@@ -26,19 +26,19 @@ const Header = () => {
                 </div>
                 <div className="rsssl-header-right">
                     { !rsssl_settings.le_generated_by_rsssl &&
-                        <a className="rsssl-knowledge-base-link" href="https://really-simple-ssl.com/knowledge-base" target="_blank">{__("Documentation", "really-simple-ssl")}</a>}
+                        <a className="rsssl-knowledge-base-link" href="https://really-simple-ssl.com/knowledge-base" target="_blank" rel="noopener noreferrer">{__("Documentation", "really-simple-ssl")}</a>}
                     { rsssl_settings.le_generated_by_rsssl &&
                         <a href={rsssl_settings.letsencrypt_url}>{__("Let's Encrypt","really-simple-ssl")}</a>
                     }
                     { rsssl_settings.pro_plugin_active &&
                         <a href="https://wordpress.org/support/plugin/really-simple-ssl/"
                            className="button button-black"
-                           target="_blank">{__("Support", "really-simple-ssl")}</a>
+                           target="_blank" rel="noopener noreferrer">{__("Support", "really-simple-ssl")}</a>
                     }
                     { !rsssl_settings.pro_plugin_active &&
                         <a href={rsssl_settings.upgrade_link}
                            className="button button-black"
-                           target="_blank">{__("Go Pro", "really-simple-ssl")}</a>
+                           target="_blank" rel="noopener noreferrer">{__("Go Pro", "really-simple-ssl")}</a>
                     }
                 </div>
             </div>

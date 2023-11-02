@@ -5,7 +5,7 @@ const TipsTricksFooter = () => {
 
     return (
         <>
-            <a href="https://really-simple-ssl.com/knowledge-base-overview/" target="_blank" className="button button-secondary">{ __("Documentation", "really-simple-ssl")}</a>
+            <a href="https://really-simple-ssl.com/knowledge-base-overview/" target="_blank"rel="noopener noreferrer" className="button button-secondary">{ __("Documentation", "really-simple-ssl")}</a>
         </>
 
 );

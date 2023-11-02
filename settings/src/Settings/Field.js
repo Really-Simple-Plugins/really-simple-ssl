@@ -34,6 +34,7 @@ import CountryDatatable from "./LimitLoginAttempts/CountryDatatable";
 // import DynamicDataTable from "./DynamicDataTable/DynamicDataTable";
 import TwoFaDataTable from "./TwoFA/TwoFaDataTable";
 import EventLogDataTable from "./EventLog/EventLogDataTable";
+import DOMPurify from "dompurify";
 const Field = (props) => {
     let scrollAnchor = React.createRef();
     const {updateField, setChangedField, highLightField} = useFields();
@@ -126,7 +127,7 @@ const Field = (props) => {
         disabled = true;
         field.comment = <>
             {__("This feature is only available networkwide.","really-simple-ssl")}
-            <Hyperlink target="_blank" text={__("Network settings","really-simple-ssl")} url={rsssl_settings.network_link}/>
+            <Hyperlink target="_blank" rel="noopener noreferrer" text={__("Network settings","really-simple-ssl")} url={rsssl_settings.network_link}/>
         </>
     }
 
@@ -149,8 +150,15 @@ const Field = (props) => {
                   disabled={disabled}
                   onChangeHandler={ ( fieldValue ) => onChangeHandler(fieldValue) }
                 />
-
-                {field.comment && <div className="rsssl-comment" dangerouslySetInnerHTML={{__html:field.comment}}></div>}
+                {/* nosemgrep:react-dangerously-set-inner-html */}
+                {field.comment &&
+                    <div
+                        className="rsssl-comment"
+                        dangerouslySetInnerHTML={{
+                            __html: DOMPurify.sanitize(field.comment)
+                        }}
+                    />
+                }
             </div>
         );
     }

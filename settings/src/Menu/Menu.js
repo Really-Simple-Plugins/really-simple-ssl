@@ -25,7 +25,7 @@ const Menu = () => {
                 <div className="rsssl-wizard-menu-items">
                     { subMenu.menu_items.map((menuItem, i) => <MenuItem key={"menuItem-"+i} menuItem={menuItem} isMainMenu={true} /> ) }
                     { hasPremiumItems && !rsssl_settings.is_premium && licenseStatus!=='valid' &&
-                        <div className="rsssl-premium-menu-item"><div><a target="_blank" href={rsssl_settings.upgrade_link} className='button button-black'>{__('Upgrade', 'really-simple-ssl')}</a></div></div>
+                        <div className="rsssl-premium-menu-item"><div><a target="_blank" rel="noopener noreferrer" href={rsssl_settings.upgrade_link} className='button button-black'>{__('Upgrade', 'really-simple-ssl')}</a></div></div>
                     }
                 </div>
             </div>

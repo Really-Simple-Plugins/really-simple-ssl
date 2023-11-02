@@ -77,7 +77,7 @@ if ( !class_exists("rsssl_site_health") ) {
 					__( 'The value, WP_DEBUG_LOG, has been added to this website’s configuration file. This means any errors on the site will be written to a file which is potentially available to all users.' ,'really-simple-ssl' )
 				),
 				'actions'     => sprintf(
-					'<p><a href="%s" target="_blank" rel="noopener">%s <span class="screen-reader-text">%s</span><span aria-hidden="true" class="dashicons dashicons-external"></span></a></p>',
+					'<p><a href="%s" target="_blank" rel="noopener noreferrer">%s <span class="screen-reader-text">%s</span><span aria-hidden="true" class="dashicons dashicons-external"></span></a></p>',
 					/* translators: Documentation explaining debugging in WordPress. */
 					esc_url( __( add_query_arg(array('page'=>'really-simple-security#settings/hardening'), rsssl_admin_url() ) ) ),
 					__( 'Remove from public location with Really Simple SSL', 'really-simple-ssl' ),
@@ -107,7 +107,7 @@ if ( !class_exists("rsssl_site_health") ) {
 					__( 'The value, WP_DEBUG_DISPLAY, has either been enabled by WP_DEBUG or added to your configuration file. This will make errors display on the front end of your site.' ,'really-simple-ssl' )
 				),
 				'actions'     => sprintf(
-					'<p><a href="%s" target="_blank" rel="noopener">%s <span class="screen-reader-text">%s</span><span aria-hidden="true" class="dashicons dashicons-external"></span></a></p>',
+					'<p><a href="%s" target="_blank" rel="noopener noreferrer">%s <span class="screen-reader-text">%s</span><span aria-hidden="true" class="dashicons dashicons-external"></span></a></p>',
 					/* translators: Documentation explaining debugging in WordPress. */
 					esc_url( 'https://really-simple-ssl.com/security/debug-display-enabled' ),
 					__( 'Read more about security concerns with debug display enabled', 'really-simple-ssl' ),
@@ -150,7 +150,7 @@ if ( !class_exists("rsssl_site_health") ) {
 				$result['label']       = __( 'Not all recommended security headers are installed' , 'really-simple-ssl' );
 				$result['description'] = sprintf( '<p>%s</p>', __( 'Your website does not send all recommended security headers.', 'really-simple-ssl' ).$style.$list);
 				$result['actions']     = sprintf(
-					'<p><a href="%s" target="_blank">%s</a></p>',
+					'<p><a href="%s" target="_blank" rel="noopener noreferrer">%s</a></p>',
 					'https://really-simple-ssl.com/site-health-recommended-security-headers/',
 					__( 'Learn more about security headers', 'really-simple-ssl' )
 				);

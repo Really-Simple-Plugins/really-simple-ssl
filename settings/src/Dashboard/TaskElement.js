@@ -46,7 +46,7 @@ const TaskElement = (props) => {
         <div className="rsssl-task-element">
             <span className={'rsssl-task-status rsssl-' + notice.output.icon}>{ notice.output.label }</span>
             <p className="rsssl-task-message" dangerouslySetInnerHTML={{__html: notice.output.msg}}></p>
-            {urlIsExternal && notice.output.url && <a target="_blank" href={notice.output.url}>{__("More info", "really-simple-ssl")}</a> }
+            {urlIsExternal && notice.output.url && <a target="_blank" rel="noopener noreferrer" href={notice.output.url}>{__("More info", "really-simple-ssl")}</a> }
             {notice.output.clear_cache_id && <span className="rsssl-task-enable button button-secondary" onClick={ () => handleClearCache(notice.output.clear_cache_id ) }>{__("Re-check", "really-simple-ssl")}</span> }
             {!premium && !urlIsExternal && notice.output.url && <a className="rsssl-task-enable button button-secondary" href={notice.output.url}>{__("View", "really-simple-ssl")}</a> }
             {!premium && notice.output.highlight_field_id && <span className="rsssl-task-enable button button-secondary" onClick={() => handleClick()}>{__("View", "really-simple-ssl")}</span> }

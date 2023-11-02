@@ -2,6 +2,8 @@
 * The native selectControl doesn't allow disabling per option.
 */
 
+import DOMPurify from "dompurify";
+
 const SelectControl = (props) => {
     let field = props.field;
     let selectDisabled = !Array.isArray(props.disabled) && props.disabled;
@@ -18,7 +20,15 @@ const SelectControl = (props) => {
                     </div>
                 </div>
             </div>
-            {field.comment && <div className="rsssl-comment" dangerouslySetInnerHTML={{__html:field.comment}}></div>}
+            {/* nosemgrep:react-dangerously-set-inner-html */}
+            {field.comment && (
+                <div
+                    className="rsssl-comment"
+                    dangerouslySetInnerHTML={{
+                        __html: DOMPurify.sanitize(field.comment)
+                    }}
+                ></div>
+            )}
         </>
     );
 }
