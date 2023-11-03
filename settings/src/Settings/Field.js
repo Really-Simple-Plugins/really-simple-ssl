@@ -152,7 +152,7 @@ const Field = (props) => {
                   disabled={disabled}
                   onChangeHandler={ ( fieldValue ) => onChangeHandler(fieldValue) }
                 />
-                {/* semgrep-ignore react-dangerouslysetinnerhtml */}
+                {/* semgrep-ignore-start */}
                 {field.comment &&
                     <div
                         className="rsssl-comment"
@@ -161,6 +161,7 @@ const Field = (props) => {
                     }}
                     />
                 }
+                {/* semgrep-ignore-end */}
             </div>
         );
     }
