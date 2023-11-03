@@ -21,7 +21,7 @@ const Help = (props) => {
                     <summary>{notice.title} <Icon name='chevron-down' /></summary>
                     {/*some notices contain html, like for the htaccess notices. A title is required for those options, otherwise the text becomes the title. */}
                         <div key={1}
-                            // semgrep-ignore
+                            // nosemgrep
                              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(notice.text) }}></div>
                     {notice.url && <div key={2} className="rsssl-help-more-info"><a target={target} href={notice.url}>{__("More info", "really-simple-ssl")}</a></div>}
                 </details>
