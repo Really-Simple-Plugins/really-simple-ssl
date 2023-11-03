@@ -152,13 +152,13 @@ const Field = (props) => {
                   disabled={disabled}
                   onChangeHandler={ ( fieldValue ) => onChangeHandler(fieldValue) }
                 />
-                {/* semgrep-ignore react-dangerouslySetInnerHTML */}
+                {/* semgrep-ignore react-dangerouslysetinnerhtml */}
                 {field.comment &&
                     <div
                         className="rsssl-comment"
                         dangerouslySetInnerHTML={{
                             __html: DOMPurify.sanitize(field.comment)
-                        }}
+                    }}
                     />
                 }
             </div>
