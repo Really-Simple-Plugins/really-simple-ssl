@@ -152,7 +152,7 @@ const Field = (props) => {
                   disabled={disabled}
                   onChangeHandler={ ( fieldValue ) => onChangeHandler(fieldValue) }
                 />
-                {/* nosemgrep:react-dangerously-set-inner-html */}
+                {/* semgrep-ignore react-dangerouslySetInnerHTML */}
                 {field.comment &&
                     <div
                         className="rsssl-comment"
