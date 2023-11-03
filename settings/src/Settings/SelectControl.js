@@ -20,8 +20,8 @@ const SelectControl = (props) => {
                     </div>
                 </div>
             </div>
-            {/* nosemgrep:react-dangerously-set-inner-html */}
             {field.comment && (
+                // nosemgrep: typescript.react.security.audit.react-dangerouslysetinnerhtml.react-dangerouslysetinnerhtml
                 <div
                     className="rsssl-comment"
                     dangerouslySetInnerHTML={{
