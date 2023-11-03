@@ -21,14 +21,8 @@ const SelectControl = (props) => {
                 </div>
             </div>
             {field.comment && (
-                // nosemgrep: typescript.react.security.audit.react-dangerouslysetinnerhtml.react-dangerouslysetinnerhtml
-                <div
-                    className="rsssl-comment"
-                    dangerouslySetInnerHTML={{
-                        __html: DOMPurify.sanitize(field.comment)
-                    }}
-                ></div>
-            )}
+                <div className="rsssl-comment" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(field.comment) }} ></div> {/* nosemgrep: react-dangerouslysetinnerhtml */}
+            ))}
         </>
     );
 }
