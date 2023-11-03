@@ -154,12 +154,7 @@ const Field = (props) => {
                 />
                 {field.comment &&
                     // semgrep-ignore
-                    <div
-                        className="rsssl-comment"
-                        dangerouslySetInnerHTML={{
-                            __html: DOMPurify.sanitize(field.comment)
-                    }}
-                    />
+                    <div className="rsssl-comment" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(field.comment) }} /> {/* nosemgrep: react-dangerouslysetinnerhtml */}
                 }
             </div>
         );
