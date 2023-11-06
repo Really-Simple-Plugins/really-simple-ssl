@@ -308,7 +308,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
                         'true' => [
                             'title' => $title,
                             'msg' => $title.' '.__('Please take appropriate action.','really-simple-ssl'),
-                            'url' => add_query_arg(['page'=>'really-simple-security#settings/vulnerabilities/vulnerabilities-overview'], rsssl_admin_url() ),
+                            'url' => add_query_arg(['page'=>'really-simple-security#settings/vulnerabilities-measures-overview'], rsssl_admin_url() ),
                             'icon' => ($risk_level === 'c' || $risk_level==='h') ? 'warning' : 'open',
                             'type' => 'warning',
                             'dismissible' => true,
