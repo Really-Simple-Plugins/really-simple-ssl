@@ -7188,12 +7188,14 @@ const RolesDropDown = _ref => {
     rolesLoaded
   } = (0,_TwoFA_RolesStore__WEBPACK_IMPORTED_MODULE_3__["default"])();
   const [selectedRoles, setSelectedRoles] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)([]);
+  const [rolesEnabled, setRolesEnabled] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
 
   // Custom hook to manage form fields
   const {
     updateField,
     setChangedField,
-    fieldsLoaded
+    fieldsLoaded,
+    getFieldValue
   } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_2__["default"])();
   let enabled = true;
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
@@ -7215,6 +7217,11 @@ const RolesDropDown = _ref => {
       label: role.charAt(0).toUpperCase() + role.slice(1)
     })));
   }, [fieldsLoaded]);
+
+  //if the field enforce_frequent_password_change is enabled, then the field is enabled
+  (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
+    setRolesEnabled(getFieldValue('enforce_frequent_password_change'));
+  }, [getFieldValue('enforce_frequent_password_change')]);
 
   /**
    * Handles the change event of the react-select component.
@@ -7246,11 +7253,6 @@ const RolesDropDown = _ref => {
       }
     })
   };
-
-  // if (field.id === 'password_change_roles') {
-  //     enabled = getFieldValue('enforce_password_protection_enabled');
-  // }
-
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     style: {
       marginTop: '5px'
@@ -7261,7 +7263,8 @@ const RolesDropDown = _ref => {
     onChange: handleChange,
     value: selectedRoles,
     menuPosition: "fixed",
-    styles: customStyles
+    styles: customStyles,
+    isDisabled: !rolesEnabled
   }), !enabled && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-locked"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -24025,4 +24028,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.8fea54d6be68619b4db4.js.map
+//# sourceMappingURL=src_Settings_Field_js.fa6cb08df467410c3826.js.map
