@@ -113,11 +113,6 @@ const IpAddressDatatable = (props) => {
 
     let enabled = getFieldValue('enable_limited_login_attempts');
 
-
-    useEffect(() => {
-        console.log('enabled ips', enabled);
-    }, [enabled]);
-
     const handleOpen = () => {
         setAddingIpAddress(true);
     };

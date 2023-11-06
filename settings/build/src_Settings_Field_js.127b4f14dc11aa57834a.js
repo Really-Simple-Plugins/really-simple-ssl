@@ -4699,9 +4699,6 @@ const IpAddressDatatable = props => {
     }
   }, 'light');
   let enabled = getFieldValue('enable_limited_login_attempts');
-  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
-    console.log('enabled ips', enabled);
-  }, [enabled]);
   const handleOpen = () => {
     setAddingIpAddress(true);
   };
@@ -23877,4 +23874,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.fe60c6ec801f36ad0ec1.js.map
+//# sourceMappingURL=src_Settings_Field_js.127b4f14dc11aa57834a.js.map
