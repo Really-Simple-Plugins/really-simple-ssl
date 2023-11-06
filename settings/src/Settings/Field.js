@@ -35,7 +35,6 @@ import CountryDatatable from "./LimitLoginAttempts/CountryDatatable";
 import TwoFaDataTable from "./TwoFA/TwoFaDataTable";
 import EventLogDataTable from "./EventLog/EventLogDataTable";
 import DOMPurify from "dompurify";
-import RE2 from 're2';
 
 const Field = (props) => {
     let scrollAnchor = React.createRef();
@@ -70,9 +69,8 @@ const Field = (props) => {
     }
     const onChangeHandler = (fieldValue) => {
         let field = props.field;
-        //if there's a pattern, validate it.
-        if ( field.pattern ) {
-            const regex = new RE2(field.pattern, 'g');
+        if (field.pattern) {
+            const regex = new RegExp(field.pattern, 'g');
             const allowedCharactersArray = fieldValue.match(regex);
             fieldValue = allowedCharactersArray ? allowedCharactersArray.join('') : '';
         }
@@ -143,17 +141,18 @@ const Field = (props) => {
         );
     }
 
-    if ( field.type==='checkbox' ){
+    if ( field.type==='checkbox' ) {
         return (
             <div className={highLightClass} ref={scrollAnchor}>
                 <CheckboxControl
                   label={labelWrap(field)}
                   field={field}
                   disabled={disabled}
-                  onChangeHandler={ ( fieldValue ) => onChangeHandler(fieldValue) }
+                  onChangeHandler={ ( fieldValue ) => onChangeHandler( fieldValue ) }
                 />
-                {field.comment &&
-                    <div className="rsssl-comment" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(field.comment) }} /> {/* nosemgrep: react-dangerouslysetinnerhtml */}
+                { field.comment &&
+                    <div className="rsssl-comment" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(field.comment) }} />
+                    /* nosemgrep: react-dangerouslysetinnerhtml */
                 }
             </div>
         );

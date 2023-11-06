@@ -21,8 +21,9 @@ const SelectControl = (props) => {
                 </div>
             </div>
             {field.comment && (
-                <div className="rsssl-comment" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(field.comment) }} ></div> {/* nosemgrep: react-dangerouslysetinnerhtml */}
-            ))}
+                <div className="rsssl-comment" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(field.comment) }} ></div>
+                /* nosemgrep: react-dangerouslysetinnerhtml */
+            )}
         </>
     );
 }

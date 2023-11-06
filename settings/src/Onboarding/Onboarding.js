@@ -222,8 +222,9 @@ const Onboarding = ({isModal}) => {
                         { certificateValid && step.info_text &&
                             <div
                                 className="rsssl-modal-description"
-                                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(step.info_text) }} {/* nosemgrep: react-dangerouslysetinnerhtml */}
+                                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(step.info_text) }}
                             />
+                            /* nosemgrep: react-dangerouslysetinnerhtml */
                         }
                         { currentStepIndex===0 && !certificateValid &&
                             <>
