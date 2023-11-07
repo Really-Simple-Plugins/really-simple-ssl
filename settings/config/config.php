@@ -75,7 +75,7 @@ function rsssl_fields( $load_values = true ) {
 		],
 		[
 			'id'               => 'redirect',
-			'menu_id'          => 'encryption_redirect',
+			'menu_id'          => 'encryption',
 			'group_id'         => 'encryption_redirect',
 			'type'             => 'select',
 			'tooltip'  => __( "Changing redirect methods should be done with caution. Please make sure you have read our instructions beforehand at the right-hand side.", 'really-simple-ssl' ),
@@ -108,7 +108,7 @@ function rsssl_fields( $load_values = true ) {
         ],
         [
             'id'       => 'mixed_content_fixer',
-            'menu_id'  => 'encryption_redirect',
+            'menu_id'  => 'encryption',
             'group_id' => 'encryption_redirect',
             'type'     => 'checkbox',
             'label'    => __("Mixed content fixer", 'really-simple-ssl'),
@@ -117,7 +117,7 @@ function rsssl_fields( $load_values = true ) {
         ],
         [
             'id'               => 'switch_mixed_content_fixer_hook',
-            'menu_id'          => 'encryption_redirect',
+            'menu_id'          => 'encryption',
             'group_id'         => 'encryption_redirect',
             'type'             => 'checkbox',
             'label'            => __("Mixed content fixer - init hook", 'really-simple-ssl'),
@@ -141,7 +141,7 @@ function rsssl_fields( $load_values = true ) {
         ],
         [
             'id'       => 'admin_mixed_content_fixer',
-            'menu_id'  => 'encryption_redirect',
+            'menu_id'  => 'encryption',
             'group_id' => 'encryption_redirect',
             'type'     => 'checkbox',
             'label'    => __("Mixed content fixer - back-end", "really-simple-ssl"),
@@ -153,7 +153,7 @@ function rsssl_fields( $load_values = true ) {
 
 		[
 			'id'                   => 'do_not_edit_htaccess', //field is removed if not enabled
-			'menu_id'              => 'encryption_redirect',
+			'menu_id'              => 'encryption',
 			'group_id'             => 'encryption_redirect',
 			'type'                 => 'checkbox',
 			'label'                => __("Stop editing the .htaccess file", 'really-simple-ssl'),
@@ -170,7 +170,7 @@ function rsssl_fields( $load_values = true ) {
 		],
 		[
 			'id'               => 'send_notifications_email',
-			 'menu_id'          => 'general_email',
+			 'menu_id'          => 'general',
 			 'group_id'         => 'general_email',
 			 'type'             => 'checkbox',
 			 'label'      => __("Notifications by email", 'really-simple-ssl'),
@@ -181,7 +181,7 @@ function rsssl_fields( $load_values = true ) {
 
         [
             'id'       => 'send_verification_email',
-            'menu_id'  => 'general_email',
+            'menu_id'  => 'general',
             'group_id' => 'general_email',
             'type'     => 'button',
             'action'      => 'send_verification_mail',

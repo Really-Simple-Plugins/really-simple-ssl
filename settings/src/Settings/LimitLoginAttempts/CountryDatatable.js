@@ -3,7 +3,6 @@ import DataTable, { createTheme } from "react-data-table-component";
 import CountryDataTableStore from "./CountryDataTableStore";
 import EventLogDataTableStore from "../EventLog/EventLogDataTableStore";
 import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import FilterData from "../FilterData";
 import Flag from "../../utils/Flag/Flag";
 import { button } from "@wordpress/components";

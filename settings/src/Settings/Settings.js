@@ -70,6 +70,7 @@ const Settings = () => {
       groups.push(selectedField.group_id);
     }
   }
+  console.log("selectedFields ", selectedFields);
 
   //convert progress notices to an array useful for the help blocks
   let notices = [];
