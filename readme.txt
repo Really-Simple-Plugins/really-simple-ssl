@@ -119,6 +119,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 * Improvement: new react based modal
 * Improvement: menu re-structured
 * Improvement: re-check vulnerability status after core update
+* Improvement: link in the email security notification to the vulnerability page instead of to a general explanation
 
 = 7.1.3 =
 * October 11th 2023
