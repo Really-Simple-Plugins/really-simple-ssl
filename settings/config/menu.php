@@ -52,15 +52,8 @@ function rsssl_menu() {
 				],
 				[
 					'id' => 'encryption',
-					'title' => 'Encryption',
-					'featured' => false,
-					'menu_items' => [
-						[
-							'id' => 'encryption_redirect',
-							'group_id' => 'encryption_redirect',
-							'title' => __( 'Redirection', 'really-simple-ssl' ),
-							'helpLink' => 'https://really-simple-ssl.com/remove-htaccess-redirect-site-lockout/?mtm_source=free',
-						],
+					'title' => 'SSL',
+					'groups' => [
 						[
 							'id' => 'encryption_lets_encrypt',
 							'group_id' => 'encryption_lets_encrypt',
@@ -70,23 +63,25 @@ function rsssl_menu() {
 							'directLink' => rsssl_letsencrypt_wizard_url(),
 						],
 						[
-							'id' => 'mixedcontentscan',
-							'group_id' => 'mixedcontentscan',
+							'id' => 'encryption_redirect',
+							'group_id' => 'encryption_redirect',
+							'title' => __( 'Redirection', 'really-simple-ssl' ),
+							'helpLink' => 'https://really-simple-ssl.com/remove-htaccess-redirect-site-lockout/?mtm_source=free',
+						],
+						[
+							'id' => 'mixed-content-general',
+							'group_id' => 'mixed-content-general',
+							'title' => __( 'Mixed Content', 'really-simple-ssl' ),
+							'helpLink' => 'https://really-simple-ssl.com/remove-htaccess-redirect-site-lockout/?mtm_source=free',
+						],
+						[
+							'id' => 'mixed-content-scan',
+							'group_id' => 'mixed-content-scan',
 							'title' => __( 'Mixed Content Scan', 'really-simple-ssl' ),
-							'premium' => true,
+							'helpLink' => 'https://really-simple-ssl.com/pro/?mtm_campaign=mixedcontent&mtm_source=free&mtm_content=upgrade',
 							'upgrade' => 'https://really-simple-ssl.com/pro/?mtm_campaign=mixedcontent&mtm_source=free&mtm_content=upgrade',
-							'helpLink' => 'https://really-simple-ssl.com/pro/?mtm_campaign=mixedcontent&mtm_source=free&mtm_content=instructions',
+							'premium' => true,
 							'premium_text' => __( "Get the Mixed Content Scan with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
-							'groups' => [
-								[
-									'id' => 'mixedcontentscan',
-									'title' => __( 'Mixed Content Scan', 'really-simple-ssl' ),
-									'helpLink' => 'https://really-simple-ssl.com/pro/?mtm_campaign=mixedcontent&mtm_source=free&mtm_content=upgrade',
-									'upgrade' => 'https://really-simple-ssl.com/pro/?mtm_campaign=mixedcontent&mtm_source=free&mtm_content=upgrade',
-									'premium' => true,
-									'premium_text' => __( "Get the Mixed Content Scan with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
-								],
-							],
 						],
 					],
 				],
@@ -263,11 +258,7 @@ function rsssl_menu() {
 						[
 							'id'                   => 'two-fa',
 							'networkwide_required' => true,
-							'premium'              => true,
-							'premium_text'         => __( 'Get two-factor authentication with %sReally Simple SSL Pro%s', 'really-simple-ssl' ),
-							'upgrade'              => 'https://really-simple-ssl.com/pro/?mtm_campaign=cops&mtm_source=free&mtm_content=upgrade',
-							'title'                => 'Login Protection',
-							'helpLink'             => 'https://really-simple-ssl.com/instructions/about-login-protection/?mtm_campaign=instructions&mtm_source=free',
+							'title'                =>  __('Two-Step verification', 'really-simple-ssl'),
 							'groups'  => [
 								[
 									'id'       => 'two_fa_general',

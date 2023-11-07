@@ -162,7 +162,7 @@ const PermissionsPolicy = (props) => {
 
                     <div className="rsssl-action-buttons">
                         {options.map((option) => (
-                            <div className="rsssl-action-buttons__inner" key={option.value}>
+                            <div className="rsssl-action-buttons__inner" key={'option-'+option.value}>
                                 <Button
                                     // className={"button button-red rsssl-action-buttons__button"}
                                     className={"button " + option.button + " rsssl-action-buttons__button"}

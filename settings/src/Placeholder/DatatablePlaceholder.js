@@ -4,7 +4,7 @@ const DatatablePlaceholder = (props) => {
     if ( !lines ) lines = 3;
     return (
         <div className="rsssl-datatable-placeholder">
-            {Array.from({length: lines}).map((item, i) => (<div key={i} ></div>))}
+            {Array.from({length: lines}).map((item, i) => (<div key={'datatable-placeholder-'+i} ></div>))}
         </div>
     );
 

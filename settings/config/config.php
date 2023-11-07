@@ -109,7 +109,7 @@ function rsssl_fields( $load_values = true ) {
         [
             'id'       => 'mixed_content_fixer',
             'menu_id'  => 'encryption',
-            'group_id' => 'encryption_redirect',
+            'group_id' => 'mixed-content-general',
             'type'     => 'checkbox',
             'label'    => __("Mixed content fixer", 'really-simple-ssl'),
             'disabled' => false,
@@ -117,8 +117,8 @@ function rsssl_fields( $load_values = true ) {
         ],
         [
             'id'               => 'switch_mixed_content_fixer_hook',
-            'menu_id'          => 'encryption',
-            'group_id'         => 'encryption_redirect',
+            'menu_id'  => 'encryption',
+            'group_id' => 'mixed-content-general',
             'type'             => 'checkbox',
             'label'            => __("Mixed content fixer - init hook", 'really-simple-ssl'),
             'help'             => [
@@ -142,7 +142,7 @@ function rsssl_fields( $load_values = true ) {
         [
             'id'       => 'admin_mixed_content_fixer',
             'menu_id'  => 'encryption',
-            'group_id' => 'encryption_redirect',
+            'group_id' => 'mixed-content-general',
             'type'     => 'checkbox',
             'label'    => __("Mixed content fixer - back-end", "really-simple-ssl"),
             'tooltip'  => __("Only enable this if you experience mixed content in the admin environment of your WordPress website.",
@@ -871,8 +871,8 @@ function rsssl_fields( $load_values = true ) {
 		],
 		[
 			'id'          => 'mixedcontentscan',
-			'menu_id'     => 'mixedcontentscan',
-			'group_id'    => 'mixedcontentscan',
+			'menu_id'     => 'encryption',
+			'group_id'    => 'mixed-content-scan',
 			'type'        => 'mixedcontentscan',
 			'label'       => __( "Mixed content scan", "really-simple-ssl" ),
 			'help'        => [

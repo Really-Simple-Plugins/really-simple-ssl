@@ -13,7 +13,7 @@ const SelectControl = (props) => {
                     <div data-wp-component="HStack" className="components-flex components-select-control">
                         <label htmlFor={field.id} className="components-toggle-control__label">{props.label}</label>
                         <select disabled={selectDisabled} value={props.value} onChange={(e) => props.onChangeHandler(e.target.value)}>
-                            {props.options.map((option,i) => <option key={i} value={option.value} disabled={optionsDisabled && optionsDisabled.includes(option.value)}>{option.label}</option>) }
+                            {props.options.map((option,i) => <option key={'option-'+i} value={option.value} disabled={optionsDisabled && optionsDisabled.includes(option.value)}>{option.label}</option>) }
                         </select>
                     </div>
                 </div>

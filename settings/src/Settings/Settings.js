@@ -70,7 +70,6 @@ const Settings = () => {
       groups.push(selectedField.group_id);
     }
   }
-  console.log("selectedFields ", selectedFields);
 
   //convert progress notices to an array useful for the help blocks
   let notices = [];
@@ -169,8 +168,8 @@ const Settings = () => {
                       {noticesExpanded && __("Collapse all","really-simple-ssl")}
                   </div>
               </div>
-              { notices.map((field, i) => <ErrorBoundary key={i} fallback={"Could not load notices"}>
-                      <Help key={i} noticesExpanded={noticesExpanded} index={i} help={field} fieldId={field.id}/>
+              { notices.map((field, i) => <ErrorBoundary key={'errorboundary-'+i} fallback={"Could not load notices"}>
+                      <Help noticesExpanded={noticesExpanded} index={i} help={field} fieldId={field.id}/>
                   </ErrorBoundary>
                   )}
 
