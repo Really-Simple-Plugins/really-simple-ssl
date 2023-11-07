@@ -190,14 +190,14 @@ function rsssl_menu() {
 							'id' => 'vulnerabilities_notifications',
 							'group_id' => 'vulnerabilities_notifications',
 							'title' => __( 'Notifications', 'really-simple-ssl' ),
-							'intro' => __( 'These notifications are set to the minimum risk level that triggers a notification. For example, the default site-wide notification triggers on high-risk and critical vulnerabilities.', 'really-simple-ssl' ),
-							'helpLink' => 'https://really-simple-ssl.com/instructions/about-vulnerabilities#notifications',
-						],
-						[
-							'id' => 'vulnerabilities-measures-overview',
-							'group_id' => 'vulnerabilities-measures-overview',
-							'title' => __( 'Measures', 'really-simple-ssl' ),
 							'groups'  => [
+								[
+									'id'       => 'vulnerabilities_notifications',
+									'group_id' => 'vulnerabilities_notifications',
+									'title' => __( 'Notifications', 'really-simple-ssl' ),
+									'intro' => __( 'These notifications are set to the minimum risk level that triggers a notification. For example, the default site-wide notification triggers on high-risk and critical vulnerabilities.', 'really-simple-ssl' ),
+									'helpLink' => 'https://really-simple-ssl.com/instructions/about-vulnerabilities#notifications',
+								],
 								[
 									'id'       => 'vulnerabilities_overview',
 									'group_id' => 'vulnerabilities_overview',
@@ -205,6 +205,13 @@ function rsssl_menu() {
 									'intro' => __( 'This is the vulnerability overview. Here you will find current known vulnerabilities on your system. You can find more information and helpful, actionable insights for every vulnerability under details.', 'really-simple-ssl' ),
 									'helpLink' => 'https://really-simple-ssl.com/instructions/about-vulnerabilities#components',
 								],
+							],
+						],
+						[
+							'id' => 'vulnerabilities-measures-overview',
+							'group_id' => 'vulnerabilities-measures-overview',
+							'title' => __( 'Measures', 'really-simple-ssl' ),
+							'groups'  => [
 								[
 									'id'       => 'vulnerabilities_measures',
 									'group_id' => 'vulnerabilities_measures',
