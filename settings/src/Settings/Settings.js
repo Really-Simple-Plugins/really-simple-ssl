@@ -135,7 +135,7 @@ const Settings = () => {
                 {selectedSubMenuItem !== menuItems[0].id &&
                     <a className="rsssl-previous"
                        href={`#${selectedMainMenuItem}/${previousMenuItem}`}>
-                      {__('Previous', 'complianz-gdpr')}
+                      {__('Previous', 'really-simple-ssl')}
                     </a>
                 }
                 <button
@@ -150,7 +150,7 @@ const Settings = () => {
                       <button disabled={nextButtonDisabled}
                          className="button button-primary"
                          onClick={(e) => {saveData(true);window.location.href=continueLink;} }>
-                        {__('Save and Continue', 'complianz-gdpr')}
+                        {__('Save and Continue', 'really-simple-ssl')}
                       </button>
                     </>
                 }
