@@ -1,9 +1,10 @@
 import {__} from "@wordpress/i18n";
 import Hyperlink from "../utils/Hyperlink";
 import useLicense from "./License/LicenseData";
+
 const PremiumOverlay = ({msg, title, url, upgrade}) => {
     const {licenseStatus} = useLicense();
-    let pro_plugin_active= rsssl_settings.pro_plugin_active;
+    let pro_plugin_active = rsssl_settings.pro_plugin_active;
     let upgradeUrl = upgrade ? upgrade : 'https://really-simple-ssl.com/pro/?mtm_campaign=fallback&mtm_source=free&mtm_content=upgrade';
     let message = msg ? msg : __("Learn more about %sPremium%s", "really-simple-ssl");
     if (rsssl_settings.pro_plugin_active) {
@@ -16,6 +17,12 @@ const PremiumOverlay = ({msg, title, url, upgrade}) => {
             message = __("You are using an incompatible version of Really Simple SSL pro. Please update to the latest version.", "really-simple-ssl");
         }
     }
+
+    if (upgrade) {
+        title = __("Get Premium Support", "really-simple-ssl");
+        message = __("Elevate your security with our Premium Support! Our expert team ensures simple, hassle-free assistance whenever you need it. Stay confidently secure with our awesome support by your side", "really-simple-ssl");
+    }
+
     return (
         <div className="rsssl-locked">
             <div className="rsssl-locked-overlay premium">
@@ -29,7 +36,7 @@ const PremiumOverlay = ({msg, title, url, upgrade}) => {
                            href="#settings/license">{__("Check license", "really-simple-ssl")}
                         </a>
                     </span>}
-                    {!pro_plugin_active && <Hyperlink target="_blank" text={message} url={upgradeUrl}/>}
+                    {!pro_plugin_active && <span>{message}</span>}
                 </div>
                 <div className="rsssl-locked-footer">
                     {/* We place a button on the left side */}

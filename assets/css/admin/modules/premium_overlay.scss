@@ -6,7 +6,7 @@
     margin-bottom: 20px;
     padding: 0;
     &.premium {
-      top: calc(100% - 170px) !important;
+      top: calc(100% - 190px) !important;
       flex-direction: column;
     }
     .rsssl-locked-header {
@@ -14,7 +14,7 @@
       flex-direction: row;
       .rsssl-locked-header-title {
         font-weight: 600;
-
+        color: var(--rsp-blue)
       }
       .rsssl-locked-header-subtitle {
 
