@@ -718,7 +718,7 @@ const SettingsGroup = props => {
     msg: activeGroup.premium_text,
     title: activeGroup.premium_title ? activeGroup.premium_title : activeGroup.title,
     upgrade: activeGroup.upgrade,
-    url: activeGroup.premium_link
+    url: activeGroup.upgrade
   }), networkwide_error && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-locked"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -1392,4 +1392,4 @@ const errorMsg = error => {
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Settings_js.a617a3142cae18aa4131.js.map
+//# sourceMappingURL=src_Settings_Settings_js.c0383e8fb161c42d58b9.js.map
