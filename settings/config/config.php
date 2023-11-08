@@ -413,7 +413,7 @@ function rsssl_fields( $load_values = true ) {
 					'sortable'   => false,
 					'searchable' => true,
 					'column'     => 'attempt_value',
-					'width'      => '2%',
+					'width'      => '4%',
 				],
 				[
 					'name'       => __('Country', 'really-simple-ssl'),
