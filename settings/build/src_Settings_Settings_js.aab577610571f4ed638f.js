@@ -297,7 +297,6 @@ const PremiumOverlay = _ref => {
   }
   if (upgrade) {
     title = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Get Premium Support", "really-simple-ssl");
-    message = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Elevate your security with our Premium Support! Our expert team ensures simple, hassle-free assistance whenever you need it. Stay confidently secure with our awesome support by your side", "really-simple-ssl");
   }
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-locked"
@@ -1396,4 +1395,4 @@ const errorMsg = error => {
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Settings_js.30a2aedaa9ec34a9b38b.js.map
+//# sourceMappingURL=src_Settings_Settings_js.aab577610571f4ed638f.js.map

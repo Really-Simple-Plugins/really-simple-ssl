@@ -20,7 +20,6 @@ const PremiumOverlay = ({msg, title, url, upgrade}) => {
 
     if (upgrade) {
         title = __("Get Premium Support", "really-simple-ssl");
-        message = __("Elevate your security with our Premium Support! Our expert team ensures simple, hassle-free assistance whenever you need it. Stay confidently secure with our awesome support by your side", "really-simple-ssl");
     }
 
     return (
