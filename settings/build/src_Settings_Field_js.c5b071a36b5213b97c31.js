@@ -5523,7 +5523,7 @@ const UserDatatable = props => {
     className: "rsssl-locked-overlay"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     className: "rsssl-task-status rsssl-open"
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Disabled', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Limit login attempts to enable this block.', 'really-simple-ssl')))));
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Disabled', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Activate Limit login attempts to enable this block.', 'really-simple-ssl')))));
 };
 /* harmony default export */ __webpack_exports__["default"] = (UserDatatable);
 
@@ -23874,4 +23874,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.127b4f14dc11aa57834a.js.map
+//# sourceMappingURL=src_Settings_Field_js.c5b071a36b5213b97c31.js.map

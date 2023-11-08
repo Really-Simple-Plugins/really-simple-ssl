@@ -301,7 +301,7 @@ return (
         {!enabled && (
             <div className="rsssl-locked">
                 <div className="rsssl-locked-overlay"><span
-                    className="rsssl-task-status rsssl-open">{__('Disabled', 'really-simple-ssl')}</span><span>{__('Limit login attempts to enable this block.', 'really-simple-ssl')}</span>
+                    className="rsssl-task-status rsssl-open">{__('Disabled', 'really-simple-ssl')}</span><span>{__('Activate Limit login attempts to enable this block.', 'really-simple-ssl')}</span>
                 </div>
             </div>
         )}
