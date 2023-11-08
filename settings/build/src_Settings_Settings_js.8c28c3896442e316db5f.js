@@ -295,9 +295,6 @@ const PremiumOverlay = _ref => {
       message = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("You are using an incompatible version of Really Simple SSL pro. Please update to the latest version.", "really-simple-ssl");
     }
   }
-  if (upgrade) {
-    title = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Get Premium Support", "really-simple-ssl");
-  }
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-locked"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -719,7 +716,7 @@ const SettingsGroup = props => {
     fields: selectedFields
   }))), disabled && !networkwide_error && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_PremiumOverlay__WEBPACK_IMPORTED_MODULE_9__["default"], {
     msg: activeGroup.premium_text,
-    title: activeGroup.title,
+    title: activeGroup.premium_title,
     upgrade: activeGroup.upgrade,
     url: activeGroup.premium_link
   }), networkwide_error && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -1395,4 +1392,4 @@ const errorMsg = error => {
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Settings_js.aab577610571f4ed638f.js.map
+//# sourceMappingURL=src_Settings_Settings_js.8c28c3896442e316db5f.js.map

@@ -154,7 +154,7 @@ const SettingsGroup = (props) => {
             </div>
             {disabled && !networkwide_error && <PremiumOverlay
                 msg={activeGroup.premium_text}
-                title={activeGroup.title}
+                title={activeGroup.premium_title}
                 upgrade={activeGroup.upgrade}
                 url={activeGroup.premium_link}
             />}

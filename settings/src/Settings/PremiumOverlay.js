@@ -18,10 +18,6 @@ const PremiumOverlay = ({msg, title, url, upgrade}) => {
         }
     }
 
-    if (upgrade) {
-        title = __("Get Premium Support", "really-simple-ssl");
-    }
-
     return (
         <div className="rsssl-locked">
             <div className="rsssl-locked-overlay premium">
