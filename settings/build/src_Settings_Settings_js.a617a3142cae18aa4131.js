@@ -716,7 +716,7 @@ const SettingsGroup = props => {
     fields: selectedFields
   }))), disabled && !networkwide_error && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_PremiumOverlay__WEBPACK_IMPORTED_MODULE_9__["default"], {
     msg: activeGroup.premium_text,
-    title: activeGroup.premium_title,
+    title: activeGroup.premium_title ? activeGroup.premium_title : activeGroup.title,
     upgrade: activeGroup.upgrade,
     url: activeGroup.premium_link
   }), networkwide_error && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -1392,4 +1392,4 @@ const errorMsg = error => {
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Settings_js.8c28c3896442e316db5f.js.map
+//# sourceMappingURL=src_Settings_Settings_js.a617a3142cae18aa4131.js.map

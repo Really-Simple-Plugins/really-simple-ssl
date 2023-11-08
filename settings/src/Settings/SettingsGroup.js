@@ -154,9 +154,9 @@ const SettingsGroup = (props) => {
             </div>
             {disabled && !networkwide_error && <PremiumOverlay
                 msg={activeGroup.premium_text}
-                title={activeGroup.premium_title}
+                title={activeGroup.premium_title ? activeGroup.premium_title : activeGroup.title}
                 upgrade={activeGroup.upgrade}
-                url={activeGroup.premium_link}
+                url={activeGroup.upgrade}
             />}
             {networkwide_error && <div className="rsssl-locked">
                 <div className="rsssl-locked-overlay">

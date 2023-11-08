@@ -5907,7 +5907,7 @@ var vanilla = (createState) => {
 /******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = function(chunkId) {
 /******/ 			// return url for filenames based on template
-/******/ 			return "" + chunkId + "." + {"vendors-node_modules_babel_runtime_helpers_esm_extends_js-node_modules_react-tooltip_dist_rea-0773da":"ee4fc675bc6fa44b8d25","src_Settings_Settings_js":"8c28c3896442e316db5f","src_Menu_Menu_js":"96d2f29cb074faa54885","src_Dashboard_DashboardPage_js":"a28e9a6e4d95ed0f2adb","src_Onboarding_OnboardingModal_js":"b4b98d8f3e7bfd2c7d95","src_Modal_Modal_js":"d8500617b3aadd99ff97","vendors-node_modules_material-ui_core_esm_TextField_TextField_js-node_modules_react-data-tabl-bf0b88":"d6b9013256253f35e739","src_Settings_Field_js":"031754f21074cb2fcf13","vendors-node_modules_material-ui_lab_esm_Autocomplete_index_js":"515dd4c5b9e6e345a1ea","vendors-node_modules_material-ui_core_esm_styles_index_js":"b2604edf5f43bcfce41a"}[chunkId] + ".js";
+/******/ 			return "" + chunkId + "." + {"vendors-node_modules_babel_runtime_helpers_esm_extends_js-node_modules_react-tooltip_dist_rea-0773da":"ee4fc675bc6fa44b8d25","src_Settings_Settings_js":"a617a3142cae18aa4131","src_Menu_Menu_js":"96d2f29cb074faa54885","src_Dashboard_DashboardPage_js":"a28e9a6e4d95ed0f2adb","src_Onboarding_OnboardingModal_js":"b4b98d8f3e7bfd2c7d95","src_Modal_Modal_js":"d8500617b3aadd99ff97","vendors-node_modules_material-ui_core_esm_TextField_TextField_js-node_modules_react-data-tabl-bf0b88":"d6b9013256253f35e739","src_Settings_Field_js":"031754f21074cb2fcf13","vendors-node_modules_material-ui_lab_esm_Autocomplete_index_js":"515dd4c5b9e6e345a1ea","vendors-node_modules_material-ui_core_esm_styles_index_js":"b2604edf5f43bcfce41a"}[chunkId] + ".js";
 /******/ 		};
 /******/ 	}();
 /******/ 	
@@ -6234,4 +6234,4 @@ document.addEventListener('click', e => {
 }();
 /******/ })()
 ;
-//# sourceMappingURL=index.255f035579be840946d3.js.map
+//# sourceMappingURL=index.28b93f79a01dbb898f56.js.map
