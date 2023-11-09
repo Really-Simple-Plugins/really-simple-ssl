@@ -355,18 +355,8 @@ function rsssl_do_action($request, $ajax_data = false)
             $response = $mailer->send_test_mail();
             break;
         case 'send_verification_mail':
-            //get fields from data. The new email might not be saved yet. We need to get it from the data.
-	        $data = $ajax_data ?: $request->get_json_params();
-            $fields = $data['fields'] ?? [];
-            $email = get_bloginfo('admin_email');
-            foreach($fields as $field ){
-                if ( $field['id'] === 'notifications_email_address' ){
-                    $email = $field['value'];
-                }
-            }
             $mailer = new rsssl_mailer();
-            $mailer->to = sanitize_email($email);
-            $response = $mailer->send_verification_mail( );
+            $response = $mailer->send_verification_mail( rsssl_get_option('notifications_email_address') );
             break;
         case 'plugin_actions':
             $response = rsssl_plugin_actions($data);
@@ -377,11 +367,11 @@ function rsssl_do_action($request, $ajax_data = false)
         case 'otherpluginsdata':
             $response = rsssl_other_plugins_data();
             break;
-        case 'get_roles':
-            $roles = rsssl_get_roles();
-	        $response = [];
-	        $response['roles'] = $roles;
-            break;
+	    case 'get_roles':
+		    $roles = rsssl_get_roles();
+		    $response = [];
+		    $response['roles'] = $roles;
+		    break;
         default:
 	        $response = apply_filters("rsssl_do_action", [], $action, $data);
     }
@@ -830,7 +820,6 @@ function rsssl_sanitize_field($value, string $type, string $id)
         case 'two_fa_roles':
 	        $value = !is_array($value) ? [] : $value;
             $roles = rsssl_get_roles();
-	        $roles = array_values($roles);
             foreach ($value as $index => $role) {
                 if (! in_array( $role, $roles, true ) ) {
                     unset($value[$index]);

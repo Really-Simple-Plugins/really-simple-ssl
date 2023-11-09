@@ -33,9 +33,50 @@ function rsssl_fields( $load_values = true ) {
 			'default'  => false,
 		],
 		[
+			'id'       => 'dismiss_all_notices',
+			'menu_id'  => 'general',
+			'group_id' => 'general',
+			'type'     => 'checkbox',
+			'label'    => __("Dismiss all notifications", 'really-simple-ssl'),
+			'disabled' => false,
+			'default'  => false,
+		],
+		[
+			'id'          => 'download-system-status',
+			'menu_id'     => 'general',
+			'group_id'    => 'general',
+			'type'        => 'button',
+			'url'         => trailingslashit(rsssl_url).'system-status.php?download',
+			'button_text' => __("Download", "really-simple-ssl"),
+			'label'       => __("System status", 'really-simple-ssl'),
+			'disabled'    => false,
+			'default'     => false,
+		],
+		[
+			'id'       => 'delete_data_on_uninstall',
+			'menu_id'  => 'general',
+			'group_id' => 'general',
+			'type'     => 'checkbox',
+			'label'    => __("Delete all data on plugin deletion", 'really-simple-ssl'),
+			'default'  => false,
+		],
+		[
+			'id'               => 'letsencrypt',
+			'menu_id'          => 'encryption_lets_encrypt',
+			'group_id'         => 'encryption_lets_encrypt',
+			'type'             => 'lets-encrypt',
+			'default'          => false,
+			'server_conditions'    => [
+				'relation' => 'AND',
+				[
+					'rsssl_letsencrypt_generation_allowed' => true,
+				]
+			],
+		],
+		[
 			'id'               => 'redirect',
-            'menu_id'          => 'general',
-			'group_id'         => 'general',
+			'menu_id'          => 'encryption',
+			'group_id'         => 'encryption_redirect',
 			'type'             => 'select',
 			'tooltip'  => __( "Changing redirect methods should be done with caution. Please make sure you have read our instructions beforehand at the right-hand side.", 'really-simple-ssl' ),
 			'label'            => __( "Redirect method", 'really-simple-ssl' ),
@@ -67,18 +108,17 @@ function rsssl_fields( $load_values = true ) {
         ],
         [
             'id'       => 'mixed_content_fixer',
-            'menu_id'  => 'general',
-            'group_id' => 'general',
+            'menu_id'  => 'encryption',
+            'group_id' => 'mixed-content-general',
             'type'     => 'checkbox',
             'label'    => __("Mixed content fixer", 'really-simple-ssl'),
             'disabled' => false,
             'default'  => true,
         ],
-
         [
             'id'               => 'switch_mixed_content_fixer_hook',
-            'menu_id'          => 'general',
-            'group_id'         => 'general',
+            'menu_id'  => 'encryption',
+            'group_id' => 'mixed-content-general',
             'type'             => 'checkbox',
             'label'            => __("Mixed content fixer - init hook", 'really-simple-ssl'),
             'help'             => [
@@ -101,8 +141,8 @@ function rsssl_fields( $load_values = true ) {
         ],
         [
             'id'       => 'admin_mixed_content_fixer',
-            'menu_id'  => 'general',
-            'group_id' => 'general',
+            'menu_id'  => 'encryption',
+            'group_id' => 'mixed-content-general',
             'type'     => 'checkbox',
             'label'    => __("Mixed content fixer - back-end", "really-simple-ssl"),
             'tooltip'  => __("Only enable this if you experience mixed content in the admin environment of your WordPress website.",
@@ -110,83 +150,55 @@ function rsssl_fields( $load_values = true ) {
             'disabled' => false,
             'default'  => false,
         ],
-        [
-            'id'       => 'send_verification_email',
-            'menu_id'  => 'general',
-            'group_id' => 'email',
-            'type'     => 'button',
-            'action'      => 'send_verification_mail',
-            'button_text' => __( "Send", "really-simple-ssl" ),
-            'warning'     => true,
-            'label'       => __( "Email verification", 'really-simple-ssl' ),
-            'disabled'    => rsssl_is_email_verified(),
-            'tooltip'  => __( "Verify your email address to get the most out of Really Simple SSL.", 'really-simple-ssl' ),
-        ],
-        [
-            'id'               => 'notifications_email_address',
-            'menu_id'          => 'general',
-            'group_id'         => 'email',
-            'type'             => 'email',
-            'label'            => __("Email address", 'really-simple-ssl'),
-            'disabled'         => false,
-            'default'          => get_bloginfo('admin_email'),
-        ],
 
-            ['id'               => 'send_notifications_email',
-            'menu_id'          => 'general',
-            'group_id'         => 'email',
-            'type'             => 'checkbox',
-            'label'      => __("Notifications by email", 'really-simple-ssl'),
-            'tooltip'            => __("Get notified of important changes, updates and settings. Recommended when using security features.", 'really-simple-ssl'),
-            'disabled'         => false,
-            'default'          => false,
-
-        ],
-        [
-            'id'       => 'dismiss_all_notices',
-            'menu_id'  => 'general',
-            'group_id' => 'general',
-            'type'     => 'checkbox',
-            'label'    => __("Dismiss all notifications", 'really-simple-ssl'),
-            'disabled' => false,
-            'default'  => false,
-        ],
-        [
-            'id'          => 'download-system-status',
-            'menu_id'     => 'general',
-            'group_id'    => 'general',
-            'type'        => 'button',
-            'url'         => trailingslashit(rsssl_url).'system-status.php?download',
-            'button_text' => __("Download", "really-simple-ssl"),
-            'label'       => __("System status", 'really-simple-ssl'),
-            'disabled'    => false,
-            'default'     => false,
-        ],
-        [
-            'id'       => 'delete_data_on_uninstall',
-            'menu_id'  => 'general',
-            'group_id' => 'general',
-            'type'     => 'checkbox',
-            'label'    => __("Delete all data on plugin deletion", 'really-simple-ssl'),
-            'default'  => false,
-        ],
-        [
-            'id'                   => 'do_not_edit_htaccess', //field is removed if not enabled
-            'menu_id'              => 'general',
-            'group_id'             => 'general',
-            'type'                 => 'checkbox',
-            'label'                => __("Stop editing the .htaccess file", 'really-simple-ssl'),
-            'disabled'             => false,
-            'default'              => false,
-            //on multisite this setting can only be set networkwide
-            'networkwide_required' => true,
-            'server_conditions'    => [
-                'relation' => 'AND',
-                [
-                    'RSSSL()->server->uses_htaccess()' => true,
-                ]
-            ],
-        ],
+		[
+			'id'                   => 'do_not_edit_htaccess', //field is removed if not enabled
+			'menu_id'              => 'encryption',
+			'group_id'             => 'encryption_redirect',
+			'type'                 => 'checkbox',
+			'label'                => __("Stop editing the .htaccess file", 'really-simple-ssl'),
+			'disabled'             => false,
+			'default'              => false,
+			//on multisite this setting can only be set networkwide
+			'networkwide_required' => true,
+			'server_conditions'    => [
+				'relation' => 'AND',
+				[
+					'RSSSL()->server->uses_htaccess()' => true,
+				]
+			],
+		],
+		[
+			'id'       => 'notifications_email_address',
+			'menu_id'  => 'general',
+			'group_id' => 'general_email',
+			'type'     => 'email',
+			'label'    => __( "Email address", 'really-simple-ssl' ),
+			'disabled' => false,
+			'default'  => get_bloginfo('admin_email'),
+		],
+		[
+			'id'       => 'send_verification_email',
+			'menu_id'  => 'general',
+			'group_id' => 'general_email',
+			'type'     => 'button',
+			'action'      => 'send_verification_mail',
+			'button_text' => __( "Send", "really-simple-ssl" ),
+			'warning'     => true,
+			'label'       => __( "Email verification", 'really-simple-ssl' ),
+			'disabled'    => rsssl_is_email_verified(),
+			'tooltip'  => __( "Verify your email address to get the most out of Really Simple SSL.", 'really-simple-ssl' ),
+		],
+		[
+			'id'               => 'send_notifications_email',
+			'menu_id'          => 'general',
+			'group_id'         => 'general_email',
+			'type'             => 'checkbox',
+			'label'      => __("Notifications by email", 'really-simple-ssl'),
+			'tooltip'            => __("Get notified of important changes, updates and settings. Recommended when using security features.", 'really-simple-ssl'),
+			'disabled'         => false,
+			'default'          => false,
+		],
         [
             'id'       => 'premium_support',
             'menu_id'  => 'general',
@@ -197,6 +209,7 @@ function rsssl_fields( $load_values = true ) {
             'default'  => false,
         ],
         [
+<<<<<<< HEAD
             'id'          => 'disable_anyone_can_register',
             'menu_id'     => 'hardening',
             'group_id'    => 'hardening_basic',
@@ -1052,6 +1065,8 @@ function rsssl_fields( $load_values = true ) {
 
         /* section x_xss_protection */
         [
+=======
+>>>>>>> master
             'id'       => 'x_xss_protection',
             'menu_id'  => 'recommended_security_headers',
             'group_id' => 'recommended_security_headers',
@@ -1251,31 +1266,365 @@ function rsssl_fields( $load_values = true ) {
             'disabled' => false,
             'default'  => 'disabled',
         ],
-        [
-            'id'       => 'login_protection_enabled',
-            'menu_id'  => 'two_fa',
-            'group_id' => 'two_fa_general',
+		[
+			'id'                   => 'do_not_edit_htaccess', //field is removed if not enabled
+			'menu_id'              => 'general',
+			'group_id'             => 'general',
+			'type'                 => 'checkbox',
+			'label'                => __( "Stop editing the .htaccess file", 'really-simple-ssl' ),
+			'disabled'             => false,
+			'default'              => false,
+			//on multisite this setting can only be set networkwide
+			'networkwide_required' => true,
+			'server_conditions'    => [
+				'relation' => 'AND',
+				[
+					'RSSSL()->server->uses_htaccess()' => true,
+				]
+			],
+		],
+		[
+			'id'                 => 'disable_anyone_can_register',
+			'menu_id'            => 'hardening-basic',
+			'group_id'           => 'hardening-basic',
+			'type'               => 'checkbox',
+			'label'              => __( "Disable \"anyone can register\"", 'really-simple-ssl' ),
+			'disabled'           => false,
+			'default'            => false,
+			'help'               => [
+				'label' => 'default',
+				'url'   => 'https://really-simple-ssl.com/definition/what-are-hardening-features/?mtm_campaign=definition&mtm_source=free',
+				'title' => __( "About Hardening", 'really-simple-ssl' ),
+				'text'  => __( 'Hardening features limit the possibility of potential weaknesses and vulnerabilities which can be misused.', 'really-simple-ssl' ),
+			],
+			'recommended'        => true,
+		],
+		[
+			'id'                 => 'disable_file_editing',
+			'menu_id'            => 'hardening-basic',
+			'group_id'           => 'hardening-basic',
+			'type'               => 'checkbox',
+			'label'              => __( "Disable the built-in file editors", 'really-simple-ssl' ),
+			'disabled'           => false,
+			'default'            => false,
+			'recommended'        => true,
+		],
+		[
+			'id'                 => 'block_code_execution_uploads',
+			'menu_id'            => 'hardening-basic',
+			'group_id'           => 'hardening-basic',
+			'type'               => 'checkbox',
+			'label'              => __( "Prevent code execution in the public 'Uploads' folder", 'really-simple-ssl' ),
+			'disabled'           => false,
+			'default'            => false,
+			'recommended' => true,
+		],
+		[
+			'id'       => 'hide_wordpress_version',
+			'menu_id'  => 'hardening-basic',
+			'group_id' => 'hardening-basic',
+			'type'     => 'checkbox',
+			'label'    => __( "Hide your WordPress version", 'really-simple-ssl' ),
+			'disabled' => false,
+			'default'  => false,
+			'recommended' => true,
+		],
+		[
+			'id'       => 'disable_login_feedback',
+			'menu_id'  => 'hardening-basic',
+			'group_id' => 'hardening-basic',
+			'type'     => 'checkbox',
+			'tooltip'  => __( "By default, WordPress shows if a username or email address exists when a login fails. This will change it to generic feedback.", 'really-simple-ssl' ),
+			'label'    => __( "Prevent login feedback", 'really-simple-ssl' ),
+			'disabled' => false,
+			'default'  => false,
+			'recommended' => true,
+		],
+		[
+			'id'                 => 'disable_indexing',
+			'menu_id'            => 'hardening-basic',
+			'group_id'           => 'hardening-basic',
+			'type'               => 'checkbox',
+			'label'              => __( "Disable directory browsing", 'really-simple-ssl' ),
+			'disabled'           => false,
+			'default'            => false,
+			'recommended' => true,
+		],
+		[
+			'id'                 => 'disable_user_enumeration',
+			'menu_id'            => 'hardening-basic',
+			'group_id'           => 'hardening-basic',
+			'type'               => 'checkbox',
+			'label'              => __( "Disable user enumeration", 'really-simple-ssl' ),
+			'disabled'           => false,
+			'default'            => false,
+			'recommended' => true,
+		],
+		[
+			'id'                 => 'rename_admin_user',
+			'menu_id'            => 'hardening-basic',
+			'warning'     			=> true,
+			'group_id'           => 'hardening-basic',
+			'type'               => 'checkbox',
+			'label'              => __( "Block the username 'admin'", 'really-simple-ssl' ),
+			'email'              => [
+				'title'   => __( "Settings update: Username 'admin' renamed", 'really-simple-ssl' ),
+				'message' => sprintf(__( "As a security precaution, the username ‘admin’ has been changed on %s. From now on, you can login with '%s' or an email address.", 'really-simple-ssl' ), '{site_url}','{username}'),
+				'url'     => 'https://really-simple-ssl.com/instructions/locked-our-after-renaming-the-admin-username/',
+				'condition'    => 'rsssl_username_admin_changed',
+			],
+			'tooltip'            => __( "If the username 'admin' currently exists, you can rename it here. Please note that you can no longer use this username, and should use the new username or an email address",
+				'really-simple-ssl' ),
+			'disabled'           => false,
+			'default'            => false,
+		],
+		[
+			'id'                 => 'new_admin_user_login',
+			'menu_id'            => 'hardening-basic',
+			'group_id'           => 'hardening-basic',
+			'type'               => 'text',
+			'label'              => __( "Choose new username to replace 'admin'", 'really-simple-ssl' ),
+			'disabled'           => false,
+			'default'            => '',
+			'required'           => true,
+			'condition_action'   => 'hide',
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'rename_admin_user' => 1,
+				]
+			],
+			'server_conditions' => [
+				'relation' => 'AND',
+				[
+					'rsssl_has_admin_user()' => true,
+				]
+			],
+
+		],
+		[
+			'id'       => 'disable_xmlrpc',
+			'menu_id'  => 'hardening-basic',
+			'group_id' => 'hardening-basic',
+			'type'     => 'checkbox',
+			'label'    => __( "Disable XML-RPC", 'really-simple-ssl' ),
+			'disabled' => false,
+			'default'  => false,
+		],
+		[
+			'id'       => 'block_display_is_login',
+			'menu_id'  => 'hardening-basic',
+			'group_id' => 'hardening-basic',
+			'type'     => 'checkbox',
+			'label'    => __( "Block user registrations when login and display name are the same", 'really-simple-ssl' ),
+			'disabled' => false,
+			'default'  => false,
+		],
+		[
+			'id'       => 'disable_http_methods',
+			'menu_id'  => 'hardening-extended',
+			'group_id' => 'hardening-extended',
+			'type'     => 'checkbox',
+			'tooltip'  => __( "This will limit or fully disable HTTP requests that are not needed, but could be used with malicious intent.", 'really-simple-ssl' ),
+			'label'    => __( "Disable HTTP methods", 'really-simple-ssl' ),
+			'disabled' => false,
+			'default'  => false,
+		],
+		[
+			'id'       => 'rename_db_prefix',
+			'menu_id'  => 'hardening-extended',
+			'group_id' => 'hardening-extended',
+			'email'            => [
+				'title'   => __( "Settings update: Database prefix changed", 'really-simple-ssl' ),
+				'message' => __( "Security through obscurity. Your site is no longer using the default wp_ prefix for database tables. The process has been designed to only complete and replace the tables after all wp_ tables are successfully renamed. In the unlikely event that this does lead to database issues on your site, please navigate to our troubleshooting article.", 'really-simple-ssl' ),
+				'url'     => 'https://really-simple-ssl.com/instructions/database-issues-after-changing-prefix/',
+			],
+			'tooltip'  => __( "This will permanently change your database prefixes and you can NOT rollback this feature. Please make sure you have a back-up.", 'really-simple-ssl' ),
+			'warning'  => __( "This will permanently change your database prefixes and you can NOT rollback this feature. Please make sure you have a back-up.", 'really-simple-ssl' ),
+			'type'     => 'checkbox',
+			'label'    => __( "Rename and randomize your database prefix", 'really-simple-ssl' ),
+			'disabled' => false,
+			'default'  => false,
+		],
+		[
+			'id'                 => 'change_debug_log_location',
+			'group_id'           => 'hardening-extended',
+			'menu_id'            => 'hardening-extended',
+			'type'               => 'checkbox',
+			'tooltip'  => __( "A debug.log is publicly accessibile and has a standard location. This will change the location to a randomly named folder in /wp-content/", 'really-simple-ssl' ),
+			'email'            => [
+				'title'   => __( "Settings update: Debug.log file relocated", 'really-simple-ssl' ),
+				'message' => __( "From now on, the debug.log won’t be publicly accessible whenever wp-debugging is enabled. The debug log will be stored in a randomly named folder in /wp-content/. This prevents possible leakage of sensitive debugging information.", 'really-simple-ssl' ),
+				'url'     => 'https://really-simple-ssl.com/instructions/debug-log-has-been-relocated-but-where/',
+			],
+			'label'              => __( "Change debug.log file location", 'really-simple-ssl' ),
+			'disabled'           => false,
+			'default'            => false,
+		],
+		[
+			'id'       => 'disable_application_passwords',
+			'menu_id'  => 'hardening-extended',
+			'group_id' => 'hardening-extended',
+			'type'     => 'checkbox',
+			'label'    => __( "Disable application passwords", 'really-simple-ssl' ),
+			'disabled' => false,
+			'default'  => false,
+		],
+		[
+			'id'       => 'block_admin_creation',
+			'menu_id'  => 'hardening-extended',
+			'group_id' => 'hardening-extended',
+			'type'     => 'checkbox',
+			'warning'  => __( "This setting will block attempts to assign administrator roles outside the native user creation process by WordPress. This might include other plugins that create, edit or assign roles to users. If you need to create an administrator in a third-party plugin, temporarily disable this setting while you make the changes.", 'really-simple-ssl' ),
+			'tooltip'  => __( "This setting will block attempts to assign administrator roles outside the native user creation process by WordPress. This might include other plugins that create, edit or assign roles to users. If you need to create an administrator in a third-party plugin, temporarily disable this setting while you make the changes.", 'really-simple-ssl' ),
+			'help'               => [
+				'label' => 'default',
+				'url'   => 'https://really-simple-ssl.com/instructions/about-hardening-features/',
+				'title' => __( "Unauthorized administrators", 'really-simple-ssl' ),
+				'text'  => __( 'Many vulnerabilities are exploited by injecting a user with administrator capabilities outside of the native WordPress creation process. Under advanced hardening you can prevent this from happening.', 'really-simple-ssl' ),
+			],
+			'label'    => __( "Restrict creation of administrator roles", 'really-simple-ssl' ),
+			'disabled' => false,
+			'default'  => false,
+		],
+		[
+			'id'       => 'change_login_url_enabled',
+			'menu_id'  => 'hardening-extended',
+			'group_id' => 'hardening-extended',
+			'warning'  => true,
+			'type'     => 'checkbox',
+			'tooltip'  => __( "Allows you to enter a custom login URL.", 'really-simple-ssl' ),
+			'label'    => __( "Enable Custom login URL", 'really-simple-ssl' ),
+			'email'            => [
+				'title'   => __( "You have changed your login URL", 'really-simple-ssl' ),
+				'message' => __( "Your login URL has changed to {login_url} to prevent common bot attacks on standard login URLs. Learn more about this feature, common questions and measures to prevent any issues.", 'really-simple-ssl' ),
+				'url'     => 'https://really-simple-ssl.com/instructions/login-url-changed',
+			],
+			'disabled' => false,
+			'default'  => false,
+		],
+		[
+			'id'       => 'change_login_url',
+			'menu_id'  => 'hardening-extended',
+			'group_id' => 'hardening-extended',
+			'type'     => 'text',
+			'tooltip'  => __( "Enter a custom login URL. This allows you to log in via this custom URL instead of /wp-admin or /wp-login.php", 'really-simple-ssl' ),
+			'placeholder'  => __( "Example: If you want to change your login page from /wp-admin/ to /control/ answer: control", 'really-simple-ssl' ),
+			'label'    => __( "Custom login URL", 'really-simple-ssl' ),
+			'disabled' => false,
+			'default'  => false,
+			'condition_action'   => 'hide',
+			'pattern' => '[a-zA-Z0-9\-_]+',
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'change_login_url_enabled' => 1,
+				]
+			],
+		],
+		[
+			'id'       => 'change_login_url_failure_url',
+			'menu_id'  => 'hardening-extended',
+			'group_id' => 'hardening-extended',
+			'type'     => 'postdropdown',
+			'tooltip'  => __( "Users trying to enter via /wp-admin or /wp-login.php will be redirected to this URL.", 'really-simple-ssl' ),
+			'label'    => '',
+			'disabled' => false,
+			'default'  => '404_default',
+			'condition_action'   => 'hide',
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'change_login_url_enabled' => 1,
+				]
+			],
+		],
+		[
+			'id'       => 'xmlrpc_status',
+			'menu_id'  => 'hardening-xml',
+			'group_id' => 'hardening-xml',
+			'type'     => 'hidden',
+			'label'    => '',
+			'disabled' => false,
+			'default'  => false,
+		],
+		[
+			'id'       => 'xmlrpc_status_lm_enabled_once',
+			'menu_id'  => 'hardening-xml',
+			'group_id' => 'hardening-xml',
+			'type'     => 'hidden',
+			'label'    => '',
+			'disabled' => false,
+			'default'  => false,
+		],
+		[
+			'id'               => 'xmlrpc_allow_list',
+			'control_field'    => 'xmlrpc_status',
+			'menu_id'          => 'hardening-xml',
+			'group_id'         => 'hardening-xml',
+			'type'             => 'learningmode',
+			'label'            => __( "XML-RPC", 'really-simple-ssl' ),
+			'disabled'         => false,
+			'default'          => false,
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'disable_xmlrpc' => false,
+				]
+			],
+			'columns'          => [
+				[
+					'name'     => __( 'Method', 'really-simple-ssl' ),
+					'sortable' => false,
+					'column'   => 'method',
+				],
+				[
+					'name'     => __( 'Login status', 'really-simple-ssl' ),
+					'sortable' => false,
+					'column'   => 'login_statusControl',
+				],
+				[
+					'name'     => __( 'Count', 'really-simple-ssl' ),
+					'sortable' => false,
+					'column'   => 'count',
+				],
+				[
+					'name'     => __( 'Action', 'really-simple-ssl' ),
+					'sortable' => false,
+					'column'   => 'statusControl',
+				],
+				[
+					'name'     => __( 'Delete', 'really-simple-ssl' ),
+					'sortable' => false,
+					'column'   => 'deleteControl',
+				],
+			],
+		],
+		[
+			'id'       => 'login_protection_enabled',
+			'menu_id'  => 'two-fa',
+			'group_id' => 'two_fa_general',
 			'type'     => 'checkbox',
 			'label'    => __( "Enable login protection", "really-simple-ssl" ),
 			'help'     => [
-					'label' => 'default',
-					'url'   => 'https://really-simple-ssl.com/instructions/about-login-protection/?mtm_campaign=instructions&mtm_source=2fa',
-					'title' => __("About Login Protection", 'really-simple-ssl'),
-					'text'  => __('Two-step verification is the first feature we regard as login protection. Want to know more about this feature, and what is to come?',
-							'really-simple-ssl'),
+				'label' => 'default',
+				'url'   => 'https://really-simple-ssl.com/instructions/about-login-protection/?mtm_campaign=instructions&mtm_source=2fa',
+				'title' => __("About Login Protection", 'really-simple-ssl'),
+				'text'  => __('Two-step verification is the first feature we regard as login protection. Want to know more about this feature, and what is to come?',
+					'really-simple-ssl'),
 			],
 			'disabled' => false,
 			'default'  => 'disabled',
-            'server_conditions'    => [
-	            'relation' => 'AND',
-	            [
-		            'is_multisite' => false,
-	            ]
-            ],
+			'server_conditions'    => [
+				'relation' => 'AND',
+				[
+					'is_multisite' => false,
+				]
+			],
 		],
 		[
 			'id'       => 'two_fa_enabled',
-			'menu_id'  => 'two_fa',
+			'menu_id'  => 'two-fa',
 			'group_id' => 'two_fa_email',
 			'type'     => 'checkbox',
 			'label'    => __( "Enable two-step verification", "really-simple-ssl" ),
@@ -1293,11 +1642,13 @@ function rsssl_fields( $load_values = true ) {
 		],
 		[
 			'id'       => 'two_fa_optional_roles',
-			'menu_id'  => 'two_fa',
+			'forced_roles_id'         => 'two_fa_forced_roles',
+			'optional_roles_id' 	   => 'two_fa_optional_roles',
+			'menu_id'  => 'two-fa',
 			'group_id' => 'two_fa_email',
 			'type'     => 'two_fa_roles',
 			'default'  => [ 'editor', 'author', 'contributor'],
-            'label'    => __( "Optional for:", "really-simple-ssl" ),
+			'label'    => __( "Optional for:", "really-simple-ssl" ),
 			'tooltip'  => __( "Two-step verification will be optional for these user roles, and they can disable it on first login.", 'really-simple-ssl' ),
 			'server_conditions'    => [
 				'relation' => 'AND',
@@ -1305,11 +1656,13 @@ function rsssl_fields( $load_values = true ) {
 					'is_multisite' => false,
 				]
 			],
-        ],
+		],
 
 		[
 			'id'       => 'two_fa_forced_roles',
-			'menu_id'  => 'two_fa',
+			'forced_roles_id'         => 'two_fa_forced_roles',
+			'optional_roles_id' 	   => 'two_fa_optional_roles',
+			'menu_id'  => 'two-fa',
 			'group_id' => 'two_fa_email',
 			'type'     => 'two_fa_roles',
 			'default'  => [ 'administrator' ],
@@ -1322,59 +1675,53 @@ function rsssl_fields( $load_values = true ) {
 				]
 			],
 		],
-        [
-            'id'    => 'two_fa_users_table',
-            'menu_id' => 'two_fa',
-            'group_id' => 'two_fa_users',
-            'type' => 'twofa-datatable',
-            'action' => 'two_fa_table',
-            'label' => __('Users', 'really-simple-ssl'),
-            'disabled' => false,
-            'default' => false,
-            'server_conditions'    => [
-	            'relation' => 'AND',
-	            [
-		            'is_multisite' => false,
-	            ]
-            ],
-            'columns' => [
-                [
-                    'name'     => __( 'Username', 'really-simple-ssl' ),
-                    'sortable' => true,
-                    'searchable' => true,
-                    'visible' => true,
-                    'column'   => 'user',
-                    'width'    => '20%',
-                ],
-                [
-                    'name'     => __( 'User role', 'really-simple-ssl' ),
-                    'sortable' => false,
-                    'searchable' => false,
-                    'visible' => true,
-                    'column'   => 'user_role',
-                    'width'    => '60%',
-                ],
-                [
-                    'name'     => __( 'Status', 'really-simple-ssl' ),
-                    'sortable' => false,
-                    'searchable' => false,
-                    'visible' => true,
-	                'width'     => '10%',
-                    'column'   => 'status_for_user',
-                ],
-	            [
-		            'name'     => '',
-		            'sortable' => false,
-		            'searchable' => false,
-		            'visible' => true,
-		            'width'     => '10%',
-		            'column'   => 'resetControl',
-	            ],
-
-            ],
-        ],
+		[
+			'id'    => 'two_fa_users_table',
+			'menu_id' => 'two-fa',
+			'group_id' => 'two_fa_users',
+			'type' => 'twofa-datatable',
+			'action' => 'two_fa_table',
+			'label' => __('Users', 'really-simple-ssl'),
+			'disabled' => false,
+			'default' => false,
+			'columns' => [
+				[
+					'name'     => __( 'Username', 'really-simple-ssl' ),
+					'sortable' => false,
+					'searchable' => true,
+					'visible' => true,
+					'column'   => 'user',
+					'width'    => '20%',
+				],
+				[
+					'name'     => __( 'Status', 'really-simple-ssl' ),
+					'sortable' => false,
+					'searchable' => false,
+					'visible' => true,
+					'column'   => 'status_for_user',
+					'width'    => '20%',
+				],
+				[
+					'name'     => __( 'User role', 'really-simple-ssl' ),
+					'sortable' => false,
+					'searchable' => false,
+					'visible' => true,
+					'column'   => 'user_role',
+					'width'    => '20%',
+				],
+				[
+					'name'     => __( 'Action', 'really-simple-ssl' ),
+					'sortable' => false,
+					'searchable' => false,
+					'visible' => true,
+					'width'     => '70%',
+					'column'   => 'rsssl_two_fa_method',
+				],
+			],
+		],
 		[
 			'id'          => 'mixedcontentscan',
+<<<<<<< HEAD
             'menu_id'  => 'mixed_content_scan',
             'group_id' => 'mixedcontentscan',
             'type'     => 'mixedcontentscan',
@@ -1667,37 +2014,525 @@ function rsssl_fields( $load_values = true ) {
 			'label'    => __( "Change passwords every", "really-simple-ssl-pro" ),
 		],
     ];
+=======
+			'menu_id'     => 'encryption',
+			'group_id'    => 'mixed-content-scan',
+			'type'        => 'mixedcontentscan',
+			'label'       => __( "Mixed content scan", "really-simple-ssl" ),
+			'help'        => [
+				'label' => 'default',
+				'url' => 'https://really-simple-ssl.com/definition/what-is-mixed-content/?mtm_campaign=definition&mtm_source=free',
+				'title' => __( "About the Mixed Content Scan", 'really-simple-ssl' ),
+				'text'  => __( 'The extensive mixed content scan will list all current and future issues and provide a fix, or instructions to fix manually.', 'really-simple-ssl' ),
+			],
+			'columns'     => [
+				[
+					'name'     => __( 'Type', 'really-simple-ssl' ),
+					'sortable' => true,
+					'column'   => 'warningControl',
+					'grow'     => 0,
+				],
+				[
+					'name'     => __( 'Description', 'really-simple-ssl' ),
+					'sortable' => true,
+					'column'   => 'description',
+					'grow'     => 10,
+				],
+				[
+					'name'     => __( 'Location', 'really-simple-ssl' ),
+					'sortable' => true,
+					'column'   => 'locationControl',
+					'grow'     => 4,
+				],
+>>>>>>> master
 
-    $fields = apply_filters('rsssl_fields', $fields);
-    if (is_multisite() && rsssl_is_networkwide_active()) {
-        $stored_options = get_site_option('rsssl_options', []);
-    } else {
-        $stored_options = get_option('rsssl_options', []);
-    }
+				[
+					'name'     => __( 'Details', 'really-simple-ssl' ),
+					'sortable' => false,
+					'column'   => 'detailsControl',
+					'grow'     => 0,
+				],
+				[
+					'name'     => __( 'Fix', 'really-simple-ssl' ),
+					'sortable' => false,
+					'column'   => 'fixControl',
+					'grow'     => 0,
+					'right'    => true,
+				],
+			],
+			'disabled'    => false,
+			'default'     => false,
+		],
+		[
+			'id'       => 'permissions_policy',
+			'menu_id'  => 'permissions_policy',
+			'group_id' => 'permissions_policy',
+			'type'     => 'permissionspolicy',
+			'options'  => [ '*' => __( "Allow", "really-simple-ssl" ), '()' => __( "Disable", "really-simple-ssl" ), 'self' => __( "Self (Default)", "really-simple-ssl" ) ],
+			'label'    => __( "Permissions Policy", 'really-simple-ssl' ),
+			'disabled' => false,
+			'help'     => [
+				'label' => 'default',
+				'url'   => 'https://really-simple-ssl.com/definition/what-is-a-permissions-policy/?mtm_campaign=definition&mtm_source=free',
+				'title' => __( "About the Permission Policy", 'really-simple-ssl' ),
+				'text'  => __( 'Browser features are plentiful, but most are not needed on your website.', 'really-simple-ssl' ).' '.__('They might be misused if you don’t actively tell the browser to disable these features.', 'really-simple-ssl' ),
+			],
+			'columns'  => [
+				[
+					'name'     => __( 'Feature', 'really-simple-ssl' ),
+					'sortable' => true,
+					'column'   => 'title',
+				],
+				[
+					'name'     => __( 'Options', 'really-simple-ssl' ),
+					'sortable' => false,
+					'column'   => 'valueControl',
+				],
+			],
+			'default'  => [
+				[
+					'id'     => 'accelerometer',
+					'title'  => 'Accelerometer',
+					'value'  => 'self',
+					'status' => true,
+				],
+				[
+					'id'     => 'autoplay',
+					'title'  => 'Autoplay',
+					'value'  => 'self',
+					'status' => false,
+				],
+				[
+					'id'     => 'camera',
+					'title'  => 'Camera',
+					'value'  => 'self',
+					'status' => false,
+				],
+				[
+					'id'     => 'encrypted-media',
+					'title'  => 'Encrypted Media',
+					'value'  => 'self',
+					'status' => false,
+				],
+				[
+					'id'     => 'fullscreen',
+					'title'  => 'Fullscreen',
+					'value'  => 'self',
+					'status' => false,
+				],
+				[
+					'id'     => 'geolocation',
+					'title'  => 'Geolocation',
+					'value'  => '*',
+					'status' => false,
+				],
+				[
+					'id'     => 'microphone',
+					'title'  => 'Microphone',
+					'value'  => 'self',
+					'status' => false,
+				],
+				[
+					'id'     => 'midi',
+					'title'  => 'Midi',
+					'value'  => 'self',
+					'status' => false,
+				],
+				[
+					'id'     => 'payment',
+					'title'  => 'Payment',
+					'value'  => 'self',
+					'status' => false,
+				],
+				[
+					'id'     => 'display-capture',
+					'title'  => 'Display Capture',
+					'value'  => 'self',
+					'status' => false,
+				],
+			],
+		],
+		[
+			'id'       => 'enable_permissions_policy',
+			'menu_id'  => 'permissions_policy',
+			'group_id' => 'permissions_policy',
+			'type'     => 'hidden',
+			'label'    => __( "Enable Permissions Policy", 'really-simple-ssl' ),
+			'disabled' => false,
+			'default'  => false,
+		],
+		[
+			'id'       => 'upgrade_insecure_requests',
+			'menu_id'  => 'content_security_policy',
+			'group_id' => 'upgrade_insecure_requests',
+			'type'     => 'checkbox',
+			'label'    => __( "Serve encrypted and authenticated responses", 'really-simple-ssl' ),
+			'disabled' => false,
+			'default'  => false,
+			'help'     => [
+				'label' => 'default',
+				'url'   => 'https://really-simple-ssl.com/definition/what-is-a-content-security-policy/?mtm_campaign=definition&mtm_source=free',
+				'title' => __( "About the Content Security Policy", 'really-simple-ssl' ),
+				'text'  => __( 'The content security policy has many options, so we always recommend starting in ‘learning mode’ to see what files and scripts are loaded.', 'really-simple-ssl' ),
+			],
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'ssl_enabled' => '1',
+				]
+			],
+		],
+		[
+			'id'       => 'csp_frame_ancestors',
+			'menu_id'  => 'content_security_policy',
+			'group_id' => 'frame_ancestors',
+			'type'     => 'select',
+			'options'  => [
+				'disabled' => __( "Disable (Default)", "really-simple-ssl" ),
+				'none'     => "None",
+				'self'     => "Self",
+			],
+			'label'    => __( "Allow your domain to be embedded", "really-simple-ssl" ),
+			'disabled' => false,
+			'default'  => 'disabled',
+		],
+		[
+			'id'       => 'csp_frame_ancestors_urls',
+			'menu_id'  => 'content_security_policy',
+			'group_id' => 'frame_ancestors',
+			'type'     => 'textarea',
+			'label'    => __( "Add additional domains which can embed your website, if needed. Comma seperated.", "really-simple-ssl" ),
+			'disabled' => false,
+			'default'  => false,
+		],
+		[
+			'id'       => 'csp_status',
+//			'menu_id'  => 'content_security_policy',
+			'group_id' => 'content_security_policy',
+			'type'     => 'hidden',
+			'label'    => '',
+			'disabled' => false,
+			'default'  => false,
+		],
+//		[
+//			'id'       => 'csp_status_lm_enabled_once',
+//			'menu_id'  => 'content_security_policy',
+//			'group_id' => 'content_security_policy',
+//			'type'     => 'hidden',
+//			'label'    => '',
+//			'disabled' => false,
+//			'default'  => false,
+//		],
+		[
+			'id'            => 'content_security_policy_source_directives',
+			'control_field' => 'csp_status',
+			'menu_id'       => 'content_security_policy',
+			'group_id'      => 'content_security_policy_source_directives',
+			'type'          => 'learningmode',
+			'label'         => "Content Security Policy",
+			'disabled'      => false,
+			'default'       => false,
+			'columns'       => [
+				[
+					'name'     => __( 'Location', 'really-simple-ssl' ),
+					'sortable' => false,
+					'column'   => 'documenturi',
+				],
+				[
+					'name'     => __( 'Directive', 'really-simple-ssl' ),
+					'sortable' => false,
+					'column'   => 'violateddirective',
+				],
+				[
+					'name'     => __( 'Source', 'really-simple-ssl' ),
+					'sortable' => false,
+					'column'   => 'blockeduri',
+				],
+				[
+					'name'     => __( 'Action', 'really-simple-ssl' ),
+					'sortable' => false,
+					'column'   => 'statusControl',
+				],
+				[
+					'name'     => '',//__('Delete', 'really-simple-ssl'),
+					'sortable' => false,
+					'column'   => 'deleteControl',
+				],
+			],
+		],
+		/* Vulnerability basic Section */
+		[
+			'id' => 'enable_vulnerability_scanner',
+			'menu_id' => 'vulnerabilities_basic',
+			'group_id' => 'vulnerabilities_basic',
+			'type' => 'checkbox',
+			'label' => __('Vulnerability detection', 'really-simple-ssl'),
+			'tooltip'  => __( "This feature depends on multiple standard background processes. If a process fails or is unavailable on your system, detection might not work. We run frequent tests for this purpose. We will notify you accordingly if there are any issues.", 'really-simple-ssl' ),
+			'disabled' => false,
+			'default' => false,
+			'warning' => true,
+			'help'               => [
+				'label' => 'default',
+				'url'   => 'https://really-simple-ssl.com/instructions/about-vulnerabilities/',
+				'title' => __( "About Vulnerabilities", 'really-simple-ssl' ),
+				'text'  => __( 'Really Simple SSL collects information about plugins, themes, and core vulnerabilities from our database powered by WPVulnerability. Anonymized data about these vulnerable components will be sent to Really Simple SSL for statistical analysis to improve open-source contributions. For more information, please read our privacy statement.', 'really-simple-ssl' ),
+			],
+		],
+		[
+			'id' => 'vulnerabilities_intro_shown',
+			'menu_id' => 'vulnerabilities_basic',
+			'group_id' => 'vulnerabilities_basic',
+			'type' => 'hidden',
+			'label' => '',
+			'disabled' => false,
+			'default' => false,
+		],
+		[
+			'id' => 'enable_feedback_in_plugin',
+			'menu_id' => 'vulnerabilities_basic',
+			'group_id' => 'vulnerabilities_basic',
+			'tooltip'  => __( "If there's a vulnerability, you will also get feedback on the themes and plugin overview.", 'really-simple-ssl' ),
+			'warning' => false,
+			'type' => 'checkbox',
+			'label' => __('Feedback in plugin overview', 'really-simple-ssl'),
+			'disabled' => false,
+			'default' => false,
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'enable_vulnerability_scanner' => 1,
+				]
+			],
+		],
+		/* Vulnerability advanced Section */
+		[
+			'id' => 'vulnerability_notification_dashboard',
+			'menu_id' => 'vulnerabilities_notifications',
+			'group_id' => 'vulnerabilities_notifications',
+			'type' => 'select',
+			'options' => [
+				'*' => __('None', 'really-simple-ssl'),
+				'l' => __('Low-risk (default)', 'really-simple-ssl'),
+				'm' => __('Medium-risk', 'really-simple-ssl'),
+				'h' => __('High-risk', 'really-simple-ssl'),
+				'c' => __('Critical', 'really-simple-ssl'),
+			],
+			'label' => __('Really Simple SSL dashboard', 'really-simple-ssl'),
+			'disabled' => false,
+			'default' => 'l',
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'enable_vulnerability_scanner' => 1,
+				]
+			],
+		],
+		[
+			'id' => 'vulnerability_notification_sitewide',
+			'menu_id' => 'vulnerabilities_notifications',
+			'group_id' => 'vulnerabilities_notifications',
+			'type' => 'select',
+			'options' => [
+				'*' => __('None', 'really-simple-ssl'),
+				'l' => __('Low-risk ', 'really-simple-ssl'),
+				'm' => __('Medium-risk', 'really-simple-ssl'),
+				'h' => __('High-risk (default)', 'really-simple-ssl'),
+				'c' => __('Critical', 'really-simple-ssl'),
+			],
+			'label' => __('Site-wide, admin notification', 'really-simple-ssl'),
+			'disabled' => false,
+			'default' => 'h',
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'enable_vulnerability_scanner' => 1,
+				]
+			],
+		],
+		[
+			'id' => 'vulnerability_notification_email_admin',
+			'menu_id' => 'vulnerabilities_notifications',
+			'group_id' => 'vulnerabilities_notifications',
+			'type' => 'select',
+			'options' => [
+				'*' => __('None', 'really-simple-ssl'),
+				'l' => __('Low-risk', 'really-simple-ssl'),
+				'm' => __('Medium-risk', 'really-simple-ssl'),
+				'h' => __('High-risk', 'really-simple-ssl'),
+				'c' => __('Critical (default)', 'really-simple-ssl'),
+			],
+			'label' => __('Email', 'really-simple-ssl'),
+			'tooltip'  => __( "This will send emails about vulnerabilities directly from your server. Make sure you can receive emails by the testing a preview below. If this feature is disabled, please enable notifications under general settings.", 'really-simple-ssl' ),
+			'warning' => true,
+			'disabled' => false,
+			'default' => 'c',
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'enable_vulnerability_scanner' => 1,
+				],
+				[
+					'send_notifications_email' => 1,
+				]
+			],
+		],
+		[
+			'id' => 'vulnerabilities_test',
+			'menu_id' => 'vulnerabilities_notifications',
+			'group_id' => 'vulnerabilities_notifications',
+			'type' => 'notificationtester',
+			'action' => 'test_vulnerability_notification',
+			'label' => __('Test notifications', 'really-simple-ssl'),
+			'tooltip' => __('Test notifications can be used to test email delivery and shows how vulnerabilities will be reported on your WordPress installation.', 'really-simple-ssl'),
+			'disabled' => false,
+			'button_text' => __( "Test notifications", "really-simple-ssl" ),
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'enable_vulnerability_scanner' => 1,
+					'send_notifications_email' => 1,
+				]
+			],
+		],
+		[
+			'id'    => 'vulnerabilities-overview',
+			'menu_id' => 'vulnerabilities_notifications',
+			'group_id' => 'vulnerabilities_overview',
+			'type' => 'vulnerabilitiestable',
 
-    foreach ($fields as $key => $field) {
-        $field = wp_parse_args($field,
-            ['default' => '', 'id' => false, 'visible' => true, 'disabled' => false, 'recommended' => false]);
-        //handle server side conditions
-        //but not if outside our settings pages
-        if (rsssl_is_logged_in_rest() && isset($field['server_conditions'])) {
-            if ( ! rsssl_conditions_apply($field['server_conditions'])) {
-                unset($fields[$key]);
-                continue;
-            }
-        }
-        if ($load_values) {
+			'label' => __('Vulnerabilities Overview', 'really-simple-ssl'),
+			'disabled' => false,
+			'default' => false,
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'enable_vulnerability_scanner' => 1,
+				]
+			],
+			'columns' => [
+				[
+					'id'      => 'component',
+					'name'     => __( 'Component', 'really-simple-ssl' ),
+					'sortable' => false,
+					'column'   => 'Name',
+					'width'    => '20%',
+				],
+				[
+					'id'      => 'risk',
+					'name'     => __( 'Risk', 'really-simple-ssl' ),
+					'sortable' => false,
+					'column'   => 'risk_name',
+				],
+				[
+					'id'      => 'date',
+					'name'     => __( 'Date', 'really-simple-ssl' ),
+					'sortable' => false,
+					'column'   => 'date',
+				],
+				[
+					'id'      => 'action',
+					'name'     => __( 'Action', 'really-simple-ssl' ),
+					'sortable' => false,
+					'column'   => 'vulnerability_action',
+				],[]
 
-            $value                = rsssl_sanitize_field(rsssl_get_option($field['id'], $field['default']),
-                $field['type'], $field['id']);
-            $field['never_saved'] = ! array_key_exists($field['id'], $stored_options);
-            $field['value']       = apply_filters('rsssl_field_value_'.$field['id'], $value, $field);
-            $fields[$key]         = apply_filters('rsssl_field', $field, $field['id']);
-        }
-    }
+			]
+		],
+		[
+			'id'               => 'vulnerabilities_measures',
+			'menu_id'          => 'vulnerabilities-measures-overview',
+			'group_id'         => 'vulnerabilities_measures',
+			'type'             => 'riskcomponent',
+			'options'          => [
+				'*' => __('None', 'really-simple-ssl'),
+				'l' => __('Low-risk', 'really-simple-ssl'),
+				'm' => __('Medium-risk', 'really-simple-ssl'),
+				'h' => __('High-risk', 'really-simple-ssl'),
+				'c' => __('Critical', 'really-simple-ssl'),
+			],
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'measures_enabled' => true,
+				]
+			],
+			'disabled'         => false,
+			'default'          => false,
+			'columns'          => [
+				[
+					'name'     => __( 'Action', 'really-simple-ssl' ),
+					'sortable' => false,
+					'column'   => 'name',
+					'width'    => '15%',
+				],
+				[
+					'name'     => __( 'Risk', 'really-simple-ssl' ),
+					'sortable' => false,
+					'column'   => 'riskSelection',
+					'width'         => '20%',
+				],
+				[
+					'name'     => __( 'Description', 'really-simple-ssl' ),
+					'sortable' => false,
+					'column'   => 'description',
+					'type'   => 'text',
+					'width'     => '70%',
+					'minWidth'  => '300px',
+				],
+				[]
+			],
+		],
+		[
+			'id'       => 'measures_enabled',
+			'menu_id'  => 'vulnerabilities_measures',
+			'group_id' => 'vulnerabilities_measures',
+			'type'     => 'checkbox',
+			'label'    => __("I have read and understood the risks to intervene with these measures.","really-simple-ssl"),
+			'comment' => '<a href="https://really-simple-ssl.com/instructions/about-vulnerabilities#measures" target="_blank">'.__("Read more", "really-simple-ssl") .'</a>',
+			'disabled' => false,
+			'default'  => false,
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'enable_vulnerability_scanner' => true,
+				]
+			],
+		],
+	];
 
-    $fields = apply_filters('rsssl_fields_values', $fields);
+	$fields = apply_filters( 'rsssl_fields', $fields );
+	if ( is_multisite() && rsssl_is_networkwide_active() ) {
+		$stored_options = get_site_option( 'rsssl_options', [] );
+	} else {
+		$stored_options = get_option( 'rsssl_options', [] );
+	}
 
+<<<<<<< HEAD
     return array_values($fields);
 }
 
+=======
+	foreach ( $fields as $key => $field ) {
+		$field = wp_parse_args( $field, [ 'default' => '', 'id' => false, 'visible' => true, 'disabled' => false, 'recommended' => false ] );
+		//handle server side conditions
+		//but not if outside our settings pages
+		if ( rsssl_is_logged_in_rest() && isset( $field['server_conditions'] ) ) {
+			if ( ! rsssl_conditions_apply( $field['server_conditions'] ) ) {
+				unset( $fields[ $key ] );
+				continue;
+			}
+		}
+		if ( $load_values ) {
+
+			$value          = rsssl_sanitize_field( rsssl_get_option( $field['id'], $field['default'] ), $field['type'], $field['id'] );
+			$field['never_saved'] = !array_key_exists( $field['id'], $stored_options );
+			$field['value'] = apply_filters( 'rsssl_field_value_' . $field['id'], $value, $field );
+			$fields[ $key ] = apply_filters( 'rsssl_field', $field, $field['id'] );
+		}
+	}
+
+	$fields = apply_filters( 'rsssl_fields_values', $fields );
+
+	return array_values( $fields );
+}
+>>>>>>> master

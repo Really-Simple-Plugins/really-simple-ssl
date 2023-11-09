@@ -61,8 +61,27 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	        //now we add the action to the cron.
 	        add_filter('rsssl_every_three_hours_cron', array($this, 'run_cron'));
 	        add_filter('rsssl_notices', [$this, 'show_help_notices'], 10, 1);
-
+//	        add_action( 'rsssl_after_save_field', array( $this, 'maybe_enable_vulnerability_scanner' ), 10, 4 );
         }
+
+//	    /**
+//	     * @param $field_id
+//	     * @param $field_value
+//	     * @param $prev_value
+//	     * @param $field_type
+//	     *
+//	     * @return void
+//         *
+//         *
+//	     */
+//        public function maybe_enable_vulnerability_scanner( $field_id, $field_value, $prev_value, $field_type ) {
+//	        if ( $field_id==='enable_vulnerability_scanner' && $field_value !== $prev_value && rsssl_user_can_manage() ) {
+//                if ( $field_value !== false ) {
+//                    // Already enabled
+//	                rsssl_update_option('enable_vulnerability_scanner', 1);
+//                }
+//	        }
+//        }
 
         public function riskNaming($risk = null)
         {
@@ -99,7 +118,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
                     $clear_admin_notices_cache = true;
 		        }
 	        }
-            if ($clear_admin_notices_cache) {
+            if ( $clear_admin_notices_cache ) {
 	            RSSSL()->admin->clear_admin_notices_cache();
             }
         }
@@ -113,8 +132,16 @@ if (!class_exists("rsssl_vulnerabilities")) {
 			    return;
 		    }
 
-		    if ( isset($_GET['rsssl_check_vulnerabilities']) ) {
+		    if ( isset($_GET['rsssl_check_vulnerabilities']) || get_option('rsssl_reload_vulnerability_files') ) {
+			    delete_option('rsssl_reload_vulnerability_files');
 			    $this->reload_files_on_update();
+			    update_option('rsssl_clear_vulnerability_notices', true, false);
+			    set_transient('rsssl_delay_clear', true, 1 * MINUTE_IN_SECONDS );
+		    }
+
+		    if ( get_option('rsssl_clear_vulnerability_notices') && !get_transient('rsssl_delay_clear')) {
+			    RSSSL()->admin->clear_admin_notices_cache();
+			    delete_option('rsssl_clear_vulnerability_notices');
 		    }
 	    }
 
@@ -133,6 +160,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 		    $this->download_plugin_vulnerabilities();
 		    $this->download_core_vulnerabilities();
 		    $this->check_notice_reset();
+
 	    }
 
         public function init(): void {
@@ -148,6 +176,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
             //we check if upgrader_process_complete is called, so we can reload the files.
             add_action('upgrader_process_complete', array($this, 'reload_files_on_update'), 10, 2);
+            add_action('_core_updated_successfully', array($this, 'prepare_reloading_of_files'), 10, 2);
             //After activation, we need to reload the files.
             add_action( 'activate_plugin', array($this, 'reload_files_on_update'), 10, 2);
 	        //we can also force it
@@ -156,6 +185,16 @@ if (!class_exists("rsssl_vulnerabilities")) {
             //same goes for themes.
             add_action('after_switch_theme', array($this, 'reload_files_on_update'), 10, 2);
             add_action('current_screen', array($this, 'show_inline_code'));
+        }
+
+	    /**
+         * Directly hooking into the core upgrader hook doesn't work, so is too early.
+         * To force this, we save an option we can check later
+         *
+	     * @return void
+	     */
+        public function prepare_reloading_of_files(){
+            update_option("rsssl_reload_vulnerability_files", true, false);
         }
 
         /**
@@ -269,7 +308,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
                         'true' => [
                             'title' => $title,
                             'msg' => $title.' '.__('Please take appropriate action.','really-simple-ssl'),
-                            'url' => add_query_arg(['page'=>'really-simple-security#settings/vulnerabilities/vulnerabilities-overview'], rsssl_admin_url() ),
+                            'url' => add_query_arg(['page'=>'really-simple-security#settings/vulnerabilities-measures-overview'], rsssl_admin_url() ),
                             'icon' => ($risk_level === 'c' || $risk_level==='h') ? 'warning' : 'open',
                             'type' => 'warning',
                             'dismissible' => true,
@@ -779,16 +818,17 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	        }
 
             //now we check if the file remotely exists and then log an error if it does not.
-            if ($this->remote_file_exists($url)) {
-                $json = file_get_contents( $url );
-                return json_decode($json);
+            $response = wp_remote_get( $url );
+            if ( is_wp_error( $response ) ) {
+                return null;
             }
 
-	        if ( defined('WP_DEBUG') && WP_DEBUG ) {
-                error_log('Could not download file from ' . $url);
+            if ( wp_remote_retrieve_response_code($response) !== 200 ) {
+                return null;
             }
 
-	        return null;
+            $json = wp_remote_retrieve_body($response);
+            return json_decode($json);
         }
 
 	    private function remote_file_exists($url): bool {
@@ -803,9 +843,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
 			    return strpos($headers[0], '200') !== false;
 			    // Rest of your code handling $headers goes here
 		    } catch (Exception $e) {
-                if ( defined('WP_DEBUG') && WP_DEBUG ) {
-                    error_log('Could not check if file exists: ' . $e->getMessage());
-                }
 			    return false;
             }
 
@@ -1456,7 +1493,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 'message' => $message . ' ' .
                              __('Based on your settings, Really Simple SSL will take appropriate action, or you will need to solve it manually.','really-simple-ssl') .' '.
                              sprintf(__('Get more information from the Really Simple SSL dashboard on %s'), $this->domain() ),
-                'url' => "https://really-simple-ssl.com/instructions/about-vulnerabilities/",
+                'url' => rsssl_admin_url('#settings/vulnerabilities-measures-overview'),
             ];
         }
 

@@ -28,7 +28,7 @@
 @import 'variables.scss';
 @import 'admin/base.scss';
 @import 'admin/layout.scss';
-  @import 'admin/modules/modal.scss';
+  //@import 'admin/modules/modal.scss';
   @import 'admin/modules/header.scss';
   @import 'admin/modules/dashboard.scss';
   @import 'admin/modules/buttons.scss';
@@ -37,7 +37,6 @@
     @import 'admin/modules/badges.scss';
 
   @import 'admin/modules/toast/main.scss';
-
   @import 'admin/modules/onboarding.scss';
   @import 'admin/modules/progress.scss';
   @import 'admin/modules/ssltest.scss';

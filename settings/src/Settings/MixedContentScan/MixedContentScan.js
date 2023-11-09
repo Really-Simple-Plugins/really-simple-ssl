@@ -136,7 +136,7 @@ const MixedContentScan = (props) => {
                 <div>
                     <p>
                         {data.details.description.map((item, i) => (
-                            <React.Fragment key={i}>
+                            <React.Fragment key={'fragment-'+i}>
                                 <span>{item}</span>
                                 <br />
                             </React.Fragment>
@@ -193,7 +193,6 @@ const MixedContentScan = (props) => {
         );
     };
 
-
     return (
         <>
             <div className="rsssl-progress-container">
@@ -213,18 +212,21 @@ const MixedContentScan = (props) => {
                           <Icon name = "shield"  size="80px"/>
                     </div> }
                     </>}
-                { DataTable && dataTable.length>0 && <div className={'rsssl-mixed-content-datatable'}><DataTable
-                    columns={columns}
-                    data={dataTable}
-                    expandableRows
-                    expandableRowsComponent={ExpandableRow}
-                    dense
-                    pagination
-                    paginationResetDefaultPage={resetPaginationToggle} // optionally, a hook to reset pagination to page 1
-                    noDataComponent={__("No results", "really-simple-ssl")} //or your component
-                    theme={theme}
-                    customStyles={customStyles}
-                /></div>  }
+                { DataTable && dataTable.length>0 &&
+                    <div className={'rsssl-mixed-content-datatable'}>
+                        <DataTable
+                            columns={columns}
+                            data={dataTable}
+                            expandableRows
+                            expandableRowsComponent={ExpandableRow}
+                            dense
+                            pagination
+                            paginationResetDefaultPage={resetPaginationToggle} // optionally, a hook to reset pagination to page 1
+                            noDataComponent={__("No results", "really-simple-ssl")} //or your component
+                            theme={theme}
+                            customStyles={customStyles}
+                        />
+                    </div>  }
             <div className="rsssl-grid-item-content-footer">
                 <button className="button" disabled={startDisabled} onClick={ () => start() }>{__("Start scan","really-simple-ssl")}</button>
                 <button className="button" disabled={stopDisabled} onClick={ () => stop() }>{__("Stop","really-simple-ssl")}</button>

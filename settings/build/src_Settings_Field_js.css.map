@@ -1,1 +1,0 @@
-{"version":3,"file":"src_Settings_Field_js.css","mappings":";;;AAAA;EACE;AACF,C","sources":["webpack://really-simple-ssl/./src/Settings/TwoFA/select.scss"],"sourcesContent":["div[class$=\"MenuPortal\"] {\n  z-index:20;\n}"],"names":[],"sourceRoot":""}
