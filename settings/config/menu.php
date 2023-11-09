@@ -108,7 +108,6 @@ function rsssl_menu() {
 							'premium_text'         => __( "Get HTTP Strict Transport Security with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
 							'upgrade'              => 'https://really-simple-ssl.com/pro/?mtm_campaign=hsts&mtm_source=free&mtm_content=upgrade',
 							'title'                => 'HTTP Strict Transport Security',
-//							'intro' => __( 'HSTS Security Headers', 'really-simple-ssl' ),
 							'helpLink' => 'https://really-simple-ssl.com/instructions/about-hsts/?mtm_campaign=instructions&mtm_source=free',
 						],
 						[

@@ -213,7 +213,7 @@ const IpAddressDatatable = (props) => {
                     }
 
                     return (
-                        <option key={i} value={item.value} disabled={disabled}>
+                        <option key={'ip-options-'+i} value={item.value} disabled={disabled}>
                             {item.label}
                         </option>
                     );

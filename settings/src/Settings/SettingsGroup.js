@@ -53,7 +53,6 @@ const SettingsGroup = (props) => {
     }
 
     let activeGroup;
-
     for (const item of subMenu.menu_items) {
         if (item.id === selectedSubMenuItem && item.hasOwnProperty('groups')) {
             for (const group of item.groups) {
@@ -89,6 +88,9 @@ const SettingsGroup = (props) => {
         const nestedGroup = activeGroup.groups.find(group => group.group_id === props.group);
         if (nestedGroup) {
             activeGroup = nestedGroup;
+        } else {
+            const nestedGroup = activeGroup.groups.find(group => group.group_id === props.group);
+
         }
     }
 
@@ -131,7 +133,7 @@ const SettingsGroup = (props) => {
                                 {activeGroup.groupFilter.options.map((option) => (
                                     //if the value is equal to the selected value, set it as selected
                                     <option
-                                        key={option.id}
+                                        key={'option-'+option.id}
                                         value={option.id}
                                     >
                                         {option.title}
