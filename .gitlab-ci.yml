@@ -53,6 +53,7 @@ variables:
   WP_MULTISITE: '0'
   XDEBUG_VERSION: 3.1.6
   SAST_EXCLUDED_PATHS: "vendor/,tests,vendor,*.min.js"
+  CI_JOB_LOG_LEVEL: ERROR
 
 test:php7.4:
   stage: test
