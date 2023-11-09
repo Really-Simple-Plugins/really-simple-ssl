@@ -12,10 +12,9 @@ import {useEffect, useState} from '@wordpress/element';
  * Render a grouped block of settings
  */
 const SettingsGroup = (props) => {
-    
+
     const {fields} = useFields();
-    const {selectedFilter, setSelectedFilter, processingFilter} = filterData();
-    const {setActiveGroupId, activeGroupId} = useMenu();
+    const {selectedFilter, setSelectedFilter} = filterData();
     const {licenseStatus} = useLicense();
     const {selectedSubMenuItem, subMenu} = useMenu();
     const [Field, setField] = useState(null);
@@ -126,7 +125,6 @@ const SettingsGroup = (props) => {
                                 id={filterId}
                                 name={filterId}
                                 value={selectedFilter[filterId]}
-                                disabled={processingFilter}
                                 onChange={(e) => {
                                     const selectedValue = e.target.value;
                                     setSelectedFilter(selectedValue, filterId);
@@ -161,6 +159,7 @@ const SettingsGroup = (props) => {
             </div>}
             <div className="rsssl-grid-item-content">
                 {(activeGroup.intro && typeof activeGroup.intro === 'string') && <ErrorBoundary fallback={"Could not load group intro"}>
+                    {(activeGroup.intro && typeof activeGroup.intro === 'string') && <div className="rsssl-settings-block-intro">{activeGroup.intro}</div>}
                     {(activeGroup.intro &&  typeof activeGroup.intro === 'object') && <div className="rsssl-settings-block-intro">{updatedIntro}</div>}
                 </ErrorBoundary>}
 

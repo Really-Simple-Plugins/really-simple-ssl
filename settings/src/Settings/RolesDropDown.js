@@ -12,10 +12,12 @@ import './TwoFA/select.scss';
 const RolesDropDown = ({ field }) => {
     const {fetchRoles, roles, rolesLoaded} = useRolesData();
     const [selectedRoles, setSelectedRoles] = useState([]);
+    const [rolesEnabled, setRolesEnabled] = useState(false);
 
     // Custom hook to manage form fields
-    const { updateField, setChangedField, fieldsLoaded } = useFields();
+    const { updateField, setChangedField, fieldsLoaded,getFieldValue  } = useFields();
     let enabled = true;
+
 
     useEffect(() => {
         if (!rolesLoaded) {
@@ -31,6 +33,12 @@ const RolesDropDown = ({ field }) => {
         }
         setSelectedRoles( field.value.map((role, index) => ({ value: role, label: role.charAt(0).toUpperCase() + role.slice(1) })));
     },[fieldsLoaded]);
+
+
+    //if the field enforce_frequent_password_change is enabled, then the field is enabled
+    useEffect(() => {
+        setRolesEnabled(getFieldValue('enforce_frequent_password_change'));
+    },[getFieldValue('enforce_frequent_password_change')]);
 
     /**
      * Handles the change event of the react-select component.
@@ -64,10 +72,6 @@ const RolesDropDown = ({ field }) => {
         })
     };
 
-    // if (field.id === 'password_change_roles') {
-    //     enabled = getFieldValue('enforce_password_protection_enabled');
-    // }
-
     return (
         <div style={{marginTop: '5px'}}>
             <Select
@@ -77,6 +81,7 @@ const RolesDropDown = ({ field }) => {
                 value={selectedRoles}
                 menuPosition={"fixed"}
                 styles={customStyles}
+                isDisabled={!rolesEnabled}
             />
             {! enabled &&
                 <div className="rsssl-locked">
