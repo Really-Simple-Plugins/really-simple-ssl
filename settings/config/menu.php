@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die();
+defined('ABSPATH') or die();
 
 function rsssl_menu() {
 	if ( ! rsssl_user_can_manage() ) {
@@ -52,15 +52,8 @@ function rsssl_menu() {
 				],
 				[
 					'id' => 'encryption',
-					'title' => 'Encryption',
-					'featured' => false,
-					'menu_items' => [
-						[
-							'id' => 'encryption_redirect',
-							'group_id' => 'encryption_redirect',
-							'title' => __( 'Redirection', 'really-simple-ssl' ),
-							'helpLink' => 'https://really-simple-ssl.com/remove-htaccess-redirect-site-lockout/&mtm_source=free',
-						],
+					'title' => 'SSL',
+					'groups' => [
 						[
 							'id' => 'encryption_lets_encrypt',
 							'group_id' => 'encryption_lets_encrypt',
@@ -70,23 +63,25 @@ function rsssl_menu() {
 							'directLink' => rsssl_letsencrypt_wizard_url(),
 						],
 						[
-							'id' => 'mixedcontentscan',
-							'group_id' => 'mixedcontentscan',
+							'id' => 'encryption_redirect',
+							'group_id' => 'encryption_redirect',
+							'title' => __( 'Redirection', 'really-simple-ssl' ),
+							'helpLink' => 'https://really-simple-ssl.com/remove-htaccess-redirect-site-lockout/?mtm_source=free',
+						],
+						[
+							'id' => 'mixed-content-general',
+							'group_id' => 'mixed-content-general',
+							'title' => __( 'Mixed Content', 'really-simple-ssl' ),
+							'helpLink' => 'https://really-simple-ssl.com/remove-htaccess-redirect-site-lockout/?mtm_source=free',
+						],
+						[
+							'id' => 'mixed-content-scan',
+							'group_id' => 'mixed-content-scan',
 							'title' => __( 'Mixed Content Scan', 'really-simple-ssl' ),
-							'premium' => true,
+							'helpLink' => 'https://really-simple-ssl.com/pro/?mtm_campaign=mixedcontent&mtm_source=free&mtm_content=upgrade',
 							'upgrade' => 'https://really-simple-ssl.com/pro/?mtm_campaign=mixedcontent&mtm_source=free&mtm_content=upgrade',
-							'helpLink' => 'https://really-simple-ssl.com/pro/?mtm_campaign=mixedcontent&mtm_source=free&mtm_content=instructions',
+							'premium' => true,
 							'premium_text' => __( "Get the Mixed Content Scan with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
-							'groups' => [
-								[
-									'id' => 'mixedcontentscan',
-									'title' => __( 'Mixed Content Scan', 'really-simple-ssl' ),
-									'helpLink' => 'https://really-simple-ssl.com/pro/?mtm_campaign=mixedcontent&mtm_source=free&mtm_content=upgrade',
-									'upgrade' => 'https://really-simple-ssl.com/pro/?mtm_campaign=mixedcontent&mtm_source=free&mtm_content=upgrade',
-									'premium' => true,
-									'premium_text' => __( "Get the Mixed Content Scan with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
-								],
-							],
 						],
 					],
 				],
@@ -195,14 +190,14 @@ function rsssl_menu() {
 							'id' => 'vulnerabilities_notifications',
 							'group_id' => 'vulnerabilities_notifications',
 							'title' => __( 'Notifications', 'really-simple-ssl' ),
-							'intro' => __( 'These notifications are set to the minimum risk level that triggers a notification. For example, the default site-wide notification triggers on high-risk and critical vulnerabilities.', 'really-simple-ssl' ),
-							'helpLink' => 'https://really-simple-ssl.com/instructions/about-vulnerabilities#notifications',
-						],
-						[
-							'id' => 'vulnerabilities-measures-overview',
-							'group_id' => 'vulnerabilities-measures-overview',
-							'title' => __( 'Measures', 'really-simple-ssl' ),
 							'groups'  => [
+								[
+									'id'       => 'vulnerabilities_notifications',
+									'group_id' => 'vulnerabilities_notifications',
+									'title' => __( 'Notifications', 'really-simple-ssl' ),
+									'intro' => __( 'These notifications are set to the minimum risk level that triggers a notification. For example, the default site-wide notification triggers on high-risk and critical vulnerabilities.', 'really-simple-ssl' ),
+									'helpLink' => 'https://really-simple-ssl.com/instructions/about-vulnerabilities#notifications',
+								],
 								[
 									'id'       => 'vulnerabilities_overview',
 									'group_id' => 'vulnerabilities_overview',
@@ -210,6 +205,13 @@ function rsssl_menu() {
 									'intro' => __( 'This is the vulnerability overview. Here you will find current known vulnerabilities on your system. You can find more information and helpful, actionable insights for every vulnerability under details.', 'really-simple-ssl' ),
 									'helpLink' => 'https://really-simple-ssl.com/instructions/about-vulnerabilities#components',
 								],
+							],
+						],
+						[
+							'id' => 'vulnerabilities-measures-overview',
+							'group_id' => 'vulnerabilities-measures-overview',
+							'title' => __( 'Measures', 'really-simple-ssl' ),
+							'groups'  => [
 								[
 									'id'       => 'vulnerabilities_measures',
 									'group_id' => 'vulnerabilities_measures',
@@ -263,18 +265,14 @@ function rsssl_menu() {
 						[
 							'id'                   => 'two-fa',
 							'networkwide_required' => true,
-							'premium'              => true,
-							'premium_text'         => __( 'Get two-factor authentication with %sReally Simple SSL Pro%s', 'really-simple-ssl' ),
-							'upgrade'              => 'https://really-simple-ssl.com/pro/?mtm_campaign=cops&mtm_source=free&mtm_content=upgrade',
-							'title'                => 'Login Protection',
-							'helpLink'             => 'https://really-simple-ssl.com/instructions/about-login-protection/?mtm_campaign=instructions&mtm_source=free',
+							'title'                =>  __('Two-Step verification', 'really-simple-ssl'),
 							'groups'  => [
 								[
 									'id'       => 'two_fa_general',
 									'group_id' => 'two_fa_general',
 									'premium'              => true,
 									'premium_text'         => __( "Get Login Protection with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
-									'helpLink' => 'https://really-simple-ssl.com/instructions/two-factor-authentication',
+									'helpLink' => 'https://really-simple-ssl.com/instructions/about-login-protection/',
 									'title'    => __( 'General', 'really-simple-ssl' ),
 									'intro'    => __( 'Enhancing the authentication process and optimizing user management makes Login Protection a foundational element in securing your website.', 'really-simple-ssl' ),
 								],
@@ -309,182 +307,30 @@ function rsssl_menu() {
 											],
 											[
 												'id'    => 'disabled',
-												'title' => __( 'Disabled', 'really-simple-ssl' ),
+												'title' => __('Disabled', 'really-simple-ssl'),
 											]
 										],
 									],
 								],
 							],
 						],
-//						[
-//							'id'      => 'limit_login_attempts',
-//							'title'   => __( 'Limit Login Attempts', 'really-simple-ssl' ),
-//							'premium' => true,
-//							'groups'  => [
-//								[
-//									'id'           => 'limit_login_attempts_general',
-//									'group_id'     => 'limit_login_attempts_general',
-//									'helpLink'     => 'https://really-simple-ssl.com/knowledge-base/limit-login-attempts/?mtm_campaign=instructions&mtm_source=free',
-//									'premium'      => true,
-//									'title'        => __( 'General', 'really-simple-ssl' ),
-//									'intro'        => __( 'Protect your site against brute force login attacks by limiting the number of login attempts. Enabling this feature will temporary lock-out a username and the IP address that tries to login, after the set number of false logins.',
-//										'really-simple-ssl' ),
-//									'premium_text' => __( 'Get Limit Login Attempts with %sReally Simple SSL Pro%s',
-//										'really-simple-ssl' ),
-//								],
-//								[
-//									'id'           => 'limit_login_attempts_advanced',
-//									'group_id'     => 'limit_login_attempts_advanced',
-//									'premium'      => true,
-//									'helpLink'     => 'https://really-simple-ssl.com/knowledge-base/limit-login-attempts/?mtm_campaign=instructions&mtm_source=free',
-//									'title'        => __( 'Limit Attempts', 'really-simple-ssl' ),
-//									'intro'        => __( 'The settings below determine how strict your site will be protected. You can leave these settings on their default values, unless you experience issues.',
-//										'really-simple-ssl' ),
-//									'premium_text' => __( 'Get Limit Login Attempts with %sReally Simple SSL Pro%s',
-//										'really-simple-ssl' ),
-//								],
-//								[
-//									'id'           => 'limit_login_attempts_users',
-//									'group_id'     => 'limit_login_attempts_users',
-//									'premium'      => true,
-//									'groupFilter'  => [
-//										'default' => 'limit_login_attempts_advanced_filter_log',
-//										'id'      => 'limit_login_attempts_advanced_filter',
-//										'options' => [
-//											[
-//												'id'    => 'blocked',
-//												'title' => __( 'Permanent block', 'really-simple-ssl' ),
-//											],
-//											[
-//												'id'    => 'allowed',
-//												'title' => __( 'Trusted', 'really-simple-ssl' ),
-//											],
-//											[
-//												'id'    => 'locked',
-//												'title' => __( 'Temporary block', 'really-simple-ssl' ),
-//											],
-//										],
-//									],
-//									'title'        => __( 'Users', 'really-simple-ssl' ),
-//									'intro'        => [
-//										'locked'  => __( 'Blocked usernames will be automatically unblocked after the above-configured interval. In the table below you can instantly unblock usernames.',
-//											'really-simple-ssl' ),
-//										'allowed' => __( 'You can prevent usernames from being temporarily blocked by adding them to this list. The IP address that triggers false logins will still be blocked.',
-//											'really-simple-ssl' ),
-//										'blocked' => __( 'You can add any non-existing username to this table, to instantly block IP addresses that try common usernames like "admin".',
-//											'really-simple-ssl' ),
-//									],
-//									'premium_text' => __( 'Get Limit Login Attempts with %sReally Simple SSL Pro%s',
-//										'really-simple-ssl' ),
-//								],
-//								[
-//									'id'           => 'limit_login_attempts_ip_address',
-//									'group_id'           => 'limit_login_attempts_ip_address',
-//									'premium'      => true,
-//									'groupFilter'  => [
-//										'default' => 'limit_login_attempts_advanced_filter_log',
-//										'id'      => 'limit_login_attempts_advanced_filter',
-//										'options' => [
-//											[
-//												'id'    => 'blocked',
-//												'title' => __( 'Permanent block', 'really-simple-ssl' ),
-//											],
-//											[
-//												'id'    => 'allowed',
-//												'title' => __( 'Trusted', 'really-simple-ssl' ),
-//											],
-//											[
-//												'id'    => 'locked',
-//												'title' => __( 'Temporary block', 'really-simple-ssl' ),
-//											],
-//										],
-//									],
-//									'title'        => __( 'IP Addresses', 'really-simple-ssl' ),
-//									'intro'        => [
-//										'locked'  => __( 'Blocked IP addresses will be automatically unblocked after the above-configured interval. In the table below you can instantly unblock IP addresses.',
-//											'really-simple-ssl' ),
-//										'allowed' => __( 'You can prevent IP addresses from being temporarily blocked by adding them to this list. This can be convenient if you share an IP address with other site users. Usernames that trigger false logins will still be blocked.',
-//											'really-simple-ssl' ),
-//										'blocked' => __( 'You can indefinitely block known abusive IP addresses, to completely prevent them from trying to login.',
-//											'really-simple-ssl' ),
-//									],
-//									'premium_text' => __( 'Get Limit Login Attempts with %sReally Simple SSL Pro%s',
-//										'really-simple-ssl' ),
-//								],
-//								[
-//									'id'           => 'limit_login_attempts_event_log',
-//									'group_id'           => 'limit_login_attempts_event_log',
-//									'premium'      => true,
-//									'groupFilter'  => [
-//										'default' => 'limit_login_attempts_advanced_filter_log',
-//										'id'      => 'limit_login_attempts_advanced_filter',
-//										'options' => [
-//											[
-//												'id'    => 'warning',
-//												'title' => __( 'Warnings', 'really-simple-ssl' ),
-//											],
-//											[
-//												'id'    => 'all',
-//												'title' => __( 'All', 'really-simple-ssl' ),
-//											],
-//										],
-//									],
-//									'title'        => __( 'Event Log', 'really-simple-ssl' ),
-//									'intro'        => __( 'The Event Log shows all relevant events related to limit login attempts. You can filter the log using the dropdown on the top-right to only show warnings.',
-//										'really-simple-ssl' ),
-//									'premium_text' => __( 'Get Limit Login Attempts with %sReally Simple SSL Pro%s',
-//										'really-simple-ssl' ),
-//								],
-//								[
-//									'id'           => 'limit_login_attempts_country',
-//									'group_id'           => 'limit_login_attempts_country',
-//									'premium'      => true,
-//									'groupFilter'  => [
-//										'default' => 'limit_login_attempts_advanced_filter_log',
-//										'id'      => 'limit_login_attempts_advanced_filter',
-//										'options' => [
-//											[
-//												'id'    => 'blocked',
-//												'title' => __( 'Blocked', 'really-simple-ssl' ),
-//											],
-//											[
-//												'id'    => 'regions',
-//												'title' => __( 'Continents', 'really-simple-ssl' ),
-//											],
-//											[
-//												'id'    => 'countries',
-//												'title' => __( 'Countries', 'really-simple-ssl' ),
-//											],
-//										],
-//									],
-//									'title'        => __( 'Regions', 'really-simple-ssl' ),
-//									'intro'        => __( 'If your site is only intended for users to login from specific geographical regions, you can entirely prevent logins from certain continents or countries.',
-//										'really-simple-ssl' ),
-//									'premium_text' => __( 'Get Limit Login Attempts with %sReally Simple SSL Pro%s',
-//										'really-simple-ssl' ),
-//								]
-//							],
-//						],
 						[
 							'id'                   => 'password_security',
 							'networkwide_required' => true,
 							'premium'              => true,
-							'premium_text'         => __( 'Get Password Security with %sReally Simple SSL Pro%s',
-								'really-simple-ssl' ),
+							'premium_text'         => __( 'Get Password Security with %sReally Simple SSL Pro%s', 'really-simple-ssl' ),
 							'upgrade'              => 'https://really-simple-ssl.com/pro/?mtm_campaign=passwordsecurity&mtm_source=free&mtm_content=upgrade',
-							'title'                => 'Password Security',
+							'title'                => __('Password Security','really-simple-ssl'),
 							'helpLink'             => 'https://really-simple-ssl.com/instructions/password-security/?mtm_campaign=instructions&mtm_source=free',
 							'groups'               => [
 								[
 									'id'           => 'password_security_passwords',
 									'group_id'     => 'password_security_passwords',
 									'premium'      => true,
-									'premium_text' => __( "Get Password Security with %sReally Simple SSL Pro%s",
-										'really-simple-ssl' ),
+									'premium_text' => __( "Get Password Security with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
 									'helpLink'     => 'https://really-simple-ssl.com/instructions/password-security/?mtm_campaign=instructions&mtm_source=free',
 									'title'        => __( 'Passwords', 'really-simple-ssl' ),
-									'intro'        => __( 'Improve security by requiring strong passwords and forced periodic password changes',
-										'really-simple-ssl' ),
+									'intro'        => __( 'Improve security by requiring strong passwords and forced periodic password changes', 'really-simple-ssl' ),
 								],
 							]
 						],
@@ -497,63 +343,58 @@ function rsssl_menu() {
 			'default_hidden' => true,
 			"title"          => "Let's Encrypt",
 			'intro'          => sprintf( __( 'We have tried to make our Wizard as simple and fast as possible. Although these questions are all necessary, if there’s any way you think we can improve the plugin, please let us %sknow%s!',
-					'really-simple-ssl' ),
-					'<a target="_blank" href="https://really-simple-ssl.com/contact/?mtm_campaign=instructions&mtm_source=free">',
-					'</a>' ) .
+					'really-simple-ssl' ), '<a target="_blank" href="https://really-simple-ssl.com/contact/?mtm_campaign=instructions&mtm_source=free">', '</a>' ) .
 			                    sprintf( __( ' Please note that you can always save and finish the wizard later, use our %sdocumentation%s for additional information or log a %ssupport ticket%s if you need our assistance.',
-				                    'really-simple-ssl' ),
-				                    '<a target="_blank" href="https://really-simple-ssl.com/install-ssl-certificate/?mtm_campaign=instructions&mtm_source=free">',
-				                    '</a>',
-				                    '<a target="_blank" href="https://wordpress.org/support/plugin/really-simple-ssl/">',
-				                    '</a>' ),
-			'menu_items'     => [
+				                    'really-simple-ssl' ), '<a target="_blank" href="https://really-simple-ssl.com/install-ssl-certificate/?mtm_campaign=instructions&mtm_source=free">', '</a>',
+				                    '<a target="_blank" href="https://wordpress.org/support/plugin/really-simple-ssl/">', '</a>' ),
+			'menu_items' => [
 				[
 					'id'         => 'le-system-status',
-					'group_id'   => 'le-system-status',
-					'title'      => __( 'System Status', 'really-simple-ssl' ),
-					'intro'      => __( 'Letʼs Encrypt is a free, automated and open certificate authority brought to you by the nonprofit Internet Security Research Group (ISRG).',
-						'really-simple-ssl' ),
+					'group_id'         => 'le-system-status',
+					'title'      => __('System Status', 'really-simple-ssl'),
+					'intro'      => __('Letʼs Encrypt is a free, automated and open certificate authority brought to you by the nonprofit Internet Security Research Group (ISRG).',
+						'really-simple-ssl'),
 					'helpLink'   => 'https://really-simple-ssl.com/about-lets-encrypt/?mtm_campaign=letsencrypt&mtm_source=free',
 					'tests_only' => true,
 				],
 				[
 					'id'    => 'le-general',
-					'title' => __( 'General Settings', 'really-simple-ssl' ),
+					'title' => __('General Settings', 'really-simple-ssl'),
 				],
 				[
 					'id'    => 'le-hosting',
-					'title' => __( 'Hosting', 'really-simple-ssl' ),
-					'intro' => __( 'Below you will find the instructions for different hosting environments and configurations. If you start the process with the necessary instructions and credentials the next view steps will be done in no time.',
-						'really-simple-ssl' ),
+					'title' => __('Hosting', 'really-simple-ssl'),
+					'intro' => __('Below you will find the instructions for different hosting environments and configurations. If you start the process with the necessary instructions and credentials the next view steps will be done in no time.',
+						'really-simple-ssl'),
 				],
 				[
 					'id'         => 'le-directories',
-					'title'      => __( 'Directories', 'really-simple-ssl' ),
+					'title'      => __('Directories', 'really-simple-ssl'),
 					'tests_only' => true,
 				],
 				[
 					'id'         => 'le-dns-verification',
-					'title'      => __( 'DNS verification', 'really-simple-ssl' ),
+					'title'      => __('DNS verification', 'really-simple-ssl'),
 					'tests_only' => true,
 				],
 				[
 					'id'         => 'le-generation',
-					'title'      => __( 'Generation', 'really-simple-ssl' ),
+					'title'      => __('Generation', 'really-simple-ssl'),
 					'tests_only' => true,
 				],
 				[
 					'id'         => 'le-installation',
-					'title'      => __( 'Installation', 'really-simple-ssl' ),
+					'title'      => __('Installation', 'really-simple-ssl'),
 					'tests_only' => true,
 				],
 				[
 					'id'         => 'le-activate_ssl',
-					'title'      => __( 'Activate', 'really-simple-ssl' ),
+					'title'      => __('Activate', 'really-simple-ssl'),
 					'tests_only' => true,
 				],
 			],
 		],
 	];
 
-	return apply_filters( 'rsssl_menu', $menu_items );
+	return apply_filters('rsssl_menu', $menu_items);
 }
