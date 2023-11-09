@@ -14,29 +14,26 @@ services:
 #  stage: setup
 #  image: php:7.4
 before_script:
-  - apt-get update -yqq
-  - apt-get install git -yqq
-  - apt-get install libonig-dev -yqq
-  - apt-get -yqqf install wget zip unzip subversion default-mysql-client libmcrypt-dev
-    default-libmysqlclient-dev default-mysql-server --fix-missing
-  - docker-php-ext-install mysqli pdo_mysql mbstring
-  - pecl install xdebug-${XDEBUG_VERSION}
-  - echo xdebug.mode=coverage > /usr/local/etc/php/conf.d/xdebug.ini
-  - docker-php-ext-enable mysqli pdo_mysql mbstring xdebug
-  - curl -sS https://getcomposer.org/installer | php
-  - php composer.phar install --ignore-platform-reqs
-  - php composer.phar update
-  - bash bin/install-wp-tests.sh wordpress_test root mysql mysql $WP_VERSION
-  - curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-  - chmod +x wp-cli.phar
-  - mv wp-cli.phar /usr/local/bin/wp
-  - wp core download --allow-root
-  - wp core config --dbhost=mysql --dbname=$DB_NAME --dbuser=$DB_USER --dbpass=$DB_PASS
-    --allow-root
-  - wp config list --allow-root
-  - wp core install --url=http://localhost --title=Example --admin_user=$ADMIN_USER
-    --admin_password=$ADMIN_PASSWORD --admin_email=$ADMIN_EMAIL --allow-root
-  - zip -r really-simple-ssl.zip .
+  - apt-get update -yqq > /dev/null
+  - apt-get install git -yqq > /dev/null
+  - apt-get install libonig-dev -yqq > /dev/null
+  - apt-get -yqqf install wget zip unzip subversion default-mysql-client libmcrypt-dev default-libmysqlclient-dev default-mysql-server --fix-missing > /dev/null
+  - docker-php-ext-install mysqli pdo_mysql mbstring > /dev/null
+  - pecl install xdebug-${XDEBUG_VERSION} > /dev/null
+  - echo xdebug.mode=coverage > /usr/local/etc/php/conf.d/xdebug.ini > /dev/null
+  - docker-php-ext-enable mysqli pdo_mysql mbstring xdebug > /dev/null
+  - curl -sS https://getcomposer.org/installer | php > /dev/null
+  - php composer.phar install --ignore-platform-reqs > /dev/null
+  - php composer.phar update > /dev/null
+  - bash bin/install-wp-tests.sh wordpress_test root mysql mysql $WP_VERSION > /dev/null
+  - curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar > /dev/null
+  - chmod +x wp-cli.phar > /dev/null
+  - mv wp-cli.phar /usr/local/bin/wp > /dev/null
+  - wp core download --allow-root > /dev/null
+  - wp core config --dbhost=mysql --dbname=$DB_NAME --dbuser=$DB_USER --dbpass=$DB_PASS --allow-root > /dev/null
+  - wp config list --allow-root > /dev/null
+  - wp core install --url=http://localhost --title=Example --admin_user=$ADMIN_USER --admin_password=$ADMIN_PASSWORD --admin_email=$ADMIN_EMAIL --allow-root > /dev/null
+  - zip -r really-simple-ssl.zip . > /dev/null
   - wp plugin install really-simple-ssl.zip --allow-root --force
   - wp plugin activate really-simple-ssl --allow-root
   - wp plugin deactivate really-simple-ssl --allow-root
