@@ -58,6 +58,7 @@ test:php7.4:
   variables:
     XDEBUG_VERSION: 3.1.6
   script:
+    - export XDEBUG_MODE=coverage
     - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never --debug
   rules:
   - if: "$CI_PIPELINE_SOURCE == 'merge_request_event'"
@@ -69,6 +70,7 @@ test:php7.4:multisite:
     WP_MULTISITE: '1'
     XDEBUG_VERSION: 3.1.6
   script:
+    - export XDEBUG_MODE=coverage
     - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
   rules:
   - if: "$CI_PIPELINE_SOURCE == 'merge_request_event'"
@@ -79,6 +81,7 @@ test:php8.2:
   variables:
     XDEBUG_VERSION: 3.2.1
   script:
+    - export XDEBUG_MODE=coverage
     - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover --colors=never
   rules:
   - if: "$CI_PIPELINE_SOURCE == 'merge_request_event'"
@@ -90,6 +93,7 @@ test:php8.2:multisite:
     WP_MULTISITE: '1'
     XDEBUG_VERSION: 3.2.1
   script:
+    - export XDEBUG_MODE=coverage
     - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
   rules:
   - if: "$CI_PIPELINE_SOURCE == 'merge_request_event'"
@@ -101,6 +105,7 @@ test:php8.2:wordpress5.9:
     XDEBUG_VERSION: 3.2.1
     WP_VERSION: '5.9'
   script:
+    - export XDEBUG_MODE=coverage
     - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover --colors=never
   rules:
   - if: "$CI_PIPELINE_SOURCE == 'merge_request_event'"
@@ -113,6 +118,7 @@ test:php8.2:wordpress5.9:multisite:
     XDEBUG_VERSION: 3.2.1
     WP_VERSION: '5.9'
   script:
+    - export XDEBUG_MODE=coverage
     - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
   rules:
   - if: "$CI_PIPELINE_SOURCE == 'merge_request_event'"
