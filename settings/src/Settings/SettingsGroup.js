@@ -158,8 +158,11 @@ const SettingsGroup = (props) => {
                 </div>}
             </div>}
             <div className="rsssl-grid-item-content">
-                {(activeGroup.intro && typeof activeGroup.intro === 'string') && <div className="rsssl-settings-block-intro">{activeGroup.intro}</div>}
-                {(activeGroup.intro &&  typeof activeGroup.intro === 'object') && <div className="rsssl-settings-block-intro">{updatedIntro}</div>}
+                {(activeGroup.intro && typeof activeGroup.intro === 'string') && <ErrorBoundary fallback={"Could not load group intro"}>
+                    {(activeGroup.intro && typeof activeGroup.intro === 'string') && <div className="rsssl-settings-block-intro">{activeGroup.intro}</div>}
+                    {(activeGroup.intro &&  typeof activeGroup.intro === 'object') && <div className="rsssl-settings-block-intro">{updatedIntro}</div>}
+                </ErrorBoundary>}
+
                 {Field && selectedFields.map((field, i) =>
                         <Field key={"selectedFields-" + i} index={i} field={field} fields={selectedFields}/>
                 )}

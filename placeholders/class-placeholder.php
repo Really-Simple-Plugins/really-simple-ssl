@@ -11,11 +11,14 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
 
 			add_filter( "rsssl_run_test", array( $this, 'mixed_content_scan' ), 9, 3 );
 			add_filter( 'rsssl_do_action', array( $this, 'learningmode_table_data' ), 10, 3 );
+
 			add_filter( 'rsssl_do_action', array( $this, 'two_factor_users_data' ), 11, 3 );
-            // really-simple-ssl-pro plugin is active
+
+                // really-simple-ssl-pro plugin is active
             add_filter( 'rsssl_do_action', array( $this, 'limit_login_attempts_data' ), 11, 3 );
 
 			self::$_this = $this;
+
 		}
 
 		/**
@@ -163,12 +166,7 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
 		        return $response;
 	        }
 
-	        if ( defined('rsssl_pro_version') ) {
-		        return $response;
-	        }
-
-
-	        switch ( $action ) {
+            switch ( $action ) {
                 case 'ip_list':
                     $response['data'] = [
                         [
@@ -310,7 +308,7 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
             }
 
             $response['pagination'] =  [
-                'totalRow' => 2,
+                'total' => 2,
                 'per_page' => 10,
                 'current_page' => 1,
                 'last_page' => 1,
@@ -517,8 +515,12 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
 						'status_for_user'     => 'open'
 					],
 				];
+
 			}
+
 			return $response;
+
 		}
+
 	}
 }
