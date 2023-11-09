@@ -10,22 +10,6 @@ cache:
 services:
   - mysql
 
-#before_script:
-#  stage: setup
-#  image: php:7.4
-before_script:
-stages:
-  - setup
-  - test
-  - sast
-
-cache:
-  paths:
-    - vendor/
-
-services:
-  - mysql
-
 before_script:
   - apt-get update -yqq > /dev/null 2>&1
   - apt-get install git -yqq > /dev/null 2>&1
@@ -44,6 +28,8 @@ before_script:
   - mv wp-cli.phar /usr/local/bin/wp > /dev/null 2>&1
   - wp core download --allow-root > /dev/null 2>&1
   - wp core config --dbhost=mysql --dbname=$DB_NAME --dbuser=$DB_USER --dbpass=$DB_PASS --allow-root > /dev/null 2>&1
+    # Disable WordPress debugging (should still display fatal errors
+  - wp config set WP_DEBUG false --raw --type=constant --allow-root > /dev/null 2>&1
   - wp config list --allow-root > /dev/null 2>&1
   - wp core install --url=http://localhost --title=Example --admin_user=$ADMIN_USER --admin_password=$ADMIN_PASSWORD --admin_email=$ADMIN_EMAIL --allow-root > /dev/null 2>&1
   - zip -r really-simple-ssl.zip . > /dev/null 2>&1
