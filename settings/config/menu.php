@@ -108,7 +108,6 @@ function rsssl_menu() {
 							'premium_text'         => __( "Get HTTP Strict Transport Security with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
 							'upgrade'              => 'https://really-simple-ssl.com/pro/?mtm_campaign=hsts&mtm_source=free&mtm_content=upgrade',
 							'title'                => 'HTTP Strict Transport Security',
-//							'intro' => __( 'HSTS Security Headers', 'really-simple-ssl' ),
 							'helpLink' => 'https://really-simple-ssl.com/instructions/about-hsts/?mtm_campaign=instructions&mtm_source=free',
 						],
 						[
@@ -313,6 +312,26 @@ function rsssl_menu() {
 									],
 								],
 							],
+						],
+						[
+							'id'                   => 'password_security',
+							'networkwide_required' => true,
+							'premium'              => true,
+							'premium_text'         => __( 'Get Password Security with %sReally Simple SSL Pro%s', 'really-simple-ssl' ),
+							'upgrade'              => 'https://really-simple-ssl.com/pro/?mtm_campaign=passwordsecurity&mtm_source=free&mtm_content=upgrade',
+							'title'                => __('Password Security','really-simple-ssl'),
+							'helpLink'             => 'https://really-simple-ssl.com/instructions/password-security/?mtm_campaign=instructions&mtm_source=free',
+							'groups'               => [
+								[
+									'id'           => 'password_security_passwords',
+									'group_id'     => 'password_security_passwords',
+									'premium'      => true,
+									'premium_text' => __( "Get Password Security with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
+									'helpLink'     => 'https://really-simple-ssl.com/instructions/password-security/?mtm_campaign=instructions&mtm_source=free',
+									'title'        => __( 'Passwords', 'really-simple-ssl' ),
+									'intro'        => __( 'Improve security by requiring strong passwords and forced periodic password changes', 'really-simple-ssl' ),
+								],
+							]
 						],
 					],
 				],

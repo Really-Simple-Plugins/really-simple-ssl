@@ -12,7 +12,7 @@ import {useEffect, useState} from '@wordpress/element';
  * Render a grouped block of settings
  */
 const SettingsGroup = (props) => {
-    
+
     const {fields} = useFields();
     const {selectedFilter, setSelectedFilter} = filterData();
     const {licenseStatus} = useLicense();

@@ -30,7 +30,7 @@ const AddIpAddressModal = (props) => {
         let status = props.status;
         // we check if statusSelected is not empty
         if (ipAddress && maskError === false) {
-            addRow(ipAddress, status);
+            addRow(ipAddress, status, props.dataActions);
             //we clear the input
             resetRange();
             //we close the modal
@@ -79,30 +79,9 @@ const AddIpAddressModal = (props) => {
                                 showSwitch={true}
                                 value={ipAddress}
                                 onChange={(e) => setIpAddress(e.target.value)}
-                                switchValue={rangeDisplay}
-                                switchTitle={__("Use ip ranges", "really-simple-ssl")}
-                                switchAction={handleRangeFill}
                             />
                         </div>
                     </div>
-                    {rangeDisplay && (
-                        <>
-                    <hr/>
-                    <div
-                        style={{
-                            width: "95%",
-                            height: "100%",
-                            padding: "10px",
-                        }}
-                    >
-                        <p>
-                            {__("This tool calculates CIDR notation for IP ranges. If you're unfamiliar with this concept, please consult a network professional. Incorrect usage may cause network issues. Proceed with caution! ", "really-simple-ssl")}
-                        </p>
-                            <Cidr/>
-                    </div>
-                    </>
-                    )}
-
                 </div>
                 <div className="modal-footer">
                     {/*//we add two buttons here for add row and cancel*/}
