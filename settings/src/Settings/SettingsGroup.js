@@ -7,6 +7,7 @@ import useMenu from "../Menu/MenuData";
 import useLicense from "./License/LicenseData";
 import filterData from "./FilterData";
 import {useEffect, useState} from '@wordpress/element';
+import ErrorBoundary from "../utils/ErrorBoundary";
 
 /**
  * Render a grouped block of settings
