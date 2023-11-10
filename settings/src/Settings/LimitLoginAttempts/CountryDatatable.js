@@ -1,11 +1,10 @@
-import React, {useEffect, useState, useCallback, useRef} from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import DataTable, { createTheme } from "react-data-table-component";
 import FieldsData from "../FieldsData";
 import CountryDataTableStore from "./CountryDataTableStore";
 import EventLogDataTableStore from "../EventLog/EventLogDataTableStore";
 import FilterData from "../FilterData";
 import Flag from "../../utils/Flag/Flag";
-import { button } from "@wordpress/components";
 import { __ } from '@wordpress/i18n';
 import useFields from "../FieldsData";
 

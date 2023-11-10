@@ -67,7 +67,7 @@ const RiskComponent = (props) => {
     for (const key in data) {
         let dataItem = {...data[key]}
         dataItem.riskSelection = <select disabled={processing || disabled} value={dataItem.value} onChange={(e) => onChangeHandler(e.target.value, dataItem)}>
-            {options.map((option,i) => <option key={i} value={option.value} disabled={ dataItem.disabledRiskLevels &&  dataItem.disabledRiskLevels.includes(option.value)} >{option.label}</option>) }
+            {options.map((option,i) => <option key={'risk-'+i} value={option.value} disabled={ dataItem.disabledRiskLevels &&  dataItem.disabledRiskLevels.includes(option.value)} >{option.label}</option>) }
         </select>
         data[key] = dataItem;
     }

@@ -12,12 +12,11 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
 			add_filter( "rsssl_run_test", array( $this, 'mixed_content_scan' ), 9, 3 );
 			add_filter( 'rsssl_do_action', array( $this, 'learningmode_table_data' ), 10, 3 );
 
-			if ( ! class_exists('REALLY_SIMPLE_SSL_PRO' ) ) {
-				add_filter( 'rsssl_do_action', array( $this, 'two_factor_users_data' ), 11, 3 );
-			}
+			add_filter( 'rsssl_do_action', array( $this, 'two_factor_users_data' ), 11, 3 );
 
-			// really-simple-ssl-pro plugin is active
-			add_filter( 'rsssl_do_action', array( $this, 'limit_login_attempts_data' ), 11, 3 );
+                // really-simple-ssl-pro plugin is active
+            add_filter( 'rsssl_do_action', array( $this, 'limit_login_attempts_data' ), 11, 3 );
+
 			self::$_this = $this;
 
 		}
@@ -156,7 +155,6 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
                 'date'        => '2020-01-01',
 
                 ];
-
         }
 
         public function limit_login_attempts_data( array $response, string $action, $data ): array
@@ -164,13 +162,11 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
             if ( ! rsssl_user_can_manage() ) {
                 return $response;
             }
-
-	        if ( defined('rsssl_pro_version') ) {
+	        if ( defined('rsssl_pro_version')) {
 		        return $response;
 	        }
 
-
-	        switch ( $action ) {
+            switch ( $action ) {
                 case 'ip_list':
                     $response['data'] = [
                         [
@@ -312,7 +308,7 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
             }
 
             $response['pagination'] =  [
-                'totalRow' => 2,
+                'total' => 2,
                 'per_page' => 10,
                 'current_page' => 1,
                 'last_page' => 1,
@@ -476,6 +472,9 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
 		 * Dummy data for two factor Users block
 		 */
 		public function two_factor_users_data( array $response, string $action, $data ) {
+			if ( defined('rsssl_pro_version')) {
+				return $response;
+			}
 
 			if ( $action === 'two_fa_table' ) {
 
