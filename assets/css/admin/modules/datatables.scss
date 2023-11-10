@@ -111,7 +111,7 @@ nav.rdt_Pagination > div > svg {
   }
 }
 
-.rsssl-vulnerabilities_overview, .rsssl-vulnerabilities_measures, .rsssl-limit_login_attempts_country, .rsssl-limit_login_attempts_users, .rsssl-limit_login_attempts_event_log, .rsssl-mixedcontentscan, .rsssl-limit_login_attempts_ip_address, .rsssl-permissions_policy, .rsssl-content_security_policy, .rsssl-two_fa_users {
+.rsssl-vulnerabilities_overview, .rsssl-vulnerabilities_measures, .rsssl-limit_login_attempts_country, .rsssl-limit_login_attempts_users, .rsssl-limit_login_attempts_event_log, .rsssl-mixedcontentscan, .rsssl-limit_login_attempts_ip_address, .rsssl-permissions_policy, .rsssl-content_security_policy, .rsssl-two_fa_users, .rsssl-hardening_xml {
   .rsssl-field-wrap {
     margin-left: CALC(-1 * var(--rsp-spacing-l));
     margin-right: CALC(-1 * var(--rsp-spacing-l));
@@ -286,7 +286,7 @@ nav.rdt_Pagination > div > svg {
       div {
         width: 100%;
 
-        button {
+        button,a {
           margin-left: 10px;
         }
       }
@@ -296,27 +296,20 @@ nav.rdt_Pagination > div > svg {
 }
 
 /* EdgeCase: CountryTable */
-.rsssl-limit_login_attempts_country {
-
+.rsssl-vulnerabilities_measures {
+  .rdt_TableCell {
+    &:nth-child(2) {
+      select {
+        max-width: 100%;
+      }
+    }
+  }
 }
 
 /* EdgeCase: hardening_xml */
-.rsssl-hardening_xml {
-  .rsssl-field-wrap {
-    padding-inline: 0 !important;
-
-  }
-  .rdt_TableCol:first-child {
-    padding: 0 25px !important;
-  }
-  .rdt_TableCell:last-child {
-    padding: 0 25px !important;
-  }
-  .rsssl-action-buttons {
-    button.rsssl-learning-mode-delete {
-      margin-left: 0!important;
-    }
-  }
+.rsssl-hardening_xml .rsssl-field-wrap .rdt_TableCell:last-child div button,
+.rsssl-hardening_xml .rsssl-field-wrap .rdt_TableCell:last-child div a {
+  margin-left: 0;
 }
 
 /* EdgeCase: Permission_Policy */

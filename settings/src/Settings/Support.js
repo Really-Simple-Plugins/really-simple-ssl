@@ -1,4 +1,4 @@
-import {Button, TextareaControl,} from '@wordpress/components';
+import {TextareaControl,} from '@wordpress/components';
 import {__} from '@wordpress/i18n';
 import * as rsssl_api from "../utils/api";
 import {useState} from "@wordpress/element";
@@ -36,12 +36,12 @@ const Support = () => {
                     placeholder={__("Type your question here","really-simple-ssl")}
                     onChange={ ( message ) => onChangeHandler(message) }
             />
-            <Button
+            <button
+                className={"button button-secondary"}
                 disabled={disabled}
-                variant="secondary"
                 onClick={ ( e ) => onClickHandler(e) }>
                 { __( 'Send', 'really-simple-ssl' ) }
-            </Button>
+            </button>
         </>
     );
 

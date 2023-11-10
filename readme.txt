@@ -4,7 +4,7 @@ Donate link: https://www.paypal.me/reallysimplessl
 Tags: SSL, https, force SSL, mixed content, security, secure website, website security, TLS, secure socket layers, HSTS
 Requires at least: 5.8
 License: GPL2
-Tested up to: 6.3
+Tested up to: 6.4
 Requires PHP: 7.2
 Stable tag: 7.1.4
 
@@ -116,9 +116,11 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 * Fix: remove flags .js file which was added twice, props @adamainsworth
 * Fix: typo in missing advanced-headers.php notice
 * Improvement: new save & continue feedback
+* Improvement: datatable styling
 * Improvement: new react based modal
 * Improvement: menu re-structured
 * Improvement: re-check vulnerability status after core update
+* Improvement: link in the email security notification to the vulnerability page instead of to a general explanation
 
 = 7.1.3 =
 * October 11th 2023

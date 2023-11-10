@@ -7,15 +7,15 @@ import useMenu from "../Menu/MenuData";
 import useLicense from "./License/LicenseData";
 import filterData from "./FilterData";
 import {useEffect, useState} from '@wordpress/element';
-import PremiumOverlay from "./PremiumOverlay";
 import ErrorBoundary from "../utils/ErrorBoundary";
 
 /**
  * Render a grouped block of settings
  */
 const SettingsGroup = (props) => {
+
     const {fields} = useFields();
-    const {selectedFilter, setSelectedFilter, processingFilter} = filterData();
+    const {selectedFilter, setSelectedFilter} = filterData();
     const {licenseStatus} = useLicense();
     const {selectedSubMenuItem, subMenu} = useMenu();
     const [Field, setField] = useState(null);
@@ -32,7 +32,7 @@ const SettingsGroup = (props) => {
     }, [selectedFilter]);
 
 
-
+    let upgrade = 'https://really-simple-ssl.com/pro/?mtm_campaign=fallback&mtm_source=free&mtm_content=upgrade';
 
     /*
     * On reset of LE, send this info to the back-end, and redirect to the first step.
@@ -54,7 +54,6 @@ const SettingsGroup = (props) => {
     }
 
     let activeGroup;
-
     for (const item of subMenu.menu_items) {
         if (item.id === selectedSubMenuItem && item.hasOwnProperty('groups')) {
             for (const group of item.groups) {
@@ -90,13 +89,28 @@ const SettingsGroup = (props) => {
         const nestedGroup = activeGroup.groups.find(group => group.group_id === props.group);
         if (nestedGroup) {
             activeGroup = nestedGroup;
+        } else {
+            const nestedGroup = activeGroup.groups.find(group => group.group_id === props.group);
+
+        }
+    }
+
+    let msg = activeGroup.premium_text ? activeGroup.premium_text : __("Learn more about %sPremium%s", "really-simple-ssl");
+    if (rsssl_settings.pro_plugin_active) {
+        if (licenseStatus === 'empty' || licenseStatus === 'deactivated') {
+            msg = rsssl_settings.messageInactive;
+        } else {
+            msg = rsssl_settings.messageInvalid;
+        }
+        if (rsssl_settings.pro_incompatible) {
+            msg = __("You are using an incompatible version of Really Simple SSL pro. Please update to the latest version.", "really-simple-ssl");
         }
     }
 
     let disabled = (licenseStatus !== 'valid' || rsssl_settings.pro_incompatible) && activeGroup.premium;
     //if a feature can only be used on networkwide or single site setups, pass that info here.
     let networkwide_error = !rsssl_settings.networkwide_active && activeGroup.networkwide_required;
-
+    upgrade = activeGroup.upgrade ? activeGroup.upgrade : upgrade;
     let helplinkText = activeGroup.helpLink_text ? activeGroup.helpLink_text : __("Instructions", "really-simple-ssl");
     let anchor = getAnchor('main');
     let disabledClass = disabled || networkwide_error ? 'rsssl-disabled' : '';
@@ -112,7 +126,6 @@ const SettingsGroup = (props) => {
                                 id={filterId}
                                 name={filterId}
                                 value={selectedFilter[filterId]}
-                                disabled={processingFilter}
                                 onChange={(e) => {
                                     const selectedValue = e.target.value;
                                     setSelectedFilter(selectedValue, filterId);
@@ -121,7 +134,7 @@ const SettingsGroup = (props) => {
                                 {activeGroup.groupFilter.options.map((option) => (
                                     //if the value is equal to the selected value, set it as selected
                                     <option
-                                        key={option.id}
+                                        key={'option-'+option.id}
                                         value={option.id}
                                     >
                                         {option.title}
@@ -146,18 +159,25 @@ const SettingsGroup = (props) => {
                 </div>}
             </div>}
             <div className="rsssl-grid-item-content">
-                {(activeGroup.intro && typeof activeGroup.intro === 'string') && <div className="rsssl-settings-block-intro">{activeGroup.intro}</div>}
-                {(activeGroup.intro &&  typeof activeGroup.intro === 'object') && <div className="rsssl-settings-block-intro">{updatedIntro}</div>}
+                {(activeGroup.intro && typeof activeGroup.intro === 'string') && <ErrorBoundary fallback={"Could not load group intro"}>
+                    {(activeGroup.intro && typeof activeGroup.intro === 'string') && <div className="rsssl-settings-block-intro">{activeGroup.intro}</div>}
+                    {(activeGroup.intro &&  typeof activeGroup.intro === 'object') && <div className="rsssl-settings-block-intro">{updatedIntro}</div>}
+                </ErrorBoundary>}
+
                 {Field && selectedFields.map((field, i) =>
                         <Field key={"selectedFields-" + i} index={i} field={field} fields={selectedFields}/>
                 )}
             </div>
-            {disabled && !networkwide_error && <PremiumOverlay
-                msg={activeGroup.premium_text}
-                title={activeGroup.premium_title ? activeGroup.premium_title : activeGroup.title}
-                upgrade={activeGroup.upgrade}
-                url={activeGroup.upgrade}
-            />}
+            {disabled && !networkwide_error && <div className="rsssl-locked">
+                <div className="rsssl-locked-overlay">
+                    <span className="rsssl-task-status rsssl-premium">{__("Upgrade", "really-simple-ssl")}</span>
+                    <span>
+                        {rsssl_settings.pro_plugin_active && <span>{msg}&nbsp;<a className="rsssl-locked-link"
+                                                                                 href="#settings/license">{__("Check license", "really-simple-ssl")}</a></span>}
+                        {!rsssl_settings.pro_plugin_active && <Hyperlink target="_blank" text={msg} url={upgrade}/>}
+                    </span>
+                </div>
+            </div>}
             {networkwide_error && <div className="rsssl-locked">
                 <div className="rsssl-locked-overlay">
                     <span

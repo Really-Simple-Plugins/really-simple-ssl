@@ -20,8 +20,8 @@ const Button = (props) => {
             let label = response.success ? 'success' : 'warning';
             let title = response.title;
             let text = response.message;
-            addHelpNotice(props.field.id, label, text, title, false);
             setProcessing(false);
+            addHelpNotice(props.field.id, label, text, title, false);
         });
     }
 
