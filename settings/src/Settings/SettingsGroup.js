@@ -143,7 +143,7 @@ const SettingsGroup = (props) => {
                             </select>
                     </div>
                 )}
-                {activeGroup.helpLink && anchor !== 'letsencrypt' && (
+                {!activeGroup.groupFilter && activeGroup.helpLink && anchor !== 'letsencrypt' && (
                     <div className="rsssl-grid-item-controls">
                         <Hyperlink
                             target="_blank"
