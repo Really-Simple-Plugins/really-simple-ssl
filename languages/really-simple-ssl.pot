@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-11-10T13:48:25+00:00\n"
+"POT-Creation-Date: 2023-11-10T14:19:37+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.8.1\n"
 "X-Domain: really-simple-ssl\n"
@@ -66,9 +66,9 @@ msgid "View"
 msgstr ""
 
 #: class-admin.php:479
+#: settings/build/94.5ae971a2683d6ecc6440.js:1
 #: settings/build/641.d81ddf3ecafb9aff3560.js:1
 #: settings/build/688.34c4ba56bd822867486e.js:1
-#: settings/build/772.a9e1a2ce87bdc29e0c7d.js:1
 #: settings/src/Dashboard/TaskElement.js:49
 #: settings/src/Settings/Help.js:23
 msgid "More info"
@@ -111,11 +111,9 @@ msgstr ""
 
 #: class-admin.php:1805
 #: settings/build/688.34c4ba56bd822867486e.js:1
-#: settings/build/772.a9e1a2ce87bdc29e0c7d.js:1
 #: settings/build/829.d97408105d73a09f9412.js:1
 #: settings/src/Dashboard/OtherPlugins/OtherPlugins.js:21
 #: settings/src/Menu/Menu.js:28
-#: settings/src/Settings/SettingsGroup.js:173
 msgid "Upgrade"
 msgstr ""
 
@@ -383,7 +381,7 @@ msgstr ""
 
 #: class-admin.php:2628
 #: class-multisite.php:223
-#: settings/build/index.a3c722d67c1dace49a87.js:1
+#: settings/build/index.a364d105d709682e2514.js:1
 #: settings/src/Header.js:36
 msgid "Support"
 msgstr ""
@@ -1209,8 +1207,8 @@ msgstr ""
 
 #: lets-encrypt/functions.php:369
 #: lets-encrypt/functions.php:370
-#: settings/build/772.a9e1a2ce87bdc29e0c7d.js:1
-#: settings/src/Settings/SettingsGroup.js:114
+#: settings/build/94.5ae971a2683d6ecc6440.js:1
+#: settings/src/Settings/SettingsGroup.js:115
 msgid "Instructions"
 msgstr ""
 
@@ -2915,7 +2913,7 @@ msgid "Debugging with Really Simple SSL"
 msgstr ""
 
 #: settings/config/menu.php:60
-#: settings/build/index.a3c722d67c1dace49a87.js:1
+#: settings/build/index.a364d105d709682e2514.js:1
 #: settings/src/Header.js:31
 msgid "Let's Encrypt"
 msgstr ""
@@ -2996,7 +2994,7 @@ msgstr ""
 
 #: settings/config/menu.php:191
 #: settings/config/menu.php:196
-#: settings/build/772.a9e1a2ce87bdc29e0c7d.js:1
+#: settings/build/94.5ae971a2683d6ecc6440.js:1
 #: settings/src/Settings/Settings.js:164
 msgid "Notifications"
 msgstr ""
@@ -3464,6 +3462,96 @@ msgstr ""
 #: modal/build/index.7baa22d2f235f90d6196.js:1
 #: modal/src/components/DeactivationModal/DeactivationModal.js:55
 msgid "Please choose the correct deactivation method, and before you go; you will miss out on below and future features in Really Simple Security"
+msgstr ""
+
+#: settings/build/94.5ae971a2683d6ecc6440.js:1
+#: settings/src/LetsEncrypt/letsEncryptData.js:15
+msgid "Switched to Directory"
+msgstr ""
+
+#: settings/build/94.5ae971a2683d6ecc6440.js:1
+#: settings/src/LetsEncrypt/letsEncryptData.js:15
+msgid "Switched to DNS"
+msgstr ""
+
+#: settings/build/94.5ae971a2683d6ecc6440.js:1
+#: settings/src/Settings/PremiumOverlay.js:9
+#: settings/src/Settings/SettingsGroup.js:99
+msgid "Learn more about %sPremium%s"
+msgstr ""
+
+#: settings/build/94.5ae971a2683d6ecc6440.js:1
+#: settings/src/Settings/PremiumOverlay.js:17
+#: settings/src/Settings/SettingsGroup.js:107
+msgid "You are using an incompatible version of Really Simple SSL pro. Please update to the latest version."
+msgstr ""
+
+#: settings/build/94.5ae971a2683d6ecc6440.js:1
+#: settings/src/Settings/PremiumOverlay.js:31
+msgid "Check license"
+msgstr ""
+
+#: settings/build/94.5ae971a2683d6ecc6440.js:1
+#: settings/build/688.34c4ba56bd822867486e.js:1
+#: settings/build/index.a364d105d709682e2514.js:1
+#: settings/src/Dashboard/Progress/ProgressFooter.js:26
+#: settings/src/Header.js:41
+#: settings/src/Settings/PremiumOverlay.js:43
+msgid "Go Pro"
+msgstr ""
+
+#: settings/build/94.5ae971a2683d6ecc6440.js:1
+#: settings/src/Settings/SettingsGroup.js:159
+msgid "Reset Let's Encrypt"
+msgstr ""
+
+#: settings/build/94.5ae971a2683d6ecc6440.js:1
+#: settings/src/Settings/SettingsGroup.js:182
+msgid "Network feature"
+msgstr ""
+
+#: settings/build/94.5ae971a2683d6ecc6440.js:1
+#: settings/build/641.d81ddf3ecafb9aff3560.js:1
+#: settings/src/Settings/Field.js:129
+#: settings/src/Settings/SettingsGroup.js:183
+msgid "This feature is only available networkwide."
+msgstr ""
+
+#: settings/build/94.5ae971a2683d6ecc6440.js:1
+#: settings/build/641.d81ddf3ecafb9aff3560.js:1
+#: settings/src/Settings/Field.js:130
+#: settings/src/Settings/SettingsGroup.js:184
+msgid "Network settings"
+msgstr ""
+
+#: settings/build/94.5ae971a2683d6ecc6440.js:1
+#: settings/src/Settings/Settings.js:116
+msgid "Save"
+msgstr ""
+
+#: settings/build/94.5ae971a2683d6ecc6440.js:1
+#: settings/src/Settings/Settings.js:119
+msgid "Refresh"
+msgstr ""
+
+#: settings/build/94.5ae971a2683d6ecc6440.js:1
+#: settings/src/Settings/Settings.js:138
+msgid "Previous"
+msgstr ""
+
+#: settings/build/94.5ae971a2683d6ecc6440.js:1
+#: settings/src/Settings/Settings.js:153
+msgid "Save and Continue"
+msgstr ""
+
+#: settings/build/94.5ae971a2683d6ecc6440.js:1
+#: settings/src/Settings/Settings.js:167
+msgid "Expand all"
+msgstr ""
+
+#: settings/build/94.5ae971a2683d6ecc6440.js:1
+#: settings/src/Settings/Settings.js:168
+msgid "Collapse all"
 msgstr ""
 
 #: settings/build/187.c8f8487a25b28518fe1f.js:1
@@ -4251,20 +4339,6 @@ msgstr ""
 msgid "Loading..."
 msgstr ""
 
-#: settings/build/641.d81ddf3ecafb9aff3560.js:1
-#: settings/build/772.a9e1a2ce87bdc29e0c7d.js:1
-#: settings/src/Settings/Field.js:129
-#: settings/src/Settings/SettingsGroup.js:185
-msgid "This feature is only available networkwide."
-msgstr ""
-
-#: settings/build/641.d81ddf3ecafb9aff3560.js:1
-#: settings/build/772.a9e1a2ce87bdc29e0c7d.js:1
-#: settings/src/Settings/Field.js:130
-#: settings/src/Settings/SettingsGroup.js:186
-msgid "Network settings"
-msgstr ""
-
 #: settings/build/688.34c4ba56bd822867486e.js:1
 #: settings/src/Dashboard/Progress/ProgressBlockHeader.js:37
 msgid "Progress"
@@ -4288,14 +4362,6 @@ msgstr ""
 #: settings/build/688.34c4ba56bd822867486e.js:1
 #: settings/src/Dashboard/Progress/ProgressFooter.js:15
 msgid "SSL not activated"
-msgstr ""
-
-#: settings/build/688.34c4ba56bd822867486e.js:1
-#: settings/build/index.a3c722d67c1dace49a87.js:1
-#: settings/src/Dashboard/Progress/ProgressFooter.js:26
-#: settings/src/Header.js:41
-#: settings/src/Settings/PremiumOverlay.js:43
-msgid "Go Pro"
 msgstr ""
 
 #: settings/build/688.34c4ba56bd822867486e.js:1
@@ -4417,7 +4483,7 @@ msgid "You have %s %d"
 msgstr ""
 
 #: settings/build/688.34c4ba56bd822867486e.js:1
-#: settings/build/index.a3c722d67c1dace49a87.js:1
+#: settings/build/index.a364d105d709682e2514.js:1
 #: settings/src/Dashboard/TipsTricks/TipsTricksFooter.js:8
 #: settings/src/Header.js:29
 msgid "Documentation"
@@ -4439,74 +4505,6 @@ msgstr ""
 msgid "Tips & Tricks"
 msgstr ""
 
-#: settings/build/772.a9e1a2ce87bdc29e0c7d.js:1
-#: settings/src/LetsEncrypt/letsEncryptData.js:15
-msgid "Switched to Directory"
-msgstr ""
-
-#: settings/build/772.a9e1a2ce87bdc29e0c7d.js:1
-#: settings/src/LetsEncrypt/letsEncryptData.js:15
-msgid "Switched to DNS"
-msgstr ""
-
-#: settings/build/772.a9e1a2ce87bdc29e0c7d.js:1
-#: settings/src/Settings/PremiumOverlay.js:9
-#: settings/src/Settings/SettingsGroup.js:98
-msgid "Learn more about %sPremium%s"
-msgstr ""
-
-#: settings/build/772.a9e1a2ce87bdc29e0c7d.js:1
-#: settings/src/Settings/PremiumOverlay.js:17
-#: settings/src/Settings/SettingsGroup.js:106
-msgid "You are using an incompatible version of Really Simple SSL pro. Please update to the latest version."
-msgstr ""
-
-#: settings/build/772.a9e1a2ce87bdc29e0c7d.js:1
-#: settings/src/Settings/SettingsGroup.js:158
-msgid "Reset Let's Encrypt"
-msgstr ""
-
-#: settings/build/772.a9e1a2ce87bdc29e0c7d.js:1
-#: settings/src/Settings/PremiumOverlay.js:31
-#: settings/src/Settings/SettingsGroup.js:176
-msgid "Check license"
-msgstr ""
-
-#: settings/build/772.a9e1a2ce87bdc29e0c7d.js:1
-#: settings/src/Settings/SettingsGroup.js:184
-msgid "Network feature"
-msgstr ""
-
-#: settings/build/772.a9e1a2ce87bdc29e0c7d.js:1
-#: settings/src/Settings/Settings.js:116
-msgid "Save"
-msgstr ""
-
-#: settings/build/772.a9e1a2ce87bdc29e0c7d.js:1
-#: settings/src/Settings/Settings.js:119
-msgid "Refresh"
-msgstr ""
-
-#: settings/build/772.a9e1a2ce87bdc29e0c7d.js:1
-#: settings/src/Settings/Settings.js:138
-msgid "Previous"
-msgstr ""
-
-#: settings/build/772.a9e1a2ce87bdc29e0c7d.js:1
-#: settings/src/Settings/Settings.js:153
-msgid "Save and Continue"
-msgstr ""
-
-#: settings/build/772.a9e1a2ce87bdc29e0c7d.js:1
-#: settings/src/Settings/Settings.js:167
-msgid "Expand all"
-msgstr ""
-
-#: settings/build/772.a9e1a2ce87bdc29e0c7d.js:1
-#: settings/src/Settings/Settings.js:168
-msgid "Collapse all"
-msgstr ""
-
 #: settings/build/829.d97408105d73a09f9412.js:1
 #: settings/src/Menu/MenuItem.js:27
 #: settings/src/Menu/MenuItem.js:36
@@ -4519,78 +4517,78 @@ msgstr ""
 msgid "New"
 msgstr ""
 
-#: settings/build/index.a3c722d67c1dace49a87.js:1
+#: settings/build/index.a364d105d709682e2514.js:1
 #: settings/src/Onboarding/OnboardingData.js:164
 msgid "Re-checking SSL certificate, please wait..."
 msgstr ""
 
-#: settings/build/index.a3c722d67c1dace49a87.js:1
+#: settings/build/index.a364d105d709682e2514.js:1
 #: settings/src/Settings/FieldsData.js:182
 msgid "Saving settings..."
 msgstr ""
 
-#: settings/build/index.a3c722d67c1dace49a87.js:1
+#: settings/build/index.a364d105d709682e2514.js:1
 #: settings/src/Settings/FieldsData.js:183
 #: settings/src/Settings/FieldsData.js:205
 msgid "Settings saved"
 msgstr ""
 
-#: settings/build/index.a3c722d67c1dace49a87.js:1
+#: settings/build/index.a364d105d709682e2514.js:1
 #: settings/src/Settings/FieldsData.js:184
 msgid "Something went wrong"
 msgstr ""
 
-#: settings/build/index.a3c722d67c1dace49a87.js:1
+#: settings/build/index.a364d105d709682e2514.js:1
 #: settings/src/Settings/FieldsData.js:284
 msgid "Settings Saved"
 msgstr ""
 
-#: settings/build/index.a3c722d67c1dace49a87.js:1
+#: settings/build/index.a364d105d709682e2514.js:1
 #: settings/src/utils/Error.js:12
 msgid "Please check if security settings on the server or a plugin is blocking the requests from Really Simple SSL."
 msgstr ""
 
-#: settings/build/index.a3c722d67c1dace49a87.js:1
+#: settings/build/index.a364d105d709682e2514.js:1
 #: settings/src/utils/Error.js:20
 msgid "The Really Simple SSL Rest API is disabled."
 msgstr ""
 
-#: settings/build/index.a3c722d67c1dace49a87.js:1
+#: settings/build/index.a364d105d709682e2514.js:1
 #: settings/src/utils/Error.js:22
 msgid "The Really Simple SSL Rest API returned a not found."
 msgstr ""
 
-#: settings/build/index.a3c722d67c1dace49a87.js:1
+#: settings/build/index.a364d105d709682e2514.js:1
 #: settings/src/utils/Error.js:24
 msgid "The Really Simple SSL Rest API returned a 403 forbidden error."
 msgstr ""
 
-#: settings/build/index.a3c722d67c1dace49a87.js:1
+#: settings/build/index.a364d105d709682e2514.js:1
 #: settings/src/utils/Error.js:35
 msgid "A problem was detected during the loading of the settings"
 msgstr ""
 
-#: settings/build/index.a3c722d67c1dace49a87.js:1
+#: settings/build/index.a364d105d709682e2514.js:1
 #: settings/src/utils/Error.js:41
 msgid "The request returned the following errors:"
 msgstr ""
 
-#: settings/build/index.a3c722d67c1dace49a87.js:1
+#: settings/build/index.a364d105d709682e2514.js:1
 #: settings/src/utils/Error.js:43
 msgid "Response code:"
 msgstr ""
 
-#: settings/build/index.a3c722d67c1dace49a87.js:1
+#: settings/build/index.a364d105d709682e2514.js:1
 #: settings/src/utils/Error.js:44
 msgid "Status code:"
 msgstr ""
 
-#: settings/build/index.a3c722d67c1dace49a87.js:1
+#: settings/build/index.a364d105d709682e2514.js:1
 #: settings/src/utils/Error.js:45
 msgid "Server response:"
 msgstr ""
 
-#: settings/build/index.a3c722d67c1dace49a87.js:1
+#: settings/build/index.a364d105d709682e2514.js:1
 #: settings/src/utils/Error.js:48
 msgid "More information"
 msgstr ""
