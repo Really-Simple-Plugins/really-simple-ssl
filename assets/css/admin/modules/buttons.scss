@@ -69,14 +69,7 @@
   cursor: pointer;
 }
 
-
 .rsssl-action-buttons {
-  /* Making sure we use the full width of the container */
-  display: flex;
-  justify-content: flex-end;
-}
-
-.rsssl-action-buttons__inner {
   display: flex;
   justify-content: flex-end;
 }
