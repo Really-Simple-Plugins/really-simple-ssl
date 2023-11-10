@@ -344,7 +344,7 @@ function rsssl_menu() {
 					[
 						'id'           => 'limit_login_attempts_general',
 						'group_id'     => 'limit_login_attempts_general',
-						'helpLink'     => 'https://really-simple-ssl.com/knowledge-base/limit-login-attempts/?mtm_campaign=instructions&mtm_source=free',
+						'helpLink'     => 'https://really-simple-ssl.com/instructions/limit-login-attempts/?mtm_campaign=instructions&mtm_source=free',
 						'premium'      => true,
 						'title'        => __( 'General', 'really-simple-ssl' ),
 						'intro'        => __( 'Protect your site against brute force login attacks by limiting the number of login attempts. Enabling this feature will temporary lock-out a username and the IP address that tries to login, after the set number of false logins.',
@@ -356,7 +356,7 @@ function rsssl_menu() {
 						'id'           => 'limit_login_attempts_advanced',
 						'group_id'     => 'limit_login_attempts_advanced',
 						'premium'      => true,
-						'helpLink'     => 'https://really-simple-ssl.com/knowledge-base/limit-login-attempts/?mtm_campaign=instructions&mtm_source=free',
+						'helpLink'     => 'https://really-simple-ssl.com/instructions/limit-login-attempts/?mtm_campaign=instructions&mtm_source=free',
 						'title'        => __( 'Limit Attempts', 'really-simple-ssl' ),
 						'intro'        => __( 'The settings below determine how strict your site will be protected. You can leave these settings on their default values, unless you experience issues.',
 							'really-simple-ssl' ),
