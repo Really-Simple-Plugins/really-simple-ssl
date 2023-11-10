@@ -8,6 +8,7 @@ import useLicense from "./License/LicenseData";
 import filterData from "./FilterData";
 import {useEffect, useState} from '@wordpress/element';
 import ErrorBoundary from "../utils/ErrorBoundary";
+import PremiumOverlay from "./PremiumOverlay";
 
 /**
  * Render a grouped block of settings
@@ -168,16 +169,13 @@ const SettingsGroup = (props) => {
                         <Field key={"selectedFields-" + i} index={i} field={field} fields={selectedFields}/>
                 )}
             </div>
-            {disabled && !networkwide_error && <div className="rsssl-locked">
-                <div className="rsssl-locked-overlay">
-                    <span className="rsssl-task-status rsssl-premium">{__("Upgrade", "really-simple-ssl")}</span>
-                    <span>
-                        {rsssl_settings.pro_plugin_active && <span>{msg}&nbsp;<a className="rsssl-locked-link"
-                                                                                 href="#settings/license">{__("Check license", "really-simple-ssl")}</a></span>}
-                        {!rsssl_settings.pro_plugin_active && <Hyperlink target="_blank" text={msg} url={upgrade}/>}
-                    </span>
-                </div>
-            </div>}
+            {disabled && !networkwide_error && <PremiumOverlay
+                msg={activeGroup.premium_text}
+                title={activeGroup.premium_title ? activeGroup.premium_title : activeGroup.title}
+                upgrade={activeGroup.upgrade}
+                url={activeGroup.upgrade}
+            />}
+
             {networkwide_error && <div className="rsssl-locked">
                 <div className="rsssl-locked-overlay">
                     <span
