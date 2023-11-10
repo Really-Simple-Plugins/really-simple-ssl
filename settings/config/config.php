@@ -240,7 +240,7 @@ function rsssl_fields( $load_values = true ) {
 				'15' => sprintf('%d %s', 15, __('attempts', 'really-simple-ssl')),
 			],
 			'disabled'         => false,
-			'default'          => '3',
+			'default'          => '5',
 			'react_conditions' => [
 				'relation' => 'AND',
 				[
@@ -264,7 +264,7 @@ function rsssl_fields( $load_values = true ) {
 					'1440' => sprintf('%d %s', 1, __(' day', 'really-simple-ssl')),
 			],
 			'disabled'         => false,
-			'default'          => '30',
+			'default'          => '15',
 			'react_conditions' => [
 				'relation' => 'AND',
 				[
