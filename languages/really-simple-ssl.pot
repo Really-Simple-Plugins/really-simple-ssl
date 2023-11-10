@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-11-10T11:28:57+00:00\n"
+"POT-Creation-Date: 2023-11-10T13:48:25+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.8.1\n"
 "X-Domain: really-simple-ssl\n"
@@ -68,7 +68,7 @@ msgstr ""
 #: class-admin.php:479
 #: settings/build/641.d81ddf3ecafb9aff3560.js:1
 #: settings/build/688.34c4ba56bd822867486e.js:1
-#: settings/build/772.4347b97be312a4509404.js:1
+#: settings/build/772.a9e1a2ce87bdc29e0c7d.js:1
 #: settings/src/Dashboard/TaskElement.js:49
 #: settings/src/Settings/Help.js:23
 msgid "More info"
@@ -111,7 +111,7 @@ msgstr ""
 
 #: class-admin.php:1805
 #: settings/build/688.34c4ba56bd822867486e.js:1
-#: settings/build/772.4347b97be312a4509404.js:1
+#: settings/build/772.a9e1a2ce87bdc29e0c7d.js:1
 #: settings/build/829.d97408105d73a09f9412.js:1
 #: settings/src/Dashboard/OtherPlugins/OtherPlugins.js:21
 #: settings/src/Menu/Menu.js:28
@@ -383,7 +383,7 @@ msgstr ""
 
 #: class-admin.php:2628
 #: class-multisite.php:223
-#: settings/build/index.9500c5f33ab1c1f737b1.js:1
+#: settings/build/index.a3c722d67c1dace49a87.js:1
 #: settings/src/Header.js:36
 msgid "Support"
 msgstr ""
@@ -893,7 +893,7 @@ msgid "I don't know, or not listed, proceed with installation"
 msgstr ""
 
 #: lets-encrypt/config/fields.php:8
-#: settings/config/menu.php:502
+#: settings/config/menu.php:504
 msgid "System Status"
 msgstr ""
 
@@ -902,7 +902,7 @@ msgid "General settings"
 msgstr ""
 
 #: lets-encrypt/config/fields.php:17
-#: settings/config/menu.php:520
+#: settings/config/menu.php:522
 msgid "Directories"
 msgstr ""
 
@@ -911,12 +911,12 @@ msgid "DNS Verification"
 msgstr ""
 
 #: lets-encrypt/config/fields.php:25
-#: settings/config/menu.php:530
+#: settings/config/menu.php:532
 msgid "Generation"
 msgstr ""
 
 #: lets-encrypt/config/fields.php:29
-#: settings/config/menu.php:535
+#: settings/config/menu.php:537
 msgid "Installation"
 msgstr ""
 
@@ -1209,7 +1209,7 @@ msgstr ""
 
 #: lets-encrypt/functions.php:369
 #: lets-encrypt/functions.php:370
-#: settings/build/772.4347b97be312a4509404.js:1
+#: settings/build/772.a9e1a2ce87bdc29e0c7d.js:1
 #: settings/src/Settings/SettingsGroup.js:114
 msgid "Instructions"
 msgstr ""
@@ -1584,7 +1584,7 @@ msgid "Activate our plugin %s"
 msgstr ""
 
 #: onboarding/class-onboarding.php:354
-#: settings/config/menu.php:540
+#: settings/config/menu.php:542
 #: settings/build/641.d81ddf3ecafb9aff3560.js:1
 #: settings/build/688.34c4ba56bd822867486e.js:1
 #: settings/src/Dashboard/OtherPlugins/OtherPluginsData.js:74
@@ -2193,7 +2193,7 @@ msgstr ""
 #: settings/config/config.php:298
 #: settings/config/config.php:344
 #: settings/config/config.php:390
-#: settings/config/menu.php:468
+#: settings/config/menu.php:465
 #: settings/build/641.d81ddf3ecafb9aff3560.js:1
 #: settings/src/Settings/LearningMode/LearningMode.js:141
 msgid "Blocked"
@@ -2208,8 +2208,8 @@ msgstr ""
 #: settings/config/config.php:300
 #: settings/config/config.php:346
 #: settings/config/config.php:392
-#: settings/config/menu.php:380
-#: settings/config/menu.php:414
+#: settings/config/menu.php:377
+#: settings/config/menu.php:411
 msgid "Trusted"
 msgstr ""
 
@@ -2600,7 +2600,7 @@ msgstr ""
 
 #: settings/config/config.php:1110
 #: settings/config/menu.php:293
-#: settings/config/menu.php:388
+#: settings/config/menu.php:385
 msgid "Users"
 msgstr ""
 
@@ -2890,7 +2890,7 @@ msgstr ""
 #: settings/config/menu.php:23
 #: settings/config/menu.php:29
 #: settings/config/menu.php:275
-#: settings/config/menu.php:349
+#: settings/config/menu.php:346
 msgid "General"
 msgstr ""
 
@@ -2915,7 +2915,7 @@ msgid "Debugging with Really Simple SSL"
 msgstr ""
 
 #: settings/config/menu.php:60
-#: settings/build/index.9500c5f33ab1c1f737b1.js:1
+#: settings/build/index.a3c722d67c1dace49a87.js:1
 #: settings/src/Header.js:31
 msgid "Let's Encrypt"
 msgstr ""
@@ -2996,7 +2996,7 @@ msgstr ""
 
 #: settings/config/menu.php:191
 #: settings/config/menu.php:196
-#: settings/build/772.4347b97be312a4509404.js:1
+#: settings/build/772.a9e1a2ce87bdc29e0c7d.js:1
 #: settings/src/Settings/Settings.js:164
 msgid "Notifications"
 msgstr ""
@@ -3113,74 +3113,74 @@ msgstr ""
 msgid "Improve security by requiring strong passwords and forced periodic password changes"
 msgstr ""
 
-#: settings/config/menu.php:341
+#: settings/config/menu.php:338
 msgid "Limit Login Attempts"
 msgstr ""
 
-#: settings/config/menu.php:350
+#: settings/config/menu.php:347
 msgid "Protect your site against brute force login attacks by limiting the number of login attempts. Enabling this feature will temporary lock-out a username and the IP address that tries to login, after the set number of false logins."
 msgstr ""
 
-#: settings/config/menu.php:352
-#: settings/config/menu.php:363
-#: settings/config/menu.php:397
-#: settings/config/menu.php:431
-#: settings/config/menu.php:455
-#: settings/config/menu.php:483
+#: settings/config/menu.php:349
+#: settings/config/menu.php:360
+#: settings/config/menu.php:394
+#: settings/config/menu.php:428
+#: settings/config/menu.php:452
+#: settings/config/menu.php:480
 msgid "Get Limit Login Attempts with %sReally Simple SSL Pro%s"
 msgstr ""
 
-#: settings/config/menu.php:360
+#: settings/config/menu.php:357
 msgid "Limit Attempts"
 msgstr ""
 
-#: settings/config/menu.php:361
+#: settings/config/menu.php:358
 msgid "The settings below determine how strict your site will be protected. You can leave these settings on their default values, unless you experience issues."
 msgstr ""
 
-#: settings/config/menu.php:376
-#: settings/config/menu.php:410
+#: settings/config/menu.php:373
+#: settings/config/menu.php:407
 msgid "Permanent block"
 msgstr ""
 
-#: settings/config/menu.php:384
-#: settings/config/menu.php:418
+#: settings/config/menu.php:381
+#: settings/config/menu.php:415
 msgid "Temporary block"
 msgstr ""
 
-#: settings/config/menu.php:390
+#: settings/config/menu.php:387
 msgid "Blocked usernames will be automatically unblocked after the above-configured interval. In the table below you can instantly unblock usernames."
 msgstr ""
 
-#: settings/config/menu.php:392
+#: settings/config/menu.php:389
 msgid "You can prevent usernames from being temporarily blocked by adding them to this list. The IP address that triggers false logins will still be blocked."
 msgstr ""
 
-#: settings/config/menu.php:394
+#: settings/config/menu.php:391
 msgid "You can add any non-existing username to this table, to instantly block IP addresses that try common usernames like \"admin\"."
 msgstr ""
 
-#: settings/config/menu.php:422
+#: settings/config/menu.php:419
 msgid "IP Addresses"
 msgstr ""
 
-#: settings/config/menu.php:424
+#: settings/config/menu.php:421
 msgid "Blocked IP addresses will be automatically unblocked after the above-configured interval. In the table below you can instantly unblock IP addresses."
 msgstr ""
 
-#: settings/config/menu.php:426
+#: settings/config/menu.php:423
 msgid "You can prevent IP addresses from being temporarily blocked by adding them to this list. This can be convenient if you share an IP address with other site users. Usernames that trigger false logins will still be blocked."
 msgstr ""
 
-#: settings/config/menu.php:428
+#: settings/config/menu.php:425
 msgid "You can indefinitely block known abusive IP addresses, to completely prevent them from trying to login."
 msgstr ""
 
-#: settings/config/menu.php:444
+#: settings/config/menu.php:441
 msgid "Warnings"
 msgstr ""
 
-#: settings/config/menu.php:448
+#: settings/config/menu.php:445
 #: settings/build/641.d81ddf3ecafb9aff3560.js:1
 #: settings/src/Settings/EventLog/EventLogDataTable.js:214
 #: settings/src/Settings/LearningMode/LearningMode.js:139
@@ -3189,55 +3189,55 @@ msgstr ""
 msgid "All"
 msgstr ""
 
-#: settings/config/menu.php:452
+#: settings/config/menu.php:449
 msgid "Event Log"
 msgstr ""
 
-#: settings/config/menu.php:453
+#: settings/config/menu.php:450
 msgid "The Event Log shows all relevant events related to limit login attempts. You can filter the log using the dropdown on the top-right to only show warnings."
 msgstr ""
 
-#: settings/config/menu.php:472
+#: settings/config/menu.php:469
 msgid "Continents"
 msgstr ""
 
-#: settings/config/menu.php:476
+#: settings/config/menu.php:473
 msgid "Countries"
 msgstr ""
 
-#: settings/config/menu.php:480
+#: settings/config/menu.php:477
 msgid "Regions"
 msgstr ""
 
-#: settings/config/menu.php:481
+#: settings/config/menu.php:478
 msgid "If your site is only intended for users to login from specific geographical regions, you can entirely prevent logins from certain continents or countries."
 msgstr ""
 
-#: settings/config/menu.php:493
+#: settings/config/menu.php:495
 msgid "We have tried to make our Wizard as simple and fast as possible. Although these questions are all necessary, if there’s any way you think we can improve the plugin, please let us %sknow%s!"
 msgstr ""
 
-#: settings/config/menu.php:495
+#: settings/config/menu.php:497
 msgid " Please note that you can always save and finish the wizard later, use our %sdocumentation%s for additional information or log a %ssupport ticket%s if you need our assistance."
 msgstr ""
 
-#: settings/config/menu.php:503
+#: settings/config/menu.php:505
 msgid "Letʼs Encrypt is a free, automated and open certificate authority brought to you by the nonprofit Internet Security Research Group (ISRG)."
 msgstr ""
 
-#: settings/config/menu.php:510
+#: settings/config/menu.php:512
 msgid "General Settings"
 msgstr ""
 
-#: settings/config/menu.php:514
+#: settings/config/menu.php:516
 msgid "Hosting"
 msgstr ""
 
-#: settings/config/menu.php:515
+#: settings/config/menu.php:517
 msgid "Below you will find the instructions for different hosting environments and configurations. If you start the process with the necessary instructions and credentials the next view steps will be done in no time."
 msgstr ""
 
-#: settings/config/menu.php:525
+#: settings/config/menu.php:527
 msgid "DNS verification"
 msgstr ""
 
@@ -4252,14 +4252,14 @@ msgid "Loading..."
 msgstr ""
 
 #: settings/build/641.d81ddf3ecafb9aff3560.js:1
-#: settings/build/772.4347b97be312a4509404.js:1
+#: settings/build/772.a9e1a2ce87bdc29e0c7d.js:1
 #: settings/src/Settings/Field.js:129
 #: settings/src/Settings/SettingsGroup.js:185
 msgid "This feature is only available networkwide."
 msgstr ""
 
 #: settings/build/641.d81ddf3ecafb9aff3560.js:1
-#: settings/build/772.4347b97be312a4509404.js:1
+#: settings/build/772.a9e1a2ce87bdc29e0c7d.js:1
 #: settings/src/Settings/Field.js:130
 #: settings/src/Settings/SettingsGroup.js:186
 msgid "Network settings"
@@ -4291,7 +4291,7 @@ msgid "SSL not activated"
 msgstr ""
 
 #: settings/build/688.34c4ba56bd822867486e.js:1
-#: settings/build/index.9500c5f33ab1c1f737b1.js:1
+#: settings/build/index.a3c722d67c1dace49a87.js:1
 #: settings/src/Dashboard/Progress/ProgressFooter.js:26
 #: settings/src/Header.js:41
 #: settings/src/Settings/PremiumOverlay.js:43
@@ -4417,7 +4417,7 @@ msgid "You have %s %d"
 msgstr ""
 
 #: settings/build/688.34c4ba56bd822867486e.js:1
-#: settings/build/index.9500c5f33ab1c1f737b1.js:1
+#: settings/build/index.a3c722d67c1dace49a87.js:1
 #: settings/src/Dashboard/TipsTricks/TipsTricksFooter.js:8
 #: settings/src/Header.js:29
 msgid "Documentation"
@@ -4439,70 +4439,70 @@ msgstr ""
 msgid "Tips & Tricks"
 msgstr ""
 
-#: settings/build/772.4347b97be312a4509404.js:1
+#: settings/build/772.a9e1a2ce87bdc29e0c7d.js:1
 #: settings/src/LetsEncrypt/letsEncryptData.js:15
 msgid "Switched to Directory"
 msgstr ""
 
-#: settings/build/772.4347b97be312a4509404.js:1
+#: settings/build/772.a9e1a2ce87bdc29e0c7d.js:1
 #: settings/src/LetsEncrypt/letsEncryptData.js:15
 msgid "Switched to DNS"
 msgstr ""
 
-#: settings/build/772.4347b97be312a4509404.js:1
+#: settings/build/772.a9e1a2ce87bdc29e0c7d.js:1
 #: settings/src/Settings/PremiumOverlay.js:9
 #: settings/src/Settings/SettingsGroup.js:98
 msgid "Learn more about %sPremium%s"
 msgstr ""
 
-#: settings/build/772.4347b97be312a4509404.js:1
+#: settings/build/772.a9e1a2ce87bdc29e0c7d.js:1
 #: settings/src/Settings/PremiumOverlay.js:17
 #: settings/src/Settings/SettingsGroup.js:106
 msgid "You are using an incompatible version of Really Simple SSL pro. Please update to the latest version."
 msgstr ""
 
-#: settings/build/772.4347b97be312a4509404.js:1
+#: settings/build/772.a9e1a2ce87bdc29e0c7d.js:1
 #: settings/src/Settings/SettingsGroup.js:158
 msgid "Reset Let's Encrypt"
 msgstr ""
 
-#: settings/build/772.4347b97be312a4509404.js:1
+#: settings/build/772.a9e1a2ce87bdc29e0c7d.js:1
 #: settings/src/Settings/PremiumOverlay.js:31
 #: settings/src/Settings/SettingsGroup.js:176
 msgid "Check license"
 msgstr ""
 
-#: settings/build/772.4347b97be312a4509404.js:1
+#: settings/build/772.a9e1a2ce87bdc29e0c7d.js:1
 #: settings/src/Settings/SettingsGroup.js:184
 msgid "Network feature"
 msgstr ""
 
-#: settings/build/772.4347b97be312a4509404.js:1
+#: settings/build/772.a9e1a2ce87bdc29e0c7d.js:1
 #: settings/src/Settings/Settings.js:116
 msgid "Save"
 msgstr ""
 
-#: settings/build/772.4347b97be312a4509404.js:1
+#: settings/build/772.a9e1a2ce87bdc29e0c7d.js:1
 #: settings/src/Settings/Settings.js:119
 msgid "Refresh"
 msgstr ""
 
-#: settings/build/772.4347b97be312a4509404.js:1
+#: settings/build/772.a9e1a2ce87bdc29e0c7d.js:1
 #: settings/src/Settings/Settings.js:138
 msgid "Previous"
 msgstr ""
 
-#: settings/build/772.4347b97be312a4509404.js:1
+#: settings/build/772.a9e1a2ce87bdc29e0c7d.js:1
 #: settings/src/Settings/Settings.js:153
 msgid "Save and Continue"
 msgstr ""
 
-#: settings/build/772.4347b97be312a4509404.js:1
+#: settings/build/772.a9e1a2ce87bdc29e0c7d.js:1
 #: settings/src/Settings/Settings.js:167
 msgid "Expand all"
 msgstr ""
 
-#: settings/build/772.4347b97be312a4509404.js:1
+#: settings/build/772.a9e1a2ce87bdc29e0c7d.js:1
 #: settings/src/Settings/Settings.js:168
 msgid "Collapse all"
 msgstr ""
@@ -4519,78 +4519,78 @@ msgstr ""
 msgid "New"
 msgstr ""
 
-#: settings/build/index.9500c5f33ab1c1f737b1.js:1
+#: settings/build/index.a3c722d67c1dace49a87.js:1
 #: settings/src/Onboarding/OnboardingData.js:164
 msgid "Re-checking SSL certificate, please wait..."
 msgstr ""
 
-#: settings/build/index.9500c5f33ab1c1f737b1.js:1
+#: settings/build/index.a3c722d67c1dace49a87.js:1
 #: settings/src/Settings/FieldsData.js:182
 msgid "Saving settings..."
 msgstr ""
 
-#: settings/build/index.9500c5f33ab1c1f737b1.js:1
+#: settings/build/index.a3c722d67c1dace49a87.js:1
 #: settings/src/Settings/FieldsData.js:183
 #: settings/src/Settings/FieldsData.js:205
 msgid "Settings saved"
 msgstr ""
 
-#: settings/build/index.9500c5f33ab1c1f737b1.js:1
+#: settings/build/index.a3c722d67c1dace49a87.js:1
 #: settings/src/Settings/FieldsData.js:184
 msgid "Something went wrong"
 msgstr ""
 
-#: settings/build/index.9500c5f33ab1c1f737b1.js:1
+#: settings/build/index.a3c722d67c1dace49a87.js:1
 #: settings/src/Settings/FieldsData.js:284
 msgid "Settings Saved"
 msgstr ""
 
-#: settings/build/index.9500c5f33ab1c1f737b1.js:1
+#: settings/build/index.a3c722d67c1dace49a87.js:1
 #: settings/src/utils/Error.js:12
 msgid "Please check if security settings on the server or a plugin is blocking the requests from Really Simple SSL."
 msgstr ""
 
-#: settings/build/index.9500c5f33ab1c1f737b1.js:1
+#: settings/build/index.a3c722d67c1dace49a87.js:1
 #: settings/src/utils/Error.js:20
 msgid "The Really Simple SSL Rest API is disabled."
 msgstr ""
 
-#: settings/build/index.9500c5f33ab1c1f737b1.js:1
+#: settings/build/index.a3c722d67c1dace49a87.js:1
 #: settings/src/utils/Error.js:22
 msgid "The Really Simple SSL Rest API returned a not found."
 msgstr ""
 
-#: settings/build/index.9500c5f33ab1c1f737b1.js:1
+#: settings/build/index.a3c722d67c1dace49a87.js:1
 #: settings/src/utils/Error.js:24
 msgid "The Really Simple SSL Rest API returned a 403 forbidden error."
 msgstr ""
 
-#: settings/build/index.9500c5f33ab1c1f737b1.js:1
+#: settings/build/index.a3c722d67c1dace49a87.js:1
 #: settings/src/utils/Error.js:35
 msgid "A problem was detected during the loading of the settings"
 msgstr ""
 
-#: settings/build/index.9500c5f33ab1c1f737b1.js:1
+#: settings/build/index.a3c722d67c1dace49a87.js:1
 #: settings/src/utils/Error.js:41
 msgid "The request returned the following errors:"
 msgstr ""
 
-#: settings/build/index.9500c5f33ab1c1f737b1.js:1
+#: settings/build/index.a3c722d67c1dace49a87.js:1
 #: settings/src/utils/Error.js:43
 msgid "Response code:"
 msgstr ""
 
-#: settings/build/index.9500c5f33ab1c1f737b1.js:1
+#: settings/build/index.a3c722d67c1dace49a87.js:1
 #: settings/src/utils/Error.js:44
 msgid "Status code:"
 msgstr ""
 
-#: settings/build/index.9500c5f33ab1c1f737b1.js:1
+#: settings/build/index.a3c722d67c1dace49a87.js:1
 #: settings/src/utils/Error.js:45
 msgid "Server response:"
 msgstr ""
 
-#: settings/build/index.9500c5f33ab1c1f737b1.js:1
+#: settings/build/index.a3c722d67c1dace49a87.js:1
 #: settings/src/utils/Error.js:48
 msgid "More information"
 msgstr ""
