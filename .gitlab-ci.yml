@@ -55,8 +55,7 @@ test:php7.4:
   variables:
     XDEBUG_VERSION: 3.1.6
   script:
-    - php -r "ini_set('error_reporting', E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED); error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED); set_error_handler(function (\$severity, \$message, \$file, \$line) { if (! (error_reporting() & \$severity)) { return; } throw new ErrorException(\$message, 0, \$severity, \$file, \$line); });"
-    - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
+    - vendor/bin/phpunit --bootstrap phpunit-bootstrap.php --coverage-text --coverage-clover=coverage.clove --colors=never
   rules:
   - if: "$CI_PIPELINE_SOURCE == 'merge_request_event'"
   - if: "$CI_COMMIT_BRANCH == 'master'"
@@ -67,8 +66,7 @@ test:php7.4:multisite:
     WP_MULTISITE: '1'
     XDEBUG_VERSION: 3.1.6
   script:
-    - php -r "ini_set('error_reporting', E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED); error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED); set_error_handler(function (\$severity, \$message, \$file, \$line) { if (! (error_reporting() & \$severity)) { return; } throw new ErrorException(\$message, 0, \$severity, \$file, \$line); });"
-    - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
+    - vendor/bin/phpunit --bootstrap phpunit-bootstrap.php --coverage-text --coverage-clover=coverage.clove --colors=never
   rules:
   - if: "$CI_PIPELINE_SOURCE == 'merge_request_event'"
   - if: "$CI_COMMIT_BRANCH == 'master'"
@@ -78,8 +76,7 @@ test:php8.2:
   variables:
     XDEBUG_VERSION: 3.2.1
   script:
-    - php -r "ini_set('error_reporting', E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED); error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED); set_error_handler(function (\$severity, \$message, \$file, \$line) { if (! (error_reporting() & \$severity)) { return; } throw new ErrorException(\$message, 0, \$severity, \$file, \$line); });"
-    - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
+    - vendor/bin/phpunit --bootstrap phpunit-bootstrap.php --coverage-text --coverage-clover=coverage.clove --colors=never
   rules:
   - if: "$CI_PIPELINE_SOURCE == 'merge_request_event'"
   - if: "$CI_COMMIT_BRANCH == 'master'"
@@ -90,8 +87,7 @@ test:php8.2:multisite:
     WP_MULTISITE: '1'
     XDEBUG_VERSION: 3.2.1
   script:
-    - php -r "ini_set('error_reporting', E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED); error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED); set_error_handler(function (\$severity, \$message, \$file, \$line) { if (! (error_reporting() & \$severity)) { return; } throw new ErrorException(\$message, 0, \$severity, \$file, \$line); });"
-    - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
+    - vendor/bin/phpunit --bootstrap phpunit-bootstrap.php --coverage-text --coverage-clover=coverage.clove --colors=never
   rules:
   - if: "$CI_PIPELINE_SOURCE == 'merge_request_event'"
   - if: "$CI_COMMIT_BRANCH == 'master'"
@@ -102,8 +98,7 @@ test:php8.2:wordpress5.9:
     XDEBUG_VERSION: 3.2.1
     WP_VERSION: '5.9'
   script:
-    - php -r "ini_set('error_reporting', E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED); error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED); set_error_handler(function (\$severity, \$message, \$file, \$line) { if (! (error_reporting() & \$severity)) { return; } throw new ErrorException(\$message, 0, \$severity, \$file, \$line); });"
-    - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
+    - vendor/bin/phpunit --bootstrap phpunit-bootstrap.php --coverage-text --coverage-clover=coverage.clove --colors=never
   rules:
   - if: "$CI_PIPELINE_SOURCE == 'merge_request_event'"
   - if: "$CI_COMMIT_BRANCH == 'master'"
@@ -115,8 +110,7 @@ test:php8.2:wordpress5.9:multisite:
     XDEBUG_VERSION: 3.2.1
     WP_VERSION: '5.9'
   script:
-    - php -r "ini_set('error_reporting', E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED); error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED); set_error_handler(function (\$severity, \$message, \$file, \$line) { if (! (error_reporting() & \$severity)) { return; } throw new ErrorException(\$message, 0, \$severity, \$file, \$line); });"
-    - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
+    - vendor/bin/phpunit --bootstrap phpunit-bootstrap.php --coverage-text --coverage-clover=coverage.clove --colors=never
   rules:
   - if: "$CI_PIPELINE_SOURCE == 'merge_request_event'"
   - if: "$CI_COMMIT_BRANCH == 'master'"
