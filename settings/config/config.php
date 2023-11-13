@@ -217,7 +217,7 @@ function rsssl_fields( $load_values = true ) {
 			'label'    => __('Enable Limit Login Attempts', 'really-simple-ssl'),
 			'help'     => [
 				'label' => 'default',
-				'url'   => 'https://really-simple-ssl.com/definition/what-is-a-permissions-policy/?mtm_campaign=definition&mtm_source=free',
+				'url'   => 'https://really-simple-ssl.com/instructions/limit-login-attempts/?mtm_campaign=definition&mtm_source=free',
 				'title' => __( "About Limit Login Attempts", 'really-simple-ssl' ),
 				'text'  => __( 'Browser features are plentiful, but most are not needed on your website.', 'really-simple-ssl' ).' '.__('They might be misused if you don’t actively tell the browser to disable these features.', 'really-simple-ssl' ),
 			],
@@ -1000,9 +1000,9 @@ function rsssl_fields( $load_values = true ) {
 			'default'          => false,
 			'help'     => [
 				'label' => 'default',
-				'url'   => 'https://really-simple-ssl.com/definition/what-is-a-permissions-policy/?mtm_campaign=definition&mtm_source=free',
+				'url'   => 'https://really-simple-ssl.com/definition/what-is-xml-rpc/',
 				'title' => __( "About XML-RPC", 'really-simple-ssl' ),
-				'text'  => __( 'Browser features are plentiful, but most are not needed on your website.', 'really-simple-ssl' ).' '.__('They might be misused if you don’t actively tell the browser to disable these features.', 'really-simple-ssl' ),
+				'text'  => __( 'XML-RPC is a mechanism originally implemented into WordPress to publish content without the need to actually login to the backend. It is also used to login to WordPress from devices other than desktop, or the regular wp-admin interface.', 'really-simple-ssl' ),
 			],
 			'react_conditions' => [
 				'relation' => 'AND',
@@ -1654,7 +1654,7 @@ function rsssl_fields( $load_values = true ) {
 			'label'    => __( "Enforce strong passwords", "really-simple-ssl-pro" ),
 			'help'     => [
 				'label' => 'default',
-				'url'   => 'https://really-simple-ssl.com/definition/what-is-a-permissions-policy/?mtm_campaign=definition&mtm_source=free',
+				'url'   => 'https://really-simple-ssl.com/instructions/password-security/?mtm_campaign=definition&mtm_source=free',
 				'title' => __( "Enforce Strong Passwords", 'really-simple-ssl' ),
 				'text'  => __( 'Browser features are plentiful, but most are not needed on your website.', 'really-simple-ssl' ).' '.__('They might be misused if you don’t actively tell the browser to disable these features.', 'really-simple-ssl' ),
 			],
