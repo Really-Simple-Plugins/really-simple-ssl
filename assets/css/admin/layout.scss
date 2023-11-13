@@ -140,7 +140,7 @@
   .rsssl-grid-item {
     @include rsssl-block;
     &.rsssl-disabled {
-      min-height:200px;//add min height on disabled so the settings is visible behind the locked div.
+      min-height:320px;//add min height on disabled so the settings is visible behind the locked div.
     }
     display: flex;
     flex-wrap: wrap;

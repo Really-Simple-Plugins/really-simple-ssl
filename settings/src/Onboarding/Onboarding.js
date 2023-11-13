@@ -118,9 +118,13 @@ const Onboarding = ({isModal}) => {
                 await fetchVulnerabilities();
                 await getProgressData();
             }
+
+            if ( sslEnabled ) {
+                await getProgressData();
+            }
         }
         runUpdate();
-    }, [hardeningEnabled, vulnerabilityDetectionEnabled])
+    }, [hardeningEnabled, vulnerabilityDetectionEnabled, sslEnabled])
 
     const parseStepItems = (items) => {
         return items && items.map( (item, index) => {
@@ -176,9 +180,6 @@ const Onboarding = ({isModal}) => {
             )
         })
     }
-
-
-
 
     if (error){
         return (
