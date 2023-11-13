@@ -215,6 +215,12 @@ function rsssl_fields( $load_values = true ) {
 			'group_id' => 'limit_login_attempts_general',
 			'type'     => 'checkbox',
 			'label'    => __('Enable Limit Login Attempts', 'really-simple-ssl'),
+			'help'     => [
+				'label' => 'default',
+				'url'   => 'https://really-simple-ssl.com/definition/what-is-a-permissions-policy/?mtm_campaign=definition&mtm_source=free',
+				'title' => __( "About Limit Login Attempts", 'really-simple-ssl' ),
+				'text'  => __( 'Browser features are plentiful, but most are not needed on your website.', 'really-simple-ssl' ).' '.__('They might be misused if you don’t actively tell the browser to disable these features.', 'really-simple-ssl' ),
+			],
 			'disabled' => false,
 		],
 		[
@@ -992,6 +998,12 @@ function rsssl_fields( $load_values = true ) {
 			'label'            => __( "XML-RPC", 'really-simple-ssl' ),
 			'disabled'         => false,
 			'default'          => false,
+			'help'     => [
+				'label' => 'default',
+				'url'   => 'https://really-simple-ssl.com/definition/what-is-a-permissions-policy/?mtm_campaign=definition&mtm_source=free',
+				'title' => __( "About XML-RPC", 'really-simple-ssl' ),
+				'text'  => __( 'Browser features are plentiful, but most are not needed on your website.', 'really-simple-ssl' ).' '.__('They might be misused if you don’t actively tell the browser to disable these features.', 'really-simple-ssl' ),
+			],
 			'react_conditions' => [
 				'relation' => 'AND',
 				[
@@ -1635,6 +1647,12 @@ function rsssl_fields( $load_values = true ) {
 			'group_id' => 'password_security_passwords',
 			'type'     => 'checkbox',
 			'label'    => __( "Enforce strong passwords", "really-simple-ssl-pro" ),
+			'help'     => [
+				'label' => 'default',
+				'url'   => 'https://really-simple-ssl.com/definition/what-is-a-permissions-policy/?mtm_campaign=definition&mtm_source=free',
+				'title' => __( "Enforce Strong Passwords", 'really-simple-ssl' ),
+				'text'  => __( 'Browser features are plentiful, but most are not needed on your website.', 'really-simple-ssl' ).' '.__('They might be misused if you don’t actively tell the browser to disable these features.', 'really-simple-ssl' ),
+			],
 			'disabled' => false,
 			'default'  => 'disabled',
 			'tooltip'  => __( "This adds extra requirements for strong passwords for new users and updated passwords.",
