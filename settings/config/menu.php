@@ -97,7 +97,7 @@ function rsssl_menu() {
 							'networkwide_required' => true,
 							'premium_title'         => __( "The Essentials", 'really-simple-ssl' ),
 							'premium'              => true,
-							'premium_text'         => __( "Protecting your website visitors from mailicious attacks and data breaches should be your #1 priority, start with the fundamentals with Really Simple Security", 'really-simple-ssl' ),
+							'premium_text'         => __( "Protecting your website visitors from mailicious attacks and data breaches should be your #1 priority, start with the essentials with Really Simple Security", 'really-simple-ssl' ),
 							'upgrade'              => 'https://really-simple-ssl.com/pro/?mtm_campaign=recommendedheaders&mtm_source=free&mtm_content=upgrade',
 							'helpLink' => 'https://really-simple-ssl.com/instructions/about-recommended-security-headers/?mtm_campaign=instructions&mtm_source=free',
 						],
