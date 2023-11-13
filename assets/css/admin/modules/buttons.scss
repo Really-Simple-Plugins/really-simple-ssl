@@ -77,16 +77,10 @@
 .rsssl-action-buttons__inner {
   //all buttons are floating right
   float: right;
-}
-
-.rsssl-action-buttons__button {
-  //add some spacing between the buttons
-  margin-right: 10px;
-}
-
-/* Remove margin for the last button to ensure clean alignment */
-.rsssl-action-buttons__inner:last-child {
-  margin-right: 0;
+  .rsssl-action-buttons__button {
+    //add some spacing between the buttons
+    margin-left: 10px;
+  }
 }
 
 /**

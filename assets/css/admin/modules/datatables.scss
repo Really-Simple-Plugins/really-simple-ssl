@@ -14,7 +14,6 @@
       flex-grow: 0;
       flex-direction: row-reverse;
       min-width: initial;
-
     }
   }
 
@@ -307,9 +306,19 @@ nav.rdt_Pagination > div > svg {
 }
 
 /* EdgeCase: hardening_xml */
-.rsssl-hardening_xml .rsssl-field-wrap .rdt_TableCell:last-child div button,
-.rsssl-hardening_xml .rsssl-field-wrap .rdt_TableCell:last-child div a {
-  margin-left: 0;
+.rsssl-hardening-xml {
+  .rsssl-field-wrap {
+    .rdt_TableCell:last-child div {
+      button, a {
+        margin-left: 0;
+      }
+    }
+  }
+  .rdt_TableRow .rdt_TableCell:last-child {
+    flex:1;
+    display: flex;
+    justify-content: flex-end;
+  }
 }
 
 /* EdgeCase: Permission_Policy */
