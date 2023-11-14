@@ -1030,13 +1030,13 @@ function rsssl_fields( $load_values = true ) {
 					'width'     => '20%',
 				],
 				[
-					'name'     => __( 'Action', 'really-simple-ssl' ),
+					'name'     => __( '', 'really-simple-ssl' ),
 					'sortable' => false,
 					'column'   => 'statusControl',
 					'width'     => '20%',
 				],
 				[
-					'name'     => __( 'Delete', 'really-simple-ssl' ),
+					'name'     => __( '', 'really-simple-ssl' ),
 					'sortable' => false,
 					'column'   => 'deleteControl',
 					'width'     => '20%',
@@ -1153,11 +1153,11 @@ function rsssl_fields( $load_values = true ) {
 					'width'    => '20%',
 				],
 				[
-					'name'     => __( 'Action', 'really-simple-ssl' ),
+					'name'     => __( '', 'really-simple-ssl' ),
 					'sortable' => false,
 					'searchable' => false,
 					'visible' => true,
-					'width'     => '70%',
+					'width'     => '40%',
 					'column'   => 'resetControl',
 				],
 			],
@@ -1179,13 +1179,14 @@ function rsssl_fields( $load_values = true ) {
 					'name'     => __( 'Type', 'really-simple-ssl' ),
 					'sortable' => true,
 					'column'   => 'warningControl',
-					'grow'     => 0,
+					'grow'     => 5,
+					'width'   => '5%',
 				],
 				[
 					'name'     => __( 'Description', 'really-simple-ssl' ),
 					'sortable' => true,
 					'column'   => 'description',
-					'grow'     => 10,
+					'grow'     => 15,
 				],
 				[
 					'name'     => __( 'Location', 'really-simple-ssl' ),
@@ -1195,16 +1196,16 @@ function rsssl_fields( $load_values = true ) {
 				],
 
 				[
-					'name'     => __( 'Details', 'really-simple-ssl' ),
+					'name'     => __( '', 'really-simple-ssl' ),
 					'sortable' => false,
 					'column'   => 'detailsControl',
-					'grow'     => 0,
+					'grow'     => 5,
 				],
 				[
-					'name'     => __( 'Fix', 'really-simple-ssl' ),
+					'name'     => __( '', 'really-simple-ssl' ),
 					'sortable' => false,
 					'column'   => 'fixControl',
-					'grow'     => 0,
+					'grow'     => 5,
 					'right'    => true,
 				],
 			],
@@ -1232,7 +1233,7 @@ function rsssl_fields( $load_values = true ) {
 					'column'   => 'title',
 				],
 				[
-					'name'     => __( 'Options', 'really-simple-ssl' ),
+					'name'     => __( '', 'really-simple-ssl' ),
 					'sortable' => false,
 					'column'   => 'valueControl',
 				],
@@ -1557,33 +1558,37 @@ function rsssl_fields( $load_values = true ) {
 					'enable_vulnerability_scanner' => 1,
 				]
 			],
-			'columns' => [
+			'columns'          => [
 				[
-					'id'      => 'component',
-					'name'     => __( 'Component', 'really-simple-ssl' ),
+					'id'       => 'component',
+					'name'     => __('Component', 'really-simple-ssl'),
 					'sortable' => false,
 					'column'   => 'Name',
-					'width'    => '20%',
+					'width'    => '55%',
+					'searchable' => true,
 				],
 				[
-					'id'      => 'risk',
-					'name'     => __( 'Risk', 'really-simple-ssl' ),
-					'sortable' => false,
-					'column'   => 'risk_name',
-				],
-				[
-					'id'      => 'date',
-					'name'     => __( 'Date', 'really-simple-ssl' ),
+					'id'       => 'date',
+					'name'     => __('Date', 'really-simple-ssl'),
 					'sortable' => false,
 					'column'   => 'date',
+					'width'    => '15%',
 				],
 				[
-					'id'      => 'action',
-					'name'     => __( 'Action', 'really-simple-ssl' ),
+					'id'       => 'risk',
+					'name'     => __('Risk', 'really-simple-ssl'),
+					'sortable' => false,
+					'column'   => 'risk_name',
+					'width'    => '10%',
+					'searchable' => true,
+				],
+				[
+					'id'       => 'action',
+					'name'     => __('', 'really-simple-ssl'),
 					'sortable' => false,
 					'column'   => 'vulnerability_action',
-				],[]
-
+					'width'   => '20%',
+				]
 			]
 		],
 		[
@@ -1611,7 +1616,7 @@ function rsssl_fields( $load_values = true ) {
 					'name'     => __( 'Action', 'really-simple-ssl' ),
 					'sortable' => false,
 					'column'   => 'name',
-					'width'    => '15%',
+					'width'    => '25%',
 				],
 				[
 					'name'     => __( 'Risk', 'really-simple-ssl' ),
@@ -1624,7 +1629,6 @@ function rsssl_fields( $load_values = true ) {
 					'sortable' => false,
 					'column'   => 'description',
 					'type'   => 'text',
-					'width'     => '70%',
 					'minWidth'  => '300px',
 				],
 				[]
