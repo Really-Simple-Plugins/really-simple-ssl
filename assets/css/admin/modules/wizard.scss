@@ -43,10 +43,11 @@
         gap: var(--rsp-spacing-s);
         background-color: var(--rsp-white);
         @include rsssl-block-padding;
-        border-radius: var(--rsp-border-radius-input);
+        border-radius: var(--rsp-border-radius-s);
         margin: var(--rsp-spacing-s);
         box-shadow: var(--rsp-box-shadow);
         bottom: 0;
+        width: calc(100% - (2 * var(--rsp-spacing-s)));
 
         .rsssl-open {
           float: left;
