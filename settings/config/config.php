@@ -1196,13 +1196,13 @@ function rsssl_fields( $load_values = true ) {
 				],
 
 				[
-					'name'     => __( 'Details', 'really-simple-ssl' ),
+					'name'     => __( '', 'really-simple-ssl' ),
 					'sortable' => false,
 					'column'   => 'detailsControl',
 					'grow'     => 5,
 				],
 				[
-					'name'     => __( 'Fix', 'really-simple-ssl' ),
+					'name'     => __( '', 'really-simple-ssl' ),
 					'sortable' => false,
 					'column'   => 'fixControl',
 					'grow'     => 5,
@@ -1233,7 +1233,7 @@ function rsssl_fields( $load_values = true ) {
 					'column'   => 'title',
 				],
 				[
-					'name'     => __( 'Options', 'really-simple-ssl' ),
+					'name'     => __( '', 'really-simple-ssl' ),
 					'sortable' => false,
 					'column'   => 'valueControl',
 				],
@@ -1616,7 +1616,7 @@ function rsssl_fields( $load_values = true ) {
 					'name'     => __( 'Action', 'really-simple-ssl' ),
 					'sortable' => false,
 					'column'   => 'name',
-					'width'    => '15%',
+					'width'    => '25%',
 				],
 				[
 					'name'     => __( 'Risk', 'really-simple-ssl' ),
@@ -1629,7 +1629,6 @@ function rsssl_fields( $load_values = true ) {
 					'sortable' => false,
 					'column'   => 'description',
 					'type'   => 'text',
-					'width'     => '70%',
 					'minWidth'  => '300px',
 				],
 				[]
