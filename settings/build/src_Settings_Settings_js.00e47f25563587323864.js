@@ -290,7 +290,7 @@ const PremiumOverlay = _ref => {
     }
   }
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-locked"
+    className: "rsssl-locked rsssl-locked-premium"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-locked-overlay rsssl-premium"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -1421,4 +1421,4 @@ const sleeper = ms => {
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Settings_js.16cc3b41c68c12eb3f6b.js.map
+//# sourceMappingURL=src_Settings_Settings_js.00e47f25563587323864.js.map

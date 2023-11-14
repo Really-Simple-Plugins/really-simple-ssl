@@ -823,6 +823,12 @@
 }
 
 .rsssl-action-buttons {
+  /* Making sure we use the full width of the container */
+    display: flex;
+    justify-content: flex-end;
+}
+
+.rsssl-action-buttons__inner {
     display: flex;
     justify-content: flex-end;
 }
@@ -831,30 +837,35 @@
     float: right;
 }
 
-.rsssl-action-buttons__inner .rsssl-action-buttons__button {
-    margin-left: 10px;
+.rsssl-action-buttons__button {
+    margin-right: 10px;
+}
+
+/* Remove margin for the last button to ensure clean alignment */
+.rsssl-action-buttons__inner:last-child {
+    margin-right: 0;
 }
 
 /**
   For the mixed content scan we need to do some extra tweaking
  */
-.rsssl-mixedcontentscan .rsssl-grid-item-content-footer {
+.rsssl-mixed-content-scan .rsssl-grid-item-content-footer {
     margin-left: 0;
     margin-right: 0;
     padding-left: 25px;
 }
 
-.rsssl-mixedcontentscan .rsssl-grid-item-content-footer .button {
+.rsssl-mixed-content-scan .rsssl-grid-item-content-footer .button {
     display: block;
     margin-right: 0;
     margin-left: 0;
 }
 
-.rsssl-mixedcontentscan .rsssl-grid-item-content-footer .components-toggle-control {
+.rsssl-mixed-content-scan .rsssl-grid-item-content-footer .components-toggle-control {
     margin-top: 12px;
 }
 
-.rsssl-mixedcontentscan .rsssl-grid-item-content-footer label {
+.rsssl-mixed-content-scan .rsssl-grid-item-content-footer label {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2166,83 +2177,83 @@ button.button .cmplz-icon.rsssl-icon-loading > div {
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(1) {
-    width: 87%;
+    width: 94%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(2) {
-    width: 97%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(3) {
-    width: 92%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(4) {
-    width: 68%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(5) {
-    width: 72%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(6) {
-    width: 90%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(7) {
-    width: 64%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
-    width: 72%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
-    width: 99%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
-    width: 70%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
-    width: 65%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
-    width: 82%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
-    width: 84%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(14) {
-    width: 95%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
-    width: 71%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(16) {
-    width: 89%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(17) {
-    width: 67%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(18) {
     width: 79%;
 }
 
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(3) {
+    width: 68%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(4) {
+    width: 70%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(5) {
+    width: 66%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(6) {
+    width: 97%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(7) {
+    width: 90%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
+    width: 93%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
+    width: 61%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
+    width: 69%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
+    width: 83%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
+    width: 72%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
+    width: 62%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(14) {
+    width: 96%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
+    width: 85%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(16) {
+    width: 97%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(17) {
+    width: 99%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(18) {
+    width: 77%;
+}
+
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(19) {
-    width: 95%;
+    width: 96%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(20) {
-    width: 93%;
+    width: 80%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line ~ .rsssl-placeholder-line {
@@ -2726,6 +2737,10 @@ button.button .cmplz-icon.rsssl-icon-loading > div {
     border-radius: var(--rsp-border-radius-s);
     background: var(--rsp-yellow-faded);
     box-shadow: var(--rsp-box-shadow);
+}
+
+.rsssl-wizard-menu-items .rsssl-main-menu .rsssl-active a:hover {
+    text-decoration: none;
 }
 
 .rsssl-wizard-menu-items .rsssl-main-menu .rsssl-menu-item a span {
@@ -3344,7 +3359,6 @@ input.rsssl-input.rsssl-success:focus {
 Admin notice
  */
 .rsssl-field-wrap .rdt_TableCol, .rsssl-field-wrap .rdt_TableCell, .rsssl-field-wrap .rdt_TableCol_Sortable {
-    min-width: 100px;
     flex-direction: row;
 }
 
@@ -3419,20 +3433,20 @@ nav.rdt_Pagination > div > svg {
     max-width: 50%;
 }
 
-.rsssl-vulnerabilities_overview .rsssl-field-wrap, .rsssl-vulnerabilities-overview .rsssl-field-wrap, .rsssl-vulnerabilities_measures .rsssl-field-wrap, .rsssl-limit_login_attempts_country .rsssl-field-wrap, .rsssl-limit_login_attempts_users .rsssl-field-wrap, .rsssl-limit_login_attempts_event_log .rsssl-field-wrap, .rsssl-mixedcontentscan .rsssl-field-wrap, .rsssl-limit_login_attempts_ip_address .rsssl-field-wrap, .rsssl-permissions_policy .rsssl-field-wrap, .rsssl-content_security_policy .rsssl-field-wrap, .rsssl-two_fa_users .rsssl-field-wrap, .rsssl-hardening_xml .rsssl-field-wrap {
+.rsssl-vulnerabilities_overview .rsssl-field-wrap, .two_fa_users_table .rsssl-field-wrap, .rsssl-vulnerabilities_measures .rsssl-field-wrap, .rsssl-limit_login_attempts_country .rsssl-field-wrap, .rsssl-limit_login_attempts_users .rsssl-field-wrap, .rsssl-limit_login_attempts_event_log .rsssl-field-wrap, .rsssl-mixed-content-scan .rsssl-field-wrap, .rsssl-limit_login_attempts_ip_address .rsssl-field-wrap, .rsssl-permissions_policy .rsssl-field-wrap, .rsssl-content_security_policy .rsssl-field-wrap, .rsssl-two_fa_users .rsssl-field-wrap, .rsssl-hardening-xml .rsssl-field-wrap {
     margin-left: calc(-1 * var(--rsp-spacing-l));
     margin-right: calc(-1 * var(--rsp-spacing-l));
 }
 
 @media (max-width: 1280px) {
-    .rsssl-vulnerabilities_overview .rsssl-field-wrap, .rsssl-vulnerabilities-overview .rsssl-field-wrap, .rsssl-vulnerabilities_measures .rsssl-field-wrap, .rsssl-limit_login_attempts_country .rsssl-field-wrap, .rsssl-limit_login_attempts_users .rsssl-field-wrap, .rsssl-limit_login_attempts_event_log .rsssl-field-wrap, .rsssl-mixedcontentscan .rsssl-field-wrap, .rsssl-limit_login_attempts_ip_address .rsssl-field-wrap, .rsssl-permissions_policy .rsssl-field-wrap, .rsssl-content_security_policy .rsssl-field-wrap, .rsssl-two_fa_users .rsssl-field-wrap, .rsssl-hardening_xml .rsssl-field-wrap {
+    .rsssl-vulnerabilities_overview .rsssl-field-wrap, .two_fa_users_table .rsssl-field-wrap, .rsssl-vulnerabilities_measures .rsssl-field-wrap, .rsssl-limit_login_attempts_country .rsssl-field-wrap, .rsssl-limit_login_attempts_users .rsssl-field-wrap, .rsssl-limit_login_attempts_event_log .rsssl-field-wrap, .rsssl-mixed-content-scan .rsssl-field-wrap, .rsssl-limit_login_attempts_ip_address .rsssl-field-wrap, .rsssl-permissions_policy .rsssl-field-wrap, .rsssl-content_security_policy .rsssl-field-wrap, .rsssl-two_fa_users .rsssl-field-wrap, .rsssl-hardening-xml .rsssl-field-wrap {
         margin-left: calc(-1 * var(--rsp-spacing-m));
         margin-right: calc(-1 * var(--rsp-spacing-m));
     }
 }
 
 @media (max-width: 1080px) {
-    .rsssl-vulnerabilities_overview .rsssl-field-wrap, .rsssl-vulnerabilities-overview .rsssl-field-wrap, .rsssl-vulnerabilities_measures .rsssl-field-wrap, .rsssl-limit_login_attempts_country .rsssl-field-wrap, .rsssl-limit_login_attempts_users .rsssl-field-wrap, .rsssl-limit_login_attempts_event_log .rsssl-field-wrap, .rsssl-mixedcontentscan .rsssl-field-wrap, .rsssl-limit_login_attempts_ip_address .rsssl-field-wrap, .rsssl-permissions_policy .rsssl-field-wrap, .rsssl-content_security_policy .rsssl-field-wrap, .rsssl-two_fa_users .rsssl-field-wrap, .rsssl-hardening_xml .rsssl-field-wrap {
+    .rsssl-vulnerabilities_overview .rsssl-field-wrap, .two_fa_users_table .rsssl-field-wrap, .rsssl-vulnerabilities_measures .rsssl-field-wrap, .rsssl-limit_login_attempts_country .rsssl-field-wrap, .rsssl-limit_login_attempts_users .rsssl-field-wrap, .rsssl-limit_login_attempts_event_log .rsssl-field-wrap, .rsssl-mixed-content-scan .rsssl-field-wrap, .rsssl-limit_login_attempts_ip_address .rsssl-field-wrap, .rsssl-permissions_policy .rsssl-field-wrap, .rsssl-content_security_policy .rsssl-field-wrap, .rsssl-two_fa_users .rsssl-field-wrap, .rsssl-hardening-xml .rsssl-field-wrap {
         margin-left: calc(-1 * var(--rsp-spacing-s));
         margin-right: calc(-1 * var(--rsp-spacing-s));
     }
@@ -3443,12 +3457,12 @@ nav.rdt_Pagination > div > svg {
 .rsssl-vulnerabilities_overview .rsssl-field-wrap > div > button,
 .rsssl-vulnerabilities_overview .rsssl-field-wrap .rsssl-learning-mode-footer,
 .rsssl-vulnerabilities_overview .rsssl-field-wrap .rsssl-mixed-content-description,
-.rsssl-vulnerabilities_overview .rsssl-field-wrap .rsssl-current-scan-action, .rsssl-vulnerabilities-overview .rsssl-field-wrap > .components-base-control, .rsssl-vulnerabilities-overview .rsssl-field-wrap .rsssl-comment,
-.rsssl-vulnerabilities-overview .rsssl-field-wrap .rsssl-progress-container,
-.rsssl-vulnerabilities-overview .rsssl-field-wrap > div > button,
-.rsssl-vulnerabilities-overview .rsssl-field-wrap .rsssl-learning-mode-footer,
-.rsssl-vulnerabilities-overview .rsssl-field-wrap .rsssl-mixed-content-description,
-.rsssl-vulnerabilities-overview .rsssl-field-wrap .rsssl-current-scan-action, .rsssl-vulnerabilities_measures .rsssl-field-wrap > .components-base-control, .rsssl-vulnerabilities_measures .rsssl-field-wrap .rsssl-comment,
+.rsssl-vulnerabilities_overview .rsssl-field-wrap .rsssl-current-scan-action, .two_fa_users_table .rsssl-field-wrap > .components-base-control, .two_fa_users_table .rsssl-field-wrap .rsssl-comment,
+.two_fa_users_table .rsssl-field-wrap .rsssl-progress-container,
+.two_fa_users_table .rsssl-field-wrap > div > button,
+.two_fa_users_table .rsssl-field-wrap .rsssl-learning-mode-footer,
+.two_fa_users_table .rsssl-field-wrap .rsssl-mixed-content-description,
+.two_fa_users_table .rsssl-field-wrap .rsssl-current-scan-action, .rsssl-vulnerabilities_measures .rsssl-field-wrap > .components-base-control, .rsssl-vulnerabilities_measures .rsssl-field-wrap .rsssl-comment,
 .rsssl-vulnerabilities_measures .rsssl-field-wrap .rsssl-progress-container,
 .rsssl-vulnerabilities_measures .rsssl-field-wrap > div > button,
 .rsssl-vulnerabilities_measures .rsssl-field-wrap .rsssl-learning-mode-footer,
@@ -3468,12 +3482,12 @@ nav.rdt_Pagination > div > svg {
 .rsssl-limit_login_attempts_event_log .rsssl-field-wrap > div > button,
 .rsssl-limit_login_attempts_event_log .rsssl-field-wrap .rsssl-learning-mode-footer,
 .rsssl-limit_login_attempts_event_log .rsssl-field-wrap .rsssl-mixed-content-description,
-.rsssl-limit_login_attempts_event_log .rsssl-field-wrap .rsssl-current-scan-action, .rsssl-mixedcontentscan .rsssl-field-wrap > .components-base-control, .rsssl-mixedcontentscan .rsssl-field-wrap .rsssl-comment,
-.rsssl-mixedcontentscan .rsssl-field-wrap .rsssl-progress-container,
-.rsssl-mixedcontentscan .rsssl-field-wrap > div > button,
-.rsssl-mixedcontentscan .rsssl-field-wrap .rsssl-learning-mode-footer,
-.rsssl-mixedcontentscan .rsssl-field-wrap .rsssl-mixed-content-description,
-.rsssl-mixedcontentscan .rsssl-field-wrap .rsssl-current-scan-action, .rsssl-limit_login_attempts_ip_address .rsssl-field-wrap > .components-base-control, .rsssl-limit_login_attempts_ip_address .rsssl-field-wrap .rsssl-comment,
+.rsssl-limit_login_attempts_event_log .rsssl-field-wrap .rsssl-current-scan-action, .rsssl-mixed-content-scan .rsssl-field-wrap > .components-base-control, .rsssl-mixed-content-scan .rsssl-field-wrap .rsssl-comment,
+.rsssl-mixed-content-scan .rsssl-field-wrap .rsssl-progress-container,
+.rsssl-mixed-content-scan .rsssl-field-wrap > div > button,
+.rsssl-mixed-content-scan .rsssl-field-wrap .rsssl-learning-mode-footer,
+.rsssl-mixed-content-scan .rsssl-field-wrap .rsssl-mixed-content-description,
+.rsssl-mixed-content-scan .rsssl-field-wrap .rsssl-current-scan-action, .rsssl-limit_login_attempts_ip_address .rsssl-field-wrap > .components-base-control, .rsssl-limit_login_attempts_ip_address .rsssl-field-wrap .rsssl-comment,
 .rsssl-limit_login_attempts_ip_address .rsssl-field-wrap .rsssl-progress-container,
 .rsssl-limit_login_attempts_ip_address .rsssl-field-wrap > div > button,
 .rsssl-limit_login_attempts_ip_address .rsssl-field-wrap .rsssl-learning-mode-footer,
@@ -3493,22 +3507,22 @@ nav.rdt_Pagination > div > svg {
 .rsssl-two_fa_users .rsssl-field-wrap > div > button,
 .rsssl-two_fa_users .rsssl-field-wrap .rsssl-learning-mode-footer,
 .rsssl-two_fa_users .rsssl-field-wrap .rsssl-mixed-content-description,
-.rsssl-two_fa_users .rsssl-field-wrap .rsssl-current-scan-action, .rsssl-hardening_xml .rsssl-field-wrap > .components-base-control, .rsssl-hardening_xml .rsssl-field-wrap .rsssl-comment,
-.rsssl-hardening_xml .rsssl-field-wrap .rsssl-progress-container,
-.rsssl-hardening_xml .rsssl-field-wrap > div > button,
-.rsssl-hardening_xml .rsssl-field-wrap .rsssl-learning-mode-footer,
-.rsssl-hardening_xml .rsssl-field-wrap .rsssl-mixed-content-description,
-.rsssl-hardening_xml .rsssl-field-wrap .rsssl-current-scan-action {
+.rsssl-two_fa_users .rsssl-field-wrap .rsssl-current-scan-action, .rsssl-hardening-xml .rsssl-field-wrap > .components-base-control, .rsssl-hardening-xml .rsssl-field-wrap .rsssl-comment,
+.rsssl-hardening-xml .rsssl-field-wrap .rsssl-progress-container,
+.rsssl-hardening-xml .rsssl-field-wrap > div > button,
+.rsssl-hardening-xml .rsssl-field-wrap .rsssl-learning-mode-footer,
+.rsssl-hardening-xml .rsssl-field-wrap .rsssl-mixed-content-description,
+.rsssl-hardening-xml .rsssl-field-wrap .rsssl-current-scan-action {
     margin-left: var(--rsp-spacing-l);
     margin-right: var(--rsp-spacing-l);
 }
 
-.rsssl-vulnerabilities_overview .rdt_TableCell:first-child, .rsssl-vulnerabilities_overview .rdt_TableCol:first-child, .rsssl-vulnerabilities-overview .rdt_TableCell:first-child, .rsssl-vulnerabilities-overview .rdt_TableCol:first-child, .rsssl-vulnerabilities_measures .rdt_TableCell:first-child, .rsssl-vulnerabilities_measures .rdt_TableCol:first-child, .rsssl-limit_login_attempts_country .rdt_TableCell:first-child, .rsssl-limit_login_attempts_country .rdt_TableCol:first-child, .rsssl-limit_login_attempts_users .rdt_TableCell:first-child, .rsssl-limit_login_attempts_users .rdt_TableCol:first-child, .rsssl-limit_login_attempts_event_log .rdt_TableCell:first-child, .rsssl-limit_login_attempts_event_log .rdt_TableCol:first-child, .rsssl-mixedcontentscan .rdt_TableCell:first-child, .rsssl-mixedcontentscan .rdt_TableCol:first-child, .rsssl-limit_login_attempts_ip_address .rdt_TableCell:first-child, .rsssl-limit_login_attempts_ip_address .rdt_TableCol:first-child, .rsssl-permissions_policy .rdt_TableCell:first-child, .rsssl-permissions_policy .rdt_TableCol:first-child, .rsssl-content_security_policy .rdt_TableCell:first-child, .rsssl-content_security_policy .rdt_TableCol:first-child, .rsssl-two_fa_users .rdt_TableCell:first-child, .rsssl-two_fa_users .rdt_TableCol:first-child, .rsssl-hardening_xml .rdt_TableCell:first-child, .rsssl-hardening_xml .rdt_TableCol:first-child {
+.rsssl-vulnerabilities_overview .rdt_TableCell:first-child, .rsssl-vulnerabilities_overview .rdt_TableCol:first-child, .two_fa_users_table .rdt_TableCell:first-child, .two_fa_users_table .rdt_TableCol:first-child, .rsssl-vulnerabilities_measures .rdt_TableCell:first-child, .rsssl-vulnerabilities_measures .rdt_TableCol:first-child, .rsssl-limit_login_attempts_country .rdt_TableCell:first-child, .rsssl-limit_login_attempts_country .rdt_TableCol:first-child, .rsssl-limit_login_attempts_users .rdt_TableCell:first-child, .rsssl-limit_login_attempts_users .rdt_TableCol:first-child, .rsssl-limit_login_attempts_event_log .rdt_TableCell:first-child, .rsssl-limit_login_attempts_event_log .rdt_TableCol:first-child, .rsssl-mixed-content-scan .rdt_TableCell:first-child, .rsssl-mixed-content-scan .rdt_TableCol:first-child, .rsssl-limit_login_attempts_ip_address .rdt_TableCell:first-child, .rsssl-limit_login_attempts_ip_address .rdt_TableCol:first-child, .rsssl-permissions_policy .rdt_TableCell:first-child, .rsssl-permissions_policy .rdt_TableCol:first-child, .rsssl-content_security_policy .rdt_TableCell:first-child, .rsssl-content_security_policy .rdt_TableCol:first-child, .rsssl-two_fa_users .rdt_TableCell:first-child, .rsssl-two_fa_users .rdt_TableCol:first-child, .rsssl-hardening-xml .rdt_TableCell:first-child, .rsssl-hardening-xml .rdt_TableCol:first-child {
     padding-left: var(--rsp-spacing-l);
     padding-right: var(--rsp-spacing-l);
 }
 
-.rsssl-vulnerabilities_overview .rdt_TableCell:last-child, .rsssl-vulnerabilities_overview .rdt_TableCol:last-child, .rsssl-vulnerabilities-overview .rdt_TableCell:last-child, .rsssl-vulnerabilities-overview .rdt_TableCol:last-child, .rsssl-vulnerabilities_measures .rdt_TableCell:last-child, .rsssl-vulnerabilities_measures .rdt_TableCol:last-child, .rsssl-limit_login_attempts_country .rdt_TableCell:last-child, .rsssl-limit_login_attempts_country .rdt_TableCol:last-child, .rsssl-limit_login_attempts_users .rdt_TableCell:last-child, .rsssl-limit_login_attempts_users .rdt_TableCol:last-child, .rsssl-limit_login_attempts_event_log .rdt_TableCell:last-child, .rsssl-limit_login_attempts_event_log .rdt_TableCol:last-child, .rsssl-mixedcontentscan .rdt_TableCell:last-child, .rsssl-mixedcontentscan .rdt_TableCol:last-child, .rsssl-limit_login_attempts_ip_address .rdt_TableCell:last-child, .rsssl-limit_login_attempts_ip_address .rdt_TableCol:last-child, .rsssl-permissions_policy .rdt_TableCell:last-child, .rsssl-permissions_policy .rdt_TableCol:last-child, .rsssl-content_security_policy .rdt_TableCell:last-child, .rsssl-content_security_policy .rdt_TableCol:last-child, .rsssl-two_fa_users .rdt_TableCell:last-child, .rsssl-two_fa_users .rdt_TableCol:last-child, .rsssl-hardening_xml .rdt_TableCell:last-child, .rsssl-hardening_xml .rdt_TableCol:last-child {
+.rsssl-vulnerabilities_overview .rdt_TableCell:last-child, .rsssl-vulnerabilities_overview .rdt_TableCol:last-child, .two_fa_users_table .rdt_TableCell:last-child, .two_fa_users_table .rdt_TableCol:last-child, .rsssl-vulnerabilities_measures .rdt_TableCell:last-child, .rsssl-vulnerabilities_measures .rdt_TableCol:last-child, .rsssl-limit_login_attempts_country .rdt_TableCell:last-child, .rsssl-limit_login_attempts_country .rdt_TableCol:last-child, .rsssl-limit_login_attempts_users .rdt_TableCell:last-child, .rsssl-limit_login_attempts_users .rdt_TableCol:last-child, .rsssl-limit_login_attempts_event_log .rdt_TableCell:last-child, .rsssl-limit_login_attempts_event_log .rdt_TableCol:last-child, .rsssl-mixed-content-scan .rdt_TableCell:last-child, .rsssl-mixed-content-scan .rdt_TableCol:last-child, .rsssl-limit_login_attempts_ip_address .rdt_TableCell:last-child, .rsssl-limit_login_attempts_ip_address .rdt_TableCol:last-child, .rsssl-permissions_policy .rdt_TableCell:last-child, .rsssl-permissions_policy .rdt_TableCol:last-child, .rsssl-content_security_policy .rdt_TableCell:last-child, .rsssl-content_security_policy .rdt_TableCol:last-child, .rsssl-two_fa_users .rdt_TableCell:last-child, .rsssl-two_fa_users .rdt_TableCol:last-child, .rsssl-hardening-xml .rdt_TableCell:last-child, .rsssl-hardening-xml .rdt_TableCol:last-child {
     padding-right: var(--rsp-spacing-l);
 }
 
@@ -3576,8 +3590,8 @@ nav.rdt_Pagination > div > svg {
 /* Section for EdgeCases and other specific styling */
 /* EdgeCase: EventLog */
 .rsssl-content_security_policy .rdt_TableCell, .rsssl-content_security_policy .rdt_TableCol,
-.rsssl-hardening_xml .rdt_TableCell,
-.rsssl-hardening_xml .rdt_TableCol,
+.rsssl-hardening-xml .rdt_TableCell,
+.rsssl-hardening-xml .rdt_TableCol,
 .rsssl-vulnerabilities_overview .rdt_TableCell,
 .rsssl-vulnerabilities_overview .rdt_TableCol,
 .rsssl-limit_login_attempts_ip_address .rdt_TableCell,
@@ -3592,7 +3606,7 @@ nav.rdt_Pagination > div > svg {
 }
 
 .rsssl-content_security_policy .rdt_Pagination,
-.rsssl-hardening_xml .rdt_Pagination,
+.rsssl-hardening-xml .rdt_Pagination,
 .rsssl-vulnerabilities_overview .rdt_Pagination,
 .rsssl-limit_login_attempts_ip_address .rdt_Pagination,
 .rsssl-limit_login_attempts_users .rdt_Pagination,
@@ -3602,18 +3616,18 @@ nav.rdt_Pagination > div > svg {
     padding: 0 25px;
 }
 
-.rsssl-content_security_policy rdt_tableCell:has(div > .rsssl-action-buttons),
-.rsssl-hardening_xml rdt_tableCell:has(div > .rsssl-action-buttons),
-.rsssl-vulnerabilities_overview rdt_tableCell:has(div > .rsssl-action-buttons),
-.rsssl-limit_login_attempts_ip_address rdt_tableCell:has(div > .rsssl-action-buttons),
-.rsssl-limit_login_attempts_users rdt_tableCell:has(div > .rsssl-action-buttons),
-.rsssl-limit_login_attempts_country rdt_tableCell:has(div > .rsssl-action-buttons),
-.rsssl-limit_login_attempts_event_log rdt_tableCell:has(div > .rsssl-action-buttons) {
+.rsssl-content_security_policy .rdt_tableCell:has(div > .rsssl-action-buttons),
+.rsssl-hardening-xml .rdt_tableCell:has(div > .rsssl-action-buttons),
+.rsssl-vulnerabilities_overview .rdt_tableCell:has(div > .rsssl-action-buttons),
+.rsssl-limit_login_attempts_ip_address .rdt_tableCell:has(div > .rsssl-action-buttons),
+.rsssl-limit_login_attempts_users .rdt_tableCell:has(div > .rsssl-action-buttons),
+.rsssl-limit_login_attempts_country .rdt_tableCell:has(div > .rsssl-action-buttons),
+.rsssl-limit_login_attempts_event_log .rdt_tableCell:has(div > .rsssl-action-buttons) {
     position: relative;
 }
 
 .rsssl-content_security_policy .rsssl-field-wrap,
-.rsssl-hardening_xml .rsssl-field-wrap,
+.rsssl-hardening-xml .rsssl-field-wrap,
 .rsssl-vulnerabilities_overview .rsssl-field-wrap,
 .rsssl-limit_login_attempts_ip_address .rsssl-field-wrap,
 .rsssl-limit_login_attempts_users .rsssl-field-wrap,
@@ -3623,7 +3637,7 @@ nav.rdt_Pagination > div > svg {
 }
 
 .rsssl-content_security_policy .rsssl-field-wrap .rdt_TableHeadRow .rdt_TableCol:last-child,
-.rsssl-hardening_xml .rsssl-field-wrap .rdt_TableHeadRow .rdt_TableCol:last-child,
+.rsssl-hardening-xml .rsssl-field-wrap .rdt_TableHeadRow .rdt_TableCol:last-child,
 .rsssl-vulnerabilities_overview .rsssl-field-wrap .rdt_TableHeadRow .rdt_TableCol:last-child,
 .rsssl-limit_login_attempts_ip_address .rsssl-field-wrap .rdt_TableHeadRow .rdt_TableCol:last-child,
 .rsssl-limit_login_attempts_users .rsssl-field-wrap .rdt_TableHeadRow .rdt_TableCol:last-child,
@@ -3633,7 +3647,7 @@ nav.rdt_Pagination > div > svg {
 }
 
 .rsssl-content_security_policy .rsssl-field-wrap .rdt_TableBody .rdt_TableRow .rdt_TableCell:last-child,
-.rsssl-hardening_xml .rsssl-field-wrap .rdt_TableBody .rdt_TableRow .rdt_TableCell:last-child,
+.rsssl-hardening-xml .rsssl-field-wrap .rdt_TableBody .rdt_TableRow .rdt_TableCell:last-child,
 .rsssl-vulnerabilities_overview .rsssl-field-wrap .rdt_TableBody .rdt_TableRow .rdt_TableCell:last-child,
 .rsssl-limit_login_attempts_ip_address .rsssl-field-wrap .rdt_TableBody .rdt_TableRow .rdt_TableCell:last-child,
 .rsssl-limit_login_attempts_users .rsssl-field-wrap .rdt_TableBody .rdt_TableRow .rdt_TableCell:last-child,
@@ -3643,7 +3657,7 @@ nav.rdt_Pagination > div > svg {
 }
 
 .rsssl-content_security_policy .rsssl-field-wrap .rdt_TableBody .rdt_Expanding .rdt_TableRow .rdt_TableCell:first-child,
-.rsssl-hardening_xml .rsssl-field-wrap .rdt_TableBody .rdt_Expanding .rdt_TableRow .rdt_TableCell:first-child,
+.rsssl-hardening-xml .rsssl-field-wrap .rdt_TableBody .rdt_Expanding .rdt_TableRow .rdt_TableCell:first-child,
 .rsssl-vulnerabilities_overview .rsssl-field-wrap .rdt_TableBody .rdt_Expanding .rdt_TableRow .rdt_TableCell:first-child,
 .rsssl-limit_login_attempts_ip_address .rsssl-field-wrap .rdt_TableBody .rdt_Expanding .rdt_TableRow .rdt_TableCell:first-child,
 .rsssl-limit_login_attempts_users .rsssl-field-wrap .rdt_TableBody .rdt_Expanding .rdt_TableRow .rdt_TableCell:first-child,
@@ -3654,7 +3668,7 @@ nav.rdt_Pagination > div > svg {
 }
 
 .rsssl-content_security_policy .rsssl-field-wrap .rdt_TableBody .rdt_TableRow .rdt_TableCell:first-child,
-.rsssl-hardening_xml .rsssl-field-wrap .rdt_TableBody .rdt_TableRow .rdt_TableCell:first-child,
+.rsssl-hardening-xml .rsssl-field-wrap .rdt_TableBody .rdt_TableRow .rdt_TableCell:first-child,
 .rsssl-vulnerabilities_overview .rsssl-field-wrap .rdt_TableBody .rdt_TableRow .rdt_TableCell:first-child,
 .rsssl-limit_login_attempts_ip_address .rsssl-field-wrap .rdt_TableBody .rdt_TableRow .rdt_TableCell:first-child,
 .rsssl-limit_login_attempts_users .rsssl-field-wrap .rdt_TableBody .rdt_TableRow .rdt_TableCell:first-child,
@@ -3664,18 +3678,18 @@ nav.rdt_Pagination > div > svg {
     flex-direction: row;
 }
 
-.rsssl-content_security_policy .rsssl-field-wrap .allowRowEvents,
-.rsssl-hardening_xml .rsssl-field-wrap .allowRowEvents,
-.rsssl-vulnerabilities_overview .rsssl-field-wrap .allowRowEvents,
-.rsssl-limit_login_attempts_ip_address .rsssl-field-wrap .allowRowEvents,
-.rsssl-limit_login_attempts_users .rsssl-field-wrap .allowRowEvents,
-.rsssl-limit_login_attempts_country .rsssl-field-wrap .allowRowEvents,
-.rsssl-limit_login_attempts_event_log .rsssl-field-wrap .allowRowEvents {
-    width: 100%;
+.rsssl-content_security_policy .rsssl-field-wrap .rsssl-learning-mode-delete,
+.rsssl-hardening-xml .rsssl-field-wrap .rsssl-learning-mode-delete,
+.rsssl-vulnerabilities_overview .rsssl-field-wrap .rsssl-learning-mode-delete,
+.rsssl-limit_login_attempts_ip_address .rsssl-field-wrap .rsssl-learning-mode-delete,
+.rsssl-limit_login_attempts_users .rsssl-field-wrap .rsssl-learning-mode-delete,
+.rsssl-limit_login_attempts_country .rsssl-field-wrap .rsssl-learning-mode-delete,
+.rsssl-limit_login_attempts_event_log .rsssl-field-wrap .rsssl-learning-mode-delete {
+    float: right;
 }
 
 .rsssl-content_security_policy .rsssl-field-wrap .rdt_TableCell:last-child div,
-.rsssl-hardening_xml .rsssl-field-wrap .rdt_TableCell:last-child div,
+.rsssl-hardening-xml .rsssl-field-wrap .rdt_TableCell:last-child div,
 .rsssl-vulnerabilities_overview .rsssl-field-wrap .rdt_TableCell:last-child div,
 .rsssl-limit_login_attempts_ip_address .rsssl-field-wrap .rdt_TableCell:last-child div,
 .rsssl-limit_login_attempts_users .rsssl-field-wrap .rdt_TableCell:last-child div,
@@ -3685,8 +3699,8 @@ nav.rdt_Pagination > div > svg {
 }
 
 .rsssl-content_security_policy .rsssl-field-wrap .rdt_TableCell:last-child div button, .rsssl-content_security_policy .rsssl-field-wrap .rdt_TableCell:last-child div a,
-.rsssl-hardening_xml .rsssl-field-wrap .rdt_TableCell:last-child div button,
-.rsssl-hardening_xml .rsssl-field-wrap .rdt_TableCell:last-child div a,
+.rsssl-hardening-xml .rsssl-field-wrap .rdt_TableCell:last-child div button,
+.rsssl-hardening-xml .rsssl-field-wrap .rdt_TableCell:last-child div a,
 .rsssl-vulnerabilities_overview .rsssl-field-wrap .rdt_TableCell:last-child div button,
 .rsssl-vulnerabilities_overview .rsssl-field-wrap .rdt_TableCell:last-child div a,
 .rsssl-limit_login_attempts_ip_address .rsssl-field-wrap .rdt_TableCell:last-child div button,
@@ -3705,9 +3719,13 @@ nav.rdt_Pagination > div > svg {
     max-width: 100%;
 }
 
-/* EdgeCase: hardening_xml */
-.rsssl-hardening-xml .rsssl-field-wrap .rdt_TableCell:last-child div button, .rsssl-hardening-xml .rsssl-field-wrap .rdt_TableCell:last-child div a {
-    margin-left: 0;
+/* EdgeCase: hardening-xml */
+.rsssl-hardening-xml .rdt_TableCol:first-child {
+    padding: 0 25px !important;
+}
+
+.rsssl-hardening-xml .rdt_TableCell:last-child {
+    padding: 0 25px !important;
 }
 
 .rsssl-hardening-xml .rdt_TableRow .rdt_TableCell:last-child {
@@ -3855,7 +3873,12 @@ a.rsssl-skip-link {
     }
 }
 
-.rsssl .rsssl-locked-overlay {
+.rsssl .rsssl-locked.rsssl-locked-premium .rsssl-locked-overlay {
+    top: calc(100% - 190px) !important;
+    flex-direction: column;
+}
+
+.rsssl .rsssl-locked .rsssl-locked-overlay {
     display: flex;
     top: calc(100% - 100px) !important;
     text-align: left;
@@ -3863,42 +3886,46 @@ a.rsssl-skip-link {
     padding: 0;
 }
 
-.rsssl .rsssl-locked-overlay.rsssl-premium {
+.rsssl .rsssl-locked .rsssl-locked-overlay.rsssl-premium {
     top: calc(100% - 190px) !important;
     flex-direction: column;
 }
 
-.rsssl .rsssl-locked-overlay .rsssl-locked-header {
+.rsssl .rsssl-locked .rsssl-locked-overlay .rsssl-locked-header {
     width: 100%;
     flex-direction: row;
 }
 
-.rsssl .rsssl-locked-overlay .rsssl-locked-header .rsssl-locked-header-title {
+.rsssl .rsssl-locked .rsssl-locked-overlay .rsssl-locked-header .rsssl-locked-header-title {
     font-weight: 600;
     color: var(--rsp-blue);
 }
 
-.rsssl .rsssl-locked-overlay .rsssl-locked-content {
+.rsssl .rsssl-locked .rsssl-locked-overlay .rsssl-locked-content {
     flex-direction: row;
     width: 100%;
 }
 
-.rsssl .rsssl-locked-overlay .rsssl-locked-footer {
+.rsssl .rsssl-locked .rsssl-locked-overlay .rsssl-locked-footer {
     display: flex;
     align-items: center;
     justify-content: flex-start;
     width: 100%;
 }
 
-.rsssl .rsssl-locked-overlay .rsssl-locked-footer a {
+.rsssl .rsssl-locked .rsssl-locked-overlay .rsssl-locked-footer a {
     position: relative;
     float: left !important;
 }
 
-.rsssl .rsssl-locked-overlay .rsssl-locked-footer::after {
+.rsssl .rsssl-locked .rsssl-locked-overlay .rsssl-locked-footer::after {
     content: "";
     display: table;
     clear: both;
+}
+
+.rsssl .rsssl-disabled .rsssl-field-wrap .rsssl-locked {
+    background: transparent;
 }
 
 /* Accordeon */

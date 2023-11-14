@@ -3616,7 +3616,6 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
     }
   },
   removeRegions: async (regions, status, dataActions) => {
-    console.log("removeRegions", regions, status, dataActions);
     set({
       processing: true
     });
@@ -4375,7 +4374,6 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
 
     // Handle the '::' within the address
     if (ip.includes('::')) {
-      console.log('includes ::');
       const parts = ip.split('::');
       if (parts.length > 2) return false;
       const left = parts[0].split(':').filter(Boolean);
@@ -4459,7 +4457,6 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
           inputRangeValidated: true
         });
       } else if (get().validateIpv6(get().extendIpV6(lowest)) && get().validateIpv6(get().extendIpV6(highest))) {
-        console.log('ipv6 validated');
         //now we check if the lowest is lower than the highest
         if (get().ipToNumber(get().extendIpV6(lowest)) > get().ipToNumber(get().extendIpV6(highest))) {
           console.warn('lowest is higher than highest');
@@ -24026,4 +24023,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.11f239084b06606b3a0a.js.map
+//# sourceMappingURL=src_Settings_Field_js.d31f59e6b223e3936dbc.js.map
