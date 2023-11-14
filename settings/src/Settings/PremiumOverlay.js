@@ -19,7 +19,7 @@ const PremiumOverlay = ({msg, title, url, upgrade}) => {
     }
 
     return (
-        <div className="rsssl-locked">
+        <div className="rsssl-locked rsssl-locked-premium">
             <div className="rsssl-locked-overlay rsssl-premium">
                 {/* header */}
                 <div className="rsssl-locked-header">

@@ -2,14 +2,14 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Really Simple SSL 7.1.4\n"
+"Project-Id-Version: Really Simple SSL 7.2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/really-simple-ssl\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-11-13T09:13:04+00:00\n"
+"POT-Creation-Date: 2023-11-13T17:09:02+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.8.1\n"
 "X-Domain: really-simple-ssl\n"
@@ -373,6 +373,7 @@ msgstr ""
 #: class-admin.php:2623
 #: class-multisite.php:220
 #: settings/config/menu.php:17
+#: settings/config/menu.php:376
 #: settings/build/688.34c4ba56bd822867486e.js:1
 #: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:237
 #: settings/src/Dashboard/Vulnerabilities/VulnerabilitiesFooter.js:24
@@ -891,7 +892,7 @@ msgid "I don't know, or not listed, proceed with installation"
 msgstr ""
 
 #: lets-encrypt/config/fields.php:8
-#: settings/config/menu.php:520
+#: settings/config/menu.php:534
 msgid "System Status"
 msgstr ""
 
@@ -900,7 +901,7 @@ msgid "General settings"
 msgstr ""
 
 #: lets-encrypt/config/fields.php:17
-#: settings/config/menu.php:538
+#: settings/config/menu.php:552
 msgid "Directories"
 msgstr ""
 
@@ -909,12 +910,12 @@ msgid "DNS Verification"
 msgstr ""
 
 #: lets-encrypt/config/fields.php:25
-#: settings/config/menu.php:548
+#: settings/config/menu.php:562
 msgid "Generation"
 msgstr ""
 
 #: lets-encrypt/config/fields.php:29
-#: settings/config/menu.php:553
+#: settings/config/menu.php:567
 msgid "Installation"
 msgstr ""
 
@@ -1582,7 +1583,7 @@ msgid "Activate our plugin %s"
 msgstr ""
 
 #: onboarding/class-onboarding.php:354
-#: settings/config/menu.php:558
+#: settings/config/menu.php:572
 #: settings/build/641.dfc88a5f54474e801fd6.js:1
 #: settings/build/688.34c4ba56bd822867486e.js:1
 #: settings/src/Dashboard/OtherPlugins/OtherPluginsData.js:74
@@ -1600,7 +1601,7 @@ msgstr ""
 #: placeholders/class-placeholder.php:389
 #: placeholders/class-placeholder.php:415
 #: placeholders/class-placeholder.php:440
-#: settings/config/config.php:1186
+#: settings/config/config.php:1198
 #: settings/build/434.33f8fe1145ac390fb7ca.js:1
 #: settings/build/641.dfc88a5f54474e801fd6.js:1
 #: settings/build/688.34c4ba56bd822867486e.js:1
@@ -1802,7 +1803,6 @@ msgid "We have detected administrator roles where the login and display names ar
 msgstr ""
 
 #: security/notices.php:120
-#: security/sync-settings.php:34
 msgid "Debugging"
 msgstr ""
 
@@ -1820,8 +1820,8 @@ msgstr ""
 
 #: security/notices.php:158
 #: security/notices.php:175
-#: settings/config/config.php:312
-#: settings/config/config.php:1120
+#: settings/config/config.php:318
+#: settings/config/config.php:1132
 #: settings/build/641.dfc88a5f54474e801fd6.js:1
 #: settings/src/Settings/LimitLoginAttempts/AddUserModal.js:53
 msgid "Username"
@@ -1861,6 +1861,10 @@ msgstr ""
 
 #: security/notices.php:281
 msgid "Your WordPress version is visible to others."
+msgstr ""
+
+#: security/sync-settings.php:34
+msgid "Debug.log"
 msgstr ""
 
 #: security/sync-settings.php:35
@@ -2105,7 +2109,7 @@ msgid "Only enable this if you experience mixed content in the admin environment
 msgstr ""
 
 #: settings/config/config.php:159
-#: settings/config/config.php:700
+#: settings/config/config.php:706
 msgid "Stop editing the .htaccess file"
 msgstr ""
 
@@ -2135,422 +2139,446 @@ msgstr ""
 msgid "Enable Limit Login Attempts"
 msgstr ""
 
-#: settings/config/config.php:225
+#: settings/config/config.php:221
+msgid "About Limit Login Attempts"
+msgstr ""
+
+#: settings/config/config.php:222
+#: settings/config/config.php:1226
+#: settings/config/config.php:1659
+msgid "Browser features are plentiful, but most are not needed on your website."
+msgstr ""
+
+#: settings/config/config.php:222
+#: settings/config/config.php:1226
+#: settings/config/config.php:1659
+msgid "They might be misused if you don’t actively tell the browser to disable these features."
+msgstr ""
+
+#: settings/config/config.php:231
 msgid "After this number of failed login attempts the user and IP address will be temporarily blocked."
 msgstr ""
 
-#: settings/config/config.php:227
+#: settings/config/config.php:233
 msgid "Login attempts"
 msgstr ""
 
-#: settings/config/config.php:229
-#: settings/config/config.php:230
-#: settings/config/config.php:231
-#: settings/config/config.php:232
+#: settings/config/config.php:235
+#: settings/config/config.php:236
+#: settings/config/config.php:237
+#: settings/config/config.php:238
 msgid "attempts"
 msgstr ""
 
-#: settings/config/config.php:248
+#: settings/config/config.php:254
 msgid "If the number of failed login attempts is exceeded within this timeframe, the IP address and user will be blocked."
 msgstr ""
 
-#: settings/config/config.php:250
+#: settings/config/config.php:256
 msgid "Interval"
 msgstr ""
 
-#: settings/config/config.php:252
-#: settings/config/config.php:253
-#: settings/config/config.php:276
-#: settings/config/config.php:277
+#: settings/config/config.php:258
+#: settings/config/config.php:259
+#: settings/config/config.php:282
+#: settings/config/config.php:283
 msgid "%s minutes"
 msgstr ""
 
-#: settings/config/config.php:254
-#: settings/config/config.php:278
+#: settings/config/config.php:260
+#: settings/config/config.php:284
 msgid "%s hour"
 msgstr ""
 
-#: settings/config/config.php:255
-#: settings/config/config.php:279
+#: settings/config/config.php:261
+#: settings/config/config.php:285
 msgid "%s hours"
 msgstr ""
 
-#: settings/config/config.php:256
-#: settings/config/config.php:280
+#: settings/config/config.php:262
+#: settings/config/config.php:286
 msgid "%s day"
 msgstr ""
 
-#: settings/config/config.php:272
+#: settings/config/config.php:278
 msgid "The user and IP address will be temporarily unable to login for the specified duration. You can block IP addresses indefinitely via the IP addresses block."
 msgstr ""
 
-#: settings/config/config.php:274
+#: settings/config/config.php:280
 msgid "Lockout duration"
 msgstr ""
 
-#: settings/config/config.php:298
-#: settings/config/config.php:344
-#: settings/config/config.php:390
-#: settings/config/menu.php:481
+#: settings/config/config.php:304
+#: settings/config/config.php:350
+#: settings/config/config.php:396
+#: settings/config/menu.php:497
 #: settings/build/641.dfc88a5f54474e801fd6.js:1
 #: settings/src/Settings/LearningMode/LearningMode.js:141
 msgid "Blocked"
 msgstr ""
 
-#: settings/config/config.php:299
-#: settings/config/config.php:345
-#: settings/config/config.php:391
+#: settings/config/config.php:305
+#: settings/config/config.php:351
+#: settings/config/config.php:397
 msgid "Locked-out"
 msgstr ""
 
-#: settings/config/config.php:300
-#: settings/config/config.php:346
-#: settings/config/config.php:392
-#: settings/config/menu.php:393
-#: settings/config/menu.php:427
+#: settings/config/config.php:306
+#: settings/config/config.php:352
+#: settings/config/config.php:398
+#: settings/config/menu.php:403
+#: settings/config/menu.php:441
 msgid "Trusted"
 msgstr ""
 
-#: settings/config/config.php:319
-#: settings/config/config.php:366
-#: settings/config/config.php:426
-#: settings/config/config.php:1128
+#: settings/config/config.php:325
+#: settings/config/config.php:372
+#: settings/config/config.php:432
+#: settings/config/config.php:1140
 #: settings/build/688.34c4ba56bd822867486e.js:1
 #: settings/src/Dashboard/SslLabs/SslLabsHeader.js:5
 msgid "Status"
 msgstr ""
 
-#: settings/config/config.php:325
-#: settings/config/config.php:372
-#: settings/config/config.php:461
-#: settings/config/config.php:1564
+#: settings/config/config.php:331
+#: settings/config/config.php:378
+#: settings/config/config.php:467
+#: settings/config/config.php:1576
 msgid "Date"
 msgstr ""
 
-#: settings/config/config.php:348
+#: settings/config/config.php:354
 msgid "Enable open source blocklist API etc."
 msgstr ""
 
-#: settings/config/config.php:359
-#: settings/config/config.php:475
+#: settings/config/config.php:365
+#: settings/config/config.php:481
 #: settings/build/641.dfc88a5f54474e801fd6.js:1
 #: settings/src/Settings/LimitLoginAttempts/AddIpAddressModal.js:76
 msgid "IP Address"
 msgstr ""
 
-#: settings/config/config.php:411
-#: settings/config/config.php:455
+#: settings/config/config.php:417
+#: settings/config/config.php:461
 msgid "Country"
 msgstr ""
 
-#: settings/config/config.php:419
+#: settings/config/config.php:425
 msgid "Continent"
 msgstr ""
 
-#: settings/config/config.php:444
+#: settings/config/config.php:450
 msgid "IP address overview"
 msgstr ""
 
-#: settings/config/config.php:467
+#: settings/config/config.php:473
 msgid "User"
 msgstr ""
 
-#: settings/config/config.php:483
+#: settings/config/config.php:489
 msgid "Event"
 msgstr ""
 
-#: settings/config/config.php:500
+#: settings/config/config.php:506
 msgid "X-XSS-Protection"
 msgstr ""
 
-#: settings/config/config.php:502
+#: settings/config/config.php:508
 msgid "disabled"
 msgstr ""
 
-#: settings/config/config.php:503
+#: settings/config/config.php:509
 msgid "(recommended)"
 msgstr ""
 
-#: settings/config/config.php:512
+#: settings/config/config.php:518
 msgid "About Recommended Security Headers"
 msgstr ""
 
-#: settings/config/config.php:513
+#: settings/config/config.php:519
 msgid "These security headers are the fundamental security measures to protect your website visitors while visiting your website."
 msgstr ""
 
-#: settings/config/config.php:522
+#: settings/config/config.php:528
 msgid "X-Content-Type options"
 msgstr ""
 
-#: settings/config/config.php:532
-#: settings/config/config.php:546
-#: settings/config/config.php:649
-#: settings/config/config.php:671
-#: settings/config/config.php:686
+#: settings/config/config.php:538
+#: settings/config/config.php:552
+#: settings/config/config.php:655
+#: settings/config/config.php:677
+#: settings/config/config.php:692
 msgid "Off"
 msgstr ""
 
-#: settings/config/config.php:536
+#: settings/config/config.php:542
 msgid "X-Frame options"
 msgstr ""
 
-#: settings/config/config.php:547
+#: settings/config/config.php:553
 msgid "recommended"
 msgstr ""
 
-#: settings/config/config.php:557
+#: settings/config/config.php:563
 msgid "Referrer Policy"
 msgstr ""
 
-#: settings/config/config.php:566
+#: settings/config/config.php:572
 msgid "HTTP Strict Transport Security"
 msgstr ""
 
-#: settings/config/config.php:572
+#: settings/config/config.php:578
 msgid "About HTTP Strict Transport Security"
 msgstr ""
 
-#: settings/config/config.php:573
+#: settings/config/config.php:579
 msgid "Leveraging your SSL certificate with HSTS is a staple for every website. Force your website over SSL, mitigating risks of malicious counterfeit websites in your name."
 msgstr ""
 
-#: settings/config/config.php:588
+#: settings/config/config.php:594
 msgid "Include preload"
 msgstr ""
 
-#: settings/config/config.php:589
+#: settings/config/config.php:595
 msgid "After enabling this feature, you can submit your site to %shstspreload.org%s"
 msgstr ""
 
-#: settings/config/config.php:613
+#: settings/config/config.php:619
 msgid "Include subdomains"
 msgstr ""
 
-#: settings/config/config.php:629
+#: settings/config/config.php:635
 msgid "One day (for testing only)"
 msgstr ""
 
-#: settings/config/config.php:630
+#: settings/config/config.php:636
 msgid "One year"
 msgstr ""
 
-#: settings/config/config.php:631
+#: settings/config/config.php:637
 msgid "Two years (required for preload)"
 msgstr ""
 
-#: settings/config/config.php:633
+#: settings/config/config.php:639
 msgid "Choose the max-age for HSTS"
 msgstr ""
 
-#: settings/config/config.php:657
+#: settings/config/config.php:663
 msgid "About Cross Origin Policies"
 msgstr ""
 
-#: settings/config/config.php:658
+#: settings/config/config.php:664
 msgid "One of the most powerful features, and therefore the most complex are the Cross-Origin headers that can isolate your website so any data leaks are minimized."
 msgstr ""
 
-#: settings/config/config.php:661
+#: settings/config/config.php:667
 msgid "Cross Origin Opener Policy"
 msgstr ""
 
-#: settings/config/config.php:676
+#: settings/config/config.php:682
 msgid "Cross Origin Resource Policy"
 msgstr ""
 
-#: settings/config/config.php:691
+#: settings/config/config.php:697
 msgid "Cross Origin Embedder Policy"
 msgstr ""
 
-#: settings/config/config.php:717
+#: settings/config/config.php:723
 msgid "Disable \"anyone can register\""
 msgstr ""
 
-#: settings/config/config.php:723
+#: settings/config/config.php:729
 msgid "About Hardening"
 msgstr ""
 
-#: settings/config/config.php:724
+#: settings/config/config.php:730
 msgid "Hardening features limit the possibility of potential weaknesses and vulnerabilities which can be misused."
 msgstr ""
 
-#: settings/config/config.php:733
+#: settings/config/config.php:739
 msgid "Disable the built-in file editors"
 msgstr ""
 
-#: settings/config/config.php:743
+#: settings/config/config.php:749
 msgid "Prevent code execution in the public 'Uploads' folder"
 msgstr ""
 
-#: settings/config/config.php:753
+#: settings/config/config.php:759
 msgid "Hide your WordPress version"
 msgstr ""
 
-#: settings/config/config.php:763
+#: settings/config/config.php:769
 msgid "By default, WordPress shows if a username or email address exists when a login fails. This will change it to generic feedback."
 msgstr ""
 
-#: settings/config/config.php:764
+#: settings/config/config.php:770
 msgid "Prevent login feedback"
 msgstr ""
 
-#: settings/config/config.php:774
+#: settings/config/config.php:780
 msgid "Disable directory browsing"
 msgstr ""
 
-#: settings/config/config.php:784
+#: settings/config/config.php:790
 msgid "Disable user enumeration"
 msgstr ""
 
-#: settings/config/config.php:795
+#: settings/config/config.php:801
 msgid "Block the username 'admin'"
 msgstr ""
 
-#: settings/config/config.php:797
+#: settings/config/config.php:803
 msgid "Settings update: Username 'admin' renamed"
 msgstr ""
 
-#: settings/config/config.php:798
+#: settings/config/config.php:804
 msgid "As a security precaution, the username ‘admin’ has been changed on %s. From now on, you can login with '%s' or an email address."
 msgstr ""
 
-#: settings/config/config.php:802
+#: settings/config/config.php:808
 msgid "If the username 'admin' currently exists, you can rename it here. Please note that you can no longer use this username, and should use the new username or an email address"
 msgstr ""
 
-#: settings/config/config.php:812
+#: settings/config/config.php:818
 msgid "Choose new username to replace 'admin'"
 msgstr ""
 
-#: settings/config/config.php:836
+#: settings/config/config.php:842
 msgid "Disable XML-RPC"
 msgstr ""
 
-#: settings/config/config.php:845
+#: settings/config/config.php:851
 msgid "Block user registrations when login and display name are the same"
 msgstr ""
 
-#: settings/config/config.php:854
+#: settings/config/config.php:860
 msgid "This will limit or fully disable HTTP requests that are not needed, but could be used with malicious intent."
 msgstr ""
 
-#: settings/config/config.php:855
+#: settings/config/config.php:861
 msgid "Disable HTTP methods"
 msgstr ""
 
-#: settings/config/config.php:864
+#: settings/config/config.php:870
 msgid "Settings update: Database prefix changed"
 msgstr ""
 
-#: settings/config/config.php:865
+#: settings/config/config.php:871
 msgid "Security through obscurity. Your site is no longer using the default wp_ prefix for database tables. The process has been designed to only complete and replace the tables after all wp_ tables are successfully renamed. In the unlikely event that this does lead to database issues on your site, please navigate to our troubleshooting article."
 msgstr ""
 
-#: settings/config/config.php:868
-#: settings/config/config.php:869
+#: settings/config/config.php:874
+#: settings/config/config.php:875
 msgid "This will permanently change your database prefixes and you can NOT rollback this feature. Please make sure you have a back-up."
 msgstr ""
 
-#: settings/config/config.php:871
+#: settings/config/config.php:877
 msgid "Rename and randomize your database prefix"
 msgstr ""
 
-#: settings/config/config.php:880
+#: settings/config/config.php:886
 msgid "A debug.log is publicly accessibile and has a standard location. This will change the location to a randomly named folder in /wp-content/"
 msgstr ""
 
-#: settings/config/config.php:882
+#: settings/config/config.php:888
 msgid "Settings update: Debug.log file relocated"
 msgstr ""
 
-#: settings/config/config.php:883
+#: settings/config/config.php:889
 msgid "From now on, the debug.log won’t be publicly accessible whenever wp-debugging is enabled. The debug log will be stored in a randomly named folder in /wp-content/. This prevents possible leakage of sensitive debugging information."
 msgstr ""
 
-#: settings/config/config.php:886
+#: settings/config/config.php:892
 msgid "Change debug.log file location"
 msgstr ""
 
-#: settings/config/config.php:895
+#: settings/config/config.php:901
 msgid "Disable application passwords"
 msgstr ""
 
-#: settings/config/config.php:904
-#: settings/config/config.php:905
+#: settings/config/config.php:910
+#: settings/config/config.php:911
 msgid "This setting will block attempts to assign administrator roles outside the native user creation process by WordPress. This might include other plugins that create, edit or assign roles to users. If you need to create an administrator in a third-party plugin, temporarily disable this setting while you make the changes."
 msgstr ""
 
-#: settings/config/config.php:909
+#: settings/config/config.php:915
 msgid "Unauthorized administrators"
 msgstr ""
 
-#: settings/config/config.php:910
+#: settings/config/config.php:916
 msgid "Many vulnerabilities are exploited by injecting a user with administrator capabilities outside of the native WordPress creation process. Under advanced hardening you can prevent this from happening."
 msgstr ""
 
-#: settings/config/config.php:912
+#: settings/config/config.php:918
 msgid "Restrict creation of administrator roles"
 msgstr ""
 
-#: settings/config/config.php:922
+#: settings/config/config.php:928
 msgid "Allows you to enter a custom login URL."
 msgstr ""
 
-#: settings/config/config.php:923
+#: settings/config/config.php:929
 msgid "Enable Custom login URL"
 msgstr ""
 
-#: settings/config/config.php:925
+#: settings/config/config.php:931
 msgid "You have changed your login URL"
 msgstr ""
 
-#: settings/config/config.php:926
+#: settings/config/config.php:932
 msgid "Your login URL has changed to {login_url} to prevent common bot attacks on standard login URLs. Learn more about this feature, common questions and measures to prevent any issues."
 msgstr ""
 
-#: settings/config/config.php:937
+#: settings/config/config.php:943
 msgid "Enter a custom login URL. This allows you to log in via this custom URL instead of /wp-admin or /wp-login.php"
 msgstr ""
 
-#: settings/config/config.php:938
+#: settings/config/config.php:944
 msgid "Example: If you want to change your login page from /wp-admin/ to /control/ answer: control"
 msgstr ""
 
-#: settings/config/config.php:939
+#: settings/config/config.php:945
 msgid "Custom login URL"
 msgstr ""
 
-#: settings/config/config.php:956
+#: settings/config/config.php:962
 msgid "Users trying to enter via /wp-admin or /wp-login.php will be redirected to this URL."
 msgstr ""
 
-#: settings/config/config.php:992
+#: settings/config/config.php:998
 #: settings/config/menu.php:258
 msgid "XML-RPC"
 msgstr ""
 
-#: settings/config/config.php:1003
-msgid "Method"
+#: settings/config/config.php:1004
+msgid "About XML-RPC"
 msgstr ""
 
-#: settings/config/config.php:1009
-msgid "Login status"
+#: settings/config/config.php:1005
+msgid "XML-RPC is a mechanism originally implemented into WordPress to publish content without the need to actually login to the backend. It is also used to login to WordPress from devices other than desktop, or the regular wp-admin interface."
 msgstr ""
 
 #: settings/config/config.php:1015
-msgid "Count"
+msgid "Method"
 msgstr ""
 
 #: settings/config/config.php:1021
-#: settings/config/config.php:1144
-#: settings/config/config.php:1388
-#: settings/config/config.php:1570
-#: settings/config/config.php:1599
-msgid "Action"
+msgid "Login status"
 msgstr ""
 
 #: settings/config/config.php:1027
+msgid "Count"
+msgstr ""
+
+#: settings/config/config.php:1033
+#: settings/config/config.php:1156
+#: settings/config/config.php:1400
+#: settings/config/config.php:1582
+#: settings/config/config.php:1611
+msgid "Action"
+msgstr ""
+
+#: settings/config/config.php:1039
 #: settings/build/641.dfc88a5f54474e801fd6.js:1
 #: settings/src/Settings/LearningMode/Delete.js:12
 #: settings/src/Settings/LimitLoginAttempts/IpAddressDatatable.js:257
@@ -2560,79 +2588,81 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: settings/config/config.php:1039
+#: settings/config/config.php:1051
 msgid "Enable login protection"
 msgstr ""
 
-#: settings/config/config.php:1043
+#: settings/config/config.php:1055
 msgid "About Login Protection"
 msgstr ""
 
-#: settings/config/config.php:1044
+#: settings/config/config.php:1056
 msgid "Two-step verification is the first feature we regard as login protection. Want to know more about this feature, and what is to come?"
 msgstr ""
 
-#: settings/config/config.php:1061
+#: settings/config/config.php:1073
 msgid "Enable two-step verification"
 msgstr ""
 
-#: settings/config/config.php:1062
+#: settings/config/config.php:1074
 msgid "By enabling this feature you understand that email validation is required, and you can send email from your server reliably."
 msgstr ""
 
-#: settings/config/config.php:1082
+#: settings/config/config.php:1094
 msgid "Optional for:"
 msgstr ""
 
-#: settings/config/config.php:1083
+#: settings/config/config.php:1095
 msgid "Two-step verification will be optional for these user roles, and they can disable it on first login."
 msgstr ""
 
-#: settings/config/config.php:1100
+#: settings/config/config.php:1112
 msgid "Force on:"
 msgstr ""
 
-#: settings/config/config.php:1101
+#: settings/config/config.php:1113
 msgid "These user roles are forced to enter the authentication code."
 msgstr ""
 
-#: settings/config/config.php:1115
+#: settings/config/config.php:1127
 #: settings/config/menu.php:310
-#: settings/config/menu.php:401
+#: settings/config/menu.php:390
+#: settings/config/menu.php:411
 msgid "Users"
 msgstr ""
 
-#: settings/config/config.php:1136
+#: settings/config/config.php:1148
 msgid "User role"
 msgstr ""
 
-#: settings/config/config.php:1158
+#: settings/config/config.php:1170
 msgid "Mixed content scan"
 msgstr ""
 
-#: settings/config/config.php:1162
+#: settings/config/config.php:1174
 msgid "About the Mixed Content Scan"
 msgstr ""
 
-#: settings/config/config.php:1163
+#: settings/config/config.php:1175
+#: settings/config/menu.php:82
 msgid "The extensive mixed content scan will list all current and future issues and provide a fix, or instructions to fix manually."
 msgstr ""
 
-#: settings/config/config.php:1167
+#: settings/config/config.php:1179
 msgid "Type"
 msgstr ""
 
-#: settings/config/config.php:1173
-#: settings/config/config.php:1611
+#: settings/config/config.php:1185
+#: settings/config/config.php:1623
 msgid "Description"
 msgstr ""
 
-#: settings/config/config.php:1179
-#: settings/config/config.php:1373
+#: settings/config/config.php:1191
+#: settings/config/config.php:1385
 msgid "Location"
 msgstr ""
 
-#: settings/config/config.php:1192
+#: settings/config/config.php:1204
 #: settings/build/187.c8f8487a25b28518fe1f.js:1
 #: settings/build/641.dfc88a5f54474e801fd6.js:1
 #: settings/src/Modal/Modal.js:66
@@ -2641,7 +2671,7 @@ msgstr ""
 msgid "Fix"
 msgstr ""
 
-#: settings/config/config.php:1207
+#: settings/config/config.php:1219
 #: settings/build/641.dfc88a5f54474e801fd6.js:1
 #: settings/src/Settings/LearningMode/ChangeStatus.js:7
 #: settings/src/Settings/LearningMode/LearningMode.js:240
@@ -2654,7 +2684,7 @@ msgstr ""
 msgid "Allow"
 msgstr ""
 
-#: settings/config/config.php:1207
+#: settings/config/config.php:1219
 #: settings/build/641.dfc88a5f54474e801fd6.js:1
 #: settings/src/Settings/LearningMode/LearningMode.js:290
 #: settings/src/Settings/LearningMode/LearningMode.js:296
@@ -2662,190 +2692,182 @@ msgstr ""
 msgid "Disable"
 msgstr ""
 
-#: settings/config/config.php:1207
+#: settings/config/config.php:1219
 msgid "Self (Default)"
 msgstr ""
 
-#: settings/config/config.php:1208
+#: settings/config/config.php:1220
 msgid "Permissions Policy"
 msgstr ""
 
-#: settings/config/config.php:1213
+#: settings/config/config.php:1225
 msgid "About the Permission Policy"
 msgstr ""
 
-#: settings/config/config.php:1214
-msgid "Browser features are plentiful, but most are not needed on your website."
-msgstr ""
-
-#: settings/config/config.php:1214
-msgid "They might be misused if you don’t actively tell the browser to disable these features."
-msgstr ""
-
-#: settings/config/config.php:1218
+#: settings/config/config.php:1230
 msgid "Feature"
 msgstr ""
 
-#: settings/config/config.php:1223
+#: settings/config/config.php:1235
 msgid "Options"
 msgstr ""
 
-#: settings/config/config.php:1296
+#: settings/config/config.php:1308
 msgid "Enable Permissions Policy"
 msgstr ""
 
-#: settings/config/config.php:1305
+#: settings/config/config.php:1317
 msgid "Serve encrypted and authenticated responses"
 msgstr ""
 
-#: settings/config/config.php:1311
+#: settings/config/config.php:1323
 msgid "About the Content Security Policy"
 msgstr ""
 
-#: settings/config/config.php:1312
+#: settings/config/config.php:1324
 msgid "The content security policy has many options, so we always recommend starting in ‘learning mode’ to see what files and scripts are loaded."
 msgstr ""
 
-#: settings/config/config.php:1327
+#: settings/config/config.php:1339
 msgid "Disable (Default)"
 msgstr ""
 
-#: settings/config/config.php:1331
+#: settings/config/config.php:1343
 msgid "Allow your domain to be embedded"
 msgstr ""
 
-#: settings/config/config.php:1340
+#: settings/config/config.php:1352
 msgid "Add additional domains which can embed your website, if needed. Comma seperated."
 msgstr ""
 
-#: settings/config/config.php:1378
+#: settings/config/config.php:1390
 msgid "Directive"
 msgstr ""
 
-#: settings/config/config.php:1383
+#: settings/config/config.php:1395
 msgid "Source"
 msgstr ""
 
-#: settings/config/config.php:1405
+#: settings/config/config.php:1417
 #: modal/build/index.7baa22d2f235f90d6196.js:1
 #: modal/src/components/DeactivationModal/DeactivationModal.js:71
 #: modal/src/components/DeactivationModal/DeactivationModal.js:113
 msgid "Vulnerability detection"
 msgstr ""
 
-#: settings/config/config.php:1406
+#: settings/config/config.php:1418
 msgid "This feature depends on multiple standard background processes. If a process fails or is unavailable on your system, detection might not work. We run frequent tests for this purpose. We will notify you accordingly if there are any issues."
 msgstr ""
 
-#: settings/config/config.php:1413
+#: settings/config/config.php:1425
 msgid "About Vulnerabilities"
 msgstr ""
 
-#: settings/config/config.php:1414
+#: settings/config/config.php:1426
 msgid "Really Simple SSL collects information about plugins, themes, and core vulnerabilities from our database powered by WPVulnerability. Anonymized data about these vulnerable components will be sent to Really Simple SSL for statistical analysis to improve open-source contributions. For more information, please read our privacy statement."
 msgstr ""
 
-#: settings/config/config.php:1430
+#: settings/config/config.php:1442
 msgid "If there's a vulnerability, you will also get feedback on the themes and plugin overview."
 msgstr ""
 
-#: settings/config/config.php:1433
+#: settings/config/config.php:1445
 msgid "Feedback in plugin overview"
 msgstr ""
 
-#: settings/config/config.php:1450
-#: settings/config/config.php:1472
-#: settings/config/config.php:1494
-#: settings/config/config.php:1583
+#: settings/config/config.php:1462
+#: settings/config/config.php:1484
+#: settings/config/config.php:1506
+#: settings/config/config.php:1595
 msgid "None"
 msgstr ""
 
-#: settings/config/config.php:1451
+#: settings/config/config.php:1463
 msgid "Low-risk (default)"
 msgstr ""
 
-#: settings/config/config.php:1452
-#: settings/config/config.php:1474
-#: settings/config/config.php:1496
-#: settings/config/config.php:1585
+#: settings/config/config.php:1464
+#: settings/config/config.php:1486
+#: settings/config/config.php:1508
+#: settings/config/config.php:1597
 msgid "Medium-risk"
 msgstr ""
 
-#: settings/config/config.php:1453
-#: settings/config/config.php:1497
-#: settings/config/config.php:1586
+#: settings/config/config.php:1465
+#: settings/config/config.php:1509
+#: settings/config/config.php:1598
 msgid "High-risk"
 msgstr ""
 
-#: settings/config/config.php:1454
-#: settings/config/config.php:1476
-#: settings/config/config.php:1587
+#: settings/config/config.php:1466
+#: settings/config/config.php:1488
+#: settings/config/config.php:1599
 msgid "Critical"
 msgstr ""
 
-#: settings/config/config.php:1456
+#: settings/config/config.php:1468
 msgid "Really Simple SSL dashboard"
 msgstr ""
 
-#: settings/config/config.php:1473
+#: settings/config/config.php:1485
 msgid "Low-risk "
 msgstr ""
 
-#: settings/config/config.php:1475
+#: settings/config/config.php:1487
 msgid "High-risk (default)"
 msgstr ""
 
-#: settings/config/config.php:1478
+#: settings/config/config.php:1490
 msgid "Site-wide, admin notification"
 msgstr ""
 
-#: settings/config/config.php:1495
-#: settings/config/config.php:1584
+#: settings/config/config.php:1507
+#: settings/config/config.php:1596
 msgid "Low-risk"
 msgstr ""
 
-#: settings/config/config.php:1498
+#: settings/config/config.php:1510
 msgid "Critical (default)"
 msgstr ""
 
-#: settings/config/config.php:1500
+#: settings/config/config.php:1512
 #: settings/config/menu.php:300
 msgid "Email"
 msgstr ""
 
-#: settings/config/config.php:1501
+#: settings/config/config.php:1513
 msgid "This will send emails about vulnerabilities directly from your server. Make sure you can receive emails by the testing a preview below. If this feature is disabled, please enable notifications under general settings."
 msgstr ""
 
-#: settings/config/config.php:1521
-#: settings/config/config.php:1524
+#: settings/config/config.php:1533
+#: settings/config/config.php:1536
 #: settings/build/641.dfc88a5f54474e801fd6.js:1
 #: settings/src/Settings/RiskConfiguration/NotificationTester.js:39
 msgid "Test notifications"
 msgstr ""
 
-#: settings/config/config.php:1522
+#: settings/config/config.php:1534
 msgid "Test notifications can be used to test email delivery and shows how vulnerabilities will be reported on your WordPress installation."
 msgstr ""
 
-#: settings/config/config.php:1539
+#: settings/config/config.php:1551
 msgid "Vulnerabilities Overview"
 msgstr ""
 
-#: settings/config/config.php:1551
+#: settings/config/config.php:1563
 msgid "Component"
 msgstr ""
 
-#: settings/config/config.php:1558
-#: settings/config/config.php:1605
+#: settings/config/config.php:1570
+#: settings/config/config.php:1617
 msgid "Risk"
 msgstr ""
 
-#: settings/config/config.php:1626
+#: settings/config/config.php:1638
 msgid "I have read and understood the risks to intervene with these measures."
 msgstr ""
 
-#: settings/config/config.php:1627
+#: settings/config/config.php:1639
 #: settings/build/641.dfc88a5f54474e801fd6.js:1
 #: settings/build/688.34c4ba56bd822867486e.js:1
 #: settings/src/Dashboard/SslLabs/SslLabs.js:319
@@ -2853,7 +2875,11 @@ msgstr ""
 msgid "Read more"
 msgstr ""
 
-#: settings/config/config.php:1645
+#: settings/config/config.php:1658
+msgid "Enforce Strong Passwords"
+msgstr ""
+
+#: settings/config/config.php:1663
 msgid "This adds extra requirements for strong passwords for new users and updated passwords."
 msgstr ""
 
@@ -2887,8 +2913,7 @@ msgstr ""
 
 #: settings/config/menu.php:23
 #: settings/config/menu.php:29
-#: settings/config/menu.php:290
-#: settings/config/menu.php:362
+#: settings/config/menu.php:366
 msgid "General"
 msgstr ""
 
@@ -2939,10 +2964,6 @@ msgstr ""
 msgid "Mixed Content Scan"
 msgstr ""
 
-#: settings/config/menu.php:82
-msgid "Discover and address existing and new mixed content issues with clear fixes, ensuring you're always up-to-date."
-msgstr ""
-
 #: settings/config/menu.php:90
 #: modal/build/index.7baa22d2f235f90d6196.js:1
 #: modal/src/components/DeactivationModal/DeactivationModal.js:86
@@ -2954,19 +2975,19 @@ msgid "Recommended Security Headers"
 msgstr ""
 
 #: settings/config/menu.php:98
-msgid "The Fundamentals"
+msgid "The Essentials"
 msgstr ""
 
 #: settings/config/menu.php:100
-msgid "Protecting your website visitors from mailicious attacks and data breaches should be your #1 priority, start with the fundamentals with Really Simple Security"
+msgid "Protecting your website visitors from mailicious attacks and data breaches should be your #1 priority, start with the essentials with Really Simple Security"
 msgstr ""
 
 #: settings/config/menu.php:109
-msgid "HSTS forces browsers to always load a website via HTTPS, it removes unnecessary redirects and prevents manipulation of data originating from or send to your website, including credentials."
+msgid "HSTS forces browsers always to load a website via HTTPS. It prevents unnecessary redirects and prevents manipulation of data originating from communication with your website."
 msgstr ""
 
 #: settings/config/menu.php:118
-msgid "Blocks third parties misusing data collected by microphone, camera, GEO Location etc, when enabled for your website."
+msgid "Control browser features that could allow third parties to misuse data collected by microphone, camera, GEO Location etc, when enabled for your website."
 msgstr ""
 
 #: settings/config/menu.php:127
@@ -2978,19 +2999,19 @@ msgid "Content Security Policy Headers"
 msgstr ""
 
 #: settings/config/menu.php:138
-msgid "A correctly configured Content Security Policy can protect your visitors from the most common web attacks. It all start with denying and upgrading insecure requests on your website."
+msgid "A correctly configured Content Security Policy can protect your visitors from the most common web attacks. It all starts with denying and upgrading insecure requests on your website."
 msgstr ""
 
 #: settings/config/menu.php:148
-msgid "Prevent clickjacking and other malicious attacks by restricting sources that are permitted to embed content on your website."
+msgid "Prevent clickjacking and other malicious attacks by restricting sources that are permitted to embed content from your website."
 msgstr ""
 
 #: settings/config/menu.php:160
-msgid "Get a detailed look of the third parties, sources and files loaded on your website and use only what's necessary, preventing Cross-Site Scripting and data injection."
+msgid "Allow only necessary third party resources to be loaded on your website, thus preventing common attacks. Use our unique learning mode to automatically configure your Content Security Policy."
 msgstr ""
 
 #: settings/config/menu.php:171
-msgid "This is a security feature implemented by web browsers to control how web pages from different origins can interact with each other"
+msgid "This is a security feature implemented by web browsers to control how web pages from different origins can interact with each other."
 msgstr ""
 
 #: settings/config/menu.php:186
@@ -3021,16 +3042,16 @@ msgid "This is the vulnerability overview. Here you will find current known vuln
 msgstr ""
 
 #: settings/config/menu.php:215
-msgid "Measures"
-msgstr ""
-
 #: settings/config/menu.php:220
-#: settings/config/menu.php:225
-msgid "Automated Measures"
+msgid "Measures"
 msgstr ""
 
 #: settings/config/menu.php:221
 msgid "You can choose to automate the most common actions for a vulnerability. Each action is set to a minimum risk level, similar to the notifications. Please read the instructions to learn more about the process."
+msgstr ""
+
+#: settings/config/menu.php:225
+msgid "Automated Measures"
 msgstr ""
 
 #: settings/config/menu.php:226
@@ -3056,11 +3077,11 @@ msgid "Advanced Hardening"
 msgstr ""
 
 #: settings/config/menu.php:252
-msgid "Hardening features are specifically designed for WordPress and reduce possible vulnerabilities by disallowing unused WordPress features, and strenthening defenses against potential attacks and threats."
+msgid "Advanced hardening features complement the basic hardening functions by protecting your site against advanced threats and attacks."
 msgstr ""
 
 #: settings/config/menu.php:259
-msgid "XML-RPC Learning Mode"
+msgid "XML-RPC with Learning Mode"
 msgstr ""
 
 #: settings/config/menu.php:263
@@ -3084,17 +3105,29 @@ msgid "Two-Step verification"
 msgstr ""
 
 #: settings/config/menu.php:287
-#: settings/config/menu.php:297
-#: settings/config/menu.php:307
-msgid "Get Login Protection with Really Simple SSL Pro"
+msgid "Start login protection by adding an additional layer during authentication. This will leave authentication less dependent on just a single password. Want to force strong passwords? Check out Password Security."
+msgstr ""
+
+#: settings/config/menu.php:290
+msgid "Two-Step Verification"
 msgstr ""
 
 #: settings/config/menu.php:291
 msgid "Enhancing the authentication process and optimizing user management makes Login Protection a foundational element in securing your website."
 msgstr ""
 
+#: settings/config/menu.php:297
+msgid "Send an email code during login. You can force user roles to use two-step verification, or leave the choose with your users, if so desired."
+msgstr ""
+
 #: settings/config/menu.php:301
 msgid "Two-step verification will enhance the authentication process by adding an additional layer. Selected users will be required to enter their correct credentials first, and then they must provide a one-time code sent to their email as an extra step."
+msgstr ""
+
+#: settings/config/menu.php:307
+#: settings/config/menu.php:391
+#: settings/config/menu.php:421
+msgid "Here you control the users that are automatically, and temporarily blocked. You can also add or remove users manually. We recommend blocking ‘admin’ as username as a start."
 msgstr ""
 
 #: settings/config/menu.php:311
@@ -3121,7 +3154,7 @@ msgstr ""
 msgid "Disabled"
 msgstr ""
 
-#: settings/config/menu.php:337
+#: settings/config/menu.php:336
 #: settings/config/menu.php:343
 msgid "Password Security"
 msgstr ""
@@ -3139,73 +3172,87 @@ msgid "Improve security by requiring strong passwords and forced periodic passwo
 msgstr ""
 
 #: settings/config/menu.php:354
+#: settings/config/menu.php:362
 msgid "Limit Login Attempts"
 msgstr ""
 
 #: settings/config/menu.php:363
+#: settings/config/menu.php:377
+#: settings/config/menu.php:383
+msgid "Customize login attempts, intervals, and temporary lockouts according to your preferences to regulate the level of security on your website during authentication. No additional settings required"
+msgstr ""
+
+#: settings/config/menu.php:367
+#: settings/config/menu.php:369
 msgid "Protect your site against brute force login attacks by limiting the number of login attempts. Enabling this feature will temporary lock-out a username and the IP address that tries to login, after the set number of false logins."
 msgstr ""
 
-#: settings/config/menu.php:365
-#: settings/config/menu.php:376
-#: settings/config/menu.php:410
-#: settings/config/menu.php:444
-#: settings/config/menu.php:468
-#: settings/config/menu.php:496
-msgid "Get Limit Login Attempts with Really Simple SSL Pro"
-msgstr ""
-
-#: settings/config/menu.php:373
+#: settings/config/menu.php:380
 msgid "Limit Attempts"
 msgstr ""
 
-#: settings/config/menu.php:374
+#: settings/config/menu.php:381
 msgid "The settings below determine how strict your site will be protected. You can leave these settings on their default values, unless you experience issues."
 msgstr ""
 
-#: settings/config/menu.php:389
-#: settings/config/menu.php:423
+#: settings/config/menu.php:399
+#: settings/config/menu.php:437
 msgid "Permanent block"
 msgstr ""
 
-#: settings/config/menu.php:397
-#: settings/config/menu.php:431
+#: settings/config/menu.php:407
+#: settings/config/menu.php:445
 msgid "Temporary block"
 msgstr ""
 
-#: settings/config/menu.php:403
+#: settings/config/menu.php:414
 msgid "Blocked usernames will be automatically unblocked after the above-configured interval. In the table below you can instantly unblock usernames."
 msgstr ""
 
-#: settings/config/menu.php:405
+#: settings/config/menu.php:416
 msgid "You can prevent usernames from being temporarily blocked by adding them to this list. The IP address that triggers false logins will still be blocked."
 msgstr ""
 
-#: settings/config/menu.php:407
+#: settings/config/menu.php:418
 msgid "You can add any non-existing username to this table, to instantly block IP addresses that try common usernames like \"admin\"."
 msgstr ""
 
-#: settings/config/menu.php:435
+#: settings/config/menu.php:428
+#: settings/config/menu.php:449
 msgid "IP Addresses"
 msgstr ""
 
-#: settings/config/menu.php:437
+#: settings/config/menu.php:429
+msgid "IP Addresses can be allowed, blocked or will show up when your settings add them to a temporary blocklist. If you want to add your IP to the allowlist, please read the article provided at the right-hand side for instructions."
+msgstr ""
+
+#: settings/config/menu.php:451
 msgid "Blocked IP addresses will be automatically unblocked after the above-configured interval. In the table below you can instantly unblock IP addresses."
 msgstr ""
 
-#: settings/config/menu.php:439
+#: settings/config/menu.php:453
 msgid "You can prevent IP addresses from being temporarily blocked by adding them to this list. This can be convenient if you share an IP address with other site users. Usernames that trigger false logins will still be blocked."
 msgstr ""
 
-#: settings/config/menu.php:441
+#: settings/config/menu.php:455
 msgid "You can indefinitely block known abusive IP addresses, to completely prevent them from trying to login."
 msgstr ""
 
-#: settings/config/menu.php:457
+#: settings/config/menu.php:463
+#: settings/config/menu.php:480
+msgid "Event Log"
+msgstr ""
+
+#: settings/config/menu.php:464
+#: settings/config/menu.php:481
+msgid "The Event Log shows all relevant events related to limit login attempts. You can filter the log using the dropdown on the top-right to only show warnings."
+msgstr ""
+
+#: settings/config/menu.php:472
 msgid "Warnings"
 msgstr ""
 
-#: settings/config/menu.php:461
+#: settings/config/menu.php:476
 #: settings/build/641.dfc88a5f54474e801fd6.js:1
 #: settings/src/Settings/EventLog/EventLogDataTable.js:214
 #: settings/src/Settings/LearningMode/LearningMode.js:139
@@ -3214,55 +3261,52 @@ msgstr ""
 msgid "All"
 msgstr ""
 
-#: settings/config/menu.php:465
-msgid "Event Log"
-msgstr ""
-
-#: settings/config/menu.php:466
-msgid "The Event Log shows all relevant events related to limit login attempts. You can filter the log using the dropdown on the top-right to only show warnings."
-msgstr ""
-
-#: settings/config/menu.php:485
-msgid "Continents"
-msgstr ""
-
-#: settings/config/menu.php:489
-msgid "Countries"
-msgstr ""
-
-#: settings/config/menu.php:493
+#: settings/config/menu.php:488
+#: settings/config/menu.php:509
 msgid "Regions"
 msgstr ""
 
-#: settings/config/menu.php:494
+#: settings/config/menu.php:489
+msgid "You can easily block countries, or entire continents. You can act on the event log below and see which countries are suspicious, or exclude all countries but your own."
+msgstr ""
+
+#: settings/config/menu.php:501
+msgid "Continents"
+msgstr ""
+
+#: settings/config/menu.php:505
+msgid "Countries"
+msgstr ""
+
+#: settings/config/menu.php:510
 msgid "If your site is only intended for users to login from specific geographical regions, you can entirely prevent logins from certain continents or countries."
 msgstr ""
 
-#: settings/config/menu.php:511
+#: settings/config/menu.php:525
 msgid "We have tried to make our Wizard as simple and fast as possible. Although these questions are all necessary, if there’s any way you think we can improve the plugin, please let us %sknow%s!"
 msgstr ""
 
-#: settings/config/menu.php:513
+#: settings/config/menu.php:527
 msgid " Please note that you can always save and finish the wizard later, use our %sdocumentation%s for additional information or log a %ssupport ticket%s if you need our assistance."
 msgstr ""
 
-#: settings/config/menu.php:521
+#: settings/config/menu.php:535
 msgid "Letʼs Encrypt is a free, automated and open certificate authority brought to you by the nonprofit Internet Security Research Group (ISRG)."
 msgstr ""
 
-#: settings/config/menu.php:528
+#: settings/config/menu.php:542
 msgid "General Settings"
 msgstr ""
 
-#: settings/config/menu.php:532
+#: settings/config/menu.php:546
 msgid "Hosting"
 msgstr ""
 
-#: settings/config/menu.php:533
+#: settings/config/menu.php:547
 msgid "Below you will find the instructions for different hosting environments and configurations. If you start the process with the necessary instructions and credentials the next view steps will be done in no time."
 msgstr ""
 
-#: settings/config/menu.php:543
+#: settings/config/menu.php:557
 msgid "DNS verification"
 msgstr ""
 
