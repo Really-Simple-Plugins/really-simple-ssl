@@ -14,6 +14,7 @@
       flex-grow: 0;
       flex-direction: row-reverse;
       min-width: initial;
+
     }
   }
 
@@ -110,7 +111,7 @@ nav.rdt_Pagination > div > svg {
   }
 }
 
-.rsssl-vulnerabilities_overview, .rsssl-vulnerabilities_measures, .rsssl-limit_login_attempts_country, .rsssl-limit_login_attempts_users, .rsssl-limit_login_attempts_event_log, .rsssl-mixedcontentscan, .rsssl-limit_login_attempts_ip_address, .rsssl-permissions_policy, .rsssl-content_security_policy, .rsssl-two_fa_users, .rsssl-hardening_xml {
+.rsssl-vulnerabilities_overview, .rsssl-vulnerabilities_measures, .rsssl-limit_login_attempts_country, .rsssl-limit_login_attempts_users, .rsssl-limit_login_attempts_event_log, .rsssl-mixed-content-scan, .rsssl-limit_login_attempts_ip_address, .rsssl-permissions_policy, .rsssl-content_security_policy, .rsssl-two_fa_users, .rsssl-hardening-xml {
   .rsssl-field-wrap {
     margin-left: CALC(-1 * var(--rsp-spacing-l));
     margin-right: CALC(-1 * var(--rsp-spacing-l));
@@ -209,7 +210,7 @@ nav.rdt_Pagination > div > svg {
 /* Section for EdgeCases and other specific styling */
 /* EdgeCase: EventLog */
 .rsssl-content_security_policy,
-.rsssl-hardening_xml,
+.rsssl-hardening-xml,
 .rsssl-vulnerabilities_overview,
 .rsssl-limit_login_attempts_ip_address,
 .rsssl-limit_login_attempts_users,
@@ -225,7 +226,7 @@ nav.rdt_Pagination > div > svg {
     padding: 0 25px;
   }
 
-  rdt_tableCell {
+  .rdt_tableCell {
     &:has(div > .rsssl-action-buttons) {
       position: relative;
     }
@@ -305,14 +306,17 @@ nav.rdt_Pagination > div > svg {
   }
 }
 
-/* EdgeCase: hardening_xml */
+/* EdgeCase: hardening-xml */
 .rsssl-hardening-xml {
   .rsssl-field-wrap {
-    .rdt_TableCell:last-child div {
-      button, a {
-        margin-left: 0;
-      }
-    }
+    padding-inline: 0 !important;
+
+  }
+  .rdt_TableCol:first-child {
+    padding: 0 25px !important;
+  }
+  .rdt_TableCell:last-child {
+    padding: 0 25px !important;
   }
   .rdt_TableRow .rdt_TableCell:last-child {
     flex:1;
