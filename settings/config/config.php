@@ -1557,33 +1557,37 @@ function rsssl_fields( $load_values = true ) {
 					'enable_vulnerability_scanner' => 1,
 				]
 			],
-			'columns' => [
+			'columns'          => [
 				[
-					'id'      => 'component',
-					'name'     => __( 'Component', 'really-simple-ssl' ),
+					'id'       => 'component',
+					'name'     => __('Component', 'really-simple-ssl'),
 					'sortable' => false,
 					'column'   => 'Name',
-					'width'    => '20%',
+					'width'    => '55%',
+					'searchable' => true,
 				],
 				[
-					'id'      => 'risk',
-					'name'     => __( 'Risk', 'really-simple-ssl' ),
-					'sortable' => false,
-					'column'   => 'risk_name',
-				],
-				[
-					'id'      => 'date',
-					'name'     => __( 'Date', 'really-simple-ssl' ),
+					'id'       => 'date',
+					'name'     => __('Date', 'really-simple-ssl'),
 					'sortable' => false,
 					'column'   => 'date',
+					'width'    => '15%',
 				],
 				[
-					'id'      => 'action',
-					'name'     => __( 'Action', 'really-simple-ssl' ),
+					'id'       => 'risk',
+					'name'     => __('Risk', 'really-simple-ssl'),
+					'sortable' => false,
+					'column'   => 'risk_name',
+					'width'    => '10%',
+					'searchable' => true,
+				],
+				[
+					'id'       => 'action',
+					'name'     => __('', 'really-simple-ssl'),
 					'sortable' => false,
 					'column'   => 'vulnerability_action',
-				],[]
-
+					'width'   => '20%',
+				]
 			]
 		],
 		[

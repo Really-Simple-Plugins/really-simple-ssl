@@ -112,7 +112,7 @@ function rsssl_menu() {
 							'helpLink' => 'https://really-simple-ssl.com/instructions/about-hsts/?mtm_campaign=instructions&mtm_source=free',
 						],
 						[
-							'id' => 'permissions_policy',
+							'id' => '||',
 							'group_id' => 'permissions_policy',
 							'title' => 'Permissions Policy',
 							'premium_text'         => __( "Control browser features that could allow third parties to misuse data collected by microphone, camera, GEO Location etc, when enabled for your website.", 'really-simple-ssl' ),

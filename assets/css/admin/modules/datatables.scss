@@ -110,7 +110,7 @@ nav.rdt_Pagination > div > svg {
   }
 }
 
-.rsssl-vulnerabilities_overview, .rsssl-vulnerabilities_measures, .rsssl-limit_login_attempts_country, .rsssl-limit_login_attempts_users, .rsssl-limit_login_attempts_event_log, .rsssl-mixedcontentscan, .rsssl-limit_login_attempts_ip_address, .rsssl-permissions_policy, .rsssl-content_security_policy, .rsssl-two_fa_users, .rsssl-hardening_xml {
+.rsssl-vulnerabilities_overview, .rsssl-vulnerabilities-overview,  .rsssl-vulnerabilities_measures, .rsssl-limit_login_attempts_country, .rsssl-limit_login_attempts_users, .rsssl-limit_login_attempts_event_log, .rsssl-mixedcontentscan, .rsssl-limit_login_attempts_ip_address, .rsssl-permissions_policy, .rsssl-content_security_policy, .rsssl-two_fa_users, .rsssl-hardening_xml {
   .rsssl-field-wrap {
     margin-left: CALC(-1 * var(--rsp-spacing-l));
     margin-right: CALC(-1 * var(--rsp-spacing-l));
