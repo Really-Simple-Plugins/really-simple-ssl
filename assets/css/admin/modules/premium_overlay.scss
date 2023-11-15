@@ -2,19 +2,19 @@
   .rsssl-locked {
     &.rsssl-locked-premium {
       .rsssl-locked-overlay {
-        top: calc(100% - 190px) !important;
+        bottom: var(--rsp-spacing-s);
         flex-direction: column;
       }
     }
     .rsssl-locked-overlay {
       display: flex;
-      top: calc(100% - 100px) !important;
+      bottom: 0;
       text-align: left;
       margin-bottom: 20px;
       padding: 0;
 
       &.rsssl-premium {
-        top: calc(100% - 190px) !important;
+        bottom: 0;
         flex-direction: column;
       }
 
