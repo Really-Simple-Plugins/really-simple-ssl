@@ -260,8 +260,7 @@ function rsssl_menu() {
 							'premium'   => true,
 							'upgrade'   => 'https://really-simple-ssl.com/pro/?mtm_campaign=hardening&mtm_source=free&mtm_content=upgrade',
 							'helpLink'  => 'https://really-simple-ssl.com/instructions/about-hardening-features#xml-rpc?mtm_campaign=instructions&mtm_source=free',
-							'premium_text' => __( "Not sure if you're using XML-RPC, or want to restrict unauthorized use of XML-RPC? With learning mode you can see exactly which sources use XML-RPC, and you can
-							revoke where necessary.", 'really-simple-ssl' ),
+							'premium_text' => __( "Not sure if you're using XML-RPC, or want to restrict unauthorized use of XML-RPC? With learning mode you can see exactly which sources use XML-RPC, and you can revoke where necessary.", 'really-simple-ssl' ),
 						],
 					],
 				],
