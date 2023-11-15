@@ -337,7 +337,6 @@ function rsssl_fields( $load_values = true ) {
 					'sortable' => false,
 					'column'   => 'action',
 				],
-
 			],
 		],
 		[
