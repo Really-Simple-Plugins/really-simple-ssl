@@ -73,32 +73,32 @@ const DeactivationModal = () => {
             {
                 'icon':'circle-times',
                 'color':'red',
-                'text': __("Advanced WordPress hardening", "really-simple-ssl"),
-            },
-            {
-                'icon':'circle-times',
-                'color':'red',
-                'text': __("Two-Factor authentication", "really-simple-ssl"),
-            },
-            {
-                'icon':'circle-times',
-                'color':'red',
                 'text': __("Security Headers", "really-simple-ssl"),
             },
             {
                 'icon':'circle-times',
                 'color':'red',
-                'text': __("Login Protection", "really-simple-ssl"),
+                'text': __("Advanced hardening", "really-simple-ssl"),
             },
             {
                 'icon':'circle-times',
                 'color':'red',
-                'text': __("WordPress hardening", "really-simple-ssl"),
+                'text': __("Mixed content scan", "really-simple-ssl"),
             },
             {
                 'icon':'circle-times',
                 'color':'red',
                 'text': __("Two-step verification", "really-simple-ssl"),
+            },
+            {
+                'icon':'circle-times',
+                'color':'red',
+                'text': __("Password security", "really-simple-ssl"),
+            },
+            {
+                'icon':'circle-times',
+                'color':'red',
+                'text': __("Limit login attempts", "really-simple-ssl"),
             },
         ] :
         [
@@ -120,7 +120,7 @@ const DeactivationModal = () => {
             {
                 'icon':'circle-times',
                 'color':'red',
-                'text': __("Two-step verification", "really-simple-ssl"),
+                'text': __("Mixed content fixer", "really-simple-ssl"),
             },
         ];
     return (
