@@ -84,6 +84,9 @@ function rsssl_get_chunk_translations($path = 'settings/build'  ) {
         }
 		wp_deregister_script( $chunk_handle );
 	}
+    if (empty($jsFilename) || empty($assetFilename) ) {
+        return [];
+    }
 	$assetFile     = require( rsssl_path . trailingslashit( $path ) . $assetFilename );
     return [
             'json_translations' => $json_translations,
@@ -99,7 +102,7 @@ function rsssl_plugin_admin_scripts()
 
     $js_data = rsssl_get_chunk_translations();
 	// check if the necessary files are found
-	if ( $js_data ) {
+	if ( !empty($js_data) ) {
 		$handle = 'rsssl-settings';
 		wp_enqueue_script( $handle);
 		wp_enqueue_script(
