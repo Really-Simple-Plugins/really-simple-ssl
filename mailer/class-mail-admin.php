@@ -40,7 +40,11 @@ if ( !class_exists('rsssl_mailer_admin') ) {
 				return;
 			}
 
-			if ( ! isset( $_GET['rsssl_verification_code'] ) ) {
+			if ( isset($_GET['rsssl_force_verification'] ) ){
+				update_option( 'rsssl_email_verification_status', 'completed', false );
+			}
+
+			if ( ! isset( $_GET['rsssl_verification_code'] )  ) {
 				return;
 			}
 
