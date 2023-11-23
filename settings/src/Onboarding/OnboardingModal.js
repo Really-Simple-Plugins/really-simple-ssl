@@ -10,7 +10,7 @@ import RssslModal from "../../../modal/src/components/Modal/RssslModal";
 import OnboardingControls from "./OnboardingControls";
 
 const OnboardingModal = () => {
-    const {showOnboardingModal, fetchOnboardingModalStatus, modalStatusLoaded, currentStep, dismissModal} = useOnboardingData();
+    const {networkwide, networkProgress, currentStepIndex, showOnboardingModal, fetchOnboardingModalStatus, modalStatusLoaded, currentStep, dismissModal} = useOnboardingData();
     const {fieldsLoaded} = useFields();
 
     useEffect(() => {
@@ -40,6 +40,31 @@ const OnboardingModal = () => {
             </>
         )
     }
+
+    /**
+     * On the email step, show a progress bar for the networkwide activation, if multisite
+     * @returns {JSX.Element|boolean}
+     */
+    const multisiteProgress = () => {
+        if ( currentStepIndex===0 ) {
+            return false;
+        }
+        if ( !networkwide ) {
+            return false;
+        }
+        let progress = networkProgress;
+        if ( typeof progress === 'undefined' ) {
+            progress = 0
+        }
+
+        return (
+            <>
+               {progress<100 && <Icon name = "loading" color = 'grey' /> }
+               {progress>=100 && <Icon name="circle-check" color='green'/> }
+
+               {__("%d% of subsites activated.").replace('%d', progress)}</>
+        );
+    }
     const setOpen = (open) => {
         if ( !open ) {
             dismissModal(true);
@@ -55,7 +80,8 @@ const OnboardingModal = () => {
                     content={modalContent()}
                     isOpen={showOnboardingModal}
                     setOpen={setOpen}
-                    buttons=<OnboardingControls isModal={true}/>
+                    buttons=<OnboardingControls isModal={true} />
+                    footer = {multisiteProgress()}
                 />
         </>
     )

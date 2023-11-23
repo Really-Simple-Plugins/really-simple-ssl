@@ -210,7 +210,7 @@ class rsssl_onboarding {
 			"ssl_detection_overridden" => get_option('rsssl_ssl_detection_overridden'),
 			'certificate_valid' => RSSSL()->certificate->is_valid(),
 			"networkwide" => is_multisite() && rsssl_is_networkwide_active(),
-			"network_activation_status" => get_site_option('rsssl_network_activation_status'),
+			"network_activation_status" => false,//get_site_option('rsssl_network_activation_status'),
 		];
 	}
 

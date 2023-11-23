@@ -39,6 +39,7 @@ const useOnboardingData = create(( set, get ) => ({
         set(state => ({ processing }))
     },
     setCurrentStepIndex: (currentStepIndex) => {
+        console.log("set current step index to "+currentStepIndex);
         const currentStep = get().steps[currentStepIndex];
         set(state => ({ currentStepIndex, currentStep }))
     },
@@ -81,6 +82,7 @@ const useOnboardingData = create(( set, get ) => ({
         set((state) => ({processing:true}));
         rsssl_api.doAction('update_email', data).then(( response ) => {
             set((state) => ({processing:false}));
+            console.log("save email, increase stepindex ",get().currentStepIndex+1);
             get().setCurrentStepIndex(get().currentStepIndex+1);
         });
 

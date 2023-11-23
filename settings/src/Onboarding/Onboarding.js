@@ -1,5 +1,4 @@
 import { useEffect, useState } from "@wordpress/element";
-import { Button } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import Icon from "../utils/Icon";
 import Placeholder from '../Placeholder/Placeholder';
@@ -37,7 +36,10 @@ const Onboarding = ({isModal}) => {
 
     useEffect( () => {
         if (networkwide && networkActivationStatus==='main_site_activated') {
-            activateSSLNetworkWide();
+            //run networkwide activation with a delay
+            setTimeout( () => {
+                activateSSLNetworkWide();
+            }, 1000);
         }
     }, [networkActivationStatus, networkProgress])
 
@@ -52,6 +54,7 @@ const Onboarding = ({isModal}) => {
         const run = async () => {
             await getSteps(false);
             if ( dataLoaded && sslEnabled && currentStepIndex===0) {
+                console.log("ssl enabled");
                 setCurrentStepIndex(1)
             }
         }
@@ -95,7 +98,7 @@ const Onboarding = ({isModal}) => {
         runUpdate();
     }, [hardeningEnabled, vulnerabilityDetectionEnabled])
 
-    console.log(currentStep);
+    console.log(currentStepIndex, currentStep);
 
     if (error){
         return (

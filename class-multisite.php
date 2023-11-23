@@ -396,6 +396,7 @@ if (!class_exists('rsssl_multisite')) {
 
         public function activate_ssl_networkwide()
         {
+			return;
 	        if (!rsssl_user_can_manage()) {
 		        return;
 	        }
@@ -606,7 +607,9 @@ if (!class_exists('rsssl_multisite')) {
 
             //prevent showing the review on edit screen, as gutenberg removes the class which makes it editable.
             $screen = get_current_screen();
-	        if ( $screen && $screen->base === 'post' ) return;
+	        if ( $screen && $screen->base === 'post' ) {
+				return;
+	        }
 
 	        if ( !$this->is_settings_page() ) {
 		        $notices = RSSSL()->admin->get_notices_list( array('admin_notices'=>true) );

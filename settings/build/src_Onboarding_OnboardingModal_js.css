@@ -183,8 +183,14 @@
 .rsssl-modal .rsssl-modal-footer img {
   width: 150px;
 }
+.rsssl-modal .rsssl-modal-footer .rsssl-modal-footer-feedback {
+  display: flex;
+}
+.rsssl-modal .rsssl-modal-footer .rsssl-modal-footer-feedback .rsssl-icon {
+  margin-right: 10px;
+}
 @media (max-width: 768px) {
-  .rsssl-modal .rsssl-modal-footer .rsssl-modal-footer-image {
+  .rsssl-modal .rsssl-modal-footer .rsssl-modal-footer-image, .rsssl-modal .rsssl-modal-footer .rsssl-modal-footer-feedback {
     display: none;
   }
   .rsssl-modal .rsssl-modal-footer .rsssl-modal-footer-buttons {
