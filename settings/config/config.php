@@ -1356,7 +1356,7 @@ function rsssl_fields( $load_values = true ) {
 		[
 			'id'       => 'csp_status',
 			'menu_id'  => 'content_security_policy',
-			'group_id' => 'content_security_policy',
+			'group_id' => 'content_security_policy_source_directives',
 			'type'     => 'hidden',
 			'label'    => '',
 			'disabled' => false,
@@ -1365,7 +1365,7 @@ function rsssl_fields( $load_values = true ) {
 		[
 			'id'       => 'csp_status_lm_enabled_once',
 			'menu_id'  => 'content_security_policy',
-			'group_id' => 'content_security_policy',
+			'group_id' => 'content_security_policy_source_directives',
 			'type'     => 'hidden',
 			'label'    => '',
 			'disabled' => false,
