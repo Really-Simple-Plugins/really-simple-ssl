@@ -11,9 +11,11 @@ const UseLearningMode = create(( set, get ) => ({
         let learningModeData = await rsssl_api.doAction('learning_mode_data', data).then((response) => {
             return response;
         })
+
         if ( typeof learningModeData === 'object' && learningModeData.request_success === true ) {
             learningModeData = Object.values(learningModeData);
         }
+
         if ( !Array.isArray(learningModeData) ) {
             learningModeData = [];
         }

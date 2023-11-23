@@ -210,7 +210,7 @@ const LearningMode = (props) => {
     return (
         <>
             <div>
-                { !dataLoaded || data.length==0 && <>
+                { !dataLoaded && <>
                     <div className="rsssl-learningmode-placeholder">
                         <div></div><div></div><div></div><div></div>
                     </div>
@@ -265,7 +265,7 @@ const LearningMode = (props) => {
                         </div>
                     </div>
                 )}
-                {data.length>0 && <>
+                {dataLoaded && <>
                     <DataTable
                         columns={columns}
                         data={data}
