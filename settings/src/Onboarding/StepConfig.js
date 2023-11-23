@@ -31,6 +31,9 @@ const StepConfig = () => {
             <label>
                 <input onChange={ (e) => onChangeCloudFlareHandler(e.target.checked)} type="checkbox" checked={CloudFlareEnabled.value} />{__("I use CloudFlare.","really-simple-ssl")}
             </label>
+            <ul>
+                <ListItems />
+            </ul>
             { !certificateValid &&
                 <>
                     <div className="rsssl-modal-description">
@@ -38,19 +41,18 @@ const StepConfig = () => {
                             { __("Refresh SSL status", "really-simple-ssl")}
                         </a>.&nbsp;{__("The SSL detection method is not 100% accurate.", "really-simple-ssl")}&nbsp;
                         {__("If you’re certain an SSL certificate is present, and refresh SSL status does not work, please check “Override SSL detection” to continue activating SSL.", "really-simple-ssl")}
+                        &nbsp;<label className="rsssl-override-detection-toggle">
+                            <input
+                                onChange={ (e) => setOverrideSSL(e.target.checked)}
+                                type="checkbox"
+                                checked={overrideSSL} />
+                            {__("Override SSL detection.","really-simple-ssl")}
+                        </label>
                     </div>
-                    <label className="rsssl-override-detection-toggle">
-                        <input
-                            onChange={ (e) => setOverrideSSL(e.target.checked)}
-                            type="checkbox"
-                            checked={overrideSSL} />
-                        {__("Override SSL detection.","really-simple-ssl")}
-                    </label>
+
                 </>
             }
-            <ul>
-                <ListItems />
-            </ul>
+
         </>
     );
 }
