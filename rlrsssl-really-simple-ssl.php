@@ -272,7 +272,7 @@ function rsssl_register_user_meta() {
         'single' => true,
         'type' => 'string',
         'description' => 'The method of two-factor authentication for the user.',
-        'default' => false,
+        'default' => 'false',
         'auth_callback' => function() {
             return rsssl_user_can_manage();
         },
