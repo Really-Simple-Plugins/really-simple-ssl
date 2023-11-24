@@ -308,7 +308,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
                         'true' => [
                             'title' => $title,
                             'msg' => $title.' '.__('Please take appropriate action.','really-simple-ssl'),
-                            'url' => add_query_arg(['page'=>'really-simple-security#settings/vulnerabilities/vulnerabilities-overview'], rsssl_admin_url() ),
+                            'url' => add_query_arg(['page'=>'really-simple-security#settings/vulnerabilities-measures-overview'], rsssl_admin_url() ),
                             'icon' => ($risk_level === 'c' || $risk_level==='h') ? 'warning' : 'open',
                             'type' => 'warning',
                             'dismissible' => true,
@@ -818,12 +818,17 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	        }
 
             //now we check if the file remotely exists and then log an error if it does not.
-            if ($this->remote_file_exists($url)) {
-                $json = file_get_contents( $url );
-                return json_decode($json);
+            $response = wp_remote_get( $url );
+            if ( is_wp_error( $response ) ) {
+                return null;
             }
 
-	        return null;
+            if ( wp_remote_retrieve_response_code($response) !== 200 ) {
+                return null;
+            }
+
+            $json = wp_remote_retrieve_body($response);
+            return json_decode($json);
         }
 
 	    private function remote_file_exists($url): bool {
@@ -1488,7 +1493,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 'message' => $message . ' ' .
                              __('Based on your settings, Really Simple SSL will take appropriate action, or you will need to solve it manually.','really-simple-ssl') .' '.
                              sprintf(__('Get more information from the Really Simple SSL dashboard on %s'), $this->domain() ),
-                'url' => "https://really-simple-ssl.com/instructions/about-vulnerabilities/",
+                'url' => rsssl_admin_url('#settings/vulnerabilities-measures-overview'),
             ];
         }
 

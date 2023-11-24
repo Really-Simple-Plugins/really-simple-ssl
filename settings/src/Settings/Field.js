@@ -34,6 +34,7 @@ import CountryDatatable from "./LimitLoginAttempts/CountryDatatable";
 // import DynamicDataTable from "./DynamicDataTable/DynamicDataTable";
 import TwoFaDataTable from "./TwoFA/TwoFaDataTable";
 import EventLogDataTable from "./EventLog/EventLogDataTable";
+import RolesDropDown from "./RolesDropDown";
 const Field = (props) => {
     let scrollAnchor = React.createRef();
     const {updateField, setChangedField, highLightField} = useFields();
@@ -439,6 +440,17 @@ const Field = (props) => {
                 />
             </div>
         )
+    }
+    if (field.type === 'roles_dropdown') {
+        return (
+            <div className={highLightClass} ref={scrollAnchor}>
+                <label htmlFor="rsssl-roles-dropdown-{field.id}">
+                    {labelWrap(field)}
+                </label>
+                <RolesDropDown field={props.field}
+                />
+            </div>
+        );
     }
 
     if(field.type === 'notificationtester') {

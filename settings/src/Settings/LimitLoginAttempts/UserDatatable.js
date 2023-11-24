@@ -1,5 +1,5 @@
 import {__} from '@wordpress/i18n';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import DataTable, {createTheme} from "react-data-table-component";
 import UserDataTableStore from "./UserDataTableStore";
 import FilterData from "../FilterData";
@@ -15,69 +15,83 @@ const UserDatatable = (props) => {
     const {
         UserDataTable,
         dataLoaded,
+        fetchUserData,
+        processing,
+        handleUserTableFilter,
+        handleUserTablePageChange,
         pagination,
         resetRow,
         resetMultiRow,
         dataActions,
         handleUserTableRowsChange,
-        fetchUserData,
         handleUserTableSort,
-        handleUserTablePageChange,
         handleUserTableSearch,
-        handleUserTableFilter,
         updateMultiRow,
         updateRow,
+        rowCleared
     } = UserDataTableStore()
 
+    const {
+        DynamicDataTable,
+        fetchDynamicData,
+    } = EventLogDataTableStore();
     //here we set the selectedFilter from the Settings group
-    const {selectedFilter, setSelectedFilter, activeGroupId, getCurrentFilter} = FilterData();
+    const {
+        selectedFilter,
+        setSelectedFilter,
+        activeGroupId,
+        getCurrentFilter,
+        setProcessingFilter,
+    } = FilterData();
+
     const [rowsSelected, setRowsSelected] = useState([]);
     const [addingUser, setAddingUser] = useState(false);
     const [user, setUser] = useState('');
-    const [rowCleared, setRowCleared] = useState(false);
-    const {fetchDynamicData} = EventLogDataTableStore();
-    const moduleName = 'rsssl-group-filter-limit_login_attempts_users';
-    const {fields, fieldAlreadyEnabled, getFieldValue} = useFields();
 
-    //we create the columns
-    let columns = [];
+    const moduleName = 'rsssl-group-filter-limit_login_attempts_users';
+    const {fields, fieldAlreadyEnabled, getFieldValue, saveFields} = useFields();
+
+    const buildColumn = useCallback((column) => ({
+        name: column.name,
+        sortable: column.sortable,
+        searchable: column.searchable,
+        width: column.width,
+        visible: column.visible,
+        column: column.column,
+        selector: row => row[column.column],
+    }), []);
     //getting the fields from the props
     let field = props.field;
     //we loop through the fields
-    field.columns.forEach(function (item, i) {
-        let newItem = buildColumn(item)
-        columns.push(newItem);
-    });
+    const columns = field.columns.map(buildColumn);
 
-    //get data if field was already enabled, so not changed right now.
-    // useEffect(() => {
-    //     if (fieldAlreadyEnabled) {
-    //         if (!dataLoaded) {
-    //             fetchUserData(field.action);
-    //         }
-    //     }
-    // }, [fields]);
+    const searchableColumns = columns
+        .filter(column => column.searchable)
+        .map(column => column.column);
 
     useEffect(() => {
         const currentFilter = getCurrentFilter(moduleName);
-
         if (!currentFilter) {
             setSelectedFilter('locked', moduleName);
-        } else if (dataActions.sortDirection || dataActions.filterValue || dataActions.search || dataActions.page) {
-            // Fetch the user data only if dataActions are not empty
-            fetchUserData(field.action, dataActions);
         }
-
+        setProcessingFilter(processing);
         handleUserTableFilter('status', currentFilter);
-    }, [selectedFilter, dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, moduleName]);
+    }, [moduleName, handleUserTableFilter, getCurrentFilter(moduleName), setSelectedFilter, UserDatatable, processing]);
 
-    let enabled = false;
+    useEffect(() => {
+        setRowsSelected([]);
+    }, [UserDataTable]);
 
-    fields.forEach(function (item, i) {
-        if (item.id === 'enable_limited_login_attempts') {
-            enabled = item.value;
+    //if the dataActions are changed, we fetch the data
+    useEffect(() => {
+        //we make sure the dataActions are changed in the store before we fetch the data
+        if (dataActions) {
+            fetchUserData(field.action, dataActions)
         }
-    });
+    }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, dataActions.currentRowsPerPage, fieldAlreadyEnabled('enable_limited_login_attempts')]);
+
+    let enabled = getFieldValue('enable_limited_login_attempts');
+
 
     const customStyles = {
         headCells: {
@@ -99,27 +113,6 @@ const UserDatatable = (props) => {
         },
     }, 'light');
 
-    //only show the datatable if the data is loaded
-    if (!dataLoaded && columns.length === 0 && UserDataTable.length === 0) {
-        return (
-            <div className="rsssl-spinner">
-                <div className="rsssl-spinner__inner">
-                    <div className="rsssl-spinner__icon"></div>
-                    <div className="rsssl-spinner__text">{__("Loading...", "really-simple-ssl")}</div>
-                </div>
-            </div>
-        );
-    }
-
-    let searchableColumns = [];
-    //setting the searchable columns
-    columns.map(column => {
-        if (column.searchable) {
-            searchableColumns.push(column.column);
-        }
-    });
-
-
     const handleOpen = () => {
         setAddingUser(true);
     };
@@ -135,156 +128,102 @@ const UserDatatable = (props) => {
         return {label: item[1], value: item[0]};
     });
 
-    function handleStatusChange(value, id) {
-
-    }
-
-    function blockUsers(data) {
-        //we check if the data is an array
+    const blockUsers = useCallback(async (data) => {
         if (Array.isArray(data)) {
-            let ids = [];
-            data.map((item) => {
-                ids.push(item.id);
-            });
-            updateMultiRow(ids, 'blocked');
-            //we emtry the rowsSelected
+            const ids = data.map((item) => item.id);
+            await updateMultiRow(ids, 'blocked');
             setRowsSelected([]);
         } else {
-            updateRow(data, 'blocked');
+            await updateRow(data, 'blocked');
         }
-        fetchDynamicData('event_log')
-    }
+        await fetchDynamicData('event_log');
+    }, [updateMultiRow, updateRow, fetchDynamicData]);
 
-    function allowUsers(data) {
-        //we check if the data is an array
+    const allowUsers = useCallback(async (data) => {
         if (Array.isArray(data)) {
-            let ids = [];
-            data.map((item) => {
-                ids.push(item.id);
-            });
-            updateMultiRow(ids, 'allowed');
-            //we emtry the rowsSelected
+            const ids = data.map((item) => item.id);
+            await updateMultiRow(ids, 'allowed');
             setRowsSelected([]);
         } else {
-            updateRow(data, 'allowed');
+            await updateRow(data, 'allowed');
         }
-        fetchDynamicData('event_log')
-    }
+        await fetchDynamicData('event_log');
+    }, [updateMultiRow, updateRow, fetchDynamicData]);
 
-    function resetUsers(data) {
-        //we check if the data is an array
+    const resetUsers = useCallback(async (data) => {
         if (Array.isArray(data)) {
-            let ids = [];
-            data.map((item) => {
-                ids.push(item.id);
-            });
-            resetMultiRow(ids);
-            //we emtry the rowsSelected
+            const ids = data.map((item) => item.id);
+            await resetMultiRow(ids, dataActions);
             setRowsSelected([]);
         } else {
-            resetRow(data);
+            await resetRow(data, dataActions);
         }
-        fetchDynamicData('event_log');
-    }
-    function handleSelection(state) {
+        await fetchDynamicData('event_log');
+    }, [resetMultiRow, resetRow, fetchDynamicData, dataActions]);
+
+    const handleSelection = useCallback((state) => {
         setRowsSelected(state.selectedRows);
-    }
+    }, []);
 
-    function generateActionbuttons(id) {
-        return (
-            <>
-                <div className="rsssl-action-buttons">
-                    {/* if the id is new we show the Allow button */}
-                    {getCurrentFilter(moduleName) === 'blocked' && (
-                    <div className="rsssl-action-buttons__inner">
-                        <button
-                            className="button button-secondary rsssl-action-buttons__button"
-                            onClick={() => {
-                                allowUsers(id);
-                            }}
-                        >
-                            {__("Allow", "really-simple-ssl")}
-                        </button>
-                    </div>
-                    )}
-                    {/* if the id is new we show the Block button */}
-                    {getCurrentFilter(moduleName) === 'allowed' && (
-                    <div className="rsssl-action-buttons__inner">
-                        <button
-                            className="button button-primary rsssl-action-buttons__button"
-                            onClick={() => {
-                                blockUsers(id);
-                            }}
-                        >
-                            {__("Block", "really-simple-ssl")}
-                        </button>
-                    </div>
-                    )}
-                    {/* if the id is new we show the Delete button */}
-                    <div className="rsssl-action-buttons__inner">
-                        <button
-                            className="button button-red rsssl-action-buttons__button"
-                            onClick={() => {
-                                resetUsers(id);
-                            }}
-                        >
-                            {__("Delete", "really-simple-ssl")}
-                        </button>
-                    </div>
-                </div>
-            </>
-        );
-    }
-
-    //we convert the data to an array
-    let data = {...UserDataTable.data};
-
-    function generateOptions(status, id) {
-        return (
-            <select
-                className="rsssl-select"
-                value={status}
-                onChange={(event) => handleStatusChange(event.target.value, id)}
+    const ActionButton = ({onClick, children, className}) => (
+        <div className={`rsssl-action-buttons__inner`}>
+            <button
+                className={`button ${className} rsssl-action-buttons__button`}
+                onClick={onClick}
+                disabled={processing}
             >
-                {options.map((item, i) => {
-                    let disabled = false;
-                    if (item.value === 'locked') {
-                        disabled = true;
-                    }
-                    return (
-                        <option key={i} value={item.value} disabled={disabled}>
-                            {item.label}
-                        </option>
-                    );
-                })}
-            </select>
-        );
-    }
+                {children}
+            </button>
+        </div>
+    );
 
-    for (const key in data) {
-        let dataItem = {...data[key]}
-        //we add the action buttons
-        dataItem.action = generateActionbuttons(dataItem.id);
-        data[key] = dataItem;
-    }
+    const generateActionButtons = useCallback((id, status, region_name) => (
+        <div className="rsssl-action-buttons">
+            <ActionButton onClick={() => {
+                resetUsers(id);
+            }}
+                          className="button-red">
+                {__("Delete", "really-simple-ssl")}
+            </ActionButton>
+        </div>
+    ), [getCurrentFilter(moduleName), moduleName, resetUsers, blockUsers, allowUsers]);
 
-    return (
-        <>
-            <AddUserModal
-                isOpen={addingUser}
-                onRequestClose={handleClose}
-                options={options}
-                value={user}
-                status={getCurrentFilter(moduleName)}
-            >
-            </AddUserModal>
-            <div className="rsssl-container">
-                {/*display the add button on left side*/}
-                <div className="rsssl-add-button">
-                    {(getCurrentFilter(moduleName) === 'blocked' || getCurrentFilter(moduleName) === 'allowed') && (
+
+//we convert the data to an array
+let data = {...UserDataTable.data};
+
+for (const key in data) {
+    let dataItem = {...data[key]}
+    //we add the action buttons
+    dataItem.action = generateActionButtons(dataItem.id);
+    dataItem.status = __(dataItem.status = dataItem.status.charAt(0).toUpperCase() + dataItem.status.slice(1), 'really-simple-ssl');
+    data[key] = dataItem;
+}
+
+let paginationSet = true;
+if (typeof pagination === 'undefined') {
+    paginationSet = false;
+}
+
+return (
+    <>
+        <AddUserModal
+            isOpen={addingUser}
+            onRequestClose={handleClose}
+            options={options}
+            value={user}
+            status={getCurrentFilter(moduleName)}
+            dataActions={dataActions}
+        >
+        </AddUserModal>
+        <div className="rsssl-container">
+            {/*display the add button on left side*/}
+            <div className="rsssl-add-button">
+                {(getCurrentFilter(moduleName) === 'blocked' || getCurrentFilter(moduleName) === 'allowed') && (
                     <div className="rsssl-add-button__inner">
                         <button
                             className="button button-secondary rsssl-add-button__button"
+                            disabled={processing}
                             onClick={handleOpen}
                         >
                             {getCurrentFilter(moduleName) === 'blocked' && (
@@ -295,91 +234,63 @@ const UserDatatable = (props) => {
                             )}
                         </button>
                     </div>
-                    )}
+                )}
+            </div>
+            {/*Display the search bar*/}
+            <div className="rsssl-search-bar">
+                <div className="rsssl-search-bar__inner">
+                    <div className="rsssl-search-bar__icon"></div>
+                    <input
+                        type="text"
+                        className="rsssl-search-bar__input"
+                        placeholder={__("Search", "really-simple-ssl")}
+                        disabled={processing}
+                        onKeyUp={event => {
+                            if (event.key === 'Enter') {
+                                handleUserTableSearch(event.target.value, searchableColumns)
+                            }
+                        }}
+                    />
                 </div>
-                {/*Display the search bar*/}
-                <div className="rsssl-search-bar">
-                    <div className="rsssl-search-bar__inner">
-                        <div className="rsssl-search-bar__icon"></div>
-                        <input
-                            type="text"
-                            className="rsssl-search-bar__input"
-                            placeholder={__("Search", "really-simple-ssl")}
-                            onChange={event => handleUserTableSearch(event.target.value, searchableColumns)}
-                        />
+            </div>
+        </div>
+        { /*Display the action form what to do with the selected*/}
+        {rowsSelected.length > 0 && (
+            <div style={{
+                marginTop: '1em',
+                marginBottom: '1em',
+            }}>
+                <div className={"rsssl-multiselect-datatable-form rsssl-primary"}
+                >
+                    <div>
+                        {__("You have selected %s rows", "really-simple-ssl").replace('%s', rowsSelected.length)}
+                    </div>
+
+                    <div className="rsssl-action-buttons">
+                        {/* if the id is new we show the Delete button */}
+                        <ActionButton
+                            className="button button-red rsssl-action-buttons__button"
+                            onClick={() => {resetUsers(rowsSelected)}}>
+                            {__("Delete", "really-simple-ssl")}
+                        </ActionButton>
                     </div>
                 </div>
             </div>
-            { /*Display the action form what to do with the selected*/}
-            {rowsSelected.length > 0 && (
-                <div style={{
-                    marginTop: '1em',
-                    marginBottom: '1em',
-                }}>
-                    <div className={"rsssl-multiselect-datatable-form rsssl-primary"}
-                    >
-                        <div>
-                            {__("You have selected", "really-simple-ssl")} {rowsSelected.length} {__("rows", "really-simple-ssl")}
-                        </div>
-
-                        <div className="rsssl-action-buttons">
-                            {/* if the id is new we show the Allow button */}
-                            {getCurrentFilter(moduleName) === 'blocked' && (
-                            <div className="rsssl-action-buttons__inner">
-                                <button
-                                    className="button button-secondary rsssl-action-buttons__button"
-                                    onClick={() => {
-                                        allowUsers(rowsSelected);
-                                    }}
-                                >
-                                    {__("Allow", "really-simple-ssl")}
-                                </button>
-                            </div>
-                            )}
-                            {/* if the id is new we show the Block button */}
-                            {getCurrentFilter(moduleName) === 'allowed' && (
-                            <div className="rsssl-action-buttons__inner">
-                                <button
-                                    className="button button-primary rsssl-action-buttons__button"
-                                    onClick={() => {
-                                        blockUsers(rowsSelected);
-                                    }}
-                                >
-                                    {__("Block", "really-simple-ssl")}
-                                </button>
-                            </div>
-                            )}
-                            {/* if the id is new we show the Delete button */}
-                            <div className="rsssl-action-buttons__inner">
-                                <button
-                                    className="button button-red rsssl-action-buttons__button"
-                                    onClick={() => {
-                                      resetUsers(rowsSelected);
-                                    }
-                                    }
-                                >
-                                    {__("Delete", "really-simple-ssl")}
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
-            {/*Display the datatable*/}
-            {dataLoaded ?
+        )}
+        {/*Display the datatable*/}
             <DataTable
                 columns={columns}
-                data={Object.values(data)}
+                data={processing && !dataLoaded? [] : Object.values(data)}
                 dense
-                pagination
+                pagination={!processing}
                 paginationServer
-                paginationTotalRows={pagination.totalRows}
+                paginationTotalRows={paginationSet? pagination.totalRows: 10}
                 onChangeRowsPerPage={handleUserTableRowsChange}
                 onChangePage={handleUserTablePageChange}
-                sortServer
+                sortServer={!processing}
                 onSort={handleUserTableSort}
                 paginationRowsPerPageOptions={[10, 25, 50, 100]}
-                selectableRows
+                selectableRows={!processing}
                 onSelectedRowsChange={handleSelection}
                 clearSelectedRows={rowCleared}
                 noDataComponent={__("No results", "really-simple-ssl")}
@@ -387,53 +298,17 @@ const UserDatatable = (props) => {
                 theme="really-simple-plugins"
                 customStyles={customStyles}
             ></DataTable>
-                :
-                <div className="rsssl-spinner" style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    marginTop: "100px"
-                }}>
-                    <div className="rsssl-spinner__inner">
-                        <div className="rsssl-spinner__icon" style={{
-                            border: '8px solid white',
-                            borderTop: '8px solid #f4bf3e',
-                            borderRadius: '50%',
-                            width: '120px',
-                            height: '120px',
-                            animation: 'spin 2s linear infinite'
-                        }}></div>
-                        <div className="rsssl-spinner__text" style={{
-                            position: 'absolute',
-                            top: '50%',
-                            left: '50%',
-                            transform: 'translate(-50%, -50%)',
-                        }}>{__("Loading data, please stand by...", "really-simple-ssl")}</div>
-                    </div>
+        {!enabled && (
+            <div className="rsssl-locked">
+                <div className="rsssl-locked-overlay"><span
+                    className="rsssl-task-status rsssl-open">{__('Disabled', 'really-simple-ssl')}</span><span>{__('Activate Limit login attempts to enable this block.', 'really-simple-ssl')}</span>
                 </div>
-            }
-            {!enabled && (
-                <div className="rsssl-locked">
-                    <div className="rsssl-locked-overlay"><span
-                        className="rsssl-task-status rsssl-open">{__('Disabled', 'really-simple-ssl')}</span><span>{__('Limit login attempts to enable this block.', 'really-simple-ssl')}</span>
-                    </div>
-                </div>
-            )}
-        </>
-    );
+            </div>
+        )}
+    </>
+);
 
 }
 export default UserDatatable;
 
-function buildColumn(column) {
-    return {
-        name: column.name,
-        sortable: column.sortable,
-        searchable: column.searchable,
-        width: column.width,
-        visible: column.visible,
-        column: column.column,
-        selector: row => row[column.column],
-    };
-}
 

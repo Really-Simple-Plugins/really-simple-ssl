@@ -174,6 +174,10 @@ const LearningMode = (props) => {
         if (item.login_status) item.login_statusControl = item.login_status == 1 ? __("success", "really-simple-ssl") : __("failed", "really-simple-ssl");
         item.statusControl = <ChangeStatus item={item} field={props.field} />;
         item.deleteControl = <Delete item={item} field={props.field}/>;
+        item.grouped = <div className="rsssl-action-buttons">
+            <ChangeStatus item={item} field={props.field} />
+            <Delete item={item} field={props.field}/>
+        </div>
     }
 
     const handleMultiRowStatus = (status, selectedRows, type) => {

@@ -54,11 +54,24 @@ add_filter('rest_url', 'rsssl_fix_rest_url_for_wpml', 10, 4);
  *
  * @return array
  */
-function rsssl_get_chunk_translations() {
+function rsssl_get_chunk_translations($path = 'settings/build'  ) {
 	//get all files from the settings/build folder
-	$files = scandir(rsssl_path . 'settings/build');
+	$files = scandir(rsssl_path . $path );
 	$json_translations = [];
+
+	// filter the filenames to get the JavaScript and asset filenames
+	$jsFilename = '';
+	$assetFilename = '';
+
 	foreach ($files as $file) {
+		if (strpos($file, 'index.') === 0) {
+			if (substr($file, -3) === '.js') {
+				$jsFilename = $file;
+			} elseif (substr($file, -10) === '.asset.php') {
+				$assetFilename = $file;
+			}
+		}
+
         if (strpos($file, '.js') === false) {
             continue;
         }
@@ -71,42 +84,32 @@ function rsssl_get_chunk_translations() {
         }
 		wp_deregister_script( $chunk_handle );
 	}
-    return $json_translations;
+    if (empty($jsFilename) || empty($assetFilename) ) {
+        return [];
+    }
+	$assetFile     = require( rsssl_path . trailingslashit( $path ) . $assetFilename );
+    return [
+            'json_translations' => $json_translations,
+            'dependencies'  => $assetFile['dependencies'],
+            'version'  => $assetFile['version'],
+            'js_file'  => $jsFilename,
+        ];
 }
 
 
 function rsssl_plugin_admin_scripts()
 {
-	// replace with the actual path to your build directory
-	$buildDirPath = plugin_dir_path(__FILE__) . '/build';
 
-	// get the filenames in the build directory
-	$filenames = scandir($buildDirPath);
-
-	// filter the filenames to get the JavaScript and asset filenames
-	$jsFilename = '';
-	$assetFilename = '';
-	foreach ($filenames as $filename) {
-		if (strpos($filename, 'index.') === 0) {
-			if (substr($filename, -3) === '.js') {
-				$jsFilename = $filename;
-			} elseif (substr($filename, -10) === '.asset.php') {
-				$assetFilename = $filename;
-			}
-		}
-	}
-
+    $js_data = rsssl_get_chunk_translations();
 	// check if the necessary files are found
-	if ($jsFilename !== '' && $assetFilename !== '') {
-		$assetFilePath = $buildDirPath . '/' . $assetFilename;
-		$assetFile     = require( $assetFilePath );
+	if ( !empty($js_data) ) {
 		$handle = 'rsssl-settings';
 		wp_enqueue_script( $handle);
 		wp_enqueue_script(
 			'rsssl-settings',
-			plugins_url( 'build/' . $jsFilename, __FILE__ ),
-			$assetFile['dependencies'],
-			$assetFile['version'],
+			plugins_url( 'build/' . $js_data['js_file'], __FILE__ ),
+			$js_data['dependencies'],
+			$js_data['version'],
 			true
 		);
 		wp_set_script_translations($handle, 'really-simple-ssl');
@@ -114,7 +117,7 @@ function rsssl_plugin_admin_scripts()
 			'rsssl-settings',
 			'rsssl_settings',
 			apply_filters('rsssl_localize_script', [
-				'json_translations' => rsssl_get_chunk_translations(),
+				'json_translations' => $js_data['json_translations'],
 				'menu' => rsssl_menu(),
 				'site_url' => get_rest_url(),
 				'plugins_url' => admin_url('update-core.php'),
@@ -582,6 +585,7 @@ function rsssl_sanitize_field_type($type)
         'LetsEncrypt',
         'postdropdown',
         'two_fa_roles',
+		'roles_dropdown',
 //        'two_fa_table',
 //        'verify_email',
     ];
@@ -822,6 +826,7 @@ function rsssl_sanitize_field($value, string $type, string $id)
             return rsssl_sanitize_datatable($value, $type, $id);
         case 'mixedcontentscan':
             return $value;
+		case 'roles_dropdown':
         case 'two_fa_roles':
 	        $value = !is_array($value) ? [] : $value;
             $roles = rsssl_get_roles();

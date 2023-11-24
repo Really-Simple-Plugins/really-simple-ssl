@@ -49,10 +49,12 @@ if ( !function_exists('rsssl_has_fix')) {
 if ( !function_exists('rsssl_admin_url')) {
 	/**
 	 * Get admin url, adjusted for multisite
+	 * @param string $path
 	 * @return string|null
 	 */
-	function rsssl_admin_url(){
-		return is_multisite() ? network_admin_url('settings.php') : admin_url("options-general.php");
+	function rsssl_admin_url(string $path = ''): string {
+		$url = is_multisite() ? network_admin_url('settings.php') : admin_url("options-general.php");
+		return $url.$path;
 	}
 }
 

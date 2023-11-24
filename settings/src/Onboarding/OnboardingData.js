@@ -71,6 +71,8 @@ const useOnboardingData = create(( set, get ) => ({
                         set(state => ({ networkActivationStatus:'main_site_activated' }))
                     }
                 }
+
+                set({ sslEnabled: true})
             }
         });
     },

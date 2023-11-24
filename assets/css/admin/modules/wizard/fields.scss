@@ -155,7 +155,11 @@ input.rsssl-input {
     }
   }
 }
-
+.wp-core-ui select {
+  /* Your styles here */
+  flex-grow: 1 !important;
+  max-width: 33%;
+}
 .icon-button {
   position: absolute;
   right: 10px;
@@ -164,4 +168,9 @@ input.rsssl-input {
   border: none;
   background: none;
   cursor: pointer;
+}
+
+.rsssl-group-filter {
+  min-width: 25%;
+  max-width: 100%!important;
 }

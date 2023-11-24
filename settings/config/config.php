@@ -97,7 +97,7 @@ function rsssl_fields( $load_values = true ) {
 		],
 		[
 			'id'               => 'redirect',
-			'menu_id'          => 'encryption_redirect',
+			'menu_id'          => 'encryption',
 			'group_id'         => 'encryption_redirect',
 			'type'             => 'select',
 			'tooltip'  => __( "Changing redirect methods should be done with caution. Please make sure you have read our instructions beforehand at the right-hand side.", 'really-simple-ssl' ),
@@ -113,69 +113,69 @@ function rsssl_fields( $load_values = true ) {
 				'title' => __( "Redirect method", 'really-simple-ssl' ),
 				'text'  => __( 'Redirects your site to https with a SEO friendly 301 redirect if it is requested over http.', 'really-simple-ssl' ),
 			],
-            'email'            => [
-                'title'     => __("Settings update: .htaccess redirect", 'really-simple-ssl'),
-                'message'   => __("The .htaccess redirect has been enabled on your site. If the server configuration is non-standard, this might cause issues. Please check if all pages on your site are functioning properly.",
-                    'really-simple-ssl'),
-                'url'       => 'https://really-simple-ssl.com/remove-htaccess-redirect-site-lockout/',
-                'condition' => ['redirect' => 'htaccess']
-            ],
-            'react_conditions' => [
-                'relation' => 'AND',
-                [
-                    'ssl_enabled' => '1',
-                ]
-            ],
-            'default'          => false,
-        ],
-        [
-            'id'       => 'mixed_content_fixer',
-            'menu_id'  => 'encryption_redirect',
-            'group_id' => 'encryption_redirect',
-            'type'     => 'checkbox',
-            'label'    => __("Mixed content fixer", 'really-simple-ssl'),
-            'disabled' => false,
-            'default'  => true,
-        ],
-        [
-            'id'               => 'switch_mixed_content_fixer_hook',
-            'menu_id'          => 'encryption_redirect',
-            'group_id'         => 'encryption_redirect',
-            'type'             => 'checkbox',
-            'label'            => __("Mixed content fixer - init hook", 'really-simple-ssl'),
-            'help'             => [
-                'label' => 'default',
-                'title' => __("Mixed content fixer - init hook", 'really-simple-ssl'),
-                'text'  => __('If this option is set to true, the mixed content fixer will fire on the init hook instead of the template_redirect hook. Only use this option when you experience problems with the mixed content fixer.',
-                    'really-simple-ssl'),
-            ],
-            'disabled'         => false,
-            'required'         => false,
-            'default'          => false,
-            'tooltip'          => __("Only enable if the default mixed content fixer does not fix your front-end mixed content.",
-                'really-simple-ssl'),
-            'react_conditions' => [
-                'relation' => 'AND',
-                [
-                    'mixed_content_fixer' => 1,
-                ]
-            ],
-        ],
-        [
-            'id'       => 'admin_mixed_content_fixer',
-            'menu_id'  => 'encryption_redirect',
-            'group_id' => 'encryption_redirect',
-            'type'     => 'checkbox',
-            'label'    => __("Mixed content fixer - back-end", "really-simple-ssl"),
-            'tooltip'  => __("Only enable this if you experience mixed content in the admin environment of your WordPress website.",
-                'really-simple-ssl'),
-            'disabled' => false,
-            'default'  => false,
-        ],
+			'email'            => [
+				'title'     => __("Settings update: .htaccess redirect", 'really-simple-ssl'),
+				'message'   => __("The .htaccess redirect has been enabled on your site. If the server configuration is non-standard, this might cause issues. Please check if all pages on your site are functioning properly.",
+					'really-simple-ssl'),
+				'url'       => 'https://really-simple-ssl.com/remove-htaccess-redirect-site-lockout/',
+				'condition' => ['redirect' => 'htaccess']
+			],
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'ssl_enabled' => '1',
+				]
+			],
+			'default'          => false,
+		],
+		[
+			'id'       => 'mixed_content_fixer',
+			'menu_id'  => 'encryption',
+			'group_id' => 'mixed-content-general',
+			'type'     => 'checkbox',
+			'label'    => __("Mixed content fixer", 'really-simple-ssl'),
+			'disabled' => false,
+			'default'  => true,
+		],
+		[
+			'id'               => 'switch_mixed_content_fixer_hook',
+			'menu_id'  => 'encryption',
+			'group_id' => 'mixed-content-general',
+			'type'             => 'checkbox',
+			'label'            => __("Mixed content fixer - init hook", 'really-simple-ssl'),
+			'help'             => [
+				'label' => 'default',
+				'title' => __("Mixed content fixer - init hook", 'really-simple-ssl'),
+				'text'  => __('If this option is set to true, the mixed content fixer will fire on the init hook instead of the template_redirect hook. Only use this option when you experience problems with the mixed content fixer.',
+					'really-simple-ssl'),
+			],
+			'disabled'         => false,
+			'required'         => false,
+			'default'          => false,
+			'tooltip'          => __("Only enable if the default mixed content fixer does not fix your front-end mixed content.",
+				'really-simple-ssl'),
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'mixed_content_fixer' => 1,
+				]
+			],
+		],
+		[
+			'id'       => 'admin_mixed_content_fixer',
+			'menu_id'  => 'encryption',
+			'group_id' => 'mixed-content-general',
+			'type'     => 'checkbox',
+			'label'    => __("Mixed content fixer - back-end", "really-simple-ssl"),
+			'tooltip'  => __("Only enable this if you experience mixed content in the admin environment of your WordPress website.",
+				'really-simple-ssl'),
+			'disabled' => false,
+			'default'  => false,
+		],
 
 		[
 			'id'                   => 'do_not_edit_htaccess', //field is removed if not enabled
-			'menu_id'              => 'encryption_redirect',
+			'menu_id'              => 'encryption',
 			'group_id'             => 'encryption_redirect',
 			'type'                 => 'checkbox',
 			'label'                => __("Stop editing the .htaccess file", 'really-simple-ssl'),
@@ -191,29 +191,6 @@ function rsssl_fields( $load_values = true ) {
 			],
 		],
 		[
-			'id'               => 'send_notifications_email',
-			 'menu_id'          => 'general_email',
-			 'group_id'         => 'general_email',
-			 'type'             => 'checkbox',
-			 'label'      => __("Notifications by email", 'really-simple-ssl'),
-			 'tooltip'            => __("Get notified of important changes, updates and settings. Recommended when using security features.", 'really-simple-ssl'),
-			 'disabled'         => false,
-			 'default'          => false,
-		],
-
-        [
-            'id'       => 'send_verification_email',
-            'menu_id'  => 'general_email',
-            'group_id' => 'general_email',
-            'type'     => 'button',
-            'action'      => 'send_verification_mail',
-            'button_text' => __( "Send", "really-simple-ssl" ),
-            'warning'     => true,
-            'label'       => __( "Email verification", 'really-simple-ssl' ),
-            'disabled'    => rsssl_is_email_verified(),
-            'tooltip'  => __( "Verify your email address to get the most out of Really Simple SSL.", 'really-simple-ssl' ),
-        ],
-		[
 			'id'       => 'notifications_email_address',
 			'menu_id'  => 'general',
 			'group_id' => 'general_email',
@@ -221,223 +198,527 @@ function rsssl_fields( $load_values = true ) {
 			'label'    => __( "Email address", 'really-simple-ssl' ),
 			'disabled' => false,
 			'default'  => get_bloginfo('admin_email'),
-			'condition_action'   => 'hide',
+		],
+		[
+			'id'       => 'send_verification_email',
+			'menu_id'  => 'general',
+			'group_id' => 'general_email',
+			'type'     => 'button',
+			'action'      => 'send_verification_mail',
+			'button_text' => __( "Send", "really-simple-ssl" ),
+			'warning'     => true,
+			'label'       => __( "Email verification", 'really-simple-ssl' ),
+			'disabled'    => rsssl_is_email_verified(),
+			'tooltip'  => __( "Verify your email address to get the most out of Really Simple SSL.", 'really-simple-ssl' ),
+		],
+		[
+			'id'               => 'send_notifications_email',
+			'menu_id'          => 'general',
+			'group_id'         => 'general_email',
+			'type'             => 'checkbox',
+			'label'      => __("Notifications by email", 'really-simple-ssl'),
+			'tooltip'            => __("Get notified of important changes, updates and settings. Recommended when using security features.", 'really-simple-ssl'),
+			'disabled'         => false,
+			'default'          => false,
+		],
+		[
+			'id'       => 'premium_support',
+			'menu_id'  => 'general',
+			'group_id' => 'support',
+			'type'     => 'support',
+			'label'    => __("Premium support", 'really-simple-ssl'),
+			'disabled' => false,
+			'default'  => false,
+		],
+		/* section limited_login_attempts */
+		[
+			'id'       => 'enable_limited_login_attempts',
+			'menu_id'  => 'limit_login_attempts',
+			'group_id' => 'limit_login_attempts_general',
+			'type'     => 'checkbox',
+			'label'    => __('Enable Limit Login Attempts', 'really-simple-ssl'),
+			'help'     => [
+				'label' => 'default',
+				'url'   => 'https://really-simple-ssl.com/instructions/limit-login-attempts/?mtm_campaign=definition&mtm_source=free',
+				'title' => __( "About Limit Login Attempts", 'really-simple-ssl' ),
+				'text'  => __( 'Limit Login Attempts protects your site from login attempts by unauthorized users. When you enable Limit Login Attempts, all login attempts are logged and repeated attempts to login with invalid credentials will be blocked automatically.', 'really-simple-ssl' ).' '.__('They might be misused if you don’t actively tell the browser to disable these features.', 'really-simple-ssl' ),
+			],
+			'disabled' => false,
+		],
+		[
+			'id'               => 'limit_login_attempts_amount',
+			'menu_id'          => 'limit_login_attempts',
+			'group_id'         => 'limit_login_attempts_advanced',
+			'type'             => 'select',
+			'tooltip'          => __("After this number of failed login attempts the user and IP address will be temporarily blocked.",
+				'really-simple-ssl'),
+			'label'            => __('Login attempts', 'really-simple-ssl'),
+			'options'          => [
+				'3'  => sprintf('%d %s', 3, __('attempts', 'really-simple-ssl')),
+				'5'  => sprintf('%d %s', 5, __('attempts', 'really-simple-ssl')),
+				'10' => sprintf('%d %s', 10, __('attempts', 'really-simple-ssl')),
+				'15' => sprintf('%d %s', 15, __('attempts', 'really-simple-ssl')),
+			],
+			'disabled'         => false,
+			'default'          => '5',
 			'react_conditions' => [
 				'relation' => 'AND',
 				[
-					'send_notifications_email' => 1,
+					'enable_limited_login_attempts' => true,
 				]
 			],
 		],
-        [
-            'id'       => 'premium_support',
-            'menu_id'  => 'general',
-            'group_id' => 'support',
-            'type'     => 'support',
-            'label'    => __("Premium support", 'really-simple-ssl'),
-            'disabled' => false,
-            'default'  => false,
-        ],
-        [
-            'id'       => 'x_xss_protection',
-            'menu_id'  => 'recommended_security_headers',
-            'group_id' => 'recommended_security_headers',
-            'type'     => 'select',
-            'label'    => __("X-XSS-Protection", "really-simple-ssl"),
-            'options'  => [
-                'disabled'   => __("disabled", "really-simple-ssl"),
-                'zero'       => "0 ".__("(recommended)", "really-simple-ssl"),
-                'one'        => "1",
-                'mode_block' => "1; mode=block",
-            ],
-            'disabled' => false,
-            'default'  => 'zero',
-            'help'     => [
-                'label' => 'default',
-                'url'   => 'https://really-simple-ssl.com/definition/about-recommended-security-headers/?mtm_campaign=definition&mtm_source=free',
-                'title' => __("About Recommended Security Headers", 'really-simple-ssl'),
-                'text'  => __('These security headers are the fundamental security measures to protect your website visitors while visiting your website.',
-                    'really-simple-ssl'),
-            ],
-        ],
-        [
-            'id'       => 'x_content_type_options',
-            'menu_id'  => 'recommended_security_headers',
-            'group_id' => 'recommended_security_headers',
-            'type'     => 'checkbox',
-            'label'    => __("X-Content-Type options", "really-simple-ssl"),
-            'disabled' => false,
-            'default'  => false,
-        ],
-        [
-            'id'       => 'x_frame_options',
-            'menu_id'  => 'recommended_security_headers',
-            'group_id' => 'recommended_security_headers',
-            'type'     => 'select',
-            'options'  => [
-                'disabled'   => __("Off", "really-simple-ssl"),
-                'DENY'       => 'DENY',
-                'SAMEORIGIN' => 'SAMEORIGIN',
-            ],
-            'label'    => __("X-Frame options", "really-simple-ssl"),
-            'disabled' => false,
-            'default'  => false,
-        ],
-        [
-            'id'       => 'referrer_policy',
-            'menu_id'  => 'recommended_security_headers',
-            'group_id' => 'recommended_security_headers',
-            'type'     => 'select',
-            'options'  => [
-                'disabled'                        => __("Off", "really-simple-ssl"),
-                'strict-origin-when-cross-origin' => 'strict-origin-when-cross-origin'.' ('.__("recommended",
-                        "really-simple-ssl").')',
-                'no-referrer'                     => 'no-referrer',
-                'origin'                          => 'origin',
-                'no-referrer-when-downgrade'      => 'no-referrer-when-downgrade',
-                'unsafe-url'                      => 'unsafe-url',
-                'origin-when-cross-origin'        => 'origin-when-cross-origin',
-                'strict-origin'                   => 'strict-origin',
-                'same-origin'                     => 'same-origin',
-            ],
-            'label'    => __("Referrer Policy", "really-simple-ssl"),
-            'disabled' => false,
-            'default'  => 'strict-origin-when-cross-origin',
-        ],
-        [
-            'id'               => 'hsts',
-            'menu_id'          => 'hsts',
-            'group_id'         => 'hsts',
-            'type'             => 'checkbox',
-            'label'            => __("HTTP Strict Transport Security", "really-simple-ssl"),
-            'disabled'         => false,
-            'default'          => false,
-            'help'             => [
-                'label' => 'default',
-                'url'   => 'https://really-simple-ssl.com/definition/what-is-hsts/?mtm_campaign=definition&mtm_source=free',
-                'title' => __("About HTTP Strict Transport Security", 'really-simple-ssl'),
-                'text'  => __('Leveraging your SSL certificate with HSTS is a staple for every website. Force your website over SSL, mitigating risks of malicious counterfeit websites in your name.',
-                    'really-simple-ssl'),
-            ],
-            'react_conditions' => [
-                'relation' => 'AND',
-                [
-                    'ssl_enabled' => '1',
-                ]
-            ],
-        ],
-        [
-            'id'                      => 'hsts_preload',
-            'menu_id'                 => 'hsts',
-            'group_id'                => 'hsts',
-            'type'                    => 'checkbox',
-            'label'                   => __("Include preload", "really-simple-ssl"),
-            'comment'                 => sprintf(__("After enabling this feature, you can submit your site to %shstspreload.org%s",
-                "really-simple-ssl"), '<a target="_blank" href="https://hstspreload.org?domain='.site_url().'">',
-                "</a>"),
-            'react_conditions'        => [
-                'relation' => 'AND',
-                [
-                    'hsts' => true,
-                ]
-            ],
-            'configure_on_activation' => [
-                'condition' => 1,
-                [
-                    'hsts_subdomains' => true,
-                    'hsts_max_age'    => 63072000,
-                ]
-            ],
-            'disabled'                => false,
-            'default'                 => false,
-        ],
-        [
-            'id'               => 'hsts_subdomains',
-            'menu_id'          => 'hsts',
-            'group_id'         => 'hsts',
-            'type'             => 'checkbox',
-            'label'            => __("Include subdomains", "really-simple-ssl"),
-            'react_conditions' => [
-                'relation' => 'AND',
-                [
-                    'hsts' => true,
-                ]
-            ],
-            'disabled'         => false,
-            'default'          => false,
-        ],
-        [
-            'id'               => 'hsts_max_age',
-            'menu_id'          => 'hsts',
-            'group_id'         => 'hsts',
-            'type'             => 'select',
-            'options'          => [
-                '86400'    => __('One day (for testing only)', 'really-simple-ssl'),
-                '31536000' => __('One year', 'really-simple-ssl'),
-                '63072000' => __('Two years (required for preload)', 'really-simple-ssl'),
-            ],
-            'label'            => __("Choose the max-age for HSTS", "really-simple-ssl"),
-            'react_conditions' => [
-                'relation' => 'AND',
-                [
-                    'hsts' => true,
-                ]
-            ],
-            'disabled'         => false,
-            'default'          => '63072000',
-        ],
-        [
-            'id'       => 'cross_origin_opener_policy',
-            'menu_id'  => 'cross_origin_policy',
-            'group_id' => 'cross_origin_policy',
-            'type'     => 'select',
-            'options'  => [
-                'disabled'                 => __('Off', 'really-simple-ssl'),
-                'unsafe-none'              => 'unsafe-none',
-                'same-origin-allow-popups' => 'same-origin-allow-popups',
-                'same-origin'              => 'same-origin',
-            ],
-            'help'     => [
-                'label' => 'default',
-                'url'   => 'https://really-simple-ssl.com/definition/what-is-a-cross-origin-policy/?mtm_campaign=definition&mtm_source=free',
-                'title' => __("About Cross Origin Policies", 'really-simple-ssl'),
-                'text'  => __('One of the most powerful features, and therefore the most complex are the Cross-Origin headers that can isolate your website so any data leaks are minimized.',
-                    'really-simple-ssl'),
-            ],
-            'label'    => __("Cross Origin Opener Policy", "really-simple-ssl"),
-            'disabled' => false,
-            'default'  => 'disabled',
-        ],
-        [
-            'id'       => 'cross_origin_resource_policy',
-            'menu_id'  => 'cross_origin_policy',
-            'group_id' => 'cross_origin_policy',
-            'type'     => 'select',
-            'options'  => [
-                'disabled'     => __('Off', 'really-simple-ssl'),
-                'same-site'    => 'same-site',
-                'same-origin'  => 'same-origin',
-                'cross-origin' => 'cross-origin',
-            ],
-            'label'    => __("Cross Origin Resource Policy", "really-simple-ssl"),
-            'disabled' => false,
-            'default'  => 'disabled',
-        ],
-        [
-            'id'       => 'cross_origin_embedder_policy',
-            'menu_id'  => 'cross_origin_policy',
-            'group_id' => 'cross_origin_policy',
-            'type'     => 'select',
-            'options'  => [
-                'disabled'     => __('Off', 'really-simple-ssl'),
-                'require-corp' => 'require-corp',
-                'same-origin'  => 'same-origin',
-                'unsafe-none'  => 'unsafe-none',
-            ],
-            'label'    => __("Cross Origin Embedder Policy", "really-simple-ssl"),
-            'disabled' => false,
-            'default'  => 'disabled',
-        ],
+		[
+			'id'               => 'limit_login_attempts_duration',
+			'menu_id'          => 'limit_login_attempts',
+			'group_id'         => 'limit_login_attempts_advanced',
+			'type'             => 'select',
+			'tooltip'          => __("If the number of failed login attempts is exceeded within this timeframe, the IP address and user will be blocked.",
+				'really-simple-ssl'),
+			'label'            => __('Interval', 'really-simple-ssl'),
+			'options'          => [
+				'15'   => sprintf(__('%s minutes', 'really-simple-ssl'), 15),
+				'30'   => sprintf(__('%s minutes', 'really-simple-ssl'), 30),
+				'60'   => sprintf(__('%s hour', 'really-simple-ssl'), 1),
+				'240'  => sprintf(__('%s hours', 'really-simple-ssl'), 4),
+				'1440' => sprintf(__('%s day', 'really-simple-ssl'), 1),
+			],
+			'disabled'         => false,
+			'default'          => '15',
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'enable_limited_login_attempts' => true,
+				]
+			],
+		],
+		[
+			'id'               => 'limit_login_attempts_locked_out_duration',
+			'menu_id'          => 'limit_login_attempts',
+			'group_id'         => 'limit_login_attempts_advanced',
+			'type'             => 'select',
+			'tooltip'          => __("The user and IP address will be temporarily unable to login for the specified duration. You can block IP addresses indefinitely via the IP addresses block.",
+				'really-simple-ssl'),
+			'label'            => __('Lockout duration', 'really-simple-ssl'),
+			'options'          => [
+				'15'   => sprintf(__('%s minutes', 'really-simple-ssl'), 15),
+				'30'   => sprintf(__('%s minutes', 'really-simple-ssl'), 30),
+				'60'   => sprintf(__('%s hour', 'really-simple-ssl'), 1),
+				'240'  => sprintf(__('%s hours', 'really-simple-ssl'), 4),
+				'1440' => sprintf(__('%s day', 'really-simple-ssl'), 1),
+			],
+			'disabled'         => false,
+			'default'          => '30',
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'enable_limited_login_attempts' => true,
+				]
+			],
+		],
+		[
+			'id'               => 'limit_login_attempts_users_view',
+			'menu_id'          => 'limit_login_attempts',
+			'group_id'         => 'limit_login_attempts_users',
+			'type'             => 'user-datatable',
+			'action'           => 'user_list',
+			'options'          => [
+				'blocked' => __('Blocked', 'really-simple-ssl'),
+				'locked'  => __('Locked-out', 'really-simple-ssl'),
+				'trusted' => __('Trusted', 'really-simple-ssl'),
+			],
+			'disabled'         => false,
+			'default'          => false,
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'enable_limited_login_attempts' => true,
+				]
+			],
+			'columns'          => [
+				[
+					'name'       => __('Username', 'really-simple-ssl'),
+					'sortable'   => true,
+					'searchable' => true,
+					'column'     => 'attempt_value',
+					'width'      => '50%',
+				],
+				[
+					'name'     => __('Status', 'really-simple-ssl'),
+					'sortable' => false,
+					'column'   => 'status',
+					'width'    => '10%',
+				],
+				[
+					'name'     => __('Date', 'really-simple-ssl'),
+					'sortable' => true,
+					'column'   => 'datetime',
+				],
+				[
+					'name'     => '',
+					'sortable' => false,
+					'column'   => 'action',
+				],
+			],
+		],
+		[
+			'id'               => 'limit_login_attempts_ip_view',
+			'menu_id'          => 'limit_login_attempts',
+			'group_id'         => 'limit_login_attempts_ip_address',
+			'type'             => 'ip-address-datatable',
+			'action'           => 'ip_list',
+			'options'          => [
+				'blocked' => __('Blocked', 'really-simple-ssl'),
+				'locked'  => __('Locked-out', 'really-simple-ssl'),
+				'trusted' => __('Trusted', 'really-simple-ssl'),
+			],
+			'label'            => __('Enable open source blocklist API etc.', 'really-simple-ssl'),
+			'disabled'         => false,
+			'default'          => false,
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'enable_limited_login_attempts' => true,
+				]
+			],
+			'columns'          => [
+				[
+					'name'       => __('IP Address', 'really-simple-ssl'),
+					'sortable'   => true,
+					'searchable' => true,
+					'column'     => 'attempt_value',
+					'width'      => '50%',
+				],
+				[
+					'name'     => __('Status', 'really-simple-ssl'),
+					'sortable' => false,
+					'column'   => 'status',
+					'width'    => '10%',
+				],
+				[
+					'name'     => __('Date', 'really-simple-ssl'),
+					'sortable' => true,
+					'column'   => 'datetime',
+				],
+				[
+					'name'     => '',
+					'sortable' => false,
+					'column'   => 'action',
+				],
+			],
+		],
+		[
+			'id'               => 'limit_login_attempts_country_view',
+			'menu_id'          => 'limit_login_attempts',
+			'group_id'         => 'limit_login_attempts_country',
+			'type'             => 'country-datatable',
+			'action'           => 'country_list',
+			'options'          => [
+				'blocked' => __('Blocked', 'really-simple-ssl'),
+				'locked'  => __('Locked-out', 'really-simple-ssl'),
+				'trusted' => __('Trusted', 'really-simple-ssl'),
+			],
+			'disabled'         => false,
+			'default'          => false,
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'enable_limited_login_attempts' => true,
+				]
+			],
+			'columns'          => [
+				[
+					'name'       => '',
+					'sortable'   => false,
+					'searchable' => true,
+					'column'     => 'attempt_value',
+					'width'      => '4%',
+				],
+				[
+					'name'       => __('Country', 'really-simple-ssl'),
+					'sortable'   => true,
+					'searchable' => true,
+					'visible'   => false,
+					'column'     => 'country_name',
+					'width'      => '20%',
+				],
+				[
+					'name'       => __('Continent', 'really-simple-ssl'),
+					'sortable'   => true,
+					'searchable' => true,
+					'column'     => 'region',
+					'width'      => '20%',
+				],
+				[
+					'name'     => __('Status', 'really-simple-ssl'),
+					'sortable' => false,
+					'column'   => 'status',
+					'width'    => '10%',
+				],
+				[
+					'name'     => '',
+					'sortable' => false,
+					'column'   => 'action',
+				],
+			],
+		],
+		[
+			'id'               => 'event_log_viewer',
+			'menu_id'          => 'limit_login_attempts',
+			'group_id'         => 'limit_login_attempts_event_log',
+			'type'             => 'eventlog-datatable',
+			'action'           => 'event_log',
+			'label'            => __('IP address overview', 'really-simple-ssl'),
+			'disabled'         => false,
+			'default'          => false,
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'enable_limited_login_attempts' => true,
+				]
+			],
+			'columns'          => [
+				[
+					'name'     => __('Country', 'really-simple-ssl'),
+					'sortable' => true,
+					'column'   => 'iso2_code',
+					'width'    => '8%',
+				],
+				[
+					'name'     => __('Date', 'really-simple-ssl'),
+					'sortable' => true,
+					'column'   => 'datetime',
+					'width'         => '12%',
+				],
+				[
+					'name'       => __('User', 'really-simple-ssl'),
+					'sortable'   => true,
+					'column'     => 'username',
+					'searchable' => true,
+					'type'       => 'text',
+					'width'     => '12%',
+				],
+				[
+					'name'       => __('IP Address', 'really-simple-ssl'),
+					'sortable'   => true,
+					'searchable' => true,
+					'column'     => 'source_ip',
+					'type'     => 'text',
+					'width'    => '32%',
+				],
+				[
+					'name'     => __('Event', 'really-simple-ssl'),
+					'sortable' => true,
+					'column'   => 'event_name',
+					'width'         => '28%',
+				]
+//
+//                [
+//                    'width'    => '1px',
+//                ]
+
+			],
+		],
+		[
+			'id'       => 'x_xss_protection',
+			'menu_id'  => 'recommended_security_headers',
+			'group_id' => 'recommended_security_headers',
+			'type'     => 'select',
+			'label'    => __("X-XSS-Protection", "really-simple-ssl"),
+			'options'  => [
+				'disabled'   => __("disabled", "really-simple-ssl"),
+				'zero'       => "0 ".__("(recommended)", "really-simple-ssl"),
+				'one'        => "1",
+				'mode_block' => "1; mode=block",
+			],
+			'disabled' => false,
+			'default'  => 'zero',
+			'help'     => [
+				'label' => 'default',
+				'url'   => 'https://really-simple-ssl.com/definition/about-recommended-security-headers/?mtm_campaign=definition&mtm_source=free',
+				'title' => __("About Recommended Security Headers", 'really-simple-ssl'),
+				'text'  => __('These security headers are the fundamental security measures to protect your website visitors while visiting your website.',
+					'really-simple-ssl'),
+			],
+		],
+		[
+			'id'       => 'x_content_type_options',
+			'menu_id'  => 'recommended_security_headers',
+			'group_id' => 'recommended_security_headers',
+			'type'     => 'checkbox',
+			'label'    => __("X-Content-Type options", "really-simple-ssl"),
+			'disabled' => false,
+			'default'  => false,
+		],
+		[
+			'id'       => 'x_frame_options',
+			'menu_id'  => 'recommended_security_headers',
+			'group_id' => 'recommended_security_headers',
+			'type'     => 'select',
+			'options'  => [
+				'disabled'   => __("Off", "really-simple-ssl"),
+				'DENY'       => 'DENY',
+				'SAMEORIGIN' => 'SAMEORIGIN',
+			],
+			'label'    => __("X-Frame options", "really-simple-ssl"),
+			'disabled' => false,
+			'default'  => false,
+		],
+		[
+			'id'       => 'referrer_policy',
+			'menu_id'  => 'recommended_security_headers',
+			'group_id' => 'recommended_security_headers',
+			'type'     => 'select',
+			'options'  => [
+				'disabled'                        => __("Off", "really-simple-ssl"),
+				'strict-origin-when-cross-origin' => 'strict-origin-when-cross-origin'.' ('.__("recommended",
+						"really-simple-ssl").')',
+				'no-referrer'                     => 'no-referrer',
+				'origin'                          => 'origin',
+				'no-referrer-when-downgrade'      => 'no-referrer-when-downgrade',
+				'unsafe-url'                      => 'unsafe-url',
+				'origin-when-cross-origin'        => 'origin-when-cross-origin',
+				'strict-origin'                   => 'strict-origin',
+				'same-origin'                     => 'same-origin',
+			],
+			'label'    => __("Referrer Policy", "really-simple-ssl"),
+			'disabled' => false,
+			'default'  => 'strict-origin-when-cross-origin',
+		],
+		[
+			'id'               => 'hsts',
+			'menu_id'          => 'hsts',
+			'group_id'         => 'hsts',
+			'type'             => 'checkbox',
+			'label'            => __("HTTP Strict Transport Security", "really-simple-ssl"),
+			'disabled'         => false,
+			'default'          => false,
+			'help'             => [
+				'label' => 'default',
+				'url'   => 'https://really-simple-ssl.com/definition/what-is-hsts/?mtm_campaign=definition&mtm_source=free',
+				'title' => __("About HTTP Strict Transport Security", 'really-simple-ssl'),
+				'text'  => __('Leveraging your SSL certificate with HSTS is a staple for every website. Force your website over SSL, mitigating risks of malicious counterfeit websites in your name.',
+					'really-simple-ssl'),
+			],
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'ssl_enabled' => '1',
+				]
+			],
+		],
+		[
+			'id'                      => 'hsts_preload',
+			'menu_id'                 => 'hsts',
+			'group_id'                => 'hsts',
+			'type'                    => 'checkbox',
+			'label'                   => __("Include preload", "really-simple-ssl"),
+			'comment'                 => sprintf(__("After enabling this feature, you can submit your site to %shstspreload.org%s",
+				"really-simple-ssl"), '<a target="_blank" href="https://hstspreload.org?domain='.site_url().'">',
+				"</a>"),
+			'react_conditions'        => [
+				'relation' => 'AND',
+				[
+					'hsts' => true,
+				]
+			],
+			'configure_on_activation' => [
+				'condition' => 1,
+				[
+					'hsts_subdomains' => true,
+					'hsts_max_age'    => 63072000,
+				]
+			],
+			'disabled'                => false,
+			'default'                 => false,
+		],
+		[
+			'id'               => 'hsts_subdomains',
+			'menu_id'          => 'hsts',
+			'group_id'         => 'hsts',
+			'type'             => 'checkbox',
+			'label'            => __("Include subdomains", "really-simple-ssl"),
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'hsts' => true,
+				]
+			],
+			'disabled'         => false,
+			'default'          => false,
+		],
+		[
+			'id'               => 'hsts_max_age',
+			'menu_id'          => 'hsts',
+			'group_id'         => 'hsts',
+			'type'             => 'select',
+			'options'          => [
+				'86400'    => __('One day (for testing only)', 'really-simple-ssl'),
+				'31536000' => __('One year', 'really-simple-ssl'),
+				'63072000' => __('Two years (required for preload)', 'really-simple-ssl'),
+			],
+			'label'            => __("Choose the max-age for HSTS", "really-simple-ssl"),
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'hsts' => true,
+				]
+			],
+			'disabled'         => false,
+			'default'          => '63072000',
+		],
+		[
+			'id'       => 'cross_origin_opener_policy',
+			'menu_id'  => 'cross_origin_policy',
+			'group_id' => 'cross_origin_policy',
+			'type'     => 'select',
+			'options'  => [
+				'disabled'                 => __('Off', 'really-simple-ssl'),
+				'unsafe-none'              => 'unsafe-none',
+				'same-origin-allow-popups' => 'same-origin-allow-popups',
+				'same-origin'              => 'same-origin',
+			],
+			'help'     => [
+				'label' => 'default',
+				'url'   => 'https://really-simple-ssl.com/definition/what-is-a-cross-origin-policy/?mtm_campaign=definition&mtm_source=free',
+				'title' => __("About Cross Origin Policies", 'really-simple-ssl'),
+				'text'  => __('One of the most powerful features, and therefore the most complex are the Cross-Origin headers that can isolate your website so any data leaks are minimized.',
+					'really-simple-ssl'),
+			],
+			'label'    => __("Cross Origin Opener Policy", "really-simple-ssl"),
+			'disabled' => false,
+			'default'  => 'disabled',
+		],
+		[
+			'id'       => 'cross_origin_resource_policy',
+			'menu_id'  => 'cross_origin_policy',
+			'group_id' => 'cross_origin_policy',
+			'type'     => 'select',
+			'options'  => [
+				'disabled'     => __('Off', 'really-simple-ssl'),
+				'same-site'    => 'same-site',
+				'same-origin'  => 'same-origin',
+				'cross-origin' => 'cross-origin',
+			],
+			'label'    => __("Cross Origin Resource Policy", "really-simple-ssl"),
+			'disabled' => false,
+			'default'  => 'disabled',
+		],
+		[
+			'id'       => 'cross_origin_embedder_policy',
+			'menu_id'  => 'cross_origin_policy',
+			'group_id' => 'cross_origin_policy',
+			'type'     => 'select',
+			'options'  => [
+				'disabled'     => __('Off', 'really-simple-ssl'),
+				'require-corp' => 'require-corp',
+				'same-origin'  => 'same-origin',
+				'unsafe-none'  => 'unsafe-none',
+			],
+			'label'    => __("Cross Origin Embedder Policy", "really-simple-ssl"),
+			'disabled' => false,
+			'default'  => 'disabled',
+		],
 		[
 			'id'                   => 'do_not_edit_htaccess', //field is removed if not enabled
 			'menu_id'              => 'general',
@@ -738,6 +1019,12 @@ function rsssl_fields( $load_values = true ) {
 			'label'            => __( "XML-RPC", 'really-simple-ssl' ),
 			'disabled'         => false,
 			'default'          => false,
+			'help'     => [
+				'label' => 'default',
+				'url'   => 'https://really-simple-ssl.com/definition/what-is-xml-rpc/',
+				'title' => __( "About XML-RPC", 'really-simple-ssl' ),
+				'text'  => __( 'XML-RPC is a mechanism originally implemented into WordPress to publish content without the need to actually login to the backend. It is also used to login to WordPress from devices other than desktop, or the regular wp-admin interface.', 'really-simple-ssl' ),
+			],
 			'react_conditions' => [
 				'relation' => 'AND',
 				[
@@ -749,26 +1036,31 @@ function rsssl_fields( $load_values = true ) {
 					'name'     => __( 'Method', 'really-simple-ssl' ),
 					'sortable' => false,
 					'column'   => 'method',
+					'width'     => '20%',
 				],
 				[
 					'name'     => __( 'Login status', 'really-simple-ssl' ),
 					'sortable' => false,
 					'column'   => 'login_statusControl',
+					'width'     => '20%',
 				],
 				[
 					'name'     => __( 'Count', 'really-simple-ssl' ),
 					'sortable' => false,
 					'column'   => 'count',
+					'width'     => '20%',
 				],
 				[
-					'name'     => __( 'Action', 'really-simple-ssl' ),
+					'name'     => __( '', 'really-simple-ssl' ),
 					'sortable' => false,
 					'column'   => 'statusControl',
+					'width'     => '20%',
 				],
 				[
-					'name'     => __( 'Delete', 'really-simple-ssl' ),
+					'name'     => __( '', 'really-simple-ssl' ),
 					'sortable' => false,
 					'column'   => 'deleteControl',
+					'width'     => '20%',
 				],
 			],
 		],
@@ -882,19 +1174,19 @@ function rsssl_fields( $load_values = true ) {
 					'width'    => '20%',
 				],
 				[
-					'name'     => __( 'Action', 'really-simple-ssl' ),
+					'name'     => __( '', 'really-simple-ssl' ),
 					'sortable' => false,
 					'searchable' => false,
 					'visible' => true,
-					'width'     => '70%',
-					'column'   => 'rsssl_two_fa_method',
+					'width'     => '40%',
+					'column'   => 'resetControl',
 				],
 			],
 		],
 		[
 			'id'          => 'mixedcontentscan',
-			'menu_id'     => 'mixedcontentscan',
-			'group_id'    => 'mixedcontentscan',
+			'menu_id'     => 'encryption',
+			'group_id'    => 'mixed-content-scan',
 			'type'        => 'mixedcontentscan',
 			'label'       => __( "Mixed content scan", "really-simple-ssl" ),
 			'help'        => [
@@ -908,13 +1200,14 @@ function rsssl_fields( $load_values = true ) {
 					'name'     => __( 'Type', 'really-simple-ssl' ),
 					'sortable' => true,
 					'column'   => 'warningControl',
-					'grow'     => 0,
+					'grow'     => 5,
+					'width'   => '5%',
 				],
 				[
 					'name'     => __( 'Description', 'really-simple-ssl' ),
 					'sortable' => true,
 					'column'   => 'description',
-					'grow'     => 10,
+					'grow'     => 15,
 				],
 				[
 					'name'     => __( 'Location', 'really-simple-ssl' ),
@@ -924,16 +1217,16 @@ function rsssl_fields( $load_values = true ) {
 				],
 
 				[
-					'name'     => __( 'Details', 'really-simple-ssl' ),
+					'name'     => __( '', 'really-simple-ssl' ),
 					'sortable' => false,
 					'column'   => 'detailsControl',
-					'grow'     => 0,
+					'grow'     => 5,
 				],
 				[
-					'name'     => __( 'Fix', 'really-simple-ssl' ),
+					'name'     => __( '', 'really-simple-ssl' ),
 					'sortable' => false,
 					'column'   => 'fixControl',
-					'grow'     => 0,
+					'grow'     => 5,
 					'right'    => true,
 				],
 			],
@@ -961,7 +1254,7 @@ function rsssl_fields( $load_values = true ) {
 					'column'   => 'title',
 				],
 				[
-					'name'     => __( 'Options', 'really-simple-ssl' ),
+					'name'     => __( '', 'really-simple-ssl' ),
 					'sortable' => false,
 					'column'   => 'valueControl',
 				],
@@ -1273,7 +1566,7 @@ function rsssl_fields( $load_values = true ) {
 		],
 		[
 			'id'    => 'vulnerabilities-overview',
-			'menu_id' => 'vulnerabilities-measures-overview',
+			'menu_id' => 'vulnerabilities_notifications',
 			'group_id' => 'vulnerabilities_overview',
 			'type' => 'vulnerabilitiestable',
 
@@ -1286,33 +1579,37 @@ function rsssl_fields( $load_values = true ) {
 					'enable_vulnerability_scanner' => 1,
 				]
 			],
-			'columns' => [
+			'columns'          => [
 				[
-					'id'      => 'component',
-					'name'     => __( 'Component', 'really-simple-ssl' ),
+					'id'       => 'component',
+					'name'     => __('Component', 'really-simple-ssl'),
 					'sortable' => false,
 					'column'   => 'Name',
-					'width'    => '20%',
+					'width'    => '55%',
+					'searchable' => true,
 				],
 				[
-					'id'      => 'risk',
-					'name'     => __( 'Risk', 'really-simple-ssl' ),
-					'sortable' => false,
-					'column'   => 'risk_name',
-				],
-				[
-					'id'      => 'date',
-					'name'     => __( 'Date', 'really-simple-ssl' ),
+					'id'       => 'date',
+					'name'     => __('Date', 'really-simple-ssl'),
 					'sortable' => false,
 					'column'   => 'date',
+					'width'    => '15%',
 				],
 				[
-					'id'      => 'action',
-					'name'     => __( 'Action', 'really-simple-ssl' ),
+					'id'       => 'risk',
+					'name'     => __('Risk', 'really-simple-ssl'),
+					'sortable' => false,
+					'column'   => 'risk_name',
+					'width'    => '10%',
+					'searchable' => true,
+				],
+				[
+					'id'       => 'action',
+					'name'     => __('', 'really-simple-ssl'),
 					'sortable' => false,
 					'column'   => 'vulnerability_action',
-				],[]
-
+					'width'   => '20%',
+				]
 			]
 		],
 		[
@@ -1340,7 +1637,7 @@ function rsssl_fields( $load_values = true ) {
 					'name'     => __( 'Action', 'really-simple-ssl' ),
 					'sortable' => false,
 					'column'   => 'name',
-					'width'    => '15%',
+					'width'    => '25%',
 				],
 				[
 					'name'     => __( 'Risk', 'really-simple-ssl' ),
@@ -1353,7 +1650,6 @@ function rsssl_fields( $load_values = true ) {
 					'sortable' => false,
 					'column'   => 'description',
 					'type'   => 'text',
-					'width'     => '70%',
 					'minWidth'  => '300px',
 				],
 				[]
@@ -1372,6 +1668,71 @@ function rsssl_fields( $load_values = true ) {
 				'relation' => 'AND',
 				[
 					'enable_vulnerability_scanner' => true,
+				]
+			],
+		],
+		[
+			'id'       => 'enforce_password_security_enabled',
+			'menu_id'  => 'password_security',
+			'group_id' => 'password_security_passwords',
+			'type'     => 'checkbox',
+			'label'    => __( "Enforce strong passwords", "really-simple-ssl-pro" ),
+			'help'     => [
+				'label' => 'default',
+				'url'   => 'https://really-simple-ssl.com/instructions/password-security/?mtm_campaign=definition&mtm_source=free',
+				'title' => __( "Enforce Strong Passwords", 'really-simple-ssl' ),
+				'text'  => __( 'Improve the default WordPress password strength check. You can also enforce frequent password changes for user roles.', 'really-simple-ssl' ).' '.__('They might be misused if you don’t actively tell the browser to disable these features.', 'really-simple-ssl' ),
+			],
+			'disabled' => false,
+			'default'  => 'disabled',
+			'tooltip'  => __( "This adds extra requirements for strong passwords for new users and updated passwords.",
+				'really-simple-ssl' ),
+		],
+		[
+			'id'       => 'enforce_frequent_password_change',
+			'menu_id'  => 'password_security',
+			'group_id' => 'password_security_passwords',
+			'type'     => 'checkbox',
+			'label'    => __( "Enforce frequent password change", "really-simple-ssl-pro" ),
+			'disabled' => false,
+			'default'  => 'disabled',
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'enforce_password_security_enabled' => 1,
+				]
+			],
+		],
+		[
+			'id'       => 'password_change_roles',
+			'menu_id'  => 'password_security',
+			'group_id' => 'password_security_passwords',
+			'type'     => 'roles_dropdown',
+			'default'  => [ 'administrator'],
+			'label'    => __( "User roles for password change", "really-simple-ssl-pro" ),
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'enforce_frequent_password_change' => 1,
+				]
+			],
+		],
+		[
+			'id'       => 'password_change_frequency',
+			'menu_id'  => 'password_security',
+			'group_id' => 'password_security_passwords',
+			'type'     => 'select',
+			'default'  => '12',
+			'options'   => [
+				'6' => __( "6 months", "really-simple-ssl-pro" ),
+				'12' => __( "1 year", "really-simple-ssl-pro" ),
+				'24' => __( "2 years", "really-simple-ssl-pro" ),
+			],
+			'label'    => __( "Change passwords every", "really-simple-ssl-pro" ),
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'enforce_frequent_password_change' => 1,
 				]
 			],
 		],

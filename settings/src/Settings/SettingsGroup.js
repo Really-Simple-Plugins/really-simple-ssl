@@ -7,12 +7,14 @@ import useMenu from "../Menu/MenuData";
 import useLicense from "./License/LicenseData";
 import filterData from "./FilterData";
 import {useEffect, useState} from '@wordpress/element';
+import ErrorBoundary from "../utils/ErrorBoundary";
+import PremiumOverlay from "./PremiumOverlay";
 
 /**
  * Render a grouped block of settings
  */
 const SettingsGroup = (props) => {
-    
+
     const {fields} = useFields();
     const {selectedFilter, setSelectedFilter} = filterData();
     const {licenseStatus} = useLicense();
@@ -53,7 +55,6 @@ const SettingsGroup = (props) => {
     }
 
     let activeGroup;
-
     for (const item of subMenu.menu_items) {
         if (item.id === selectedSubMenuItem && item.hasOwnProperty('groups')) {
             for (const group of item.groups) {
@@ -89,6 +90,9 @@ const SettingsGroup = (props) => {
         const nestedGroup = activeGroup.groups.find(group => group.group_id === props.group);
         if (nestedGroup) {
             activeGroup = nestedGroup;
+        } else {
+            const nestedGroup = activeGroup.groups.find(group => group.group_id === props.group);
+
         }
     }
 
@@ -131,7 +135,7 @@ const SettingsGroup = (props) => {
                                 {activeGroup.groupFilter.options.map((option) => (
                                     //if the value is equal to the selected value, set it as selected
                                     <option
-                                        key={option.id}
+                                        key={'option-'+option.id}
                                         value={option.id}
                                     >
                                         {option.title}
@@ -140,7 +144,7 @@ const SettingsGroup = (props) => {
                             </select>
                     </div>
                 )}
-                {activeGroup.helpLink && anchor !== 'letsencrypt' && (
+                {!activeGroup.groupFilter && activeGroup.helpLink && anchor !== 'letsencrypt' && (
                     <div className="rsssl-grid-item-controls">
                         <Hyperlink
                             target="_blank"
@@ -156,22 +160,22 @@ const SettingsGroup = (props) => {
                 </div>}
             </div>}
             <div className="rsssl-grid-item-content">
-                {(activeGroup.intro && typeof activeGroup.intro === 'string') && <div className="rsssl-settings-block-intro">{activeGroup.intro}</div>}
-                {(activeGroup.intro &&  typeof activeGroup.intro === 'object') && <div className="rsssl-settings-block-intro">{updatedIntro}</div>}
+                {(activeGroup.intro && typeof activeGroup.intro === 'string') && <ErrorBoundary fallback={"Could not load group intro"}>
+                    {(activeGroup.intro && typeof activeGroup.intro === 'string') && <div className="rsssl-settings-block-intro">{activeGroup.intro}</div>}
+                    {(activeGroup.intro &&  typeof activeGroup.intro === 'object') && <div className="rsssl-settings-block-intro">{updatedIntro}</div>}
+                </ErrorBoundary>}
+
                 {Field && selectedFields.map((field, i) =>
                         <Field key={"selectedFields-" + i} index={i} field={field} fields={selectedFields}/>
                 )}
             </div>
-            {disabled && !networkwide_error && <div className="rsssl-locked">
-                <div className="rsssl-locked-overlay">
-                    <span className="rsssl-task-status rsssl-premium">{__("Upgrade", "really-simple-ssl")}</span>
-                    <span>
-                        {rsssl_settings.pro_plugin_active && <span>{msg}&nbsp;<a className="rsssl-locked-link"
-                                                                                 href="#settings/license">{__("Check license", "really-simple-ssl")}</a></span>}
-                        {!rsssl_settings.pro_plugin_active && <Hyperlink target="_blank" text={msg} url={upgrade}/>}
-                    </span>
-                </div>
-            </div>}
+            {disabled && !networkwide_error && <PremiumOverlay
+                msg={activeGroup.premium_text}
+                title={activeGroup.premium_title ? activeGroup.premium_title : activeGroup.title}
+                upgrade={activeGroup.upgrade}
+                url={activeGroup.upgrade}
+            />}
+
             {networkwide_error && <div className="rsssl-locked">
                 <div className="rsssl-locked-overlay">
                     <span

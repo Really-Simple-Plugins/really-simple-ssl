@@ -2319,6 +2319,7 @@ class rsssl_admin
 		        'callback' => 'RSSSL()->mailer_admin->email_verification_completed',
 		        'output' => array(
 			        'false' => array(
+				        'highlight_field_id' => 'notifications_email_address',
 				        'msg' => __( "Email verification has not been completed yet. Check your email and click the link", 'really-simple-ssl' ),
 				        'icon' => 'open',
 				        'admin_notice' => false,

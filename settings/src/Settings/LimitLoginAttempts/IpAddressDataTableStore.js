@@ -23,6 +23,8 @@ const IpAddressDataTableStore = create((set, get) => ({
     dataActions: {},
     IpDataTable: [],
     maskError: false,
+    rowCleared: false,
+
 
     setMaskError: (maskError) => {
         set({maskError});
@@ -35,6 +37,11 @@ const IpAddressDataTableStore = create((set, get) => ({
     fetchIpData: async (action, dataActions) => {
         set({processing: true});
         set({dataLoaded: false});
+        set({rowCleared: true});
+        //if the dataActions is empty we do nothing
+        if (Object.keys(dataActions).length === 0) {
+            return;
+        }
         try {
             const response = await rsssl_api.doAction(
                 action,
@@ -47,6 +54,10 @@ const IpAddressDataTableStore = create((set, get) => ({
             }
         } catch (e) {
             console.log(e);
+        } finally {
+            set({processing: false});
+            set({rowCleared: false});
+
         }
     },
 
@@ -109,6 +120,9 @@ const IpAddressDataTableStore = create((set, get) => ({
     * This function sets the ip address and is used by Cidr and IpAddressInput
      */
     setIpAddress: (ipAddress) => {
+        if(ipAddress.length === 0) {
+            return;
+        }
         let ipRegex = /^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$|^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,4}|((25[0-5]|(2[0-4]|1{0,1}[0-9])?[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9])?[0-9]))|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9])?[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9])?[0-9]))$/;
         if (ipAddress.includes('/')) {
             let finalIp = '';
@@ -162,7 +176,7 @@ const IpAddressDataTableStore = create((set, get) => ({
     /*
     * This function updates the row only changing the status
      */
-    updateRow: async (id, status) => {
+    updateRow: async (id, status, dataActions) => {
         set({processing: true});
         try {
             const response = await rsssl_api.doAction(
@@ -170,24 +184,26 @@ const IpAddressDataTableStore = create((set, get) => ({
                 {id, status}
             );
             //now we set the EventLog
-            if (response) {
-                await get().fetchIpData('ip_list');
+            if (response && response.request_success) {
+                await get().fetchIpData('ip_list', dataActions);
             }
         } catch (e) {
             console.log(e);
+        }  finally {
+            set({processing: false});
         }
     },
 
     /*
     * This function add a new row to the table
      */
-    addRow: async (ipAddress, status) => {
+    addRow: async (ipAddress, status, dataActions) => {
         set({processing: true});
         try {
             const response = await rsssl_api.doAction('ip_add_ip_address', {ipAddress, status});
             // Consider checking the response structure for any specific success or failure signals
             if (response && response.request_success) {
-                await get().fetchIpData('ip_list');
+                await get().fetchIpData('ip_list', dataActions);
                 // Potentially notify the user of success, if needed.
             } else {
                 // Handle any unsuccessful response if needed.
@@ -247,7 +263,6 @@ const IpAddressDataTableStore = create((set, get) => ({
 
         // Handle the '::' within the address
         if (ip.includes('::')) {
-            console.log('includes ::')
             const parts = ip.split('::');
             if (parts.length > 2) return false;
 
@@ -329,7 +344,6 @@ const IpAddressDataTableStore = create((set, get) => ({
                 to = highest;
                 set({inputRangeValidated: true});
             } else if (get().validateIpv6(get().extendIpV6(lowest)) && get().validateIpv6(get().extendIpV6(highest))) {
-                console.log('ipv6 validated');
                 //now we check if the lowest is lower than the highest
                 if (get().ipToNumber(get().extendIpV6(lowest)) > get().ipToNumber(get().extendIpV6(highest))) {
                     console.warn('lowest is higher than highest');
@@ -374,7 +388,7 @@ const IpAddressDataTableStore = create((set, get) => ({
         }
     },
 
-    updateMultiRow: async (ids, status) => {
+    updateMultiRow: async (ids, status, dataActions) => {
         set({processing: true});
         try {
             const response = await rsssl_api.doAction(
@@ -382,31 +396,34 @@ const IpAddressDataTableStore = create((set, get) => ({
                 {ids, status}
             );
             //now we set the EventLog
-            if (response) {
-                await get().fetchIpData('ip_list');
+            if (response && response.request_success) {
+                await get().fetchIpData('ip_list', dataActions);
             }
         } catch (e) {
             console.log(e);
+        } finally {
+            set({processing: false});
         }
     },
 
-    resetRow: async (id) => {
+    resetRow: async (id, dataActions) => {
         set({processing: true});
         try {
-            const response = await rsssl_api.doAction(
-                'delete_entry',
-                {id}
-            );
+            const response = await rsssl_api.doAction('delete_entry', {id} );
             //now we set the EventLog
-            if (response) {
-                await get().fetchIpData('ip_list');
+            if (response && response.request_success) {
+                await get().fetchIpData('ip_list', get().dataActions);
+            } else {
+                console.log("Failed to remove IP address: ", response.message);
             }
         } catch (e) {
             console.log(e);
+        } finally {
+            set({processing: false});
         }
     },
 
-    resetMultiRow: async (ids) => {
+    resetMultiRow: async (ids, dataActions) => {
         set({processing: true});
         try {
             const response = await rsssl_api.doAction(
@@ -414,11 +431,13 @@ const IpAddressDataTableStore = create((set, get) => ({
                 {ids}
             );
             //now we set the EventLog
-            if (response) {
-                await get().fetchIpData('ip_list');
+            if (response && response.request_success) {
+                await get().fetchIpData('ip_list', get().dataActions);
             }
         } catch (e) {
             console.log(e);
+        } finally {
+            set({processing: false});
         }
     }
 }));

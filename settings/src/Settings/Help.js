@@ -14,17 +14,17 @@ const Help = (props) => {
 
     let target = notice.url && notice.url.indexOf("really-simple-ssl.com") !==-1 ? "_blank" : '_self';
     return (
-        <div key={props.index}>
+        <div>
             { notice.title && notice.text &&
-                <details key={props.index} className={"rsssl-wizard-help-notice rsssl-" + notice.label.toLowerCase()} open={openStatus}>
+                <details className={"rsssl-wizard-help-notice rsssl-" + notice.label.toLowerCase()} open={openStatus}>
                     <summary>{notice.title} <Icon name='chevron-down' /></summary>
                     {/*some notices contain html, like for the htaccess notices. A title is required for those options, otherwise the text becomes the title. */}
-                    <div key={1} dangerouslySetInnerHTML={{__html:notice.text}}></div>
-                    {notice.url && <div key={2} className="rsssl-help-more-info"><a target={target} href={notice.url}>{__("More info", "really-simple-ssl")}</a></div>}
+                    <div dangerouslySetInnerHTML={{__html:notice.text}}></div>
+                    {notice.url && <div className="rsssl-help-more-info"><a target={target} href={notice.url}>{__("More info", "really-simple-ssl")}</a></div>}
                 </details>
             }
             { notice.title && !notice.text &&
-                <div  key={props.index} className={"rsssl-wizard-help-notice rsssl-" + notice.label.toLowerCase()}><p>{notice.title}</p></div>
+                <div className={"rsssl-wizard-help-notice rsssl-" + notice.label.toLowerCase()}><p>{notice.title}</p></div>
             }
         </div>
     );
