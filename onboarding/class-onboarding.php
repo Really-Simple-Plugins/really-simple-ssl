@@ -223,43 +223,53 @@ class rsssl_onboarding {
 			$items[] = [
 				"title" => __("You may need to login in again, have your credentials prepared.", "really-simple-ssl"),
 				"status" => "inactive",
+				"id" => "login",
 			];
 		}
 
 		if ( RSSSL()->certificate->is_valid() ) {
 			$items[] = [
 				"title" => __("An SSL certificate has been detected", "really-simple-ssl"),
-				"status" => "success"
+				"status" => "success",
+				"id" => "certificate",
 			];
 		} else if ( RSSSL()->certificate->detection_failed() ) {
 			$items[] = [
 				"title" => __("Could not test certificate.", "really-simple-ssl") . " " . __("Automatic certificate detection is not possible on your server.", "really-simple-ssl"),
-				"status" => "error"
+				"status" => "error",
+				"id" => "certificate",
 			];
 		} else {
 			$items[] = [
 				"title" => __("No SSL certificate has been detected.", "really-simple-ssl") . " " . __("Please refresh the SSL status if a certificate has been installed recently.", "really-simple-ssl"),
-				"status" => "error"
+				"status" => "error",
+				"id" => "certificate",
 			];
 		}
 
 		return $items;
 	}
 
-	public function plugins(){
+	public function plugins(): array {
 		$items = [];
 		$plugins_to_install = [
 			[
 				"slug" => "burst-statistics",
-				'constant_premium' => false,
+				'constant_premium' => 'burst_pro',
 				"title" => "Burst Statistics",
-				"description" => __("Self-hosted, Privacy-friendly analytics tool", "really-simple-ssl"),
+				"description" => __("Privacy-friendly analytics tool", "really-simple-ssl"),
 			],
 			[
 				"slug" => "complianz-gdpr",
 				'constant_premium' => 'cmplz_premium',
 				"title" => "Complianz",
 				"description" => __("Consent Management as it should be", "really-simple-ssl"),
+			],
+			[
+				"slug" => "complianz-terms-conditions",
+				'constant_premium' => false,
+				"title" => "Complianz Terms & Conditions",
+				"description" => __("Terms & Conditions", "really-simple-ssl"),
 			]
 		];
 		foreach ($plugins_to_install as $plugin_info) {
@@ -267,38 +277,24 @@ class rsssl_onboarding {
 			$plugin = new rsssl_installer($plugin_info["slug"]);
 			$premium_active = $plugin_info['constant_premium'] && defined($plugin_info['constant_premium']);
 			$free_active = $plugin->plugin_is_downloaded() && $plugin->plugin_is_activated();
+
 			if( $premium_active || $free_active ) {
-				$items[] = [
-					"id" => $plugin_info['slug'],
-					"is_plugin" => true,
-					"title" => sprintf(__("%s has been installed!", "really-simple-ssl"), $plugin_info["title"]),
-					"action" => "none",
-					"current_action" => "none",
-					"status" => "success",
-				];
+				$action = "none";
 			} else if( !$plugin->plugin_is_downloaded() ){
-				$items[] = [
-					"id" => $plugin_info['slug'],
-					"is_plugin" => true,
-					"title" => $plugin_info["title"],
-					"description" => $plugin_info["description"],
-					"read_more" => $plugin_info["read_more"],
-					"action" => "install_plugin",
-					"current_action" => "none",
-					"status" => "warning",
-					"button" => __("Install", "really-simple-ssl"),
-				];
+				$action = "install_plugin";
 			} else if ( $plugin->plugin_is_downloaded() && !$plugin->plugin_is_activated() ) {
-				$items[] = [
-					"id" => $plugin_info['slug'],
-					"is_plugin" => true,
-					"title" => sprintf(__("Activate our plugin %s", "really-simple-ssl"), $plugin_info["title"]),
-					"action" => "activate",
-					"current_action" => "none",
-					"status" => "warning",
-					"button" => __("Activate", "really-simple-ssl"),
-				];
+				$action = "activate";
+			} else {
+				$action = "none";
 			}
+
+			$items[] = [
+				"id" => $plugin_info['slug'],
+				"title" => $plugin_info["title"],
+				"action" => $action,
+				"activated" => true,
+				"current_action" => "none",
+			];
 		}
 		return $items;
 	}

@@ -23,8 +23,10 @@
       }
     }
 
-    .rsssl-activate_ssl ul {
-      column-count: 1;
+    .rsssl-activate_ssl, .rsssl-plugins {
+      ul {
+        column-count: 1;
+      }
     }
 
     ul {

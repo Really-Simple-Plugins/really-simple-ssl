@@ -19,7 +19,7 @@
   padding: 8px 20px;
   color: var(--rsp-grey-500);
 }
-.rsssl-modal.rsssl-onboarding-modal .rsssl-modal-body .rsssl-activate_ssl ul {
+.rsssl-modal.rsssl-onboarding-modal .rsssl-modal-body .rsssl-activate_ssl ul, .rsssl-modal.rsssl-onboarding-modal .rsssl-modal-body .rsssl-plugins ul {
   -moz-column-count: 1;
        column-count: 1;
 }
@@ -188,6 +188,9 @@
 .rsssl-modal .rsssl-modal-footer .rsssl-modal-footer-feedback .rsssl-icon {
   margin-right: 10px;
 }
+.rsssl-modal .rsssl-modal-footer .rsssl-modal-footer-buttons button .rsssl-icon {
+  margin-right: 10px;
+}
 @media (max-width: 768px) {
   .rsssl-modal .rsssl-modal-footer .rsssl-modal-footer-image, .rsssl-modal .rsssl-modal-footer .rsssl-modal-footer-feedback {
     display: none;
@@ -202,6 +205,9 @@
   .rsssl-modal .rsssl-modal-footer .rsssl-modal-footer-buttons button {
     width: 100%;
     margin: 0;
+  }
+  .rsssl-modal .rsssl-modal-footer .rsssl-modal-footer-buttons button .rsssl-icon {
+    margin-right: 10px;
   }
 }
 .rsssl-modal .rsssl-modal-footer button + button {
@@ -220,7 +226,7 @@
 /*!******************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[3].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[3].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[3].use[3]!../modal/src/components/Modal/checkbox.scss ***!
   \******************************************************************************************************************************************************************************************************************************************************************/
-.rsssl-modal-checkbox-container {
+.rsssl-modal-body .rsssl-modal-checkbox-container {
   margin-right: 35px;
   display: block;
   position: relative;
@@ -232,19 +238,23 @@
   -moz-user-select: none;
   user-select: none;
 }
-.rsssl-modal-checkbox-container:hover input ~ .rsssl-checkmark {
+.rsssl-modal-body .rsssl-modal-checkbox-container:hover input ~ .rsssl-checkmark {
   background-color: var(--rsp-grey-400);
   border: 1px solid var(--rsp-grey-400);
   border-radius: 3px;
 }
-.rsssl-modal-checkbox-container input:checked ~ .rsssl-checkmark {
+.rsssl-modal-body .rsssl-modal-checkbox-container input:checked ~ .rsssl-checkmark {
   background-color: var(--rsp-dark-blue);
   border: 1px solid var(--rsp-dark-blue);
 }
-.rsssl-modal-checkbox-container input:checked ~ .rsssl-checkmark:after {
+.rsssl-modal-body .rsssl-modal-checkbox-container input:disabled ~ .rsssl-checkmark {
+  background-color: var(--rsp-grey-400);
+  border: 1px solid var(--rsp-grey-400);
+}
+.rsssl-modal-body .rsssl-modal-checkbox-container input:checked ~ .rsssl-checkmark:after {
   display: block;
 }
-.rsssl-modal-checkbox-container .rsssl-checkmark::after {
+.rsssl-modal-body .rsssl-modal-checkbox-container .rsssl-checkmark::after {
   left: 6px;
   top: 3px;
   width: 5px;
@@ -255,14 +265,14 @@
   -webkit-transform: rotate(45deg);
   -ms-transform: rotate(45deg);
 }
-.rsssl-modal-checkbox-container input {
+.rsssl-modal-body .rsssl-modal-checkbox-container input {
   position: absolute;
   height: 0;
   width: 0;
   opacity: 0;
   cursor: pointer;
 }
-.rsssl-modal-checkbox-container .rsssl-checkmark {
+.rsssl-modal-body .rsssl-modal-checkbox-container .rsssl-checkmark {
   background-color: var(--rsp-grey-300);
   border: 1px solid var(--rsp-grey-400);
   position: absolute;
@@ -271,7 +281,7 @@
   height: var(--rsp-fs-600);
   aspect-ratio: 1;
 }
-.rsssl-modal-checkbox-container .rsssl-checkmark::after {
+.rsssl-modal-body .rsssl-modal-checkbox-container .rsssl-checkmark::after {
   content: "";
   position: absolute;
   display: none;

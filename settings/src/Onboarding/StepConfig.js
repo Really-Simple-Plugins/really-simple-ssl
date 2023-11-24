@@ -7,9 +7,6 @@ import ListItem from "./Items/ListItem";
 const StepConfig = () => {
     const { fetchFieldsData, getField, fieldsLoaded, updateField, setChangedField, saveFields} = useFields();
     const {
-        overrideSSL,
-        setOverrideSSL,
-        certificateValid,
         currentStep,
     } = useOnboardingData();
 
@@ -42,25 +39,6 @@ const StepConfig = () => {
                     </ul>
                 }
             </ul>
-            { !certificateValid &&
-                <>
-                    <div className="rsssl-modal-description">
-                        <a href="#" onClick={ (e) => refreshSSLStatus(e)}>
-                            { __("Refresh SSL status", "really-simple-ssl")}
-                        </a>.&nbsp;{__("The SSL detection method is not 100% accurate.", "really-simple-ssl")}&nbsp;
-                        {__("If you’re certain an SSL certificate is present, and refresh SSL status does not work, please check “Override SSL detection” to continue activating SSL.", "really-simple-ssl")}
-                        &nbsp;<label className="rsssl-override-detection-toggle">
-                            <input
-                                onChange={ (e) => setOverrideSSL(e.target.checked)}
-                                type="checkbox"
-                                checked={overrideSSL} />
-                            {__("Override SSL detection.","really-simple-ssl")}
-                        </label>
-                    </div>
-
-                </>
-            }
-
         </>
     );
 }

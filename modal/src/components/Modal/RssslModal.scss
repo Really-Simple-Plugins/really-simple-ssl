@@ -74,6 +74,14 @@
       }
     }
 
+    .rsssl-modal-footer-buttons {
+      button {
+        .rsssl-icon {
+          margin-right:10px;
+        }
+      }
+    }
+
     @media (max-width: 768px) {
       .rsssl-modal-footer-image, .rsssl-modal-footer-feedback {
         display:none;
@@ -87,6 +95,9 @@
         button {
           width: 100%;
           margin:0;
+          .rsssl-icon {
+            margin-right:10px;
+          }
         }
       }
     }

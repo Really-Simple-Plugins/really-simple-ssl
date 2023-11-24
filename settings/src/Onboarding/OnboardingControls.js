@@ -6,6 +6,7 @@ import useOnboardingData from "./OnboardingData";
 import useProgress from "../Dashboard/Progress/ProgressData";
 import {useEffect} from "@wordpress/element";
 import useRiskData from "../Settings/RiskConfiguration/RiskData";
+import Icon from "../utils/Icon";
 const OnboardingControls = ({isModal}) => {
     const { getProgressData} = useProgress();
     const { updateField, setChangedField, updateFieldsData, fetchFieldsData, saveFields} = useFields();
@@ -52,12 +53,12 @@ const OnboardingControls = ({isModal}) => {
                     await saveFields(true, false);
 
                     if (item.id === 'hardening') {
-                        await fetchFieldsData('hardening');
+                        // await fetchFieldsData('hardening');
                         await getProgressData();
                     }
 
                     if  (item.id === '"vulnerability_detection"' ) {
-                        await fetchFieldsData('vulnerabilities');
+                        // await fetchFieldsData('vulnerabilities');
                         await fetchFirstRun();
                         await fetchVulnerabilities();
                         await getProgressData();
@@ -112,7 +113,12 @@ const OnboardingControls = ({isModal}) => {
         return (
             <>
                 <Button disabled={processing} onClick={() => {setCurrentStepIndex(currentStepIndex+1)}}>{__('Skip', 'really-simple-ssl')}</Button>
-                <Button disabled={processing} isPrimary onClick={() => saveAndContinue() }>{currentStep.button}</Button>
+                <Button disabled={processing} isPrimary onClick={() => saveAndContinue() }>
+                    {processing && <>
+                        <Icon name = "loading" color = 'grey' />
+                    </>}
+                    {currentStep.button}
+                </Button>
             </>
         );
     }
