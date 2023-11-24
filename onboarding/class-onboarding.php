@@ -338,9 +338,9 @@ class rsssl_onboarding {
 			],
 			[
 				"title" => __("Limit Login Attempts", "really-simple-ssl"),
-				"id" => "health_scan",
+				"id" => "limit_login_attempts",
 				"premium" => true,
-				"options" => [],
+				"options" => ['enable_limited_login_attempts'],
 				"activated" => true,
 			],
 		];
