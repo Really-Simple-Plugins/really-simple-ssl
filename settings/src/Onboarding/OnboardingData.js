@@ -87,20 +87,14 @@ const useOnboardingData = create(( set, get ) => ({
         });
 
     },
-    updateItemStatus: (action, status, id) => {
+    updateItemStatus: (id, action, status, activated) => {
         const currentStepIndex = get().currentStepIndex;
         const itemIndex = get().steps[currentStepIndex].items.findIndex(item => {return item.id===id;});
         set(
             produce((state) => {
-                let step = get().currentStep;
-                let stepCopy = {...step};
-                let itemsCopy = [...step.items];
-                let itemCopy = {...step.items[itemIndex]};
-                itemCopy.status = status;
-                itemCopy.current_action = action;
-                itemsCopy[itemIndex] = itemCopy;
-                stepCopy.items = itemsCopy;
-                state.steps[currentStepIndex] = stepCopy;
+                if (typeof action !== 'undefined') state.steps[currentStepIndex].items[itemIndex].action = action;
+                if (typeof status !== 'undefined') state.steps[currentStepIndex].items[itemIndex].status = status;
+                if (typeof activated !== 'undefined') state.steps[currentStepIndex].items[itemIndex].activated = activated;
                 state.currentStep = state.steps[currentStepIndex];
             })
         )
@@ -117,12 +111,12 @@ const useOnboardingData = create(( set, get ) => ({
     actionHandler: async (id, action, event) => {
         set({actionStatus: 'processing'});
         event.preventDefault();
-        get().updateItemStatus(action, 'processing', id);
+        get().updateItemStatus(id, action, 'processing');
         let next = await processAction(action, id);
-        get().updateItemStatus(next.action, next.status, id);
+        get().updateItemStatus(id, next.action, next.status);
         if ( next.action!=='none' && next.action!=='completed') {
             next = await processAction(next.action, id);
-            get().updateItemStatus(next.action, next.status, id);
+            get().updateItemStatus(id, next.action, next.status);
         } else {
             set({actionStatus: 'completed'});
         }

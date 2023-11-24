@@ -956,6 +956,50 @@ const ModalControl = props => {
 
 /***/ }),
 
+/***/ "./src/Onboarding/CheckboxItem.js":
+/*!****************************************!*\
+  !*** ./src/Onboarding/CheckboxItem.js ***!
+  \****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _OnboardingData__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./OnboardingData */ "./src/Onboarding/OnboardingData.js");
+
+
+
+const CheckboxItem = ({
+  item
+}) => {
+  const {
+    updateItemStatus
+  } = (0,_OnboardingData__WEBPACK_IMPORTED_MODULE_1__["default"])();
+  let {
+    title,
+    description,
+    id,
+    activated
+  } = item;
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
+    className: "rsssl-modal-checkbox-container"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "checkbox",
+    checked: activated,
+    value: id,
+    id: id,
+    onChange: e => updateItemStatus(id, null, null, e.target.checked)
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "rsssl-checkmark"
+  })), title, description && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, "\xA0-\xA0", description));
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.memo)(CheckboxItem));
+
+/***/ }),
+
 /***/ "./src/Onboarding/ListItem.js":
 /*!************************************!*\
   !*** ./src/Onboarding/ListItem.js ***!
@@ -969,42 +1013,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/Icon */ "./src/utils/Icon.js");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _OnboardingData__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./OnboardingData */ "./src/Onboarding/OnboardingData.js");
-
-
-
 
 
 
 const ListItem = ({
   item
 }) => {
-  const {
-    actionHandler,
-    networkwide,
-    networkProgress,
-    networkActivationStatus
-  } = (0,_OnboardingData__WEBPACK_IMPORTED_MODULE_4__["default"])();
   let {
     title,
     description,
-    current_action,
-    action,
-    status,
-    button,
-    id
+    status
   } = item;
-  const currentActions = {
-    'activate_setting': (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Activating...', "really-simple-ssl"),
-    'activate': (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Activating...', "really-simple-ssl"),
-    'install_plugin': (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Installing...', "really-simple-ssl"),
-    'error': (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Failed', "really-simple-ssl"),
-    'completed': (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Finished', "really-simple-ssl")
-  };
   const statuses = {
     'inactive': {
       'icon': 'info',
@@ -1027,28 +1046,8 @@ const ListItem = ({
       'color': 'black'
     }
   };
-  if (id === 'ssl_enabled' && networkwide) {
-    if (networkProgress >= 100) {
-      status = 'success';
-      title = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("SSL has been activated network wide", "really-simple-ssl");
-    } else {
-      status = 'processing';
-      title = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Processing activation of subsites networkwide", "really-simple-ssl");
-    }
-  }
   const statusIcon = item.status !== 'success' && item.is_plugin && item.current_action === 'none' ? 'empty' : statuses[status].icon;
   const statusColor = statuses[status].color;
-  let buttonTitle = '';
-  if (button) {
-    buttonTitle = button;
-    if (current_action !== 'none') {
-      buttonTitle = currentActions[current_action];
-      if (current_action === 'failed') {
-        buttonTitle = currentActions['error'];
-      }
-    }
-  }
-  let showLink = button && button === buttonTitle;
   let showAsPlugin = item.status !== 'success' && item.is_plugin && item.current_action === 'none';
   let isPluginClass = showAsPlugin ? 'rsssl-is-plugin' : '';
   title = showAsPlugin ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("b", null, title) : title;
@@ -1057,45 +1056,9 @@ const ListItem = ({
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_1__["default"], {
     name: statusIcon,
     color: statusColor
-  }), title, description && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, "\xA0-\xA0", description), id === 'ssl_enabled' && networkwide && networkActivationStatus === 'main_site_activated' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, "\xA0-\xA0", networkProgress < 100 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("working", "really-simple-ssl"), "\xA0", networkProgress, "%"), networkProgress >= 100 && (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("completed", "really-simple-ssl")), button && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, "\xA0-\xA0", showLink && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.Button, {
-    isLink: true,
-    onClick: e => actionHandler(id, action, e)
-  }, buttonTitle), !showLink && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, buttonTitle)));
+  }), title, description && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, "\xA0-\xA0", description));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.memo)(ListItem));
-
-/***/ }),
-
-/***/ "./src/Onboarding/ListItems.js":
-/*!*************************************!*\
-  !*** ./src/Onboarding/ListItems.js ***!
-  \*************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _OnboardingData__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./OnboardingData */ "./src/Onboarding/OnboardingData.js");
-/* harmony import */ var _ListItem__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ListItem */ "./src/Onboarding/ListItem.js");
-
-
-
-
-const ListItems = () => {
-  const {
-    currentStep,
-    networkwide
-  } = (0,_OnboardingData__WEBPACK_IMPORTED_MODULE_1__["default"])();
-  let items = currentStep.items;
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", null, items && items.map((item, index) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_ListItem__WEBPACK_IMPORTED_MODULE_2__["default"], {
-    key: index,
-    item: item
-  })));
-};
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.memo)(ListItems));
 
 /***/ }),
 
@@ -1122,6 +1085,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _OnboardingControls__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./OnboardingControls */ "./src/Onboarding/OnboardingControls.js");
 /* harmony import */ var _StepEmail__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./StepEmail */ "./src/Onboarding/StepEmail.js");
 /* harmony import */ var _StepConfig__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./StepConfig */ "./src/Onboarding/StepConfig.js");
+/* harmony import */ var _StepFeatures__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./StepFeatures */ "./src/Onboarding/StepFeatures.js");
+/* harmony import */ var _StepPlugins__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./StepPlugins */ "./src/Onboarding/StepPlugins.js");
+
+
 
 
 
@@ -1139,20 +1106,8 @@ const Onboarding = ({
 }) => {
   const {
     fetchFieldsData,
-    fieldsLoaded,
-    updateField,
-    setChangedField,
-    saveFields
+    fieldsLoaded
   } = (0,_Settings_FieldsData__WEBPACK_IMPORTED_MODULE_4__["default"])();
-  const {
-    getProgressData
-  } = (0,_Dashboard_Progress_ProgressData__WEBPACK_IMPORTED_MODULE_5__["default"])();
-  const [hardeningEnabled, setHardeningEnabled] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
-  const [vulnerabilityDetectionEnabled, setVulnerabilityDetectionEnabled] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
-  const {
-    fetchFirstRun,
-    fetchVulnerabilities
-  } = (0,_Settings_RiskConfiguration_RiskData__WEBPACK_IMPORTED_MODULE_7__["default"])();
   const {
     getSteps,
     error,
@@ -1185,47 +1140,11 @@ const Onboarding = ({
     const run = async () => {
       await getSteps(false);
       if (dataLoaded && sslEnabled && currentStepIndex === 0) {
-        console.log("ssl enabled");
         setCurrentStepIndex(1);
       }
     };
     run();
   }, []);
-  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-    if (currentStep && currentStep.items) {
-      let hardeningItem = currentStep.items.find(item => {
-        return item.id === 'hardening';
-      });
-      if (hardeningItem) {
-        setHardeningEnabled(hardeningItem.status === 'success');
-      }
-      let vulnerabilityDetection = currentStep.items.find(item => {
-        return item.id === 'vulnerability_detection';
-      });
-      if (vulnerabilityDetection) {
-        setVulnerabilityDetectionEnabled(vulnerabilityDetection.status === 'success');
-      }
-    }
-  }, [currentStep]);
-
-  //ensure all fields are updated, and progress is retrieved again
-  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-    const runUpdate = async () => {
-      //in currentStep.items, find item with id 'hardening'
-      //if it has status 'completed' fetchFieldsData again.
-      if (hardeningEnabled) {
-        await fetchFieldsData('hardening');
-        await getProgressData();
-      }
-      if (vulnerabilityDetectionEnabled) {
-        await fetchFieldsData('vulnerabilities');
-        await fetchFirstRun();
-        await fetchVulnerabilities();
-        await getProgressData();
-      }
-    };
-    runUpdate();
-  }, [hardeningEnabled, vulnerabilityDetectionEnabled]);
   console.log(currentStepIndex, currentStep);
   if (error) {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Placeholder_Placeholder__WEBPACK_IMPORTED_MODULE_3__["default"], {
@@ -1245,7 +1164,7 @@ const Onboarding = ({
     lines: "3"
   }))), dataLoaded && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: processingClass
-  }, currentStep.id === 'activate_ssl' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_StepConfig__WEBPACK_IMPORTED_MODULE_10__["default"], null)), currentStep.id === 'email' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_StepEmail__WEBPACK_IMPORTED_MODULE_9__["default"], null)), currentStep.id === 'plugins' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(StepPlugins, null)), certificateValid && currentStep.info_text && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, currentStep.id === 'activate_ssl' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_StepConfig__WEBPACK_IMPORTED_MODULE_10__["default"], null)), currentStep.id === 'features' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_StepFeatures__WEBPACK_IMPORTED_MODULE_11__["default"], null)), currentStep.id === 'email' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_StepEmail__WEBPACK_IMPORTED_MODULE_9__["default"], null)), currentStep.id === 'plugins' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_StepPlugins__WEBPACK_IMPORTED_MODULE_12__["default"], null)), certificateValid && currentStep.info_text && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-modal-description",
     dangerouslySetInnerHTML: {
       __html: currentStep.info_text
@@ -1278,6 +1197,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Settings_FieldsData__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Settings/FieldsData */ "./src/Settings/FieldsData.js");
 /* harmony import */ var _OnboardingData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./OnboardingData */ "./src/Onboarding/OnboardingData.js");
 /* harmony import */ var _Dashboard_Progress_ProgressData__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Dashboard/Progress/ProgressData */ "./src/Dashboard/Progress/ProgressData.js");
+/* harmony import */ var _Settings_RiskConfiguration_RiskData__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../Settings/RiskConfiguration/RiskData */ "./src/Settings/RiskConfiguration/RiskData.js");
+
+
 
 
 
@@ -1301,6 +1223,10 @@ const OnboardingControls = ({
     selectedSubMenuItem
   } = (0,_Menu_MenuData__WEBPACK_IMPORTED_MODULE_3__["default"])();
   const {
+    fetchFirstRun,
+    fetchVulnerabilities
+  } = (0,_Settings_RiskConfiguration_RiskData__WEBPACK_IMPORTED_MODULE_7__["default"])();
+  const {
     dismissModal,
     activateSSL,
     certificateValid,
@@ -1320,6 +1246,36 @@ const OnboardingControls = ({
     }
     setSelectedMainMenuItem('dashboard');
   };
+  const saveAndContinue = async () => {
+    if (currentStep.id === 'features') {
+      //loop through all items of currentStep.items
+      for (const item of currentStep.items) {
+        console.log(item);
+        if (item.activated) {
+          for (const fieldId of Object.values(item.options)) {
+            await updateField(fieldId, true);
+          }
+          if (item.id === 'hardening') {
+            await fetchFieldsData('hardening');
+            await getProgressData();
+          }
+          if (item.id === '"vulnerability_detection"') {
+            await fetchFieldsData('vulnerabilities');
+            await fetchFirstRun();
+            await fetchVulnerabilities();
+            await getProgressData();
+          }
+        }
+      }
+      setCurrentStepIndex(currentStepIndex + 1);
+    }
+    if (currentStep.id === 'email') {
+      await saveEmail();
+      updateField('send_notifications_email', true);
+      updateField('notifications_email_address', email);
+      updateFieldsData(selectedSubMenuItem);
+    }
+  };
   const handleActivateSSL = async () => {
     await activateSSL();
     await getProgressData();
@@ -1328,12 +1284,6 @@ const OnboardingControls = ({
   const goToLetsEncrypt = () => {
     if (isModal) dismissModal(true);
     window.location.href = rsssl_settings.letsencrypt_url;
-  };
-  const saveEmailAndUpdateFields = async () => {
-    await saveEmail();
-    updateField('send_notifications_email', true);
-    updateField('notifications_email_address', email);
-    updateFieldsData(selectedSubMenuItem);
   };
   let ActivateSSLText = networkwide ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Activate SSL networkwide", "really-simple-ssl") : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Activate SSL", "really-simple-ssl");
   if (currentStepIndex === 0) {
@@ -1350,7 +1300,6 @@ const OnboardingControls = ({
     }, ActivateSSLText));
   }
   if (currentStepIndex > 0 && currentStepIndex < steps.length - 1) {
-    let buttonText = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Save and continue', 'really-simple-ssl');
     if (currentStep.id === 'plugins') {}
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
       disabled: processing,
@@ -1360,8 +1309,8 @@ const OnboardingControls = ({
     }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Skip', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
       disabled: processing,
       isPrimary: true,
-      onClick: () => saveEmailAndUpdateFields()
-    }, buttonText));
+      onClick: () => saveAndContinue()
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Save and continue', 'really-simple-ssl')));
   }
 
   //for last step only
@@ -1401,7 +1350,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _OnboardingData__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./OnboardingData */ "./src/Onboarding/OnboardingData.js");
 /* harmony import */ var _Settings_FieldsData__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Settings/FieldsData */ "./src/Settings/FieldsData.js");
 /* harmony import */ var _Settings_Host_Host__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Settings/Host/Host */ "./src/Settings/Host/Host.js");
-/* harmony import */ var _ListItems__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./ListItems */ "./src/Onboarding/ListItems.js");
+/* harmony import */ var _ListItem__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./ListItem */ "./src/Onboarding/ListItem.js");
 
 
 
@@ -1420,7 +1369,8 @@ const StepConfig = () => {
   } = (0,_Settings_FieldsData__WEBPACK_IMPORTED_MODULE_3__["default"])();
   const {
     overrideSSL,
-    certificateValid
+    certificateValid,
+    currentStep
   } = (0,_OnboardingData__WEBPACK_IMPORTED_MODULE_2__["default"])();
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     if (!fieldsLoaded) {
@@ -1434,13 +1384,17 @@ const StepConfig = () => {
   };
   let otherHostsField = fieldsLoaded && getField('other_host_type');
   let CloudFlareEnabled = fieldsLoaded && getField('cloudflare_enabled');
+  let items = currentStep.items ? currentStep.items : [];
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Settings_Host_Host__WEBPACK_IMPORTED_MODULE_4__["default"], {
     field: otherHostsField
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
     onChange: e => onChangeCloudFlareHandler(e.target.checked),
     type: "checkbox",
     checked: CloudFlareEnabled.value
-  }), (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("I use CloudFlare.", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_ListItems__WEBPACK_IMPORTED_MODULE_5__["default"], null)), !certificateValid && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }), (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("I use CloudFlare.", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", null, items && items.map((item, index) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_ListItem__WEBPACK_IMPORTED_MODULE_5__["default"], {
+    key: index,
+    item: item
+  })))), !certificateValid && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-modal-description"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
     href: "#",
@@ -1515,6 +1469,69 @@ const StepEmail = () => {
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Privacy Statement", "really-simple-ssl")))));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.memo)(StepEmail));
+
+/***/ }),
+
+/***/ "./src/Onboarding/StepFeatures.js":
+/*!****************************************!*\
+  !*** ./src/Onboarding/StepFeatures.js ***!
+  \****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _OnboardingData__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./OnboardingData */ "./src/Onboarding/OnboardingData.js");
+/* harmony import */ var _CheckboxItem__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./CheckboxItem */ "./src/Onboarding/CheckboxItem.js");
+
+
+
+
+const StepFeatures = () => {
+  const {
+    currentStep
+  } = (0,_OnboardingData__WEBPACK_IMPORTED_MODULE_1__["default"])();
+  let items = currentStep.items ? currentStep.items : [];
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", null, items && items.map((item, index) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_CheckboxItem__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    key: index,
+    item: item
+  }))));
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.memo)(StepFeatures));
+
+/***/ }),
+
+/***/ "./src/Onboarding/StepPlugins.js":
+/*!***************************************!*\
+  !*** ./src/Onboarding/StepPlugins.js ***!
+  \***************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _OnboardingData__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./OnboardingData */ "./src/Onboarding/OnboardingData.js");
+
+
+
+const StepPlugins = () => {
+  const {
+    currentStep
+  } = (0,_OnboardingData__WEBPACK_IMPORTED_MODULE_1__["default"])();
+  let plugins = currentStep.items;
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, plugins && plugins.map((plugin, index) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "checkbox",
+    value: plugin.slug,
+    key: index
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("b", null, plugin.title), "\xA0-\xA0", plugin.description)));
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.memo)(StepPlugins));
 
 /***/ }),
 
@@ -25029,4 +25046,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.51fc5281bf4601658fd5.js.map
+//# sourceMappingURL=src_Settings_Field_js.27766af6aa64f4cda05b.js.map

@@ -1,46 +1,6 @@
-/*!*******************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[3].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[3].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[3].use[3]!./src/Onboarding/onboarding.scss ***!
-  \*******************************************************************************************************************************************************************************************************************************************************/
-.rsssl-modal.rsssl-onboarding-modal .rsssl-modal-body .rsssl-override-detection-toggle {
-  margin-bottom: -15px;
-}
-.rsssl-modal.rsssl-onboarding-modal .rsssl-modal-body input[type=email] {
-  width: 100%;
-  margin-bottom: var(--rsp-spacing-m);
-  border: 2px solid;
-  height: 50px;
-  border-color: var(--rsp-grey-300);
-}
-.rsssl-modal.rsssl-onboarding-modal .rsssl-modal-body .rsssl-select label {
-  display: none;
-}
-.rsssl-modal.rsssl-onboarding-modal .rsssl-modal-body .rsssl-select .components-select-control__input {
-  height: 45px;
-  padding: 8px 20px;
-  color: var(--rsp-grey-500);
-}
-.rsssl-modal.rsssl-onboarding-modal .rsssl-modal-body ul {
-  -moz-column-count: 1;
-       column-count: 1;
-}
-.rsssl-modal.rsssl-onboarding-modal .rsssl-modal-body ul li {
-  display: flex;
-  align-items: flex-start;
-  margin-bottom: var(--rsp-spacing-xxs);
-}
-.rsssl-modal.rsssl-onboarding-modal .rsssl-modal-body ul li.rsssl-is-plugin {
-  background-color: var(--rsp-grey-300);
-  border: none;
-  margin: 10px 0;
-  padding: 5px 0;
-  position: relative;
-}
-.rsssl-modal.rsssl-onboarding-modal .rsssl-modal-body ul li .rsssl-icon {
-  margin-right: 7px;
-}
-/*!********************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[3].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[3].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[3].use[3]!../modal/src/components/Modal/RssslModal.scss ***!
-  \********************************************************************************************************************************************************************************************************************************************************************/
+/*!*********************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/@wordpress/scripts/node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./src/components/Modal/RssslModal.scss ***!
+  \*********************************************************************************************************************************************************************************************************************************************************************************************/
 :root {
   --rsp-spacing-xxs: 5px;
   --rsp-spacing-xs: 10px;
@@ -218,9 +178,9 @@
   color: var(--rsp-red);
   background-color: transparent;
 }
-/*!******************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[3].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[3].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[3].use[3]!../modal/src/components/Modal/checkbox.scss ***!
-  \******************************************************************************************************************************************************************************************************************************************************************/
+/*!*******************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/@wordpress/scripts/node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./src/components/Modal/checkbox.scss ***!
+  \*******************************************************************************************************************************************************************************************************************************************************************************************/
 .rsssl-modal-checkbox-container {
   margin-right: 15px;
   display: block;
@@ -278,4 +238,4 @@
   display: none;
 }
 
-/*# sourceMappingURL=src_Onboarding_OnboardingModal_js.css.map*/
+/*# sourceMappingURL=src_components_Modal_RssslModal_js.css.map*/

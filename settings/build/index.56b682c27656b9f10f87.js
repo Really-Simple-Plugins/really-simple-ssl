@@ -2689,25 +2689,15 @@ const useOnboardingData = (0,zustand__WEBPACK_IMPORTED_MODULE_2__.create)((set, 
       get().setCurrentStepIndex(get().currentStepIndex + 1);
     });
   },
-  updateItemStatus: (action, status, id) => {
+  updateItemStatus: (id, action, status, activated) => {
     const currentStepIndex = get().currentStepIndex;
     const itemIndex = get().steps[currentStepIndex].items.findIndex(item => {
       return item.id === id;
     });
     set((0,immer__WEBPACK_IMPORTED_MODULE_3__.produce)(state => {
-      let step = get().currentStep;
-      let stepCopy = {
-        ...step
-      };
-      let itemsCopy = [...step.items];
-      let itemCopy = {
-        ...step.items[itemIndex]
-      };
-      itemCopy.status = status;
-      itemCopy.current_action = action;
-      itemsCopy[itemIndex] = itemCopy;
-      stepCopy.items = itemsCopy;
-      state.steps[currentStepIndex] = stepCopy;
+      if (typeof action !== 'undefined') state.steps[currentStepIndex].items[itemIndex].action = action;
+      if (typeof status !== 'undefined') state.steps[currentStepIndex].items[itemIndex].status = status;
+      if (typeof activated !== 'undefined') state.steps[currentStepIndex].items[itemIndex].activated = activated;
       state.currentStep = state.steps[currentStepIndex];
     }));
   },
@@ -2727,12 +2717,12 @@ const useOnboardingData = (0,zustand__WEBPACK_IMPORTED_MODULE_2__.create)((set, 
       actionStatus: 'processing'
     });
     event.preventDefault();
-    get().updateItemStatus(action, 'processing', id);
+    get().updateItemStatus(id, action, 'processing');
     let next = await processAction(action, id);
-    get().updateItemStatus(next.action, next.status, id);
+    get().updateItemStatus(id, next.action, next.status);
     if (next.action !== 'none' && next.action !== 'completed') {
       next = await processAction(next.action, id);
-      get().updateItemStatus(next.action, next.status, id);
+      get().updateItemStatus(id, next.action, next.status);
     } else {
       set({
         actionStatus: 'completed'
@@ -5919,7 +5909,7 @@ var vanilla = (createState) => {
 /******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = (chunkId) => {
 /******/ 			// return url for filenames based on template
-/******/ 			return "" + chunkId + "." + {"vendors-node_modules_babel_runtime_helpers_esm_extends_js-node_modules_react-tooltip_dist_rea-0773da":"391ada537d6c21e9ecc5","src_Settings_Settings_js":"a5b63a3898d73641cb13","src_Menu_Menu_js":"f53d40d789d54e58734a","src_Dashboard_DashboardPage_js":"cd9b163905db0cf31640","src_Onboarding_OnboardingModal_js":"5bf61dd634632ba410c7","src_Modal_Modal_js":"f0027c992be01b6b1950","vendors-node_modules_material-ui_core_esm_TextField_TextField_js-node_modules_react-toastify_-d58746":"7ace031c4382676aced3","src_Settings_Field_js":"51fc5281bf4601658fd5","vendors-node_modules_material-ui_lab_esm_Autocomplete_index_js":"7e3acfc4b2cc4f80a10a","vendors-node_modules_material-ui_core_esm_styles_index_js":"a8b5b3bd6cd7ef36aa0a"}[chunkId] + ".js";
+/******/ 			return "" + chunkId + "." + {"vendors-node_modules_babel_runtime_helpers_esm_extends_js-node_modules_react-tooltip_dist_rea-0773da":"391ada537d6c21e9ecc5","src_Settings_Settings_js":"a5b63a3898d73641cb13","src_Menu_Menu_js":"f53d40d789d54e58734a","src_Dashboard_DashboardPage_js":"cd9b163905db0cf31640","src_Onboarding_OnboardingModal_js":"347e5583aadf946ffa75","src_Modal_Modal_js":"f0027c992be01b6b1950","vendors-node_modules_material-ui_core_esm_TextField_TextField_js-node_modules_react-toastify_-d58746":"7ace031c4382676aced3","src_Settings_Field_js":"27766af6aa64f4cda05b","vendors-node_modules_material-ui_lab_esm_Autocomplete_index_js":"7e3acfc4b2cc4f80a10a","vendors-node_modules_material-ui_core_esm_styles_index_js":"a8b5b3bd6cd7ef36aa0a"}[chunkId] + ".js";
 /******/ 		};
 /******/ 	})();
 /******/ 	
@@ -6245,4 +6235,4 @@ document.addEventListener('click', e => {
 
 /******/ })()
 ;
-//# sourceMappingURL=index.509cfd2d8d08b28df939.js.map
+//# sourceMappingURL=index.56b682c27656b9f10f87.js.map

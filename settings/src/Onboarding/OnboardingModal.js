@@ -57,11 +57,14 @@ const OnboardingModal = () => {
             progress = 0
         }
 
+        if ( currentStepIndex>1 && progress>=100) {
+            return false;
+        }
+
         return (
             <>
-               {progress<100 && <Icon name = "loading" color = 'grey' /> }
-               {progress>=100 && <Icon name="circle-check" color='green'/> }
-
+               { progress<100 && <Icon name = "loading" color = 'grey' /> }
+               { progress>=100 && <Icon name="circle-check" color='green'/> }
                {__("%d% of subsites activated.").replace('%d', progress)}</>
         );
     }
