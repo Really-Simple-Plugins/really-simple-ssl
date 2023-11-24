@@ -160,14 +160,10 @@ class rsssl_onboarding {
 		// "warning", // yellow dot
 		// "error", // red dot
 		// "active" // green dot
-		$info = "";
 		$refresh = isset($data['forceRefresh']) && $data['forceRefresh']===true;
 		$nonce = $data['nonce'] ?? false;
 		if ( !wp_verify_nonce($nonce, 'rsssl_nonce') ) {
 			return [];
-		}
-		if( !defined('rsssl_pro_version')) {
-			$info = __('You can also let the automatic scan of the pro version handle this for you, and get premium support, increased security with HSTS and more!', 'really-simple-ssl'). " " . sprintf('<a target="_blank" href="%s">%s</a>', RSSSL()->admin->pro_url, __("Check out Really Simple SSL Pro", "really-simple-ssl"));;
 		}
 
 		$steps = [
@@ -176,24 +172,27 @@ class rsssl_onboarding {
 				"title" => __( "Really Simple SSL & Security", 'really-simple-ssl' ),
 				"subtitle" => __("We have added many new features to our plugin, now bearing the name Really Simple SSL & Security. But we start like we did almost 10 years ago. Optimising your Encryption with SSL", "really-simple-ssl"),
 				"items" => $this->activate_ssl(),
-				"info_text" => $info,
 			],
 			[
 				"id" => 'features',
 				"title" => get_option('rsssl_show_onboarding') ? __( "Thanks for updating!", 'really-simple-ssl' ) : __( "Congratulations!", 'really-simple-ssl' ),
-				"subtitle" => __("Now have a look at our new features.", "really-simple-ssl"),
+				"subtitle" => __("These are some of our new features, and weʼre just getting started.", "really-simple-ssl")." ".
+				              __("A lightweight plugin with heavyweight security features, focusing on performance and usability.", "really-simple-ssl"),
 				"items" => $this->recommended_features(),
+				"button" => __("Enable", "really-simple-ssl"),
 			],
 			[
 				"id" => 'email',
 				"title" => __( "Get notified!", 'really-simple-ssl' ),
 				"subtitle" => __("We use email notification to explain important updates in plugin settings.", "really-simple-ssl").' '.__("Add your email address below.", "really-simple-ssl"),
+				"button" => __("Save and continue", "really-simple-ssl"),
 			],
 			[
 				"id" => 'plugins',
 				"title" => __("Free plugins", "really-simple-ssl"),
 				"subtitle" => __("Really Simple Plugins is also the author of the below privacy-focused plugins, including consent management, legal documents and analytics!.", "really-simple-ssl"),
 				"items" => $this->plugins(),
+				"button" => __("Install", "really-simple-ssl"),
 			],
 		];
 
@@ -255,14 +254,12 @@ class rsssl_onboarding {
 				'constant_premium' => false,
 				"title" => "Burst Statistics",
 				"description" => __("Self-hosted, Privacy-friendly analytics tool", "really-simple-ssl"),
-				'read_more' => 'https://really-simple-plugins.com',//we only want one button, show we show it with the first plugin, then position it in the middle
 			],
 			[
 				"slug" => "complianz-gdpr",
 				'constant_premium' => 'cmplz_premium',
 				"title" => "Complianz",
 				"description" => __("Consent Management as it should be", "really-simple-ssl"),
-				'read_more' => false,
 			]
 		];
 		foreach ($plugins_to_install as $plugin_info) {
@@ -341,6 +338,27 @@ class rsssl_onboarding {
 				"id" => "limit_login_attempts",
 				"premium" => true,
 				"options" => ['enable_limited_login_attempts'],
+				"activated" => true,
+			],
+			[
+				"title" => __("Two Factor Authentication", "really-simple-ssl"),
+				"id" => "two_fa",
+				"premium" => true,
+				"options" => ['two_fa_enabled'],
+				"activated" => true,
+			],
+			[
+				"title" => __("Advanced Security Headers", "really-simple-ssl"),
+				"id" => "advanced_headers",
+				"premium" => true,
+				"options" => [],
+				"activated" => true,
+			],
+			[
+				"title" => __("Advanced Hardening Features", "really-simple-ssl"),
+				"id" => "advanced_hardening",
+				"premium" => true,
+				"options" => [],
 				"activated" => true,
 			],
 		];

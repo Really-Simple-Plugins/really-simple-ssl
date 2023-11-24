@@ -23,9 +23,12 @@
       }
     }
 
+    .rsssl-activate_ssl ul {
+      column-count: 1;
+    }
 
     ul {
-      column-count: 1;
+
       li {
         display: flex;
         align-items: flex-start;

@@ -3,11 +3,12 @@ import {__} from "@wordpress/i18n";
 import useOnboardingData from "./OnboardingData";
 import useFields from "../Settings/FieldsData";
 import Host from "../Settings/Host/Host";
-import ListItem from "./ListItem";
+import ListItem from "./Items/ListItem";
 const StepConfig = () => {
     const { fetchFieldsData, getField, fieldsLoaded, updateField, setChangedField, saveFields} = useFields();
     const {
         overrideSSL,
+        setOverrideSSL,
         certificateValid,
         currentStep,
     } = useOnboardingData();

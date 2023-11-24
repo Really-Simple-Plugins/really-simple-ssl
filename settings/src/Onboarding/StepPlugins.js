@@ -1,20 +1,20 @@
 import {memo} from "@wordpress/element";
 import useOnboardingData from "./OnboardingData";
+import CheckboxItem from "./Items/CheckboxItem";
 
 const StepPlugins = () => {
     const {
         currentStep,
     } = useOnboardingData();
+
+
     let plugins = currentStep.items;
     return (
         <>
-            { plugins && plugins.map( (plugin, index ) =>
-                <>
-                    <input type="checkbox" value={plugin.slug} key={index} />
-                    <b>{plugin.title}</b>&nbsp;-&nbsp;{plugin.description}
-                </>)}
-
-</>
+            <ul>
+                { plugins && plugins.map( (item, index) => <CheckboxItem key={index} item={item} />) }
+            </ul>
+        </>
     );
 }
 export default memo(StepPlugins);

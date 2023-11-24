@@ -17,7 +17,6 @@ const Onboarding = ({isModal}) => {
     const {
         getSteps,
         error,
-        certificateValid,
         networkwide,
         sslEnabled,
         dataLoaded,
@@ -81,7 +80,7 @@ const Onboarding = ({isModal}) => {
             }
             {
                 dataLoaded &&
-                    <div className={ processingClass }>
+                    <div className={ processingClass+" rsssl-"+currentStep.id }>
                         { currentStep.id === 'activate_ssl' &&
                           <>
                               <StepConfig />
@@ -103,7 +102,7 @@ const Onboarding = ({isModal}) => {
                                 <StepPlugins />
                             </>
                         }
-                        { certificateValid && currentStep.info_text && <div className="rsssl-modal-description" dangerouslySetInnerHTML={{__html: currentStep.info_text}} /> }
+
                         { !isModal &&
                             <OnboardingControls isModal={false}/>
                         }

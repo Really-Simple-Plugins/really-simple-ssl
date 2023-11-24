@@ -4,6 +4,7 @@ import {useEffect, useState} from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import './RssslModal.scss';
 import './checkbox.scss';
+import './PremiumItem.scss';
 import ErrorBoundary from "../../../../settings/src/utils/ErrorBoundary";
 
 const RssslModal = ({

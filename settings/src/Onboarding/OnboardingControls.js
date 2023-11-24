@@ -8,7 +8,7 @@ import {useEffect} from "@wordpress/element";
 import useRiskData from "../Settings/RiskConfiguration/RiskData";
 const OnboardingControls = ({isModal}) => {
     const { getProgressData} = useProgress();
-    const { updateField, updateFieldsData, fetchFieldsData} = useFields();
+    const { updateField, setChangedField, updateFieldsData, fetchFieldsData, saveFields} = useFields();
     const { setSelectedMainMenuItem, selectedSubMenuItem} = useMenu();
     const {
         fetchFirstRun, fetchVulnerabilities
@@ -19,6 +19,7 @@ const OnboardingControls = ({isModal}) => {
         certificateValid,
         networkwide,
         processing,
+        setProcessing,
         steps,
         currentStepIndex,
         currentStep,
@@ -26,6 +27,7 @@ const OnboardingControls = ({isModal}) => {
         overrideSSL,
         email,
         saveEmail,
+        actionHandler,
     } = useOnboardingData();
 
     const goToDashboard = () => {
@@ -37,13 +39,18 @@ const OnboardingControls = ({isModal}) => {
 
     const saveAndContinue = async () => {
         if (currentStep.id === 'features') {
+            setProcessing(true);
             //loop through all items of currentStep.items
             for (const item of currentStep.items){
                 console.log(item);
                 if (item.activated) {
                     for (const fieldId of Object.values(item.options)) {
-                        await updateField(fieldId, true);
+                        console.log("enable field ", fieldId);
+                        updateField(fieldId, true);
+                        setChangedField(fieldId, true);
                     }
+                    await saveFields(true, false);
+
                     if (item.id === 'hardening') {
                         await fetchFieldsData('hardening');
                         await getProgressData();
@@ -57,7 +64,8 @@ const OnboardingControls = ({isModal}) => {
                     }
                 }
             }
-            setCurrentStepIndex(currentStepIndex+1)
+            setCurrentStepIndex(currentStepIndex+1);
+            setProcessing(false);
         }
 
         if ( currentStep.id === 'email' ) {
@@ -65,6 +73,17 @@ const OnboardingControls = ({isModal}) => {
             updateField('send_notifications_email', true );
             updateField('notifications_email_address', email );
             updateFieldsData(selectedSubMenuItem);
+        }
+
+        if ( currentStep.id === 'plugins' ) {
+            //loop through all items of currentStep.items
+            for (const item of currentStep.items){
+                console.log(item);
+                if (item.activated) {
+                    //await actionHandler(fieldId, item.current_action, );
+                }
+            }
+            setCurrentStepIndex(currentStepIndex+1)
         }
     }
 
@@ -90,11 +109,10 @@ const OnboardingControls = ({isModal}) => {
     }
 
     if (currentStepIndex>0 && currentStepIndex<steps.length-1) {
-        if (currentStep.id === 'plugins') {}
         return (
             <>
                 <Button disabled={processing} onClick={() => {setCurrentStepIndex(currentStepIndex+1)}}>{__('Skip', 'really-simple-ssl')}</Button>
-                <Button disabled={processing} isPrimary onClick={() => saveAndContinue() }>{__('Save and continue', 'really-simple-ssl')}</Button>
+                <Button disabled={processing} isPrimary onClick={() => saveAndContinue() }>{currentStep.button}</Button>
             </>
         );
     }
