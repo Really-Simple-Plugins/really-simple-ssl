@@ -396,7 +396,6 @@ if (!class_exists('rsssl_multisite')) {
 
         public function activate_ssl_networkwide()
         {
-			return;
 	        if (!rsssl_user_can_manage()) {
 		        return;
 	        }
@@ -571,23 +570,19 @@ if (!class_exists('rsssl_multisite')) {
         /**
          * Test if a domain has a subfolder structure
          *
-         * @since  2.2
-         *
          * @param string $domain
          *
-         * @access private
+         * @access public
          *
          * @return bool
+         * @since  2.2
+         *
          */
 
-        public function is_subfolder($domain)
-        {
+        public function is_subfolder(string $domain): bool {
             //remove slashes of the http(s)
             $domain = preg_replace("/(http:\/\/|https:\/\/)/", "", $domain);
-            if ( strpos($domain, "/") !== FALSE ) {
-                return true;
-            }
-            return false;
+	        return strpos( $domain, "/" ) !== false;
         }
 
         /**
