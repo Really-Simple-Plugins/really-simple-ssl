@@ -119,6 +119,7 @@ function rsssl_plugin_admin_scripts()
 			apply_filters('rsssl_localize_script', [
 				'json_translations' => $js_data['json_translations'],
 				'menu' => rsssl_menu(),
+				'is_bf' => RSSSL()->admin->is_bf(),
 				'site_url' => get_rest_url(),
 				'plugins_url' => admin_url('update-core.php'),
 				'admin_ajax_url' => add_query_arg(

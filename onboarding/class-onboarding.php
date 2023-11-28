@@ -69,6 +69,7 @@ class rsssl_onboarding {
 			case 'install_plugin':
 				require_once(rsssl_path . 'class-installer.php');
 				$plugin = new rsssl_installer(sanitize_title($data['id']));
+				error_log("installing ".$data['id']);
 				$success = $plugin->download_plugin();
 				$response = [
 					'next_action' => 'activate',
@@ -77,6 +78,7 @@ class rsssl_onboarding {
 				break;
 			case 'activate':
 				require_once(rsssl_path . 'class-installer.php');
+				error_log("activating ".$data['id']);
 				$plugin = new rsssl_installer(sanitize_title($data['id']));
 				$success = $plugin->activate_plugin();
 				$response = [
@@ -190,8 +192,15 @@ class rsssl_onboarding {
 			[
 				"id" => 'plugins',
 				"title" => __("Free plugins", "really-simple-ssl"),
-				"subtitle" => __("Really Simple Plugins is also the author of the below privacy-focused plugins, including consent management, legal documents and analytics!.", "really-simple-ssl"),
+				"subtitle" => __("Really Simple Plugins is also the author of the below privacy-focused plugins, including consent management, legal documents and analytics!", "really-simple-ssl"),
 				"items" => $this->plugins(),
+				"button" => __("Install", "really-simple-ssl"),
+			],
+			[
+				"id" => 'pro',
+				"title" => __("Really Simple Security Pro", "really-simple-ssl"),
+				"subtitle" => __("Heavyweight security features, in a lightweight performant plugin from Really Simple Plugins. Get started with below features and get the latest and greatest updates for a peace of mind!", "really-simple-ssl"),
+				"items" => $this->pro_features(),
 				"button" => __("Install", "really-simple-ssl"),
 			],
 		];
@@ -355,6 +364,55 @@ class rsssl_onboarding {
 				"id" => "advanced_hardening",
 				"premium" => true,
 				"options" => [],
+				"activated" => true,
+			],
+		];
+	}
+
+	/**
+	 * Returns onboarding items if user upgraded plugin to 6.0 or SSL is detected
+	 * @return array
+	 */
+	public function pro_features () {
+		return [
+			[
+				"title" => __("Limit Login Attempts", "really-simple-ssl"),
+				"id" => "limit_login_attempts",
+				"premium" => true,
+				"options" => ['enable_limited_login_attempts'],
+				"activated" => true,
+			],
+			[
+				"title" => __("Two Factor Authentication", "really-simple-ssl"),
+				"id" => "two_fa",
+				"premium" => true,
+				"options" => ['two_fa_enabled'],
+				"activated" => true,
+			],
+			[
+				"title" => __("Advanced Security Headers", "really-simple-ssl"),
+				"id" => "advanced_headers",
+				"premium" => true,
+				"options" => [],
+				"activated" => true,
+			],
+			[
+				"title" => __("Password Security", "really-simple-ssl"),
+				"id" => "password_security",
+				"options" => ['enforce_password_security_enabled'],
+				"activated" => true,
+			],
+			[
+				"title" => __("Advanced Hardening", "really-simple-ssl"),
+				"id" => "advanced_hardening",
+				"premium" => true,
+				"options" => [ 'change_debug_log_location', 'disable_http_methods' ],
+				"activated" => true,
+			],
+			[
+				"title" => __("Vulnerability Measures", "really-simple-ssl"),
+				"id" => "vulnerability_detection",
+				"options" => ["vulnerabilities_measures"],
 				"activated" => true,
 			],
 		];

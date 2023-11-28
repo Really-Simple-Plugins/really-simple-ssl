@@ -8,9 +8,10 @@ import useFields from "../Settings/FieldsData";
 import './onboarding.scss';
 import RssslModal from "../../../modal/src/components/Modal/RssslModal";
 import OnboardingControls from "./OnboardingControls";
-
+import './checkbox.scss';
+import './PremiumItem.scss';
 const OnboardingModal = () => {
-    const {networkwide, networkProgress, currentStepIndex, showOnboardingModal, fetchOnboardingModalStatus, modalStatusLoaded, currentStep, dismissModal} = useOnboardingData();
+    const {footerStatus, showOnboardingModal, fetchOnboardingModalStatus, modalStatusLoaded, currentStep, dismissModal} = useOnboardingData();
     const {fieldsLoaded} = useFields();
 
     useEffect(() => {
@@ -41,37 +42,23 @@ const OnboardingModal = () => {
         )
     }
 
-    /**
-     * On the email step, show a progress bar for the networkwide activation, if multisite
-     * @returns {JSX.Element|boolean}
-     */
-    const multisiteProgress = () => {
-        if ( currentStepIndex===0 ) {
-            return false;
+    const setOpen = (open) => {
+        if ( !open ) {
+            dismissModal(true);
         }
-        if ( !networkwide ) {
-            return false;
-        }
-        let progress = networkProgress;
-        if ( typeof progress === 'undefined' ) {
-            progress = 0
-        }
+    }
 
-        if ( currentStepIndex>1 && progress>=100) {
+    const handleFooterStatus = () => {
+        if ( footerStatus.length === 0 ) {
             return false;
         }
 
         return (
             <>
-               { progress<100 && <Icon name = "loading" color = 'grey' /> }
-               { progress>=100 && <Icon name="circle-check" color='green'/> }
-               {__("%d% of subsites activated.").replace('%d', progress)}</>
-        );
-    }
-    const setOpen = (open) => {
-        if ( !open ) {
-            dismissModal(true);
-        }
+                <Icon name = "loading" color = 'grey' />
+                {footerStatus}
+            </>
+        )
     }
 
     return (
@@ -83,8 +70,8 @@ const OnboardingModal = () => {
                     content={modalContent()}
                     isOpen={showOnboardingModal}
                     setOpen={setOpen}
-                    buttons=<OnboardingControls isModal={true} />
-                    footer = {multisiteProgress()}
+                    buttons = <OnboardingControls isModal={true} />
+                    footer = {handleFooterStatus() }
                 />
         </>
     )

@@ -4,9 +4,8 @@ import useMenu from "../Menu/MenuData";
 import useFields from "../Settings/FieldsData";
 import useOnboardingData from "./OnboardingData";
 import useProgress from "../Dashboard/Progress/ProgressData";
-import {useEffect} from "@wordpress/element";
 import useRiskData from "../Settings/RiskConfiguration/RiskData";
-import Icon from "../utils/Icon";
+
 const OnboardingControls = ({isModal}) => {
     const { getProgressData} = useProgress();
     const { updateField, setChangedField, updateFieldsData, fetchFieldsData, saveFields} = useFields();
@@ -18,6 +17,7 @@ const OnboardingControls = ({isModal}) => {
         dismissModal,
         activateSSL,
         certificateValid,
+        setFooterStatus,
         networkwide,
         processing,
         setProcessing,
@@ -28,7 +28,7 @@ const OnboardingControls = ({isModal}) => {
         overrideSSL,
         email,
         saveEmail,
-        actionHandler,
+        pluginInstaller,
     } = useOnboardingData();
 
     const goToDashboard = () => {
@@ -39,52 +39,85 @@ const OnboardingControls = ({isModal}) => {
     }
 
     const saveAndContinue = async () => {
+        let vulnerabilityDetectionEnabled = false;
         if (currentStep.id === 'features') {
+            setCurrentStepIndex(currentStepIndex+1);
             setProcessing(true);
             //loop through all items of currentStep.items
             for (const item of currentStep.items){
-                console.log(item);
-                if (item.activated) {
+                if ( item.activated ) {
                     for (const fieldId of Object.values(item.options)) {
-                        console.log("enable field ", fieldId);
                         updateField(fieldId, true);
                         setChangedField(fieldId, true);
                     }
-                    await saveFields(true, false);
 
-                    if (item.id === 'hardening') {
-                        // await fetchFieldsData('hardening');
-                        await getProgressData();
-                    }
-
-                    if  (item.id === '"vulnerability_detection"' ) {
-                        // await fetchFieldsData('vulnerabilities');
-                        await fetchFirstRun();
-                        await fetchVulnerabilities();
-                        await getProgressData();
+                    if  ( item.id === 'vulnerability_detection' ) {
+                        vulnerabilityDetectionEnabled = true;
                     }
                 }
             }
-            setCurrentStepIndex(currentStepIndex+1);
+            setFooterStatus(__("Activating options...", "really-simple-ssl") );
+            await saveFields(true, false);
+            if (vulnerabilityDetectionEnabled) {
+                setFooterStatus(__("Initializing vulnerability detection...", "really-simple-ssl") );
+                await fetchFirstRun();
+                setFooterStatus(__("Scanning for vulnerabilities...", "really-simple-ssl") );
+                await fetchVulnerabilities();
+            }
+
+            setFooterStatus(__("Updating dashboard...", "really-simple-ssl") );
+            await getProgressData();
+            setFooterStatus( '' );
             setProcessing(false);
         }
-
+        console.log(currentStep.id);
         if ( currentStep.id === 'email' ) {
             await saveEmail();
+            setCurrentStepIndex(currentStepIndex+1);
             updateField('send_notifications_email', true );
             updateField('notifications_email_address', email );
             updateFieldsData(selectedSubMenuItem);
         }
 
         if ( currentStep.id === 'plugins' ) {
-            //loop through all items of currentStep.items
-            for (const item of currentStep.items){
-                console.log(item);
-                if (item.activated) {
-                    //await actionHandler(fieldId, item.current_action, );
+            setCurrentStepIndex(currentStepIndex+1)
+            for (const item of currentStep.items) {
+                if (item.action !== 'none') {
+                    // Add the promise returned by pluginInstaller to the array
+                    await pluginInstaller(item.id, item.action, item.title );
                 }
             }
-            setCurrentStepIndex(currentStepIndex+1)
+            setFooterStatus('')
+        }
+
+        if ( currentStep.id === 'pro' ) {
+            setProcessing(true);
+            //loop through all items of currentStep.items
+            for (const item of currentStep.items){
+                if ( item.activated ) {
+                    for (const fieldId of Object.values(item.options)) {
+                        updateField(fieldId, true);
+                        setChangedField(fieldId, true);
+                    }
+
+                    if  ( item.id === 'vulnerability_detection' ) {
+                        vulnerabilityDetectionEnabled = true;
+                    }
+                }
+            }
+            setFooterStatus(__("Activating options...", "really-simple-ssl") );
+            await saveFields(true, false);
+            if (vulnerabilityDetectionEnabled) {
+                setFooterStatus(__("Initializing vulnerability detection...", "really-simple-ssl") );
+                await fetchFirstRun();
+                setFooterStatus(__("Scanning for vulnerabilities...", "really-simple-ssl") );
+                await fetchVulnerabilities();
+            }
+
+            setFooterStatus(__("Updating dashboard...", "really-simple-ssl") );
+            await getProgressData();
+            setFooterStatus( '' );
+            setProcessing(false);
         }
     }
 
@@ -112,11 +145,8 @@ const OnboardingControls = ({isModal}) => {
     if (currentStepIndex>0 && currentStepIndex<steps.length-1) {
         return (
             <>
-                <Button disabled={processing} onClick={() => {setCurrentStepIndex(currentStepIndex+1)}}>{__('Skip', 'really-simple-ssl')}</Button>
-                <Button disabled={processing} isPrimary onClick={() => saveAndContinue() }>
-                    {processing && <>
-                        <Icon name = "loading" color = 'grey' />
-                    </>}
+                <Button  onClick={() => {setCurrentStepIndex(currentStepIndex+1)}}>{__('Skip', 'really-simple-ssl')}</Button>
+                <Button isPrimary onClick={() => saveAndContinue() }>
                     {currentStep.button}
                 </Button>
             </>
@@ -125,11 +155,11 @@ const OnboardingControls = ({isModal}) => {
 
     //for last step only
     if ( steps.length-1 === currentStepIndex ) {
+        let upgradeText = rsssl_settings.is_bf ? __("Get 40% off", "really-simple-ssl") : __("Get PRO", "really-simple-ssl");
         return (
             <>
-                <Button onClick={() => dismissModal(true)}>{__('Dismiss', 'really-simple-ssl')}</Button>
-                <Button isPrimary onClick={() => {goToDashboard()}}>{__('Go to Dashboard', 'really-simple-ssl')}</Button>
-                { certificateValid && !rsssl_settings.pro_plugin_active && <Button onClick={(e) => {window.location.href=rsssl_settings.upgrade_link}}>{__("Improve Security with PRO", "really-simple-ssl")}</Button>}
+                <Button disabled={processing} isPrimary onClick={() => {goToDashboard()}}>{__('Finish', 'really-simple-ssl')}</Button>
+                { certificateValid && !rsssl_settings.pro_plugin_active && <Button onClick={(e) => {window.location.href=rsssl_settings.upgrade_link}}>{upgradeText}</Button>}
             </>
         );
     }

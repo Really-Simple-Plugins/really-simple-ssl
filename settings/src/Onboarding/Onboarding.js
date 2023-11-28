@@ -1,16 +1,15 @@
-import { useEffect, useState } from "@wordpress/element";
+import { useEffect } from "@wordpress/element";
 import { __ } from '@wordpress/i18n';
 import Icon from "../utils/Icon";
 import Placeholder from '../Placeholder/Placeholder';
 import useFields from "../Settings/FieldsData";
-import useProgress from "../Dashboard/Progress/ProgressData";
 import useOnboardingData from "./OnboardingData";
-import useRiskData from "../Settings/RiskConfiguration/RiskData";
 import OnboardingControls from "./OnboardingControls";
 import StepEmail from "./StepEmail";
 import StepConfig from "./StepConfig";
 import StepFeatures from "./StepFeatures";
 import StepPlugins from "./StepPlugins";
+import StepPro from "./StepPro";
 
 const Onboarding = ({isModal}) => {
     const { fetchFieldsData, fieldsLoaded} = useFields();
@@ -55,16 +54,13 @@ const Onboarding = ({isModal}) => {
         run();
     }, [])
 
-    console.log(currentStepIndex, currentStep);
-
     if (error){
         return (
             <Placeholder lines="3" error={error}></Placeholder>
         )
     }
-    let processingClass = processing ? 'rsssl-processing' : '';
+    let processingClass = '';//processing ? 'rsssl-processing' : '';
     //get 'other_host_type' field from fields
-
 
     return (
         <>
@@ -100,6 +96,12 @@ const Onboarding = ({isModal}) => {
                         { currentStep.id === 'plugins' &&
                             <>
                                 <StepPlugins />
+                            </>
+                        }
+
+                        { currentStep.id === 'pro' &&
+                            <>
+                                <StepPro />
                             </>
                         }
 

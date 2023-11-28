@@ -21,8 +21,11 @@ const useOnboardingData = create(( set, get ) => ({
     email: '',
     includeTips:false,
     sendTestEmail:true,
-    actionStatus: '',
     overrideSSLDetection:false,
+    footerStatus: '',
+    setFooterStatus: (footerStatus) => {
+        set({footerStatus:footerStatus})
+    },
     setIncludeTips: (includeTips) => {
         set(state => ({ includeTips }))
     },
@@ -39,7 +42,6 @@ const useOnboardingData = create(( set, get ) => ({
         set(state => ({ processing }))
     },
     setCurrentStepIndex: (currentStepIndex) => {
-        console.log("set current step index to "+currentStepIndex);
         const currentStep = get().steps[currentStepIndex];
         set(state => ({ currentStepIndex, currentStep }))
     },
@@ -77,6 +79,7 @@ const useOnboardingData = create(( set, get ) => ({
         });
     },
     saveEmail:() => {
+        get().setFooterStatus( __("Updating email preferences..", "really-simple-ssl") );
         let data={};
         data.email = get().email;
         data.includeTips = get().includeTips;
@@ -84,20 +87,17 @@ const useOnboardingData = create(( set, get ) => ({
         set((state) => ({processing:true}));
         rsssl_api.doAction('update_email', data).then(( response ) => {
             set((state) => ({processing:false}));
-            console.log("save email, increase stepindex ",get().currentStepIndex+1);
-            get().setCurrentStepIndex(get().currentStepIndex+1);
+            get().setFooterStatus('' );
         });
-
     },
     updateItemStatus: (id, action, status, activated) => {
-        const currentStepIndex = get().currentStepIndex;
-        const itemIndex = get().steps[currentStepIndex].items.findIndex(item => {return item.id===id;});
+        const index = get().steps.findIndex(item => {return item.id==='plugins';});
+        const itemIndex = get().steps[index].items.findIndex(item => {return item.id===id;});
         set(
             produce((state) => {
-                if (typeof action !== 'undefined') state.steps[currentStepIndex].items[itemIndex].action = action;
-                if (typeof status !== 'undefined') state.steps[currentStepIndex].items[itemIndex].status = status;
-                if (typeof activated !== 'undefined') state.steps[currentStepIndex].items[itemIndex].activated = activated;
-                state.currentStep = state.steps[currentStepIndex];
+                if (typeof action !== 'undefined') state.steps[index].items[itemIndex].action = action;
+                if (typeof status !== 'undefined') state.steps[index].items[itemIndex].status = status;
+                if (typeof activated !== 'undefined') state.steps[index].items[itemIndex].activated = activated;
             })
         )
     },
@@ -110,17 +110,36 @@ const useOnboardingData = create(( set, get ) => ({
         });
     },
     setShowOnBoardingModal: (showOnboardingModal) => set(state => ({ showOnboardingModal })),
-    actionHandler: async (id, action, event) => {
-        set({actionStatus: 'processing'});
-        event.preventDefault();
+    installPlugins: async (plugins) => {
+        set(() => ({processing:true}));
+        let data={};
+        data.plugins = plugins;
+        return await rsssl_api.doAction('install_plugins', data).then( async ( response ) => {
+            set(() => ({processing:false}));
+            return response.success;
+        }).catch(error => {
+            return 'failed';
+        });
+    },
+    pluginInstaller: async (id, action, title) => {
+        set(() => ({processing:true}));
+        console.log("action", action);
         get().updateItemStatus(id, action, 'processing');
-        let next = await processAction(action, id);
-        get().updateItemStatus(id, next.action, next.status);
-        if ( next.action!=='none' && next.action!=='completed') {
-            next = await processAction(next.action, id);
-            get().updateItemStatus(id, next.action, next.status);
+        get().setFooterStatus(__("Installing %d...", "really-simple-ssl").replace("%d", title));
+
+        let nextAction = await processAction(action, id);
+        get().updateItemStatus(id, nextAction);
+        console.log("nextAction", nextAction);
+
+        if ( nextAction!=='none' && nextAction!=='completed') {
+            console.log("process ", nextAction, id);
+            get().setFooterStatus(__("Activating %d...", "really-simple-ssl").replace("%d", title));
+            nextAction = await processAction(nextAction, id);
+            get().updateItemStatus(id, nextAction);
         } else {
-            set({actionStatus: 'completed'});
+            console.log("completed ", nextAction, id);
+            get().setFooterStatus('');
+            set(() => ({processing:false}));
         }
     },
     getSteps: async (forceRefresh) => {
@@ -184,6 +203,10 @@ const useOnboardingData = create(( set, get ) => ({
         }, 1000) //add a delay, otherwise it's so fast the user may not trust it.
     },
     activateSSLNetworkWide: () => {
+        let progress = get().networkProgress;
+        if (typeof progress !== 'undefined') {
+            get().setFooterStatus(__("%d% of subsites activated.").replace('%d', progress));
+        }
         if (get().networkProgress>=100) {
             set({
                 sslEnabled: true,
@@ -191,15 +214,17 @@ const useOnboardingData = create(( set, get ) => ({
             });
             return;
         }
-        set(() => ({processing: true}));
+        set( () => ({processing: true}));
         rsssl_api.runTest('activate_ssl_networkwide' ).then( ( response ) => {
             if (response.success) {
                 set({
                     networkProgress: response.progress,
                     processing:false,
                 });
-                if (response.progress>=100) {
+                get().setFooterStatus(__("%d% of subsites activated.").replace('%d', response.progress));
 
+                if (response.progress>=100) {
+                    get().setFooterStatus('');
                     set({
                         sslEnabled: true,
                         networkActivationStatus:'completed'
@@ -226,24 +251,17 @@ const retrieveSteps = (forceRefresh) => {
     });
 }
 
-const processAction = (action, id) => {
+const processAction = async (action, id) => {
     let data={};
     data.id = id;
-    let next = {};
-    return rsssl_api.doAction(action, data).then( async ( response ) => {
+    return await rsssl_api.doAction(action, data).then( async ( response ) => {
         if ( response.success ){
-            next.action = response.next_action;
-            next.status = 'success';
-            return next;
+            return response.next_action;
         } else {
-            next.action = 'failed';
-            next.status = 'error';
-            return next;
+            return 'failed';
         }
     }).catch(error => {
-        next.action = 'failed';
-        next.status = 'error';
-        return next;
+        return 'failed';
     });
 }
 

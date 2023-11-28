@@ -1,14 +1,25 @@
-import {memo} from "@wordpress/element";
+import {memo, useEffect} from "@wordpress/element";
 import useOnboardingData from "./OnboardingData";
 import CheckboxItem from "./Items/CheckboxItem";
 
 const StepPlugins = () => {
     const {
         currentStep,
+        currentStepIndex,
+        setCurrentStepIndex,
     } = useOnboardingData();
 
+    useEffect(()=> {
+        //if all plugins are already activated, we skip the plugins step
+        let plugins = currentStep.items;
+        console.log(plugins);
+        if ( plugins.filter(item => item.action !== 'none').length === 0) {
+            setCurrentStepIndex(currentStepIndex+1);
+        }
+    }, [] );
 
     let plugins = currentStep.items;
+
     return (
         <>
             <ul>
