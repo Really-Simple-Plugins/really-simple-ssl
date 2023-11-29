@@ -11,6 +11,7 @@
  * License: GPL2
  * Text Domain: really-simple-ssl
  * Domain Path: /languages
+ * Network: true
  */
 /*  Copyright 2023  Really Simple Plugins BV  (email : support@really-simple-ssl.com)
     This program is free software; you can redistribute it and/or modify
