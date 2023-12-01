@@ -17,6 +17,17 @@ function rsssl_remove_wp_version() {
 }
 add_action('init', 'rsssl_remove_wp_version');
 
+function rsssl_generate_rand_version(){
+	$wp_version = get_bloginfo( 'version' );
+	$token = get_option('rsssl_wp_version_token');
+	if ( !$token ) {
+		$token = str_shuffle ( time() );
+		update_option('rsssl_wp_version_token', $token );
+	}
+	
+	return hash('md5', $token );
+}
+
 function rsssl_replace_wp_version($html){
 	$wp_version = get_bloginfo( 'version' );
 	$new_version = hash('md5', get_bloginfo( 'version' ) );
