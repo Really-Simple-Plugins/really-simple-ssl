@@ -23,7 +23,7 @@ const StepPlugins = () => {
     return (
         <>
             <ul>
-                { plugins && plugins.map( (item, index) => <CheckboxItem key={index} item={item} disabled={item.action==='none'} />) }
+                { plugins && plugins.map( (item, index) => <CheckboxItem key={'step-plugins'+index} item={item} disabled={item.action==='none'} />) }
             </ul>
         </>
     );

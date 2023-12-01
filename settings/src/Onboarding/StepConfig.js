@@ -35,7 +35,7 @@ const StepConfig = () => {
             <ul>
                 {
                     <ul>
-                        { items && items.map( (item, index) => <ListItem key={index} item={item} />) }
+                        { items && items.map( (item, index) => <ListItem key={'step-config-'+index} item={item} />) }
                     </ul>
                 }
             </ul>

@@ -90,9 +90,10 @@ const useOnboardingData = create(( set, get ) => ({
             get().setFooterStatus('' );
         });
     },
-    updateItemStatus: (id, action, status, activated) => {
-        const index = get().steps.findIndex(item => {return item.id==='plugins';});
+    updateItemStatus: (stepId, id, action, status, activated) => {
+        const index = get().steps.findIndex(item => { return item.id===stepId; });
         const itemIndex = get().steps[index].items.findIndex(item => {return item.id===id;});
+        console.log("new value", action, status, activated);
         set(
             produce((state) => {
                 if (typeof action !== 'undefined') state.steps[index].items[itemIndex].action = action;
@@ -100,6 +101,14 @@ const useOnboardingData = create(( set, get ) => ({
                 if (typeof activated !== 'undefined') state.steps[index].items[itemIndex].activated = activated;
             })
         )
+        console.log( get().steps );
+
+        let currentStep = get().steps[get().currentStepIndex];
+        set(
+            produce((state) => {
+                state.currentStep = currentStep;
+            }
+        ))
     },
     fetchOnboardingModalStatus: async () => {
         rsssl_api.doAction('get_modal_status').then((response) => {
@@ -110,37 +119,25 @@ const useOnboardingData = create(( set, get ) => ({
         });
     },
     setShowOnBoardingModal: (showOnboardingModal) => set(state => ({ showOnboardingModal })),
-    installPlugins: async (plugins) => {
-        set(() => ({processing:true}));
-        let data={};
-        data.plugins = plugins;
-        return await rsssl_api.doAction('install_plugins', data).then( async ( response ) => {
-            set(() => ({processing:false}));
-            return response.success;
-        }).catch(error => {
-            return 'failed';
-        });
-    },
     pluginInstaller: async (id, action, title) => {
         set(() => ({processing:true}));
         console.log("action", action);
-        get().updateItemStatus(id, action, 'processing');
+        get().updateItemStatus('plugins', id, action, 'processing');
         get().setFooterStatus(__("Installing %d...", "really-simple-ssl").replace("%d", title));
 
         let nextAction = await processAction(action, id);
-        get().updateItemStatus(id, nextAction);
-        console.log("nextAction", nextAction);
+        get().updateItemStatus('plugins', id, nextAction);
 
         if ( nextAction!=='none' && nextAction!=='completed') {
             console.log("process ", nextAction, id);
             get().setFooterStatus(__("Activating %d...", "really-simple-ssl").replace("%d", title));
             nextAction = await processAction(nextAction, id);
-            get().updateItemStatus(id, nextAction);
+            get().updateItemStatus('plugins', id, nextAction);
         } else {
             console.log("completed ", nextAction, id);
             get().setFooterStatus('');
-            set(() => ({processing:false}));
         }
+        set((state) => ({processing:false}));
     },
     getSteps: async (forceRefresh) => {
         const {steps, networkActivationStatus, certificateValid, networkProgress, networkwide, overrideSSL, error, sslEnabled} = await retrieveSteps(forceRefresh);

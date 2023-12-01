@@ -8,7 +8,7 @@ const ScoreElement = ({className, content, id}) => {
 
     let hoverClass = hover ? 'rsssl-hover' : '';
     return (
-        <div key={id} className="rsssl-score-container"><div
+        <div key={'score_container-'+id} className="rsssl-score-container"><div
             onMouseEnter={()=> setHover(true)}
             onMouseLeave={() => setHover(false)}
             className={"rsssl-score-snippet "+className+' '+hoverClass}>{content}</div></div>

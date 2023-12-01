@@ -5,6 +5,7 @@ import useFields from "../Settings/FieldsData";
 import useOnboardingData from "./OnboardingData";
 import useProgress from "../Dashboard/Progress/ProgressData";
 import useRiskData from "../Settings/RiskConfiguration/RiskData";
+import useSslLabs from "../Dashboard/SslLabs/SslLabsData";
 
 const OnboardingControls = ({isModal}) => {
     const { getProgressData} = useProgress();
@@ -13,6 +14,9 @@ const OnboardingControls = ({isModal}) => {
     const {
         fetchFirstRun, fetchVulnerabilities
     } = useRiskData();
+    const {
+        setSslScanStatus,
+    } = useSslLabs();
     const {
         dismissModal,
         activateSSL,
@@ -45,15 +49,19 @@ const OnboardingControls = ({isModal}) => {
             setProcessing(true);
             //loop through all items of currentStep.items
             for (const item of currentStep.items){
-                if ( item.activated ) {
-                    for (const fieldId of Object.values(item.options)) {
-                        updateField(fieldId, true);
-                        setChangedField(fieldId, true);
-                    }
+                if ( item.id=== 'health_scan' && item.activated ) {
+                    console.log("start scan");
+                    setFooterStatus(__("Starting SSL health scan...", "really-simple-ssl") );
+                    setSslScanStatus('active');
+                }
 
-                    if  ( item.id === 'vulnerability_detection' ) {
-                        vulnerabilityDetectionEnabled = true;
-                    }
+                for (const fieldId of Object.values(item.options)) {
+                    updateField(fieldId, item.activated);
+                    setChangedField(fieldId, item.activated);
+                }
+
+                if  ( item.id === 'vulnerability_detection' ) {
+                    vulnerabilityDetectionEnabled = item.activated;
                 }
             }
             setFooterStatus(__("Activating options...", "really-simple-ssl") );

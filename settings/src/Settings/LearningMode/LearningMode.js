@@ -282,7 +282,7 @@ const LearningMode = (props) => {
                         clearSelectedRows={rowCleared}
                     /></>
                 }
-              <div key="2" className={"rsssl-learning-mode-footer "}>
+              <div className={"rsssl-learning-mode-footer "}>
                   {hasError && <div className="rsssl-locked">
                           <div className="rsssl-locked-overlay">
                               <span className="rsssl-progress-status rsssl-learning-mode-error">{__("Error detected","really-simple-ssl")}</span>
