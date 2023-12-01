@@ -24,7 +24,7 @@ function rsssl_generate_rand_version(){
 		$token = str_shuffle ( time() );
 		update_option('rsssl_wp_version_token', $token );
 	}
-	
+
 	return hash('md5', $token );
 }
 
