@@ -315,25 +315,25 @@ class rsssl_onboarding {
 	public function recommended_features () {
 		return [
 			[
-				"title" => __("Mixed content fixer", "really-simple-ssl"),
+				"title" => __("Mixed Content Fixer", "really-simple-ssl"),
 				"id" => "mixed_content_fixer",
 				"options" => ["mixed_content_fixer"],
 				"activated" => true,
 			],
 			[
-				"title" => __("Vulnerability detection", "really-simple-ssl"),
+				"title" => __("Vulnerability Detection", "really-simple-ssl"),
 				"id" => "vulnerability_detection",
 				"options" => ["enable_vulnerability_scanner"],
 				"activated" => true,
 			],
 			[
-				"title" => __("Recommended hardening features", "really-simple-ssl"),
+				"title" => __("Recommended Hardening Features", "really-simple-ssl"),
 				"id" => "hardening",
 				"options" => $this->get_hardening_fields(),
 				"activated" => true,
 			],
 			[
-				"title" => __("Run system health scan", "really-simple-ssl"),
+				"title" => __("Run System Health Scan", "really-simple-ssl"),
 				"id" => "health_scan",
 				"options" => [],
 				"activated" => true,
