@@ -167,7 +167,7 @@ const OnboardingControls = ({isModal}) => {
         return (
             <>
                 <Button disabled={processing} isPrimary onClick={() => {goToDashboard()}}>{__('Finish', 'really-simple-ssl')}</Button>
-                { certificateValid && !rsssl_settings.pro_plugin_active && <Button onClick={(e) => {window.location.href=rsssl_settings.upgrade_link}}>{upgradeText}</Button>}
+                { !certificateValid && !rsssl_settings.pro_plugin_active && <Button rel="noreferrer noopener" target="_blank" isPrimary href={rsssl_settings.upgrade_link} >{upgradeText}</Button>}
             </>
         );
     }
