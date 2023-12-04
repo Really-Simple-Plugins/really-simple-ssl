@@ -6,8 +6,8 @@ const CheckboxItem = ({item, disabled}) => {
         updateItemStatus,
         currentStep
     } = useOnboardingData();
-    let { title, id, activated } = item;
-    console.log(currentStep);
+    let { title, description, id, activated } = item;
+    console.log(description);
     return (
         <li>
             <label className="rsssl-modal-checkbox-container">
@@ -15,6 +15,7 @@ const CheckboxItem = ({item, disabled}) => {
                 <span className="rsssl-checkmark"></span>
             </label>
             {title}
+            {description && <> - {description}</>}
         </li>
     )
 }

@@ -266,19 +266,19 @@ class rsssl_onboarding {
 				"slug" => "burst-statistics",
 				'constant_premium' => 'burst_pro',
 				"title" => "Burst Statistics",
-				"description" => __("Privacy-friendly analytics tool", "really-simple-ssl"),
+				"description" => __("Privacy-friendly analytics tool.", "really-simple-ssl"),
 			],
 			[
 				"slug" => "complianz-gdpr",
 				'constant_premium' => 'cmplz_premium',
 				"title" => "Complianz",
-				"description" => __("Consent Management as it should be", "really-simple-ssl"),
+				"description" => __("Consent Management as it should be.", "really-simple-ssl"),
 			],
 			[
 				"slug" => "complianz-terms-conditions",
 				'constant_premium' => false,
 				"title" => "Complianz Terms & Conditions",
-				"description" => __("Terms & Conditions", "really-simple-ssl"),
+				"description" => __("Terms & Conditions.", "really-simple-ssl"),
 			]
 		];
 		foreach ($plugins_to_install as $plugin_info) {
@@ -300,6 +300,7 @@ class rsssl_onboarding {
 			$items[] = [
 				"id" => $plugin_info['slug'],
 				"title" => $plugin_info["title"],
+				"description" => $plugin_info["description"],
 				"action" => $action,
 				"activated" => true,
 				"current_action" => "none",
