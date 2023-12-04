@@ -28,7 +28,7 @@ const StepConfig = () => {
 
     return (
         <>
-            <Host field={otherHostsField}/>
+            <Host field={otherHostsField} showDisabledWhenSaving={false}/>
             <label>
                 <input onChange={ (e) => onChangeCloudFlareHandler(e.target.checked)} type="checkbox" checked={CloudFlareEnabled.value} />{__("I use CloudFlare.","really-simple-ssl")}
             </label>

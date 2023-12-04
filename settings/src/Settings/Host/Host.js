@@ -6,7 +6,7 @@ import useFields from "../FieldsData";
 import useHostData from "./HostData";
 import {__} from "@wordpress/i18n";
 
-const Host = ({field}) => {
+const Host = ({field, showDisabledWhenSaving=true}) => {
     const {updateField, setChangedField, saveFields, handleNextButtonDisabled} = useFields();
     const disabled = useRef(false);
     const {fetchHosts, hosts, hostsLoaded} = useHostData();
@@ -19,7 +19,9 @@ const Host = ({field}) => {
     const onChangeHandler = async (fieldValue) => {
         //force update, and get new fields.
         handleNextButtonDisabled(true);
-        disabled.current = true;
+        if (showDisabledWhenSaving) {
+            disabled.current = true;
+        }
         updateField(field.id, fieldValue);
         setChangedField(field.id, fieldValue);
 
