@@ -208,20 +208,38 @@ const Onboarding = ({isModal}) => {
                         </ul>
                         { currentStep.id === 'email'&&
                             <>
-                                <div>
-                                    <input type="email" value={email} placeholder={__("Your email address", "really-simple-ssl")} onChange={(e) => setEmail(e.target.value)} />
+                                <div style={{ marginBottom: !isModal ? '10px' : '0' }} >
+                                    <input
+                                        type="email"
+                                        value={email}
+                                        placeholder={__("Your email address", "really-simple-ssl")}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                    />
                                 </div>
                                 <div>
-                                <label>
-                                    <input onChange={ (e) => setIncludeTips(e.target.checked)} type="checkbox" checked={includeTips} />{__("Include 6 Tips & Tricks to get started with Really Simple SSL.","really-simple-ssl")}&nbsp;<a href="https://really-simple-ssl.com/legal/privacy-statement/" target="_blank">{__("Privacy Statement", "really-simple-ssl")}</a>
-                                </label>
+                                    <label style={{ marginBottom: !isModal ? '10px' : '0' }}>
+                                        <input
+                                            onChange={(e) => setIncludeTips(e.target.checked)}
+                                            type="checkbox"
+                                            checked={includeTips}
+                                        />
+                                        {__("Include 6 Tips & Tricks to get started with Really Simple SSL.","really-simple-ssl")}&nbsp;
+                                        <a
+                                            href="https://really-simple-ssl.com/legal/privacy-statement/"
+                                            target="_blank"
+                                        >
+                                            {__("Privacy Statement", "really-simple-ssl")}
+                                        </a>
+                                    </label>
                                 </div>
                             </>
                         }
                         { certificateValid && step.info_text && <div className="rsssl-modal-description" dangerouslySetInnerHTML={{__html: step.info_text}} /> }
                         { currentStepIndex===0 && !certificateValid &&
                             <>
-                                <div className="rsssl-modal-description">
+                                <div
+                                    className="rsssl-modal-description"
+                                    style={{ marginBottom: isModal ? '0' : '10px' }}>
                                    <a href="#" onClick={ (e) => refreshSSLStatus(e)}>
                                        { __("Refresh SSL status", "really-simple-ssl")}
                                    </a>.&nbsp;{__("The SSL detection method is not 100% accurate.", "really-simple-ssl")}&nbsp;
@@ -237,12 +255,11 @@ const Onboarding = ({isModal}) => {
                                         rsssl_api.doAction('override_ssl_detection',data );
                                     }}
                                 />
-                                { !isModal &&
-                                    <OnboardingControls isModal={isModal}/>
-                                }
                             </>
                         }
-
+                        { !isModal &&
+                            <OnboardingControls isModal={isModal}/>
+                        }
                     </div>
             }
         </>

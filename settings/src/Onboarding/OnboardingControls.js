@@ -72,7 +72,11 @@ const OnboardingControls = ({isModal}) => {
     if ( steps.length-1 === currentStepIndex ) {
         return (
             <>
-                <Button onClick={() => dismissModal(true)}>{__('Dismiss', 'really-simple-ssl')}</Button>
+                {isModal && (
+                    <Button onClick={() => dismissModal(true)}>
+                        {__('Dismiss', 'really-simple-ssl')}
+                    </Button>
+                )}
                 <Button isPrimary onClick={() => {goToDashboard()}}>{__('Go to Dashboard', 'really-simple-ssl')}</Button>
             </>
         );
