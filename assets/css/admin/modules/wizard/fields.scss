@@ -94,6 +94,24 @@ html {
     scroll-padding-top:100px;
   }
 
+  .rsssl-block-highlight {
+    border:0;
+    -o-animation: fadeItBlock 3s ease-in-out;
+    animation: fadeItBlock 3s ease-in-out;
+  }
+
+  @-o-keyframes fadeItBlock {
+    0%   { border: 0; }
+    60%  { border: 3px solid var(--rsp-green); }
+    100% { border: 0; }
+  }
+
+  @keyframes fadeItBlock {
+    0%   { border: 0; }
+    60%  { border: 3px solid var(--rsp-green); }
+    100% { border: 0; }
+  }
+
   @-o-keyframes fadeIt {
     0%   { background-color: transparent; }
     30%  { background-color: var(--rsp-green-faded); }
