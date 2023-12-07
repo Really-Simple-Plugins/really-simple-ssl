@@ -27,7 +27,7 @@ document.addEventListener('click', e => {
 		document.querySelector('.rsssl-ssllabs').classList.add('rsssl-block-highlight');
 		setTimeout(function(){
 			document.querySelector('.rsssl-ssllabs').classList.remove('rsssl-block-highlight');
-		}, 4000);
+		}, 6000);
     }
 });
 
