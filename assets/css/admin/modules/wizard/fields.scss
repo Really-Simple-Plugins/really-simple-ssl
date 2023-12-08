@@ -95,21 +95,34 @@ html {
   }
 
   .rsssl-block-highlight {
-    border:0;
-    -o-animation: fadeItBlock 3s ease-in-out;
-    animation: fadeItBlock 3s ease-in-out;
-  }
+    border: 0;
+    -o-animation: pulse 2s infinite;
+    animation: pulse 2s infinite;}
 
-  @-o-keyframes fadeItBlock {
-    0%   { border: 0; }
-    60%  { border: 3px solid var(--rsp-green); }
-    100% { border: 0; }
+  @-webkit-keyframes pulse {
+    0% {
+      -webkit-box-shadow: 0 0 0 0 var(--rsp-green);
+    }
+    70% {
+      -webkit-box-shadow: 0 0 0 10px var(--rsp-green-faded);
+    }
+    100% {
+      -webkit-box-shadow: 0 0 0 0 var(--rsp-green-faded);;
+    }
   }
-
-  @keyframes fadeItBlock {
-    0%   { border: 0; }
-    60%  { border: 3px solid var(--rsp-green); }
-    100% { border: 0; }
+  @keyframes pulse {
+    0% {
+      -moz-box-shadow: 0 0 0 0 var(--rsp-green);
+      box-shadow: 0 0 0 0 var(--rsp-green);
+    }
+    70% {
+      -moz-box-shadow: 0 0 0 10px var(--rsp-green-faded);
+      box-shadow: 0 0 0 10px var(--rsp-green-faded);
+    }
+    100% {
+      -moz-box-shadow: 0 0 0 0 var(--rsp-green-faded);
+      box-shadow: 0 0 0 0 var(--rsp-green-faded);
+    }
   }
 
   @-o-keyframes fadeIt {
