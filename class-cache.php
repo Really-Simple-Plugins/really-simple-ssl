@@ -1,19 +1,18 @@
 <?php
-
-defined( 'ABSPATH' ) or die( 'you do not have access to this page!' );
+defined( 'ABSPATH' ) or die( );
 if ( ! class_exists( 'rsssl_cache' ) ) {
 	class rsssl_cache {
 		private static $_this;
 
-		function __construct() {
+		public function __construct() {
 			if ( isset( self::$_this ) ) {
-				wp_die( sprintf( __( '%s is a singleton class and you cannot create a second instance.', 'really-simple-ssl' ), get_class( $this ) ) );
+				wp_die( 'you cannot create a second instance.' );
 			}
 
 			self::$_this = $this;
 		}
 
-		static function this() {
+		public static function this() {
 			return self::$_this;
 		}
 
