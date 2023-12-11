@@ -93,7 +93,6 @@ const useOnboardingData = create(( set, get ) => ({
     updateItemStatus: (stepId, id, action, status, activated) => {
         const index = get().steps.findIndex(item => { return item.id===stepId; });
         const itemIndex = get().steps[index].items.findIndex(item => {return item.id===id;});
-        console.log("new value", action, status, activated);
         set(
             produce((state) => {
                 if (typeof action !== 'undefined') state.steps[index].items[itemIndex].action = action;
@@ -101,8 +100,6 @@ const useOnboardingData = create(( set, get ) => ({
                 if (typeof activated !== 'undefined') state.steps[index].items[itemIndex].activated = activated;
             })
         )
-        console.log( get().steps );
-
         let currentStep = get().steps[get().currentStepIndex];
         set(
             produce((state) => {
@@ -120,8 +117,11 @@ const useOnboardingData = create(( set, get ) => ({
     },
     setShowOnBoardingModal: (showOnboardingModal) => set(state => ({ showOnboardingModal })),
     pluginInstaller: async (id, action, title) => {
+        if ( !action ) {
+            return;
+        }
+
         set(() => ({processing:true}));
-        console.log("action", action);
         get().updateItemStatus('plugins', id, action, 'processing');
         get().setFooterStatus(__("Installing %d...", "really-simple-ssl").replace("%d", title));
 
@@ -129,12 +129,10 @@ const useOnboardingData = create(( set, get ) => ({
         get().updateItemStatus('plugins', id, nextAction);
 
         if ( nextAction!=='none' && nextAction!=='completed') {
-            console.log("process ", nextAction, id);
             get().setFooterStatus(__("Activating %d...", "really-simple-ssl").replace("%d", title));
             nextAction = await processAction(nextAction, id);
             get().updateItemStatus('plugins', id, nextAction);
         } else {
-            console.log("completed ", nextAction, id);
             get().setFooterStatus('');
         }
         set((state) => ({processing:false}));

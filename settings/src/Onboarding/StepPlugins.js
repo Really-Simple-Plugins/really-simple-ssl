@@ -12,7 +12,6 @@ const StepPlugins = () => {
     useEffect(()=> {
         //if all plugins are already activated, we skip the plugins step
         let plugins = currentStep.items;
-        console.log(plugins);
         if ( plugins.filter(item => item.action !== 'none').length === 0) {
             setCurrentStepIndex(currentStepIndex+1);
         }

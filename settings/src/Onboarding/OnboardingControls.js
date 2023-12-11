@@ -50,7 +50,6 @@ const OnboardingControls = ({isModal}) => {
             //loop through all items of currentStep.items
             for (const item of currentStep.items){
                 if ( item.id=== 'health_scan' && item.activated ) {
-                    console.log("start scan");
                     setFooterStatus(__("Starting SSL health scan...", "really-simple-ssl") );
                     setSslScanStatus('active');
                 }
@@ -78,7 +77,6 @@ const OnboardingControls = ({isModal}) => {
             setFooterStatus( '' );
             setProcessing(false);
         }
-        console.log(currentStep.id);
         if ( currentStep.id === 'email' ) {
             await saveEmail();
             setCurrentStepIndex(currentStepIndex+1);
@@ -90,7 +88,7 @@ const OnboardingControls = ({isModal}) => {
         if ( currentStep.id === 'plugins' ) {
             setCurrentStepIndex(currentStepIndex+1)
             for (const item of currentStep.items) {
-                if (item.action !== 'none') {
+                if (item.action !== 'none' && item.action !== null ) {
                     // Add the promise returned by pluginInstaller to the array
                     await pluginInstaller(item.id, item.action, item.title );
                 }

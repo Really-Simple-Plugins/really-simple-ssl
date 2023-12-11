@@ -9,7 +9,6 @@ const StepFeatures = () => {
     } = useOnboardingData();
 
     let items = currentStep.items ? currentStep.items : [];
-    console.log("items in features overview ", items);
     let freeItems = items.filter( (item) => !item.premium );
     let premiumItems = items.filter( (item) => item.premium );
     return (
