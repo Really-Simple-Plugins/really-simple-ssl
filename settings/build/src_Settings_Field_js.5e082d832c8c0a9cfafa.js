@@ -7620,8 +7620,7 @@ const DynamicDataTable = props => {
     if (Array.isArray(users)) {
       //for each users, check if the user has a forced role
       for (const user of users) {
-        console.log(user.rsssl_two_fa_status);
-        if (user.rsssl_two_fa_status !== 'open') {
+        if (user.rsssl_two_fa_status !== 'open' || user.rsssl_two_fa_status_totp !== 'open') {
           return false;
         }
       }
@@ -24091,4 +24090,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.deb3ee2381c7e5f6629d.js.map
+//# sourceMappingURL=src_Settings_Field_js.5e082d832c8c0a9cfafa.js.map

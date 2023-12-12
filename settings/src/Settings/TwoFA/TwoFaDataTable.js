@@ -123,8 +123,7 @@ const DynamicDataTable = (props) => {
         if (Array.isArray(users)) {
             //for each users, check if the user has a forced role
             for (const user of users) {
-                console.log(user.rsssl_two_fa_status);
-                if ( user.rsssl_two_fa_status !== 'open' ) {
+                if ( user.rsssl_two_fa_status !== 'open' || user.rsssl_two_fa_status_totp !== 'open' ) {
                     return false;
                 }
             }
