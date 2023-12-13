@@ -115,17 +115,20 @@ if ( !function_exists('rsssl_remove_htaccess_security_edits') ) {
 	 *
 	 * @return void
 	 */
-	function rsssl_remove_htaccess_security_edits(){
+	function rsssl_remove_htaccess_security_edits() {
+
 		if ( ! rsssl_user_can_manage()  ) {
 			return;
 		}
 
-		if ( ! rsssl_uses_htaccess() ) {
-			return;
+		if ( ! defined( 'WP_CLI' ) && WP_CLI ) {
+			if ( ! rsssl_uses_htaccess() ) {
+				return;
+			}
 		}
 
 		$htaccess_file = RSSSL()->admin->htaccess_file();
-		if ( !file_exists( $htaccess_file ) ) {
+		if ( ! file_exists( $htaccess_file ) ) {
 			return;
 		}
 
