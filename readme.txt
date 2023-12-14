@@ -116,6 +116,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 * Fix: datatable styling
 * Fix: using deactivate_https with wp-cli did not remove htaccess rules 
 * Improvement: add query parameter to enforce email verification &rsssl_force_verification
+* Improvement: css for check certificate manually button
 
 = 7.2.0 =
 * Fix: changed link to article
