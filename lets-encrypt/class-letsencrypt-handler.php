@@ -633,15 +633,29 @@ class rsssl_letsencrypt_handler {
 
 		    if ( $order ) {
 			    if ( $order->isCertificateBundleAvailable() ) {
-
+				    $challenge_type = $use_dns ? Order::CHALLENGE_TYPE_DNS : Order::CHALLENGE_TYPE_HTTP;
 				    try {
 					    $order->enableAutoRenewal();
-					    $response = new RSSSL_RESPONSE(
-						    'success',
-						    'continue',
-						    __("Certificate already generated. It was renewed if required.",'really-simple-ssl')
-					    );
-					    $bundle_completed = true;
+						
+					    if ( $order->authorize( $challenge_type ) ) {
+						    $order->finalize();
+						    $this->reset_attempt();
+						    $response = new RSSSL_RESPONSE(
+							    'success',
+							    'continue',
+							    __("Certificate already generated. It was renewed if required.",'really-simple-ssl')
+						    );
+						    $bundle_completed = true;
+					    } else {
+						    $this->count_attempt();
+						    $response = new RSSSL_RESPONSE(
+							    'error',
+							    'retry',
+							    __('Authorization not completed yet.',"really-simple-ssl")
+						    );
+						    $bundle_completed = false;
+					    }
+
 				    } catch ( Exception $e ) {
 					    $response = new RSSSL_RESPONSE(
 						    'error',
