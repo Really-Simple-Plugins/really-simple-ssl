@@ -636,7 +636,7 @@ class rsssl_letsencrypt_handler {
 				    $challenge_type = $use_dns ? Order::CHALLENGE_TYPE_DNS : Order::CHALLENGE_TYPE_HTTP;
 				    try {
 					    $order->enableAutoRenewal();
-						
+
 					    if ( $order->authorize( $challenge_type ) ) {
 						    $order->finalize();
 						    $this->reset_attempt();
