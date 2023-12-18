@@ -396,7 +396,7 @@ add_action('rsssl_after_saved_fields', 'rsssl_gather_warning_blocks_for_mail', 4
 function rsssl_uses_htaccess() {
 	//when using WP CLI, the get_server check does not work, so we assume .htaccess is being used
 	//and rely on the file exists check to catch if not.
-	if ( defined( 'WP_CLI' ) ) {
+	if ( defined( 'WP_CLI' ) && WP_CLI ) {
 		return true;
 	}
 	return rsssl_get_server() === 'apache' || rsssl_get_server() === 'litespeed';
