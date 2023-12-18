@@ -77,6 +77,10 @@ if ( ! class_exists( 'rsssl_hide_wp_version' ) ) {
 		 * Remove WordPress version from css and js strings
 		 */
 		public function remove_css_js_version( $src ) {
+			if ( empty($src) ) {
+				return $src;
+			}
+
 			if ( strpos( $src, '?ver=' ) && strpos( $src, 'wp-includes' ) ) {
 				$wp_version  = get_bloginfo( 'version' );
 				$new_version = $this->generate_rand_version();
