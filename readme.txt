@@ -122,6 +122,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 * Fix: changed link to article
 * Fix: remove flags .js file which was added twice, props @adamainsworth
 * Fix: typo in missing advanced-headers.php notice
+* Improvement: catch php warning when script src is empty when using hide wp version, props @chris-yau
 * Improvement: new save & continue feedback
 * Improvement: datatable styling
 * Improvement: new react based modal
