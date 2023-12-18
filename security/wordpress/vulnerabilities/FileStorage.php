@@ -4,7 +4,8 @@ namespace security\wordpress\vulnerabilities;
 defined('ABSPATH') or die();
 class FileStorage
 {
-    private $hash;
+	private $hash;
+	public $folder; //for the foldername
 
     /**
      * FileStorage constructor.
@@ -13,18 +14,29 @@ class FileStorage
     {
         //Fetching the key from the database
         $this->generateHashKey();
+	    $upload_dir = wp_upload_dir();
+		$this->folder =  $upload_dir['basedir'] . Rsssl_Folder_Name::getInstance()->getFolderName();
     }
 
-    public Static function StoreFile($file, $data)
-    {
+    public Static function StoreFile($file, $data): void {
         $storage = new FileStorage();
-        $storage->set($data, $file);
+	    //first we check if the storage folder is already in the $file string
+	    if (strpos($file, $storage->folder) !== false) {
+		    $file = str_replace($storage->folder . '/', '', $file);
+	    }
+        $storage->set($data, $storage->folder . '/' . $file);
     }
 
     public Static function GetFile($file)
     {
         $storage = new FileStorage();
-        return $storage->get($file);
+
+		//first we check if the storage folder is already in the $file string
+	   	if (strpos($file, $storage->folder) !== false) {
+			$file = str_replace($storage->folder . '/', '', $file);
+		}
+
+        return $storage->get($storage->folder . '/' . $file);
     }
 
     /** Get the data from the file
@@ -48,7 +60,7 @@ class FileStorage
     public function set($data, $file)
     {
         $data = $this->Encode64WithHash(json_encode($data));
-        file_put_contents($file, $data);
+        file_put_contents($this->folder . '/' . $file, $data);
     }
 
     /** encode the data with a hash
@@ -89,19 +101,33 @@ class FileStorage
 
     public static function GetDate(string $file)
     {
+		$storage = new FileStorage();
+		$file = $storage->folder . '/' . $file;
         if (file_exists($file)) {
             return filemtime($file);
         }
         return false;
     }
 
+	public static function get_upload_dir() {
+		return ( new FileStorage() )->folder;
+	}
+
+	public static function validateFile(string $file): bool {
+		$storage = new FileStorage();
+		$file = $storage->folder . '/' . $file;
+		if (file_exists($file)) {
+			return true;
+		}
+		return false;
+	}
+
     public static function DeleteAll()
     {
-        //we get the upload folder
-        $upload_dir = wp_upload_dir();
+		$storage = new FileStorage();
 
         //we get the really-simple-ssl folder
-        $rsssl_dir = $upload_dir['basedir'] . '/really-simple-ssl';
+        $rsssl_dir = $storage->folder;
 
         //then we delete the following files from that folder: manifest.json, components.json and core.json
         $files = array('manifest.json', 'components.json', 'core.json');

@@ -785,9 +785,8 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 $file = 'manifest.json';
             }
 
-            $upload_dir = wp_upload_dir();
-            $upload_dir = $upload_dir['basedir'];
-            $file = $upload_dir . self::RSSSL_VULNERABILITIES_LOCATION . '/' . $file;
+            $upload_dir = FileStorage::get_upload_dir();
+            $file = $upload_dir . '/' . $file;
             if (file_exists($file)) {
                 //now we check if the file is older than 3 days, if so, we download it again
                 $file_time = filemtime($file);
@@ -863,9 +862,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 		        return;
 	        }
 	        //we get the upload directory
-	        $upload_dir = wp_upload_dir();
-	        $upload_dir = $upload_dir['basedir'];
-	        $upload_dir = $upload_dir . self::RSSSL_VULNERABILITIES_LOCATION;
+	        $upload_dir = FileStorage::get_upload_dir();
 
 	        if ( !$manifest ) {
 		        $file = $upload_dir . '/' . ($isCore ? 'core.json' : 'components.json');
@@ -882,11 +879,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 return;
             }
 
-            //we check if the directory exists, if not, we create it
-            if ( !file_exists($upload_dir) ) {
-                mkdir($upload_dir, 0755, true);
-            }
-
             FileStorage::StoreFile($file, $data);
             $this->jsons_files_updated = true;
         }
@@ -896,9 +888,9 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	        if ( ! rsssl_admin_logged_in() ) {
 		        return false;
 	        }
-            $upload_dir = wp_upload_dir();
-            $upload_dir = $upload_dir['basedir'];
-            $upload_dir .= self::RSSSL_VULNERABILITIES_LOCATION;
+
+            $upload_dir = FileStorage::get_upload_dir();
+
             if ($manifest) {
                 $file = $upload_dir . '/manifest.json';
                 if (!file_exists($file)) {
@@ -1025,9 +1017,8 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	        if ( ! rsssl_admin_logged_in() ) {
 		        return [];
 	        }
-            $upload_dir = wp_upload_dir();
-            $upload_dir = $upload_dir['basedir'];
-            $upload_dir = $upload_dir . self::RSSSL_VULNERABILITIES_LOCATION;
+            $upload_dir = FileStorage::get_upload_dir();
+
             $file = $upload_dir . '/components.json';
             if (!file_exists($file)) {
                 return [];
@@ -1046,9 +1037,9 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	        if ( ! rsssl_admin_logged_in() ) {
 		        return null;
 	        }
-            $upload_dir = wp_upload_dir();
-            $upload_dir = $upload_dir['basedir'];
-            $upload_dir = $upload_dir . self::RSSSL_VULNERABILITIES_LOCATION;
+
+            $upload_dir = FileStorage::get_upload_dir();
+
             $file = $upload_dir . '/core.json';
             if (!file_exists($file)) {
                 return false;
@@ -1272,9 +1263,9 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	        if ( ! rsssl_admin_logged_in() ) {
 		        return false;
 	        }
-            $upload_dir = wp_upload_dir();
-            $upload_dir = $upload_dir['basedir'];
-            $upload_dir .= self::RSSSL_VULNERABILITIES_LOCATION;
+
+            $upload_dir = FileStorage::get_upload_dir();
+
             $file = $upload_dir . '/manifest.json';
             if (!file_exists($file)) {
                 return false;
