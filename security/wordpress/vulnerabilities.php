@@ -23,7 +23,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
      */
     class rsssl_vulnerabilities
     {
-        const RSSSL_VULNERABILITIES_LOCATION = '/really-simple-ssl';
         const RSSSL_SECURITY_API = 'https://downloads.really-simple-security.com/rsssl/vulnerabilities/V1/';
         public $workable_plugins = [];
 
@@ -127,7 +126,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	     * Allow users to manually force a re-check, e.g. in case of manually updating plugins
 	     * @return void
 	     */
-	    public function force_reload_files(){
+	    public function force_reload_files(): void {
 		    if ( ! rsssl_admin_logged_in() ) {
 			    return;
 		    }
@@ -193,7 +192,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
          *
 	     * @return void
 	     */
-        public function prepare_reloading_of_files(){
+        public function prepare_reloading_of_files(): void {
             update_option("rsssl_reload_vulnerability_files", true, false);
         }
 
@@ -221,8 +220,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
          * Get site health notice for vulnerabilities
 	     * @return array
 	     */
-	    public function get_site_health_notice()
-	    {
+	    public function get_site_health_notice(): array {
             if (!rsssl_admin_logged_in()){
                 return [];
             }
@@ -392,11 +390,11 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
         /* Public Section 2: DataGathering */
 
-        /**
-         * @param $data
-         *
-         * @return array
-         */
+		/**
+		 * @param $stats
+		 *
+		 * @return array
+		 */
         public function get_stats($stats): array
         {
 	        if ( ! rsssl_user_can_manage() ) {
