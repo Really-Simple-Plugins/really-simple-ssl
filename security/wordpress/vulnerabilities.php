@@ -867,6 +867,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	        } else {
 		        $file = $upload_dir . '/manifest.json';
 	        }
+
 	        //we delete the old file if it exists
 	        if ( file_exists($file) ) {
 		        wp_delete_file($file);

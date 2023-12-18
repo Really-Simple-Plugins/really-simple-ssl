@@ -7,7 +7,7 @@ require_once 'class-rsssl-folder-name.php';
 class FileStorage
 {
 	private $hash;
-	public $folder; //for the foldername
+	public $folder; //for the folder name
 
     /**
      * FileStorage constructor.
@@ -17,7 +17,7 @@ class FileStorage
         //Fetching the key from the database
         $this->generateHashKey();
 	    $upload_dir = wp_upload_dir();
-		$this->folder =  $upload_dir['basedir'] . Rsssl_Folder_Name::getInstance()->getFolderName();
+		$this->folder =  $upload_dir['basedir'] . '/' . Rsssl_Folder_Name::getFolderName();
     }
 
     public Static function StoreFile($file, $data): void {
@@ -62,6 +62,11 @@ class FileStorage
     public function set($data, $file)
     {
         $data = $this->Encode64WithHash(json_encode($data));
+	    //first we check if the storage folder is already in the $file string
+	    if (strpos($file, $this->folder) !== false) {
+		    $file = str_replace($this->folder . '/', '', $file);
+	    }
+
         file_put_contents($this->folder . '/' . $file, $data);
     }
 

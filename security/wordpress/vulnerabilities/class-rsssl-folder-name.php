@@ -3,8 +3,7 @@
 namespace security\wordpress\vulnerabilities;
 
 class Rsssl_Folder_Name {
-	private static $instance;
-	private $folderName;
+	public $folderName;
 
 	/**
 	 * Rsssl_Folder_Name constructor.
@@ -12,17 +11,19 @@ class Rsssl_Folder_Name {
 	private function __construct()
 	{
 		// Fetch the folder name from the settings if it exists
-		if (rsssl_get_option('vulnerability_folder_name')) {
-			$this->folderName = rsssl_get_option('vulnerability_folder_name');
+		if (get_option('rsssl_folder_name')) {
+			$this->folderName = get_option('rsssl_folder_name');
 			// We need to check if the folder exists, if not we need to create it
-			if (!file_exists($this->folderName)) {
+			$upload_dir = wp_upload_dir();
+
+			if (!file_exists($upload_dir['basedir'] . '/' . $this->folderName)) {
 				$this->createFolder();
 			}
 		} else {
 			// Generate a new folder name and save it in the settings
 			$this->folderName = md5(uniqid(mt_rand(), true));
 			$this->createFolder();
-			rsssl_update_option('vulnerability_folder_name', $this->folderName);
+			update_option('rsssl_folder_name', $this->folderName);
 		}
 	}
 
@@ -45,26 +46,12 @@ class Rsssl_Folder_Name {
 	}
 
 	/**
-	 * Get the singleton instance of this class
-	 *
-	 * @return Rsssl_Folder_Name
-	 */
-	public static function getInstance(): Rsssl_Folder_Name {
-		if (self::$instance === null)
-		{
-			self::$instance = new Rsssl_Folder_Name();
-		}
-
-		return self::$instance;
-	}
-
-	/**
 	 * Creates a new folder name and saves it in the settings
 	 *
 	 * @return string
 	 */
-	public function getFolderName(): string
+	public static function getFolderName(): string
 	{
-		return $this->folderName;
+		return (new Rsssl_Folder_Name())->folderName;
 	}
 }
