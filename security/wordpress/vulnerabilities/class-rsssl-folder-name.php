@@ -13,7 +13,7 @@ class Rsssl_Folder_Name {
 	{
 		// Fetch the folder name from the settings if it exists
 		if (rsssl_get_option('vulnerability_folder_name')) {
-			$this->folderName = get_option('vulnerability_folder_name');
+			$this->folderName = rsssl_get_option('vulnerability_folder_name');
 			// We need to check if the folder exists, if not we need to create it
 			if (!file_exists($this->folderName)) {
 				$this->createFolder();

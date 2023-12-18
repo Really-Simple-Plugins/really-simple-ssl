@@ -2,6 +2,8 @@
 
 namespace security\wordpress\vulnerabilities;
 defined('ABSPATH') or die();
+
+require_once 'class-rsssl-folder-name.php';
 class FileStorage
 {
 	private $hash;
