@@ -1,5 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {Modal, MenuItem, SelectControl, Button} from "@wordpress/components";
+import {
+    Modal,
+    MenuItem,
+    SelectControl,
+    Button,
+    __experimentalConfirmDialog as ConfirmDialog
+} from "@wordpress/components";
 import IpAddressDataTableStore   from "./IpAddressDataTableStore";
 import {__} from "@wordpress/i18n";
 import IpAddressInput from "./IpAddressInput";
@@ -7,7 +13,6 @@ import Cidr from "./Cidr";
 import EventLogDataTableStore from "../EventLog/EventLogDataTableStore";
 
 const AddIpAddressModal = (props) => {
-    if (!props.isOpen) return;
     const { inputRangeValidated, fetchCidrData, ipAddress, setIpAddress, maskError, dataLoaded, addRow, resetRange} = IpAddressDataTableStore();
     const [rangeDisplay, setRangeDisplay] = useState(false);
     const {fetchDynamicData} = EventLogDataTableStore();
@@ -48,7 +53,9 @@ const AddIpAddressModal = (props) => {
         // Close the modal
         props.onRequestClose();
     }
-
+    if (!props.isOpen) {
+        return null;
+    }
     return (
         <Modal
             title={__("Add IP Address", "really-simple-ssl")}

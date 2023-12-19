@@ -4,10 +4,7 @@ import DataTable, {createTheme} from "react-data-table-component";
 import IpAddressDataTableStore from "./IpAddressDataTableStore";
 import EventLogDataTableStore from "../EventLog/EventLogDataTableStore";
 import FilterData from "../FilterData";
-import {button} from "@wordpress/components";
-import {produce} from "immer";
 import Flag from "../../utils/Flag/Flag";
-import Icon from "../../utils/Icon";
 import AddIpAddressModal from "./AddIpAddressModal";
 import useFields from "../FieldsData";
 
