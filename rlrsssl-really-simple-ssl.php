@@ -260,23 +260,3 @@ if ( !function_exists('rsssl_is_logged_in_rest')){
         return is_user_logged_in();
 	}
 }
-
-/**
- * Add rsssl_two_fa_status usermeta field
- *
- * @return void
- */
-function rsssl_register_user_meta() {
-    register_meta('user', 'rsssl_two_fa_status', [
-        'show_in_rest' => true,
-        'single' => true,
-        'type' => 'string',
-        'description' => 'The method of two-factor authentication for the user.',
-        'default' => 'false',
-        'auth_callback' => function() {
-            return rsssl_user_can_manage();
-        },
-    ]);
-}
-
-add_action( 'init' , 'rsssl_register_user_meta' );
