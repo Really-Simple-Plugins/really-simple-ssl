@@ -212,3 +212,17 @@ function rsssl_register_user_meta() {
 }
 
 add_action( 'init' , 'rsssl_register_user_meta' );
+
+/**
+ * Minifies the given JS string or file
+ *
+ * @return string
+ */
+function rsssl_minify_js($input): string {
+	if(trim($input) === "") return $input;
+	// Remove comments, whitespace, newlines, etc.
+	$input = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $input);
+
+	return str_replace( array( ': ', "\r\n", "\r", "\n", "\t", '  ', '    ', '     ' ),
+		array( ':', '', '', '', '', '', '', '' ), $input );
+}
