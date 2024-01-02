@@ -214,7 +214,9 @@ function rsssl_register_user_meta() {
 add_action( 'init' , 'rsssl_register_user_meta' );
 
 /**
- * Minifies the given JS string or file
+ * Minifies the given JS string or file to be added inline as a script tag
+ *
+ * @param $input
  *
  * @return string
  */
