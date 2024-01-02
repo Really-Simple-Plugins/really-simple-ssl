@@ -132,3 +132,63 @@ function add_user_role_to_api_response( $response, $user, $request ) {
 	return $response;
 }
 add_filter('rest_prepare_user', 'add_user_role_to_api_response', 10, 3);
+
+/**
+ * Adds a template.
+ *
+ * @param  string  $template
+ * @param  string  $path
+ *
+ * @return string
+ * @throws Exception
+ */
+function rsssl_get_template( string $template, string $path = '' ): string {
+	// Define the path in the theme where templates can be overridden.
+	$theme_template_path = get_stylesheet_directory() . '/really-simple-ssl-templates/' . $template;
+
+	// Check if the theme has an override for the template.
+	if ( file_exists( $theme_template_path ) ) {
+		return $theme_template_path;
+	}
+
+	//first we check if $path is set, if not we use the default path
+	if ( $path === '' ) {
+		$base_path = plugin_dir_path( __FILE__ ) . 'templates/';
+		//we check if the template exists in the default path if not we throw an error
+		if ( ! file_exists( $base_path . $template ) ) {
+			throw new \RuntimeException( 'Template not found: ' . $base_path . $template );
+		}
+		return $base_path . $template;
+	}
+
+	// Path to the template in the plugin directory.
+	$path = trailingslashit( $path );
+	// Check if the template exists in the specified path.
+	if ( ! file_exists( $path . $template ) ) {
+		throw new \RuntimeException( 'Template not found: ' . $path . $template );
+	}
+	return $path . $template;
+}
+
+/**
+ * Load a template file.
+ *
+ * @param  string  $template
+ * @param  array  $vars
+ * @param  string  $path
+ *
+ * @throws Exception
+ */
+function rsssl_load_template( string $template, array $vars = [], string $path = '' ) {
+	// Extract variables to be available in the template scope
+	if ( is_array( $vars ) ) {
+		extract( $vars );
+	}
+
+	// Get the template file, checking for theme overrides
+	$template_file = rsssl_get_template( $template , $path );
+
+	if ( file_exists( $template_file ) ) {
+		include $template_file;
+	}
+}
