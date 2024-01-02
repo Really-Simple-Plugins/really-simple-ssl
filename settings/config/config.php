@@ -1647,7 +1647,7 @@ function rsssl_fields( $load_values = true ) {
 			'group_id' => 'vulnerabilities_measures',
 			'type'     => 'checkbox',
 			'label'    => __("I have read and understood the risks to intervene with these measures.","really-simple-ssl"),
-			'comment' => '<a href="https://really-simple-ssl.com/instructions/about-vulnerabilities#measures" target="_blank">'.__("Read more", "really-simple-ssl") .'</a>',
+			'comment' => '<a href="https://really-simple-ssl.com/instructions/about-vulnerabilities#measures" target="_blank" rel="noopener noreferrer">'.__("Read more", "really-simple-ssl") .'</a>',
 			'disabled' => false,
 			'default'  => false,
 			'react_conditions' => [

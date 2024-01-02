@@ -10,7 +10,7 @@
  */
 function rsssl_le_read_more( $url, $add_character = ' ' ) {
 	$html = sprintf( __( "For more information, please read this %sarticle%s",
-		'really-simple-ssl' ), '<a target="_blank" href="' . $url . '">',
+		'really-simple-ssl' ), '<a target="_blank" rel="noopener noreferrer" href="' . $url . '">',
 		'</a>' );
 	if ( is_string($add_character) ) {
 		$html = $add_character . $html;
@@ -366,23 +366,23 @@ if ( !function_exists('rsssl_get_manual_instructions_text')) {
 		$dashboard_activation_required = rsssl_activation_required();
 		$activated_by_default = rsssl_activated_by_default();
 		$paid_only = rsssl_paid_only();
-		$button_activate = '<br><a href="' . $default_url . '" target="_blank" class="button button-primary">' . __( "Instructions", "really-simple-ssl" ) . '</a>&nbsp;&nbsp;';
-		$button_complete = '<br><a href="' . $default_url . '" target="_blank" class="button button-primary">' . __( "Instructions", "really-simple-ssl" ) . '</a>&nbsp;&nbsp;';
+		$button_activate = '<br><a href="' . $default_url . '" target="_blank" rel="noopener noreferrer" class="button button-primary">' . __( "Instructions", "really-simple-ssl" ) . '</a>&nbsp;&nbsp;';
+		$button_complete = '<br><a href="' . $default_url . '" target="_blank" rel="noopener noreferrer" class="button button-primary">' . __( "Instructions", "really-simple-ssl" ) . '</a>&nbsp;&nbsp;';
 
 		if ( $url === $default_url ) {
 			$complete_manually = sprintf( __( "Please complete manually in your hosting dashboard.", "really-simple-ssl" ), '<a target="_blank" href="' . $url . '">', '</a>' );
 			$activate_manually = sprintf( __( "Please activate it manually on your hosting dashboard.", "really-simple-ssl" ), '<a target="_blank" href="' . $url . '">', '</a>' );
 		} else {
-			$complete_manually = sprintf( __( "Please complete %smanually%s", "really-simple-ssl" ), '<a target="_blank" href="' . $url . '">', '</a>' );
-			$activate_manually = sprintf( __( "Please activate it on your dashboard %smanually%s", "really-simple-ssl" ), '<a target="_blank" href="' . $url . '">', '</a>' );
-			$button_activate   .= '<a href="' . $url . '" target="_blank" class="button button-primary">' . __( "Go to activation", "really-simple-ssl" ) . '</a>';
-			$button_complete   .= '<a href="' . $url . '" target="_blank" class="button button-primary">' . __( "Go to installation", "really-simple-ssl" ) . '</a>';
+			$complete_manually = sprintf( __( "Please complete %smanually%s", "really-simple-ssl" ), '<a target="_blank" rel="noopener noreferrer" href="' . $url . '">', '</a>' );
+			$activate_manually = sprintf( __( "Please activate it on your dashboard %smanually%s", "really-simple-ssl" ), '<a target="_blank" rel="noopener noreferrer" href="' . $url . '">', '</a>' );
+			$button_activate   .= '<a href="' . $url . '" target="_blank" rel="noopener noreferrer" class="button button-primary">' . __( "Go to activation", "really-simple-ssl" ) . '</a>';
+			$button_complete   .= '<a href="' . $url . '" target="_blank" rel="noopener noreferrer" class="button button-primary">' . __( "Go to installation", "really-simple-ssl" ) . '</a>';
 		}
 
 		if ( $activated_by_default ) {
 			$msg
 				= sprintf( __( "According to our information, your hosting provider supplies your account with an SSL certificate by default. Please contact your %shosting support%s if this is not the case.",
-					"really-simple-ssl" ), '<a target="_blank" href="' . $url . '">', '</a>' ) . '&nbsp' .
+					"really-simple-ssl" ), '<a target="_blank "rel="noopener noreferrer" href="' . $url . '">', '</a>' ) . '&nbsp' .
 				  __( "After completing the installation, you can continue to the next step to complete your configuration.", "really-simple-ssl" );
 		} else if ( $dashboard_activation_required ) {
 			$msg = __( "You already have free SSL on your hosting environment.", "really-simple-ssl" ) . '&nbsp' .
@@ -392,11 +392,11 @@ if ( !function_exists('rsssl_get_manual_instructions_text')) {
 		} else if ( $paid_only ) {
 			$msg
 				= sprintf( __( "According to our information, your hosting provider does not allow any kind of SSL installation, other then their own paid certificate. For an alternative hosting provider with SSL, see this %sarticle%s.",
-				"really-simple-ssl" ), '<a target="_blank" href="https://really-simple-ssl.com/hosting-providers-with-free-ssl">', '</a>' );
+				"really-simple-ssl" ), '<a target="_blank" rel="noopener noreferrer" href="https://really-simple-ssl.com/hosting-providers-with-free-ssl">', '</a>' );
 		} else {
 			$msg = __( "Your hosting environment does not allow automatic SSL installation.", "really-simple-ssl" ) . ' ' .
 			       $complete_manually . ' ' .
-			       sprintf( __( "You can follow these %sinstructions%s.", "really-simple-ssl" ), '<a target="_blank" href="' . $default_url . '">', '</a>' ) . '&nbsp' .
+			       sprintf( __( "You can follow these %sinstructions%s.", "really-simple-ssl" ), '<a target="_blank" rel="noopener noreferrer" href="' . $default_url . '">', '</a>' ) . '&nbsp' .
 			       __( "After completing the installation, you can continue to the next step to complete your configuration.", "really-simple-ssl" )
 			       . $button_complete;
 		}
