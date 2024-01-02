@@ -28,25 +28,24 @@
       background: rgba(255, 255, 255, 0.8);
       border-radius: var(--rsp-border-radius);
       .rsssl-shield-overlay {
-        height: 0;
-        top: calc(100% - 190px);
-        position: relative;
         align-items: center;
-        justify-content: center;
         display: flex;
+        justify-content: center;
+        margin-top: 30%;
       }
       .rsssl-locked-overlay {
         z-index: 1;
-        top: calc(100% - 110px);
-        position: relative;
+        position: absolute;
         display: flex;
         align-items: center;
         gap: var(--rsp-spacing-s);
         background-color: var(--rsp-white);
         @include rsssl-block-padding;
-        border-radius: var(--rsp-border-radius-input);
+        border-radius: var(--rsp-border-radius-s);
         margin: var(--rsp-spacing-s);
         box-shadow: var(--rsp-box-shadow);
+        bottom: 0;
+        width: calc(100% - (2 * var(--rsp-spacing-s)));
 
         .rsssl-open {
           float: left;

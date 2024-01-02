@@ -17,8 +17,6 @@ const IpAddressInput = (props) => {
     const [error, setError] = useState(false);
     const {maskError, setMaskError} = IpAddressDataTableStore();
 
-    let is_checked = props.switchValue ? 'is-checked' : '';
-
     return (
         <>
             <label
@@ -35,35 +33,6 @@ const IpAddressInput = (props) => {
                     className={`rsssl-input full ${maskError ? 'rsssl-error' : 'rsssl-success'}`}
                     onChange={props.onChange}
                 />
-                {/* if icon is active, show it */}
-                {props.showSwitch && (
-                    <>
-                        <div style={{
-                            marginTop: '10px',
-                            marginBottom: '10px',
-                        }}>
-                            <div className="components-base-control components-toggle-control">
-                                <div className="components-base-control__field">
-                                    <div data-wp-component="HStack" className="components-flex components-h-stack">
-                                        <label className="components-toggle-control__label">{props.switchTitle}  </label>
-                                        <span className={"components-form-toggle " + is_checked}>
-                                    <input
-                                        onKeyDown={props.switchAction}
-                                        checked={props.switchValue}
-                                        className="components-form-toggle__input"
-                                        onChange={props.switchAction}
-                                        type="checkbox"
-                                    />
-                                    <span className="components-form-toggle__track"></span>
-                                    <span className="components-form-toggle__thumb"></span>
-                                 </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </>
-
-                )}
             </div>
             {maskError && <span
                 style={{color: 'red', marginLeft: '10px'}}>{__('Invalid ip address', 'really-simple-ssl')}</span>}

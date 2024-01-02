@@ -1,9 +1,7 @@
 import {create} from 'zustand';
 import {produce} from 'immer';
 import * as rsssl_api from "../utils/api";
-import sleeper from "../utils/sleeper.js";
 import {__} from '@wordpress/i18n';
-import {dispatch} from '@wordpress/data';
 import {toast} from 'react-toastify';
 
 const fetchFields = () => {
@@ -111,6 +109,7 @@ const useFields = create(( set, get ) => ({
         )
     },
     addHelpNotice : (id, label, text, title, url) => {
+        console.log("remove ",id);
         get().removeHelpNotice(id);
         //create help object
 
@@ -151,43 +150,61 @@ const useFields = create(( set, get ) => ({
         }
         return false;
     },
-    saveFields: (skipRefreshTests, showSavedNotice) => {
-        let refreshTests = typeof skipRefreshTests !=='undefined' ? skipRefreshTests : true;
-        showSavedNotice = typeof showSavedNotice !=='undefined' ? showSavedNotice : true;
+    saveFields: async (skipRefreshTests, showSavedNotice) => {
+        let refreshTests = typeof skipRefreshTests !== 'undefined' ? skipRefreshTests : true;
+        showSavedNotice = typeof showSavedNotice !== 'undefined' ? showSavedNotice : true;
         let fields = get().fields;
-        fields = fields.filter( field => field.data_target !== 'banner');
+        fields = fields.filter(field => field.data_target !== 'banner');
         let changedFields = get().changedFields;
-        let progress = get().progress;
         let saveFields = [];
         //data_target
-        for ( const field of fields ){
-            let fieldIsIncluded = changedFields.filter( changedField => changedField.id===field.id ).length>0;
+        for (const field of fields) {
+            let fieldIsIncluded = changedFields.filter(changedField => changedField.id === field.id).length > 0;
             //also check if there's no saved value yet for radio fields, by checking the never_saved attribute.
             //a radio or select field looks like it's completed, but won't save if it isn't changed.
             //this should not be the case for disabled fields, as these fields often are enabled server side because they're enabled outside Really Simple SSL.
-            let select_or_radio = field.type==='select' || field.type==='radio';
-            if ( fieldIsIncluded || (field.never_saved && !field.disabled && select_or_radio) ){
+            let select_or_radio = field.type === 'select' || field.type === 'radio';
+            if (fieldIsIncluded || (field.never_saved && !field.disabled && select_or_radio)) {
                 saveFields.push(field);
             }
         }
 
         //if no fields were changed, do nothing.
-        if ( saveFields.length>0 ) {
-            rsssl_api.setFields(saveFields).then(( response ) => {
-                progress = response.progress;
-                fields = response.fields;
+        if (saveFields.length > 0) {
+            let response = rsssl_api.setFields(saveFields).then((response) => {
+                return response;
+            })
+
+            if (showSavedNotice) {
+                toast.promise(
+                    response,
+                    {
+                        pending: __('Saving settings...', 'really-simple-ssl'),
+                        success: __('Settings saved', 'really-simple-ssl'),
+                        error: __('Something went wrong', 'really-simple-ssl'),
+                    }
+                );
+            }
+            await response.then((response) => {
                 set(
                     produce((state) => {
                         state.changedFields = [];
-                        state.fields = fields;
-                        state.progress = progress;
+                        state.fields = response.fields;
+                        state.progress = response.progress;
                         state.refreshTests = refreshTests;
                     })
                 )
             });
         }
-        if (showSavedNotice) {
-            handleShowSavedSettingsNotice();
+
+        if (showSavedNotice && saveFields.length === 0) {
+            //nothing to save. show instant success.
+            toast.promise(
+                Promise.resolve(),
+                {
+                    success: __('Settings saved', 'really-simple-ssl'),
+                }
+            );
         }
 
     },

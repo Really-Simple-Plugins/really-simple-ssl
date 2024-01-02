@@ -21,6 +21,9 @@
       border-radius: var(--rsp-border-radius-s);
       background: var(--rsp-yellow-faded);
       box-shadow: var(--rsp-box-shadow);
+      a:hover {
+        text-decoration: none;
+      }
     }
 
     .rsssl-menu-item {

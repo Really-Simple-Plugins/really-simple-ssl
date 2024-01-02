@@ -162,6 +162,7 @@ const DynamicDataTable = (props) => {
                 paddingRight: '0',
             },
         },
+        padding: '0'
     };
     createTheme('really-simple-plugins', {
         divider: {
@@ -185,6 +186,12 @@ const DynamicDataTable = (props) => {
         setRowsSelected([]);
         setRowCleared(true);
     }
+
+    const rowStyles = {
+        cursor: 'pointer', // Change cursor on hover
+        backgroundColor: '#f0f0f0', // Change background color
+        color: 'blue', // Change text color
+    };
 
     function handleSelection(state) {
         setRowsSelected(state.selectedRows);
@@ -252,7 +259,6 @@ const DynamicDataTable = (props) => {
                     </div>
                 </div>
             )}
-
             {dataLoaded &&
                 <DataTable
                     columns={columns}

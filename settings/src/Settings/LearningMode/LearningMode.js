@@ -95,7 +95,7 @@ const LearningMode = (props) => {
         run();
     }, [enforce, learningMode] );
 
-    const toggleEnforce = (e, enforceValue) => {
+    const toggleEnforce = async (e, enforceValue) => {
         e.preventDefault();
         //enforce this setting
         let controlFieldValue = enforceValue==1 ? 'enforce' : 'disabled';
@@ -104,8 +104,8 @@ const LearningMode = (props) => {
         setLearningMode(0);
         setChangedField(controlField.id, controlFieldValue);
         updateField(controlField.id, controlFieldValue);
-        saveFields(true, false);
-        fetchLearningModeData();
+        await saveFields(true, false);
+        //await fetchLearningModeData();
     }
 
 
@@ -174,6 +174,10 @@ const LearningMode = (props) => {
         if (item.login_status) item.login_statusControl = item.login_status == 1 ? __("success", "really-simple-ssl") : __("failed", "really-simple-ssl");
         item.statusControl = <ChangeStatus item={item} field={props.field} />;
         item.deleteControl = <Delete item={item} field={props.field}/>;
+        item.grouped = <div className="rsssl-action-buttons">
+            <ChangeStatus item={item} field={props.field} />
+            <Delete item={item} field={props.field}/>
+        </div>
     }
 
     const handleMultiRowStatus = (status, selectedRows, type) => {
@@ -206,7 +210,7 @@ const LearningMode = (props) => {
     return (
         <>
             <div>
-                { !dataLoaded || data.length==0 && <>
+                { !dataLoaded && <>
                     <div className="rsssl-learningmode-placeholder">
                         <div></div><div></div><div></div><div></div>
                     </div>
@@ -261,7 +265,7 @@ const LearningMode = (props) => {
                         </div>
                     </div>
                 )}
-                {data.length>0 && <>
+                {dataLoaded && <>
                     <DataTable
                         columns={columns}
                         data={data}

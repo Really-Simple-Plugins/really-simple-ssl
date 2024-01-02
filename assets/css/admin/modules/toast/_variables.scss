@@ -11,7 +11,7 @@ $rt-mobile: 'only screen and (max-width : 480px)' !default;
   --toastify-color-transparent: rgba(255, 255, 255, 0.7);
 
   --toastify-icon-color-info: var(--toastify-color-info);
-  --toastify-icon-color-success: var(--toastify-color-success);
+  --toastify-icon-color-success: var(--rsp-green);
   --toastify-icon-color-warning: var(--toastify-color-warning);
   --toastify-icon-color-error: var(--toastify-color-error);
 
@@ -37,7 +37,7 @@ $rt-mobile: 'only screen and (max-width : 480px)' !default;
   // Used when no type is provided
   --toastify-color-progress-light: linear-gradient(
     to right,
-    #4cd964,
+    var(--rsp-green),
     #5ac8fa,
     #007aff,
     #34aadc,
@@ -47,7 +47,7 @@ $rt-mobile: 'only screen and (max-width : 480px)' !default;
   // Used when no type is provided
   --toastify-color-progress-dark: #bb86fc;
   --toastify-color-progress-info: var(--toastify-color-info);
-  --toastify-color-progress-success: var(--toastify-color-success);
+  --toastify-color-progress-success: var(--rsp-green);
   --toastify-color-progress-warning: var(--toastify-color-warning);
   --toastify-color-progress-error: var(--toastify-color-error);
 }

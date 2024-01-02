@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Modal, MenuItem, SelectControl, Button} from "@wordpress/components";
 import UserDataTableStore from "./UserDataTableStore";
+import EventLogDataTableStore from "../EventLog/EventLogDataTableStore";
 import {__} from "@wordpress/i18n";
 
 
@@ -8,15 +9,17 @@ const AddUserModal = (props) => {
     if (!props.isOpen) return null;
 
     const {addRow, maskError} = UserDataTableStore();
+    const {fetchDynamicData} = EventLogDataTableStore();
     const [user, setUser] = useState('');
 
-    function handleSubmit() {
+    async function handleSubmit() {
         let status = props.status;
         // we check if statusSelected is not empty
         if (user !== '') {
-            addRow(user, status);
+            await addRow(user, status, props.dataActions);
             //we clear the input
             setUser('');
+            await fetchDynamicData('event_log');
             //we close the modal
             props.onRequestClose();
         }

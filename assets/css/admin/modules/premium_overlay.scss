@@ -1,0 +1,71 @@
+.rsssl {
+  .rsssl-locked {
+    &.rsssl-locked-premium {
+      .rsssl-locked-overlay {
+        bottom: var(--rsp-spacing-s);
+        flex-direction: column;
+      }
+    }
+    .rsssl-locked-overlay {
+      display: flex;
+      bottom: 0;
+      text-align: left;
+      margin-bottom: 20px;
+      padding: 0;
+
+      &.rsssl-premium {
+        bottom: 0;
+        flex-direction: column;
+      }
+
+      .rsssl-locked-header {
+        width: 100%;
+        flex-direction: row;
+
+        .rsssl-locked-header-title {
+          font-weight: 600;
+          color: var(--rsp-blue)
+        }
+
+        .rsssl-locked-header-subtitle {
+
+        }
+      }
+
+      .rsssl-locked-content {
+        flex-direction: row;
+        width: 100%;
+
+        .rsssl-locked-content-text {
+
+        }
+      }
+
+      .rsssl-locked-footer {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        width: 100%;
+        // we want the a to be displayed on the left side
+        a {
+          position: relative;
+          float: left !important;
+        }
+      }
+
+      .rsssl-locked-footer::after {
+        content: "";
+        display: table;
+        clear: both;
+      }
+
+    }
+  }
+
+  //if a field is both disabled, and the group is premium, we don't want a duplicate opacity on the overlay.
+  .rsssl-disabled .rsssl-field-wrap {
+    .rsssl-locked {
+      background:transparent;
+    }
+  }
+}

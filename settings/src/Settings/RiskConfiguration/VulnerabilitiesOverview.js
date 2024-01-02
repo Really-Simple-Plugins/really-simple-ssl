@@ -51,7 +51,8 @@ const VulnerabilitiesOverview = (props) => {
             visible: column.visible,
             selector: row => row[column.column],
             searchable: column.searchable,
-            grow:column.grow
+            grow:column.grow,
+            width: column.width,
         };
     }
 

@@ -10,13 +10,15 @@
     transition: all 0.3s ease;
     min-height: 10px;
 
-    &.button-secondary, &.button-default{
+    &.button-secondary, &.button-default {
       background: transparent;
     }
+
     .rsssl-icon {
       padding-top: 7px;
       padding-left: 7px;
     }
+
     &.button-black {
       border: 1px solid var(--rsp-black);
       background: var(--rsp-black);
@@ -47,34 +49,77 @@
     font-weight: 300;
     min-height: auto;
   }
+
   //on the dashboard, keep a minimum distance between two buttons
-  .rsssl-button-small + .rsssl-button-small{
-    margin-left:10px;
+  .rsssl-button-small + .rsssl-button-small {
+    margin-left: 10px;
   }
-}
-/* Documents overview */
-.rsssl-shortcode {
-  right: 10000px;
-  position: absolute;
-  background-color: #fff;
-  padding: 0;
-  white-space: nowrap;
-}
 
-.shortcode {
-  cursor: pointer;
-}
 
-.rsssl-action-buttons {
-  display: flex;
-  justify-content: space-between; /* or 'flex-start' if you don't want space between them */
-}
+  /* Documents overview */
+  .rsssl-shortcode {
+    right: 10000px;
+    position: absolute;
+    background-color: #fff;
+    padding: 0;
+    white-space: nowrap;
+  }
 
-.rsssl-action-buttons__inner {
-  margin-right: 10px; /* adjust as needed */
-}
+  .shortcode {
+    cursor: pointer;
+  }
 
-/* Remove margin for the last button to ensure clean alignment */
-.rsssl-action-buttons__inner:last-child {
-  margin-right: 0;
+
+  .rsssl-action-buttons {
+    /* Making sure we use the full width of the container */
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .rsssl-action-buttons__inner {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .rsssl-action-buttons__inner {
+    //all buttons are floating right
+    float: right;
+  }
+
+  .rsssl-action-buttons__button {
+    //add some spacing between the buttons
+    margin-right: 10px;
+  }
+
+  /* Remove margin for the last button to ensure clean alignment */
+  .rsssl-action-buttons__inner:last-child {
+    margin-right: 0;
+  }
+
+  /**
+    For the mixed content scan we need to do some extra tweaking
+   */
+  .rsssl-mixed-content-scan {
+    .rsssl-grid-item-content-footer {
+      margin-left: 0;
+      margin-right: 0;
+      padding-left: 25px;
+
+      .button {
+        display: block;
+        margin-right: 0;
+        margin-left: 0;
+      }
+
+      .components-toggle-control {
+        margin-top: calc(12px);
+      }
+
+      label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+  }
 }

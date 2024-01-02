@@ -17,7 +17,7 @@
   }
   &-theme--colored#{&}--success {
     color: var(--toastify-text-color-success);
-    background: var(--toastify-color-success);
+    background: var(--rsp-green);
   }
   &-theme--colored#{&}--warning {
     color: var(--toastify-text-color-warning);

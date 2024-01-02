@@ -8,6 +8,8 @@ const useMenu = create(( set, get ) => ({
     nextMenuItem:false,
     selectedMainMenuItem:false,
     selectedSubMenuItem:false,
+    selectedFilter: false,
+    activeGroupId: false,
     hasPremiumItems:false,
     subMenu:{title:' ',menu_items:[]},
     setSelectedSubMenuItem: async (selectedSubMenuItem) => {
@@ -32,7 +34,6 @@ const useMenu = create(( set, get ) => ({
     },
     fetchMenuData: (fields) => {
         let menu = rsssl_settings.menu;
-
         menu = Object.values(menu);
         const selectedMainMenuItem = getAnchor('main') || 'dashboard';
         menu = menu.filter( item => !item.default_hidden || selectedMainMenuItem===item.id);
