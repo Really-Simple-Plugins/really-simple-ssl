@@ -152,30 +152,7 @@ function rsssl_plugin_admin_scripts()
  * @return bool
  */
 function rsssl_uses_cloudflare(): bool {
-    if ( isset($_SERVER['HTTP_CDN_LOOP']) && 'cloudflare' === $_SERVER['HTTP_CDN_LOOP'] ) {
-        return true;
-    }
-
-    if (
-        isset( $_SERVER['HTTP_CF_CONNECTING_IP'] ) ||
-        isset( $_SERVER['HTTP_CF_VISITOR'] ) ||
-        isset( $_SERVER['HTTP_CF_RAY'] ) ||
-        isset( $_SERVER['HTTP_CF_IPCOUNTRY'] )
-    ) {
-        return true;
-    }
-
-    $cloudflare = get_transient( 'rsssl_uses_cloudflare' );
-    if ( !$cloudflare ) {
-	    $headers = wp_get_http_headers( get_site_url() );
-	    if ( ! is_wp_error( $headers ) ) {
-            //save as boolean string, to differ between empty transient and false.
-		    $cloudflare = isset( $headers['server'] ) && false !== strpos( $headers['server'], 'cloudflare' ) ? 'true' : 'false';
-	    }
-
-        set_transient('rsssl_uses_cloudflare', $cloudflare, DAY_IN_SECONDS);
-    }
-    return 'true' === $cloudflare;
+    return isset( $_SERVER['HTTP_CF_CONNECTING_IP'] );
 }
 
 /**
