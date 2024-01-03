@@ -1,18 +1,18 @@
 <?php
-defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
+defined( 'ABSPATH' ) or die( 'you do not have access to this page!' );
 
 if ( ! class_exists( 'rsssl_server' ) ) {
 	class rsssl_server {
 		private static $_this;
 
-		function __construct() {
+		public function __construct() {
 			if ( isset( self::$_this ) ) {
-				wp_die( sprintf( '%s is a singleton class and you cannot create a second instance.', get_class( $this ) ) );
+				wp_die( 'you cannot create a second instance.' );
 			}
 			self::$_this = $this;
 		}
 
-		static function this() {
+		public static function this() {
 			return self::$_this;
 		}
 
@@ -28,7 +28,7 @@ if ( ! class_exists( 'rsssl_server' ) ) {
 				return false;
 			}
 
-			if ( $this->get_server() === "apache" || $this->get_server() === "litespeed" ) {
+			if ( $this->get_server() === 'apache' || $this->get_server() === 'litespeed' ) {
 				return true;
 			}
 
@@ -65,10 +65,10 @@ if ( ! class_exists( 'rsssl_server' ) ) {
 		 * Check if the apache version is at least 2.4
 		 * @return bool
 		 */
-		public function apache_version_min_24(){
+		public function apache_version_min_24() {
 			$version = $_SERVER['SERVER_SOFTWARE'] ?? false;
 			//check if version is higher then 2.4.
-			if ( preg_match('/Apache\/(2\.[4-9])/', $version, $matches) ){
+			if ( preg_match( '/Apache\/(2\.[4-9])/', $version, $matches ) ) {
 				return true;
 			}
 			return false;
