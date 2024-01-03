@@ -1,5 +1,5 @@
 import {__} from '@wordpress/i18n';
-import React, {useRef, useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import DataTable, {createTheme} from "react-data-table-component";
 import useFields from "../FieldsData";
 import TwoFaDataTableStore from "./TwoFaDataTableStore";
@@ -56,27 +56,24 @@ const DynamicDataTable = (props) => {
 
     //when the data is saved, changefields=0 again,
     useEffect(() => {
-        if (!reloadWhenSaved) {
-            return;
-        }
-        if (changedFields.length===0) {
-            setDataLoaded(false);
-            setReloadWhenSaved(false);
-            fetchDynamicData();
+        if (reloadWhenSaved) {
+            if (changedFields.length === 0) {
+                setDataLoaded(false);
+                setReloadWhenSaved(false);
+                fetchDynamicData();
+            }
         }
     }, [changedFields]);
 
     useEffect(() => {
-        if (!dataLoaded) {
-            return;
+        if (dataLoaded) {
+            const currentFilter = getCurrentFilter(moduleName);
+            if (!currentFilter) {
+                setSelectedFilter('active', moduleName);
+            }
+            setRowCleared(true);
+            handleUsersTableFilter('rsssl_two_fa_status', currentFilter);
         }
-
-        const currentFilter = getCurrentFilter(moduleName);
-        if ( !currentFilter ) {
-            setSelectedFilter('active', moduleName);
-        }
-        setRowCleared(true);
-        handleUsersTableFilter('rsssl_two_fa_status', currentFilter);
     }, [getCurrentFilter(moduleName)]);
 
     useEffect(() => {
@@ -133,8 +130,8 @@ const DynamicDataTable = (props) => {
         }
     }
 
-    function buildColumn(column) {
-        let newColumn = {
+    const buildColumn = (column) => {
+        return {
             name: column.name,
             column: column.column,
             sortable: column.sortable,
@@ -143,8 +140,6 @@ const DynamicDataTable = (props) => {
             visible: column.visible,
             selector: row => row[column.column],
         };
-
-        return newColumn;
     }
 
     let columns = [];
@@ -180,12 +175,12 @@ const DynamicDataTable = (props) => {
         },
     }, 'light');
 
-    async function handleReset(users) {
+    const handleReset = async (users) => {
         // Function to handle reset logic
         const resetRolesEmail = getFieldValue('two_fa_optional_roles');
         const resetRolesTotp = getFieldValue('two_fa_optional_roles_totp');
         const resetRoles = resetRolesEmail.concat(resetRolesTotp);
-        console.log (resetRoles);
+
         if (Array.isArray(users)) {
             //loop through all users one by one, and reset the user
             for (const user of users) {
@@ -200,7 +195,7 @@ const DynamicDataTable = (props) => {
         setRowCleared(true);
     }
 
-    function handleSelection(state) {
+    const handleSelection = (state) => {
         setRowsSelected(state.selectedRows);
     }
 
