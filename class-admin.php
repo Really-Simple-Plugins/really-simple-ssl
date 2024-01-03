@@ -2270,23 +2270,6 @@ class rsssl_admin
 	            ),
             ),
 
-            'upgraded_to_6' => array(
-	            'condition'  => array(
-                        'RSSSL()->admin->is_upgraded_to_6',
-                ),
-	            'callback' => '_true_',
-	            'output' => array(
-		            'true' => array(
-			            'msg' => __( "Thanks for updating to Really Simple SSL 6.0! Check out our new features on the settings page.", 'really-simple-ssl' ),
-			            'icon' => 'open',
-			            'admin_notice' => true,
-			            'url' => add_query_arg(['page'=>'really-simple-security'], rsssl_admin_url() ),
-			            'dismissible' => true,
-			            'plusone' => true,
-		            ),
-	            ),
-            ),
-
             'ajax_fallback' => array(
 	            'condition'  => array(
                         'wp_option_rsssl_ajax_fallback_active',
