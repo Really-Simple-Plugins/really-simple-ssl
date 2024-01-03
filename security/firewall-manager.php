@@ -244,4 +244,151 @@ class rsssl_firewall_manager {
 			unlink( $file );
 		}
 	}
+
+
+	/**
+	 * @param WP_Filesystem_Base $wp_filesystem
+	 * @throws wfWAFAutoPrependHelperException
+	 */
+	public function performInstallation($wp_filesystem) {
+		$bootstrapPath = wordfence::getWAFBootstrapPath();
+		if (!$wp_filesystem->put_contents($bootstrapPath, wordfence::getWAFBootstrapContent($this->currentAutoPrependedFile))) {
+			throw new wfWAFAutoPrependHelperException(__('We were unable to create the <code>wordfence-waf.php</code> file in the root of the WordPress installation. It\'s possible WordPress cannot write to the <code>wordfence-waf.php</code> file because of file permissions. Please verify the permissions are correct and retry the installation.', 'wordfence'));
+		}
+
+		$serverConfig = $this->getServerConfig();
+
+		$htaccessPath = $this->getHtaccessPath();
+		$homePath = dirname($htaccessPath);
+
+		$userIniPath = $this->getUserIniPath();
+		$userIni = ini_get('user_ini.filename');
+
+		$userIniHtaccessDirectives = '';
+		if ($userIni) {
+			$userIniHtaccessDirectives = sprintf('<Files "%s">
+<IfModule mod_authz_core.c>
+	Require all denied
+</IfModule>
+<IfModule !mod_authz_core.c>
+	Order deny,allow
+	Deny from all
+</IfModule>
+</Files>
+', addcslashes($userIni, '"'));
+		}
+
+
+		// .htaccess configuration
+		switch ($serverConfig) {
+			case 'apache-mod_php':
+				$autoPrependDirective = sprintf("# Wordfence WAF
+<IfModule mod_php5.c>
+	php_value auto_prepend_file '%1\$s'
+</IfModule>
+<IfModule mod_php7.c>
+	php_value auto_prepend_file '%1\$s'
+</IfModule>
+<IfModule mod_php.c>
+	php_value auto_prepend_file '%1\$s'
+</IfModule>
+$userIniHtaccessDirectives
+# END Wordfence WAF
+", addcslashes($bootstrapPath, "'"));
+				break;
+
+			case 'litespeed':
+				$escapedBootstrapPath = addcslashes($bootstrapPath, "'");
+				$autoPrependDirective = sprintf("# Wordfence WAF
+<IfModule LiteSpeed>
+php_value auto_prepend_file '%s'
+</IfModule>
+<IfModule lsapi_module>
+php_value auto_prepend_file '%s'
+</IfModule>
+$userIniHtaccessDirectives
+# END Wordfence WAF
+", $escapedBootstrapPath, $escapedBootstrapPath);
+				break;
+
+			case 'apache-suphp':
+				$autoPrependDirective = sprintf("# Wordfence WAF
+$userIniHtaccessDirectives
+# END Wordfence WAF
+", addcslashes($homePath, "'"));
+				break;
+
+			case 'cgi':
+				if ($userIniHtaccessDirectives) {
+					$autoPrependDirective = sprintf("# Wordfence WAF
+$userIniHtaccessDirectives
+# END Wordfence WAF
+", addcslashes($homePath, "'"));
+				}
+				break;
+
+		}
+
+		if (!empty($autoPrependDirective)) {
+			// Modify .htaccess
+			$htaccessContent = $wp_filesystem->get_contents($htaccessPath);
+
+			if ($htaccessContent) {
+				$regex = '/# Wordfence WAF.*?# END Wordfence WAF/is';
+				if (preg_match($regex, $htaccessContent, $matches)) {
+					$htaccessContent = preg_replace($regex, $autoPrependDirective, $htaccessContent);
+				} else {
+					$htaccessContent .= "\n\n" . $autoPrependDirective;
+				}
+			} else {
+				$htaccessContent = $autoPrependDirective;
+			}
+
+			if (!$wp_filesystem->put_contents($htaccessPath, $htaccessContent)) {
+				throw new wfWAFAutoPrependHelperException(__('We were unable to make changes to the .htaccess file. It\'s possible WordPress cannot write to the .htaccess file because of file permissions, which may have been set by another security plugin, or you may have set them manually. Please verify the permissions allow the web server to write to the file, and retry the installation.', 'wordfence'));
+			}
+			if ($serverConfig == 'litespeed') {
+				// sleep(2);
+				$wp_filesystem->touch($htaccessPath);
+			}
+
+		}
+		if ($userIni) {
+			// .user.ini configuration
+			switch ($serverConfig) {
+				case 'cgi':
+				case 'nginx':
+				case 'apache-suphp':
+				case 'litespeed':
+				case 'iis':
+					$autoPrependIni = sprintf("; Wordfence WAF
+auto_prepend_file = '%s'
+; END Wordfence WAF
+", addcslashes($bootstrapPath, "'"));
+
+					break;
+			}
+
+			if (!empty($autoPrependIni)) {
+
+				// Modify .user.ini
+				$userIniContent = $wp_filesystem->get_contents($userIniPath);
+				if (is_string($userIniContent)) {
+					$userIniContent = str_replace('auto_prepend_file', ';auto_prepend_file', $userIniContent);
+					$regex = '/; Wordfence WAF.*?; END Wordfence WAF/is';
+					if (preg_match($regex, $userIniContent, $matches)) {
+						$userIniContent = preg_replace($regex, $autoPrependIni, $userIniContent);
+					} else {
+						$userIniContent .= "\n\n" . $autoPrependIni;
+					}
+				} else {
+					$userIniContent = $autoPrependIni;
+				}
+
+				if (!$wp_filesystem->put_contents($userIniPath, $userIniContent)) {
+					throw new wfWAFAutoPrependHelperException(sprintf(/* translators: File path. */ __('We were unable to make changes to the %1$s file. It\'s possible WordPress cannot write to the %1$s file because of file permissions. Please verify the permissions are correct and retry the installation.', 'wordfence'), basename($userIniPath)));
+				}
+			}
+		}
+	}
 }
