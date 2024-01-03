@@ -16,22 +16,22 @@ const StepConfig = () => {
         }
     }, []);
 
-    const onChangeCloudFlareHandler = async (fieldValue) => {
-        updateField('cloudflare_enabled', fieldValue);
-        setChangedField('cloudflare_enabled', fieldValue);
-        await saveFields(true, false);
-    }
-
     let otherHostsField = fieldsLoaded && getField('other_host_type');
     let CloudFlareEnabled = fieldsLoaded && getField('cloudflare_enabled');
     let items = currentStep.items ? currentStep.items : [];
 
+    if (rsssl_settings.cloudflare) {
+        let cfItem = {
+            status: 'success',
+            title: "CloudFlare",
+            id: 'cf'
+        }
+        items.unshift(cfItem);
+    }
+
     return (
         <>
             <Host field={otherHostsField} showDisabledWhenSaving={false}/>
-            <label>
-                <input onChange={ (e) => onChangeCloudFlareHandler(e.target.checked)} type="checkbox" checked={CloudFlareEnabled.value} />{__("I use Cloudflare.","really-simple-ssl")}
-            </label>
             <ul>
                 {
                     <ul>

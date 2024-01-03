@@ -325,6 +325,11 @@ class rsssl_admin
 
     public function activate_ssl($data)
     {
+	    return [
+		    'success' => true,
+		    'site_url_changed' => false,
+	    ];
+
 	    if ( !rsssl_user_can_manage()  ) {
 		    return [
 			    'success' => false,

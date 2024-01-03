@@ -35,17 +35,6 @@ function rsssl_fields( $load_values = true ) {
 			'disabled' => false,
 		],
 		[
-			'id'       => 'cloudflare_enabled',
-			'menu_id'  => 'general',
-			'group_id' => 'general',
-			'type'     => 'checkbox',
-			//options loaded in data store
-			'default'  => false,
-			'label'    => __( "Hosting provider", 'really-simple-ssl' ),
-			'required' => false,
-			'disabled' => false,
-		],
-		[
 			'id'       => 'review_notice_shown',
 			'menu_id'  => 'general',
 			'group_id' => 'general',
