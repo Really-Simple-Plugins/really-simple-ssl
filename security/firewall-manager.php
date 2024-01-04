@@ -13,6 +13,16 @@ class rsssl_firewall_manager {
 		add_action( 'rsssl_after_saved_fields', array($this, 'insert_advanced_header_file'), 100 );
 		add_action( 'rsssl_deactivate', array($this, 'remove_advanced_headers'), 20 );
 		add_filter( 'rsssl_notices', array($this, 'notices') );
+
+		if (!defined('WF_IS_WP_ENGINE')) {
+			define('WF_IS_WP_ENGINE', isset($_SERVER['IS_WPE']));
+		}
+		if (!defined('WF_IS_FLYWHEEL')) {
+			define('WF_IS_FLYWHEEL', isset($_SERVER['SERVER_SOFTWARE']) && strpos($_SERVER['SERVER_SOFTWARE'], 'Flywheel/') === 0);
+		}
+		if (!defined('WF_IS_PRESSABLE')) {
+			define('WF_IS_PRESSABLE', (defined('IS_ATOMIC') && IS_ATOMIC) || (defined('IS_PRESSABLE') && IS_PRESSABLE));
+		}
 	}
 
 	static function this() {
