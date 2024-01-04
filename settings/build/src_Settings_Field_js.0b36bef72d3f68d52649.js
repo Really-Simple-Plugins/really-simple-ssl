@@ -7511,6 +7511,7 @@ __webpack_require__.r(__webpack_exports__);
 const DynamicDataTable = props => {
   const {
     resetUserMethod,
+    hardResetUser,
     handleUsersTableFilter,
     handleRowsPerPageChange,
     totalRecords,
@@ -7599,12 +7600,32 @@ const DynamicDataTable = props => {
     if (Array.isArray(users)) {
       //for each users, check if the user has a forced role
       for (const user of users) {
+        if (user.user_role === undefined) {
+          return true;
+        }
+        if (user.rsssl_two_fa_providers.toLowerCase() === 'none') {
+          return true;
+        }
+        //if the user has an active or disabled status, it can be reset
+        if (user.status_for_user.toLowerCase() === 'active' || user.status_for_user.toLowerCase() === 'disabled') {
+          return false;
+        }
         if (!forcedRoles.includes(user.user_role.toLowerCase() || !forcedRolesTotp.includes(user.user_role.toLowerCase()))) {
           return false;
         }
       }
       return true;
     } else {
+      if (users.user_role === undefined) {
+        return true;
+      }
+      if (users.rsssl_two_fa_providers.toLowerCase() === 'none') {
+        return true;
+      }
+      //if the user has an active or disabled status, it can be reset
+      if (users.status_for_user.toLowerCase() === 'active' || users.status_for_user.toLowerCase() === 'disabled') {
+        return false;
+      }
       return forcedRoles.includes(users.user_role.toLowerCase()) || forcedRolesTotp.includes(users.user_role.toLowerCase());
     }
   };
@@ -7618,13 +7639,13 @@ const DynamicDataTable = props => {
     if (Array.isArray(users)) {
       //for each users, check if the user has a forced role
       for (const user of users) {
-        if (user.rsssl_two_fa_status !== 'open' || user.rsssl_two_fa_status_totp !== 'open') {
+        if (user.status_for_user !== 'open') {
           return false;
         }
       }
       return true;
     } else {
-      return users.rsssl_two_fa_status === 'open';
+      return users.status_for_user === 'open';
     }
   };
   const buildColumn = column => {
@@ -7677,10 +7698,10 @@ const DynamicDataTable = props => {
     if (Array.isArray(users)) {
       //loop through all users one by one, and reset the user
       for (const user of users) {
-        await resetUserMethod(user.id, resetRoles, user.user_role.toLowerCase());
+        await hardResetUser(user.id, resetRoles, user.user_role.toLowerCase());
       }
     } else {
-      await resetUserMethod(users.id, resetRoles, users.user_role.toLowerCase());
+      await hardResetUser(users.id, resetRoles, users.user_role.toLowerCase());
     }
     await fetchDynamicData();
     setRowsSelected([]);
@@ -7690,6 +7711,8 @@ const DynamicDataTable = props => {
     setRowsSelected(state.selectedRows);
   };
   let resetDisabled = allAreForced(rowsSelected) || allAreOpen(rowsSelected);
+  console.log('forced', allAreForced(rowsSelected));
+  console.log('open', allAreOpen(rowsSelected));
   let displayData = [];
   let inputData = DynamicDataTable ? DynamicDataTable : [];
   inputData.forEach(user => {
@@ -7698,6 +7721,7 @@ const DynamicDataTable = props => {
     };
     //forced roles can't be reset if it's just the email method. An open status also can't be reset.
     let btnDisabled = allAreForced(user) || allAreOpen(user);
+    console.log(btnDisabled);
     recordCopy.resetControl = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
       disabled: processing || btnDisabled,
       className: "button button-red rsssl-action-buttons__button",
@@ -7816,7 +7840,8 @@ const DynamicDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_2__.create)((s
         method: 'POST',
         data: {
           meta: {
-            rsssl_two_fa_status: 'open'
+            rsssl_two_fa_status: 'open',
+            rsssl_two_fa_status_totp: 'open'
           }
         }
       }).catch(error => {
@@ -7825,6 +7850,27 @@ const DynamicDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_2__.create)((s
       set({
         processing: false
       });
+    }
+  },
+  hardResetUser: async id => {
+    if (get().processing) return;
+    set({
+      processing: true
+    });
+    try {
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('two_fa_reset_user', {
+        id
+      });
+      if (response) {
+        set(state => ({
+          ...state,
+          processing: false
+        }));
+        // Return the response for the calling function to use
+        return response;
+      }
+    } catch (e) {
+      console.log(e);
     }
   },
   fetchDynamicData: async () => {
@@ -24086,4 +24132,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.50010d63b6446c54d480.js.map
+//# sourceMappingURL=src_Settings_Field_js.0b36bef72d3f68d52649.js.map

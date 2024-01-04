@@ -8,6 +8,7 @@ import FilterData from "../FilterData";
 const DynamicDataTable = (props) => {
     const {
         resetUserMethod,
+        hardResetUser,
         handleUsersTableFilter,
         handleRowsPerPageChange,
         totalRecords,
@@ -101,12 +102,32 @@ const DynamicDataTable = (props) => {
         if (Array.isArray(users)) {
             //for each users, check if the user has a forced role
             for (const user of users) {
+                if ( user.user_role === undefined ) {
+                    return true;
+                }
+                if (user.rsssl_two_fa_providers.toLowerCase() === 'none') {
+                    return true;
+                }
+                //if the user has an active or disabled status, it can be reset
+                if (user.status_for_user.toLowerCase() === 'active' || user.status_for_user.toLowerCase() === 'disabled' ) {
+                    return false;
+                }
                 if ( !forcedRoles.includes(user.user_role.toLowerCase() || !forcedRolesTotp.includes(user.user_role.toLowerCase())) ) {
                     return false;
                 }
             }
             return true;
         } else {
+            if (users.user_role === undefined) {
+                return true;
+            }
+            if (users.rsssl_two_fa_providers.toLowerCase() === 'none') {
+                return true;
+            }
+            //if the user has an active or disabled status, it can be reset
+            if ( users.status_for_user.toLowerCase() === 'active' || users.status_for_user.toLowerCase() === 'disabled' ) {
+                return false;
+            }
             return (forcedRoles.includes(users.user_role.toLowerCase()) || forcedRolesTotp.includes(users.user_role.toLowerCase()));
         }
     }
@@ -120,13 +141,13 @@ const DynamicDataTable = (props) => {
         if (Array.isArray(users)) {
             //for each users, check if the user has a forced role
             for (const user of users) {
-                if ( user.rsssl_two_fa_status !== 'open' || user.rsssl_two_fa_status_totp !== 'open' ) {
+                if ( user.status_for_user !== 'open' ) {
                     return false;
                 }
             }
             return true;
         } else {
-            return users.rsssl_two_fa_status === 'open';
+            return users.status_for_user === 'open';
         }
     }
 
@@ -184,10 +205,10 @@ const DynamicDataTable = (props) => {
         if (Array.isArray(users)) {
             //loop through all users one by one, and reset the user
             for (const user of users) {
-                await resetUserMethod(user.id, resetRoles, user.user_role.toLowerCase());
+                await hardResetUser(user.id, resetRoles, user.user_role.toLowerCase());
             }
         } else {
-            await resetUserMethod(users.id, resetRoles, users.user_role.toLowerCase());
+            await hardResetUser(users.id, resetRoles, users.user_role.toLowerCase());
         }
 
         await fetchDynamicData();
@@ -200,12 +221,15 @@ const DynamicDataTable = (props) => {
     }
 
     let resetDisabled = allAreForced(rowsSelected) || allAreOpen(rowsSelected);
+    console.log('forced',allAreForced(rowsSelected));
+    console.log('open',allAreOpen( rowsSelected));
     let displayData = [];
     let inputData= DynamicDataTable ? DynamicDataTable : [];
     inputData.forEach(user => {
         let recordCopy = {...user}
         //forced roles can't be reset if it's just the email method. An open status also can't be reset.
         let btnDisabled =  allAreForced(user) || allAreOpen(user);
+        console.log(btnDisabled);
         recordCopy.resetControl = <button disabled={processing || btnDisabled}
                                       className="button button-red rsssl-action-buttons__button"
                                       onClick={() => handleReset(user)}

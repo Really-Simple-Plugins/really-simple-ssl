@@ -25,12 +25,33 @@ const DynamicDataTableStore = create((set, get) => ({
                 data: {
                     meta: {
                         rsssl_two_fa_status: 'open',
+                        rsssl_two_fa_status_totp: 'open',
                     },
                 },
             }).catch((error) => {
                 console.error(error);
             });
             set({processing: false});
+        }
+    },
+    hardResetUser: async (id) => {
+        if (get().processing) return;
+        set({processing: true});
+        try {
+            const response = await rsssl_api.doAction(
+                'two_fa_reset_user',
+                {id}
+            );
+            if (response) {
+                set(state => ({
+                    ...state,
+                    processing: false,
+                }));
+                // Return the response for the calling function to use
+                return response;
+            }
+        } catch (e) {
+            console.log(e);
         }
     },
     fetchDynamicData: async () => {
