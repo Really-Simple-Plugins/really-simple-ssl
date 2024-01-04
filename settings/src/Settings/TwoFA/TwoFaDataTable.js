@@ -221,15 +221,12 @@ const DynamicDataTable = (props) => {
     }
 
     let resetDisabled = allAreForced(rowsSelected) || allAreOpen(rowsSelected);
-    console.log('forced',allAreForced(rowsSelected));
-    console.log('open',allAreOpen( rowsSelected));
     let displayData = [];
     let inputData= DynamicDataTable ? DynamicDataTable : [];
     inputData.forEach(user => {
         let recordCopy = {...user}
         //forced roles can't be reset if it's just the email method. An open status also can't be reset.
         let btnDisabled =  allAreForced(user) || allAreOpen(user);
-        console.log(btnDisabled);
         recordCopy.resetControl = <button disabled={processing || btnDisabled}
                                       className="button button-red rsssl-action-buttons__button"
                                       onClick={() => handleReset(user)}

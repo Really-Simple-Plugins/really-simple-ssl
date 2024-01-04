@@ -7711,8 +7711,6 @@ const DynamicDataTable = props => {
     setRowsSelected(state.selectedRows);
   };
   let resetDisabled = allAreForced(rowsSelected) || allAreOpen(rowsSelected);
-  console.log('forced', allAreForced(rowsSelected));
-  console.log('open', allAreOpen(rowsSelected));
   let displayData = [];
   let inputData = DynamicDataTable ? DynamicDataTable : [];
   inputData.forEach(user => {
@@ -7721,7 +7719,6 @@ const DynamicDataTable = props => {
     };
     //forced roles can't be reset if it's just the email method. An open status also can't be reset.
     let btnDisabled = allAreForced(user) || allAreOpen(user);
-    console.log(btnDisabled);
     recordCopy.resetControl = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
       disabled: processing || btnDisabled,
       className: "button button-red rsssl-action-buttons__button",
@@ -24132,4 +24129,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.0b36bef72d3f68d52649.js.map
+//# sourceMappingURL=src_Settings_Field_js.f7989cdcdd595ad5fe18.js.map
