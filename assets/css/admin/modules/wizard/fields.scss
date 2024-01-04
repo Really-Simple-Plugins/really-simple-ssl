@@ -94,6 +94,37 @@ html {
     scroll-padding-top:100px;
   }
 
+  .rsssl-block-highlight {
+    border: 0;
+    -o-animation: pulse 2s infinite;
+    animation: pulse 2s infinite;}
+
+  @-webkit-keyframes pulse {
+    0% {
+      -webkit-box-shadow: 0 0 0 0 var(--rsp-green);
+    }
+    70% {
+      -webkit-box-shadow: 0 0 0 10px var(--rsp-green-faded);
+    }
+    100% {
+      -webkit-box-shadow: 0 0 0 0 var(--rsp-green-faded);;
+    }
+  }
+  @keyframes pulse {
+    0% {
+      -moz-box-shadow: 0 0 0 0 var(--rsp-green);
+      box-shadow: 0 0 0 0 var(--rsp-green);
+    }
+    70% {
+      -moz-box-shadow: 0 0 0 10px var(--rsp-green-faded);
+      box-shadow: 0 0 0 10px var(--rsp-green-faded);
+    }
+    100% {
+      -moz-box-shadow: 0 0 0 0 var(--rsp-green-faded);
+      box-shadow: 0 0 0 0 var(--rsp-green-faded);
+    }
+  }
+
   @-o-keyframes fadeIt {
     0%   { background-color: transparent; }
     30%  { background-color: var(--rsp-green-faded); }

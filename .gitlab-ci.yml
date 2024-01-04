@@ -117,6 +117,7 @@ test:php8.2:wordpress5.9:multisite:
 
 sast:
   stage: sast
+  before_script: []
   script:
     - phpcs --ignore=vendor/* --standard=phpcs.xml .
     - echo "Running SAST..."

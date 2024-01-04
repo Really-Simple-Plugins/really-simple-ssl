@@ -60,8 +60,8 @@ const Modal = (props) => {
                     { Array.isArray(description) && description.map((s, i) => <div key={"modalDescription-"+i} className="rsssl-modal-description">{s}</div>) }
                 </div>
                 <div className="rsssl-modal-footer">
-                    { modalData.edit && <a href={modalData.edit} target="_blank" className="button button-secondary">{__("Edit", "really-simple-ssl")}</a>}
-                    { modalData.help && <a href={modalData.help} target="_blank"  className="button rsssl-button-help">{__("Help", "really-simple-ssl")}</a>}
+                    { modalData.edit && <a href={modalData.edit} target="_blank" rel="noopener noreferrer" className="button button-secondary">{__("Edit", "really-simple-ssl")}</a>}
+                    { modalData.help && <a href={modalData.help} target="_blank" rel="noopener noreferrer" className="button rsssl-button-help">{__("Help", "really-simple-ssl")}</a>}
                     { (!modalData.ignored && modalData.action==='ignore_url') && <button disabled={disabled} className="button button-primary" onClick={ (e) => handleFix(e, 'ignore') }>{ __("Ignore", "really-simple-ssl")}</button>}
                     { modalData.action!=='ignore_url' &&  <button disabled={disabled} className="button button-primary" onClick={ (e) => handleFix(e, 'fix') }>{__("Fix", "really-simple-ssl")}</button> }
                 </div>

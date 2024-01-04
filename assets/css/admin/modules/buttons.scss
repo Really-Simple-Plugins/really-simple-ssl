@@ -54,68 +54,72 @@
   .rsssl-button-small + .rsssl-button-small {
     margin-left: 10px;
   }
-}
-
-/* Documents overview */
-.rsssl-shortcode {
-  right: 10000px;
-  position: absolute;
-  background-color: #fff;
-  padding: 0;
-  white-space: nowrap;
-}
-
-.shortcode {
-  cursor: pointer;
-}
 
 
-.rsssl-action-buttons {
-  /* Making sure we use the full width of the container */
-  display: flex;
-  justify-content: flex-end;
-}
+  /* Documents overview */
+  .rsssl-shortcode {
+    right: 10000px;
+    position: absolute;
+    background-color: #fff;
+    padding: 0;
+    white-space: nowrap;
+  }
 
-.rsssl-action-buttons__inner {
-  display: flex;
-  justify-content: flex-end;
-}
+  .shortcode {
+    cursor: pointer;
+  }
 
-.rsssl-action-buttons__inner {
-  //all buttons are floating right
-  float: right;
-}
 
-.rsssl-action-buttons__button {
-  //add some spacing between the buttons
-  margin-right: 10px;
-}
+  .rsssl-action-buttons {
+    /* Making sure we use the full width of the container */
+    display: flex;
+    justify-content: flex-end;
+  }
 
-/* Remove margin for the last button to ensure clean alignment */
-.rsssl-action-buttons__inner:last-child {
-  margin-right: 0;
-}
+  .rsssl-action-buttons__inner {
+    display: flex;
+    justify-content: flex-end;
+  }
 
-/**
-  For the mixed content scan we need to do some extra tweaking
- */
-.rsssl-mixed-content-scan {
-  .rsssl-grid-item-content-footer {
-    margin-left: 0;
+  .rsssl-action-buttons__inner {
+    //all buttons are floating right
+    float: right;
+  }
+
+  .rsssl-action-buttons__button {
+    //add some spacing between the buttons
+    margin-right: 10px;
+  }
+
+  /* Remove margin for the last button to ensure clean alignment */
+  .rsssl-action-buttons__inner:last-child {
     margin-right: 0;
-    padding-left:25px;
-    .button {
-      display: block;
-      margin-right: 0;
+  }
+
+  /**
+    For the mixed content scan we need to do some extra tweaking
+   */
+  .rsssl-mixed-content-scan {
+    .rsssl-grid-item-content-footer {
       margin-left: 0;
-    }
-    .components-toggle-control {
-      margin-top: calc(12px);
-    }
-    label {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      margin-right: 0;
+      padding-left: 25px;
+
+      .button {
+        display: block;
+        margin-right: 0;
+        margin-left: 0;
+      }
+
+      .components-toggle-control {
+        margin-top: calc(12px);
+      }
+
+      label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
     }
   }
 }

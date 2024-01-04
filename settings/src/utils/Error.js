@@ -45,7 +45,7 @@ const Error = (props) => {
                         {message && <li>{__("Server response:", "really-simple-ssl")}&nbsp;{message}</li>}
                     </ul>
                 </div>
-                <Hyperlink className="button button-default" target="_blank" text={__("More information","really-simple-ssl")} url={url}/>
+                <Hyperlink className="button button-default" target="_blank" rel="noopener noreferrer" text={__("More information","really-simple-ssl")} url={url}/>
 
             </div>}
         </>

@@ -1,6 +1,5 @@
 <?php
 defined( 'ABSPATH' ) or die();
-
 if ( ! class_exists( 'rsssl_hide_wp_version' ) ) {
 	class rsssl_hide_wp_version {
 		private static $_this;
