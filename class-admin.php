@@ -323,12 +323,14 @@ class rsssl_admin
 	 *  Activate the SSL for this site
 	 */
 
-    public function activate_ssl($data)
-    {
-	    return [
-		    'success' => true,
-		    'site_url_changed' => false,
-	    ];
+    public function activate_ssl($data) {
+        //skip activation if safe mode
+	    if ( defined( 'RSSSL_SAFE_MODE' ) && RSSSL_SAFE_MODE ) {
+            return [
+                'success'          => true,
+                'site_url_changed' => false,
+            ];
+        }
 
 	    if ( !rsssl_user_can_manage()  ) {
 		    return [
