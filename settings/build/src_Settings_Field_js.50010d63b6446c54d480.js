@@ -7559,25 +7559,23 @@ const DynamicDataTable = props => {
 
   //when the data is saved, changefields=0 again,
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
-    if (!reloadWhenSaved) {
-      return;
-    }
-    if (changedFields.length === 0) {
-      setDataLoaded(false);
-      setReloadWhenSaved(false);
-      fetchDynamicData();
+    if (reloadWhenSaved) {
+      if (changedFields.length === 0) {
+        setDataLoaded(false);
+        setReloadWhenSaved(false);
+        fetchDynamicData();
+      }
     }
   }, [changedFields]);
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
-    if (!dataLoaded) {
-      return;
+    if (dataLoaded) {
+      const currentFilter = getCurrentFilter(moduleName);
+      if (!currentFilter) {
+        setSelectedFilter('active', moduleName);
+      }
+      setRowCleared(true);
+      handleUsersTableFilter('rsssl_two_fa_status', currentFilter);
     }
-    const currentFilter = getCurrentFilter(moduleName);
-    if (!currentFilter) {
-      setSelectedFilter('active', moduleName);
-    }
-    setRowCleared(true);
-    handleUsersTableFilter('rsssl_two_fa_status', currentFilter);
   }, [getCurrentFilter(moduleName)]);
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
     const value = getFieldValue('two_fa_enabled') || getFieldValue('two_fa_enabled_totp');
@@ -7629,8 +7627,8 @@ const DynamicDataTable = props => {
       return users.rsssl_two_fa_status === 'open';
     }
   };
-  function buildColumn(column) {
-    let newColumn = {
+  const buildColumn = column => {
+    return {
       name: column.name,
       column: column.column,
       sortable: column.sortable,
@@ -7639,8 +7637,7 @@ const DynamicDataTable = props => {
       visible: column.visible,
       selector: row => row[column.column]
     };
-    return newColumn;
-  }
+  };
   let columns = [];
   field.columns.forEach(function (item, i) {
     var _newItem$visible;
@@ -7672,12 +7669,11 @@ const DynamicDataTable = props => {
       default: 'transparent'
     }
   }, 'light');
-  async function handleReset(users) {
+  const handleReset = async users => {
     // Function to handle reset logic
     const resetRolesEmail = getFieldValue('two_fa_optional_roles');
     const resetRolesTotp = getFieldValue('two_fa_optional_roles_totp');
     const resetRoles = resetRolesEmail.concat(resetRolesTotp);
-    console.log(resetRoles);
     if (Array.isArray(users)) {
       //loop through all users one by one, and reset the user
       for (const user of users) {
@@ -7689,10 +7685,10 @@ const DynamicDataTable = props => {
     await fetchDynamicData();
     setRowsSelected([]);
     setRowCleared(true);
-  }
-  function handleSelection(state) {
+  };
+  const handleSelection = state => {
     setRowsSelected(state.selectedRows);
-  }
+  };
   let resetDisabled = allAreForced(rowsSelected) || allAreOpen(rowsSelected);
   let displayData = [];
   let inputData = DynamicDataTable ? DynamicDataTable : [];
@@ -24090,4 +24086,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.5e082d832c8c0a9cfafa.js.map
+//# sourceMappingURL=src_Settings_Field_js.50010d63b6446c54d480.js.map

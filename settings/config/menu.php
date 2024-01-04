@@ -301,7 +301,6 @@ function rsssl_menu() {
 									'group_id'      => 'two_fa_users',
 									'premium'       => true,
 									'premium_text'  => __( "Get Login Protection with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
-									'helpLink'      => 'https://really-simple-ssl.com/instructions/about-login-protection',
 									'title'         => __( 'Users', 'really-simple-ssl' ),
 									'intro'         => __( 'Here you can see which users have enabled two-step login, or change the status per user.', 'really-simple-ssl' ),
 									'groupFilter'  => [
