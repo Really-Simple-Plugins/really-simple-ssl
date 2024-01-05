@@ -537,3 +537,7 @@ function rsssl_is_email_verified() {
 
     return false;
 }
+
+function rsssl_remove_prefix_from_version($version) {
+	return preg_replace('/^[^\d]*(?=\d)/', '', $version);
+}
