@@ -538,6 +538,8 @@ function rsssl_is_email_verified() {
     return false;
 }
 
-function rsssl_remove_prefix_from_version($version) {
-	return preg_replace('/^[^\d]*(?=\d)/', '', $version);
+function rsssl_version_compare($version, $compare_to) {
+	$version = preg_replace('/^[^\d]*(?=\d)/', '', $version);
+	$compare_to = preg_replace('/^[^\d]*(?=\d)/', '', $compare_to);
+	return version_compare($version, $compare_to);
 }
