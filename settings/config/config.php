@@ -698,6 +698,55 @@ function rsssl_fields( $load_values = true ) {
 			'default'  => 'disabled',
 		],
 		[
+			'id'       => 'geo_blocklist_enabled',
+			'menu_id'  => 'geo_block_list',
+			'group_id' => 'geo_block_list_general',
+			'type'     => 'checkbox',
+			'label'    => __("Enable Geo Blocklist", "really-simple-ssl"),
+			'disabled' => false,
+			'default'  => false,
+		],
+		[
+			'id'               => 'geo_blocklist_listing_overview',
+			'menu_id'          => 'geo_block_list',
+			'group_id'         => 'geo_block_list_listing',
+			'type'             => 'geo-datatable',
+			'action'           => 'rsssl_geo_list',
+			'options'          => [
+				'blocked' => __('Blocked', 'really-simple-ssl'),
+				'locked'  => __('Locked-out', 'really-simple-ssl'),
+				'trusted' => __('Trusted', 'really-simple-ssl'),
+			],
+			'disabled'         => false,
+			'default'          => false,
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'geo_blocklist_enabled' => true,
+				]
+			],
+			'columns'          => [
+				[
+					'name'       => __('country', 'really-simple-ssl'),
+					'sortable'   => true,
+					'searchable' => true,
+					'column'     => 'country_name',
+					'width'      => '50%',
+				],
+				[
+					'name'     => __('Status', 'really-simple-ssl'),
+					'sortable' => false,
+					'column'   => 'status',
+					'width'    => '10%',
+				],
+//				[
+//					'name'     => '',
+//					'sortable' => false,
+//					'column'   => 'action',
+//				],
+			],
+		],
+		[
 			'id'                   => 'do_not_edit_htaccess', //field is removed if not enabled
 			'menu_id'              => 'general',
 			'group_id'             => 'general',
