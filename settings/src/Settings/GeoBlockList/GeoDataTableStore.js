@@ -86,13 +86,19 @@ const GeoDataTableStore = create((set, get) => ({
     /*
 * This function add a new row to the table
  */
-    addRow: async (country, status, dataActions) => {
+    addRow: async (country, name, dataActions) => {
         set({processing: true});
+        // we make an array of country and name
+        let data = {
+                country_code: country,
+                country_name: name
+            };
+        console.log(data);
         try {
-            const response = await rsssl_api.doAction('add_country_to_list', {country, status});
+            const response = await rsssl_api.doAction('geo_block_add_blocked_country', data);
             // Consider checking the response structure for any specific success or failure signals
             if (response && response.request_success) {
-                await get().fetchCountryData('country_list', dataActions);
+                await get().fetchCountryData('rsssl_geo_list', dataActions);
                 // Potentially notify the user of success, if needed.
             } else {
                 // Handle any unsuccessful response if needed.
@@ -108,10 +114,10 @@ const GeoDataTableStore = create((set, get) => ({
     addRowMultiple: async (countries, status, dataActions) => {
         set({processing: true});
         try {
-            const response = await rsssl_api.doAction('add_countries_to_list', {countries, status});
+            const response = await rsssl_api.doAction('geo_block_add_blocked_country', {countries, status});
             // Consider checking the response structure for any specific success or failure signals
             if (response && response.request_success) {
-                await get().fetchCountryData('country_list', dataActions);
+                await get().fetchCountryData('rsssl_geo_list', dataActions);
                 // Potentially notify the user of success, if needed.
             } else {
                 // Handle any unsuccessful response if needed.
@@ -127,10 +133,10 @@ const GeoDataTableStore = create((set, get) => ({
     removeRowMultiple: async (countries, status, dataActions) => {
         set({processing: true});
         try {
-            const response = await rsssl_api.doAction('remove_countries_from_list', {countries, status});
+            const response = await rsssl_api.doAction('geo_block_remove_blocked_country', {countries, status});
             // Consider checking the response structure for any specific success or failure signals
             if (response && response.request_success) {
-                await get().fetchCountryData('country_list', dataActions);
+                await get().fetchCountryData('rsssl_geo_list', dataActions);
                 // Potentially notify the user of success, if needed.
             } else {
                 // Handle any unsuccessful response if needed.
@@ -143,13 +149,13 @@ const GeoDataTableStore = create((set, get) => ({
         }
     },
 
-    removeRow: async (country, status, dataActions) => {
+    removeRow: async (country, name, dataActions) => {
         set({processing: true});
         try {
-            const response = await rsssl_api.doAction('remove_country_from_list', {country, status});
+            const response = await rsssl_api.doAction('geo_block_remove_blocked_country', {country, name});
             // Consider checking the response structure for any specific success or failure signals
             if (response && response.request_success) {
-                await get().fetchCountryData('country_list', dataActions);
+                await get().fetchCountryData('rsssl_geo_list', dataActions);
                 // Potentially notify the user of success, if needed.
             } else {
                 // Handle any unsuccessful response if needed.
@@ -168,7 +174,7 @@ const GeoDataTableStore = create((set, get) => ({
             const response = await rsssl_api.doAction('add_region_to_list', {region, status});
             if (response && response.request_success) {
                 // Do any immediate operations here if needed
-                await get().fetchCountryData('country_list', dataActions);
+                await get().fetchCountryData('rsssl_geo_list', dataActions);
             } else {
                 console.error("Failed to add region: ", response.message);
             }
@@ -183,7 +189,7 @@ const GeoDataTableStore = create((set, get) => ({
             const response = await rsssl_api.doAction('add_regions_to_list', {regions, status});
             if (response && response.request_success) {
                 // Do any immediate operations here if needed
-                await get().fetchCountryData('country_list', dataActions);
+                await get().fetchCountryData('rsssl_geo_list', dataActions);
             } else {
                 console.error("Failed to add regions: ", response.message);
             }
@@ -200,7 +206,7 @@ const GeoDataTableStore = create((set, get) => ({
             const response = await rsssl_api.doAction('remove_region_from_list', {region, status});
             // Consider checking the response structure for any specific success or failure signals
             if (response && response.request_success) {
-                await get().fetchCountryData('country_list', dataActions);
+                await get().fetchCountryData('rsssl_geo_list', dataActions);
                 // Potentially notify the user of success, if needed.
             } else {
                 // Handle any unsuccessful response if needed.
@@ -220,7 +226,7 @@ const GeoDataTableStore = create((set, get) => ({
             // Consider checking the response structure for any specific success or failure signals
             if (response && response.request_success) {
                 // Potentially notify the user of success, if needed.
-                await get().fetchCountryData('country_list', dataActions);
+                await get().fetchCountryData('rsssl_geo_list', dataActions);
             } else {
                 // Handle any unsuccessful response if needed.
                 console.error("Failed to remove regions: ", response.message);
@@ -241,7 +247,7 @@ const GeoDataTableStore = create((set, get) => ({
             );
             //now we set the EventLog
             if (response) {
-                await get().fetchCountryData('country_list', dataActions);
+                await get().fetchCountryData('rsssl_geo_list', dataActions);
             }
         } catch (e) {
             console.log(e);
@@ -259,7 +265,7 @@ const GeoDataTableStore = create((set, get) => ({
             );
             //now we set the EventLog
             if (response) {
-                await get().fetchCountryData('country_list', dataActions);
+                await get().fetchCountryData('rsssl_geo_list', dataActions);
             }
         } catch (e) {
             console.log(e);
@@ -277,7 +283,7 @@ const GeoDataTableStore = create((set, get) => ({
             );
             //now we set the EventLog
             if (response) {
-                await get().fetchCountryData('country_list', dataActions);
+                await get().fetchCountryData('rsssl_geo_list', dataActions);
             }
         } catch (e) {
             console.log(e);

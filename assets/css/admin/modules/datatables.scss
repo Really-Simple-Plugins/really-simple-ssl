@@ -209,6 +209,7 @@ nav.rdt_Pagination > div > svg {
 /* Section for EdgeCases and other specific styling */
 /* EdgeCase: EventLog */
 .rsssl-content_security_policy,
+.rsssl-geo_block_list_listing,
 .rsssl-hardening-xml,
 .rsssl-vulnerabilities_overview,
 .rsssl-limit_login_attempts_ip_address,
@@ -346,7 +347,7 @@ nav.rdt_Pagination > div > svg {
         display: flex;
         justify-content: flex-end;
         button {
-          margin-right: 0px !important;
+          margin-right: 0 !important;
         }
       }
     }
