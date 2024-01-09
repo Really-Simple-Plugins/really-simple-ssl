@@ -30,7 +30,7 @@ class RssslRemoveWPVersionTest extends WP_UnitTestCase {
      */
     public function test_rsssl_replace_wp_version_hooked() {
         $wp_version = get_bloginfo('version');
-        $new_version = hash('md5', $wp_version);
+	    $new_version = RSSSL_SECURITY()->components['hide-wp-version']->generate_rand_version();
 
         $html = '<link rel="stylesheet" href="http://example.org/wp-includes/css/style.css?ver=' . $wp_version . '" />';
         $expected_html = '<link rel="stylesheet" href="http://example.org/wp-includes/css/style.css?ver=' . $new_version . '" />';
@@ -49,7 +49,7 @@ class RssslRemoveWPVersionTest extends WP_UnitTestCase {
      */
     public function test_rsssl_remove_css_js_version() {
         $wp_version = get_bloginfo('version');
-        $new_version = hash('md5', $wp_version);
+        $new_version = RSSSL_SECURITY()->components['hide-wp-version']->generate_rand_version();
 
         $test_src = trailingslashit(site_url()) . 'wp-includes/js/jquery/jquery.min.js?ver=' . $wp_version;
         $expected_src = trailingslashit(site_url()) . 'wp-includes/js/jquery/jquery.min.js?ver=' . $new_version;
