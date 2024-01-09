@@ -90,4 +90,4 @@ if ( ! class_exists( 'rsssl_hide_wp_version' ) ) {
 		}
 	}
 }
-$rsssl_hide_wp_version = new rsssl_hide_wp_version();
+RSSSL_SECURITY()->components['hide-wp-version'] = new rsssl_hide_wp_version();

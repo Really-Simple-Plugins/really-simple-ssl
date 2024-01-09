@@ -10,7 +10,7 @@ class RssslRemoveWPVersionTest extends WP_UnitTestCase {
     public function setUp(): void {
         parent::setUp();
         require_once __DIR__ . '/../security/wordpress/hide-wp-version.php';
-        add_filter('rsssl_fixer_output', 'rsssl_replace_wp_version');
+        add_filter('rsssl_fixer_output', array( RSSSL_SECURITY()->components['hide-wp-version'], 'replace_wp_version') );
     }
 
     /**
@@ -23,7 +23,7 @@ class RssslRemoveWPVersionTest extends WP_UnitTestCase {
     }
 
     /**
-     * Test if rsssl_replace_wp_version function works as expected
+     * Test if replace_wp_version function works as expected
      * and is hooked to the 'rsssl_fixer_output' filter.
      *
      * @return void
@@ -35,11 +35,11 @@ class RssslRemoveWPVersionTest extends WP_UnitTestCase {
         $html = '<link rel="stylesheet" href="http://example.org/wp-includes/css/style.css?ver=' . $wp_version . '" />';
         $expected_html = '<link rel="stylesheet" href="http://example.org/wp-includes/css/style.css?ver=' . $new_version . '" />';
 
-        $result = rsssl_replace_wp_version($html);
+        $result = RSSSL_SECURITY()->components['hide-wp-version']->replace_wp_version($html);
         $this->assertEquals($expected_html, $result);
 
         // Ensure the filter is hooked
-        $this->assertNotFalse(has_filter('rsssl_fixer_output', 'rsssl_replace_wp_version'));
+        $this->assertNotFalse(has_filter('rsssl_fixer_output', array(RSSSL_SECURITY()->components['hide-wp-version'], 'replace_wp_version')));
     }
 
     /**

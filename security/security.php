@@ -5,6 +5,7 @@ class REALLY_SIMPLE_SECURITY
 	private static $instance;
 	public $firewall_manager;
 	public $hardening;
+	public $components;
 
 	private function __construct()
 	{
