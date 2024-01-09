@@ -23,7 +23,7 @@ const ProgressFooter = (props) => {
         <>
             { !sslEnabled && <button disabled={wpconfigFixRequired} onClick={() => setShowOnBoardingModal(true)} className="button button-primary">{__( "Activate SSL", "really-simple-ssl" ) }</button>}
             { rsssl_settings.pro_plugin_active && <span className="rsssl-footer-left">Really Simple SSL Pro {rsssl_settings.pro_version}</span>}
-            { !rsssl_settings.pro_plugin_active && <a href={rsssl_settings.upgrade_link} target="_blank" className="button button-default">{ __( "Go Pro", "really-simple-ssl" ) }</a>}
+            { !rsssl_settings.pro_plugin_active && <a href={rsssl_settings.upgrade_link} target="_blank" rel="noopener noreferrer" className="button button-default">{ __( "Go Pro", "really-simple-ssl" ) }</a>}
 
             <div className="rsssl-legend">
                 <Icon name = {sslStatusIcon} color = {sslStatusColor} />

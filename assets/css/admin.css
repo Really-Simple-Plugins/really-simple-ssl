@@ -799,6 +799,14 @@
     color: var(--rsp-text-color-white);
 }
 
+.rsssl {
+  /* Documents overview */
+  /* Remove margin for the last button to ensure clean alignment */
+  /**
+    For the mixed content scan we need to do some extra tweaking
+   */
+}
+
 .rsssl a.rsssl-button-small, .rsssl button.rsssl-button-small, .rsssl input.rsssl-button-small {
     font-size: var(--rsp-fs-100);
     font-weight: 300;
@@ -809,8 +817,7 @@
     margin-left: 10px;
 }
 
-/* Documents overview */
-.rsssl-shortcode {
+.rsssl .rsssl-shortcode {
     right: 10000px;
     position: absolute;
     background-color: #fff;
@@ -818,54 +825,50 @@
     white-space: nowrap;
 }
 
-.shortcode {
+.rsssl .shortcode {
     cursor: pointer;
 }
 
-.rsssl-action-buttons {
+.rsssl .rsssl-action-buttons {
   /* Making sure we use the full width of the container */
     display: flex;
     justify-content: flex-end;
 }
 
-.rsssl-action-buttons__inner {
+.rsssl .rsssl-action-buttons__inner {
     display: flex;
     justify-content: flex-end;
 }
 
-.rsssl-action-buttons__inner {
+.rsssl .rsssl-action-buttons__inner {
     float: right;
 }
 
-.rsssl-action-buttons__button {
+.rsssl .rsssl-action-buttons__button {
     margin-right: 10px;
 }
 
-/* Remove margin for the last button to ensure clean alignment */
-.rsssl-action-buttons__inner:last-child {
+.rsssl .rsssl-action-buttons__inner:last-child {
     margin-right: 0;
 }
 
-/**
-  For the mixed content scan we need to do some extra tweaking
- */
-.rsssl-mixed-content-scan .rsssl-grid-item-content-footer {
+.rsssl .rsssl-mixed-content-scan .rsssl-grid-item-content-footer {
     margin-left: 0;
     margin-right: 0;
     padding-left: 25px;
 }
 
-.rsssl-mixed-content-scan .rsssl-grid-item-content-footer .button {
+.rsssl .rsssl-mixed-content-scan .rsssl-grid-item-content-footer .button {
     display: block;
     margin-right: 0;
     margin-left: 0;
 }
 
-.rsssl-mixed-content-scan .rsssl-grid-item-content-footer .components-toggle-control {
+.rsssl .rsssl-mixed-content-scan .rsssl-grid-item-content-footer .components-toggle-control {
     margin-top: 12px;
 }
 
-.rsssl-mixed-content-scan .rsssl-grid-item-content-footer label {
+.rsssl .rsssl-mixed-content-scan .rsssl-grid-item-content-footer label {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2177,35 +2180,35 @@ button.button .cmplz-icon.rsssl-icon-loading > div {
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(1) {
-    width: 68%;
+    width: 64%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(2) {
-    width: 61%;
+    width: 67%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(3) {
-    width: 88%;
+    width: 87%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(4) {
-    width: 81%;
+    width: 100%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(5) {
-    width: 89%;
+    width: 69%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(6) {
-    width: 63%;
+    width: 96%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(7) {
-    width: 63%;
+    width: 93%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
-    width: 78%;
+    width: 76%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
@@ -2213,47 +2216,47 @@ button.button .cmplz-icon.rsssl-icon-loading > div {
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
-    width: 77%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
-    width: 89%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
-    width: 81%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
     width: 99%;
 }
 
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
+    width: 84%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
+    width: 61%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
+    width: 80%;
+}
+
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(14) {
-    width: 62%;
+    width: 67%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
-    width: 86%;
+    width: 73%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(16) {
-    width: 71%;
+    width: 82%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(17) {
-    width: 62%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(18) {
-    width: 62%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(19) {
     width: 91%;
 }
 
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(18) {
+    width: 83%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(19) {
+    width: 62%;
+}
+
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(20) {
-    width: 76%;
+    width: 63%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line ~ .rsssl-placeholder-line {
@@ -2478,12 +2481,10 @@ button.button .cmplz-icon.rsssl-icon-loading > div {
 }
 
 .rsssl div[class^=rsssl-wizard-] .rsssl-locked .rsssl-shield-overlay {
-    height: 0;
-    bottom: 0;
-    position: absolute;
     align-items: center;
-    justify-content: center;
     display: flex;
+    justify-content: center;
+    margin-top: 30%;
 }
 
 .rsssl div[class^=rsssl-wizard-] .rsssl-locked .rsssl-locked-overlay {
@@ -2981,6 +2982,43 @@ html {
     animation: fadeIt 3s ease-in-out;
     scroll-margin-top: 100px;
     scroll-padding-top: 100px;
+}
+
+.rsssl .rsssl-block-highlight {
+    border: 0;
+    -o-animation: pulse 2s infinite;
+    animation: pulse 2s infinite;
+}
+
+@-webkit-keyframes pulse {
+    0% {
+        -webkit-box-shadow: 0 0 0 0 var(--rsp-green);
+    }
+
+    70% {
+        -webkit-box-shadow: 0 0 0 10px var(--rsp-green-faded);
+    }
+
+    100% {
+        -webkit-box-shadow: 0 0 0 0 var(--rsp-green-faded);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        -moz-box-shadow: 0 0 0 0 var(--rsp-green);
+        box-shadow: 0 0 0 0 var(--rsp-green);
+    }
+
+    70% {
+        -moz-box-shadow: 0 0 0 10px var(--rsp-green-faded);
+        box-shadow: 0 0 0 10px var(--rsp-green-faded);
+    }
+
+    100% {
+        -moz-box-shadow: 0 0 0 0 var(--rsp-green-faded);
+        box-shadow: 0 0 0 0 var(--rsp-green-faded);
+    }
 }
 
 @-o-keyframes fadeIt {
@@ -3573,6 +3611,7 @@ nav.rdt_Pagination > div > svg {
 
 .rsssl-multiselect-datatable-form {
     display: flex;
+    align-items: center;
     Justify-content: space-between;
     width: 100%;
     padding: 1em 2em;

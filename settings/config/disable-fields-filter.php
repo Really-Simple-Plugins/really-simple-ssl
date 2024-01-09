@@ -67,7 +67,7 @@ function rsssl_email_help_text() {
 		'url'   => add_query_arg( [ 'page' => 'really-simple-security#settings/general/email' ], rsssl_admin_url() ),
 		'text'  => rsssl_is_email_verified()
 			? __( "Email validation completed", 'really-simple-ssl' )
-			: ( check_if_email_essential_feature()
+			: ( rsssl_check_if_email_essential_feature()
 				? __( "You're using a feature where email is an essential part of the functionality. Please validate that you can send emails on your server.", 'really-simple-ssl' )
 				: __("Email not verified yet. Verify your email address to get the most out of Really Simple SSL", "really-simple-ssl")
 			),

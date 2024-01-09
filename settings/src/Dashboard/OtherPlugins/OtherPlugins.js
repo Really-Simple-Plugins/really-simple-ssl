@@ -13,12 +13,12 @@ const OtherPlugins = () => {
     const otherPluginElement = (plugin, i) => {
         return (
            <div key={"plugin"+i} className={"rsssl-other-plugins-element rsssl-"+plugin.slug}>
-               <a href={plugin.wordpress_url} target="_blank" title={plugin.title}>
+               <a href={plugin.wordpress_url} target="_blank" rel="noopener noreferrer" title={plugin.title}>
                    <div className="rsssl-bullet"></div>
                    <div className="rsssl-other-plugins-content">{plugin.title}</div>
                </a>
                <div className="rsssl-other-plugin-status">
-                {plugin.pluginAction==='upgrade-to-premium' && <><a target="_blank" href={plugin.upgrade_url}>{__("Upgrade", "really-simple-ssl")}</a></>}
+                {plugin.pluginAction==='upgrade-to-premium' && <><a target="_blank" rel="noopener noreferrer" href={plugin.upgrade_url}>{__("Upgrade", "really-simple-ssl")}</a></>}
                 {plugin.pluginAction!=='upgrade-to-premium' && plugin.pluginAction!=='installed' && <>
                     <a href="#" onClick={ (e) => pluginActions(plugin.slug, plugin.pluginAction, e) } >{plugin.pluginActionNice}</a></>}
                 {plugin.pluginAction==='installed' && <>{__("Installed", "really-simple-ssl")}</>}

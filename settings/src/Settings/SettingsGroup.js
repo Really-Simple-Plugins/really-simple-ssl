@@ -148,6 +148,7 @@ const SettingsGroup = (props) => {
                     <div className="rsssl-grid-item-controls">
                         <Hyperlink
                             target="_blank"
+                            rel="noopener noreferrer"
                             className="rsssl-helplink"
                             text={helplinkText}
                             url={activeGroup.helpLink}
@@ -181,7 +182,7 @@ const SettingsGroup = (props) => {
                     <span
                         className="rsssl-task-status rsssl-warning">{__("Network feature", "really-simple-ssl")}</span>
                     <span>{__("This feature is only available networkwide.", "really-simple-ssl")}<Hyperlink
-                        target="_blank" text={__("Network settings", "really-simple-ssl")}
+                        target="_blank" rel="noopener noreferrer" text={__("Network settings", "really-simple-ssl")}
                         url={rsssl_settings.network_link}/></span>
                 </div>
             </div>}

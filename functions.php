@@ -1,5 +1,5 @@
 <?php
-defined('ABSPATH') or die();
+defined( 'ABSPATH' ) or die();
 /**
  *  Only functions also required on front-end here
  */
@@ -8,13 +8,13 @@ defined('ABSPATH') or die();
  * Get a Really Simple SSL option by name
  *
  * @param string $name
- * @param mixed  $default
+ * @param mixed  $default_value
  *
  * @return mixed
  */
 
-function rsssl_get_option( string $name, $default=false ) {
-	$name = sanitize_title($name);
+function rsssl_get_option( string $name, $default_value = false ) {
+	$name = sanitize_title( $name );
 	if ( is_multisite() && rsssl_is_networkwide_active() ) {
 		$options = get_site_option( 'rsssl_options', [] );
 	} else {
@@ -24,22 +24,22 @@ function rsssl_get_option( string $name, $default=false ) {
 	//fallback, will be removed after 6.2
 	//because we only check if the option is not saved in the new style, this if should normally never get executed.
 	if (
-		!isset($options[$name]) &&
-		($name === 'ssl_enabled' || $name === 'redirect' || $name === "mixed_content_fixer" || $name === 'dismiss_all_notices' )
+		! isset( $options[ $name ] ) &&
+		( 'ssl_enabled' === $name || 'redirect' === $name || 'mixed_content_fixer' === $name || 'dismiss_all_notices' === $name )
 	) {
-		$options = rsssl_get_legacy_option($options, $name);
+		$options = rsssl_get_legacy_option( $options, $name );
 	}
 
 	$value = $options[ $name ] ?? false;
-	if ( $value===false && $default!==false ) {
-		$value = $default;
+	if ( false === $value && false !== $default_value ) {
+		$value = $default_value;
 	}
 
-	if ($value===1) {
+	if ( 1 === $value ) {
 		$value = true;
 	}
 
-	return apply_filters("rsssl_option_$name", $value, $name);
+	return apply_filters( "rsssl_option_$name", $value, $name );
 }
 
 /**
@@ -49,15 +49,15 @@ function rsssl_get_option( string $name, $default=false ) {
  * @return bool
  */
 
-function rsssl_is_networkwide_active(){
-	if ( !is_multisite() ) {
+function rsssl_is_networkwide_active() {
+	if ( ! is_multisite() ) {
 		return false;
 	}
-	if ( !function_exists('is_plugin_active_for_network') ) {
-		require_once( ABSPATH . '/wp-admin/includes/plugin.php' );
+	if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
+		require_once ABSPATH . '/wp-admin/includes/plugin.php';
 	}
 
-	if ( is_plugin_active_for_network(rsssl_plugin) ) {
+	if ( is_plugin_active_for_network( rsssl_plugin ) ) {
 		return true;
 	}
 
@@ -72,21 +72,21 @@ function rsssl_is_networkwide_active(){
  *
  * @return array
  */
-function rsssl_get_legacy_option( $options, string $name): array {
-	$old_options = is_multisite() ? get_site_option('rlrsssl_network_options') : get_option( 'rlrsssl_options' );
+function rsssl_get_legacy_option( $options, string $name ): array {
+	$old_options = is_multisite() ? get_site_option( 'rlrsssl_network_options' ) : get_option( 'rlrsssl_options' );
 	if ( $old_options ) {
-		if ( $name === 'ssl_enabled' && isset( $old_options['ssl_enabled']) ) {
+		if ( 'ssl_enabled' === $name && isset( $old_options['ssl_enabled'] ) ) {
 			$options['ssl_enabled'] = $old_options['ssl_enabled'];
-		} else if ( $name === 'dismiss_all_notices' && isset( $old_options['dismiss_all_notices']) ) {
+		} elseif ( 'dismiss_all_notices' === $name && isset( $old_options['dismiss_all_notices'] ) ) {
 			$options['dismiss_all_notices'] = $old_options['dismiss_all_notices'];
-		} else if ( $name === 'dismiss_all_notices' && isset( $old_options['dismiss_all_notices']) ) {
+		} elseif ( 'dismiss_all_notices' === $name && isset( $old_options['dismiss_all_notices'] ) ) {
 			$options['dismiss_all_notices'] = $old_options['dismiss_all_notices'];
-		} else if ( $name === 'mixed_content_fixer' && isset($old_options['autoreplace_insecure_links']) ) {
+		} elseif ( 'mixed_content_fixer' === $name && isset( $old_options['autoreplace_insecure_links'] ) ) {
 			$options['mixed_content_fixer'] = $old_options['autoreplace_insecure_links'];
-		} else if ( $name === 'redirect' ){
-			if ( isset($old_options['htaccess_redirect']) && $old_options['htaccess_redirect'] ) {
+		} elseif ( 'redirect' === $name ) {
+			if ( isset( $old_options['htaccess_redirect'] ) && $old_options['htaccess_redirect'] ) {
 				$options['redirect'] = 'htaccess';
-			} else if (isset($old_options['wp_redirect']) && $old_options['wp_redirect']) {
+			} elseif ( isset( $old_options['wp_redirect'] ) && $old_options['wp_redirect'] ) {
 				$options['redirect'] = 'wp_redirect';
 			}
 		}
@@ -94,14 +94,14 @@ function rsssl_get_legacy_option( $options, string $name): array {
 	return $options;
 }
 
-function check_if_email_essential_feature() {
+function rsssl_check_if_email_essential_feature() {
 	$essential_features = array(
-		'limit_login_attempts' => rsssl_get_option('enable_limited_login_attempts') == 1,
-		'two_fa_enabled' => rsssl_get_option('two_fa_enabled') == 1
+		'limit_login_attempts' => rsssl_get_option( 'enable_limited_login_attempts' ) == 1,//phpcs:ignore
+		'two_fa_enabled'       => rsssl_get_option( 'two_fa_enabled' ) == 1,//phpcs:ignore
 	);
 
 	// Check if the current feature is in the essential features array
-	foreach( $essential_features as $feature => $is_essential ) {
+	foreach ( $essential_features as $feature => $is_essential ) {
 		if ( $is_essential ) {
 			return true;
 		}
@@ -109,25 +109,3 @@ function check_if_email_essential_feature() {
 
 	return false;
 }
-
-/**
- * @param $response
- * @param $user
- * @param $request
- *
- * @return mixed
- *
- * Add user roles to /users endpoint
- */
-function add_user_role_to_api_response( $response, $user, $request ) {
-	$headers = $request->get_headers();
-
-	if (isset($headers['referer']) && strpos($headers['referer'][0], 'really-simple-security') !== false) {
-		$data = $response->get_data();
-		$data['roles'] = $user->roles;
-		$response->set_data($data);
-	}
-
-	return $response;
-}
-add_filter('rest_prepare_user', 'add_user_role_to_api_response', 10, 3);

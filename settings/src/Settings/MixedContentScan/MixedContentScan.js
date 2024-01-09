@@ -77,7 +77,7 @@ const MixedContentScan = (props) => {
         if (item.location.length > 0) {
             if (item.location.indexOf('http://') !== -1 || item.location.indexOf('https://') !== -1) {
                 item.locationControl =
-                    <a href={item.location} target="_blank">{__("View", "really-simple-ssl")}</a>
+                    <a href={item.location} target="_blank" rel="noopener noreferrer">{__("View", "really-simple-ssl")}</a>
             } else {
                 item.locationControl = item.location;
             }

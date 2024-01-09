@@ -10,7 +10,7 @@ import StepConfig from "./StepConfig";
 import StepFeatures from "./StepFeatures";
 import StepPlugins from "./StepPlugins";
 import StepPro from "./StepPro";
-
+import DOMPurify from 'dompurify';
 const Onboarding = ({isModal}) => {
     const { fetchFieldsData, fieldsLoaded} = useFields();
     const {
