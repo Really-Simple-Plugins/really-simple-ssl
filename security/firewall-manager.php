@@ -314,7 +314,7 @@ class rsssl_firewall_manager {
 		error_log($userIniPath);
 		error_log($userIni);
 
-//		return;
+		return;
 		$userIniHtaccessDirectives = '';
 		if ($userIni) {
 			$userIniHtaccessDirectives = sprintf('<Files "%s">
