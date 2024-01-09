@@ -1,5 +1,6 @@
 import Icon from "../utils/Icon";
 import { __ } from '@wordpress/i18n';
+import DOMPurify from "dompurify";
 /**
  * Render a help notice in the sidebar
  */
@@ -19,7 +20,7 @@ const Help = (props) => {
                 <details className={"rsssl-wizard-help-notice rsssl-" + notice.label.toLowerCase()} open={openStatus}>
                     <summary>{notice.title} <Icon name='chevron-down' /></summary>
                     {/*some notices contain html, like for the htaccess notices. A title is required for those options, otherwise the text becomes the title. */}
-                    <div dangerouslySetInnerHTML={{__html:notice.text}}></div>
+                    <div dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(notice.text)}}></div>
                     {notice.url && <div className="rsssl-help-more-info"><a target={target} href={notice.url}>{__("More info", "really-simple-ssl")}</a></div>}
                 </details>
             }

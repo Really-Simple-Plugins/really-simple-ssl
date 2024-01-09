@@ -263,7 +263,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 				    __( 'Please check the vulnerabilities overview for more information and take appropriate action.' ,'really-simple-ssl' )
 			    ),
 			    'actions'     => sprintf(
-				    '<p><a href="%s" target="_blank" rel="noopener">%s</a></p>',
+				    '<p><a href="%s" target="_blank" rel="noopener noreferrer">%s</a></p>',
 				    esc_url( __( add_query_arg(array('page'=>'really-simple-security#settings/vulnerabilities/vulnerabilities-overview'), rsssl_admin_url() ) ) ),
 				    __( 'View vulnerabilities', 'really-simple-ssl' )
 			    ),
@@ -635,25 +635,25 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 if ($this->check_vulnerability( $plugin_file ) ) {
 	                switch ( $this->check_severity( $plugin_file ) ) {
 		                case 'c':
-			                echo sprintf( '<a class="rsssl-btn-vulnerable rsssl-critical" target="_blank" href="%s">%s</a>',
+			                echo sprintf( '<a class="rsssl-btn-vulnerable rsssl-critical" target="_blank" rel="noopener noreferrer" href="%s">%s</a>',
 				                'https://really-simple-ssl.com/vulnerabilities/' . $this->getIdentifier( $plugin_file ), ucfirst( $this->risk_naming['c'] ) );
 			                break;
 		                case 'h':
-			                echo sprintf( '<a class="rsssl-btn-vulnerable rsssl-high" target="_blank" href="%s">%s</a>',
+			                echo sprintf( '<a class="rsssl-btn-vulnerable rsssl-high" target="_blank" rel="noopener noreferrer" href="%s">%s</a>',
 				                'https://really-simple-ssl.com/vulnerabilities/' . $this->getIdentifier( $plugin_file ), ucfirst( $this->risk_naming['h'] ) );
 			                break;
 		                case 'm':
-			                echo sprintf( '<a class="rsssl-btn-vulnerable rsssl-medium" target="_blank" href="%s">%s</a>',
+			                echo sprintf( '<a class="rsssl-btn-vulnerable rsssl-medium" target="_blank" rel="noopener noreferrer" href="%s">%s</a>',
 				                'https://really-simple-ssl.com/vulnerabilities/' . $this->getIdentifier( $plugin_file ), ucfirst( $this->risk_naming['m'] ) );
 			                break;
 		                default:
-			                echo sprintf( '<a class="rsssl-btn-vulnerable rsssl-low" target="_blank" href="%s">%s</a>',
+			                echo sprintf( '<a class="rsssl-btn-vulnerable rsssl-low" target="_blank" rel="noopener noreferrer" href="%s">%s</a>',
 				                'https://really-simple-ssl.com/vulnerabilities/' . $this->getIdentifier( $plugin_file ), ucfirst( $this->risk_naming['l'] ) );
 			                break;
 	                }
                 }
                 if ( $this->is_quarantined($plugin_file)) {
-	                echo sprintf( '<a class="rsssl-btn-vulnerable rsssl-critical" target="_blank" href="%s">%s</a>',
+	                echo sprintf( '<a class="rsssl-btn-vulnerable rsssl-critical" target="_blank" rel="noopener noreferrer" href="%s">%s</a>',
 		                'https://really-simple-ssl.com/instructions/about-vulnerabilities/#quarantine' , __("Quarantined","really-simple-ssl") );
                 }
             }
@@ -1140,7 +1140,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
                             theme_element.insertAdjacentHTML('afterbegin', `
                               <div class="${divClass}">
                                 <div><span class="dashicons dashicons-info"></span>
-                                    <a href="https://really-simple-ssl.com/instructions/about-vulnerabilities/#quarantine" target="_blank">${text}</a>
+                                    <a href="https://really-simple-ssl.com/instructions/about-vulnerabilities/#quarantine" target="_blank" rel="noopener noreferrer">${text}</a>
                                 </div>
                               </div>
                             `);
@@ -1536,7 +1536,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
          * @return string
          */
 	    public function domain(): string {
-		    return '<a href="'.$this->site_url().'" target="_blank">'.$this->site_url().'</a>';
+		    return '<a href="'.$this->site_url().'" target="_blank" rel="noopener noreferrer">'.$this->site_url().'</a>';
 	    }
 
 	    /**

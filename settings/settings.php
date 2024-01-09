@@ -1124,3 +1124,23 @@ function rsssl_get_roles( ): array {
 
 	return $roles;
 }
+
+/**
+ * @param $response
+ * @param $user
+ * @param $request
+ *
+ * @return mixed
+ *
+ * Add user roles to /users endpoint
+ */
+function rsssl_add_user_role_to_api_response( $response, $user, $request ) {
+	if ( rsssl_is_logged_in_rest() ) {
+		$data          = $response->get_data();
+		$data['roles'] = $user->roles;
+		$response->set_data( $data );
+	}
+
+	return $response;
+}
+add_filter( 'rest_prepare_user', 'rsssl_add_user_role_to_api_response', 10, 3 );

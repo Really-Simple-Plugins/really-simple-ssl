@@ -6,7 +6,7 @@ Requires at least: 5.8
 License: GPL2
 Tested up to: 6.4
 Requires PHP: 7.2
-Stable tag: 7.2.0
+Stable tag: 7.2.1
 
 The easiest way to improve security! Leverage your SSL certificate and protect your website visitors.
 
@@ -111,10 +111,18 @@ The plugin checks your certificate before enabling, but if, for example, you mig
 If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions](https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/) instead.
 
 == Changelog ==
+= 7.2.1 =
+* Fix: Config for CSP preventing Learning mode from completing
+* Fix: datatable styling
+* Fix: using deactivate_https with wp-cli did not remove htaccess rules 
+* Improvement: add query parameter to enforce email verification &rsssl_force_verification
+* Improvement: css for check certificate manually button
+
 = 7.2.0 =
 * Fix: changed link to article
 * Fix: remove flags .js file which was added twice, props @adamainsworth
 * Fix: typo in missing advanced-headers.php notice
+* Improvement: catch php warning when script src is empty when using hide wp version, props @chris-yau
 * Improvement: new save & continue feedback
 * Improvement: datatable styling
 * Improvement: new react based modal

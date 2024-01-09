@@ -28,12 +28,10 @@
       background: rgba(255, 255, 255, 0.8);
       border-radius: var(--rsp-border-radius);
       .rsssl-shield-overlay {
-        height: 0;
-        bottom: 0;
-        position: absolute;
         align-items: center;
-        justify-content: center;
         display: flex;
+        justify-content: center;
+        margin-top: 30%;
       }
       .rsssl-locked-overlay {
         z-index: 1;

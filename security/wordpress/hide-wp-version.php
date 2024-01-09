@@ -29,6 +29,9 @@ add_filter('rsssl_fixer_output', 'rsssl_replace_wp_version');
  * Remove WordPress version from css and js strings
  */
 function rsssl_remove_css_js_version( $src ) {
+	if ( empty($src) ) {
+		return $src;
+	}
 
 	if ( strpos( $src, '?ver=' ) && strpos( $src, 'wp-includes') ) {
 		$wp_version = get_bloginfo( 'version' );

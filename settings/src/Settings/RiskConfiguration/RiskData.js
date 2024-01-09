@@ -111,7 +111,7 @@ const UseRiskData = create((set, get) => ({
                     item.vulnerability_action = <div className="rsssl-action-buttons">
                         <a className="rsssl-button button-secondary"
                             href={"https://really-simple-ssl.com/vulnerabilities/" + item.rss_identifier}
-                           target={"_blank"}>{__("Details", "really-simple-ssl")}</a>
+                           target={"_blank"}  rel="noopener noreferrer">{__("Details", "really-simple-ssl")}</a>
                         <a disabled={!item.update_available} href={updateUrl}
                            className="rsssl-button button-primary"
                         >{__("Update", "really-simple-ssl")}</a>

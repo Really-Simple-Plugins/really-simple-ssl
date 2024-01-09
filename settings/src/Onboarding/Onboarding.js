@@ -9,6 +9,7 @@ import useProgress from "../Dashboard/Progress/ProgressData";
 import useOnboardingData from "./OnboardingData";
 import useRiskData from "../Settings/RiskConfiguration/RiskData";
 import OnboardingControls from "./OnboardingControls";
+import DOMPurify from 'dompurify';
 
 const Onboarding = ({isModal}) => {
     const { fetchFieldsData, getFieldValue} = useFields();
@@ -213,12 +214,19 @@ const Onboarding = ({isModal}) => {
                                 </div>
                                 <div>
                                 <label>
-                                    <input onChange={ (e) => setIncludeTips(e.target.checked)} type="checkbox" checked={includeTips} />{__("Include 6 Tips & Tricks to get started with Really Simple SSL.","really-simple-ssl")}&nbsp;<a href="https://really-simple-ssl.com/legal/privacy-statement/" target="_blank">{__("Privacy Statement", "really-simple-ssl")}</a>
+                                    <input onChange={ (e) => setIncludeTips(e.target.checked)} type="checkbox" checked={includeTips} />{__("Include 6 Tips & Tricks to get started with Really Simple SSL.","really-simple-ssl")}&nbsp;<a href="https://really-simple-ssl.com/legal/privacy-statement/" target="_blank" rel="noopener noreferrer">{__("Privacy Statement", "really-simple-ssl")}</a>
                                 </label>
                                 </div>
                             </>
                         }
-                        { certificateValid && step.info_text && <div className="rsssl-modal-description" dangerouslySetInnerHTML={{__html: step.info_text}} /> }
+                        {/* nosemgrep:react-dangerously-set-inner-html */}
+                        { certificateValid && step.info_text &&
+                            <div
+                                className="rsssl-modal-description"
+                                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(step.info_text) }}
+                            />
+                            /* nosemgrep: react-dangerouslysetinnerhtml */
+                        }
                         { currentStepIndex===0 && !certificateValid &&
                             <>
                                 <div className="rsssl-modal-description">

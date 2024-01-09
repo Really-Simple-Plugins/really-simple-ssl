@@ -13,13 +13,7 @@
 	<exclude-pattern>*min.css</exclude-pattern>
 
 	<rule ref="WordPress-Core">
-		<!--
-		Example of removing a rule.
-		<exclude name="WordPress.WhiteSpace.ControlStructureSpacing"/>
-		-->
-        <exclude name="Squiz.Commenting.FileComment.WrongStyle" />
         <exclude name="Universal.Arrays.DisallowShortArraySyntax.Found" />
-
 	</rule>
         <exclude name="Universal.Arrays.DisallowShortArraySyntax.Found" />
 
