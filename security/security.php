@@ -6,7 +6,7 @@ class REALLY_SIMPLE_SECURITY
 	public $firewall_manager;
 	public $hardening;
 	/**
-	 * Components array, so we can access singleton classes which are dynamically added, from anywhere. 
+	 * Components array, so we can access singleton classes which are dynamically added, from anywhere.
 	 * @var
 	 */
 	public $components;
