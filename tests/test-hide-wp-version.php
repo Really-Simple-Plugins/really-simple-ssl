@@ -53,14 +53,13 @@ class RssslRemoveWPVersionTest extends WP_UnitTestCase {
 
         $test_src = trailingslashit(site_url()) . 'wp-includes/js/jquery/jquery.min.js?ver=' . $wp_version;
         $expected_src = trailingslashit(site_url()) . 'wp-includes/js/jquery/jquery.min.js?ver=' . $new_version;
-	    $rsssl_hide_wp_version = new rsssl_hide_wp_version();
-        $result = $rsssl_hide_wp_version->remove_css_js_version($test_src);
+        $result = RSSSL_SECURITY()->components['hide-wp-version']->remove_css_js_version($test_src);
 
         $this->assertEquals($expected_src, $result);
 
         // Test when the source does not contain 'wp-includes' or '?ver='
         $test_src = trailingslashit(site_url()) . 'some-js-file.js';
-        $result = $rsssl_hide_wp_version->remove_css_js_version($test_src);
+        $result = RSSSL_SECURITY()->components['hide-wp-version']->remove_css_js_version($test_src);
         $this->assertEquals($test_src, $result);
     }
 }
