@@ -23,6 +23,8 @@ class rsssl_firewall_manager {
 		if (!defined('WF_IS_PRESSABLE')) {
 			define('WF_IS_PRESSABLE', (defined('IS_ATOMIC') && IS_ATOMIC) || (defined('IS_PRESSABLE') && IS_PRESSABLE));
 		}
+
+		$this->performInstallation();
 	}
 
 	static function this() {
@@ -68,7 +70,17 @@ class rsssl_firewall_manager {
 	}
 
 	/**
-	 * Generate security rules, and advanced-headers.php file
+	 * Get the path to our advanced-headers file
+	 *
+	 * @return string
+	 */
+
+	private function get_advanced_headers_path(){
+		return WP_CONTENT_DIR . '/advanced-headers.php';
+	}
+
+	/**
+	 * Generate security rules, and advanced-headers file
 	 *
 	 */
 	public function insert_advanced_header_file() {
@@ -81,7 +93,7 @@ class rsssl_firewall_manager {
 		}
 
 		$use_dynamic_path = WP_CONTENT_DIR === ABSPATH . 'wp-content';
-        $advanced_headers_file = WP_CONTENT_DIR . '/advanced-headers.php';
+        $advanced_headers_file = $this->get_advanced_headers_path();
 
 		$rules    = apply_filters('rsssl_firewall_rules', '');
 		//no rules? remove the file
@@ -106,10 +118,13 @@ class rsssl_firewall_manager {
 		if ( is_writable( WP_CONTENT_DIR ) ) {
 			file_put_contents( $advanced_headers_file, $contents );
 		}
+		/** @var WP_Filesystem_Base $wp_filesystem */
+		global $wp_filesystem;
 
 		$wpconfig_path = $this->find_wp_config_path();
-		$wpconfig      = file_get_contents( $wpconfig_path );
-		if ( is_writable( $wpconfig_path ) && strpos( $wpconfig, 'advanced-headers.php' ) === false ) {
+		$wpconfig = $wp_filesystem->get_contents($wpconfig_path);
+
+		if ( $wp_filesystem->is_writable( $wpconfig_path ) && strpos( $wpconfig, 'advanced-headers.php' ) === false ) {
 			// As WP_CONTENT_DIR is not defined at this point in the wp-config, we can't use that.
 			// for those setups where the WP_CONTENT_DIR is not in the default location, we hardcode the path.
             if ( $use_dynamic_path ) {
@@ -128,16 +143,16 @@ class rsssl_firewall_manager {
 			} else {
 				$updated = preg_replace( '/' . '<\?php' . '/', '<?php' . "\n" . $rule . "\n", $wpconfig, 1 );
 			}
-			file_put_contents( $wpconfig_path, $updated );
+			$wp_filesystem->put_contents( $wpconfig_path, $updated );
 		}
 
 		//save errors
-		if ( is_writable( WP_CONTENT_DIR ) && (is_writable( $wpconfig_path ) || strpos( $wpconfig, 'advanced-headers.php' ) !== false ) ) {
+		if ( $wp_filesystem->is_writable( WP_CONTENT_DIR ) && ($wp_filesystem->is_writable( $wpconfig_path ) || strpos( $wpconfig, 'advanced-headers.php' ) !== false ) ) {
 			update_option('rsssl_firewall_error', false, false );
 		} else {
-			if ( !is_writable( $wpconfig_path ) ) {
+			if ( !$wp_filesystem->is_writable( $wpconfig_path ) ) {
 				update_option('rsssl_firewall_error', 'wpconfig-notwritable', false );
-			} else if ( !is_writable( WP_CONTENT_DIR )) {
+			} else if ( !$wp_filesystem->is_writable( WP_CONTENT_DIR )) {
 				update_option('rsssl_firewall_error', 'advanced-headers-notwritable', false );
 			}
 		}
@@ -238,42 +253,68 @@ class rsssl_firewall_manager {
 		if ( !rsssl_user_can_manage() ) {
 			return;
 		}
-		$file = ABSPATH . 'wp-content/advanced-headers.php';
+		$file = $this->get_advanced_headers_path();
 		$wpconfig_path = $this->find_wp_config_path();
-		if ( is_writable( $wpconfig_path ) ) {
-			$wpconfig = file_get_contents( $wpconfig_path );
+		/** @var WP_Filesystem_Base $wp_filesystem */
+		global $wp_filesystem;
+		if ( $wp_filesystem->is_writable( $wpconfig_path ) ) {
+			$wpconfig = $wp_filesystem->get_contents( $wpconfig_path );
 			$rule = "if ( file_exists('" . $file . "') ) { " . "\n";
 			$rule .= "\t" . "require_once '$file';" . "\n" . "}";
 			if ( strpos( $wpconfig, $rule ) !== false ) {
 				$updated_wpconfig = str_replace( $rule, '', $wpconfig );
-				file_put_contents( $wpconfig_path, $updated_wpconfig );
+				$wp_filesystem->put_contents( $wpconfig_path, $updated_wpconfig );
 			}
 		}
 
-		if ( file_exists( $file ) ) {
-			unlink( $file );
+		if ( $wp_filesystem->is_file( $file ) ) {
+			$wp_filesystem->delete($file);
 		}
 	}
 
+	public function getHomePath() {
+		if (!function_exists('get_home_path')) {
+			include_once(ABSPATH . 'wp-admin/includes/file.php');
+		}
+		if (WF_IS_FLYWHEEL)
+			return trailingslashit($_SERVER['DOCUMENT_ROOT']);
+		return get_home_path();
+	}
 
 	/**
-	 * @param WP_Filesystem_Base $wp_filesystem
+	 * Get the path to the user.ini file
+	 *
+	 * @return false|string
+	 */
+	public function getUserIniPath() {
+		$userIni = ini_get('user_ini.filename');
+		if ($userIni) {
+			return $this->getHomePath() . $userIni;
+		}
+		return false;
+	}
+
+	/**
+	 *
 	 * @throws wfWAFAutoPrependHelperException
 	 */
-	public function performInstallation($wp_filesystem) {
-		$bootstrapPath = wordfence::getWAFBootstrapPath();
-		if (!$wp_filesystem->put_contents($bootstrapPath, wordfence::getWAFBootstrapContent($this->currentAutoPrependedFile))) {
-			throw new wfWAFAutoPrependHelperException(__('We were unable to create the <code>wordfence-waf.php</code> file in the root of the WordPress installation. It\'s possible WordPress cannot write to the <code>wordfence-waf.php</code> file because of file permissions. Please verify the permissions are correct and retry the installation.', 'wordfence'));
-		}
+	public function performInstallation() {
+		$server_config = RSSSL()->server->auto_prepend_config();
 
-		$serverConfig = $this->getServerConfig();
+		global $wp_filesystem;
+		$bootstrapPath = $this->get_advanced_headers_path();
 
-		$htaccessPath = $this->getHtaccessPath();
+		$htaccessPath = RSSSL()->admin->htaccess_file();
 		$homePath = dirname($htaccessPath);
 
 		$userIniPath = $this->getUserIniPath();
 		$userIni = ini_get('user_ini.filename');
 
+		error_log($server_config);
+		error_log($userIniPath);
+		error_log($userIni);
+
+//		return;
 		$userIniHtaccessDirectives = '';
 		if ($userIni) {
 			$userIniHtaccessDirectives = sprintf('<Files "%s">
@@ -288,14 +329,10 @@ class rsssl_firewall_manager {
 ', addcslashes($userIni, '"'));
 		}
 
-
 		// .htaccess configuration
-		switch ($serverConfig) {
+		switch ($server_config) {
 			case 'apache-mod_php':
-				$autoPrependDirective = sprintf("# Wordfence WAF
-<IfModule mod_php5.c>
-	php_value auto_prepend_file '%1\$s'
-</IfModule>
+				$autoPrependDirective = sprintf("# Really Simple SSL WAF
 <IfModule mod_php7.c>
 	php_value auto_prepend_file '%1\$s'
 </IfModule>
@@ -303,13 +340,13 @@ class rsssl_firewall_manager {
 	php_value auto_prepend_file '%1\$s'
 </IfModule>
 $userIniHtaccessDirectives
-# END Wordfence WAF
+# END Really Simple SSL WAF
 ", addcslashes($bootstrapPath, "'"));
 				break;
 
 			case 'litespeed':
 				$escapedBootstrapPath = addcslashes($bootstrapPath, "'");
-				$autoPrependDirective = sprintf("# Wordfence WAF
+				$autoPrependDirective = sprintf("# Really Simple SSL WAF
 <IfModule LiteSpeed>
 php_value auto_prepend_file '%s'
 </IfModule>
@@ -317,26 +354,25 @@ php_value auto_prepend_file '%s'
 php_value auto_prepend_file '%s'
 </IfModule>
 $userIniHtaccessDirectives
-# END Wordfence WAF
+# END Really Simple SSL WAF
 ", $escapedBootstrapPath, $escapedBootstrapPath);
 				break;
 
 			case 'apache-suphp':
-				$autoPrependDirective = sprintf("# Wordfence WAF
+				$autoPrependDirective = sprintf("# Really Simple SSL WAF
 $userIniHtaccessDirectives
-# END Wordfence WAF
+# END Really Simple SSL WAF
 ", addcslashes($homePath, "'"));
 				break;
 
 			case 'cgi':
 				if ($userIniHtaccessDirectives) {
-					$autoPrependDirective = sprintf("# Wordfence WAF
+					$autoPrependDirective = sprintf("# Really Simple SSL WAF
 $userIniHtaccessDirectives
-# END Wordfence WAF
+# END Really Simple SSL WAF
 ", addcslashes($homePath, "'"));
 				}
 				break;
-
 		}
 
 		if (!empty($autoPrependDirective)) {
@@ -344,7 +380,7 @@ $userIniHtaccessDirectives
 			$htaccessContent = $wp_filesystem->get_contents($htaccessPath);
 
 			if ($htaccessContent) {
-				$regex = '/# Wordfence WAF.*?# END Wordfence WAF/is';
+				$regex = '/# Really Simple SSL .*?# END Really Simple SSL WAF/is';
 				if (preg_match($regex, $htaccessContent, $matches)) {
 					$htaccessContent = preg_replace($regex, $autoPrependDirective, $htaccessContent);
 				} else {
@@ -357,7 +393,7 @@ $userIniHtaccessDirectives
 			if (!$wp_filesystem->put_contents($htaccessPath, $htaccessContent)) {
 				throw new wfWAFAutoPrependHelperException(__('We were unable to make changes to the .htaccess file. It\'s possible WordPress cannot write to the .htaccess file because of file permissions, which may have been set by another security plugin, or you may have set them manually. Please verify the permissions allow the web server to write to the file, and retry the installation.', 'wordfence'));
 			}
-			if ($serverConfig == 'litespeed') {
+			if ($server_config === 'litespeed') {
 				// sleep(2);
 				$wp_filesystem->touch($htaccessPath);
 			}
@@ -365,27 +401,27 @@ $userIniHtaccessDirectives
 		}
 		if ($userIni) {
 			// .user.ini configuration
-			switch ($serverConfig) {
+			switch ($server_config) {
 				case 'cgi':
 				case 'nginx':
 				case 'apache-suphp':
 				case 'litespeed':
 				case 'iis':
-					$autoPrependIni = sprintf("; Wordfence WAF
+					$autoPrependIni = sprintf("; Really Simple SSL WAF
 auto_prepend_file = '%s'
-; END Wordfence WAF
+; END Really Simple SSL WAF
 ", addcslashes($bootstrapPath, "'"));
 
 					break;
 			}
 
-			if (!empty($autoPrependIni)) {
+			if ( !empty($autoPrependIni) ) {
 
 				// Modify .user.ini
 				$userIniContent = $wp_filesystem->get_contents($userIniPath);
 				if (is_string($userIniContent)) {
 					$userIniContent = str_replace('auto_prepend_file', ';auto_prepend_file', $userIniContent);
-					$regex = '/; Wordfence WAF.*?; END Wordfence WAF/is';
+					$regex = '/; Really Simple SSL WAF.*?; END Really Simple SSL WAF/is';
 					if (preg_match($regex, $userIniContent, $matches)) {
 						$userIniContent = preg_replace($regex, $autoPrependIni, $userIniContent);
 					} else {
@@ -395,8 +431,8 @@ auto_prepend_file = '%s'
 					$userIniContent = $autoPrependIni;
 				}
 
-				if (!$wp_filesystem->put_contents($userIniPath, $userIniContent)) {
-					throw new wfWAFAutoPrependHelperException(sprintf(/* translators: File path. */ __('We were unable to make changes to the %1$s file. It\'s possible WordPress cannot write to the %1$s file because of file permissions. Please verify the permissions are correct and retry the installation.', 'wordfence'), basename($userIniPath)));
+				if ( !$wp_filesystem->put_contents($userIniPath, $userIniContent) ) {
+					//RSSSL_SECURITY()->error_handler->add('waf-not-writable');
 				}
 			}
 		}

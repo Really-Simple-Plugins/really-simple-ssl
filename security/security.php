@@ -5,6 +5,7 @@ class REALLY_SIMPLE_SECURITY
 	private static $instance;
 	public $firewall_manager;
 	public $hardening;
+	public $error_handler;
 
 	private function __construct()
 	{
@@ -19,6 +20,7 @@ class REALLY_SIMPLE_SECURITY
 			if ( rsssl_admin_logged_in() ) {
 				self::$instance->firewall_manager = new rsssl_firewall_manager();
 				self::$instance->hardening = new rsssl_hardening();
+				self::$instance->error_handler = new rsssl_error_handler();
 			}
 		}
 		return self::$instance;
@@ -41,6 +43,7 @@ class REALLY_SIMPLE_SECURITY
 			require_once( $path . 'tests.php' );
 			require_once( $path . 'notices.php' );
 			require_once( $path . 'sync-settings.php' );
+			require_once( $path . 'class-error-handler.php' );
 		}
 
 	}

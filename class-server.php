@@ -4,12 +4,14 @@ defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 if ( ! class_exists( 'rsssl_server' ) ) {
 	class rsssl_server {
 		private static $_this;
-
+		private $sapi;
 		function __construct() {
 			if ( isset( self::$_this ) ) {
 				wp_die( sprintf( '%s is a singleton class and you cannot create a second instance.', get_class( $this ) ) );
 			}
 			self::$_this = $this;
+
+			$this->sapi = php_sapi_name();
 		}
 
 		static function this() {
@@ -42,6 +44,7 @@ if ( ! class_exists( 'rsssl_server' ) ) {
 		 */
 
 		public function get_server() {
+
 			//Allows to override server authentication for testing or other reasons.
 			if ( defined( 'RSSSL_SERVER_OVERRIDE' ) ) {
 				return RSSSL_SERVER_OVERRIDE;
@@ -52,13 +55,107 @@ if ( ! class_exists( 'rsssl_server' ) ) {
 			//figure out what server they're using
 			if ( strpos( $server_raw, 'apache' ) !== false ) {
 				return 'apache';
-			} elseif ( strpos( $server_raw, 'nginx' ) !== false ) {
+			} else if ( WF_IS_FLYWHEEL || strpos( $server_raw, 'nginx' ) !== false ) {
 				return 'nginx';
-			} elseif ( strpos( $server_raw, 'litespeed' ) !== false ) {
+			} else if ( false !== strpos( $server_raw, 'litespeed' ) || 'litespeed' === $this->sapi) {
 				return 'litespeed';
+			} else if ( strpos( $server_raw, 'microsoft-iis' ) !== false || false !== strpos( $server_raw, 'expressiondevserver' ) ) {
+				return 'iis';
 			} else { //unsupported server
 				return false;
 			}
+		}
+
+		public function auto_prepend_config(){
+			if (isset($_GET['server_config']) && $this->isValidServerConfig($_GET['server_config'])) {
+				return $_GET['server_config'];
+			} else if ( $this->isApacheModPHP() ){
+				return "apache-mod_php"; //Apache _ modphp
+			} else if ( $this->isApacheSuPHP() ) {
+				return "apache-suphp"; //Apache + SuPHP
+			} else if ( $this->isApache() && !$this->isApacheSuPHP() && ($this->isCGI() || $this->isFastCGI()) ) {
+				return "cgi"; //Apache + CGI/FastCGI
+			} else if ($this->isLiteSpeed()){
+				return "litespeed";
+			} else if ( $this->isNGINX() ) {
+				return "nginx";
+			} else if ( $this->isIIS() ) {
+				return "iis";
+			} else {
+				return "manual";
+			}
+		}
+
+		/**
+		 * @return bool
+		 */
+		public function isApache() {
+			return $this->get_server() === 'apache';
+		}
+
+		public function isValidServerConfig($serverConfig) {
+			$validValues = array(
+				"apache-mod_php",
+				"apache-suphp",
+				"cgi",
+				"litespeed",
+				"nginx",
+				"iis",
+				'manual',
+			);
+			return in_array($serverConfig, $validValues);
+		}
+
+		/**
+		 * @return bool
+		 */
+		public function isNGINX() {
+			return $this->get_server() === 'nginx';
+		}
+
+		/**
+		 * @return bool
+		 */
+		public function isLiteSpeed() {
+			return $this->get_server() === 'litespeed';
+		}
+
+		/**
+		 * @return bool
+		 */
+		public function isIIS() {
+			return $this->get_server() === 'iis';
+		}
+
+		/**
+		 * @return bool
+		 */
+		public function isApacheModPHP() {
+			return $this->isApache() && function_exists('apache_get_modules');
+		}
+
+		/**
+		 * Not sure if this can be implemented at the PHP level.
+		 * @return bool
+		 */
+		public function isApacheSuPHP() {
+			return $this->isApache() && $this->isCGI() &&
+			       function_exists('posix_getuid') &&
+			       getmyuid() === posix_getuid();
+		}
+
+		/**
+		 * @return bool
+		 */
+		public function isCGI() {
+			return !$this->isFastCGI() && stripos($this->sapi, 'cgi') !== false;
+		}
+
+		/**
+		 * @return bool
+		 */
+		public function isFastCGI() {
+			return stripos($this->sapi, 'fastcgi') !== false || stripos($this->sapi, 'fpm-fcgi') !== false;
 		}
 
 		/**
