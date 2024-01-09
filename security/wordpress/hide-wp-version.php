@@ -42,7 +42,7 @@ if ( ! class_exists( 'rsssl_hide_wp_version' ) ) {
 		 *
 		 * @return string
 		 */
-		private function generate_rand_version() {
+		public function generate_rand_version() {
 			if ( !$this->new_version) {
 				$wp_version = get_bloginfo( 'version' );
 				$token      = get_option( 'rsssl_wp_version_token' );
