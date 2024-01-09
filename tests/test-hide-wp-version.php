@@ -19,7 +19,7 @@ class RssslRemoveWPVersionTest extends WP_UnitTestCase {
      * @return void
      */
     public function test_rsssl_remove_wp_version_hooked() {
-        $this->assertNotFalse(has_action('init', 'rsssl_remove_wp_version'));
+        $this->assertNotFalse(has_action('init', array( RSSSL_SECURITY()->components['hide-wp-version'], 'remove_wp_version')));
     }
 
     /**
