@@ -48,20 +48,18 @@ class rsssl_firewall_manager {
 		//no rules? remove the file
 		if ( empty(trim($rules) ) ) {
 			//$this->delete_file();
-			error_log("remove prepend file");
 			$this->remove_prepend_file_in_htaccess();
 			$this->remove_prepend_file_in_wpconfig();
 			return;
 		}
-		error_log("update prepend file");
 
 		$this->update_file($rules);
 
-//		if ( $this->uses_htaccess() ) {
-//			$this->include_prepend_file_in_htaccess();
-//		} else {
+		if ( $this->uses_htaccess() ) {
+			$this->include_prepend_file_in_htaccess();
+		} else {
 			$this->include_prepend_file_in_wp_config();
-//		}
+		}
 	}
 
 	/**
