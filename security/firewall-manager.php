@@ -53,12 +53,12 @@ class rsssl_firewall_manager {
 			return;
 		}
 
-		$this->update_file($rules);
+		//update the file to be included
+		$this->update_firewall($rules);
 
+		$this->include_prepend_file_in_wp_config();
 		if ( $this->uses_htaccess() ) {
 			$this->include_prepend_file_in_htaccess();
-		} else {
-			$this->include_prepend_file_in_wp_config();
 		}
 	}
 
@@ -130,7 +130,7 @@ class rsssl_firewall_manager {
 	 *
 	 * @return void
 	 */
-	private function update_file( string $rules): void {
+	private function update_firewall( string $rules): void {
 		if ( !rsssl_user_can_manage() ) {
 			return;
 		}
@@ -201,16 +201,23 @@ class rsssl_firewall_manager {
 	}
 
 	/**
-	 * Check if this server uses .htaccess
+	 * Check if this server uses .htaccess. Not by checking the server header, but simply by checking
+	 * if the htaccess file exists.
 	 *
 	 * @return bool
 	 */
+
 	private function uses_htaccess(): bool {
-		return RSSSL()->server->uses_htaccess();
+		return $this->file_exists($this->htaccess_path() );
 	}
 
 	private function include_prepend_file_in_htaccess(): void {
 		if ( !$this->file_exists( $this->file ) ) {
+			return;
+		}
+
+		//check if the wp-config contains the if constant condition, to prevent duplicate loading. If not, try upgrading. If that fails, skip.
+		if ( !$this->wp_config_contains_latest() ) {
 			return;
 		}
 
@@ -225,9 +232,9 @@ class rsssl_firewall_manager {
 		$htaccess_file = $this->htaccess_path();
 		if ( $this->file_exists( $htaccess_file ) ) {
 			$rules = implode( "\n", $rules );
-			$content_htaccess = $this->get_contents( $htaccess_file );
+			$content = $this->get_contents( $htaccess_file );
 			//remove first, to ensure we are at the top of the file.
-			$content_htaccess = preg_replace( $pattern_content, "", $content_htaccess);
+			$content = preg_replace( $pattern_content, "", $content);
 			if ( !empty( $rules ) ) {
 				if ( ! $this->is_writable( $htaccess_file ) ) {
 					update_site_option( 'rsssl_htaccess_error', 'not-writable' );
@@ -236,7 +243,7 @@ class rsssl_firewall_manager {
 					delete_site_option( 'rsssl_htaccess_error' );
 					delete_site_option( 'rsssl_htaccess_rules' );
 					//add rules as new block
-					$new_htaccess = $start . $rules . $end . $content_htaccess;
+					$new_htaccess = $start . $rules . $end . $content;
 
 					#clean up
 					if (strpos($new_htaccess, "\n" ."\n" . "\n" )!==false) {
@@ -258,33 +265,32 @@ class rsssl_firewall_manager {
 		if ( !rsssl_user_can_manage() ) {
 			return;
 		}
-		$wpconfig_path = $this->find_wp_config_path();
-		$wpconfig      = file_get_contents( $wpconfig_path );
-		if ( $this->is_writable( $wpconfig_path ) && strpos( $wpconfig, 'advanced-headers.php' ) === false ) {
-			// As WP_CONTENT_DIR is not defined at this point in the wp-config, we can't use that.
-			// for those setups where the WP_CONTENT_DIR is not in the default location, we hardcode the path.
+		$file = $this->wpconfig_path();
+		$content      = file_get_contents( $file );
+		if ( $this->is_writable( $file ) && strpos( $content, 'advanced-headers.php' ) === false ) {
 			$rule = $this->get_wp_config_rule();
 
 			//if RSSSL comment is found, insert after
 			$rsssl_comment = '//END Really Simple SSL Server variable fix';
-			if ( strpos($wpconfig, $rsssl_comment)!==false ) {
-				$pos = strrpos($wpconfig, $rsssl_comment);
-				$updated = substr_replace($wpconfig, $rsssl_comment."\n" . $rule . "\n", $pos, strlen($rsssl_comment));
+			if ( strpos($content, $rsssl_comment)!==false ) {
+				$pos = strrpos($content, $rsssl_comment);
+				$updated = substr_replace($content, $rsssl_comment."\n" . $rule . "\n", $pos, strlen($rsssl_comment));
 			} else {
-				$updated = preg_replace( '/' . '<\?php' . '/', '<?php' . "\n" . $rule . "\n", $wpconfig, 1 );
-			}
-			if (strpos($updated, "\n" ."\n" . "\n" )!==false) {
-				$new_htaccess = str_replace("\n" . "\n" . "\n", "\n" ."\n", $updated);
+				$updated = preg_replace( '/' . '<\?php' . '/', '<?php' . "\n" . $rule . "\n", $content, 1 );
 			}
 
-			$this->put_contents( $wpconfig_path, $updated );
+			if (strpos($updated, "\n" ."\n" . "\n" )!==false) {
+				$updated = str_replace("\n" . "\n" . "\n", "\n" ."\n", $updated);
+			}
+
+			$this->put_contents( $file, $updated );
 		}
 
 		//save errors
-		if ( $this->is_writable( WP_CONTENT_DIR ) && ($this->is_writable( $wpconfig_path ) || strpos( $wpconfig, 'advanced-headers.php' ) !== false ) ) {
+		if ( $this->is_writable( WP_CONTENT_DIR ) && ($this->is_writable( $file ) || strpos( $content, 'advanced-headers.php' ) !== false ) ) {
 			update_option('rsssl_firewall_error', false, false );
 		} else {
-			if ( !$this->is_writable( $wpconfig_path ) ) {
+			if ( !$this->is_writable( $file ) ) {
 				update_option('rsssl_firewall_error', 'wpconfig-notwritable', false );
 			} else if ( !$this->is_writable( WP_CONTENT_DIR )) {
 				update_option('rsssl_firewall_error', 'advanced-headers-notwritable', false );
@@ -302,13 +308,13 @@ class rsssl_firewall_manager {
 		}
 		$start = '#Begin Really Simple Auto Prepend File ' . "\n";
 		$end   = "\n" . '#End Really Simple Auto Prepend File' . "\n";
-		$pattern_content = '/'.$start.'(.*?)'.$end.'/is';
+		$pattern = '/'.$start.'(.*?)'.$end.'/is';
 		$htaccess_file = $this->htaccess_path();
 		if ( $this->file_exists( $htaccess_file ) ) {
-			$content_htaccess = $this->get_contents( $htaccess_file );
+			$content = $this->get_contents( $htaccess_file );
 			//remove first, to ensure we are at the top of the file.
-			$content_htaccess = preg_replace( $pattern_content, "", $content_htaccess);
-			$this->put_contents($htaccess_file, $content_htaccess);
+			$content = preg_replace( $pattern, "", $content);
+			$this->put_contents($htaccess_file, $content);
 		}
 	}
 
@@ -317,16 +323,16 @@ class rsssl_firewall_manager {
 			return;
 		}
 
-		$wpconfig_path = $this->find_wp_config_path();
-		if ( $this->is_writable( $wpconfig_path ) ) {
-			$wpconfig = $this->get_contents( $wpconfig_path );
+		$file = $this->wpconfig_path();
+		if ( $this->is_writable( $file ) ) {
+			$content = $this->get_contents( $file );
 			$rule = $this->get_wp_config_rule();
-			if ( strpos( $wpconfig, $rule ) !== false ) {
-				$updated_wpconfig = str_replace( $rule, '', $wpconfig );
-				if (strpos($updated_wpconfig, "\n" ."\n" . "\n" )!==false) {
-					$updated_wpconfig = str_replace("\n" . "\n" . "\n", "\n" ."\n", $updated_wpconfig);
+			if ( strpos( $content, $rule ) !== false ) {
+				$content = str_replace( $rule, '', $content );
+				if (strpos($content, "\n" ."\n" . "\n" )!==false) {
+					$content = str_replace("\n" . "\n" . "\n", "\n" ."\n", $content);
 				}
-				$this->put_contents( $wpconfig_path, $updated_wpconfig );
+				$this->put_contents( $file, $content );
 			}
 		}
 	}
@@ -445,23 +451,59 @@ class rsssl_firewall_manager {
 		return $notices;
 	}
 
+	/**
+	 * // As WP_CONTENT_DIR is not defined at this point in the wp-config, we can't use that.
+	 * // for those setups where the WP_CONTENT_DIR is not in the default location, we hardcode the path.
+	 *
+	 * @return string
+	 */
 	public function get_wp_config_rule(){
-
 		if ( $this->use_dynamic_path ) {
-			$rule = 'if (file_exists( ABSPATH . "wp-content/advanced-headers.php")) {' . "\n";
+			$rule = 'if (!defined("RSSSL_HEADERS_ACTIVE") && file_exists( ABSPATH . "wp-content/advanced-headers.php")) {' . "\n";
 			$rule .= "\t" . 'require_once ABSPATH . "wp-content/advanced-headers.php";' . "\n" . '}';
 		} else {
-			$rule = 'if (file_exists(\'' . WP_CONTENT_DIR . '/advanced-headers.php\')) {' . "\n";
+			$rule = 'if (!defined("RSSSL_HEADERS_ACTIVE") && file_exists(\'' . WP_CONTENT_DIR . '/advanced-headers.php\')) {' . "\n";
 			$rule .= "\t" . 'require_once \'' . WP_CONTENT_DIR . '/advanced-headers.php\';' . "\n" . '}';
 		}
 		return $rule;
 	}
 
 	/**
+	 * check if the wp-config contains the if constant condition, to prevent duplicate loading. If not, try upgrading. If that fails, skip.
+	 */
+	private function wp_config_contains_latest() {
+		return $this->update_wp_config_rule();
+	}
+
+	/**
+	 * called in upgrade.php, to upgrade older rules to the latest
+	 *
+	 * @return bool
+	 */
+	public function update_wp_config_rule(){
+		$file = $this->wpconfig_path();
+		if ( !$file ) {
+			return false;
+		}
+
+		$content = $this->get_contents($file);
+		$find = '(file_exists( ABSPATH . "wp-content/advanced-headers.php"))';
+		if ( false !== strpos($content, $find ) ) {
+			if ( !$this->is_writable( $file )) {
+				return false;
+			}
+			$replace = '(!defined("RSSSL_HEADERS_ACTIVE") && file_exists( ABSPATH . "wp-content/advanced-headers.php"))';
+			$content = str_replace( $find, $replace, $content);
+			$this->put_contents($file, $content);
+		}
+		return true;
+	}
+
+	/**
 	 * Admin is not always loaded here, so we define our own function
 	 * @return string|null
 	 */
-	public function find_wp_config_path()
+	public function wpconfig_path()
 	{
 		//limit nr of iterations to 5
 		$i = 0;

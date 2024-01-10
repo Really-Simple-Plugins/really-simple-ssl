@@ -111,6 +111,9 @@ The plugin checks your certificate before enabling, but if, for example, you mig
 If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions](https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/) instead.
 
 == Changelog ==
+= 7.2.2 =
+* Improvement: auto prepend file
+
 = 7.2.1 =
 * Fix: Config for CSP preventing Learning mode from completing
 * Fix: datatable styling
