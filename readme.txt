@@ -113,6 +113,9 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 == Changelog ==
 = 7.2.2 =
 * Improvement: auto prepend file
+* Improvement: new onboarding setup
+* Improvement: improved hide wp-version logic
+
 
 = 7.2.1 =
 * Fix: Config for CSP preventing Learning mode from completing

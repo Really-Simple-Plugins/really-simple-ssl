@@ -570,23 +570,19 @@ if (!class_exists('rsssl_multisite')) {
         /**
          * Test if a domain has a subfolder structure
          *
-         * @since  2.2
-         *
          * @param string $domain
          *
-         * @access private
+         * @access public
          *
          * @return bool
+         * @since  2.2
+         *
          */
 
-        public function is_subfolder($domain)
-        {
+        public function is_subfolder(string $domain): bool {
             //remove slashes of the http(s)
             $domain = preg_replace("/(http:\/\/|https:\/\/)/", "", $domain);
-            if ( strpos($domain, "/") !== FALSE ) {
-                return true;
-            }
-            return false;
+	        return strpos( $domain, "/" ) !== false;
         }
 
         /**
@@ -606,7 +602,9 @@ if (!class_exists('rsssl_multisite')) {
 
             //prevent showing the review on edit screen, as gutenberg removes the class which makes it editable.
             $screen = get_current_screen();
-	        if ( $screen && $screen->base === 'post' ) return;
+	        if ( $screen && $screen->base === 'post' ) {
+				return;
+	        }
 
 	        if ( !$this->is_settings_page() ) {
 		        $notices = RSSSL()->admin->get_notices_list( array('admin_notices'=>true) );
