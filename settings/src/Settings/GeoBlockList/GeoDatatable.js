@@ -88,7 +88,8 @@ const GeoDatatable = (props) => {
         if (dataActions) {
             fetchCountryData(field.action, dataActions)
         }
-    }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, dataActions.currentRowsPerPage, fieldAlreadyEnabled('enable_limited_login_attempts')]);
+    }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page,
+        dataActions.currentRowsPerPage, fieldAlreadyEnabled('enable_limited_login_attempts')]);
 
     let enabled = getFieldValue('geo_blocklist_enabled');
 
@@ -177,8 +178,7 @@ const GeoDatatable = (props) => {
             await removeRowMultiple(ids, 'blocked', dataActions );
             setRowsSelected([]);
         } else {
-            console.log('test',code);
-            await removeRow(code, 'blocked', dataActions);
+            await removeRow(code, dataActions);
         }
 
         await fetchDynamicData('event_log');
@@ -191,8 +191,6 @@ const GeoDatatable = (props) => {
             await addRowMultiple(ids, 'blocked', dataActions);
             setRowsSelected([]);
         } else {
-            console.log('test',code)
-            console.log('test name',name)
             await addRow(code, name, dataActions);
         }
 
@@ -229,7 +227,7 @@ const GeoDatatable = (props) => {
     const generateActionButtons = useCallback((code, name, region_name) => {
         return (<div className="rsssl-action-buttons">
             {getCurrentFilter(moduleName) === 'blocked' && (
-                <ActionButton onClick={() => allowById(id)}
+                <ActionButton onClick={() => allowCountryByCode(code)}
                               className="button-secondary">
                     {__("Allow", "really-simple-ssl")}
                 </ActionButton>
@@ -273,7 +271,7 @@ const GeoDatatable = (props) => {
         } else {
             dataItem.action = generateActionButtons(dataItem.iso2_code, dataItem.status, dataItem.region);
         }
-        dataItem.flag = generateFlag(dataItem.iso2_code, dataItem.country_name);
+        dataItem.iso2_code = generateFlag(dataItem.iso2_code, dataItem.country_name);
         dataItem.status = __(dataItem.status = dataItem.status.charAt(0).toUpperCase() + dataItem.status.slice(1), 'really-simple-ssl');
         data[key] = dataItem;
     }

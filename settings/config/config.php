@@ -730,7 +730,7 @@ function rsssl_fields( $load_values = true ) {
 					'name'       => __('', 'really-simple-ssl'),
 					'sortable'   => true,
 					'searchable' => true,
-					'column'     => 'flag',
+					'column'     => 'iso2_code',
 					'width'      => '10%',
 				],
 				[
@@ -738,13 +738,13 @@ function rsssl_fields( $load_values = true ) {
 					'sortable'   => true,
 					'searchable' => true,
 					'column'     => 'country_name',
-					'width'      => '20%',
+					'width'      => '30%',
 				],
 				[
 					'name'     => __('Status', 'really-simple-ssl'),
 					'sortable' => false,
 					'column'   => 'status',
-					'width'    => '10%',
+					'width'    => '20%',
 				],
 				[
 					'name'     => '',

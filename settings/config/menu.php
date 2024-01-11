@@ -184,56 +184,6 @@ function rsssl_menu() {
 							'premium_title'        => 'Advanced: Cross Origin Policy',
 							'helpLink'             => 'https://really-simple-ssl.com/instructions/cross-origin-policies/?mtm_campaign=instructions&mtm_source=free',
 						],
-						[
-							'id'      => 'geo_block_list',
-							'title'   => __( 'Geo Blocking', 'really-simple-ssl' ),
-							'premium' => true,
-							'groups'  => [
-								[
-									'id'            => 'geo_block_list_general',
-									'group_id'      => 'geo_block_list_general',
-									'helpLink'      => 'https://really-simple-ssl.com/instructions/about-geo-blocking/?mtm_campaign=instructions&mtm_source=free',
-									'premium'       => true,
-									'premium_title' => __( 'Geo Blocklist General', 'really-simple-ssl' ),
-									'premium_text'  => __( 'Enabling this feature will block visitors from the countries you select. You can also block entire continents, or allow only specific countries.',
-										'really-simple-ssl' ),
-									'upgrade'       => 'https://really-simple-ssl.com/pro/?mtm_campaign=lla&mtm_source=free&mtm_content=upgrade',
-									'title'         => __( 'General', 'really-simple-ssl' ),
-									'intro'         => __( 'Block visitors from specific countries, or continents. You can also allow only specific countries.',
-										'really-simple-ssl' ),
-								],
-								[
-									'id'                   => 'geo_block_list_listing',
-									'group_id'             => 'geo_block_list_listing',
-									'networkwide_required' => true,
-									'premium'              => true,
-									'premium_text'         => __( 'This feature allows you to block visitors from your website based on country',
-										'really-simple-ssl' ),
-									'upgrade'              => 'https://really-simple-ssl.com/pro/?mtm_campaign=cops&mtm_source=free&mtm_content=upgrade',
-									'title'                => __( 'Geo Block List', 'really-simple-ssl' ),
-									'premium_title'        => __( 'Geo Block List', 'really-simple-ssl' ),
-									'groupFilter'          => [
-										'default' => 'countries',
-										'id'      => 'rsssl-group-filter-geo_block_list',
-										'options' => [
-											[
-												'id'    => 'blocked',
-												'title' => __( 'Blocked', 'really-simple-ssl' ),
-											],
-											[
-												'id'    => 'regions',
-												'title' => __( 'Continents', 'really-simple-ssl' ),
-											],
-											[
-												'id'    => 'countries',
-												'title' => __( 'Countries', 'really-simple-ssl' ),
-											],
-										],
-									],
-								],
-							]
-						],
-
 					],
 				],
 				[
@@ -588,6 +538,59 @@ function rsssl_menu() {
 						],
 					],
 
+				],
+				[
+					'id' => 'access_control',
+					'title' => __( 'Access Control', 'really-simple-ssl' ),
+					'featured'   => false,
+					'new'        => true,
+					'menu_items' => [
+						[
+							'id'      => 'geo_block_list',
+							'title'   => __( 'Geo Blocking', 'really-simple-ssl' ),
+							'premium' => true,
+							'groups'  => [
+								[
+									'id'            => 'geo_block_list_general',
+									'group_id'      => 'geo_block_list_general',
+									'helpLink'      => 'https://really-simple-ssl.com/instructions/about-geo-blocking/?mtm_campaign=instructions&mtm_source=free',
+									'premium'       => true,
+									'premium_title' => __( 'Geo Blocklist General', 'really-simple-ssl' ),
+									'premium_text'  => __( 'Enabling this feature will block visitors from the countries you select. You can also block entire continents, or allow only specific countries.',
+										'really-simple-ssl' ),
+									'upgrade'       => 'https://really-simple-ssl.com/pro/?mtm_campaign=lla&mtm_source=free&mtm_content=upgrade',
+									'title'         => __( 'General', 'really-simple-ssl' ),
+									'intro'         => __( 'Block visitors from specific countries, or continents. You can also allow only specific countries.',
+										'really-simple-ssl' ),
+								],
+								[
+									'id'                   => 'geo_block_list_listing',
+									'group_id'             => 'geo_block_list_listing',
+									'networkwide_required' => true,
+									'premium'              => true,
+									'premium_text'         => __( 'This feature allows you to block visitors from your website based on country',
+										'really-simple-ssl' ),
+									'upgrade'              => 'https://really-simple-ssl.com/pro/?mtm_campaign=cops&mtm_source=free&mtm_content=upgrade',
+									'title'                => __( 'Geo Block List', 'really-simple-ssl' ),
+									'premium_title'        => __( 'Geo Block List', 'really-simple-ssl' ),
+									'groupFilter'          => [
+										'default' => 'countries',
+										'id'      => 'rsssl-group-filter-geo_block_list',
+										'options' => [
+											[
+												'id'    => 'blocked',
+												'title' => __( 'Blocked', 'really-simple-ssl' ),
+											],
+											[
+												'id'    => 'countries',
+												'title' => __( 'Allowed', 'really-simple-ssl' ),
+											],
+										],
+									],
+								],
+							]
+						],
+					]
 				],
 			],
 		],

@@ -2568,7 +2568,6 @@ const GeoDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, 
       country_code: country,
       country_name: name
     };
-    console.log(data);
     try {
       const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('geo_block_add_blocked_country', data);
       // Consider checking the response structure for any specific success or failure signals
@@ -2637,15 +2636,15 @@ const GeoDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, 
       });
     }
   },
-  removeRow: async (country, name, dataActions) => {
+  removeRow: async (country, dataActions) => {
     set({
       processing: true
     });
+    let data = {
+      country_code: country
+    };
     try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('geo_block_remove_blocked_country', {
-        country,
-        name
-      });
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('geo_block_remove_blocked_country', data);
       // Consider checking the response structure for any specific success or failure signals
       if (response && response.request_success) {
         await get().fetchCountryData('rsssl_geo_list', dataActions);
@@ -2997,8 +2996,7 @@ const GeoDatatable = props => {
       await removeRowMultiple(ids, 'blocked', dataActions);
       setRowsSelected([]);
     } else {
-      console.log('test', code);
-      await removeRow(code, 'blocked', dataActions);
+      await removeRow(code, dataActions);
     }
     await fetchDynamicData('event_log');
   }, [removeRow, removeRowMultiple, dataActions, getCurrentFilter(moduleName)]);
@@ -3008,8 +3006,6 @@ const GeoDatatable = props => {
       await addRowMultiple(ids, 'blocked', dataActions);
       setRowsSelected([]);
     } else {
-      console.log('test', code);
-      console.log('test name', name);
       await addRow(code, name, dataActions);
     }
     await fetchDynamicData('event_log');
@@ -3041,7 +3037,7 @@ const GeoDatatable = props => {
     return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-action-buttons"
     }, getCurrentFilter(moduleName) === 'blocked' && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
-      onClick: () => allowById(id),
+      onClick: () => allowCountryByCode(code),
       className: "button-secondary"
     }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("Allow", "really-simple-ssl")), getCurrentFilter(moduleName) === 'regions' && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
       onClick: () => blockRegionByCode(id, region_name),
@@ -3066,7 +3062,7 @@ const GeoDatatable = props => {
     } else {
       dataItem.action = generateActionButtons(dataItem.iso2_code, dataItem.status, dataItem.region);
     }
-    dataItem.flag = generateFlag(dataItem.iso2_code, dataItem.country_name);
+    dataItem.iso2_code = generateFlag(dataItem.iso2_code, dataItem.country_name);
     dataItem.status = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)(dataItem.status = dataItem.status.charAt(0).toUpperCase() + dataItem.status.slice(1), 'really-simple-ssl');
     data[key] = dataItem;
   }
@@ -24885,4 +24881,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.a3c351c3c1553388b5da.js.map
+//# sourceMappingURL=src_Settings_Field_js.b3f2bdcfdb4d38438449.js.map

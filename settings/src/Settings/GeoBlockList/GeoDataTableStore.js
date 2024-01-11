@@ -93,7 +93,6 @@ const GeoDataTableStore = create((set, get) => ({
                 country_code: country,
                 country_name: name
             };
-        console.log(data);
         try {
             const response = await rsssl_api.doAction('geo_block_add_blocked_country', data);
             // Consider checking the response structure for any specific success or failure signals
@@ -149,10 +148,13 @@ const GeoDataTableStore = create((set, get) => ({
         }
     },
 
-    removeRow: async (country, name, dataActions) => {
+    removeRow: async (country, dataActions) => {
         set({processing: true});
+        let data = {
+            country_code: country
+        };
         try {
-            const response = await rsssl_api.doAction('geo_block_remove_blocked_country', {country, name});
+            const response = await rsssl_api.doAction('geo_block_remove_blocked_country', data);
             // Consider checking the response structure for any specific success or failure signals
             if (response && response.request_success) {
                 await get().fetchCountryData('rsssl_geo_list', dataActions);
