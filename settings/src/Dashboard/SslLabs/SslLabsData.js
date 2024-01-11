@@ -105,9 +105,12 @@ const useSslLabs = create(( set, get ) => ({
             }
 
         });
-
     },
     processSslData: (sslData) => {
+        if ( !sslData ) {
+            sslData = {};
+        }
+
         let progress = sslData.progress ? sslData.progress : 0;
         let startTime = sslData.startTime ? sslData.startTime : '';
         let statusMessage = sslData.statusMessage ? sslData.statusMessage : '';

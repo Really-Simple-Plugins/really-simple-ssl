@@ -119,6 +119,7 @@ function rsssl_plugin_admin_scripts()
 			apply_filters('rsssl_localize_script', [
 				'json_translations' => $js_data['json_translations'],
 				'menu' => rsssl_menu(),
+				'is_bf' => RSSSL()->admin->is_bf(),
 				'site_url' => get_rest_url(),
 				'plugins_url' => admin_url('update-core.php'),
 				'admin_ajax_url' => add_query_arg(
@@ -139,9 +140,19 @@ function rsssl_plugin_admin_scripts()
 				'nonce' => wp_create_nonce('wp_rest'),//to authenticate the logged in user
 				'rsssl_nonce' => wp_create_nonce('rsssl_nonce'),
 				'wpconfig_fix_required' => RSSSL()->admin->do_wpconfig_loadbalancer_fix() && !RSSSL()->admin->wpconfig_has_fixes(),
+				'cloudflare' => rsssl_uses_cloudflare(),
 			])
 		);
 	}
+}
+
+/**
+ * Check if this server is behind CloudFlare
+ *
+ * @return bool
+ */
+function rsssl_uses_cloudflare(): bool {
+    return isset( $_SERVER['HTTP_CF_CONNECTING_IP'] );
 }
 
 /**
@@ -375,6 +386,13 @@ function rsssl_do_action($request, $ajax_data = false)
 		    $response = [];
 		    $response['roles'] = $roles;
 		    break;
+	    case 'get_hosts':
+		    if ( !class_exists('rsssl_le_hosts')) {
+			    require_once( rsssl_path . 'lets-encrypt/config/class-hosts.php');
+		    }
+		    $response = [];
+            $response['hosts'] = ( new rsssl_le_hosts() )->hosts;
+            break;
         default:
 	        $response = apply_filters("rsssl_do_action", [], $action, $data);
     }

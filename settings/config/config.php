@@ -24,6 +24,17 @@ function rsssl_fields( $load_values = true ) {
 			'default'  => false,
 		],
 		[
+			'id'       => 'other_host_type',
+			'menu_id'  => 'general',
+			'group_id' => 'general',
+			'type'     => 'host',
+			//options loaded in data store
+			'default'  => false,
+			'label'    => __( "Hosting provider", 'really-simple-ssl' ),
+			'required' => false,
+			'disabled' => false,
+		],
+		[
 			'id'       => 'review_notice_shown',
 			'menu_id'  => 'general',
 			'group_id' => 'general',

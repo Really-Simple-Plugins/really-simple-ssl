@@ -48,14 +48,16 @@ if ( ! class_exists( 'rsssl_server' ) ) {
 			}
 
 			$server_raw = strtolower( htmlspecialchars( $_SERVER['SERVER_SOFTWARE'] ) );
-
-			//figure out what server they're using
 			if ( strpos( $server_raw, 'apache' ) !== false ) {
 				return 'apache';
 			} elseif ( strpos( $server_raw, 'nginx' ) !== false ) {
 				return 'nginx';
 			} elseif ( strpos( $server_raw, 'litespeed' ) !== false ) {
 				return 'litespeed';
+			} elseif ( strpos( $server_raw, 'openresty' ) !== false ) {
+				return 'openresty';
+			} elseif ( strpos( $server_raw, 'microsoft-iis' ) !== false ) {
+				return 'microsoft-iis';
 			} else { //unsupported server
 				return false;
 			}

@@ -322,13 +322,21 @@ class rsssl_admin {
 	 *  Activate the SSL for this site
 	 */
 
-	public function activate_ssl( $data ) {
-		if ( ! rsssl_user_can_manage() ) {
-			return [
-				'success'          => false,
-				'site_url_changed' => false,
-			];
-		}
+    public function activate_ssl($data) {
+        //skip activation if safe mode
+	    if ( defined( 'RSSSL_SAFE_MODE' ) && RSSSL_SAFE_MODE ) {
+            return [
+                'success'          => true,
+                'site_url_changed' => false,
+            ];
+        }
+
+	    if ( !rsssl_user_can_manage()  ) {
+		    return [
+			    'success' => false,
+			    'site_url_changed' => false,
+		    ];
+        }
 
 		$safe_mode        = defined( 'RSSSL_SAFE_MODE' ) && RSSSL_SAFE_MODE;
 		$error            = false;
@@ -2297,7 +2305,6 @@ class rsssl_admin {
 					),
 				),
 			),
-
 			'bf_notice2023'                        => array(
 				'condition' => array(
 					'RSSSL()->admin->is_bf',
@@ -2313,76 +2320,58 @@ class rsssl_admin {
 					),
 				),
 			),
-
-			'upgraded_to_6'                        => array(
-				'condition' => array(
-					'RSSSL()->admin->is_upgraded_to_6',
-				),
-				'callback'  => '_true_',
-				'output'    => array(
-					'true' => array(
-						'msg'          => __( 'Thanks for updating to Really Simple SSL 6.0! Check out our new features on the settings page.', 'really-simple-ssl' ),
-						'icon'         => 'open',
-						'admin_notice' => true,
-						'url'          => add_query_arg( [ 'page' => 'really-simple-security' ], rsssl_admin_url() ),
-						'dismissible'  => true,
-						'plusone'      => true,
-					),
-				),
-			),
-
-			'ajax_fallback'                        => array(
-				'condition' => array(
-					'wp_option_rsssl_ajax_fallback_active',
-				),
-				'callback'  => '_true_',
-				'output'    => array(
-					'true' => array(
-						'msg'          => __( 'Please check if your REST API is loading correctly. Your site currently is using the slower Ajax fallback method to load the settings.', 'really-simple-ssl' ),
-						'icon'         => 'warning',
-						'admin_notice' => false,
-						'url'          => 'https://really-simple-ssl.com/instructions/how-to-debug-a-blank-settings-page-in-really-simple-ssl/',
-						'dismissible'  => true,
-						'plusone'      => true,
-					),
-				),
-			),
-			'vul_beta'                             => array(
-				'callback' => '_true_',
-				'output'   => array(
-					'true' => array(
-						'msg'          => __( 'Our vulnerability reporting is in beta. Signup for the beta to discover the new features!', 'really-simple-ssl' ),
-						'icon'         => 'urgent',
-						'admin_notice' => false,
-						'url'          => 'https://really-simple-ssl.com/vulnerability-reporting/',
-						'dismissible'  => true,
-						'plusone'      => true,
-					),
-				),
-			),
-			'email_verification_not_verified'      => array(
-				'callback' => 'RSSSL()->mailer_admin->email_verification_completed',
-				'output'   => array(
-					'false' => array(
-						'highlight_field_id' => 'notifications_email_address',
-						'msg'                => __( 'Email verification has not been completed yet. Check your email and click the link', 'really-simple-ssl' ),
-						'icon'               => 'open',
-						'admin_notice'       => false,
-						'url'                => 'https://really-simple-ssl.com/instructions/email-verification/',
-						'dismissible'        => true,
-						'plusone'            => true,
-					),
-					'true'  => array(
-						'msg'          => __( 'Email address successfully verified', 'really-simple-ssl' ),
-						'icon'         => 'success',
-						'admin_notice' => false,
-						'url'          => 'https://really-simple-ssl.com/instructions/email-verification/',
-						'dismissible'  => true,
-						'plusone'      => false,
-					),
-				),
-			),
-		);
+			'ajax_fallback' => array(
+	            'condition'  => array(
+                        'wp_option_rsssl_ajax_fallback_active',
+                ),
+	            'callback' => '_true_',
+	            'output' => array(
+		            'true' => array(
+			            'msg' => __( "Please check if your REST API is loading correctly. Your site currently is using the slower Ajax fallback method to load the settings.", 'really-simple-ssl' ),
+			            'icon' => 'warning',
+			            'admin_notice' => false,
+			            'url' => 'https://really-simple-ssl.com/instructions/how-to-debug-a-blank-settings-page-in-really-simple-ssl/',
+			            'dismissible' => true,
+			            'plusone' => true,
+		            ),
+	            ),
+            ),
+	        'vul_beta' => array(
+		        'callback' => '_true_',
+		        'output' => array(
+			        'true' => array(
+				        'msg' => __( "Our vulnerability reporting is in beta. Signup for the beta to discover the new features!", 'really-simple-ssl' ),
+				        'icon' => 'urgent',
+				        'admin_notice' => false,
+				        'url' => 'https://really-simple-ssl.com/vulnerability-reporting/',
+				        'dismissible' => true,
+				        'plusone' => true,
+			        ),
+		        ),
+	        ),
+	        'email_verification_not_verified' => array(
+		        'callback' => 'RSSSL()->mailer_admin->email_verification_completed',
+		        'output' => array(
+			        'false' => array(
+				        'highlight_field_id' => 'notifications_email_address',
+				        'msg' => __( "Email verification has not been completed yet. Check your email and click the link", 'really-simple-ssl' ),
+				        'icon' => 'open',
+				        'admin_notice' => false,
+				        'url' => 'https://really-simple-ssl.com/instructions/email-verification/',
+				        'dismissible' => true,
+				        'plusone' => true,
+			        ),
+			        'true' => array(
+				        'msg' => __( "Email address successfully verified", 'really-simple-ssl' ),
+				        'icon' => 'success',
+				        'admin_notice' => false,
+				        'url' => 'https://really-simple-ssl.com/instructions/email-verification/',
+				        'dismissible' => true,
+				        'plusone' => false,
+			        ),
+		        ),
+	        ),
+        );
 
 		//on multisite, don't show the notice on subsites.
 		//we can't make different sets for network admin and for subsites (at least not for admin notices), as these notices are cached,
