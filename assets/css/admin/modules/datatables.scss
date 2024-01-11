@@ -323,8 +323,8 @@ nav.rdt_Pagination > div > svg {
 
 /* EdgeCase: GeoBlockList */
 .rsssl-geo_block_list_listing {
-  .rsssl-field-wrap {
-    padding: 0 !important;
+  .rdt_TableHeadRow {
+    padding-left: 10px;
   }
 }
 

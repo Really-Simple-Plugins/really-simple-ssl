@@ -110,12 +110,15 @@ const GeoDataTableStore = create((set, get) => ({
         }
     },
 
-    addRowMultiple: async (countries, status, dataActions) => {
+    addRowMultiple: async (countries, dataActions) => {
         set({processing: true});
+        let data = {
+            country_code: countries
+        }
         try {
-            const response = await rsssl_api.doAction('geo_block_add_blocked_country', {countries, status});
+            const response = await rsssl_api.doAction('geo_block_add_blocked_country', data);
             // Consider checking the response structure for any specific success or failure signals
-            if (response && response.request_success) {
+            if (response && response.success) {
                 await get().fetchCountryData('rsssl_geo_list', dataActions);
                 // Potentially notify the user of success, if needed.
             } else {
@@ -129,12 +132,15 @@ const GeoDataTableStore = create((set, get) => ({
         }
     },
 
-    removeRowMultiple: async (countries, status, dataActions) => {
+    removeRowMultiple: async (countries, dataActions) => {
         set({processing: true});
+        let data = {
+            country_code: countries
+        }
         try {
-            const response = await rsssl_api.doAction('geo_block_remove_blocked_country', {countries, status});
+            const response = await rsssl_api.doAction('geo_block_remove_blocked_country', data);
             // Consider checking the response structure for any specific success or failure signals
-            if (response && response.request_success) {
+            if (response && response.success) {
                 await get().fetchCountryData('rsssl_geo_list', dataActions);
                 // Potentially notify the user of success, if needed.
             } else {
@@ -170,118 +176,12 @@ const GeoDataTableStore = create((set, get) => ({
 
         }
     },
-
-    addRegion: async (region, status, dataActions) => {
-        try {
-            const response = await rsssl_api.doAction('add_region_to_list', {region, status});
-            if (response && response.request_success) {
-                // Do any immediate operations here if needed
-                await get().fetchCountryData('rsssl_geo_list', dataActions);
-            } else {
-                console.error("Failed to add region: ", response.message);
-            }
-        } catch (e) {
-            console.error(e);
-        } finally {
-            set({processing: false});
-        }
-    },
-    addRegions: async (regions, status, dataActions) => {
-        try {
-            const response = await rsssl_api.doAction('add_regions_to_list', {regions, status});
-            if (response && response.request_success) {
-                // Do any immediate operations here if needed
-                await get().fetchCountryData('rsssl_geo_list', dataActions);
-            } else {
-                console.error("Failed to add regions: ", response.message);
-            }
-        } catch (e) {
-            console.error(e);
-        } finally {
-            set({processing: false});
-        }
-
-    },
-    removeRegion: async (region, status, dataActions) => {
-        set({processing: true});
-        try {
-            const response = await rsssl_api.doAction('remove_region_from_list', {region, status});
-            // Consider checking the response structure for any specific success or failure signals
-            if (response && response.request_success) {
-                await get().fetchCountryData('rsssl_geo_list', dataActions);
-                // Potentially notify the user of success, if needed.
-            } else {
-                // Handle any unsuccessful response if needed.
-                console.error("Failed to remove region: ", response.message);
-            }
-        } catch (e) {
-            console.error(e);
-            // Notify the user of an error.
-        } finally {
-            set({processing: false});
-        }
-    },
-    removeRegions: async (regions, status, dataActions) => {
-        set({processing: true});
-        try {
-            const response = await rsssl_api.doAction('remove_regions_from_list', {regions, status});
-            // Consider checking the response structure for any specific success or failure signals
-            if (response && response.request_success) {
-                // Potentially notify the user of success, if needed.
-                await get().fetchCountryData('rsssl_geo_list', dataActions);
-            } else {
-                // Handle any unsuccessful response if needed.
-                console.error("Failed to remove regions: ", response.message);
-            }
-        } catch (e) {
-            console.error(e);
-            // Notify the user of an error.
-        } finally {
-            set({processing: false});
-        }
-    },
     updateMultiRow: async (ids, status, dataActions) => {
         set({processing: true});
         try {
             const response = await rsssl_api.doAction(
                 'update_multi_row',
                 {ids, status}
-            );
-            //now we set the EventLog
-            if (response) {
-                await get().fetchCountryData('rsssl_geo_list', dataActions);
-            }
-        } catch (e) {
-            console.log(e);
-        } finally {
-            set({processing: false});
-        }
-    },
-
-    resetRow: async (id, dataActions) => {
-        set({processing: true});
-        try {
-            const response = await rsssl_api.doAction(
-                'delete_entry',
-                {id}
-            );
-            //now we set the EventLog
-            if (response) {
-                await get().fetchCountryData('rsssl_geo_list', dataActions);
-            }
-        } catch (e) {
-            console.log(e);
-        } finally {
-            set({processing: false});
-        }
-    },
-
-    resetMultiRow: async (ids, dataActions) => {
-        set({processing: true});
-        try {
-            const response = await rsssl_api.doAction(
-                'delete_multi_entries',
-                {ids}
             );
             //now we set the EventLog
             if (response) {

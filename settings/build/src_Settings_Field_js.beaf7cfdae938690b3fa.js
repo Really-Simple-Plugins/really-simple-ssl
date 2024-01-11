@@ -2586,7 +2586,7 @@ const GeoDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, 
       });
     }
   },
-  addRowMultiple: async (countries, status, dataActions) => {
+  addRowMultiple: async (countries, dataActions) => {
     set({
       processing: true
     });
@@ -2611,17 +2611,17 @@ const GeoDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, 
       });
     }
   },
-  removeRowMultiple: async (countries, status, dataActions) => {
+  removeRowMultiple: async (countries, dataActions) => {
     set({
       processing: true
     });
+    let data = {
+      country_code: countries
+    };
     try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('geo_block_remove_blocked_country', {
-        countries,
-        status
-      });
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('geo_block_remove_blocked_country', data);
       // Consider checking the response structure for any specific success or failure signals
-      if (response && response.request_success) {
+      if (response && response.success) {
         await get().fetchCountryData('rsssl_geo_list', dataActions);
         // Potentially notify the user of success, if needed.
       } else {
@@ -2661,98 +2661,6 @@ const GeoDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, 
       });
     }
   },
-  addRegion: async (region, status, dataActions) => {
-    try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('add_region_to_list', {
-        region,
-        status
-      });
-      if (response && response.request_success) {
-        // Do any immediate operations here if needed
-        await get().fetchCountryData('rsssl_geo_list', dataActions);
-      } else {
-        console.error("Failed to add region: ", response.message);
-      }
-    } catch (e) {
-      console.error(e);
-    } finally {
-      set({
-        processing: false
-      });
-    }
-  },
-  addRegions: async (regions, status, dataActions) => {
-    try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('add_regions_to_list', {
-        regions,
-        status
-      });
-      if (response && response.request_success) {
-        // Do any immediate operations here if needed
-        await get().fetchCountryData('rsssl_geo_list', dataActions);
-      } else {
-        console.error("Failed to add regions: ", response.message);
-      }
-    } catch (e) {
-      console.error(e);
-    } finally {
-      set({
-        processing: false
-      });
-    }
-  },
-  removeRegion: async (region, status, dataActions) => {
-    set({
-      processing: true
-    });
-    try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('remove_region_from_list', {
-        region,
-        status
-      });
-      // Consider checking the response structure for any specific success or failure signals
-      if (response && response.request_success) {
-        await get().fetchCountryData('rsssl_geo_list', dataActions);
-        // Potentially notify the user of success, if needed.
-      } else {
-        // Handle any unsuccessful response if needed.
-        console.error("Failed to remove region: ", response.message);
-      }
-    } catch (e) {
-      console.error(e);
-      // Notify the user of an error.
-    } finally {
-      set({
-        processing: false
-      });
-    }
-  },
-  removeRegions: async (regions, status, dataActions) => {
-    set({
-      processing: true
-    });
-    try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('remove_regions_from_list', {
-        regions,
-        status
-      });
-      // Consider checking the response structure for any specific success or failure signals
-      if (response && response.request_success) {
-        // Potentially notify the user of success, if needed.
-        await get().fetchCountryData('rsssl_geo_list', dataActions);
-      } else {
-        // Handle any unsuccessful response if needed.
-        console.error("Failed to remove regions: ", response.message);
-      }
-    } catch (e) {
-      console.error(e);
-      // Notify the user of an error.
-    } finally {
-      set({
-        processing: false
-      });
-    }
-  },
   updateMultiRow: async (ids, status, dataActions) => {
     set({
       processing: true
@@ -2761,46 +2669,6 @@ const GeoDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, 
       const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('update_multi_row', {
         ids,
         status
-      });
-      //now we set the EventLog
-      if (response) {
-        await get().fetchCountryData('rsssl_geo_list', dataActions);
-      }
-    } catch (e) {
-      console.log(e);
-    } finally {
-      set({
-        processing: false
-      });
-    }
-  },
-  resetRow: async (id, dataActions) => {
-    set({
-      processing: true
-    });
-    try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('delete_entry', {
-        id
-      });
-      //now we set the EventLog
-      if (response) {
-        await get().fetchCountryData('rsssl_geo_list', dataActions);
-      }
-    } catch (e) {
-      console.log(e);
-    } finally {
-      set({
-        processing: false
-      });
-    }
-  },
-  resetMultiRow: async (ids, dataActions) => {
-    set({
-      processing: true
-    });
-    try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('delete_multi_entries', {
-        ids
       });
       //now we set the EventLog
       if (response) {
@@ -2876,10 +2744,6 @@ const GeoDatatable = props => {
     showSavedSettingsNotice,
     saveFields
   } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_2__["default"])();
-  const {
-    DynamicDataTable,
-    fetchDynamicData
-  } = (0,_EventLog_EventLogDataTableStore__WEBPACK_IMPORTED_MODULE_4__["default"])();
   const {
     selectedFilter,
     setSelectedFilter,
@@ -2967,7 +2831,6 @@ const GeoDatatable = props => {
       await removeRegion(code, 'blocked', dataActions);
       showSavedSettingsNotice((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)('%s is now allowed', 'really-simple-ssl').replace('%s', regionName));
     }
-    await fetchDynamicData('event_log');
   }, [removeRegion, getCurrentFilter(moduleName), dataActions]);
   const allowMultiple = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(rows => {
     const ids = rows.map(item => item.id);
@@ -2988,27 +2851,26 @@ const GeoDatatable = props => {
       await addRegion(code, 'blocked', dataActions);
       showSavedSettingsNotice((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)('%s has been blocked', 'really-simple-ssl').replace('%s', region));
     }
-    await fetchDynamicData('event_log');
   }, [addRegion, getCurrentFilter(moduleName), dataActions]);
   const allowCountryByCode = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(async code => {
     if (Array.isArray(code)) {
+      console.log(code[0]);
       const ids = code.map(item => item.iso2_code);
-      await removeRowMultiple(ids, 'blocked', dataActions);
+      //we loop through the ids and allow them one by one
+      await removeRowMultiple(ids, dataActions);
       setRowsSelected([]);
     } else {
       await removeRow(code, dataActions);
     }
-    await fetchDynamicData('event_log');
   }, [removeRow, removeRowMultiple, dataActions, getCurrentFilter(moduleName)]);
   const blockCountryByCode = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(async (code, name) => {
     if (Array.isArray(code)) {
       const ids = code.map(item => item.iso2_code);
-      await addRowMultiple(ids, 'blocked', dataActions);
+      await addRowMultiple(ids, dataActions);
       setRowsSelected([]);
     } else {
       await addRow(code, name, dataActions);
     }
-    await fetchDynamicData('event_log');
   }, [addRow, addRowMultiple, dataActions, getCurrentFilter(moduleName)]);
   const data = {
     ...CountryDataTable.data
@@ -3039,13 +2901,7 @@ const GeoDatatable = props => {
     }, getCurrentFilter(moduleName) === 'blocked' && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
       onClick: () => allowCountryByCode(code),
       className: "button-secondary"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("Allow", "really-simple-ssl")), getCurrentFilter(moduleName) === 'regions' && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
-      onClick: () => blockRegionByCode(id, region_name),
-      className: "button-primary"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("Block", "really-simple-ssl")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
-      onClick: () => allowRegionByCode(id, region_name),
-      className: "button-secondary"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("Allow", "really-simple-ssl"))), getCurrentFilter(moduleName) === 'countries' && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, status === 'blocked' ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("Allow", "really-simple-ssl")), getCurrentFilter(moduleName) === 'countries' && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, status === 'blocked' ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
       onClick: () => allowCountryByCode(code, name),
       className: "button-secondary"
     }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("Allow", "really-simple-ssl")) : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
@@ -3062,7 +2918,7 @@ const GeoDatatable = props => {
     } else {
       dataItem.action = generateActionButtons(dataItem.iso2_code, dataItem.status, dataItem.region);
     }
-    dataItem.iso2_code = generateFlag(dataItem.iso2_code, dataItem.country_name);
+    dataItem.flag = generateFlag(dataItem.iso2_code, dataItem.country_name);
     dataItem.status = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)(dataItem.status = dataItem.status.charAt(0).toUpperCase() + dataItem.status.slice(1), 'really-simple-ssl');
     data[key] = dataItem;
   }
@@ -3107,13 +2963,8 @@ const GeoDatatable = props => {
     onClick: () => blockCountryByCode(rowsSelected),
     className: "button-primary"
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("Block", "really-simple-ssl"))), getCurrentFilter(moduleName) === 'blocked' && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
-    onClick: () => allowMultiple(rowsSelected)
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("Allow", "really-simple-ssl")), getCurrentFilter(moduleName) === 'regions' && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
-    onClick: () => allowRegionByCode(rowsSelected),
-    className: "button-primary"
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("Allow", "really-simple-ssl")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
-    onClick: () => blockRegionByCode(rowsSelected)
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("Block", "really-simple-ssl")))))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    onClick: () => allowCountryByCode(rowsSelected)
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("Allow", "really-simple-ssl"))))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_1__["default"], {
     columns: columns,
     data: processing ? [] : Object.values(data),
     dense: true,
@@ -24881,4 +24732,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.b3f2bdcfdb4d38438449.js.map
+//# sourceMappingURL=src_Settings_Field_js.beaf7cfdae938690b3fa.js.map

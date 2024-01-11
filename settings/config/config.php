@@ -730,8 +730,8 @@ function rsssl_fields( $load_values = true ) {
 					'name'       => __('', 'really-simple-ssl'),
 					'sortable'   => true,
 					'searchable' => true,
-					'column'     => 'iso2_code',
-					'width'      => '10%',
+					'column'     => 'flag',
+					'width'      => '5%',
 				],
 				[
 					'name'       => __('Country', 'really-simple-ssl'),

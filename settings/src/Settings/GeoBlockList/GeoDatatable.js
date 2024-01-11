@@ -35,11 +35,6 @@ const GeoDatatable = (props) => {
     const {showSavedSettingsNotice, saveFields} = FieldsData();
 
     const {
-        DynamicDataTable,
-        fetchDynamicData,
-    } = EventLogDataTableStore();
-
-    const {
         selectedFilter,
         setSelectedFilter,
         activeGroupId,
@@ -140,7 +135,6 @@ const GeoDatatable = (props) => {
             showSavedSettingsNotice(__('%s is now allowed', 'really-simple-ssl')
                 .replace('%s',regionName));
         }
-        await fetchDynamicData('event_log');
     }, [removeRegion, getCurrentFilter(moduleName), dataActions]);
 
 
@@ -168,33 +162,29 @@ const GeoDatatable = (props) => {
                 .replace('%s',region));
         }
 
-        await fetchDynamicData('event_log');
-
     }, [addRegion, getCurrentFilter(moduleName), dataActions]);
 
     const allowCountryByCode = useCallback(async (code) => {
         if (Array.isArray(code)) {
+            console.log(code[0]);
             const ids = code.map(item => item.iso2_code);
-            await removeRowMultiple(ids, 'blocked', dataActions );
+            //we loop through the ids and allow them one by one
+            await removeRowMultiple(ids, dataActions );
             setRowsSelected([]);
         } else {
             await removeRow(code, dataActions);
         }
-
-        await fetchDynamicData('event_log');
 
     }, [removeRow, removeRowMultiple, dataActions, getCurrentFilter(moduleName)]);
 
     const blockCountryByCode = useCallback(async (code, name) => {
         if (Array.isArray(code)) {
             const ids = code.map(item => item.iso2_code);
-            await addRowMultiple(ids, 'blocked', dataActions);
+                await addRowMultiple(ids, dataActions);
             setRowsSelected([]);
         } else {
             await addRow(code, name, dataActions);
         }
-
-        await fetchDynamicData('event_log');
 
     }, [addRow, addRowMultiple, dataActions, getCurrentFilter(moduleName)]);
 
@@ -232,18 +222,6 @@ const GeoDatatable = (props) => {
                     {__("Allow", "really-simple-ssl")}
                 </ActionButton>
             )}
-            {getCurrentFilter(moduleName) === 'regions' && (
-                <>
-                    <ActionButton
-                        onClick={() => blockRegionByCode(id, region_name)} className="button-primary">
-                        {__("Block", "really-simple-ssl")}
-                    </ActionButton>
-                    <ActionButton
-                        onClick={() => allowRegionByCode(id, region_name)} className="button-secondary">
-                        {__("Allow", "really-simple-ssl")}
-                    </ActionButton>
-                </>
-            )}
             {getCurrentFilter(moduleName) === 'countries' && (
                 <>
                     {status === 'blocked' ? (
@@ -271,7 +249,7 @@ const GeoDatatable = (props) => {
         } else {
             dataItem.action = generateActionButtons(dataItem.iso2_code, dataItem.status, dataItem.region);
         }
-        dataItem.iso2_code = generateFlag(dataItem.iso2_code, dataItem.country_name);
+        dataItem.flag = generateFlag(dataItem.iso2_code, dataItem.country_name);
         dataItem.status = __(dataItem.status = dataItem.status.charAt(0).toUpperCase() + dataItem.status.slice(1), 'really-simple-ssl');
         data[key] = dataItem;
     }
@@ -333,21 +311,9 @@ const GeoDatatable = (props) => {
                             )}
                             {getCurrentFilter(moduleName) === 'blocked' && (
                                 <ActionButton
-                                    onClick={() => allowMultiple(rowsSelected)}>
+                                    onClick={() => allowCountryByCode(rowsSelected)}>
                                     {__("Allow", "really-simple-ssl")}
                                 </ActionButton>
-                            )}
-                            {getCurrentFilter(moduleName) === 'regions' && (
-                                <>
-                                    <ActionButton
-                                        onClick={() => allowRegionByCode(rowsSelected)}  className="button-primary">
-                                        {__("Allow", "really-simple-ssl")}
-                                    </ActionButton>
-                                    <ActionButton
-                                        onClick={() => blockRegionByCode(rowsSelected)}>
-                                        {__("Block", "really-simple-ssl")}
-                                    </ActionButton>
-                                </>
                             )}
                         </div>
                     </div>
