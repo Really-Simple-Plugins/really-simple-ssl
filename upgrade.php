@@ -180,10 +180,6 @@ function rsssl_upgrade() {
 		do_action( 'rsssl_update_rules' );
 	}
 
-	if ( $prev_version && version_compare( $prev_version, '7.2.2', '<' ) ) {
-		RSSSL_SECURITY()->firewall_manager->update_wp_config_rule();
-	}
-
 	//don't clear on each update.
 	//RSSSL()->admin->clear_admin_notices_cache();
 
