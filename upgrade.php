@@ -180,6 +180,7 @@ function rsssl_upgrade() {
 		do_action( 'rsssl_update_rules' );
 	}
 
+	//update the config to auto prepend
 	if ( $prev_version && version_compare( $prev_version, '7.2.2', '<' ) ) {
 		RSSSL_SECURITY()->firewall_manager->update_wp_config_rule();
 	}
