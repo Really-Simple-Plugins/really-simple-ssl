@@ -261,11 +261,7 @@ class rsssl_firewall_manager {
 			return;
 		}
 
-		$rules           = array(
-			'<IfModule mod_php.c>',
-			'php_value auto_prepend_file ' . $this->file,
-			'</IfModule>',
-		);
+		$rules           = $this->get_htaccess_rules();
 		$start           = '#Begin Really Simple Auto Prepend File ' . "\n";
 		$end             = "\n" . '#End Really Simple Auto Prepend File' . "\n";
 		$pattern_content = '/' . $start . '(.*?)' . $end . '/is';
@@ -294,6 +290,19 @@ class rsssl_firewall_manager {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Get the .htaccess rules for the prepend file
+	 *
+	 * @return array //the array containing the lines of rules
+	 */
+	private function get_htaccess_rules() : array {
+		return array(
+			'<IfModule mod_php.c>',
+			'php_value auto_prepend_file ' . $this->file,
+			'</IfModule>',
+		);
 	}
 
 	/**
