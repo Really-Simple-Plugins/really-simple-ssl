@@ -61,6 +61,101 @@ if ( ! class_exists( 'rsssl_server' ) ) {
 			}
 		}
 
+
+
+		public function auto_prepend_config(){
+			if (isset($_GET['server_config']) && $this->isValidServerConfig($_GET['server_config'])) {
+				return $_GET['server_config'];
+			} else if ( $this->isApacheModPHP() ){
+				return "apache-mod_php"; //Apache _ modphp
+			} else if ( $this->isApacheSuPHP() ) {
+				return "apache-suphp"; //Apache + SuPHP
+			} else if ( $this->isApache() && !$this->isApacheSuPHP() && ($this->isCGI() || $this->isFastCGI()) ) {
+				return "cgi"; //Apache + CGI/FastCGI
+			} else if ($this->isLiteSpeed()){
+				return "litespeed";
+			} else if ( $this->isNGINX() ) {
+				return "nginx";
+			} else if ( $this->isIIS() ) {
+				return "iis";
+			} else {
+				return "manual";
+			}
+		}
+
+		/**
+		 * @return bool
+		 */
+		public function isApache() {
+			return $this->get_server() === 'apache';
+		}
+
+		public function isValidServerConfig($serverConfig) {
+			$validValues = array(
+				"apache-mod_php",
+				"apache-suphp",
+				"cgi",
+				"litespeed",
+				"nginx",
+				"iis",
+				'manual',
+			);
+			return in_array($serverConfig, $validValues);
+		}
+
+		/**
+		 * @return bool
+		 */
+		public function isNGINX() {
+			return $this->get_server() === 'nginx';
+		}
+
+		/**
+		 * @return bool
+		 */
+		public function isLiteSpeed() {
+			return $this->get_server() === 'litespeed';
+		}
+
+		/**
+		 * @return bool
+		 */
+		public function isIIS() {
+			return $this->get_server() === 'iis';
+		}
+
+		/**
+		 * @return bool
+		 */
+		public function isApacheModPHP() {
+			return $this->isApache() && function_exists('apache_get_modules');
+		}
+
+		/**
+		 * Not sure if this can be implemented at the PHP level.
+		 * @return bool
+		 */
+		public function isApacheSuPHP() {
+			return $this->isApache() && $this->isCGI() &&
+			       function_exists('posix_getuid') &&
+			       getmyuid() === posix_getuid();
+		}
+
+		/**
+		 * @return bool
+		 */
+		public function isCGI() {
+			return !$this->isFastCGI() && stripos($this->sapi, 'cgi') !== false;
+		}
+
+		/**
+		 * @return bool
+		 */
+		public function isFastCGI() {
+			return stripos($this->sapi, 'fastcgi') !== false || stripos($this->sapi, 'fpm-fcgi') !== false;
+		}
+
+
 		/**
 		 * Check if the apache version is at least 2.4
 		 * @return bool

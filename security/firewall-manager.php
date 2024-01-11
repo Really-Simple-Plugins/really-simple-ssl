@@ -592,4 +592,6 @@ class rsssl_firewall_manager {
 	public function remove_advanced_headers() {
 		$this->uninstall();
 	}
+
+
 }
