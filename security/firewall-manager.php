@@ -37,6 +37,11 @@ class rsssl_firewall_manager {
 		add_action( 'rsssl_after_saved_fields', array( $this, 'install' ), 100 );
 		add_action( 'rsssl_deactivate', array( $this, 'uninstall' ), 20 );
 		add_filter( 'rsssl_notices', array( $this, 'notices' ) );
+		add_filter( 'before_rocket_htaccess_rules', array( $this, 'add_htaccess_rules_before_wp_rocket' ), 999 );
+
+		//handle activation and deactivation of wp rocket
+		add_action( 'rocket_activation', array( $this, 'remove_prepend_file_in_htaccess' ) );
+		add_action( 'rocket_deactivation', array( $this, 'include_prepend_file_in_htaccess' ) );
 
 		if ( ! defined( 'RSSSL_IS_WP_ENGINE' ) ) {
 			define( 'RSSSL_IS_WP_ENGINE', isset( $_SERVER['IS_WPE'] ) );
@@ -66,10 +71,13 @@ class rsssl_firewall_manager {
 		$rules = apply_filters( 'rsssl_firewall_rules', '' );
 		// no rules? remove the file.
 		if ( empty( trim( $rules ) ) ) {
+			error_log("empty rule set");
 			// $this->delete_file();
 			$this->remove_prepend_file_in_htaccess();
 			$this->remove_prepend_file_in_wpconfig();
 			return;
+		} else {
+			error_log("has rules");
 		}
 
 		// update the file to be included.
@@ -251,7 +259,7 @@ class rsssl_firewall_manager {
 	 *
 	 * @return void
 	 */
-	private function include_prepend_file_in_htaccess(): void {
+	public function include_prepend_file_in_htaccess(): void {
 		if ( ! $this->file_exists( $this->file ) ) {
 			return;
 		}
@@ -262,12 +270,12 @@ class rsssl_firewall_manager {
 		}
 
 		$rules           = $this->get_htaccess_rules();
-		$start           = '#Begin Really Simple Auto Prepend File ' . "\n";
+
+		$start           = '#Begin Really Simple Auto Prepend File' . "\n";
 		$end             = "\n" . '#End Really Simple Auto Prepend File' . "\n";
 		$pattern_content = '/' . $start . '(.*?)' . $end . '/is';
 		$htaccess_file   = $this->htaccess_path();
 		if ( $this->file_exists( $htaccess_file ) ) {
-			$rules   = implode( "\n", $rules );
 			$content = $this->get_contents( $htaccess_file );
 			// remove first, to ensure we are at the top of the file.
 			$content = preg_replace( $pattern_content, '', $content );
@@ -279,14 +287,13 @@ class rsssl_firewall_manager {
 					delete_site_option( 'rsssl_htaccess_error' );
 					delete_site_option( 'rsssl_htaccess_rules' );
 					// add rules as new block.
-					$new_htaccess = $start . $rules . $end . $content;
+					$content = $start . $rules . $end . $content;
 
 					// clean up.
-					if ( strpos( $new_htaccess, "\n\n\n" ) !== false ) {
-						$new_htaccess = str_replace( "\n\n\n", "\n\n", $new_htaccess );
+					if ( strpos( $content, "\n\n\n" ) !== false ) {
+						$content = str_replace( "\n\n\n", "\n\n", $content );
 					}
-
-					$this->put_contents( $htaccess_file, $new_htaccess );
+					$this->put_contents( $htaccess_file, $content );
 				}
 			}
 		}
@@ -295,15 +302,35 @@ class rsssl_firewall_manager {
 	/**
 	 * Get the .htaccess rules for the prepend file
 	 *
-	 * @return array //the array containing the lines of rules
+	 * @return string //the string containing the lines of rules
 	 */
-	private function get_htaccess_rules() : array {
+	private function get_htaccess_rules() : string {
 		$config = RSSSL()->server->auto_prepend_config();
-		return array(
-			'<IfModule mod_php.c>',
-			'php_value auto_prepend_file ' . $this->file,
-			'</IfModule>',
-		);
+		$file = addcslashes($this->file, "'");
+		switch ($config) {
+			case 'litespeed':
+					$rules = array(
+						'<IfModule LiteSpeed>',
+						'php_value auto_prepend_file ' . $file ,
+						'</IfModule>',
+						'<IfModule lsapi_module>',
+						'php_value auto_prepend_file ' . $file,
+						'</IfModule>',
+					);
+					break;
+			case 'apache-mod_php':
+			default:
+				$rules = array(
+					'<IfModule mod_php7.c>',
+					'php_value auto_prepend_file ' . $file ,
+					'</IfModule>',
+					'<IfModule mod_php.c>',
+					'php_value auto_prepend_file ' . $file,
+					'</IfModule>',
+				);
+		}
+
+		return implode( "\n", $rules );
 	}
 
 	/**
@@ -351,11 +378,11 @@ class rsssl_firewall_manager {
 	 *
 	 * @return void
 	 */
-	private function remove_prepend_file_in_htaccess() {
+	public function remove_prepend_file_in_htaccess(): void {
 		if ( ! rsssl_user_can_manage() ) {
 			return;
 		}
-		$start         = '#Begin Really Simple Auto Prepend File ' . "\n";
+		$start         = '#Begin Really Simple Auto Prepend File' . "\n";
 		$end           = "\n" . '#End Really Simple Auto Prepend File' . "\n";
 		$pattern       = '/' . $start . '(.*?)' . $end . '/is';
 		$htaccess_file = $this->htaccess_path();
@@ -592,6 +619,20 @@ class rsssl_firewall_manager {
 	 */
 	public function remove_advanced_headers() {
 		$this->uninstall();
+	}
+
+	/**
+	 * Return .htaccess redirect when using WP Rocket
+	 * @return string
+	 */
+	public function add_htaccess_rules_before_wp_rocket($rules) {
+		$rules = $this->get_htaccess_rules()."\n".$rules;
+		if ( ! empty( $rules ) ) {
+			$start           = '#Begin Really Simple Auto Prepend File' . "\n";
+			$end             = "\n" . '#End Really Simple Auto Prepend File' . "\n";
+			$rules = $start . $rules . $end;
+		}
+		return $rules;
 	}
 
 
