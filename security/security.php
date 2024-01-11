@@ -5,6 +5,11 @@ class REALLY_SIMPLE_SECURITY
 	private static $instance;
 	public $firewall_manager;
 	public $hardening;
+	/**
+	 * Components array, so we can access singleton classes which are dynamically added, from anywhere.
+	 * @var
+	 */
+	public $components;
 
 	private function __construct()
 	{
