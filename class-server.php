@@ -4,6 +4,7 @@ defined( 'ABSPATH' ) or die( 'you do not have access to this page!' );
 if ( ! class_exists( 'rsssl_server' ) ) {
 	class rsssl_server {
 		private static $_this;
+		private $sapi = false;
 
 		public function __construct() {
 			if ( isset( self::$_this ) ) {
@@ -64,9 +65,7 @@ if ( ! class_exists( 'rsssl_server' ) ) {
 
 
 		public function auto_prepend_config(){
-			if (isset($_GET['server_config']) && $this->isValidServerConfig($_GET['server_config'])) {
-				return $_GET['server_config'];
-			} else if ( $this->isApacheModPHP() ){
+			if ( $this->isApacheModPHP() ){
 				return "apache-mod_php"; //Apache _ modphp
 			} else if ( $this->isApacheSuPHP() ) {
 				return "apache-suphp"; //Apache + SuPHP
@@ -88,19 +87,6 @@ if ( ! class_exists( 'rsssl_server' ) ) {
 		 */
 		public function isApache() {
 			return $this->get_server() === 'apache';
-		}
-
-		public function isValidServerConfig($serverConfig) {
-			$validValues = array(
-				"apache-mod_php",
-				"apache-suphp",
-				"cgi",
-				"litespeed",
-				"nginx",
-				"iis",
-				'manual',
-			);
-			return in_array($serverConfig, $validValues);
 		}
 
 		/**
@@ -145,14 +131,25 @@ if ( ! class_exists( 'rsssl_server' ) ) {
 		 * @return bool
 		 */
 		public function isCGI() {
-			return !$this->isFastCGI() && stripos($this->sapi, 'cgi') !== false;
+			return !$this->isFastCGI() && stripos($this->sapi(), 'cgi') !== false;
 		}
 
 		/**
 		 * @return bool
 		 */
 		public function isFastCGI() {
-			return stripos($this->sapi, 'fastcgi') !== false || stripos($this->sapi, 'fpm-fcgi') !== false;
+			return stripos($this->sapi(), 'fastcgi') !== false || stripos($this->sapi(), 'fpm-fcgi') !== false;
+		}
+
+
+		private function sapi(){
+			if ( !$this->sapi ) {
+				$this->sapi = function_exists('php_sapi_name') ? php_sapi_name() : 'false';
+			}
+			if ( 'false' === $this->sapi ) {
+				return false;
+			}
+			return $this->sapi;
 		}
 
 

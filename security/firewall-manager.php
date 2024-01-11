@@ -298,6 +298,7 @@ class rsssl_firewall_manager {
 	 * @return array //the array containing the lines of rules
 	 */
 	private function get_htaccess_rules() : array {
+		$config = RSSSL()->server->auto_prepend_config();
 		return array(
 			'<IfModule mod_php.c>',
 			'php_value auto_prepend_file ' . $this->file,
