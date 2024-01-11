@@ -65,7 +65,11 @@ if ( ! class_exists( 'rsssl_server' ) ) {
 		}
 
 
-
+		/**
+		 * Get the Auto prepend configuration
+		 *
+		 * @return string
+		 */
 		public function auto_prepend_config(){
 			if ( $this->isApacheModPHP() ){
 				return "apache-mod_php"; //Apache _ modphp
@@ -85,65 +89,77 @@ if ( ! class_exists( 'rsssl_server' ) ) {
 		}
 
 		/**
+		 * If Apache
 		 * @return bool
 		 */
-		public function isApache() {
+		public function isApache():bool {
 			return $this->get_server() === 'apache';
 		}
 
 		/**
+		 * If NGINX
 		 * @return bool
 		 */
-		public function isNGINX() {
+		public function isNGINX():bool {
 			return $this->get_server() === 'nginx';
 		}
 
 		/**
+		 * If Litespeed
 		 * @return bool
 		 */
-		public function isLiteSpeed() {
+		public function isLiteSpeed():bool {
 			return $this->get_server() === 'litespeed';
 		}
 
 		/**
+		 * If IIS
 		 * @return bool
 		 */
-		public function isIIS() {
+		public function isIIS():bool {
 			return $this->get_server() === 'iis';
 		}
 
 		/**
+		 * If ModPHP
 		 * @return bool
 		 */
-		public function isApacheModPHP() {
+		public function isApacheModPHP():bool {
 			return $this->isApache() && function_exists('apache_get_modules');
 		}
 
 		/**
+		 * If SupPHP
 		 * Not sure if this can be implemented at the PHP level.
 		 * @return bool
 		 */
-		public function isApacheSuPHP() {
+		public function isApacheSuPHP():bool {
 			return $this->isApache() && $this->isCGI() &&
 			       function_exists('posix_getuid') &&
 			       getmyuid() === posix_getuid();
 		}
 
 		/**
+		 * If CGI
 		 * @return bool
 		 */
-		public function isCGI() {
+		public function isCGI():bool {
 			return !$this->isFastCGI() && stripos($this->sapi(), 'cgi') !== false;
 		}
 
 		/**
+		 * If FastCGI
 		 * @return bool
 		 */
-		public function isFastCGI() {
+		public function isFastCGI():bool {
 			return stripos($this->sapi(), 'fastcgi') !== false || stripos($this->sapi(), 'fpm-fcgi') !== false;
 		}
 
 
+		/**
+		 * If Sapi
+		 * @return bool|string
+		 */
 		private function sapi(){
 			if ( !$this->sapi ) {
 				$this->sapi = function_exists('php_sapi_name') ? php_sapi_name() : 'false';
