@@ -71,13 +71,10 @@ class rsssl_firewall_manager {
 		$rules = apply_filters( 'rsssl_firewall_rules', '' );
 		// no rules? remove the file.
 		if ( empty( trim( $rules ) ) ) {
-			error_log("empty rule set");
 			// $this->delete_file();
 			$this->remove_prepend_file_in_htaccess();
 			$this->remove_prepend_file_in_wpconfig();
 			return;
-		} else {
-			error_log("has rules");
 		}
 
 		// update the file to be included.
@@ -392,6 +389,10 @@ class rsssl_firewall_manager {
 			$content = preg_replace( $pattern, '', $content );
 			$this->put_contents( $htaccess_file, $content );
 		}
+	}
+
+	public function remove_prepend_file_in_wp_config(){
+
 	}
 
 	/**
