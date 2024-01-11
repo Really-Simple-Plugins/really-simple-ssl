@@ -171,6 +171,10 @@ class rsssl_firewall_manager {
 	 * @return void
 	 */
 	private function put_contents( $file, $contents ): void {
+		if ( ! rsssl_user_can_manage() ) {
+			return;
+		}
+
 		// $wp_filesystem = $this->init_file_system();
 		// $result = $wp_filesystem->put_contents($contents, $this->file);
 		file_put_contents( $file, $contents );//phpcs:ignore
@@ -198,6 +202,10 @@ class rsssl_firewall_manager {
 	 * @return void
 	 */
 	private function delete_file(): void {
+		if ( ! rsssl_user_can_manage() ) {
+			return;
+		}
+
 		if ( $this->file_exists( $this->file ) ) {
 			unlink( $this->file );//phpcs:ignore
 		}
