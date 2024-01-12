@@ -6,12 +6,12 @@ defined( 'ABSPATH' ) or die();
 
 require_once 'class-rsssl-folder-name.php';
 
-class FileStorage {
+class Rsssl_File_Storage {
 	private $hash;
 	public $folder; //for the folder name
 
 	/**
-	 * FileStorage constructor.
+	 * Rsssl_File_Storage constructor.
 	 */
 	public function __construct() {
 		//Fetching the key from the database
@@ -21,7 +21,7 @@ class FileStorage {
 	}
 
 	public static function StoreFile( $file, $data ): void {
-		$storage = new FileStorage();
+		$storage = new Rsssl_File_Storage();
 		//first we check if the storage folder is already in the $file string
 		if ( strpos( $file, $storage->folder ) !== false ) {
 			$file = str_replace( $storage->folder . '/', '', $file );
@@ -30,7 +30,7 @@ class FileStorage {
 	}
 
 	public static function GetFile( $file ) {
-		$storage = new FileStorage();
+		$storage = new Rsssl_File_Storage();
 
 		//first we check if the storage folder is already in the $file string
 		if ( strpos( $file, $storage->folder ) !== false ) {
@@ -112,7 +112,7 @@ class FileStorage {
 	}
 
 	public static function GetDate( string $file ) {
-		$storage = new FileStorage();
+		$storage = new Rsssl_File_Storage();
 		$file    = $storage->folder . '/' . $file;
 		if ( file_exists( $file ) ) {
 			return filemtime( $file );
@@ -122,11 +122,11 @@ class FileStorage {
 	}
 
 	public static function get_upload_dir() {
-		return ( new FileStorage() )->folder;
+		return ( new Rsssl_File_Storage() )->folder;
 	}
 
 	public static function validateFile( string $file ): bool {
-		$storage = new FileStorage();
+		$storage = new Rsssl_File_Storage();
 		$file    = $storage->folder . '/' . $file;
 		if ( file_exists( $file ) ) {
 			return true;
@@ -136,7 +136,7 @@ class FileStorage {
 	}
 
 	public static function DeleteAll() {
-		$storage = new FileStorage();
+		$storage = new Rsssl_File_Storage();
 
 		//we get the really-simple-ssl folder
 		$rsssl_dir = $storage->folder;

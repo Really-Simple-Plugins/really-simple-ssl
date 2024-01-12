@@ -1,10 +1,10 @@
 <?php /** @noinspection PhpComposerExtensionStubsInspection */
 
-use security\wordpress\vulnerabilities\FileStorage;
+use security\wordpress\vulnerabilities\Rsssl_File_Storage;
 
 defined('ABSPATH') or die();
 //including the file storage class
-require_once(rsssl_path . 'security/wordpress/vulnerabilities/FileStorage.php');
+require_once(rsssl_path . 'security/wordpress/vulnerabilities/class-rsssl-file-storage.php');
 
 /**
  * @package Really Simple SSL
@@ -783,7 +783,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 $file = 'manifest.json';
             }
 
-            $upload_dir = FileStorage::get_upload_dir();
+            $upload_dir = Rsssl_File_Storage::get_upload_dir();
             $file = $upload_dir . '/' . $file;
             if (file_exists($file)) {
                 //now we check if the file is older than 3 days, if so, we download it again
@@ -860,7 +860,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 		        return;
 	        }
 	        //we get the upload directory
-	        $upload_dir = FileStorage::get_upload_dir();
+	        $upload_dir = Rsssl_File_Storage::get_upload_dir();
 
 	        if ( !$manifest ) {
 		        $file = $upload_dir . '/' . ($isCore ? 'core.json' : 'components.json');
@@ -878,7 +878,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 return;
             }
 
-            FileStorage::StoreFile($file, $data);
+	        Rsssl_File_Storage::StoreFile($file, $data);
             $this->jsons_files_updated = true;
         }
 
@@ -888,7 +888,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 		        return false;
 	        }
 
-            $upload_dir = FileStorage::get_upload_dir();
+            $upload_dir = Rsssl_File_Storage::get_upload_dir();
 
             if ($manifest) {
                 $file = $upload_dir . '/manifest.json';
@@ -896,14 +896,14 @@ if (!class_exists("rsssl_vulnerabilities")) {
                     return false;
                 }
 
-                return FileStorage::GetDate($file);
+                return Rsssl_File_Storage::GetDate($file);
             }
             $file = $upload_dir . '/' . ($isCore ? 'core.json' : 'components.json');
             if (!file_exists($file)) {
                 return false;
             }
 
-            return FileStorage::GetDate($file);
+            return Rsssl_File_Storage::GetDate($file);
         }
 
         /* End of files and Storage */
@@ -1016,14 +1016,14 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	        if ( ! rsssl_admin_logged_in() ) {
 		        return [];
 	        }
-            $upload_dir = FileStorage::get_upload_dir();
+            $upload_dir = Rsssl_File_Storage::get_upload_dir();
 
             $file = $upload_dir . '/components.json';
             if (!file_exists($file)) {
                 return [];
             }
 
-            $components =  FileStorage::GetFile($file);
+            $components =  Rsssl_File_Storage::GetFile($file);
             if (!is_array($components)) $components = [];
             return $components;
         }
@@ -1037,14 +1037,14 @@ if (!class_exists("rsssl_vulnerabilities")) {
 		        return null;
 	        }
 
-            $upload_dir = FileStorage::get_upload_dir();
+            $upload_dir = Rsssl_File_Storage::get_upload_dir();
 
             $file = $upload_dir . '/core.json';
             if (!file_exists($file)) {
                 return false;
             }
 
-            return FileStorage::GetFile($file);
+            return Rsssl_File_Storage::GetFile($file);
         }
 
         /* Section for the theme files */
@@ -1263,14 +1263,14 @@ if (!class_exists("rsssl_vulnerabilities")) {
 		        return false;
 	        }
 
-            $upload_dir = FileStorage::get_upload_dir();
+            $upload_dir = Rsssl_File_Storage::get_upload_dir();
 
             $file = $upload_dir . '/manifest.json';
             if (!file_exists($file)) {
                 return false;
             }
 
-            return FileStorage::GetFile($file);
+            return Rsssl_File_Storage::GetFile($file);
         }
 
         private function filter_vulnerabilities($vulnerabilities, $Version, $core = false): array
