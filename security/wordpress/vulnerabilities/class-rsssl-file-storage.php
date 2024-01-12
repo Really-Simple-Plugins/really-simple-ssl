@@ -77,12 +77,21 @@ class Rsssl_File_Storage {
 	 * @param $data
 	 *
 	 * @return string
+	 * @throws \Exception
 	 */
 	private function Encode64WithHash( $data ): string {
-		//we create a simple encoding, using the hashkey as a salt
-		$data = base64_encode( $data );
+		$crypto_strong = false;
+		$iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'), $crypto_strong);
 
-		return base64_encode( $data . $this->hash );
+		// Check if IV generation was successful and cryptographically strong
+		if ($iv === false || $crypto_strong === false) {
+			throw new \RuntimeException( __('Could not generate a secure initialization vector.', 'really-simple-ssl'));
+		}
+
+		$encrypted = openssl_encrypt($data, 'aes-256-cbc', $this->hash, 0, $iv);
+		// Store the $iv along with the $encrypted data, so we can use it during decryption
+		$encrypted = base64_encode($encrypted . '::' . $iv);
+		return $encrypted;
 	}
 
 	/** decode the data with a hash
@@ -90,14 +99,22 @@ class Rsssl_File_Storage {
 	 * @param $data
 	 *
 	 * @return string
+	 * @throws \Exception
 	 */
-	private function Decode64WithHash( $data ): string {
-		//we create a simple decoding, using the hashkey as a salt
+	private function Decode64WithHash($data): string {
 		$data = base64_decode( $data );
-		$data = substr( $data, 0, - strlen( $this->hash ) );
+		[ $encrypted_data, $iv ] = explode( '::', $data, 2 );
 
-		return base64_decode( $data );
+		// Check if IV was successfully retrieved
+		if ( $iv === false ) {
+			throw new \RuntimeException( __('Could not retrieve the initialization vector.', 'really-simple-ssl') );
+		}
+
+		$decrypted = openssl_decrypt( $encrypted_data, 'aes-256-cbc', $this->hash, 0, $iv );
+
+		return $decrypted;
 	}
+
 
 	/** Generate a hashkey and store it in the database
 	 * @return void

@@ -928,7 +928,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
             }
 
             $data->vulnerabilities = $this->filter_vulnerabilities($data->vulnerabilities, $wp_version, true);
-            $data->version = $wp_version;
+
             //first we store this as a json file in the uploads folder
             $this->store_file($data, true);
         }
