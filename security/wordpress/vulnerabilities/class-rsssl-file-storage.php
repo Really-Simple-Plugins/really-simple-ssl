@@ -89,6 +89,8 @@ class Rsssl_File_Storage {
 		}
 
 		$encrypted = openssl_encrypt($data, 'aes-256-cbc', $this->hash, 0, $iv);
+		// Store the $iv along with the $encrypted data, so we can use it during decryption
+		$encrypted = base64_encode($encrypted . '::' . $iv);
 		return $encrypted;
 	}
 
@@ -100,6 +102,7 @@ class Rsssl_File_Storage {
 	 * @throws \Exception
 	 */
 	private function Decode64WithHash($data): string {
+		$data = base64_decode( $data );
 		[ $encrypted_data, $iv ] = explode( '::', $data, 2 );
 
 		// Check if IV was successfully retrieved
