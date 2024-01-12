@@ -89,14 +89,6 @@ function rsssl_disable_fields($field, $field_id){
 		}
 	}
 
-if ( $field_id==='enable_vulnerability_scanner' ){
-		if ( !$field['value'] ) {
-			// We delete the folder
-			require_once(rsssl_path . 'security/wordpress/vulnerabilities/FileStorage.php');
-			\security\wordpress\vulnerabilities\FileStorage::DeleteAll();
-		}
-	}
-
 	return $field;
 }
 add_filter('rsssl_field', 'rsssl_disable_fields', 10, 2);

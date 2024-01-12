@@ -60,7 +60,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	        //now we add the action to the cron.
 	        add_filter('rsssl_every_three_hours_cron', array($this, 'run_cron'));
 	        add_filter('rsssl_notices', [$this, 'show_help_notices'], 10, 1);
-//	        add_action( 'rsssl_after_save_field', array( $this, 'maybe_enable_vulnerability_scanner' ), 10, 4 );
+	        add_action( 'rsssl_after_save_field', array( $this, 'maybe_delete_local_files' ), 10, 4 );
         }
 
 //	    /**
@@ -81,6 +81,26 @@ if (!class_exists("rsssl_vulnerabilities")) {
 //                }
 //	        }
 //        }
+
+		/**
+         * Deletes local files if the vulnerability scanner is disabled
+         *
+		 * @param $field_id
+		 * @param $field_value
+		 * @param $prev_value
+		 * @param $field_type
+		 *
+		 * @return void
+		 */
+        public static function maybe_delete_local_files($field_id, $field_value, $prev_value, $field_type): void {
+            if ( $field_id==='enable_vulnerability_scanner' && $field_value !== $prev_value && rsssl_user_can_manage() ) {
+                if ( $field_value === false ) {
+                    // Already disabled
+                    require_once(rsssl_path . 'security/wordpress/vulnerabilities/class-rsssl-file-storage.php');
+                    \security\wordpress\vulnerabilities\Rsssl_File_Storage::DeleteAll();
+                }
+            }
+        }
 
         public function riskNaming($risk = null)
         {

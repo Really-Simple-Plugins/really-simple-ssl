@@ -22,6 +22,8 @@ class Rsssl_Folder_Name {
 		} else {
 			// Generate a new folder name and save it in the settings
 			$this->folderName = md5(uniqid(mt_rand(), true));
+			require_once 'class-rsssl-file-storage.php';
+			Rsssl_File_Storage::DeleteOldFiles();
 			$this->createFolder();
 			update_option('rsssl_folder_name', $this->folderName);
 		}
