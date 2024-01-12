@@ -84,6 +84,10 @@ class rsssl_firewall_manager {
 		if ( $this->uses_htaccess() ) {
 			$this->include_prepend_file_in_htaccess();
 		}
+
+		if ( $this->has_user_ini_file() ) {
+			$this->include_prepend_file_in_user_ini();
+		}
 	}
 
 	/**
@@ -102,6 +106,7 @@ class rsssl_firewall_manager {
 
 		$this->remove_prepend_file_in_htaccess();
 		$this->remove_prepend_file_in_wp_config();
+		$this->remove_auto_prepend_file_in_user_ini();
 
 		$this->delete_file();
 	}
@@ -306,6 +311,7 @@ class rsssl_firewall_manager {
 
 	/**
 	 * Get the .htaccess rules for the prepend file
+	 * Add user.ini blocking rules if user.ini filename exist.
 	 *
 	 * @return string //the string containing the lines of rules
 	 */
@@ -333,6 +339,22 @@ class rsssl_firewall_manager {
 					'php_value auto_prepend_file ' . $file,
 					'</IfModule>',
 				);
+		}
+
+		$userIni = ini_get('user_ini.filename');
+		if ($userIni) {
+			$rules +=
+			array(
+				sprintf('<Files "%s">', addcslashes($userIni, '"')),
+				'<IfModule mod_authz_core.c>' ,
+				'Require all denied',
+				'</IfModule>',
+				'<IfModule !mod_authz_core.c>',
+				'Order deny,allow',
+				'Deny from all',
+				'</IfModule>',
+				'</Files>',
+			);
 		}
 
 		return implode( "\n", $rules );
@@ -642,6 +664,80 @@ class rsssl_firewall_manager {
 			$rules = $start . $rules . $end;
 		}
 		return $rules;
+	}
+
+	/**
+	 * Check if a user.ini file exists or is in user.
+	 *
+	 * @return bool
+	 */
+	private function has_user_ini_file():bool {
+		$userIni = ini_get('user_ini.filename');
+		if ( $userIni ) {
+			return true;
+		}
+		return false;
+	}
+
+	private function include_prepend_file_in_user_ini(){
+		$config = RSSSL()->server->auto_prepend_config();
+		if ( !$this->has_user_ini_file() ) {
+			return;
+		}
+		$autoPrependIni = '';
+		$userIniPath = $this->get_user_ini_path();
+		// .user.ini configuration
+		switch ($config) {
+			case 'cgi':
+			case 'nginx':
+			case 'apache-suphp':
+			case 'litespeed':
+			case 'iis':
+				$autoPrependIni = sprintf("; BEGIN Really Simple Auto Prepend File
+auto_prepend_file = '%s'
+; END Really Simple Auto Prepend File
+", addcslashes($this->file, "'"));
+				break;
+		}
+
+		if ( !empty($autoPrependIni) ) {
+			// Modify .user.ini
+			$userIniContent = $this->get_contents($userIniPath);
+			if ( $userIniContent ) {
+				$userIniContent = str_replace('auto_prepend_file', ';auto_prepend_file', $userIniContent);
+				$regex = '/; BEGIN Really Simple Auto Prepend File.*?; END Really Simple Auto Prepend File/is';
+				if (preg_match($regex, $userIniContent, $matches)) {
+					$userIniContent = preg_replace($regex, $autoPrependIni, $userIniContent);
+				} else {
+					$userIniContent .= "\n\n" . $autoPrependIni;
+				}
+			} else {
+				$userIniContent = $autoPrependIni;
+			}
+
+			$this->put_contents($userIniPath, $userIniContent);
+		}
+	}
+
+	public function get_user_ini_path() {
+		$userIni = ini_get('user_ini.filename');
+		if ($userIni) {
+			return $this->get_home_path() . $userIni;
+		}
+		return false;
+	}
+
+	private function remove_auto_prepend_file_in_user_ini() {
+		if ( ! $this->has_user_ini_file() ) {
+			return false;
+		}
+
+		$userIniPath = $this->get_user_ini_path();
+		$userIniContent = $this->get_contents( $userIniPath );
+		$userIniContent = preg_replace( '/; BEGIN Really Simple Auto Prepend File.*?; END BEGIN Really Simple Auto Prepend File/is', '', $userIniContent );
+		$userIniContent = str_replace( 'auto_prepend_file', ';auto_prepend_file', $userIniContent );
+		$this->put_contents( $userIniPath, $userIniContent );
+		return strpos( $userIniContent, 'auto_prepend_file' ) !== false;
 	}
 
 
