@@ -12,7 +12,7 @@ class Rsssl_Folder_Name {
 	{
 		// Fetch the folder name from the settings if it exists
 		if (get_option('rsssl_folder_name')) {
-			$this->folderName = get_option('rsssl_folder_name');
+			$this->folderName = 'really-simple-ssl/' . get_option('rsssl_folder_name');
 			// We need to check if the folder exists, if not we need to create it
 			$upload_dir = wp_upload_dir();
 
