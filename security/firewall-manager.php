@@ -77,7 +77,7 @@ class rsssl_firewall_manager {
 		//no rules? remove the file
 		if ( empty(trim($rules) ) ) {
 			if ( file_exists($advanced_headers_file) ) {
-//				unlink($advanced_headers_file);
+				unlink($advanced_headers_file);
 			}
 			return;
 		}
