@@ -180,10 +180,17 @@ class rsssl_firewall_manager {
 			return;
 		}
 
+		if ( !$this->is_writable($file)) {
+			return;
+		}
+
 		// $wp_filesystem = $this->init_file_system();
 		// $result = $wp_filesystem->put_contents($contents, $this->file);
 		file_put_contents( $file, $contents );//phpcs:ignore
-		chmod( $this->file, 0664 ); //phpcs:ignore
+		//only chmod other files than .htaccess and wpconfig. We leave these as is.
+		if ( strpos($file, 'htaccess') === false || strpos($file, 'wp-config.php') === false ) {
+			chmod( $this->file, 0664 ); //phpcs:ignore
+		}
 	}
 
 	/**
@@ -679,7 +686,16 @@ class rsssl_firewall_manager {
 		return false;
 	}
 
+	/**
+	 * Add auto prepend file to user.ini
+	 *
+	 * @return void
+	 */
 	private function include_prepend_file_in_user_ini(){
+		if ( ! rsssl_user_can_manage() ) {
+			return;
+		}
+
 		$config = RSSSL()->server->auto_prepend_config();
 		if ( !$this->has_user_ini_file() ) {
 			return;
@@ -719,6 +735,11 @@ auto_prepend_file = '%s'
 		}
 	}
 
+	/**
+	 * Get the user.ini path
+	 *
+	 * @return false|string
+	 */
 	public function get_user_ini_path() {
 		$userIni = ini_get('user_ini.filename');
 		if ($userIni) {
@@ -727,9 +748,18 @@ auto_prepend_file = '%s'
 		return false;
 	}
 
+	/**
+	 * Remove the added auto prepend file
+	 *
+	 * @return void
+	 */
 	private function remove_auto_prepend_file_in_user_ini() {
+		if ( ! rsssl_user_can_manage() ) {
+			return;
+		}
+
 		if ( ! $this->has_user_ini_file() ) {
-			return false;
+			return;
 		}
 
 		$userIniPath = $this->get_user_ini_path();
@@ -737,7 +767,6 @@ auto_prepend_file = '%s'
 		$userIniContent = preg_replace( '/; BEGIN Really Simple Auto Prepend File.*?; END BEGIN Really Simple Auto Prepend File/is', '', $userIniContent );
 		$userIniContent = str_replace( 'auto_prepend_file', ';auto_prepend_file', $userIniContent );
 		$this->put_contents( $userIniPath, $userIniContent );
-		return strpos( $userIniContent, 'auto_prepend_file' ) !== false;
 	}
 
 
