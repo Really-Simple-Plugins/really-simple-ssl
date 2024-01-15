@@ -37,7 +37,7 @@ const OnboardingControls = ({isModal}) => {
 
     const goToDashboard = () => {
         if ( isModal ) {
-            dismissModal(true);
+           dismissModal(true);
         }
         setSelectedMainMenuItem('dashboard');
     }
@@ -105,25 +105,16 @@ const OnboardingControls = ({isModal}) => {
                         updateField(fieldId, true);
                         setChangedField(fieldId, true);
                     }
-
-                    if  ( item.id === 'vulnerability_detection' ) {
-                        vulnerabilityDetectionEnabled = true;
-                    }
                 }
             }
             setFooterStatus(__("Activating options...", "really-simple-ssl") );
             await saveFields(true, false);
-            if (vulnerabilityDetectionEnabled) {
-                setFooterStatus(__("Initializing vulnerability detection...", "really-simple-ssl") );
-                await fetchFirstRun();
-                setFooterStatus(__("Scanning for vulnerabilities...", "really-simple-ssl") );
-                await fetchVulnerabilities();
-            }
 
             setFooterStatus(__("Updating dashboard...", "really-simple-ssl") );
             await getProgressData();
             setFooterStatus( '' );
             setProcessing(false);
+            goToDashboard();
         }
     }
 
@@ -164,7 +155,7 @@ const OnboardingControls = ({isModal}) => {
         let upgradeText = rsssl_settings.is_bf ? __("Get 40% off", "really-simple-ssl") : __("Get PRO", "really-simple-ssl");
         return (
             <>
-                <Button disabled={processing} isPrimary onClick={() => {goToDashboard()}}>{__('Finish', 'really-simple-ssl')}</Button>
+                <Button disabled={processing} isPrimary onClick={() => saveAndContinue() }>{__('Finish', 'really-simple-ssl')}</Button>
                 { !certificateValid && !rsssl_settings.pro_plugin_active && <Button rel="noreferrer noopener" target="_blank" isPrimary href={rsssl_settings.upgrade_link} >{upgradeText}</Button>}
             </>
         );

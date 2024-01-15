@@ -1040,13 +1040,13 @@ function rsssl_fields( $load_values = true ) {
 					'width'     => '20%',
 				],
 				[
-					'name'     => __( '', 'really-simple-ssl' ),
+					'name'     => '',
 					'sortable' => false,
 					'column'   => 'statusControl',
 					'width'     => '20%',
 				],
 				[
-					'name'     => __( '', 'really-simple-ssl' ),
+					'name'     => '',
 					'sortable' => false,
 					'column'   => 'deleteControl',
 					'width'     => '20%',
@@ -1100,7 +1100,7 @@ function rsssl_fields( $load_values = true ) {
 			'menu_id'  => 'two-fa',
 			'group_id' => 'two_fa_email',
 			'type'     => 'two_fa_roles',
-			'default'  => [ 'editor', 'author', 'contributor'],
+			'default'  => [ 'editor', 'author', 'contributor', 'administrator' ],
 			'label'    => __( "Optional for:", "really-simple-ssl" ),
 			'tooltip'  => __( "Two-step verification will be optional for these user roles, and they can disable it on first login.", 'really-simple-ssl' ),
 			'server_conditions'    => [
@@ -1118,7 +1118,7 @@ function rsssl_fields( $load_values = true ) {
 			'menu_id'  => 'two-fa',
 			'group_id' => 'two_fa_email',
 			'type'     => 'two_fa_roles',
-			'default'  => [ 'administrator' ],
+			'default'  => [],
 			'label'    => __( "Force on:", "really-simple-ssl" ),
 			'tooltip'  => __( "These user roles are forced to enter the authentication code.", 'really-simple-ssl' ),
 			'server_conditions'    => [

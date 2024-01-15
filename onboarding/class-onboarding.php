@@ -69,7 +69,6 @@ class rsssl_onboarding {
 			case 'install_plugin':
 				require_once(rsssl_path . 'class-installer.php');
 				$plugin = new rsssl_installer(sanitize_title($data['id']));
-				error_log("installing ".$data['id']);
 				$success = $plugin->download_plugin();
 				$response = [
 					'next_action' => 'activate',
@@ -78,7 +77,6 @@ class rsssl_onboarding {
 				break;
 			case 'activate':
 				require_once(rsssl_path . 'class-installer.php');
-				error_log("activating ".$data['id']);
 				$plugin = new rsssl_installer(sanitize_title($data['id']));
 				$success = $plugin->activate_plugin();
 				$response = [
@@ -391,7 +389,7 @@ class rsssl_onboarding {
 				"title" => __("Two Factor Authentication", "really-simple-ssl"),
 				"id" => "two_fa",
 				"premium" => true,
-				"options" => ['two_fa_enabled'],
+				"options" => ['login_protection_enabled', 'two_fa_enabled'],
 				"activated" => true,
 			],
 			[
@@ -416,7 +414,7 @@ class rsssl_onboarding {
 			],
 			[
 				"title" => __("Vulnerability Measures", "really-simple-ssl"),
-				"id" => "vulnerability_detection",
+				"id" => "vulnerability_measures",
 				"options" => ["vulnerabilities_measures"],
 				"activated" => true,
 			],
