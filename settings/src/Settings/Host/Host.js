@@ -1,8 +1,6 @@
-import {
-    SelectControl,
-} from '@wordpress/components';
 import {useRef, useEffect, memo} from "@wordpress/element";
 import useFields from "../FieldsData";
+import AutoCompleteControl from "../AutoComplete/AutoCompleteControl";
 import useHostData from "./HostData";
 import {__} from "@wordpress/i18n";
 
@@ -48,8 +46,9 @@ const Host = ({field, showDisabledWhenSaving=true}) => {
     }
 
     return (
-          <SelectControl
+          <AutoCompleteControl
               className="rsssl-select"
+              field={field}
               label={ field.label }
               onChange={ ( fieldValue ) => onChangeHandler(fieldValue) }
               value= { field.value }
