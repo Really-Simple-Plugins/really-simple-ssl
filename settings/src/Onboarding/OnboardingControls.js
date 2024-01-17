@@ -97,23 +97,25 @@ const OnboardingControls = ({isModal}) => {
         }
 
         if ( currentStep.id === 'pro' ) {
-            setProcessing(true);
-            //loop through all items of currentStep.items
-            for (const item of currentStep.items){
-                if ( item.activated ) {
-                    for (const fieldId of Object.values(item.options)) {
-                        updateField(fieldId, true);
-                        setChangedField(fieldId, true);
+            if ( rsssl_settings.is_premium ) {
+                setProcessing(true);
+                //loop through all items of currentStep.items
+                for (const item of currentStep.items) {
+                    if (item.activated) {
+                        for (const fieldId of Object.values(item.options)) {
+                            updateField(fieldId, true);
+                            setChangedField(fieldId, true);
+                        }
                     }
                 }
-            }
-            setFooterStatus(__("Activating options...", "really-simple-ssl") );
-            await saveFields(true, false);
+                setFooterStatus(__("Activating options...", "really-simple-ssl"));
+                await saveFields(true, false);
 
-            setFooterStatus(__("Updating dashboard...", "really-simple-ssl") );
-            await getProgressData();
-            setFooterStatus( '' );
-            setProcessing(false);
+                setFooterStatus(__("Updating dashboard...", "really-simple-ssl"));
+                await getProgressData();
+                setFooterStatus('');
+                setProcessing(false);
+            }
             goToDashboard();
         }
     }
@@ -155,8 +157,8 @@ const OnboardingControls = ({isModal}) => {
         let upgradeText = rsssl_settings.is_bf ? __("Get 40% off", "really-simple-ssl") : __("Get PRO", "really-simple-ssl");
         return (
             <>
-                <Button disabled={processing} isPrimary onClick={() => saveAndContinue() }>{__('Finish', 'really-simple-ssl')}</Button>
-                { !certificateValid && !rsssl_settings.pro_plugin_active && <Button rel="noreferrer noopener" target="_blank" isPrimary href={rsssl_settings.upgrade_link} >{upgradeText}</Button>}
+                <Button isPrimary onClick={() => saveAndContinue() }>{__('Finish', 'really-simple-ssl')}</Button>
+                { !rsssl_settings.pro_plugin_active && <Button rel="noreferrer noopener" target="_blank" isPrimary href={rsssl_settings.upgrade_link} >{upgradeText}</Button>}
             </>
         );
     }
