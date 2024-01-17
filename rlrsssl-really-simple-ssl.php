@@ -39,6 +39,7 @@ if (!function_exists('rsssl_activation_check')) {
     }
 	register_activation_hook( __FILE__, 'rsssl_activation_check' );
 }
+if ( !class_exists('REALLY_SIMPLE_SSL')) {
 class REALLY_SIMPLE_SSL
 {
 	private static $instance;
@@ -205,6 +206,13 @@ class REALLY_SIMPLE_SSL
 		return false;
 	}
 }
+	function RSSSL()
+	{
+		return REALLY_SIMPLE_SSL::instance();
+	}
+	add_action('plugins_loaded', 'RSSSL', 8);
+
+}
 
 if ( ! function_exists('rsssl_add_manage_security_capability')){
 	/**
@@ -246,11 +254,7 @@ if ( !function_exists('rsssl_admin_logged_in')){
     }
 }
 
-function RSSSL()
-{
-    return REALLY_SIMPLE_SSL::instance();
-}
-add_action('plugins_loaded', 'RSSSL', 8);
+
 
 if ( !function_exists('rsssl_is_logged_in_rest')){
 	function rsssl_is_logged_in_rest(){
