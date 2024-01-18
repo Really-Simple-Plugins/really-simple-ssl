@@ -35,7 +35,10 @@ const Host = ({field, showDisabledWhenSaving=true}) => {
         label: __('Optional. You can select your hosting provider if available for specific integrations.', 'really-simple-ssl'),
         value: '',
     };
-    options.push(item);
+    console.log(field);
+    if (field.value.length==='') {
+        options.push(item);
+    }
     for (let key in loadedHosts) {
         if (loadedHosts.hasOwnProperty(key)) {
             let item = {};

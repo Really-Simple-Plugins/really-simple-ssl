@@ -1,6 +1,17 @@
-.rsssl, .rsssl-modal-body {
+.rsssl-modal-body {
   input.MuiInput-underline:before {
     display:none;
+  }
+  .MuiAutocomplete-root {
+    .MuiInputLabel-outlined[data-shrink=false] {
+      transform: translate(14px, 16px) scale(1);
+    }
+    .MuiFormLabel-root {
+      font-family:inherit;
+    }
+    .MuiOutlinedInput-root {
+      padding: 0;
+    }
   }
   input.MuiAutocomplete-input[type=text] {
     &:focus {
@@ -21,18 +32,20 @@
   }
   .MuiInput-root {
     display:block;
+    width: 100%;
     position:relative;
   }
   .MuiInput-root input.MuiInputBase-input {
     padding-left:10px;
   }
-  .MuiPopper-root {
-    max-width:100%;
+  .MuiPopper-root, .MuiPaper-root {
+    max-height:40vh;
     div {
       font-family: inherit !important;
     }
     ul {
-      column-count:1;
+      max-height:initial;
+      //overflow-y:scroll;
     }
   }
 }

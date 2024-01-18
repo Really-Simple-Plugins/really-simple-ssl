@@ -34,7 +34,8 @@ defined('ABSPATH') or die("you do not have access to this page!");
 if (!function_exists('rsssl_activation_check')) {
 	function rsssl_activation_check()
 	{
-        update_option('rsssl_show_onboarding', true);
+		update_option('rsssl_activation', true, false );
+        update_option('rsssl_show_onboarding', true, false );
         set_transient('rsssl_redirect_to_settings_page', true, HOUR_IN_SECONDS );
     }
 	register_activation_hook( __FILE__, 'rsssl_activation_check' );
