@@ -547,7 +547,7 @@ function rsssl_menu() {
 					'menu_items' => [
 						[
 							'id'      => 'geo_block_list',
-							'title'   => __( 'Geo Blocking', 'really-simple-ssl' ),
+							'title'   => __( 'Region restrictions', 'really-simple-ssl' ),
 							'premium' => true,
 							'groups'  => [
 								[
@@ -559,7 +559,7 @@ function rsssl_menu() {
 									'premium_text'  => __( 'Enabling this feature will block visitors from the countries you select. You can also block entire continents, or allow only specific countries.',
 										'really-simple-ssl' ),
 									'upgrade'       => 'https://really-simple-ssl.com/pro/?mtm_campaign=lla&mtm_source=free&mtm_content=upgrade',
-									'title'         => __( 'General', 'really-simple-ssl' ),
+									'title'         => __( 'Region restrictions', 'really-simple-ssl' ),
 									'intro'         => __( 'Block visitors from specific countries, or continents. You can also allow only specific countries.',
 										'really-simple-ssl' ),
 								],
@@ -573,6 +573,8 @@ function rsssl_menu() {
 									'upgrade'              => 'https://really-simple-ssl.com/pro/?mtm_campaign=cops&mtm_source=free&mtm_content=upgrade',
 									'title'                => __( 'Geo Block List', 'really-simple-ssl' ),
 									'premium_title'        => __( 'Geo Block List', 'really-simple-ssl' ),
+									'intro' 			  => __( 'Restrict access to your site based on user location. By default, all regions are allowed. You can also block countries from a continent.',
+										'really-simple-ssl' ),
 									'groupFilter'          => [
 										'default' => 'countries',
 										'id'      => 'rsssl-group-filter-geo_block_list',
@@ -580,6 +582,10 @@ function rsssl_menu() {
 											[
 												'id'    => 'blocked',
 												'title' => __( 'Blocked', 'really-simple-ssl' ),
+											],
+											[
+												'id'   => 'regions',
+												'title' => __( 'Continents', 'really-simple-ssl' ),
 											],
 											[
 												'id'    => 'countries',

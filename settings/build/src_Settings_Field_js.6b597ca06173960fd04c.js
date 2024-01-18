@@ -2590,13 +2590,13 @@ const GeoDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, 
     set({
       processing: true
     });
+    let data = {
+      country_code: countries
+    };
     try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('geo_block_add_blocked_country', {
-        countries,
-        status
-      });
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('geo_block_add_blocked_country', data);
       // Consider checking the response structure for any specific success or failure signals
-      if (response && response.request_success) {
+      if (response && response.success) {
         await get().fetchCountryData('rsssl_geo_list', dataActions);
         // Potentially notify the user of success, if needed.
       } else {
@@ -8732,6 +8732,57 @@ const Flag = ({
   title
 }) => {
   const FlagComponent = _Flags__WEBPACK_IMPORTED_MODULE_1__[countryCode];
+  if (countryCode === 'EU') {
+    return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+      title: title
+    }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
+      src: "https://upload.wikimedia.org/wikipedia/commons/b/b7/Flag_of_Europe.svg",
+      alt: "EU",
+      style: {
+        width: '16px',
+        height: '12px'
+      }
+    }));
+  }
+  if (countryCode === 'AN') {
+    //Flag of antarctica
+    return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+      title: title
+    }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
+      src: "https://upload.wikimedia.org/wikipedia/commons/6/68/Flag_of_the_Antarctic_Treaty.svg",
+      alt: "AN",
+      style: {
+        width: '16px',
+        height: '12px'
+      }
+    }));
+  }
+  if (countryCode === 'AS') {
+    //Flag of Asean
+    return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+      title: title
+    }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
+      src: "https://upload.wikimedia.org/wikipedia/en/thumb/8/87/Flag_of_ASEAN.svg/1920px-Flag_of_ASEAN.svg.png",
+      alt: "AS",
+      style: {
+        width: '16px',
+        height: '12px'
+      }
+    }));
+  }
+  if (countryCode === 'OC') {
+    //Flag of Australia
+    return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+      title: title
+    }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
+      src: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Flag_of_Australia_%28converted%29.svg/1920px-Flag_of_Australia_%28converted%29.svg.png",
+      alt: "OC",
+      style: {
+        width: '16px',
+        height: '12px'
+      }
+    }));
+  }
   return FlagComponent ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     title: title
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(FlagComponent, {
@@ -24732,4 +24783,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.beaf7cfdae938690b3fa.js.map
+//# sourceMappingURL=src_Settings_Field_js.6b597ca06173960fd04c.js.map
