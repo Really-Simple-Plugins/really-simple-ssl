@@ -109,3 +109,101 @@ function rsssl_check_if_email_essential_feature() {
 
 	return false;
 }
+
+/**
+ * @param $response
+ * @param $user
+ * @param $request
+ *
+ * @return mixed
+ *
+ * Add user roles to /users endpoint
+ */
+function add_user_role_to_api_response( $response, $user, $request ) {
+	$headers = $request->get_headers();
+
+	if (isset($headers['referer']) && strpos($headers['referer'][0], 'really-simple-security') !== false) {
+		$data = $response->get_data();
+		$data['roles'] = $user->roles;
+		$response->set_data($data);
+	}
+
+	return $response;
+}
+add_filter('rest_prepare_user', 'add_user_role_to_api_response', 10, 3);
+
+/**
+ * Adds a template.
+ *
+ * @param  string  $template
+ * @param  string  $path
+ *
+ * @return string
+ * @throws Exception
+ */
+function rsssl_get_template( string $template, string $path = '' ): string {
+	// Define the path in the theme where templates can be overridden.
+	$theme_template_path = get_stylesheet_directory() . '/really-simple-ssl-templates/' . $template;
+
+	// Check if the theme has an override for the template.
+	if (file_exists($theme_template_path)) {
+		return $theme_template_path;
+	}
+
+	// If $path is not set, use the default path
+	if ($path === '') {
+		$path = rsssl_path . 'templates/'; //Remember this only works in free version, for pro we need to add the $path parameter/argument
+	} else {
+		// Ensure the path ends with a slash
+		$path = trailingslashit($path);
+	}
+
+	// Full path to the template file
+	$full_path = $path . $template;
+
+	// Check if the template exists in the specified path.
+	if (!file_exists($full_path)) {
+		throw new \RuntimeException('Template not found: ' . $full_path);
+	}
+
+	return $full_path;
+
+}
+
+/**
+ * Load a template file.
+ *
+ * @param  string  $template
+ * @param  array  $vars
+ * @param  string  $path
+ *
+ * @throws Exception
+ */
+function rsssl_load_template( string $template, array $vars = [], string $path = '' ) {
+	// Extract variables to be available in the template scope
+	if (is_array($vars)) {
+		extract($vars);
+	}
+
+	// Get the template file, checking for theme overrides
+	$template_file = rsssl_get_template($template, $path);
+
+	// Include the template file
+	include $template_file;
+}
+
+/**
+ * Minifies the given JS string or file to be added inline as a script tag
+ *
+ * @param $input
+ *
+ * @return string
+ */
+function rsssl_minify_js($input): string {
+	if(trim($input) === "") return $input;
+	// Remove comments, whitespace, newlines, etc.
+	$input = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $input);
+
+	return str_replace( array( ': ', "\r\n", "\r", "\n", "\t", '  ', '    ', '     ' ),
+		array( ':', '', '', '', '', '', '', '' ), $input );
+}
