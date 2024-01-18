@@ -1,4 +1,4 @@
-.rsssl-modal-body {
+.rsssl-modal-body, .rsssl {
   input.MuiInput-underline:before {
     display:none;
   }
@@ -19,22 +19,12 @@
       box-shadow:none;
     }
     border:0;
+    padding-left:12px;
   }
   .MuiInputBase-root {
     font-family: inherit;
   }
-  ul.MuiAutocomplete-listbox {
-    column-count: 1 !important;
-    li {
-      font-family: inherit;
-      display: block !important;
-    }
-  }
-  .MuiInput-root {
-    display:block;
-    width: 100%;
-    position:relative;
-  }
+
   .MuiInput-root input.MuiInputBase-input {
     padding-left:10px;
   }
@@ -45,7 +35,6 @@
     }
     ul {
       max-height:initial;
-      //overflow-y:scroll;
     }
   }
 }
