@@ -48,7 +48,7 @@ const GeoDatatable = (props) => {
 
     const buildColumn = useCallback((column) => ({
         //if the filter is set to region and the columns = status we do not want to show the column
-        omit: getCurrentFilter(moduleName) === 'regions' && column.column === 'status',
+        omit: getCurrentFilter(moduleName) === 'regions' && column.column === 'region_name',
         name: column.name,
         sortable: column.sortable,
         searchable: column.searchable,
@@ -220,6 +220,12 @@ const GeoDatatable = (props) => {
                 <ActionButton onClick={() => allowCountryByCode(code)}
                               className="button-secondary">
                     {__("Allow", "really-simple-ssl")}
+                </ActionButton>
+            )}
+            {getCurrentFilter(moduleName) === 'regions' && (
+                <ActionButton onClick={() => blockRegionByCode(code, region_name)}
+                                className="button-primary">
+                    {__("Block", "really-simple-ssl")}
                 </ActionButton>
             )}
             {getCurrentFilter(moduleName) === 'countries' && (

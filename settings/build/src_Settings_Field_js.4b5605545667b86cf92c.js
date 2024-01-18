@@ -2558,7 +2558,7 @@ const GeoDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, 
   },
   /*
   * This function add a new row to the table
-  */
+   */
   addRow: async (country, name, dataActions) => {
     set({
       processing: true
@@ -2645,6 +2645,31 @@ const GeoDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, 
     };
     try {
       const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('geo_block_remove_blocked_country', data);
+      // Consider checking the response structure for any specific success or failure signals
+      if (response && response.request_success) {
+        await get().fetchCountryData('rsssl_geo_list', dataActions);
+        // Potentially notify the user of success, if needed.
+      } else {
+        // Handle any unsuccessful response if needed.
+      }
+    } catch (e) {
+      console.log(e);
+      // Notify the user of an error.
+    } finally {
+      set({
+        processing: false
+      });
+    }
+  },
+  addRegion: async (region, dataActions) => {
+    set({
+      processing: true
+    });
+    let data = {
+      region_code: region
+    };
+    try {
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('geo_block_add_blocked_region', data);
       // Consider checking the response structure for any specific success or failure signals
       if (response && response.request_success) {
         await get().fetchCountryData('rsssl_geo_list', dataActions);
@@ -2760,7 +2785,7 @@ const GeoDatatable = props => {
   } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_2__["default"])();
   const buildColumn = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(column => ({
     //if the filter is set to region and the columns = status we do not want to show the column
-    omit: getCurrentFilter(moduleName) === 'regions' && column.column === 'status',
+    omit: getCurrentFilter(moduleName) === 'regions' && column.column === 'region_name',
     name: column.name,
     sortable: column.sortable,
     searchable: column.searchable,
@@ -2901,7 +2926,10 @@ const GeoDatatable = props => {
     }, getCurrentFilter(moduleName) === 'blocked' && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
       onClick: () => allowCountryByCode(code),
       className: "button-secondary"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("Allow", "really-simple-ssl")), getCurrentFilter(moduleName) === 'countries' && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, status === 'blocked' ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("Allow", "really-simple-ssl")), getCurrentFilter(moduleName) === 'regions' && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
+      onClick: () => blockRegionByCode(code, region_name),
+      className: "button-primary"
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("Block", "really-simple-ssl")), getCurrentFilter(moduleName) === 'countries' && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, status === 'blocked' ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
       onClick: () => allowCountryByCode(code, name),
       className: "button-secondary"
     }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("Allow", "really-simple-ssl")) : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
@@ -24783,4 +24811,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.6b597ca06173960fd04c.js.map
+//# sourceMappingURL=src_Settings_Field_js.4b5605545667b86cf92c.js.map
