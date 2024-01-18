@@ -741,6 +741,12 @@ function rsssl_fields( $load_values = true ) {
 					'width'      => '30%',
 				],
 				[
+					'name'    => __('Continent', 'really-simple-ssl'),
+					'sortable' => true,
+					'column'  => 'region_name',
+					'width'   => '30%',
+				],
+				[
 					'name'     => __('Status', 'really-simple-ssl'),
 					'sortable' => false,
 					'column'   => 'status',
