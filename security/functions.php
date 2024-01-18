@@ -520,6 +520,11 @@ function rsssl_is_email_verified() {
         return false;
     }
 
+	if ( get_option('rsssl_email_verification_status') ) {
+		error_log("rsssl_email_verification_status value:");
+		error_log(get_option('rsssl_email_verification_status'));
+	}
+
     if ( get_option('rsssl_email_verification_status') == 'completed' ) {
         // completed
         return true;

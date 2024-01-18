@@ -36,15 +36,24 @@ if ( !class_exists('rsssl_mailer_admin') ) {
 		 */
 		public function maybe_verify_user_email() {
 
+			error_log("===== Start verification process =====");
+			error_log("In maybe_verify_user_email");
+
 			if ( ! rsssl_user_can_manage() ) {
+				error_log("User cannot manage, return");
 				return;
 			}
 
+			error_log("GET:");
+			error_log(print_r($_GET, true));
+
 			if ( isset($_GET['rsssl_force_verification'] ) ){
+				error_log("Force verification true");
 				update_option( 'rsssl_email_verification_status', 'completed', false );
 			}
 
 			if ( ! isset( $_GET['rsssl_verification_code'] )  ) {
+				error_log("Get rsssl_verification_code not set");
 				return;
 			}
 
@@ -53,10 +62,17 @@ if ( !class_exists('rsssl_mailer_admin') ) {
 			$verification_code = preg_replace( "/[^0-9]/", "", $verification_code );
 			$verification_code = substr( $verification_code, 0, 6 );
 
+			error_log("Verification code: $verification_code");
+
 			// verify code
 			$user_id = get_current_user_id();
+			error_log("User id: $user_id");
+
 			$nonce   = $_GET['rsssl_nonce'];
+			error_log("Nonce: $nonce");
+
 			if ( ! wp_verify_nonce( $nonce, 'rsssl_email_verification_' . $user_id ) ) {
+				error_log("Nonce check failed, return");
 				return;
 			}
 
@@ -64,8 +80,13 @@ if ( !class_exists('rsssl_mailer_admin') ) {
 			$saved_verification_code       = get_option('rsssl_email_verification_code');
 			$saved_verification_expiration = get_option('rsssl_email_verification_code_expiration');
 
+			error_log("Current time: $current_time");
+			error_log("saved_verification_code: $saved_verification_code");
+			error_log("saved_verification_expiration: $saved_verification_expiration");
+
 			if ( $verification_code === $saved_verification_code && $saved_verification_expiration && $current_time < $saved_verification_expiration ) {
 				// If the verification code is correct and hasn't expired, update the verification status
+				error_log("Conditions met, verifying user");
 				update_option( 'rsssl_email_verification_status', 'completed', false );
 				set_transient('rsssl_redirect_to_settings_page', true, HOUR_IN_SECONDS );
 			}
