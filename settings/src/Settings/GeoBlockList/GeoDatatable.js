@@ -223,10 +223,16 @@ const GeoDatatable = (props) => {
                 </ActionButton>
             )}
             {getCurrentFilter(moduleName) === 'regions' && (
+                <>
                 <ActionButton onClick={() => blockRegionByCode(code, region_name)}
                                 className="button-primary">
                     {__("Block", "really-simple-ssl")}
                 </ActionButton>
+                <ActionButton onClick={() => allowRegionByCode(code, region_name)}
+                                className="button-secondary">
+                    {__("Allow", "really-simple-ssl")}
+                </ActionButton>
+                </>
             )}
             {getCurrentFilter(moduleName) === 'countries' && (
                 <>

@@ -199,6 +199,28 @@ const GeoDataTableStore = create((set, get) => ({
 
         }
     },
+    removeRegion: async (region, dataActions) => {
+        set({processing: true});
+        let data = {
+            region_code: region
+        };
+        try {
+            const response = await rsssl_api.doAction('geo_block_remove_blocked_region', data);
+            // Consider checking the response structure for any specific success or failure signals
+            if (response && response.request_success) {
+                await get().fetchCountryData('rsssl_geo_list', dataActions);
+                // Potentially notify the user of success, if needed.
+            } else {
+                // Handle any unsuccessful response if needed.
+            }
+        } catch (e) {
+            console.log(e);
+            // Notify the user of an error.
+        } finally {
+            set({processing: false});
+
+        }
+    },
     updateMultiRow: async (ids, status, dataActions) => {
         set({processing: true});
         try {
