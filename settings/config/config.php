@@ -1673,7 +1673,7 @@ function rsssl_fields( $load_values = true ) {
 			'menu_id'  => 'password_security',
 			'group_id' => 'password_security_passwords',
 			'type'     => 'checkbox',
-			'label'    => __( "Enforce strong passwords", "really-simple-ssl-pro" ),
+			'label'    => __( "Enforce strong passwords", "really-simple-ssl" ),
 			'help'     => [
 				'label' => 'default',
 				'url'   => 'https://really-simple-ssl.com/instructions/password-security/?mtm_campaign=definition&mtm_source=free',
@@ -1690,7 +1690,7 @@ function rsssl_fields( $load_values = true ) {
 			'menu_id'  => 'password_security',
 			'group_id' => 'password_security_passwords',
 			'type'     => 'checkbox',
-			'label'    => __( "Enforce frequent password change", "really-simple-ssl-pro" ),
+			'label'    => __( "Enforce frequent password change", "really-simple-ssl" ),
 			'disabled' => false,
 			'default'  => 'disabled',
 			'react_conditions' => [
@@ -1706,7 +1706,7 @@ function rsssl_fields( $load_values = true ) {
 			'group_id' => 'password_security_passwords',
 			'type'     => 'roles_dropdown',
 			'default'  => [ 'administrator'],
-			'label'    => __( "User roles for password change", "really-simple-ssl-pro" ),
+			'label'    => __( "User roles for password change", "really-simple-ssl" ),
 			'react_conditions' => [
 				'relation' => 'AND',
 				[
@@ -1721,11 +1721,11 @@ function rsssl_fields( $load_values = true ) {
 			'type'     => 'select',
 			'default'  => '12',
 			'options'   => [
-				'6' => __( "6 months", "really-simple-ssl-pro" ),
-				'12' => __( "1 year", "really-simple-ssl-pro" ),
-				'24' => __( "2 years", "really-simple-ssl-pro" ),
+				'6' => __( "6 months", "really-simple-ssl" ),
+				'12' => __( "1 year", "really-simple-ssl" ),
+				'24' => __( "2 years", "really-simple-ssl" ),
 			],
-			'label'    => __( "Change passwords every", "really-simple-ssl-pro" ),
+			'label'    => __( "Change passwords every", "really-simple-ssl" ),
 			'react_conditions' => [
 				'relation' => 'AND',
 				[
