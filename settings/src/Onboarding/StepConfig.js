@@ -19,7 +19,7 @@ const StepConfig = () => {
     let otherHostsField = fieldsLoaded && getField('other_host_type');
     let items = currentStep.items ? currentStep.items : [];
 
-    if (rsssl_settings.cloudflare) {
+    if ( rsssl_settings.cloudflare ) {
         let cfItem = {
             status: 'success',
             title: "CloudFlare",

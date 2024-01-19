@@ -174,7 +174,7 @@ class rsssl_onboarding {
 			[
 				"id" => 'activate_ssl',
 				"title" => __( "Really Simple SSL & Security", 'really-simple-ssl' ),
-				"subtitle" => __("We have added many new features to our plugin, now bearing the name Really Simple SSL & Security. But we start like we did almost 10 years ago. Optimising your Encryption with SSL", "really-simple-ssl"),
+				"subtitle" => __("We have added many new features to our plugin, now bearing the name Really Simple SSL & Security. But we start like we did almost 10 years ago. Optimising your Encryption with SSL.", "really-simple-ssl"),
 				"items" => $this->activate_ssl(),
 			],
 			[
