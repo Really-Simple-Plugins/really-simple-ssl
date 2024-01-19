@@ -87,4 +87,17 @@ if (isset($settings['delete_data_on_uninstall']) && $settings['delete_data_on_un
 		delete_transient( $transient );
 		delete_site_transient( $transient );
 	}
+
+	//deleting the really_simple_ssl upload dir
+	$upload_dir = wp_upload_dir();
+	$really_simple_ssl_dir = $upload_dir['basedir'] . '/really-simple-ssl';
+	if (is_dir($really_simple_ssl_dir)) {
+		$files = scandir($really_simple_ssl_dir);
+		foreach ($files as $file) {
+			if ( $file !== '.' && $file !== '..') {
+				unlink($really_simple_ssl_dir . '/' . $file);
+			}
+		}
+		rmdir($really_simple_ssl_dir);
+	}
 }
