@@ -98,6 +98,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
                     // Already disabled
                     require_once(rsssl_path . 'security/wordpress/vulnerabilities/class-rsssl-file-storage.php');
                     \security\wordpress\vulnerabilities\Rsssl_File_Storage::DeleteAll();
+
                 }
             }
         }
@@ -150,6 +151,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 		    if ( ! rsssl_admin_logged_in() ) {
 			    return;
 		    }
+		    \security\wordpress\vulnerabilities\Rsssl_File_Storage::DeleteOldFiles();
 
 		    if ( isset($_GET['rsssl_check_vulnerabilities']) || get_option('rsssl_reload_vulnerability_files') ) {
 			    delete_option('rsssl_reload_vulnerability_files');
