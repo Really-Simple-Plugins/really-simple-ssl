@@ -166,24 +166,38 @@ const GeoDatatable = (props) => {
 
     const allowCountryByCode = useCallback(async (code) => {
         if (Array.isArray(code)) {
-            console.log(code[0]);
             const ids = code.map(item => item.iso2_code);
             //we loop through the ids and allow them one by one
             await removeRowMultiple(ids, dataActions );
             setRowsSelected([]);
         } else {
-            await removeRow(code, dataActions);
+            await removeRow(code, dataActions).then((result) => {
+                console.log(result);
+                showSavedSettingsNotice(__('%s is now allowed', 'really-simple-ssl')
+                    .replace('%s',code));
+            });
         }
 
     }, [removeRow, removeRowMultiple, dataActions, getCurrentFilter(moduleName)]);
 
     const blockCountryByCode = useCallback(async (code, name) => {
         if (Array.isArray(code)) {
-            const ids = code.map(item => item.iso2_code);
-                await addRowMultiple(ids, dataActions);
+            //We get all the iso2 codes and names from the array
+            const ids = code.map(item => ({
+                iso2_code: item.iso2_code,
+                country_name: item.country_name
+            }));
+            //we loop through the ids and block them one by one
+            ids.forEach((id) => {
+                addRow(id.iso2_code, id.country_name, dataActions).then((result) => {
+                    showSavedSettingsNotice(result.message);
+                });
+            });
             setRowsSelected([]);
         } else {
-            await addRow(code, name, dataActions);
+            await addRow(code, name, dataActions).then((result) => {
+                showSavedSettingsNotice(result.message);
+            });
         }
 
     }, [addRow, addRowMultiple, dataActions, getCurrentFilter(moduleName)]);

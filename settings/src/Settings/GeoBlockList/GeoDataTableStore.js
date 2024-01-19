@@ -88,23 +88,24 @@ const GeoDataTableStore = create((set, get) => ({
      */
     addRow: async (country, name, dataActions) => {
         set({processing: true});
-        // we make an array of country and name
         let data = {
-                country_code: country,
-                country_name: name
-            };
+            country_code: country,
+            country_name: name
+        };
         try {
             const response = await rsssl_api.doAction('geo_block_add_blocked_country', data);
-            // Consider checking the response structure for any specific success or failure signals
             if (response && response.request_success) {
                 await get().fetchCountryData('rsssl_geo_list', dataActions);
-                // Potentially notify the user of success, if needed.
+                // Return the success message from the API response.
+                return { success: true, message: response.message, response };
             } else {
-                // Handle any unsuccessful response if needed.
+                // Return a custom error message or the API response message.
+                return { success: false, message: response?.message || 'Failed to add country', response };
             }
         } catch (e) {
             console.log(e);
-            // Notify the user of an error.
+            // Return the caught error with a custom message.
+            return { success: false, message: 'Error occurred', error: e };
         } finally {
             set({processing: false});
         }

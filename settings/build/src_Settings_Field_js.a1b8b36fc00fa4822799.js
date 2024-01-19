@@ -2563,23 +2563,36 @@ const GeoDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, 
     set({
       processing: true
     });
-    // we make an array of country and name
     let data = {
       country_code: country,
       country_name: name
     };
     try {
       const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('geo_block_add_blocked_country', data);
-      // Consider checking the response structure for any specific success or failure signals
       if (response && response.request_success) {
         await get().fetchCountryData('rsssl_geo_list', dataActions);
-        // Potentially notify the user of success, if needed.
+        // Return the success message from the API response.
+        return {
+          success: true,
+          message: response.message,
+          response
+        };
       } else {
-        // Handle any unsuccessful response if needed.
+        // Return a custom error message or the API response message.
+        return {
+          success: false,
+          message: response?.message || 'Failed to add country',
+          response
+        };
       }
     } catch (e) {
       console.log(e);
-      // Notify the user of an error.
+      // Return the caught error with a custom message.
+      return {
+        success: false,
+        message: 'Error occurred',
+        error: e
+      };
     } finally {
       set({
         processing: false
@@ -2904,22 +2917,35 @@ const GeoDatatable = props => {
   }, [addRegion, getCurrentFilter(moduleName), dataActions]);
   const allowCountryByCode = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(async code => {
     if (Array.isArray(code)) {
-      console.log(code[0]);
       const ids = code.map(item => item.iso2_code);
       //we loop through the ids and allow them one by one
       await removeRowMultiple(ids, dataActions);
       setRowsSelected([]);
     } else {
-      await removeRow(code, dataActions);
+      await removeRow(code, dataActions).then(result => {
+        console.log(result);
+        showSavedSettingsNotice((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)('%s is now allowed', 'really-simple-ssl').replace('%s', code));
+      });
     }
   }, [removeRow, removeRowMultiple, dataActions, getCurrentFilter(moduleName)]);
   const blockCountryByCode = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(async (code, name) => {
     if (Array.isArray(code)) {
-      const ids = code.map(item => item.iso2_code);
-      await addRowMultiple(ids, dataActions);
+      //We get all the iso2 codes and names from the array
+      const ids = code.map(item => ({
+        iso2_code: item.iso2_code,
+        country_name: item.country_name
+      }));
+      //we loop through the ids and block them one by one
+      ids.forEach(id => {
+        addRow(id.iso2_code, id.country_name, dataActions).then(result => {
+          showSavedSettingsNotice(result.message);
+        });
+      });
       setRowsSelected([]);
     } else {
-      await addRow(code, name, dataActions);
+      await addRow(code, name, dataActions).then(result => {
+        showSavedSettingsNotice(result.message);
+      });
     }
   }, [addRow, addRowMultiple, dataActions, getCurrentFilter(moduleName)]);
   const data = {
@@ -24839,4 +24865,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.a1a76f386b916c95aab4.js.map
+//# sourceMappingURL=src_Settings_Field_js.a1b8b36fc00fa4822799.js.map
