@@ -24,10 +24,7 @@ const GeoDatatable = (props) => {
         handleCountryTableSearch,
         addRegion,
         removeRegion,
-        addRowMultiple,
-        removeRowMultiple,
         resetRow,
-        resetMultiRow,
         dataActions,
         rowCleared,
     } = GeoDataTableStore();
@@ -123,25 +120,24 @@ const GeoDatatable = (props) => {
 
     const allowRegionByCode = useCallback(async (code, regionName = '') => {
         if (Array.isArray(code)) {
-            const ids = code.map(item => item.id);
-            const regions = code.map(item => item.region);
-            await removeRegions(ids, '',dataActions);
-            let regionsString = regions.join(', ');
-            showSavedSettingsNotice(__('%s is now allowed', 'really-simple-ssl')
-                .replace('%s',regionsString));
+            const ids = code.map(item => ({
+                iso2_code: item.iso2_code,
+                country_name: item.country_name
+            }));
+            ids.forEach((id) => {
+                removeRegion(id.iso2_code, dataActions).then((result) => {
+                    showSavedSettingsNotice(result.message);
+                });
+            });
+            setRowsSelected([]);
+            await fetchCountryData('rsssl_geo_list', dataActions);
             setRowsSelected([]);
         } else {
-            await removeRegion(code, 'blocked', dataActions);
-            showSavedSettingsNotice(__('%s is now allowed', 'really-simple-ssl')
-                .replace('%s',regionName));
+            await removeRegion(code, dataActions).then((result) => {
+                showSavedSettingsNotice(result.message);
+            });
         }
     }, [removeRegion, getCurrentFilter(moduleName), dataActions]);
-
-
-    const allowMultiple = useCallback((rows) => {
-        const ids = rows.map(item => item.id);
-        resetMultiRow(ids, 'blocked', dataActions);
-    }, [resetMultiRow, getCurrentFilter(moduleName), dataActions]);
 
     const allowById = useCallback((id) => {
         resetRow(id, 'blocked', dataActions);
@@ -149,36 +145,47 @@ const GeoDatatable = (props) => {
 
     const blockRegionByCode = useCallback(async (code, region = '') => {
         if (Array.isArray(code)) {
-            const ids = code.map(item => item.id);
-            const regions = code.map(item => item.region);
-            await addRegions(ids, 'blocked', dataActions);
-            let regionsString = regions.join(', ');
-            showSavedSettingsNotice(__('%s has been blocked', 'really-simple-ssl')
-                .replace('%s',regionsString));
+            const ids = code.map(item => ({
+                iso2_code: item.iso2_code,
+                country_name: item.country_name
+            }));
+            ids.forEach((id) => {
+                addRegion(id.iso2_code, dataActions).then((result) => {
+                    showSavedSettingsNotice(result.message);
+                });
+            });
+            setRowsSelected([]);
+            await fetchCountryData('rsssl_geo_list', dataActions);
             setRowsSelected([]);
         } else {
-            await addRegion(code, 'blocked', dataActions);
-            showSavedSettingsNotice(__('%s has been blocked', 'really-simple-ssl')
-                .replace('%s',region));
+            await addRegion(code, dataActions).then((result) => {
+                showSavedSettingsNotice(result.message);
+            });
         }
 
     }, [addRegion, getCurrentFilter(moduleName), dataActions]);
 
     const allowCountryByCode = useCallback(async (code) => {
         if (Array.isArray(code)) {
-            const ids = code.map(item => item.iso2_code);
+            const ids = code.map(item => ({
+                iso2_code: item.iso2_code,
+                country_name: item.country_name
+            }));
             //we loop through the ids and allow them one by one
-            await removeRowMultiple(ids, dataActions );
+            ids.forEach((id) => {
+                removeRow(id.iso2_code, dataActions).then((result) => {
+                    showSavedSettingsNotice(result.message);
+                });
+            });
             setRowsSelected([]);
+            await fetchCountryData('rsssl_geo_list', dataActions);
         } else {
             await removeRow(code, dataActions).then((result) => {
-                console.log(result);
-                showSavedSettingsNotice(__('%s is now allowed', 'really-simple-ssl')
-                    .replace('%s',code));
+                showSavedSettingsNotice(result.message);
             });
         }
 
-    }, [removeRow, removeRowMultiple, dataActions, getCurrentFilter(moduleName)]);
+    }, [removeRow, dataActions, getCurrentFilter(moduleName)]);
 
     const blockCountryByCode = useCallback(async (code, name) => {
         if (Array.isArray(code)) {
@@ -200,7 +207,7 @@ const GeoDatatable = (props) => {
             });
         }
 
-    }, [addRow, addRowMultiple, dataActions, getCurrentFilter(moduleName)]);
+    }, [addRow, dataActions, getCurrentFilter(moduleName)]);
 
     const data = {...CountryDataTable.data};
 
@@ -249,19 +256,10 @@ const GeoDatatable = (props) => {
                 </>
             )}
             {getCurrentFilter(moduleName) === 'countries' && (
-                <>
-                    {status === 'blocked' ? (
-                        <ActionButton
-                            onClick={() => allowCountryByCode(code, name)} className="button-secondary">
-                            {__("Allow", "really-simple-ssl")}
-                        </ActionButton>
-                    ) : (
-                        <ActionButton
-                            onClick={() => blockCountryByCode(code, name)} className="button-primary">
-                            {__("Block", "really-simple-ssl")}
-                        </ActionButton>
-                    )}
-                </>
+                <ActionButton
+                    onClick={() => blockCountryByCode(code, name)} className="button-primary">
+                    {__("Block", "really-simple-ssl")}
+                </ActionButton>
             )}
         </div>)
     }, [getCurrentFilter, moduleName, allowById, blockRegionByCode, allowRegionByCode, blockCountryByCode, allowCountryByCode]);
@@ -326,11 +324,19 @@ const GeoDatatable = (props) => {
                             {getCurrentFilter(moduleName) === 'countries' && (
                                 <>
                                     <ActionButton
-                                        onClick={() => allowCountryByCode(rowsSelected)}>
+                                        onClick={() => blockCountryByCode(rowsSelected)}  className="button-primary">
+                                        {__("Block", "really-simple-ssl")}
+                                    </ActionButton>
+                                </>
+                            )}
+                            {getCurrentFilter(moduleName) === 'regions' && (
+                                <>
+                                    <ActionButton
+                                        onClick={() => allowRegionByCode(rowsSelected)}  className="button-secondary">
                                         {__("Allow", "really-simple-ssl")}
                                     </ActionButton>
                                     <ActionButton
-                                        onClick={() => blockCountryByCode(rowsSelected)}  className="button-primary">
+                                        onClick={() => blockRegionByCode(rowsSelected)}  className="button-primary">
                                         {__("Block", "really-simple-ssl")}
                                     </ActionButton>
                                 </>
