@@ -32,10 +32,10 @@ const Host = ({field, showDisabledWhenSaving=true}) => {
     let loadedHosts = hostsLoaded ? hosts : [];
     let options = [];
     let item = {
-        label: __('Optional. You can select your hosting provider if available for specific integrations.', 'really-simple-ssl'),
+        label: __('Optional - Select your hosting provider.', 'really-simple-ssl'),
         value: '',
     };
-    if (field.value.length==='') {
+    if ( field.value.length === 0 ) {
         options.push(item);
     }
     for (let key in loadedHosts) {
