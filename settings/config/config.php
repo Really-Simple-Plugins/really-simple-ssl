@@ -1738,19 +1738,12 @@ function rsssl_fields( $load_values = true ) {
 			'menu_id'  => 'password_security',
 			'group_id' => 'password_security_passwords',
 			'type'     => 'select',
-			'default'  => '12',
+			'default'  => '48',
 			'options'   => [
-				'6' => __( "6 months", "really-simple-ssl-pro" ),
-				'48' => __( "48 hours", "really-simple-ssl-pro" ),
-				'24' => __( "2 years", "really-simple-ssl-pro" ),
+				'6' => __( "8 hours (recommended)", "really-simple-ssl" ),
+				'48' => __( "48 hours", "really-simple-ssl" ),
 			],
-			'label'    => __( "Change passwords every", "really-simple-ssl-pro" ),
-			'react_conditions' => [
-				'relation' => 'AND',
-				[
-					'enforce_frequent_password_change' => 1,
-				]
-			],
+			'label'    => __( "Let login cookie expire after", "really-simple-ssl" ),
 		],
 	];
 
