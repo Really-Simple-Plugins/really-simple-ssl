@@ -477,6 +477,15 @@ if ( ! class_exists( "rsssl_le_hosts" ) ) {
 		            'api' => false,
 		            'ssl_installation_link' => false,
 	            ),
+	            'xxl' => array(
+		            'name' => 'XXL Hosting',
+		            'installation_renewal_required' => false,
+		            'local_ssl_generation_needed' => false,
+		            'free_ssl_available' => true,
+		            'hosting_dashboard' => 'cpanel',
+		            'api' => false,
+		            'ssl_installation_link' => false,
+	            ),
 	            'digitalocean' => array(
 		            'name' => 'Digitalocean',
 		            'installation_renewal_required' => false,
