@@ -26,9 +26,6 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-use security\wordpress\DynamicTables\DataTable;
-use security\wordpress\DynamicTables\QueryBuilder;
-
 defined('ABSPATH') or die("you do not have access to this page!");
 
 if (!function_exists('rsssl_activation_check')) {
