@@ -212,7 +212,7 @@ class rsssl_firewall_manager {
 		$dir = ABSPATH;
 		do {
 			$i++;
-			if (file_exists($dir . "/wp-config.php")) {
+			if ( file_exists($dir . "/wp-config.php") ) {
 				return $dir . "/wp-config.php";
 			}
 		} while (($dir = realpath("$dir/..")) && ($i < $maxiterations));
