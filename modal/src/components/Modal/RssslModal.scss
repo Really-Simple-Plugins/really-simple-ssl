@@ -7,6 +7,7 @@
   border-top:1px solid var(--rsp-grey-300);
   max-height: calc(100% - 120px); //the default wp modal limits this to minimum 600px, but this creates an ugly modal.
   margin:auto;//the default wp modal limits this to minimum 600px, but this creates an ugly modal.
+  overflow:visible; //for the hosts dropdown
   @media (max-width: 768px) {
     width: 100%;
   }
@@ -52,6 +53,7 @@
 
   .rsssl-modal-footer {
     background-color: var(--rsp-grey-200);
+    border-radius:0 0 var(--rsp-border-radius) var(--rsp-border-radius);
     display: flex;
     justify-content: space-between;
     align-items: center;

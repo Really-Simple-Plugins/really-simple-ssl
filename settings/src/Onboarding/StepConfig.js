@@ -17,10 +17,9 @@ const StepConfig = () => {
     }, []);
 
     let otherHostsField = fieldsLoaded && getField('other_host_type');
-    let CloudFlareEnabled = fieldsLoaded && getField('cloudflare_enabled');
     let items = currentStep.items ? currentStep.items : [];
 
-    if (rsssl_settings.cloudflare) {
+    if ( rsssl_settings.cloudflare ) {
         let cfItem = {
             status: 'success',
             title: "CloudFlare",

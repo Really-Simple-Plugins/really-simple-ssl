@@ -61,6 +61,7 @@ class rsssl_admin {
 
 		add_filter( 'rsssl_htaccess_security_rules', array( $this, 'add_htaccess_redirect' ) );
 		add_filter( 'before_rocket_htaccess_rules', array( $this, 'add_htaccess_redirect_before_wp_rocket' ) );
+		add_filter( 'admin_init', array( $this, 'handle_activation' ) );
 		add_action( 'rocket_activation', 'rsssl_wrap_htaccess' );
 		add_action( 'rocket_deactivation', 'rsssl_wrap_htaccess' );
 	}
@@ -68,6 +69,21 @@ class rsssl_admin {
 	public static function this() {
 		return self::$_this;
 	}
+
+    public function handle_activation(){
+        if ( !rsssl_admin_logged_in() ) {
+            return;
+        }
+
+        if ( get_option('rsssl_activation') ) {
+	        if ( !class_exists('rsssl_le_hosts')) {
+		        require_once( rsssl_path . 'lets-encrypt/config/class-hosts.php');
+	        }
+	        ( new rsssl_le_hosts() )->detect_host_on_activation();
+            do_action('rsssl_activation');
+            delete_option('rsssl_activation');
+        }
+    }
 
 	/**
 	 * Redirect to the new settings page

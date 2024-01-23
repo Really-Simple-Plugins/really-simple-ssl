@@ -1,8 +1,6 @@
-import {
-    SelectControl,
-} from '@wordpress/components';
 import {useRef, useEffect, memo} from "@wordpress/element";
 import useFields from "../FieldsData";
+import AutoCompleteControl from "../AutoComplete/AutoCompleteControl";
 import useHostData from "./HostData";
 import {__} from "@wordpress/i18n";
 
@@ -34,10 +32,12 @@ const Host = ({field, showDisabledWhenSaving=true}) => {
     let loadedHosts = hostsLoaded ? hosts : [];
     let options = [];
     let item = {
-        label: __('Optional. You can select your hosting provider if available for specific integrations.', 'really-simple-ssl'),
+        label: __('Optional - Select your hosting provider.', 'really-simple-ssl'),
         value: '',
     };
-    options.push(item);
+    if ( field.value.length === 0 ) {
+        options.push(item);
+    }
     for (let key in loadedHosts) {
         if (loadedHosts.hasOwnProperty(key)) {
             let item = {};
@@ -48,8 +48,9 @@ const Host = ({field, showDisabledWhenSaving=true}) => {
     }
 
     return (
-          <SelectControl
+          <AutoCompleteControl
               className="rsssl-select"
+              field={field}
               label={ field.label }
               onChange={ ( fieldValue ) => onChangeHandler(fieldValue) }
               value= { field.value }

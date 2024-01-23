@@ -77,7 +77,7 @@ class rsssl_firewall_manager {
 		//no rules? remove the file
 		if ( empty(trim($rules) ) ) {
 			if ( file_exists($advanced_headers_file) ) {
-				unlink($advanced_headers_file);
+				if ( !defined('RSSSL_SAFE_MODE')) unlink($advanced_headers_file);
 			}
 			return;
 		}
@@ -240,7 +240,7 @@ class rsssl_firewall_manager {
 		}
 
 		if ( file_exists( $file ) ) {
-			unlink( $file );
+			if ( !defined('RSSSL_SAFE_MODE')) unlink( $file );
 		}
 	}
 }
