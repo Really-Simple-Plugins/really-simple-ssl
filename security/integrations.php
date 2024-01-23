@@ -165,7 +165,7 @@ add_action( 'rsssl_after_saved_fields', 'rsssl_integrations', 20 );
  */
 function rsssl_is_in_deactivation_list( string $plugin ): bool {
 
-	if ( ! is_admin() || ! is_user_logged_in() ) {
+	if ( ! rsssl_admin_logged_in() ) {
 		return false;
 	}
 
