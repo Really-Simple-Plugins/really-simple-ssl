@@ -636,12 +636,20 @@ class rsssl_letsencrypt_handler {
 
 				    try {
 					    $order->enableAutoRenewal();
-					    $response = new RSSSL_RESPONSE(
-						    'success',
-						    'continue',
-						    __("Certificate already generated. It was renewed if required.",'really-simple-ssl')
-					    );
-					    $bundle_completed = true;
+					    $bundle_completed = $this->update_certificate_paths($order);
+					    if ( $bundle_completed ) {
+						    $response = new RSSSL_RESPONSE(
+							    'success',
+							    'continue',
+							    __("Certificate already generated. It was renewed if required.",'really-simple-ssl')
+						    );
+					    } else {
+						    $response = new RSSSL_RESPONSE(
+							    'error',
+							    'retry',
+							    __("Files not created yet...",'really-simple-ssl')
+						    );
+					    }
 				    } catch ( Exception $e ) {
 					    $response = new RSSSL_RESPONSE(
 						    'error',
@@ -694,33 +702,10 @@ class rsssl_letsencrypt_handler {
 					    }
 				    }
 
-					if ($finalized) {
+					if ( $finalized ) {
 					    try {
 						    if ( $order->isCertificateBundleAvailable() ) {
-							    $bundle_completed   = true;
-							    $success_cert       = $success_intermediate = $success_private = false;
-							    $bundle             = $order->getCertificateBundle();
-							    $pathToPrivateKey   = $bundle->path . $bundle->private;
-							    $pathToCertificate  = $bundle->path . $bundle->certificate;
-							    $pathToIntermediate = $bundle->path . $bundle->intermediate;
-
-							    if ( file_exists( $pathToPrivateKey ) ) {
-								    $success_private = true;
-								    update_option( 'rsssl_private_key_path', $pathToPrivateKey, false );
-							    }
-							    if ( file_exists( $pathToCertificate ) ) {
-								    $success_cert = true;
-								    update_option( 'rsssl_certificate_path', $pathToCertificate, false );
-							    }
-
-							    if ( file_exists( $pathToIntermediate ) ) {
-								    $success_intermediate = true;
-								    update_option( 'rsssl_intermediate_path', $pathToIntermediate, false );
-							    }
-
-							    if ( ! $success_cert || ! $success_private || ! $success_intermediate ) {
-								    $bundle_completed = false;
-							    }
+							    $bundle_completed  = $this->update_certificate_paths($order);
 
 							    if ( $bundle_completed ) {
 								    $response = new RSSSL_RESPONSE(
@@ -771,6 +756,41 @@ class rsssl_letsencrypt_handler {
 
 	    return $response;
     }
+
+	/**
+	 * For each file, check if the path exists, update the path options, and return success or false accordingly
+	 * @param $order
+	 *
+	 * @return bool
+	 */
+	private function update_certificate_paths($order){
+		$bundle             = $order->getCertificateBundle();
+		$pathToPrivateKey   = $bundle->path . $bundle->private;
+		$pathToCertificate  = $bundle->path . $bundle->certificate;
+		$pathToIntermediate = $bundle->path . $bundle->intermediate;
+		$success_private = $success_cert = $success_intermediate = false;
+
+		if ( file_exists( $pathToPrivateKey ) ) {
+			$success_private = true;
+			update_option( 'rsssl_private_key_path', $pathToPrivateKey, false );
+		}
+		if ( file_exists( $pathToCertificate ) ) {
+			$success_cert = true;
+			update_option( 'rsssl_certificate_path', $pathToCertificate, false );
+		}
+
+		if ( file_exists( $pathToIntermediate ) ) {
+			$success_intermediate = true;
+			update_option( 'rsssl_intermediate_path', $pathToIntermediate, false );
+		}
+
+		$bundle_completed = true;
+		if ( ! $success_cert || ! $success_private || ! $success_intermediate ) {
+			$bundle_completed = false;
+		}
+
+		return $bundle_completed;
+	}
 
 	/**
 	 * Get the order object
