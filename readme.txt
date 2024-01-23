@@ -112,6 +112,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 
 == Changelog ==
 = 7.2.2 =
+* January 24th 2024
 * Improvement: new onboarding setup
 * Improvement: improved hide wp-version logic
 
