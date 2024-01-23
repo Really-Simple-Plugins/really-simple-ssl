@@ -80,6 +80,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 	    'risk'                 => 'low',
 	    'option_id'            => 'disable_xmlrpc',
 	    'always_include'       => false,
+	    'has_deactivation'     => true,
     ),
 
     'vulnerabilities' => array(
@@ -163,12 +164,14 @@ add_action( 'rsssl_after_saved_fields', 'rsssl_integrations', 20 );
  * @return bool
  */
 function rsssl_is_in_deactivation_list( string $plugin ): bool {
-	if ( !is_admin() || !is_user_logged_in() ) {
+
+	if ( ! is_admin() || ! is_user_logged_in() ) {
 		return false;
 	}
 
-	if ( !is_array(get_option('rsssl_deactivate_list',[]))){
-		delete_option('rsssl_deactivate_list');
+	if ( ! is_array( get_option( 'rsssl_deactivate_list', [] ) ) ) {
+		delete_option( 'rsssl_deactivate_list' );
 	}
-	return in_array($plugin, get_option('rsssl_deactivate_list',[]) );
+
+	return in_array( $plugin, get_option( 'rsssl_deactivate_list', [] ) );
 }
