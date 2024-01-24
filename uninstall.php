@@ -88,23 +88,26 @@ if (isset($settings['delete_data_on_uninstall']) && $settings['delete_data_on_un
 		delete_site_transient( $transient );
 	}
 
-	//deleting the really_simple_ssl upload dir
-	function delete_directory($dir) {
-		if (is_dir($dir)) {
-			$objects = scandir($dir);
-			foreach ($objects as $object) {
-				if ($object != "." && $object != "..") {
-					if (is_dir($dir . "/" . $object))
-						delete_directory($dir . "/" . $object);
-					else
-						unlink($dir . "/" . $object);
+	require_once(ABSPATH . 'wp-admin/includes/file.php');
+	WP_Filesystem();
+
+	function rsssl_delete_directory_wpfilesystem($dir) {
+		global $wp_filesystem;
+		if ($wp_filesystem->is_dir($dir)) {
+			$objects = $wp_filesystem->dirlist($dir);
+			foreach ($objects as $object => $objectdata) {
+				if ($wp_filesystem->is_dir($dir . "/" . $object)) {
+					rsssl_delete_directory_wpfilesystem($dir . "/" . $object);
+				}
+				else {
+					$wp_filesystem->delete($dir . "/" . $object);
 				}
 			}
-			rmdir($dir);
+			$wp_filesystem->rmdir($dir);
 		}
 	}
 
 	$upload_dir = wp_upload_dir();
 	$really_simple_ssl_dir = $upload_dir['basedir'] . '/really-simple-ssl';
-	delete_directory($really_simple_ssl_dir);
+	rsssl_delete_directory_wpfilesystem($really_simple_ssl_dir);
 }
