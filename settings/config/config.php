@@ -699,6 +699,7 @@ function rsssl_fields( $load_values = true ) {
 		],
 		[
 			'id'       => 'geo_blocklist_enabled',
+			'control_field' => 'geo_blocklist_enabled',
 			'menu_id'  => 'geo_block_list',
 			'group_id' => 'geo_block_list_general',
 			'type'     => 'checkbox',
