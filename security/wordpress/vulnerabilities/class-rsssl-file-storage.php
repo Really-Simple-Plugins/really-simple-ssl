@@ -161,7 +161,6 @@ class Rsssl_File_Storage {
 		$storage = new Rsssl_File_Storage();
 		//we get the really-simple-ssl folder
 		$rsssl_dir = $storage->folder;
-
 		//then we delete the following files from that folder: manifest.json, components.json and core.json
 		$files = array( 'manifest.json', 'components.json', 'core.json' );
 		foreach ( $files as $file ) {
@@ -173,10 +172,44 @@ class Rsssl_File_Storage {
 		}
 		//we delete the folder
 		if ( file_exists( $rsssl_dir ) ) {
-			rmdir( $rsssl_dir );
+			self::DeleteFolder($rsssl_dir);
 			//we delete the option
 			delete_option( 'rsssl_folder_name' );
 		}
+	}
+
+	/**
+	 * Recursively delete a folder and its contents.
+	 *
+	 * @param  string  $dir  The path to the folder to be deleted.
+	 *
+	 * @return bool Returns true if the folder was successfully deleted, false otherwise.
+	 */
+	public static function DeleteFolder($dir): bool {
+		if (substr($dir, strlen($dir) - 1, 1) != '/')
+			$dir .= '/';
+
+		if ($handle = opendir($dir)) {
+			while ($obj = readdir($handle)) {
+				if ($obj != '.' && $obj != '..') {
+					if (is_dir($dir.$obj)) {
+						if (!self::DeleteFolder($dir.$obj))
+							return false;
+					}
+					elseif (is_file($dir.$obj)) {
+						if (!unlink($dir.$obj))
+							return false;
+					}
+				}
+			}
+
+			closedir($handle);
+
+			if (!rmdir($dir))
+				return false;
+			return true;
+		}
+		return false;
 	}
 
 	/**

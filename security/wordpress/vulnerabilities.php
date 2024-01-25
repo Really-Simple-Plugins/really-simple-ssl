@@ -94,7 +94,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 		 */
         public static function maybe_delete_local_files($field_id, $field_value, $prev_value, $field_type): void {
             if ( $field_id==='enable_vulnerability_scanner' && $field_value !== $prev_value && rsssl_user_can_manage() ) {
-                if ( $field_value === false ) {
+                if ( $field_value == false ) {
                     // Already disabled
                     require_once(rsssl_path . 'security/wordpress/vulnerabilities/class-rsssl-file-storage.php');
                     \security\wordpress\vulnerabilities\Rsssl_File_Storage::DeleteAll();
