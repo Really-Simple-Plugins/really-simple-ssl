@@ -161,24 +161,6 @@ function rsssl_fields( $load_values = true ) {
 			'disabled' => false,
 			'default'  => false,
 		],
-
-		[
-			'id'                   => 'do_not_edit_htaccess', //field is removed if not enabled
-			'menu_id'              => 'encryption',
-			'group_id'             => 'encryption_redirect',
-			'type'                 => 'checkbox',
-			'label'                => __("Stop editing the .htaccess file", 'really-simple-ssl'),
-			'disabled'             => false,
-			'default'              => false,
-			//on multisite this setting can only be set networkwide
-			'networkwide_required' => true,
-			'server_conditions'    => [
-				'relation' => 'AND',
-				[
-					'RSSSL()->server->uses_htaccess()' => true,
-				]
-			],
-		],
 		[
 			'id'       => 'notifications_email_address',
 			'menu_id'  => 'general',
@@ -709,7 +691,7 @@ function rsssl_fields( $load_values = true ) {
 			'default'  => 'disabled',
 		],
 		[
-			'id'                   => 'do_not_edit_htaccess', //field is removed if not enabled
+			'id'                   => 'do_not_edit_htaccess',
 			'menu_id'              => 'general',
 			'group_id'             => 'general',
 			'type'                 => 'checkbox',
