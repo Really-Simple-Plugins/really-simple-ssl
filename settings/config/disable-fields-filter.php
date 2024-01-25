@@ -26,12 +26,6 @@ function rsssl_remove_fields($fields){
 		$fields = array_values($fields);
 	}
 
-	if ( !rsssl_get_option('do_not_edit_htaccess') ){
-		$index = array_search( 'do_not_edit_htaccess', array_column( $fields, 'id' ), true );
-		unset($fields[$index]);
-		$fields = array_values($fields);
-	}
-
 	// 2FA and LLA e-mail verification help texts
 	if ( ! rsssl_is_email_verified() ) {
 		$index = array_search( 'send_verification_email', array_column( $fields, 'id' ), true );
