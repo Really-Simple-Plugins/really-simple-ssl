@@ -536,7 +536,7 @@ function rsssl_menu() {
 				[
 					'id'    => 'le-hosting',
 					'title' => __('Hosting', 'really-simple-ssl'),
-					'intro' => __('Below you will find the instructions for different hosting environments and configurations. If you start the process with the necessary instructions and credentials the next view steps will be done in no time.',
+					'intro' => __('Below you will find the instructions for different hosting environments and configurations. If you start the process with the necessary instructions and credentials the next steps will be done in no time.',
 						'really-simple-ssl'),
 				],
 				[

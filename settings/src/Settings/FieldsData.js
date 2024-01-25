@@ -109,7 +109,6 @@ const useFields = create(( set, get ) => ({
         )
     },
     addHelpNotice : (id, label, text, title, url) => {
-        console.log("remove ",id);
         get().removeHelpNotice(id);
         //create help object
 

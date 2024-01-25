@@ -1,13 +1,13 @@
 @import '../../../../assets/css/variables.scss';
 .rsssl-modal {
   width: 700px;
-  //background:var(--rsp-grey-100);
   padding:var(--rsp-spacing-m) var(--rsp-spacing-l);
   box-shadow:var(--rsp-box-shadow);
   border-radius:var(--rsp-border-radius) var(--rsp-border-radius);
   border-top:1px solid var(--rsp-grey-300);
   max-height: calc(100% - 120px); //the default wp modal limits this to minimum 600px, but this creates an ugly modal.
   margin:auto;//the default wp modal limits this to minimum 600px, but this creates an ugly modal.
+  overflow:visible; //for the hosts dropdown
   @media (max-width: 768px) {
     width: 100%;
   }
@@ -30,11 +30,11 @@
     padding: 12px 8px 80px 8px; //80 is for the complete footer height + margin
     @media (max-width: 768px) {
       padding: 12px 8px 180px 8px;
-
     }
     p {
       margin-top:0;
     }
+
     ul {
       column-count: 2;
       column-gap: 20px;
@@ -53,6 +53,7 @@
 
   .rsssl-modal-footer {
     background-color: var(--rsp-grey-200);
+    border-radius:0 0 var(--rsp-border-radius) var(--rsp-border-radius);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -65,10 +66,25 @@
     right: 0;
     img {
       width: 150px;
-
     }
+
+    .rsssl-modal-footer-feedback {
+      display:flex;
+      .rsssl-icon {
+        margin-right: 10px;
+      }
+    }
+
+    .rsssl-modal-footer-buttons {
+      button {
+        .rsssl-icon {
+          margin-right:10px;
+        }
+      }
+    }
+
     @media (max-width: 768px) {
-      .rsssl-modal-footer-image {
+      .rsssl-modal-footer-image, .rsssl-modal-footer-feedback {
         display:none;
       }
       .rsssl-modal-footer-buttons {
@@ -80,11 +96,18 @@
         button {
           width: 100%;
           margin:0;
+          .rsssl-icon {
+            margin-right:10px;
+          }
         }
       }
     }
 
     button + button {
+      margin-left: 10px;
+    }
+
+    button + a {
       margin-left: 10px;
     }
 

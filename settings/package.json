@@ -1,10 +1,10 @@
 {
   "name": "really-simple-ssl",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "build/index.js",
   "scripts": {
-    "start": "wp-scripts start",
-    "build": "set \"INLINE_RUNTIME_CHUNK=false\" && wp-scripts build"
+    "start": "export RSSSL_ENV=development && wp-scripts start",
+    "build": "set \"INLINE_RUNTIME_CHUNK=false\" && export RSSSL_ENV=production && wp-scripts build"
   },
   "author": "Really Simple Plugins",
   "license": "GPL-2.0-only",

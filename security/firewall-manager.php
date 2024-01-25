@@ -77,7 +77,7 @@ class rsssl_firewall_manager {
 		//no rules? remove the file
 		if ( empty(trim($rules) ) ) {
 			if ( file_exists($advanced_headers_file) ) {
-				unlink($advanced_headers_file);
+				if ( !defined('RSSSL_SAFE_MODE')) unlink($advanced_headers_file);
 			}
 			return;
 		}
@@ -86,7 +86,6 @@ class rsssl_firewall_manager {
 		$contents .= '/**' . "\n";
 		$contents .= '* This file is created by Really Simple SSL' . "\n";
 		$contents .= '*/' . "\n\n";
-		$contents .= "defined('ABSPATH') or die();" . "\n\n";
 		//allow disabling of headers for detection purposes
 		$contents .= 'if ( isset($_GET["rsssl_header_test"]) && (int) $_GET["rsssl_header_test"] ===  ' . $this->get_headers_nonce() . ' ) return;' . "\n\n";
 		$contents .= 'if (!defined("RSSSL_HEADERS_ACTIVE")) define("RSSSL_HEADERS_ACTIVE", true);'."\n";
@@ -241,7 +240,7 @@ class rsssl_firewall_manager {
 		}
 
 		if ( file_exists( $file ) ) {
-			unlink( $file );
+			if ( !defined('RSSSL_SAFE_MODE')) unlink( $file );
 		}
 	}
 }
