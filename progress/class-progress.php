@@ -82,12 +82,12 @@ class rsssl_progress {
 		if ( rsssl_get_option('ssl_enabled') ) {
 			$doing_well = __( "SSL is activated on your site.",  'really-simple-ssl' ) . ' ' . sprintf( _n( "You still have %s task open.", "You still have %s tasks open.", $open_task_count, 'really-simple-ssl' ), $open_task_count );
 			if ( $open_task_count === 0 ) {
-				_e("SSL configuration finished!", "really-simple-ssl");
+				_e("Configuration finished!", "really-simple-ssl");
 			} elseif ( !defined('rsssl_pro_version') ){
 				if ( $open_task_count >= $lowest_possible_task_count) {
 					echo $doing_well;
 				} else {
-					printf(__("Basic SSL configuration finished! Improve your score with %sReally Simple SSL Pro%s.", "really-simple-ssl"), '<a target="_blank" href="' . RSSSL()->admin->pro_url . '">', '</a>');
+					printf(__("Basic configuration finished! Improve your score with %sReally Simple SSL Pro%s.", "really-simple-ssl"), '<a target="_blank" rel="noopener noreferrer" href="' . RSSSL()->admin->pro_url . '">', '</a>');
 				}
 			} else {
 				echo $doing_well;

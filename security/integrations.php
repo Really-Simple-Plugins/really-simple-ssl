@@ -3,7 +3,6 @@ defined( 'ABSPATH' ) or die();
 global $rsssl_integrations_list;
 $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
     'user-registration' => array(
-        'label'                => 'User registration',
         'folder'               => 'wordpress',
         'impact'               => 'medium',
         'risk'                 => 'medium',
@@ -11,7 +10,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
     ),
 
 	'file-editing' => array(
-		'label'                => __('File editing', 'really-simple-ssl'),
 		'folder'               => 'wordpress',
 		'impact'               => 'medium',
 		'risk'                 => 'low',
@@ -19,7 +17,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 	),
 
 	'hide-wp-version' => array(
-		'label'                => __('Hide WP version','really-simple-ssl'),
 		'folder'               => 'wordpress',
 		'impact'               => 'low',
 		'risk'                 => 'low',
@@ -27,7 +24,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 	),
 
 	'user-enumeration' => array(
-		'label'                => __('User Enumeration','really-simple-ssl'),
 		'folder'               => 'wordpress',
 		'impact'               => 'low',
 		'risk'                 => 'medium',
@@ -35,7 +31,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 	),
 
     'block-code-execution-uploads' => array(
-        'label'                => __('Block code execution in uploads directory','really-simple-ssl'),
         'folder'               => 'wordpress',
         'impact'               => 'medium',
         'risk'                 => 'low',
@@ -43,14 +38,12 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
     ),
 
     'prevent-login-info-leakage' => array(
-        'label'                => __('Prevent login error leakage','really-simple-ssl'),
         'folder'               => 'wordpress',
         'impact'               => 'low',
         'risk'                 => 'high',
         'option_id'            => 'disable_login_feedback',
     ),
     'disable-indexing' => array(
-        'label'                => __('Disable directory indexing', 'really-simple-ssl'),
         'folder'               => 'server',
         'impact'               => 'low',
         'risk'                 => 'medium',
@@ -59,14 +52,12 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
     ),
 
     'rename-admin-user' => array(
-		'label'                => __('Do not allow users with admin username', 'really-simple-ssl'),
 		'folder'               => 'wordpress',
 		'impact'               => 'high',
 		'risk'                 => 'high',
 		'option_id'            => 'rename_admin_user',
 	),
 	'display-name-is-login-name' => array(
-		'label'                => __('Block user registration when login name equals display name', 'really-simple-ssl'),
 		'folder'               => 'wordpress',
 		'impact'               => 'low',
 		'risk'                 => 'medium',
@@ -74,7 +65,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 	),
 
     'disable-xmlrpc' => array(
-	    'label'                => 'XMLRPC',
 	    'folder'               => 'wordpress',
 	    'impact'               => 'medium',
 	    'risk'                 => 'low',
@@ -83,7 +73,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
     ),
 
     'vulnerabilities' => array(
-        'label'                => 'Vulnerabilities',
         'folder'               => 'wordpress',
         'impact'               => 'medium',
         'risk'                 => 'medium',

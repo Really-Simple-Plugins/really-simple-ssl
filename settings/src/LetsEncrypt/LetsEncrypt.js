@@ -10,6 +10,7 @@ import { __ } from '@wordpress/i18n';
 import Icon from "../utils/Icon";
 import useFields from "../Settings/FieldsData";
 import useLetsEncryptData from "./letsEncryptData";
+import DOMPurify from "dompurify";
 
 const LetsEncrypt = (props) => {
     const {handleNextButtonDisabled, getFieldValue} = useFields();
@@ -275,7 +276,7 @@ const LetsEncrypt = (props) => {
                                   <Icon name = {getStatusIcon(action)} color = {getStatusColor(action)} />
                                         {action.do==='retry' && attemptCount >=1 && <>{__("Attempt %s.", "really-simple-ssl").replace('%s', attemptCount)} </>}
                                         &nbsp;
-                                        <span dangerouslySetInnerHTML={{__html:action.description}}></span>
+                                        <span dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(action.description) }}></span> {/* nosemgrep: react-dangerouslysetinnerhtml */}
                                     </li>
 
                             )

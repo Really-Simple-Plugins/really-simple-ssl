@@ -1,0 +1,40 @@
+.rsssl-modal-body, .rsssl {
+  input.MuiInput-underline:before {
+    display:none;
+  }
+  .MuiAutocomplete-root {
+    .MuiInputLabel-outlined[data-shrink=false] {
+      transform: translate(14px, 16px) scale(1);
+    }
+    .MuiFormLabel-root {
+      font-family:inherit;
+    }
+    .MuiOutlinedInput-root {
+      padding: 0;
+    }
+  }
+  input.MuiAutocomplete-input[type=text] {
+    &:focus {
+      outline: none;
+      box-shadow:none;
+    }
+    border:0;
+    padding-left:12px;
+  }
+  .MuiInputBase-root {
+    font-family: inherit;
+  }
+
+  .MuiInput-root input.MuiInputBase-input {
+    padding-left:10px;
+  }
+  .MuiPopper-root, .MuiPaper-root {
+    max-height:40vh;
+    div {
+      font-family: inherit !important;
+    }
+    ul {
+      max-height:initial;
+    }
+  }
+}

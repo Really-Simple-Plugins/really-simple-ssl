@@ -28,6 +28,7 @@ const PremiumOverlay = ({msg, title, url, upgrade}) => {
                 <div className="rsssl-locked-content">
                     {pro_plugin_active && <span>{message}&nbsp;
                         <a className="rsssl-locked-link"
+                           rel="noopener noreferrer"
                            href="#settings/license">{__("Check license", "really-simple-ssl")}
                         </a>
                     </span>}

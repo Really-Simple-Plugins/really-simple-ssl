@@ -3,7 +3,7 @@
  * Plugin Name: Really Simple SSL
  * Plugin URI: https://really-simple-ssl.com
  * Description: Lightweight SSL & Hardening Plugin
- * Version: 7.2.1
+ * Version: 7.2.2
  * Requires at least: 5.8
  * Requires PHP: 7.2
  * Author: Really Simple Plugins
@@ -11,6 +11,7 @@
  * License: GPL2
  * Text Domain: really-simple-ssl
  * Domain Path: /languages
+ * Network: true
  */
 /*  Copyright 2023  Really Simple Plugins BV  (email : support@really-simple-ssl.com)
     This program is free software; you can redistribute it and/or modify
@@ -25,19 +26,18 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-use security\wordpress\DynamicTables\DataTable;
-use security\wordpress\DynamicTables\QueryBuilder;
-
 defined('ABSPATH') or die("you do not have access to this page!");
 
 if (!function_exists('rsssl_activation_check')) {
 	function rsssl_activation_check()
 	{
-        update_option('rsssl_show_onboarding', true);
+		update_option('rsssl_activation', true, false );
+        update_option('rsssl_show_onboarding', true, false );
         set_transient('rsssl_redirect_to_settings_page', true, HOUR_IN_SECONDS );
     }
 	register_activation_hook( __FILE__, 'rsssl_activation_check' );
 }
+if ( !class_exists('REALLY_SIMPLE_SSL')) {
 class REALLY_SIMPLE_SSL
 {
 	private static $instance;
@@ -104,7 +104,7 @@ class REALLY_SIMPLE_SSL
         if ( !defined('rsssl_file') ){
             define('rsssl_file', __FILE__);
         }
-		define('rsssl_version', '7.2.1');
+		define('rsssl_version', '7.2.2');
 		define('rsssl_le_cron_generation_renewal_check', 20);
 		define('rsssl_le_manual_generation_renewal_check', 15);
 	}
@@ -176,7 +176,7 @@ class REALLY_SIMPLE_SSL
 			<div id="message" class="error notice really-simple-plugins">
 				<p><?php echo __("Update Really Simple SSL Pro: the plugin needs to be updated to the latest version to be compatible.","really-simple-ssl");?></p>
                 <p>
-                    <?php printf(__("Visit the plugins overview or %srenew your license%s.","really-simple-ssl"),'<a href="https://really-simple-ssl.com/pro/?mtm_campaign=renew&mtm_source=free&mtm_content=upgrade" target="_blank">','</a>'); ?>
+                    <?php printf(__("Visit the plugins overview or %srenew your license%s.","really-simple-ssl"),'<a href="https://really-simple-ssl.com/pro/?mtm_campaign=renew&mtm_source=free&mtm_content=upgrade" target="_blank" rel="noopener noreferrer">','</a>'); ?>
                 </p>
 			</div>
 			<?php
@@ -203,6 +203,13 @@ class REALLY_SIMPLE_SSL
 		}
 		return false;
 	}
+}
+	function RSSSL()
+	{
+		return REALLY_SIMPLE_SSL::instance();
+	}
+	add_action('plugins_loaded', 'RSSSL', 8);
+
 }
 
 if ( ! function_exists('rsssl_add_manage_security_capability')){
@@ -245,11 +252,7 @@ if ( !function_exists('rsssl_admin_logged_in')){
     }
 }
 
-function RSSSL()
-{
-    return REALLY_SIMPLE_SSL::instance();
-}
-add_action('plugins_loaded', 'RSSSL', 8);
+
 
 if ( !function_exists('rsssl_is_logged_in_rest')){
 	function rsssl_is_logged_in_rest(){

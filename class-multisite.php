@@ -220,11 +220,11 @@ if (!class_exists('rsssl_multisite')) {
 		    $settings_link = '<a href="' . $url . '">' . __("Settings", "really-simple-ssl") . '</a>';
 		    array_unshift($links, $settings_link);
 
-		    $support = apply_filters('rsssl_support_link', '<a target="_blank" href="https://wordpress.org/support/plugin/really-simple-ssl/">' . __('Support', 'really-simple-ssl') . '</a>');
+		    $support = apply_filters('rsssl_support_link', '<a target="_blank" rel="noopener noreferrer" href="https://wordpress.org/support/plugin/really-simple-ssl/">' . __('Support', 'really-simple-ssl') . '</a>');
 		    array_unshift($links, $support);
 
 		    if ( ! defined( 'rsssl_pro_version' ) ) {
-			    $upgrade_link = '<a style="color:#2271b1;font-weight:bold" target="_blank" href="https://really-simple-ssl.com/pro/?mtm_campaign=settings&mtm_kwd=multisite&mtm_source=free&mtm_content=upgrade">' . __( 'Improve security - Upgrade', 'really-simple-ssl' ) . '</a>';
+			    $upgrade_link = '<a style="color:#2271b1;font-weight:bold" target="_blank" rel="noopener noreferrer" href="https://really-simple-ssl.com/pro/?mtm_campaign=settings&mtm_kwd=multisite&mtm_source=free&mtm_content=upgrade">' . __( 'Improve security - Upgrade', 'really-simple-ssl' ) . '</a>';
 			    array_unshift( $links, $upgrade_link );
 		    }
 		    return $links;
@@ -570,23 +570,19 @@ if (!class_exists('rsssl_multisite')) {
         /**
          * Test if a domain has a subfolder structure
          *
-         * @since  2.2
-         *
          * @param string $domain
          *
-         * @access private
+         * @access public
          *
          * @return bool
+         * @since  2.2
+         *
          */
 
-        public function is_subfolder($domain)
-        {
+        public function is_subfolder(string $domain): bool {
             //remove slashes of the http(s)
             $domain = preg_replace("/(http:\/\/|https:\/\/)/", "", $domain);
-            if ( strpos($domain, "/") !== FALSE ) {
-                return true;
-            }
-            return false;
+	        return strpos( $domain, "/" ) !== false;
         }
 
         /**
@@ -606,7 +602,9 @@ if (!class_exists('rsssl_multisite')) {
 
             //prevent showing the review on edit screen, as gutenberg removes the class which makes it editable.
             $screen = get_current_screen();
-	        if ( $screen && $screen->base === 'post' ) return;
+	        if ( $screen && $screen->base === 'post' ) {
+				return;
+	        }
 
 	        if ( !$this->is_settings_page() ) {
 		        $notices = RSSSL()->admin->get_notices_list( array('admin_notices'=>true) );

@@ -160,43 +160,57 @@ class rsssl_onboarding {
 		// "warning", // yellow dot
 		// "error", // red dot
 		// "active" // green dot
-		$info = "";
 		$refresh = isset($data['forceRefresh']) && $data['forceRefresh']===true;
 		$nonce = $data['nonce'] ?? false;
 		if ( !wp_verify_nonce($nonce, 'rsssl_nonce') ) {
 			return [];
 		}
+
 		if( !defined('rsssl_pro_version')) {
-			$info = __('You can also let the automatic scan of the pro version handle this for you, and get premium support, increased security with HSTS and more!', 'really-simple-ssl'). " " . sprintf('<a target="_blank" href="%s">%s</a>', RSSSL()->admin->pro_url, __("Check out Really Simple SSL Pro", "really-simple-ssl"));;
+			$info = __('You can also let the automatic scan of the pro version handle this for you, and get premium support, increased security with HSTS and more!', 'really-simple-ssl'). " " . sprintf('<a target="_blank" rel="noopener noreferrer" href="%s">%s</a>', RSSSL()->admin->pro_url, __("Check out Really Simple SSL Pro", "really-simple-ssl"));;
 		}
 
 		$steps = [
 			[
 				"id" => 'activate_ssl',
-				"title" => __( "Almost ready to migrate to SSL!", 'really-simple-ssl' ),
-				"subtitle" => __("Before you migrate, please check for:", "really-simple-ssl"),
-				"items" => $this->first_step(),
-				"info_text" => $info,
+				"title" => __( "Really Simple SSL & Security", 'really-simple-ssl' ),
+				"subtitle" => __("We have added many new features to our plugin, now bearing the name Really Simple SSL & Security. But we start like we did almost 10 years ago. Optimising your Encryption with SSL.", "really-simple-ssl"),
+				"items" => $this->activate_ssl(),
+			],
+			[
+				"id" => 'features',
+				"title" => get_option('rsssl_show_onboarding') ? __( "Thanks for updating!", 'really-simple-ssl' ) : __( "Congratulations!", 'really-simple-ssl' ),
+				"subtitle" => __("These are some of our new features, and weʼre just getting started.", "really-simple-ssl")." ".
+				              __("A lightweight plugin with heavyweight security features, focusing on performance and usability.", "really-simple-ssl"),
+				"items" => $this->recommended_features(),
+				"button" => __("Enable", "really-simple-ssl"),
 			],
 			[
 				"id" => 'email',
 				"title" => __( "Get notified!", 'really-simple-ssl' ),
 				"subtitle" => __("We use email notification to explain important updates in plugin settings.", "really-simple-ssl").' '.__("Add your email address below.", "really-simple-ssl"),
+				"button" => __("Save and continue", "really-simple-ssl"),
 			],
 			[
-				"id" => 'onboarding',
-				"title" => get_option('rsssl_show_onboarding') ? __( "Thanks for updating!", 'really-simple-ssl' ) : __( "Congratulations!", 'really-simple-ssl' ),
-				"subtitle" => __("Now have a look at our new features.", "really-simple-ssl"),
-				"items" => $this->second_step(),
+				"id" => 'plugins',
+				"title" => __("Free plugins", "really-simple-ssl"),
+				"subtitle" => __("Really Simple Plugins is also the author of the below privacy-focused plugins, including consent management, legal documents and analytics!", "really-simple-ssl"),
+				"items" => $this->plugins(),
+				"button" => __("Install", "really-simple-ssl"),
 			],
-
+			[
+				"id" => 'pro',
+				"title" => __("Really Simple Security Pro", "really-simple-ssl"),
+				"subtitle" => __("Heavyweight security features, in a lightweight performant plugin from Really Simple Plugins. Get started with below features and get the latest and greatest updates for a peace of mind!", "really-simple-ssl"),
+				"items" => $this->pro_features(),
+				"button" => __("Install", "really-simple-ssl"),
+			],
 		];
 
 		//if the user called with a refresh action, clear the cache
 		if ($refresh) {
 			delete_transient('rsssl_certinfo');
 		}
-
 		return [
 			"request_success" =>true,
 			"steps" => $steps,
@@ -204,7 +218,7 @@ class rsssl_onboarding {
 			"ssl_detection_overridden" => get_option('rsssl_ssl_detection_overridden'),
 			'certificate_valid' => RSSSL()->certificate->is_valid(),
 			"networkwide" => is_multisite() && rsssl_is_networkwide_active(),
-			"network_activation_status" => get_site_option('rsssl_network_activation_status'),
+			"network_activation_status" => false,//get_site_option('rsssl_network_activation_status'),
 		];
 	}
 
@@ -212,39 +226,88 @@ class rsssl_onboarding {
 	 * Return onboarding items for fresh installs
 	 * @return array[]
 	 */
-	function first_step () {
-		$items = [
-			[
-				"title" => __("Http references in your .css and .js files: change any http:// into https://", "really-simple-ssl"),
+	function activate_ssl () {
+		$items = [];
+
+		//if the site url is not yet https, the user may need to login again
+		if ( strpos( site_url(), 'https://') === false ) {
+			$items[] = [
+				"title" => __("You may need to login in again, have your credentials prepared.", "really-simple-ssl"),
 				"status" => "inactive",
-			],
-			[
-				"title" => __("Images, stylesheets or scripts from a domain without an SSL certificate: remove them or move to your own server.", "really-simple-ssl"),
-				"status" => "inactive",
-			],
-			[
-				"title" => __("You may need to login in again.", "really-simple-ssl"),
-				"status" => "inactive",
-			],
-		];
+				"id" => "login",
+			];
+		}
 
 		if ( RSSSL()->certificate->is_valid() ) {
 			$items[] = [
 				"title" => __("An SSL certificate has been detected", "really-simple-ssl"),
-				"status" => "success"
+				"status" => "success",
+				"id" => "certificate",
 			];
 		} else if ( RSSSL()->certificate->detection_failed() ) {
 			$items[] = [
 				"title" => __("Could not test certificate.", "really-simple-ssl") . " " . __("Automatic certificate detection is not possible on your server.", "really-simple-ssl"),
-				"status" => "error"
+				"status" => "error",
+				"id" => "certificate",
 			];
 		} else {
 			$items[] = [
 				"title" => __("No SSL certificate has been detected.", "really-simple-ssl") . " " . __("Please refresh the SSL status if a certificate has been installed recently.", "really-simple-ssl"),
-				"status" => "error"
+				"status" => "error",
+				"id" => "certificate",
 			];
 		}
 
+		return $items;
+	}
+
+	public function plugins(): array {
+		$items = [];
+		$plugins_to_install = [
+			[
+				"slug" => "burst-statistics",
+				'constant_premium' => 'burst_pro',
+				"title" => "Burst Statistics",
+				"description" => __("Privacy-friendly analytics tool.", "really-simple-ssl"),
+			],
+			[
+				"slug" => "complianz-gdpr",
+				'constant_premium' => 'cmplz_premium',
+				"title" => "Complianz",
+				"description" => __("Consent Management as it should be.", "really-simple-ssl"),
+			],
+			[
+				"slug" => "complianz-terms-conditions",
+				'constant_premium' => false,
+				"title" => "Complianz Terms & Conditions",
+				"description" => __("Terms & Conditions.", "really-simple-ssl"),
+			]
+		];
+		foreach ($plugins_to_install as $plugin_info) {
+			require_once(rsssl_path . 'class-installer.php');
+			$plugin = new rsssl_installer($plugin_info["slug"]);
+			$premium_active = $plugin_info['constant_premium'] && defined($plugin_info['constant_premium']);
+			$free_active = $plugin->plugin_is_downloaded() && $plugin->plugin_is_activated();
+
+			if( $premium_active || $free_active ) {
+				$action = "none";
+			} else if( !$plugin->plugin_is_downloaded() ){
+				$action = "install_plugin";
+			} else if ( $plugin->plugin_is_downloaded() && !$plugin->plugin_is_activated() ) {
+				$action = "activate";
+			} else {
+				$action = "none";
+			}
+
+			$items[] = [
+				"id" => $plugin_info['slug'],
+				"title" => $plugin_info["title"],
+				"description" => $plugin_info["description"],
+				"action" => $action,
+				"activated" => true,
+				"current_action" => "none",
+			];
+		}
 		return $items;
 	}
 
@@ -252,113 +315,110 @@ class rsssl_onboarding {
 	 * Returns onboarding items if user upgraded plugin to 6.0 or SSL is detected
 	 * @return array
 	 */
-	public function second_step () {
-		$plugins_to_install = [
+	public function recommended_features () {
+		return [
 			[
-				"slug" => "burst-statistics",
-				'constant_premium' => false,
-				"title" => "Burst Statistics",
-				"description" => __("Self-hosted, Privacy-friendly analytics tool", "really-simple-ssl"),
-				'read_more' => 'https://really-simple-plugins.com',//we only want one button, show we show it with the first plugin, then position it in the middle
+				"title" => __("Mixed Content Fixer", "really-simple-ssl"),
+				"id" => "mixed_content_fixer",
+				"options" => ["mixed_content_fixer"],
+				"activated" => true,
 			],
 			[
-				"slug" => "complianz-gdpr",
-				'constant_premium' => 'cmplz_premium',
-				"title" => "Complianz",
-				"description" => __("Consent Management as it should be", "really-simple-ssl"),
-				'read_more' => false,
-			]
-		];
-
-		$items = [];
-		$items[] = [
-			"id" => 'ssl_enabled',
-			"title" => __("SSL has been activated", "really-simple-ssl"),
-			"action" => "none",
-			"status" => "success",
-		];
-
-		$vulnerability_detection_enabled = rsssl_get_option('enable_vulnerability_scanner');
-		if( !$vulnerability_detection_enabled ) {
-			$items[] = [
-				"title" => __("Enable plugin & theme vulnerability detection", "really-simple-ssl"),
+				"title" => __("Vulnerability Detection", "really-simple-ssl"),
 				"id" => "vulnerability_detection",
-				"action" => "activate_setting",
-				"current_action" => "none",
-				"status" => "warning",
-				"button" => __("Enable", "really-simple-ssl"),
-			];
-		} else {
-			$items[] = [
-				"title" => __("Vulnerability detection enabled!", "really-simple-ssl"),
-				"action" => "none",
-				"current_action" => "none",
-				"status" => "success",
-				"id" => "vulnerability",
-			];
-		}
-		$all_enabled = RSSSL()->onboarding->all_recommended_hardening_features_enabled();
-		if( !$all_enabled ) {
-			$items[] = [
-				"title" => __("Enable recommended hardening features in Really Simple SSL", "really-simple-ssl"),
+				"options" => ["enable_vulnerability_scanner"],
+				"activated" => true,
+			],
+			[
+				"title" => __("Recommended Hardening Features", "really-simple-ssl"),
 				"id" => "hardening",
-				"action" => "activate_setting",
-				"current_action" => "none",
-				"status" => "warning",
-				"button" => __("Enable", "really-simple-ssl"),
-			];
-		} else {
-			$items[] = [
-				"title" => __("Hardening features are enabled!", "really-simple-ssl"),
-				"action" => "none",
-				"current_action" => "none",
-				"status" => "success",
-				"id" => "hardening",
-			];
-		}
+				"options" => $this->get_hardening_fields(),
+				"activated" => true,
+			],
+			[
+				"title" => __("Run System Health Scan", "really-simple-ssl"),
+				"id" => "health_scan",
+				"options" => [],
+				"activated" => true,
+			],
+			[
+				"title" => __("Limit Login Attempts", "really-simple-ssl"),
+				"id" => "limit_login_attempts",
+				"premium" => true,
+				"options" => ['enable_limited_login_attempts'],
+				"activated" => true,
+			],
+			[
+				"title" => __("Two Factor Authentication", "really-simple-ssl"),
+				"id" => "two_fa",
+				"premium" => true,
+				"options" => ['two_fa_enabled'],
+				"activated" => true,
+			],
+			[
+				"title" => __("Advanced Security Headers", "really-simple-ssl"),
+				"id" => "advanced_headers",
+				"premium" => true,
+				"options" => [],
+				"activated" => true,
+			],
+			[
+				"title" => __("Advanced Hardening Features", "really-simple-ssl"),
+				"id" => "advanced_hardening",
+				"premium" => true,
+				"options" => [],
+				"activated" => true,
+			],
+		];
+	}
 
-		foreach ($plugins_to_install as $plugin_info) {
-			require_once(rsssl_path . 'class-installer.php');
-			$plugin = new rsssl_installer($plugin_info["slug"]);
-			$premium_active = $plugin_info['constant_premium'] && defined($plugin_info['constant_premium']);
-			$free_active = $plugin->plugin_is_downloaded() && $plugin->plugin_is_activated();
-			if( $premium_active || $free_active ) {
-				$items[] = [
-					"id" => $plugin_info['slug'],
-					"is_plugin" => true,
-					"title" => sprintf(__("%s has been installed!", "really-simple-ssl"), $plugin_info["title"]),
-					"action" => "none",
-					"current_action" => "none",
-					"status" => "success",
-				];
-			} else if( !$plugin->plugin_is_downloaded() ){
-				$items[] = [
-					"id" => $plugin_info['slug'],
-					"is_plugin" => true,
-					"title" => $plugin_info["title"],
-					"description" => $plugin_info["description"],
-					"read_more" => $plugin_info["read_more"],
-					"action" => "install_plugin",
-					"current_action" => "none",
-					"status" => "warning",
-					"button" => __("Install", "really-simple-ssl"),
-				];
-			} else if ( $plugin->plugin_is_downloaded() && !$plugin->plugin_is_activated() ) {
-				$items[] = [
-					"id" => $plugin_info['slug'],
-					"is_plugin" => true,
-					"title" => sprintf(__("Activate our plugin %s", "really-simple-ssl"), $plugin_info["title"]),
-					"action" => "activate",
-					"current_action" => "none",
-					"status" => "warning",
-					"button" => __("Activate", "really-simple-ssl"),
-				];
-			}
-
-
-		}
-
-		return $items;
+	/**
+	 * Returns onboarding items if user upgraded plugin to 6.0 or SSL is detected
+	 * @return array
+	 */
+	public function pro_features () {
+		return [
+			[
+				"title" => __("Limit Login Attempts", "really-simple-ssl"),
+				"id" => "limit_login_attempts",
+				"premium" => true,
+				"options" => ['enable_limited_login_attempts'],
+				"activated" => true,
+			],
+			[
+				"title" => __("Two Factor Authentication", "really-simple-ssl"),
+				"id" => "two_fa",
+				"premium" => true,
+				"options" => ['login_protection_enabled', 'two_fa_enabled'],
+				"activated" => true,
+			],
+			[
+				"title" => __("Advanced Security Headers", "really-simple-ssl"),
+				"id" => "advanced_headers",
+				"premium" => true,
+				"options" => [],
+				"activated" => true,
+			],
+			[
+				"title" => __("Password Security", "really-simple-ssl"),
+				"id" => "password_security",
+				"options" => ['enforce_password_security_enabled'],
+				"activated" => true,
+			],
+			[
+				"title" => __("Advanced Hardening", "really-simple-ssl"),
+				"id" => "advanced_hardening",
+				"premium" => true,
+				"options" => [ 'change_debug_log_location', 'disable_http_methods' ],
+				"activated" => true,
+			],
+			[
+				"title" => __("Vulnerability Measures", "really-simple-ssl"),
+				"id" => "vulnerability_measures",
+				"options" => ["vulnerabilities_measures"],
+				"activated" => true,
+			],
+		];
 	}
 
 	/**
@@ -398,14 +458,14 @@ class rsssl_onboarding {
 		return true;
 	}
 
-	private function get_hardening_fields(){
+	private function get_hardening_fields(): array {
 		$fields = rsssl_fields(false);
 		//get all fields that are recommended
 		$recommended = array_filter($fields, function($field){
 			return isset($field['recommended']) && $field['recommended'];
 		});
 		//get all id's from this array
-		return array_map(function($field){
+		return array_map( static function($field){
 			return $field['id'];
 		}, $recommended);
 	}

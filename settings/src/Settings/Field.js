@@ -8,7 +8,7 @@ import { __ } from '@wordpress/i18n';
 import License from "./License/License";
 import Password from "./Password";
 import SelectControl from "./SelectControl";
-import Host from "./Host";
+import Host from "./Host/Host";
 import Hyperlink from "../utils/Hyperlink";
 import LetsEncrypt from "../LetsEncrypt/LetsEncrypt";
 import Activate from "../LetsEncrypt/Activate";
@@ -34,7 +34,9 @@ import CountryDatatable from "./LimitLoginAttempts/CountryDatatable";
 // import DynamicDataTable from "./DynamicDataTable/DynamicDataTable";
 import TwoFaDataTable from "./TwoFA/TwoFaDataTable";
 import EventLogDataTable from "./EventLog/EventLogDataTable";
+import DOMPurify from "dompurify";
 import RolesDropDown from "./RolesDropDown";
+
 const Field = (props) => {
     let scrollAnchor = React.createRef();
     const {updateField, setChangedField, highLightField} = useFields();
@@ -68,8 +70,7 @@ const Field = (props) => {
     }
     const onChangeHandler = (fieldValue) => {
         let field = props.field;
-        //if there's a pattern, validate it.
-        if ( field.pattern ) {
+        if (field.pattern) {
             const regex = new RegExp(field.pattern, 'g');
             const allowedCharactersArray = fieldValue.match(regex);
             fieldValue = allowedCharactersArray ? allowedCharactersArray.join('') : '';
@@ -127,7 +128,7 @@ const Field = (props) => {
         disabled = true;
         field.comment = <>
             {__("This feature is only available networkwide.","really-simple-ssl")}
-            <Hyperlink target="_blank" text={__("Network settings","really-simple-ssl")} url={rsssl_settings.network_link}/>
+            <Hyperlink target="_blank" rel="noopener noreferrer" text={__("Network settings","really-simple-ssl")} url={rsssl_settings.network_link}/>
         </>
     }
 
@@ -141,17 +142,19 @@ const Field = (props) => {
         );
     }
 
-    if ( field.type==='checkbox' ){
+    if ( field.type==='checkbox' ) {
         return (
             <div className={highLightClass} ref={scrollAnchor}>
                 <CheckboxControl
                   label={labelWrap(field)}
                   field={field}
                   disabled={disabled}
-                  onChangeHandler={ ( fieldValue ) => onChangeHandler(fieldValue) }
+                  onChangeHandler={ ( fieldValue ) => onChangeHandler( fieldValue ) }
                 />
-
-                {field.comment && <div className="rsssl-comment" dangerouslySetInnerHTML={{__html:field.comment}}></div>}
+                { field.comment &&
+                    <div className="rsssl-comment" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(field.comment) }} />
+                    /* nosemgrep: react-dangerouslysetinnerhtml */
+                }
             </div>
         );
     }

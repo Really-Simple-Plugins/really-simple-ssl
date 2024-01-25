@@ -283,7 +283,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 				    __( 'Please check the vulnerabilities overview for more information and take appropriate action.' ,'really-simple-ssl' )
 			    ),
 			    'actions'     => sprintf(
-				    '<p><a href="%s" target="_blank" rel="noopener">%s</a></p>',
+				    '<p><a href="%s" target="_blank" rel="noopener noreferrer">%s</a></p>',
 				    esc_url( __( add_query_arg(array('page'=>'really-simple-security#settings/vulnerabilities/vulnerabilities-overview'), rsssl_admin_url() ) ) ),
 				    __( 'View vulnerabilities', 'really-simple-ssl' )
 			    ),
@@ -328,12 +328,12 @@ if (!class_exists("rsssl_vulnerabilities")) {
                         'true' => [
                             'title' => $title,
                             'msg' => $title.' '.__('Please take appropriate action.','really-simple-ssl'),
-                            'url' => add_query_arg(['page'=>'really-simple-security#settings/vulnerabilities-measures-overview'], rsssl_admin_url() ),
                             'icon' => ($risk_level === 'c' || $risk_level==='h') ? 'warning' : 'open',
                             'type' => 'warning',
                             'dismissible' => true,
                             'admin_notice' => $siteWide,
                             'plusone' => true,
+                            'highlight_field_id' => 'vulnerabilities-overview',
                         ]
                     ],
                 ];
@@ -655,25 +655,25 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 if ($this->check_vulnerability( $plugin_file ) ) {
 	                switch ( $this->check_severity( $plugin_file ) ) {
 		                case 'c':
-			                echo sprintf( '<a class="rsssl-btn-vulnerable rsssl-critical" target="_blank" href="%s">%s</a>',
+			                echo sprintf( '<a class="rsssl-btn-vulnerable rsssl-critical" target="_blank" rel="noopener noreferrer" href="%s">%s</a>',
 				                'https://really-simple-ssl.com/vulnerabilities/' . $this->getIdentifier( $plugin_file ), ucfirst( $this->risk_naming['c'] ) );
 			                break;
 		                case 'h':
-			                echo sprintf( '<a class="rsssl-btn-vulnerable rsssl-high" target="_blank" href="%s">%s</a>',
+			                echo sprintf( '<a class="rsssl-btn-vulnerable rsssl-high" target="_blank" rel="noopener noreferrer" href="%s">%s</a>',
 				                'https://really-simple-ssl.com/vulnerabilities/' . $this->getIdentifier( $plugin_file ), ucfirst( $this->risk_naming['h'] ) );
 			                break;
 		                case 'm':
-			                echo sprintf( '<a class="rsssl-btn-vulnerable rsssl-medium" target="_blank" href="%s">%s</a>',
+			                echo sprintf( '<a class="rsssl-btn-vulnerable rsssl-medium" target="_blank" rel="noopener noreferrer" href="%s">%s</a>',
 				                'https://really-simple-ssl.com/vulnerabilities/' . $this->getIdentifier( $plugin_file ), ucfirst( $this->risk_naming['m'] ) );
 			                break;
 		                default:
-			                echo sprintf( '<a class="rsssl-btn-vulnerable rsssl-low" target="_blank" href="%s">%s</a>',
+			                echo sprintf( '<a class="rsssl-btn-vulnerable rsssl-low" target="_blank" rel="noopener noreferrer" href="%s">%s</a>',
 				                'https://really-simple-ssl.com/vulnerabilities/' . $this->getIdentifier( $plugin_file ), ucfirst( $this->risk_naming['l'] ) );
 			                break;
 	                }
                 }
                 if ( $this->is_quarantined($plugin_file)) {
-	                echo sprintf( '<a class="rsssl-btn-vulnerable rsssl-critical" target="_blank" href="%s">%s</a>',
+	                echo sprintf( '<a class="rsssl-btn-vulnerable rsssl-critical" target="_blank" rel="noopener noreferrer" href="%s">%s</a>',
 		                'https://really-simple-ssl.com/instructions/about-vulnerabilities/#quarantine' , __("Quarantined","really-simple-ssl") );
                 }
             }
@@ -1152,7 +1152,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
                             theme_element.insertAdjacentHTML('afterbegin', `
                               <div class="${divClass}">
                                 <div><span class="dashicons dashicons-info"></span>
-                                    <a href="https://really-simple-ssl.com/instructions/about-vulnerabilities/#quarantine" target="_blank">${text}</a>
+                                    <a href="https://really-simple-ssl.com/instructions/about-vulnerabilities/#quarantine" target="_blank" rel="noopener noreferrer">${text}</a>
                                 </div>
                               </div>
                             `);
@@ -1301,7 +1301,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
             foreach ($vulnerabilities as $vulnerability) {
                 //if fixed_in contains a version, and the current version is higher than the fixed_in version, we skip it as fixed.
                 //This needs to be a positive check only, as the fixed_in value is less accurate than the version_from and version_to values
-	            if ($vulnerability->fixed_in !== 'not fixed' && version_compare($Version, $vulnerability->fixed_in, '>=') ) {
+	            if ($vulnerability->fixed_in !== 'not fixed' && rsssl_version_compare($Version, $vulnerability->fixed_in, '>=') ) {
 		            continue;
 	            }
 
@@ -1311,7 +1311,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 $operator_from = $vulnerability->operator_from;
                 $operator_to = $vulnerability->operator_to;
                 //we now check if the version is between the two versions
-                if (version_compare($Version, $version_from, $operator_from) && version_compare($Version, $version_to, $operator_to)) {
+                if (rsssl_version_compare($Version, $version_from, $operator_from) && rsssl_version_compare($Version, $version_to, $operator_to)) {
                     $filtered_vulnerabilities[] = $vulnerability;
                 }
             }
@@ -1505,7 +1505,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 'message' => $message . ' ' .
                              __('Based on your settings, Really Simple SSL will take appropriate action, or you will need to solve it manually.','really-simple-ssl') .' '.
                              sprintf(__('Get more information from the Really Simple SSL dashboard on %s'), $this->domain() ),
-                'url' => rsssl_admin_url('#settings/vulnerabilities-measures-overview'),
+                'url' => rsssl_admin_url('#settings/vulnerabilities_notifications'),
             ];
         }
 
@@ -1548,7 +1548,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
          * @return string
          */
 	    public function domain(): string {
-		    return '<a href="'.$this->site_url().'" target="_blank">'.$this->site_url().'</a>';
+		    return '<a href="'.$this->site_url().'" target="_blank" rel="noopener noreferrer">'.$this->site_url().'</a>';
 	    }
 
 	    /**
