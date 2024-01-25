@@ -1715,6 +1715,18 @@ function rsssl_fields( $load_values = true ) {
 				]
 			],
 		],
+		[
+			'id'       => 'login_cookie_expiration',
+			'menu_id'  => 'password_security',
+			'group_id' => 'password_security_passwords',
+			'type'     => 'select',
+			'default'  => '48',
+			'options'   => [
+				'6' => __( "8 hours (recommended)", "really-simple-ssl" ),
+				'48' => __( "48 hours", "really-simple-ssl" ),
+			],
+			'label'    => __( "Let login cookie expire after", "really-simple-ssl" ),
+		],
 	];
 
 	$fields = apply_filters( 'rsssl_fields', $fields );
