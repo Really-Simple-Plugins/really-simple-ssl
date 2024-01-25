@@ -308,12 +308,12 @@ if (!class_exists("rsssl_vulnerabilities")) {
                         'true' => [
                             'title' => $title,
                             'msg' => $title.' '.__('Please take appropriate action.','really-simple-ssl'),
-                            'url' => add_query_arg(['page'=>'really-simple-security#settings/vulnerabilities-measures-overview'], rsssl_admin_url() ),
                             'icon' => ($risk_level === 'c' || $risk_level==='h') ? 'warning' : 'open',
                             'type' => 'warning',
                             'dismissible' => true,
                             'admin_notice' => $siteWide,
                             'plusone' => true,
+                            'highlight_field_id' => 'vulnerabilities-overview',
                         ]
                     ],
                 ];
@@ -1493,7 +1493,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 'message' => $message . ' ' .
                              __('Based on your settings, Really Simple SSL will take appropriate action, or you will need to solve it manually.','really-simple-ssl') .' '.
                              sprintf(__('Get more information from the Really Simple SSL dashboard on %s'), $this->domain() ),
-                'url' => rsssl_admin_url('#settings/vulnerabilities-measures-overview'),
+                'url' => rsssl_admin_url('#settings/vulnerabilities_notifications'),
             ];
         }
 
