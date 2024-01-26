@@ -111,6 +111,9 @@ The plugin checks your certificate before enabling, but if, for example, you mig
 If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions](https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/) instead.
 
 == Changelog ==
+= 7.2.3 =
+* Improvement: give json directory a random foldername, and remove after deactivating vulnerability detection
+
 = 7.2.2 =
 * January 24th 2024
 * Improvement: new onboarding setup
