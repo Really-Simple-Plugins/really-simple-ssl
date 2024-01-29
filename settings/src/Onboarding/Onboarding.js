@@ -5,11 +5,15 @@ import Placeholder from '../Placeholder/Placeholder';
 import useFields from "../Settings/FieldsData";
 import useOnboardingData from "./OnboardingData";
 import OnboardingControls from "./OnboardingControls";
-import StepEmail from "./StepEmail";
-import StepConfig from "./StepConfig";
-import StepFeatures from "./StepFeatures";
-import StepPlugins from "./StepPlugins";
-import StepPro from "./StepPro";
+import StepEmail from "./Steps/StepEmail";
+import StepConfig from "./Steps/StepConfig";
+import StepFeatures from "./Steps/StepFeatures";
+import StepPlugins from "./Steps/StepPlugins";
+import StepPro from "./Steps/StepPro";
+import './PremiumItem.scss';
+import './checkbox.scss';
+import './onboarding.scss';
+
 import DOMPurify from 'dompurify';
 const Onboarding = ({isModal}) => {
     const { fetchFieldsData, fieldsLoaded} = useFields();
@@ -79,7 +83,7 @@ const Onboarding = ({isModal}) => {
                     <div className={ processingClass+" rsssl-"+currentStep.id }>
                         { currentStep.id === 'activate_ssl' &&
                           <>
-                              <StepConfig />
+                              <StepConfig isModal={isModal}/>
                           </>
                         }
                         { currentStep.id === 'features'&&

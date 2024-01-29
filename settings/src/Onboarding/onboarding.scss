@@ -1,5 +1,4 @@
-.rsssl-modal.rsssl-onboarding-modal {
-  .rsssl-modal-body {
+  .rsssl-modal.rsssl-onboarding-modal .rsssl-modal-body, .rsssl-letsencrypt .rsssl-le-activate_ssl {
 
     .rsssl-override-detection-toggle {
       margin-bottom: -15px;
@@ -46,5 +45,5 @@
         }
       }
     }
-  }
+
 }

@@ -1,6 +1,6 @@
 import {memo, useEffect} from "@wordpress/element";
-import useOnboardingData from "./OnboardingData";
-import CheckboxItem from "./Items/CheckboxItem";
+import useOnboardingData from "../OnboardingData";
+import CheckboxItem from "../Items/CheckboxItem";
 
 const StepPlugins = () => {
     const {

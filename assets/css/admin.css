@@ -2180,59 +2180,59 @@ button.button .cmplz-icon.rsssl-icon-loading > div {
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(1) {
-    width: 88%;
+    width: 100%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(2) {
-    width: 83%;
+    width: 87%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(3) {
-    width: 93%;
+    width: 72%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(4) {
-    width: 88%;
+    width: 70%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(5) {
-    width: 77%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(6) {
-    width: 75%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(7) {
     width: 68%;
 }
 
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
-    width: 67%;
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(6) {
+    width: 64%;
 }
 
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
-    width: 89%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
-    width: 91%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
-    width: 62%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
-    width: 75%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(7) {
     width: 61%;
 }
 
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
+    width: 84%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
+    width: 77%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
+    width: 85%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
+    width: 96%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
+    width: 81%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
+    width: 91%;
+}
+
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(14) {
-    width: 92%;
+    width: 93%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
@@ -2240,23 +2240,23 @@ button.button .cmplz-icon.rsssl-icon-loading > div {
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(16) {
-    width: 64%;
+    width: 73%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(17) {
-    width: 80%;
+    width: 67%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(18) {
-    width: 91%;
+    width: 100%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(19) {
-    width: 90%;
+    width: 99%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(20) {
-    width: 89%;
+    width: 80%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line ~ .rsssl-placeholder-line {
@@ -3251,6 +3251,31 @@ input.rsssl-input.rsssl-success:focus {
 
 .rsssl-learning-mode-footer label input {
     margin-top: 0;
+}
+
+.rsssl-letsencrypt button, .rsssl-le-activate_ssl button {
+    margin-top: 20px;
+    margin-right: 20px;
+}
+
+.rsssl-letsencrypt .rsssl-features ul, .rsssl-letsencrypt .rsssl-pro ul, .rsssl-le-activate_ssl .rsssl-features ul, .rsssl-le-activate_ssl .rsssl-pro ul {
+    -moz-column-count: 2;
+    column-count: 2;
+    -moz-column-gap: 20px;
+    column-gap: 20px;
+    margin-bottom: 0;
+}
+
+.rsssl-letsencrypt .rsssl-icon, .rsssl-le-activate_ssl .rsssl-icon {
+    margin-top: 2px;
+}
+
+.rsssl-letsencrypt .rsssl-override-detection-toggle input, .rsssl-le-activate_ssl .rsssl-override-detection-toggle input {
+    margin-top: 2px;
+}
+
+.rsssl-letsencrypt .rsssl-modal-checkbox-container input, .rsssl-le-activate_ssl .rsssl-modal-checkbox-container input {
+    margin-top: 1px;
 }
 
 .rsssl-lets-encrypt-tests {

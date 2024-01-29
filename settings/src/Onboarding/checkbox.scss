@@ -1,4 +1,4 @@
-.rsssl-modal-body {
+.rsssl-modal-body, .rsssl-le-activate_ssl {
   .rsssl-modal-checkbox-container {
     margin-right: 35px;
     display: block;
@@ -11,6 +11,7 @@
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    overflow:unset !important;
 
     &:hover input ~ .rsssl-checkmark {
       background-color: var(--rsp-grey-400);

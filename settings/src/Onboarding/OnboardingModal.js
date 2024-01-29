@@ -5,11 +5,9 @@ import { __ } from '@wordpress/i18n';
 import Icon from "../utils/Icon";
 import useOnboardingData from "./OnboardingData";
 import useFields from "../Settings/FieldsData";
-import './onboarding.scss';
 import RssslModal from "../../../modal/src/components/Modal/RssslModal";
 import OnboardingControls from "./OnboardingControls";
-import './checkbox.scss';
-import './PremiumItem.scss';
+
 const OnboardingModal = () => {
     const {footerStatus, showOnboardingModal, fetchOnboardingModalStatus, modalStatusLoaded, currentStep, dismissModal} = useOnboardingData();
     const {fieldsLoaded} = useFields();

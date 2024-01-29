@@ -1,7 +1,7 @@
 import {memo} from "@wordpress/element";
-import useOnboardingData from "./OnboardingData";
-import CheckboxItem from "./Items/CheckboxItem";
-import PremiumItem from "./Items/PremiumItem";
+import useOnboardingData from "../OnboardingData";
+import CheckboxItem from "../Items/CheckboxItem";
+import PremiumItem from "../Items/PremiumItem";
 
 const StepFeatures = () => {
     const {
