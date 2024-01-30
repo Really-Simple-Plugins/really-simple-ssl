@@ -217,7 +217,7 @@ function rsssl_fields( $load_values = true ) {
 			'tooltip'  => __( "Enter your reCaptcha site key.", 'really-simple-ssl' ),
 			'disabled' => false,
 			'default'  => false,
-			'required' => false,
+			'required' => true,
 			'hidden'   => false,
 			'react_conditions' => [
 				'relation' => 'AND',
@@ -235,7 +235,7 @@ function rsssl_fields( $load_values = true ) {
 			'tooltip'  => __( "Enter your reCaptcha secret key.", 'really-simple-ssl' ),
 			'disabled' => false,
 			'default'  => false,
-			'required' => false,
+			'required' => true,
 			'hidden'   => false,
 			'react_conditions' => [
 				'relation' => 'AND',
@@ -253,7 +253,7 @@ function rsssl_fields( $load_values = true ) {
 			'tooltip'  => __( "Enter your hCaptcha site key.", 'really-simple-ssl' ),
 			'disabled' => false,
 			'default'  => false,
-			'required' => false,
+			'required' => true,
 			'hidden'   => false,
 			'react_conditions' => [
 				'relation' => 'AND',
@@ -268,7 +268,7 @@ function rsssl_fields( $load_values = true ) {
 			'group_id' => 'general_captcha',
 			'type'     => 'text',
 			'label'    => __( "hCaptcha secret key", 'really-simple-ssl'),
-			'required' => false,
+			'required' => true,
 			'tooltip'  => __( "Enter your hCaptcha secret key.", 'really-simple-ssl' ),
 			'disabled' => false,
 			'default'  => false,
@@ -374,6 +374,26 @@ function rsssl_fields( $load_values = true ) {
 				[
 					'enable_limited_login_attempts' => true,
 				]
+			],
+		],
+		[
+			//Captchas
+			'id'               => 'limit_login_attempts_captcha',
+			'menu_id'          => 'limit_login_attempts',
+			'group_id'         => 'limit_login_attempts_advanced',
+			'type'             => 'checkbox',
+			'label'            => __('Captcha', 'really-simple-ssl'),
+			'tooltip'          => __("Enable captcha for login forms.", 'really-simple-ssl'),
+			'disabled'         => false,
+			'default'          => false,
+			'comment'                 => __("Please configure your Captcha settings before enabling this settings",
+				"really-simple-ssl"),
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'enable_limited_login_attempts' => true,
+					'captcha_fully_enabled' => true,
+				],
 			],
 		],
 		[
