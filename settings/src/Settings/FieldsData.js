@@ -266,6 +266,13 @@ const updateFieldsListWithConditions = (fields) => {
         let previouslyEnabled = !field.conditionallyDisabled;
         //we want to update the changed fields if this field has just become visible. Otherwise the new field won't get saved.
         const newField = {...field};
+
+        // conditions for hiding a field
+        if (field.shouldBeHiddenCondition || !enabled) {
+            newField.hidden = true;
+        } else {
+            newField.hidden = false;
+        }
         newField.conditionallyDisabled = !enabled;
         newField.visible = !(!enabled && (newField.type === 'letsencrypt' || newField.condition_action === 'hide'));
 

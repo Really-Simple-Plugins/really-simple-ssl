@@ -204,7 +204,13 @@ const Field = (props) => {
         );
     }
 
-    if (field.type==='text' ){
+    if (field.type==='text' ) {
+        //if field.hidden is set, don't show the field
+        if ( field.hidden ) {
+            return (
+                <></>
+            );
+        }
         return (
             <div className={highLightClass} ref={scrollAnchor} style={{position: 'relative'}}>
                 <TextControl
@@ -300,6 +306,7 @@ const Field = (props) => {
             </div>
         )
     }
+
 
     if ( field.type==='select') {
         return (

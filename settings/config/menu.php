@@ -36,6 +36,17 @@ function rsssl_menu() {
 							'helpLink' => 'https://really-simple-ssl.com/instructions/about-our-general-settings/?mtm_campaign=instructions&mtm_source=free',
 						],
 						[
+							'id'       => 'general_captcha',
+							'group_id' => 'general_captcha',
+							'title'    => __( 'Captcha', 'really-simple-ssl' ),
+							'helpLink' => 'https://really-simple-ssl.com/instructions/about-our-general-settings/?mtm_campaign=instructions&mtm_source=free',
+							'premium'  => true,
+							'premium_title' => __( 'Captcha', 'really-simple-ssl' ),
+							'premium_text' => __( 'Protect your website against spam and brute-force attacks with Really Simple Captcha. Choose between Google reCAPTCHA or hCaptcha.', 'really-simple-ssl' ),
+							'upgrade'  => 'https://really-simple-ssl.com/pro/?mtm_campaign=captcha&mtm_source=free&mtm_content=upgrade',
+							'helpLink_text' =>  __( 'About Captcha', 'really-simple-ssl' ),
+						],
+						[
 							'id'            => 'support',
 							'group_id'      => 'support',
 							'title'         => __('Premium Support', 'really-simple-ssl'),

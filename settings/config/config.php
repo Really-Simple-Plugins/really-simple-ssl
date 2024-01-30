@@ -187,11 +187,100 @@ function rsssl_fields( $load_values = true ) {
 			'menu_id'          => 'general',
 			'group_id'         => 'general_email',
 			'type'             => 'checkbox',
-			'label'      => __("Notifications by email", 'really-simple-ssl'),
-			'tooltip'            => __("Get notified of important changes, updates and settings. Recommended when using security features.", 'really-simple-ssl'),
+			'label'            => __("Notifications by email", 'really-simple-ssl'),
+			'tooltip'           => __("Get notified of important changes, updates and settings. Recommended when using security features.", 'really-simple-ssl'),
 			'disabled'         => false,
 			'default'          => false,
 		],
+		[
+			'id'           => 'enabled_captcha_provider',
+			'menu_id'      => 'general',
+			'group_id'     => 'general_captcha',
+			'type'         => 'select',
+			'options'      => [
+				'none'      => __( "None", "really-simple-ssl" ),
+				'recaptcha' => __( "reCaptcha", "really-simple-ssl" ),
+				'hcaptcha'  => __( "hCaptcha", "really-simple-ssl" ),
+			],
+			'label'        => __( "Captcha provider", 'really-simple-ssl' ),
+			'tooltip'      => __( "Select the captcha provider you want to use.", 'really-simple-ssl' ),
+			'disabled'     => false,
+			'default'      => false,
+			'required' => false,
+		],
+		[
+			'id'       => 'recaptcha_site_key',
+			'menu_id'  => 'general',
+			'group_id' => 'general_captcha',
+			'type'     => 'text',
+			'label'    => __( "reCaptcha site key", 'really-simple-ssl' ),
+			'tooltip'  => __( "Enter your reCaptcha site key.", 'really-simple-ssl' ),
+			'disabled' => false,
+			'default'  => false,
+			'required' => false,
+			'hidden'   => false,
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'enabled_captcha_provider' => 'recaptcha',
+				]
+			],
+		],
+		[
+			'id'       => 'recaptcha_secret_key',
+			'menu_id'  => 'general',
+			'group_id' => 'general_captcha',
+			'type'     => 'text',
+			'label'    => __( "reCaptcha secret key", 'really-simple-ssl' ),
+			'tooltip'  => __( "Enter your reCaptcha secret key.", 'really-simple-ssl' ),
+			'disabled' => false,
+			'default'  => false,
+			'required' => false,
+			'hidden'   => false,
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'enabled_captcha_provider' => 'recaptcha',
+				]
+			],
+		],
+		[
+			'id'       => 'hcaptcha_site_key',
+			'menu_id'  => 'general',
+			'group_id' => 'general_captcha',
+			'type'     => 'text',
+			'label'    => __( "hCaptcha site key", 'really-simple-ssl' ),
+			'tooltip'  => __( "Enter your hCaptcha site key.", 'really-simple-ssl' ),
+			'disabled' => false,
+			'default'  => false,
+			'required' => false,
+			'hidden'   => false,
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'enabled_captcha_provider' => 'hcaptcha',
+				]
+			],
+		],
+		[
+			'id'       => 'hcaptcha_secret_key',
+			'menu_id'  => 'general',
+			'group_id' => 'general_captcha',
+			'type'     => 'text',
+			'label'    => __( "hCaptcha secret key", 'really-simple-ssl'),
+			'required' => false,
+			'tooltip'  => __( "Enter your hCaptcha secret key.", 'really-simple-ssl' ),
+			'disabled' => false,
+			'default'  => false,
+			'hidden'   => false,
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'enabled_captcha_provider' => 'hcaptcha',
+				]
+			],
+		],
+
 		[
 			'id'       => 'premium_support',
 			'menu_id'  => 'general',
