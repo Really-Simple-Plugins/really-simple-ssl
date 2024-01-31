@@ -12,6 +12,9 @@ const DeactivationModal = () => {
     };
 
     const deactivateKeepHttps = () => {
+        if ( !targetPluginLink ) {
+            return;
+        }
         targetPluginLink.removeEventListener('click', handleClick);
         //click the targetPluginLink
         setOpen(false);
@@ -19,11 +22,17 @@ const DeactivationModal = () => {
     }
 
     const deactivateAndRevert = () => {
+        if ( !targetPluginLink ) {
+            return;
+        }
         setOpen(false);
         window.location.href = targetPluginLink.getAttribute('href');
     }
 
     useEffect(() => {
+        if ( !targetPluginLink ) {
+            return;
+        }
         // Attach the click event listener to each link element
         targetPluginLink.addEventListener('click', handleClick);
 
@@ -34,6 +43,9 @@ const DeactivationModal = () => {
     }, []);
 
     useEffect(() => {
+        if ( !targetPluginLink ) {
+            return;
+        }
         if ( isOpen ) {
             targetPluginLink.removeEventListener('click', handleClick);
         } else {
