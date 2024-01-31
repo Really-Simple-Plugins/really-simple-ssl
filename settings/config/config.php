@@ -1067,7 +1067,6 @@ function rsssl_fields( $load_values = true ) {
 			'disabled' => false,
 			'warning'  => true,
 			'default'  => 'disabled',
-
 			'server_conditions'    => [
 				'relation' => 'AND',
 				[

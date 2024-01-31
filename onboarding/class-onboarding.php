@@ -183,7 +183,6 @@ class rsssl_onboarding {
 				"subtitle" => __("These are some of our new features, and weʼre just getting started.", "really-simple-ssl")." ".
 				              __("A lightweight plugin with heavyweight security features, focusing on performance and usability.", "really-simple-ssl"),
 				"items" => $this->recommended_features(),
-				"button" => __("Enable", "really-simple-ssl"),
 			],
 			[
 				"id" => 'email',
@@ -196,14 +195,12 @@ class rsssl_onboarding {
 				"title" => __("Free plugins", "really-simple-ssl"),
 				"subtitle" => __("Really Simple Plugins is also the author of the below privacy-focused plugins, including consent management, legal documents and analytics!", "really-simple-ssl"),
 				"items" => $this->plugins(),
-				"button" => __("Install", "really-simple-ssl"),
 			],
 			[
 				"id" => 'pro',
 				"title" => __("Really Simple Security Pro", "really-simple-ssl"),
 				"subtitle" => __("Heavyweight security features, in a lightweight performant plugin from Really Simple Plugins. Get started with below features and get the latest and greatest updates for a peace of mind!", "really-simple-ssl"),
 				"items" => $this->pro_features(),
-				"button" => __("Install", "really-simple-ssl"),
 			],
 		];
 
@@ -218,7 +215,7 @@ class rsssl_onboarding {
 			"ssl_detection_overridden" => get_option('rsssl_ssl_detection_overridden'),
 			'certificate_valid' => RSSSL()->certificate->is_valid(),
 			"networkwide" => is_multisite() && rsssl_is_networkwide_active(),
-			"network_activation_status" => false,//get_site_option('rsssl_network_activation_status'),
+			"network_activation_status" => get_site_option('rsssl_network_activation_status'),
 		];
 	}
 
@@ -352,7 +349,7 @@ class rsssl_onboarding {
 				"title" => __("Two Factor Authentication", "really-simple-ssl"),
 				"id" => "two_fa",
 				"premium" => true,
-				"options" => ['two_fa_enabled'],
+				"options" => ['login_protection_enabled', 'two_fa_enabled'],
 				"activated" => true,
 			],
 			[
