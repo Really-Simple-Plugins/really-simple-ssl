@@ -6,7 +6,7 @@ Requires at least: 5.8
 License: GPL2
 Tested up to: 6.4
 Requires PHP: 7.2
-Stable tag: 7.2.2
+Stable tag: 7.2.3
 
 The easiest way to improve security! Leverage your SSL certificate and protect your website visitors.
 
@@ -117,6 +117,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 * Improvement: link in vulnerability notification to the vulnerability overview page instead of measures
 * Improvement: allow for versions with a 'v' prefix in the version number in vulnerability detection
 * Fix: duplicate do_not_edit_htaccess key in the fields array, causing the setting to not be saved
+* Fix: css for last step in Lets Encrypt wizard
 
 = 7.2.2 =
 * January 24th 2024
