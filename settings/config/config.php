@@ -209,6 +209,14 @@ function rsssl_fields( $load_values = true ) {
 			'required' => false,
 		],
 		[
+			'id'      => 'captcha_fully_enabled',
+			'menu_id' => 'general',
+			'group_id' => 'general_captcha',
+			'type'    => 'hidden',
+			'label'   => '',
+			'default' => false,
+		],
+		[
 			'id'       => 'recaptcha_site_key',
 			'menu_id'  => 'general',
 			'group_id' => 'general_captcha',
@@ -391,7 +399,7 @@ function rsssl_fields( $load_values = true ) {
 			'react_conditions' => [
 				'relation' => 'AND',
 				[
-					'enable_limited_login_attempts' => true,
+//					'enable_limited_login_attempts' => true,
 					'captcha_fully_enabled' => true,
 				],
 			],
