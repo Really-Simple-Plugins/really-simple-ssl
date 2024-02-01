@@ -36,6 +36,7 @@ import TwoFaDataTable from "./TwoFA/TwoFaDataTable";
 import EventLogDataTable from "./EventLog/EventLogDataTable";
 import DOMPurify from "dompurify";
 import RolesDropDown from "./RolesDropDown";
+import Captcha from "./Captcha/Captcha";
 
 const Field = (props) => {
     let scrollAnchor = React.createRef();
@@ -342,6 +343,14 @@ const Field = (props) => {
         return (
             <div className={highLightClass} ref={scrollAnchor}>
               <PermissionsPolicy disabled={disabled} field={props.field} options={options}/>
+            </div>
+        )
+    }
+
+    if (field.type==='captcha') {
+        return (
+            <div className={highLightClass} ref={scrollAnchor}>
+                <Captcha field={field} />
             </div>
         )
     }

@@ -288,6 +288,14 @@ function rsssl_fields( $load_values = true ) {
 				]
 			],
 		],
+		[
+			'id'      => 'captcha_verified',
+			'menu_id' => 'general',
+			'group_id' => 'general_captcha',
+			'type'    => 'captcha',
+			'label'   => '',
+			'default' => false,
+		],
 
 		[
 			'id'       => 'premium_support',
@@ -399,7 +407,7 @@ function rsssl_fields( $load_values = true ) {
 			'react_conditions' => [
 				'relation' => 'AND',
 				[
-//					'enable_limited_login_attempts' => true,
+					'enable_limited_login_attempts' => true,
 					'captcha_fully_enabled' => true,
 				],
 			],

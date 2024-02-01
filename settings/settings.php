@@ -597,6 +597,7 @@ function rsssl_sanitize_field_type($type)
         'postdropdown',
         'two_fa_roles',
 		'roles_dropdown',
+		'captcha',
 //        'two_fa_table',
 //        'verify_email',
     ];
