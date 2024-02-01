@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from '@wordpress/element';
 import useFields from '../FieldsData';
+import useCaptchaData from "./CaptchaData";
 
 let detachedCaptchaHtml = '';
 const Captcha = ({ field, showDisabledWhenSaving = true }) => {
@@ -7,6 +8,7 @@ const Captcha = ({ field, showDisabledWhenSaving = true }) => {
     const [uniqueId, setUniqueId] = useState(generateUniqueId());
     const captchaContainerRef = useRef(null);
     const [loaded, setLoaded] = useState(false);
+    const { verifyCaptcha } = useCaptchaData();
     const reCAPTCHAScriptId = 'recaptchaScript'; //assign this Id when you're generating the reCAPTCHA script
 
     function removeRecaptchaScript() {
@@ -49,6 +51,15 @@ const Captcha = ({ field, showDisabledWhenSaving = true }) => {
         }
     }
 
+    const recaptchaCallback = (response) => {
+        console.log("Recaptcha response: ", response);
+        // Here you can call action you want to perform after receiving the response
+    };
+
+    const hcaptchaCallback = (response) => {
+       verifyCaptcha(response);
+    };
+
     const enabled_captcha_provider = getFieldValue('enabled_captcha_provider');
 
     useEffect(() => {
@@ -78,13 +89,19 @@ const Captcha = ({ field, showDisabledWhenSaving = true }) => {
                         //     window.initRecaptcha();
                         // }
                         window.initRecaptcha = window.initRecaptcha || (() => {
-                            window.grecaptcha && window.grecaptcha.render(captchaContainerRef.current, { sitekey: site_key });
+                            window.grecaptcha && window.grecaptcha.render(captchaContainerRef.current, {
+                                sitekey: site_key,
+                                callback: recaptchaCallback,
+                            });
                         });
                         break;
                     case 'hcaptcha':
                         script.src = `https://hcaptcha.com/1/api.js?onload=initHcaptcha`;
                         window.initHcaptcha = window.initHcaptcha || (() => {
-                            window.hcaptcha && window.hcaptcha.render(captchaContainerRef.current, { sitekey: site_key });
+                            window.hcaptcha && window.hcaptcha.render(captchaContainerRef.current, {
+                                sitekey: site_key,
+                                callback: hcaptchaCallback,
+                            });
                         });
                         break;
                     default:

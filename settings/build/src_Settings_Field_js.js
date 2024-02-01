@@ -2069,6 +2069,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../FieldsData */ "./src/Settings/FieldsData.js");
+/* harmony import */ var _CaptchaData__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./CaptchaData */ "./src/Settings/Captcha/CaptchaData.js");
+
 
 
 
@@ -2083,6 +2085,9 @@ const Captcha = ({
   const [uniqueId, setUniqueId] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(generateUniqueId());
   const captchaContainerRef = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useRef)(null);
   const [loaded, setLoaded] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
+  const {
+    verifyCaptcha
+  } = (0,_CaptchaData__WEBPACK_IMPORTED_MODULE_3__["default"])();
   const reCAPTCHAScriptId = 'recaptchaScript'; //assign this Id when you're generating the reCAPTCHA script
 
   function removeRecaptchaScript() {
@@ -2120,6 +2125,13 @@ const Captcha = ({
       }
     }
   }
+  const recaptchaCallback = response => {
+    console.log("Recaptcha response: ", response);
+    // Here you can call action you want to perform after receiving the response
+  };
+  const hcaptchaCallback = response => {
+    verifyCaptcha(response);
+  };
   const enabled_captcha_provider = getFieldValue('enabled_captcha_provider');
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     if (enabled_captcha_provider === 'none') {
@@ -2147,7 +2159,8 @@ const Captcha = ({
             // }
             window.initRecaptcha = window.initRecaptcha || (() => {
               window.grecaptcha && window.grecaptcha.render(captchaContainerRef.current, {
-                sitekey: site_key
+                sitekey: site_key,
+                callback: recaptchaCallback
               });
             });
             break;
@@ -2155,7 +2168,8 @@ const Captcha = ({
             script.src = `https://hcaptcha.com/1/api.js?onload=initHcaptcha`;
             window.initHcaptcha = window.initHcaptcha || (() => {
               window.hcaptcha && window.hcaptcha.render(captchaContainerRef.current, {
-                sitekey: site_key
+                sitekey: site_key,
+                callback: hcaptchaCallback
               });
             });
             break;
@@ -2184,6 +2198,42 @@ const Captcha = ({
   });
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Captcha);
+
+/***/ }),
+
+/***/ "./src/Settings/Captcha/CaptchaData.js":
+/*!*********************************************!*\
+  !*** ./src/Settings/Captcha/CaptchaData.js ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/index.mjs");
+/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils/api */ "./src/utils/api.js");
+
+
+const useCaptchaData = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, get) => ({
+  verifyCaptcha: async responseToken => {
+    try {
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('verify_captcha', {
+        responseToken: responseToken
+      });
+
+      // Handle the response
+      if (!response) {
+        console.error('No response received from the server.');
+        return;
+      }
+      return response;
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+}));
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useCaptchaData);
 
 /***/ }),
 
