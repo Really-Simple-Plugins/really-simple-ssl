@@ -1,6 +1,7 @@
 import React, {useRef, useEffect, useState} from '@wordpress/element';
 import useFields from '../FieldsData';
 import useCaptchaData from "./CaptchaData";
+import {__} from '@wordpress/i18n';
 
 let detachedCaptchaHtml = '';
 
@@ -72,7 +73,7 @@ const Captcha = ({field, showDisabledWhenSaving = true}) => {
         if (enabled_captcha_provider) {
             if (detachedCaptchaHtml) {  // <-- add this if clause
                 // If there's any detached captcha HTML, reinsert it
-                captchaContainerRef.current.innerHTML = detachedCaptchaHtml;
+               captchaContainerRef.current.innerHTML = detachedCaptchaHtml;
             } else {
                 script = document.createElement('script');
                 script.async = true;
@@ -118,7 +119,7 @@ const Captcha = ({field, showDisabledWhenSaving = true}) => {
         return () => {
             script && script.remove();
             // Detach the captcha HTML upon unmounting
-            detachedCaptchaHtml = captchaContainerRef.current.innerHTML;
+           // detachedCaptchaHtml = captchaContainerRef.current.innerHTML;
             unloadCaptcha(); // Ensure CAPTCHA is unloaded
         };
     }, [enabled_captcha_provider, uniqueId, fully_enabled]);
@@ -129,25 +130,43 @@ const Captcha = ({field, showDisabledWhenSaving = true}) => {
 
     return (
         <>
-        <div ref={captchaContainerRef} key={uniqueId} id={uniqueId}></div>
             <div>
-                {fully_enabled ? (
+                {fully_enabled && enabled_captcha_provider !== 'none' && (
                     <p>
-                        Captcha verification was completed successfully. If you change the vale of the captcha provider, you will need to re-verify the captcha.
-                    </p>
-                ) : (
-                    <p>
-                        Please complete the captcha verification to continue.
+                        {__('Captcha verification was completed successfully. If you change the value of the captcha provider, you will need to re-verify the captcha.', 'really-simple-ssl')}
                     </p>
                 )}
-                {
-                    enabled_captcha_provider === 'none' ? (
+
+                {!fully_enabled && enabled_captcha_provider !== 'none' && (
+                    <div style={{ marginBottom: '20px' }}>
+                        <h5 style={{fontWeight: 'bold'}}>
+                            {__('Confirm your CAPTCHA keys', 'really-simple-ssl')}
+                        </h5>
                         <p>
-                            Captcha verification is disabled. If you want to enable captcha verification, please select a captcha provider.
+                            {__('Before saving your changes, please confirm your CAPTCHA keys are correct by completing the CAPTCHA challenge.', 'really-simple-ssl')}
                         </p>
-                    ) : null
-                }
+                    </div>
+                )}
+
+                {enabled_captcha_provider === 'none' ? (
+                    <p>
+                        {__('Captcha verification is disabled. If you want to enable captcha verification, please select a captcha provider.', 'really-simple-ssl')}
+                    </p>
+                ) : null}
             </div>
+            {enabled_captcha_provider !== 'none' && !fully_enabled && (
+                 <div ref={captchaContainerRef} key={uniqueId} id={uniqueId}></div>
+            )}
+            {!fully_enabled && enabled_captcha_provider !== 'none' && (
+                <div className={'rsssl-warning-block'} style={{color: 'red'}}>
+                    <h5 style={{color: 'red', fontWeight: 'bold'}}>
+                        {__('CAPTCHA Confirmation Required', 'really-simple-ssl')}
+                    </h5>
+                    <p style={{color: 'red'}}>
+                        {__('Click on the CAPTCHA checkbox above to validate your site key and secret key.', 'really-simple-ssl')}
+                    </p>
+                </div>
+            )}
         </>
     );
 };

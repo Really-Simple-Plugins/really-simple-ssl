@@ -2070,6 +2070,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../FieldsData */ "./src/Settings/FieldsData.js");
 /* harmony import */ var _CaptchaData__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./CaptchaData */ "./src/Settings/Captcha/CaptchaData.js");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__);
+
 
 
 
@@ -2186,18 +2189,40 @@ const Captcha = ({
     return () => {
       script && script.remove();
       // Detach the captcha HTML upon unmounting
-      detachedCaptchaHtml = captchaContainerRef.current.innerHTML;
+      // detachedCaptchaHtml = captchaContainerRef.current.innerHTML;
       unloadCaptcha(); // Ensure CAPTCHA is unloaded
     };
   }, [enabled_captcha_provider, uniqueId, fully_enabled]);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     setUniqueId(generateUniqueId());
   }, [enabled_captcha_provider]);
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, fully_enabled && enabled_captcha_provider !== 'none' && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Captcha verification was completed successfully. If you change the value of the captcha provider, you will need to re-verify the captcha.', 'really-simple-ssl')), !fully_enabled && enabled_captcha_provider !== 'none' && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    style: {
+      marginBottom: '20px'
+    }
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h5", {
+    style: {
+      fontWeight: 'bold'
+    }
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Confirm your CAPTCHA keys', 'really-simple-ssl')), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Before saving your changes, please confirm your CAPTCHA keys are correct by completing the CAPTCHA challenge.', 'really-simple-ssl'))), enabled_captcha_provider === 'none' ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Captcha verification is disabled. If you want to enable captcha verification, please select a captcha provider.', 'really-simple-ssl')) : null), enabled_captcha_provider !== 'none' && !fully_enabled && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     ref: captchaContainerRef,
     key: uniqueId,
     id: uniqueId
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, fully_enabled ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "Captcha verification was completed successfully. If you change the vale of the captcha provider, you will need to re-verify the captcha.") : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "Please complete the captcha verification to continue."), enabled_captcha_provider === 'none' ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "Captcha verification is disabled. If you want to enable captcha verification, please select a captcha provider.") : null));
+  }), !fully_enabled && enabled_captcha_provider !== 'none' && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: 'rsssl-warning-block',
+    style: {
+      color: 'red'
+    }
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h5", {
+    style: {
+      color: 'red',
+      fontWeight: 'bold'
+    }
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)('CAPTCHA Confirmation Required', 'really-simple-ssl')), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
+    style: {
+      color: 'red'
+    }
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Click on the CAPTCHA checkbox above to validate your site key and secret key.', 'really-simple-ssl'))));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Captcha);
 
