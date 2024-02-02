@@ -205,7 +205,7 @@ function rsssl_fields( $load_values = true ) {
 			'label'        => __( "Captcha provider", 'really-simple-ssl' ),
 			'tooltip'      => __( "Select the captcha provider you want to use.", 'really-simple-ssl' ),
 			'disabled'     => false,
-			'default'      => false,
+			'default'      => 'none',
 			'required' => false,
 		],
 		[
