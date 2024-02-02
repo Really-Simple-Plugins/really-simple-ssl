@@ -4,7 +4,7 @@ import useCaptchaData from "./CaptchaData";
 
 let detachedCaptchaHtml = '';
 const Captcha = ({ field, showDisabledWhenSaving = true }) => {
-    const { getFieldValue } = useFields();
+    const { getFieldValue, updateField } = useFields();
     const [uniqueId, setUniqueId] = useState(generateUniqueId());
     const captchaContainerRef = useRef(null);
     const [loaded, setLoaded] = useState(false);
@@ -52,15 +52,39 @@ const Captcha = ({ field, showDisabledWhenSaving = true }) => {
     }
 
     const recaptchaCallback = (response) => {
-        console.log("Recaptcha response: ", response);
-        // Here you can call action you want to perform after receiving the response
+        verifyCaptcha(response).then((response) => {
+            if (response && response.success) {
+                updateField('captcha_fully_enabled', true);
+            } else {
+                updateField('captcha_fully_enabled', false);
+            }
+        });
     };
 
     const hcaptchaCallback = (response) => {
-       verifyCaptcha(response);
+       verifyCaptcha(response).then((response) => {
+            if (response && response.success) {
+                updateField('captcha_fully_enabled', true);
+            } else {
+                updateField('captcha_fully_enabled', false);
+            }
+       });
     };
 
     const enabled_captcha_provider = getFieldValue('enabled_captcha_provider');
+    const fully_enabled = getFieldValue('captcha_fully_enabled');
+
+    useEffect(() => {
+        if (enabled_captcha_provider === 'none') {
+            console.log(fully_enabled);
+        }
+        if (enabled_captcha_provider === 'recaptcha') {
+            console.log(fully_enabled);
+        }
+        if (enabled_captcha_provider === 'hcaptcha') {
+            console.log(fully_enabled);
+        }
+    }, [enabled_captcha_provider, fully_enabled]);
 
     useEffect(() => {
         if (enabled_captcha_provider === 'none') {
@@ -69,6 +93,7 @@ const Captcha = ({ field, showDisabledWhenSaving = true }) => {
         let script;
 
         unloadCaptcha(); // Unload existing CAPTCHA
+
 
         if (enabled_captcha_provider) {
             if (detachedCaptchaHtml) {  // <-- add this if clause
@@ -80,7 +105,9 @@ const Captcha = ({ field, showDisabledWhenSaving = true }) => {
                 script.defer = true;
 
                 const site_key = getFieldValue(`${enabled_captcha_provider}_site_key`);
-
+                if (fully_enabled) {
+                    return;
+                }
                 switch (enabled_captcha_provider) {
                     case 'recaptcha':
                         script.src = `https://www.google.com/recaptcha/api.js?render=explicit&onload=initRecaptcha`;
@@ -120,13 +147,35 @@ const Captcha = ({ field, showDisabledWhenSaving = true }) => {
             detachedCaptchaHtml = captchaContainerRef.current.innerHTML;
             unloadCaptcha(); // Ensure CAPTCHA is unloaded
         };
-    }, [enabled_captcha_provider, uniqueId]);
+    }, [enabled_captcha_provider, uniqueId, fully_enabled]);
 
     useEffect(() => {
         setUniqueId(generateUniqueId());
     }, [enabled_captcha_provider]);
 
-    return <div ref={captchaContainerRef} key={uniqueId} id={uniqueId}></div>;
+    return (
+        <>
+        <div ref={captchaContainerRef} key={uniqueId} id={uniqueId}></div>
+            <div>
+                {fully_enabled ? (
+                    <p>
+                        Captcha verification was completed successfully. If you change the vale of the captcha provider, you will need to re-verify the captcha.
+                    </p>
+                ) : (
+                    <p>
+                        Please complete the captcha verification to continue.
+                    </p>
+                )}
+                {
+                    enabled_captcha_provider === 'none' ? (
+                        <p>
+                            Captcha verification is disabled. If you want to enable captcha verification, please select a captcha provider.
+                        </p>
+                    ) : null
+                }
+            </div>
+        </>
+    );
 };
 
 export default Captcha;

@@ -2080,7 +2080,8 @@ const Captcha = ({
   showDisabledWhenSaving = true
 }) => {
   const {
-    getFieldValue
+    getFieldValue,
+    updateField
   } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_2__["default"])();
   const [uniqueId, setUniqueId] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(generateUniqueId());
   const captchaContainerRef = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useRef)(null);
@@ -2126,13 +2127,36 @@ const Captcha = ({
     }
   }
   const recaptchaCallback = response => {
-    console.log("Recaptcha response: ", response);
-    // Here you can call action you want to perform after receiving the response
+    verifyCaptcha(response).then(response => {
+      if (response && response.success) {
+        updateField('captcha_fully_enabled', true);
+      } else {
+        updateField('captcha_fully_enabled', false);
+      }
+    });
   };
   const hcaptchaCallback = response => {
-    verifyCaptcha(response);
+    verifyCaptcha(response).then(response => {
+      if (response && response.success) {
+        updateField('captcha_fully_enabled', true);
+      } else {
+        updateField('captcha_fully_enabled', false);
+      }
+    });
   };
   const enabled_captcha_provider = getFieldValue('enabled_captcha_provider');
+  const fully_enabled = getFieldValue('captcha_fully_enabled');
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
+    if (enabled_captcha_provider === 'none') {
+      console.log(fully_enabled);
+    }
+    if (enabled_captcha_provider === 'recaptcha') {
+      console.log(fully_enabled);
+    }
+    if (enabled_captcha_provider === 'hcaptcha') {
+      console.log(fully_enabled);
+    }
+  }, [enabled_captcha_provider, fully_enabled]);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     if (enabled_captcha_provider === 'none') {
       return;
@@ -2150,6 +2174,9 @@ const Captcha = ({
         script.async = true;
         script.defer = true;
         const site_key = getFieldValue(`${enabled_captcha_provider}_site_key`);
+        if (fully_enabled) {
+          return;
+        }
         switch (enabled_captcha_provider) {
           case 'recaptcha':
             script.src = `https://www.google.com/recaptcha/api.js?render=explicit&onload=initRecaptcha`;
@@ -2187,15 +2214,15 @@ const Captcha = ({
       detachedCaptchaHtml = captchaContainerRef.current.innerHTML;
       unloadCaptcha(); // Ensure CAPTCHA is unloaded
     };
-  }, [enabled_captcha_provider, uniqueId]);
+  }, [enabled_captcha_provider, uniqueId, fully_enabled]);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     setUniqueId(generateUniqueId());
   }, [enabled_captcha_provider]);
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     ref: captchaContainerRef,
     key: uniqueId,
     id: uniqueId
-  });
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, fully_enabled ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "Captcha verification was completed successfully. If you change the vale of the captcha provider, you will need to re-verify the captcha.") : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "Please complete the captcha verification to continue."), enabled_captcha_provider === 'none' ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "Captcha verification is disabled. If you want to enable captcha verification, please select a captcha provider.") : null));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Captcha);
 

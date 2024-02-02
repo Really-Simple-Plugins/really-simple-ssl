@@ -293,6 +293,7 @@ function rsssl_fields( $load_values = true ) {
 			'menu_id' => 'general',
 			'group_id' => 'general_captcha',
 			'type'    => 'captcha',
+			'info'     => __( "Captcha has not yet been verified, you need to complete the process of a Captcha to verify it's availability.", 'really-simple-ssl' ),
 			'label'   => '',
 			'default' => false,
 		],
