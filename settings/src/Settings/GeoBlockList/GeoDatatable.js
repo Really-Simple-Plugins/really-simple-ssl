@@ -211,6 +211,8 @@ const GeoDatatable = (props) => {
 
     const data = {...CountryDataTable.data};
 
+    console.log(getCurrentFilter(moduleName))
+
     const generateFlag = useCallback((flag, title) => (
         <>
             <Flag
@@ -219,6 +221,7 @@ const GeoDatatable = (props) => {
                     fontSize: '2em',
                 }}
                 title={title}
+                continent={(getCurrentFilter(moduleName) === 'regions')}
             />
         </>
     ), []);
