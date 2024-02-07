@@ -10,6 +10,10 @@ if ( ! function_exists('rsssl_plugin_plugin_page_scripts')) {
             return;
         }
 
+		if ( is_multisite() && ! is_network_admin() ) {
+			return;
+		}
+
 		$js_data = rsssl_get_chunk_translations( 'modal/build' );
 		if (empty($js_data)) {
 			return;
