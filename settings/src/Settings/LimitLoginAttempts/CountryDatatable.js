@@ -207,6 +207,7 @@ const CountryDatatable = (props) => {
                     fontSize: '2em',
                 }}
                 title={title}
+                continent={(getCurrentFilter(moduleName) === 'regions')}
             />
         </>
     ), []);
