@@ -2939,12 +2939,14 @@ const GeoDatatable = props => {
   const data = {
     ...CountryDataTable.data
   };
+  console.log(getCurrentFilter(moduleName));
   const generateFlag = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)((flag, title) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Flag_Flag__WEBPACK_IMPORTED_MODULE_6__["default"], {
     countryCode: flag,
     style: {
       fontSize: '2em'
     },
-    title: title
+    title: title,
+    continent: getCurrentFilter(moduleName) === 'regions'
   })), []);
   const ActionButton = ({
     onClick,
@@ -24810,4 +24812,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.de0608226ede6038830f.js.map
+//# sourceMappingURL=src_Settings_Field_js.810b54058db9df350457.js.map
