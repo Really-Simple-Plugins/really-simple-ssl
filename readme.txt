@@ -118,6 +118,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 * Improvement: allow for versions with a 'v' prefix in the version number in vulnerability detection
 * Fix: duplicate do_not_edit_htaccess key in the fields array, causing the setting to not be saved
 * Fix: css for last step in Lets Encrypt wizard
+* Fix: js error on subsites on a multisite setup in plugins overview due to deactivation modal
 
 = 7.2.2 =
 * January 24th 2024
