@@ -104,9 +104,20 @@ function rsssl_is_integration_enabled( $plugin, $details ) {
 	}
 
 	$field_id = $details['option_id'] ?? false;
-	if ($field_id && rsssl_get_option($field_id) ) {
+	if ( ! $field_id ) {
+		return false;
+	}
+
+	$field_value = $details['option_value'] ?? false;
+	$stored_value = rsssl_get_option($field_id);
+	if ( $field_value ) {
+		if ( $stored_value === $field_value ) {
+			return true;
+		}
+	} else if ( $stored_value ) {
 		return true;
 	}
+
 	return false;
 }
 

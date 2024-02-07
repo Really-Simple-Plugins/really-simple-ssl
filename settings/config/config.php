@@ -1721,7 +1721,7 @@ function rsssl_fields( $load_values = true ) {
 			'type'     => 'select',
 			'default'  => '48',
 			'options'   => [
-				'6' => __( "8 hours (recommended)", "really-simple-ssl" ),
+				'8' => __( "8 hours (recommended)", "really-simple-ssl" ),
 				'48' => __( "48 hours", "really-simple-ssl" ),
 			],
 			'label'    => __( "Let login cookie expire after", "really-simple-ssl" ),
