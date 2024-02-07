@@ -112,7 +112,6 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 
 == Changelog ==
 = 7.2.3 =
-* New: Added option to limit login cookie expiration time
 * Improvement: give json directory a random foldername, and remove after deactivating vulnerability detection
 * Improvement: link in vulnerability notification to the vulnerability overview page instead of measures
 * Improvement: allow for versions with a 'v' prefix in the version number in vulnerability detection
