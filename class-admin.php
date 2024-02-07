@@ -2566,7 +2566,14 @@ class rsssl_admin {
 				$base     = $matches[1];
 				$class    = $matches[2];
 				$function = $matches[3];
-				$output   = call_user_func( array( $base()->{$class}, $function ) );
+				if ( method_exists($base()->{$class}, $function) ) {
+					$output   = call_user_func(array($base()->{$class}, $function));
+				} else {
+					$output = false;
+					if ( defined('WP_DEBUG') && WP_DEBUG ) {
+                        error_log('Really Simple SSL: ' . $func . ' not found');
+                    }
+				}
 			} else {
 				$output = $func();
 			}
