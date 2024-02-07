@@ -1726,6 +1726,16 @@ function rsssl_fields( $load_values = true ) {
 			],
 			'label'    => __( "Let login cookie expire after", "really-simple-ssl" ),
 		],
+		[
+			'id'       => 'hide_rememberme',
+			'menu_id'  => 'password_security',
+			'group_id' => 'password_security_passwords',
+			'type'     => 'checkbox',
+			'default'  => false,
+			'label'    => __( "Hide the remember me checkbox on login", "really-simple-ssl" ),
+		],
+
+
 	];
 
 	$fields = apply_filters( 'rsssl_fields', $fields );
