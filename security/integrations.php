@@ -117,7 +117,6 @@ function rsssl_is_integration_enabled( $plugin, $details ) {
 function rsssl_integrations() {
 	global $rsssl_integrations_list;
 	foreach ( $rsssl_integrations_list as $plugin => $details ) {
-		error_log($plugin);
 		$details = wp_parse_args($details,
 			[
 				'option_id' => false,
@@ -132,11 +131,9 @@ function rsssl_integrations() {
 		}
 
 		if ( rsssl_is_integration_enabled( $plugin, $details ) ) {
-			error_log("$plugin enabled");
 			$path = apply_filters('rsssl_integrations_path', rsssl_path, $plugin);
 			$file = $path . 'security/' . $details['folder'] . "/" . $plugin . '.php';
 			if ( ! file_exists( $file ) ) {
-				error_log("file $file does not exist");
 				continue;
 			}
 			require_once( $file );
