@@ -167,7 +167,7 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
 	        }
 
             switch ( $action ) {
-                case 'ip_list':
+                case 'rsssl_limit_login':
                     $response['data'] = [
                         [
                             'id' => 12,
@@ -197,7 +197,7 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
                         ],
                     ];
                     break;
-                case 'user_list':
+                case 'rsssl_limit_login_user':
                     $response['data'] = [
                         [
                             'id' => 1,

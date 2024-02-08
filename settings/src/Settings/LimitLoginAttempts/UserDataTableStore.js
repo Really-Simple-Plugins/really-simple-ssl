@@ -100,7 +100,7 @@ const UserDataTableStore = create((set, get) => ({
             const response = await rsssl_api.doAction('user_add_user', {user, status});
             // Consider checking the response structure for any specific success or failure signals
             if (response && response.request_success) {
-                await get().fetchUserData('user_list', dataActions);
+                await get().fetchUserData('rsssl_limit_login_user', dataActions);
                 // Potentially notify the user of success, if needed.
             } else {
                 // Handle any unsuccessful response if needed.
@@ -126,7 +126,7 @@ const UserDataTableStore = create((set, get) => ({
             );
             //now we set the EventLog
             if (response) {
-                await get().fetchUserData('user_list', dataActions);
+                await get().fetchUserData('rsssl_limit_login_user', dataActions);
             }
         } catch (e) {
             console.log(e);
@@ -145,7 +145,7 @@ const UserDataTableStore = create((set, get) => ({
             );
             //now we set the EventLog
             if (response && response.request_success) {
-                await get().fetchUserData('user_list', dataActions);
+                await get().fetchUserData('rsssl_limit_login_user', dataActions);
             }
         } catch (e) {
             console.log(e);
@@ -162,7 +162,7 @@ const UserDataTableStore = create((set, get) => ({
             );
             //now we set the EventLog
             if (response) {
-                await get().fetchUserData('user_list', dataActions);
+                await get().fetchUserData('rsssl_limit_login_user', dataActions);
             }
         } catch (e) {
             console.log(e);
@@ -180,7 +180,7 @@ const UserDataTableStore = create((set, get) => ({
             );
             //now we set the EventLog
             if (response) {
-                await get().fetchUserData('user_list', dataActions);
+                await get().fetchUserData('rsssl_limit_login_user', dataActions);
             }
         } catch (e) {
             console.log(e);

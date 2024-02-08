@@ -194,6 +194,7 @@ let data = {...UserDataTable.data};
 
 for (const key in data) {
     let dataItem = {...data[key]}
+    //we log the dataItem
     //we add the action buttons
     dataItem.action = generateActionButtons(dataItem.id);
     dataItem.status = __(dataItem.status = dataItem.status.charAt(0).toUpperCase() + dataItem.status.slice(1), 'really-simple-ssl');

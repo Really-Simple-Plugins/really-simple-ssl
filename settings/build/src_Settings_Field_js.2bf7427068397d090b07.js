@@ -5044,7 +5044,7 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
       });
       //now we set the EventLog
       if (response && response.request_success) {
-        await get().fetchIpData('ip_list', dataActions);
+        await get().fetchIpData('rsssl_limit_login', dataActions);
       }
     } catch (e) {
       console.log(e);
@@ -5068,7 +5068,7 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
       });
       // Consider checking the response structure for any specific success or failure signals
       if (response && response.request_success) {
-        await get().fetchIpData('ip_list', dataActions);
+        await get().fetchIpData('rsssl_limit_login', dataActions);
         // Potentially notify the user of success, if needed.
       } else {
         // Handle any unsuccessful response if needed.
@@ -5275,7 +5275,7 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
       });
       //now we set the EventLog
       if (response && response.request_success) {
-        await get().fetchIpData('ip_list', dataActions);
+        await get().fetchIpData('rsssl_limit_login', dataActions);
       }
     } catch (e) {
       console.log(e);
@@ -5295,7 +5295,7 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
       });
       //now we set the EventLog
       if (response && response.request_success) {
-        await get().fetchIpData('ip_list', get().dataActions);
+        await get().fetchIpData('rsssl_limit_login', get().dataActions);
       } else {
         console.log("Failed to remove IP address: ", response.message);
       }
@@ -5317,7 +5317,7 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
       });
       //now we set the EventLog
       if (response && response.request_success) {
-        await get().fetchIpData('ip_list', get().dataActions);
+        await get().fetchIpData('rsssl_limit_login', get().dataActions);
       }
     } catch (e) {
       console.log(e);
@@ -5889,7 +5889,7 @@ const UserDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set,
       });
       // Consider checking the response structure for any specific success or failure signals
       if (response && response.request_success) {
-        await get().fetchUserData('user_list', dataActions);
+        await get().fetchUserData('rsssl_limit_login_user', dataActions);
         // Potentially notify the user of success, if needed.
       } else {
         // Handle any unsuccessful response if needed.
@@ -5918,7 +5918,7 @@ const UserDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set,
       });
       //now we set the EventLog
       if (response) {
-        await get().fetchUserData('user_list', dataActions);
+        await get().fetchUserData('rsssl_limit_login_user', dataActions);
       }
     } catch (e) {
       console.log(e);
@@ -5939,7 +5939,7 @@ const UserDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set,
       });
       //now we set the EventLog
       if (response && response.request_success) {
-        await get().fetchUserData('user_list', dataActions);
+        await get().fetchUserData('rsssl_limit_login_user', dataActions);
       }
     } catch (e) {
       console.log(e);
@@ -5959,7 +5959,7 @@ const UserDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set,
       });
       //now we set the EventLog
       if (response) {
-        await get().fetchUserData('user_list', dataActions);
+        await get().fetchUserData('rsssl_limit_login_user', dataActions);
       }
     } catch (e) {
       console.log(e);
@@ -5979,7 +5979,7 @@ const UserDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set,
       });
       //now we set the EventLog
       if (response) {
-        await get().fetchUserData('user_list', dataActions);
+        await get().fetchUserData('rsssl_limit_login_user', dataActions);
       }
     } catch (e) {
       console.log(e);
@@ -6202,6 +6202,7 @@ const UserDatatable = props => {
     let dataItem = {
       ...data[key]
     };
+    //we log the dataItem
     //we add the action buttons
     dataItem.action = generateActionButtons(dataItem.id);
     dataItem.status = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)(dataItem.status = dataItem.status.charAt(0).toUpperCase() + dataItem.status.slice(1), 'really-simple-ssl');
@@ -24812,4 +24813,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.810b54058db9df350457.js.map
+//# sourceMappingURL=src_Settings_Field_js.2bf7427068397d090b07.js.map
