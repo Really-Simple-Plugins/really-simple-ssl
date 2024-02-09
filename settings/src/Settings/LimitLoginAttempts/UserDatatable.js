@@ -16,7 +16,7 @@ const UserDatatable = (props) => {
     const {
         UserDataTable,
         dataLoaded,
-        fetchUserData,
+        fetchData,
         processing,
         handleUserTableFilter,
         handleUserTablePageChange,
@@ -87,7 +87,7 @@ const UserDatatable = (props) => {
     useEffect(() => {
         //we make sure the dataActions are changed in the store before we fetch the data
         if (dataActions) {
-            fetchUserData(field.action, dataActions)
+            fetchData(field.action, dataActions)
         }
     }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, dataActions.currentRowsPerPage, fieldAlreadyEnabled('enable_limited_login_attempts')]);
 

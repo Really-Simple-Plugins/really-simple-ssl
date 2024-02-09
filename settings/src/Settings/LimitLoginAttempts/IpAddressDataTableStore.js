@@ -34,7 +34,7 @@ const IpAddressDataTableStore = create((set, get) => ({
     * This function fetches the data from the server and fills the property IpDataTable
     * Note this function works with the DataTable class on serverside
      */
-    fetchIpData: async (action, dataActions) => {
+    fetchData: async (action, dataActions) => {
         set({processing: true});
         set({dataLoaded: false});
         set({rowCleared: true});
@@ -176,48 +176,30 @@ const IpAddressDataTableStore = create((set, get) => ({
     /*
     * This function updates the row only changing the status
      */
-    updateRow: async (id, status, dataActions) => {
+    /*
+* This function updates the row only changing the status
+ */
+    updateRow: async (value, status, dataActions) => {
         set({processing: true});
+        let data = {
+            value: value,
+            status: status
+        };
         try {
             const response = await rsssl_api.doAction(
                 'ip_update_row',
-                {id, status}
+                data
             );
-            //now we set the EventLog
             if (response && response.request_success) {
-                await get().fetchIpData('rsssl_limit_login', dataActions);
-            }
-        } catch (e) {
-            console.log(e);
-        }  finally {
-            set({processing: false});
-        }
-    },
-
-    /*
-    * This function add a new row to the table
-     */
-    addRow: async (ipAddress, status, dataActions) => {
-        set({processing: true});
-        try {
-            const response = await rsssl_api.doAction('ip_add_ip_address', {ipAddress, status});
-            // Consider checking the response structure for any specific success or failure signals
-            if (response && response.request_success) {
-                await get().fetchIpData('rsssl_limit_login', dataActions);
-                // Potentially notify the user of success, if needed.
+                await get().fetchData('rsssl_limit_login', dataActions);
+                return { success: true, message: response.message, response };
             } else {
-                // Handle any unsuccessful response if needed.
-                console.log("Failed to add IP address: ", response.message);
-                //we also clear the form
-                set({ipAddress: ''});
+                return { success: false, message: response?.message || 'Failed to add ip', response };
             }
         } catch (e) {
-            console.log(e);
-            // Notify the user of an error.
+            return { success: false, message: 'Error occurred', error: e };
         } finally {
             set({processing: false});
-            //we also clear the form
-            set({ipAddress: ''});
         }
     },
 
@@ -316,9 +298,6 @@ const IpAddressDataTableStore = create((set, get) => ({
             return (acc << BigInt(16)) + BigInt(segmentValue);
         }, BigInt(0));
     },
-    // ipV6ToNumber: (ip) => {
-    //     return ip.split(":").reduce((acc, cur) => (acc << BigInt(16)) + BigInt(parseInt(cur, 16)), BigInt(0));
-    // },
 
     /**
      * This function validates the ip range, if the lowest is lower than the highest
@@ -388,36 +367,26 @@ const IpAddressDataTableStore = create((set, get) => ({
         }
     },
 
-    updateMultiRow: async (ids, status, dataActions) => {
-        set({processing: true});
-        try {
-            const response = await rsssl_api.doAction(
-                'ip_update_multi_row',
-                {ids, status}
-            );
-            //now we set the EventLog
-            if (response && response.request_success) {
-                await get().fetchIpData('rsssl_limit_login', dataActions);
-            }
-        } catch (e) {
-            console.log(e);
-        } finally {
-            set({processing: false});
-        }
-    },
-
     resetRow: async (id, dataActions) => {
         set({processing: true});
         try {
-            const response = await rsssl_api.doAction('delete_entry', {id} );
+            const response = await rsssl_api.doAction(
+                'delete_entries',
+                {id}
+            );
             //now we set the EventLog
-            if (response && response.request_success) {
-                await get().fetchIpData('rsssl_limit_login', get().dataActions);
+            if (response && response.success) {
+                await get().fetchData('rsssl_limit_login', dataActions);
+                // Return the success message from the API response.
+                return { success: true, message: response.message, response };
             } else {
-                console.log("Failed to remove IP address: ", response.message);
+                // Return a custom error message or the API response message.
+                return { success: false, message: response?.message || 'Failed to reset ip', response };
             }
         } catch (e) {
-            console.log(e);
+            console.error(e);
+            // Return the caught error with a custom message.
+            return { success: false, message: 'Error occurred', error: e };
         } finally {
             set({processing: false});
         }
@@ -427,15 +396,21 @@ const IpAddressDataTableStore = create((set, get) => ({
         set({processing: true});
         try {
             const response = await rsssl_api.doAction(
-                'delete_multi_entries',
+                'delete_entries',
                 {ids}
             );
+            console.log(response);
             //now we set the EventLog
-            if (response && response.request_success) {
-                await get().fetchIpData('rsssl_limit_login', get().dataActions);
+            if (response && response.success) {
+                if (response.success) {
+                    await get().fetchData('rsssl_limit_login', dataActions);
+                    return {success: true, message: response.message, response};
+                } else
+                    return {success: false, message: response?.message || 'Failed to reset ip', response};
             }
         } catch (e) {
-            console.log(e);
+            console.error(e);
+            return { success: false, message: 'Error occurred', error: e };
         } finally {
             set({processing: false});
         }

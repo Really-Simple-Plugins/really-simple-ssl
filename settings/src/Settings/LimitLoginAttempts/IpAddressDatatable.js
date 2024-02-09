@@ -15,7 +15,7 @@ const IpAddressDatatable = (props) => {
         dataActions,
         handleIpTableRowsChange,
         updateMultiRow,
-        fetchIpData,
+        fetchData,
         handleIpTableSort,
         handleIpTablePageChange,
         handleIpTableSearch,
@@ -82,7 +82,7 @@ const IpAddressDatatable = (props) => {
     useEffect(() => {
         //we make sure the dataActions are changed in the store before we fetch the data
         if (dataActions) {
-            fetchIpData(field.action, dataActions);
+            fetchData(field.action, dataActions);
         }
     }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, dataActions.currentRowsPerPage, fieldAlreadyEnabled('enable_limited_login_attempts')]);
 

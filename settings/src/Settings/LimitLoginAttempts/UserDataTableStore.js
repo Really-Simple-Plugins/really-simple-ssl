@@ -14,7 +14,7 @@ const UserDataTableStore = create((set, get) => ({
     UserDataTable: [],
     rowCleared: false,
 
-    fetchUserData: async (action, dataActions) => {
+    fetchData: async (action, dataActions) => {
         //we check if the processing is already true, if so we return
         set({processing: true});
         set({dataLoaded: false});
@@ -94,10 +94,10 @@ const UserDataTableStore = create((set, get) => ({
     /*
 * This function updates the row only changing the status
  */
-    updateRow: async (user, status, dataActions) => {
+    updateRow: async (value, status, dataActions) => {
         set({processing: true});
         let data = {
-            value: user,
+            value: value,
             status: status
         };
         try {
@@ -106,8 +106,7 @@ const UserDataTableStore = create((set, get) => ({
                data
             );
             if (response && response.request_success) {
-                await get().fetchUserData('rsssl_limit_login_user', dataActions);
-                await get().fetchUserData('rsssl_limit_login_user', dataActions);
+                await get().fetchData('rsssl_limit_login_user', dataActions);
                 return { success: true, message: response.message, response };
             } else {
                 return { success: false, message: response?.message || 'Failed to add user', response };
@@ -128,7 +127,7 @@ const UserDataTableStore = create((set, get) => ({
             );
             //now we set the EventLog
             if (response && response.success) {
-                await get().fetchUserData('rsssl_limit_login_user', dataActions);
+                await get().fetchData('rsssl_limit_login_user', dataActions);
                 // Return the success message from the API response.
                 return { success: true, message: response.message, response };
             } else {

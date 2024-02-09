@@ -3796,8 +3796,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _IpAddressInput__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./IpAddressInput */ "./src/Settings/LimitLoginAttempts/IpAddressInput.js");
-/* harmony import */ var _Cidr__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Cidr */ "./src/Settings/LimitLoginAttempts/Cidr.js");
-/* harmony import */ var _EventLog_EventLogDataTableStore__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../EventLog/EventLogDataTableStore */ "./src/Settings/EventLog/EventLogDataTableStore.js");
+/* harmony import */ var _EventLog_EventLogDataTableStore__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../EventLog/EventLogDataTableStore */ "./src/Settings/EventLog/EventLogDataTableStore.js");
+/* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../FieldsData */ "./src/Settings/FieldsData.js");
 
 
 
@@ -3814,17 +3814,21 @@ const AddIpAddressModal = props => {
     setIpAddress,
     maskError,
     dataLoaded,
-    addRow,
+    updateRow,
     resetRange
   } = (0,_IpAddressDataTableStore__WEBPACK_IMPORTED_MODULE_2__["default"])();
   const [rangeDisplay, setRangeDisplay] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   const {
     fetchDynamicData
-  } = (0,_EventLog_EventLogDataTableStore__WEBPACK_IMPORTED_MODULE_6__["default"])();
+  } = (0,_EventLog_EventLogDataTableStore__WEBPACK_IMPORTED_MODULE_5__["default"])();
   const [resetFlag, setResetFlag] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  const {
+    showSavedSettingsNotice
+  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_6__["default"])();
+
   //we add a function to handle the range fill
   const handleRangeFill = () => {
-    //we toggle the range displayß
+    //we toggle the range display.
     setRangeDisplay(!rangeDisplay);
   };
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
@@ -3834,11 +3838,17 @@ const AddIpAddressModal = props => {
       fetchCidrData('get_mask_from_range');
     }
   }, [inputRangeValidated]);
-  function handleSubmit() {
+  async function handleSubmit() {
     let status = props.status;
     // we check if statusSelected is not empty
     if (ipAddress && maskError === false) {
-      addRow(ipAddress, status, props.dataActions);
+      await updateRow(ipAddress, status, props.dataActions).then(response => {
+        if (response.success) {
+          showSavedSettingsNotice(response.message);
+        } else {
+          showSavedSettingsNotice(response.message, 'error');
+        }
+      });
       //we clear the input
       resetRange();
       //we close the modal
@@ -4016,79 +4026,6 @@ const AddUserModal = props => {
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Add", "really-simple-ssl"))))));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (AddUserModal);
-
-/***/ }),
-
-/***/ "./src/Settings/LimitLoginAttempts/Cidr.js":
-/*!*************************************************!*\
-  !*** ./src/Settings/LimitLoginAttempts/Cidr.js ***!
-  \*************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _IpAddressDataTableStore__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./IpAddressDataTableStore */ "./src/Settings/LimitLoginAttempts/IpAddressDataTableStore.js");
-/* harmony import */ var _IpAddressInput__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./IpAddressInput */ "./src/Settings/LimitLoginAttempts/IpAddressInput.js");
-
-
-
-
-const Cidr = () => {
-  const [lowestIP, setLowestIP] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("");
-  const [highestIP, setHighestIP] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("");
-  const [validated, setValidated] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
-  const {
-    setIpAddress,
-    validateIpRange,
-    setIpRange
-  } = (0,_IpAddressDataTableStore__WEBPACK_IMPORTED_MODULE_1__["default"])();
-  const cleanupIpAddress = ipAddress => {
-    return ipAddress.replace(/,/g, '.');
-  };
-  const handleLowestIPChange = ip => {
-    setLowestIP(cleanupIpAddress(ip));
-  };
-  const handleHighestIPChange = ip => {
-    setHighestIP(cleanupIpAddress(ip));
-  };
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-ip-address-input"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-ip-address-input__inner"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-ip-address-input__icon"
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_IpAddressInput__WEBPACK_IMPORTED_MODULE_2__["default"], {
-    id: "lowestIP",
-    type: "text",
-    className: "rsssl-ip-address-input__input",
-    value: lowestIP,
-    onChange: e => handleLowestIPChange(e.target.value)
-  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-ip-address-input__inner"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-ip-address-input__icon"
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_IpAddressInput__WEBPACK_IMPORTED_MODULE_2__["default"], {
-    id: "highestIP",
-    type: "text",
-    className: "rsssl-ip-address-input__input",
-    value: highestIP,
-    onChange: e => handleHighestIPChange(e.target.value)
-  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: 'rsssl-container'
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: 'rsssl-container__inner'
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-    className: 'button button--primary',
-    onClick: () => {
-      validateIpRange(lowestIP, highestIP);
-    }
-  }, "Validate")))));
-};
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Cidr);
 
 /***/ }),
 
@@ -4858,7 +4795,7 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
   * This function fetches the data from the server and fills the property IpDataTable
   * Note this function works with the DataTable class on serverside
    */
-  fetchIpData: async (action, dataActions) => {
+  fetchData: async (action, dataActions) => {
     set({
       processing: true
     });
@@ -5042,61 +4979,42 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
   /*
   * This function updates the row only changing the status
    */
-  updateRow: async (id, status, dataActions) => {
-    set({
-      processing: true
-    });
-    try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('ip_update_row', {
-        id,
-        status
-      });
-      //now we set the EventLog
-      if (response && response.request_success) {
-        await get().fetchIpData('rsssl_limit_login', dataActions);
-      }
-    } catch (e) {
-      console.log(e);
-    } finally {
-      set({
-        processing: false
-      });
-    }
-  },
   /*
-  * This function add a new row to the table
-   */
-  addRow: async (ipAddress, status, dataActions) => {
+  * This function updates the row only changing the status
+  */
+  updateRow: async (value, status, dataActions) => {
     set({
       processing: true
     });
+    let data = {
+      value: value,
+      status: status
+    };
     try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('ip_add_ip_address', {
-        ipAddress,
-        status
-      });
-      // Consider checking the response structure for any specific success or failure signals
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('ip_update_row', data);
       if (response && response.request_success) {
-        await get().fetchIpData('rsssl_limit_login', dataActions);
-        // Potentially notify the user of success, if needed.
+        await get().fetchData('rsssl_limit_login', dataActions);
+        return {
+          success: true,
+          message: response.message,
+          response
+        };
       } else {
-        // Handle any unsuccessful response if needed.
-        console.log("Failed to add IP address: ", response.message);
-        //we also clear the form
-        set({
-          ipAddress: ''
-        });
+        return {
+          success: false,
+          message: response?.message || 'Failed to add ip',
+          response
+        };
       }
     } catch (e) {
-      console.log(e);
-      // Notify the user of an error.
+      return {
+        success: false,
+        message: 'Error occurred',
+        error: e
+      };
     } finally {
       set({
         processing: false
-      });
-      //we also clear the form
-      set({
-        ipAddress: ''
       });
     }
   },
@@ -5187,10 +5105,6 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
       return (acc << BigInt(16)) + BigInt(segmentValue);
     }, BigInt(0));
   },
-  // ipV6ToNumber: (ip) => {
-  //     return ip.split(":").reduce((acc, cur) => (acc << BigInt(16)) + BigInt(parseInt(cur, 16)), BigInt(0));
-  // },
-
   /**
    * This function validates the ip range, if the lowest is lower than the highest
    * This checks ipv4 and ipv6 addresses
@@ -5273,43 +5187,39 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
       console.log(e);
     }
   },
-  updateMultiRow: async (ids, status, dataActions) => {
-    set({
-      processing: true
-    });
-    try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('ip_update_multi_row', {
-        ids,
-        status
-      });
-      //now we set the EventLog
-      if (response && response.request_success) {
-        await get().fetchIpData('rsssl_limit_login', dataActions);
-      }
-    } catch (e) {
-      console.log(e);
-    } finally {
-      set({
-        processing: false
-      });
-    }
-  },
   resetRow: async (id, dataActions) => {
     set({
       processing: true
     });
     try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('delete_entry', {
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('delete_entries', {
         id
       });
       //now we set the EventLog
-      if (response && response.request_success) {
-        await get().fetchIpData('rsssl_limit_login', get().dataActions);
+      if (response && response.success) {
+        await get().fetchData('rsssl_limit_login', dataActions);
+        // Return the success message from the API response.
+        return {
+          success: true,
+          message: response.message,
+          response
+        };
       } else {
-        console.log("Failed to remove IP address: ", response.message);
+        // Return a custom error message or the API response message.
+        return {
+          success: false,
+          message: response?.message || 'Failed to reset ip',
+          response
+        };
       }
     } catch (e) {
-      console.log(e);
+      console.error(e);
+      // Return the caught error with a custom message.
+      return {
+        success: false,
+        message: 'Error occurred',
+        error: e
+      };
     } finally {
       set({
         processing: false
@@ -5321,15 +5231,32 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
       processing: true
     });
     try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('delete_multi_entries', {
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('delete_entries', {
         ids
       });
+      console.log(response);
       //now we set the EventLog
-      if (response && response.request_success) {
-        await get().fetchIpData('rsssl_limit_login', get().dataActions);
+      if (response && response.success) {
+        if (response.success) {
+          await get().fetchData('rsssl_limit_login', dataActions);
+          return {
+            success: true,
+            message: response.message,
+            response
+          };
+        } else return {
+          success: false,
+          message: response?.message || 'Failed to reset ip',
+          response
+        };
       }
     } catch (e) {
-      console.log(e);
+      console.error(e);
+      return {
+        success: false,
+        message: 'Error occurred',
+        error: e
+      };
     } finally {
       set({
         processing: false
@@ -5379,7 +5306,7 @@ const IpAddressDatatable = props => {
     dataActions,
     handleIpTableRowsChange,
     updateMultiRow,
-    fetchIpData,
+    fetchData,
     handleIpTableSort,
     handleIpTablePageChange,
     handleIpTableSearch,
@@ -5444,7 +5371,7 @@ const IpAddressDatatable = props => {
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     //we make sure the dataActions are changed in the store before we fetch the data
     if (dataActions) {
-      fetchIpData(field.action, dataActions);
+      fetchData(field.action, dataActions);
     }
   }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, dataActions.currentRowsPerPage, fieldAlreadyEnabled('enable_limited_login_attempts')]);
   const customStyles = {
@@ -5785,7 +5712,7 @@ const UserDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set,
   dataActions: {},
   UserDataTable: [],
   rowCleared: false,
-  fetchUserData: async (action, dataActions) => {
+  fetchData: async (action, dataActions) => {
     //we check if the processing is already true, if so we return
     set({
       processing: true
@@ -5887,19 +5814,18 @@ const UserDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set,
   /*
   * This function updates the row only changing the status
   */
-  updateRow: async (user, status, dataActions) => {
+  updateRow: async (value, status, dataActions) => {
     set({
       processing: true
     });
     let data = {
-      value: user,
+      value: value,
       status: status
     };
     try {
       const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('user_update_row', data);
       if (response && response.request_success) {
-        await get().fetchUserData('rsssl_limit_login_user', dataActions);
-        await get().fetchUserData('rsssl_limit_login_user', dataActions);
+        await get().fetchData('rsssl_limit_login_user', dataActions);
         return {
           success: true,
           message: response.message,
@@ -5934,7 +5860,7 @@ const UserDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set,
       });
       //now we set the EventLog
       if (response && response.success) {
-        await get().fetchUserData('rsssl_limit_login_user', dataActions);
+        await get().fetchData('rsssl_limit_login_user', dataActions);
         // Return the success message from the API response.
         return {
           success: true,
@@ -6045,7 +5971,7 @@ const UserDatatable = props => {
   const {
     UserDataTable,
     dataLoaded,
-    fetchUserData,
+    fetchData,
     processing,
     handleUserTableFilter,
     handleUserTablePageChange,
@@ -6115,7 +6041,7 @@ const UserDatatable = props => {
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     //we make sure the dataActions are changed in the store before we fetch the data
     if (dataActions) {
-      fetchUserData(field.action, dataActions);
+      fetchData(field.action, dataActions);
     }
   }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, dataActions.currentRowsPerPage, fieldAlreadyEnabled('enable_limited_login_attempts')]);
   let enabled = getFieldValue('enable_limited_login_attempts');
@@ -24821,4 +24747,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.3378889b4a9037e94fe8.js.map
+//# sourceMappingURL=src_Settings_Field_js.9ec643613961499dc737.js.map
