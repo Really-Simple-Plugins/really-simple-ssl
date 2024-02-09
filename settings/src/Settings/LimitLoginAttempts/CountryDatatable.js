@@ -15,8 +15,7 @@ const CountryDatatable = (props) => {
         fetchData,
         processing,
         handleCountryTableFilter,
-        addRow,
-        removeRow,
+        updateRow,
         pagination,
         handleCountryTablePageChange,
         handleCountryTableRowsChange,
@@ -25,7 +24,6 @@ const CountryDatatable = (props) => {
         addRegion,
         removeRegion,
         addRowMultiple,
-        removeRowMultiple,
         resetRow,
         resetMultiRow,
         dataActions,
@@ -145,7 +143,13 @@ const CountryDatatable = (props) => {
 
     const allowMultiple = useCallback((rows) => {
         const ids = rows.map(item => item.id);
-        resetMultiRow(ids, 'blocked', dataActions);
+        resetMultiRow(ids, dataActions).then((response) => {
+            if (response && response.success) {
+                showSavedSettingsNotice(response.message);
+            } else {
+                showSavedSettingsNotice(response.message, 'error' );
+            }
+        });
     }, [resetMultiRow, getCurrentFilter(moduleName), dataActions]);
 
     const allowById = useCallback((id) => {
@@ -177,31 +181,39 @@ const CountryDatatable = (props) => {
 
     }, [addRegion, getCurrentFilter(moduleName), dataActions]);
 
-    const allowCountryByCode = useCallback(async (code) => {
-        if (Array.isArray(code)) {
-            const ids = code.map(item => item.iso2_code);
-            await removeRowMultiple(ids, 'blocked', dataActions );
-            setRowsSelected([]);
-        } else {
-            await removeRow(code, 'blocked', dataActions);
-        }
-
-        await fetchDynamicData('event_log');
-
-    }, [removeRow, removeRowMultiple, dataActions, getCurrentFilter(moduleName)]);
+    // const allowCountryByCode = useCallback(async (code) => {
+    //     if (Array.isArray(code)) {
+    //         const ids = code.map(item => item.iso2_code);
+    //         await removeRowMultiple(ids, 'blocked', dataActions );
+    //         setRowsSelected([]);
+    //     } else {
+    //         await removeRow(code, 'blocked', dataActions);
+    //     }
+    //
+    //     await fetchDynamicData('event_log');
+    //
+    // }, [removeRow, removeRowMultiple, dataActions, getCurrentFilter(moduleName)]);
 
     const blockCountryByCode = useCallback(async (code) => {
         if (Array.isArray(code)) {
             const ids = code.map(item => item.iso2_code);
-            await addRowMultiple(ids, 'blocked', dataActions);
+
             setRowsSelected([]);
         } else {
-            await addRow(code, 'blocked', dataActions);
+            await updateRow(code, 'blocked', dataActions).then(
+                (response) => {
+                    if (response.success) {
+                        showSavedSettingsNotice(response.message );
+                    } else {
+                        showSavedSettingsNotice(response.message, 'error');
+                    }
+                }
+            );
         }
 
         await fetchDynamicData('event_log');
 
-    }, [addRow, addRowMultiple, dataActions, getCurrentFilter(moduleName)]);
+    }, [updateRow, addRowMultiple, dataActions, getCurrentFilter(moduleName)]);
 
     const data = {...CountryDataTable.data};
 
@@ -254,8 +266,8 @@ const CountryDatatable = (props) => {
                 <>
                     {status === 'blocked' ? (
                         <ActionButton
-                            onClick={() => allowCountryByCode(id)} className="button-secondary">
-                            {__("Allow", "really-simple-ssl")}
+                            onClick={() => allowById(id)} className="button-secondary">
+                             {__("Allow", "really-simple-ssl")}
                         </ActionButton>
                     ) : (
                         <ActionButton
@@ -266,7 +278,7 @@ const CountryDatatable = (props) => {
                 </>
             )}
         </div>
-    ), [getCurrentFilter, moduleName, allowById, blockRegionByCode, allowRegionByCode, blockCountryByCode, allowCountryByCode]);
+    ), [getCurrentFilter, moduleName, allowById, blockRegionByCode, allowRegionByCode, blockCountryByCode]);
 
 
 
@@ -328,7 +340,7 @@ const CountryDatatable = (props) => {
                             {getCurrentFilter(moduleName) === 'countries' && (
                                 <>
                                     <ActionButton
-                                        onClick={() => allowCountryByCode(rowsSelected)}>
+                                        onClick={() => allowById(rowsSelected)}>
                                         {__("Allow", "really-simple-ssl")}
                                     </ActionButton>
                                     <ActionButton

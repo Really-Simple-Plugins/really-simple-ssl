@@ -136,7 +136,7 @@ const UserDatatable = (props) => {
                 if (response && response.success) {
                     showSavedSettingsNotice(response.message);
                 } else {
-                    showSavedSettingsNotice(response.message);
+                    showSavedSettingsNotice(response.message, 'error');
                 }
             });
             setRowsSelected([]);
