@@ -10,6 +10,7 @@ import AddIpAddressModal from "./AddIpAddressModal";
 import AddUserModal from "./AddUserModal";
 import EventLogDataTableStore from "../EventLog/EventLogDataTableStore";
 import useFields from "../FieldsData";
+import FieldsData from "../FieldsData";
 
 const UserDatatable = (props) => {
     const {
@@ -30,7 +31,7 @@ const UserDatatable = (props) => {
         updateRow,
         rowCleared
     } = UserDataTableStore()
-
+    const {showSavedSettingsNotice} = FieldsData();
     const {
         DynamicDataTable,
         fetchDynamicData,
@@ -131,10 +132,19 @@ const UserDatatable = (props) => {
     const setUserStatus = useCallback(async (data, status) => {
         if (Array.isArray(data)) {
             const ids = data.map((item) => item.id);
-            await updateMultiRow(ids, status);
+            //await updateMultiRow(ids, status);
+            ids.forEach((id) => {
+                updateRow(id, status).then((result) => {
+                    console.log(result);
+                    showSavedSettingsNotice(result.message);
+                });
+            });
             setRowsSelected([]);
         } else {
-            await updateRow(data, status);
+            await updateRow(data, status, dataActions).then((result) => {
+                console.log(result);
+                showSavedSettingsNotice(result.message);
+            });
         }
         await fetchDynamicData('event_log');
     }, [updateMultiRow, updateRow, fetchDynamicData]);

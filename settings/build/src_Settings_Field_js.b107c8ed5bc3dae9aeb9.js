@@ -3928,6 +3928,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _EventLog_EventLogDataTableStore__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../EventLog/EventLogDataTableStore */ "./src/Settings/EventLog/EventLogDataTableStore.js");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../FieldsData */ "./src/Settings/FieldsData.js");
+
 
 
 
@@ -3937,24 +3939,32 @@ __webpack_require__.r(__webpack_exports__);
 const AddUserModal = props => {
   if (!props.isOpen) return null;
   const {
-    addRow,
-    maskError
+    updateRow
   } = (0,_UserDataTableStore__WEBPACK_IMPORTED_MODULE_2__["default"])();
   const {
     fetchDynamicData
   } = (0,_EventLog_EventLogDataTableStore__WEBPACK_IMPORTED_MODULE_3__["default"])();
   const [user, setUser] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('');
+  const {
+    showSavedSettingsNotice
+  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_5__["default"])();
   async function handleSubmit() {
     let status = props.status;
+    console.log(user, status);
     // we check if statusSelected is not empty
     if (user !== '') {
-      await addRow(user, status, props.dataActions);
+      await updateRow(user, status, props.dataActions).then(response => {
+        if (response.success) {
+          showSavedSettingsNotice(response.message);
+        } else {
+          showSavedSettingsNotice(response.message, 'error');
+        }
+      });
       //we clear the input
       setUser('');
       await fetchDynamicData('event_log');
-      //we close the modal
-      props.onRequestClose();
     }
+    props.onRequestClose();
   }
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Modal, {
     title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Add User", "really-simple-ssl"),
@@ -5907,21 +5917,37 @@ const UserDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set,
   /*
   * This function updates the row only changing the status
   */
-  updateRow: async (id, status, dataActions) => {
+  updateRow: async (user, status, dataActions) => {
     set({
       processing: true
     });
+    let data = {
+      value: user,
+      status: status
+    };
     try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('user_update_row', {
-        id,
-        status
-      });
-      //now we set the EventLog
-      if (response) {
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('user_update_row', data);
+      if (response && response.request_success) {
         await get().fetchUserData('rsssl_limit_login_user', dataActions);
+        await get().fetchUserData('rsssl_limit_login_user', dataActions);
+        return {
+          success: true,
+          message: response.message,
+          response
+        };
+      } else {
+        return {
+          success: false,
+          message: response?.message || 'Failed to add user',
+          response
+        };
       }
     } catch (e) {
-      console.log(e);
+      return {
+        success: false,
+        message: 'Error occurred',
+        error: e
+      };
     } finally {
       set({
         processing: false
@@ -6029,6 +6055,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 const UserDatatable = props => {
   const {
     UserDataTable,
@@ -6048,6 +6075,9 @@ const UserDatatable = props => {
     updateRow,
     rowCleared
   } = (0,_UserDataTableStore__WEBPACK_IMPORTED_MODULE_3__["default"])();
+  const {
+    showSavedSettingsNotice
+  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_9__["default"])();
   const {
     DynamicDataTable,
     fetchDynamicData
@@ -6144,10 +6174,19 @@ const UserDatatable = props => {
   const setUserStatus = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(async (data, status) => {
     if (Array.isArray(data)) {
       const ids = data.map(item => item.id);
-      await updateMultiRow(ids, status);
+      //await updateMultiRow(ids, status);
+      ids.forEach(id => {
+        updateRow(id, status).then(result => {
+          console.log(result);
+          showSavedSettingsNotice(result.message);
+        });
+      });
       setRowsSelected([]);
     } else {
-      await updateRow(data, status);
+      await updateRow(data, status, dataActions).then(result => {
+        console.log(result);
+        showSavedSettingsNotice(result.message);
+      });
     }
     await fetchDynamicData('event_log');
   }, [updateMultiRow, updateRow, fetchDynamicData]);
@@ -24805,4 +24844,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.e4481575f4016d383449.js.map
+//# sourceMappingURL=src_Settings_Field_js.b107c8ed5bc3dae9aeb9.js.map

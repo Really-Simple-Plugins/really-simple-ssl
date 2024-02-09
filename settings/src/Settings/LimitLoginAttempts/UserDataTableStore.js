@@ -120,19 +120,26 @@ const UserDataTableStore = create((set, get) => ({
     /*
 * This function updates the row only changing the status
  */
-    updateRow: async (id, status, dataActions) => {
+    updateRow: async (user, status, dataActions) => {
         set({processing: true});
+        let data = {
+            value: user,
+            status: status
+        };
         try {
             const response = await rsssl_api.doAction(
                 'user_update_row',
-                {id, status}
+               data
             );
-            //now we set the EventLog
-            if (response) {
+            if (response && response.request_success) {
                 await get().fetchUserData('rsssl_limit_login_user', dataActions);
+                await get().fetchUserData('rsssl_limit_login_user', dataActions);
+                return { success: true, message: response.message, response };
+            } else {
+                return { success: false, message: response?.message || 'Failed to add user', response };
             }
         } catch (e) {
-            console.log(e);
+            return { success: false, message: 'Error occurred', error: e };
         } finally {
             set({processing: false});
         }
