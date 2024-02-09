@@ -4061,7 +4061,7 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
   dataActions: {},
   CountryDataTable: [],
   rowCleared: false,
-  fetchCountryData: async (action, dataActions) => {
+  fetchData: async (action, dataActions) => {
     //we check if the processing is already true, if so we return
     set({
       processing: true
@@ -4154,100 +4154,40 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
   /*
   * This function add a new row to the table
   */
-  addRow: async (country, status, dataActions) => {
+  updateRow: async (country, status, dataActions) => {
     set({
       processing: true
     });
+    let data = {
+      value: value,
+      status: status
+    };
     try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('add_country_to_list', {
-        country,
-        status
-      });
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('country_update_row', data);
       // Consider checking the response structure for any specific success or failure signals
       if (response && response.request_success) {
-        await get().fetchCountryData('country_list', dataActions);
+        await get().fetchData('rsssl_limit_login_country', dataActions);
         // Potentially notify the user of success, if needed.
+        return {
+          success: true,
+          message: response.message,
+          response
+        };
       } else {
         // Handle any unsuccessful response if needed.
+        return {
+          success: false,
+          message: response?.message || 'Failed to add country',
+          response
+        };
       }
     } catch (e) {
       console.log(e);
-      // Notify the user of an error.
-    } finally {
-      set({
-        processing: false
-      });
-    }
-  },
-  addRowMultiple: async (countries, status, dataActions) => {
-    set({
-      processing: true
-    });
-    try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('add_countries_to_list', {
-        countries,
-        status
-      });
-      // Consider checking the response structure for any specific success or failure signals
-      if (response && response.request_success) {
-        await get().fetchCountryData('country_list', dataActions);
-        // Potentially notify the user of success, if needed.
-      } else {
-        // Handle any unsuccessful response if needed.
-      }
-    } catch (e) {
-      console.error(e);
-      // Notify the user of an error.
-    } finally {
-      set({
-        processing: false
-      });
-    }
-  },
-  removeRowMultiple: async (countries, status, dataActions) => {
-    set({
-      processing: true
-    });
-    try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('remove_countries_from_list', {
-        countries,
-        status
-      });
-      // Consider checking the response structure for any specific success or failure signals
-      if (response && response.request_success) {
-        await get().fetchCountryData('country_list', dataActions);
-        // Potentially notify the user of success, if needed.
-      } else {
-        // Handle any unsuccessful response if needed.
-      }
-    } catch (e) {
-      console.error(e);
-      // Notify the user of an error.
-    } finally {
-      set({
-        processing: false
-      });
-    }
-  },
-  removeRow: async (country, status, dataActions) => {
-    set({
-      processing: true
-    });
-    try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('remove_country_from_list', {
-        country,
-        status
-      });
-      // Consider checking the response structure for any specific success or failure signals
-      if (response && response.request_success) {
-        await get().fetchCountryData('country_list', dataActions);
-        // Potentially notify the user of success, if needed.
-      } else {
-        // Handle any unsuccessful response if needed.
-      }
-    } catch (e) {
-      console.log(e);
-      // Notify the user of an error.
+      return {
+        success: false,
+        message: 'Error occurred',
+        error: e
+      };
     } finally {
       set({
         processing: false
@@ -4262,7 +4202,7 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
       });
       if (response && response.request_success) {
         // Do any immediate operations here if needed
-        await get().fetchCountryData('country_list', dataActions);
+        await get().fetchData('rsssl_limit_login_country', dataActions);
       } else {
         console.error("Failed to add region: ", response.message);
       }
@@ -4282,7 +4222,7 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
       });
       if (response && response.request_success) {
         // Do any immediate operations here if needed
-        await get().fetchCountryData('country_list', dataActions);
+        await get().fetchData('rsssl_limit_login_country', dataActions);
       } else {
         console.error("Failed to add regions: ", response.message);
       }
@@ -4305,7 +4245,7 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
       });
       // Consider checking the response structure for any specific success or failure signals
       if (response && response.request_success) {
-        await get().fetchCountryData('country_list', dataActions);
+        await get().fetchData('rsssl_limit_login_country', dataActions);
         // Potentially notify the user of success, if needed.
       } else {
         // Handle any unsuccessful response if needed.
@@ -4332,7 +4272,7 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
       // Consider checking the response structure for any specific success or failure signals
       if (response && response.request_success) {
         // Potentially notify the user of success, if needed.
-        await get().fetchCountryData('country_list', dataActions);
+        await get().fetchData('rsssl_limit_login_country', dataActions);
       } else {
         // Handle any unsuccessful response if needed.
         console.error("Failed to remove regions: ", response.message);
@@ -4346,41 +4286,36 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
       });
     }
   },
-  updateMultiRow: async (ids, status, dataActions) => {
-    set({
-      processing: true
-    });
-    try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('update_multi_row', {
-        ids,
-        status
-      });
-      //now we set the EventLog
-      if (response) {
-        await get().fetchCountryData('country_list', dataActions);
-      }
-    } catch (e) {
-      console.log(e);
-    } finally {
-      set({
-        processing: false
-      });
-    }
-  },
   resetRow: async (id, dataActions) => {
     set({
       processing: true
     });
     try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('delete_entry', {
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('delete_entries', {
         id
       });
       //now we set the EventLog
-      if (response) {
-        await get().fetchCountryData('country_list', dataActions);
+      if (response && response.success) {
+        await get().fetchData('rsssl_limit_login_country', dataActions);
+        return {
+          success: true,
+          message: response.message,
+          response
+        };
+      } else {
+        return {
+          success: false,
+          message: response?.message || 'Failed to reset country',
+          response
+        };
       }
     } catch (e) {
-      console.log(e);
+      console.error(e);
+      return {
+        success: false,
+        message: 'Error occurred',
+        error: e
+      };
     } finally {
       set({
         processing: false
@@ -4392,15 +4327,32 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
       processing: true
     });
     try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('delete_multi_entries', {
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('delete_entries', {
         ids
       });
       //now we set the EventLog
-      if (response) {
-        await get().fetchCountryData('country_list', dataActions);
+      if (response && response.success) {
+        await get().fetchData('rsssl_limit_login_country', dataActions);
+        return {
+          success: true,
+          message: response.message,
+          response
+        };
+      } else {
+        return {
+          success: false,
+          message: response?.message || 'Failed to reset country',
+          response
+        };
       }
     } catch (e) {
-      console.log(e);
+      console.error(e);
+      return {
+        success: false,
+        message: 'Error occurred',
+        error: e
+      };
+      ß;
     } finally {
       set({
         processing: false
@@ -4446,7 +4398,7 @@ const CountryDatatable = props => {
   const {
     CountryDataTable,
     dataLoaded,
-    fetchCountryData,
+    fetchData,
     processing,
     handleCountryTableFilter,
     addRow,
@@ -4517,7 +4469,7 @@ const CountryDatatable = props => {
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     //we make sure the dataActions are changed in the store before we fetch the data
     if (dataActions) {
-      fetchCountryData(field.action, dataActions);
+      fetchData(field.action, dataActions);
     }
   }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, dataActions.currentRowsPerPage, fieldAlreadyEnabled('enable_limited_login_attempts')]);
   let enabled = getFieldValue('enable_limited_login_attempts');
@@ -4567,7 +4519,11 @@ const CountryDatatable = props => {
     resetMultiRow(ids, 'blocked', dataActions);
   }, [resetMultiRow, getCurrentFilter(moduleName), dataActions]);
   const allowById = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(id => {
-    resetRow(id, 'blocked', dataActions);
+    resetRow(id, dataActions).then(response => {
+      if (response.success) {
+        showSavedSettingsNotice(response.message);
+      }
+    });
   }, [resetRow, getCurrentFilter(moduleName), dataActions]);
   const blockRegionByCode = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(async (code, region = '') => {
     if (Array.isArray(code)) {
@@ -5890,7 +5846,7 @@ const UserDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set,
       const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('delete_entries', {
         ids
       });
-      console.log(response);
+      console.error(response);
       //now we set the EventLog
       if (response && response.success) {
         if (response.success) {
@@ -24740,4 +24696,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.fa6ed77038db775a2d88.js.map
+//# sourceMappingURL=src_Settings_Field_js.79d9d8b7faa2169bbd30.js.map

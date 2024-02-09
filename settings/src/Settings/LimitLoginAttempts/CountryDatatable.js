@@ -12,7 +12,7 @@ const CountryDatatable = (props) => {
     const {
         CountryDataTable,
         dataLoaded,
-        fetchCountryData,
+        fetchData,
         processing,
         handleCountryTableFilter,
         addRow,
@@ -86,7 +86,7 @@ const CountryDatatable = (props) => {
     useEffect(() => {
         //we make sure the dataActions are changed in the store before we fetch the data
         if (dataActions) {
-            fetchCountryData(field.action, dataActions)
+            fetchData(field.action, dataActions)
         }
     }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, dataActions.currentRowsPerPage, fieldAlreadyEnabled('enable_limited_login_attempts')]);
 
@@ -149,7 +149,13 @@ const CountryDatatable = (props) => {
     }, [resetMultiRow, getCurrentFilter(moduleName), dataActions]);
 
     const allowById = useCallback((id) => {
-        resetRow(id, 'blocked', dataActions);
+        resetRow(id, dataActions).then(
+            (response) => {
+                if (response.success) {
+                    showSavedSettingsNotice(response.message);
+                }
+            }
+        );
     }, [resetRow,getCurrentFilter(moduleName), dataActions]);
 
     const blockRegionByCode = useCallback(async (code, region = '') => {

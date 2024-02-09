@@ -150,7 +150,7 @@ const UserDataTableStore = create((set, get) => ({
                 'delete_entries',
                 {ids}
             );
-            console.log(response);
+            console.error(response);
             //now we set the EventLog
             if (response && response.success) {
                 if (response.success) {
