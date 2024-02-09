@@ -97,7 +97,10 @@ const UserDataTableStore = create((set, get) => ({
     addRow: async (user, status, dataActions) => {
         set({processing: true});
         try {
-            const response = await rsssl_api.doAction('user_add_user', {user, status});
+            const response = await rsssl_api.doAction('user_update_row', {
+                value: user,
+                status: status
+            });
             // Consider checking the response structure for any specific success or failure signals
             if (response && response.request_success) {
                 await get().fetchUserData('rsssl_limit_login_user', dataActions);
@@ -140,7 +143,7 @@ const UserDataTableStore = create((set, get) => ({
         set({processing: true});
         try {
             const response = await rsssl_api.doAction(
-                'user_update_multi_row',
+                'delete_entries',
                 {ids, status}
             );
             //now we set the EventLog
@@ -157,7 +160,7 @@ const UserDataTableStore = create((set, get) => ({
         set({processing: true});
         try {
             const response = await rsssl_api.doAction(
-                'delete_entry',
+                'delete_entries',
                 {id}
             );
             //now we set the EventLog

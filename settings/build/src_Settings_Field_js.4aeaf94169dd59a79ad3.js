@@ -5883,9 +5883,9 @@ const UserDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set,
       processing: true
     });
     try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('user_add_user', {
-        user,
-        status
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('user_update_row', {
+        value: user,
+        status: status
       });
       // Consider checking the response structure for any specific success or failure signals
       if (response && response.request_success) {
@@ -5933,7 +5933,7 @@ const UserDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set,
       processing: true
     });
     try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('user_update_multi_row', {
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('delete_entries', {
         ids,
         status
       });
@@ -5954,7 +5954,7 @@ const UserDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set,
       processing: true
     });
     try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('delete_entry', {
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('delete_entries', {
         id
       });
       //now we set the EventLog
@@ -24813,4 +24813,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.2bf7427068397d090b07.js.map
+//# sourceMappingURL=src_Settings_Field_js.4aeaf94169dd59a79ad3.js.map
