@@ -128,27 +128,19 @@ const UserDatatable = (props) => {
         return {label: item[1], value: item[0]};
     });
 
-    const blockUsers = useCallback(async (data) => {
+    const setUserStatus = useCallback(async (data, status) => {
         if (Array.isArray(data)) {
             const ids = data.map((item) => item.id);
-            await updateMultiRow(ids, 'blocked');
+            await updateMultiRow(ids, status);
             setRowsSelected([]);
         } else {
-            await updateRow(data, 'blocked');
+            await updateRow(data, status);
         }
         await fetchDynamicData('event_log');
     }, [updateMultiRow, updateRow, fetchDynamicData]);
 
-    const allowUsers = useCallback(async (data) => {
-        if (Array.isArray(data)) {
-            const ids = data.map((item) => item.id);
-            await updateMultiRow(ids, 'allowed');
-            setRowsSelected([]);
-        } else {
-            await updateRow(data, 'allowed');
-        }
-        await fetchDynamicData('event_log');
-    }, [updateMultiRow, updateRow, fetchDynamicData]);
+    const blockUsers = data => setUserStatus(data, 'blocked');
+    const allowUsers = data => setUserStatus(data, 'allowed');
 
     const resetUsers = useCallback(async (data) => {
         if (Array.isArray(data)) {

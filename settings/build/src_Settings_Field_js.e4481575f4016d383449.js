@@ -6141,26 +6141,18 @@ const UserDatatable = props => {
       value: item[0]
     };
   });
-  const blockUsers = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(async data => {
+  const setUserStatus = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(async (data, status) => {
     if (Array.isArray(data)) {
       const ids = data.map(item => item.id);
-      await updateMultiRow(ids, 'blocked');
+      await updateMultiRow(ids, status);
       setRowsSelected([]);
     } else {
-      await updateRow(data, 'blocked');
+      await updateRow(data, status);
     }
     await fetchDynamicData('event_log');
   }, [updateMultiRow, updateRow, fetchDynamicData]);
-  const allowUsers = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(async data => {
-    if (Array.isArray(data)) {
-      const ids = data.map(item => item.id);
-      await updateMultiRow(ids, 'allowed');
-      setRowsSelected([]);
-    } else {
-      await updateRow(data, 'allowed');
-    }
-    await fetchDynamicData('event_log');
-  }, [updateMultiRow, updateRow, fetchDynamicData]);
+  const blockUsers = data => setUserStatus(data, 'blocked');
+  const allowUsers = data => setUserStatus(data, 'allowed');
   const resetUsers = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(async data => {
     if (Array.isArray(data)) {
       const ids = data.map(item => item.id);
@@ -24813,4 +24805,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.4aeaf94169dd59a79ad3.js.map
+//# sourceMappingURL=src_Settings_Field_js.e4481575f4016d383449.js.map
