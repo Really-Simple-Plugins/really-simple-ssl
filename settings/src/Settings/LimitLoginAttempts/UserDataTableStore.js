@@ -92,32 +92,6 @@ const UserDataTableStore = create((set, get) => ({
     },
 
     /*
-* This function add a new row to the table
- */
-    addRow: async (user, status, dataActions) => {
-        set({processing: true});
-        try {
-            const response = await rsssl_api.doAction('user_update_row', {
-                value: user,
-                status: status
-            });
-            // Consider checking the response structure for any specific success or failure signals
-            if (response && response.request_success) {
-                await get().fetchUserData('rsssl_limit_login_user', dataActions);
-                // Potentially notify the user of success, if needed.
-            } else {
-                // Handle any unsuccessful response if needed.
-                console.log("Failed to add User: ", response.message);
-            }
-        } catch (e) {
-            console.log(e);
-            // Notify the user of an error.
-        } finally {
-            set({processing: false});
-        }
-    },
-
-    /*
 * This function updates the row only changing the status
  */
     updateRow: async (user, status, dataActions) => {
@@ -145,24 +119,6 @@ const UserDataTableStore = create((set, get) => ({
         }
     },
 
-
-    updateMultiRow: async (ids, status, dataActions) => {
-        set({processing: true});
-        try {
-            const response = await rsssl_api.doAction(
-                'delete_entries',
-                {ids, status}
-            );
-            //now we set the EventLog
-            if (response && response.request_success) {
-                await get().fetchUserData('rsssl_limit_login_user', dataActions);
-            }
-        } catch (e) {
-            console.log(e);
-        } finally {
-            set({processing: false});
-        }
-    },
     resetRow: async (id, dataActions) => {
         set({processing: true});
         try {
@@ -171,11 +127,18 @@ const UserDataTableStore = create((set, get) => ({
                 {id}
             );
             //now we set the EventLog
-            if (response) {
+            if (response && response.success) {
                 await get().fetchUserData('rsssl_limit_login_user', dataActions);
+                // Return the success message from the API response.
+                return { success: true, message: response.message, response };
+            } else {
+                // Return a custom error message or the API response message.
+                return { success: false, message: response?.message || 'Failed to reset user', response };
             }
         } catch (e) {
-            console.log(e);
+            console.error(e);
+            // Return the caught error with a custom message.
+            return { success: false, message: 'Error occurred', error: e };
         } finally {
             set({processing: false});
         }
@@ -185,15 +148,21 @@ const UserDataTableStore = create((set, get) => ({
         set({processing: true});
         try {
             const response = await rsssl_api.doAction(
-                'delete_multi_entries',
+                'delete_entries',
                 {ids}
             );
+            console.log(response);
             //now we set the EventLog
-            if (response) {
-                await get().fetchUserData('rsssl_limit_login_user', dataActions);
+            if (response && response.success) {
+                if (response.success) {
+                    await get().fetchUserData('rsssl_limit_login_user', dataActions);
+                    return {success: true, message: response.message, response};
+                } else
+                    return {success: false, message: response?.message || 'Failed to reset user', response};
             }
         } catch (e) {
-            console.log(e);
+            console.error(e);
+            return { success: false, message: 'Error occurred', error: e };
         } finally {
             set({processing: false});
         }

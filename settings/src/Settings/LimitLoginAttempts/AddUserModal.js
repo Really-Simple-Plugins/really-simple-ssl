@@ -16,7 +16,6 @@ const AddUserModal = (props) => {
 
     async function handleSubmit() {
         let status = props.status;
-        console.log(user, status);
         // we check if statusSelected is not empty
         if (user !== '') {
             await updateRow(user, status, props.dataActions).then((response) => {

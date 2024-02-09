@@ -129,36 +129,25 @@ const UserDatatable = (props) => {
         return {label: item[1], value: item[0]};
     });
 
-    const setUserStatus = useCallback(async (data, status) => {
-        if (Array.isArray(data)) {
-            const ids = data.map((item) => item.id);
-            //await updateMultiRow(ids, status);
-            ids.forEach((id) => {
-                updateRow(id, status).then((result) => {
-                    console.log(result);
-                    showSavedSettingsNotice(result.message);
-                });
-            });
-            setRowsSelected([]);
-        } else {
-            await updateRow(data, status, dataActions).then((result) => {
-                console.log(result);
-                showSavedSettingsNotice(result.message);
-            });
-        }
-        await fetchDynamicData('event_log');
-    }, [updateMultiRow, updateRow, fetchDynamicData]);
-
-    const blockUsers = data => setUserStatus(data, 'blocked');
-    const allowUsers = data => setUserStatus(data, 'allowed');
-
     const resetUsers = useCallback(async (data) => {
         if (Array.isArray(data)) {
             const ids = data.map((item) => item.id);
-            await resetMultiRow(ids, dataActions);
+            await resetMultiRow(ids, dataActions).then((response) => {
+                if (response && response.success) {
+                    showSavedSettingsNotice(response.message);
+                } else {
+                    showSavedSettingsNotice(response.message);
+                }
+            });
             setRowsSelected([]);
         } else {
-            await resetRow(data, dataActions);
+            await resetRow(data, dataActions).then((response) => {
+                if (response && response.success) {
+                    showSavedSettingsNotice(response.message);
+                } else {
+                    showSavedSettingsNotice(response.message);
+                }
+            });
         }
         await fetchDynamicData('event_log');
     }, [resetMultiRow, resetRow, fetchDynamicData, dataActions]);
@@ -188,7 +177,7 @@ const UserDatatable = (props) => {
                 {__("Delete", "really-simple-ssl")}
             </ActionButton>
         </div>
-    ), [getCurrentFilter(moduleName), moduleName, resetUsers, blockUsers, allowUsers]);
+    ), [getCurrentFilter(moduleName), moduleName, resetUsers]);
 
 
 //we convert the data to an array
@@ -207,6 +196,8 @@ let paginationSet = true;
 if (typeof pagination === 'undefined') {
     paginationSet = false;
 }
+
+    let debounceTimer;
 
 return (
     <>
@@ -247,11 +238,11 @@ return (
                         type="text"
                         className="rsssl-search-bar__input"
                         placeholder={__("Search", "really-simple-ssl")}
-                        disabled={processing}
                         onKeyUp={event => {
-                            if (event.key === 'Enter') {
-                                handleUserTableSearch(event.target.value, searchableColumns)
-                            }
+                            clearTimeout(debounceTimer);
+                            debounceTimer = setTimeout(() => {
+                                handleUserTableSearch(event.target.value, searchableColumns);
+                            }, 500);
                         }}
                     />
                 </div>

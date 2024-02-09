@@ -3950,7 +3950,6 @@ const AddUserModal = props => {
   } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_5__["default"])();
   async function handleSubmit() {
     let status = props.status;
-    console.log(user, status);
     // we check if statusSelected is not empty
     if (user !== '') {
       await updateRow(user, status, props.dataActions).then(response => {
@@ -5886,35 +5885,6 @@ const UserDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set,
     }));
   },
   /*
-  * This function add a new row to the table
-  */
-  addRow: async (user, status, dataActions) => {
-    set({
-      processing: true
-    });
-    try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('user_update_row', {
-        value: user,
-        status: status
-      });
-      // Consider checking the response structure for any specific success or failure signals
-      if (response && response.request_success) {
-        await get().fetchUserData('rsssl_limit_login_user', dataActions);
-        // Potentially notify the user of success, if needed.
-      } else {
-        // Handle any unsuccessful response if needed.
-        console.log("Failed to add User: ", response.message);
-      }
-    } catch (e) {
-      console.log(e);
-      // Notify the user of an error.
-    } finally {
-      set({
-        processing: false
-      });
-    }
-  },
-  /*
   * This function updates the row only changing the status
   */
   updateRow: async (user, status, dataActions) => {
@@ -5954,27 +5924,6 @@ const UserDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set,
       });
     }
   },
-  updateMultiRow: async (ids, status, dataActions) => {
-    set({
-      processing: true
-    });
-    try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('delete_entries', {
-        ids,
-        status
-      });
-      //now we set the EventLog
-      if (response && response.request_success) {
-        await get().fetchUserData('rsssl_limit_login_user', dataActions);
-      }
-    } catch (e) {
-      console.log(e);
-    } finally {
-      set({
-        processing: false
-      });
-    }
-  },
   resetRow: async (id, dataActions) => {
     set({
       processing: true
@@ -5984,11 +5933,30 @@ const UserDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set,
         id
       });
       //now we set the EventLog
-      if (response) {
+      if (response && response.success) {
         await get().fetchUserData('rsssl_limit_login_user', dataActions);
+        // Return the success message from the API response.
+        return {
+          success: true,
+          message: response.message,
+          response
+        };
+      } else {
+        // Return a custom error message or the API response message.
+        return {
+          success: false,
+          message: response?.message || 'Failed to reset user',
+          response
+        };
       }
     } catch (e) {
-      console.log(e);
+      console.error(e);
+      // Return the caught error with a custom message.
+      return {
+        success: false,
+        message: 'Error occurred',
+        error: e
+      };
     } finally {
       set({
         processing: false
@@ -6000,15 +5968,32 @@ const UserDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set,
       processing: true
     });
     try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('delete_multi_entries', {
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('delete_entries', {
         ids
       });
+      console.log(response);
       //now we set the EventLog
-      if (response) {
-        await get().fetchUserData('rsssl_limit_login_user', dataActions);
+      if (response && response.success) {
+        if (response.success) {
+          await get().fetchUserData('rsssl_limit_login_user', dataActions);
+          return {
+            success: true,
+            message: response.message,
+            response
+          };
+        } else return {
+          success: false,
+          message: response?.message || 'Failed to reset user',
+          response
+        };
       }
     } catch (e) {
-      console.log(e);
+      console.error(e);
+      return {
+        success: false,
+        message: 'Error occurred',
+        error: e
+      };
     } finally {
       set({
         processing: false
@@ -6171,34 +6156,25 @@ const UserDatatable = props => {
       value: item[0]
     };
   });
-  const setUserStatus = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(async (data, status) => {
-    if (Array.isArray(data)) {
-      const ids = data.map(item => item.id);
-      //await updateMultiRow(ids, status);
-      ids.forEach(id => {
-        updateRow(id, status).then(result => {
-          console.log(result);
-          showSavedSettingsNotice(result.message);
-        });
-      });
-      setRowsSelected([]);
-    } else {
-      await updateRow(data, status, dataActions).then(result => {
-        console.log(result);
-        showSavedSettingsNotice(result.message);
-      });
-    }
-    await fetchDynamicData('event_log');
-  }, [updateMultiRow, updateRow, fetchDynamicData]);
-  const blockUsers = data => setUserStatus(data, 'blocked');
-  const allowUsers = data => setUserStatus(data, 'allowed');
   const resetUsers = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(async data => {
     if (Array.isArray(data)) {
       const ids = data.map(item => item.id);
-      await resetMultiRow(ids, dataActions);
+      await resetMultiRow(ids, dataActions).then(response => {
+        if (response && response.success) {
+          showSavedSettingsNotice(response.message);
+        } else {
+          showSavedSettingsNotice(response.message);
+        }
+      });
       setRowsSelected([]);
     } else {
-      await resetRow(data, dataActions);
+      await resetRow(data, dataActions).then(response => {
+        if (response && response.success) {
+          showSavedSettingsNotice(response.message);
+        } else {
+          showSavedSettingsNotice(response.message);
+        }
+      });
     }
     await fetchDynamicData('event_log');
   }, [resetMultiRow, resetRow, fetchDynamicData, dataActions]);
@@ -6223,7 +6199,7 @@ const UserDatatable = props => {
       resetUsers(id);
     },
     className: "button-red"
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Delete", "really-simple-ssl"))), [getCurrentFilter(moduleName), moduleName, resetUsers, blockUsers, allowUsers]);
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Delete", "really-simple-ssl"))), [getCurrentFilter(moduleName), moduleName, resetUsers]);
 
   //we convert the data to an array
   let data = {
@@ -6243,6 +6219,7 @@ const UserDatatable = props => {
   if (typeof pagination === 'undefined') {
     paginationSet = false;
   }
+  let debounceTimer;
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_AddUserModal__WEBPACK_IMPORTED_MODULE_7__["default"], {
     isOpen: addingUser,
     onRequestClose: handleClose,
@@ -6270,11 +6247,11 @@ const UserDatatable = props => {
     type: "text",
     className: "rsssl-search-bar__input",
     placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Search", "really-simple-ssl"),
-    disabled: processing,
     onKeyUp: event => {
-      if (event.key === 'Enter') {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
         handleUserTableSearch(event.target.value, searchableColumns);
-      }
+      }, 500);
     }
   })))), rowsSelected.length > 0 && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     style: {
@@ -24844,4 +24821,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.b107c8ed5bc3dae9aeb9.js.map
+//# sourceMappingURL=src_Settings_Field_js.3378889b4a9037e94fe8.js.map
