@@ -81,7 +81,7 @@ function rsssl_clear_scheduled_hooks() {
 	wp_clear_scheduled_hook( 'rsssl_every_day_hook' );
 	wp_clear_scheduled_hook( 'rsssl_every_week_hook' );
 	wp_clear_scheduled_hook( 'rsssl_every_five_minutes_hook' );
-	wp_clear_scheduled_hook( 'rsssl_every_three_hours' );
+	wp_clear_scheduled_hook( 'rsssl_every_three_hours_hook' );
 	wp_clear_scheduled_hook( 'rsssl_ssl_process_hook' );
 }
 
