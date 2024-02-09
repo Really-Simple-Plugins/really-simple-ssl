@@ -59,7 +59,7 @@ class rsssl_firewall_manager {
 	 *
 	 * @return void
 	 */
-	public function install() {
+	public function install(): void {
 		if ( ! rsssl_user_can_manage() && ! defined( 'RSSSL_LEARNING_MODE' ) ) {
 			return;
 		}
@@ -95,7 +95,7 @@ class rsssl_firewall_manager {
 	 *
 	 * @return void
 	 */
-	public function uninstall() {
+	public function uninstall(): void {
 		if ( ! rsssl_user_can_manage() ) {
 			return;
 		}
@@ -180,13 +180,14 @@ class rsssl_firewall_manager {
 			return;
 		}
 
-		if ( !$this->is_writable($file)) {
+		if ( !file_exists($file) || $this->is_writable($file)) {
+			// $wp_filesystem = $this->init_file_system();
+			// $result = $wp_filesystem->put_contents($contents, $this->file);
+			file_put_contents( $file, $contents );//phpcs:ignore
+		} else if ( !$this->is_writable($file)) {
 			return;
 		}
 
-		// $wp_filesystem = $this->init_file_system();
-		// $result = $wp_filesystem->put_contents($contents, $this->file);
-		file_put_contents( $file, $contents );//phpcs:ignore
 		//only chmod other files than .htaccess and wpconfig. We leave these as is.
 		if ( strpos($file, 'htaccess') === false || strpos($file, 'wp-config.php') === false ) {
 			chmod( $this->file, 0664 ); //phpcs:ignore
@@ -256,7 +257,7 @@ class rsssl_firewall_manager {
 	 *
 	 * @return string
 	 */
-	private function sanitize_path( $path ) {
+	private function sanitize_path( $path ): string {
 		// prevent path traversal.
 		return str_replace( '../', '/', realpath( sanitize_text_field( $path ) ) );
 	}
@@ -350,7 +351,8 @@ class rsssl_firewall_manager {
 
 		$userIni = ini_get('user_ini.filename');
 		if ($userIni) {
-			$rules +=
+			$rules = array_merge(
+				$rules,
 			array(
 				sprintf('<Files "%s">', addcslashes($userIni, '"')),
 				'<IfModule mod_authz_core.c>' ,
@@ -361,7 +363,7 @@ class rsssl_firewall_manager {
 				'Deny from all',
 				'</IfModule>',
 				'</Files>',
-			);
+			));
 		}
 
 		return implode( "\n", $rules );
@@ -437,7 +439,7 @@ class rsssl_firewall_manager {
 	 *
 	 * @return void
 	 */
-	private function remove_prepend_file_in_wpconfig() {
+	private function remove_prepend_file_in_wpconfig(): void {
 		if ( ! rsssl_user_can_manage() ) {
 			return;
 		}
