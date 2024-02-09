@@ -7,6 +7,7 @@ import FilterData from "../FilterData";
 import Flag from "../../utils/Flag/Flag";
 import AddIpAddressModal from "./AddIpAddressModal";
 import useFields from "../FieldsData";
+import FieldsData from "../FieldsData";
 
 const IpAddressDatatable = (props) => {
     const {
@@ -47,6 +48,7 @@ const IpAddressDatatable = (props) => {
     const [addingIpAddress, setAddingIpAddress] = useState(false);
     const [rowsSelected, setRowsSelected] = useState([]);
     const {fields, fieldAlreadyEnabled, getFieldValue, saveFields} = useFields();
+    const {showSavedSettingsNotice} = FieldsData();
 
     const moduleName = 'rsssl-group-filter-limit_login_attempts_ip_address';
 
@@ -147,43 +149,28 @@ const IpAddressDatatable = (props) => {
     //we convert the data to an array
     let data = Object.values({...IpDataTable.data});
 
-
-    const blockIpAddresses = useCallback(async (data) => {
-        //we check if the data is an array
-        if (Array.isArray(data)) {
-            const ids = data.map((item) => item.id);
-            await updateMultiRow(ids, 'blocked');
-            setRowsSelected([]);
-        } else {
-            await updateRow(data, 'blocked');
-        }
-        await fetchDynamicData('event_log')
-    }, [updateMultiRow, updateRow, fetchDynamicData]);
-
-    const allowIpAddresses = useCallback(async (data) => {
-        //we check if the data is an array
-        if (Array.isArray(data)) {
-            const ids = data.map((item) => item.id);
-            await updateMultiRow(ids, 'allowed');
-            setRowsSelected([]);
-        } else {
-            await updateRow(data, 'allowed');
-        }
-        await fetchDynamicData('event_log')
-    }, [updateMultiRow, updateRow, fetchDynamicData]);
-
     const resetIpAddresses = useCallback(async (data) => {
-        //we check if the data is an array
         if (Array.isArray(data)) {
             const ids = data.map((item) => item.id);
-            await resetMultiRow(ids, dataActions);
-            //we emtry the rowsSelected
+            await resetMultiRow(ids, dataActions).then((response) => {
+                if (response && response.success) {
+                    showSavedSettingsNotice(response.message);
+                } else {
+                    showSavedSettingsNotice(response.message);
+                }
+            });
             setRowsSelected([]);
         } else {
-            await resetRow(data, dataActions);
+            await resetRow(data, dataActions).then((response) => {
+                if (response && response.success) {
+                    showSavedSettingsNotice(response.message);
+                } else {
+                    showSavedSettingsNotice(response.message);
+                }
+            });
         }
-        fetchDynamicData('event_log')
-    }, [resetMultiRow, resetRow, fetchDynamicData]);
+        await fetchDynamicData('event_log')
+    }, [resetMultiRow, resetRow, fetchDynamicData, dataActions]);
 
 
     function generateOptions(status, id) {
@@ -276,6 +263,8 @@ const IpAddressDatatable = (props) => {
         paginationSet = false;
     }
 
+    let debounceTimer;
+
     return (
         <>
             <AddIpAddressModal
@@ -317,11 +306,11 @@ const IpAddressDatatable = (props) => {
                             type="text"
                             className="rsssl-search-bar__input"
                             placeholder={__("Search", "really-simple-ssl")}
-                            disabled={processing}
-                            onKeyUp={(event) => {
-                                if (event.key === 'Enter') {
+                            onKeyUp={event => {
+                                clearTimeout(debounceTimer);
+                                debounceTimer = setTimeout(() => {
                                     handleIpTableSearch(event.target.value, searchableColumns);
-                                }
+                                }, 500);
                             }}
                         />
                     </div>
