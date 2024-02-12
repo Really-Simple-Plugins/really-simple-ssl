@@ -8,6 +8,7 @@ import useMenu from "../../Menu/MenuData";
 import Flag from "../../utils/Flag/Flag";
 import Icon from "../../utils/Icon";
 import useFields from "../FieldsData";
+import SearchBar from "../DynamicDataTable/SearchBar";
 
 const EventLogDataTable = (props) => {
     const {
@@ -183,18 +184,7 @@ const EventLogDataTable = (props) => {
             <div className="rsssl-container">
                 <div></div>
                 {/*Display the search bar*/}
-                <div className="rsssl-search-bar">
-                    <div className="rsssl-search-bar__inner">
-                        <div className="rsssl-search-bar__icon"></div>
-                        <input
-                            type="text"
-                            className="rsssl-search-bar__input"
-                            placeholder={__("Search", "really-simple-ssl")}
-                            disabled={processing}
-                            onChange={event => handleEventTableSearch(event.target.value, searchableColumns)}
-                        />
-                    </div>
-                </div>
+                <SearchBar handleSearch={handleEventTableSearch} searchableColumns={searchableColumns}/>
             </div>
             {/*Display the datatable*/}
             <DataTable

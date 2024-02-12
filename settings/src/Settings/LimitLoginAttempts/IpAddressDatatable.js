@@ -8,6 +8,7 @@ import Flag from "../../utils/Flag/Flag";
 import AddIpAddressModal from "./AddIpAddressModal";
 import useFields from "../FieldsData";
 import FieldsData from "../FieldsData";
+import SearchBar from "../DynamicDataTable/SearchBar";
 
 const IpAddressDatatable = (props) => {
     const {
@@ -299,22 +300,10 @@ const IpAddressDatatable = (props) => {
                 </div>
 
                 {/*Display the search bar*/}
-                <div className="rsssl-search-bar">
-                    <div className="rsssl-search-bar__inner">
-                        <div className="rsssl-search-bar__icon"></div>
-                        <input
-                            type="text"
-                            className="rsssl-search-bar__input"
-                            placeholder={__("Search", "really-simple-ssl")}
-                            onKeyUp={event => {
-                                clearTimeout(debounceTimer);
-                                debounceTimer = setTimeout(() => {
-                                    handleIpTableSearch(event.target.value, searchableColumns);
-                                }, 500);
-                            }}
-                        />
-                    </div>
-                </div>
+                <SearchBar
+                    handleSearch={handleIpTableSearch}
+                    searchableColumns={searchableColumns}
+                />
             </div>
 
             { /*Display the action form what to do with the selected*/}
