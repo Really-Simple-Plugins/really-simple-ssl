@@ -594,7 +594,7 @@ function rsssl_fields( $load_values = true ) {
 				]
 			],
 			'configure_on_activation' => [
-				'condition' => 1,
+				'condition' => 0,
 				[
 					'hsts_subdomains' => true,
 					'hsts_max_age'    => 63072000,
