@@ -1525,6 +1525,88 @@ const CheckboxControl = props => {
 
 /***/ }),
 
+/***/ "./src/Settings/DynamicDataTable/AddButton.js":
+/*!****************************************************!*\
+  !*** ./src/Settings/DynamicDataTable/AddButton.js ***!
+  \****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+
+const AddButton = ({
+  getCurrentFilter,
+  moduleName,
+  handleOpen,
+  processing,
+  blockedText,
+  allowedText
+}) => {
+  let buttonText = getCurrentFilter(moduleName) === 'blocked' ? blockedText : allowedText;
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-add-button"
+  }, (getCurrentFilter(moduleName) === 'blocked' || getCurrentFilter(moduleName) === 'allowed') && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-add-button__inner"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    className: "button button-secondary button-datatable rsssl-add-button__button",
+    onClick: handleOpen,
+    disabled: processing
+  }, buttonText)));
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (AddButton);
+
+/***/ }),
+
+/***/ "./src/Settings/DynamicDataTable/SearchBar.js":
+/*!****************************************************!*\
+  !*** ./src/Settings/DynamicDataTable/SearchBar.js ***!
+  \****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+
+
+
+const SearchBar = ({
+  handleSearch,
+  searchableColumns
+}) => {
+  const [debounceTimer, setDebounceTimer] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
+  const onKeyUp = event => {
+    clearTimeout(debounceTimer);
+    setDebounceTimer(setTimeout(() => {
+      handleSearch(event.target.value, searchableColumns);
+    }, 500));
+  };
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-search-bar"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-search-bar__inner"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-search-bar__icon"
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "text",
+    className: "rsssl-search-bar__input",
+    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Search", "really-simple-ssl"),
+    onKeyUp: onKeyUp
+  })));
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (SearchBar);
+
+/***/ }),
+
 /***/ "./src/Settings/EventLog/EventLogDataTable.js":
 /*!****************************************************!*\
   !*** ./src/Settings/EventLog/EventLogDataTable.js ***!
@@ -1547,6 +1629,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_Flag_Flag__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../utils/Flag/Flag */ "./src/utils/Flag/Flag.js");
 /* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../utils/Icon */ "./src/utils/Icon.js");
 /* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../FieldsData */ "./src/Settings/FieldsData.js");
+/* harmony import */ var _DynamicDataTable_SearchBar__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../DynamicDataTable/SearchBar */ "./src/Settings/DynamicDataTable/SearchBar.js");
+
 
 
 
@@ -1724,19 +1808,10 @@ const EventLogDataTable = props => {
   }
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-container"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-search-bar"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-search-bar__inner"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-search-bar__icon"
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-    type: "text",
-    className: "rsssl-search-bar__input",
-    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Search", "really-simple-ssl"),
-    disabled: processing,
-    onChange: event => handleEventTableSearch(event.target.value, searchableColumns)
-  })))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_2__["default"], {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_DynamicDataTable_SearchBar__WEBPACK_IMPORTED_MODULE_10__["default"], {
+    handleSearch: handleEventTableSearch,
+    searchableColumns: searchableColumns
+  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_2__["default"], {
     columns: columns,
     data: processing ? [] : data,
     dense: true,
@@ -3796,8 +3871,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _IpAddressInput__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./IpAddressInput */ "./src/Settings/LimitLoginAttempts/IpAddressInput.js");
-/* harmony import */ var _Cidr__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Cidr */ "./src/Settings/LimitLoginAttempts/Cidr.js");
-/* harmony import */ var _EventLog_EventLogDataTableStore__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../EventLog/EventLogDataTableStore */ "./src/Settings/EventLog/EventLogDataTableStore.js");
+/* harmony import */ var _EventLog_EventLogDataTableStore__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../EventLog/EventLogDataTableStore */ "./src/Settings/EventLog/EventLogDataTableStore.js");
+/* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../FieldsData */ "./src/Settings/FieldsData.js");
 
 
 
@@ -3814,17 +3889,21 @@ const AddIpAddressModal = props => {
     setIpAddress,
     maskError,
     dataLoaded,
-    addRow,
+    updateRow,
     resetRange
   } = (0,_IpAddressDataTableStore__WEBPACK_IMPORTED_MODULE_2__["default"])();
   const [rangeDisplay, setRangeDisplay] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   const {
     fetchDynamicData
-  } = (0,_EventLog_EventLogDataTableStore__WEBPACK_IMPORTED_MODULE_6__["default"])();
+  } = (0,_EventLog_EventLogDataTableStore__WEBPACK_IMPORTED_MODULE_5__["default"])();
   const [resetFlag, setResetFlag] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  const {
+    showSavedSettingsNotice
+  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_6__["default"])();
+
   //we add a function to handle the range fill
   const handleRangeFill = () => {
-    //we toggle the range displayß
+    //we toggle the range display.
     setRangeDisplay(!rangeDisplay);
   };
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
@@ -3834,11 +3913,17 @@ const AddIpAddressModal = props => {
       fetchCidrData('get_mask_from_range');
     }
   }, [inputRangeValidated]);
-  function handleSubmit() {
+  async function handleSubmit() {
     let status = props.status;
     // we check if statusSelected is not empty
     if (ipAddress && maskError === false) {
-      addRow(ipAddress, status, props.dataActions);
+      await updateRow(ipAddress, status, props.dataActions).then(response => {
+        if (response.success) {
+          showSavedSettingsNotice(response.message);
+        } else {
+          showSavedSettingsNotice(response.message, 'error');
+        }
+      });
       //we clear the input
       resetRange();
       //we close the modal
@@ -3928,6 +4013,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _EventLog_EventLogDataTableStore__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../EventLog/EventLogDataTableStore */ "./src/Settings/EventLog/EventLogDataTableStore.js");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../FieldsData */ "./src/Settings/FieldsData.js");
+
 
 
 
@@ -3937,24 +4024,31 @@ __webpack_require__.r(__webpack_exports__);
 const AddUserModal = props => {
   if (!props.isOpen) return null;
   const {
-    addRow,
-    maskError
+    updateRow
   } = (0,_UserDataTableStore__WEBPACK_IMPORTED_MODULE_2__["default"])();
   const {
     fetchDynamicData
   } = (0,_EventLog_EventLogDataTableStore__WEBPACK_IMPORTED_MODULE_3__["default"])();
   const [user, setUser] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('');
+  const {
+    showSavedSettingsNotice
+  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_5__["default"])();
   async function handleSubmit() {
     let status = props.status;
     // we check if statusSelected is not empty
     if (user !== '') {
-      await addRow(user, status, props.dataActions);
+      await updateRow(user, status, props.dataActions).then(response => {
+        if (response.success) {
+          showSavedSettingsNotice(response.message);
+        } else {
+          showSavedSettingsNotice(response.message, 'error');
+        }
+      });
       //we clear the input
       setUser('');
       await fetchDynamicData('event_log');
-      //we close the modal
-      props.onRequestClose();
     }
+    props.onRequestClose();
   }
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Modal, {
     title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Add User", "really-simple-ssl"),
@@ -4010,79 +4104,6 @@ const AddUserModal = props => {
 
 /***/ }),
 
-/***/ "./src/Settings/LimitLoginAttempts/Cidr.js":
-/*!*************************************************!*\
-  !*** ./src/Settings/LimitLoginAttempts/Cidr.js ***!
-  \*************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _IpAddressDataTableStore__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./IpAddressDataTableStore */ "./src/Settings/LimitLoginAttempts/IpAddressDataTableStore.js");
-/* harmony import */ var _IpAddressInput__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./IpAddressInput */ "./src/Settings/LimitLoginAttempts/IpAddressInput.js");
-
-
-
-
-const Cidr = () => {
-  const [lowestIP, setLowestIP] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("");
-  const [highestIP, setHighestIP] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("");
-  const [validated, setValidated] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
-  const {
-    setIpAddress,
-    validateIpRange,
-    setIpRange
-  } = (0,_IpAddressDataTableStore__WEBPACK_IMPORTED_MODULE_1__["default"])();
-  const cleanupIpAddress = ipAddress => {
-    return ipAddress.replace(/,/g, '.');
-  };
-  const handleLowestIPChange = ip => {
-    setLowestIP(cleanupIpAddress(ip));
-  };
-  const handleHighestIPChange = ip => {
-    setHighestIP(cleanupIpAddress(ip));
-  };
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-ip-address-input"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-ip-address-input__inner"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-ip-address-input__icon"
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_IpAddressInput__WEBPACK_IMPORTED_MODULE_2__["default"], {
-    id: "lowestIP",
-    type: "text",
-    className: "rsssl-ip-address-input__input",
-    value: lowestIP,
-    onChange: e => handleLowestIPChange(e.target.value)
-  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-ip-address-input__inner"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-ip-address-input__icon"
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_IpAddressInput__WEBPACK_IMPORTED_MODULE_2__["default"], {
-    id: "highestIP",
-    type: "text",
-    className: "rsssl-ip-address-input__input",
-    value: highestIP,
-    onChange: e => handleHighestIPChange(e.target.value)
-  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: 'rsssl-container'
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: 'rsssl-container__inner'
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-    className: 'button button--primary',
-    onClick: () => {
-      validateIpRange(lowestIP, highestIP);
-    }
-  }, "Validate")))));
-};
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Cidr);
-
-/***/ }),
-
 /***/ "./src/Settings/LimitLoginAttempts/CountryDataTableStore.js":
 /*!******************************************************************!*\
   !*** ./src/Settings/LimitLoginAttempts/CountryDataTableStore.js ***!
@@ -4115,7 +4136,7 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
   dataActions: {},
   CountryDataTable: [],
   rowCleared: false,
-  fetchCountryData: async (action, dataActions) => {
+  fetchData: async (action, dataActions) => {
     //we check if the processing is already true, if so we return
     set({
       processing: true
@@ -4208,213 +4229,80 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
   /*
   * This function add a new row to the table
   */
-  addRow: async (country, status, dataActions) => {
+  updateRow: async (value, status, dataActions) => {
     set({
       processing: true
     });
+    let data = {
+      value: value,
+      status: status
+    };
     try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('add_country_to_list', {
-        country,
-        status
-      });
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('country_update_row', data);
       // Consider checking the response structure for any specific success or failure signals
       if (response && response.request_success) {
-        await get().fetchCountryData('country_list', dataActions);
+        await get().fetchData('rsssl_limit_login_country', dataActions);
         // Potentially notify the user of success, if needed.
+        return {
+          success: true,
+          message: response.message,
+          response
+        };
       } else {
         // Handle any unsuccessful response if needed.
+        return {
+          success: false,
+          message: response?.message || 'Failed to add country',
+          response
+        };
       }
     } catch (e) {
       console.log(e);
-      // Notify the user of an error.
+      return {
+        success: false,
+        message: 'Error occurred',
+        error: e
+      };
     } finally {
       set({
         processing: false
       });
     }
   },
-  addRowMultiple: async (countries, status, dataActions) => {
+  updateRowRegion: async (value, status, dataActions) => {
     set({
       processing: true
     });
+    let data = {
+      value: value,
+      status: status
+    };
     try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('add_countries_to_list', {
-        countries,
-        status
-      });
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('region_update_row', data);
       // Consider checking the response structure for any specific success or failure signals
       if (response && response.request_success) {
-        await get().fetchCountryData('country_list', dataActions);
+        await get().fetchData('rsssl_limit_login_country', dataActions);
         // Potentially notify the user of success, if needed.
+        return {
+          success: true,
+          message: response.message,
+          response
+        };
       } else {
         // Handle any unsuccessful response if needed.
-      }
-    } catch (e) {
-      console.error(e);
-      // Notify the user of an error.
-    } finally {
-      set({
-        processing: false
-      });
-    }
-  },
-  removeRowMultiple: async (countries, status, dataActions) => {
-    set({
-      processing: true
-    });
-    try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('remove_countries_from_list', {
-        countries,
-        status
-      });
-      // Consider checking the response structure for any specific success or failure signals
-      if (response && response.request_success) {
-        await get().fetchCountryData('country_list', dataActions);
-        // Potentially notify the user of success, if needed.
-      } else {
-        // Handle any unsuccessful response if needed.
-      }
-    } catch (e) {
-      console.error(e);
-      // Notify the user of an error.
-    } finally {
-      set({
-        processing: false
-      });
-    }
-  },
-  removeRow: async (country, status, dataActions) => {
-    set({
-      processing: true
-    });
-    try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('remove_country_from_list', {
-        country,
-        status
-      });
-      // Consider checking the response structure for any specific success or failure signals
-      if (response && response.request_success) {
-        await get().fetchCountryData('country_list', dataActions);
-        // Potentially notify the user of success, if needed.
-      } else {
-        // Handle any unsuccessful response if needed.
+        return {
+          success: false,
+          message: response?.message || 'Failed to add region',
+          response
+        };
       }
     } catch (e) {
       console.log(e);
-      // Notify the user of an error.
-    } finally {
-      set({
-        processing: false
-      });
-    }
-  },
-  addRegion: async (region, status, dataActions) => {
-    try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('add_region_to_list', {
-        region,
-        status
-      });
-      if (response && response.request_success) {
-        // Do any immediate operations here if needed
-        await get().fetchCountryData('country_list', dataActions);
-      } else {
-        console.error("Failed to add region: ", response.message);
-      }
-    } catch (e) {
-      console.error(e);
-    } finally {
-      set({
-        processing: false
-      });
-    }
-  },
-  addRegions: async (regions, status, dataActions) => {
-    try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('add_regions_to_list', {
-        regions,
-        status
-      });
-      if (response && response.request_success) {
-        // Do any immediate operations here if needed
-        await get().fetchCountryData('country_list', dataActions);
-      } else {
-        console.error("Failed to add regions: ", response.message);
-      }
-    } catch (e) {
-      console.error(e);
-    } finally {
-      set({
-        processing: false
-      });
-    }
-  },
-  removeRegion: async (region, status, dataActions) => {
-    set({
-      processing: true
-    });
-    try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('remove_region_from_list', {
-        region,
-        status
-      });
-      // Consider checking the response structure for any specific success or failure signals
-      if (response && response.request_success) {
-        await get().fetchCountryData('country_list', dataActions);
-        // Potentially notify the user of success, if needed.
-      } else {
-        // Handle any unsuccessful response if needed.
-        console.error("Failed to remove region: ", response.message);
-      }
-    } catch (e) {
-      console.error(e);
-      // Notify the user of an error.
-    } finally {
-      set({
-        processing: false
-      });
-    }
-  },
-  removeRegions: async (regions, status, dataActions) => {
-    set({
-      processing: true
-    });
-    try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('remove_regions_from_list', {
-        regions,
-        status
-      });
-      // Consider checking the response structure for any specific success or failure signals
-      if (response && response.request_success) {
-        // Potentially notify the user of success, if needed.
-        await get().fetchCountryData('country_list', dataActions);
-      } else {
-        // Handle any unsuccessful response if needed.
-        console.error("Failed to remove regions: ", response.message);
-      }
-    } catch (e) {
-      console.error(e);
-      // Notify the user of an error.
-    } finally {
-      set({
-        processing: false
-      });
-    }
-  },
-  updateMultiRow: async (ids, status, dataActions) => {
-    set({
-      processing: true
-    });
-    try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('update_multi_row', {
-        ids,
-        status
-      });
-      //now we set the EventLog
-      if (response) {
-        await get().fetchCountryData('country_list', dataActions);
-      }
-    } catch (e) {
-      console.log(e);
+      return {
+        success: false,
+        message: 'Error occurred',
+        error: e
+      };
     } finally {
       set({
         processing: false
@@ -4426,15 +4314,31 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
       processing: true
     });
     try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('delete_entry', {
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('delete_entries', {
         id
       });
       //now we set the EventLog
-      if (response) {
-        await get().fetchCountryData('country_list', dataActions);
+      if (response && response.success) {
+        await get().fetchData('rsssl_limit_login_country', dataActions);
+        return {
+          success: true,
+          message: response.message,
+          response
+        };
+      } else {
+        return {
+          success: false,
+          message: response?.message || 'Failed to reset country',
+          response
+        };
       }
     } catch (e) {
-      console.log(e);
+      console.error(e);
+      return {
+        success: false,
+        message: 'Error occurred',
+        error: e
+      };
     } finally {
       set({
         processing: false
@@ -4446,15 +4350,32 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
       processing: true
     });
     try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('delete_multi_entries', {
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('delete_entries', {
         ids
       });
       //now we set the EventLog
-      if (response) {
-        await get().fetchCountryData('country_list', dataActions);
+      if (response && response.success) {
+        await get().fetchData('rsssl_limit_login_country', dataActions);
+        return {
+          success: true,
+          message: response.message,
+          response
+        };
+      } else {
+        return {
+          success: false,
+          message: response?.message || 'Failed to reset country',
+          response
+        };
       }
     } catch (e) {
-      console.log(e);
+      console.error(e);
+      return {
+        success: false,
+        message: 'Error occurred',
+        error: e
+      };
+      ß;
     } finally {
       set({
         processing: false
@@ -4486,6 +4407,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_Flag_Flag__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../utils/Flag/Flag */ "./src/utils/Flag/Flag.js");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _DynamicDataTable_SearchBar__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../DynamicDataTable/SearchBar */ "./src/Settings/DynamicDataTable/SearchBar.js");
+
 
 
 
@@ -4500,11 +4423,10 @@ const CountryDatatable = props => {
   const {
     CountryDataTable,
     dataLoaded,
-    fetchCountryData,
+    fetchData,
     processing,
     handleCountryTableFilter,
-    addRow,
-    removeRow,
+    updateRow,
     pagination,
     handleCountryTablePageChange,
     handleCountryTableRowsChange,
@@ -4513,9 +4435,9 @@ const CountryDatatable = props => {
     addRegion,
     removeRegion,
     addRowMultiple,
-    removeRowMultiple,
     resetRow,
     resetMultiRow,
+    updateRowRegion,
     dataActions,
     rowCleared
   } = (0,_CountryDataTableStore__WEBPACK_IMPORTED_MODULE_3__["default"])();
@@ -4571,7 +4493,7 @@ const CountryDatatable = props => {
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     //we make sure the dataActions are changed in the store before we fetch the data
     if (dataActions) {
-      fetchCountryData(field.action, dataActions);
+      fetchData(field.action, dataActions);
     }
   }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, dataActions.currentRowsPerPage, fieldAlreadyEnabled('enable_limited_login_attempts')]);
   let enabled = getFieldValue('enable_limited_login_attempts');
@@ -4618,45 +4540,60 @@ const CountryDatatable = props => {
   }, [removeRegion, getCurrentFilter(moduleName), dataActions]);
   const allowMultiple = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(rows => {
     const ids = rows.map(item => item.id);
-    resetMultiRow(ids, 'blocked', dataActions);
+    resetMultiRow(ids, dataActions).then(response => {
+      if (response && response.success) {
+        showSavedSettingsNotice(response.message);
+      } else {
+        showSavedSettingsNotice(response.message, 'error');
+      }
+    });
   }, [resetMultiRow, getCurrentFilter(moduleName), dataActions]);
   const allowById = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(id => {
-    resetRow(id, 'blocked', dataActions);
+    resetRow(id, dataActions).then(response => {
+      if (response.success) {
+        showSavedSettingsNotice(response.message);
+      }
+    });
   }, [resetRow, getCurrentFilter(moduleName), dataActions]);
   const blockRegionByCode = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(async (code, region = '') => {
     if (Array.isArray(code)) {
       const ids = code.map(item => item.id);
       const regions = code.map(item => item.region);
-      await addRegions(ids, 'blocked', dataActions);
-      let regionsString = regions.join(', ');
-      showSavedSettingsNotice((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)('%s has been blocked', 'really-simple-ssl').replace('%s', regionsString));
-      setRowsSelected([]);
+      regions.ForEach(region => {
+        updateRowRegion(code, 'blocked', dataActions).then(response => {
+          if (response.success) {
+            showSavedSettingsNotice(response.message);
+          } else {
+            showSavedSettingsNotice(response.message, 'error');
+          }
+        });
+      });
     } else {
-      await addRegion(code, 'blocked', dataActions);
-      showSavedSettingsNotice((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)('%s has been blocked', 'really-simple-ssl').replace('%s', region));
+      updateRowRegion(code, 'blocked', dataActions).then(response => {
+        if (response.success) {
+          showSavedSettingsNotice(response.message);
+        } else {
+          showSavedSettingsNotice(response.message, 'error');
+        }
+      });
     }
     await fetchDynamicData('event_log');
   }, [addRegion, getCurrentFilter(moduleName), dataActions]);
-  const allowCountryByCode = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(async code => {
-    if (Array.isArray(code)) {
-      const ids = code.map(item => item.iso2_code);
-      await removeRowMultiple(ids, 'blocked', dataActions);
-      setRowsSelected([]);
-    } else {
-      await removeRow(code, 'blocked', dataActions);
-    }
-    await fetchDynamicData('event_log');
-  }, [removeRow, removeRowMultiple, dataActions, getCurrentFilter(moduleName)]);
   const blockCountryByCode = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(async code => {
     if (Array.isArray(code)) {
       const ids = code.map(item => item.iso2_code);
-      await addRowMultiple(ids, 'blocked', dataActions);
       setRowsSelected([]);
     } else {
-      await addRow(code, 'blocked', dataActions);
+      await updateRow(code, 'blocked', dataActions).then(response => {
+        if (response.success) {
+          showSavedSettingsNotice(response.message);
+        } else {
+          showSavedSettingsNotice(response.message, 'error');
+        }
+      });
     }
     await fetchDynamicData('event_log');
-  }, [addRow, addRowMultiple, dataActions, getCurrentFilter(moduleName)]);
+  }, [updateRow, addRowMultiple, dataActions, getCurrentFilter(moduleName)]);
   const data = {
     ...CountryDataTable.data
   };
@@ -4693,12 +4630,12 @@ const CountryDatatable = props => {
     onClick: () => allowRegionByCode(id, region_name),
     className: "button-secondary"
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("Allow", "really-simple-ssl"))), getCurrentFilter(moduleName) === 'countries' && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, status === 'blocked' ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
-    onClick: () => allowCountryByCode(id),
+    onClick: () => allowById(id),
     className: "button-secondary"
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("Allow", "really-simple-ssl")) : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
     onClick: () => blockCountryByCode(id),
     className: "button-primary"
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("Block", "really-simple-ssl")))), [getCurrentFilter, moduleName, allowById, blockRegionByCode, allowRegionByCode, blockCountryByCode, allowCountryByCode]);
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("Block", "really-simple-ssl")))), [getCurrentFilter, moduleName, allowById, blockRegionByCode, allowRegionByCode, blockCountryByCode]);
   for (const key in data) {
     const dataItem = {
       ...data[key]
@@ -4722,23 +4659,10 @@ const CountryDatatable = props => {
   }
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-container"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-search-bar"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-search-bar__inner"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-search-bar__icon"
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-    type: "text",
-    className: "rsssl-search-bar__input",
-    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("Search", "really-simple-ssl"),
-    disabled: processing,
-    onKeyUp: event => {
-      if (event.key === 'Enter') {
-        handleCountryTableSearch(event.target.value, searchableColumns);
-      }
-    }
-  })))), rowsSelected.length > 0 && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_DynamicDataTable_SearchBar__WEBPACK_IMPORTED_MODULE_8__["default"], {
+    handleSearch: handleCountryTableSearch,
+    searchableColumns: searchableColumns
+  })), rowsSelected.length > 0 && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     style: {
       marginTop: '1em',
       marginBottom: '1em'
@@ -4748,7 +4672,7 @@ const CountryDatatable = props => {
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("You have selected %s rows", "really-simple-ssl").replace('%s', rowsSelected.length)), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-action-buttons"
   }, getCurrentFilter(moduleName) === 'countries' && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
-    onClick: () => allowCountryByCode(rowsSelected)
+    onClick: () => allowById(rowsSelected)
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("Allow", "really-simple-ssl")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
     onClick: () => blockCountryByCode(rowsSelected),
     className: "button-primary"
@@ -4849,7 +4773,7 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
   * This function fetches the data from the server and fills the property IpDataTable
   * Note this function works with the DataTable class on serverside
    */
-  fetchIpData: async (action, dataActions) => {
+  fetchData: async (action, dataActions) => {
     set({
       processing: true
     });
@@ -5033,61 +4957,42 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
   /*
   * This function updates the row only changing the status
    */
-  updateRow: async (id, status, dataActions) => {
-    set({
-      processing: true
-    });
-    try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('ip_update_row', {
-        id,
-        status
-      });
-      //now we set the EventLog
-      if (response && response.request_success) {
-        await get().fetchIpData('ip_list', dataActions);
-      }
-    } catch (e) {
-      console.log(e);
-    } finally {
-      set({
-        processing: false
-      });
-    }
-  },
   /*
-  * This function add a new row to the table
-   */
-  addRow: async (ipAddress, status, dataActions) => {
+  * This function updates the row only changing the status
+  */
+  updateRow: async (value, status, dataActions) => {
     set({
       processing: true
     });
+    let data = {
+      value: value,
+      status: status
+    };
     try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('ip_add_ip_address', {
-        ipAddress,
-        status
-      });
-      // Consider checking the response structure for any specific success or failure signals
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('ip_update_row', data);
       if (response && response.request_success) {
-        await get().fetchIpData('ip_list', dataActions);
-        // Potentially notify the user of success, if needed.
+        await get().fetchData('rsssl_limit_login', dataActions);
+        return {
+          success: true,
+          message: response.message,
+          response
+        };
       } else {
-        // Handle any unsuccessful response if needed.
-        console.log("Failed to add IP address: ", response.message);
-        //we also clear the form
-        set({
-          ipAddress: ''
-        });
+        return {
+          success: false,
+          message: response?.message || 'Failed to add ip',
+          response
+        };
       }
     } catch (e) {
-      console.log(e);
-      // Notify the user of an error.
+      return {
+        success: false,
+        message: 'Error occurred',
+        error: e
+      };
     } finally {
       set({
         processing: false
-      });
-      //we also clear the form
-      set({
-        ipAddress: ''
       });
     }
   },
@@ -5178,10 +5083,6 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
       return (acc << BigInt(16)) + BigInt(segmentValue);
     }, BigInt(0));
   },
-  // ipV6ToNumber: (ip) => {
-  //     return ip.split(":").reduce((acc, cur) => (acc << BigInt(16)) + BigInt(parseInt(cur, 16)), BigInt(0));
-  // },
-
   /**
    * This function validates the ip range, if the lowest is lower than the highest
    * This checks ipv4 and ipv6 addresses
@@ -5264,43 +5165,39 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
       console.log(e);
     }
   },
-  updateMultiRow: async (ids, status, dataActions) => {
-    set({
-      processing: true
-    });
-    try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('ip_update_multi_row', {
-        ids,
-        status
-      });
-      //now we set the EventLog
-      if (response && response.request_success) {
-        await get().fetchIpData('ip_list', dataActions);
-      }
-    } catch (e) {
-      console.log(e);
-    } finally {
-      set({
-        processing: false
-      });
-    }
-  },
   resetRow: async (id, dataActions) => {
     set({
       processing: true
     });
     try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('delete_entry', {
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('delete_entries', {
         id
       });
       //now we set the EventLog
-      if (response && response.request_success) {
-        await get().fetchIpData('ip_list', get().dataActions);
+      if (response && response.success) {
+        await get().fetchData('rsssl_limit_login', dataActions);
+        // Return the success message from the API response.
+        return {
+          success: true,
+          message: response.message,
+          response
+        };
       } else {
-        console.log("Failed to remove IP address: ", response.message);
+        // Return a custom error message or the API response message.
+        return {
+          success: false,
+          message: response?.message || 'Failed to reset ip',
+          response
+        };
       }
     } catch (e) {
-      console.log(e);
+      console.error(e);
+      // Return the caught error with a custom message.
+      return {
+        success: false,
+        message: 'Error occurred',
+        error: e
+      };
     } finally {
       set({
         processing: false
@@ -5312,15 +5209,32 @@ const IpAddressDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(
       processing: true
     });
     try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('delete_multi_entries', {
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('delete_entries', {
         ids
       });
+      console.log(response);
       //now we set the EventLog
-      if (response && response.request_success) {
-        await get().fetchIpData('ip_list', get().dataActions);
+      if (response && response.success) {
+        if (response.success) {
+          await get().fetchData('rsssl_limit_login', dataActions);
+          return {
+            success: true,
+            message: response.message,
+            response
+          };
+        } else return {
+          success: false,
+          message: response?.message || 'Failed to reset ip',
+          response
+        };
       }
     } catch (e) {
-      console.log(e);
+      console.error(e);
+      return {
+        success: false,
+        message: 'Error occurred',
+        error: e
+      };
     } finally {
       set({
         processing: false
@@ -5353,6 +5267,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_Flag_Flag__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../utils/Flag/Flag */ "./src/utils/Flag/Flag.js");
 /* harmony import */ var _AddIpAddressModal__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./AddIpAddressModal */ "./src/Settings/LimitLoginAttempts/AddIpAddressModal.js");
 /* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../FieldsData */ "./src/Settings/FieldsData.js");
+/* harmony import */ var _DynamicDataTable_SearchBar__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../DynamicDataTable/SearchBar */ "./src/Settings/DynamicDataTable/SearchBar.js");
+/* harmony import */ var _DynamicDataTable_AddButton__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../DynamicDataTable/AddButton */ "./src/Settings/DynamicDataTable/AddButton.js");
+
+
+
 
 
 
@@ -5370,7 +5289,7 @@ const IpAddressDatatable = props => {
     dataActions,
     handleIpTableRowsChange,
     updateMultiRow,
-    fetchIpData,
+    fetchData,
     handleIpTableSort,
     handleIpTablePageChange,
     handleIpTableSearch,
@@ -5405,6 +5324,9 @@ const IpAddressDatatable = props => {
     getFieldValue,
     saveFields
   } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_8__["default"])();
+  const {
+    showSavedSettingsNotice
+  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_8__["default"])();
   const moduleName = 'rsssl-group-filter-limit_login_attempts_ip_address';
   const buildColumn = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(column => ({
     name: column.name,
@@ -5435,7 +5357,7 @@ const IpAddressDatatable = props => {
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     //we make sure the dataActions are changed in the store before we fetch the data
     if (dataActions) {
-      fetchIpData(field.action, dataActions);
+      fetchData(field.action, dataActions);
     }
   }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, dataActions.currentRowsPerPage, fieldAlreadyEnabled('enable_limited_login_attempts')]);
   const customStyles = {
@@ -5497,40 +5419,28 @@ const IpAddressDatatable = props => {
   let data = Object.values({
     ...IpDataTable.data
   });
-  const blockIpAddresses = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(async data => {
-    //we check if the data is an array
-    if (Array.isArray(data)) {
-      const ids = data.map(item => item.id);
-      await updateMultiRow(ids, 'blocked');
-      setRowsSelected([]);
-    } else {
-      await updateRow(data, 'blocked');
-    }
-    await fetchDynamicData('event_log');
-  }, [updateMultiRow, updateRow, fetchDynamicData]);
-  const allowIpAddresses = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(async data => {
-    //we check if the data is an array
-    if (Array.isArray(data)) {
-      const ids = data.map(item => item.id);
-      await updateMultiRow(ids, 'allowed');
-      setRowsSelected([]);
-    } else {
-      await updateRow(data, 'allowed');
-    }
-    await fetchDynamicData('event_log');
-  }, [updateMultiRow, updateRow, fetchDynamicData]);
   const resetIpAddresses = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(async data => {
-    //we check if the data is an array
     if (Array.isArray(data)) {
       const ids = data.map(item => item.id);
-      await resetMultiRow(ids, dataActions);
-      //we emtry the rowsSelected
+      await resetMultiRow(ids, dataActions).then(response => {
+        if (response && response.success) {
+          showSavedSettingsNotice(response.message);
+        } else {
+          showSavedSettingsNotice(response.message);
+        }
+      });
       setRowsSelected([]);
     } else {
-      await resetRow(data, dataActions);
+      await resetRow(data, dataActions).then(response => {
+        if (response && response.success) {
+          showSavedSettingsNotice(response.message);
+        } else {
+          showSavedSettingsNotice(response.message);
+        }
+      });
     }
-    fetchDynamicData('event_log');
-  }, [resetMultiRow, resetRow, fetchDynamicData]);
+    await fetchDynamicData('event_log');
+  }, [resetMultiRow, resetRow, fetchDynamicData, dataActions]);
   function generateOptions(status, id) {
     //if the there is no id we set it to new
     if (!id) {
@@ -5599,6 +5509,7 @@ const IpAddressDatatable = props => {
   if (typeof pagination === 'undefined') {
     paginationSet = false;
   }
+  let debounceTimer;
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_AddIpAddressModal__WEBPACK_IMPORTED_MODULE_7__["default"], {
     isOpen: addingIpAddress,
     onRequestClose: handleClose,
@@ -5608,31 +5519,17 @@ const IpAddressDatatable = props => {
     dataActions: dataActions
   }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-container"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-add-button"
-  }, (getCurrentFilter(moduleName) === 'blocked' || getCurrentFilter(moduleName) === 'allowed') && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-add-button__inner"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-    className: "button button-secondary button-datatable rsssl-add-button__button",
-    onClick: handleOpen,
-    disabled: processing
-  }, getCurrentFilter(moduleName) === 'blocked' && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Block IP Address", "really-simple-ssl")), getCurrentFilter(moduleName) === 'allowed' && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Trust IP Address", "really-simple-ssl"))))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-search-bar"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-search-bar__inner"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-search-bar__icon"
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-    type: "text",
-    className: "rsssl-search-bar__input",
-    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Search", "really-simple-ssl"),
-    disabled: processing,
-    onKeyUp: event => {
-      if (event.key === 'Enter') {
-        handleIpTableSearch(event.target.value, searchableColumns);
-      }
-    }
-  })))), rowsSelected.length > 0 && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_DynamicDataTable_AddButton__WEBPACK_IMPORTED_MODULE_10__["default"], {
+    getCurrentFilter: getCurrentFilter,
+    moduleName: moduleName,
+    handleOpen: handleOpen,
+    processing: processing,
+    blockedText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Block IP Address", "really-simple-ssl"),
+    allowedText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Trust IP Address", "really-simple-ssl")
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_DynamicDataTable_SearchBar__WEBPACK_IMPORTED_MODULE_9__["default"], {
+    handleSearch: handleIpTableSearch,
+    searchableColumns: searchableColumns
+  })), rowsSelected.length > 0 && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     style: {
       marginTop: '1em',
       marginBottom: '1em'
@@ -5776,7 +5673,7 @@ const UserDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set,
   dataActions: {},
   UserDataTable: [],
   rowCleared: false,
-  fetchUserData: async (action, dataActions) => {
+  fetchData: async (action, dataActions) => {
     //we check if the processing is already true, if so we return
     set({
       processing: true
@@ -5876,73 +5773,38 @@ const UserDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set,
     }));
   },
   /*
-  * This function add a new row to the table
-  */
-  addRow: async (user, status, dataActions) => {
-    set({
-      processing: true
-    });
-    try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('user_add_user', {
-        user,
-        status
-      });
-      // Consider checking the response structure for any specific success or failure signals
-      if (response && response.request_success) {
-        await get().fetchUserData('user_list', dataActions);
-        // Potentially notify the user of success, if needed.
-      } else {
-        // Handle any unsuccessful response if needed.
-        console.log("Failed to add User: ", response.message);
-      }
-    } catch (e) {
-      console.log(e);
-      // Notify the user of an error.
-    } finally {
-      set({
-        processing: false
-      });
-    }
-  },
-  /*
   * This function updates the row only changing the status
   */
-  updateRow: async (id, status, dataActions) => {
+  updateRow: async (value, status, dataActions) => {
     set({
       processing: true
     });
+    let data = {
+      value: value,
+      status: status
+    };
     try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('user_update_row', {
-        id,
-        status
-      });
-      //now we set the EventLog
-      if (response) {
-        await get().fetchUserData('user_list', dataActions);
-      }
-    } catch (e) {
-      console.log(e);
-    } finally {
-      set({
-        processing: false
-      });
-    }
-  },
-  updateMultiRow: async (ids, status, dataActions) => {
-    set({
-      processing: true
-    });
-    try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('user_update_multi_row', {
-        ids,
-        status
-      });
-      //now we set the EventLog
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('user_update_row', data);
       if (response && response.request_success) {
-        await get().fetchUserData('user_list', dataActions);
+        await get().fetchData('rsssl_limit_login_user', dataActions);
+        return {
+          success: true,
+          message: response.message,
+          response
+        };
+      } else {
+        return {
+          success: false,
+          message: response?.message || 'Failed to add user',
+          response
+        };
       }
     } catch (e) {
-      console.log(e);
+      return {
+        success: false,
+        message: 'Error occurred',
+        error: e
+      };
     } finally {
       set({
         processing: false
@@ -5954,15 +5816,34 @@ const UserDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set,
       processing: true
     });
     try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('delete_entry', {
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('delete_entries', {
         id
       });
       //now we set the EventLog
-      if (response) {
-        await get().fetchUserData('user_list', dataActions);
+      if (response && response.success) {
+        await get().fetchData('rsssl_limit_login_user', dataActions);
+        // Return the success message from the API response.
+        return {
+          success: true,
+          message: response.message,
+          response
+        };
+      } else {
+        // Return a custom error message or the API response message.
+        return {
+          success: false,
+          message: response?.message || 'Failed to reset user',
+          response
+        };
       }
     } catch (e) {
-      console.log(e);
+      console.error(e);
+      // Return the caught error with a custom message.
+      return {
+        success: false,
+        message: 'Error occurred',
+        error: e
+      };
     } finally {
       set({
         processing: false
@@ -5974,15 +5855,32 @@ const UserDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set,
       processing: true
     });
     try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('delete_multi_entries', {
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('delete_entries', {
         ids
       });
+      console.error(response);
       //now we set the EventLog
-      if (response) {
-        await get().fetchUserData('user_list', dataActions);
+      if (response && response.success) {
+        if (response.success) {
+          await get().fetchUserData('rsssl_limit_login_user', dataActions);
+          return {
+            success: true,
+            message: response.message,
+            response
+          };
+        } else return {
+          success: false,
+          message: response?.message || 'Failed to reset user',
+          response
+        };
       }
     } catch (e) {
-      console.log(e);
+      console.error(e);
+      return {
+        success: false,
+        message: 'Error occurred',
+        error: e
+      };
     } finally {
       set({
         processing: false
@@ -6017,6 +5915,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _AddUserModal__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./AddUserModal */ "./src/Settings/LimitLoginAttempts/AddUserModal.js");
 /* harmony import */ var _EventLog_EventLogDataTableStore__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../EventLog/EventLogDataTableStore */ "./src/Settings/EventLog/EventLogDataTableStore.js");
 /* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../FieldsData */ "./src/Settings/FieldsData.js");
+/* harmony import */ var _DynamicDataTable_SearchBar__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../DynamicDataTable/SearchBar */ "./src/Settings/DynamicDataTable/SearchBar.js");
+/* harmony import */ var _DynamicDataTable_AddButton__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../DynamicDataTable/AddButton */ "./src/Settings/DynamicDataTable/AddButton.js");
+
+
+
 
 
 
@@ -6033,7 +5936,7 @@ const UserDatatable = props => {
   const {
     UserDataTable,
     dataLoaded,
-    fetchUserData,
+    fetchData,
     processing,
     handleUserTableFilter,
     handleUserTablePageChange,
@@ -6048,6 +5951,9 @@ const UserDatatable = props => {
     updateRow,
     rowCleared
   } = (0,_UserDataTableStore__WEBPACK_IMPORTED_MODULE_3__["default"])();
+  const {
+    showSavedSettingsNotice
+  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_9__["default"])();
   const {
     DynamicDataTable,
     fetchDynamicData
@@ -6100,7 +6006,7 @@ const UserDatatable = props => {
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     //we make sure the dataActions are changed in the store before we fetch the data
     if (dataActions) {
-      fetchUserData(field.action, dataActions);
+      fetchData(field.action, dataActions);
     }
   }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, dataActions.currentRowsPerPage, fieldAlreadyEnabled('enable_limited_login_attempts')]);
   let enabled = getFieldValue('enable_limited_login_attempts');
@@ -6141,33 +6047,25 @@ const UserDatatable = props => {
       value: item[0]
     };
   });
-  const blockUsers = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(async data => {
-    if (Array.isArray(data)) {
-      const ids = data.map(item => item.id);
-      await updateMultiRow(ids, 'blocked');
-      setRowsSelected([]);
-    } else {
-      await updateRow(data, 'blocked');
-    }
-    await fetchDynamicData('event_log');
-  }, [updateMultiRow, updateRow, fetchDynamicData]);
-  const allowUsers = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(async data => {
-    if (Array.isArray(data)) {
-      const ids = data.map(item => item.id);
-      await updateMultiRow(ids, 'allowed');
-      setRowsSelected([]);
-    } else {
-      await updateRow(data, 'allowed');
-    }
-    await fetchDynamicData('event_log');
-  }, [updateMultiRow, updateRow, fetchDynamicData]);
   const resetUsers = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(async data => {
     if (Array.isArray(data)) {
       const ids = data.map(item => item.id);
-      await resetMultiRow(ids, dataActions);
+      await resetMultiRow(ids, dataActions).then(response => {
+        if (response && response.success) {
+          showSavedSettingsNotice(response.message);
+        } else {
+          showSavedSettingsNotice(response.message, 'error');
+        }
+      });
       setRowsSelected([]);
     } else {
-      await resetRow(data, dataActions);
+      await resetRow(data, dataActions).then(response => {
+        if (response && response.success) {
+          showSavedSettingsNotice(response.message);
+        } else {
+          showSavedSettingsNotice(response.message);
+        }
+      });
     }
     await fetchDynamicData('event_log');
   }, [resetMultiRow, resetRow, fetchDynamicData, dataActions]);
@@ -6192,7 +6090,7 @@ const UserDatatable = props => {
       resetUsers(id);
     },
     className: "button-red"
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Delete", "really-simple-ssl"))), [getCurrentFilter(moduleName), moduleName, resetUsers, blockUsers, allowUsers]);
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Delete", "really-simple-ssl"))), [getCurrentFilter(moduleName), moduleName, resetUsers]);
 
   //we convert the data to an array
   let data = {
@@ -6202,6 +6100,7 @@ const UserDatatable = props => {
     let dataItem = {
       ...data[key]
     };
+    //we log the dataItem
     //we add the action buttons
     dataItem.action = generateActionButtons(dataItem.id);
     dataItem.status = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)(dataItem.status = dataItem.status.charAt(0).toUpperCase() + dataItem.status.slice(1), 'really-simple-ssl');
@@ -6220,31 +6119,17 @@ const UserDatatable = props => {
     dataActions: dataActions
   }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-container"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-add-button"
-  }, (getCurrentFilter(moduleName) === 'blocked' || getCurrentFilter(moduleName) === 'allowed') && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-add-button__inner"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-    className: "button button-secondary rsssl-add-button__button",
-    disabled: processing,
-    onClick: handleOpen
-  }, getCurrentFilter(moduleName) === 'blocked' && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Block username", "really-simple-ssl")), getCurrentFilter(moduleName) === 'allowed' && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Trust username", "really-simple-ssl"))))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-search-bar"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-search-bar__inner"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-search-bar__icon"
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-    type: "text",
-    className: "rsssl-search-bar__input",
-    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Search", "really-simple-ssl"),
-    disabled: processing,
-    onKeyUp: event => {
-      if (event.key === 'Enter') {
-        handleUserTableSearch(event.target.value, searchableColumns);
-      }
-    }
-  })))), rowsSelected.length > 0 && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_DynamicDataTable_AddButton__WEBPACK_IMPORTED_MODULE_11__["default"], {
+    getCurrentFilter: getCurrentFilter,
+    moduleName: moduleName,
+    handleOpen: handleOpen,
+    processing: processing,
+    blockedText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Block Username", "really-simple-ssl"),
+    allowedText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Trust Username", "really-simple-ssl")
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_DynamicDataTable_SearchBar__WEBPACK_IMPORTED_MODULE_10__["default"], {
+    handleSearch: handleUserTableSearch,
+    searchableColumns: searchableColumns
+  })), rowsSelected.length > 0 && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     style: {
       marginTop: '1em',
       marginBottom: '1em'
@@ -24812,4 +24697,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.810b54058db9df350457.js.map
+//# sourceMappingURL=src_Settings_Field_js.8105da0b59a56c281557.js.map
