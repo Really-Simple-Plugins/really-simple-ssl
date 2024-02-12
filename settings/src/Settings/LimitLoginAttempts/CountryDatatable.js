@@ -7,6 +7,7 @@ import FilterData from "../FilterData";
 import Flag from "../../utils/Flag/Flag";
 import { __ } from '@wordpress/i18n';
 import useFields from "../FieldsData";
+import SearchBar from "../DynamicDataTable/SearchBar";
 
 const CountryDatatable = (props) => {
     const {
@@ -26,6 +27,7 @@ const CountryDatatable = (props) => {
         addRowMultiple,
         resetRow,
         resetMultiRow,
+        updateRowRegion,
         dataActions,
         rowCleared,
     } = CountryDataTableStore();
@@ -166,33 +168,30 @@ const CountryDatatable = (props) => {
         if (Array.isArray(code)) {
             const ids = code.map(item => item.id);
             const regions = code.map(item => item.region);
-            await addRegions(ids, 'blocked', dataActions);
-            let regionsString = regions.join(', ');
-            showSavedSettingsNotice(__('%s has been blocked', 'really-simple-ssl')
-                .replace('%s',regionsString));
-            setRowsSelected([]);
+            regions.ForEach((region) => {
+                updateRowRegion(code, 'blocked', dataActions).then(
+                    (response) => {
+                        if (response.success) {
+                            showSavedSettingsNotice(response.message );
+                        } else {
+                            showSavedSettingsNotice(response.message, 'error');
+                        }
+                    });
+            });
         } else {
-            await addRegion(code, 'blocked', dataActions);
-            showSavedSettingsNotice(__('%s has been blocked', 'really-simple-ssl')
-                .replace('%s',region));
+            updateRowRegion(code, 'blocked', dataActions).then(
+                (response) => {
+                    if (response.success) {
+                        showSavedSettingsNotice(response.message );
+                    } else {
+                        showSavedSettingsNotice(response.message, 'error');
+                    }
+                });
         }
 
         await fetchDynamicData('event_log');
 
     }, [addRegion, getCurrentFilter(moduleName), dataActions]);
-
-    // const allowCountryByCode = useCallback(async (code) => {
-    //     if (Array.isArray(code)) {
-    //         const ids = code.map(item => item.iso2_code);
-    //         await removeRowMultiple(ids, 'blocked', dataActions );
-    //         setRowsSelected([]);
-    //     } else {
-    //         await removeRow(code, 'blocked', dataActions);
-    //     }
-    //
-    //     await fetchDynamicData('event_log');
-    //
-    // }, [removeRow, removeRowMultiple, dataActions, getCurrentFilter(moduleName)]);
 
     const blockCountryByCode = useCallback(async (code) => {
         if (Array.isArray(code)) {
@@ -301,29 +300,13 @@ const CountryDatatable = (props) => {
         paginationSet = false;
     }
 
-
     return (
         <>
             <div className="rsssl-container">
                 <div>
                     {/* reserved for left side buttons */}
                 </div>
-                <div className="rsssl-search-bar">
-                    <div className="rsssl-search-bar__inner">
-                        <div className="rsssl-search-bar__icon"></div>
-                        <input
-                            type="text"
-                            className="rsssl-search-bar__input"
-                            placeholder={__("Search", "really-simple-ssl")}
-                            disabled={processing}
-                            onKeyUp={event => {
-                                if (event.key === 'Enter') {
-                                    handleCountryTableSearch(event.target.value, searchableColumns);
-                                }
-                            }}
-                         />
-                    </div>
-                </div>
+                <SearchBar handleSearch={handleCountryTableSearch} searchableColumns={searchableColumns} />
             </div>
             {rowsSelected.length > 0 && (
                 <div

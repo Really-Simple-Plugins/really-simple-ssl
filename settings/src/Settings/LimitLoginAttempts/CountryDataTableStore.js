@@ -113,72 +113,29 @@ const CountryDataTableStore = create((set, get) => ({
             set({processing: false});
         }
     },
-
-    addRegion: async (region, status, dataActions) => {
-        try {
-            const response = await rsssl_api.doAction('add_region_to_list', {region, status});
-            if (response && response.request_success) {
-                // Do any immediate operations here if needed
-                await get().fetchData('rsssl_limit_login_country', dataActions);
-            } else {
-                console.error("Failed to add region: ", response.message);
-            }
-        } catch (e) {
-            console.error(e);
-        } finally {
-            set({processing: false});
-        }
-    },
-    addRegions: async (regions, status, dataActions) => {
-        try {
-            const response = await rsssl_api.doAction('add_regions_to_list', {regions, status});
-            if (response && response.request_success) {
-                // Do any immediate operations here if needed
-                await get().fetchData('rsssl_limit_login_country', dataActions);
-            } else {
-                console.error("Failed to add regions: ", response.message);
-            }
-        } catch (e) {
-            console.error(e);
-        } finally {
-            set({processing: false});
-        }
-
-    },
-    removeRegion: async (region, status, dataActions) => {
+    updateRowRegion: async (value, status, dataActions) => {
         set({processing: true});
+        let data = {
+            value: value,
+            status: status
+        };
         try {
-            const response = await rsssl_api.doAction('remove_region_from_list', {region, status});
+            const response = await rsssl_api.doAction(
+                'region_update_row',
+                data
+            );
             // Consider checking the response structure for any specific success or failure signals
             if (response && response.request_success) {
                 await get().fetchData('rsssl_limit_login_country', dataActions);
                 // Potentially notify the user of success, if needed.
+                return { success: true, message: response.message, response };
             } else {
                 // Handle any unsuccessful response if needed.
-                console.error("Failed to remove region: ", response.message);
+                return { success: false, message: response?.message || 'Failed to add region', response };
             }
         } catch (e) {
-            console.error(e);
-            // Notify the user of an error.
-        } finally {
-            set({processing: false});
-        }
-    },
-    removeRegions: async (regions, status, dataActions) => {
-        set({processing: true});
-        try {
-            const response = await rsssl_api.doAction('remove_regions_from_list', {regions, status});
-            // Consider checking the response structure for any specific success or failure signals
-            if (response && response.request_success) {
-                // Potentially notify the user of success, if needed.
-                await get().fetchData('rsssl_limit_login_country', dataActions);
-            } else {
-                // Handle any unsuccessful response if needed.
-                console.error("Failed to remove regions: ", response.message);
-            }
-        } catch (e) {
-            console.error(e);
-            // Notify the user of an error.
+            console.log(e);
+            return { success: false, message: 'Error occurred', error: e };
         } finally {
             set({processing: false});
         }

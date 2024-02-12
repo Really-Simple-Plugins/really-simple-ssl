@@ -11,6 +11,7 @@ import AddUserModal from "./AddUserModal";
 import EventLogDataTableStore from "../EventLog/EventLogDataTableStore";
 import useFields from "../FieldsData";
 import FieldsData from "../FieldsData";
+import SearchBar from "../DynamicDataTable/SearchBar";
 
 const UserDatatable = (props) => {
     const {
@@ -197,8 +198,6 @@ if (typeof pagination === 'undefined') {
     paginationSet = false;
 }
 
-    let debounceTimer;
-
 return (
     <>
         <AddUserModal
@@ -231,22 +230,7 @@ return (
                 )}
             </div>
             {/*Display the search bar*/}
-            <div className="rsssl-search-bar">
-                <div className="rsssl-search-bar__inner">
-                    <div className="rsssl-search-bar__icon"></div>
-                    <input
-                        type="text"
-                        className="rsssl-search-bar__input"
-                        placeholder={__("Search", "really-simple-ssl")}
-                        onKeyUp={event => {
-                            clearTimeout(debounceTimer);
-                            debounceTimer = setTimeout(() => {
-                                handleUserTableSearch(event.target.value, searchableColumns);
-                            }, 500);
-                        }}
-                    />
-                </div>
-            </div>
+            <SearchBar handleSearch={handleUserTableSearch} searchableColumns={searchableColumns}/>
         </div>
         { /*Display the action form what to do with the selected*/}
         {rowsSelected.length > 0 && (

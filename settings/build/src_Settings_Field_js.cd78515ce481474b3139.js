@@ -1525,6 +1525,51 @@ const CheckboxControl = props => {
 
 /***/ }),
 
+/***/ "./src/Settings/DynamicDataTable/SearchBar.js":
+/*!****************************************************!*\
+  !*** ./src/Settings/DynamicDataTable/SearchBar.js ***!
+  \****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+
+
+
+const SearchBar = ({
+  handleSearch,
+  searchableColumns
+}) => {
+  const [debounceTimer, setDebounceTimer] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
+  const onKeyUp = event => {
+    clearTimeout(debounceTimer);
+    setDebounceTimer(setTimeout(() => {
+      handleSearch(event.target.value, searchableColumns);
+    }, 500));
+  };
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-search-bar"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-search-bar__inner"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-search-bar__icon"
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "text",
+    className: "rsssl-search-bar__input",
+    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Search", "really-simple-ssl"),
+    onKeyUp: onKeyUp
+  })));
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (SearchBar);
+
+/***/ }),
+
 /***/ "./src/Settings/EventLog/EventLogDataTable.js":
 /*!****************************************************!*\
   !*** ./src/Settings/EventLog/EventLogDataTable.js ***!
@@ -4194,92 +4239,40 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
       });
     }
   },
-  addRegion: async (region, status, dataActions) => {
-    try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('add_region_to_list', {
-        region,
-        status
-      });
-      if (response && response.request_success) {
-        // Do any immediate operations here if needed
-        await get().fetchData('rsssl_limit_login_country', dataActions);
-      } else {
-        console.error("Failed to add region: ", response.message);
-      }
-    } catch (e) {
-      console.error(e);
-    } finally {
-      set({
-        processing: false
-      });
-    }
-  },
-  addRegions: async (regions, status, dataActions) => {
-    try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('add_regions_to_list', {
-        regions,
-        status
-      });
-      if (response && response.request_success) {
-        // Do any immediate operations here if needed
-        await get().fetchData('rsssl_limit_login_country', dataActions);
-      } else {
-        console.error("Failed to add regions: ", response.message);
-      }
-    } catch (e) {
-      console.error(e);
-    } finally {
-      set({
-        processing: false
-      });
-    }
-  },
-  removeRegion: async (region, status, dataActions) => {
+  updateRowRegion: async (value, status, dataActions) => {
     set({
       processing: true
     });
+    let data = {
+      value: value,
+      status: status
+    };
     try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('remove_region_from_list', {
-        region,
-        status
-      });
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('region_update_row', data);
       // Consider checking the response structure for any specific success or failure signals
       if (response && response.request_success) {
         await get().fetchData('rsssl_limit_login_country', dataActions);
         // Potentially notify the user of success, if needed.
+        return {
+          success: true,
+          message: response.message,
+          response
+        };
       } else {
         // Handle any unsuccessful response if needed.
-        console.error("Failed to remove region: ", response.message);
+        return {
+          success: false,
+          message: response?.message || 'Failed to add region',
+          response
+        };
       }
     } catch (e) {
-      console.error(e);
-      // Notify the user of an error.
-    } finally {
-      set({
-        processing: false
-      });
-    }
-  },
-  removeRegions: async (regions, status, dataActions) => {
-    set({
-      processing: true
-    });
-    try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('remove_regions_from_list', {
-        regions,
-        status
-      });
-      // Consider checking the response structure for any specific success or failure signals
-      if (response && response.request_success) {
-        // Potentially notify the user of success, if needed.
-        await get().fetchData('rsssl_limit_login_country', dataActions);
-      } else {
-        // Handle any unsuccessful response if needed.
-        console.error("Failed to remove regions: ", response.message);
-      }
-    } catch (e) {
-      console.error(e);
-      // Notify the user of an error.
+      console.log(e);
+      return {
+        success: false,
+        message: 'Error occurred',
+        error: e
+      };
     } finally {
       set({
         processing: false
@@ -4384,6 +4377,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_Flag_Flag__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../utils/Flag/Flag */ "./src/utils/Flag/Flag.js");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _DynamicDataTable_SearchBar__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../DynamicDataTable/SearchBar */ "./src/Settings/DynamicDataTable/SearchBar.js");
+
 
 
 
@@ -4412,6 +4407,7 @@ const CountryDatatable = props => {
     addRowMultiple,
     resetRow,
     resetMultiRow,
+    updateRowRegion,
     dataActions,
     rowCleared
   } = (0,_CountryDataTableStore__WEBPACK_IMPORTED_MODULE_3__["default"])();
@@ -4533,30 +4529,26 @@ const CountryDatatable = props => {
     if (Array.isArray(code)) {
       const ids = code.map(item => item.id);
       const regions = code.map(item => item.region);
-      await addRegions(ids, 'blocked', dataActions);
-      let regionsString = regions.join(', ');
-      showSavedSettingsNotice((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)('%s has been blocked', 'really-simple-ssl').replace('%s', regionsString));
-      setRowsSelected([]);
+      regions.ForEach(region => {
+        updateRowRegion(code, 'blocked', dataActions).then(response => {
+          if (response.success) {
+            showSavedSettingsNotice(response.message);
+          } else {
+            showSavedSettingsNotice(response.message, 'error');
+          }
+        });
+      });
     } else {
-      await addRegion(code, 'blocked', dataActions);
-      showSavedSettingsNotice((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)('%s has been blocked', 'really-simple-ssl').replace('%s', region));
+      updateRowRegion(code, 'blocked', dataActions).then(response => {
+        if (response.success) {
+          showSavedSettingsNotice(response.message);
+        } else {
+          showSavedSettingsNotice(response.message, 'error');
+        }
+      });
     }
     await fetchDynamicData('event_log');
   }, [addRegion, getCurrentFilter(moduleName), dataActions]);
-
-  // const allowCountryByCode = useCallback(async (code) => {
-  //     if (Array.isArray(code)) {
-  //         const ids = code.map(item => item.iso2_code);
-  //         await removeRowMultiple(ids, 'blocked', dataActions );
-  //         setRowsSelected([]);
-  //     } else {
-  //         await removeRow(code, 'blocked', dataActions);
-  //     }
-  //
-  //     await fetchDynamicData('event_log');
-  //
-  // }, [removeRow, removeRowMultiple, dataActions, getCurrentFilter(moduleName)]);
-
   const blockCountryByCode = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(async code => {
     if (Array.isArray(code)) {
       const ids = code.map(item => item.iso2_code);
@@ -4637,23 +4629,10 @@ const CountryDatatable = props => {
   }
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-container"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-search-bar"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-search-bar__inner"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-search-bar__icon"
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-    type: "text",
-    className: "rsssl-search-bar__input",
-    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("Search", "really-simple-ssl"),
-    disabled: processing,
-    onKeyUp: event => {
-      if (event.key === 'Enter') {
-        handleCountryTableSearch(event.target.value, searchableColumns);
-      }
-    }
-  })))), rowsSelected.length > 0 && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_DynamicDataTable_SearchBar__WEBPACK_IMPORTED_MODULE_8__["default"], {
+    handleSearch: handleCountryTableSearch,
+    searchableColumns: searchableColumns
+  })), rowsSelected.length > 0 && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     style: {
       marginTop: '1em',
       marginBottom: '1em'
@@ -5916,6 +5895,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _AddUserModal__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./AddUserModal */ "./src/Settings/LimitLoginAttempts/AddUserModal.js");
 /* harmony import */ var _EventLog_EventLogDataTableStore__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../EventLog/EventLogDataTableStore */ "./src/Settings/EventLog/EventLogDataTableStore.js");
 /* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../FieldsData */ "./src/Settings/FieldsData.js");
+/* harmony import */ var _DynamicDataTable_SearchBar__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../DynamicDataTable/SearchBar */ "./src/Settings/DynamicDataTable/SearchBar.js");
+
 
 
 
@@ -6107,7 +6088,6 @@ const UserDatatable = props => {
   if (typeof pagination === 'undefined') {
     paginationSet = false;
   }
-  let debounceTimer;
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_AddUserModal__WEBPACK_IMPORTED_MODULE_7__["default"], {
     isOpen: addingUser,
     onRequestClose: handleClose,
@@ -6125,23 +6105,10 @@ const UserDatatable = props => {
     className: "button button-secondary rsssl-add-button__button",
     disabled: processing,
     onClick: handleOpen
-  }, getCurrentFilter(moduleName) === 'blocked' && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Block username", "really-simple-ssl")), getCurrentFilter(moduleName) === 'allowed' && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Trust username", "really-simple-ssl"))))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-search-bar"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-search-bar__inner"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-search-bar__icon"
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-    type: "text",
-    className: "rsssl-search-bar__input",
-    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Search", "really-simple-ssl"),
-    onKeyUp: event => {
-      clearTimeout(debounceTimer);
-      debounceTimer = setTimeout(() => {
-        handleUserTableSearch(event.target.value, searchableColumns);
-      }, 500);
-    }
-  })))), rowsSelected.length > 0 && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, getCurrentFilter(moduleName) === 'blocked' && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Block username", "really-simple-ssl")), getCurrentFilter(moduleName) === 'allowed' && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Trust username", "really-simple-ssl"))))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_DynamicDataTable_SearchBar__WEBPACK_IMPORTED_MODULE_10__["default"], {
+    handleSearch: handleUserTableSearch,
+    searchableColumns: searchableColumns
+  })), rowsSelected.length > 0 && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     style: {
       marginTop: '1em',
       marginBottom: '1em'
@@ -24709,4 +24676,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.0180c15d8dc82d6759e1.js.map
+//# sourceMappingURL=src_Settings_Field_js.cd78515ce481474b3139.js.map
