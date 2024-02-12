@@ -9,6 +9,7 @@ import AddIpAddressModal from "./AddIpAddressModal";
 import useFields from "../FieldsData";
 import FieldsData from "../FieldsData";
 import SearchBar from "../DynamicDataTable/SearchBar";
+import AddButton from "../DynamicDataTable/AddButton";
 
 const IpAddressDatatable = (props) => {
     const {
@@ -279,25 +280,14 @@ const IpAddressDatatable = (props) => {
             </AddIpAddressModal>
             <div className="rsssl-container">
                 {/*display the add button on left side*/}
-
-                <div className="rsssl-add-button">
-                    {(getCurrentFilter(moduleName) === 'blocked' || getCurrentFilter(moduleName) === 'allowed') && (
-                        <div className="rsssl-add-button__inner">
-                            <button
-                                className="button button-secondary button-datatable rsssl-add-button__button"
-                                onClick={handleOpen}
-                                disabled={processing}
-                            >
-                                {getCurrentFilter(moduleName) === 'blocked' && (
-                                    <>{__("Block IP Address", "really-simple-ssl")}</>
-                                )}
-                                {getCurrentFilter(moduleName) === 'allowed' && (
-                                    <>{__("Trust IP Address", "really-simple-ssl")}</>
-                                )}
-                            </button>
-                        </div>
-                    )}
-                </div>
+                <AddButton
+                    getCurrentFilter={getCurrentFilter}
+                    moduleName={moduleName}
+                    handleOpen={handleOpen}
+                    processing={processing}
+                    blockedText={__("Block IP Address", "really-simple-ssl")}
+                    allowedText={__("Trust IP Address", "really-simple-ssl")}
+                />
 
                 {/*Display the search bar*/}
                 <SearchBar

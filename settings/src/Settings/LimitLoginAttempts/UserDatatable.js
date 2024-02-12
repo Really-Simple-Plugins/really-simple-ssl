@@ -12,6 +12,7 @@ import EventLogDataTableStore from "../EventLog/EventLogDataTableStore";
 import useFields from "../FieldsData";
 import FieldsData from "../FieldsData";
 import SearchBar from "../DynamicDataTable/SearchBar";
+import AddButton from "../DynamicDataTable/AddButton";
 
 const UserDatatable = (props) => {
     const {
@@ -211,24 +212,14 @@ return (
         </AddUserModal>
         <div className="rsssl-container">
             {/*display the add button on left side*/}
-            <div className="rsssl-add-button">
-                {(getCurrentFilter(moduleName) === 'blocked' || getCurrentFilter(moduleName) === 'allowed') && (
-                    <div className="rsssl-add-button__inner">
-                        <button
-                            className="button button-secondary rsssl-add-button__button"
-                            disabled={processing}
-                            onClick={handleOpen}
-                        >
-                            {getCurrentFilter(moduleName) === 'blocked' && (
-                                <>{__("Block username", "really-simple-ssl")}</>
-                            )}
-                            {getCurrentFilter(moduleName) === 'allowed' && (
-                                <>{__("Trust username", "really-simple-ssl")}</>
-                            )}
-                        </button>
-                    </div>
-                )}
-            </div>
+            <AddButton
+                getCurrentFilter={getCurrentFilter}
+                moduleName={moduleName}
+                handleOpen={handleOpen}
+                processing={processing}
+                blockedText={__("Block Username", "really-simple-ssl")}
+                allowedText={__("Trust Username", "really-simple-ssl")}
+            />
             {/*Display the search bar*/}
             <SearchBar handleSearch={handleUserTableSearch} searchableColumns={searchableColumns}/>
         </div>
