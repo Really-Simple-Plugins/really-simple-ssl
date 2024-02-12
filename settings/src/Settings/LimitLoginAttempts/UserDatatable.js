@@ -10,12 +10,15 @@ import AddIpAddressModal from "./AddIpAddressModal";
 import AddUserModal from "./AddUserModal";
 import EventLogDataTableStore from "../EventLog/EventLogDataTableStore";
 import useFields from "../FieldsData";
+import FieldsData from "../FieldsData";
+import SearchBar from "../DynamicDataTable/SearchBar";
+import AddButton from "../DynamicDataTable/AddButton";
 
 const UserDatatable = (props) => {
     const {
         UserDataTable,
         dataLoaded,
-        fetchUserData,
+        fetchData,
         processing,
         handleUserTableFilter,
         handleUserTablePageChange,
@@ -30,7 +33,7 @@ const UserDatatable = (props) => {
         updateRow,
         rowCleared
     } = UserDataTableStore()
-
+    const {showSavedSettingsNotice} = FieldsData();
     const {
         DynamicDataTable,
         fetchDynamicData,
@@ -86,7 +89,7 @@ const UserDatatable = (props) => {
     useEffect(() => {
         //we make sure the dataActions are changed in the store before we fetch the data
         if (dataActions) {
-            fetchUserData(field.action, dataActions)
+            fetchData(field.action, dataActions)
         }
     }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, dataActions.currentRowsPerPage, fieldAlreadyEnabled('enable_limited_login_attempts')]);
 
@@ -128,35 +131,25 @@ const UserDatatable = (props) => {
         return {label: item[1], value: item[0]};
     });
 
-    const blockUsers = useCallback(async (data) => {
-        if (Array.isArray(data)) {
-            const ids = data.map((item) => item.id);
-            await updateMultiRow(ids, 'blocked');
-            setRowsSelected([]);
-        } else {
-            await updateRow(data, 'blocked');
-        }
-        await fetchDynamicData('event_log');
-    }, [updateMultiRow, updateRow, fetchDynamicData]);
-
-    const allowUsers = useCallback(async (data) => {
-        if (Array.isArray(data)) {
-            const ids = data.map((item) => item.id);
-            await updateMultiRow(ids, 'allowed');
-            setRowsSelected([]);
-        } else {
-            await updateRow(data, 'allowed');
-        }
-        await fetchDynamicData('event_log');
-    }, [updateMultiRow, updateRow, fetchDynamicData]);
-
     const resetUsers = useCallback(async (data) => {
         if (Array.isArray(data)) {
             const ids = data.map((item) => item.id);
-            await resetMultiRow(ids, dataActions);
+            await resetMultiRow(ids, dataActions).then((response) => {
+                if (response && response.success) {
+                    showSavedSettingsNotice(response.message);
+                } else {
+                    showSavedSettingsNotice(response.message, 'error');
+                }
+            });
             setRowsSelected([]);
         } else {
-            await resetRow(data, dataActions);
+            await resetRow(data, dataActions).then((response) => {
+                if (response && response.success) {
+                    showSavedSettingsNotice(response.message);
+                } else {
+                    showSavedSettingsNotice(response.message);
+                }
+            });
         }
         await fetchDynamicData('event_log');
     }, [resetMultiRow, resetRow, fetchDynamicData, dataActions]);
@@ -186,7 +179,7 @@ const UserDatatable = (props) => {
                 {__("Delete", "really-simple-ssl")}
             </ActionButton>
         </div>
-    ), [getCurrentFilter(moduleName), moduleName, resetUsers, blockUsers, allowUsers]);
+    ), [getCurrentFilter(moduleName), moduleName, resetUsers]);
 
 
 //we convert the data to an array
@@ -194,6 +187,7 @@ let data = {...UserDataTable.data};
 
 for (const key in data) {
     let dataItem = {...data[key]}
+    //we log the dataItem
     //we add the action buttons
     dataItem.action = generateActionButtons(dataItem.id);
     dataItem.status = __(dataItem.status = dataItem.status.charAt(0).toUpperCase() + dataItem.status.slice(1), 'really-simple-ssl');
@@ -218,41 +212,16 @@ return (
         </AddUserModal>
         <div className="rsssl-container">
             {/*display the add button on left side*/}
-            <div className="rsssl-add-button">
-                {(getCurrentFilter(moduleName) === 'blocked' || getCurrentFilter(moduleName) === 'allowed') && (
-                    <div className="rsssl-add-button__inner">
-                        <button
-                            className="button button-secondary rsssl-add-button__button"
-                            disabled={processing}
-                            onClick={handleOpen}
-                        >
-                            {getCurrentFilter(moduleName) === 'blocked' && (
-                                <>{__("Block username", "really-simple-ssl")}</>
-                            )}
-                            {getCurrentFilter(moduleName) === 'allowed' && (
-                                <>{__("Trust username", "really-simple-ssl")}</>
-                            )}
-                        </button>
-                    </div>
-                )}
-            </div>
+            <AddButton
+                getCurrentFilter={getCurrentFilter}
+                moduleName={moduleName}
+                handleOpen={handleOpen}
+                processing={processing}
+                blockedText={__("Block Username", "really-simple-ssl")}
+                allowedText={__("Trust Username", "really-simple-ssl")}
+            />
             {/*Display the search bar*/}
-            <div className="rsssl-search-bar">
-                <div className="rsssl-search-bar__inner">
-                    <div className="rsssl-search-bar__icon"></div>
-                    <input
-                        type="text"
-                        className="rsssl-search-bar__input"
-                        placeholder={__("Search", "really-simple-ssl")}
-                        disabled={processing}
-                        onKeyUp={event => {
-                            if (event.key === 'Enter') {
-                                handleUserTableSearch(event.target.value, searchableColumns)
-                            }
-                        }}
-                    />
-                </div>
-            </div>
+            <SearchBar handleSearch={handleUserTableSearch} searchableColumns={searchableColumns}/>
         </div>
         { /*Display the action form what to do with the selected*/}
         {rowsSelected.length > 0 && (
