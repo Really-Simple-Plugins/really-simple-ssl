@@ -34,7 +34,7 @@ const GeoDataTableStore = create((set, get) => ({
             }
             set({ rowCleared: true });
         } catch (e) {
-            console.log(e);
+            console.error(e);
         } finally {
             set({processing: false});
             set({rowCleared: false});
@@ -103,7 +103,7 @@ const GeoDataTableStore = create((set, get) => ({
                 return { success: false, message: response?.message || 'Failed to add country', response };
             }
         } catch (e) {
-            console.log(e);
+            console.error(e);
             // Return the caught error with a custom message.
             return { success: false, message: 'Error occurred', error: e };
         } finally {
@@ -128,7 +128,7 @@ const GeoDataTableStore = create((set, get) => ({
                 return { success: false, message: response?.message || 'Failed to remove country', response };
             }
         } catch (e) {
-            console.log(e);
+            console.error(e);
             // Notify the user of an error.
             return { success: false, message: 'Error occurred', error: e };
         } finally {
@@ -153,7 +153,7 @@ const GeoDataTableStore = create((set, get) => ({
                 return { success: false, message: response?.message || 'Failed to add region', response };
             }
         } catch (e) {
-            console.log(e);
+            console.error(e);
             // Notify the user of an error.
             return { success: false, message: 'Error occurred', error: e };
         } finally {
@@ -177,7 +177,7 @@ const GeoDataTableStore = create((set, get) => ({
                 return { success: false, message: response?.message || 'Failed to remove region', response };
             }
         } catch (e) {
-            console.log(e);
+            console.error(e);
             // Notify the user of an error.
             return { success: false, message: 'Error occurred', error: e };
         } finally {

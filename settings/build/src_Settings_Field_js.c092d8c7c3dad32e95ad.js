@@ -2570,7 +2570,7 @@ const GeoDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, 
         rowCleared: true
       });
     } catch (e) {
-      console.log(e);
+      console.error(e);
     } finally {
       set({
         processing: false
@@ -2661,7 +2661,7 @@ const GeoDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, 
         };
       }
     } catch (e) {
-      console.log(e);
+      console.error(e);
       // Return the caught error with a custom message.
       return {
         success: false,
@@ -2701,7 +2701,7 @@ const GeoDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, 
         };
       }
     } catch (e) {
-      console.log(e);
+      console.error(e);
       // Notify the user of an error.
       return {
         success: false,
@@ -2741,7 +2741,7 @@ const GeoDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, 
         };
       }
     } catch (e) {
-      console.log(e);
+      console.error(e);
       // Notify the user of an error.
       return {
         success: false,
@@ -2781,7 +2781,7 @@ const GeoDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, 
         };
       }
     } catch (e) {
-      console.log(e);
+      console.error(e);
       // Notify the user of an error.
       return {
         success: false,
@@ -3016,7 +3016,6 @@ const GeoDatatable = props => {
   const data = {
     ...CountryDataTable.data
   };
-  console.log(getCurrentFilter(moduleName));
   const generateFlag = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)((flag, title) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Flag_Flag__WEBPACK_IMPORTED_MODULE_6__["default"], {
     countryCode: flag,
     style: {
@@ -24686,4 +24685,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.582859ae66bc436df4bc.js.map
+//# sourceMappingURL=src_Settings_Field_js.c092d8c7c3dad32e95ad.js.map
