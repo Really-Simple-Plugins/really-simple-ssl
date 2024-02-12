@@ -7,6 +7,7 @@ import FilterData from "../FilterData";
 import Flag from "../../utils/Flag/Flag";
 import { __ } from '@wordpress/i18n';
 import useFields from "../FieldsData";
+import SearchBar from "../DynamicDataTable/SearchBar";
 
 const GeoDatatable = (props) => {
     const {
@@ -295,22 +296,7 @@ const GeoDatatable = (props) => {
                 <div>
                     {/* reserved for left side buttons */}
                 </div>
-                <div className="rsssl-search-bar">
-                    <div className="rsssl-search-bar__inner">
-                        <div className="rsssl-search-bar__icon"></div>
-                        <input
-                            type="text"
-                            className="rsssl-search-bar__input"
-                            placeholder={__("Search", "really-simple-ssl")}
-                            disabled={processing}
-                            onKeyUp={event => {
-                                if (event.key === 'Enter') {
-                                    handleCountryTableSearch(event.target.value, searchableColumns);
-                                }
-                            }}
-                         />
-                    </div>
-                </div>
+                <SearchBar handleSearch={handleCountryTableSearch} searchableColumns={searchableColumns} />
             </div>
             {rowsSelected.length > 0 && (
                 <div

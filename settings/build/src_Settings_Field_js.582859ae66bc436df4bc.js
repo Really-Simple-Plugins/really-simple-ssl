@@ -2819,6 +2819,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_Flag_Flag__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../utils/Flag/Flag */ "./src/utils/Flag/Flag.js");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _DynamicDataTable_SearchBar__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../DynamicDataTable/SearchBar */ "./src/Settings/DynamicDataTable/SearchBar.js");
+
 
 
 
@@ -3076,23 +3078,10 @@ const GeoDatatable = props => {
   }
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-container"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-search-bar"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-search-bar__inner"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-search-bar__icon"
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-    type: "text",
-    className: "rsssl-search-bar__input",
-    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("Search", "really-simple-ssl"),
-    disabled: processing,
-    onKeyUp: event => {
-      if (event.key === 'Enter') {
-        handleCountryTableSearch(event.target.value, searchableColumns);
-      }
-    }
-  })))), rowsSelected.length > 0 && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_DynamicDataTable_SearchBar__WEBPACK_IMPORTED_MODULE_8__["default"], {
+    handleSearch: handleCountryTableSearch,
+    searchableColumns: searchableColumns
+  })), rowsSelected.length > 0 && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     style: {
       marginTop: '1em',
       marginBottom: '1em'
@@ -24697,4 +24686,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.8105da0b59a56c281557.js.map
+//# sourceMappingURL=src_Settings_Field_js.582859ae66bc436df4bc.js.map
