@@ -130,36 +130,8 @@ const Captcha = ({field, showDisabledWhenSaving = true}) => {
 
     return (
         <>
-            <div>
-                {fully_enabled && enabled_captcha_provider !== 'none' && (
-                    <p>
-                        {__('Captcha verification was completed successfully. If you change the value of the captcha provider, you will need to re-verify the captcha.', 'really-simple-ssl')}
-                    </p>
-                )}
-
-                {!fully_enabled && enabled_captcha_provider !== 'none' && (
-                    <div style={{ marginBottom: '20px' }}>
-                        <h5 style={{fontWeight: 'bold'}}>
-                            {__('Confirm your CAPTCHA keys', 'really-simple-ssl')}
-                        </h5>
-                        <p>
-                            {__('Before saving your changes, please confirm your CAPTCHA keys are correct by completing the CAPTCHA challenge.', 'really-simple-ssl')}
-                        </p>
-                    </div>
-                )}
-            </div>
             {enabled_captcha_provider !== 'none' && !fully_enabled && (
                  <div ref={captchaContainerRef} key={uniqueId} id={uniqueId}></div>
-            )}
-            {!fully_enabled && enabled_captcha_provider !== 'none' && (
-                <div className={'rsssl-warning-block'} style={{color: 'red'}}>
-                    <h5 style={{color: 'red', fontWeight: 'bold'}}>
-                        {__('CAPTCHA Confirmation Required', 'really-simple-ssl')}
-                    </h5>
-                    <p style={{color: 'red'}}>
-                        {__('Click on the CAPTCHA checkbox above to validate your site key and secret key.', 'really-simple-ssl')}
-                    </p>
-                </div>
             )}
         </>
     );

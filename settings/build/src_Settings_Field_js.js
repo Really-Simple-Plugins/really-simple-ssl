@@ -2196,33 +2196,11 @@ const Captcha = ({
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     setUniqueId(generateUniqueId());
   }, [enabled_captcha_provider]);
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, fully_enabled && enabled_captcha_provider !== 'none' && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Captcha verification was completed successfully. If you change the value of the captcha provider, you will need to re-verify the captcha.', 'really-simple-ssl')), !fully_enabled && enabled_captcha_provider !== 'none' && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    style: {
-      marginBottom: '20px'
-    }
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h5", {
-    style: {
-      fontWeight: 'bold'
-    }
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Confirm your CAPTCHA keys', 'really-simple-ssl')), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Before saving your changes, please confirm your CAPTCHA keys are correct by completing the CAPTCHA challenge.', 'really-simple-ssl')))), enabled_captcha_provider !== 'none' && !fully_enabled && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, enabled_captcha_provider !== 'none' && !fully_enabled && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     ref: captchaContainerRef,
     key: uniqueId,
     id: uniqueId
-  }), !fully_enabled && enabled_captcha_provider !== 'none' && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: 'rsssl-warning-block',
-    style: {
-      color: 'red'
-    }
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h5", {
-    style: {
-      color: 'red',
-      fontWeight: 'bold'
-    }
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)('CAPTCHA Confirmation Required', 'really-simple-ssl')), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
-    style: {
-      color: 'red'
-    }
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Click on the CAPTCHA checkbox above to validate your site key and secret key.', 'really-simple-ssl'))));
+  }));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Captcha);
 
