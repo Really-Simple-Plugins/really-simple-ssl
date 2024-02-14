@@ -147,12 +147,6 @@ const Captcha = ({field, showDisabledWhenSaving = true}) => {
                         </p>
                     </div>
                 )}
-
-                {enabled_captcha_provider === 'none' ? (
-                    <p>
-                        {__('Captcha verification is disabled. If you want to enable captcha verification, please select a captcha provider.', 'really-simple-ssl')}
-                    </p>
-                ) : null}
             </div>
             {enabled_captcha_provider !== 'none' && !fully_enabled && (
                  <div ref={captchaContainerRef} key={uniqueId} id={uniqueId}></div>

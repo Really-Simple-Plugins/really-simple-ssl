@@ -2204,7 +2204,7 @@ const Captcha = ({
     style: {
       fontWeight: 'bold'
     }
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Confirm your CAPTCHA keys', 'really-simple-ssl')), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Before saving your changes, please confirm your CAPTCHA keys are correct by completing the CAPTCHA challenge.', 'really-simple-ssl'))), enabled_captcha_provider === 'none' ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Captcha verification is disabled. If you want to enable captcha verification, please select a captcha provider.', 'really-simple-ssl')) : null), enabled_captcha_provider !== 'none' && !fully_enabled && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Confirm your CAPTCHA keys', 'really-simple-ssl')), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Before saving your changes, please confirm your CAPTCHA keys are correct by completing the CAPTCHA challenge.', 'really-simple-ssl')))), enabled_captcha_provider !== 'none' && !fully_enabled && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     ref: captchaContainerRef,
     key: uniqueId,
     id: uniqueId
