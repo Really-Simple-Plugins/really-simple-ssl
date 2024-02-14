@@ -4121,9 +4121,23 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
   processing: false,
   dataLoaded: false,
   pagination: {},
-  dataActions: {},
+  dataActions: {
+    page: 1,
+    pageSize: 10,
+    sortColumn: 'country_name',
+    sortDirection: 'asc',
+    filterColumn: '',
+    filterValue: '',
+    search: '',
+    searchColumns: ['country_name']
+  },
   CountryDataTable: [],
   rowCleared: false,
+  setDataActions: async data => {
+    set((0,immer__WEBPACK_IMPORTED_MODULE_5__.produce)(state => {
+      state.dataActions = data;
+    }));
+  },
   fetchData: async (action, dataActions) => {
     //we check if the processing is already true, if so we return
     set({
@@ -4427,7 +4441,8 @@ const CountryDatatable = props => {
     resetMultiRow,
     updateRowRegion,
     dataActions,
-    rowCleared
+    rowCleared,
+    setDataActions
   } = (0,_CountryDataTableStore__WEBPACK_IMPORTED_MODULE_3__["default"])();
   const {
     showSavedSettingsNotice,
@@ -4472,7 +4487,18 @@ const CountryDatatable = props => {
     }
     setProcessingFilter(processing);
     handleCountryTableFilter('status', currentFilter);
+    console.log(dataActions);
   }, [moduleName, handleCountryTableFilter, getCurrentFilter(moduleName), setSelectedFilter, CountryDatatable, processing]);
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    if (dataActions.filterColumn === 'status') {
+      const {
+        search,
+        searchColumns,
+        ...rest
+      } = dataActions;
+      setDataActions(rest);
+    }
+  }, [dataActions.filterColumn]);
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     setRowsSelected([]);
   }, [CountryDataTable]);
@@ -24685,4 +24711,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.c092d8c7c3dad32e95ad.js.map
+//# sourceMappingURL=src_Settings_Field_js.94125951cd0e6f77aca0.js.map

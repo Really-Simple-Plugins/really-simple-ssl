@@ -30,6 +30,7 @@ const CountryDatatable = (props) => {
         updateRowRegion,
         dataActions,
         rowCleared,
+        setDataActions,
     } = CountryDataTableStore();
 
     const {showSavedSettingsNotice, saveFields} = FieldsData();
@@ -76,7 +77,15 @@ const CountryDatatable = (props) => {
         }
         setProcessingFilter(processing);
         handleCountryTableFilter('status', currentFilter);
+
     }, [moduleName, handleCountryTableFilter, getCurrentFilter(moduleName), setSelectedFilter, CountryDatatable, processing]);
+
+    useEffect(() => {
+        if(dataActions.filterColumn === 'status') {
+            const {search, searchColumns, ...rest} = dataActions;
+            setDataActions(rest);
+        }
+    }, [dataActions.filterColumn])
 
     useEffect(() => {
         setRowsSelected([]);

@@ -11,10 +11,24 @@ const CountryDataTableStore = create((set, get) => ({
     processing: false,
     dataLoaded: false,
     pagination: {},
-    dataActions: {},
+    dataActions: {
+        page: 1,
+        pageSize: 10,
+        sortColumn: 'country_name',
+        sortDirection: 'asc',
+        filterColumn: '',
+        filterValue: '',
+        search: '',
+        searchColumns: ['country_name']
+    },
     CountryDataTable: [],
     rowCleared: false,
-
+    setDataActions: async (data) => {
+        set(produce((state) => {
+                state.dataActions = data;
+            })
+        );
+    },
     fetchData: async (action, dataActions) => {
         //we check if the processing is already true, if so we return
         set({processing: true});
