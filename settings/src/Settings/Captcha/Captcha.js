@@ -11,7 +11,7 @@ function generateUniqueId() {
 }
 
 const Captcha = ({field, showDisabledWhenSaving = true}) => {
-    const {getFieldValue, updateField} = useFields();
+    const {getFieldValue, updateField, saveFields} = useFields();
     const [uniqueId, setUniqueId] = useState(generateUniqueId());
     const captchaContainerRef = useRef(null);
     const [loaded, setLoaded] = useState(false);
@@ -20,6 +20,14 @@ const Captcha = ({field, showDisabledWhenSaving = true}) => {
     const enabled_captcha_provider = getFieldValue('enabled_captcha_provider');
     const fully_enabled = getFieldValue('captcha_fully_enabled');
     const [showCaptcha, setShowCaptcha] = useState(false);
+    const site_key = getFieldValue(`${enabled_captcha_provider}_site_key`);
+    const secret_key = getFieldValue(`${enabled_captcha_provider}secret_key`);
+
+    // if both the secret and site key are not set, we do nothing.
+    if (site_key.length <  35 || secret_key.length < 35) {
+        return (<></>);
+    }
+
 
     // Moved out response handling into a separate function
     const handleCaptchaResponse = (response) => {
@@ -46,6 +54,13 @@ const Captcha = ({field, showDisabledWhenSaving = true}) => {
             document.body.removeChild(script);
         }
     }
+
+    useEffect(() => {
+       // if the value of the enabled_captcha_provider is changed we save the field.
+        saveFields(true, false);
+    }, [enabled_captcha_provider]);
+
+
 
     function unloadCaptcha() {
         const container = captchaContainerRef.current;
@@ -81,7 +96,6 @@ const Captcha = ({field, showDisabledWhenSaving = true}) => {
                 script.async = true;
                 script.defer = true;
 
-                const site_key = getFieldValue(`${enabled_captcha_provider}_site_key`);
                 if (fully_enabled) {
                     return;
                 }
@@ -139,10 +153,12 @@ const Captcha = ({field, showDisabledWhenSaving = true}) => {
                     <div ref={captchaContainerRef} key={uniqueId} id={uniqueId}></div>
                 </div>
             )}
+            {enabled_captcha_provider !== 'none' && !fully_enabled && (
                 <Button isPrimary={true}
                         text={__('validate CAPTCHA', 'really-simple-ssl')}
                         // style={{display: !showCaptcha? 'none': 'block'}}
-                    onClick={() => setShowCaptcha(true)} />
+                    onClick={() => setShowCaptcha(true)} /> )
+            }
         </>
     );
 };

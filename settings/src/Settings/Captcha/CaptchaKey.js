@@ -1,18 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { Icon, TextControl } from '@wordpress/components'; // assuming you're using WordPress components
+import Icon from "../../utils/Icon";
+import useFields from "../FieldsData";
+import {TextControl} from "@wordpress/components"; // assuming you're using WordPress components
 
 const CaptchaKey = ({ field, fields, showDisabledWhenSaving = true }) => {
-    const [captchaVerified, setCaptchaVerified] = useState(false);
-    const [disabled, setDisabled] = useState(false);
-    const [fieldValue, setFieldValue] = useState('');
+    const { fieldAlreadyEnabled, getFieldValue, setChangedField, updateField, saveFields} = useFields();
 
-    useEffect(() => {
-        const captchaStatus = fields.find(field => field.id === 'captcha_fully_enabled').value;
-        setCaptchaVerified(captchaStatus);
-    }, [fields]);
+    let fieldValue = getFieldValue(field.id);
+    let captchaVerified = getFieldValue('captcha_fully_enabled');
 
-    const onChangeHandler = (value) => {
-        setFieldValue(value);
+    // useEffect(() => {
+    //     const captchaStatus = fields.find(field => field.id === 'captcha_fully_enabled').value;
+    //     setCaptchaVerified(captchaStatus);
+    // }, [fields]);
+
+    const onChangeHandler = async (fieldValue) => {
+        setChangedField(field.id, fieldValue);
+        updateField(field.id, fieldValue);
+        await saveFields(true, false);
     }
 
     const labelWrap = (field) => {
@@ -20,31 +25,25 @@ const CaptchaKey = ({ field, fields, showDisabledWhenSaving = true }) => {
         return field.label;
     }
 
-    const highLightClass = ''; // add the conditional logic for highLightClass if necessary
-    const scrollAnchor = React.useRef();  // Using React's useRef hook
-
-    if (field.hidden) {
-        return null;
-    }
-
+    console.log('capcha verfication', typeof Boolean(captchaVerified), Boolean(captchaVerified));
     return (
-        <div className={highLightClass} ref={scrollAnchor} style={{ position: 'relative' }}>
+        <>
             <TextControl
                 required={field.required}
                 placeholder={field.placeholder}
-                disabled={disabled}
                 help={field.comment}
                 label={labelWrap(field)}
-                onChange={onChangeHandler}
+                onChange={(value) => onChangeHandler(value)}
                 value={fieldValue}
             />
 
             <div className="rsssl-email-verified" >
-                {captchaVerified
+                {Boolean(captchaVerified)
                     ? <Icon name='circle-check' color={'green'} />
-                    : <Icon name='circle-times' color={'red'} />}
+                    : <Icon name='circle-times' color={'red'} />
+                }
             </div>
-        </div>
+        </>
     );
 }
 

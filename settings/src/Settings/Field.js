@@ -207,8 +207,13 @@ const Field = (props) => {
     }
 
     if (field.type==='captcha_key') {
+        if (field.hidden) {
+            return <></>;
+        }
         return (
-            <CaptchaKey field={field} fields={props.fields} />
+            <div className={highLightClass} ref={scrollAnchor} style={{position: 'relative'}}>
+                <CaptchaKey field={field} fields={props.fields} />
+            </div>
             )
     }
 

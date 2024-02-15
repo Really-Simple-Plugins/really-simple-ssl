@@ -2090,7 +2090,8 @@ const Captcha = ({
 }) => {
   const {
     getFieldValue,
-    updateField
+    updateField,
+    saveFields
   } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_2__["default"])();
   const [uniqueId, setUniqueId] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(generateUniqueId());
   const captchaContainerRef = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useRef)(null);
@@ -2102,6 +2103,13 @@ const Captcha = ({
   const enabled_captcha_provider = getFieldValue('enabled_captcha_provider');
   const fully_enabled = getFieldValue('captcha_fully_enabled');
   const [showCaptcha, setShowCaptcha] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
+  const site_key = getFieldValue(`${enabled_captcha_provider}_site_key`);
+  const secret_key = getFieldValue(`${enabled_captcha_provider}secret_key`);
+
+  // if both the secret and site key are not set, we do nothing.
+  if (site_key.length < 35 || secret_key.length < 35) {
+    return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null);
+  }
 
   // Moved out response handling into a separate function
   const handleCaptchaResponse = response => {
@@ -2125,6 +2133,10 @@ const Captcha = ({
       document.body.removeChild(script);
     }
   }
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
+    // if the value of the enabled_captcha_provider is changed we save the field.
+    saveFields(true, false);
+  }, [enabled_captcha_provider]);
   function unloadCaptcha() {
     const container = captchaContainerRef.current;
     if (container) {
@@ -2155,7 +2167,6 @@ const Captcha = ({
         script = document.createElement('script');
         script.async = true;
         script.defer = true;
-        const site_key = getFieldValue(`${enabled_captcha_provider}_site_key`);
         if (fully_enabled) {
           return;
         }
@@ -2212,7 +2223,7 @@ const Captcha = ({
     ref: captchaContainerRef,
     key: uniqueId,
     id: uniqueId
-  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.Button, {
+  })), enabled_captcha_provider !== 'none' && !fully_enabled && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.Button, {
     isPrimary: true,
     text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)('validate CAPTCHA', 'really-simple-ssl')
     // style={{display: !showCaptcha? 'none': 'block'}}
@@ -2257,6 +2268,79 @@ const useCaptchaData = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, get
   }
 }));
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useCaptchaData);
+
+/***/ }),
+
+/***/ "./src/Settings/Captcha/CaptchaKey.js":
+/*!********************************************!*\
+  !*** ./src/Settings/Captcha/CaptchaKey.js ***!
+  \********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../utils/Icon */ "./src/utils/Icon.js");
+/* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../FieldsData */ "./src/Settings/FieldsData.js");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__);
+
+
+
+
+ // assuming you're using WordPress components
+
+const CaptchaKey = ({
+  field,
+  fields,
+  showDisabledWhenSaving = true
+}) => {
+  const {
+    fieldAlreadyEnabled,
+    getFieldValue,
+    setChangedField,
+    updateField,
+    saveFields
+  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_2__["default"])();
+  let fieldValue = getFieldValue(field.id);
+  let captchaVerified = getFieldValue('captcha_fully_enabled');
+
+  // useEffect(() => {
+  //     const captchaStatus = fields.find(field => field.id === 'captcha_fully_enabled').value;
+  //     setCaptchaVerified(captchaStatus);
+  // }, [fields]);
+
+  const onChangeHandler = async fieldValue => {
+    setChangedField(field.id, fieldValue);
+    updateField(field.id, fieldValue);
+    await saveFields(true, false);
+  };
+  const labelWrap = field => {
+    // implement label wrap function
+    return field.label;
+  };
+  console.log('capcha verfication', typeof Boolean(captchaVerified), Boolean(captchaVerified));
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.TextControl, {
+    required: field.required,
+    placeholder: field.placeholder,
+    help: field.comment,
+    label: labelWrap(field),
+    onChange: value => onChangeHandler(value),
+    value: fieldValue
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-email-verified"
+  }, Boolean(captchaVerified) ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    name: "circle-check",
+    color: 'green'
+  }) : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    name: "circle-times",
+    color: 'red'
+  })));
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (CaptchaKey);
 
 /***/ }),
 
@@ -2785,6 +2869,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var dompurify__WEBPACK_IMPORTED_MODULE_31___default = /*#__PURE__*/__webpack_require__.n(dompurify__WEBPACK_IMPORTED_MODULE_31__);
 /* harmony import */ var _RolesDropDown__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./RolesDropDown */ "./src/Settings/RolesDropDown.js");
 /* harmony import */ var _Captcha_Captcha__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! ./Captcha/Captcha */ "./src/Settings/Captcha/Captcha.js");
+/* harmony import */ var _Captcha_CaptchaKey__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./Captcha/CaptchaKey */ "./src/Settings/Captcha/CaptchaKey.js");
 
 
 
@@ -2815,6 +2900,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 // import DynamicDataTable from "./DynamicDataTable/DynamicDataTable";
+
 
 
 
@@ -2991,8 +3077,6 @@ const Field = props => {
     })));
   }
   if (field.type === 'captcha_key') {
-    const captchaVerified = props.fields.find(field => field.id === 'captcha_fully_enabled').value;
-    console.log(captchaVerified);
     if (field.hidden) {
       return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null);
     }
@@ -3002,23 +3086,10 @@ const Field = props => {
       style: {
         position: 'relative'
       }
-    }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
-      required: field.required,
-      placeholder: field.placeholder,
-      disabled: disabled,
-      help: field.comment,
-      label: labelWrap(field),
-      onChange: fieldValue => onChangeHandler(fieldValue),
-      value: fieldValue
-    }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-email-verified"
-    }, Boolean(captchaVerified) ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_20__["default"], {
-      name: "circle-check",
-      color: 'green'
-    }) : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_20__["default"], {
-      name: "circle-times",
-      color: 'red'
-    })));
+    }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Captcha_CaptchaKey__WEBPACK_IMPORTED_MODULE_34__["default"], {
+      field: field,
+      fields: props.fields
+    }));
   }
   if (field.type === 'text') {
     //if field.hidden is set, don't show the field
