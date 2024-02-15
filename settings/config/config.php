@@ -199,7 +199,7 @@ function rsssl_fields( $load_values = true ) {
 			'type'         => 'select',
 			'options'      => [
 				'none'      => __( "None", "really-simple-ssl" ),
-				'recaptcha' => __( "reCaptcha", "really-simple-ssl" ),
+				'recaptcha' => __( "reCaptcha v2", "really-simple-ssl" ),
 				'hcaptcha'  => __( "hCaptcha", "really-simple-ssl" ),
 			],
 			'label'        => __( "Captcha provider", 'really-simple-ssl' ),
