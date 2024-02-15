@@ -37,6 +37,7 @@ import EventLogDataTable from "./EventLog/EventLogDataTable";
 import DOMPurify from "dompurify";
 import RolesDropDown from "./RolesDropDown";
 import Captcha from "./Captcha/Captcha";
+import CaptchaKey from "./Captcha/CaptchaKey";
 
 const Field = (props) => {
     let scrollAnchor = React.createRef();
@@ -206,31 +207,9 @@ const Field = (props) => {
     }
 
     if (field.type==='captcha_key') {
-        const captchaVerified = props.fields.find(field => field.id === 'captcha_fully_enabled').value;
-        console.log(captchaVerified);
-        if ( field.hidden ) {
-            return (
-                <></>
-            );
-        }
         return (
-            <div className={highLightClass} ref={scrollAnchor} style={{position: 'relative'}}>
-                <TextControl
-                    required={ field.required }
-                    placeholder={ field.placeholder }
-                    disabled={ disabled }
-                    help={ field.comment }
-                    label={labelWrap(field)}
-                    onChange={ ( fieldValue ) => onChangeHandler(fieldValue) }
-                    value= { fieldValue }
-                />
-                    <div className="rsssl-email-verified" >
-                    {Boolean(captchaVerified)
-                        ? <Icon name='circle-check' color={'green'} />
-                        : <Icon name='circle-times' color={'red'} />}
-                </div>
-            </div>
-        );
+            <CaptchaKey field={field} fields={props.fields} />
+            )
     }
 
     if (field.type==='text' ) {
