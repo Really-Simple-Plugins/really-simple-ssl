@@ -395,11 +395,10 @@ function rsssl_fields( $load_values = true ) {
 			'group_id'         => 'limit_login_attempts_advanced',
 			'type'             => 'checkbox',
 			'label'            => __('Trigger captcha on failed login attempt', 'really-simple-ssl'),
-			'tooltip'          => __("Enable captcha for login forms.", 'really-simple-ssl'),
 			'disabled'         => false,
 			'default'          => false,
-			'comment'                 => __("Please configure your Captcha settings before enabling this settings",
-				"really-simple-ssl"),
+			'comment'                 => sprintf(__("Please configure your %sCaptcha settings%s before enabling this settings",
+				"really-simple-ssl"), '<a target="_blank" href="#settings/general">', '</a>'),
 			'react_conditions' => [
 				'relation' => 'AND',
 				[
