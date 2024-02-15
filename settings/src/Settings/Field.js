@@ -205,6 +205,34 @@ const Field = (props) => {
         );
     }
 
+    if (field.type==='captcha_key') {
+        const captchaVerified = props.fields.find(field => field.id === 'captcha_fully_enabled').value;
+        console.log(captchaVerified);
+        if ( field.hidden ) {
+            return (
+                <></>
+            );
+        }
+        return (
+            <div className={highLightClass} ref={scrollAnchor} style={{position: 'relative'}}>
+                <TextControl
+                    required={ field.required }
+                    placeholder={ field.placeholder }
+                    disabled={ disabled }
+                    help={ field.comment }
+                    label={labelWrap(field)}
+                    onChange={ ( fieldValue ) => onChangeHandler(fieldValue) }
+                    value= { fieldValue }
+                />
+                    <div className="rsssl-email-verified" >
+                    {Boolean(captchaVerified)
+                        ? <Icon name='circle-check' color={'green'} />
+                        : <Icon name='circle-times' color={'red'} />}
+                </div>
+            </div>
+        );
+    }
+
     if (field.type==='text' ) {
         //if field.hidden is set, don't show the field
         if ( field.hidden ) {
@@ -493,6 +521,7 @@ const Field = (props) => {
     }
 
     return (
+
         'not found field type '+field.type
     );
 }

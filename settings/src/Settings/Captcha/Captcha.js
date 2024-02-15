@@ -2,6 +2,7 @@ import React, {useRef, useEffect, useState} from '@wordpress/element';
 import useFields from '../FieldsData';
 import useCaptchaData from "./CaptchaData";
 import {__} from '@wordpress/i18n';
+import {Button} from "@wordpress/components";
 
 let detachedCaptchaHtml = '';
 
@@ -18,6 +19,7 @@ const Captcha = ({field, showDisabledWhenSaving = true}) => {
     const reCAPTCHAScriptId = 'recaptchaScript';
     const enabled_captcha_provider = getFieldValue('enabled_captcha_provider');
     const fully_enabled = getFieldValue('captcha_fully_enabled');
+    const [showCaptcha, setShowCaptcha] = useState(false);
 
     // Moved out response handling into a separate function
     const handleCaptchaResponse = (response) => {
@@ -73,7 +75,7 @@ const Captcha = ({field, showDisabledWhenSaving = true}) => {
         if (enabled_captcha_provider) {
             if (detachedCaptchaHtml) {  // <-- add this if clause
                 // If there's any detached captcha HTML, reinsert it
-               captchaContainerRef.current.innerHTML = detachedCaptchaHtml;
+                captchaContainerRef.current.innerHTML = detachedCaptchaHtml;
             } else {
                 script = document.createElement('script');
                 script.async = true;
@@ -119,7 +121,7 @@ const Captcha = ({field, showDisabledWhenSaving = true}) => {
         return () => {
             script && script.remove();
             // Detach the captcha HTML upon unmounting
-           // detachedCaptchaHtml = captchaContainerRef.current.innerHTML;
+            // detachedCaptchaHtml = captchaContainerRef.current.innerHTML;
             unloadCaptcha(); // Ensure CAPTCHA is unloaded
         };
     }, [enabled_captcha_provider, uniqueId, fully_enabled]);
@@ -131,8 +133,16 @@ const Captcha = ({field, showDisabledWhenSaving = true}) => {
     return (
         <>
             {enabled_captcha_provider !== 'none' && !fully_enabled && (
-                 <div ref={captchaContainerRef} key={uniqueId} id={uniqueId}></div>
+                <div className="rsssl-captcha"
+                    style={{display: showCaptcha? 'flex': 'none', flexDirection: 'column', alignItems: 'center', marginBottom: '20px'}}
+                >
+                    <div ref={captchaContainerRef} key={uniqueId} id={uniqueId}></div>
+                </div>
             )}
+                <Button isPrimary={true}
+                        text={__('validate CAPTCHA', 'really-simple-ssl')}
+                        // style={{display: !showCaptcha? 'none': 'block'}}
+                    onClick={() => setShowCaptcha(true)} />
         </>
     );
 };

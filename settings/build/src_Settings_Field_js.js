@@ -2072,6 +2072,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _CaptchaData__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./CaptchaData */ "./src/Settings/Captcha/CaptchaData.js");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__);
+
 
 
 
@@ -2098,6 +2101,7 @@ const Captcha = ({
   const reCAPTCHAScriptId = 'recaptchaScript';
   const enabled_captcha_provider = getFieldValue('enabled_captcha_provider');
   const fully_enabled = getFieldValue('captcha_fully_enabled');
+  const [showCaptcha, setShowCaptcha] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
 
   // Moved out response handling into a separate function
   const handleCaptchaResponse = response => {
@@ -2197,9 +2201,23 @@ const Captcha = ({
     setUniqueId(generateUniqueId());
   }, [enabled_captcha_provider]);
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, enabled_captcha_provider !== 'none' && !fully_enabled && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-captcha",
+    style: {
+      display: showCaptcha ? 'flex' : 'none',
+      flexDirection: 'column',
+      alignItems: 'center',
+      marginBottom: '20px'
+    }
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     ref: captchaContainerRef,
     key: uniqueId,
     id: uniqueId
+  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.Button, {
+    isPrimary: true,
+    text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)('validate CAPTCHA', 'really-simple-ssl')
+    // style={{display: !showCaptcha? 'none': 'block'}}
+    ,
+    onClick: () => setShowCaptcha(true)
   }));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Captcha);
@@ -2965,6 +2983,36 @@ const Field = props => {
     }), sendVerificationEmailField && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-email-verified"
     }, emailIsVerified ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_20__["default"], {
+      name: "circle-check",
+      color: 'green'
+    }) : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_20__["default"], {
+      name: "circle-times",
+      color: 'red'
+    })));
+  }
+  if (field.type === 'captcha_key') {
+    const captchaVerified = props.fields.find(field => field.id === 'captcha_fully_enabled').value;
+    console.log(captchaVerified);
+    if (field.hidden) {
+      return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null);
+    }
+    return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: highLightClass,
+      ref: scrollAnchor,
+      style: {
+        position: 'relative'
+      }
+    }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
+      required: field.required,
+      placeholder: field.placeholder,
+      disabled: disabled,
+      help: field.comment,
+      label: labelWrap(field),
+      onChange: fieldValue => onChangeHandler(fieldValue),
+      value: fieldValue
+    }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-email-verified"
+    }, Boolean(captchaVerified) ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_20__["default"], {
       name: "circle-check",
       color: 'green'
     }) : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_20__["default"], {

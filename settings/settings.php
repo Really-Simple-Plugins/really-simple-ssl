@@ -598,6 +598,7 @@ function rsssl_sanitize_field_type($type)
         'two_fa_roles',
 		'roles_dropdown',
 		'captcha',
+		'captcha_key',
 //        'two_fa_table',
 //        'verify_email',
     ];
@@ -819,6 +820,7 @@ function rsssl_sanitize_field($value, string $type, string $id)
         case 'text':
         case 'textarea':
         case 'license':
+		case 'captcha_key':
         case 'postdropdown':
             return sanitize_text_field($value);
         case 'multicheckbox':
