@@ -25,7 +25,6 @@ const CaptchaKey = ({ field, fields, showDisabledWhenSaving = true }) => {
         return field.label;
     }
 
-    console.log('capcha verfication', typeof Boolean(captchaVerified), Boolean(captchaVerified));
     return (
         <>
             <TextControl
