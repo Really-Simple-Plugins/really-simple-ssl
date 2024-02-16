@@ -708,6 +708,44 @@ function rsssl_fields( $load_values = true ) {
 			'default'  => false,
 		],
 		[
+			'id'      => 'geo_blocklist_white_listing_overview',
+			'menu_id' => 'geo_block_list',
+			'group_id' => 'geo_block_list_white_listing',
+			'type'    => 'geo-ip-datatable',
+			'action'  => 'rsssl_geo_white_list',
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'geo_blocklist_enabled' => true,
+				]
+			],
+			'columns' => [
+				[
+					'name'       => __('IP Address', 'really-simple-ssl'),
+					'sortable'   => true,
+					'searchable' => true,
+					'column'     => 'ip_address',
+					'width'      => '50%',
+				],
+				[
+					'name'     => __('Note', 'really-simple-ssl'),
+					'sortable' => false,
+					'column'   => 'note',
+					'width'    => '10%',
+				],
+				[
+					'name'     => __('Date', 'really-simple-ssl'),
+					'sortable' => true,
+					'column'   => 'create_date',
+				],
+				[
+					'name'     => '',
+					'sortable' => false,
+					'column'   => 'action',
+				],
+			],
+		],
+		[
 			'id'               => 'geo_blocklist_listing_overview',
 			'menu_id'          => 'geo_block_list',
 			'group_id'         => 'geo_block_list_listing',

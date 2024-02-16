@@ -2035,6 +2035,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var dompurify__WEBPACK_IMPORTED_MODULE_31___default = /*#__PURE__*/__webpack_require__.n(dompurify__WEBPACK_IMPORTED_MODULE_31__);
 /* harmony import */ var _RolesDropDown__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./RolesDropDown */ "./src/Settings/RolesDropDown.js");
 /* harmony import */ var _GeoBlockList_GeoDatatable__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! ./GeoBlockList/GeoDatatable */ "./src/Settings/GeoBlockList/GeoDatatable.js");
+/* harmony import */ var _GeoBlockList_WhiteListDatatable__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./GeoBlockList/WhiteListDatatable */ "./src/Settings/GeoBlockList/WhiteListDatatable.js");
 
 
 
@@ -2065,6 +2066,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 // import DynamicDataTable from "./DynamicDataTable/DynamicDataTable";
+
 
 
 
@@ -2470,6 +2472,15 @@ const Field = props => {
       className: highLightClass,
       ref: scrollAnchor
     }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_GeoBlockList_GeoDatatable__WEBPACK_IMPORTED_MODULE_33__["default"], {
+      field: props.field,
+      action: props.field.action
+    }));
+  }
+  if (field.type === 'geo-ip-datatable') {
+    return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: highLightClass,
+      ref: scrollAnchor
+    }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_GeoBlockList_WhiteListDatatable__WEBPACK_IMPORTED_MODULE_34__["default"], {
       field: props.field,
       action: props.field.action
     }));
@@ -3137,6 +3148,605 @@ const GeoDatatable = props => {
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)('Disabled', 'really-simple-ssl')), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)('Activate region restrictions to enable this block.', 'really-simple-ssl')))));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (GeoDatatable);
+
+/***/ }),
+
+/***/ "./src/Settings/GeoBlockList/WhiteListDatatable.js":
+/*!*********************************************************!*\
+  !*** ./src/Settings/GeoBlockList/WhiteListDatatable.js ***!
+  \*********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_data_table_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-data-table-component */ "./node_modules/react-data-table-component/dist/index.cjs.js");
+/* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../FieldsData */ "./src/Settings/FieldsData.js");
+/* harmony import */ var _WhiteListTableStore__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./WhiteListTableStore */ "./src/Settings/GeoBlockList/WhiteListTableStore.js");
+/* harmony import */ var _FilterData__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../FilterData */ "./src/Settings/FilterData.js");
+/* harmony import */ var _utils_Flag_Flag__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../utils/Flag/Flag */ "./src/utils/Flag/Flag.js");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _DynamicDataTable_SearchBar__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../DynamicDataTable/SearchBar */ "./src/Settings/DynamicDataTable/SearchBar.js");
+
+
+
+
+
+
+
+
+
+
+const WhiteListDatatable = props => {
+  const {
+    WhiteListTable,
+    dataLoaded,
+    fetchWhiteListData,
+    processing,
+    handleCountryTableFilter,
+    addRow,
+    removeRow,
+    pagination,
+    handleCountryTablePageChange,
+    handleCountryTableRowsChange,
+    handleCountryTableSort,
+    handleCountryTableSearch,
+    addRegion,
+    removeRegion,
+    resetRow,
+    dataActions,
+    rowCleared
+  } = (0,_WhiteListTableStore__WEBPACK_IMPORTED_MODULE_3__["default"])();
+  const {
+    showSavedSettingsNotice,
+    saveFields
+  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_2__["default"])();
+  const [rowsSelected, setRowsSelected] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
+  const moduleName = 'rsssl-group-filter-geo_block_list_white_listing';
+  const {
+    fields,
+    fieldAlreadyEnabled,
+    getFieldValue
+  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_2__["default"])();
+
+  /**
+   * Build a column configuration object.
+   *
+   * @param {object} column - The column object.
+   * @param {string} column.name - The name of the column.
+   * @param {boolean} column.sortable - Whether the column is sortable.
+   * @param {boolean} column.searchable - Whether the column is searchable.
+   * @param {number} column.width - The width of the column.
+   * @param {boolean} column.visible - Whether the column is visible.
+   * @param {string} column.column - The column identifier.
+   *
+   * @returns {object} The column configuration object.
+   */
+  const buildColumn = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(column => ({
+    //if the filter is set to region and the columns = status we do not want to show the column
+    name: column.name,
+    sortable: column.sortable,
+    searchable: column.searchable,
+    width: column.width,
+    visible: column.visible,
+    column: column.column,
+    selector: row => row[column.column]
+  }), []);
+  let field = props.field;
+  const columns = field.columns.map(buildColumn);
+  const searchableColumns = columns.filter(column => column.searchable).map(column => column.column);
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    setRowsSelected([]);
+  }, [WhiteListTable]);
+
+  //if the dataActions are changed, we fetch the data
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    //we make sure the dataActions are changed in the store before we fetch the data
+    fetchWhiteListData(field.action, dataActions);
+  }, [dataActions.sortDirection, dataActions.search, dataActions.page, dataActions.currentRowsPerPage, fieldAlreadyEnabled('geo_blocklist_enabled')]);
+  let enabled = getFieldValue('geo_blocklist_enabled');
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    return () => {
+      saveFields(false, false);
+    };
+  }, [enabled]);
+  const customStyles = {
+    headCells: {
+      style: {
+        paddingLeft: '0',
+        paddingRight: '0'
+      }
+    },
+    cells: {
+      style: {
+        paddingLeft: '0',
+        paddingRight: '0'
+      }
+    }
+  };
+  (0,react_data_table_component__WEBPACK_IMPORTED_MODULE_1__.createTheme)('really-simple-plugins', {
+    divider: {
+      default: 'transparent'
+    }
+  }, 'light');
+  const handleSelection = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(state => {
+    setRowsSelected(state.selectedRows);
+  }, []);
+  const allowRegionByCode = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(async (code, regionName = '') => {
+    if (Array.isArray(code)) {
+      const ids = code.map(item => ({
+        iso2_code: item.iso2_code,
+        country_name: item.country_name
+      }));
+      ids.forEach(id => {
+        removeRegion(id.iso2_code, dataActions).then(result => {
+          showSavedSettingsNotice(result.message);
+        });
+      });
+      setRowsSelected([]);
+      await fetchWhiteListData(field.action, dataActions);
+      setRowsSelected([]);
+    } else {
+      await removeRegion(code, dataActions).then(result => {
+        showSavedSettingsNotice(result.message);
+      });
+    }
+  }, [removeRegion, dataActions]);
+  const allowById = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(id => {
+    resetRow(id, 'blocked', dataActions);
+  }, [resetRow, dataActions]);
+  const blockRegionByCode = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(async (code, region = '') => {
+    if (Array.isArray(code)) {
+      const ids = code.map(item => ({
+        iso2_code: item.iso2_code,
+        country_name: item.country_name
+      }));
+      ids.forEach(id => {
+        addRegion(id.iso2_code, dataActions).then(result => {
+          showSavedSettingsNotice(result.message);
+        });
+      });
+      setRowsSelected([]);
+      await fetchWhiteListData(field.action, dataActions);
+      setRowsSelected([]);
+    } else {
+      await addRegion(code, dataActions).then(result => {
+        showSavedSettingsNotice(result.message);
+      });
+    }
+  }, [addRegion, dataActions]);
+  const allowCountryByCode = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(async code => {
+    if (Array.isArray(code)) {
+      const ids = code.map(item => ({
+        iso2_code: item.iso2_code,
+        country_name: item.country_name
+      }));
+      //we loop through the ids and allow them one by one
+      ids.forEach(id => {
+        removeRow(id.iso2_code, dataActions).then(result => {
+          showSavedSettingsNotice(result.message);
+        });
+      });
+      setRowsSelected([]);
+      await fetchWhiteListData(field.action, dataActions);
+    } else {
+      await removeRow(code, dataActions).then(result => {
+        showSavedSettingsNotice(result.message);
+      });
+    }
+  }, [removeRow, dataActions]);
+  const blockCountryByCode = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(async (code, name) => {
+    if (Array.isArray(code)) {
+      //We get all the iso2 codes and names from the array
+      const ids = code.map(item => ({
+        iso2_code: item.iso2_code,
+        country_name: item.country_name
+      }));
+      //we loop through the ids and block them one by one
+      ids.forEach(id => {
+        addRow(id.iso2_code, id.country_name, dataActions).then(result => {
+          showSavedSettingsNotice(result.message);
+        });
+      });
+      setRowsSelected([]);
+    } else {
+      await addRow(code, name, dataActions).then(result => {
+        showSavedSettingsNotice(result.message);
+      });
+    }
+  }, [addRow, dataActions]);
+  const data = {
+    ...WhiteListTable.data
+  };
+  const generateFlag = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)((flag, title) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Flag_Flag__WEBPACK_IMPORTED_MODULE_5__["default"], {
+    countryCode: flag,
+    style: {
+      fontSize: '2em'
+    },
+    title: title
+  })), []);
+  const ActionButton = ({
+    onClick,
+    children,
+    className
+  }) =>
+  // <div className={`rsssl-action-buttons__inner`}>
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    className: `button ${className} rsssl-action-buttons__button`,
+    onClick: onClick,
+    disabled: processing
+  }, children)
+  // </div>
+  ;
+  const generateActionButtons = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)((code, name, region_name) => {
+    return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-action-buttons"
+    }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
+      onClick: () => blockCountryByCode(code, name),
+      className: "button-primary"
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_6__.__)("Block", "really-simple-ssl")));
+  }, [moduleName, allowById, blockRegionByCode, allowRegionByCode, blockCountryByCode, allowCountryByCode]);
+  for (const key in data) {
+    const dataItem = {
+      ...data[key]
+    };
+    dataItem.action = generateActionButtons(dataItem.iso2_code, dataItem.status, dataItem.region);
+    dataItem.flag = generateFlag(dataItem.iso2_code, dataItem.country_name);
+    dataItem.status = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_6__.__)(dataItem.status = dataItem.status.charAt(0).toUpperCase() + dataItem.status.slice(1), 'really-simple-ssl');
+    data[key] = dataItem;
+  }
+  let paginationSet = true;
+  if (typeof pagination === 'undefined') {
+    paginationSet = false;
+  }
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-container"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_DynamicDataTable_SearchBar__WEBPACK_IMPORTED_MODULE_7__["default"], {
+    handleSearch: handleCountryTableSearch,
+    searchableColumns: searchableColumns
+  })), rowsSelected.length > 0 && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    style: {
+      marginTop: '1em',
+      marginBottom: '1em'
+    }
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-multiselect-datatable-form rsssl-primary"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_6__.__)("You have selected %s rows", "really-simple-ssl").replace('%s', rowsSelected.length)), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-action-buttons"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
+    onClick: () => blockCountryByCode(rowsSelected),
+    className: "button-primary"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_6__.__)("Block", "really-simple-ssl")))))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    columns: columns,
+    data: processing ? [] : Object.values(data),
+    dense: true,
+    pagination: !processing,
+    paginationServer: true,
+    paginationTotalRows: paginationSet ? pagination.totalRows : 10,
+    paginationPerPage: paginationSet ? pagination.perPage : 10,
+    paginationDefaultPage: paginationSet ? pagination.currentPage : 1,
+    paginationComponentOptions: {
+      rowsPerPageText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_6__.__)('Rows per page:', 'really-simple-ssl'),
+      rangeSeparatorText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_6__.__)('of', 'really-simple-ssl'),
+      noRowsPerPage: false,
+      selectAllRowsItem: false,
+      selectAllRowsItemText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_6__.__)('All', 'really-simple-ssl')
+    },
+    onChangeRowsPerPage: handleCountryTableRowsChange,
+    onChangePage: handleCountryTablePageChange,
+    sortServer: !processing,
+    onSort: handleCountryTableSort,
+    paginationRowsPerPageOptions: [10, 25, 50, 100],
+    noDataComponent: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_6__.__)("No results", "really-simple-ssl"),
+    persistTableHead: true,
+    selectableRows: !processing,
+    clearSelectedRows: rowCleared,
+    onSelectedRowsChange: handleSelection,
+    theme: "really-simple-plugins",
+    customStyles: customStyles
+  }), !enabled && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-locked"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-locked-overlay"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "rsssl-task-status rsssl-open"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_6__.__)('Disabled', 'really-simple-ssl')), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_6__.__)('Activate region restrictions to enable this block.', 'really-simple-ssl')))));
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (WhiteListDatatable);
+
+/***/ }),
+
+/***/ "./src/Settings/GeoBlockList/WhiteListTableStore.js":
+/*!**********************************************************!*\
+  !*** ./src/Settings/GeoBlockList/WhiteListTableStore.js ***!
+  \**********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/index.mjs");
+/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils/api */ "./src/utils/api.js");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var immer__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! immer */ "./node_modules/immer/dist/immer.esm.mjs");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _GeoDatatable__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./GeoDatatable */ "./src/Settings/GeoBlockList/GeoDatatable.js");
+/* Creates A Store For Risk Data using Zustand */
+
+
+
+
+
+
+const WhiteListTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, get) => ({
+  processing: false,
+  dataLoaded: false,
+  pagination: {},
+  dataActions: {},
+  WhiteListTable: [],
+  rowCleared: false,
+  fetchWhiteListData: async (action, dataActions) => {
+    //we check if the processing is already true, if so we return
+    set({
+      processing: true
+    });
+    set({
+      dataLoaded: false
+    });
+    set({
+      rowCleared: true
+    });
+    // if (Object.keys(dataActions).length === 0) {
+    //     return;
+    // }
+    try {
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction(action, dataActions);
+      //now we set the EventLog
+      if (response && response.request_success) {
+        set({
+          WhiteListTable: response,
+          dataLoaded: true,
+          processing: false,
+          pagination: response.pagination
+        });
+      }
+      set({
+        rowCleared: true
+      });
+    } catch (e) {
+      console.error(e);
+    } finally {
+      set({
+        processing: false
+      });
+      set({
+        rowCleared: false
+      });
+    }
+  },
+  handleCountryTableSearch: async (search, searchColumns) => {
+    //Add the search to the dataActions
+    set((0,immer__WEBPACK_IMPORTED_MODULE_5__.produce)(state => {
+      state.dataActions = {
+        ...state.dataActions,
+        search,
+        searchColumns
+      };
+    }));
+  },
+  handleCountryTablePageChange: async (page, pageSize) => {
+    //Add the page and pageSize to the dataActions
+    set((0,immer__WEBPACK_IMPORTED_MODULE_5__.produce)(state => {
+      state.dataActions = {
+        ...state.dataActions,
+        page,
+        pageSize
+      };
+    }));
+  },
+  handleCountryTableRowsChange: async (currentRowsPerPage, currentPage) => {
+    //Add the page and pageSize to the dataActions
+    set((0,immer__WEBPACK_IMPORTED_MODULE_5__.produce)(state => {
+      state.dataActions = {
+        ...state.dataActions,
+        currentRowsPerPage,
+        currentPage
+      };
+    }));
+  },
+  //this handles all pagination and sorting
+  handleCountryTableSort: async (column, sortDirection) => {
+    //Add the column and sortDirection to the dataActions
+    set((0,immer__WEBPACK_IMPORTED_MODULE_5__.produce)(state => {
+      state.dataActions = {
+        ...state.dataActions,
+        sortColumn: column,
+        sortDirection
+      };
+    }));
+  },
+  handleCountryTableFilter: async (column, filterValue) => {
+    //Add the column and sortDirection to the dataActions
+    set((0,immer__WEBPACK_IMPORTED_MODULE_5__.produce)(state => {
+      state.dataActions = {
+        ...state.dataActions,
+        filterColumn: column,
+        filterValue
+      };
+    }));
+  },
+  /*
+  * This function add a new row to the table
+   */
+  addRow: async (country, name, dataActions) => {
+    set({
+      processing: true
+    });
+    let data = {
+      country_code: country,
+      country_name: name
+    };
+    try {
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('geo_block_add_blocked_country', data);
+      if (response && response.request_success) {
+        await get().fetchCountryData('rsssl_geo_list', dataActions);
+        // Return the success message from the API response.
+        return {
+          success: true,
+          message: response.message,
+          response
+        };
+      } else {
+        // Return a custom error message or the API response message.
+        return {
+          success: false,
+          message: response?.message || 'Failed to add country',
+          response
+        };
+      }
+    } catch (e) {
+      console.error(e);
+      // Return the caught error with a custom message.
+      return {
+        success: false,
+        message: 'Error occurred',
+        error: e
+      };
+    } finally {
+      set({
+        processing: false
+      });
+    }
+  },
+  removeRow: async (country, dataActions) => {
+    set({
+      processing: true
+    });
+    let data = {
+      country_code: country
+    };
+    try {
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('geo_block_remove_blocked_country', data);
+      // Consider checking the response structure for any specific success or failure signals
+      if (response && response.request_success) {
+        await get().fetchCountryData('rsssl_geo_list', dataActions);
+        // Potentially notify the user of success, if needed.
+        return {
+          success: true,
+          message: response.message,
+          response
+        };
+      } else {
+        // Handle any unsuccessful response if needed.
+        return {
+          success: false,
+          message: response?.message || 'Failed to remove country',
+          response
+        };
+      }
+    } catch (e) {
+      console.error(e);
+      // Notify the user of an error.
+      return {
+        success: false,
+        message: 'Error occurred',
+        error: e
+      };
+    } finally {
+      set({
+        processing: false
+      });
+    }
+  },
+  addRegion: async (region, dataActions) => {
+    set({
+      processing: true
+    });
+    let data = {
+      region_code: region
+    };
+    try {
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('geo_block_add_blocked_region', data);
+      // Consider checking the response structure for any specific success or failure signals
+      if (response && response.request_success) {
+        await get().fetchCountryData('rsssl_geo_list', dataActions);
+        // Potentially notify the user of success, if needed.
+        return {
+          success: true,
+          message: response.message,
+          response
+        };
+      } else {
+        // Handle any unsuccessful response if needed.
+        return {
+          success: false,
+          message: response?.message || 'Failed to add region',
+          response
+        };
+      }
+    } catch (e) {
+      console.error(e);
+      // Notify the user of an error.
+      return {
+        success: false,
+        message: 'Error occurred',
+        error: e
+      };
+    } finally {
+      set({
+        processing: false
+      });
+    }
+  },
+  removeRegion: async (region, dataActions) => {
+    set({
+      processing: true
+    });
+    let data = {
+      region_code: region
+    };
+    try {
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('geo_block_remove_blocked_region', data);
+      // Consider checking the response structure for any specific success or failure signals
+      if (response && response.request_success) {
+        await get().fetchCountryData('rsssl_geo_list', dataActions);
+        // Potentially notify the user of success, if needed.
+        return {
+          success: true,
+          message: response.message,
+          response
+        };
+      } else {
+        // Handle any unsuccessful response if needed.
+        return {
+          success: false,
+          message: response?.message || 'Failed to remove region',
+          response
+        };
+      }
+    } catch (e) {
+      console.error(e);
+      // Notify the user of an error.
+      return {
+        success: false,
+        message: 'Error occurred',
+        error: e
+      };
+    } finally {
+      set({
+        processing: false
+      });
+    }
+  }
+}));
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (WhiteListTableStore);
 
 /***/ }),
 
@@ -4487,7 +5097,6 @@ const CountryDatatable = props => {
     }
     setProcessingFilter(processing);
     handleCountryTableFilter('status', currentFilter);
-    console.log(dataActions);
   }, [moduleName, handleCountryTableFilter, getCurrentFilter(moduleName), setSelectedFilter, CountryDatatable, processing]);
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     if (dataActions.filterColumn === 'status') {
@@ -24711,4 +25320,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.94125951cd0e6f77aca0.js.map
+//# sourceMappingURL=src_Settings_Field_js.898701e1265cc8c5a588.js.map
