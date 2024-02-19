@@ -36,6 +36,7 @@ const WhiteListDatatable = (props) => {
     const {showSavedSettingsNotice, saveFields} = FieldsData();
 
     const [rowsSelected, setRowsSelected] = useState([]);
+    const [modalOpen, setModalOpen] = useState(false);
     const moduleName = 'rsssl-group-filter-geo_block_list_white_listing';
     const {fields, fieldAlreadyEnabled, getFieldValue} = useFields();
 
@@ -240,11 +241,11 @@ const WhiteListDatatable = (props) => {
     }
 
     const handleClose = () => {
-        alert('close');
+        setModalOpen(false);
     }
 
     const handleOpen = () => {
-        alert('open');
+        setModalOpen(true);
     }
 
     const generateActionButtons = useCallback((code, name, region_name) => {
@@ -275,7 +276,7 @@ const WhiteListDatatable = (props) => {
     return (
         <>
             <TrustIpAddressModal
-                isOpen={addingIpAddress}
+                isOpen={modalOpen}
                 onRequestClose={handleClose}
                 value={ipAddress}
                 status={'trusted'}

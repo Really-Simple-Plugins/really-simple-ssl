@@ -731,12 +731,13 @@ function rsssl_fields( $load_values = true ) {
 					'name'     => __('Note', 'really-simple-ssl'),
 					'sortable' => false,
 					'column'   => 'note',
-					'width'    => '10%',
+					'width'    => '20%',
 				],
 				[
 					'name'     => __('Date', 'really-simple-ssl'),
 					'sortable' => true,
 					'column'   => 'create_date',
+					'width'    => '20%',
 				],
 				[
 					'name'     => '',

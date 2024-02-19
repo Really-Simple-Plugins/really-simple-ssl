@@ -86,7 +86,7 @@ const TrustIpAddressModal = (props) => {
                             <input
                                 name={'rsssl_note_geo_trust_ip'}
                                 type={'text'}
-                                placeholder={__('Note', 'really-simple-ssl')}
+                                placeholder={__('Note <optional>', 'really-simple-ssl')}
                                 style={{
                                     width: '100%',
                                     marginTop: '1em',

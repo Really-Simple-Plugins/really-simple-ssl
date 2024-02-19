@@ -3292,7 +3292,7 @@ const TrustIpAddressModal = props => {
   }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
     name: 'rsssl_note_geo_trust_ip',
     type: 'text',
-    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Note', 'really-simple-ssl'),
+    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Note <optional>', 'really-simple-ssl'),
     style: {
       width: '100%',
       marginTop: '1em',
@@ -3385,6 +3385,7 @@ const WhiteListDatatable = props => {
     saveFields
   } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_2__["default"])();
   const [rowsSelected, setRowsSelected] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
+  const [modalOpen, setModalOpen] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   const moduleName = 'rsssl-group-filter-geo_block_list_white_listing';
   const {
     fields,
@@ -3567,10 +3568,10 @@ const WhiteListDatatable = props => {
     alert(ip);
   };
   const handleClose = () => {
-    alert('close');
+    setModalOpen(false);
   };
   const handleOpen = () => {
-    alert('open');
+    setModalOpen(true);
   };
   const generateActionButtons = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)((code, name, region_name) => {
     return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -3594,7 +3595,7 @@ const WhiteListDatatable = props => {
     paginationSet = false;
   }
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_TrustIpAddressModal__WEBPACK_IMPORTED_MODULE_10__["default"], {
-    isOpen: addingIpAddress,
+    isOpen: modalOpen,
     onRequestClose: handleClose,
     value: ipAddress,
     status: 'trusted',
@@ -25507,4 +25508,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.d6b0b612ec5bf9febf77.js.map
+//# sourceMappingURL=src_Settings_Field_js.09dde2f16b9c773b8729.js.map
