@@ -139,7 +139,25 @@ const WhiteListDatatable = (props) => {
     }, [removeRegion, dataActions]);
 
     const allowById = useCallback((id) => {
-        resetRow(id, dataActions);
+        //We check if the id is an array
+        if (Array.isArray(id)) {
+            //We get all the iso2 codes and names from the array
+            const ids = id.map(item => ({
+                id: item.id,
+            }));
+            //we loop through the ids and allow them one by one
+            ids.forEach((id) => {
+                resetRow(id.id, dataActions).then((result) => {
+                    showSavedSettingsNotice(result.message);
+                });
+            });
+            setRowsSelected([]);
+        } else {
+            resetRow(id, dataActions).then((result) => {
+                showSavedSettingsNotice(result.message);
+            });
+        }
+        fetchWhiteListData(field.action, dataActions);
     }, [resetRow, dataActions]);
 
     const blockRegionByCode = useCallback(async (code, region = '') => {
@@ -302,8 +320,8 @@ const WhiteListDatatable = (props) => {
                         <div className="rsssl-action-buttons">
                             <>
                                 <ActionButton
-                                    onClick={() => blockCountryByCode(rowsSelected)}  className="button-primary">
-                                        {__("Block", "really-simple-ssl")}
+                                    onClick={() => allowById(rowsSelected)}  className="button-red">
+                                        {__("Reset", "really-simple-ssl")}
                                     </ActionButton>
                                 </>
                         </div>

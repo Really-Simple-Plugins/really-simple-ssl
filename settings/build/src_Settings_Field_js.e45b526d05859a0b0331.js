@@ -3481,7 +3481,25 @@ const WhiteListDatatable = props => {
     }
   }, [removeRegion, dataActions]);
   const allowById = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(id => {
-    resetRow(id, dataActions);
+    //We check if the id is an array
+    if (Array.isArray(id)) {
+      //We get all the iso2 codes and names from the array
+      const ids = id.map(item => ({
+        id: item.id
+      }));
+      //we loop through the ids and allow them one by one
+      ids.forEach(id => {
+        resetRow(id.id, dataActions).then(result => {
+          showSavedSettingsNotice(result.message);
+        });
+      });
+      setRowsSelected([]);
+    } else {
+      resetRow(id, dataActions).then(result => {
+        showSavedSettingsNotice(result.message);
+      });
+    }
+    fetchWhiteListData(field.action, dataActions);
   }, [resetRow, dataActions]);
   const blockRegionByCode = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(async (code, region = '') => {
     if (Array.isArray(code)) {
@@ -3620,9 +3638,9 @@ const WhiteListDatatable = props => {
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_6__.__)("You have selected %s rows", "really-simple-ssl").replace('%s', rowsSelected.length)), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-action-buttons"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
-    onClick: () => blockCountryByCode(rowsSelected),
-    className: "button-primary"
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_6__.__)("Block", "really-simple-ssl")))))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    onClick: () => allowById(rowsSelected),
+    className: "button-red"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_6__.__)("Reset", "really-simple-ssl")))))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_1__["default"], {
     columns: columns,
     data: processing ? [] : Object.values(data),
     dense: true,
@@ -3798,7 +3816,6 @@ const WhiteListTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set
       const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('geo_block_reset_ip', data);
       // Consider checking the response structure for any specific success or failure signals
       if (response && response.request_success) {
-        await get().fetchWhiteListData('rsssl_geo_white_list', dataActions);
         // Potentially notify the user of success, if needed.
         return {
           success: true,
@@ -25551,4 +25568,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.9741ad5abd83cf8195cb.js.map
+//# sourceMappingURL=src_Settings_Field_js.e45b526d05859a0b0331.js.map

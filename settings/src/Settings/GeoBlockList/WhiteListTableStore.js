@@ -96,7 +96,6 @@ const WhiteListTableStore = create((set, get) => ({
             const response = await rsssl_api.doAction('geo_block_reset_ip', data);
             // Consider checking the response structure for any specific success or failure signals
             if (response && response.request_success) {
-                await get().fetchWhiteListData('rsssl_geo_white_list', dataActions);
                 // Potentially notify the user of success, if needed.
                 return { success: true, message: response.message, response };
             } else {
