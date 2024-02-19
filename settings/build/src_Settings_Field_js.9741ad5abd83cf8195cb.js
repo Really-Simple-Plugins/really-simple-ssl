@@ -3216,6 +3216,8 @@ __webpack_require__.r(__webpack_exports__);
 const TrustIpAddressModal = props => {
   const {
     inputRangeValidated,
+    note,
+    setNote,
     ipAddress,
     setIpAddress,
     maskError,
@@ -3235,10 +3237,9 @@ const TrustIpAddressModal = props => {
     setRangeDisplay(!rangeDisplay);
   };
   async function handleSubmit() {
-    let status = props.status;
     // we check if statusSelected is not empty
     if (ipAddress && maskError === false) {
-      await updateRow(ipAddress, status, props.dataActions).then(response => {
+      await updateRow(ipAddress, note, props.dataActions).then(response => {
         if (response.success) {
           showSavedSettingsNotice(response.message);
         } else {
@@ -3289,14 +3290,17 @@ const TrustIpAddressModal = props => {
     showSwitch: true,
     value: ipAddress,
     onChange: e => setIpAddress(e.target.value)
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-    name: 'rsssl_note_geo_trust_ip',
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
+    htmlFor: 'note',
+    className: 'rsssl-label'
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Notes', 'really-simple-ssl')), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    name: 'note',
+    id: 'note',
     type: 'text',
-    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Note <optional>', 'really-simple-ssl'),
+    value: note,
+    onChange: e => setNote(e.target.value),
     style: {
-      width: '100%',
-      marginTop: '1em',
-      padding: '0.25em'
+      width: '100%'
     }
   })))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "modal-footer"
@@ -3477,7 +3481,7 @@ const WhiteListDatatable = props => {
     }
   }, [removeRegion, dataActions]);
   const allowById = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(id => {
-    resetRow(id, 'blocked', dataActions);
+    resetRow(id, dataActions);
   }, [resetRow, dataActions]);
   const blockRegionByCode = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(async (code, region = '') => {
     if (Array.isArray(code)) {
@@ -3562,22 +3566,17 @@ const WhiteListDatatable = props => {
   }, children)
   // </div>
   ;
-  const addingIpAddress = ({
-    ip
-  }) => {
-    alert(ip);
-  };
   const handleClose = () => {
     setModalOpen(false);
   };
   const handleOpen = () => {
     setModalOpen(true);
   };
-  const generateActionButtons = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)((code, name, region_name) => {
+  const generateActionButtons = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(id => {
     return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-action-buttons"
     }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
-      onClick: () => blockCountryByCode(code, name),
+      onClick: () => allowById(id),
       className: "button-red"
     }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_6__.__)("Reset", "really-simple-ssl")));
   }, [moduleName, allowById, blockRegionByCode, allowRegionByCode, blockCountryByCode, allowCountryByCode]);
@@ -3585,7 +3584,7 @@ const WhiteListDatatable = props => {
     const dataItem = {
       ...data[key]
     };
-    dataItem.action = generateActionButtons(dataItem.iso2_code, dataItem.status, dataItem.region);
+    dataItem.action = generateActionButtons(dataItem.id);
     dataItem.flag = generateFlag(dataItem.iso2_code, dataItem.country_name);
     dataItem.status = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_6__.__)(dataItem.status = dataItem.status.charAt(0).toUpperCase() + dataItem.status.slice(1), 'really-simple-ssl');
     data[key] = dataItem;
@@ -3697,6 +3696,7 @@ const WhiteListTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set
   rowCleared: false,
   maskError: false,
   ipAddress: '',
+  note: '',
   fetchWhiteListData: async (action, dataActions) => {
     //we check if the processing is already true, if so we return
     set({
@@ -3787,38 +3787,76 @@ const WhiteListTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set
       };
     }));
   },
-  /*
-  * This function add a new row to the table
-   */
-  addRow: async (country, name, dataActions) => {
+  resetRow: async (id, dataActions) => {
     set({
       processing: true
     });
     let data = {
-      country_code: country,
-      country_name: name
+      id: id
     };
     try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('geo_block_add_blocked_country', data);
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('geo_block_reset_ip', data);
+      // Consider checking the response structure for any specific success or failure signals
       if (response && response.request_success) {
-        await get().fetchCountryData('rsssl_geo_list', dataActions);
-        // Return the success message from the API response.
+        await get().fetchWhiteListData('rsssl_geo_white_list', dataActions);
+        // Potentially notify the user of success, if needed.
         return {
           success: true,
           message: response.message,
           response
         };
       } else {
-        // Return a custom error message or the API response message.
+        // Handle any unsuccessful response if needed.
         return {
           success: false,
-          message: response?.message || 'Failed to add country',
+          message: response?.message || 'Failed to reset Ip',
           response
         };
       }
     } catch (e) {
       console.error(e);
-      // Return the caught error with a custom message.
+      // Notify the user of an error.
+      return {
+        success: false,
+        message: 'Error occurred',
+        error: e
+      };
+    } finally {
+      set({
+        processing: false
+      });
+    }
+  },
+  updateRow: async (ip, note, dataActions) => {
+    set({
+      processing: true
+    });
+    let data = {
+      ip_address: ip,
+      note: note
+    };
+    try {
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('geo_block_add_white_list_ip', data);
+      // Consider checking the response structure for any specific success or failure signals
+      if (response && response.request_success) {
+        await get().fetchWhiteListData('rsssl_geo_white_list', dataActions);
+        // Potentially notify the user of success, if needed.
+        return {
+          success: true,
+          message: response.message,
+          response
+        };
+      } else {
+        // Handle any unsuccessful response if needed.
+        return {
+          success: false,
+          message: response?.message || 'Failed to add Ip',
+          response
+        };
+      }
+    } catch (e) {
+      console.error(e);
+      // Notify the user of an error.
       return {
         success: false,
         message: 'Error occurred',
@@ -3841,7 +3879,7 @@ const WhiteListTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set
       const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('geo_block_remove_blocked_country', data);
       // Consider checking the response structure for any specific success or failure signals
       if (response && response.request_success) {
-        await get().fetchCountryData('rsssl_geo_list', dataActions);
+        await get().fetchCountryData('rsssl_geo_white_list', dataActions);
         // Potentially notify the user of success, if needed.
         return {
           success: true,
@@ -3915,6 +3953,11 @@ const WhiteListTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set
         ipAddress: ipAddress.replace(/,/g, '.')
       });
     }
+  },
+  setNote: note => {
+    set({
+      note
+    });
   },
   resetRange: () => {
     set({
@@ -25508,4 +25551,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.09dde2f16b9c773b8729.js.map
+//# sourceMappingURL=src_Settings_Field_js.9741ad5abd83cf8195cb.js.map

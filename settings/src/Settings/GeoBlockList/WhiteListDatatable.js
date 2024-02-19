@@ -139,7 +139,7 @@ const WhiteListDatatable = (props) => {
     }, [removeRegion, dataActions]);
 
     const allowById = useCallback((id) => {
-        resetRow(id, 'blocked', dataActions);
+        resetRow(id, dataActions);
     }, [resetRow, dataActions]);
 
     const blockRegionByCode = useCallback(async (code, region = '') => {
@@ -234,12 +234,6 @@ const WhiteListDatatable = (props) => {
         // </div>
     );
 
-    const addingIpAddress = ({
-        ip
-    }) => {
-       alert(ip);
-    }
-
     const handleClose = () => {
         setModalOpen(false);
     }
@@ -248,10 +242,10 @@ const WhiteListDatatable = (props) => {
         setModalOpen(true);
     }
 
-    const generateActionButtons = useCallback((code, name, region_name) => {
+    const generateActionButtons = useCallback((id) => {
         return (<div className="rsssl-action-buttons">
                 <ActionButton
-                    onClick={() => blockCountryByCode(code, name)} className="button-red">
+                    onClick={() => allowById(id)} className="button-red">
                     {__("Reset", "really-simple-ssl")}
                 </ActionButton>
         </div>)
@@ -261,7 +255,7 @@ const WhiteListDatatable = (props) => {
 
     for (const key in data) {
         const dataItem = {...data[key]};
-        dataItem.action = generateActionButtons(dataItem.iso2_code, dataItem.status, dataItem.region);
+        dataItem.action = generateActionButtons(dataItem.id);
         dataItem.flag = generateFlag(dataItem.iso2_code, dataItem.country_name);
         dataItem.status = __(dataItem.status = dataItem.status.charAt(0).toUpperCase() + dataItem.status.slice(1), 'really-simple-ssl');
         data[key] = dataItem;

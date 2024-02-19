@@ -16,6 +16,7 @@ const WhiteListTableStore = create((set, get) => ({
     rowCleared: false,
     maskError: false,
     ipAddress: '',
+    note: '',
 
 
     fetchWhiteListData: async (action, dataActions) => {
@@ -86,28 +87,51 @@ const WhiteListTableStore = create((set, get) => ({
         );
     },
 
-    /*
-    * This function add a new row to the table
-     */
-    addRow: async (country, name, dataActions) => {
+    resetRow: async (id, dataActions) => {
         set({processing: true});
         let data = {
-            country_code: country,
-            country_name: name
+            id: id
         };
         try {
-            const response = await rsssl_api.doAction('geo_block_add_blocked_country', data);
+            const response = await rsssl_api.doAction('geo_block_reset_ip', data);
+            // Consider checking the response structure for any specific success or failure signals
             if (response && response.request_success) {
-                await get().fetchCountryData('rsssl_geo_list', dataActions);
-                // Return the success message from the API response.
+                await get().fetchWhiteListData('rsssl_geo_white_list', dataActions);
+                // Potentially notify the user of success, if needed.
                 return { success: true, message: response.message, response };
             } else {
-                // Return a custom error message or the API response message.
-                return { success: false, message: response?.message || 'Failed to add country', response };
+                // Handle any unsuccessful response if needed.
+                return { success: false, message: response?.message || 'Failed to reset Ip', response };
             }
         } catch (e) {
             console.error(e);
-            // Return the caught error with a custom message.
+            // Notify the user of an error.
+            return { success: false, message: 'Error occurred', error: e };
+        } finally {
+            set({processing: false});
+        }
+    }
+    ,
+    updateRow: async (ip, note, dataActions) => {
+        set({processing: true});
+        let data = {
+            ip_address: ip,
+            note: note
+        };
+        try {
+            const response = await rsssl_api.doAction('geo_block_add_white_list_ip', data);
+            // Consider checking the response structure for any specific success or failure signals
+            if (response && response.request_success) {
+                await get().fetchWhiteListData('rsssl_geo_white_list', dataActions);
+                // Potentially notify the user of success, if needed.
+                return { success: true, message: response.message, response };
+            } else {
+                // Handle any unsuccessful response if needed.
+                return { success: false, message: response?.message || 'Failed to add Ip', response };
+            }
+        } catch (e) {
+            console.error(e);
+            // Notify the user of an error.
             return { success: false, message: 'Error occurred', error: e };
         } finally {
             set({processing: false});
@@ -123,7 +147,7 @@ const WhiteListTableStore = create((set, get) => ({
             const response = await rsssl_api.doAction('geo_block_remove_blocked_country', data);
             // Consider checking the response structure for any specific success or failure signals
             if (response && response.request_success) {
-                await get().fetchCountryData('rsssl_geo_list', dataActions);
+                await get().fetchCountryData('rsssl_geo_white_list', dataActions);
                 // Potentially notify the user of success, if needed.
                 return { success: true, message: response.message, response };
             } else {
@@ -172,6 +196,10 @@ const WhiteListTableStore = create((set, get) => ({
             }
             set({ ipAddress: ipAddress.replace(/,/g, '.') })
         }
+    },
+
+    setNote: (note) => {
+        set({note});
     },
 
     resetRange: () => {

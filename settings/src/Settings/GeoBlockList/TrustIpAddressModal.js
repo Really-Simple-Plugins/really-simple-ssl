@@ -12,7 +12,7 @@ import FieldsData from "../FieldsData";
 import WhiteListTableStore from "./WhiteListTableStore";
 
 const TrustIpAddressModal = (props) => {
-    const { inputRangeValidated, ipAddress, setIpAddress, maskError, dataLoaded, updateRow, resetRange} = WhiteListTableStore();
+    const { inputRangeValidated,note, setNote, ipAddress, setIpAddress, maskError, dataLoaded, updateRow, resetRange} = WhiteListTableStore();
     const [rangeDisplay, setRangeDisplay] = useState(false);
     const [resetFlag, setResetFlag] = useState(false);
     const {showSavedSettingsNotice} = FieldsData();
@@ -24,10 +24,9 @@ const TrustIpAddressModal = (props) => {
     }
 
     async function handleSubmit() {
-        let status = props.status;
         // we check if statusSelected is not empty
         if (ipAddress && maskError === false) {
-            await updateRow(ipAddress, status, props.dataActions).then((response) => {
+            await updateRow(ipAddress, note, props.dataActions).then((response) => {
                 if (response.success) {
                     showSavedSettingsNotice(response.message);
                 } else {
@@ -83,14 +82,18 @@ const TrustIpAddressModal = (props) => {
                                 value={ipAddress}
                                 onChange={(e) => setIpAddress(e.target.value)}
                             />
+                            <label
+                                htmlFor={'note'}
+                                className={'rsssl-label'}
+                            >{__('Notes', 'really-simple-ssl')}</label>
                             <input
-                                name={'rsssl_note_geo_trust_ip'}
+                                name={'note'}
+                                id={'note'}
                                 type={'text'}
-                                placeholder={__('Note <optional>', 'really-simple-ssl')}
+                                value={note}
+                                onChange={(e) => setNote(e.target.value)}
                                 style={{
                                     width: '100%',
-                                    marginTop: '1em',
-                                    padding: '0.25em',
                                 }}
                             />
                         </div>
