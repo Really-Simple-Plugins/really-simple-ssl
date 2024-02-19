@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import DataTable, { createTheme } from "react-data-table-component";
 import FieldsData from "../FieldsData";
 import WhiteListTableStore from "./WhiteListTableStore";
@@ -7,6 +7,9 @@ import Flag from "../../utils/Flag/Flag";
 import { __ } from '@wordpress/i18n';
 import useFields from "../FieldsData";
 import SearchBar from "../DynamicDataTable/SearchBar";
+import AddButton from "./AddButton";
+import AddIpAddressModal from "../LimitLoginAttempts/AddIpAddressModal";
+import TrustIpAddressModal from "./TrustIpAddressModal";
 
 const WhiteListDatatable = (props) => {
     const {
@@ -14,6 +17,7 @@ const WhiteListDatatable = (props) => {
         dataLoaded,
         fetchWhiteListData,
         processing,
+        ipAddress,
         handleCountryTableFilter,
         addRow,
         removeRow,
@@ -229,6 +233,20 @@ const WhiteListDatatable = (props) => {
         // </div>
     );
 
+    const addingIpAddress = ({
+        ip
+    }) => {
+       alert(ip);
+    }
+
+    const handleClose = () => {
+        alert('close');
+    }
+
+    const handleOpen = () => {
+        alert('open');
+    }
+
     const generateActionButtons = useCallback((code, name, region_name) => {
         return (<div className="rsssl-action-buttons">
                 <ActionButton
@@ -256,11 +274,24 @@ const WhiteListDatatable = (props) => {
 
     return (
         <>
+            <TrustIpAddressModal
+                isOpen={addingIpAddress}
+                onRequestClose={handleClose}
+                value={ipAddress}
+                status={'trusted'}
+                dataActions={dataActions}
+            >
+            </TrustIpAddressModal>
             <div className="rsssl-container">
-                <div>
-                    {/* reserved for left side buttons */}
-                </div>
-                <SearchBar handleSearch={handleCountryTableSearch} searchableColumns={searchableColumns} />
+                    {/*display the add button on left side*/}
+                    <AddButton
+                        moduleName={moduleName}
+                        handleOpen={handleOpen}
+                        processing={processing}
+                        blockedText={__("Block IP Address", "really-simple-ssl")}
+                        allowedText={__("Trust IP Address", "really-simple-ssl")}
+                    />
+                    <SearchBar handleSearch={handleCountryTableSearch} searchableColumns={searchableColumns}/>
             </div>
             {rowsSelected.length > 0 && (
                 <div
@@ -274,9 +305,9 @@ const WhiteListDatatable = (props) => {
                             {__("You have selected %s rows", "really-simple-ssl").replace('%s', rowsSelected.length)}
                         </div>
                         <div className="rsssl-action-buttons">
-                                <>
-                                    <ActionButton
-                                        onClick={() => blockCountryByCode(rowsSelected)}  className="button-primary">
+                            <>
+                                <ActionButton
+                                    onClick={() => blockCountryByCode(rowsSelected)}  className="button-primary">
                                         {__("Block", "really-simple-ssl")}
                                     </ActionButton>
                                 </>

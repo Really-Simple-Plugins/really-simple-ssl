@@ -2520,6 +2520,42 @@ const Field = props => {
 
 /***/ }),
 
+/***/ "./src/Settings/GeoBlockList/AddButton.js":
+/*!************************************************!*\
+  !*** ./src/Settings/GeoBlockList/AddButton.js ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+
+const AddButton = ({
+  getCurrentFilter,
+  moduleName,
+  handleOpen,
+  processing,
+  blockedText,
+  allowedText
+}) => {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-add-button"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-add-button__inner"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    className: "button button-secondary button-datatable rsssl-add-button__button",
+    onClick: handleOpen,
+    disabled: processing
+  }, allowedText)));
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (AddButton);
+
+/***/ }),
+
 /***/ "./src/Settings/GeoBlockList/GeoDataTableStore.js":
 /*!********************************************************!*\
   !*** ./src/Settings/GeoBlockList/GeoDataTableStore.js ***!
@@ -3151,6 +3187,142 @@ const GeoDatatable = props => {
 
 /***/ }),
 
+/***/ "./src/Settings/GeoBlockList/TrustIpAddressModal.js":
+/*!**********************************************************!*\
+  !*** ./src/Settings/GeoBlockList/TrustIpAddressModal.js ***!
+  \**********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _LimitLoginAttempts_IpAddressInput__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../LimitLoginAttempts/IpAddressInput */ "./src/Settings/LimitLoginAttempts/IpAddressInput.js");
+/* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../FieldsData */ "./src/Settings/FieldsData.js");
+/* harmony import */ var _WhiteListTableStore__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./WhiteListTableStore */ "./src/Settings/GeoBlockList/WhiteListTableStore.js");
+
+
+
+
+
+
+
+const TrustIpAddressModal = props => {
+  const {
+    inputRangeValidated,
+    ipAddress,
+    setIpAddress,
+    maskError,
+    dataLoaded,
+    updateRow,
+    resetRange
+  } = (0,_WhiteListTableStore__WEBPACK_IMPORTED_MODULE_5__["default"])();
+  const [rangeDisplay, setRangeDisplay] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  const [resetFlag, setResetFlag] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  const {
+    showSavedSettingsNotice
+  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_4__["default"])();
+
+  //we add a function to handle the range fill
+  const handleRangeFill = () => {
+    //we toggle the range display.
+    setRangeDisplay(!rangeDisplay);
+  };
+  async function handleSubmit() {
+    let status = props.status;
+    // we check if statusSelected is not empty
+    if (ipAddress && maskError === false) {
+      await updateRow(ipAddress, status, props.dataActions).then(response => {
+        if (response.success) {
+          showSavedSettingsNotice(response.message);
+        } else {
+          showSavedSettingsNotice(response.message, 'error');
+        }
+      });
+      //we clear the input
+      resetRange();
+      //we close the modal
+      props.onRequestClose();
+    }
+  }
+  function handleCancel() {
+    // Reset all local state
+    setRangeDisplay(false);
+    resetRange();
+
+    // Close the modal
+    props.onRequestClose();
+  }
+  if (!props.isOpen) {
+    return null;
+  }
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Modal, {
+    title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Add IP Address", "really-simple-ssl"),
+    shouldCloseOnClickOutside: true,
+    shouldCloseOnEsc: true,
+    overlayClassName: "rsssl-modal-overlay",
+    className: "rsssl-modal",
+    onRequestClose: props.onRequestClose
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "modal-content"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "modal-body",
+    style: {
+      padding: "0.5em"
+    }
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    style: {
+      width: "95%",
+      height: "100%",
+      padding: "10px"
+    }
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_LimitLoginAttempts_IpAddressInput__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("IP Address", "really-simple-ssl"),
+    id: "ip-address",
+    name: "ip-address",
+    showSwitch: true,
+    value: ipAddress,
+    onChange: e => setIpAddress(e.target.value)
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    name: 'rsssl_note_geo_trust_ip',
+    type: 'text',
+    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Note', 'really-simple-ssl'),
+    style: {
+      width: '100%',
+      marginTop: '1em',
+      padding: '0.25em'
+    }
+  })))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "modal-footer"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: 'rsssl-grid-item-footer',
+    style: {
+      display: 'flex',
+      justifyContent: 'flex-end',
+      alignItems: 'center',
+      padding: '1em'
+    }
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+    isSecondary: true,
+    onClick: handleCancel,
+    style: {
+      marginRight: '10px'
+    }
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Cancel", "really-simple-ssl")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+    isPrimary: true,
+    onClick: handleSubmit
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Add", "really-simple-ssl"))))));
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (TrustIpAddressModal);
+
+/***/ }),
+
 /***/ "./src/Settings/GeoBlockList/WhiteListDatatable.js":
 /*!*********************************************************!*\
   !*** ./src/Settings/GeoBlockList/WhiteListDatatable.js ***!
@@ -3171,6 +3343,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_6__);
 /* harmony import */ var _DynamicDataTable_SearchBar__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../DynamicDataTable/SearchBar */ "./src/Settings/DynamicDataTable/SearchBar.js");
+/* harmony import */ var _AddButton__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./AddButton */ "./src/Settings/GeoBlockList/AddButton.js");
+/* harmony import */ var _LimitLoginAttempts_AddIpAddressModal__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../LimitLoginAttempts/AddIpAddressModal */ "./src/Settings/LimitLoginAttempts/AddIpAddressModal.js");
+/* harmony import */ var _TrustIpAddressModal__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./TrustIpAddressModal */ "./src/Settings/GeoBlockList/TrustIpAddressModal.js");
+
+
+
 
 
 
@@ -3187,6 +3365,7 @@ const WhiteListDatatable = props => {
     dataLoaded,
     fetchWhiteListData,
     processing,
+    ipAddress,
     handleCountryTableFilter,
     addRow,
     removeRow,
@@ -3382,13 +3561,24 @@ const WhiteListDatatable = props => {
   }, children)
   // </div>
   ;
+  const addingIpAddress = ({
+    ip
+  }) => {
+    alert(ip);
+  };
+  const handleClose = () => {
+    alert('close');
+  };
+  const handleOpen = () => {
+    alert('open');
+  };
   const generateActionButtons = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)((code, name, region_name) => {
     return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-action-buttons"
     }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
       onClick: () => blockCountryByCode(code, name),
-      className: "button-primary"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_6__.__)("Block", "really-simple-ssl")));
+      className: "button-red"
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_6__.__)("Reset", "really-simple-ssl")));
   }, [moduleName, allowById, blockRegionByCode, allowRegionByCode, blockCountryByCode, allowCountryByCode]);
   for (const key in data) {
     const dataItem = {
@@ -3403,9 +3593,21 @@ const WhiteListDatatable = props => {
   if (typeof pagination === 'undefined') {
     paginationSet = false;
   }
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_TrustIpAddressModal__WEBPACK_IMPORTED_MODULE_10__["default"], {
+    isOpen: addingIpAddress,
+    onRequestClose: handleClose,
+    value: ipAddress,
+    status: 'trusted',
+    dataActions: dataActions
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-container"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_DynamicDataTable_SearchBar__WEBPACK_IMPORTED_MODULE_7__["default"], {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_AddButton__WEBPACK_IMPORTED_MODULE_8__["default"], {
+    moduleName: moduleName,
+    handleOpen: handleOpen,
+    processing: processing,
+    blockedText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_6__.__)("Block IP Address", "really-simple-ssl"),
+    allowedText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_6__.__)("Trust IP Address", "really-simple-ssl")
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_DynamicDataTable_SearchBar__WEBPACK_IMPORTED_MODULE_7__["default"], {
     handleSearch: handleCountryTableSearch,
     searchableColumns: searchableColumns
   })), rowsSelected.length > 0 && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -3492,6 +3694,8 @@ const WhiteListTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set
   dataActions: {},
   WhiteListTable: [],
   rowCleared: false,
+  maskError: false,
+  ipAddress: '',
   fetchWhiteListData: async (action, dataActions) => {
     //we check if the processing is already true, if so we return
     set({
@@ -3665,85 +3869,68 @@ const WhiteListTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set
       });
     }
   },
-  addRegion: async (region, dataActions) => {
-    set({
-      processing: true
-    });
-    let data = {
-      region_code: region
-    };
-    try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('geo_block_add_blocked_region', data);
-      // Consider checking the response structure for any specific success or failure signals
-      if (response && response.request_success) {
-        await get().fetchCountryData('rsssl_geo_list', dataActions);
-        // Potentially notify the user of success, if needed.
-        return {
-          success: true,
-          message: response.message,
-          response
-        };
+  /*
+  * This function sets the ip address and is used by Cidr and IpAddressInput
+  */
+  setIpAddress: ipAddress => {
+    if (ipAddress.length === 0) {
+      return;
+    }
+    let ipRegex = /^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$|^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,4}|((25[0-5]|(2[0-4]|1{0,1}[0-9])?[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9])?[0-9]))|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9])?[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9])?[0-9]))$/;
+    if (ipAddress.includes('/')) {
+      let finalIp = '';
+      // Split the input into IP and CIDR mask
+      let [ip, mask] = ipAddress.split('/');
+      //if , we change it to .
+      ip = ip.replace(/,/g, '.');
+      if (mask.length <= 0) {
+        if (!ipRegex.test(ip)) {
+          set({
+            maskError: true
+          });
+        } else {
+          set({
+            maskError: false
+          });
+        }
+        finalIp = `${ip}/${mask}`;
       } else {
-        // Handle any unsuccessful response if needed.
-        return {
-          success: false,
-          message: response?.message || 'Failed to add region',
-          response
-        };
+        finalIp = mask ? `${ip}/${mask}` : ip;
       }
-    } catch (e) {
-      console.error(e);
-      // Notify the user of an error.
-      return {
-        success: false,
-        message: 'Error occurred',
-        error: e
-      };
-    } finally {
       set({
-        processing: false
+        ipAddress: finalIp
+      });
+    } else {
+      if (!ipRegex.test(ipAddress)) {
+        set({
+          maskError: true
+        });
+      } else {
+        set({
+          maskError: false
+        });
+      }
+      set({
+        ipAddress: ipAddress.replace(/,/g, '.')
       });
     }
   },
-  removeRegion: async (region, dataActions) => {
+  resetRange: () => {
     set({
-      processing: true
+      inputRangeValidated: false
     });
-    let data = {
-      region_code: region
-    };
-    try {
-      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('geo_block_remove_blocked_region', data);
-      // Consider checking the response structure for any specific success or failure signals
-      if (response && response.request_success) {
-        await get().fetchCountryData('rsssl_geo_list', dataActions);
-        // Potentially notify the user of success, if needed.
-        return {
-          success: true,
-          message: response.message,
-          response
-        };
-      } else {
-        // Handle any unsuccessful response if needed.
-        return {
-          success: false,
-          message: response?.message || 'Failed to remove region',
-          response
-        };
-      }
-    } catch (e) {
-      console.error(e);
-      // Notify the user of an error.
-      return {
-        success: false,
-        message: 'Error occurred',
-        error: e
-      };
-    } finally {
-      set({
-        processing: false
-      });
-    }
+    set({
+      highestIP: ''
+    });
+    set({
+      lowestIP: ''
+    });
+    set({
+      ipAddress: ''
+    });
+    set({
+      maskError: false
+    });
   }
 }));
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (WhiteListTableStore);
@@ -25320,4 +25507,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.898701e1265cc8c5a588.js.map
+//# sourceMappingURL=src_Settings_Field_js.d6b0b612ec5bf9febf77.js.map
