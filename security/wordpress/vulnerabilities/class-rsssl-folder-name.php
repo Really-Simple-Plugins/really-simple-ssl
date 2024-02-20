@@ -17,6 +17,7 @@ class Rsssl_Folder_Name {
 			$this->folderName = $this->folderName( $rsssl_folder );
 		} else {
 			$newFolderName    = 'really-simple-ssl/' . md5( uniqid( mt_rand(), true ) );
+
 			$this->folderName = $this->folderName( $newFolderName );
 
 			require_once 'class-rsssl-file-storage.php';
@@ -40,10 +41,8 @@ class Rsssl_Folder_Name {
 		$upload_dir  = wp_upload_dir();
 		$folder_path = $upload_dir['basedir'] . '/' . $this->folderName;
 
-		if ( ! file_exists( $folder_path ) ) {
-			if ( ! mkdir( $folder_path, 0755, true ) && ! is_dir( $folder_path ) ) {
-				throw new \RuntimeException( sprintf( 'Directory "%s" was not created', $folder_path ) );
-			}
+		if ( ! file_exists( $folder_path ) && ! mkdir( $folder_path, 0755, true ) && ! is_dir( $folder_path ) ) {
+			error_log( sprintf( 'Directory "%s" was not created', $folder_path ) );
 		}
 	}
 
