@@ -23,12 +23,6 @@ const Captcha = ({field, showDisabledWhenSaving = true}) => {
     const site_key = getFieldValue(`${enabled_captcha_provider}_site_key`);
     const secret_key = getFieldValue(`${enabled_captcha_provider}secret_key`);
 
-    // if both the secret and site key are not set, we do nothing.
-    if (site_key.length <  35 || secret_key.length < 35) {
-        return (<></>);
-    }
-
-
     // Moved out response handling into a separate function
     const handleCaptchaResponse = (response) => {
         verifyCaptcha(response).then((response) => {
@@ -133,9 +127,9 @@ const Captcha = ({field, showDisabledWhenSaving = true}) => {
 
         // Cleanup function
         return () => {
-            script && script.remove();
-            // Detach the captcha HTML upon unmounting
-            // detachedCaptchaHtml = captchaContainerRef.current.innerHTML;
+            if (script) {
+                script.remove();
+            }
             unloadCaptcha(); // Ensure CAPTCHA is unloaded
         };
     }, [enabled_captcha_provider, uniqueId, fully_enabled]);
