@@ -1,159 +1,61 @@
-import React, {useRef, useEffect, useState} from '@wordpress/element';
+import React, {useState} from 'react';
+import ReCaptcha from './ReCaptcha';
+import HCaptcha from './HCaptcha';
 import useFields from '../FieldsData';
 import useCaptchaData from "./CaptchaData";
 import {__} from '@wordpress/i18n';
 import {Button} from "@wordpress/components";
+import {useEffect} from "@wordpress/element";
 
-let detachedCaptchaHtml = '';
-
-function generateUniqueId() {
-    return Date.now() + '_' + Math.floor(Math.random() * 1000);
-}
-
-const Captcha = ({field, showDisabledWhenSaving = true}) => {
+const Captcha = ({props}) => {
     const {getFieldValue, updateField, saveFields} = useFields();
-    const [uniqueId, setUniqueId] = useState(generateUniqueId());
-    const captchaContainerRef = useRef(null);
-    const [loaded, setLoaded] = useState(false);
-    const {verifyCaptcha} = useCaptchaData();
-    const reCAPTCHAScriptId = 'recaptchaScript';
     const enabled_captcha_provider = getFieldValue('enabled_captcha_provider');
+    const siteKey = getFieldValue(`${enabled_captcha_provider}_site_key`);
     const fully_enabled = getFieldValue('captcha_fully_enabled');
+    const {verifyCaptcha} = useCaptchaData();
     const [showCaptcha, setShowCaptcha] = useState(false);
-    const site_key = getFieldValue(`${enabled_captcha_provider}_site_key`);
-    const secret_key = getFieldValue(`${enabled_captcha_provider}secret_key`);
 
-    // Moved out response handling into a separate function
     const handleCaptchaResponse = (response) => {
         verifyCaptcha(response).then((response) => {
+            setShowCaptcha(false);
             if (response && response.success) {
                 updateField('captcha_fully_enabled', true);
+                saveFields(false, false);
             } else {
                 updateField('captcha_fully_enabled', false);
+                saveFields(false, false);
             }
         });
     };
 
-    const recaptchaCallback = (response) => {
-        handleCaptchaResponse(response);
-    };
-
-    const hcaptchaCallback = (response) => {
-        handleCaptchaResponse(response);
-    };
-
-    function removeRecaptchaScript() {
-        let script = document.getElementById(reCAPTCHAScriptId);
-        if (script) {
-            document.body.removeChild(script);
-        }
-    }
-
+    //if we switch to another captcha provider, we need to reset the captcha
     useEffect(() => {
-       // if the value of the enabled_captcha_provider is changed we save the field.
-        saveFields(true, false);
+        saveFields(false, false);
     }, [enabled_captcha_provider]);
 
-
-
-    function unloadCaptcha() {
-        const container = captchaContainerRef.current;
-        if (container) {
-            // Remove reCAPTCHA script if exists
-            removeRecaptchaScript();
-
-            if (window.hcaptcha && typeof window.hcaptcha.reset === "function") {
-                window.hcaptcha.reset();
-            }
-            // Remove all child elements
-            while (container.firstChild) {
-                container.removeChild(container.firstChild);
-            }
-        }
-    }
-
     useEffect(() => {
-        if (enabled_captcha_provider === 'none') {
-            return;
+        if (fully_enabled) {
+            setShowCaptcha(false);
+            // we reload the page to make sure the captcha is not shown anymore.
+           saveFields(false, false);
         }
-        let script;
-
-        unloadCaptcha(); // Unload existing CAPTCHA
-
-
-        if (enabled_captcha_provider) {
-            if (detachedCaptchaHtml) {  // <-- add this if clause
-                // If there's any detached captcha HTML, reinsert it
-                captchaContainerRef.current.innerHTML = detachedCaptchaHtml;
-            } else {
-                script = document.createElement('script');
-                script.async = true;
-                script.defer = true;
-
-                if (fully_enabled) {
-                    return;
-                }
-                switch (enabled_captcha_provider) {
-                    case 'recaptcha':
-                        script.src = `https://www.google.com/recaptcha/api.js?render=explicit&onload=initRecaptcha`;
-                        //first we check if the recaptcha script is already loaded
-                        // if (typeof window.grecaptcha !== 'undefined') {
-                        //     window.initRecaptcha();
-                        // }
-                        window.initRecaptcha = window.initRecaptcha || (() => {
-                            window.grecaptcha && window.grecaptcha.render(captchaContainerRef.current, {
-                                sitekey: site_key,
-                                callback: recaptchaCallback,
-                            });
-                        });
-                        break;
-                    case 'hcaptcha':
-                        script.src = `https://hcaptcha.com/1/api.js?onload=initHcaptcha`;
-                        window.initHcaptcha = window.initHcaptcha || (() => {
-                            window.hcaptcha && window.hcaptcha.render(captchaContainerRef.current, {
-                                sitekey: site_key,
-                                callback: hcaptchaCallback,
-                            });
-                        });
-                        break;
-                    default:
-                        break;
-                }
-
-                document.body.appendChild(script);
-            }
-
-        }
-
-        // Cleanup function
-        return () => {
-            if (script) {
-                script.remove();
-            }
-            unloadCaptcha(); // Ensure CAPTCHA is unloaded
-        };
-    }, [enabled_captcha_provider, uniqueId, fully_enabled]);
-
-    useEffect(() => {
-        setUniqueId(generateUniqueId());
-    }, [enabled_captcha_provider]);
+    }, [fully_enabled]);
 
     return (
-        <>
-            {enabled_captcha_provider !== 'none' && !fully_enabled && (
-                <div className="rsssl-captcha"
-                    style={{display: showCaptcha? 'flex': 'none', flexDirection: 'column', alignItems: 'center', marginBottom: '20px'}}
-                >
-                    <div ref={captchaContainerRef} key={uniqueId} id={uniqueId}></div>
-                </div>
+        <div>
+            {enabled_captcha_provider === 'recaptcha' && !fully_enabled && showCaptcha && (
+                <ReCaptcha sitekey={siteKey} handleCaptchaResponse={handleCaptchaResponse} />
+                )}
+            {enabled_captcha_provider === 'hcaptcha' && !fully_enabled && showCaptcha && (
+                <HCaptcha sitekey={siteKey} handleCaptchaResponse={handleCaptchaResponse} captchaVerified={fully_enabled}/>
             )}
             {enabled_captcha_provider !== 'none' && !fully_enabled && (
                 <Button isPrimary={true}
                         text={__('validate CAPTCHA', 'really-simple-ssl')}
-                        // style={{display: !showCaptcha? 'none': 'block'}}
-                    onClick={() => setShowCaptcha(true)} /> )
+                    // style={{display: !showCaptcha? 'none': 'block'}}
+                        onClick={() => setShowCaptcha(true)}/>)
             }
-        </>
+        </div>
     );
 };
 

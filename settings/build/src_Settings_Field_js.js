@@ -2066,161 +2066,74 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../FieldsData */ "./src/Settings/FieldsData.js");
-/* harmony import */ var _CaptchaData__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./CaptchaData */ "./src/Settings/Captcha/CaptchaData.js");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _ReCaptcha__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ReCaptcha */ "./src/Settings/Captcha/ReCaptcha.js");
+/* harmony import */ var _HCaptcha__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./HCaptcha */ "./src/Settings/Captcha/HCaptcha.js");
+/* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../FieldsData */ "./src/Settings/FieldsData.js");
+/* harmony import */ var _CaptchaData__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./CaptchaData */ "./src/Settings/Captcha/CaptchaData.js");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_7__);
 
 
 
 
 
 
-let detachedCaptchaHtml = '';
-function generateUniqueId() {
-  return Date.now() + '_' + Math.floor(Math.random() * 1000);
-}
+
+
+
 const Captcha = ({
-  field,
-  showDisabledWhenSaving = true
+  props
 }) => {
   const {
     getFieldValue,
     updateField,
     saveFields
-  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_2__["default"])();
-  const [uniqueId, setUniqueId] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(generateUniqueId());
-  const captchaContainerRef = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useRef)(null);
-  const [loaded, setLoaded] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
+  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_3__["default"])();
+  const enabled_captcha_provider = getFieldValue('enabled_captcha_provider');
+  const siteKey = getFieldValue(`${enabled_captcha_provider}_site_key`);
+  const fully_enabled = getFieldValue('captcha_fully_enabled');
   const {
     verifyCaptcha
-  } = (0,_CaptchaData__WEBPACK_IMPORTED_MODULE_3__["default"])();
-  const reCAPTCHAScriptId = 'recaptchaScript';
-  const enabled_captcha_provider = getFieldValue('enabled_captcha_provider');
-  const fully_enabled = getFieldValue('captcha_fully_enabled');
-  const [showCaptcha, setShowCaptcha] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
-  const site_key = getFieldValue(`${enabled_captcha_provider}_site_key`);
-  const secret_key = getFieldValue(`${enabled_captcha_provider}secret_key`);
-
-  // Moved out response handling into a separate function
+  } = (0,_CaptchaData__WEBPACK_IMPORTED_MODULE_4__["default"])();
+  const [showCaptcha, setShowCaptcha] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   const handleCaptchaResponse = response => {
     verifyCaptcha(response).then(response => {
+      setShowCaptcha(false);
       if (response && response.success) {
         updateField('captcha_fully_enabled', true);
+        saveFields(false, false);
       } else {
         updateField('captcha_fully_enabled', false);
+        saveFields(false, false);
       }
     });
   };
-  const recaptchaCallback = response => {
-    handleCaptchaResponse(response);
-  };
-  const hcaptchaCallback = response => {
-    handleCaptchaResponse(response);
-  };
-  function removeRecaptchaScript() {
-    let script = document.getElementById(reCAPTCHAScriptId);
-    if (script) {
-      document.body.removeChild(script);
-    }
-  }
-  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
-    // if the value of the enabled_captcha_provider is changed we save the field.
-    saveFields(true, false);
-  }, [enabled_captcha_provider]);
-  function unloadCaptcha() {
-    const container = captchaContainerRef.current;
-    if (container) {
-      // Remove reCAPTCHA script if exists
-      removeRecaptchaScript();
-      if (window.hcaptcha && typeof window.hcaptcha.reset === "function") {
-        window.hcaptcha.reset();
-      }
-      // Remove all child elements
-      while (container.firstChild) {
-        container.removeChild(container.firstChild);
-      }
-    }
-  }
-  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
-    if (enabled_captcha_provider === 'none') {
-      return;
-    }
-    let script;
-    unloadCaptcha(); // Unload existing CAPTCHA
 
-    if (enabled_captcha_provider) {
-      if (detachedCaptchaHtml) {
-        // <-- add this if clause
-        // If there's any detached captcha HTML, reinsert it
-        captchaContainerRef.current.innerHTML = detachedCaptchaHtml;
-      } else {
-        script = document.createElement('script');
-        script.async = true;
-        script.defer = true;
-        if (fully_enabled) {
-          return;
-        }
-        switch (enabled_captcha_provider) {
-          case 'recaptcha':
-            script.src = `https://www.google.com/recaptcha/api.js?render=explicit&onload=initRecaptcha`;
-            //first we check if the recaptcha script is already loaded
-            // if (typeof window.grecaptcha !== 'undefined') {
-            //     window.initRecaptcha();
-            // }
-            window.initRecaptcha = window.initRecaptcha || (() => {
-              window.grecaptcha && window.grecaptcha.render(captchaContainerRef.current, {
-                sitekey: site_key,
-                callback: recaptchaCallback
-              });
-            });
-            break;
-          case 'hcaptcha':
-            script.src = `https://hcaptcha.com/1/api.js?onload=initHcaptcha`;
-            window.initHcaptcha = window.initHcaptcha || (() => {
-              window.hcaptcha && window.hcaptcha.render(captchaContainerRef.current, {
-                sitekey: site_key,
-                callback: hcaptchaCallback
-              });
-            });
-            break;
-          default:
-            break;
-        }
-        document.body.appendChild(script);
-      }
-    }
-
-    // Cleanup function
-    return () => {
-      if (script) {
-        script.remove();
-      }
-      unloadCaptcha(); // Ensure CAPTCHA is unloaded
-    };
-  }, [enabled_captcha_provider, uniqueId, fully_enabled]);
-  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
-    setUniqueId(generateUniqueId());
+  //if we switch to another captcha provider, we need to reset the captcha
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_7__.useEffect)(() => {
+    saveFields(false, false);
   }, [enabled_captcha_provider]);
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, enabled_captcha_provider !== 'none' && !fully_enabled && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-captcha",
-    style: {
-      display: showCaptcha ? 'flex' : 'none',
-      flexDirection: 'column',
-      alignItems: 'center',
-      marginBottom: '20px'
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_7__.useEffect)(() => {
+    if (fully_enabled) {
+      setShowCaptcha(false);
+      // we reload the page to make sure the captcha is not shown anymore.
+      saveFields(false, false);
     }
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    ref: captchaContainerRef,
-    key: uniqueId,
-    id: uniqueId
-  })), enabled_captcha_provider !== 'none' && !fully_enabled && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.Button, {
+  }, [fully_enabled]);
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, enabled_captcha_provider === 'recaptcha' && !fully_enabled && showCaptcha && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_ReCaptcha__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    sitekey: siteKey,
+    handleCaptchaResponse: handleCaptchaResponse
+  }), enabled_captcha_provider === 'hcaptcha' && !fully_enabled && showCaptcha && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_HCaptcha__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    sitekey: siteKey,
+    handleCaptchaResponse: handleCaptchaResponse,
+    captchaVerified: fully_enabled
+  }), enabled_captcha_provider !== 'none' && !fully_enabled && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
     isPrimary: true,
-    text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)('validate CAPTCHA', 'really-simple-ssl')
+    text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)('validate CAPTCHA', 'really-simple-ssl')
     // style={{display: !showCaptcha? 'none': 'block'}}
     ,
     onClick: () => setShowCaptcha(true)
@@ -2302,12 +2215,6 @@ const CaptchaKey = ({
   } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_2__["default"])();
   let fieldValue = getFieldValue(field.id);
   let captchaVerified = getFieldValue('captcha_fully_enabled');
-
-  // useEffect(() => {
-  //     const captchaStatus = fields.find(field => field.id === 'captcha_fully_enabled').value;
-  //     setCaptchaVerified(captchaStatus);
-  // }, [fields]);
-
   const onChangeHandler = async fieldValue => {
     setChangedField(field.id, fieldValue);
     updateField(field.id, fieldValue);
@@ -2335,6 +2242,139 @@ const CaptchaKey = ({
   })));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (CaptchaKey);
+
+/***/ }),
+
+/***/ "./src/Settings/Captcha/HCaptcha.js":
+/*!******************************************!*\
+  !*** ./src/Settings/Captcha/HCaptcha.js ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+
+const HCaptcha = ({
+  sitekey,
+  handleCaptchaResponse
+}) => {
+  const hcaptchaCallback = response => {
+    handleCaptchaResponse(response);
+  };
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    const script = document.createElement('script');
+    script.src = `https://hcaptcha.com/1/api.js?onload=initHcaptcha`;
+    script.async = true;
+    script.defer = true;
+    script.onload = () => {
+      if (typeof window.hcaptcha !== 'undefined') {
+        window.hcaptcha.render('hcaptchaContainer', {
+          sitekey: sitekey,
+          callback: hcaptchaCallback
+        });
+      }
+    };
+    document.body.appendChild(script);
+
+    // Cleanup function
+    return () => {
+      // Check if hcaptcha is loaded before trying to remove it
+      if (window.hcaptcha) {
+        window.hcaptcha.reset();
+      }
+      if (script) {
+        script.remove();
+      }
+    };
+  }, [sitekey, handleCaptchaResponse]);
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-captcha",
+    style: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      marginBottom: '20px'
+    }
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    id: "hcaptchaContainer"
+  }));
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (HCaptcha);
+
+/***/ }),
+
+/***/ "./src/Settings/Captcha/ReCaptcha.js":
+/*!*******************************************!*\
+  !*** ./src/Settings/Captcha/ReCaptcha.js ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+
+const ReCaptcha = ({
+  sitekey,
+  handleCaptchaResponse,
+  captchaVerified
+}) => {
+  const recaptchaCallback = response => {
+    handleCaptchaResponse(response);
+  };
+  console.log('sitekey', sitekey);
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    const script = document.createElement('script');
+    script.src = `https://www.google.com/recaptcha/api.js?render=explicit&onload=initRecaptcha`;
+    script.async = true;
+    script.defer = true;
+    script.onload = () => {
+      console.log(window.grecaptcha);
+      if (typeof window.grecaptcha !== 'undefined') {
+        window.initRecaptcha = window.initRecaptcha || (() => {
+          window.grecaptcha && window.grecaptcha.render(recaptchaContainer, {
+            sitekey: sitekey,
+            callback: recaptchaCallback
+          });
+        });
+      }
+    };
+    document.body.appendChild(script);
+  }, [sitekey, handleCaptchaResponse]);
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    // Move cleanup here.
+    if (captchaVerified) {
+      if (window.grecaptcha) {
+        window.grecaptcha.reset();
+      }
+      const scriptTag = document.querySelector('script[src^="https://www.google.com/recaptcha/api.js"]');
+      if (scriptTag) {
+        scriptTag.remove();
+      }
+      console.log('removing recaptcha script');
+    }
+  }, [captchaVerified]);
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-captcha",
+    style: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      marginBottom: '20px'
+    }
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    id: "recaptchaContainer"
+  }));
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ReCaptcha);
 
 /***/ }),
 
@@ -4832,6 +4872,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_Flag_Flag__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../utils/Flag/Flag */ "./src/utils/Flag/Flag.js");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _Menu_MenuData__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../Menu/MenuData */ "./src/Menu/MenuData.js");
+
 
 
 
@@ -4867,8 +4909,12 @@ const CountryDatatable = props => {
   } = (0,_CountryDataTableStore__WEBPACK_IMPORTED_MODULE_3__["default"])();
   const {
     showSavedSettingsNotice,
-    saveFields
+    saveFields,
+    setHighLightField
   } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_2__["default"])();
+  const {
+    setSelectedSubMenuItem
+  } = (0,_Menu_MenuData__WEBPACK_IMPORTED_MODULE_8__["default"])();
   const {
     DynamicDataTable,
     fetchDynamicData
@@ -4885,8 +4931,34 @@ const CountryDatatable = props => {
   const {
     fields,
     fieldAlreadyEnabled,
-    getFieldValue
+    getFieldValue,
+    getField
   } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_2__["default"])();
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    const element = document.getElementById('set_to_captcha_configuration');
+    const clickListener = async event => {
+      event.preventDefault();
+      if (element) {
+        await redirectToAddCaptcha(element);
+      }
+    };
+    if (element) {
+      element.addEventListener('click', clickListener);
+    }
+    return () => {
+      if (element) {
+        element.removeEventListener('click', clickListener);
+      }
+    };
+  }, []);
+  const redirectToAddCaptcha = async element => {
+    // We fetch the props from the menu item
+    let menuItem = getField('enabled_captcha_provider');
+    menuItem.highlight_field_id = 'enabled_captcha_provider';
+    setHighLightField(menuItem.highlight_field_id);
+    let highlightField = getField(menuItem.highlight_field_id);
+    await setSelectedSubMenuItem(highlightField.menu_id);
+  };
   const buildColumn = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(column => ({
     //if the filter is set to region and the columns = status we do not want to show the column
     omit: getCurrentFilter(moduleName) === 'regions' && column.column === 'status',

@@ -9,11 +9,6 @@ const CaptchaKey = ({ field, fields, showDisabledWhenSaving = true }) => {
     let fieldValue = getFieldValue(field.id);
     let captchaVerified = getFieldValue('captcha_fully_enabled');
 
-    // useEffect(() => {
-    //     const captchaStatus = fields.find(field => field.id === 'captcha_fully_enabled').value;
-    //     setCaptchaVerified(captchaStatus);
-    // }, [fields]);
-
     const onChangeHandler = async (fieldValue) => {
         setChangedField(field.id, fieldValue);
         updateField(field.id, fieldValue);
