@@ -9,20 +9,19 @@ import {useEffect} from "@wordpress/element";
 import ErrorBoundary from "../../utils/ErrorBoundary";
 
 const Captcha = ({props}) => {
-    const {getFieldValue, updateField, saveFields, fetchFields} = useFields();
+    const {getFieldValue, updateField, saveFields} = useFields();
     const enabled_captcha_provider = getFieldValue('enabled_captcha_provider');
     const siteKey = getFieldValue(`${enabled_captcha_provider}_site_key`);
     const fully_enabled = getFieldValue('captcha_fully_enabled');
     const {verifyCaptcha, setReloadCaptcha, removeRecaptchaScript} = useCaptchaData();
     const [showCaptcha, setShowCaptcha] = useState(false);
 
+
     const handleCaptchaResponse = (response) => {
         verifyCaptcha(response).then((response) => {
-            setShowCaptcha(false);
             if (response && response.success) {
-                updateField('captcha_fully_enabled', true);
-                fetchFields();
-                saveFields(false, false);
+                updateField('captcha_fully_enabled', 1);
+                saveFields(false, false, true);
             } else {
                 updateField('captcha_fully_enabled', false);
                 saveFields(false, false);
@@ -36,11 +35,9 @@ const Captcha = ({props}) => {
     }, [enabled_captcha_provider]);
 
     useEffect(() => {
-        //if the captcha is fully enabled, we don't want to show the captcha anymore
         if (fully_enabled) {
-            setShowCaptcha(false);
-            // we reload the page to make sure the captcha is not shown anymore.
-           saveFields(false, false);
+            updateField('captcha_fully_enabled', 1);
+            saveFields(false, false);
         }
     }, [fully_enabled]);
 

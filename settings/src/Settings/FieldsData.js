@@ -149,7 +149,7 @@ const useFields = create(( set, get ) => ({
         }
         return false;
     },
-    saveFields: async (skipRefreshTests, showSavedNotice) => {
+    saveFields: async (skipRefreshTests, showSavedNotice, force = false) => {
         let refreshTests = typeof skipRefreshTests !== 'undefined' ? skipRefreshTests : true;
         showSavedNotice = typeof showSavedNotice !== 'undefined' ? showSavedNotice : true;
         let fields = get().fields;
@@ -166,6 +166,33 @@ const useFields = create(( set, get ) => ({
             if (fieldIsIncluded || (field.never_saved && !field.disabled && select_or_radio)) {
                 saveFields.push(field);
             }
+        }
+
+        if ( force === true ) {
+            let response = rsssl_api.setFields(saveFields).then((response) => {
+                return response;
+            })
+
+            if (showSavedNotice) {
+                toast.promise(
+                    response,
+                    {
+                        pending: __('Saving settings...', 'really-simple-ssl'),
+                        success: __('Settings saved', 'really-simple-ssl'),
+                        error: __('Something went wrong', 'really-simple-ssl'),
+                    }
+                );
+            }
+            await response.then((response) => {
+                set(
+                    produce((state) => {
+                        state.changedFields = [];
+                        state.fields = response.fields;
+                        state.progress = response.progress;
+                        state.refreshTests = refreshTests;
+                    })
+                )
+            });
         }
 
         //if no fields were changed, do nothing.

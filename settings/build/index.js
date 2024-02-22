@@ -1141,7 +1141,7 @@ const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set, get) => 
     }
     return false;
   },
-  saveFields: async (skipRefreshTests, showSavedNotice) => {
+  saveFields: async (skipRefreshTests, showSavedNotice, force = false) => {
     let refreshTests = typeof skipRefreshTests !== 'undefined' ? skipRefreshTests : true;
     showSavedNotice = typeof showSavedNotice !== 'undefined' ? showSavedNotice : true;
     let fields = get().fields;
@@ -1158,6 +1158,26 @@ const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set, get) => 
       if (fieldIsIncluded || field.never_saved && !field.disabled && select_or_radio) {
         saveFields.push(field);
       }
+    }
+    if (force === true) {
+      let response = _utils_api__WEBPACK_IMPORTED_MODULE_0__.setFields(saveFields).then(response => {
+        return response;
+      });
+      if (showSavedNotice) {
+        react_toastify__WEBPACK_IMPORTED_MODULE_2__.toast.promise(response, {
+          pending: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Saving settings...', 'really-simple-ssl'),
+          success: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Settings saved', 'really-simple-ssl'),
+          error: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Something went wrong', 'really-simple-ssl')
+        });
+      }
+      await response.then(response => {
+        set((0,immer__WEBPACK_IMPORTED_MODULE_4__.produce)(state => {
+          state.changedFields = [];
+          state.fields = response.fields;
+          state.progress = response.progress;
+          state.refreshTests = refreshTests;
+        }));
+      });
     }
 
     //if no fields were changed, do nothing.
