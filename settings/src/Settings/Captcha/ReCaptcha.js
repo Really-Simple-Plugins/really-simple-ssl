@@ -1,11 +1,26 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
+import useFields from '../FieldsData';
+import CaptchaData from "./CaptchaData";
 
-const ReCaptcha = ({sitekey, handleCaptchaResponse , captchaVerified}) => {
+/**
+ * ReCaptcha functionality.
+ *
+ * @param {function} handleCaptchaResponse - The callback function to handle the ReCaptcha response.
+ * @param {boolean} captchaVerified - Boolean value indicating whether the ReCaptcha is verified or not.
+ * @return {JSX.Element} - The ReCaptcha component JSX.
+ */
+const ReCaptcha = ({ handleCaptchaResponse , captchaVerified}) => {
     const recaptchaCallback = (response) => {
         handleCaptchaResponse(response);
     };
 
-    console.log('sitekey', sitekey);
+    const {reloadCaptcha, removeRecaptchaScript, setReloadCaptcha} = CaptchaData();
+    const {getFieldValue, updateField, saveFields} = useFields();
+    const sitekey = getFieldValue('recaptcha_site_key');
+    const secret = getFieldValue('recaptcha_secret_key');
+    const fully_enabled = getFieldValue('captcha_fully_enabled');
+
+    console.log('reloading recaptcha', reloadCaptcha);
 
     useEffect(() => {
         const script = document.createElement('script');
@@ -15,7 +30,8 @@ const ReCaptcha = ({sitekey, handleCaptchaResponse , captchaVerified}) => {
         script.defer = true;
 
         script.onload = () => {
-            console.log(window.grecaptcha);
+            // We restore the recaptcha script if it was not removed.
+            let recaptchaContainer = document.getElementById('recaptchaContainer');
             if (typeof window.grecaptcha !== 'undefined') {
                 window.initRecaptcha = window.initRecaptcha || (() => {
                     window.grecaptcha && window.grecaptcha.render(recaptchaContainer, {
@@ -23,6 +39,7 @@ const ReCaptcha = ({sitekey, handleCaptchaResponse , captchaVerified}) => {
                         callback: recaptchaCallback,
                     });
                 });
+                console.log(window.grecaptcha);
             }
         };
 
@@ -33,14 +50,8 @@ const ReCaptcha = ({sitekey, handleCaptchaResponse , captchaVerified}) => {
     useEffect(() => {
         // Move cleanup here.
         if (captchaVerified) {
-            if (window.grecaptcha) {
-                window.grecaptcha.reset();
-            }
-            const scriptTag = document.querySelector('script[src^="https://www.google.com/recaptcha/api.js"]');
-            if (scriptTag) {
-                scriptTag.remove();
-            }
-            console.log('removing recaptcha script');
+            console.log('rtiggered');
+          removeRecaptchaScript();
         }
     }, [captchaVerified]);
 

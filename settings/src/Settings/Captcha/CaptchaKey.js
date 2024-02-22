@@ -11,8 +11,9 @@ const CaptchaKey = ({ field, fields, showDisabledWhenSaving = true }) => {
 
     const onChangeHandler = async (fieldValue) => {
         setChangedField(field.id, fieldValue);
+        setChangedField('captcha_fully_enabled', false);
         updateField(field.id, fieldValue);
-        await saveFields(true, false);
+        await saveFields(false, false);
     }
 
     const labelWrap = (field) => {

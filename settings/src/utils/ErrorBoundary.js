@@ -23,6 +23,12 @@ class ErrorBoundary extends Component {
     }
 
     render() {
+        let title = '';
+        if (this.props.title === undefined) {
+            title = 'Try Again';
+        } else {
+            title = this.props.title;
+        }
         if (this.state.hasError) {
             return (
                 <div>
@@ -30,7 +36,7 @@ class ErrorBoundary extends Component {
 
                     {/* You can render any custom fallback UI */}
                     <p>{this.props.fallback}</p>
-                    <button onClick={this.resetError}>Try Again</button>
+                    <button onClick={this.resetError}>{title}</button>
                 </div>
             );
         }

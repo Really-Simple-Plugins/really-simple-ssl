@@ -1505,10 +1505,16 @@ class ErrorBoundary extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
     });
   }
   render() {
+    let title = '';
+    if (this.props.title === undefined) {
+      title = 'Try Again';
+    } else {
+      title = this.props.title;
+    }
     if (this.state.hasError) {
       return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h1", null, "Something went wrong."), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, this.props.fallback), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
         onClick: this.resetError
-      }, "Try Again"));
+      }, title));
     }
     return this.props.children;
   }

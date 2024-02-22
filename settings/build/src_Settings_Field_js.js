@@ -2076,6 +2076,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _utils_ErrorBoundary__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../utils/ErrorBoundary */ "./src/utils/ErrorBoundary.js");
+
 
 
 
@@ -2091,13 +2093,16 @@ const Captcha = ({
   const {
     getFieldValue,
     updateField,
-    saveFields
+    saveFields,
+    fetchFields
   } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_3__["default"])();
   const enabled_captcha_provider = getFieldValue('enabled_captcha_provider');
   const siteKey = getFieldValue(`${enabled_captcha_provider}_site_key`);
   const fully_enabled = getFieldValue('captcha_fully_enabled');
   const {
-    verifyCaptcha
+    verifyCaptcha,
+    setReloadCaptcha,
+    removeRecaptchaScript
   } = (0,_CaptchaData__WEBPACK_IMPORTED_MODULE_4__["default"])();
   const [showCaptcha, setShowCaptcha] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   const handleCaptchaResponse = response => {
@@ -2105,6 +2110,7 @@ const Captcha = ({
       setShowCaptcha(false);
       if (response && response.success) {
         updateField('captcha_fully_enabled', true);
+        fetchFields();
         saveFields(false, false);
       } else {
         updateField('captcha_fully_enabled', false);
@@ -2118,14 +2124,19 @@ const Captcha = ({
     saveFields(false, false);
   }, [enabled_captcha_provider]);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_7__.useEffect)(() => {
+    //if the captcha is fully enabled, we don't want to show the captcha anymore
     if (fully_enabled) {
       setShowCaptcha(false);
       // we reload the page to make sure the captcha is not shown anymore.
       saveFields(false, false);
     }
   }, [fully_enabled]);
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, enabled_captcha_provider === 'recaptcha' && !fully_enabled && showCaptcha && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_ReCaptcha__WEBPACK_IMPORTED_MODULE_1__["default"], {
-    sitekey: siteKey,
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_7__.useEffect)(() => {
+    setShowCaptcha(false);
+  }, [siteKey]);
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_ErrorBoundary__WEBPACK_IMPORTED_MODULE_8__["default"], {
+    title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)('Reload Captcha', 'really-simple-ssl')
+  }, enabled_captcha_provider === 'recaptcha' && !fully_enabled && showCaptcha && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_ReCaptcha__WEBPACK_IMPORTED_MODULE_1__["default"], {
     handleCaptchaResponse: handleCaptchaResponse
   }), enabled_captcha_provider === 'hcaptcha' && !fully_enabled && showCaptcha && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_HCaptcha__WEBPACK_IMPORTED_MODULE_2__["default"], {
     sitekey: siteKey,
@@ -2137,7 +2148,7 @@ const Captcha = ({
     // style={{display: !showCaptcha? 'none': 'block'}}
     ,
     onClick: () => setShowCaptcha(true)
-  }));
+  })));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Captcha);
 
@@ -2158,6 +2169,10 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const useCaptchaData = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, get) => ({
+  reloadCaptcha: false,
+  setReloadCaptcha: value => set({
+    reloadCaptcha: value
+  }),
   verifyCaptcha: async responseToken => {
     try {
       const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('verify_captcha', {
@@ -2173,6 +2188,26 @@ const useCaptchaData = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, get
     } catch (error) {
       console.error('Error:', error);
     }
+  },
+  removeRecaptchaScript: async (source = 'recaptcha') => {
+    if (window.grecaptcha) {
+      window.grecaptcha.reset();
+      delete window.grecaptcha;
+    }
+    const scriptTags = document.querySelectorAll('script[src^="https://www.google.com/recaptcha/api.js"]');
+    // For each found script tag
+    scriptTags.forEach(scriptTag => {
+      console.log(scriptTag);
+      scriptTag.remove(); // Remove it
+    });
+    const rescriptTags = document.querySelectorAll('script[src^="https://www.google.com/recaptcha/api.js"]');
+    console.log(rescriptTags);
+    // now we check if reCaptcha was still rendered.
+    const recaptchaContainer = document.getElementById('recaptchaContainer');
+    if (recaptchaContainer) {
+      recaptchaContainer.remove();
+    }
+    console.log('removing recaptcha script v2');
   }
 }));
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useCaptchaData);
@@ -2217,8 +2252,9 @@ const CaptchaKey = ({
   let captchaVerified = getFieldValue('captcha_fully_enabled');
   const onChangeHandler = async fieldValue => {
     setChangedField(field.id, fieldValue);
+    setChangedField('captcha_fully_enabled', false);
     updateField(field.id, fieldValue);
-    await saveFields(true, false);
+    await saveFields(false, false);
   };
   const labelWrap = field => {
     // implement label wrap function
@@ -2320,24 +2356,49 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../FieldsData */ "./src/Settings/FieldsData.js");
+/* harmony import */ var _CaptchaData__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./CaptchaData */ "./src/Settings/Captcha/CaptchaData.js");
 
 
+
+
+
+/**
+ * ReCaptcha functionality.
+ *
+ * @param {function} handleCaptchaResponse - The callback function to handle the ReCaptcha response.
+ * @param {boolean} captchaVerified - Boolean value indicating whether the ReCaptcha is verified or not.
+ * @return {JSX.Element} - The ReCaptcha component JSX.
+ */
 const ReCaptcha = ({
-  sitekey,
   handleCaptchaResponse,
   captchaVerified
 }) => {
   const recaptchaCallback = response => {
     handleCaptchaResponse(response);
   };
-  console.log('sitekey', sitekey);
+  const {
+    reloadCaptcha,
+    removeRecaptchaScript,
+    setReloadCaptcha
+  } = (0,_CaptchaData__WEBPACK_IMPORTED_MODULE_2__["default"])();
+  const {
+    getFieldValue,
+    updateField,
+    saveFields
+  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_1__["default"])();
+  const sitekey = getFieldValue('recaptcha_site_key');
+  const secret = getFieldValue('recaptcha_secret_key');
+  const fully_enabled = getFieldValue('captcha_fully_enabled');
+  console.log('reloading recaptcha', reloadCaptcha);
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     const script = document.createElement('script');
     script.src = `https://www.google.com/recaptcha/api.js?render=explicit&onload=initRecaptcha`;
     script.async = true;
     script.defer = true;
     script.onload = () => {
-      console.log(window.grecaptcha);
+      // We restore the recaptcha script if it was not removed.
+      let recaptchaContainer = document.getElementById('recaptchaContainer');
       if (typeof window.grecaptcha !== 'undefined') {
         window.initRecaptcha = window.initRecaptcha || (() => {
           window.grecaptcha && window.grecaptcha.render(recaptchaContainer, {
@@ -2345,6 +2406,7 @@ const ReCaptcha = ({
             callback: recaptchaCallback
           });
         });
+        console.log(window.grecaptcha);
       }
     };
     document.body.appendChild(script);
@@ -2352,14 +2414,8 @@ const ReCaptcha = ({
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     // Move cleanup here.
     if (captchaVerified) {
-      if (window.grecaptcha) {
-        window.grecaptcha.reset();
-      }
-      const scriptTag = document.querySelector('script[src^="https://www.google.com/recaptcha/api.js"]');
-      if (scriptTag) {
-        scriptTag.remove();
-      }
-      console.log('removing recaptcha script');
+      console.log('rtiggered');
+      removeRecaptchaScript();
     }
   }, [captchaVerified]);
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
