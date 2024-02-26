@@ -80,6 +80,7 @@ const Field = (props) => {
         // we can configure other fields if a field is enabled, or set to a certain value.
         let configureFieldCondition = false;
         if ( field.configure_on_activation ) {
+
             if ( field.configure_on_activation.hasOwnProperty('condition') && props.field.value==field.configure_on_activation.condition ) {
                 configureFieldCondition = true;
             }
