@@ -24,27 +24,16 @@ class Rsssl_Folder_Name {
 		$rsssl_folder = get_option( 'rsssl_folder_name' );
 
 		if ( $rsssl_folder ) {
-			$this->folderName = $this->folderName( $rsssl_folder );
+			$this->folderName = $rsssl_folder;
 		} else {
 			$newFolderName    = md5( uniqid( mt_rand(), true ) );
 
-			$this->folderName = $this->folderName( $newFolderName );
+			$this->folderName = $newFolderName;
 
 			require_once 'class-rsssl-file-storage.php';
 			Rsssl_File_Storage::DeleteOldFiles();
 			update_option( 'rsssl_folder_name', $this->folderName );
 		}
-	}
-
-	/**
-	 * Returns the provided name as the folder name for Really Simple SSL.
-	 *
-	 * @param  string  $name  The folder name.
-	 *
-	 * @return string The folder name.
-	 */
-	private function folderName( string $name ): string {
-		return $name;
 	}
 
 	/**
