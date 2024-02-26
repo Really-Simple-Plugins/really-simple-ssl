@@ -5169,6 +5169,42 @@ const CountryDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((s
       });
     }
   },
+  resetRegions: async (region, dataActions) => {
+    set({
+      processing: true
+    });
+    try {
+      const response = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('delete_entries_regions', {
+        value: region
+      });
+      //now we set the EventLog
+      if (response && response.success) {
+        await get().fetchData('rsssl_limit_login_country', dataActions);
+        return {
+          success: true,
+          message: response.message,
+          response
+        };
+      } else {
+        return {
+          success: false,
+          message: response?.message || 'Failed to reset region',
+          response
+        };
+      }
+    } catch (e) {
+      console.error(e);
+      return {
+        success: false,
+        message: 'Error occurred',
+        error: e
+      };
+    } finally {
+      set({
+        processing: false
+      });
+    }
+  },
   resetRow: async (id, dataActions) => {
     set({
       processing: true
@@ -5293,7 +5329,7 @@ const CountryDatatable = props => {
     handleCountryTableSort,
     handleCountryTableSearch,
     addRegion,
-    removeRegion,
+    resetRegions,
     addRowMultiple,
     resetRow,
     resetMultiRow,
@@ -5396,19 +5432,20 @@ const CountryDatatable = props => {
     setRowsSelected(state.selectedRows);
   }, []);
   const allowRegionByCode = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(async (code, regionName = '') => {
+    console.log('clicked');
     if (Array.isArray(code)) {
       const ids = code.map(item => item.id);
       const regions = code.map(item => item.region);
-      await removeRegions(ids, '', dataActions);
+      await resetRegions(ids, dataActions);
       let regionsString = regions.join(', ');
       showSavedSettingsNotice((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)('%s is now allowed', 'really-simple-ssl').replace('%s', regionsString));
       setRowsSelected([]);
     } else {
-      await removeRegion(code, 'blocked', dataActions);
+      await resetRegions(code, dataActions);
       showSavedSettingsNotice((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)('%s is now allowed', 'really-simple-ssl').replace('%s', regionName));
     }
     await fetchDynamicData('event_log');
-  }, [removeRegion, getCurrentFilter(moduleName), dataActions]);
+  }, [resetRegions, getCurrentFilter(moduleName), dataActions]);
   const allowMultiple = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(rows => {
     const ids = rows.map(item => item.id);
     resetMultiRow(ids, dataActions).then(response => {
@@ -5429,8 +5466,8 @@ const CountryDatatable = props => {
   const blockRegionByCode = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(async (code, region = '') => {
     if (Array.isArray(code)) {
       const ids = code.map(item => item.id);
-      const regions = code.map(item => item.region);
-      regions.ForEach(region => {
+      const regions = code.map(item => item.iso2_code);
+      regions.forEach(code => {
         updateRowRegion(code, 'blocked', dataActions).then(response => {
           if (response.success) {
             showSavedSettingsNotice(response.message);
@@ -5550,11 +5587,12 @@ const CountryDatatable = props => {
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("Block", "really-simple-ssl"))), getCurrentFilter(moduleName) === 'blocked' && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
     onClick: () => allowMultiple(rowsSelected)
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("Allow", "really-simple-ssl")), getCurrentFilter(moduleName) === 'regions' && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
-    onClick: () => allowRegionByCode(rowsSelected),
+    onClick: () => blockRegionByCode(rowsSelected),
     className: "button-primary"
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("Allow", "really-simple-ssl")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
-    onClick: () => blockRegionByCode(rowsSelected)
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("Block", "really-simple-ssl")))))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_1__["default"], {
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("Block", "really-simple-ssl")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
+    onClick: () => allowRegionByCode(rowsSelected),
+    className: "button-secondary"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("Allow", "really-simple-ssl")))))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_1__["default"], {
     columns: columns,
     data: processing ? [] : Object.values(data),
     dense: true,
@@ -25568,4 +25606,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.e45b526d05859a0b0331.js.map
+//# sourceMappingURL=src_Settings_Field_js.dd6465163cb853fa213e.js.map

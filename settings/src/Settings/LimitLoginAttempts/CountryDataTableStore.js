@@ -155,6 +155,28 @@ const CountryDataTableStore = create((set, get) => ({
         }
     },
 
+    resetRegions: async (region, dataActions) => {
+        set({processing: true});
+        try {
+            const response = await rsssl_api.doAction(
+                'delete_entries_regions',
+                {value: region}
+            );
+            //now we set the EventLog
+            if (response && response.success) {
+                await get().fetchData('rsssl_limit_login_country', dataActions);
+                return { success: true, message: response.message, response };
+            } else {
+                return { success: false, message: response?.message || 'Failed to reset region', response };
+            }
+        } catch (e) {
+            console.error(e);
+            return { success: false, message: 'Error occurred', error: e };
+        } finally {
+            set({processing: false});
+        }
+    },
+
     resetRow: async (id, dataActions) => {
         set({processing: true});
         try {
