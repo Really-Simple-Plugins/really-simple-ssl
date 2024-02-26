@@ -15,10 +15,12 @@ if ( ! class_exists( "rsssl_le_hosts" ) ) {
         public $paid_only;
 
         public function __construct() {
-	        define('RSSSL_LE_CONFIG_LOADED', true);
+	        if ( !defined('RSSSL_LE_CONFIG_LOADED') ) {
+				define('RSSSL_LE_CONFIG_LOADED', true);
+	        }
 
 	        if ( isset( self::$_this ) ) {
-                wp_die( 'this is a singleton class and you cannot create a second instance.' );
+                wp_die( 'This is a singleton class and you cannot create a second instance.');
             }
 
             self::$_this = $this;
@@ -548,6 +550,15 @@ if ( ! class_exists( "rsssl_le_hosts" ) ) {
 		            'hosting_dashboard' => 'false',
 		            'api' => false,
 		            'ssl_installation_link' => 'https://support.upress.io',
+	            ),
+	            'infomaniak' => array(
+		            'name' => 'Infomaniak',
+		            'installation_renewal_required' => false,
+		            'local_ssl_generation_needed' => false,
+		            'free_ssl_available' => 'activation_required',
+		            'hosting_dashboard' => 'infomaniak',
+		            'api' => false,
+		            'ssl_installation_link' => 'https://www.infomaniak.com/en/secure/ssl-certificates',
 	            ),
             );
 

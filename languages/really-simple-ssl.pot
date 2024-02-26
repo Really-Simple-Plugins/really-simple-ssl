@@ -2,14 +2,14 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Really Simple SSL 7.2.2\n"
+"Project-Id-Version: Really Simple SSL 7.2.3\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/really-simple-ssl\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-01-31T07:19:38+00:00\n"
+"POT-Creation-Date: 2024-02-12T11:48:32+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.8.1\n"
 "X-Domain: really-simple-ssl\n"
@@ -84,8 +84,8 @@ msgid "Don't show again"
 msgstr ""
 
 #: class-admin.php:1791
-#: class-admin.php:2673
-#: class-admin.php:2676
+#: class-admin.php:2680
+#: class-admin.php:2683
 #: class-multisite.php:220
 #: settings/config/menu.php:17
 #: settings/config/menu.php:372
@@ -376,14 +376,14 @@ msgstr ""
 msgid "Email address successfully verified"
 msgstr ""
 
-#: class-admin.php:2681
+#: class-admin.php:2688
 #: class-multisite.php:223
 #: settings/build/index.a729f1a7153d0f128944.js:1
 #: settings/src/Header.js:36
 msgid "Support"
 msgstr ""
 
-#: class-admin.php:2686
+#: class-admin.php:2693
 #: class-multisite.php:227
 msgid "Improve security - Upgrade"
 msgstr ""
@@ -891,7 +891,7 @@ msgstr ""
 msgid "The system is not ready for the installation yet. Please run the wizard again."
 msgstr ""
 
-#: lets-encrypt/config/class-hosts.php:563
+#: lets-encrypt/config/class-hosts.php:565
 msgid "I don't know, or not listed, proceed with installation"
 msgstr ""
 
@@ -1435,6 +1435,10 @@ msgstr ""
 msgid "Please verify your email"
 msgstr ""
 
+#: mailer/class-mail.php:116
+msgid "To use certain features in Really Simple SSL we need to confirm emails are delivered without issues."
+msgstr ""
+
 #: mailer/class-mail.php:117
 msgid "Verify email"
 msgstr ""
@@ -1825,7 +1829,7 @@ msgstr ""
 #: security/notices.php:158
 #: security/notices.php:175
 #: settings/config/config.php:311
-#: settings/config/config.php:1124
+#: settings/config/config.php:1123
 #: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/LimitLoginAttempts/AddUserModal.js:53
 msgid "Username"
@@ -2096,8 +2100,8 @@ msgid "The .htaccess redirect has been enabled on your site. If the server confi
 msgstr ""
 
 #: settings/config/config.php:125
-#: modal/build/index.b167e8372488ba3980d4.js:1
-#: modal/src/components/DeactivationModal/DeactivationModal.js:123
+#: modal/build/index.5c0c53e2db8c73c5db9d.js:1
+#: modal/src/components/DeactivationModal/DeactivationModal.js:135
 msgid "Mixed content fixer"
 msgstr ""
 
@@ -2157,8 +2161,8 @@ msgid "Limit Login Attempts protects your site from login attempts by unauthoriz
 msgstr ""
 
 #: settings/config/config.php:215
-#: settings/config/config.php:1219
-#: settings/config/config.php:1663
+#: settings/config/config.php:1218
+#: settings/config/config.php:1662
 msgid "They might be misused if you don’t actively tell the browser to disable these features."
 msgstr ""
 
@@ -2241,7 +2245,7 @@ msgstr ""
 #: settings/config/config.php:318
 #: settings/config/config.php:364
 #: settings/config/config.php:424
-#: settings/config/config.php:1132
+#: settings/config/config.php:1131
 #: settings/build/354.2f14ed4d6692e499a6c3.js:1
 #: settings/src/Dashboard/SslLabs/SslLabsHeader.js:5
 msgid "Status"
@@ -2250,7 +2254,7 @@ msgstr ""
 #: settings/config/config.php:324
 #: settings/config/config.php:370
 #: settings/config/config.php:459
-#: settings/config/config.php:1572
+#: settings/config/config.php:1571
 msgid "Date"
 msgstr ""
 
@@ -2601,63 +2605,63 @@ msgstr ""
 msgid "By enabling this feature you understand that email validation is required, and you can send email from your server reliably."
 msgstr ""
 
-#: settings/config/config.php:1086
+#: settings/config/config.php:1085
 msgid "Optional for:"
 msgstr ""
 
-#: settings/config/config.php:1087
+#: settings/config/config.php:1086
 msgid "Two-step verification will be optional for these user roles, and they can disable it on first login."
 msgstr ""
 
-#: settings/config/config.php:1104
+#: settings/config/config.php:1103
 msgid "Force on:"
 msgstr ""
 
-#: settings/config/config.php:1105
+#: settings/config/config.php:1104
 msgid "These user roles are forced to enter the authentication code."
 msgstr ""
 
-#: settings/config/config.php:1119
+#: settings/config/config.php:1118
 #: settings/config/menu.php:309
 #: settings/config/menu.php:384
 #: settings/config/menu.php:405
 msgid "Users"
 msgstr ""
 
-#: settings/config/config.php:1140
+#: settings/config/config.php:1139
 msgid "User role"
 msgstr ""
 
-#: settings/config/config.php:1162
-#: modal/build/index.b167e8372488ba3980d4.js:1
-#: modal/src/components/DeactivationModal/DeactivationModal.js:86
+#: settings/config/config.php:1161
+#: modal/build/index.5c0c53e2db8c73c5db9d.js:1
+#: modal/src/components/DeactivationModal/DeactivationModal.js:98
 msgid "Mixed content scan"
 msgstr ""
 
-#: settings/config/config.php:1166
+#: settings/config/config.php:1165
 msgid "About the Mixed Content Scan"
 msgstr ""
 
-#: settings/config/config.php:1167
+#: settings/config/config.php:1166
 #: settings/config/menu.php:82
 msgid "The extensive mixed content scan will list all current and future issues and provide a fix, or instructions to fix manually."
 msgstr ""
 
-#: settings/config/config.php:1171
+#: settings/config/config.php:1170
 msgid "Type"
 msgstr ""
 
-#: settings/config/config.php:1178
-#: settings/config/config.php:1628
+#: settings/config/config.php:1177
+#: settings/config/config.php:1627
 msgid "Description"
 msgstr ""
 
-#: settings/config/config.php:1184
-#: settings/config/config.php:1378
+#: settings/config/config.php:1183
+#: settings/config/config.php:1377
 msgid "Location"
 msgstr ""
 
-#: settings/config/config.php:1212
+#: settings/config/config.php:1211
 #: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/LearningMode/ChangeStatus.js:7
 #: settings/src/Settings/LearningMode/LearningMode.js:240
@@ -2670,7 +2674,7 @@ msgstr ""
 msgid "Allow"
 msgstr ""
 
-#: settings/config/config.php:1212
+#: settings/config/config.php:1211
 #: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/LearningMode/LearningMode.js:290
 #: settings/src/Settings/LearningMode/LearningMode.js:296
@@ -2678,68 +2682,68 @@ msgstr ""
 msgid "Disable"
 msgstr ""
 
-#: settings/config/config.php:1212
+#: settings/config/config.php:1211
 msgid "Self (Default)"
 msgstr ""
 
-#: settings/config/config.php:1213
+#: settings/config/config.php:1212
 msgid "Permissions Policy"
 msgstr ""
 
-#: settings/config/config.php:1218
+#: settings/config/config.php:1217
 msgid "About the Permission Policy"
 msgstr ""
 
-#: settings/config/config.php:1219
+#: settings/config/config.php:1218
 msgid "Browser features are plentiful, but most are not needed on your website."
 msgstr ""
 
-#: settings/config/config.php:1223
+#: settings/config/config.php:1222
 msgid "Feature"
 msgstr ""
 
-#: settings/config/config.php:1301
+#: settings/config/config.php:1300
 msgid "Enable Permissions Policy"
 msgstr ""
 
-#: settings/config/config.php:1310
+#: settings/config/config.php:1309
 msgid "Serve encrypted and authenticated responses"
 msgstr ""
 
-#: settings/config/config.php:1316
+#: settings/config/config.php:1315
 msgid "About the Content Security Policy"
 msgstr ""
 
-#: settings/config/config.php:1317
+#: settings/config/config.php:1316
 msgid "The content security policy has many options, so we always recommend starting in ‘learning mode’ to see what files and scripts are loaded."
 msgstr ""
 
-#: settings/config/config.php:1332
+#: settings/config/config.php:1331
 msgid "Disable (Default)"
 msgstr ""
 
-#: settings/config/config.php:1336
+#: settings/config/config.php:1335
 msgid "Allow your domain to be embedded"
 msgstr ""
 
-#: settings/config/config.php:1345
+#: settings/config/config.php:1344
 msgid "Add additional domains which can embed your website, if needed. Comma seperated."
 msgstr ""
 
-#: settings/config/config.php:1384
+#: settings/config/config.php:1383
 msgid "Directive"
 msgstr ""
 
-#: settings/config/config.php:1390
+#: settings/config/config.php:1389
 msgid "Source"
 msgstr ""
 
-#: settings/config/config.php:1396
-#: settings/config/config.php:1616
+#: settings/config/config.php:1395
+#: settings/config/config.php:1615
 msgid "Action"
 msgstr ""
 
-#: settings/config/config.php:1402
+#: settings/config/config.php:1401
 #: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/LearningMode/Delete.js:12
 #: settings/src/Settings/LimitLoginAttempts/IpAddressDatatable.js:254
@@ -2749,126 +2753,126 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: settings/config/config.php:1418
-#: modal/build/index.b167e8372488ba3980d4.js:1
-#: modal/src/components/DeactivationModal/DeactivationModal.js:71
-#: modal/src/components/DeactivationModal/DeactivationModal.js:113
+#: settings/config/config.php:1417
+#: modal/build/index.5c0c53e2db8c73c5db9d.js:1
+#: modal/src/components/DeactivationModal/DeactivationModal.js:83
+#: modal/src/components/DeactivationModal/DeactivationModal.js:125
 msgid "Vulnerability detection"
 msgstr ""
 
-#: settings/config/config.php:1419
+#: settings/config/config.php:1418
 msgid "This feature depends on multiple standard background processes. If a process fails or is unavailable on your system, detection might not work. We run frequent tests for this purpose. We will notify you accordingly if there are any issues."
 msgstr ""
 
-#: settings/config/config.php:1426
+#: settings/config/config.php:1425
 msgid "About Vulnerabilities"
 msgstr ""
 
-#: settings/config/config.php:1427
+#: settings/config/config.php:1426
 msgid "Really Simple SSL collects information about plugins, themes, and core vulnerabilities from our database powered by WPVulnerability. Anonymized data about these vulnerable components will be sent to Really Simple SSL for statistical analysis to improve open-source contributions. For more information, please read our privacy statement."
 msgstr ""
 
-#: settings/config/config.php:1443
+#: settings/config/config.php:1442
 msgid "If there's a vulnerability, you will also get feedback on the themes and plugin overview."
 msgstr ""
 
-#: settings/config/config.php:1446
+#: settings/config/config.php:1445
 msgid "Feedback in plugin overview"
 msgstr ""
 
-#: settings/config/config.php:1463
-#: settings/config/config.php:1485
-#: settings/config/config.php:1507
-#: settings/config/config.php:1600
+#: settings/config/config.php:1462
+#: settings/config/config.php:1484
+#: settings/config/config.php:1506
+#: settings/config/config.php:1599
 msgid "None"
 msgstr ""
 
-#: settings/config/config.php:1464
+#: settings/config/config.php:1463
 msgid "Low-risk (default)"
 msgstr ""
 
-#: settings/config/config.php:1465
-#: settings/config/config.php:1487
-#: settings/config/config.php:1509
-#: settings/config/config.php:1602
+#: settings/config/config.php:1464
+#: settings/config/config.php:1486
+#: settings/config/config.php:1508
+#: settings/config/config.php:1601
 msgid "Medium-risk"
 msgstr ""
 
-#: settings/config/config.php:1466
-#: settings/config/config.php:1510
-#: settings/config/config.php:1603
+#: settings/config/config.php:1465
+#: settings/config/config.php:1509
+#: settings/config/config.php:1602
 msgid "High-risk"
 msgstr ""
 
-#: settings/config/config.php:1467
-#: settings/config/config.php:1489
-#: settings/config/config.php:1604
+#: settings/config/config.php:1466
+#: settings/config/config.php:1488
+#: settings/config/config.php:1603
 msgid "Critical"
 msgstr ""
 
-#: settings/config/config.php:1469
+#: settings/config/config.php:1468
 msgid "Really Simple SSL dashboard"
 msgstr ""
 
-#: settings/config/config.php:1486
+#: settings/config/config.php:1485
 msgid "Low-risk "
 msgstr ""
 
-#: settings/config/config.php:1488
+#: settings/config/config.php:1487
 msgid "High-risk (default)"
 msgstr ""
 
-#: settings/config/config.php:1491
+#: settings/config/config.php:1490
 msgid "Site-wide, admin notification"
 msgstr ""
 
-#: settings/config/config.php:1508
-#: settings/config/config.php:1601
+#: settings/config/config.php:1507
+#: settings/config/config.php:1600
 msgid "Low-risk"
 msgstr ""
 
-#: settings/config/config.php:1511
+#: settings/config/config.php:1510
 msgid "Critical (default)"
 msgstr ""
 
-#: settings/config/config.php:1513
+#: settings/config/config.php:1512
 #: settings/config/menu.php:299
 msgid "Email"
 msgstr ""
 
-#: settings/config/config.php:1514
+#: settings/config/config.php:1513
 msgid "This will send emails about vulnerabilities directly from your server. Make sure you can receive emails by the testing a preview below. If this feature is disabled, please enable notifications under general settings."
 msgstr ""
 
-#: settings/config/config.php:1534
-#: settings/config/config.php:1537
+#: settings/config/config.php:1533
+#: settings/config/config.php:1536
 #: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/RiskConfiguration/NotificationTester.js:39
 msgid "Test notifications"
 msgstr ""
 
-#: settings/config/config.php:1535
+#: settings/config/config.php:1534
 msgid "Test notifications can be used to test email delivery and shows how vulnerabilities will be reported on your WordPress installation."
 msgstr ""
 
-#: settings/config/config.php:1552
+#: settings/config/config.php:1551
 msgid "Vulnerabilities Overview"
 msgstr ""
 
-#: settings/config/config.php:1564
+#: settings/config/config.php:1563
 msgid "Component"
 msgstr ""
 
-#: settings/config/config.php:1579
-#: settings/config/config.php:1622
+#: settings/config/config.php:1578
+#: settings/config/config.php:1621
 msgid "Risk"
 msgstr ""
 
-#: settings/config/config.php:1642
+#: settings/config/config.php:1641
 msgid "I have read and understood the risks to intervene with these measures."
 msgstr ""
 
-#: settings/config/config.php:1643
+#: settings/config/config.php:1642
 #: settings/build/229.2d51466bad556da30427.js:1
 #: settings/build/354.2f14ed4d6692e499a6c3.js:1
 #: settings/src/Dashboard/SslLabs/SslLabs.js:319
@@ -2876,55 +2880,55 @@ msgstr ""
 msgid "Read more"
 msgstr ""
 
-#: settings/config/config.php:1658
+#: settings/config/config.php:1657
 msgid "Enforce strong passwords"
 msgstr ""
 
-#: settings/config/config.php:1662
+#: settings/config/config.php:1661
 msgid "Enforce Strong Passwords"
 msgstr ""
 
-#: settings/config/config.php:1663
+#: settings/config/config.php:1662
 msgid "Improve the default WordPress password strength check. You can also enforce frequent password changes for user roles."
 msgstr ""
 
-#: settings/config/config.php:1667
+#: settings/config/config.php:1666
 msgid "This adds extra requirements for strong passwords for new users and updated passwords."
 msgstr ""
 
-#: settings/config/config.php:1675
+#: settings/config/config.php:1674
 msgid "Enforce frequent password change"
 msgstr ""
 
-#: settings/config/config.php:1691
+#: settings/config/config.php:1690
 msgid "User roles for password change"
 msgstr ""
 
-#: settings/config/config.php:1706
+#: settings/config/config.php:1705
 msgid "6 months"
 msgstr ""
 
-#: settings/config/config.php:1707
+#: settings/config/config.php:1706
 msgid "1 year"
 msgstr ""
 
-#: settings/config/config.php:1708
+#: settings/config/config.php:1707
 msgid "2 years"
 msgstr ""
 
-#: settings/config/config.php:1710
+#: settings/config/config.php:1709
 msgid "Change passwords every"
 msgstr ""
 
-#: settings/config/config.php:1725
+#: settings/config/config.php:1724
 msgid "8 hours (recommended)"
 msgstr ""
 
-#: settings/config/config.php:1726
+#: settings/config/config.php:1725
 msgid "48 hours"
 msgstr ""
 
-#: settings/config/config.php:1728
+#: settings/config/config.php:1727
 msgid "Let login cookie expire after"
 msgstr ""
 
@@ -3010,8 +3014,8 @@ msgid "Mixed Content Scan"
 msgstr ""
 
 #: settings/config/menu.php:90
-#: modal/build/index.b167e8372488ba3980d4.js:1
-#: modal/src/components/DeactivationModal/DeactivationModal.js:76
+#: modal/build/index.5c0c53e2db8c73c5db9d.js:1
+#: modal/src/components/DeactivationModal/DeactivationModal.js:88
 msgid "Security Headers"
 msgstr ""
 
@@ -3517,56 +3521,56 @@ msgstr ""
 msgid "Your license key has reached its activation limit."
 msgstr ""
 
-#: modal/build/index.b167e8372488ba3980d4.js:1
-#: modal/src/components/DeactivationModal/DeactivationModal.js:66
-#: modal/src/components/DeactivationModal/DeactivationModal.js:108
+#: modal/build/index.5c0c53e2db8c73c5db9d.js:1
+#: modal/src/components/DeactivationModal/DeactivationModal.js:78
+#: modal/src/components/DeactivationModal/DeactivationModal.js:120
 msgid "Performant HTTPS redirection"
 msgstr ""
 
-#: modal/build/index.b167e8372488ba3980d4.js:1
-#: modal/src/components/DeactivationModal/DeactivationModal.js:81
+#: modal/build/index.5c0c53e2db8c73c5db9d.js:1
+#: modal/src/components/DeactivationModal/DeactivationModal.js:93
 msgid "Advanced hardening"
 msgstr ""
 
-#: modal/build/index.b167e8372488ba3980d4.js:1
-#: modal/src/components/DeactivationModal/DeactivationModal.js:91
+#: modal/build/index.5c0c53e2db8c73c5db9d.js:1
+#: modal/src/components/DeactivationModal/DeactivationModal.js:103
 msgid "Two-step verification"
 msgstr ""
 
-#: modal/build/index.b167e8372488ba3980d4.js:1
-#: modal/src/components/DeactivationModal/DeactivationModal.js:96
+#: modal/build/index.5c0c53e2db8c73c5db9d.js:1
+#: modal/src/components/DeactivationModal/DeactivationModal.js:108
 msgid "Password security"
 msgstr ""
 
-#: modal/build/index.b167e8372488ba3980d4.js:1
-#: modal/src/components/DeactivationModal/DeactivationModal.js:101
+#: modal/build/index.5c0c53e2db8c73c5db9d.js:1
+#: modal/src/components/DeactivationModal/DeactivationModal.js:113
 msgid "Limit login attempts"
 msgstr ""
 
-#: modal/build/index.b167e8372488ba3980d4.js:1
-#: modal/src/components/DeactivationModal/DeactivationModal.js:118
+#: modal/build/index.5c0c53e2db8c73c5db9d.js:1
+#: modal/src/components/DeactivationModal/DeactivationModal.js:130
 msgid "WordPress hardening"
 msgstr ""
 
-#: modal/build/index.b167e8372488ba3980d4.js:1
-#: modal/src/components/DeactivationModal/DeactivationModal.js:128
+#: modal/build/index.5c0c53e2db8c73c5db9d.js:1
+#: modal/src/components/DeactivationModal/DeactivationModal.js:140
 msgid "Are you sure?"
 msgstr ""
 
-#: modal/build/index.b167e8372488ba3980d4.js:1
-#: modal/src/components/DeactivationModal/DeactivationModal.js:129
+#: modal/build/index.5c0c53e2db8c73c5db9d.js:1
+#: modal/src/components/DeactivationModal/DeactivationModal.js:141
 #: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/License/License.js:70
 msgid "Deactivate"
 msgstr ""
 
-#: modal/build/index.b167e8372488ba3980d4.js:1
-#: modal/src/components/DeactivationModal/DeactivationModal.js:131
+#: modal/build/index.5c0c53e2db8c73c5db9d.js:1
+#: modal/src/components/DeactivationModal/DeactivationModal.js:143
 msgid "Deactivate and use HTTP"
 msgstr ""
 
-#: modal/build/index.b167e8372488ba3980d4.js:1
-#: modal/src/components/DeactivationModal/DeactivationModal.js:55
+#: modal/build/index.5c0c53e2db8c73c5db9d.js:1
+#: modal/src/components/DeactivationModal/DeactivationModal.js:67
 msgid "Please choose the correct deactivation method, and before you go; you will miss out on below and future features in Really Simple Security"
 msgstr ""
 
