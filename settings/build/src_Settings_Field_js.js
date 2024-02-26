@@ -2097,6 +2097,7 @@ const Captcha = ({
   } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_3__["default"])();
   const enabled_captcha_provider = getFieldValue('enabled_captcha_provider');
   const siteKey = getFieldValue(`${enabled_captcha_provider}_site_key`);
+  const secretKey = getFieldValue(`${enabled_captcha_provider}_secret`);
   const fully_enabled = getFieldValue('captcha_fully_enabled');
   const {
     verifyCaptcha,
@@ -2128,7 +2129,7 @@ const Captcha = ({
   }, [fully_enabled]);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_7__.useEffect)(() => {
     setShowCaptcha(false);
-  }, [siteKey]);
+  }, [siteKey, secretKey]);
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_ErrorBoundary__WEBPACK_IMPORTED_MODULE_8__["default"], {
     title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)('Reload Captcha', 'really-simple-ssl')
   }, enabled_captcha_provider === 'recaptcha' && !fully_enabled && showCaptcha && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_ReCaptcha__WEBPACK_IMPORTED_MODULE_1__["default"], {
@@ -5005,9 +5006,14 @@ const CountryDatatable = props => {
   const redirectToAddCaptcha = async element => {
     // We fetch the props from the menu item
     let menuItem = getField('enabled_captcha_provider');
-    menuItem.highlight_field_id = 'enabled_captcha_provider';
-    setHighLightField(menuItem.highlight_field_id);
-    let highlightField = getField(menuItem.highlight_field_id);
+
+    // Create a new object based on the menuItem, including the new property
+    let highlightingMenuItem = {
+      ...menuItem,
+      highlight_field_id: 'enabled_captcha_provider'
+    };
+    setHighLightField(highlightingMenuItem.highlight_field_id);
+    let highlightField = getField(highlightingMenuItem.highlight_field_id);
     await setSelectedSubMenuItem(highlightField.menu_id);
   };
   const buildColumn = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(column => ({

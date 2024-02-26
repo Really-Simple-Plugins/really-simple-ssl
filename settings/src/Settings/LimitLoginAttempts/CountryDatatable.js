@@ -76,9 +76,15 @@ const CountryDatatable = (props) => {
     const redirectToAddCaptcha = async (element) => {
         // We fetch the props from the menu item
         let menuItem = getField('enabled_captcha_provider');
-        menuItem.highlight_field_id = 'enabled_captcha_provider';
-        setHighLightField(menuItem.highlight_field_id);
-        let highlightField = getField(menuItem.highlight_field_id);
+
+        // Create a new object based on the menuItem, including the new property
+        let highlightingMenuItem = {
+            ...menuItem,
+            highlight_field_id: 'enabled_captcha_provider',
+        };
+
+        setHighLightField(highlightingMenuItem.highlight_field_id);
+        let highlightField = getField(highlightingMenuItem.highlight_field_id);
         await setSelectedSubMenuItem(highlightField.menu_id);
     }
 

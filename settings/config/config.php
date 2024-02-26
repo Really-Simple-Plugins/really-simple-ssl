@@ -198,7 +198,7 @@ function rsssl_fields( $load_values = true ) {
 			'group_id'     => 'general_captcha',
 			'type'         => 'select',
 			'options'      => [
-				'none'      => __( "None", "really-simple-ssl" ),
+				'none'      => __( "Choose your provider", "really-simple-ssl" ),
 				'recaptcha' => __( "reCaptcha v2", "really-simple-ssl" ),
 				'hcaptcha'  => __( "hCaptcha", "really-simple-ssl" ),
 			],

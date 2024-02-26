@@ -12,6 +12,7 @@ const Captcha = ({props}) => {
     const {getFieldValue, updateField, saveFields} = useFields();
     const enabled_captcha_provider = getFieldValue('enabled_captcha_provider');
     const siteKey = getFieldValue(`${enabled_captcha_provider}_site_key`);
+    const secretKey = getFieldValue(`${enabled_captcha_provider}_secret` );
     const fully_enabled = getFieldValue('captcha_fully_enabled');
     const {verifyCaptcha, setReloadCaptcha, removeRecaptchaScript} = useCaptchaData();
     const [showCaptcha, setShowCaptcha] = useState(false);
@@ -43,7 +44,7 @@ const Captcha = ({props}) => {
 
     useEffect(() => {
         setShowCaptcha(false);
-    }, [siteKey]);
+    }, [siteKey, secretKey]);
 
 
     return (
