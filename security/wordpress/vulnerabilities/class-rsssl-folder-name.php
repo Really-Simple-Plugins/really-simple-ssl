@@ -26,7 +26,7 @@ class Rsssl_Folder_Name {
 		if ( $rsssl_folder ) {
 			$this->folderName = $this->folderName( $rsssl_folder );
 		} else {
-			$newFolderName    = 'really-simple-ssl/' . md5( uniqid( mt_rand(), true ) );
+			$newFolderName    = md5( uniqid( mt_rand(), true ) );
 
 			$this->folderName = $this->folderName( $newFolderName );
 
@@ -55,8 +55,8 @@ class Rsssl_Folder_Name {
 	 * @return void
 	 */
 	private function verifyAndCreateFolder(): void {
-		$upload_dir = wp_upload_dir();
-		if ( ! file_exists( $upload_dir['basedir'] . '/' . $this->folderName ) ) {
+		$upload_dir = rsssl_upload_dir();
+		if ( ! file_exists( $upload_dir. '/' . $this->folderName ) ) {
 			$this->createFolder();
 		}
 	}
@@ -70,8 +70,8 @@ class Rsssl_Folder_Name {
 	 * @return void
 	 */
 	public function createFolder(): void {
-		$upload_dir  = wp_upload_dir();
-		$folder_path = $upload_dir['basedir'] . '/' . $this->folderName;
+		$upload_dir  = rsssl_upload_dir();
+		$folder_path = $upload_dir . '/' . $this->folderName;
 
 		if ( ! file_exists( $folder_path ) && ! mkdir( $folder_path, 0755, true ) && ! is_dir( $folder_path ) ) {
 			error_log( sprintf( 'Directory "%s" was not created', $folder_path ) );

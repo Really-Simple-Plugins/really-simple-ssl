@@ -109,3 +109,81 @@ function rsssl_check_if_email_essential_feature() {
 
 	return false;
 }
+
+if ( ! function_exists('rsssl_upload_dir')) {
+	/**
+	 * Get the upload dir
+	 *
+	 * @param string $path
+	 *
+	 * @return string
+	 */
+	function rsssl_upload_dir( string $path=''): string {
+		$uploads    = wp_upload_dir();
+		$upload_dir = trailingslashit( apply_filters( 'rsssl_upload_dir', $uploads['basedir'] ) ).'really-simple-ssl/'.$path;
+		if ( !is_dir( $upload_dir)  ) {
+			rsssl_create_missing_directories_recursively($upload_dir);
+		}
+
+		return trailingslashit( $upload_dir );
+	}
+}
+
+if (!function_exists('rsssl_has_open_basedir_restriction')) {
+	function rsssl_has_open_basedir_restriction($path) {
+		// Default error handler is required
+		set_error_handler(null);
+		// Clean last error info.
+		error_clear_last();
+		// Testing...
+		@file_exists($path);
+		// Restore previous error handler
+		restore_error_handler();
+		// Return `true` if error has occurred
+		return ($error = error_get_last()) && $error['message'] !== '__clean_error_info';
+	}
+}
+
+/**
+ * Create directories recursively
+ *
+ * @param string $path
+ */
+
+if ( !function_exists('rsssl_create_missing_directories_recursively') ) {
+	function rsssl_create_missing_directories_recursively( string $path ) {
+		if ( ! rsssl_user_can_manage() ) {
+			return;
+		}
+
+		$parts = explode( '/', $path );
+		$dir   = '';
+		foreach ( $parts as $part ) {
+			$dir .= $part . '/';
+			if (rsssl_has_open_basedir_restriction($dir)) {
+				continue;
+			}
+			if ( ! is_dir( $dir ) && strlen( $dir ) > 0 && is_writable( dirname( $dir, 1 ) ) ) {
+				if ( ! mkdir( $dir ) && ! is_dir( $dir ) ) {
+					throw new \RuntimeException( sprintf( 'Directory "%s" was not created', $dir ) );
+				}
+			}
+		}
+	}
+}
+
+if ( ! function_exists('rsssl_upload_url')) {
+	/**
+	 * Get the upload url
+	 *
+	 * @param string $path
+	 *
+	 * @return string
+	 */
+	function rsssl_upload_url( string $path=''): string {
+		$uploads    = wp_upload_dir();
+		$upload_url = $uploads['baseurl'];
+		$upload_url = trailingslashit( apply_filters('rsssl_upload_url', $upload_url) );
+		return trailingslashit($upload_url.'really-simple-ssl/'.$path);
+	}
+}
