@@ -113,6 +113,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 == Changelog ==
 = 7.2.4 =
 * Improvement: added Infomaniak host
+* Improvement: hide rememberme option
 
 = 7.2.3 =
 * Improvement: give json directory a random foldername, and remove after deactivating vulnerability detection
