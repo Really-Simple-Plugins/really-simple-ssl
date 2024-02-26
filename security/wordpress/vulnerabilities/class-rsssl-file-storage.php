@@ -16,8 +16,7 @@ class Rsssl_File_Storage {
 	public function __construct() {
 		//Fetching the key from the database
 		$this->generateHashKey();
-		$upload_dir   = wp_upload_dir();
-		$this->folder = $upload_dir['basedir'] . '/' . Rsssl_Folder_Name::getFolderName();
+		$this->folder = Rsssl_Folder_Name::getFolderName();
 	}
 
 	public static function StoreFile( $file, $data ): void {
@@ -57,12 +56,10 @@ class Rsssl_File_Storage {
 		return false;
 	}
 
-	/** Save the data to the file
+	/**
 	 *
-	 * @param $data
-	 * @param $file
 	 */
-	public function set( $data, $file ) {
+	public function set( $data, $file ): void {
 		$data = $this->Encode64WithHash( json_encode( $data ) );
 		//first we check if the storage folder is already in the $file string
 		if ( strpos( $file, $this->folder ) !== false ) {
@@ -218,7 +215,7 @@ class Rsssl_File_Storage {
 	 * @return void
 	 */
 	public static function DeleteOldFiles(): void {
-		$rsssl_dir = wp_upload_dir()['basedir'] . '/really-simple-ssl';
+		$rsssl_dir = rsssl_upload_dir();
 		//then we delete the following files from that folder: manifest.json, components.json and core.json
 		$files = array( 'manifest.json', 'components.json', 'core.json' );
 		foreach ( $files as $file ) {
