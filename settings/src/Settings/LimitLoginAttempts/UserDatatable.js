@@ -15,7 +15,7 @@ import SearchBar from "../DynamicDataTable/SearchBar";
 import AddButton from "../DynamicDataTable/AddButton";
 
 const UserDatatable = (props) => {
-    const {
+    let {
         UserDataTable,
         dataLoaded,
         fetchData,

@@ -27,6 +27,10 @@ const UserDataTableStore = create((set, get) => ({
             return;
         }
 
+        if (Object.keys(dataActions).length === 0) {
+            return;
+        }
+
         //we empty all existing data
         set({UserDataTable: []});
 

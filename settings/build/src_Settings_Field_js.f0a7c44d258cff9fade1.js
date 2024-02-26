@@ -5432,13 +5432,18 @@ const CountryDatatable = props => {
     setRowsSelected(state.selectedRows);
   }, []);
   const allowRegionByCode = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(async (code, regionName = '') => {
-    console.log('clicked');
     if (Array.isArray(code)) {
       const ids = code.map(item => item.id);
-      const regions = code.map(item => item.region);
-      await resetRegions(ids, dataActions);
-      let regionsString = regions.join(', ');
-      showSavedSettingsNotice((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)('%s is now allowed', 'really-simple-ssl').replace('%s', regionsString));
+      const regions = code.map(item => item.iso2_code);
+      regions.forEach(code => {
+        resetRegions(code, dataActions).then(response => {
+          if (response.success) {
+            showSavedSettingsNotice(response.message);
+          } else {
+            showSavedSettingsNotice(response.message, 'error');
+          }
+        });
+      });
       setRowsSelected([]);
     } else {
       await resetRegions(code, dataActions);
@@ -6599,6 +6604,9 @@ const UserDataTableStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)((set,
     if (!get().processing) {
       return;
     }
+    if (Object.keys(dataActions).length === 0) {
+      return;
+    }
 
     //we empty all existing data
     set({
@@ -6842,7 +6850,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const UserDatatable = props => {
-  const {
+  let {
     UserDataTable,
     dataLoaded,
     fetchData,
@@ -25606,4 +25614,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.dd6465163cb853fa213e.js.map
+//# sourceMappingURL=src_Settings_Field_js.f0a7c44d258cff9fade1.js.map
