@@ -63,6 +63,14 @@ class Rsssl_File_Storage {
 	 * @param $file
 	 */
 	public function set( $data, $file ) {
+		if ( !is_dir( $this->folder )) {
+			return;
+		}
+
+		if ( !is_writable($this->folder ) ) {
+			return;
+		}
+
 		$data = $this->Encode64WithHash( json_encode( $data ) );
 		//first we check if the storage folder is already in the $file string
 		if ( strpos( $file, $this->folder ) !== false ) {
