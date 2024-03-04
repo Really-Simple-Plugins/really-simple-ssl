@@ -424,7 +424,7 @@ function rsssl_fields( $load_values = true ) {
 					'name'       => __('Continent', 'really-simple-ssl'),
 					'sortable'   => true,
 					'searchable' => true,
-					'column'     => 'region',
+					'column'     => 'region_name',
 					'width'      => '20%',
 				],
 				[

@@ -170,6 +170,7 @@ const CountryDatatable = (props) => {
     }, [resetMultiRow, getCurrentFilter(moduleName), dataActions]);
 
     const allowById = useCallback((id) => {
+        console.log(id);
         resetRow(id, dataActions).then(
             (response) => {
                 if (response.success) {
@@ -256,7 +257,7 @@ const CountryDatatable = (props) => {
         // </div>
     );
 
-    const generateActionButtons = useCallback((id, status, region_name) => (
+    const generateActionButtons = useCallback((id, status, region_name, db_id ) => (
         <div className="rsssl-action-buttons">
             {getCurrentFilter(moduleName) === 'blocked' && (
                 <ActionButton onClick={() => allowById(id)}
@@ -280,7 +281,7 @@ const CountryDatatable = (props) => {
                 <>
                     {status === 'blocked' ? (
                         <ActionButton
-                            onClick={() => allowById(id)} className="button-secondary">
+                            onClick={() => allowById(db_id)} className="button-secondary">
                             {__("Allow", "really-simple-ssl")}
                         </ActionButton>
                     ) : (
@@ -298,7 +299,7 @@ const CountryDatatable = (props) => {
     for (const key in data) {
         const dataItem = {...data[key]};
         if (getCurrentFilter(moduleName) === 'regions' || getCurrentFilter(moduleName) === 'countries') {
-            dataItem.action = generateActionButtons(dataItem.attempt_value, dataItem.status, dataItem.region);
+            dataItem.action = generateActionButtons(dataItem.attempt_value, dataItem.status, dataItem.region, dataItem.db_id);
         } else {
             dataItem.action = generateActionButtons(dataItem.id);
         }

@@ -5462,6 +5462,7 @@ const CountryDatatable = props => {
     });
   }, [resetMultiRow, getCurrentFilter(moduleName), dataActions]);
   const allowById = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(id => {
+    console.log(id);
     resetRow(id, dataActions).then(response => {
       if (response.success) {
         showSavedSettingsNotice(response.message);
@@ -5531,7 +5532,7 @@ const CountryDatatable = props => {
   }, children)
   // </div>
   ;
-  const generateActionButtons = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)((id, status, region_name) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  const generateActionButtons = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)((id, status, region_name, db_id) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-action-buttons"
   }, getCurrentFilter(moduleName) === 'blocked' && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
     onClick: () => allowById(id),
@@ -5543,7 +5544,7 @@ const CountryDatatable = props => {
     onClick: () => allowRegionByCode(id, region_name),
     className: "button-secondary"
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("Allow", "really-simple-ssl"))), getCurrentFilter(moduleName) === 'countries' && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, status === 'blocked' ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
-    onClick: () => allowById(id),
+    onClick: () => allowById(db_id),
     className: "button-secondary"
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("Allow", "really-simple-ssl")) : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(ActionButton, {
     onClick: () => blockCountryByCode(id),
@@ -5554,7 +5555,7 @@ const CountryDatatable = props => {
       ...data[key]
     };
     if (getCurrentFilter(moduleName) === 'regions' || getCurrentFilter(moduleName) === 'countries') {
-      dataItem.action = generateActionButtons(dataItem.attempt_value, dataItem.status, dataItem.region);
+      dataItem.action = generateActionButtons(dataItem.attempt_value, dataItem.status, dataItem.region, dataItem.db_id);
     } else {
       dataItem.action = generateActionButtons(dataItem.id);
     }
@@ -25614,4 +25615,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 }]);
-//# sourceMappingURL=src_Settings_Field_js.f0a7c44d258cff9fade1.js.map
+//# sourceMappingURL=src_Settings_Field_js.f4c10f89bb875924eb9b.js.map
