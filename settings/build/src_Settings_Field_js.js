@@ -2072,11 +2072,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _CaptchaData__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./CaptchaData */ "./src/Settings/Captcha/CaptchaData.js");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony import */ var _utils_ErrorBoundary__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../utils/ErrorBoundary */ "./src/utils/ErrorBoundary.js");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _utils_ErrorBoundary__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../utils/ErrorBoundary */ "./src/utils/ErrorBoundary.js");
+/* harmony import */ var _Button__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../Button */ "./src/Settings/Button.js");
 
 
 
@@ -2093,11 +2092,12 @@ const Captcha = ({
   const {
     getFieldValue,
     updateField,
-    saveFields
+    saveFields,
+    getField
   } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_3__["default"])();
   const enabled_captcha_provider = getFieldValue('enabled_captcha_provider');
   const siteKey = getFieldValue(`${enabled_captcha_provider}_site_key`);
-  const secretKey = getFieldValue(`${enabled_captcha_provider}_secret`);
+  const secretKey = getFieldValue(`${enabled_captcha_provider}_secret_key`);
   const fully_enabled = getFieldValue('captcha_fully_enabled');
   const {
     verifyCaptcha,
@@ -2105,6 +2105,7 @@ const Captcha = ({
     removeRecaptchaScript
   } = (0,_CaptchaData__WEBPACK_IMPORTED_MODULE_4__["default"])();
   const [showCaptcha, setShowCaptcha] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  const [buttonEnabled, setButtonEnabled] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   const handleCaptchaResponse = response => {
     verifyCaptcha(response).then(response => {
       if (response && response.success) {
@@ -2118,19 +2119,36 @@ const Captcha = ({
   };
 
   //if we switch to another captcha provider, we need to reset the captcha
-  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_7__.useEffect)(() => {
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_6__.useEffect)(() => {
     saveFields(false, false);
   }, [enabled_captcha_provider]);
-  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_7__.useEffect)(() => {
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_6__.useEffect)(() => {
     if (fully_enabled) {
       updateField('captcha_fully_enabled', 1);
       saveFields(false, false);
     }
   }, [fully_enabled]);
-  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_7__.useEffect)(() => {
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_6__.useEffect)(() => {
     setShowCaptcha(false);
-  }, [siteKey, secretKey]);
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_ErrorBoundary__WEBPACK_IMPORTED_MODULE_8__["default"], {
+    //based on the provider the keys need certain length if hcapthca the length is 36 and recapthca 40
+    switch (enabled_captcha_provider) {
+      case 'recaptcha':
+        if (siteKey.length === 40 && secretKey.length === 40) {
+          setButtonEnabled(true);
+        } else {
+          setButtonEnabled(false);
+        }
+        break;
+      case 'hcaptcha':
+        if (siteKey.length === 36 && secretKey.length === 35) {
+          setButtonEnabled(true);
+        } else {
+          setButtonEnabled(false);
+        }
+        break;
+    }
+  }, [siteKey, secretKey, enabled_captcha_provider]);
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_ErrorBoundary__WEBPACK_IMPORTED_MODULE_7__["default"], {
     title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)('Reload Captcha', 'really-simple-ssl')
   }, enabled_captcha_provider === 'recaptcha' && !fully_enabled && showCaptcha && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_ReCaptcha__WEBPACK_IMPORTED_MODULE_1__["default"], {
     handleCaptchaResponse: handleCaptchaResponse
@@ -2138,13 +2156,13 @@ const Captcha = ({
     sitekey: siteKey,
     handleCaptchaResponse: handleCaptchaResponse,
     captchaVerified: fully_enabled
-  }), enabled_captcha_provider !== 'none' && !fully_enabled && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
-    isPrimary: true,
-    text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)('validate CAPTCHA', 'really-simple-ssl')
+  }), enabled_captcha_provider !== 'none' && !fully_enabled && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    disabled: !buttonEnabled,
+    className: `button button-primary ${!buttonEnabled ? 'rsssl-learning-mode-disabled' : ''}`
     // style={{display: !showCaptcha? 'none': 'block'}}
     ,
     onClick: () => setShowCaptcha(true)
-  })));
+  }, " ", (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)('validate CAPTCHA', 'really-simple-ssl'), " ")));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Captcha);
 
@@ -3012,10 +3030,22 @@ const Field = props => {
     setAnchor((0,_utils_getAnchor__WEBPACK_IMPORTED_MODULE_25__["default"])('anchor'));
     handleAnchor();
     if (highLightField === props.field.id && scrollAnchor.current) {
+      console.log('scrolling to', props.field.id, scrollAnchor.current);
       scrollAnchor.current.scrollIntoView({
         behavior: 'smooth',
         block: 'start'
       });
+    }
+
+    //if the field is a captcha provider, scroll to the captcha provider is a temp fix cause i can't get the scroll to work properly.
+    if (highLightField === 'enabled_captcha_provider' && props.fields) {
+      let captchaField = document.getElementsByClassName('rsssl-highlight')[0];
+      if (captchaField) {
+        captchaField.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
     }
   }, []);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_21__.useEffect)(() => {

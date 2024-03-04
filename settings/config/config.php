@@ -398,7 +398,7 @@ function rsssl_fields( $load_values = true ) {
 			'disabled'         => false,
 			'default'          => false,
 			'comment'                 => sprintf(__("Please configure your %sCaptcha settings%s before enabling this settings",
-				"really-simple-ssl"), '<a id="set_to_captcha_configuration" href="#settings/general/">', '</a>'),
+				"really-simple-ssl"), '<a id="set_to_captcha_configuration" href="#settings/general/enable_captcha_provider">', '</a>'),
 			'react_conditions' => [
 				'relation' => 'AND',
 				[

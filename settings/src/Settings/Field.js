@@ -54,8 +54,18 @@ const Field = (props) => {
         setAnchor(getAnchor('anchor'))
         handleAnchor();
         if ( highLightField===props.field.id && scrollAnchor.current ) {
+            console.log('scrolling to', props.field.id, scrollAnchor.current);
             scrollAnchor.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
+
+        //if the field is a captcha provider, scroll to the captcha provider is a temp fix cause i can't get the scroll to work properly.
+        if (highLightField === 'enabled_captcha_provider' && props.fields) {
+            let captchaField = document.getElementsByClassName('rsssl-highlight')[0];
+            if (captchaField) {
+                captchaField.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
     },[]);
 
     useEffect( () => {
