@@ -526,7 +526,7 @@ function rsssl_menu() {
 											],
 											[
 												'id'    => 'countries',
-												'title' => __( 'Countries', 'really-simple-ssl' ),
+												'title' => __( 'Allowed', 'really-simple-ssl' ),
 											],
 										],
 									],
