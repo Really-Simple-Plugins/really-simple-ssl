@@ -418,7 +418,7 @@ function rsssl_fields( $load_values = true ) {
 					'searchable' => true,
 					'visible'   => false,
 					'column'     => 'country_name',
-					'width'      => '150px',
+					'width'      => '200px',
 				],
 				[
 					'name'       => __('Continent', 'really-simple-ssl'),
