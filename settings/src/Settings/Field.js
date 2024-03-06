@@ -45,7 +45,6 @@ const Field = (props) => {
     const [anchor, setAnchor] = useState(null);
     const {selectedFilter, setSelectedFilter} = useMenu();
 
-
     const handleFilterChange = (value) => {
         setSelectedFilter(value); // Update selectedFilter when the filter value changes
     };
@@ -54,7 +53,6 @@ const Field = (props) => {
         setAnchor(getAnchor('anchor'))
         handleAnchor();
         if ( highLightField===props.field.id && scrollAnchor.current ) {
-            console.log('scrolling to', props.field.id, scrollAnchor.current);
             scrollAnchor.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
@@ -217,23 +215,14 @@ const Field = (props) => {
     }
 
     if (field.type==='captcha_key') {
-        if (field.hidden) {
-            return <></>;
-        }
         return (
             <div className={highLightClass} ref={scrollAnchor} style={{position: 'relative'}}>
-                <CaptchaKey field={field} fields={props.fields} />
+                <CaptchaKey field={field} fields={props.fields} label={labelWrap(field)} />
             </div>
             )
     }
 
     if (field.type==='text' ) {
-        //if field.hidden is set, don't show the field
-        if ( field.hidden ) {
-            return (
-                <></>
-            );
-        }
         return (
             <div className={highLightClass} ref={scrollAnchor} style={{position: 'relative'}}>
                 <TextControl
@@ -372,7 +361,7 @@ const Field = (props) => {
     if (field.type==='captcha') {
         return (
             <div className={highLightClass} ref={scrollAnchor}>
-                <Captcha field={field} />
+                <Captcha field={field} label={labelWrap(field)} />
             </div>
         )
     }

@@ -1,10 +1,10 @@
-import React, {useState} from 'react';
+import React from 'react';
 import ReCaptcha from './ReCaptcha';
 import HCaptcha from './HCaptcha';
 import useFields from '../FieldsData';
 import useCaptchaData from "./CaptchaData";
 import {__} from '@wordpress/i18n';
-import {useEffect} from "@wordpress/element";
+import {useEffect, useState} from "@wordpress/element";
 import ErrorBoundary from "../../utils/ErrorBoundary";
 import Button from "../Button";
 

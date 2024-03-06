@@ -1,4 +1,5 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
+import {useEffect} from "@wordpress/element";
 import useFields from '../FieldsData';
 import CaptchaData from "./CaptchaData";
 
@@ -20,8 +21,6 @@ const ReCaptcha = ({ handleCaptchaResponse , captchaVerified}) => {
     const secret = getFieldValue('recaptcha_secret_key');
     const fully_enabled = getFieldValue('captcha_fully_enabled');
 
-    console.log('reloading recaptcha', reloadCaptcha);
-
     useEffect(() => {
         const script = document.createElement('script');
 
@@ -39,7 +38,6 @@ const ReCaptcha = ({ handleCaptchaResponse , captchaVerified}) => {
                         callback: recaptchaCallback,
                     });
                 });
-                console.log(window.grecaptcha);
             }
         };
 
@@ -50,7 +48,6 @@ const ReCaptcha = ({ handleCaptchaResponse , captchaVerified}) => {
     useEffect(() => {
         // Move cleanup here.
         if (captchaVerified) {
-            console.log('rtiggered');
           removeRecaptchaScript();
         }
     }, [captchaVerified]);

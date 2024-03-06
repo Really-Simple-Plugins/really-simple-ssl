@@ -2104,8 +2104,8 @@ const Captcha = ({
     setReloadCaptcha,
     removeRecaptchaScript
   } = (0,_CaptchaData__WEBPACK_IMPORTED_MODULE_4__["default"])();
-  const [showCaptcha, setShowCaptcha] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
-  const [buttonEnabled, setButtonEnabled] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  const [showCaptcha, setShowCaptcha] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_6__.useState)(false);
+  const [buttonEnabled, setButtonEnabled] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_6__.useState)(false);
   const handleCaptchaResponse = response => {
     verifyCaptcha(response).then(response => {
       if (response && response.success) {
@@ -2211,17 +2211,14 @@ const useCaptchaData = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, get
     const scriptTags = document.querySelectorAll('script[src^="https://www.google.com/recaptcha/api.js"]');
     // For each found script tag
     scriptTags.forEach(scriptTag => {
-      console.log(scriptTag);
       scriptTag.remove(); // Remove it
     });
     const rescriptTags = document.querySelectorAll('script[src^="https://www.google.com/recaptcha/api.js"]');
-    console.log(rescriptTags);
     // now we check if reCaptcha was still rendered.
     const recaptchaContainer = document.getElementById('recaptchaContainer');
     if (recaptchaContainer) {
       recaptchaContainer.remove();
     }
-    console.log('removing recaptcha script v2');
   }
 }));
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useCaptchaData);
@@ -2253,10 +2250,9 @@ __webpack_require__.r(__webpack_exports__);
 const CaptchaKey = ({
   field,
   fields,
-  showDisabledWhenSaving = true
+  label
 }) => {
   const {
-    fieldAlreadyEnabled,
     getFieldValue,
     setChangedField,
     updateField,
@@ -2270,15 +2266,11 @@ const CaptchaKey = ({
     updateField(field.id, fieldValue);
     await saveFields(false, false);
   };
-  const labelWrap = field => {
-    // implement label wrap function
-    return field.label;
-  };
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.TextControl, {
     required: field.required,
     placeholder: field.placeholder,
     help: field.comment,
-    label: labelWrap(field),
+    label: label,
     onChange: value => onChangeHandler(value),
     value: fieldValue
   }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -2307,6 +2299,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+
 
 
 const HCaptcha = ({
@@ -2316,7 +2311,7 @@ const HCaptcha = ({
   const hcaptchaCallback = response => {
     handleCaptchaResponse(response);
   };
-  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     const script = document.createElement('script');
     script.src = `https://hcaptcha.com/1/api.js?onload=initHcaptcha`;
     script.async = true;
@@ -2370,8 +2365,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../FieldsData */ "./src/Settings/FieldsData.js");
-/* harmony import */ var _CaptchaData__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./CaptchaData */ "./src/Settings/Captcha/CaptchaData.js");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../FieldsData */ "./src/Settings/FieldsData.js");
+/* harmony import */ var _CaptchaData__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./CaptchaData */ "./src/Settings/Captcha/CaptchaData.js");
+
 
 
 
@@ -2395,17 +2393,16 @@ const ReCaptcha = ({
     reloadCaptcha,
     removeRecaptchaScript,
     setReloadCaptcha
-  } = (0,_CaptchaData__WEBPACK_IMPORTED_MODULE_2__["default"])();
+  } = (0,_CaptchaData__WEBPACK_IMPORTED_MODULE_3__["default"])();
   const {
     getFieldValue,
     updateField,
     saveFields
-  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_1__["default"])();
+  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_2__["default"])();
   const sitekey = getFieldValue('recaptcha_site_key');
   const secret = getFieldValue('recaptcha_secret_key');
   const fully_enabled = getFieldValue('captcha_fully_enabled');
-  console.log('reloading recaptcha', reloadCaptcha);
-  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     const script = document.createElement('script');
     script.src = `https://www.google.com/recaptcha/api.js?render=explicit&onload=initRecaptcha`;
     script.async = true;
@@ -2420,15 +2417,13 @@ const ReCaptcha = ({
             callback: recaptchaCallback
           });
         });
-        console.log(window.grecaptcha);
       }
     };
     document.body.appendChild(script);
   }, [sitekey, handleCaptchaResponse]);
-  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     // Move cleanup here.
     if (captchaVerified) {
-      console.log('rtiggered');
       removeRecaptchaScript();
     }
   }, [captchaVerified]);
@@ -3030,7 +3025,6 @@ const Field = props => {
     setAnchor((0,_utils_getAnchor__WEBPACK_IMPORTED_MODULE_25__["default"])('anchor'));
     handleAnchor();
     if (highLightField === props.field.id && scrollAnchor.current) {
-      console.log('scrolling to', props.field.id, scrollAnchor.current);
       scrollAnchor.current.scrollIntoView({
         behavior: 'smooth',
         block: 'start'
@@ -3193,9 +3187,6 @@ const Field = props => {
     })));
   }
   if (field.type === 'captcha_key') {
-    if (field.hidden) {
-      return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null);
-    }
     return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: highLightClass,
       ref: scrollAnchor,
@@ -3204,14 +3195,11 @@ const Field = props => {
       }
     }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Captcha_CaptchaKey__WEBPACK_IMPORTED_MODULE_34__["default"], {
       field: field,
-      fields: props.fields
+      fields: props.fields,
+      label: labelWrap(field)
     }));
   }
   if (field.type === 'text') {
-    //if field.hidden is set, don't show the field
-    if (field.hidden) {
-      return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null);
-    }
     return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: highLightClass,
       ref: scrollAnchor,
@@ -3342,7 +3330,8 @@ const Field = props => {
       className: highLightClass,
       ref: scrollAnchor
     }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Captcha_Captcha__WEBPACK_IMPORTED_MODULE_33__["default"], {
-      field: field
+      field: field,
+      label: labelWrap(field)
     }));
   }
   if (field.type === 'learningmode') {

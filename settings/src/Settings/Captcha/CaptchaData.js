@@ -26,17 +26,14 @@ const useCaptchaData = create(( set, get ) => ({
         const scriptTags = document.querySelectorAll('script[src^="https://www.google.com/recaptcha/api.js"]');
         // For each found script tag
         scriptTags.forEach((scriptTag) => {
-            console.log(scriptTag);
             scriptTag.remove(); // Remove it
         });
         const rescriptTags = document.querySelectorAll('script[src^="https://www.google.com/recaptcha/api.js"]');
-        console.log(rescriptTags);
         // now we check if reCaptcha was still rendered.
         const recaptchaContainer = document.getElementById('recaptchaContainer');
         if (recaptchaContainer) {
             recaptchaContainer.remove();
         }
-        console.log('removing recaptcha script v2');
     },
 }));
 

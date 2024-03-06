@@ -224,8 +224,8 @@ function rsssl_fields( $load_values = true ) {
 			'disabled' => false,
 			'default'  => false,
 			'required' => true,
-			'hidden'   => false,
-			'react_conditions' => [
+			'visible'   => false,
+			'server_conditions' => [
 				'relation' => 'AND',
 				[
 					'enabled_captcha_provider' => 'recaptcha',
@@ -241,8 +241,8 @@ function rsssl_fields( $load_values = true ) {
 			'disabled' => false,
 			'default'  => false,
 			'required' => true,
-			'hidden'   => false,
-			'react_conditions' => [
+			'visible'   => false,
+			'server_conditions' => [
 				'relation' => 'AND',
 				[
 					'enabled_captcha_provider' => 'recaptcha',
@@ -258,8 +258,8 @@ function rsssl_fields( $load_values = true ) {
 			'disabled' => false,
 			'default'  => false,
 			'required' => true,
-			'hidden'   => false,
-			'react_conditions' => [
+			'visible'   => false,
+			'server_conditions' => [
 				'relation' => 'AND',
 				[
 					'enabled_captcha_provider' => 'hcaptcha',
@@ -275,8 +275,8 @@ function rsssl_fields( $load_values = true ) {
 			'required' => true,
 			'disabled' => false,
 			'default'  => false,
-			'hidden'   => false,
-			'react_conditions' => [
+			'visible'   => false,
+			'server_conditions' => [
 				'relation' => 'AND',
 				[
 					'enabled_captcha_provider' => 'hcaptcha',

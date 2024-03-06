@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+
 import Icon from "../../utils/Icon";
 import useFields from "../FieldsData";
 import {TextControl} from "@wordpress/components"; // assuming you're using WordPress components
 
-const CaptchaKey = ({ field, fields, showDisabledWhenSaving = true }) => {
-    const { fieldAlreadyEnabled, getFieldValue, setChangedField, updateField, saveFields} = useFields();
+const CaptchaKey = ({ field, fields, label }) => {
+    const { getFieldValue, setChangedField, updateField, saveFields} = useFields();
 
     let fieldValue = getFieldValue(field.id);
     let captchaVerified = getFieldValue('captcha_fully_enabled');
@@ -16,18 +17,13 @@ const CaptchaKey = ({ field, fields, showDisabledWhenSaving = true }) => {
         await saveFields(false, false);
     }
 
-    const labelWrap = (field) => {
-        // implement label wrap function
-        return field.label;
-    }
-
     return (
         <>
             <TextControl
                 required={field.required}
                 placeholder={field.placeholder}
                 help={field.comment}
-                label={labelWrap(field)}
+                label={label}
                 onChange={(value) => onChangeHandler(value)}
                 value={fieldValue}
             />
