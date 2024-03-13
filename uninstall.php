@@ -87,4 +87,27 @@ if ( isset( $rsssl_settings['delete_data_on_uninstall'] ) && $rsssl_settings['de
 		delete_transient( $rsssl_transient );
 		delete_site_transient( $rsssl_transient );
 	}
+
+	require_once(ABSPATH . 'wp-admin/includes/file.php');
+	WP_Filesystem();
+
+	function rsssl_delete_directory_wpfilesystem($dir) {
+		global $wp_filesystem;
+		if ($wp_filesystem->is_dir($dir)) {
+			$objects = $wp_filesystem->dirlist($dir);
+			foreach ($objects as $object => $objectdata) {
+				if ($wp_filesystem->is_dir($dir . "/" . $object)) {
+					rsssl_delete_directory_wpfilesystem($dir . "/" . $object);
+				}
+				else {
+					$wp_filesystem->delete($dir . "/" . $object);
+				}
+			}
+			$wp_filesystem->rmdir($dir);
+		}
+	}
+
+	$upload_dir = wp_upload_dir();
+	$really_simple_ssl_dir = $upload_dir['basedir'] . '/really-simple-ssl';
+	rsssl_delete_directory_wpfilesystem($really_simple_ssl_dir);
 }

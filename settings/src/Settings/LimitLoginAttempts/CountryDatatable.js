@@ -8,6 +8,7 @@ import Flag from "../../utils/Flag/Flag";
 import {__} from '@wordpress/i18n';
 import useFields from "../FieldsData";
 import SearchBar from "../DynamicDataTable/SearchBar";
+import useMenu from "../../Menu/MenuData";
 
 const CountryDatatable = (props) => {
     const {
@@ -33,7 +34,8 @@ const CountryDatatable = (props) => {
         setDataActions,
     } = CountryDataTableStore();
 
-    const {showSavedSettingsNotice, saveFields} = FieldsData();
+    const {showSavedSettingsNotice, saveFields, setHighLightField} = FieldsData();
+    const {setSelectedSubMenuItem} = useMenu();
 
     const {
         DynamicDataTable,
@@ -50,7 +52,42 @@ const CountryDatatable = (props) => {
 
     const [rowsSelected, setRowsSelected] = useState([]);
     const moduleName = 'rsssl-group-filter-limit_login_attempts_country';
-    const {fields, fieldAlreadyEnabled, getFieldValue} = useFields();
+    const {fields, fieldAlreadyEnabled, getFieldValue, getField} = useFields();
+
+    useEffect(() => {
+        const element = document.getElementById('set_to_captcha_configuration');
+        const clickListener = async event => {
+            event.preventDefault();
+            if (element) {
+                await redirectToAddCaptcha(element);
+            }
+        };
+
+        if (element) {
+            element.addEventListener('click', clickListener);
+        }
+
+        return () => {
+            if (element) {
+                element.removeEventListener('click', clickListener);
+            }
+        };
+    }, []);
+
+    const redirectToAddCaptcha = async (element) => {
+        // We fetch the props from the menu item
+        let menuItem = getField('enabled_captcha_provider');
+
+        // Create a new object based on the menuItem, including the new property
+        let highlightingMenuItem = {
+            ...menuItem,
+            highlight_field_id: 'enabled_captcha_provider',
+        };
+
+        setHighLightField(highlightingMenuItem.highlight_field_id);
+        let highlightField = getField(highlightingMenuItem.highlight_field_id);
+        await setSelectedSubMenuItem(highlightField.menu_id);
+    }
 
     const buildColumn = useCallback((column) => ({
         //if the filter is set to region and the columns = status we do not want to show the column

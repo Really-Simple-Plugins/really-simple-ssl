@@ -5,12 +5,11 @@ import { __ } from '@wordpress/i18n';
 import Icon from "../utils/Icon";
 import useOnboardingData from "./OnboardingData";
 import useFields from "../Settings/FieldsData";
-import './onboarding.scss';
 import RssslModal from "../../../modal/src/components/Modal/RssslModal";
 import OnboardingControls from "./OnboardingControls";
 
 const OnboardingModal = () => {
-    const {showOnboardingModal, fetchOnboardingModalStatus, modalStatusLoaded, currentStep, dismissModal} = useOnboardingData();
+    const {footerStatus, showOnboardingModal, fetchOnboardingModalStatus, modalStatusLoaded, currentStep, dismissModal} = useOnboardingData();
     const {fieldsLoaded} = useFields();
 
     useEffect(() => {
@@ -40,10 +39,24 @@ const OnboardingModal = () => {
             </>
         )
     }
+
     const setOpen = (open) => {
         if ( !open ) {
             dismissModal(true);
         }
+    }
+
+    const handleFooterStatus = () => {
+        if ( footerStatus.length === 0 ) {
+            return false;
+        }
+
+        return (
+            <>
+                <Icon name = "loading" color = 'grey' />
+                {footerStatus}
+            </>
+        )
     }
 
     return (
@@ -55,7 +68,8 @@ const OnboardingModal = () => {
                     content={modalContent()}
                     isOpen={showOnboardingModal}
                     setOpen={setOpen}
-                    buttons=<OnboardingControls isModal={true}/>
+                    buttons = <OnboardingControls isModal={true} />
+                    footer = {handleFooterStatus() }
                 />
         </>
     )

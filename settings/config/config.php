@@ -24,6 +24,17 @@ function rsssl_fields( $load_values = true ) {
 			'default'  => false,
 		],
 		[
+			'id'       => 'other_host_type',
+			'menu_id'  => 'general',
+			'group_id' => 'general',
+			'type'     => 'host',
+			//options loaded in data store
+			'default'  => false,
+			'label'    => __( "Hosting provider", 'really-simple-ssl' ),
+			'required' => false,
+			'disabled' => false,
+		],
+		[
 			'id'       => 'review_notice_shown',
 			'menu_id'  => 'general',
 			'group_id' => 'general',
@@ -150,24 +161,6 @@ function rsssl_fields( $load_values = true ) {
 			'disabled' => false,
 			'default'  => false,
 		],
-
-		[
-			'id'                   => 'do_not_edit_htaccess', //field is removed if not enabled
-			'menu_id'              => 'encryption',
-			'group_id'             => 'encryption_redirect',
-			'type'                 => 'checkbox',
-			'label'                => __("Stop editing the .htaccess file", 'really-simple-ssl'),
-			'disabled'             => false,
-			'default'              => false,
-			//on multisite this setting can only be set networkwide
-			'networkwide_required' => true,
-			'server_conditions'    => [
-				'relation' => 'AND',
-				[
-					'RSSSL()->server->uses_htaccess()' => true,
-				]
-			],
-		],
 		[
 			'id'       => 'notifications_email_address',
 			'menu_id'  => 'general',
@@ -194,11 +187,112 @@ function rsssl_fields( $load_values = true ) {
 			'menu_id'          => 'general',
 			'group_id'         => 'general_email',
 			'type'             => 'checkbox',
-			'label'      => __("Notifications by email", 'really-simple-ssl'),
-			'tooltip'            => __("Get notified of important changes, updates and settings. Recommended when using security features.", 'really-simple-ssl'),
+			'label'            => __("Notifications by email", 'really-simple-ssl'),
+			'tooltip'           => __("Get notified of important changes, updates and settings. Recommended when using security features.", 'really-simple-ssl'),
 			'disabled'         => false,
 			'default'          => false,
 		],
+		[
+			'id'           => 'enabled_captcha_provider',
+			'menu_id'      => 'general',
+			'group_id'     => 'general_captcha',
+			'type'         => 'select',
+			'options'      => [
+				'none'      => __( "Choose your provider", "really-simple-ssl" ),
+				'recaptcha' => __( "reCaptcha v2", "really-simple-ssl" ),
+				'hcaptcha'  => __( "hCaptcha", "really-simple-ssl" ),
+			],
+			'label'        => __( "Captcha provider", 'really-simple-ssl' ),
+			'disabled'     => false,
+			'default'      => 'none',
+			'required' => false,
+		],
+		[
+			'id'      => 'captcha_fully_enabled',
+			'menu_id' => 'general',
+			'group_id' => 'general_captcha',
+			'type'    => 'hidden',
+			'label'   => '',
+			'default' => false,
+		],
+		[
+			'id'       => 'recaptcha_site_key',
+			'menu_id'  => 'general',
+			'group_id' => 'general_captcha',
+			'type'     => 'captcha_key',
+			'label'    => __( "reCaptcha site key", 'really-simple-ssl' ),
+			'disabled' => false,
+			'default'  => false,
+			'required' => true,
+			'visible'   => false,
+			'server_conditions' => [
+				'relation' => 'AND',
+				[
+					'enabled_captcha_provider' => 'recaptcha',
+				]
+			],
+		],
+		[
+			'id'       => 'recaptcha_secret_key',
+			'menu_id'  => 'general',
+			'group_id' => 'general_captcha',
+			'type'     => 'captcha_key',
+			'label'    => __( "reCaptcha secret key", 'really-simple-ssl' ),
+			'disabled' => false,
+			'default'  => false,
+			'required' => true,
+			'visible'   => false,
+			'server_conditions' => [
+				'relation' => 'AND',
+				[
+					'enabled_captcha_provider' => 'recaptcha',
+				]
+			],
+		],
+		[
+			'id'       => 'hcaptcha_site_key',
+			'menu_id'  => 'general',
+			'group_id' => 'general_captcha',
+			'type'     => 'captcha_key',
+			'label'    => __( "hCaptcha site key", 'really-simple-ssl' ),
+			'disabled' => false,
+			'default'  => false,
+			'required' => true,
+			'visible'   => false,
+			'server_conditions' => [
+				'relation' => 'AND',
+				[
+					'enabled_captcha_provider' => 'hcaptcha',
+				]
+			],
+		],
+		[
+			'id'       => 'hcaptcha_secret_key',
+			'menu_id'  => 'general',
+			'group_id' => 'general_captcha',
+			'type'     => 'captcha_key',
+			'label'    => __( "hCaptcha secret key", 'really-simple-ssl'),
+			'required' => true,
+			'disabled' => false,
+			'default'  => false,
+			'visible'   => false,
+			'server_conditions' => [
+				'relation' => 'AND',
+				[
+					'enabled_captcha_provider' => 'hcaptcha',
+				]
+			],
+		],
+		[
+			'id'      => 'captcha_verified',
+			'menu_id' => 'general',
+			'group_id' => 'general_captcha',
+			'type'    => 'captcha',
+			'info'     => __( "Captcha has not yet been verified, you need to complete the process of a Captcha to verify it's availability.", 'really-simple-ssl' ),
+			'label'   => '',
+			'default' => false,
+		],
+
 		[
 			'id'       => 'premium_support',
 			'menu_id'  => 'general',
@@ -292,6 +386,25 @@ function rsssl_fields( $load_values = true ) {
 				[
 					'enable_limited_login_attempts' => true,
 				]
+			],
+		],
+		[
+			//Captchas
+			'id'               => 'limit_login_attempts_captcha',
+			'menu_id'          => 'limit_login_attempts',
+			'group_id'         => 'limit_login_attempts_advanced',
+			'type'             => 'checkbox',
+			'label'            => __('Trigger captcha on failed login attempt', 'really-simple-ssl'),
+			'disabled'         => false,
+			'default'          => false,
+			'comment'                 => sprintf(__("Please configure your %sCaptcha settings%s before enabling this settings",
+				"really-simple-ssl"), '<a id="set_to_captcha_configuration" href="#settings/general/enable_captcha_provider">', '</a>'),
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'enable_limited_login_attempts' => true,
+					'captcha_fully_enabled' => true,
+				],
 			],
 		],
 		[
@@ -1132,13 +1245,13 @@ function rsssl_fields( $load_values = true ) {
 					'width'     => '20%',
 				],
 				[
-					'name'     => __( '', 'really-simple-ssl' ),
+					'name'     => '',
 					'sortable' => false,
 					'column'   => 'statusControl',
 					'width'     => '20%',
 				],
 				[
-					'name'     => __( '', 'really-simple-ssl' ),
+					'name'     => '',
 					'sortable' => false,
 					'column'   => 'deleteControl',
 					'width'     => '20%',
@@ -1192,7 +1305,7 @@ function rsssl_fields( $load_values = true ) {
 			'menu_id'  => 'two-fa',
 			'group_id' => 'two_fa_email',
 			'type'     => 'two_fa_roles',
-			'default'  => [ 'editor', 'author', 'contributor'],
+			'default'  => [ 'editor', 'author', 'contributor', 'administrator' ],
 			'label'    => __( "Optional for:", "really-simple-ssl" ),
 			'tooltip'  => __( "Two-step verification will be optional for these user roles, and they can disable it on first login.", 'really-simple-ssl' ),
 			'server_conditions'    => [
@@ -1210,7 +1323,7 @@ function rsssl_fields( $load_values = true ) {
 			'menu_id'  => 'two-fa',
 			'group_id' => 'two_fa_email',
 			'type'     => 'two_fa_roles',
-			'default'  => [ 'administrator' ],
+			'default'  => [],
 			'label'    => __( "Force on:", "really-simple-ssl" ),
 			'tooltip'  => __( "These user roles are forced to enter the authentication code.", 'really-simple-ssl' ),
 			'server_conditions'    => [
@@ -1765,7 +1878,7 @@ function rsssl_fields( $load_values = true ) {
 			'menu_id'  => 'password_security',
 			'group_id' => 'password_security_passwords',
 			'type'     => 'checkbox',
-			'label'    => __( "Enforce strong passwords", "really-simple-ssl-pro" ),
+			'label'    => __( "Enforce strong passwords", "really-simple-ssl" ),
 			'help'     => [
 				'label' => 'default',
 				'url'   => 'https://really-simple-ssl.com/instructions/password-security/?mtm_campaign=definition&mtm_source=free',
@@ -1782,7 +1895,7 @@ function rsssl_fields( $load_values = true ) {
 			'menu_id'  => 'password_security',
 			'group_id' => 'password_security_passwords',
 			'type'     => 'checkbox',
-			'label'    => __( "Enforce frequent password change", "really-simple-ssl-pro" ),
+			'label'    => __( "Enforce frequent password change", "really-simple-ssl" ),
 			'disabled' => false,
 			'default'  => 'disabled',
 			'react_conditions' => [
@@ -1798,7 +1911,7 @@ function rsssl_fields( $load_values = true ) {
 			'group_id' => 'password_security_passwords',
 			'type'     => 'roles_dropdown',
 			'default'  => [ 'administrator'],
-			'label'    => __( "User roles for password change", "really-simple-ssl-pro" ),
+			'label'    => __( "User roles for password change", "really-simple-ssl" ),
 			'react_conditions' => [
 				'relation' => 'AND',
 				[
@@ -1813,17 +1926,29 @@ function rsssl_fields( $load_values = true ) {
 			'type'     => 'select',
 			'default'  => '12',
 			'options'   => [
-				'6' => __( "6 months", "really-simple-ssl-pro" ),
-				'12' => __( "1 year", "really-simple-ssl-pro" ),
-				'24' => __( "2 years", "really-simple-ssl-pro" ),
+				'6' => __( "6 months", "really-simple-ssl" ),
+				'12' => __( "1 year", "really-simple-ssl" ),
+				'24' => __( "2 years", "really-simple-ssl" ),
 			],
-			'label'    => __( "Change passwords every", "really-simple-ssl-pro" ),
+			'label'    => __( "Change passwords every", "really-simple-ssl" ),
 			'react_conditions' => [
 				'relation' => 'AND',
 				[
 					'enforce_frequent_password_change' => 1,
 				]
 			],
+		],
+		[
+			'id'       => 'login_cookie_expiration',
+			'menu_id'  => 'password_security',
+			'group_id' => 'password_security_passwords',
+			'type'     => 'select',
+			'default'  => '48',
+			'options'   => [
+				'6' => __( "8 hours (recommended)", "really-simple-ssl" ),
+				'48' => __( "48 hours", "really-simple-ssl" ),
+			],
+			'label'    => __( "Let login cookie expire after", "really-simple-ssl" ),
 		],
 	];
 

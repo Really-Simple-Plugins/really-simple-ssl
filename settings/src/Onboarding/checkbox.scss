@@ -1,0 +1,75 @@
+.rsssl-modal-body, .rsssl-le-activate_ssl {
+  .rsssl-modal-checkbox-container {
+    margin-right: 35px;
+    display: block;
+    position: relative;
+    margin-bottom: 5px;
+    padding-left: 10px;
+    cursor: pointer;
+    font-size: 12px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    overflow:unset !important;
+
+    &:hover input ~ .rsssl-checkmark {
+      background-color: var(--rsp-grey-400);
+      border: 1px solid var(--rsp-grey-400);
+      border-radius: 3px;
+    }
+
+    input:checked ~ .rsssl-checkmark {
+      background-color: var(--rsp-dark-blue);
+      border: 1px solid var(--rsp-dark-blue);
+
+    }
+
+    input:disabled ~ .rsssl-checkmark {
+      background-color: var(--rsp-grey-400);
+      border: 1px solid var(--rsp-grey-400);
+
+    }
+
+    input:checked ~ .rsssl-checkmark:after {
+      display: block;
+    }
+
+    .rsssl-checkmark::after {
+      left: 6px;
+      top: 3px;
+      width: 5px;
+      height: 7px;
+      border: solid white;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+      -webkit-transform: rotate(45deg);
+      -ms-transform: rotate(45deg);
+    }
+
+    input {
+      position: absolute;
+      height: 0;
+      width: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .rsssl-checkmark {
+      background-color: var(--rsp-grey-300);
+      border: 1px solid var(--rsp-grey-400);
+
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: var(--rsp-fs-600);
+      aspect-ratio: 1;
+    }
+
+    .rsssl-checkmark::after {
+      content: "";
+      position: absolute;
+      display: none;
+    }
+  }
+}

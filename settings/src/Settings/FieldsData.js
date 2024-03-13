@@ -109,7 +109,6 @@ const useFields = create(( set, get ) => ({
         )
     },
     addHelpNotice : (id, label, text, title, url) => {
-        console.log("remove ",id);
         get().removeHelpNotice(id);
         //create help object
 
@@ -150,7 +149,7 @@ const useFields = create(( set, get ) => ({
         }
         return false;
     },
-    saveFields: async (skipRefreshTests, showSavedNotice) => {
+    saveFields: async (skipRefreshTests, showSavedNotice, force = false) => {
         let refreshTests = typeof skipRefreshTests !== 'undefined' ? skipRefreshTests : true;
         showSavedNotice = typeof showSavedNotice !== 'undefined' ? showSavedNotice : true;
         let fields = get().fields;
@@ -170,7 +169,7 @@ const useFields = create(( set, get ) => ({
         }
 
         //if no fields were changed, do nothing.
-        if (saveFields.length > 0) {
+        if (saveFields.length > 0 || force === true) {
             let response = rsssl_api.setFields(saveFields).then((response) => {
                 return response;
             })
@@ -267,6 +266,13 @@ const updateFieldsListWithConditions = (fields) => {
         let previouslyEnabled = !field.conditionallyDisabled;
         //we want to update the changed fields if this field has just become visible. Otherwise the new field won't get saved.
         const newField = {...field};
+
+        // conditions for hiding a field
+        if (field.shouldBeHiddenCondition || !enabled) {
+            newField.hidden = true;
+        } else {
+            newField.hidden = false;
+        }
         newField.conditionallyDisabled = !enabled;
         newField.visible = !(!enabled && (newField.type === 'letsencrypt' || newField.condition_action === 'hide'));
 

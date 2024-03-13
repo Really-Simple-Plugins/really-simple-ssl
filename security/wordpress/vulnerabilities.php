@@ -1,10 +1,10 @@
 <?php /** @noinspection PhpComposerExtensionStubsInspection */
 
-use security\wordpress\vulnerabilities\FileStorage;
+use security\wordpress\vulnerabilities\Rsssl_File_Storage;
 
 defined('ABSPATH') or die();
 //including the file storage class
-require_once(rsssl_path . 'security/wordpress/vulnerabilities/FileStorage.php');
+require_once(rsssl_path . 'security/wordpress/vulnerabilities/class-rsssl-file-storage.php');
 
 /**
  * @package Really Simple SSL
@@ -23,7 +23,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
      */
     class rsssl_vulnerabilities
     {
-        const RSSSL_VULNERABILITIES_LOCATION = '/really-simple-ssl';
         const RSSSL_SECURITY_API = 'https://downloads.really-simple-security.com/rsssl/vulnerabilities/V1/';
         public $workable_plugins = [];
 
@@ -61,7 +60,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	        //now we add the action to the cron.
 	        add_filter('rsssl_every_three_hours_cron', array($this, 'run_cron'));
 	        add_filter('rsssl_notices', [$this, 'show_help_notices'], 10, 1);
-//	        add_action( 'rsssl_after_save_field', array( $this, 'maybe_enable_vulnerability_scanner' ), 10, 4 );
+	        add_action( 'rsssl_after_save_field', array( $this, 'maybe_delete_local_files' ), 10, 4 );
         }
 
 //	    /**
@@ -82,6 +81,27 @@ if (!class_exists("rsssl_vulnerabilities")) {
 //                }
 //	        }
 //        }
+
+		/**
+         * Deletes local files if the vulnerability scanner is disabled
+         *
+		 * @param $field_id
+		 * @param $field_value
+		 * @param $prev_value
+		 * @param $field_type
+		 *
+		 * @return void
+		 */
+        public static function maybe_delete_local_files($field_id, $field_value, $prev_value, $field_type): void {
+            if ( $field_id==='enable_vulnerability_scanner' && $field_value !== $prev_value && rsssl_user_can_manage() ) {
+                if ( $field_value == false ) {
+                    // Already disabled
+                    require_once(rsssl_path . 'security/wordpress/vulnerabilities/class-rsssl-file-storage.php');
+                    \security\wordpress\vulnerabilities\Rsssl_File_Storage::DeleteAll();
+
+                }
+            }
+        }
 
         public function riskNaming($risk = null)
         {
@@ -127,10 +147,11 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	     * Allow users to manually force a re-check, e.g. in case of manually updating plugins
 	     * @return void
 	     */
-	    public function force_reload_files(){
+	    public function force_reload_files(): void {
 		    if ( ! rsssl_admin_logged_in() ) {
 			    return;
 		    }
+		    \security\wordpress\vulnerabilities\Rsssl_File_Storage::DeleteOldFiles();
 
 		    if ( isset($_GET['rsssl_check_vulnerabilities']) || get_option('rsssl_reload_vulnerability_files') ) {
 			    delete_option('rsssl_reload_vulnerability_files');
@@ -193,7 +214,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
          *
 	     * @return void
 	     */
-        public function prepare_reloading_of_files(){
+        public function prepare_reloading_of_files(): void {
             update_option("rsssl_reload_vulnerability_files", true, false);
         }
 
@@ -221,8 +242,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
          * Get site health notice for vulnerabilities
 	     * @return array
 	     */
-	    public function get_site_health_notice()
-	    {
+	    public function get_site_health_notice(): array {
             if (!rsssl_admin_logged_in()){
                 return [];
             }
@@ -308,12 +328,12 @@ if (!class_exists("rsssl_vulnerabilities")) {
                         'true' => [
                             'title' => $title,
                             'msg' => $title.' '.__('Please take appropriate action.','really-simple-ssl'),
-                            'url' => add_query_arg(['page'=>'really-simple-security#settings/vulnerabilities-measures-overview'], rsssl_admin_url() ),
                             'icon' => ($risk_level === 'c' || $risk_level==='h') ? 'warning' : 'open',
                             'type' => 'warning',
                             'dismissible' => true,
                             'admin_notice' => $siteWide,
                             'plusone' => true,
+                            'highlight_field_id' => 'vulnerabilities-overview',
                         ]
                     ],
                 ];
@@ -392,11 +412,11 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
         /* Public Section 2: DataGathering */
 
-        /**
-         * @param $data
-         *
-         * @return array
-         */
+		/**
+		 * @param $stats
+		 *
+		 * @return array
+		 */
         public function get_stats($stats): array
         {
 	        if ( ! rsssl_user_can_manage() ) {
@@ -785,9 +805,8 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 $file = 'manifest.json';
             }
 
-            $upload_dir = wp_upload_dir();
-            $upload_dir = $upload_dir['basedir'];
-            $file = $upload_dir . self::RSSSL_VULNERABILITIES_LOCATION . '/' . $file;
+            $upload_dir = Rsssl_File_Storage::get_upload_dir();
+            $file = $upload_dir . '/' . $file;
             if (file_exists($file)) {
                 //now we check if the file is older than 3 days, if so, we download it again
                 $file_time = filemtime($file);
@@ -863,15 +882,14 @@ if (!class_exists("rsssl_vulnerabilities")) {
 		        return;
 	        }
 	        //we get the upload directory
-	        $upload_dir = wp_upload_dir();
-	        $upload_dir = $upload_dir['basedir'];
-	        $upload_dir = $upload_dir . self::RSSSL_VULNERABILITIES_LOCATION;
+	        $upload_dir = Rsssl_File_Storage::get_upload_dir();
 
 	        if ( !$manifest ) {
 		        $file = $upload_dir . '/' . ($isCore ? 'core.json' : 'components.json');
 	        } else {
 		        $file = $upload_dir . '/manifest.json';
 	        }
+
 	        //we delete the old file if it exists
 	        if ( file_exists($file) ) {
 		        wp_delete_file($file);
@@ -882,12 +900,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 return;
             }
 
-            //we check if the directory exists, if not, we create it
-            if ( !file_exists($upload_dir) ) {
-                mkdir($upload_dir, 0755, true);
-            }
-
-            FileStorage::StoreFile($file, $data);
+	        Rsssl_File_Storage::StoreFile($file, $data);
             $this->jsons_files_updated = true;
         }
 
@@ -896,23 +909,23 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	        if ( ! rsssl_admin_logged_in() ) {
 		        return false;
 	        }
-            $upload_dir = wp_upload_dir();
-            $upload_dir = $upload_dir['basedir'];
-            $upload_dir .= self::RSSSL_VULNERABILITIES_LOCATION;
+
+            $upload_dir = Rsssl_File_Storage::get_upload_dir();
+
             if ($manifest) {
                 $file = $upload_dir . '/manifest.json';
                 if (!file_exists($file)) {
                     return false;
                 }
 
-                return FileStorage::GetDate($file);
+                return Rsssl_File_Storage::GetDate($file);
             }
             $file = $upload_dir . '/' . ($isCore ? 'core.json' : 'components.json');
             if (!file_exists($file)) {
                 return false;
             }
 
-            return FileStorage::GetDate($file);
+            return Rsssl_File_Storage::GetDate($file);
         }
 
         /* End of files and Storage */
@@ -937,7 +950,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
             }
 
             $data->vulnerabilities = $this->filter_vulnerabilities($data->vulnerabilities, $wp_version, true);
-            $data->version = $wp_version;
+
             //first we store this as a json file in the uploads folder
             $this->store_file($data, true);
         }
@@ -1025,15 +1038,14 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	        if ( ! rsssl_admin_logged_in() ) {
 		        return [];
 	        }
-            $upload_dir = wp_upload_dir();
-            $upload_dir = $upload_dir['basedir'];
-            $upload_dir = $upload_dir . self::RSSSL_VULNERABILITIES_LOCATION;
+            $upload_dir = Rsssl_File_Storage::get_upload_dir();
+
             $file = $upload_dir . '/components.json';
             if (!file_exists($file)) {
                 return [];
             }
 
-            $components =  FileStorage::GetFile($file);
+            $components =  Rsssl_File_Storage::GetFile($file);
             if (!is_array($components)) $components = [];
             return $components;
         }
@@ -1046,15 +1058,15 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	        if ( ! rsssl_admin_logged_in() ) {
 		        return null;
 	        }
-            $upload_dir = wp_upload_dir();
-            $upload_dir = $upload_dir['basedir'];
-            $upload_dir = $upload_dir . self::RSSSL_VULNERABILITIES_LOCATION;
+
+            $upload_dir = Rsssl_File_Storage::get_upload_dir();
+
             $file = $upload_dir . '/core.json';
             if (!file_exists($file)) {
                 return false;
             }
 
-            return FileStorage::GetFile($file);
+            return Rsssl_File_Storage::GetFile($file);
         }
 
         /* Section for the theme files */
@@ -1272,15 +1284,15 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	        if ( ! rsssl_admin_logged_in() ) {
 		        return false;
 	        }
-            $upload_dir = wp_upload_dir();
-            $upload_dir = $upload_dir['basedir'];
-            $upload_dir .= self::RSSSL_VULNERABILITIES_LOCATION;
+
+            $upload_dir = Rsssl_File_Storage::get_upload_dir();
+
             $file = $upload_dir . '/manifest.json';
             if (!file_exists($file)) {
                 return false;
             }
 
-            return FileStorage::GetFile($file);
+            return Rsssl_File_Storage::GetFile($file);
         }
 
         private function filter_vulnerabilities($vulnerabilities, $Version, $core = false): array
@@ -1289,7 +1301,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
             foreach ($vulnerabilities as $vulnerability) {
                 //if fixed_in contains a version, and the current version is higher than the fixed_in version, we skip it as fixed.
                 //This needs to be a positive check only, as the fixed_in value is less accurate than the version_from and version_to values
-	            if ($vulnerability->fixed_in !== 'not fixed' && version_compare($Version, $vulnerability->fixed_in, '>=') ) {
+	            if ($vulnerability->fixed_in !== 'not fixed' && rsssl_version_compare($Version, $vulnerability->fixed_in, '>=') ) {
 		            continue;
 	            }
 
@@ -1299,7 +1311,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 $operator_from = $vulnerability->operator_from;
                 $operator_to = $vulnerability->operator_to;
                 //we now check if the version is between the two versions
-                if (version_compare($Version, $version_from, $operator_from) && version_compare($Version, $version_to, $operator_to)) {
+                if (rsssl_version_compare($Version, $version_from, $operator_from) && rsssl_version_compare($Version, $version_to, $operator_to)) {
                     $filtered_vulnerabilities[] = $vulnerability;
                 }
             }
@@ -1493,7 +1505,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 'message' => $message . ' ' .
                              __('Based on your settings, Really Simple SSL will take appropriate action, or you will need to solve it manually.','really-simple-ssl') .' '.
                              sprintf(__('Get more information from the Really Simple SSL dashboard on %s'), $this->domain() ),
-                'url' => rsssl_admin_url('#settings/vulnerabilities-measures-overview'),
+                'url' => rsssl_admin_url('#settings/vulnerabilities_notifications'),
             ];
         }
 

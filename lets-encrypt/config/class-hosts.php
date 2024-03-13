@@ -14,12 +14,11 @@ if ( ! class_exists( "rsssl_le_hosts" ) ) {
         public $activated_by_default;
         public $paid_only;
 
-        function __construct() {
+        public function __construct() {
 	        define('RSSSL_LE_CONFIG_LOADED', true);
 
 	        if ( isset( self::$_this ) ) {
-                wp_die( sprintf( '%s is a singleton class and you cannot create a second instance.',
-                    get_class( $this ) ) );
+                wp_die( 'this is a singleton class and you cannot create a second instance.' );
             }
 
             self::$_this = $this;
@@ -140,6 +139,7 @@ if ( ! class_exists( "rsssl_le_hosts" ) ) {
 		            'free_ssl_available' => 'activation_required',
 		            'hosting_dashboard' => false,
 		            'api' => false,
+					'detected' => isset($_SERVER['IS_WPE']),
 		            'ssl_installation_link' => 'https://wpengine.com/support/add-ssl-site/#letsencrypt',
 	            ),
 	            'ipage' => array(
@@ -293,6 +293,7 @@ if ( ! class_exists( "rsssl_le_hosts" ) ) {
 		            'free_ssl_available' => 'activation_required',
 		            'hosting_dashboard' => 'flywheel',
 		            'api' => false,
+					'detected' => isset($_SERVER['SERVER_SOFTWARE']) && strpos($_SERVER['SERVER_SOFTWARE'], 'Flywheel/') === 0,
 		            'ssl_installation_link' => 'https://getflywheel.com/why-flywheel/simple-ssl/',
 	            ),
 	            'kinsta' => array(
@@ -312,6 +313,7 @@ if ( ! class_exists( "rsssl_le_hosts" ) ) {
 		            'hosting_dashboard' => 'pressable',
 		            'api' => false,
 		            'ssl_installation_link' => false,
+		            'detected' => (defined('IS_ATOMIC') && IS_ATOMIC) || (defined('IS_PRESSABLE') && IS_PRESSABLE),
 	            ),
 	            'wpx' => array(
 		            'name' => 'WPX',
@@ -475,6 +477,33 @@ if ( ! class_exists( "rsssl_le_hosts" ) ) {
 		            'api' => false,
 		            'ssl_installation_link' => false,
 	            ),
+	            'xxl' => array(
+		            'name' => 'XXL Hosting',
+		            'installation_renewal_required' => false,
+		            'local_ssl_generation_needed' => false,
+		            'free_ssl_available' => true,
+		            'hosting_dashboard' => 'cpanel',
+		            'api' => false,
+		            'ssl_installation_link' => false,
+	            ),
+	            'combell' => array(
+		            'name' => 'Combell',
+		            'installation_renewal_required' => false,
+		            'local_ssl_generation_needed' => false,
+		            'free_ssl_available' => true,
+		            'hosting_dashboard' => 'cpanel',
+		            'api' => false,
+		            'ssl_installation_link' => false,
+	            ),
+	            'transip' => array(
+		            'name' => 'TransIP',
+		            'installation_renewal_required' => false,
+		            'local_ssl_generation_needed' => false,
+		            'free_ssl_available' => true,
+		            'hosting_dashboard' => 'cpanel',
+		            'api' => false,
+		            'ssl_installation_link' => false,
+	            ),
 	            'digitalocean' => array(
 		            'name' => 'Digitalocean',
 		            'installation_renewal_required' => false,
@@ -539,6 +568,14 @@ if ( ! class_exists( "rsssl_le_hosts" ) ) {
         static function this() {
             return self::$_this;
         }
+
+		public function detect_host_on_activation(){
+			foreach ( $this->hosts as $host_key => $host ) {
+				if ( isset($host['detected']) && $host['detected'] ) {
+					rsssl_update_option('other_host_type', $host_key );
+				}
+			}
+		}
 
 
 	    /**

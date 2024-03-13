@@ -49,7 +49,6 @@ const PostDropdown = ({ field }) => {
                         MuiAutocomplete: {
                             inputRoot: {
                                 '& .MuiAutocomplete-input': {
-                                    padding: '0 !important',
                                     border: 0,
                                 },
                                 flexWrap: 'inherit',

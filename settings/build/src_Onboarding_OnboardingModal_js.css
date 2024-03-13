@@ -1,34 +1,152 @@
+/*!********************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./src/Settings/AutoComplete/AutoComplete.scss ***!
+  \********************************************************************************************************************************************************************************************************************************************************************/
+.rsssl-modal-body input.MuiInput-underline:before, .rsssl input.MuiInput-underline:before {
+  display: none;
+}
+.rsssl-modal-body .MuiAutocomplete-root .MuiInputLabel-outlined[data-shrink=false], .rsssl .MuiAutocomplete-root .MuiInputLabel-outlined[data-shrink=false] {
+  transform: translate(14px, 16px) scale(1);
+}
+.rsssl-modal-body .MuiAutocomplete-root .MuiFormLabel-root, .rsssl .MuiAutocomplete-root .MuiFormLabel-root {
+  font-family: inherit;
+}
+.rsssl-modal-body .MuiAutocomplete-root .MuiOutlinedInput-root, .rsssl .MuiAutocomplete-root .MuiOutlinedInput-root {
+  padding: 0;
+}
+.rsssl-modal-body input.MuiAutocomplete-input[type=text], .rsssl input.MuiAutocomplete-input[type=text] {
+  border: 0;
+  padding-left: 12px;
+}
+.rsssl-modal-body input.MuiAutocomplete-input[type=text]:focus, .rsssl input.MuiAutocomplete-input[type=text]:focus {
+  outline: none;
+  box-shadow: none;
+}
+.rsssl-modal-body .MuiInputBase-root, .rsssl .MuiInputBase-root {
+  font-family: inherit;
+}
+.rsssl-modal-body .MuiInput-root input.MuiInputBase-input, .rsssl .MuiInput-root input.MuiInputBase-input {
+  padding-left: 10px;
+}
+.rsssl-modal-body .MuiPopper-root, .rsssl-modal-body .MuiPaper-root, .rsssl .MuiPopper-root, .rsssl .MuiPaper-root {
+  max-height: 40vh;
+}
+.rsssl-modal-body .MuiPopper-root div, .rsssl-modal-body .MuiPaper-root div, .rsssl .MuiPopper-root div, .rsssl .MuiPaper-root div {
+  font-family: inherit !important;
+}
+.rsssl-modal-body .MuiPopper-root ul, .rsssl-modal-body .MuiPaper-root ul, .rsssl .MuiPopper-root ul, .rsssl .MuiPaper-root ul {
+  max-height: initial;
+}
+/*!********************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./src/Onboarding/PremiumItem.scss ***!
+  \********************************************************************************************************************************************************************************************************************************************************/
+.rsssl-modal-premium-container {
+  background-color: var(--rsp-dark-blue);
+  color: #fff;
+  padding: 0 5px;
+  margin-right: 22px;
+}
+/*!*****************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./src/Onboarding/checkbox.scss ***!
+  \*****************************************************************************************************************************************************************************************************************************************************/
+.rsssl-modal-body .rsssl-modal-checkbox-container, .rsssl-le-activate_ssl .rsssl-modal-checkbox-container {
+  margin-right: 35px;
+  display: block;
+  position: relative;
+  margin-bottom: 5px;
+  padding-left: 10px;
+  cursor: pointer;
+  font-size: 12px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  overflow: unset !important;
+}
+.rsssl-modal-body .rsssl-modal-checkbox-container:hover input ~ .rsssl-checkmark, .rsssl-le-activate_ssl .rsssl-modal-checkbox-container:hover input ~ .rsssl-checkmark {
+  background-color: var(--rsp-grey-400);
+  border: 1px solid var(--rsp-grey-400);
+  border-radius: 3px;
+}
+.rsssl-modal-body .rsssl-modal-checkbox-container input:checked ~ .rsssl-checkmark, .rsssl-le-activate_ssl .rsssl-modal-checkbox-container input:checked ~ .rsssl-checkmark {
+  background-color: var(--rsp-dark-blue);
+  border: 1px solid var(--rsp-dark-blue);
+}
+.rsssl-modal-body .rsssl-modal-checkbox-container input:disabled ~ .rsssl-checkmark, .rsssl-le-activate_ssl .rsssl-modal-checkbox-container input:disabled ~ .rsssl-checkmark {
+  background-color: var(--rsp-grey-400);
+  border: 1px solid var(--rsp-grey-400);
+}
+.rsssl-modal-body .rsssl-modal-checkbox-container input:checked ~ .rsssl-checkmark:after, .rsssl-le-activate_ssl .rsssl-modal-checkbox-container input:checked ~ .rsssl-checkmark:after {
+  display: block;
+}
+.rsssl-modal-body .rsssl-modal-checkbox-container .rsssl-checkmark::after, .rsssl-le-activate_ssl .rsssl-modal-checkbox-container .rsssl-checkmark::after {
+  left: 6px;
+  top: 3px;
+  width: 5px;
+  height: 7px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+}
+.rsssl-modal-body .rsssl-modal-checkbox-container input, .rsssl-le-activate_ssl .rsssl-modal-checkbox-container input {
+  position: absolute;
+  height: 0;
+  width: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.rsssl-modal-body .rsssl-modal-checkbox-container .rsssl-checkmark, .rsssl-le-activate_ssl .rsssl-modal-checkbox-container .rsssl-checkmark {
+  background-color: var(--rsp-grey-300);
+  border: 1px solid var(--rsp-grey-400);
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: var(--rsp-fs-600);
+  aspect-ratio: 1;
+}
+.rsssl-modal-body .rsssl-modal-checkbox-container .rsssl-checkmark::after, .rsssl-le-activate_ssl .rsssl-modal-checkbox-container .rsssl-checkmark::after {
+  content: "";
+  position: absolute;
+  display: none;
+}
 /*!*******************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./src/Onboarding/onboarding.scss ***!
   \*******************************************************************************************************************************************************************************************************************************************************/
-.rsssl-modal.rsssl-onboarding-modal .rsssl-modal-body .rsssl-override-detection-toggle {
+.rsssl-modal.rsssl-onboarding-modal .rsssl-modal-body .rsssl-override-detection-toggle, .rsssl-letsencrypt .rsssl-le-activate_ssl .rsssl-override-detection-toggle {
   margin-bottom: -15px;
-  float: right;
 }
-.rsssl-modal.rsssl-onboarding-modal .rsssl-modal-body input[type=email] {
+.rsssl-modal.rsssl-onboarding-modal .rsssl-modal-body input[type=email], .rsssl-letsencrypt .rsssl-le-activate_ssl input[type=email] {
   width: 100%;
   margin-bottom: var(--rsp-spacing-m);
   border: 2px solid;
   height: 50px;
   border-color: var(--rsp-grey-300);
 }
-.rsssl-modal.rsssl-onboarding-modal .rsssl-modal-body ul {
+.rsssl-modal.rsssl-onboarding-modal .rsssl-modal-body .rsssl-select label, .rsssl-letsencrypt .rsssl-le-activate_ssl .rsssl-select label {
+  display: none;
+}
+.rsssl-modal.rsssl-onboarding-modal .rsssl-modal-body .rsssl-select .components-select-control__input, .rsssl-letsencrypt .rsssl-le-activate_ssl .rsssl-select .components-select-control__input {
+  height: 45px;
+  padding: 8px 20px;
+  color: var(--rsp-grey-500);
+}
+.rsssl-modal.rsssl-onboarding-modal .rsssl-modal-body .rsssl-activate_ssl ul, .rsssl-modal.rsssl-onboarding-modal .rsssl-modal-body .rsssl-plugins ul, .rsssl-letsencrypt .rsssl-le-activate_ssl .rsssl-activate_ssl ul, .rsssl-letsencrypt .rsssl-le-activate_ssl .rsssl-plugins ul {
   -moz-column-count: 1;
        column-count: 1;
 }
-.rsssl-modal.rsssl-onboarding-modal .rsssl-modal-body ul li {
+.rsssl-modal.rsssl-onboarding-modal .rsssl-modal-body ul li, .rsssl-letsencrypt .rsssl-le-activate_ssl ul li {
   display: flex;
   align-items: flex-start;
   margin-bottom: var(--rsp-spacing-xxs);
 }
-.rsssl-modal.rsssl-onboarding-modal .rsssl-modal-body ul li.rsssl-is-plugin {
+.rsssl-modal.rsssl-onboarding-modal .rsssl-modal-body ul li.rsssl-is-plugin, .rsssl-letsencrypt .rsssl-le-activate_ssl ul li.rsssl-is-plugin {
   background-color: var(--rsp-grey-100);
   border: none;
   margin: 10px 0;
   padding: 5px 0;
   position: relative;
 }
-.rsssl-modal.rsssl-onboarding-modal .rsssl-modal-body ul li .rsssl-icon {
+.rsssl-modal.rsssl-onboarding-modal .rsssl-modal-body ul li .rsssl-icon, .rsssl-letsencrypt .rsssl-le-activate_ssl ul li .rsssl-icon {
   margin-right: 7px;
 }
 /*!********************************************************************************************************************************************************************************************************************************************************************!*\
@@ -117,6 +235,7 @@
   border-top: 1px solid var(--rsp-grey-300);
   max-height: calc(100% - 120px);
   margin: auto;
+  overflow: visible;
 }
 @media (max-width: 768px) {
   .rsssl-modal {
@@ -162,6 +281,7 @@
 }
 .rsssl-modal .rsssl-modal-footer {
   background-color: var(--rsp-grey-200);
+  border-radius: 0 0 var(--rsp-border-radius) var(--rsp-border-radius);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -175,8 +295,17 @@
 .rsssl-modal .rsssl-modal-footer img {
   width: 150px;
 }
+.rsssl-modal .rsssl-modal-footer .rsssl-modal-footer-feedback {
+  display: flex;
+}
+.rsssl-modal .rsssl-modal-footer .rsssl-modal-footer-feedback .rsssl-icon {
+  margin-right: 10px;
+}
+.rsssl-modal .rsssl-modal-footer .rsssl-modal-footer-buttons button .rsssl-icon {
+  margin-right: 10px;
+}
 @media (max-width: 768px) {
-  .rsssl-modal .rsssl-modal-footer .rsssl-modal-footer-image {
+  .rsssl-modal .rsssl-modal-footer .rsssl-modal-footer-image, .rsssl-modal .rsssl-modal-footer .rsssl-modal-footer-feedback {
     display: none;
   }
   .rsssl-modal .rsssl-modal-footer .rsssl-modal-footer-buttons {
@@ -190,8 +319,14 @@
     width: 100%;
     margin: 0;
   }
+  .rsssl-modal .rsssl-modal-footer .rsssl-modal-footer-buttons button .rsssl-icon {
+    margin-right: 10px;
+  }
 }
 .rsssl-modal .rsssl-modal-footer button + button {
+  margin-left: 10px;
+}
+.rsssl-modal .rsssl-modal-footer button + a {
   margin-left: 10px;
 }
 .rsssl-modal .rsssl-modal-footer button:not(.is-primary) {
