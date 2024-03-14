@@ -147,10 +147,10 @@ const Field = (props) => {
         return (
             <div className={highLightClass} ref={scrollAnchor}>
                 <CheckboxControl
-                  label={labelWrap(field)}
-                  field={field}
-                  disabled={disabled}
-                  onChangeHandler={ ( fieldValue ) => onChangeHandler( fieldValue ) }
+                    label={labelWrap(field)}
+                    field={field}
+                    disabled={disabled}
+                    onChangeHandler={ ( fieldValue ) => onChangeHandler( fieldValue ) }
                 />
                 { field.comment &&
                     <div className="rsssl-comment" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(field.comment) }} />
@@ -169,12 +169,12 @@ const Field = (props) => {
     if ( field.type==='radio' ){
         return (
             <div className={highLightClass} ref={scrollAnchor}>
-              <RadioControl
-                  label={labelWrap(field)}
-                  onChange={ ( fieldValue ) => onChangeHandler(fieldValue) }
-                  selected={ fieldValue }
-                  options={ options }
-              />
+                <RadioControl
+                    label={labelWrap(field)}
+                    onChange={ ( fieldValue ) => onChangeHandler(fieldValue) }
+                    selected={ fieldValue }
+                    options={ options }
+                />
             </div>
         );
     }
@@ -196,10 +196,10 @@ const Field = (props) => {
                 />
                 { sendVerificationEmailField &&
                     <div className="rsssl-email-verified" >
-                    {emailIsVerified
-                        ? <Icon name='circle-check' color={'green'} />
-                        : <Icon name='circle-times' color={'red'} />}
-                </div>
+                        {emailIsVerified
+                            ? <Icon name='circle-check' color={'green'} />
+                            : <Icon name='circle-times' color={'red'} />}
+                    </div>
                 }
             </div>
         );
@@ -245,13 +245,13 @@ const Field = (props) => {
     if ( field.type==='textarea' ){
         return (
             <div className={highLightClass} ref={scrollAnchor}>
-              <TextareaControl
-                  label={ field.label }
-                  help={ field.comment }
-                  value= { fieldValue }
-                  onChange={ ( fieldValue ) => onChangeHandler(fieldValue) }
-                  disabled={ field.disabled }
-              />
+                <TextareaControl
+                    label={ field.label }
+                    help={ field.comment }
+                    value= { fieldValue }
+                    onChange={ ( fieldValue ) => onChangeHandler(fieldValue) }
+                    disabled={ field.disabled }
+                />
             </div>
         );
     }
@@ -261,7 +261,7 @@ const Field = (props) => {
         let fieldValue = field.value;
         return (
             <div className={highLightClass} ref={scrollAnchor}>
-              <License index={props.index} field={field} fieldValue={fieldValue}/>
+                <License index={props.index} field={field} fieldValue={fieldValue}/>
             </div>
 
         );
@@ -294,10 +294,10 @@ const Field = (props) => {
     if ( field.type==='host') {
         return (
             <div className={highLightClass} ref={scrollAnchor}>
-              <Host
-                  index={props.index}
-                  field={props.field}
-              />
+                <Host
+                    index={props.index}
+                    field={props.field}
+                />
             </div>
         )
     }
@@ -305,14 +305,14 @@ const Field = (props) => {
     if ( field.type==='select') {
         return (
             <div className={highLightClass} ref={scrollAnchor}>
-              <SelectControl
-                  disabled={ disabled }
-                  label={labelWrap(field)}
-                  onChangeHandler={ ( fieldValue ) => onChangeHandler(fieldValue) }
-                  value= { fieldValue }
-                  options={ options }
-                  field={field}
-              />
+                <SelectControl
+                    disabled={ disabled }
+                    label={labelWrap(field)}
+                    onChangeHandler={ ( fieldValue ) => onChangeHandler(fieldValue) }
+                    value= { fieldValue }
+                    options={ options }
+                    field={field}
+                />
             </div>
         )
     }
@@ -320,7 +320,7 @@ const Field = (props) => {
     if ( field.type==='support' ) {
         return (
             <div className={highLightClass} ref={scrollAnchor}>
-              <Support/>
+                <Support/>
             </div>
         )
     }
@@ -328,14 +328,14 @@ const Field = (props) => {
     if ( field.type==='postdropdown' ) {
         return (
             <div className={highLightClass} ref={scrollAnchor}>
-              <PostDropdown field={props.field}/>
+                <PostDropdown field={props.field}/>
             </div>
         )
     }
     if ( field.type==='permissionspolicy' ) {
         return (
             <div className={highLightClass} ref={scrollAnchor}>
-              <PermissionsPolicy disabled={disabled} field={props.field} options={options}/>
+                <PermissionsPolicy disabled={disabled} field={props.field} options={options}/>
             </div>
         )
     }
@@ -343,7 +343,7 @@ const Field = (props) => {
     if ( field.type==='learningmode' ) {
         return(
             <div className={highLightClass} ref={scrollAnchor}>
-              <LearningMode disabled={disabled} field={props.field}/>
+                <LearningMode disabled={disabled} field={props.field}/>
             </div>
         )
     }
@@ -357,7 +357,7 @@ const Field = (props) => {
     if ( field.type === 'mixedcontentscan' ) {
         return (
             <div className={highLightClass} ref={scrollAnchor}>
-              <MixedContentScan field={props.field}/>
+                <MixedContentScan field={props.field}/>
             </div>
         )
     }
@@ -365,7 +365,7 @@ const Field = (props) => {
     if (field.type === 'vulnerabilitiestable') {
         return (
             <div className={highLightClass} ref={scrollAnchor}>
-              <VulnerabilitiesOverview field={props.field} />
+                <VulnerabilitiesOverview field={props.field} />
             </div>
         )
     }
@@ -466,15 +466,15 @@ const Field = (props) => {
     }
 
     if ( field.type === 'letsencrypt' ) {
-            return (
-               <LetsEncrypt field={field} />
-            )
+        return (
+            <LetsEncrypt field={field} />
+        )
     }
 
     if ( field.type === 'activate' ) {
-            return (
-               <Activate field={field}/>
-            )
+        return (
+            <Activate field={field}/>
+        )
     }
 
     return (

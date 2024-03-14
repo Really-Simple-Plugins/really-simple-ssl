@@ -87,7 +87,6 @@ if ( ! class_exists( 'rsssl_installer' ) ) {
 		/**
 		 * Download the plugin
 		 * @return bool
-		 * @todo restore
 		 */
 		public function download_plugin() {
 			if ( ! current_user_can( 'install_plugins' ) ) {

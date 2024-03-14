@@ -1567,7 +1567,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
     //we initialize the class
     //add_action('init', array(rsssl_vulnerabilities::class, 'instance'));
-    if ( !defined('rsssl_pro_version') ) {
+    if ( !defined('rsssl_pro') ) {
 	    $vulnerabilities = new rsssl_vulnerabilities();
     }
 }

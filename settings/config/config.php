@@ -594,7 +594,7 @@ function rsssl_fields( $load_values = true ) {
 				]
 			],
 			'configure_on_activation' => [
-				'condition' => 0,
+				'condition' => 1,
 				[
 					'hsts_subdomains' => true,
 					'hsts_max_age'    => 63072000,
@@ -1041,6 +1041,13 @@ function rsssl_fields( $load_values = true ) {
 			'group_id' => 'two_fa_general',
 			'type'     => 'checkbox',
 			'label'    => __( "Enable login protection", "really-simple-ssl" ),
+			'help'     => [
+				'label' => 'default',
+				'url'   => 'https://really-simple-ssl.com/instructions/about-login-protection/?mtm_campaign=instructions&mtm_source=2fa',
+				'title' => __("About Login Protection", 'really-simple-ssl'),
+				'text'  => __('Two-step verification is the first feature we regard as login protection. Want to know more about this feature, and what is to come?',
+					'really-simple-ssl'),
+			],
 			'disabled' => false,
 			'default'  => 'disabled',
 			'server_conditions'    => [
@@ -1714,26 +1721,11 @@ function rsssl_fields( $load_values = true ) {
 			'type'     => 'select',
 			'default'  => '48',
 			'options'   => [
-				'8' => __( "8 hours (recommended)", "really-simple-ssl" ),
-				'48' => __( "48 hours (default)", "really-simple-ssl" ),
+				'6' => __( "8 hours (recommended)", "really-simple-ssl" ),
+				'48' => __( "48 hours", "really-simple-ssl" ),
 			],
-			'label'    => __( "Limit logged in session duration", "really-simple-ssl" ),
-			'help'             => [
-				'label' => 'default',
-				'title' => __( "Prevent session hijacking", 'really-simple-ssl' ),
-				'text'  => __( "Really Simple SSL allows you to limit the default logged in session duration. By default, WordPress will keep users logged in for 48 hours, or even 7 days when clicking the ‘remember me’ checkbox. An attacker could possibly steal the logged in cookie and gain access to a user’s account. Limiting the logged in duration to 8 hours will greatly reduce the risk of session hijacking.", 'really-simple-ssl' ),
-			],
+			'label'    => __( "Let login cookie expire after", "really-simple-ssl" ),
 		],
-		[
-			'id'       => 'hide_rememberme',
-			'menu_id'  => 'password_security',
-			'group_id' => 'password_security_passwords',
-			'type'     => 'checkbox',
-			'default'  => false,
-			'label'    => __( "Hide the remember me checkbox", "really-simple-ssl" ),
-		],
-
-
 	];
 
 	$fields = apply_filters( 'rsssl_fields', $fields );

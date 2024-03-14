@@ -13,9 +13,6 @@ const PremiumOverlay = ({msg, title, url, upgrade}) => {
         } else {
             message = rsssl_settings.messageInvalid;
         }
-        if (rsssl_settings.pro_incompatible) {
-            message = __("You are using an incompatible version of Really Simple SSL pro. Please update to the latest version.", "really-simple-ssl");
-        }
     }
 
     return (

@@ -1,0 +1,135 @@
+//.rsssl-modal-backdrop {
+//  position: fixed;
+//  top: 0;
+//  right: 0;
+//  bottom: 0;
+//  left: 0;
+//  background-color: rgba(0, 0, 0, 0.6);
+//  width: 100%;
+//  height: 100%;
+//  z-index: 12; //higher than rsssl-locked
+//}
+//
+//.rsssl-modal {
+//  width: clamp(300px, 75ch, 100vw - 50px);
+//  height: max-content;
+//  position: absolute;
+//  z-index: 9999;//ensure the modal is over the WP menu in the sidebar.
+//  border-radius: var(--rsp-border-radius);
+//  background-color: var(--rsp-white);
+//  top: 25vh;
+//  left: -20px;
+//  right: 0;
+//  bottom: 0;
+//  /* transform: translate(-50%, -50%); */
+//  margin: 25px auto;
+//
+//  &-header {
+//    @include rsssl-block-padding;
+//    display: flex;
+//    justify-content: space-between;
+//    align-items: center;
+//    border-radius: var(--rsp-border-radius);
+//    .modal-title {
+//      margin: 0;
+//    }
+//    .rsssl-modal-close {
+//      cursor: pointer;
+//      background: none;
+//      border: none;
+//      font-weight: 700;
+//    }
+//    button {
+//      img {
+//        height: 16px;
+//        width: 16px;
+//      }
+//    }
+//  }
+//
+//  &-content {
+//    position: relative;
+//    font-size: var(--rsp-fs-300);
+//    line-height: 1.5;
+//    @include rsssl-block-padding;
+//    &-subtitle {
+//      font-size: var(--rsp-fs-600);
+//      font-weight: 600;
+//      margin-bottom: var(--rsp-spacing-xs);
+//    }
+//    &-description {
+//      overflow-wrap: anywhere;
+//      margin-top: 0;
+//      font-weight: 400;
+//      line-height: 1.5;
+//      margin-bottom: var(--rsp-spacing-s);
+//    }
+//  }
+//  &-footer {
+//    display: flex;
+//    flex-direction: row;
+//    @include rsssl-block-padding;
+//    gap:10px;
+//    // text-align: right;
+//    .button {
+//      display: flex;
+//      align-items: flex-start;
+//      justify-content: center;
+//      min-width: 105px;
+//
+//      //height: 45px;
+//      //width: 100%;
+//      text-align: center;
+//      // margin-right: 20px;
+//      border-radius: 6px;
+//    }
+//
+//    .rsssl-button-help {
+//      background-color: #D7263D;
+//      color: white;
+//      border-color: #D7263D;
+//      &:hover {
+//        opacity: 0.9;
+//      }
+//    }
+//  }
+//}
+////this has to apply both to modal and LE activation step
+//.rsssl-modal-content-step {
+//
+//  ul{
+//    margin-bottom: var(--rsp-spacing-m);
+//    li {
+//      display: flex;
+//      align-items: flex-start;
+//      margin-bottom: var(--rsp-spacing-xxs);
+//      &.rsssl-is-plugin{
+//        background-color: var(--rsp-grey-100);
+//        border: none;
+//        margin: 10px 0 0 0;
+//        padding:2px 0;
+//        position:relative;
+//        a.button-default.rsssl-read-more{
+//          position:absolute;
+//          display:none;
+//          top:17px;
+//          right:20px;
+//          z-index:5;
+//          @media(max-width: 620px) {
+//            position:relative;
+//            margin-left:20px;
+//            z-index:5;
+//          }
+//        }
+//      }
+//      .rsssl-icon{
+//        margin-right:7px;
+//      }
+//
+//    }
+//  }
+//}
+//
+//.components-modal__frame {
+//  width: clamp(300px, 75ch, 100vw - 50px);
+//}

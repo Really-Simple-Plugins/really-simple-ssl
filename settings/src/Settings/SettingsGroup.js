@@ -103,12 +103,9 @@ const SettingsGroup = (props) => {
         } else {
             msg = rsssl_settings.messageInvalid;
         }
-        if (rsssl_settings.pro_incompatible) {
-            msg = __("You are using an incompatible version of Really Simple SSL pro. Please update to the latest version.", "really-simple-ssl");
-        }
     }
 
-    let disabled = (licenseStatus !== 'valid' || rsssl_settings.pro_incompatible) && activeGroup.premium;
+    let disabled = licenseStatus !== 'valid' && activeGroup.premium;
     //if a feature can only be used on networkwide or single site setups, pass that info here.
     let networkwide_error = !rsssl_settings.networkwide_active && activeGroup.networkwide_required;
     upgrade = activeGroup.upgrade ? activeGroup.upgrade : upgrade;

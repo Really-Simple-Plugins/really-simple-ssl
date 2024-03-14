@@ -129,8 +129,6 @@ class Rsssl_File_Storage {
 	}
 
 	public static function GetDate( string $file ) {
-		$storage = new Rsssl_File_Storage();
-		$file    = $storage->folder . '/' . $file;
 		if ( file_exists( $file ) ) {
 			return filemtime( $file );
 		}

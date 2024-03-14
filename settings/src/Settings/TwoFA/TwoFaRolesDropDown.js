@@ -42,6 +42,7 @@ const TwoFaRolesDropDown = ({ field }) => {
             setSelectedRoles(field.default.map((role, index) => ({ value: role, label: role.charAt(0).toUpperCase() + role.slice(1) })));
        } else {
            setSelectedRoles(field.value.map((role, index) => ({ value: role, label: role.charAt(0).toUpperCase() + role.slice(1) })));
+
        }
     },[fieldsLoaded]);
 

@@ -162,7 +162,7 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
             if ( ! rsssl_user_can_manage() ) {
                 return $response;
             }
-	        if ( defined('rsssl_pro_version')) {
+	        if ( defined('rsssl_pro')) {
 		        return $response;
 	        }
 
@@ -472,7 +472,7 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
 		 * Dummy data for two factor Users block
 		 */
 		public function two_factor_users_data( array $response, string $action, $data ) {
-			if ( defined('rsssl_pro_version')) {
+			if ( defined('rsssl_pro')) {
 				return $response;
 			}
 

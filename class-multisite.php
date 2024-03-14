@@ -223,7 +223,7 @@ if (!class_exists('rsssl_multisite')) {
 		    $support = apply_filters('rsssl_support_link', '<a target="_blank" rel="noopener noreferrer" href="https://wordpress.org/support/plugin/really-simple-ssl/">' . __('Support', 'really-simple-ssl') . '</a>');
 		    array_unshift($links, $support);
 
-		    if ( ! defined( 'rsssl_pro_version' ) ) {
+		    if ( ! defined( 'rsssl_pro' ) ) {
 			    $upgrade_link = '<a style="color:#2271b1;font-weight:bold" target="_blank" rel="noopener noreferrer" href="https://really-simple-ssl.com/pro/?mtm_campaign=settings&mtm_kwd=multisite&mtm_source=free&mtm_content=upgrade">' . __( 'Improve security - Upgrade', 'really-simple-ssl' ) . '</a>';
 			    array_unshift( $links, $upgrade_link );
 		    }

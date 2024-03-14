@@ -5,22 +5,7 @@ import { __ } from "@wordpress/i18n";
 import './RssslModal.scss';
 import ErrorBoundary from "../../../../settings/src/utils/ErrorBoundary";
 
-const RssslModal = ({
-                        title,
-                        subTitle,
-                        buttons,
-                        content,
-                        list,
-                        confirmAction,
-                        confirmText,
-                        alternativeAction,
-                        alternativeText,
-                        alternativeClassName,
-                        isOpen,
-                        setOpen,
-                        className,
-                        footer,
-                    }) => {
+const RssslModal = ({title, subTitle, buttons, content, list, confirmAction, confirmText, alternativeAction, alternativeText, alternativeClassName, isOpen, setOpen, className}) => {
     const [Icon, setIcon] = useState(null);
     let pluginUrl = typeof rsssl_modal !== 'undefined' ? rsssl_modal.plugin_url : rsssl_settings.plugin_url;
     alternativeClassName = alternativeClassName ? alternativeClassName : 'rsssl-warning';
@@ -54,12 +39,9 @@ const RssslModal = ({
                             </ul>}
                         </div>
                         <div className="rsssl-modal-footer">
-                            {!footer && <div className="rsssl-modal-footer-image">
+                            <div className="rsssl-modal-footer-image">
                                 <img className="rsssl-logo" src={pluginUrl+"assets/img/really-simple-ssl-logo.svg"} alt="Really Simple SSL" />
-                            </div>}
-                            { footer && <div className="rsssl-modal-footer-feedback">
-                                {footer}
-                            </div>}
+                            </div>
                             <div className="rsssl-modal-footer-buttons">
                                 <Button onClick={() => setOpen(false)}>{__("Cancel", "really-simple-ssl")}</Button>
                                 { buttons && <>{buttons}</>}

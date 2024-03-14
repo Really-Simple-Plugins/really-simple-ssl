@@ -132,13 +132,13 @@ class rsssl_onboarding {
 	 */
 	public function signup_for_mailinglist( string $email): void {
 		$license_key = '';
-		if ( defined('rsssl_pro_version') ) {
+		if ( defined('rsssl_pro') ) {
 			$license_key = RSSSL_PRO()->licensing->license_key();
 			$license_key = RSSSL_PRO()->licensing->maybe_decode( $license_key );
 		}
 
 		$api_params = array(
-			'has_premium' => defined('rsssl_pro_version'),
+			'has_premium' => defined('rsssl_pro'),
 			'license' => $license_key,
 			'email' => sanitize_email($email),
 			'domain' => esc_url_raw( site_url() ),
@@ -166,7 +166,7 @@ class rsssl_onboarding {
 			return [];
 		}
 
-		if( !defined('rsssl_pro_version')) {
+		if( !defined('rsssl_pro')) {
 			$info = __('You can also let the automatic scan of the pro version handle this for you, and get premium support, increased security with HSTS and more!', 'really-simple-ssl'). " " . sprintf('<a target="_blank" rel="noopener noreferrer" href="%s">%s</a>', RSSSL()->admin->pro_url, __("Check out Really Simple SSL Pro", "really-simple-ssl"));;
 		}
 

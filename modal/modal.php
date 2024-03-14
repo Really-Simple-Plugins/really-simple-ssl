@@ -10,10 +10,6 @@ if ( ! function_exists('rsssl_plugin_plugin_page_scripts')) {
             return;
         }
 
-		if ( is_multisite() && ! is_network_admin() ) {
-			return;
-		}
-
 		$js_data = rsssl_get_chunk_translations( 'modal/build' );
 		if (empty($js_data)) {
 			return;
@@ -39,7 +35,7 @@ if ( ! function_exists('rsssl_plugin_plugin_page_scripts')) {
                 'json_translations' => $js_data['json_translations'],
                 'plugin_url' => rsssl_url,
                 'deactivate_keep_https' => $deactivate_keep_ssl_link,
-                'pro_plugin_active' => defined('rsssl_pro_version'),
+                'pro_plugin_active' => defined('rsssl_pro'),
             ])
         );
 
