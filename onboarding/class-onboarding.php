@@ -133,8 +133,8 @@ class rsssl_onboarding {
 	public function signup_for_mailinglist( string $email): void {
 		$license_key = '';
 		if ( defined('rsssl_pro') ) {
-			$license_key = RSSSL_PRO()->licensing->license_key();
-			$license_key = RSSSL_PRO()->licensing->maybe_decode( $license_key );
+			$license_key = RSSSL()->licensing->license_key();
+			$license_key = RSSSL()->licensing->maybe_decode( $license_key );
 		}
 
 		$api_params = array(
