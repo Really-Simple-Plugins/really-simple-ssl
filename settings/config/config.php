@@ -1726,6 +1726,7 @@ function rsssl_fields( $load_values = true ) {
 			],
 			'label'    => __( "Let login cookie expire after", "really-simple-ssl" ),
 		],
+
 	];
 
 	$fields = apply_filters( 'rsssl_fields', $fields );
