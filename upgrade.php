@@ -180,6 +180,10 @@ function rsssl_upgrade() {
 		do_action( 'rsssl_update_rules' );
 	}
 
+	if ( $prev_version && version_compare( $prev_version, '8.0.0', '<' ) ) {
+		wp_clear_scheduled_hook( 'rsssl_every_five_minutes_hook' );
+	}
+
 	//don't clear on each update.
 	//RSSSL()->admin->clear_admin_notices_cache();
 
