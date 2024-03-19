@@ -557,7 +557,7 @@ if ( !function_exists('rsssl_generated_by_rsssl')) {
 if ( ! function_exists( 'rsssl_caa_record_prevents_le' ) ) {
 	function rsssl_caa_record_prevents_le(): bool {
 		// Get DNS CAA records for site_url()
-		$caa_records = dns_get_record( parse_url( site_url(), PHP_URL_HOST ), DNS_CAA );
+		$caa_records = dns_get_record( parse_url( site_url(), PHP_URL_HOST ), 8192 );
 
 		// If no CAA records found, return false
 		if ( empty( $caa_records ) ) {
