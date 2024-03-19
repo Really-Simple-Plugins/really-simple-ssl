@@ -452,17 +452,17 @@ function rsssl_plugin_actions($data)
  *
  * @return string
  */
-function rsssl_ssltest_run($data)
-{
-	if (!rsssl_user_can_manage()) {
+function rsssl_ssltest_run( $data ) {
+	if ( ! rsssl_user_can_manage() ) {
 		return '';
 	}
-	$url = $data['url'];
-	$response = wp_remote_get($url);
-	$data = wp_remote_retrieve_body($response);
-	if (empty($data)) {
-		$data = ['errors' => 'Request failed, please try again.'];
+	$url      = $data['url'];
+	$response = wp_safe_remote_get( $url );
+	$data     = wp_remote_retrieve_body( $response );
+	if ( empty( $data ) ) {
+		$data = [ 'errors' => 'Request failed, please try again.' ];
 	}
+
 	return $data;
 }
 
