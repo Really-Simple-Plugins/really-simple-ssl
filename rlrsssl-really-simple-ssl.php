@@ -4,7 +4,7 @@
  * Plugin URI: https://really-simple-ssl.com
  * Description: Lightweight SSL & Hardening Plugin
  * Version: 8.0.0
- * Requires at least: 5.8
+ * Requires at least: 5.9
  * Requires PHP: 7.2
  * Author: Really Simple Plugins
  * Author URI: https://really-simple-plugins.com

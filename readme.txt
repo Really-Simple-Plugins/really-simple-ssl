@@ -2,9 +2,9 @@
 Contributors: RogierLankhorst, markwolters, hesseldejong, vicocotea, marcelsanting, janwoostendorp
 Donate link: https://www.paypal.me/reallysimplessl
 Tags: SSL, https, force SSL, mixed content, security, secure website, website security, TLS, secure socket layers, HSTS
-Requires at least: 5.8
+Requires at least: 5.9
 License: GPL2
-Tested up to: 6.4
+Tested up to: 6.5
 Requires PHP: 7.2
 Stable tag: 8.0.0
 
@@ -111,6 +111,10 @@ The plugin checks your certificate before enabling, but if, for example, you mig
 If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions](https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/) instead.
 
 == Changelog ==
+= 8.0.0 =
+* New: extend blocking of malicious admin creation to multisite
+* Improvement: added dandomain host
+
 = 7.2.4 =
 * Improvement: added Infomaniak host
 * Improvement: hide rememberme option

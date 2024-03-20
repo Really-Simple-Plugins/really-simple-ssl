@@ -2,14 +2,14 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Really Simple SSL Pro 8.0\n"
+"Project-Id-Version: Really Simple SSL Pro 8.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/really-simple-ssl-pro\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-03-14T09:46:45+00:00\n"
+"POT-Creation-Date: 2024-03-20T09:10:58+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.8.1\n"
 "X-Domain: really-simple-ssl\n"
@@ -34,16 +34,40 @@ msgstr ""
 msgid "https://really-simple-plugins.com"
 msgstr ""
 
+#: class-admin.php:113
+#: class-admin.php:115
+#: class-admin.php:1835
+#: class-multisite.php:220
+#: settings/config/menu.php:17
+#: settings/config/menu.php:372
+#: settings/build/354.2f14ed4d6692e499a6c3.js:1
+#: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:237
+#: settings/src/Dashboard/Vulnerabilities/VulnerabilitiesFooter.js:24
+msgid "Settings"
+msgstr ""
+
+#: class-admin.php:120
+#: class-multisite.php:223
+#: settings/build/index.42248915a0410688dcc4.js:1
+#: settings/src/Header.js:36
+msgid "Support"
+msgstr ""
+
+#: class-admin.php:125
+#: class-multisite.php:227
+msgid "Improve security - Upgrade"
+msgstr ""
+
 #. translators: %s is replaced with the hyperlink
-#: class-admin.php:121
+#: class-admin.php:159
 msgid "Really Simple SSL and Really Simple SSL add-ons do not process any personal identifiable information, so the GDPR does not apply to these plugins or usage of these plugins on your website. You can find our privacy policy <a href=\"%s\" rel=\"noopener noreferrer\" target=\"_blank\">here</a>."
 msgstr ""
 
-#: class-admin.php:503
+#: class-admin.php:541
 msgid "Dismiss"
 msgstr ""
 
-#: class-admin.php:506
+#: class-admin.php:544
 #: settings/build/229.2d51466bad556da30427.js:1
 #: settings/build/354.2f14ed4d6692e499a6c3.js:1
 #: settings/src/Dashboard/TaskElement.js:52
@@ -52,7 +76,7 @@ msgstr ""
 msgid "View"
 msgstr ""
 
-#: class-admin.php:506
+#: class-admin.php:544
 #: settings/build/94.e98da9d5e5e52624f028.js:1
 #: settings/build/229.2d51466bad556da30427.js:1
 #: settings/build/354.2f14ed4d6692e499a6c3.js:1
@@ -62,58 +86,45 @@ msgid "More info"
 msgstr ""
 
 #. translators: %1$ and %2$ are replaced with opening and closing a tag containing hyperlink
-#: class-admin.php:1627
+#: class-admin.php:1665
 msgid "Hi, Really Simple SSL has kept your site secure for some time now, awesome! If you have a moment, please consider leaving a review on WordPress.org to spread the word. We greatly appreciate it! If you have any questions or feedback, leave us a %1$smessage%2$s."
 msgstr ""
 
 #. translators: %1$ and %2$ are replaced with opening and closing a tag containing hyperlink
-#: class-admin.php:1634
+#: class-admin.php:1672
 msgid "Hi, Really Simple SSL has kept your site secure for a month now, awesome! If you have a moment, please consider leaving a review on WordPress.org to spread the word. We greatly appreciate it! If you have any questions or feedback, leave us a %1$smessage%2$s."
 msgstr ""
 
-#: class-admin.php:1642
+#: class-admin.php:1680
 msgid "Leave a review"
 msgstr ""
 
-#: class-admin.php:1655
+#: class-admin.php:1693
 msgid "Maybe later"
 msgstr ""
 
-#: class-admin.php:1668
+#: class-admin.php:1706
 msgid "Don't show again"
 msgstr ""
 
-#: class-admin.php:1797
-#: class-admin.php:2670
-#: class-admin.php:2673
-#: class-multisite.php:220
-#: pro/class-admin.php:765
-#: settings/config/menu.php:17
-#: settings/config/menu.php:372
-#: settings/build/354.2f14ed4d6692e499a6c3.js:1
-#: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:237
-#: settings/src/Dashboard/Vulnerabilities/VulnerabilitiesFooter.js:24
-msgid "Settings"
-msgstr ""
-
-#: class-admin.php:1855
+#: class-admin.php:1893
 msgid "Completed"
 msgstr ""
 
-#: class-admin.php:1856
+#: class-admin.php:1894
 #: pro/class-licensing.php:635
 #: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/MixedContentScan/MixedContentScan.js:58
 msgid "Warning"
 msgstr ""
 
-#: class-admin.php:1857
+#: class-admin.php:1895
 #: pro/class-licensing.php:636
 #: settings/config/menu.php:321
 msgid "Open"
 msgstr ""
 
-#: class-admin.php:1858
+#: class-admin.php:1896
 #: settings/build/354.2f14ed4d6692e499a6c3.js:1
 #: settings/build/829.25a3e44e27776e51a37d.js:1
 #: settings/src/Dashboard/OtherPlugins/OtherPlugins.js:21
@@ -121,36 +132,36 @@ msgstr ""
 msgid "Upgrade"
 msgstr ""
 
-#: class-admin.php:1899
+#: class-admin.php:1937
 msgid "No recommended redirect rules detected."
 msgstr ""
 
-#: class-admin.php:1914
+#: class-admin.php:1952
 msgid "(Unknown)"
 msgstr ""
 
-#: class-admin.php:1923
+#: class-admin.php:1961
 msgid "Your wp-config.php has to be edited, but is not writable."
 msgstr ""
 
-#: class-admin.php:1924
-#: class-admin.php:1945
+#: class-admin.php:1962
+#: class-admin.php:1983
 msgid "Set your wp-config.php to writable and reload this page."
 msgstr ""
 
-#: class-admin.php:1925
+#: class-admin.php:1963
 msgid "To safely enable SSL on your server configuration, you should add the following line of code to your wp-config.php."
 msgstr ""
 
-#: class-admin.php:1945
+#: class-admin.php:1983
 msgid "A definition of a site url or home url was detected in your wp-config.php, but the file is not writable."
 msgstr ""
 
-#: class-admin.php:1960
+#: class-admin.php:1998
 msgid "The 'force-deactivate.php' file has to be renamed to .txt. Otherwise your ssl can be deactivated by anyone on the internet."
 msgstr ""
 
-#: class-admin.php:1961
+#: class-admin.php:1999
 #: settings/build/229.2d51466bad556da30427.js:1
 #: settings/build/434.736589de85bbbce50967.js:1
 #: settings/src/Onboarding/Items/ListItem.js:46
@@ -158,233 +169,221 @@ msgid "Check again"
 msgstr ""
 
 #. translators: %s is replaced with the folder name.
-#: class-admin.php:1977
+#: class-admin.php:2015
 msgid "The Really Simple SSL plugin folder in the /wp-content/plugins/ directory has been renamed to %1$s. This might cause issues when deactivating, or with premium add-ons. To fix this you can rename the Really Simple SSL folder back to the default %2$s."
 msgstr ""
 
-#: class-admin.php:1991
+#: class-admin.php:2029
 msgid "SSL is now activated. Follow the three steps in this article to check if your website is secure."
 msgstr ""
 
-#: class-admin.php:2004
+#: class-admin.php:2042
 msgid "SSL is enabled on your site."
 msgstr ""
 
-#: class-admin.php:2008
+#: class-admin.php:2046
 msgid "SSL is not enabled yet."
 msgstr ""
 
-#: class-admin.php:2025
+#: class-admin.php:2063
 msgid "The wp-config.php file is not writable, and needs to be edited. Please set this file to writable."
 msgstr ""
 
-#: class-admin.php:2029
+#: class-admin.php:2067
 msgid "No SSL detected"
 msgstr ""
 
-#: class-admin.php:2030
+#: class-admin.php:2068
 msgid "No SSL detected. Use the retry button to check again."
 msgstr ""
 
-#: class-admin.php:2037
-#: class-admin.php:2051
 #: class-admin.php:2075
+#: class-admin.php:2089
+#: class-admin.php:2113
 msgid "Install SSL certificate"
 msgstr ""
 
-#: class-admin.php:2038
+#: class-admin.php:2076
 msgid "Retry"
 msgstr ""
 
-#: class-admin.php:2043
+#: class-admin.php:2081
 msgid "Could not test certificate"
 msgstr ""
 
-#: class-admin.php:2044
+#: class-admin.php:2082
 #: onboarding/class-onboarding.php:249
 msgid "Automatic certificate detection is not possible on your server."
 msgstr ""
 
-#: class-admin.php:2052
+#: class-admin.php:2090
 msgid "Check manually"
 msgstr ""
 
-#: class-admin.php:2057
+#: class-admin.php:2095
 msgid "An SSL certificate was detected on your site."
 msgstr ""
 
-#: class-admin.php:2062
+#: class-admin.php:2100
 msgid "Your SSL certificate will expire soon."
 msgstr ""
 
 #. translators: %s is replaced with date.
-#: class-admin.php:2065
+#: class-admin.php:2103
 msgid "SSL certificate will expire on %s."
 msgstr ""
 
 #. translators: %s is replaced with date.
-#: class-admin.php:2065
+#: class-admin.php:2103
 msgid "If your hosting provider auto-renews your certificate, no action is required. Alternatively, you have the option to generate an SSL certificate with Really Simple SSL."
 msgstr ""
 
 #. translators: %1$ and %2$s are replaced with the opening and closing tag with link.
-#: class-admin.php:2067
+#: class-admin.php:2105
 msgid "Depending on your hosting provider, %1$smanual installation%2$s may be required."
 msgstr ""
 
-#: class-admin.php:2076
+#: class-admin.php:2114
 #: settings/build/229.2d51466bad556da30427.js:1
 #: settings/build/354.2f14ed4d6692e499a6c3.js:1
 #: settings/src/Dashboard/TaskElement.js:51
 msgid "Re-check"
 msgstr ""
 
-#: class-admin.php:2088
+#: class-admin.php:2126
 msgid "Mixed content fixer was successfully detected on the front-end."
 msgstr ""
 
-#: class-admin.php:2093
+#: class-admin.php:2131
 msgid "Really Simple SSL has received no response from the webpage."
 msgstr ""
 
-#: class-admin.php:2100
+#: class-admin.php:2138
 msgid "The mixed content fixer is active, but was not detected on the frontpage."
 msgstr ""
 
-#: class-admin.php:2105
+#: class-admin.php:2143
 msgid "Error occurred when retrieving the webpage."
 msgstr ""
 
-#: class-admin.php:2111
+#: class-admin.php:2149
 msgid "Mixed content fixer not enabled. Enable the option to fix mixed content on your site."
 msgstr ""
 
 #. translators: %s is replaced with the error description.
-#: class-admin.php:2118
+#: class-admin.php:2156
 msgid "The mixed content fixer could not be detected due to a cURL error: %s. cURL errors are often caused by an outdated version of PHP or cURL and don't affect the front-end of your site. Contact your hosting provider for a fix."
 msgstr ""
 
-#: class-admin.php:2131
+#: class-admin.php:2169
 msgid "301 redirect to https set."
 msgstr ""
 
-#: class-admin.php:2135
+#: class-admin.php:2173
 msgid "No 301 redirect is set. Enable the WordPress 301 redirect in the settings to get a 301 permanent redirect."
 msgstr ""
 
-#: class-admin.php:2150
-#: class-admin.php:2156
+#: class-admin.php:2188
+#: class-admin.php:2194
 msgid "301 .htaccess redirect"
 msgstr ""
 
-#: class-admin.php:2151
+#: class-admin.php:2189
 msgid "The 301 redirect with .htaccess to HTTPS is now enabled."
 msgstr ""
 
-#: class-admin.php:2157
+#: class-admin.php:2195
 msgid "WordPress 301 redirect enabled. We recommend to enable a 301 .htaccess redirect."
 msgstr ""
 
-#: class-admin.php:2164
+#: class-admin.php:2202
 msgid "Enable a .htaccess redirect or PHP redirect in the settings to create a 301 redirect."
 msgstr ""
 
-#: class-admin.php:2169
+#: class-admin.php:2207
 msgid ".htaccess redirect."
 msgstr ""
 
-#: class-admin.php:2171
+#: class-admin.php:2209
 msgid "The .htaccess redirect rules selected by this plugin failed in the test. Set manually or dismiss to leave on PHP redirect."
 msgstr ""
 
-#: class-admin.php:2186
+#: class-admin.php:2224
 msgid "Your site uses Elementor. This can require some additional steps before getting the secure lock."
 msgstr ""
 
-#: class-admin.php:2200
+#: class-admin.php:2238
 msgid "Your site uses Divi. This can require some additional steps before getting the secure lock."
 msgstr ""
 
-#: class-admin.php:2216
+#: class-admin.php:2254
 msgid "HttpOnly Secure cookies have been set automatically!"
 msgstr ""
 
-#: class-admin.php:2221
+#: class-admin.php:2259
 msgid "HttpOnly Secure cookies not set."
 msgstr ""
 
-#: class-admin.php:2228
+#: class-admin.php:2266
 msgid "To set the httponly secure cookie settings, your wp-config.php has to be edited, but the file is not writable."
 msgstr ""
 
-#: class-admin.php:2228
+#: class-admin.php:2266
 msgid "Add the following lines of code to your wp-config.php."
 msgstr ""
 
-#: class-admin.php:2236
+#: class-admin.php:2274
 msgid "Or set your wp-config.php to writable and reload this page."
 msgstr ""
 
-#: class-admin.php:2250
+#: class-admin.php:2288
 msgid "See which recommended security headers are not present on your website."
 msgstr ""
 
-#: class-admin.php:2256
+#: class-admin.php:2294
 msgid "Recommended security headers enabled."
 msgstr ""
 
-#: class-admin.php:2268
+#: class-admin.php:2306
 msgid "Improve security with Really Simple SSL Pro."
 msgstr ""
 
-#: class-admin.php:2282
+#: class-admin.php:2320
 msgid "Due to a recent update by WP Engine, we have changed your settings automatically to adapt."
 msgstr ""
 
-#: class-admin.php:2295
+#: class-admin.php:2333
 msgid "You have the Really Simple SSL Let's Encrypt beta add-on activated. This functionality has now been integrated in core, so you can deactivate the add-on."
 msgstr ""
 
 #. translators: %s is replaced with the plugin name.
-#: class-admin.php:2307
+#: class-admin.php:2345
 msgid "We have detected the %s plugin on your website."
 msgstr ""
 
 #. translators: %s is replaced with the plugin name.
-#: class-admin.php:2307
+#: class-admin.php:2345
 msgid "As Really Simple SSL handles all the functionality this plugin provides, we recommend to disable this plugin to prevent unexpected behavior."
 msgstr ""
 
-#: class-admin.php:2321
+#: class-admin.php:2359
 msgid "Black Friday sale! Get 40% Off Really Simple SSL Pro"
 msgstr ""
 
-#: class-admin.php:2336
+#: class-admin.php:2374
 msgid "Please check if your REST API is loading correctly. Your site currently is using the slower Ajax fallback method to load the settings."
 msgstr ""
 
-#: class-admin.php:2349
+#: class-admin.php:2387
 msgid "Our vulnerability reporting is in beta. Signup for the beta to discover the new features!"
 msgstr ""
 
-#: class-admin.php:2363
+#: class-admin.php:2401
 msgid "Email verification has not been completed yet. Check your email and click the link"
 msgstr ""
 
-#: class-admin.php:2371
+#: class-admin.php:2409
 msgid "Email address successfully verified"
-msgstr ""
-
-#: class-admin.php:2678
-#: class-multisite.php:223
-#: settings/build/index.42248915a0410688dcc4.js:1
-#: settings/src/Header.js:36
-msgid "Support"
-msgstr ""
-
-#: class-admin.php:2683
-#: class-multisite.php:227
-msgid "Improve security - Upgrade"
 msgstr ""
 
 #: class-multisite.php:114
@@ -433,8 +432,8 @@ msgstr ""
 
 #: class-multisite.php:289
 #: class-multisite.php:290
-#: settings/settings.php:176
 #: settings/settings.php:177
+#: settings/settings.php:178
 msgid "SSL & Security"
 msgstr ""
 
@@ -895,7 +894,7 @@ msgstr ""
 msgid "The system is not ready for the installation yet. Please run the wizard again."
 msgstr ""
 
-#: lets-encrypt/config/class-hosts.php:574
+#: lets-encrypt/config/class-hosts.php:583
 msgid "I don't know, or not listed, proceed with installation"
 msgstr ""
 
@@ -1624,7 +1623,9 @@ msgstr ""
 #: onboarding/class-onboarding.php:403
 #: settings/config/menu.php:335
 #: settings/config/menu.php:342
-msgid "Password Security"
+#: modal/build/index.855f8bc8ac202db563f6.js:1
+#: modal/src/components/DeactivationModal/DeactivationModal.js:97
+msgid "Password security"
 msgstr ""
 
 #: onboarding/class-onboarding.php:409
@@ -1713,67 +1714,89 @@ msgstr ""
 msgid "Widget with mixed content"
 msgstr ""
 
-#: pro/class-admin.php:177
+#: pro/class-admin.php:162
 msgid "You have installed Really Simple SSL Pro. We have deactivated and removed the free plugin."
 msgstr ""
 
-#: pro/class-admin.php:190
-msgid "After installing Really Simple SSL Pro, the Really Simple SSL plugin can be safely deleted."
-msgstr ""
-
-#: pro/class-admin.php:192
-msgid "We failed to delete Really Simple SSL automatically. Please delete Really Simple SSL manually."
-msgstr ""
-
-#: pro/class-admin.php:205
+#: pro/class-admin.php:175
 #: settings/config/menu.php:41
 msgid "Premium Support"
 msgstr ""
 
-#: pro/class-admin.php:656
+#: pro/class-admin.php:626
 msgid "Elementor mixed content successfully converted."
 msgstr ""
 
-#: pro/class-admin.php:669
-#: pro/class-admin.php:674
+#: pro/class-admin.php:639
+#: pro/class-admin.php:644
 msgid "Potential redirect loop."
 msgstr ""
 
-#: pro/class-admin.php:670
+#: pro/class-admin.php:640
 msgid "No redirect to http detected."
 msgstr ""
 
-#: pro/class-admin.php:675
+#: pro/class-admin.php:645
 msgid "A redirect to http was detected. This might result in redirect loops."
 msgstr ""
 
-#: pro/class-admin.php:675
+#: pro/class-admin.php:645
 msgid "%sRead more%s."
 msgstr ""
 
-#: pro/class-admin.php:689
-#: pro/class-admin.php:695
+#: pro/class-admin.php:659
+#: pro/class-admin.php:665
 msgid "TLS version"
 msgstr ""
 
-#: pro/class-admin.php:690
+#: pro/class-admin.php:660
 msgid "TLS version is up-to-date"
 msgstr ""
 
-#: pro/class-admin.php:696
+#: pro/class-admin.php:666
 msgid "Your site uses an outdated version of TLS. Upgrade to TLS 1.2 or TLS 1.3 to keep your site secure."
 msgstr ""
 
-#: pro/class-admin.php:710
+#: pro/class-admin.php:680
 msgid "Your site redirects 404 pages to the http:// version of your homepage. This can cause mixed content issues with images."
 msgstr ""
 
-#: pro/class-admin.php:724
+#: pro/class-admin.php:694
 msgid "Update Really Simple SSL Free to the latest version for optimal compatibility."
 msgstr ""
 
-#: pro/class-admin.php:738
+#: pro/class-admin.php:708
 msgid "You are using W3 Total Cache with Disk: Enhanced setting. This can prevent Security headers from being properly loaded."
+msgstr ""
+
+#: pro/class-headers.php:210
+#: pro/class-headers.php:419
+msgid "The %s security header is not set by Really Simple SSL, but has a non-recommended value: \"%s\"."
+msgstr ""
+
+#: pro/class-headers.php:230
+#: pro/class-headers.php:236
+msgid "HSTS Preload"
+msgstr ""
+
+#: pro/class-headers.php:231
+msgid "Your site has been configured for the HSTS preload list. If you have submitted your site, it will be preloaded. Click %shere%s to submit."
+msgstr ""
+
+#: pro/class-headers.php:237
+msgid "Your site is not yet configured for the HSTS preload list."
+msgstr ""
+
+#: pro/class-headers.php:243
+msgid "HSTS not enabled"
+msgstr ""
+
+#: pro/class-headers.php:244
+msgid "Your site is not configured for HSTS yet."
+msgstr ""
+
+#: pro/class-headers.php:450
+msgid "The following recommended security headers have not been set: %s"
 msgstr ""
 
 #: pro/class-importer.php:61
@@ -1843,6 +1866,10 @@ msgstr ""
 
 #: pro/class-licensing.php:507
 msgid "You have a lifetime license."
+msgstr ""
+
+#: pro/class-licensing.php:507
+msgid "Valid until %s."
 msgstr ""
 
 #: pro/class-licensing.php:513
@@ -2169,25 +2196,21 @@ msgstr ""
 msgid "Block admin creation was disabled, because the registration of admin users has failed."
 msgstr ""
 
-#: pro/security/security.php:32
-#: settings/config/config.php:853
-msgid "Disable HTTP methods"
+#: pro/security/wordpress/block-admin-creation.php:346
+msgid "Manual approval required"
 msgstr ""
 
-#: pro/security/security.php:46
-msgid "Move debug.log"
+#: pro/security/wordpress/block-admin-creation.php:347
+msgid "Because of your settings in Really Simple SSL, this user has been set to subscriber until you change the role manually."
 msgstr ""
 
-#: pro/security/security.php:55
-msgid "Rename DB prefix"
+#: pro/security/wordpress/block-admin-creation.php:353
+#: pro/security/wordpress/block-admin-creation.php:354
+msgid "Suspicious admin account detected"
 msgstr ""
 
-#: pro/security/security.php:63
-msgid "Disable Application passwords"
-msgstr ""
-
-#: pro/security/security.php:73
-msgid "Change login URL"
+#: pro/security/wordpress/block-admin-creation.php:355
+msgid "A user account with administrator privileges was created outside the WordPress dashboard."
 msgstr ""
 
 #: pro/security/wordpress/change-login-url.php:18
@@ -2198,7 +2221,7 @@ msgstr ""
 msgid "You have requested the login URL for your website. You can log in on %s."
 msgstr ""
 
-#: pro/security/wordpress/change-login-url.php:140
+#: pro/security/wordpress/change-login-url.php:141
 msgid "This feature is not enabled."
 msgstr ""
 
@@ -2209,6 +2232,67 @@ msgstr ""
 
 #: pro/security/wordpress/class-rsssl-event-listener.php:183
 msgid "Your access has been denied, too many login attempts"
+msgstr ""
+
+#: pro/security/wordpress/class-rsssl-password-security.php:132
+msgid "Password Expires On"
+msgstr ""
+
+#. translators: %s: Not required.
+#: pro/security/wordpress/class-rsssl-password-security.php:172
+msgid "Not required"
+msgstr ""
+
+#: pro/security/wordpress/class-rsssl-password-security.php:368
+msgid "Your password has expired. Please change your password."
+msgstr ""
+
+#: pro/security/wordpress/class-rsssl-password-security.php:586
+#: pro/security/wordpress/class-rsssl-password-security.php:590
+msgid "Invalid nonce."
+msgstr ""
+
+#: pro/security/wordpress/class-rsssl-password-security.php:640
+msgid "Your password contains (part of) your (user)name or email address. Choose a different password"
+msgstr ""
+
+#: pro/security/wordpress/class-rsssl-password-security.php:798
+#: pro/security/wordpress/class-rsssl-password-security.php:799
+msgid "Your account is locked"
+msgstr ""
+
+#: pro/security/wordpress/class-rsssl-password-security.php:801
+msgid "Hi %1$s, Your password expired on %2$s , please change your password."
+msgstr ""
+
+#: pro/security/wordpress/class-rsssl-password-security.php:805
+msgid "Unlock Account"
+msgstr ""
+
+#: pro/security/wordpress/class-rsssl-password-security.php:807
+#: pro/security/wordpress/class-rsssl-password-security.php:830
+msgid "Copy this URL to your browser to change your password: %1$s "
+msgstr ""
+
+#: pro/security/wordpress/class-rsssl-password-security.php:816
+msgid "Account Locked"
+msgstr ""
+
+#: pro/security/wordpress/class-rsssl-password-security.php:821
+#: pro/security/wordpress/class-rsssl-password-security.php:822
+msgid "Your password will expire in 7 days"
+msgstr ""
+
+#: pro/security/wordpress/class-rsssl-password-security.php:824
+msgid "Hi %1$s, Your password on %2$s will expire in 7 days, please change your password."
+msgstr ""
+
+#: pro/security/wordpress/class-rsssl-password-security.php:828
+msgid "Change password"
+msgstr ""
+
+#: pro/security/wordpress/class-rsssl-password-security.php:839
+msgid "Change your password"
 msgstr ""
 
 #: pro/security/wordpress/eventlog/class-rsssl-event-type.php:119
@@ -2227,7 +2311,7 @@ msgid "Login by %s failed (incorrect credentials)"
 msgstr ""
 
 #: pro/security/wordpress/eventlog/class-rsssl-event-type.php:260
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:529
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:524
 msgid "REST API authentication successful"
 msgstr ""
 
@@ -2235,25 +2319,25 @@ msgstr ""
 #: pro/security/wordpress/eventlog/class-rsssl-event-type.php:265
 #: pro/security/wordpress/eventlog/class-rsssl-event-type.php:270
 #: pro/security/wordpress/eventlog/class-rsssl-event-type.php:275
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:524
 #: pro/security/wordpress/eventlog/class-rsssl-event-type.php:529
 #: pro/security/wordpress/eventlog/class-rsssl-event-type.php:534
 #: pro/security/wordpress/eventlog/class-rsssl-event-type.php:539
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:544
 msgid "Authentication"
 msgstr ""
 
 #: pro/security/wordpress/eventlog/class-rsssl-event-type.php:265
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:534
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:529
 msgid "REST API authentication failed"
 msgstr ""
 
 #: pro/security/wordpress/eventlog/class-rsssl-event-type.php:270
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:539
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:534
 msgid "XML-RPC authentication successful"
 msgstr ""
 
 #: pro/security/wordpress/eventlog/class-rsssl-event-type.php:275
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:544
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:539
 msgid "XML-RPC authentication failed"
 msgstr ""
 
@@ -2371,75 +2455,75 @@ msgid "MFA setup required"
 msgstr ""
 
 #: pro/security/wordpress/eventlog/class-rsssl-event-type.php:369
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:585
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:580
 msgid "Unknown event"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:525
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:520
 msgid "Login successful"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:527
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:522
 msgid "Login failed"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:549
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:544
 msgid "User locked out"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:552
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:547
 msgid "User removed from blocklist"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:554
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:549
 msgid "User added to blocklist"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:556
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:551
 msgid "User added to trusted list"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:558
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:553
 msgid "User removed from trusted list"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:560
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:555
 msgid "IP address locked-out"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:563
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:558
 msgid "IP removed from blocklist"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:565
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:560
 msgid "IP added to blocklist"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:567
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:562
 msgid "IP added to trusted list"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:569
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:564
 msgid "IP removed from trusted list"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:572
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:567
 msgid "Geo-IP blocklist changed"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:574
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:569
 msgid "Unblock link sent"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:577
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:572
 msgid "Login blocked by username"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:580
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:575
 msgid "Login blocked by IP address"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:582
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:577
 msgid "Login blocked by Geo-IP list"
 msgstr ""
 
@@ -2483,11 +2567,15 @@ msgid "Below you will find your login code for %1$s. It's valid for 15 minutes. 
 msgstr ""
 
 #. translators: %s is replaced with the site url
+#. translators: %s: site url
 #: pro/security/wordpress/two_fa/class-two-factor-email.php:295
+#: pro/security/wordpress/two_fa/two-factor.php:1517
+#: pro/security/wordpress/two_fa/two-factor.php:1565
 msgid "Notification by %s"
 msgstr ""
 
 #: pro/security/wordpress/two_fa/class-two-factor-email.php:298
+#: pro/security/wordpress/two_fa/two-factor.php:1520
 msgid "Hi"
 msgstr ""
 
@@ -2508,7 +2596,7 @@ msgid "Resend Code"
 msgstr ""
 
 #: pro/security/wordpress/two_fa/class-two-factor-email.php:357
-msgid "Don't use Two-Step verification"
+msgid "Don't use Two-step verification"
 msgstr ""
 
 #. translators: %s: email address
@@ -2516,42 +2604,146 @@ msgstr ""
 msgid "Authentication codes will be sent to %s."
 msgstr ""
 
+#: pro/security/wordpress/two_fa/class-two-factor-settings.php:355
+msgid "No role"
+msgstr ""
+
+#: pro/security/wordpress/two_fa/two-factor.php:677
+msgid "API login for user disabled."
+msgstr ""
+
+#: pro/security/wordpress/two_fa/two-factor.php:751
+#: pro/security/wordpress/two_fa/two-factor.php:1281
+#: pro/security/wordpress/two_fa/two-factor.php:1292
+#: pro/security/wordpress/two_fa/two-factor.php:1317
+#: pro/security/wordpress/two_fa/two-factor.php:1343
+msgid "Failed to create a login nonce."
+msgstr ""
+
+#. translators: 1: number of failed login attempts, 2: time since last failed login
+#: pro/security/wordpress/two_fa/two-factor.php:772
+msgid "Warning: Your account has attempted to login without providing a valid two factor token. The last failed login occurred %2$s ago. If this wasn't you, you should reset your password."
+msgid_plural "Warning: %1$s login attempts have been detected on your account with the correct password but with an incorrect two-factor token. The last failed login occurred %2$s ago. If this wasn't you, you should reset your password."
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %s: URL to reset password
+#: pro/security/wordpress/two_fa/two-factor.php:823
+msgid "Your password was reset because of too many failed Two Factor attempts. You will need to <a href=\"%s\">create a new password</a> to regain access. Please check your email for more information."
+msgstr ""
+
+#. translators: %s: Two-factor method name.
+#: pro/security/wordpress/two_fa/two-factor.php:921
+msgid "Or, use your backup method: %s &rarr;"
+msgstr ""
+
+#: pro/security/wordpress/two_fa/two-factor.php:934
+msgid "Or, use a backup method…"
+msgstr ""
+
+#: pro/security/wordpress/two_fa/two-factor.php:1261
+msgid "Cheatin&#8217; uh?"
+msgstr ""
+
+#: pro/security/wordpress/two_fa/two-factor.php:1268
+#: pro/security/wordpress/two_fa/two-factor.php:1347
+msgid "Your verification code expired, click “Resend Code” to receive a new verification code."
+msgstr ""
+
+#. translators: %s: time delay between login attempts
+#: pro/security/wordpress/two_fa/two-factor.php:1308
+msgid "Too many invalid verification codes, you can try again in %s. This limit protects your account against automated attacks."
+msgstr ""
+
+#: pro/security/wordpress/two_fa/two-factor.php:1326
+#: pro/security/wordpress/two_fa/two-factor.php:1350
+msgid "Invalid verification code."
+msgstr ""
+
+#: pro/security/wordpress/two_fa/two-factor.php:1383
+msgid "You have logged in successfully."
+msgstr ""
+
+#. translators: %1$s: user login, %2$s: site url, %3$s: password best practices link, %4$s: lost password url
+#: pro/security/wordpress/two_fa/two-factor.php:1492
+msgid ""
+"Hello %1$s, an unusually high number of failed login attempts have been detected on your account at %2$s.\n"
+"\n"
+"These attempts successfully entered your password, and were only blocked because they failed to enter your second authentication factor. Despite not being able to access your account, this behavior indicates that the attackers have compromised your password. The most common reasons for this are that your password was easy to guess, or was reused on another site which has been compromised.\n"
+"\n"
+"To protect your account, your password has been reset, and you will need to create a new one. For advice on setting a strong password, please read %3$s\n"
+"\n"
+"To pick a new password, please visit %4$s\n"
+"\n"
+"This is an automated notification. If you would like to speak to a site administrator, please contact them directly."
+msgstr ""
+
+#: pro/security/wordpress/two_fa/two-factor.php:1514
+msgid "Your password was compromised and has been reset"
+msgstr ""
+
+#. translators: %s: user login
+#: pro/security/wordpress/two_fa/two-factor.php:1535
+msgid "Compromised password for %s has been reset"
+msgstr ""
+
+#. translators: %1$s: user login, %2$d: user id, %3$s: hooks documentation url
+#: pro/security/wordpress/two_fa/two-factor.php:1541
+msgid ""
+"Hello, this is a notice from your website to inform you that an unusually high number of failed login attempts have been detected on the %1$s account (ID %2$d).\n"
+"\n"
+"Those attempts successfully entered the user's password, and were only blocked because they entered invalid second authentication factors.\n"
+"\n"
+"To protect their account, the password has automatically been reset, and they have been notified that they will need to create a new one.\n"
+"\n"
+"If you do not wish to receive these notifications, you can disable them with the `two_factor_notify_admin_user_password_reset` filter. See %3$s for more information.\n"
+"\n"
+"Thank you"
+msgstr ""
+
+#: pro/security/wordpress/two_fa/two-factor.php:1568
+msgid "Compromised password reset"
+msgstr ""
+
+#: pro/security/wordpress/two_fa/two-factor.php:1582
+msgid "There have been too many failed two-factor authentication attempts, which often indicates that the password has been compromised. The password has been reset in order to protect the account."
+msgstr ""
+
+#: pro/security/wordpress/two_fa/two-factor.php:1583
+msgid "If you are the owner of this account, please check your email for instructions on regaining access."
+msgstr ""
+
+#: pro/security/wordpress/two_fa/two-factor.php:1587
+msgid "Password Reset"
+msgstr ""
+
 #: pro/security/wordpress/vulnerabilities-pro.php:427
 #: pro/security/wordpress/vulnerabilities-pro.php:478
-#: security/wordpress/vulnerabilities-pro.php:427
-#: security/wordpress/vulnerabilities-pro.php:478
 msgid "Upgrading..."
 msgstr ""
 
 #: pro/security/wordpress/vulnerabilities-pro.php:596
-#: security/wordpress/vulnerabilities-pro.php:596
 msgid "Update Alert: %s."
 msgstr ""
 
 #: pro/security/wordpress/vulnerabilities-pro.php:597
-#: security/wordpress/vulnerabilities-pro.php:597
 msgid "%s, Force Update: Scheduled."
 msgstr ""
 
 #: pro/security/wordpress/vulnerabilities-pro.php:599
-#: security/wordpress/vulnerabilities-pro.php:599
 msgid "An automatic update for %s has been scheduled due to the discovery of a vulnerability on %s"
 msgstr ""
 
 #: pro/security/wordpress/vulnerabilities-pro.php:601
-#: security/wordpress/vulnerabilities-pro.php:601
 msgid "Several automatic updates for components have been scheduled due to the discovery of vulnerabilities on %s."
 msgstr ""
 
 #: pro/security/wordpress/vulnerabilities-pro.php:606
-#: security/wordpress/vulnerabilities-pro.php:606
 msgid "Force Update: %s hours"
 msgstr ""
 
 #: pro/security/wordpress/vulnerabilities-pro.php:607
 #: pro/security/wordpress/vulnerabilities-pro.php:637
-#: security/wordpress/vulnerabilities-pro.php:607
-#: security/wordpress/vulnerabilities-pro.php:637
 msgid "We will initiate %s automatic update cycles, in the next %s hours, to mitigate available vulnerabilities."
 msgstr ""
 
@@ -2561,136 +2753,101 @@ msgstr ""
 #: pro/security/wordpress/vulnerabilities-pro.php:698
 #: pro/security/wordpress/vulnerabilities-pro.php:728
 #: pro/security/wordpress/vulnerabilities-pro.php:759
-#: security/wordpress/vulnerabilities-pro.php:608
-#: security/wordpress/vulnerabilities-pro.php:638
-#: security/wordpress/vulnerabilities-pro.php:666
-#: security/wordpress/vulnerabilities-pro.php:698
-#: security/wordpress/vulnerabilities-pro.php:728
-#: security/wordpress/vulnerabilities-pro.php:759
 msgid "Please double-check if your website is working as expected."
 msgstr ""
 
 #: pro/security/wordpress/vulnerabilities-pro.php:625
 #: pro/security/wordpress/vulnerabilities-pro.php:655
 #: pro/security/wordpress/vulnerabilities-pro.php:684
-#: security/wordpress/vulnerabilities-pro.php:625
-#: security/wordpress/vulnerabilities-pro.php:655
-#: security/wordpress/vulnerabilities-pro.php:684
 msgid "Update Alert: %s"
 msgstr ""
 
 #: pro/security/wordpress/vulnerabilities-pro.php:626
-#: security/wordpress/vulnerabilities-pro.php:626
 msgid "%s, Force Update: Failed"
 msgstr ""
 
 #: pro/security/wordpress/vulnerabilities-pro.php:628
 #: pro/security/wordpress/vulnerabilities-pro.php:687
-#: security/wordpress/vulnerabilities-pro.php:628
-#: security/wordpress/vulnerabilities-pro.php:687
 msgid "An automatic update for %s failed on %s."
 msgstr ""
 
 #: pro/security/wordpress/vulnerabilities-pro.php:630
 #: pro/security/wordpress/vulnerabilities-pro.php:690
-#: security/wordpress/vulnerabilities-pro.php:630
-#: security/wordpress/vulnerabilities-pro.php:690
 msgid "Several automatic updates for vulnerable components, scheduled on %s, have failed."
 msgstr ""
 
 #: pro/security/wordpress/vulnerabilities-pro.php:636
-#: security/wordpress/vulnerabilities-pro.php:636
 msgid "Force Update: failed"
 msgstr ""
 
 #: pro/security/wordpress/vulnerabilities-pro.php:656
-#: security/wordpress/vulnerabilities-pro.php:656
 msgid "%s, Force Update: Successful"
 msgstr ""
 
 #: pro/security/wordpress/vulnerabilities-pro.php:658
-#: security/wordpress/vulnerabilities-pro.php:658
 msgid "An automatic update for %s has been successful on %s."
 msgstr ""
 
 #: pro/security/wordpress/vulnerabilities-pro.php:660
-#: security/wordpress/vulnerabilities-pro.php:660
 msgid "Several automatic updates for vulnerable components, scheduled on %s, have been successful."
 msgstr ""
 
 #: pro/security/wordpress/vulnerabilities-pro.php:665
 #: pro/security/wordpress/vulnerabilities-pro.php:697
 #: pro/security/wordpress/vulnerabilities-pro.php:758
-#: security/wordpress/vulnerabilities-pro.php:665
-#: security/wordpress/vulnerabilities-pro.php:697
-#: security/wordpress/vulnerabilities-pro.php:758
 msgid "Verify your website"
 msgstr ""
 
 #: pro/security/wordpress/vulnerabilities-pro.php:685
-#: security/wordpress/vulnerabilities-pro.php:685
 msgid "%s, Force Update: End Process"
 msgstr ""
 
 #: pro/security/wordpress/vulnerabilities-pro.php:688
-#: security/wordpress/vulnerabilities-pro.php:688
 msgid "This is the end of the update cycle, we recommend manually removing %s."
 msgstr ""
 
 #: pro/security/wordpress/vulnerabilities-pro.php:691
-#: security/wordpress/vulnerabilities-pro.php:691
 msgid "This is the end of the update cycle, we recommend manually removing vulnerable components."
 msgstr ""
 
 #: pro/security/wordpress/vulnerabilities-pro.php:694
-#: security/wordpress/vulnerabilities-pro.php:694
 msgid "You can also use our ‘Quarantine’ option to automate this process in the future."
 msgstr ""
 
 #: pro/security/wordpress/vulnerabilities-pro.php:715
 #: pro/security/wordpress/vulnerabilities-pro.php:748
-#: security/wordpress/vulnerabilities-pro.php:715
-#: security/wordpress/vulnerabilities-pro.php:748
 msgid "Quarantine Alert: %s"
 msgstr ""
 
 #: pro/security/wordpress/vulnerabilities-pro.php:716
-#: security/wordpress/vulnerabilities-pro.php:716
 msgid "%s, Quarantine: Scheduled"
 msgstr ""
 
 #: pro/security/wordpress/vulnerabilities-pro.php:718
-#: security/wordpress/vulnerabilities-pro.php:718
 msgid "A quarantine for %s scheduled on %s."
 msgstr ""
 
 #: pro/security/wordpress/vulnerabilities-pro.php:720
-#: security/wordpress/vulnerabilities-pro.php:720
 msgid "Several vulnerable components scheduled for update on %s, have failed."
 msgstr ""
 
 #: pro/security/wordpress/vulnerabilities-pro.php:726
-#: security/wordpress/vulnerabilities-pro.php:726
 msgid "Quarantine in %s hours"
 msgstr ""
 
 #: pro/security/wordpress/vulnerabilities-pro.php:727
-#: security/wordpress/vulnerabilities-pro.php:727
 msgid "We will initiate a quarantine cycle in the next %s hours to mitigate available vulnerabilities."
 msgstr ""
 
 #: pro/security/wordpress/vulnerabilities-pro.php:749
-#: security/wordpress/vulnerabilities-pro.php:749
 msgid "%s, Quarantine: Successful"
 msgstr ""
 
 #: pro/security/wordpress/vulnerabilities-pro.php:751
-#: security/wordpress/vulnerabilities-pro.php:751
 msgid "A quarantine for %s has been successful on %s."
 msgstr ""
 
 #: pro/security/wordpress/vulnerabilities-pro.php:753
-#: security/wordpress/vulnerabilities-pro.php:753
 msgid "Several vulnerable components quarantined on %s."
 msgstr ""
 
@@ -3465,6 +3622,10 @@ msgstr ""
 msgid "This will limit or fully disable HTTP requests that are not needed, but could be used with malicious intent."
 msgstr ""
 
+#: settings/config/config.php:853
+msgid "Disable HTTP methods"
+msgstr ""
+
 #: settings/config/config.php:862
 msgid "Settings update: Database prefix changed"
 msgstr ""
@@ -3872,11 +4033,8 @@ msgid "Read more"
 msgstr ""
 
 #: settings/config/config.php:1657
-msgid "Enforce strong passwords"
-msgstr ""
-
 #: settings/config/config.php:1661
-msgid "Enforce Strong Passwords"
+msgid "Enforce strong passwords"
 msgstr ""
 
 #: settings/config/config.php:1662
@@ -4015,7 +4173,7 @@ msgid "The Essentials"
 msgstr ""
 
 #: settings/config/menu.php:100
-msgid "Protecting your website visitors from mailicious attacks and data breaches should be your #1 priority, start with the essentials with Really Simple Security"
+msgid "Protecting your website visitors from malicious attacks and data breaches should be your #1 priority, start with the essentials with Really Simple Security"
 msgstr ""
 
 #: settings/config/menu.php:109
@@ -4129,15 +4287,14 @@ msgid "Get two-factor authentication with Really Simple SSL Pro"
 msgstr ""
 
 #: settings/config/menu.php:280
-msgid "Two-Step verification"
+#: settings/config/menu.php:289
+#: modal/build/index.855f8bc8ac202db563f6.js:1
+#: modal/src/components/DeactivationModal/DeactivationModal.js:92
+msgid "Two-step verification"
 msgstr ""
 
 #: settings/config/menu.php:286
 msgid "Start login protection by adding an additional layer during authentication. This will leave authentication less dependent on just a single password. Want to force strong passwords? Check out Password Security."
-msgstr ""
-
-#: settings/config/menu.php:289
-msgid "Two-Step Verification"
 msgstr ""
 
 #: settings/config/menu.php:290
@@ -4333,16 +4490,16 @@ msgstr ""
 msgid "Activate"
 msgstr ""
 
-#: settings/settings.php:523
+#: settings/settings.php:524
 #: upgrade/upgrade-to-pro.php:144
 msgid "Self-hosted and privacy-friendly analytics tool."
 msgstr ""
 
-#: settings/settings.php:531
+#: settings/settings.php:532
 msgid "Complianz - Consent Management as it should be"
 msgstr ""
 
-#: settings/settings.php:538
+#: settings/settings.php:539
 msgid "Terms and Conditions"
 msgstr ""
 
@@ -4517,16 +4674,6 @@ msgstr ""
 #: modal/build/index.855f8bc8ac202db563f6.js:1
 #: modal/src/components/DeactivationModal/DeactivationModal.js:82
 msgid "Advanced hardening"
-msgstr ""
-
-#: modal/build/index.855f8bc8ac202db563f6.js:1
-#: modal/src/components/DeactivationModal/DeactivationModal.js:92
-msgid "Two-step verification"
-msgstr ""
-
-#: modal/build/index.855f8bc8ac202db563f6.js:1
-#: modal/src/components/DeactivationModal/DeactivationModal.js:97
-msgid "Password security"
 msgstr ""
 
 #: modal/build/index.855f8bc8ac202db563f6.js:1

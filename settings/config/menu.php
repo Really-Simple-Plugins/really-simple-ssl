@@ -97,7 +97,7 @@ function rsssl_menu() {
 							'networkwide_required' => true,
 							'premium_title'         => __( "The Essentials", 'really-simple-ssl' ),
 							'premium'              => true,
-							'premium_text'         => __( "Protecting your website visitors from mailicious attacks and data breaches should be your #1 priority, start with the essentials with Really Simple Security", 'really-simple-ssl' ),
+							'premium_text'         => __( "Protecting your website visitors from malicious attacks and data breaches should be your #1 priority, start with the essentials with Really Simple Security", 'really-simple-ssl' ),
 							'upgrade'              => 'https://really-simple-ssl.com/pro/?mtm_campaign=recommendedheaders&mtm_source=free&mtm_content=upgrade',
 							'helpLink' => 'https://really-simple-ssl.com/instructions/about-recommended-security-headers/?mtm_campaign=instructions&mtm_source=free',
 						],
@@ -277,7 +277,7 @@ function rsssl_menu() {
 							'premium_text'         => __( 'Get two-factor authentication with Really Simple SSL Pro', 'really-simple-ssl' ),
 							'upgrade'              => 'https://really-simple-ssl.com/pro/?mtm_campaign=2fa&mtm_source=free&mtm_content=upgrade',
 							'helpLink'             => 'https://really-simple-ssl.com/instructions/about-login-protection/?mtm_campaign=instructions&mtm_source=free',
-							'title'                =>  __('Two-Step verification', 'really-simple-ssl'),
+							'title'                =>  __('Two-step verification', 'really-simple-ssl'),
 							'groups'  => [
 								[
 									'id'       => 'two_fa_general',
@@ -286,7 +286,7 @@ function rsssl_menu() {
 									'premium_text'         => __( "Start login protection by adding an additional layer during authentication. This will leave authentication less dependent on just a single password. Want to force strong passwords? Check out Password Security.", 'really-simple-ssl' ),
 									'helpLink'      => 'https://really-simple-ssl.com/instructions/about-login-protection',
 									'upgrade'              => 'https://really-simple-ssl.com/pro/?mtm_campaign=2fa&mtm_source=free&mtm_content=upgrade',
-									'title'    => __( 'Two-Step Verification', 'really-simple-ssl' ),
+									'title'    => __( 'Two-step verification', 'really-simple-ssl' ),
 									'intro'    => __( 'Enhancing the authentication process and optimizing user management makes Login Protection a foundational element in securing your website.', 'really-simple-ssl' ),
 								],
 								[
@@ -332,14 +332,14 @@ function rsssl_menu() {
 						[
 							'id'                   => 'password_security',
 							'networkwide_required' => true,
-							'title'                => __('Password Security','really-simple-ssl'),
+							'title'                => __('Password security','really-simple-ssl'),
 							'helpLink'             => 'https://really-simple-ssl.com/instructions/password-security/?mtm_campaign=instructions&mtm_source=free',
 							'groups'               => [
 								[
 									'id'           => 'password_security_passwords',
 									'group_id'     => 'password_security_passwords',
 									'upgrade'              => 'https://really-simple-ssl.com/pro/?mtm_campaign=passwordsecurity&mtm_source=free&mtm_content=upgrade',
-									'premium_title'         => __( 'Password Security', 'really-simple-ssl' ),
+									'premium_title'         => __( 'Password security', 'really-simple-ssl' ),
 									'premium_text'         => __( 'Enforce secure password policies for your users by requiring strong passwords, and expiring passwords after a period of your choosing.', 'really-simple-ssl' ),
 									'premium'      => true,
 									'helpLink'     => 'https://really-simple-ssl.com/instructions/password-security/?mtm_campaign=instructions&mtm_source=free',

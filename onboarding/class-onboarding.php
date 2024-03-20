@@ -400,7 +400,7 @@ class rsssl_onboarding {
 				"activated" => true,
 			],
 			[
-				"title" => __("Password Security", "really-simple-ssl"),
+				"title" => __("Password security", "really-simple-ssl"),
 				"id" => "password_security",
 				"options" => ['enforce_password_security_enabled'],
 				"activated" => true,
