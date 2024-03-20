@@ -114,10 +114,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 = 8.0.0 =
 * New: extend blocking of malicious admin creation to multisite
 * Improvement: added dandomain host
-
-= 7.2.4 =
 * Improvement: added Infomaniak host
-* Improvement: hide rememberme option
 
 = 7.2.3 =
 * Improvement: give json directory a random foldername, and remove after deactivating vulnerability detection
