@@ -63,6 +63,14 @@ class Rsssl_File_Storage {
 	 * @param $file
 	 */
 	public function set( $data, $file ) {
+		if ( ! is_dir( $this->folder ) ) {
+			return;
+		}
+
+		if ( ! is_writable( $this->folder ) ) {
+			return;
+		}
+
 		$data = $this->Encode64WithHash( json_encode( $data ) );
 		//first we check if the storage folder is already in the $file string
 		if ( strpos( $file, $this->folder ) !== false ) {
@@ -85,7 +93,9 @@ class Rsssl_File_Storage {
 
 		// Check if IV generation was successful and cryptographically strong
 		if ($iv === false || $crypto_strong === false) {
-			throw new \RuntimeException( __('Could not generate a secure initialization vector.', 'really-simple-ssl'));
+			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+				error_log( "Really Simple SSL: Could not generate a secure initialization vector." );
+			}
 		}
 
 		$encrypted = openssl_encrypt($data, 'aes-256-cbc', $this->hash, 0, $iv);
@@ -107,7 +117,9 @@ class Rsssl_File_Storage {
 
 		// Check if IV was successfully retrieved
 		if ( $iv === false ) {
-			throw new \RuntimeException( __('Could not retrieve the initialization vector.', 'really-simple-ssl') );
+			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+				error_log( 'Really Simple SSL: Could not retrieve the initialization vector.' );
+			}
 		}
 
 		$decrypted = openssl_decrypt( $encrypted_data, 'aes-256-cbc', $this->hash, 0, $iv );

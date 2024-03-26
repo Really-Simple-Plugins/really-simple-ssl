@@ -912,16 +912,6 @@ function rsssl_fields( $load_values = true ) {
 			'default'  => false,
 		],
 		[
-			'id'       => 'permission_detection',
-			'menu_id'  => 'hardening-extended',
-			'group_id' => 'hardening-extended',
-			'type'     => 'checkbox',
-			'tooltip'  => __( "Really Simple SSL will scan for insecure file and folder permissions on a weekly basis. You will receive an email report and Dashboard notice if insecure permissions are found.", 'really-simple-ssl' ),
-			'label'    => __( "File permissions check", 'really-simple-ssl' ),
-			'disabled' => false,
-			'default'  => false,
-		],
-		[
 			'id'       => 'change_login_url_enabled',
 			'menu_id'  => 'hardening-extended',
 			'group_id' => 'hardening-extended',
