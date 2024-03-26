@@ -87,6 +87,9 @@
     button + button {
       margin-left: 10px;
     }
+    button + a {
+      margin-left: 10px;
+    }
 
     button {
       &:not(.is-primary) {
