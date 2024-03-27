@@ -70,9 +70,6 @@ class rsssl_admin {
 		add_filter( 'admin_init', array( $this, 'handle_activation' ) );
 		add_action( 'rocket_activation', 'rsssl_wrap_htaccess' );
 		add_action( 'rocket_deactivation', 'rsssl_wrap_htaccess' );
-		$plugin = rsssl_plugin;
-		add_filter( "plugin_action_links_$plugin", array($this,'plugin_settings_link' ) );
-		add_filter( "network_admin_plugin_action_links_$plugin", array($this,'plugin_settings_link' ) );
 	}
 
 	public static function this() {
@@ -93,41 +90,6 @@ class rsssl_admin {
             delete_option('rsssl_activation');
         }
     }
-
-	/**
-	 * Add settings link on plugins overview page
-	 * @param array $links
-	 *
-	 * @return array
-	 */
-
-	public function plugin_settings_link($links) {
-		//free version
-		if ( ! rsssl_user_can_manage() || ( is_multisite() && ! is_network_admin() ) ) {
-			return $links;
-		}
-		$settings_link = '';
-		$url = add_query_arg( array( 'page' => 'really-simple-security' ), rsssl_admin_url() );
-		//settings only on network wide activated, or no multisite at all.
-		if ( is_multisite() && rsssl_is_networkwide_active() && is_super_admin() ) {
-			$settings_link = '<a href="' . $url . '">' . __( 'Settings', 'really-simple-ssl' ) . '</a>';
-		} elseif ( ! is_multisite() ) {
-			$settings_link = '<a href="' . $url . '">' . __( 'Settings', 'really-simple-ssl' ) . '</a>';
-		}
-		array_unshift( $links, $settings_link );
-
-		//support
-		$support = apply_filters( 'rsssl_support_link', '<a rel="noopener noreferrer" target="_blank" href="https://wordpress.org/support/plugin/really-simple-ssl/">' . __( 'Support', 'really-simple-ssl' ) . '</a>' );
-		array_unshift( $links, $support );
-
-		if ( ! defined( 'rsssl_pro' ) ) {
-			$upgrade_link = '<a style="color:#2271b1;font-weight:bold" target="_blank" rel="noopener noreferrer" href="' . $this->pro_url . '">'
-			                . __( 'Improve security - Upgrade', 'really-simple-ssl' ) . '</a>';
-			array_unshift( $links, $upgrade_link );
-		}
-
-		return $links;
-	}
 
 	/**
 	 * Redirect to the new settings page
@@ -2683,6 +2645,46 @@ class rsssl_admin {
 		$url  = trailingslashit( rsssl_url ) . "assets/css/{$rtl}admin{$min}.css";
 		$path = trailingslashit( rsssl_path ) . "assets/css/{$rtl}admin{$min}.css";
 		wp_enqueue_style( 'rsssl-css', $url, [ 'wp-components' ], filemtime( $path ) );
+	}
+
+	/**
+	 * Add settings link on plugins overview page
+	 *
+	 * @param array $links
+	 *
+	 * @return array $links
+	 * @since  2.0
+	 *
+	 * @access public
+	 *
+	 */
+
+	public function plugin_settings_link( array $links ): array {
+		if ( ! rsssl_user_can_manage() || ( is_multisite() && ! is_network_admin() ) ) {
+			return $links;
+		}
+
+		$url = add_query_arg( array( 'page' => 'really-simple-security' ), rsssl_admin_url() );
+		//settings only on network wide activated, or no multisite at all.
+		if ( is_multisite() && rsssl_is_networkwide_active() && is_super_admin() ) {
+			$settings_link = '<a href="' . $url . '">' . __( 'Settings', 'really-simple-ssl' ) . '</a>';
+			array_unshift( $links, $settings_link );
+		} elseif ( ! is_multisite() ) {
+			$settings_link = '<a href="' . $url . '">' . __( 'Settings', 'really-simple-ssl' ) . '</a>';
+			array_unshift( $links, $settings_link );
+		}
+
+		//support
+		$support = apply_filters( 'rsssl_support_link', '<a rel="noopener noreferrer" target="_blank" href="https://wordpress.org/support/plugin/really-simple-ssl/">' . __( 'Support', 'really-simple-ssl' ) . '</a>' );
+		array_unshift( $links, $support );
+
+		if ( ! defined( 'rsssl_pro' ) ) {
+			$upgrade_link = '<a style="color:#2271b1;font-weight:bold" target="_blank" rel="noopener noreferrer" href="' . $this->pro_url . '">'
+				. __( 'Improve security - Upgrade', 'really-simple-ssl' ) . '</a>';
+			array_unshift( $links, $upgrade_link );
+		}
+
+		return $links;
 	}
 
 	/**

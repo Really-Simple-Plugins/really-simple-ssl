@@ -109,7 +109,7 @@ nav.rdt_Pagination > div > svg {
   }
 }
 
-.rsssl-vulnerabilities_overview, .two_fa_users_table, .rsssl-vulnerabilities_measures, .rsssl-limit_login_attempts_country, .rsssl-limit_login_attempts_users, .rsssl-limit_login_attempts_event_log, .rsssl-mixed-content-scan, .rsssl-limit_login_attempts_ip_address, .rsssl-permissions_policy, .rsssl-content_security_policy, .rsssl-two_fa_users, .rsssl-hardening-xml {
+.rsssl-geo_block_list_listing, .rsssl-vulnerabilities_overview, .two_fa_users_table, .rsssl-vulnerabilities_measures, .rsssl-limit_login_attempts_country, .rsssl-limit_login_attempts_users, .rsssl-limit_login_attempts_event_log, .rsssl-mixed-content-scan, .rsssl-limit_login_attempts_ip_address, .rsssl-permissions_policy, .rsssl-content_security_policy, .rsssl-two_fa_users, .rsssl-hardening-xml {
   .rsssl-field-wrap {
     margin-left: CALC(-1 * var(--rsp-spacing-l));
     margin-right: CALC(-1 * var(--rsp-spacing-l));
@@ -133,6 +133,12 @@ nav.rdt_Pagination > div > svg {
       margin-right: var(--rsp-spacing-l);
     }
   }
+
+  //.rdt_Pagination {
+  //  position: absolute;
+  //  bottom: 0;
+  //  width: 100%;
+  //}
 
   .rdt_TableCell, .rdt_TableCol {
     &:first-child {
@@ -209,6 +215,7 @@ nav.rdt_Pagination > div > svg {
 /* Section for EdgeCases and other specific styling */
 /* EdgeCase: EventLog */
 .rsssl-content_security_policy,
+.rsssl-geo_block_list_listing,
 .rsssl-hardening-xml,
 .rsssl-vulnerabilities_overview,
 .rsssl-limit_login_attempts_ip_address,
@@ -277,7 +284,7 @@ nav.rdt_Pagination > div > svg {
     }
 
     .rsssl-learning-mode-delete {
-        float: right;
+      float: right;
     }
 
     // in the tableCell we remove all previous styling of the last child
@@ -320,15 +327,14 @@ nav.rdt_Pagination > div > svg {
   }
 }
 
-
 /* EdgeCase: Permission_Policy */
 .rsssl-content_security_policy,
 .rsssl-permissions_policy {
   .rdt_TableCol {
     &:last-child {
       //we calculate the remaining width of the table and set it to the last column
-        flex-grow: 1;
-        text-align: right;
+      flex-grow: 1;
+      text-align: right;
       div {
         width: 100%;
         display: flex;
@@ -339,14 +345,14 @@ nav.rdt_Pagination > div > svg {
   .rdt_TableCell {
     &:last-child {
       //we calculate the remaining width of the table and set it to the last column
-        flex-grow: 1;
-        text-align: right;
+      flex-grow: 1;
+      text-align: right;
       div {
         width: 100%;
         display: flex;
         justify-content: flex-end;
         button {
-          margin-right: 0px !important;
+          margin-right: 0 !important;
         }
       }
     }

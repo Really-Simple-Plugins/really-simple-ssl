@@ -54,11 +54,9 @@ const OnboardingControls = ({isModal}) => {
                     setSslScanStatus('active');
                 }
 
-                if ( ! item.premium || ! item.activated ) {
-                    for (const fieldId of Object.values(item.options)) {
-                        updateField(fieldId, item.activated);
-                        setChangedField(fieldId, item.activated);
-                    }
+                for (const fieldId of Object.values(item.options)) {
+                    updateField(fieldId, item.activated);
+                    setChangedField(fieldId, item.activated);
                 }
 
                 if  ( item.id === 'vulnerability_detection' ) {
@@ -99,7 +97,7 @@ const OnboardingControls = ({isModal}) => {
         }
 
         if ( currentStep.id === 'pro' ) {
-            if ( rsssl_settings.pro_plugin_active ) {
+            if ( rsssl_settings.is_premium ) {
                 setProcessing(true);
                 //loop through all items of currentStep.items
                 for (const item of currentStep.items) {

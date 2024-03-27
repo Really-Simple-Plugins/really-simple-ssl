@@ -2,14 +2,14 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Really Simple SSL Pro 8.0.1\n"
+"Project-Id-Version: Really Simple SSL Pro 8.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/really-simple-ssl-pro\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-03-26T10:14:45+00:00\n"
+"POT-Creation-Date: 2024-03-14T13:15:06+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.8.1\n"
 "X-Domain: really-simple-ssl\n"
@@ -34,10 +34,60 @@ msgstr ""
 msgid "https://really-simple-plugins.com"
 msgstr ""
 
-#: class-admin.php:113
-#: class-admin.php:115
-#: class-admin.php:1835
+#. translators: %s is replaced with the hyperlink
+#: class-admin.php:121
+msgid "Really Simple SSL and Really Simple SSL add-ons do not process any personal identifiable information, so the GDPR does not apply to these plugins or usage of these plugins on your website. You can find our privacy policy <a href=\"%s\" rel=\"noopener noreferrer\" target=\"_blank\">here</a>."
+msgstr ""
+
+#: class-admin.php:503
+msgid "Dismiss"
+msgstr ""
+
+#: class-admin.php:506
+#: settings/build/229.2d51466bad556da30427.js:1
+#: settings/build/354.2f14ed4d6692e499a6c3.js:1
+#: settings/src/Dashboard/TaskElement.js:52
+#: settings/src/Dashboard/TaskElement.js:53
+#: settings/src/Settings/MixedContentScan/MixedContentScan.js:80
+msgid "View"
+msgstr ""
+
+#: class-admin.php:506
+#: settings/build/94.e98da9d5e5e52624f028.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
+#: settings/build/354.2f14ed4d6692e499a6c3.js:1
+#: settings/src/Dashboard/TaskElement.js:50
+#: settings/src/Settings/Help.js:24
+msgid "More info"
+msgstr ""
+
+#. translators: %1$ and %2$ are replaced with opening and closing a tag containing hyperlink
+#: class-admin.php:1627
+msgid "Hi, Really Simple SSL has kept your site secure for some time now, awesome! If you have a moment, please consider leaving a review on WordPress.org to spread the word. We greatly appreciate it! If you have any questions or feedback, leave us a %1$smessage%2$s."
+msgstr ""
+
+#. translators: %1$ and %2$ are replaced with opening and closing a tag containing hyperlink
+#: class-admin.php:1634
+msgid "Hi, Really Simple SSL has kept your site secure for a month now, awesome! If you have a moment, please consider leaving a review on WordPress.org to spread the word. We greatly appreciate it! If you have any questions or feedback, leave us a %1$smessage%2$s."
+msgstr ""
+
+#: class-admin.php:1642
+msgid "Leave a review"
+msgstr ""
+
+#: class-admin.php:1655
+msgid "Maybe later"
+msgstr ""
+
+#: class-admin.php:1668
+msgid "Don't show again"
+msgstr ""
+
+#: class-admin.php:1797
+#: class-admin.php:2670
+#: class-admin.php:2673
 #: class-multisite.php:220
+#: pro/class-admin.php:765
 #: settings/config/menu.php:17
 #: settings/config/menu.php:372
 #: settings/build/354.2f14ed4d6692e499a6c3.js:1
@@ -46,344 +96,295 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: class-admin.php:120
-#: class-multisite.php:223
-#: settings/build/index.a2f43f2e2601d780a6c9.js:1
-#: settings/src/Header.js:36
-msgid "Support"
-msgstr ""
-
-#: class-admin.php:125
-#: class-multisite.php:227
-msgid "Improve security - Upgrade"
-msgstr ""
-
-#. translators: %s is replaced with the hyperlink
-#: class-admin.php:159
-msgid "Really Simple SSL and Really Simple SSL add-ons do not process any personal identifiable information, so the GDPR does not apply to these plugins or usage of these plugins on your website. You can find our privacy policy <a href=\"%s\" rel=\"noopener noreferrer\" target=\"_blank\">here</a>."
-msgstr ""
-
-#: class-admin.php:541
-msgid "Dismiss"
-msgstr ""
-
-#: class-admin.php:544
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
-#: settings/build/354.2f14ed4d6692e499a6c3.js:1
-#: settings/src/Dashboard/TaskElement.js:52
-#: settings/src/Dashboard/TaskElement.js:53
-#: settings/src/Settings/MixedContentScan/MixedContentScan.js:80
-msgid "View"
-msgstr ""
-
-#: class-admin.php:544
-#: settings/build/94.e98da9d5e5e52624f028.js:1
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
-#: settings/build/354.2f14ed4d6692e499a6c3.js:1
-#: settings/src/Dashboard/TaskElement.js:50
-#: settings/src/Settings/Help.js:24
-msgid "More info"
-msgstr ""
-
-#. translators: %1$ and %2$ are replaced with opening and closing a tag containing hyperlink
-#: class-admin.php:1665
-msgid "Hi, Really Simple SSL has kept your site secure for some time now, awesome! If you have a moment, please consider leaving a review on WordPress.org to spread the word. We greatly appreciate it! If you have any questions or feedback, leave us a %1$smessage%2$s."
-msgstr ""
-
-#. translators: %1$ and %2$ are replaced with opening and closing a tag containing hyperlink
-#: class-admin.php:1672
-msgid "Hi, Really Simple SSL has kept your site secure for a month now, awesome! If you have a moment, please consider leaving a review on WordPress.org to spread the word. We greatly appreciate it! If you have any questions or feedback, leave us a %1$smessage%2$s."
-msgstr ""
-
-#: class-admin.php:1680
-msgid "Leave a review"
-msgstr ""
-
-#: class-admin.php:1693
-msgid "Maybe later"
-msgstr ""
-
-#: class-admin.php:1706
-msgid "Don't show again"
-msgstr ""
-
-#: class-admin.php:1893
+#: class-admin.php:1855
 msgid "Completed"
 msgstr ""
 
-#: class-admin.php:1894
+#: class-admin.php:1856
 #: pro/class-licensing.php:635
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/MixedContentScan/MixedContentScan.js:58
 msgid "Warning"
 msgstr ""
 
-#: class-admin.php:1895
+#: class-admin.php:1857
 #: pro/class-licensing.php:636
 #: settings/config/menu.php:321
 msgid "Open"
 msgstr ""
 
-#: class-admin.php:1896
+#: class-admin.php:1858
 #: settings/build/354.2f14ed4d6692e499a6c3.js:1
-#: settings/build/829.2f567557fb7dad1717c5.js:1
+#: settings/build/829.25a3e44e27776e51a37d.js:1
 #: settings/src/Dashboard/OtherPlugins/OtherPlugins.js:21
 #: settings/src/Menu/Menu.js:28
 msgid "Upgrade"
 msgstr ""
 
-#: class-admin.php:1937
+#: class-admin.php:1899
 msgid "No recommended redirect rules detected."
 msgstr ""
 
-#: class-admin.php:1952
+#: class-admin.php:1914
 msgid "(Unknown)"
 msgstr ""
 
-#: class-admin.php:1961
+#: class-admin.php:1923
 msgid "Your wp-config.php has to be edited, but is not writable."
 msgstr ""
 
-#: class-admin.php:1962
-#: class-admin.php:1983
+#: class-admin.php:1924
+#: class-admin.php:1945
 msgid "Set your wp-config.php to writable and reload this page."
 msgstr ""
 
-#: class-admin.php:1963
+#: class-admin.php:1925
 msgid "To safely enable SSL on your server configuration, you should add the following line of code to your wp-config.php."
 msgstr ""
 
-#: class-admin.php:1983
+#: class-admin.php:1945
 msgid "A definition of a site url or home url was detected in your wp-config.php, but the file is not writable."
 msgstr ""
 
-#: class-admin.php:1998
+#: class-admin.php:1960
 msgid "The 'force-deactivate.php' file has to be renamed to .txt. Otherwise your ssl can be deactivated by anyone on the internet."
 msgstr ""
 
-#: class-admin.php:1999
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
-#: settings/build/434.efc0df59700ca9d32dcb.js:1
+#: class-admin.php:1961
+#: settings/build/229.2d51466bad556da30427.js:1
+#: settings/build/434.736589de85bbbce50967.js:1
 #: settings/src/Onboarding/Items/ListItem.js:46
 msgid "Check again"
 msgstr ""
 
 #. translators: %s is replaced with the folder name.
-#: class-admin.php:2015
+#: class-admin.php:1977
 msgid "The Really Simple SSL plugin folder in the /wp-content/plugins/ directory has been renamed to %1$s. This might cause issues when deactivating, or with premium add-ons. To fix this you can rename the Really Simple SSL folder back to the default %2$s."
 msgstr ""
 
-#: class-admin.php:2029
+#: class-admin.php:1991
 msgid "SSL is now activated. Follow the three steps in this article to check if your website is secure."
 msgstr ""
 
-#: class-admin.php:2042
+#: class-admin.php:2004
 msgid "SSL is enabled on your site."
 msgstr ""
 
-#: class-admin.php:2046
+#: class-admin.php:2008
 msgid "SSL is not enabled yet."
 msgstr ""
 
-#: class-admin.php:2063
+#: class-admin.php:2025
 msgid "The wp-config.php file is not writable, and needs to be edited. Please set this file to writable."
 msgstr ""
 
-#: class-admin.php:2067
+#: class-admin.php:2029
 msgid "No SSL detected"
 msgstr ""
 
-#: class-admin.php:2068
+#: class-admin.php:2030
 msgid "No SSL detected. Use the retry button to check again."
 msgstr ""
 
+#: class-admin.php:2037
+#: class-admin.php:2051
 #: class-admin.php:2075
-#: class-admin.php:2089
-#: class-admin.php:2113
 msgid "Install SSL certificate"
 msgstr ""
 
-#: class-admin.php:2076
+#: class-admin.php:2038
 msgid "Retry"
 msgstr ""
 
-#: class-admin.php:2081
+#: class-admin.php:2043
 msgid "Could not test certificate"
 msgstr ""
 
-#: class-admin.php:2082
+#: class-admin.php:2044
 #: onboarding/class-onboarding.php:249
 msgid "Automatic certificate detection is not possible on your server."
 msgstr ""
 
-#: class-admin.php:2090
+#: class-admin.php:2052
 msgid "Check manually"
 msgstr ""
 
-#: class-admin.php:2095
+#: class-admin.php:2057
 msgid "An SSL certificate was detected on your site."
 msgstr ""
 
-#: class-admin.php:2100
+#: class-admin.php:2062
 msgid "Your SSL certificate will expire soon."
 msgstr ""
 
 #. translators: %s is replaced with date.
-#: class-admin.php:2103
+#: class-admin.php:2065
 msgid "SSL certificate will expire on %s."
 msgstr ""
 
 #. translators: %s is replaced with date.
-#: class-admin.php:2103
+#: class-admin.php:2065
 msgid "If your hosting provider auto-renews your certificate, no action is required. Alternatively, you have the option to generate an SSL certificate with Really Simple SSL."
 msgstr ""
 
 #. translators: %1$ and %2$s are replaced with the opening and closing tag with link.
-#: class-admin.php:2105
+#: class-admin.php:2067
 msgid "Depending on your hosting provider, %1$smanual installation%2$s may be required."
 msgstr ""
 
-#: class-admin.php:2114
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: class-admin.php:2076
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/build/354.2f14ed4d6692e499a6c3.js:1
 #: settings/src/Dashboard/TaskElement.js:51
 msgid "Re-check"
 msgstr ""
 
-#: class-admin.php:2126
+#: class-admin.php:2088
 msgid "Mixed content fixer was successfully detected on the front-end."
 msgstr ""
 
-#: class-admin.php:2131
+#: class-admin.php:2093
 msgid "Really Simple SSL has received no response from the webpage."
 msgstr ""
 
-#: class-admin.php:2138
+#: class-admin.php:2100
 msgid "The mixed content fixer is active, but was not detected on the frontpage."
 msgstr ""
 
-#: class-admin.php:2143
+#: class-admin.php:2105
 msgid "Error occurred when retrieving the webpage."
 msgstr ""
 
-#: class-admin.php:2149
+#: class-admin.php:2111
 msgid "Mixed content fixer not enabled. Enable the option to fix mixed content on your site."
 msgstr ""
 
 #. translators: %s is replaced with the error description.
-#: class-admin.php:2156
+#: class-admin.php:2118
 msgid "The mixed content fixer could not be detected due to a cURL error: %s. cURL errors are often caused by an outdated version of PHP or cURL and don't affect the front-end of your site. Contact your hosting provider for a fix."
 msgstr ""
 
-#: class-admin.php:2169
+#: class-admin.php:2131
 msgid "301 redirect to https set."
 msgstr ""
 
-#: class-admin.php:2173
+#: class-admin.php:2135
 msgid "No 301 redirect is set. Enable the WordPress 301 redirect in the settings to get a 301 permanent redirect."
 msgstr ""
 
-#: class-admin.php:2188
-#: class-admin.php:2194
+#: class-admin.php:2150
+#: class-admin.php:2156
 msgid "301 .htaccess redirect"
 msgstr ""
 
-#: class-admin.php:2189
+#: class-admin.php:2151
 msgid "The 301 redirect with .htaccess to HTTPS is now enabled."
 msgstr ""
 
-#: class-admin.php:2195
+#: class-admin.php:2157
 msgid "WordPress 301 redirect enabled. We recommend to enable a 301 .htaccess redirect."
 msgstr ""
 
-#: class-admin.php:2202
+#: class-admin.php:2164
 msgid "Enable a .htaccess redirect or PHP redirect in the settings to create a 301 redirect."
 msgstr ""
 
-#: class-admin.php:2207
+#: class-admin.php:2169
 msgid ".htaccess redirect."
 msgstr ""
 
-#: class-admin.php:2209
+#: class-admin.php:2171
 msgid "The .htaccess redirect rules selected by this plugin failed in the test. Set manually or dismiss to leave on PHP redirect."
 msgstr ""
 
-#: class-admin.php:2224
+#: class-admin.php:2186
 msgid "Your site uses Elementor. This can require some additional steps before getting the secure lock."
 msgstr ""
 
-#: class-admin.php:2238
+#: class-admin.php:2200
 msgid "Your site uses Divi. This can require some additional steps before getting the secure lock."
 msgstr ""
 
-#: class-admin.php:2254
+#: class-admin.php:2216
 msgid "HttpOnly Secure cookies have been set automatically!"
 msgstr ""
 
-#: class-admin.php:2259
+#: class-admin.php:2221
 msgid "HttpOnly Secure cookies not set."
 msgstr ""
 
-#: class-admin.php:2266
+#: class-admin.php:2228
 msgid "To set the httponly secure cookie settings, your wp-config.php has to be edited, but the file is not writable."
 msgstr ""
 
-#: class-admin.php:2266
+#: class-admin.php:2228
 msgid "Add the following lines of code to your wp-config.php."
 msgstr ""
 
-#: class-admin.php:2274
+#: class-admin.php:2236
 msgid "Or set your wp-config.php to writable and reload this page."
 msgstr ""
 
-#: class-admin.php:2288
+#: class-admin.php:2250
 msgid "See which recommended security headers are not present on your website."
 msgstr ""
 
-#: class-admin.php:2294
+#: class-admin.php:2256
 msgid "Recommended security headers enabled."
 msgstr ""
 
-#: class-admin.php:2306
+#: class-admin.php:2268
 msgid "Improve security with Really Simple SSL Pro."
 msgstr ""
 
-#: class-admin.php:2320
+#: class-admin.php:2282
 msgid "Due to a recent update by WP Engine, we have changed your settings automatically to adapt."
 msgstr ""
 
-#: class-admin.php:2333
+#: class-admin.php:2295
 msgid "You have the Really Simple SSL Let's Encrypt beta add-on activated. This functionality has now been integrated in core, so you can deactivate the add-on."
 msgstr ""
 
 #. translators: %s is replaced with the plugin name.
-#: class-admin.php:2345
+#: class-admin.php:2307
 msgid "We have detected the %s plugin on your website."
 msgstr ""
 
 #. translators: %s is replaced with the plugin name.
-#: class-admin.php:2345
+#: class-admin.php:2307
 msgid "As Really Simple SSL handles all the functionality this plugin provides, we recommend to disable this plugin to prevent unexpected behavior."
 msgstr ""
 
-#: class-admin.php:2359
+#: class-admin.php:2321
 msgid "Black Friday sale! Get 40% Off Really Simple SSL Pro"
 msgstr ""
 
-#: class-admin.php:2374
+#: class-admin.php:2336
 msgid "Please check if your REST API is loading correctly. Your site currently is using the slower Ajax fallback method to load the settings."
 msgstr ""
 
-#: class-admin.php:2387
+#: class-admin.php:2349
 msgid "Our vulnerability reporting is in beta. Signup for the beta to discover the new features!"
 msgstr ""
 
-#: class-admin.php:2401
+#: class-admin.php:2363
 msgid "Email verification has not been completed yet. Check your email and click the link"
 msgstr ""
 
-#: class-admin.php:2409
+#: class-admin.php:2371
 msgid "Email address successfully verified"
+msgstr ""
+
+#: class-admin.php:2678
+#: class-multisite.php:223
+#: settings/build/index.42248915a0410688dcc4.js:1
+#: settings/src/Header.js:36
+msgid "Support"
+msgstr ""
+
+#: class-admin.php:2683
+#: class-multisite.php:227
+msgid "Improve security - Upgrade"
 msgstr ""
 
 #: class-multisite.php:114
@@ -432,8 +433,8 @@ msgstr ""
 
 #: class-multisite.php:289
 #: class-multisite.php:290
+#: settings/settings.php:176
 #: settings/settings.php:177
-#: settings/settings.php:178
 msgid "SSL & Security"
 msgstr ""
 
@@ -502,11 +503,11 @@ msgid "Really Simple SSL detected an SSL certificate, but has not been configure
 msgstr ""
 
 #: class-site-health.php:197
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/build/354.2f14ed4d6692e499a6c3.js:1
-#: settings/build/434.efc0df59700ca9d32dcb.js:1
+#: settings/build/434.736589de85bbbce50967.js:1
 #: settings/src/Dashboard/Progress/ProgressFooter.js:24
-#: settings/src/Onboarding/OnboardingControls.js:136
+#: settings/src/Onboarding/OnboardingControls.js:134
 msgid "Activate SSL"
 msgstr ""
 
@@ -894,7 +895,7 @@ msgstr ""
 msgid "The system is not ready for the installation yet. Please run the wizard again."
 msgstr ""
 
-#: lets-encrypt/config/class-hosts.php:583
+#: lets-encrypt/config/class-hosts.php:574
 msgid "I don't know, or not listed, proceed with installation"
 msgstr ""
 
@@ -1623,9 +1624,7 @@ msgstr ""
 #: onboarding/class-onboarding.php:403
 #: settings/config/menu.php:335
 #: settings/config/menu.php:342
-#: modal/build/index.855f8bc8ac202db563f6.js:1
-#: modal/src/components/DeactivationModal/DeactivationModal.js:97
-msgid "Password security"
+msgid "Password Security"
 msgstr ""
 
 #: onboarding/class-onboarding.php:409
@@ -1654,9 +1653,9 @@ msgstr ""
 #: pro/class-scan.php:1786
 #: pro/class-scan.php:1824
 #: pro/class-scan.php:1871
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/build/354.2f14ed4d6692e499a6c3.js:1
-#: settings/build/434.efc0df59700ca9d32dcb.js:1
+#: settings/build/434.736589de85bbbce50967.js:1
 #: settings/src/Settings/MixedContentScan/MixedContentScan.js:90
 #: settings/src/Settings/RiskConfiguration/RiskData.js:114
 msgid "Details"
@@ -1714,89 +1713,67 @@ msgstr ""
 msgid "Widget with mixed content"
 msgstr ""
 
-#: pro/class-admin.php:162
+#: pro/class-admin.php:177
 msgid "You have installed Really Simple SSL Pro. We have deactivated and removed the free plugin."
 msgstr ""
 
-#: pro/class-admin.php:175
+#: pro/class-admin.php:190
+msgid "After installing Really Simple SSL Pro, the Really Simple SSL plugin can be safely deleted."
+msgstr ""
+
+#: pro/class-admin.php:192
+msgid "We failed to delete Really Simple SSL automatically. Please delete Really Simple SSL manually."
+msgstr ""
+
+#: pro/class-admin.php:205
 #: settings/config/menu.php:41
 msgid "Premium Support"
 msgstr ""
 
-#: pro/class-admin.php:626
+#: pro/class-admin.php:656
 msgid "Elementor mixed content successfully converted."
 msgstr ""
 
-#: pro/class-admin.php:639
-#: pro/class-admin.php:644
+#: pro/class-admin.php:669
+#: pro/class-admin.php:674
 msgid "Potential redirect loop."
 msgstr ""
 
-#: pro/class-admin.php:640
+#: pro/class-admin.php:670
 msgid "No redirect to http detected."
 msgstr ""
 
-#: pro/class-admin.php:645
+#: pro/class-admin.php:675
 msgid "A redirect to http was detected. This might result in redirect loops."
 msgstr ""
 
-#: pro/class-admin.php:645
+#: pro/class-admin.php:675
 msgid "%sRead more%s."
 msgstr ""
 
-#: pro/class-admin.php:659
-#: pro/class-admin.php:665
+#: pro/class-admin.php:689
+#: pro/class-admin.php:695
 msgid "TLS version"
 msgstr ""
 
-#: pro/class-admin.php:660
+#: pro/class-admin.php:690
 msgid "TLS version is up-to-date"
 msgstr ""
 
-#: pro/class-admin.php:666
+#: pro/class-admin.php:696
 msgid "Your site uses an outdated version of TLS. Upgrade to TLS 1.2 or TLS 1.3 to keep your site secure."
 msgstr ""
 
-#: pro/class-admin.php:680
+#: pro/class-admin.php:710
 msgid "Your site redirects 404 pages to the http:// version of your homepage. This can cause mixed content issues with images."
 msgstr ""
 
-#: pro/class-admin.php:694
+#: pro/class-admin.php:724
 msgid "Update Really Simple SSL Free to the latest version for optimal compatibility."
 msgstr ""
 
-#: pro/class-admin.php:708
+#: pro/class-admin.php:738
 msgid "You are using W3 Total Cache with Disk: Enhanced setting. This can prevent Security headers from being properly loaded."
-msgstr ""
-
-#: pro/class-headers.php:210
-#: pro/class-headers.php:419
-msgid "The %s security header is not set by Really Simple SSL, but has a non-recommended value: \"%s\"."
-msgstr ""
-
-#: pro/class-headers.php:230
-#: pro/class-headers.php:236
-msgid "HSTS Preload"
-msgstr ""
-
-#: pro/class-headers.php:231
-msgid "Your site has been configured for the HSTS preload list. If you have submitted your site, it will be preloaded. Click %shere%s to submit."
-msgstr ""
-
-#: pro/class-headers.php:237
-msgid "Your site is not yet configured for the HSTS preload list."
-msgstr ""
-
-#: pro/class-headers.php:243
-msgid "HSTS not enabled"
-msgstr ""
-
-#: pro/class-headers.php:244
-msgid "Your site is not configured for HSTS yet."
-msgstr ""
-
-#: pro/class-headers.php:450
-msgid "The following recommended security headers have not been set: %s"
 msgstr ""
 
 #: pro/class-importer.php:61
@@ -1866,10 +1843,6 @@ msgstr ""
 
 #: pro/class-licensing.php:507
 msgid "You have a lifetime license."
-msgstr ""
-
-#: pro/class-licensing.php:507
-msgid "Valid until %s."
 msgstr ""
 
 #: pro/class-licensing.php:513
@@ -2196,23 +2169,6 @@ msgstr ""
 msgid "Block admin creation was disabled, because the registration of admin users has failed."
 msgstr ""
 
-#: pro/security/wordpress/block-admin-creation.php:346
-msgid "Manual approval required"
-msgstr ""
-
-#: pro/security/wordpress/block-admin-creation.php:347
-msgid "Because of your settings in Really Simple SSL, this user has been set to subscriber until you change the role manually."
-msgstr ""
-
-#: pro/security/wordpress/block-admin-creation.php:353
-#: pro/security/wordpress/block-admin-creation.php:354
-msgid "Suspicious admin account detected"
-msgstr ""
-
-#: pro/security/wordpress/block-admin-creation.php:355
-msgid "A user account with administrator privileges was created outside the WordPress dashboard."
-msgstr ""
-
 #: pro/security/wordpress/change-login-url.php:18
 msgid "Login URL request"
 msgstr ""
@@ -2221,78 +2177,17 @@ msgstr ""
 msgid "You have requested the login URL for your website. You can log in on %s."
 msgstr ""
 
-#: pro/security/wordpress/change-login-url.php:141
+#: pro/security/wordpress/change-login-url.php:140
 msgid "This feature is not enabled."
 msgstr ""
 
-#: pro/security/wordpress/class-rsssl-event-listener.php:153
-#: pro/security/wordpress/class-rsssl-event-listener.php:179
+#: pro/security/wordpress/class-rsssl-event-listener.php:150
+#: pro/security/wordpress/class-rsssl-event-listener.php:176
 msgid "Your access has been denied, please contact the webmaster for support"
 msgstr ""
 
-#: pro/security/wordpress/class-rsssl-event-listener.php:186
+#: pro/security/wordpress/class-rsssl-event-listener.php:183
 msgid "Your access has been denied, too many login attempts"
-msgstr ""
-
-#: pro/security/wordpress/class-rsssl-password-security.php:132
-msgid "Password Expires On"
-msgstr ""
-
-#. translators: %s: Not required.
-#: pro/security/wordpress/class-rsssl-password-security.php:172
-msgid "Not required"
-msgstr ""
-
-#: pro/security/wordpress/class-rsssl-password-security.php:368
-msgid "Your password has expired. Please change your password."
-msgstr ""
-
-#: pro/security/wordpress/class-rsssl-password-security.php:586
-#: pro/security/wordpress/class-rsssl-password-security.php:590
-msgid "Invalid nonce."
-msgstr ""
-
-#: pro/security/wordpress/class-rsssl-password-security.php:640
-msgid "Your password contains (part of) your (user)name or email address. Choose a different password"
-msgstr ""
-
-#: pro/security/wordpress/class-rsssl-password-security.php:798
-#: pro/security/wordpress/class-rsssl-password-security.php:799
-msgid "Your account is locked"
-msgstr ""
-
-#: pro/security/wordpress/class-rsssl-password-security.php:801
-msgid "Hi %1$s, Your password expired on %2$s , please change your password."
-msgstr ""
-
-#: pro/security/wordpress/class-rsssl-password-security.php:805
-msgid "Unlock Account"
-msgstr ""
-
-#: pro/security/wordpress/class-rsssl-password-security.php:807
-#: pro/security/wordpress/class-rsssl-password-security.php:830
-msgid "Copy this URL to your browser to change your password: %1$s "
-msgstr ""
-
-#: pro/security/wordpress/class-rsssl-password-security.php:816
-msgid "Account Locked"
-msgstr ""
-
-#: pro/security/wordpress/class-rsssl-password-security.php:821
-#: pro/security/wordpress/class-rsssl-password-security.php:822
-msgid "Your password will expire in 7 days"
-msgstr ""
-
-#: pro/security/wordpress/class-rsssl-password-security.php:824
-msgid "Hi %1$s, Your password on %2$s will expire in 7 days, please change your password."
-msgstr ""
-
-#: pro/security/wordpress/class-rsssl-password-security.php:828
-msgid "Change password"
-msgstr ""
-
-#: pro/security/wordpress/class-rsssl-password-security.php:839
-msgid "Change your password"
 msgstr ""
 
 #: pro/security/wordpress/eventlog/class-rsssl-event-type.php:119
@@ -2311,7 +2206,7 @@ msgid "Login by %s failed (incorrect credentials)"
 msgstr ""
 
 #: pro/security/wordpress/eventlog/class-rsssl-event-type.php:260
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:524
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:529
 msgid "REST API authentication successful"
 msgstr ""
 
@@ -2319,25 +2214,25 @@ msgstr ""
 #: pro/security/wordpress/eventlog/class-rsssl-event-type.php:265
 #: pro/security/wordpress/eventlog/class-rsssl-event-type.php:270
 #: pro/security/wordpress/eventlog/class-rsssl-event-type.php:275
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:524
 #: pro/security/wordpress/eventlog/class-rsssl-event-type.php:529
 #: pro/security/wordpress/eventlog/class-rsssl-event-type.php:534
 #: pro/security/wordpress/eventlog/class-rsssl-event-type.php:539
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:544
 msgid "Authentication"
 msgstr ""
 
 #: pro/security/wordpress/eventlog/class-rsssl-event-type.php:265
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:529
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:534
 msgid "REST API authentication failed"
 msgstr ""
 
 #: pro/security/wordpress/eventlog/class-rsssl-event-type.php:270
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:534
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:539
 msgid "XML-RPC authentication successful"
 msgstr ""
 
 #: pro/security/wordpress/eventlog/class-rsssl-event-type.php:275
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:539
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:544
 msgid "XML-RPC authentication failed"
 msgstr ""
 
@@ -2455,75 +2350,75 @@ msgid "MFA setup required"
 msgstr ""
 
 #: pro/security/wordpress/eventlog/class-rsssl-event-type.php:369
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:580
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:585
 msgid "Unknown event"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:520
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:525
 msgid "Login successful"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:522
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:527
 msgid "Login failed"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:544
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:549
 msgid "User locked out"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:547
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:552
 msgid "User removed from blocklist"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:549
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:554
 msgid "User added to blocklist"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:551
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:556
 msgid "User added to trusted list"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:553
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:558
 msgid "User removed from trusted list"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:555
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:560
 msgid "IP address locked-out"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:558
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:563
 msgid "IP removed from blocklist"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:560
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:565
 msgid "IP added to blocklist"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:562
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:567
 msgid "IP added to trusted list"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:564
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:569
 msgid "IP removed from trusted list"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:567
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:572
 msgid "Geo-IP blocklist changed"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:569
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:574
 msgid "Unblock link sent"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:572
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:577
 msgid "Login blocked by username"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:575
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:580
 msgid "Login blocked by IP address"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:577
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:582
 msgid "Login blocked by Geo-IP list"
 msgstr ""
 
@@ -2567,15 +2462,11 @@ msgid "Below you will find your login code for %1$s. It's valid for 15 minutes. 
 msgstr ""
 
 #. translators: %s is replaced with the site url
-#. translators: %s: site url
 #: pro/security/wordpress/two_fa/class-two-factor-email.php:295
-#: pro/security/wordpress/two_fa/two-factor.php:1517
-#: pro/security/wordpress/two_fa/two-factor.php:1565
 msgid "Notification by %s"
 msgstr ""
 
 #: pro/security/wordpress/two_fa/class-two-factor-email.php:298
-#: pro/security/wordpress/two_fa/two-factor.php:1520
 msgid "Hi"
 msgstr ""
 
@@ -2596,125 +2487,12 @@ msgid "Resend Code"
 msgstr ""
 
 #: pro/security/wordpress/two_fa/class-two-factor-email.php:357
-msgid "Don't use Two-step verification"
+msgid "Don't use Two-Step verification"
 msgstr ""
 
 #. translators: %s: email address
 #: pro/security/wordpress/two_fa/class-two-factor-email.php:427
 msgid "Authentication codes will be sent to %s."
-msgstr ""
-
-#: pro/security/wordpress/two_fa/class-two-factor-settings.php:355
-msgid "No role"
-msgstr ""
-
-#: pro/security/wordpress/two_fa/two-factor.php:677
-msgid "API login for user disabled."
-msgstr ""
-
-#: pro/security/wordpress/two_fa/two-factor.php:751
-#: pro/security/wordpress/two_fa/two-factor.php:1281
-#: pro/security/wordpress/two_fa/two-factor.php:1292
-#: pro/security/wordpress/two_fa/two-factor.php:1317
-#: pro/security/wordpress/two_fa/two-factor.php:1343
-msgid "Failed to create a login nonce."
-msgstr ""
-
-#. translators: 1: number of failed login attempts, 2: time since last failed login
-#: pro/security/wordpress/two_fa/two-factor.php:772
-msgid "Warning: Your account has attempted to login without providing a valid two factor token. The last failed login occurred %2$s ago. If this wasn't you, you should reset your password."
-msgid_plural "Warning: %1$s login attempts have been detected on your account with the correct password but with an incorrect two-factor token. The last failed login occurred %2$s ago. If this wasn't you, you should reset your password."
-msgstr[0] ""
-msgstr[1] ""
-
-#. translators: %s: URL to reset password
-#: pro/security/wordpress/two_fa/two-factor.php:823
-msgid "Your password was reset because of too many failed Two Factor attempts. You will need to <a href=\"%s\">create a new password</a> to regain access. Please check your email for more information."
-msgstr ""
-
-#. translators: %s: Two-factor method name.
-#: pro/security/wordpress/two_fa/two-factor.php:921
-msgid "Or, use your backup method: %s &rarr;"
-msgstr ""
-
-#: pro/security/wordpress/two_fa/two-factor.php:934
-msgid "Or, use a backup method…"
-msgstr ""
-
-#: pro/security/wordpress/two_fa/two-factor.php:1261
-msgid "Cheatin&#8217; uh?"
-msgstr ""
-
-#: pro/security/wordpress/two_fa/two-factor.php:1268
-#: pro/security/wordpress/two_fa/two-factor.php:1347
-msgid "Your verification code expired, click “Resend Code” to receive a new verification code."
-msgstr ""
-
-#. translators: %s: time delay between login attempts
-#: pro/security/wordpress/two_fa/two-factor.php:1308
-msgid "Too many invalid verification codes, you can try again in %s. This limit protects your account against automated attacks."
-msgstr ""
-
-#: pro/security/wordpress/two_fa/two-factor.php:1326
-#: pro/security/wordpress/two_fa/two-factor.php:1350
-msgid "Invalid verification code."
-msgstr ""
-
-#: pro/security/wordpress/two_fa/two-factor.php:1383
-msgid "You have logged in successfully."
-msgstr ""
-
-#. translators: %1$s: user login, %2$s: site url, %3$s: password best practices link, %4$s: lost password url
-#: pro/security/wordpress/two_fa/two-factor.php:1492
-msgid ""
-"Hello %1$s, an unusually high number of failed login attempts have been detected on your account at %2$s.\n"
-"\n"
-"These attempts successfully entered your password, and were only blocked because they failed to enter your second authentication factor. Despite not being able to access your account, this behavior indicates that the attackers have compromised your password. The most common reasons for this are that your password was easy to guess, or was reused on another site which has been compromised.\n"
-"\n"
-"To protect your account, your password has been reset, and you will need to create a new one. For advice on setting a strong password, please read %3$s\n"
-"\n"
-"To pick a new password, please visit %4$s\n"
-"\n"
-"This is an automated notification. If you would like to speak to a site administrator, please contact them directly."
-msgstr ""
-
-#: pro/security/wordpress/two_fa/two-factor.php:1514
-msgid "Your password was compromised and has been reset"
-msgstr ""
-
-#. translators: %s: user login
-#: pro/security/wordpress/two_fa/two-factor.php:1535
-msgid "Compromised password for %s has been reset"
-msgstr ""
-
-#. translators: %1$s: user login, %2$d: user id, %3$s: hooks documentation url
-#: pro/security/wordpress/two_fa/two-factor.php:1541
-msgid ""
-"Hello, this is a notice from your website to inform you that an unusually high number of failed login attempts have been detected on the %1$s account (ID %2$d).\n"
-"\n"
-"Those attempts successfully entered the user's password, and were only blocked because they entered invalid second authentication factors.\n"
-"\n"
-"To protect their account, the password has automatically been reset, and they have been notified that they will need to create a new one.\n"
-"\n"
-"If you do not wish to receive these notifications, you can disable them with the `two_factor_notify_admin_user_password_reset` filter. See %3$s for more information.\n"
-"\n"
-"Thank you"
-msgstr ""
-
-#: pro/security/wordpress/two_fa/two-factor.php:1568
-msgid "Compromised password reset"
-msgstr ""
-
-#: pro/security/wordpress/two_fa/two-factor.php:1582
-msgid "There have been too many failed two-factor authentication attempts, which often indicates that the password has been compromised. The password has been reset in order to protect the account."
-msgstr ""
-
-#: pro/security/wordpress/two_fa/two-factor.php:1583
-msgid "If you are the owner of this account, please check your email for instructions on regaining access."
-msgstr ""
-
-#: pro/security/wordpress/two_fa/two-factor.php:1587
-msgid "Password Reset"
 msgstr ""
 
 #: pro/security/wordpress/vulnerabilities-pro.php:427
@@ -2990,7 +2768,7 @@ msgstr ""
 #: security/notices.php:175
 #: settings/config/config.php:311
 #: settings/config/config.php:1123
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/LimitLoginAttempts/AddUserModal.js:53
 msgid "Username"
 msgstr ""
@@ -3196,12 +2974,20 @@ msgid_plural "You have %s low-risk vulnerabilities"
 msgstr[0] ""
 msgstr[1] ""
 
+#: security/wordpress/vulnerabilities/class-rsssl-file-storage.php:88
+msgid "Could not generate a secure initialization vector."
+msgstr ""
+
+#: security/wordpress/vulnerabilities/class-rsssl-file-storage.php:110
+msgid "Could not retrieve the initialization vector."
+msgstr ""
+
 #: settings/config/config.php:51
 msgid "Dismiss all notifications"
 msgstr ""
 
 #: settings/config/config.php:61
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/LetsEncrypt/Installation.js:95
 #: settings/src/LetsEncrypt/Installation.js:100
 #: settings/src/LetsEncrypt/Installation.js:104
@@ -3279,7 +3065,7 @@ msgid "Only enable this if you experience mixed content in the admin environment
 msgstr ""
 
 #: settings/config/config.php:179
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/Support.js:43
 msgid "Send"
 msgstr ""
@@ -3375,7 +3161,7 @@ msgstr ""
 #: settings/config/config.php:342
 #: settings/config/config.php:388
 #: settings/config/menu.php:489
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/LearningMode/LearningMode.js:141
 msgid "Blocked"
 msgstr ""
@@ -3408,7 +3194,7 @@ msgstr ""
 
 #: settings/config/config.php:357
 #: settings/config/config.php:473
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/LimitLoginAttempts/AddIpAddressModal.js:83
 msgid "IP Address"
 msgstr ""
@@ -3806,7 +3592,7 @@ msgid "Location"
 msgstr ""
 
 #: settings/config/config.php:1211
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/LearningMode/ChangeStatus.js:7
 #: settings/src/Settings/LearningMode/LearningMode.js:240
 #: settings/src/Settings/LimitLoginAttempts/CountryDatatable.js:231
@@ -3819,7 +3605,7 @@ msgid "Allow"
 msgstr ""
 
 #: settings/config/config.php:1211
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/LearningMode/LearningMode.js:290
 #: settings/src/Settings/LearningMode/LearningMode.js:296
 #: settings/src/Settings/PermissionsPolicy.js:200
@@ -3888,7 +3674,7 @@ msgid "Action"
 msgstr ""
 
 #: settings/config/config.php:1401
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/LearningMode/Delete.js:12
 #: settings/src/Settings/LimitLoginAttempts/IpAddressDatatable.js:254
 #: settings/src/Settings/LimitLoginAttempts/IpAddressDatatable.js:351
@@ -3990,7 +3776,7 @@ msgstr ""
 
 #: settings/config/config.php:1533
 #: settings/config/config.php:1536
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/RiskConfiguration/NotificationTester.js:39
 msgid "Test notifications"
 msgstr ""
@@ -4017,7 +3803,7 @@ msgid "I have read and understood the risks to intervene with these measures."
 msgstr ""
 
 #: settings/config/config.php:1642
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/build/354.2f14ed4d6692e499a6c3.js:1
 #: settings/src/Dashboard/SslLabs/SslLabs.js:319
 #: settings/src/LetsEncrypt/DnsVerification.js:64
@@ -4025,8 +3811,11 @@ msgid "Read more"
 msgstr ""
 
 #: settings/config/config.php:1657
-#: settings/config/config.php:1661
 msgid "Enforce strong passwords"
+msgstr ""
+
+#: settings/config/config.php:1661
+msgid "Enforce Strong Passwords"
 msgstr ""
 
 #: settings/config/config.php:1662
@@ -4128,7 +3917,7 @@ msgid "Debugging with Really Simple SSL"
 msgstr ""
 
 #: settings/config/menu.php:59
-#: settings/build/index.a2f43f2e2601d780a6c9.js:1
+#: settings/build/index.42248915a0410688dcc4.js:1
 #: settings/src/Header.js:31
 msgid "Let's Encrypt"
 msgstr ""
@@ -4165,7 +3954,7 @@ msgid "The Essentials"
 msgstr ""
 
 #: settings/config/menu.php:100
-msgid "Protecting your website visitors from malicious attacks and data breaches should be your #1 priority, start with the essentials with Really Simple Security"
+msgid "Protecting your website visitors from mailicious attacks and data breaches should be your #1 priority, start with the essentials with Really Simple Security"
 msgstr ""
 
 #: settings/config/menu.php:109
@@ -4279,14 +4068,15 @@ msgid "Get two-factor authentication with Really Simple SSL Pro"
 msgstr ""
 
 #: settings/config/menu.php:280
-#: settings/config/menu.php:289
-#: modal/build/index.855f8bc8ac202db563f6.js:1
-#: modal/src/components/DeactivationModal/DeactivationModal.js:92
-msgid "Two-step verification"
+msgid "Two-Step verification"
 msgstr ""
 
 #: settings/config/menu.php:286
 msgid "Start login protection by adding an additional layer during authentication. This will leave authentication less dependent on just a single password. Want to force strong passwords? Check out Password Security."
+msgstr ""
+
+#: settings/config/menu.php:289
+msgid "Two-Step Verification"
 msgstr ""
 
 #: settings/config/menu.php:290
@@ -4315,7 +4105,7 @@ msgid "Active"
 msgstr ""
 
 #: settings/config/menu.php:325
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/DynamicDataTable/DynamicDataTable.js:169
 #: settings/src/Settings/EventLog/EventLogDataTable.js:233
 #: settings/src/Settings/LearningMode/LearningMode.js:332
@@ -4417,7 +4207,7 @@ msgid "Warnings"
 msgstr ""
 
 #: settings/config/menu.php:468
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/EventLog/EventLogDataTable.js:214
 #: settings/src/Settings/LearningMode/LearningMode.js:139
 #: settings/src/Settings/LimitLoginAttempts/CountryDatatable.js:369
@@ -4475,23 +4265,23 @@ msgid "DNS verification"
 msgstr ""
 
 #: settings/config/menu.php:564
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/build/354.2f14ed4d6692e499a6c3.js:1
 #: settings/src/Dashboard/OtherPlugins/OtherPluginsData.js:74
 #: settings/src/Settings/License/License.js:71
 msgid "Activate"
 msgstr ""
 
-#: settings/settings.php:524
+#: settings/settings.php:523
 #: upgrade/upgrade-to-pro.php:144
 msgid "Self-hosted and privacy-friendly analytics tool."
 msgstr ""
 
-#: settings/settings.php:532
+#: settings/settings.php:531
 msgid "Complianz - Consent Management as it should be"
 msgstr ""
 
-#: settings/settings.php:539
+#: settings/settings.php:538
 msgid "Terms and Conditions"
 msgstr ""
 
@@ -4600,8 +4390,8 @@ msgstr ""
 #: upgrade/upgrade-to-pro.php:370
 #: modal/build/204.cd378a48efe26fc7867c.js:1
 #: modal/src/components/Modal/RssslModal.js:46
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
-#: settings/build/434.efc0df59700ca9d32dcb.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
+#: settings/build/434.736589de85bbbce50967.js:1
 #: settings/src/Settings/LimitLoginAttempts/AddIpAddressModal.js:112
 #: settings/src/Settings/LimitLoginAttempts/AddUserModal.js:83
 msgid "Cancel"
@@ -4669,6 +4459,16 @@ msgid "Advanced hardening"
 msgstr ""
 
 #: modal/build/index.855f8bc8ac202db563f6.js:1
+#: modal/src/components/DeactivationModal/DeactivationModal.js:92
+msgid "Two-step verification"
+msgstr ""
+
+#: modal/build/index.855f8bc8ac202db563f6.js:1
+#: modal/src/components/DeactivationModal/DeactivationModal.js:97
+msgid "Password security"
+msgstr ""
+
+#: modal/build/index.855f8bc8ac202db563f6.js:1
 #: modal/src/components/DeactivationModal/DeactivationModal.js:102
 msgid "Limit login attempts"
 msgstr ""
@@ -4685,7 +4485,7 @@ msgstr ""
 
 #: modal/build/index.855f8bc8ac202db563f6.js:1
 #: modal/src/components/DeactivationModal/DeactivationModal.js:130
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/License/License.js:70
 msgid "Deactivate"
 msgstr ""
@@ -4723,7 +4523,7 @@ msgstr ""
 
 #: settings/build/94.e98da9d5e5e52624f028.js:1
 #: settings/build/354.2f14ed4d6692e499a6c3.js:1
-#: settings/build/index.a2f43f2e2601d780a6c9.js:1
+#: settings/build/index.42248915a0410688dcc4.js:1
 #: settings/src/Dashboard/Progress/ProgressFooter.js:26
 #: settings/src/Header.js:41
 #: settings/src/Settings/PremiumOverlay.js:41
@@ -4741,14 +4541,14 @@ msgid "Network feature"
 msgstr ""
 
 #: settings/build/94.e98da9d5e5e52624f028.js:1
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/Field.js:131
 #: settings/src/Settings/SettingsGroup.js:181
 msgid "This feature is only available networkwide."
 msgstr ""
 
 #: settings/build/94.e98da9d5e5e52624f028.js:1
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/Field.js:132
 #: settings/src/Settings/SettingsGroup.js:182
 msgid "Network settings"
@@ -4785,384 +4585,384 @@ msgid "Collapse all"
 msgstr ""
 
 #: settings/build/187.da3b9bbe34df41708690.js:1
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Modal/Modal.js:63
 #: settings/src/Settings/MixedContentScan/MixedContentScan.js:158
 msgid "Edit"
 msgstr ""
 
 #: settings/build/187.da3b9bbe34df41708690.js:1
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Modal/Modal.js:64
 #: settings/src/Settings/MixedContentScan/MixedContentScan.js:169
 msgid "Help"
 msgstr ""
 
 #: settings/build/187.da3b9bbe34df41708690.js:1
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Modal/Modal.js:65
 #: settings/src/Settings/MixedContentScan/MixedContentScan.js:179
 msgid "Ignore"
 msgstr ""
 
 #: settings/build/187.da3b9bbe34df41708690.js:1
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Modal/Modal.js:66
 #: settings/src/Settings/MixedContentScan/MixedContentScan.js:98
 #: settings/src/Settings/MixedContentScan/MixedContentScan.js:188
 msgid "Fix"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/build/354.2f14ed4d6692e499a6c3.js:1
 #: settings/src/Dashboard/TaskElement.js:28
 msgid "Re-started test"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
-#: settings/build/434.efc0df59700ca9d32dcb.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
+#: settings/build/434.736589de85bbbce50967.js:1
 #: settings/src/Onboarding/Steps/StepEmail.js:29
 msgid "Your email address"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
-#: settings/build/434.efc0df59700ca9d32dcb.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
+#: settings/build/434.736589de85bbbce50967.js:1
 #: settings/src/Onboarding/Steps/StepEmail.js:33
 msgid "Include 6 Tips & Tricks to get started with Really Simple SSL."
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
-#: settings/build/434.efc0df59700ca9d32dcb.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
+#: settings/build/434.736589de85bbbce50967.js:1
 #: settings/src/Onboarding/Steps/StepEmail.js:33
 msgid "Privacy Statement"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
-#: settings/build/434.efc0df59700ca9d32dcb.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
+#: settings/build/434.736589de85bbbce50967.js:1
 #: settings/src/Onboarding/Items/ListItem.js:58
 msgid "Override SSL detection."
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
-#: settings/build/434.efc0df59700ca9d32dcb.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
+#: settings/build/434.736589de85bbbce50967.js:1
 #: settings/src/Onboarding/Onboarding.js:75
 msgid "Fetching next step..."
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
-#: settings/build/434.efc0df59700ca9d32dcb.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
+#: settings/build/434.736589de85bbbce50967.js:1
 #: settings/src/Onboarding/OnboardingControls.js:53
 msgid "Starting SSL health scan..."
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
-#: settings/build/434.efc0df59700ca9d32dcb.js:1
-#: settings/src/Onboarding/OnboardingControls.js:68
-#: settings/src/Onboarding/OnboardingControls.js:113
+#: settings/build/229.2d51466bad556da30427.js:1
+#: settings/build/434.736589de85bbbce50967.js:1
+#: settings/src/Onboarding/OnboardingControls.js:66
+#: settings/src/Onboarding/OnboardingControls.js:111
 msgid "Activating options..."
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
-#: settings/build/434.efc0df59700ca9d32dcb.js:1
-#: settings/src/Onboarding/OnboardingControls.js:71
+#: settings/build/229.2d51466bad556da30427.js:1
+#: settings/build/434.736589de85bbbce50967.js:1
+#: settings/src/Onboarding/OnboardingControls.js:69
 msgid "Initializing vulnerability detection..."
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
-#: settings/build/434.efc0df59700ca9d32dcb.js:1
-#: settings/src/Onboarding/OnboardingControls.js:73
+#: settings/build/229.2d51466bad556da30427.js:1
+#: settings/build/434.736589de85bbbce50967.js:1
+#: settings/src/Onboarding/OnboardingControls.js:71
 msgid "Scanning for vulnerabilities..."
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
-#: settings/build/434.efc0df59700ca9d32dcb.js:1
-#: settings/src/Onboarding/OnboardingControls.js:77
-#: settings/src/Onboarding/OnboardingControls.js:116
+#: settings/build/229.2d51466bad556da30427.js:1
+#: settings/build/434.736589de85bbbce50967.js:1
+#: settings/src/Onboarding/OnboardingControls.js:75
+#: settings/src/Onboarding/OnboardingControls.js:114
 msgid "Updating dashboard..."
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
-#: settings/build/434.efc0df59700ca9d32dcb.js:1
-#: settings/src/Onboarding/OnboardingControls.js:136
+#: settings/build/229.2d51466bad556da30427.js:1
+#: settings/build/434.736589de85bbbce50967.js:1
+#: settings/src/Onboarding/OnboardingControls.js:134
 msgid "Activate SSL networkwide"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
-#: settings/build/434.efc0df59700ca9d32dcb.js:1
-#: settings/src/Onboarding/OnboardingControls.js:140
+#: settings/build/229.2d51466bad556da30427.js:1
+#: settings/build/434.736589de85bbbce50967.js:1
+#: settings/src/Onboarding/OnboardingControls.js:138
 msgid "Install SSL"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
-#: settings/build/434.efc0df59700ca9d32dcb.js:1
-#: settings/src/Onboarding/OnboardingControls.js:149
+#: settings/build/229.2d51466bad556da30427.js:1
+#: settings/build/434.736589de85bbbce50967.js:1
+#: settings/src/Onboarding/OnboardingControls.js:147
 msgid "Skip"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
-#: settings/build/434.efc0df59700ca9d32dcb.js:1
-#: settings/src/Onboarding/OnboardingControls.js:159
+#: settings/build/229.2d51466bad556da30427.js:1
+#: settings/build/434.736589de85bbbce50967.js:1
+#: settings/src/Onboarding/OnboardingControls.js:157
 msgid "Get 40% off"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
-#: settings/build/434.efc0df59700ca9d32dcb.js:1
-#: settings/src/Onboarding/OnboardingControls.js:159
+#: settings/build/229.2d51466bad556da30427.js:1
+#: settings/build/434.736589de85bbbce50967.js:1
+#: settings/src/Onboarding/OnboardingControls.js:157
 msgid "Get PRO"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
-#: settings/build/434.efc0df59700ca9d32dcb.js:1
-#: settings/src/Onboarding/OnboardingControls.js:162
+#: settings/build/229.2d51466bad556da30427.js:1
+#: settings/build/434.736589de85bbbce50967.js:1
+#: settings/src/Onboarding/OnboardingControls.js:160
 msgid "Finish"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/LetsEncrypt/Directories.js:23
 #: settings/src/LetsEncrypt/DnsVerification.js:27
 msgid "The challenge directory is used to verify the domain ownership."
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/LetsEncrypt/Directories.js:31
 msgid "The key directory is needed to store the generated keys."
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/LetsEncrypt/Directories.js:31
 #: settings/src/LetsEncrypt/Directories.js:39
 msgid "By placing it outside the root folder, it is not publicly accessible."
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/LetsEncrypt/Directories.js:39
 msgid "The certificate will get stored in this directory."
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/LetsEncrypt/Directories.js:60
 #: settings/src/LetsEncrypt/DnsVerification.js:62
 #: settings/src/LetsEncrypt/Installation.js:91
 msgid "Next step"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/LetsEncrypt/Directories.js:65
 msgid "If the challenge directory cannot be created, or is not reachable, you can either remove the server limitation, or change to DNS verification."
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/LetsEncrypt/Directories.js:71
 #: settings/src/LetsEncrypt/Directories.js:85
 #: settings/src/LetsEncrypt/Directories.js:114
 msgid "Switch to DNS verification"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/LetsEncrypt/Directories.js:78
 msgid "If you also want to secure subdomains like mail.domain.com, cpanel.domain.com, you have to use the %sDNS%s challenge."
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/LetsEncrypt/Directories.js:80
 msgid "Please note that auto-renewal with a DNS challenge might not be possible."
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/LetsEncrypt/Directories.js:90
 msgid "Create a challenge directory"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/LetsEncrypt/Directories.js:93
 msgid "Navigate in FTP or File Manager to the root of your WordPress installation:"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/LetsEncrypt/Directories.js:97
 msgid "Create a folder called “.well-known”"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/LetsEncrypt/Directories.js:100
 msgid "Inside the folder called “.well-known” create a new folder called “acme-challenge”, with 644 writing permissions."
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/LetsEncrypt/Directories.js:103
 #: settings/src/LetsEncrypt/Directories.js:135
 #: settings/src/LetsEncrypt/Directories.js:157
 msgid "Click the refresh button."
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/LetsEncrypt/Directories.js:107
 msgid "Or you can switch to DNS verification"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/LetsEncrypt/Directories.js:109
 msgid "If the challenge directory cannot be created, you can either remove the server limitation, or change to DNS verification."
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/LetsEncrypt/Directories.js:122
 msgid "Create a key directory"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/LetsEncrypt/Directories.js:125
 #: settings/src/LetsEncrypt/Directories.js:147
 msgid "Navigate in FTP or File Manager to one level above the root of your WordPress installation:"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/LetsEncrypt/Directories.js:129
 #: settings/src/LetsEncrypt/Directories.js:151
 msgid "Create a folder called “ssl”"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/LetsEncrypt/Directories.js:132
 msgid "Inside the folder called “ssl” create a new folder called “keys”, with 644 writing permissions."
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/LetsEncrypt/Directories.js:144
 msgid "Create a certs directory"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/LetsEncrypt/Directories.js:154
 msgid "Inside the folder called “ssl” create a new folder called “certs”, with 644 writing permissions."
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/LetsEncrypt/DnsVerification.js:63
 msgid "Add the following token as text record to your DNS records. We recommend to use a short TTL during installation, in case you need to change it."
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/LetsEncrypt/DnsVerification.js:69
 msgid "domain"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/LetsEncrypt/DnsVerification.js:70
 msgid "Value"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/LetsEncrypt/DnsVerification.js:83
 msgid "DNS verification active. You can switch back to directory verification here."
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/LetsEncrypt/DnsVerification.js:87
 msgid "Switch to directory verification"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/LetsEncrypt/Generation.js:41
 msgid "We could not check the DNS records. If you just added the record, please check in a few minutes."
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/LetsEncrypt/Generation.js:42
 msgid "You can manually check the DNS records in an %sonline tool%s."
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/LetsEncrypt/Generation.js:44
 msgid "If you're sure it's set correctly, you can click the button to skip the DNS check."
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/LetsEncrypt/Generation.js:24
 msgid "Skip DNS verification"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/LetsEncrypt/Generation.js:50
 msgid "Skip DNS check"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/LetsEncrypt/Installation.js:19
 msgid "This is the certificate, which you need to install in your hosting dashboard."
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/LetsEncrypt/Installation.js:20
 #: settings/src/LetsEncrypt/Installation.js:93
 msgid "Certificate (CRT)"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/LetsEncrypt/Installation.js:26
 msgid "The private key can be uploaded or pasted in the appropriate field on your hosting dashboard."
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/LetsEncrypt/Installation.js:27
 #: settings/src/LetsEncrypt/Installation.js:98
 msgid "Private Key (KEY)"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/LetsEncrypt/Installation.js:33
 msgid "The CA Bundle will sometimes be automatically detected. If not, you can use this file."
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/LetsEncrypt/Installation.js:34
 #: settings/src/LetsEncrypt/Installation.js:102
 msgid "Certificate Authority Bundle (CABUNDLE)"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/LetsEncrypt/Installation.js:65
 msgid "Copied!"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/LetsEncrypt/Installation.js:87
 msgid "The certificate is not generated by Really Simple SSL, so there are no installation files here"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/LetsEncrypt/Installation.js:92
 msgid "Install your certificate."
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/LetsEncrypt/Installation.js:96
 #: settings/src/LetsEncrypt/Installation.js:101
 #: settings/src/LetsEncrypt/Installation.js:105
 msgid "Copy content"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/LetsEncrypt/LetsEncrypt.js:141
 msgid "Verifying DNS records..."
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/LetsEncrypt/LetsEncrypt.js:277
 msgid "Attempt %s."
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/MixedContentScan/MixedContentScan.js:204
 msgid "No results. Start your first scan"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/MixedContentScan/MixedContentScan.js:205
 msgid "Everything is now served over SSL"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/DynamicDataTable/DynamicDataTable.js:136
 #: settings/src/Settings/EventLog/EventLogDataTable.js:225
 #: settings/src/Settings/LearningMode/LearningMode.js:274
@@ -5175,186 +4975,186 @@ msgstr ""
 msgid "No results"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/MixedContentScan/MixedContentScan.js:231
 msgid "Start scan"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/MixedContentScan/MixedContentScan.js:232
 msgid "Stop"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/MixedContentScan/MixedContentScan.js:237
 msgid "Show ignored URLs"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/LearningMode/LearningMode.js:229
 #: settings/src/Settings/PermissionsPolicy.js:160
 msgid "You have selected"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/LearningMode/LearningMode.js:229
 #: settings/src/Settings/PermissionsPolicy.js:160
 msgid "rows"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/PermissionsPolicy.js:171
 #: settings/src/Settings/TwoFA/TwoFaDataTable.js:211
 #: settings/src/Settings/TwoFA/TwoFaDataTable.js:255
 msgid "Reset"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/LearningMode/LearningMode.js:295
 #: settings/src/Settings/PermissionsPolicy.js:191
 msgid "Enforce"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/LearningMode/LearningMode.js:311
 #: settings/src/Settings/LearningMode/LearningMode.js:333
 #: settings/src/Settings/PermissionsPolicy.js:197
 msgid "Enforced"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/PermissionsPolicy.js:198
 msgid "Permissions Policy is set outside Really Simple SSL."
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/PermissionsPolicy.js:199
 msgid "Permissions Policy is enforced."
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/PermissionsPolicy.js:206
 msgid "The Permissions Policy has been disabled."
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/Support.js:36
 msgid "Type your question here"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/LearningMode/ChangeStatus.js:7
 #: settings/src/Settings/LearningMode/LearningMode.js:251
 msgid "Revoke"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/LearningMode/LearningMode.js:147
 msgid " The %s is now in report-only mode and will collect directives. This might take a while. Afterwards you can Exit, Edit and Enforce these Directives."
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/LearningMode/LearningMode.js:148
 msgid "%s has been disabled."
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/LearningMode/LearningMode.js:149
 msgid "%s is enforced."
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/LearningMode/LearningMode.js:151
 msgid "%s is already set outside Really Simple SSL."
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/LearningMode/LearningMode.js:174
 msgid "success"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/LearningMode/LearningMode.js:174
 msgid "failed"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/LearningMode/LearningMode.js:261
 msgid "Remove"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/LearningMode/LearningMode.js:288
 msgid "Error detected"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/LearningMode/LearningMode.js:289
 msgid "%s cannot be implemented due to server limitations. Check your notices for the detected issue."
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/LearningMode/LearningMode.js:304
 msgid "Enable Learning Mode to configure automatically"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/LearningMode/LearningMode.js:313
 msgid "Disable to configure"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/LearningMode/LearningMode.js:318
 #: settings/src/Settings/LearningMode/LearningMode.js:325
 msgid "Learning Mode"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/LearningMode/LearningMode.js:320
 msgid "Exit"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/LearningMode/LearningMode.js:326
 msgid "We finished the configuration."
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/LearningMode/LearningMode.js:327
 msgid "Review the settings and enforce the policy"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/LearningMode/LearningMode.js:140
 msgid "Allowed"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/RiskConfiguration/RunnerData.js:21
 msgid "Preparing vulnerability detection"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/RiskConfiguration/RunnerData.js:27
 msgid "Collecting plugin, theme and core data"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/RiskConfiguration/RunnerData.js:33
 msgid "Scanning your WordPress configuration"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/RiskConfiguration/RunnerData.js:39
 msgid "Reporting enabled"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/RiskConfiguration/VulnerabilitiesOverview.js:128
 msgid "Activate vulnerability detection to enable this block."
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/DynamicDataTable/DynamicDataTable.js:119
 #: settings/src/Settings/EventLog/EventLogDataTable.js:192
 #: settings/src/Settings/LimitLoginAttempts/CountryDatatable.js:298
@@ -5365,59 +5165,59 @@ msgstr ""
 msgid "Search"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/RiskConfiguration/VulnerabilitiesOverview.js:177
 msgid "No vulnerabilities found"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/LimitLoginAttempts/IpAddressInput.js:38
 msgid "Invalid ip address"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/LimitLoginAttempts/AddIpAddressModal.js:61
 msgid "Add IP Address"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/LimitLoginAttempts/AddIpAddressModal.js:118
 #: settings/src/Settings/LimitLoginAttempts/AddUserModal.js:89
 msgid "Add"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/LimitLoginAttempts/IpAddressDatatable.js:302
 msgid "Block IP Address"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/LimitLoginAttempts/IpAddressDatatable.js:305
 msgid "Trust IP Address"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/LimitLoginAttempts/CountryDatatable.js:318
 #: settings/src/Settings/LimitLoginAttempts/IpAddressDatatable.js:341
 #: settings/src/Settings/LimitLoginAttempts/UserDatatable.js:266
 msgid "You have selected %s rows"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/EventLog/EventLogDataTable.js:210
 #: settings/src/Settings/LimitLoginAttempts/CountryDatatable.js:365
 #: settings/src/Settings/LimitLoginAttempts/IpAddressDatatable.js:368
 msgid "Rows per page:"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/EventLog/EventLogDataTable.js:211
 #: settings/src/Settings/LimitLoginAttempts/CountryDatatable.js:366
 #: settings/src/Settings/LimitLoginAttempts/IpAddressDatatable.js:369
 msgid "of"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/EventLog/EventLogDataTable.js:233
 #: settings/src/Settings/LimitLoginAttempts/CountryDatatable.js:388
 #: settings/src/Settings/LimitLoginAttempts/IpAddressDatatable.js:393
@@ -5425,66 +5225,66 @@ msgstr ""
 msgid "Activate Limit login attempts to enable this block."
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/DynamicDataTable/DynamicDataTable.js:169
 #: settings/src/Settings/RolesDropDown.js:89
 #: settings/src/Settings/TwoFA/TwoFaRolesDropDown.js:112
 msgid "Activate login protection to enable this block."
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/PostDropDown.js:112
 msgid "Redirect to this post when someone tries to access /wp-admin or /wp-login.php. The default is a 404 page."
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/PostDropDown.js:122
 msgid "Search for a post."
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/RiskConfiguration/NotificationTester.js:80
 msgid "The notification test only works if you save the setting first."
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/RiskConfiguration/NotificationTester.js:77
 msgid "You have not enabled the email notifications in the general settings."
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/RiskConfiguration/NotificationTester.js:38
 msgid "All notifications are triggered successfully, please check your email to double-check if you can receive emails."
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/LimitLoginAttempts/AddUserModal.js:30
 msgid "Add User"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/LimitLoginAttempts/UserDatatable.js:230
 msgid "Block username"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/LimitLoginAttempts/UserDatatable.js:233
 msgid "Trust username"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/LimitLoginAttempts/CountryDatatable.js:134
 #: settings/src/Settings/LimitLoginAttempts/CountryDatatable.js:139
 msgid "%s is now allowed"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/LimitLoginAttempts/CountryDatatable.js:161
 #: settings/src/Settings/LimitLoginAttempts/CountryDatatable.js:166
 msgid "%s has been blocked"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/LimitLoginAttempts/CountryDatatable.js:238
 #: settings/src/Settings/LimitLoginAttempts/CountryDatatable.js:256
 #: settings/src/Settings/LimitLoginAttempts/CountryDatatable.js:329
@@ -5492,17 +5292,17 @@ msgstr ""
 msgid "Block"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/TwoFA/TwoFaDataTable.js:247
 msgid "You have selected %s users"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/src/Settings/TwoFA/TwoFaDataTable.js:290
 msgid "Activate Two Step Verification to enable this block."
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/build/354.2f14ed4d6692e499a6c3.js:1
 #: settings/src/Dashboard/Progress/ProgressBlock.js:41
 #: settings/src/Dashboard/Progress/ProgressBlock.js:47
@@ -5514,29 +5314,29 @@ msgstr ""
 msgid "Loading..."
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
-#: settings/build/434.efc0df59700ca9d32dcb.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
+#: settings/build/434.736589de85bbbce50967.js:1
 #: settings/src/Settings/Host/Host.js:35
 msgid "Optional - Select your hosting provider."
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/build/354.2f14ed4d6692e499a6c3.js:1
-#: settings/build/434.efc0df59700ca9d32dcb.js:1
+#: settings/build/434.736589de85bbbce50967.js:1
 #: settings/src/Settings/RiskConfiguration/RiskData.js:11
 msgid "Force update the plugin or theme"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/build/354.2f14ed4d6692e499a6c3.js:1
-#: settings/build/434.efc0df59700ca9d32dcb.js:1
+#: settings/build/434.736589de85bbbce50967.js:1
 #: settings/src/Settings/RiskConfiguration/RiskData.js:12
 msgid "Isolates the plugin or theme if no update can be performed"
 msgstr ""
 
-#: settings/build/229.1c0f2fc76d94a8fa0a84.js:1
+#: settings/build/229.2d51466bad556da30427.js:1
 #: settings/build/354.2f14ed4d6692e499a6c3.js:1
-#: settings/build/434.efc0df59700ca9d32dcb.js:1
+#: settings/build/434.736589de85bbbce50967.js:1
 #: settings/src/Settings/RiskConfiguration/RiskData.js:117
 msgid "Update"
 msgstr ""
@@ -5685,7 +5485,7 @@ msgid "You have %s %d"
 msgstr ""
 
 #: settings/build/354.2f14ed4d6692e499a6c3.js:1
-#: settings/build/index.a2f43f2e2601d780a6c9.js:1
+#: settings/build/index.42248915a0410688dcc4.js:1
 #: settings/src/Dashboard/TipsTricks/TipsTricksFooter.js:8
 #: settings/src/Header.js:29
 msgid "Documentation"
@@ -5712,110 +5512,110 @@ msgstr ""
 msgid "Tips & Tricks"
 msgstr ""
 
-#: settings/build/434.efc0df59700ca9d32dcb.js:1
+#: settings/build/434.736589de85bbbce50967.js:1
 #: settings/src/Onboarding/OnboardingModal.js:33
 msgid "Please wait while we detect your setup"
 msgstr ""
 
-#: settings/build/829.2f567557fb7dad1717c5.js:1
+#: settings/build/829.25a3e44e27776e51a37d.js:1
 #: settings/src/Menu/MenuItem.js:27
 #: settings/src/Menu/MenuItem.js:36
 msgid "Beta"
 msgstr ""
 
-#: settings/build/829.2f567557fb7dad1717c5.js:1
+#: settings/build/829.25a3e44e27776e51a37d.js:1
 #: settings/src/Menu/MenuItem.js:28
 #: settings/src/Menu/MenuItem.js:37
 msgid "New"
 msgstr ""
 
-#: settings/build/index.a2f43f2e2601d780a6c9.js:1
+#: settings/build/index.42248915a0410688dcc4.js:1
 #: settings/src/Onboarding/OnboardingData.js:82
 msgid "Updating email preferences.."
 msgstr ""
 
-#: settings/build/index.a2f43f2e2601d780a6c9.js:1
+#: settings/build/index.42248915a0410688dcc4.js:1
 #: settings/src/Onboarding/OnboardingData.js:126
 msgid "Installing %d..."
 msgstr ""
 
-#: settings/build/index.a2f43f2e2601d780a6c9.js:1
+#: settings/build/index.42248915a0410688dcc4.js:1
 #: settings/src/Onboarding/OnboardingData.js:132
 msgid "Activating %d..."
 msgstr ""
 
-#: settings/build/index.a2f43f2e2601d780a6c9.js:1
+#: settings/build/index.42248915a0410688dcc4.js:1
 #: settings/src/Onboarding/OnboardingData.js:179
 msgid "Re-checking SSL certificate, please wait..."
 msgstr ""
 
-#: settings/build/index.a2f43f2e2601d780a6c9.js:1
+#: settings/build/index.42248915a0410688dcc4.js:1
 #: settings/src/Settings/FieldsData.js:181
 msgid "Saving settings..."
 msgstr ""
 
-#: settings/build/index.a2f43f2e2601d780a6c9.js:1
+#: settings/build/index.42248915a0410688dcc4.js:1
 #: settings/src/Settings/FieldsData.js:182
 #: settings/src/Settings/FieldsData.js:204
 msgid "Settings saved"
 msgstr ""
 
-#: settings/build/index.a2f43f2e2601d780a6c9.js:1
+#: settings/build/index.42248915a0410688dcc4.js:1
 #: settings/src/Settings/FieldsData.js:183
 msgid "Something went wrong"
 msgstr ""
 
-#: settings/build/index.a2f43f2e2601d780a6c9.js:1
+#: settings/build/index.42248915a0410688dcc4.js:1
 #: settings/src/Settings/FieldsData.js:283
 msgid "Settings Saved"
 msgstr ""
 
-#: settings/build/index.a2f43f2e2601d780a6c9.js:1
+#: settings/build/index.42248915a0410688dcc4.js:1
 #: settings/src/utils/Error.js:12
 msgid "Please check if security settings on the server or a plugin is blocking the requests from Really Simple SSL."
 msgstr ""
 
-#: settings/build/index.a2f43f2e2601d780a6c9.js:1
+#: settings/build/index.42248915a0410688dcc4.js:1
 #: settings/src/utils/Error.js:20
 msgid "The Really Simple SSL Rest API is disabled."
 msgstr ""
 
-#: settings/build/index.a2f43f2e2601d780a6c9.js:1
+#: settings/build/index.42248915a0410688dcc4.js:1
 #: settings/src/utils/Error.js:22
 msgid "The Really Simple SSL Rest API returned a not found."
 msgstr ""
 
-#: settings/build/index.a2f43f2e2601d780a6c9.js:1
+#: settings/build/index.42248915a0410688dcc4.js:1
 #: settings/src/utils/Error.js:24
 msgid "The Really Simple SSL Rest API returned a 403 forbidden error."
 msgstr ""
 
-#: settings/build/index.a2f43f2e2601d780a6c9.js:1
+#: settings/build/index.42248915a0410688dcc4.js:1
 #: settings/src/utils/Error.js:35
 msgid "A problem was detected during the loading of the settings"
 msgstr ""
 
-#: settings/build/index.a2f43f2e2601d780a6c9.js:1
+#: settings/build/index.42248915a0410688dcc4.js:1
 #: settings/src/utils/Error.js:41
 msgid "The request returned the following errors:"
 msgstr ""
 
-#: settings/build/index.a2f43f2e2601d780a6c9.js:1
+#: settings/build/index.42248915a0410688dcc4.js:1
 #: settings/src/utils/Error.js:43
 msgid "Response code:"
 msgstr ""
 
-#: settings/build/index.a2f43f2e2601d780a6c9.js:1
+#: settings/build/index.42248915a0410688dcc4.js:1
 #: settings/src/utils/Error.js:44
 msgid "Status code:"
 msgstr ""
 
-#: settings/build/index.a2f43f2e2601d780a6c9.js:1
+#: settings/build/index.42248915a0410688dcc4.js:1
 #: settings/src/utils/Error.js:45
 msgid "Server response:"
 msgstr ""
 
-#: settings/build/index.a2f43f2e2601d780a6c9.js:1
+#: settings/build/index.42248915a0410688dcc4.js:1
 #: settings/src/utils/Error.js:48
 msgid "More information"
 msgstr ""

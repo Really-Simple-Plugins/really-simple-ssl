@@ -292,7 +292,7 @@ function rsssl_fields( $load_values = true ) {
 			'menu_id'          => 'limit_login_attempts',
 			'group_id'         => 'limit_login_attempts_users',
 			'type'             => 'user-datatable',
-			'action'           => 'user_list',
+			'action'           => 'rsssl_limit_login_user',
 			'options'          => [
 				'blocked' => __('Blocked', 'really-simple-ssl'),
 				'locked'  => __('Locked-out', 'really-simple-ssl'),
@@ -337,7 +337,7 @@ function rsssl_fields( $load_values = true ) {
 			'menu_id'          => 'limit_login_attempts',
 			'group_id'         => 'limit_login_attempts_ip_address',
 			'type'             => 'ip-address-datatable',
-			'action'           => 'ip_list',
+			'action'           => 'rsssl_limit_login',
 			'options'          => [
 				'blocked' => __('Blocked', 'really-simple-ssl'),
 				'locked'  => __('Locked-out', 'really-simple-ssl'),
@@ -383,7 +383,7 @@ function rsssl_fields( $load_values = true ) {
 			'menu_id'          => 'limit_login_attempts',
 			'group_id'         => 'limit_login_attempts_country',
 			'type'             => 'country-datatable',
-			'action'           => 'country_list',
+			'action'           => 'rsssl_limit_login_country',
 			'options'          => [
 				'blocked' => __('Blocked', 'really-simple-ssl'),
 				'locked'  => __('Locked-out', 'really-simple-ssl'),
@@ -411,13 +411,13 @@ function rsssl_fields( $load_values = true ) {
 					'searchable' => true,
 					'visible'   => false,
 					'column'     => 'country_name',
-					'width'      => '20%',
+					'width'      => '200px',
 				],
 				[
 					'name'       => __('Continent', 'really-simple-ssl'),
 					'sortable'   => true,
 					'searchable' => true,
-					'column'     => 'region',
+					'column'     => 'region_name',
 					'width'      => '20%',
 				],
 				[
@@ -483,11 +483,6 @@ function rsssl_fields( $load_values = true ) {
 					'column'   => 'event_name',
 					'width'         => '28%',
 				]
-//
-//                [
-//                    'width'    => '1px',
-//                ]
-
 			],
 		],
 		[
@@ -691,7 +686,112 @@ function rsssl_fields( $load_values = true ) {
 			'default'  => 'disabled',
 		],
 		[
-			'id'                   => 'do_not_edit_htaccess',
+			'id'       => 'geo_blocklist_enabled',
+//			'control_field' => 'geo_blocklist_enabled',
+			'menu_id'  => 'geo_block_list',
+			'group_id' => 'geo_block_list_general',
+			'type'     => 'checkbox',
+			'label'    => __("Enable Region restrictions", "really-simple-ssl"),
+			'disabled' => false,
+			'default'  => false,
+		],
+		[
+			'id'      => 'geo_blocklist_white_listing_overview',
+			'menu_id' => 'geo_block_list',
+			'group_id' => 'geo_block_list_white_listing',
+			'type'    => 'geo-ip-datatable',
+			'action'  => 'rsssl_geo_white_list',
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'geo_blocklist_enabled' => true,
+				]
+			],
+			'columns' => [
+				[
+					'name'       => __('IP Address', 'really-simple-ssl'),
+					'sortable'   => true,
+					'searchable' => true,
+					'column'     => 'ip_address',
+					'width'      => '65%',
+				],
+				[
+					'name'     => __('Note', 'really-simple-ssl'),
+					'sortable' => false,
+					'column'   => 'note',
+					'width'    => '20%',
+				],
+				[
+					'name'     => __('Date', 'really-simple-ssl'),
+					'sortable' => true,
+					'column'   => 'create_date',
+					'width'    => '18%',
+				],
+				[
+					'name'     => '',
+					'sortable' => false,
+					'column'   => 'action',
+					'width'    => '13%',
+				],
+			],
+		],
+		[
+			'id'               => 'geo_blocklist_listing_overview',
+			'menu_id'          => 'geo_block_list',
+			'group_id'         => 'geo_block_list_listing',
+			'type'             => 'geo-datatable',
+			'action'           => 'rsssl_geo_list',
+			'options'          => [
+				'blocked' => __('Blocked', 'really-simple-ssl'),
+				'locked'  => __('Locked-out', 'really-simple-ssl'),
+				'trusted' => __('Trusted', 'really-simple-ssl'),
+			],
+			'disabled'         => false,
+			'default'          => false,
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'geo_blocklist_enabled' => true,
+				]
+			],
+			'columns'          => [
+				[
+					'name'       => __('', 'really-simple-ssl'),
+					'sortable'   => true,
+					'searchable' => false,
+					'column'     => 'flag',
+					'width'      => '5%',
+				],
+				[
+					'name'       => __('Country', 'really-simple-ssl'),
+					'sortable'   => true,
+					'searchable' => true,
+					'column'     => 'country_name',
+					'width'      => '250px',
+				],
+				[
+					'name'    => __('Continent', 'really-simple-ssl'),
+					'sortable' => false,
+					'searchable' => false,
+					'column'  => 'region_name',
+					'width'   => '30%',
+				],
+				[
+					'name'     => __('Status', 'really-simple-ssl'),
+					'sortable' => false,
+					'column'   => 'status',
+					'width'    => '20%',
+				],
+				[
+					'name'     => '',
+					'sortable' => false,
+					'column'   => 'action',
+					'width'    => '180px',
+				],
+			],
+		],
+		[
+			'id'                   => 'do_not_edit_htaccess', //field is removed if not enabled
 			'menu_id'              => 'general',
 			'group_id'             => 'general',
 			'type'                 => 'checkbox',
@@ -1022,13 +1122,13 @@ function rsssl_fields( $load_values = true ) {
 					'width'     => '20%',
 				],
 				[
-					'name'     => '',
+					'name'     => __( '', 'really-simple-ssl' ),
 					'sortable' => false,
 					'column'   => 'statusControl',
 					'width'     => '20%',
 				],
 				[
-					'name'     => '',
+					'name'     => __( '', 'really-simple-ssl' ),
 					'sortable' => false,
 					'column'   => 'deleteControl',
 					'width'     => '20%',
@@ -1658,7 +1758,7 @@ function rsssl_fields( $load_values = true ) {
 			'help'     => [
 				'label' => 'default',
 				'url'   => 'https://really-simple-ssl.com/instructions/password-security/?mtm_campaign=definition&mtm_source=free',
-				'title' => __( "Enforce strong passwords", 'really-simple-ssl' ),
+				'title' => __( "Enforce Strong Passwords", 'really-simple-ssl' ),
 				'text'  => __( 'Improve the default WordPress password strength check. You can also enforce frequent password changes for user roles.', 'really-simple-ssl' ).' '.__('They might be misused if you don’t actively tell the browser to disable these features.', 'really-simple-ssl' ),
 			],
 			'disabled' => false,

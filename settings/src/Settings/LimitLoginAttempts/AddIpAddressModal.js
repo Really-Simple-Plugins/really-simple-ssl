@@ -9,17 +9,19 @@ import {
 import IpAddressDataTableStore   from "./IpAddressDataTableStore";
 import {__} from "@wordpress/i18n";
 import IpAddressInput from "./IpAddressInput";
-import Cidr from "./Cidr";
 import EventLogDataTableStore from "../EventLog/EventLogDataTableStore";
+import FieldsData from "../FieldsData";
 
 const AddIpAddressModal = (props) => {
-    const { inputRangeValidated, fetchCidrData, ipAddress, setIpAddress, maskError, dataLoaded, addRow, resetRange} = IpAddressDataTableStore();
+    const { inputRangeValidated, fetchCidrData, ipAddress, setIpAddress, maskError, dataLoaded, updateRow, resetRange} = IpAddressDataTableStore();
     const [rangeDisplay, setRangeDisplay] = useState(false);
     const {fetchDynamicData} = EventLogDataTableStore();
     const [resetFlag, setResetFlag] = useState(false);
+    const {showSavedSettingsNotice} = FieldsData();
+
     //we add a function to handle the range fill
     const handleRangeFill = () => {
-        //we toggle the range displayß
+        //we toggle the range display.
         setRangeDisplay(!rangeDisplay);
     }
 
@@ -31,11 +33,17 @@ const AddIpAddressModal = (props) => {
         }
     }, [inputRangeValidated]);
 
-    function handleSubmit() {
+    async function handleSubmit() {
         let status = props.status;
         // we check if statusSelected is not empty
         if (ipAddress && maskError === false) {
-            addRow(ipAddress, status, props.dataActions);
+            await updateRow(ipAddress, status, props.dataActions).then((response) => {
+                if (response.success) {
+                    showSavedSettingsNotice(response.message);
+                } else {
+                    showSavedSettingsNotice(response.message, 'error');
+                }
+            });
             //we clear the input
             resetRange();
             //we close the modal

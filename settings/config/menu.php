@@ -1,5 +1,5 @@
 <?php
-defined('ABSPATH') or die();
+defined( 'ABSPATH' ) or die();
 
 function rsssl_menu() {
 	if ( ! rsssl_user_can_manage() ) {
@@ -97,7 +97,7 @@ function rsssl_menu() {
 							'networkwide_required' => true,
 							'premium_title'         => __( "The Essentials", 'really-simple-ssl' ),
 							'premium'              => true,
-							'premium_text'         => __( "Protecting your website visitors from malicious attacks and data breaches should be your #1 priority, start with the essentials with Really Simple Security", 'really-simple-ssl' ),
+							'premium_text'         => __( "Protecting your website visitors from mailicious attacks and data breaches should be your #1 priority, start with the essentials with Really Simple Security", 'really-simple-ssl' ),
 							'upgrade'              => 'https://really-simple-ssl.com/pro/?mtm_campaign=recommendedheaders&mtm_source=free&mtm_content=upgrade',
 							'helpLink' => 'https://really-simple-ssl.com/instructions/about-recommended-security-headers/?mtm_campaign=instructions&mtm_source=free',
 						],
@@ -277,7 +277,7 @@ function rsssl_menu() {
 							'premium_text'         => __( 'Get two-factor authentication with Really Simple SSL Pro', 'really-simple-ssl' ),
 							'upgrade'              => 'https://really-simple-ssl.com/pro/?mtm_campaign=2fa&mtm_source=free&mtm_content=upgrade',
 							'helpLink'             => 'https://really-simple-ssl.com/instructions/about-login-protection/?mtm_campaign=instructions&mtm_source=free',
-							'title'                =>  __('Two-step verification', 'really-simple-ssl'),
+							'title'                =>  __('Two-Step verification', 'really-simple-ssl'),
 							'groups'  => [
 								[
 									'id'       => 'two_fa_general',
@@ -286,7 +286,7 @@ function rsssl_menu() {
 									'premium_text'         => __( "Start login protection by adding an additional layer during authentication. This will leave authentication less dependent on just a single password. Want to force strong passwords? Check out Password Security.", 'really-simple-ssl' ),
 									'helpLink'      => 'https://really-simple-ssl.com/instructions/about-login-protection',
 									'upgrade'              => 'https://really-simple-ssl.com/pro/?mtm_campaign=2fa&mtm_source=free&mtm_content=upgrade',
-									'title'    => __( 'Two-step verification', 'really-simple-ssl' ),
+									'title'    => __( 'Two-Step Verification', 'really-simple-ssl' ),
 									'intro'    => __( 'Enhancing the authentication process and optimizing user management makes Login Protection a foundational element in securing your website.', 'really-simple-ssl' ),
 								],
 								[
@@ -332,14 +332,14 @@ function rsssl_menu() {
 						[
 							'id'                   => 'password_security',
 							'networkwide_required' => true,
-							'title'                => __('Password security','really-simple-ssl'),
+							'title'                => __('Password Security','really-simple-ssl'),
 							'helpLink'             => 'https://really-simple-ssl.com/instructions/password-security/?mtm_campaign=instructions&mtm_source=free',
 							'groups'               => [
 								[
 									'id'           => 'password_security_passwords',
 									'group_id'     => 'password_security_passwords',
 									'upgrade'              => 'https://really-simple-ssl.com/pro/?mtm_campaign=passwordsecurity&mtm_source=free&mtm_content=upgrade',
-									'premium_title'         => __( 'Password security', 'really-simple-ssl' ),
+									'premium_title'         => __( 'Password Security', 'really-simple-ssl' ),
 									'premium_text'         => __( 'Enforce secure password policies for your users by requiring strong passwords, and expiring passwords after a period of your choosing.', 'really-simple-ssl' ),
 									'premium'      => true,
 									'helpLink'     => 'https://really-simple-ssl.com/instructions/password-security/?mtm_campaign=instructions&mtm_source=free',
@@ -494,18 +494,89 @@ function rsssl_menu() {
 											],
 											[
 												'id'    => 'countries',
-												'title' => __( 'Countries', 'really-simple-ssl' ),
+												'title' => __( 'Allowed', 'really-simple-ssl' ),
 											],
 										],
 									],
-									'title'        => __( 'Regions', 'really-simple-ssl' ),
-									'intro'        => __( 'If your site is only intended for users to login from specific geographical regions, you can entirely prevent logins from certain continents or countries.',
+									'title'         => __( 'Regions', 'really-simple-ssl' ),
+									'intro'         => __( 'If your site is only intended for users to login from specific geographical regions, you can entirely prevent logins from certain continents or countries.',
 										'really-simple-ssl' ),
 								]
 							],
 						],
 					],
 
+				],
+				[
+					'id' => 'access_control',
+					'title' => __( 'Access Control', 'really-simple-ssl' ),
+					'featured'   => false,
+					'new'        => true,
+					'menu_items' => [
+						[
+							'id'      => 'geo_block_list',
+							'title'   => __( 'Region restrictions', 'really-simple-ssl' ),
+							'premium' => true,
+							'groups'  => [
+								[
+									'id'            => 'geo_block_list_general',
+									'group_id'      => 'geo_block_list_general',
+									'helpLink'      => 'https://really-simple-ssl.com/instructions/instructions/about-region-restrictions',
+									'premium'       => true,
+									'premium_title' => __( 'Geo Blocklist General', 'really-simple-ssl' ),
+									'premium_text'  => __( 'Restrict access from specific countries or continents. You can also allow only specific countries.', 'really-simple-ssl' ),
+									'upgrade'       => 'https://really-simple-ssl.com/pro/?mtm_campaign=lla&mtm_source=free&mtm_content=upgrade',
+									'title'         => __( 'Region restrictions', 'really-simple-ssl' ),
+									'intro'         => __( 'Block visitors from specific countries, or continents. You can also allow only specific countries.',
+										'really-simple-ssl' ),
+								],
+								[
+									'id'                   => 'geo_block_list_listing',
+									'group_id'             => 'geo_block_list_white_listing',
+									'networkwide_required' => true,
+									'premium'              => true,
+									'premium_text'         => __( 'This feature allows you to block visitors from your website based on country',
+										'really-simple-ssl' ),
+									'upgrade'              => 'https://really-simple-ssl.com/pro/?mtm_campaign=cops&mtm_source=free&mtm_content=upgrade',
+									'title'                => __( 'Trusted IP addresses', 'really-simple-ssl' ),
+									'premium_title'        => __( 'Trusted IP addresses', 'really-simple-ssl' ),
+									'intro' 			  => __( 'Add, remove and list ip-addresses exempt from being blocked. → Here you can add IP addresses that should never be blocked by region restrictions. We will automatically add the IP address of the administrator that enabled Region Restrictions.',
+										'really-simple-ssl' ),
+								],
+								[
+									'id'                   => 'geo_block_list_listing',
+									'group_id'             => 'geo_block_list_listing',
+									'networkwide_required' => true,
+									'premium'              => true,
+									'premium_text'         => __( 'This feature allows you to block visitors from your website based on country',
+										'really-simple-ssl' ),
+									'upgrade'              => 'https://really-simple-ssl.com/pro/?mtm_campaign=cops&mtm_source=free&mtm_content=upgrade',
+									'title'                => __( 'Regions', 'really-simple-ssl' ),
+									'premium_title'        => __( 'Regions', 'really-simple-ssl' ),
+									'intro' 			  => __( 'Restrict access to your site based on user location. By default, all regions are allowed. You can also block countries from a continent.',
+										'really-simple-ssl' ),
+									'groupFilter'          => [
+										'default' => 'countries',
+										'id'      => 'rsssl-group-filter-geo_block_list',
+										'options' => [
+											[
+												'id'    => 'blocked',
+												'title' => __( 'Blocked', 'really-simple-ssl' ),
+											],
+											[
+												'id'   => 'regions',
+												'title' => __( 'Continents', 'really-simple-ssl' ),
+											],
+											[
+												'id'    => 'countries',
+												'title' => __( 'Allowed', 'really-simple-ssl' ),
+											],
+										],
+									],
+								],
+							]
+						],
+					]
 				],
 			],
 		],

@@ -65,20 +65,14 @@ class rsssl_hardening {
 	}
 
 	/**
-	 * Gets the count of all available updates for core, plugins, and themes.
-	 *
-	 * @return int The count of all available updates.
+	 * @return int
 	 */
 	public function getAllUpdatesCount(): int
 	{
-		$updatesData = wp_get_update_data();
-		// Checks if the 'counts' key exists in the array and it's an array itself.
-		if (isset($updatesData['counts']) && is_array($updatesData['counts'])) {
-			//we only want core, plugins and themes.
-			$updatesCounts = array_slice($updatesData['counts'], 0, 3);
-			return array_sum($updatesCounts);
-		}
-		// Fallback return in case there's no 'counts' key or it's not an array.
-		return 0;
+		$updates = wp_get_update_data();
+		//we only want core, plugins and themes
+		$updates = array_slice($updates, 0, 3);
+
+		return array_sum($updates);
 	}
 }

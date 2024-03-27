@@ -75,12 +75,10 @@ function rsssl_get_chunk_translations($path = 'settings/build'  ) {
 		if (strpos($file, '.js') === false) {
 			continue;
 		}
-		$chunk_handle = str_replace('.js', '', $file );
+		$chunk_handle = 'rsssl-chunk-'.$file;
 		//temporarily register the script, so we can get a translations object.
 		wp_register_script( $chunk_handle, plugins_url('build/'.$file, __FILE__), [], true );
-		$language_path = defined('rsssl_pro') ? rsssl_path . 'languages' : false;
-		$localeData = load_script_textdomain( $chunk_handle, 'really-simple-ssl', $language_path );
-
+		$localeData = load_script_textdomain( $chunk_handle, 'really-simple-ssl' );
 		if (!empty($localeData)){
 			$json_translations[] = $localeData;
 		}
@@ -97,6 +95,7 @@ function rsssl_get_chunk_translations($path = 'settings/build'  ) {
 		'js_file'  => $jsFilename,
 	];
 }
+
 
 function rsssl_plugin_admin_scripts()
 {
@@ -453,17 +452,17 @@ function rsssl_plugin_actions($data)
  *
  * @return string
  */
-function rsssl_ssltest_run( $data ) {
-	if ( ! rsssl_user_can_manage() ) {
+function rsssl_ssltest_run($data)
+{
+	if (!rsssl_user_can_manage()) {
 		return '';
 	}
-	$url      = $data['url'];
-	$response = wp_safe_remote_get( $url );
-	$data     = wp_remote_retrieve_body( $response );
-	if ( empty( $data ) ) {
-		$data = [ 'errors' => 'Request failed, please try again.' ];
+	$url = $data['url'];
+	$response = wp_remote_get($url);
+	$data = wp_remote_retrieve_body($response);
+	if (empty($data)) {
+		$data = ['errors' => 'Request failed, please try again.'];
 	}
-
 	return $data;
 }
 

@@ -3,26 +3,33 @@ import {Modal, MenuItem, SelectControl, Button} from "@wordpress/components";
 import UserDataTableStore from "./UserDataTableStore";
 import EventLogDataTableStore from "../EventLog/EventLogDataTableStore";
 import {__} from "@wordpress/i18n";
+import FieldsData from "../FieldsData";
 
 
 const AddUserModal = (props) => {
     if (!props.isOpen) return null;
 
-    const {addRow, maskError} = UserDataTableStore();
+    const {updateRow} = UserDataTableStore();
     const {fetchDynamicData} = EventLogDataTableStore();
     const [user, setUser] = useState('');
+    const {showSavedSettingsNotice} = FieldsData();
 
     async function handleSubmit() {
         let status = props.status;
         // we check if statusSelected is not empty
         if (user !== '') {
-            await addRow(user, status, props.dataActions);
+            await updateRow(user, status, props.dataActions).then((response) => {
+               if(response.success) {
+                   showSavedSettingsNotice(response.message);
+               } else {
+                     showSavedSettingsNotice(response.message, 'error');
+               }
+            });
             //we clear the input
             setUser('');
             await fetchDynamicData('event_log');
-            //we close the modal
-            props.onRequestClose();
         }
+        props.onRequestClose();
     }
 
     return (
