@@ -21,6 +21,7 @@ function rsssl_upgrade() {
 			)
 		);
 		foreach ( $dismiss_options as $dismiss_option ) {
+			if ( !is_string($dismiss_option) ) continue;
 			update_option( 'rsssl_' . $dismiss_option . '_dismissed', true, false );
 		}
 		delete_transient( 'rsssl_plusone_count' );

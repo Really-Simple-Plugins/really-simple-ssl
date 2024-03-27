@@ -1,36 +1,35 @@
-import {useEffect, useState, useCallback} from 'react';
-import DataTable, {createTheme} from "react-data-table-component";
+import { useEffect, useState, useCallback } from 'react';
+import DataTable, { createTheme } from "react-data-table-component";
 import FieldsData from "../FieldsData";
 import CountryDataTableStore from "./CountryDataTableStore";
 import EventLogDataTableStore from "../EventLog/EventLogDataTableStore";
 import FilterData from "../FilterData";
 import Flag from "../../utils/Flag/Flag";
-import {__} from '@wordpress/i18n';
+import { __ } from '@wordpress/i18n';
 import useFields from "../FieldsData";
-import SearchBar from "../DynamicDataTable/SearchBar";
 
 const CountryDatatable = (props) => {
     const {
         CountryDataTable,
         dataLoaded,
-        fetchData,
+        fetchCountryData,
         processing,
         handleCountryTableFilter,
-        updateRow,
+        addRow,
+        removeRow,
         pagination,
         handleCountryTablePageChange,
         handleCountryTableRowsChange,
         handleCountryTableSort,
         handleCountryTableSearch,
         addRegion,
-        resetRegions,
+        removeRegion,
         addRowMultiple,
+        removeRowMultiple,
         resetRow,
         resetMultiRow,
-        updateRowRegion,
         dataActions,
         rowCleared,
-        setDataActions,
     } = CountryDataTableStore();
 
     const {showSavedSettingsNotice, saveFields} = FieldsData();
@@ -51,8 +50,6 @@ const CountryDatatable = (props) => {
     const [rowsSelected, setRowsSelected] = useState([]);
     const moduleName = 'rsssl-group-filter-limit_login_attempts_country';
     const {fields, fieldAlreadyEnabled, getFieldValue} = useFields();
-    const [tableHeight, setTableHeight] = useState(600);  // Starting height
-    const rowHeight = 50; // Height of each row.
 
     const buildColumn = useCallback((column) => ({
         //if the filter is set to region and the columns = status we do not want to show the column
@@ -79,15 +76,7 @@ const CountryDatatable = (props) => {
         }
         setProcessingFilter(processing);
         handleCountryTableFilter('status', currentFilter);
-
     }, [moduleName, handleCountryTableFilter, getCurrentFilter(moduleName), setSelectedFilter, CountryDatatable, processing]);
-
-    useEffect(() => {
-        if (dataActions.filterColumn === 'status') {
-            const {search, searchColumns, ...rest} = dataActions;
-            setDataActions(rest);
-        }
-    }, [dataActions.filterColumn])
 
     useEffect(() => {
         setRowsSelected([]);
@@ -97,7 +86,7 @@ const CountryDatatable = (props) => {
     useEffect(() => {
         //we make sure the dataActions are changed in the store before we fetch the data
         if (dataActions) {
-            fetchData(field.action, dataActions)
+            fetchCountryData(field.action, dataActions)
         }
     }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, dataActions.currentRowsPerPage, fieldAlreadyEnabled('enable_limited_login_attempts')]);
 
@@ -139,106 +128,74 @@ const CountryDatatable = (props) => {
     const allowRegionByCode = useCallback(async (code, regionName = '') => {
         if (Array.isArray(code)) {
             const ids = code.map(item => item.id);
-            const regions = code.map(item => item.iso2_code);
-            regions.forEach((code) => {
-                resetRegions(code, dataActions).then(
-                    (response) => {
-                        if (response.success) {
-                            showSavedSettingsNotice(response.message);
-                        } else {
-                            showSavedSettingsNotice(response.message, 'error');
-                        }
-                    });
-            });
+            const regions = code.map(item => item.region);
+            await removeRegions(ids, '',dataActions);
+            let regionsString = regions.join(', ');
+            showSavedSettingsNotice(__('%s is now allowed', 'really-simple-ssl')
+                .replace('%s',regionsString));
             setRowsSelected([]);
         } else {
-            await resetRegions(code, dataActions);
+            await removeRegion(code, 'blocked', dataActions);
             showSavedSettingsNotice(__('%s is now allowed', 'really-simple-ssl')
-                .replace('%s', regionName));
+                .replace('%s',regionName));
         }
         await fetchDynamicData('event_log');
-    }, [resetRegions, getCurrentFilter(moduleName), dataActions]);
+    }, [removeRegion, getCurrentFilter(moduleName), dataActions]);
 
 
     const allowMultiple = useCallback((rows) => {
         const ids = rows.map(item => item.id);
-        resetMultiRow(ids, dataActions).then((response) => {
-            if (response && response.success) {
-                showSavedSettingsNotice(response.message);
-            } else {
-                showSavedSettingsNotice(response.message, 'error');
-            }
-        });
+        resetMultiRow(ids, 'blocked', dataActions);
     }, [resetMultiRow, getCurrentFilter(moduleName), dataActions]);
 
     const allowById = useCallback((id) => {
-        resetRow(id, dataActions).then(
-            (response) => {
-                if (response.success) {
-                    showSavedSettingsNotice(response.message);
-                }
-            }
-        );
-    }, [resetRow, getCurrentFilter(moduleName), dataActions]);
+        resetRow(id, 'blocked', dataActions);
+    }, [resetRow,getCurrentFilter(moduleName), dataActions]);
 
     const blockRegionByCode = useCallback(async (code, region = '') => {
         if (Array.isArray(code)) {
             const ids = code.map(item => item.id);
-            const regions = code.map(item => item.iso2_code);
-            await updateRowRegion(regions, 'blocked', dataActions).then(
-                (response) => {
-                    if (response.success) {
-                        showSavedSettingsNotice(response.message);
-                    } else {
-                        showSavedSettingsNotice(response.message, 'error');
-                    }
-                }
-            );
+            const regions = code.map(item => item.region);
+            await addRegions(ids, 'blocked', dataActions);
+            let regionsString = regions.join(', ');
+            showSavedSettingsNotice(__('%s has been blocked', 'really-simple-ssl')
+                .replace('%s',regionsString));
+            setRowsSelected([]);
         } else {
-            updateRowRegion(code, 'blocked', dataActions).then(
-                (response) => {
-                    if (response.success) {
-                        showSavedSettingsNotice(response.message);
-                    } else {
-                        showSavedSettingsNotice(response.message, 'error');
-                    }
-                });
+            await addRegion(code, 'blocked', dataActions);
+            showSavedSettingsNotice(__('%s has been blocked', 'really-simple-ssl')
+                .replace('%s',region));
         }
 
         await fetchDynamicData('event_log');
 
     }, [addRegion, getCurrentFilter(moduleName), dataActions]);
 
-    const blockCountryByCode = useCallback(async (code) => {
+    const allowCountryByCode = useCallback(async (code) => {
         if (Array.isArray(code)) {
             const ids = code.map(item => item.iso2_code);
-
-            await updateRow(ids, 'blocked', dataActions).then(
-                (response) => {
-                    if (response.success) {
-                        showSavedSettingsNotice(response.message);
-                    } else {
-                        showSavedSettingsNotice(response.message, 'error');
-                    }
-                }
-            );
-
+            await removeRowMultiple(ids, 'blocked', dataActions );
             setRowsSelected([]);
         } else {
-            await updateRow(code, 'blocked', dataActions).then(
-                (response) => {
-                    if (response.success) {
-                        showSavedSettingsNotice(response.message);
-                    } else {
-                        showSavedSettingsNotice(response.message, 'error');
-                    }
-                }
-            );
+            await removeRow(code, 'blocked', dataActions);
         }
 
         await fetchDynamicData('event_log');
 
-    }, [updateRow, addRowMultiple, dataActions, getCurrentFilter(moduleName)]);
+    }, [removeRow, removeRowMultiple, dataActions, getCurrentFilter(moduleName)]);
+
+    const blockCountryByCode = useCallback(async (code) => {
+        if (Array.isArray(code)) {
+            const ids = code.map(item => item.iso2_code);
+            await addRowMultiple(ids, 'blocked', dataActions);
+            setRowsSelected([]);
+        } else {
+            await addRow(code, 'blocked', dataActions);
+        }
+
+        await fetchDynamicData('event_log');
+
+    }, [addRow, addRowMultiple, dataActions, getCurrentFilter(moduleName)]);
 
     const data = {...CountryDataTable.data};
 
@@ -250,24 +207,23 @@ const CountryDatatable = (props) => {
                     fontSize: '2em',
                 }}
                 title={title}
-                continent={(getCurrentFilter(moduleName) === 'regions')}
             />
         </>
     ), []);
 
-    const ActionButton = ({onClick, children, className}) => (
+    const ActionButton = ({ onClick, children, className }) => (
         // <div className={`rsssl-action-buttons__inner`}>
-        <button
-            className={`button ${className} rsssl-action-buttons__button`}
-            onClick={onClick}
-            disabled={processing}
-        >
-            {children}
-        </button>
+            <button
+                className={`button ${className} rsssl-action-buttons__button`}
+                onClick={onClick}
+                disabled={processing}
+            >
+                {children}
+            </button>
         // </div>
     );
 
-    const generateActionButtons = useCallback((id, status, region_name, db_id ) => (
+    const generateActionButtons = useCallback((id, status, region_name) => (
         <div className="rsssl-action-buttons">
             {getCurrentFilter(moduleName) === 'blocked' && (
                 <ActionButton onClick={() => allowById(id)}
@@ -291,7 +247,7 @@ const CountryDatatable = (props) => {
                 <>
                     {status === 'blocked' ? (
                         <ActionButton
-                            onClick={() => allowById(db_id)} className="button-secondary">
+                            onClick={() => allowCountryByCode(id)} className="button-secondary">
                             {__("Allow", "really-simple-ssl")}
                         </ActionButton>
                     ) : (
@@ -303,13 +259,14 @@ const CountryDatatable = (props) => {
                 </>
             )}
         </div>
-    ), [getCurrentFilter, moduleName, allowById, blockRegionByCode, allowRegionByCode, blockCountryByCode]);
+    ), [getCurrentFilter, moduleName, allowById, blockRegionByCode, allowRegionByCode, blockCountryByCode, allowCountryByCode]);
+
 
 
     for (const key in data) {
         const dataItem = {...data[key]};
         if (getCurrentFilter(moduleName) === 'regions' || getCurrentFilter(moduleName) === 'countries') {
-            dataItem.action = generateActionButtons(dataItem.attempt_value, dataItem.status, dataItem.region, dataItem.db_id);
+            dataItem.action = generateActionButtons(dataItem.attempt_value, dataItem.status, dataItem.region);
         } else {
             dataItem.action = generateActionButtons(dataItem.id);
         }
@@ -318,19 +275,13 @@ const CountryDatatable = (props) => {
         data[key] = dataItem;
     }
 
-    const options = Object.entries(props.field.options).map(([value, label]) => ({value, label}));
+    const options = Object.entries(props.field.options).map(([value, label]) => ({ value, label }));
 
-    let paginationSet;
-    paginationSet = typeof pagination !== 'undefined';
+    let paginationSet = true;
+    if (typeof pagination === 'undefined') {
+        paginationSet = false;
+    }
 
-    useEffect(() => {
-        if (Object.keys(data).length === 0 ) {
-            setTableHeight(100); // Adjust depending on your UI measurements
-        } else {
-            setTableHeight(rowHeight * (paginationSet ? pagination.perPage + 2 : 12)); // Adjust depending on your UI measurements
-        }
-
-    }, [paginationSet, pagination?.perPage, data]);
 
     return (
         <>
@@ -338,7 +289,22 @@ const CountryDatatable = (props) => {
                 <div>
                     {/* reserved for left side buttons */}
                 </div>
-                <SearchBar handleSearch={handleCountryTableSearch} searchableColumns={searchableColumns}/>
+                <div className="rsssl-search-bar">
+                    <div className="rsssl-search-bar__inner">
+                        <div className="rsssl-search-bar__icon"></div>
+                        <input
+                            type="text"
+                            className="rsssl-search-bar__input"
+                            placeholder={__("Search", "really-simple-ssl")}
+                            disabled={processing}
+                            onKeyUp={event => {
+                                if (event.key === 'Enter') {
+                                    handleCountryTableSearch(event.target.value, searchableColumns);
+                                }
+                            }}
+                         />
+                    </div>
+                </div>
             </div>
             {rowsSelected.length > 0 && (
                 <div
@@ -355,7 +321,11 @@ const CountryDatatable = (props) => {
                             {getCurrentFilter(moduleName) === 'countries' && (
                                 <>
                                     <ActionButton
-                                        onClick={() => blockCountryByCode(rowsSelected)} className="button-primary">
+                                        onClick={() => allowCountryByCode(rowsSelected)}>
+                                        {__("Allow", "really-simple-ssl")}
+                                    </ActionButton>
+                                    <ActionButton
+                                        onClick={() => blockCountryByCode(rowsSelected)}  className="button-primary">
                                         {__("Block", "really-simple-ssl")}
                                     </ActionButton>
                                 </>
@@ -369,30 +339,28 @@ const CountryDatatable = (props) => {
                             {getCurrentFilter(moduleName) === 'regions' && (
                                 <>
                                     <ActionButton
-                                        onClick={() => blockRegionByCode(rowsSelected)} className="button-primary">
-                                        {__("Block", "really-simple-ssl")}
-                                    </ActionButton>
-                                    <ActionButton
-                                        onClick={() => allowRegionByCode(rowsSelected)} className="button-secondary">
+                                        onClick={() => allowRegionByCode(rowsSelected)}  className="button-primary">
                                         {__("Allow", "really-simple-ssl")}
                                     </ActionButton>
-
+                                    <ActionButton
+                                        onClick={() => blockRegionByCode(rowsSelected)}>
+                                        {__("Block", "really-simple-ssl")}
+                                    </ActionButton>
                                 </>
                             )}
                         </div>
                     </div>
                 </div>
             )}
-            <div style={{ height: `${tableHeight}px`, position: 'relative' }}>
             <DataTable
                 columns={columns}
-                data={Object.values(data)}
+                data={processing? [] : Object.values(data)}
                 dense
                 pagination={!processing}
                 paginationServer
-                paginationTotalRows={paginationSet ? pagination.totalRows : 10}
-                paginationPerPage={paginationSet ? pagination.perPage : 10}
-                paginationDefaultPage={paginationSet ? pagination.currentPage : 1}
+                paginationTotalRows={paginationSet? pagination.totalRows: 10}
+                paginationPerPage={paginationSet? pagination.perPage: 10}
+                paginationDefaultPage={paginationSet?pagination.currentPage: 1}
                 paginationComponentOptions={{
                     rowsPerPageText: __('Rows per page:', 'really-simple-ssl'),
                     rangeSeparatorText: __('of', 'really-simple-ssl'),
@@ -414,7 +382,6 @@ const CountryDatatable = (props) => {
                 theme="really-simple-plugins"
                 customStyles={customStyles}
             />
-            </div>
             {!enabled && (
                 <div className="rsssl-locked">
                     <div className="rsssl-locked-overlay"><span

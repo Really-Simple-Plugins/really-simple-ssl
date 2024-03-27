@@ -40,9 +40,11 @@ class Rsssl_Folder_Name {
 		$upload_dir  = wp_upload_dir();
 		$folder_path = $upload_dir['basedir'] . '/' . $this->folderName;
 
-		if ( ! file_exists( $folder_path ) ) {
+		if ( ! file_exists( $folder_path ) && is_writable($upload_dir['basedir'] ) ) {
 			if ( ! mkdir( $folder_path, 0755, true ) && ! is_dir( $folder_path ) ) {
-				throw new \RuntimeException( sprintf( 'Directory "%s" was not created', $folder_path ) );
+				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+					error_log( sprintf( 'Really Simple SSL: Directory "%s" was not created', $folder_path ) );
+				}
 			}
 		}
 	}

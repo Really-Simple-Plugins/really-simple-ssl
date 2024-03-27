@@ -36,8 +36,6 @@ import TwoFaDataTable from "./TwoFA/TwoFaDataTable";
 import EventLogDataTable from "./EventLog/EventLogDataTable";
 import DOMPurify from "dompurify";
 import RolesDropDown from "./RolesDropDown";
-import GeoDatatable from "./GeoBlockList/GeoDatatable";
-import WhiteListDatatable from "./GeoBlockList/WhiteListDatatable";
 
 const Field = (props) => {
     let scrollAnchor = React.createRef();
@@ -447,29 +445,6 @@ const Field = (props) => {
             </div>
         )
     }
-
-    if (field.type === 'geo-datatable') {
-        return (
-            <div className={highLightClass} ref={scrollAnchor}>
-                <GeoDatatable
-                    field={props.field}
-                    action={props.field.action}
-                />
-            </div>
-        )
-    }
-
-    if (field.type === 'geo-ip-datatable') {
-        return (
-            <div className={highLightClass} ref={scrollAnchor}>
-                <WhiteListDatatable
-                    field={props.field}
-                    action={props.field.action}
-                />
-            </div>
-        )
-    }
-
     if (field.type === 'roles_dropdown') {
         return (
             <div className={highLightClass} ref={scrollAnchor}>
