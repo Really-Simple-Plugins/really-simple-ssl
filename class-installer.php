@@ -82,6 +82,7 @@ if ( ! class_exists( 'rsssl_installer' ) ) {
 			update_site_option( $prefix . '_tour_started', false );
 			update_site_option( $prefix . '_tour_shown_once', true );
 			delete_transient( $prefix . '_redirect_to_settings' );
+			delete_transient( $prefix . '_redirect_to_settings_page' );
 		}
 
 		/**
