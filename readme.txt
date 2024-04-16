@@ -112,6 +112,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 
 == Changelog ==
 = 8.1.0 =
+* April 24th, 2024
 * Improvement: some string corrections
 * Improvement: catch not existing rsssl_version_compare
 * Improvement: check for openSSL module existence
