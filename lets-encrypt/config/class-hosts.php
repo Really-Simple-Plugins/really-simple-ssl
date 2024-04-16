@@ -569,6 +569,15 @@ if ( ! class_exists( "rsssl_le_hosts" ) ) {
 		            'api' => false,
 		            'ssl_installation_link' => '',
 	            ),
+	            'hetzner' => array(
+		            'name' => 'Hetzner',
+		            'installation_renewal_required' => false,
+		            'local_ssl_generation_needed' => false,
+		            'free_ssl_available' => 'activation_reguired',
+		            'hosting_dashboard' => 'konsoleh',
+		            'api' => false,
+		            'ssl_installation_link' => '',
+	            ),
             );
 
 	        $this->not_local_certificate_hosts = $this->filter_hosts( 'local_ssl_generation_needed', false);

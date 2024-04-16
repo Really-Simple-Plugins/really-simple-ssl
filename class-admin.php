@@ -311,7 +311,7 @@ class rsssl_admin {
 
 		if ( isset( $_GET['action'] ) && 'uninstall_keep_ssl' === $_GET['action'] ) {
 			//deactivate plugin, but don't revert to http.
-			$plugin = $this->plugin_dir . '/' . $this->plugin_filename;
+			$plugin = $this->get_current_rsssl_dirname() . '/' . $this->plugin_filename;
 			$plugin = plugin_basename( trim( $plugin ) );
 
 			if ( is_multisite() ) {
@@ -1949,12 +1949,12 @@ class rsssl_admin {
 		);
 
 		$curl_error            = get_transient( 'rsssl_curl_error' );
-		$current_plugin_folder = $this->get_current_rsssl_free_dirname();
+		$current_plugin_folder = $this->get_current_rsssl_dirname();
 
 		//get expiry date, if we have one.
 		$certinfo    = get_transient( 'rsssl_certinfo' );
 		$end_date    = $certinfo['validTo_time_t'] ?? false;
-		$expiry_date = ! empty( $end_date ) ? gmdate( get_option( 'date_format' ), $end_date ) : __( '(Unknown)', 'really-simple-ssl' );
+		$expiry_date = ! empty( $end_date ) ? gmdate( get_option( 'date_format' ), $end_date ) : __( '(unknown)', 'really-simple-ssl' );
 
 		$notices = array(
 			'load_balancer_fix'                    => array(
@@ -2009,20 +2009,6 @@ class rsssl_admin {
 					),
 				),
 			),
-
-			'non_default_plugin_folder'            => array(
-				'callback' => 'RSSSL()->admin->uses_default_folder_name',
-				'score'    => 30,
-				'output'   => array(
-					'false' => array(
-						'msg'  =>
-							// translators: %s is replaced with the folder name.
-							sprintf( __( 'The Really Simple SSL plugin folder in the /wp-content/plugins/ directory has been renamed to %1$s. This might cause issues when deactivating, or with premium add-ons. To fix this you can rename the Really Simple SSL folder back to the default %2$s.', 'really-simple-ssl' ), '<b>' . $current_plugin_folder . '</b>', '<b>really-simple-ssl</b>' ),
-						'url'  => 'https://really-simple-ssl.com/knowledge-base/why-you-should-use-the-default-plugin-folder-name-for-really-simple-ssl/',
-						'icon' => 'warning',
-					),
-				),
-			),
 			'mixed_content_scan'                   => array(
 				'dismiss_on_upgrade' => true,
 				'condition'          => array( 'rsssl_ssl_enabled' ),
@@ -2038,7 +2024,6 @@ class rsssl_admin {
 					),
 				),
 			),
-
 			'ssl_enabled'                          => array(
 				'callback' => 'rsssl_ssl_enabled',
 				'score'    => 30,
@@ -2420,6 +2405,22 @@ class rsssl_admin {
 			        ),
 		        ),
 	        ),
+			'plain_permalinks' => array(
+				'condition'  => array(
+					'rsssl_plain_permalinks_enabled',
+				),
+				'callback' => '_true_',
+				'output' => array(
+					'true' => array(
+						'msg' => __( "Your site uses plain permalinks, which causes issues with the REST API. Please use a different permalinks configuration.", 'really-simple-ssl' ),
+						'icon' => 'open',
+						'admin_notice' => false,
+						'dismissible' => true,
+						'plusone' => false,
+						'url' => admin_url('options-permalink.php'),
+					),
+				),
+			),
         );
 
 		//on multisite, don't show the notice on subsites.
@@ -2847,24 +2848,8 @@ class rsssl_admin {
 	 *
 	 */
 
-	public function get_current_rsssl_free_dirname() {
+	public function get_current_rsssl_dirname() {
 		return basename( __DIR__ );
-	}
-
-
-	/**
-	 *
-	 * Check the current free plugin folder path and compare it to default path to detect if the plugin folder has been renamed
-	 *
-	 * @return boolean
-	 *
-	 * @since 3.1
-	 *
-	 */
-
-	public function uses_default_folder_name() {
-		$current_plugin_path = $this->get_current_rsssl_free_dirname();
-		return $this->plugin_dir === $current_plugin_path;
 	}
 
 	/**
@@ -3015,6 +3000,12 @@ if ( ! function_exists( 'rsssl_letsencrypt_wizard_url' ) ) {
 			) . "#letsencrypt$page";
 		}
 	}
+}
+
+if ( ! function_exists('rsssl_plain_permalinks_enabled')) {
+    function rsssl_plain_permalinks_enabled() {
+        return ! get_option( 'permalink_structure' );
+    }
 }
 
 if ( ! function_exists( 'rsssl_detected_duplicate_ssl_plugin' ) ) {

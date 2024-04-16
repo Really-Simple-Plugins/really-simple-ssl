@@ -98,15 +98,30 @@ const OnboardingControls = ({isModal}) => {
             setFooterStatus('')
         }
 
-        if ( currentStep.id === 'pro' ) {
-            if ( rsssl_settings.pro_plugin_active ) {
+        if (currentStep.id === 'pro') {
+            if (rsssl_settings.pro_plugin_active) {
                 setProcessing(true);
                 //loop through all items of currentStep.items
                 for (const item of currentStep.items) {
                     if (item.activated) {
-                        for (const fieldId of Object.values(item.options)) {
-                            updateField(fieldId, true);
-                            setChangedField(fieldId, true);
+                        if (item.id === 'advanced_headers') {
+                            for (const option of item.options) {
+                                if (typeof option === 'string') {
+                                    // Single option
+                                    updateField(option, true);
+                                    setChangedField(option, true);
+                                } else if (Array.isArray(option)) {
+                                    // [option -> value] pair
+                                    const [fieldId, value] = option;
+                                    updateField(fieldId, value);
+                                    setChangedField(fieldId, value);
+                                }
+                            }
+                        } else {
+                            for (const fieldId of Object.values(item.options)) {
+                                updateField(fieldId, true);
+                                setChangedField(fieldId, true);
+                            }
                         }
                     }
                 }
@@ -156,7 +171,7 @@ const OnboardingControls = ({isModal}) => {
 
     //for last step only
     if ( steps.length-1 === currentStepIndex ) {
-        let upgradeText = rsssl_settings.is_bf ? __("Get 40% off", "really-simple-ssl") : __("Get PRO", "really-simple-ssl");
+        let upgradeText = rsssl_settings.is_bf ? __("Get 40% off", "really-simple-ssl") : __("Get Pro", "really-simple-ssl");
         return (
             <>
                 <Button isPrimary onClick={() => saveAndContinue() }>{__('Finish', 'really-simple-ssl')}</Button>

@@ -5,11 +5,11 @@ function rsssl_le_steps(){
 		[
 			[
 				"id"       => "system-status",
-				"title"    => __( "System Status", 'really-simple-ssl' ),
+				"title"    => __( "System status", 'really-simple-ssl' ),
 			],
 			[
 				"id"    => "domain",
-				"title" => __( "General settings", 'really-simple-ssl' ),
+				"title" => __( "General Settings", 'really-simple-ssl' ),
 			],
 
 			[
@@ -18,7 +18,7 @@ function rsssl_le_steps(){
 			],
 			[
 				"id"    => "dns-verification",
-				"title" => __( "DNS Verification", 'really-simple-ssl' ),
+				"title" => __( "DNS verification", 'really-simple-ssl' ),
 			],
 			[
 				"id"    => "generation",
@@ -108,7 +108,7 @@ function rsssl_le_add_fields($fields) {
 				'default'  => false,
 				'required' => true,
 				'label'    => __( 'I agree to the Terms & Conditions from Let\'s Encrypt.','really-simple-ssl'),
-				'comment'    => '<a target="_blank" href="https://letsencrypt.org/documents/LE-SA-v1.2-November-15-2017.pdf">'.__('Terms & Conditions.', "really-simple-ssl" ).'</a>',
+				'comment'    => '<a target="_blank" href="https://letsencrypt.org/documents/LE-SA-v1.2-November-15-2017.pdf">'.__('Terms & Conditions', "really-simple-ssl" ).'</a>',
 			],
 			[
 				'id'      => 'disable_ocsp',
@@ -123,7 +123,7 @@ function rsssl_le_add_fields($fields) {
 					'title' => __( "Disable OCSP stapling", "really-simple-ssl" ),
 					'text'  => __( "OCSP stapling is configured as enabled by default. You can disable this option if this is not supported by your hosting provider.", "really-simple-ssl" ),
 				],
-				'label'   => __( "Disable OCSP Stapling", 'really-simple-ssl' ),
+				'label'   => __( "Disable OCSP stapling", 'really-simple-ssl' ),
 			],
 			[
 				'id'       => 'domain',
@@ -165,7 +165,7 @@ function rsssl_le_add_fields($fields) {
 				//options loaded in data store
 				'help'     => [
 					'label' => 'default',
-					'title' => __( "Hosting Provider", "really-simple-ssl" ),
+					'title' => __( "Hosting provider", "really-simple-ssl" ),
 					'text'  => __( "By selecting your hosting provider we can tell you if your hosting provider already supports free SSL, and/or where you can activate it.", "really-simple-ssl" )
 					           . "&nbsp;" .
 					           sprintf( __( "If your hosting provider is not listed, and there's an SSL activation/installation link, please let us %sknow%s.", "really-simple-ssl" ),
@@ -323,7 +323,7 @@ function rsssl_le_add_fields($fields) {
 				'group_id'           => 'le-hosting',
 				'type'              => 'password',
 				'default'           => '',
-				'label'             => __( "CloudWays api key", 'really-simple-ssl' ),
+				'label'             => __( "CloudWays API key", 'really-simple-ssl' ),
 				'required'          => false,
 				'disabled'          => false,
 				'help'              => [

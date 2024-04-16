@@ -198,7 +198,7 @@ if ( ! class_exists( 'rsssl_site_health' ) ) {
 					);
 				} else {
 					$result['status']      = 'critical';
-					$result['label']       = __( 'No SSL detected.', 'really-simple-ssl' );
+					$result['label']       = __( 'No SSL detected', 'really-simple-ssl' );
 					$result['description'] = sprintf(
 						'<p>%s</p>',
 						__( 'Really Simple SSL is installed, but no valid SSL certificate is detected.', 'really-simple-ssl' )

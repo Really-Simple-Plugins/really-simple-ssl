@@ -74,6 +74,8 @@ function rsssl_is_networkwide_active() {
  */
 function rsssl_get_legacy_option( $options, string $name ): array {
 	$old_options = is_multisite() ? get_site_option( 'rlrsssl_network_options' ) : get_option( 'rlrsssl_options' );
+	$options     = [];
+	
 	if ( $old_options ) {
 		if ( 'ssl_enabled' === $name && isset( $old_options['ssl_enabled'] ) ) {
 			$options['ssl_enabled'] = $old_options['ssl_enabled'];

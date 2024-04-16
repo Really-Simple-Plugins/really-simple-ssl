@@ -38,7 +38,7 @@ const PremiumOverlay = ({msg, title, url, upgrade}) => {
                             target="_blank"
                             className="button button-primary left"
                             href={url ? url : "https://really-simple-ssl.com/pro/"}
-                        >{__("Go Pro", "really-simple-ssl")}</a>
+                        >{__("Get Pro", "really-simple-ssl")}</a>
                     </div>
                 </div>
             </div>

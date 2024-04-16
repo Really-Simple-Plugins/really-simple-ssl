@@ -69,7 +69,7 @@ const DeactivationModal = () => {
             {
                 'icon': 'circle-times',
                 'color': 'red',
-                'text': __("Vulnerability detection", "really-simple-ssl"),
+                'text': __("Vulnerability Detection", "really-simple-ssl"),
             },
             {
                 'icon': 'circle-times',
@@ -79,12 +79,12 @@ const DeactivationModal = () => {
             {
                 'icon': 'circle-times',
                 'color': 'red',
-                'text': __("Advanced hardening", "really-simple-ssl"),
+                'text': __("Advanced Hardening", "really-simple-ssl"),
             },
             {
                 'icon': 'circle-times',
                 'color': 'red',
-                'text': __("Mixed content scan", "really-simple-ssl"),
+                'text': __("Mixed content Scan", "really-simple-ssl"),
             },
             {
                 'icon': 'circle-times',
@@ -99,7 +99,7 @@ const DeactivationModal = () => {
             {
                 'icon': 'circle-times',
                 'color': 'red',
-                'text': __("Limit login attempts", "really-simple-ssl"),
+                'text': __("Limit Login Attempts", "really-simple-ssl"),
             },
         ] :
         [
@@ -111,7 +111,7 @@ const DeactivationModal = () => {
             {
                 'icon': 'circle-times',
                 'color': 'red',
-                'text': __("Vulnerability detection", "really-simple-ssl"),
+                'text': __("Vulnerability Detection", "really-simple-ssl"),
             },
             {
                 'icon': 'circle-times',
@@ -121,7 +121,7 @@ const DeactivationModal = () => {
             {
                 'icon': 'circle-times',
                 'color': 'red',
-                'text': __("Mixed content fixer", "really-simple-ssl"),
+                'text': __("Mixed Content Fixer", "really-simple-ssl"),
             },
         ];
     return (

@@ -149,7 +149,7 @@ const useFields = create(( set, get ) => ({
         }
         return false;
     },
-    saveFields: async (skipRefreshTests, showSavedNotice) => {
+    saveFields: async (skipRefreshTests, showSavedNotice, force = false) => {
         let refreshTests = typeof skipRefreshTests !== 'undefined' ? skipRefreshTests : true;
         showSavedNotice = typeof showSavedNotice !== 'undefined' ? showSavedNotice : true;
         let fields = get().fields;
@@ -169,7 +169,7 @@ const useFields = create(( set, get ) => ({
         }
 
         //if no fields were changed, do nothing.
-        if (saveFields.length > 0) {
+        if (saveFields.length > 0 || force === true) {
             let response = rsssl_api.setFields(saveFields).then((response) => {
                 return response;
             })
@@ -280,7 +280,7 @@ const updateFieldsListWithConditions = (fields) => {
 
 const handleShowSavedSettingsNotice = (text) => {
     if (typeof text === 'undefined') {
-        text = __( 'Settings Saved', 'really-simple-ssl' );
+        text = __( 'Settings saved', 'really-simple-ssl' );
     }
 
     toast.success(text);

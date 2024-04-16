@@ -66,7 +66,7 @@ const DnsVerification = (props) => {
                     </p>
                     <div  className="rsssl-dns-text-records">
                         <div>
-                            <div className="rsssl-dns-domain">@/{__("domain", "really-simple-ssl")}</div>
+                            <div className="rsssl-dns-domain">@/{__("Domain", "really-simple-ssl")}</div>
                             <div className="rsssl-dns-field">{__("Value", "really-simple-ssl")}</div>
                         </div>
                         { tokens.map((tokenData, i) =>

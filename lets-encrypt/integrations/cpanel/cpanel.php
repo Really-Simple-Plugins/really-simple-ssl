@@ -123,7 +123,7 @@ class rsssl_cPanel
 	        update_option('rsssl_installation_error', 'cpanel:default', false);
 	        $status = 'error';
 	        $action = $shell_addon_active ? 'skip' : 'continue';
-	        $message = __("Errors were reported during installation","really-simple-ssl").'<br> '.$response->errors[0];
+	        $message = __("Errors were reported during installation.","really-simple-ssl").'<br> '.$response->errors[0];
         }
 
 		return new RSSSL_RESPONSE($status, $action, $message);

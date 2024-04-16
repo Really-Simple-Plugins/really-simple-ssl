@@ -246,7 +246,7 @@ class rsssl_onboarding {
 			];
 		} else if ( RSSSL()->certificate->detection_failed() ) {
 			$items[] = [
-				"title" => __("Could not test certificate.", "really-simple-ssl") . " " . __("Automatic certificate detection is not possible on your server.", "really-simple-ssl"),
+				"title" => __("Could not test certificate", "really-simple-ssl") . " " . __("Automatic certificate detection is not possible on your server.", "really-simple-ssl"),
 				"status" => "error",
 				"id" => "certificate",
 			];
@@ -280,7 +280,7 @@ class rsssl_onboarding {
 				"slug" => "complianz-terms-conditions",
 				'constant_premium' => false,
 				"title" => "Complianz Terms & Conditions",
-				"description" => __("Terms & Conditions.", "really-simple-ssl"),
+				"description" => __("Terms & Conditions", "really-simple-ssl"),
 			]
 		];
 		foreach ($plugins_to_install as $plugin_info) {
@@ -396,7 +396,14 @@ class rsssl_onboarding {
 				"title" => __("Advanced Security Headers", "really-simple-ssl"),
 				"id" => "advanced_headers",
 				"premium" => true,
-				"options" => [],
+				"options" => [  'upgrade_insecure_requests',
+								'x_content_type_options',
+								['x_xss_protection' => 'zero'],
+								'x_content_type_options',
+								['x_frame_options' => 'SAMEORIGIN'],
+								['referrer_policy' => 'strict-origin-when-cross-origin'],
+								['csp_frame_ancestors' => 'self'],
+							 ],
 				"activated" => true,
 			],
 			[

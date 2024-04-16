@@ -150,7 +150,7 @@ const Settings = () => {
                       <button disabled={nextButtonDisabled}
                          className="button button-primary"
                          onClick={(e) => {saveData(true);window.location.href=continueLink;} }>
-                        {__('Save and Continue', 'really-simple-ssl')}
+                        {__('Save and continue', 'really-simple-ssl')}
                       </button>
                     </>
                 }

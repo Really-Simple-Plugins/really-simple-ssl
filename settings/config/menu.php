@@ -32,8 +32,20 @@ function rsssl_menu() {
 						[
 							'id'       => 'general_email',
 							'group_id' => 'general_email',
-							'title'    => __( 'E-mail', 'really-simple-ssl' ),
+							'title'    => __( 'Email', 'really-simple-ssl' ),
 							'helpLink' => 'https://really-simple-ssl.com/instructions/about-our-general-settings/?mtm_campaign=instructions&mtm_source=free',
+						],
+						[
+							'id'       => 'general_captcha',
+							'group_id' => 'general_captcha',
+							'title'    => __( 'Captcha', 'really-simple-ssl' ),
+							'helpLink' => 'https://really-simple-ssl.com/instructions/about-our-general-settings/?mtm_campaign=instructions&mtm_source=free',
+							'premium'  => true,
+							'premium_title' => __( 'Captcha', 'really-simple-ssl' ),
+							'intro'      => __( "Really Simple SSL can trigger a Captcha to limit access to your site or the login form.", 'really-simple-ssl' ),
+							'premium_text' => __( 'Protect your website against spam and brute-force attacks with Really Simple Captcha. Choose between Google reCAPTCHA or hCaptcha.', 'really-simple-ssl' ),
+							'upgrade'  => 'https://really-simple-ssl.com/pro/?mtm_campaign=captcha&mtm_source=free&mtm_content=upgrade',
+							'helpLink_text' =>  __( 'About Captcha', 'really-simple-ssl' ),
 						],
 						[
 							'id'            => 'support',
@@ -70,7 +82,7 @@ function rsssl_menu() {
 						[
 							'id' => 'mixed-content-general',
 							'group_id' => 'mixed-content-general',
-							'title' => __( 'Mixed Content', 'really-simple-ssl' ),
+							'title' => __( 'Mixed content', 'really-simple-ssl' ),
 							'helpLink' => 'https://really-simple-ssl.com/remove-htaccess-redirect-site-lockout/?mtm_source=free',
 						],
 						[
@@ -523,7 +535,7 @@ function rsssl_menu() {
 				[
 					'id'         => 'le-system-status',
 					'group_id'         => 'le-system-status',
-					'title'      => __('System Status', 'really-simple-ssl'),
+					'title'      => __('System status', 'really-simple-ssl'),
 					'intro'      => __('Letʼs Encrypt is a free, automated and open certificate authority brought to you by the nonprofit Internet Security Research Group (ISRG).',
 						'really-simple-ssl'),
 					'helpLink'   => 'https://really-simple-ssl.com/about-lets-encrypt/?mtm_campaign=letsencrypt&mtm_source=free',

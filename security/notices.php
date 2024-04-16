@@ -28,7 +28,7 @@ function rsssl_general_security_notices( $notices ) {
 		'score' => 5,
 		'output' => array(
 			'true' => array(
-				'msg' => __("Disable application passwords.", "really-simple-ssl"),
+				'msg' => __("Disable application passwords", "really-simple-ssl"),
 				'icon' => 'premium',
 				'url' => 'https://really-simple-ssl.com/definition/what-are-application-passwords/',
 				'dismissible' => true,

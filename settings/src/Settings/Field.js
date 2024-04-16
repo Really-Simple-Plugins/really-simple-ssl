@@ -36,6 +36,8 @@ import TwoFaDataTable from "./TwoFA/TwoFaDataTable";
 import EventLogDataTable from "./EventLog/EventLogDataTable";
 import DOMPurify from "dompurify";
 import RolesDropDown from "./RolesDropDown";
+import Captcha from "./Captcha/Captcha";
+import CaptchaKey from "./Captcha/CaptchaKey";
 
 const Field = (props) => {
     let scrollAnchor = React.createRef();
@@ -54,6 +56,15 @@ const Field = (props) => {
         if ( highLightField===props.field.id && scrollAnchor.current ) {
             scrollAnchor.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
+
+        //if the field is a captcha provider, scroll to the captcha provider is a temp fix cause i can't get the scroll to work properly.
+        if (highLightField === 'enabled_captcha_provider' && props.fields) {
+            let captchaField = document.getElementsByClassName('rsssl-highlight')[0];
+            if (captchaField) {
+                captchaField.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
     },[]);
 
     useEffect( () => {
@@ -205,7 +216,15 @@ const Field = (props) => {
         );
     }
 
-    if (field.type==='text' ){
+    if (field.type==='captcha_key') {
+        return (
+            <div className={highLightClass} ref={scrollAnchor} style={{position: 'relative'}}>
+                <CaptchaKey field={field} fields={props.fields} label={labelWrap(field)} />
+            </div>
+            )
+    }
+
+    if (field.type==='text' ) {
         return (
             <div className={highLightClass} ref={scrollAnchor} style={{position: 'relative'}}>
                 <TextControl
@@ -336,6 +355,14 @@ const Field = (props) => {
         return (
             <div className={highLightClass} ref={scrollAnchor}>
                 <PermissionsPolicy disabled={disabled} field={props.field} options={options}/>
+            </div>
+        )
+    }
+
+    if (field.type==='captcha') {
+        return (
+            <div className={highLightClass} ref={scrollAnchor}>
+                <Captcha field={field} label={labelWrap(field)} />
             </div>
         )
     }
@@ -478,6 +505,7 @@ const Field = (props) => {
     }
 
     return (
+
         'not found field type '+field.type
     );
 }

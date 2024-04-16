@@ -1296,11 +1296,11 @@ class rsssl_letsencrypt_handler {
 			if (get_option('rsssl_skip_challenge_directory_request')) {
 				$status  = 'warning';
 				$action = 'continue';
-				$message = $error_message.' '.sprintf( __( "Error code %s.", "really-simple-ssl" ), $status_code );
+				$message = $error_message.' '.sprintf( __( "Error code %s", "really-simple-ssl" ), $status_code );
 			} else {
 				$status  = 'error';
 				$action = 'stop';
-				$message = $error_message.' '.sprintf( __( "Error code %s.", "really-simple-ssl" ), $status_code );
+				$message = $error_message.' '.sprintf( __( "Error code %s", "really-simple-ssl" ), $status_code );
 				rsssl_progress_remove('directories');
 			}
 		} else {
