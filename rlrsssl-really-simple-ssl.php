@@ -5,7 +5,7 @@
  * Description: Lightweight SSL & Hardening Plugin
  * Version: 8.1.0
  * Requires at least: 5.9
- * Requires PHP: 7.2
+ * Requires PHP: 7.4
  * Author: Really Simple Plugins
  * Author URI: https://really-simple-plugins.com
  * License: GPL2

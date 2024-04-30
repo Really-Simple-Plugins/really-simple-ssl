@@ -5,7 +5,7 @@ Tags: SSL, https, force SSL, mixed content, security, secure website, website se
 Requires at least: 5.9
 License: GPL2
 Tested up to: 6.5
-Requires PHP: 7.2
+Requires PHP: 7.4
 Stable tag: 8.1.0
 
 The easiest way to improve security! Leverage your SSL certificate and protect your website visitors.
