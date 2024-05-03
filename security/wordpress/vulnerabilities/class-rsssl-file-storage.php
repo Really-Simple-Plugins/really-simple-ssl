@@ -93,7 +93,7 @@ class Rsssl_File_Storage {
 
 		// Check if IV generation was successful and cryptographically strong
 		if ($iv === false || $crypto_strong === false) {
-			return ''
+			return '';
 		}
 
 		$encrypted = openssl_encrypt($data, 'aes-256-cbc', $this->hash, 0, $iv);
