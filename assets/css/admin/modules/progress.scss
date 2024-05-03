@@ -126,6 +126,9 @@
   .rsssl-task-enable {
     cursor: pointer;
     line-height: 1.5;
+    .rsssl-icon.rsssl-icon-loading {
+      padding:3px;
+    }
   }
 
   .rsssl-task-dismiss {

@@ -354,6 +354,19 @@ class rsssl_admin {
 	}
 
 	/**
+	 * @return bool
+	 *
+	 * Check if this site is a Bitnami site
+	 */
+	public function uses_bitnami(): bool {
+		if ( isset( $_SERVER['DOCUMENT_ROOT'] ) && $_SERVER['DOCUMENT_ROOT'] === '/opt/bitnami/wordpress' ) {
+            return true;
+        }
+
+        return false;
+	}
+
+	/**
 	 * Check if site uses an htaccess.conf file, used in bitnami installations
 	 *
 	 * @Since 3.1
@@ -415,7 +428,7 @@ class rsssl_admin {
 				$this->wpconfig_loadbalancer_fix();
 			}
 
-			if ( ! $safe_mode && $this->wpconfig_siteurl_not_fixed ) {
+			if ( ! $safe_mode && $this->wpconfig_siteurl_not_fixed && ! $this->uses_bitnami() ) {
 				$this->fix_siteurl_defines_in_wpconfig();
 			}
 
@@ -462,7 +475,7 @@ class rsssl_admin {
 	 */
 	public function wpconfig_ok() {
 		//return false;
-		if ( ( $this->do_wpconfig_loadbalancer_fix || $this->no_server_variable || $this->wpconfig_siteurl_not_fixed ) && ! $this->wpconfig_is_writable() ) {
+		if ( ( $this->do_wpconfig_loadbalancer_fix || $this->no_server_variable || $this->wpconfig_siteurl_not_fixed ) && ! $this->wpconfig_is_writable()  && ! $this->uses_bitnami() ) {
 			$result = false;
 		} else {
 			$result = true;
@@ -1302,7 +1315,7 @@ class rsssl_admin {
 			)
 		);
 
-		// cURL check
+		// cURL check.
 		$curl_check_done = get_transient( 'rsssl_can_use_curl_headers_check' );//no, yes or false
 		if ( ! $curl_check_done ) {
 			//set a default
@@ -1980,7 +1993,7 @@ class rsssl_admin {
 				),
 			),
 			'site_url_in_wpconfig'                 => array(
-				'condition' => [ 'NOT rsssl_ssl_enabled' ],
+				'condition' => [ 'NOT rsssl_ssl_enabled', 'NOT RSSSL()->admin->uses_bitnami' ],
 				'callback'  => 'RSSSL()->admin->wpconfig_siteurl_not_fixed',
 				'score'     => 30,
 				'output'    => array(
@@ -2044,7 +2057,7 @@ class rsssl_admin {
 			),
 
 			'ssl_detected'                         => array(
-				'condition' => array( 'NOT rsssl_ssl_detection_overridden' ),
+				'condition' => array( 'NOT rsssl_ssl_detection_overridden', 'NOT RSSSL()->admin->uses_bitnami' ),
 				'callback'  => 'rsssl_ssl_detected',
 				'score'     => 30,
 				'output'    => array(

@@ -4,6 +4,7 @@ defined( 'ABSPATH' ) or die( 'you do not have access to this page!' );
 if ( ! class_exists( 'rsssl_server' ) ) {
 	class rsssl_server {
 		private static $_this;
+		private $sapi = false;
 
 		public function __construct() {
 			if ( isset( self::$_this ) ) {
@@ -61,6 +62,111 @@ if ( ! class_exists( 'rsssl_server' ) ) {
 			} else { //unsupported server
 				return false;
 			}
+		}
+
+		/**
+		 * Get the Auto prepend configuration
+		 *
+		 * @return string
+		 */
+		public function auto_prepend_config(){
+			if ( $this->isApacheModPHP() ){
+				return "apache-mod_php"; //Apache _ modphp
+			} else if ( $this->isApacheSuPHP() ) {
+				return "apache-suphp"; //Apache + SuPHP
+			} else if ( $this->isApache() && !$this->isApacheSuPHP() && ($this->isCGI() || $this->isFastCGI()) ) {
+				return "cgi"; //Apache + CGI/FastCGI
+			} else if ($this->isLiteSpeed()){
+				return "litespeed";
+			} else if ( $this->isNGINX() ) {
+				return "nginx";
+			} else if ( $this->isIIS() ) {
+				return "iis";
+			} else {
+				return "manual";
+			}
+		}
+
+		/**
+		 * If Apache
+		 * @return bool
+		 */
+		public function isApache():bool {
+			return $this->get_server() === 'apache';
+		}
+
+		/**
+		 * If NGINX
+		 * @return bool
+		 */
+		public function isNGINX():bool {
+			return $this->get_server() === 'nginx';
+		}
+
+		/**
+		 * If Litespeed
+		 * @return bool
+		 */
+		public function isLiteSpeed():bool {
+			return $this->get_server() === 'litespeed';
+		}
+
+		/**
+		 * If IIS
+		 * @return bool
+		 */
+		public function isIIS():bool {
+			return $this->get_server() === 'iis';
+		}
+
+		/**
+		 * If ModPHP
+		 * @return bool
+		 */
+		public function isApacheModPHP():bool {
+			return $this->isApache() && function_exists('apache_get_modules');
+		}
+
+		/**
+		 * If SupPHP
+		 * Not sure if this can be implemented at the PHP level.
+		 * @return bool
+		 */
+		public function isApacheSuPHP():bool {
+			return $this->isApache() && $this->isCGI() &&
+			       function_exists('posix_getuid') &&
+			       getmyuid() === posix_getuid();
+		}
+
+		/**
+		 * If CGI
+		 * @return bool
+		 */
+		public function isCGI():bool {
+			return !$this->isFastCGI() && stripos($this->sapi(), 'cgi') !== false;
+		}
+
+		/**
+		 * If FastCGI
+		 * @return bool
+		 */
+		public function isFastCGI():bool {
+			return stripos($this->sapi(), 'fastcgi') !== false || stripos($this->sapi(), 'fpm-fcgi') !== false;
+		}
+
+
+		/**
+		 * If Sapi
+		 * @return bool|string
+		 */
+		private function sapi(){
+			if ( !$this->sapi ) {
+				$this->sapi = function_exists('php_sapi_name') ? php_sapi_name() : 'false';
+			}
+			if ( 'false' === $this->sapi ) {
+				return false;
+			}
+			return $this->sapi;
 		}
 
 		/**

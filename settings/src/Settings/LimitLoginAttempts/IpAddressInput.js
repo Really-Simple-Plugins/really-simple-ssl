@@ -19,10 +19,12 @@ const IpAddressInput = (props) => {
 
     return (
         <>
+        {props.label &&
             <label
                 htmlFor={props.id}
                 className="rsssl-label"
             >{props.label}</label>
+        }
             <br></br>
             <div className="input-container">
                 <input

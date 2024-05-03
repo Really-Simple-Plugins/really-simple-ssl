@@ -111,3 +111,62 @@ function rsssl_check_if_email_essential_feature() {
 
 	return false;
 }
+
+/**
+ * Retrieves the path to a template file.
+ *
+ * @param string $template The name of the template to retrieve.
+ * @param string $path (Optional) The path to look for the template file. If not specified, the default path will be used.
+ *
+ * @return string The full path to the template file.
+ * @throws \RuntimeException Throws a runtime exception if the template file cannot be found.
+ */
+function rsssl_get_template( string $template, string $path = '' ): string {
+	// Define the path in the theme where templates can be overridden.
+	$theme_template_path = get_stylesheet_directory() . '/really-simple-ssl-templates/' . $template;
+
+	// Check if the theme has an override for the template.
+	if ( file_exists( $theme_template_path ) ) {
+		return $theme_template_path;
+	}
+	// If $path is not set, use the default path
+	if ( $path === '' ) {
+		$path = rsssl_path . 'templates/'; // Remember this only works in free version, for pro we need to add the $path parameter/argument
+	} else {
+		// Ensure the path ends with a slash
+		$path = trailingslashit( $path );
+	}
+
+	// Full path to the template file
+	$full_path = $path . $template;
+
+	// Check if the template exists in the specified path.
+	if ( ! file_exists( $full_path ) ) {
+		throw new \RuntimeException( 'Template not found: ' . $full_path );
+	}
+
+	return $full_path;
+}
+
+/**
+ * Loads a template file and includes it.
+ *
+ * @param string $template The name of the template to load.
+ * @param array  $vars (Optional) An associative array of variables to make available in the template scope.
+ * @param string $path (Optional) The path to look for the template file. If not specified, the default path will be used.
+ *
+ * @return void
+ * @throws Exception Throws an exception if the template file cannot be found.
+ */
+function rsssl_load_template( string $template, array $vars = array(), string $path = '' ) {
+	// Extract variables to be available in the template scope.
+	if ( is_array( $vars ) ) {
+		extract( $vars );
+	}
+
+	// Get the template file, checking for theme overrides.
+	$template_file = rsssl_get_template( $template, $path );
+
+	// Include the template file.
+	include $template_file;
+}

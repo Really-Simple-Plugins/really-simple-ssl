@@ -139,7 +139,7 @@ function rsssl_plugin_admin_scripts()
 				'networkwide_active' => !is_multisite() || rsssl_is_networkwide_active(),//true for single sites and network wide activated
 				'nonce' => wp_create_nonce('wp_rest'),//to authenticate the logged-in user
 				'rsssl_nonce' => wp_create_nonce('rsssl_nonce'),
-				'wpconfig_fix_required' => RSSSL()->admin->do_wpconfig_loadbalancer_fix() && !RSSSL()->admin->wpconfig_has_fixes(),
+				'wpconfig_fix_required' => RSSSL()->admin->do_wpconfig_loadbalancer_fix() && ! RSSSL()->admin->wpconfig_has_fixes() && ! RSSSL()->admin->uses_bitnami(),
 				'cloudflare' => rsssl_uses_cloudflare(),
 			])
 		);
@@ -353,7 +353,6 @@ function rsssl_do_action($request, $ajax_data = false)
 	if (!wp_verify_nonce($nonce, 'rsssl_nonce')) {
 		return;
 	}
-
 	switch ($action) {
 		case 'ssltest_get':
 			$response = ['data' => get_option('rsssl_ssl_labs_data')];
@@ -377,6 +376,9 @@ function rsssl_do_action($request, $ajax_data = false)
 			break;
 		case 'clear_cache':
 			$response = rsssl_clear_test_caches($data);
+			break;
+		case 'fix':
+			$response = rsssl_fix($data);
 			break;
 		case 'otherpluginsdata':
 			$response = rsssl_other_plugins_data();
@@ -419,6 +421,23 @@ function rsssl_clear_test_caches($data)
 
 	do_action('rsssl_clear_test_caches', $data);
 	return [];
+}
+
+/**
+ * @param array $data
+ *
+ * @return array
+ */
+function rsssl_fix($data)
+{
+	if (!rsssl_user_can_manage()) {
+		return [];
+	}
+
+	$fix_id = sanitize_title($data['fix_id']);
+    $output = [];
+	$output = apply_filters('rsssl_run_fix', $output, $fix_id);
+	return $output;
 }
 
 /**

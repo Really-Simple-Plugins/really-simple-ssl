@@ -24,9 +24,9 @@
       background: var(--rsp-black);
       color: var(--rsp-text-color-white);
 
-      &:hover, &:focus, &:active {
-        box-shadow: 0 0 0 1px #fff, 0 0 0 3px var(--rsp-black);
-      }
+      //&:hover, &:focus, &:active {
+      //  box-shadow: 0 0 0 1px #fff, 0 0 0 3px var(--rsp-black);
+      //}
     }
 
     &.button-tertiary, &.button-red {
@@ -34,11 +34,29 @@
       background: var(--rsp-red);
       color: var(--rsp-text-color-white);
 
-      &:hover, &:focus, &:active {
-        box-shadow: 0 0 0 1px #fff, 0 0 0 3px var(--rsp-red);
-        background: var(--rsp-red);
-        color: var(--rsp-text-color-white);
-      }
+      //&:hover, &:focus, &:active {
+      //  box-shadow: 0 0 0 1px #fff, 0 0 0 3px var(--rsp-red);
+      //  background: var(--rsp-red);
+      //  color: var(--rsp-text-color-white);
+      //}
+    }
+
+    &.button-primary {
+      // We disable all hover effects for the primary button as wel as active and focus
+        // This is to ensure that the primary button is always the same color
+        // and does not change on hover, focus or active
+        &:hover, &:focus, &:active {
+          box-shadow: none;
+        }
+    }
+
+    &.button-secondary {
+      // We disable all hover effects for the secondary button as wel as active and focus
+        // This is to ensure that the secondary button is always the same color
+        // and does not change on hover, focus or active
+        &:hover, &:focus, &:active {
+          box-shadow: none;
+        }
     }
   }
 }

@@ -90,6 +90,7 @@
     button + a {
       margin-left: 10px;
     }
+
     button {
       &:not(.is-primary) {
         border: 1px solid var(--wp-admin-theme-color, #3858e9);

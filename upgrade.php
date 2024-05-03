@@ -181,6 +181,11 @@ function rsssl_upgrade() {
 		do_action( 'rsssl_update_rules' );
 	}
 
+	// Update the config to auto prepend
+	if ( $prev_version && version_compare( $prev_version, '8.0', '<' ) ) {
+		RSSSL_SECURITY()->firewall_manager->update_wp_config_rule();
+	}
+
 	//don't clear on each update.
 	//RSSSL()->admin->clear_admin_notices_cache();
 

@@ -1,21 +1,20 @@
 import React, {useEffect, useState} from 'react';
+import Icon from "../../utils/Icon";
 import {
     Modal,
     MenuItem,
     SelectControl,
     Button,
-    __experimentalConfirmDialog as ConfirmDialog
+    __experimentalConfirmDialog as ConfirmDialog, TextControl
 } from "@wordpress/components";
-import IpAddressDataTableStore   from "./IpAddressDataTableStore";
 import {__} from "@wordpress/i18n";
-import IpAddressInput from "./IpAddressInput";
-import EventLogDataTableStore from "../EventLog/EventLogDataTableStore";
+import IpAddressInput from "../LimitLoginAttempts/IpAddressInput";
 import FieldsData from "../FieldsData";
+import WhiteListTableStore from "./WhiteListTableStore";
 
-const AddIpAddressModal = (props) => {
-    const { inputRangeValidated, fetchCidrData, ipAddress, setIpAddress, maskError, dataLoaded, updateRow, resetRange} = IpAddressDataTableStore();
+const TrustIpAddressModal = (props) => {
+    const { inputRangeValidated,note, setNote, ipAddress, setIpAddress, maskError, dataLoaded, updateRow, resetRange} = WhiteListTableStore();
     const [rangeDisplay, setRangeDisplay] = useState(false);
-    const {fetchDynamicData} = EventLogDataTableStore();
     const [resetFlag, setResetFlag] = useState(false);
     const {showSavedSettingsNotice} = FieldsData();
 
@@ -25,19 +24,10 @@ const AddIpAddressModal = (props) => {
         setRangeDisplay(!rangeDisplay);
     }
 
-    useEffect(() => {
-        //we validate the range
-        if (inputRangeValidated) {
-            //we get the mask
-            fetchCidrData('get_mask_from_range')
-        }
-    }, [inputRangeValidated]);
-
     async function handleSubmit() {
-        let status = props.status;
         // we check if statusSelected is not empty
         if (ipAddress && maskError === false) {
-            await updateRow(ipAddress, status, props.dataActions).then((response) => {
+            await updateRow(ipAddress, note, props.dataActions).then((response) => {
                 if (response.success) {
                     showSavedSettingsNotice(response.message);
                 } else {
@@ -48,8 +38,6 @@ const AddIpAddressModal = (props) => {
             resetRange();
             //we close the modal
             props.onRequestClose();
-            //we fetch the data again
-            fetchDynamicData('event_log')
         }
     }
 
@@ -64,6 +52,15 @@ const AddIpAddressModal = (props) => {
     if (!props.isOpen) {
         return null;
     }
+
+    const changeHandler = (e) => {
+       if (e.length > 0) {
+           setIpAddress(e);
+        } else {
+           resetRange()
+       }
+    }
+
     return (
         <Modal
             title={__("Add IP Address", "really-simple-ssl")}
@@ -76,7 +73,7 @@ const AddIpAddressModal = (props) => {
             <div className="modal-content">
                 <div className="modal-body"
                     style={{
-                        padding: "1em",
+                        padding: "0.5em",
                         }}
                 >
                     <div
@@ -86,14 +83,38 @@ const AddIpAddressModal = (props) => {
                             padding: "10px",
                         }}
                     >
-                        <div>
-                            <IpAddressInput
-                                label={__("IP Address", "really-simple-ssl")}
+                        <div style={{position: 'relative'}}>
+                            <label
+                                htmlFor={'ip-address'}
+                                className={'rsssl-label'}
+                            >{__('IP Address', 'really-simple-ssl')}</label>
+                            <TextControl
                                 id="ip-address"
                                 name="ip-address"
-                                showSwitch={true}
+                                onChange={changeHandler}
                                 value={ipAddress}
-                                onChange={(e) => setIpAddress(e.target.value)}
+                            />
+                            <div className="rsssl-ip-verified">
+                                {Boolean(!maskError && ipAddress.length > 0)
+                                    ? <Icon name='circle-check' color={'green'}/>
+                                    : <Icon name='circle-times' color={'red'}/>
+                                }
+                            </div>
+                        </div>
+                        <div>
+                            <label
+                                htmlFor={'note'}
+                                className={'rsssl-label'}
+                            >{__('Notes', 'really-simple-ssl')}</label>
+                            <input
+                                name={'note'}
+                                id={'note'}
+                                type={'text'}
+                                value={note}
+                                onChange={(e) => setNote(e.target.value)}
+                                style={{
+                                    width: '100%',
+                                }}
                             />
                         </div>
                     </div>
@@ -133,4 +154,4 @@ const AddIpAddressModal = (props) => {
     )
 }
 
-export default AddIpAddressModal;
+export default TrustIpAddressModal;

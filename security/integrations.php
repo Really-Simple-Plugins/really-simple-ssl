@@ -4,29 +4,21 @@ global $rsssl_integrations_list;
 $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 	'user-registration' => array(
 		'folder'               => 'wordpress',
-		'impact'               => 'medium',
-		'risk'                 => 'medium',
 		'option_id'            => 'disable_anyone_can_register',
 	),
 
 	'file-editing' => array(
 		'folder'               => 'wordpress',
-		'impact'               => 'medium',
-		'risk'                 => 'low',
 		'option_id'            => 'disable_file_editing',
 	),
 
 	'hide-wp-version' => array(
 		'folder'               => 'wordpress',
-		'impact'               => 'low',
-		'risk'                 => 'low',
 		'option_id'            => 'hide_wordpress_version',
 	),
 
 	'user-enumeration' => array(
 		'folder'               => 'wordpress',
-		'impact'               => 'low',
-		'risk'                 => 'medium',
 		'option_id'            => 'disable_user_enumeration',
 	),
 
@@ -39,43 +31,31 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 
 	'prevent-login-info-leakage' => array(
 		'folder'               => 'wordpress',
-		'impact'               => 'low',
-		'risk'                 => 'high',
 		'option_id'            => 'disable_login_feedback',
 	),
 	'disable-indexing' => array(
 		'folder'               => 'server',
-		'impact'               => 'low',
-		'risk'                 => 'medium',
 		'option_id'            => 'disable_indexing',
 		'has_deactivation'     => true,
 	),
 
 	'rename-admin-user' => array(
 		'folder'               => 'wordpress',
-		'impact'               => 'high',
-		'risk'                 => 'high',
 		'option_id'            => 'rename_admin_user',
 	),
 	'display-name-is-login-name' => array(
 		'folder'               => 'wordpress',
-		'impact'               => 'low',
-		'risk'                 => 'medium',
 		'option_id'            => 'block_display_is_login',
 	),
 
 	'disable-xmlrpc' => array(
 		'folder'               => 'wordpress',
-		'impact'               => 'medium',
-		'risk'                 => 'low',
 		'option_id'            => 'disable_xmlrpc',
 		'always_include'       => false,
 	),
 
 	'vulnerabilities' => array(
 		'folder'               => 'wordpress',
-		'impact'               => 'medium',
-		'risk'                 => 'medium',
 		'option_id'            => 'enable_vulnerability_scanner',
 		'admin_only'           => true,
 	),

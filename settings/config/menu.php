@@ -1,5 +1,5 @@
 <?php
-defined('ABSPATH') or die();
+defined( 'ABSPATH' ) or die();
 
 function rsssl_menu() {
 	if ( ! rsssl_user_can_manage() ) {
@@ -505,18 +505,89 @@ function rsssl_menu() {
 											],
 											[
 												'id'    => 'countries',
-												'title' => __( 'Countries', 'really-simple-ssl' ),
+												'title' => __( 'Allowed', 'really-simple-ssl' ),
 											],
 										],
 									],
-									'title'        => __( 'Regions', 'really-simple-ssl' ),
-									'intro'        => __( 'If your site is only intended for users to login from specific geographical regions, you can entirely prevent logins from certain continents or countries.',
+									'title'         => __( 'Regions', 'really-simple-ssl' ),
+									'intro'         => __( 'If your site is only intended for users to login from specific geographical regions, you can entirely prevent logins from certain continents or countries.',
 										'really-simple-ssl' ),
 								]
 							],
 						],
 					],
 
+				],
+				[
+					'id' => 'access_control',
+					'title' => __( 'Access Control', 'really-simple-ssl' ),
+					'featured'   => false,
+					'new'        => true,
+					'menu_items' => [
+						[
+							'id'      => 'geo_block_list',
+							'title'   => __( 'Region restrictions', 'really-simple-ssl' ),
+							'premium' => true,
+							'groups'  => [
+								[
+									'id'            => 'geo_block_list_general',
+									'group_id'      => 'geo_block_list_general',
+									'helpLink'      => 'https://really-simple-ssl.com/instructions/instructions/about-region-restrictions',
+									'premium'       => true,
+									'premium_title' => __( 'Geo Blocklist General', 'really-simple-ssl' ),
+									'premium_text'  => __( 'Restrict access from specific countries or continents. You can also allow only specific countries.', 'really-simple-ssl' ),
+									'upgrade'       => 'https://really-simple-ssl.com/pro/?mtm_campaign=lla&mtm_source=free&mtm_content=upgrade',
+									'title'         => __( 'Region restrictions', 'really-simple-ssl' ),
+									'intro'         => __( 'Block visitors from specific countries, or continents. You can also allow only specific countries.',
+										'really-simple-ssl' ),
+								],
+								[
+									'id'                   => 'geo_block_list_listing',
+									'group_id'             => 'geo_block_list_white_listing',
+									'networkwide_required' => true,
+									'premium'              => true,
+									'premium_text'         => __( 'This feature allows you to block visitors from your website based on country',
+										'really-simple-ssl' ),
+									'upgrade'              => 'https://really-simple-ssl.com/pro/?mtm_campaign=cops&mtm_source=free&mtm_content=upgrade',
+									'title'                => __( 'Trusted IP addresses', 'really-simple-ssl' ),
+									'premium_title'        => __( 'Trusted IP addresses', 'really-simple-ssl' ),
+									'intro' 			  => __( 'Add, remove and list ip-addresses exempt from being blocked. → Here you can add IP addresses that should never be blocked by region restrictions. We will automatically add the IP address of the administrator that enabled Region Restrictions.',
+										'really-simple-ssl' ),
+								],
+								[
+									'id'                   => 'geo_block_list_listing',
+									'group_id'             => 'geo_block_list_listing',
+									'networkwide_required' => true,
+									'premium'              => true,
+									'premium_text'         => __( 'This feature allows you to block visitors from your website based on country',
+										'really-simple-ssl' ),
+									'upgrade'              => 'https://really-simple-ssl.com/pro/?mtm_campaign=cops&mtm_source=free&mtm_content=upgrade',
+									'title'                => __( 'Regions', 'really-simple-ssl' ),
+									'premium_title'        => __( 'Regions', 'really-simple-ssl' ),
+									'intro' 			  => __( 'Restrict access to your site based on user location. By default, all regions are allowed. You can also block countries from a continent.',
+										'really-simple-ssl' ),
+									'groupFilter'          => [
+										'default' => 'countries',
+										'id'      => 'rsssl-group-filter-geo_block_list',
+										'options' => [
+											[
+												'id'    => 'blocked',
+												'title' => __( 'Blocked', 'really-simple-ssl' ),
+											],
+											[
+												'id'   => 'regions',
+												'title' => __( 'Continents', 'really-simple-ssl' ),
+											],
+											[
+												'id'    => 'countries',
+												'title' => __( 'Allowed', 'really-simple-ssl' ),
+											],
+										],
+									],
+								],
+							]
+						],
+					]
 				],
 			],
 		],

@@ -7,6 +7,9 @@ import FilterData from "../FilterData";
 import Flag from "../../utils/Flag/Flag";
 import AddIpAddressModal from "./AddIpAddressModal";
 import useFields from "../FieldsData";
+import FieldsData from "../FieldsData";
+import SearchBar from "../DynamicDataTable/SearchBar";
+import AddButton from "../DynamicDataTable/AddButton";
 
 const IpAddressDatatable = (props) => {
     const {
@@ -15,7 +18,7 @@ const IpAddressDatatable = (props) => {
         dataActions,
         handleIpTableRowsChange,
         updateMultiRow,
-        fetchIpData,
+        fetchData,
         handleIpTableSort,
         handleIpTablePageChange,
         handleIpTableSearch,
@@ -47,6 +50,9 @@ const IpAddressDatatable = (props) => {
     const [addingIpAddress, setAddingIpAddress] = useState(false);
     const [rowsSelected, setRowsSelected] = useState([]);
     const {fields, fieldAlreadyEnabled, getFieldValue, saveFields} = useFields();
+    const {showSavedSettingsNotice} = FieldsData();
+    const [tableHeight, setTableHeight] = useState(600);  // Starting height
+    const rowHeight = 50; // Height of each row.
 
     const moduleName = 'rsssl-group-filter-limit_login_attempts_ip_address';
 
@@ -82,7 +88,7 @@ const IpAddressDatatable = (props) => {
     useEffect(() => {
         //we make sure the dataActions are changed in the store before we fetch the data
         if (dataActions) {
-            fetchIpData(field.action, dataActions);
+            fetchData(field.action, dataActions);
         }
     }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, dataActions.currentRowsPerPage, fieldAlreadyEnabled('enable_limited_login_attempts')]);
 
@@ -147,43 +153,28 @@ const IpAddressDatatable = (props) => {
     //we convert the data to an array
     let data = Object.values({...IpDataTable.data});
 
-
-    const blockIpAddresses = useCallback(async (data) => {
-        //we check if the data is an array
-        if (Array.isArray(data)) {
-            const ids = data.map((item) => item.id);
-            await updateMultiRow(ids, 'blocked');
-            setRowsSelected([]);
-        } else {
-            await updateRow(data, 'blocked');
-        }
-        await fetchDynamicData('event_log')
-    }, [updateMultiRow, updateRow, fetchDynamicData]);
-
-    const allowIpAddresses = useCallback(async (data) => {
-        //we check if the data is an array
-        if (Array.isArray(data)) {
-            const ids = data.map((item) => item.id);
-            await updateMultiRow(ids, 'allowed');
-            setRowsSelected([]);
-        } else {
-            await updateRow(data, 'allowed');
-        }
-        await fetchDynamicData('event_log')
-    }, [updateMultiRow, updateRow, fetchDynamicData]);
-
     const resetIpAddresses = useCallback(async (data) => {
-        //we check if the data is an array
         if (Array.isArray(data)) {
             const ids = data.map((item) => item.id);
-            await resetMultiRow(ids, dataActions);
-            //we emtry the rowsSelected
+            await resetMultiRow(ids, dataActions).then((response) => {
+                if (response && response.success) {
+                    showSavedSettingsNotice(response.message);
+                } else {
+                    showSavedSettingsNotice(response.message);
+                }
+            });
             setRowsSelected([]);
         } else {
-            await resetRow(data, dataActions);
+            await resetRow(data, dataActions).then((response) => {
+                if (response && response.success) {
+                    showSavedSettingsNotice(response.message);
+                } else {
+                    showSavedSettingsNotice(response.message);
+                }
+            });
         }
-        fetchDynamicData('event_log')
-    }, [resetMultiRow, resetRow, fetchDynamicData]);
+        await fetchDynamicData('event_log')
+    }, [resetMultiRow, resetRow, fetchDynamicData, dataActions]);
 
 
     function generateOptions(status, id) {
@@ -271,10 +262,18 @@ const IpAddressDatatable = (props) => {
         setRowsSelected(state.selectedRows);
     }
 
-    let paginationSet = true;
-    if (typeof pagination === 'undefined') {
-        paginationSet = false;
-    }
+    let paginationSet;
+    paginationSet = typeof pagination !== 'undefined';
+
+    useEffect(() => {
+        if (Object.keys(data).length === 0 ) {
+            setTableHeight(100); // Adjust depending on your UI measurements
+        } else {
+            setTableHeight(rowHeight * (paginationSet ? pagination.perPage + 2 : 12)); // Adjust depending on your UI measurements
+        }
+
+    }, [paginationSet, pagination?.perPage, data]);
+    let debounceTimer;
 
     return (
         <>
@@ -289,43 +288,20 @@ const IpAddressDatatable = (props) => {
             </AddIpAddressModal>
             <div className="rsssl-container">
                 {/*display the add button on left side*/}
-
-                <div className="rsssl-add-button">
-                    {(getCurrentFilter(moduleName) === 'blocked' || getCurrentFilter(moduleName) === 'allowed') && (
-                        <div className="rsssl-add-button__inner">
-                            <button
-                                className="button button-secondary button-datatable rsssl-add-button__button"
-                                onClick={handleOpen}
-                                disabled={processing}
-                            >
-                                {getCurrentFilter(moduleName) === 'blocked' && (
-                                    <>{__("Block IP Address", "really-simple-ssl")}</>
-                                )}
-                                {getCurrentFilter(moduleName) === 'allowed' && (
-                                    <>{__("Trust IP Address", "really-simple-ssl")}</>
-                                )}
-                            </button>
-                        </div>
-                    )}
-                </div>
+                <AddButton
+                    getCurrentFilter={getCurrentFilter}
+                    moduleName={moduleName}
+                    handleOpen={handleOpen}
+                    processing={processing}
+                    blockedText={__("Block IP Address", "really-simple-ssl")}
+                    allowedText={__("Trust IP Address", "really-simple-ssl")}
+                />
 
                 {/*Display the search bar*/}
-                <div className="rsssl-search-bar">
-                    <div className="rsssl-search-bar__inner">
-                        <div className="rsssl-search-bar__icon"></div>
-                        <input
-                            type="text"
-                            className="rsssl-search-bar__input"
-                            placeholder={__("Search", "really-simple-ssl")}
-                            disabled={processing}
-                            onKeyUp={(event) => {
-                                if (event.key === 'Enter') {
-                                    handleIpTableSearch(event.target.value, searchableColumns);
-                                }
-                            }}
-                        />
-                    </div>
-                </div>
+                <SearchBar
+                    handleSearch={handleIpTableSearch}
+                    searchableColumns={searchableColumns}
+                />
             </div>
 
             { /*Display the action form what to do with the selected*/}
@@ -356,6 +332,7 @@ const IpAddressDatatable = (props) => {
             )}
 
             {/*Display the datatable*/}
+            <div style={{ height: `${tableHeight}px`, position: 'relative' }}>
             <DataTable
                 columns={columns}
                 data={processing ? [] : data}
@@ -387,6 +364,7 @@ const IpAddressDatatable = (props) => {
                 theme="really-simple-plugins"
                 customStyles={customStyles}
             ></DataTable>
+            </div>
             {!enabled && (
                 <div className="rsssl-locked">
                     <div className="rsssl-locked-overlay"><span

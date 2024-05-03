@@ -656,19 +656,19 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	                switch ( $this->check_severity( $plugin_file ) ) {
 		                case 'c':
 			                echo sprintf( '<a class="rsssl-btn-vulnerable rsssl-critical" target="_blank" rel="noopener noreferrer" href="%s">%s</a>',
-				                'https://really-simple-ssl.com/vulnerabilities/' . $this->getIdentifier( $plugin_file ), ucfirst( $this->risk_naming['c'] ) );
+				                'https://really-simple-ssl.com/vulnerability/' . $this->getIdentifier( $plugin_file ), ucfirst( $this->risk_naming['c'] ) );
 			                break;
 		                case 'h':
 			                echo sprintf( '<a class="rsssl-btn-vulnerable rsssl-high" target="_blank" rel="noopener noreferrer" href="%s">%s</a>',
-				                'https://really-simple-ssl.com/vulnerabilities/' . $this->getIdentifier( $plugin_file ), ucfirst( $this->risk_naming['h'] ) );
+				                'https://really-simple-ssl.com/vulnerability/' . $this->getIdentifier( $plugin_file ), ucfirst( $this->risk_naming['h'] ) );
 			                break;
 		                case 'm':
 			                echo sprintf( '<a class="rsssl-btn-vulnerable rsssl-medium" target="_blank" rel="noopener noreferrer" href="%s">%s</a>',
-				                'https://really-simple-ssl.com/vulnerabilities/' . $this->getIdentifier( $plugin_file ), ucfirst( $this->risk_naming['m'] ) );
+				                'https://really-simple-ssl.com/vulnerability/' . $this->getIdentifier( $plugin_file ), ucfirst( $this->risk_naming['m'] ) );
 			                break;
 		                default:
 			                echo sprintf( '<a class="rsssl-btn-vulnerable rsssl-low" target="_blank" rel="noopener noreferrer" href="%s">%s</a>',
-				                'https://really-simple-ssl.com/vulnerabilities/' . $this->getIdentifier( $plugin_file ), ucfirst( $this->risk_naming['l'] ) );
+				                'https://really-simple-ssl.com/vulnerability/' . $this->getIdentifier( $plugin_file ), ucfirst( $this->risk_naming['l'] ) );
 			                break;
 	                }
                 }

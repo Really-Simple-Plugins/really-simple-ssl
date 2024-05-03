@@ -53,8 +53,8 @@ const useFields = create(( set, get ) => ({
             })
         )
     },
-    showSavedSettingsNotice : (text) => {
-        handleShowSavedSettingsNotice(text);
+    showSavedSettingsNotice : (text , type = 'success') => {
+        handleShowSavedSettingsNotice(text, type);
     },
 
     updateField: (id, value) => {
@@ -278,12 +278,30 @@ const updateFieldsListWithConditions = (fields) => {
     return newFields;
 }
 
-const handleShowSavedSettingsNotice = (text) => {
+const handleShowSavedSettingsNotice = ( text, type ) => {
     if (typeof text === 'undefined') {
         text = __( 'Settings saved', 'really-simple-ssl' );
     }
 
-    toast.success(text);
+    if (typeof type === 'undefined') {
+        type = 'success';
+    }
+
+    if (type === 'error') {
+        toast.error(text);
+    }
+
+    if (type === 'warning') {
+        toast.warning(text);
+    }
+
+    if (type === 'info') {
+        toast.info(text);
+    }
+
+    if (type === 'success') {
+        toast.success(text);
+    }
 }
 
 

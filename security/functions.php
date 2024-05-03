@@ -178,6 +178,10 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 		}
 
 		if ( rsssl_get_option('do_not_edit_htaccess') ) {
+			if ( !empty( get_site_option('rsssl_htaccess_error') ) ) {
+				delete_site_option( 'rsssl_htaccess_error' );
+				delete_site_option( 'rsssl_htaccess_rules' );
+			}
 			return;
 		}
 
