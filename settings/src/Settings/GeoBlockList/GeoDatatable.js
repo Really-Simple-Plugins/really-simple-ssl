@@ -302,7 +302,6 @@ const GeoDatatable = (props) => {
     }, [dataLoaded]);
 
     const handleSelection = useCallback((state) => {
-        console.log(state);
         //based on the current page and the rows per page we get the rows that are selected
         const {selectedCount, selectedRows, allSelected, allRowsSelected} = state;
         let rows = [];

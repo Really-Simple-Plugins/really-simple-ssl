@@ -1009,7 +1009,6 @@ class rsssl_letsencrypt_handler {
 	    try {
 	        $this->account->update($new_email);
         } catch (Exception $e) {
-            //error_log(print_r($e, true));
         }
     }
 

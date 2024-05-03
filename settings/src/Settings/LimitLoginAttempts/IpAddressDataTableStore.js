@@ -215,7 +215,6 @@ const IpAddressDataTableStore = create((set, get) => ({
         if (parts.length !== 4) return false;
         for (let part of parts) {
             const num = parseInt(part, 10);
-            console.log(num);
             if (isNaN(num) || num < 0 || num > 255) return false;
         }
         return true;
@@ -399,7 +398,6 @@ const IpAddressDataTableStore = create((set, get) => ({
                 'delete_entries',
                 {ids}
             );
-            console.log(response);
             //now we set the EventLog
             if (response && response.success) {
                 if (response.success) {
