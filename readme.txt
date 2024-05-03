@@ -5,8 +5,8 @@ Tags: SSL, https, force SSL, mixed content, security, secure website, website se
 Requires at least: 5.9
 License: GPL2
 Tested up to: 6.5
-Requires PHP: 7.2
-Stable tag: 8.1.0
+Requires PHP: 7.4
+Stable tag: 8.1.1
 
 The easiest way to improve security! Leverage your SSL certificate and protect your website visitors.
 
@@ -111,6 +111,14 @@ The plugin checks your certificate before enabling, but if, for example, you mig
 If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions](https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/) instead.
 
 == Changelog ==
+= 8.1.1 =
+* May 14th, 2024
+* Improvement: Textual change on premium overlay
+* Improvement: Upgraded minimum required PHP version to 7.4
+* Improvement: compatibility with Bitnami
+* Improvement: clear notice about .htaccess writable if do_not_edit_htaccess is enabled
+* Fix: URL to details of detected vulnerabilities was incorrect
+
 = 8.1.0 =
 * April 24th, 2024
 * Improvement: some string corrections
