@@ -1,7 +1,7 @@
 === Really Simple SSL ===
 Contributors: RogierLankhorst, markwolters, hesseldejong, vicocotea, marcelsanting, janwoostendorp
 Donate link: https://www.paypal.me/reallysimplessl
-Tags: SSL, https, force SSL, mixed content, security, secure website, website security, TLS, secure socket layers, HSTS
+Tags: Security, SSL, https, HSTS, mixed content
 Requires at least: 5.9
 License: GPL2
 Tested up to: 6.5
