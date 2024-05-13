@@ -29,7 +29,7 @@ class rsssl_firewall_manager {
 	 */
 	public function __construct() {
 		if ( isset( self::$this ) ) {
-			wp_die( 'this is a singleton class and you cannot create a second instance.' );
+			wp_die();
 		}
 		self::$this = $this;
 		// trigger this action to force rules update
@@ -161,7 +161,9 @@ class rsssl_firewall_manager {
 		$contents .= '*/' . "\n\n";
 		// allow disabling of headers for detection purposes.
 		$contents .= 'if ( isset($_GET["rsssl_header_test"]) && (int) $_GET["rsssl_header_test"] ===  ' . $this->get_headers_nonce() . ' ) return;' . "\n\n";
-		$contents .= 'if (!defined("RSSSL_HEADERS_ACTIVE")) define("RSSSL_HEADERS_ACTIVE", true);' . "\n";
+		//if already included at some point, don't execute again.
+		$contents .= 'if (defined("RSSSL_HEADERS_ACTIVE")) return;' . "\n";
+		$contents .= 'define("RSSSL_HEADERS_ACTIVE", true);' . "\n";
 		$contents .= "//RULES START\n" . $rules;
 
 		$this->put_contents( $this->file, $contents );
@@ -190,7 +192,9 @@ class rsssl_firewall_manager {
 
 		//only chmod other files than .htaccess and wpconfig. We leave these as is.
 		if ( strpos($file, 'htaccess') === false || strpos($file, 'wp-config.php') === false ) {
-			chmod( $this->file, 0664 ); //phpcs:ignore
+			if ( $this->file_exists( $this->file) ) {
+				chmod( $this->file, 0644 );//phpcs:ignore
+			}
 		}
 	}
 
@@ -736,8 +740,7 @@ class rsssl_firewall_manager {
 			case 'iis':
 				$autoPrependIni = sprintf("; BEGIN Really Simple Auto Prepend File
 auto_prepend_file = '%s'
-; END Really Simple Auto Prepend File
-", addcslashes($this->file, "'"));
+; END Really Simple Auto Prepend File", addcslashes($this->file, "'"));
 				break;
 		}
 
@@ -750,7 +753,7 @@ auto_prepend_file = '%s'
 				if (preg_match($regex, $userIniContent, $matches)) {
 					$userIniContent = preg_replace($regex, $autoPrependIni, $userIniContent);
 				} else {
-					$userIniContent .= "\n\n" . $autoPrependIni;
+					$userIniContent .= "\n" . $autoPrependIni;
 				}
 			} else {
 				$userIniContent = $autoPrependIni;
@@ -789,7 +792,7 @@ auto_prepend_file = '%s'
 
 		$userIniPath = $this->get_user_ini_path();
 		$userIniContent = $this->get_contents( $userIniPath );
-		$userIniContent = preg_replace( '/; BEGIN Really Simple Auto Prepend File.*?; END BEGIN Really Simple Auto Prepend File/is', '', $userIniContent );
+		$userIniContent = preg_replace( '/; BEGIN Really Simple Auto Prepend File.*?; END Really Simple Auto Prepend File/is', '', $userIniContent );
 		$userIniContent = str_replace( 'auto_prepend_file', ';auto_prepend_file', $userIniContent );
 		$this->put_contents( $userIniPath, $userIniContent );
 	}

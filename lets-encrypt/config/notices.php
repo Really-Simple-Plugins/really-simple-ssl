@@ -36,28 +36,30 @@ function rsssl_le_get_notices_list($notices) {
 			}
 		}
 
-		if ( strpos(site_url(), 'www.') !== false ) {
-			$text = __( "The non-www version of your site does not point to this website. This is recommended, as it will allow you to add it to the certificate as well.", 'really-simple-ssl' );
-		} else {
-			$text = __( "The www version of your site does not point to this website. This is recommended, as it will allow you to add it to the certificate as well.", 'really-simple-ssl' );
-		}
-		$notices['alias_domain_notice'] = array(
-			'condition' => array( 'NOT rsssl_is_subdomain' ),
-			'callback'  => 'RSSSL_LE()->letsencrypt_handler->alias_domain_available',
-			'score'     => 10,
-			'output'    => array(
-				'false'  => array(
-					'title' => 	 __( "Domain", 'really-simple-ssl' ),
-					'msg'         => $text,
-					'icon'        => 'open',
-					'plusone'     => true,
-					'dismissible' => true,
+		if ( rsssl_letsencrypt_generation_allowed() ) {
+			if ( strpos(site_url(), 'www.') !== false ) {
+				$text = __( "The non-www version of your site does not point to this website. This is recommended, as it will allow you to add it to the certificate as well.", 'really-simple-ssl' );
+			} else {
+				$text = __( "The www version of your site does not point to this website. This is recommended, as it will allow you to add it to the certificate as well.", 'really-simple-ssl' );
+			}
+			$notices['alias_domain_notice'] = array(
+				'condition'         => array( 'NOT rsssl_is_subdomain' ),
+				'callback'          => 'RSSSL_LE()->letsencrypt_handler->alias_domain_available',
+				'score'             => 10,
+				'output'            => array(
+					'false' => array(
+						'title'       => __( "Domain", 'really-simple-ssl' ),
+						'msg'         => $text,
+						'icon'        => 'open',
+						'plusone'     => true,
+						'dismissible' => true,
+					),
 				),
-			),
-			'show_with_options' => [
-				'domain',
-			]
-		);
+				'show_with_options' => [
+					'domain',
+				]
+			);
+		}
 
 		if ( $expiry_date ) {
 			$notices['ssl_detected'] = array(

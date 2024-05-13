@@ -534,7 +534,7 @@ function rsssl_menu() {
 									'group_id'      => 'geo_block_list_general',
 									'helpLink'      => 'https://really-simple-ssl.com/instructions/instructions/about-region-restrictions',
 									'premium'       => true,
-									'premium_title' => __( 'Geo Blocklist General', 'really-simple-ssl' ),
+									'premium_title' => __( 'Region restrictions', 'really-simple-ssl' ),
 									'premium_text'  => __( 'Restrict access from specific countries or continents. You can also allow only specific countries.', 'really-simple-ssl' ),
 									'upgrade'       => 'https://really-simple-ssl.com/pro/?mtm_campaign=lla&mtm_source=free&mtm_content=upgrade',
 									'title'         => __( 'Region restrictions', 'really-simple-ssl' ),
@@ -551,8 +551,7 @@ function rsssl_menu() {
 									'upgrade'              => 'https://really-simple-ssl.com/pro/?mtm_campaign=cops&mtm_source=free&mtm_content=upgrade',
 									'title'                => __( 'Trusted IP addresses', 'really-simple-ssl' ),
 									'premium_title'        => __( 'Trusted IP addresses', 'really-simple-ssl' ),
-									'intro' 			  => __( 'Add, remove and list ip-addresses exempt from being blocked. → Here you can add IP addresses that should never be blocked by region restrictions. We will automatically add the IP address of the administrator that enabled Region Restrictions.',
-										'really-simple-ssl' ),
+									'intro' 			  => __( 'Here you can add IP addresses that should never be blocked by region restrictions. We will automatically add the IP address of the administrator that enabled Region Restrictions.', 'really-simple-ssl' ),
 								],
 								[
 									'id'                   => 'geo_block_list_listing',
