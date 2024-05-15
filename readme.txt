@@ -16,6 +16,7 @@ Easily improve site security with WordPress hardening, vulnerability detection a
 Really Simple SSL is the most lightweight and easy-to-use security plugin for WordPress. It lays the foundation of your WordPress website's security by leveraging your SSL certificate, scanning for possible vulnerabilities and implementing essential WordPress hardening features.
 
 We believe that security should have the absolute minimum effect on website performance, user experience and maintainability. Therefore, Really Simple SSL is:
+
 * **Lightweight:** Every security feature is developed with a modular approach and with performance in mind. Disabled features won't load any redundant code.
 * **Easy-to-use:** 1-minute configuration with short onboarding setup.
 
@@ -23,6 +24,7 @@ We believe that security should have the absolute minimum effect on website perf
 
 = Easy SSL Migration =
 Migrates your website to HTTPS and enforces SSL in just one click.
+
 * 301 redirect via PHP or .htaccess
 * Secure cookies
 * Let's Encrypt: Install an SSL Certificate if your hosting provider supports manual installation.
@@ -30,6 +32,7 @@ Migrates your website to HTTPS and enforces SSL in just one click.
 
 = WordPress Hardening =
 Tweak your configuration and keep WordPress fortified and safe by tackling potential weaknesses.
+
 * Prevent code execution in the uploads folder
 * Prevent login feedback and disable user enumeration
 * Disable XML-RPC
@@ -41,10 +44,10 @@ Tweak your configuration and keep WordPress fortified and safe by tackling poten
 Get notified when plugins, themes or WP core contain vulnerabilities and need appropriate action.
 
 === Improve Security with Really Simple SSL Pro ===
-[Protect your site with all essential security features by upgrading to Really Simple SSL Pro](https://really-simple-ssl.com/)
+[Protect your site with all essential security features by upgrading to Really Simple SSL Pro.](https://really-simple-ssl.com/)
 
 = Advanced SSL enforcement =
-* The Mixed Content Scan & Fixer. Detect files that are requested over HTTP and fix it. Both Front- and Back-end.
+* Mixed Content Scan & Fixer. Detect files that are requested over HTTP and fix it, both Front- and Back-end.
 * Enable HTTP Strict Transport Security and configure your site for the HSTS Preload list.
 
 = Security Headers =
@@ -52,7 +55,7 @@ Security headers protect your site visitors against the risk of clickjacking, cr
 
 * Independent of your Server Configuration, works on Apache, LiteSpeed, NGINX, etc.
 * Protect your website visitors with X-XSS Protection, X-Content-Type-Options, X-Frame-Options, a Referrer Policy and CORS headers.
-* Automatically generate your WordPress-tailored Content Security Policy
+* Automatically generate your WordPress-tailored Content Security Policy.
 
 = Vulnerability Measures =
 When a vulnerability is detected in a plugin, theme or WordPress core you will get notified accordingly. With Vulnerability Measures, you can configure simple but effective measures to make sure that a critical vulnerability won't remain unattended.
@@ -63,24 +66,24 @@ When a vulnerability is detected in a plugin, theme or WordPress core you will g
 = Advanced Site Hardening =
 * Choose a custom login URL
 * Automated File Permissions check and fixer
-* Rename and randomize your database prefix.
+* Rename and randomize your database prefix
 * Change the debug.log file location to a non-public folder
-* Disable application passwords.
+* Disable application passwords
 * Control admin creation
-* Disable HTTP methods, reducing HTTP requests.
+* Disable HTTP methods, reducing HTTP requests
 
 = Login Protection =
-Secure your website's login process and user accounts with powerful security measures
+Secure your website's login process and user accounts with powerful security measures.
 
 * Two-Step verification (Email login)
 * Enforce strong passwords and frequent password change
 * Limit Login Attempts
 
-With Limit Login Attempts you can configure a threshold to temporarily or permanently block IP addresses or (non-existing) usernames. You can also throw a CAPTCHA after a failed login (hCaptcha or Google ReCaptcha)
+With Limit Login Attempts you can configure a threshold to temporarily or permanently block IP addresses or (non-existing) usernames. You can also throw a CAPTCHA after a failed login (hCaptcha or Google reCaptcha)
 
 = Access Control =
-* Restrict access to your site for specific regions
-* Add specific IP addresses or IP ranges to the Blocklist or Allowlist
+* Restrict access to your site for specific regions.
+* Add specific IP addresses or IP ranges to the Blocklist or Allowlist.
 
 == Useful Links ==
 * [Documentation](https://really-simple-ssl.com/knowledge-base-overview/)
