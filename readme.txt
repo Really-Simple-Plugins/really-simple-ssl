@@ -128,7 +128,7 @@ The plugin checks your certificate before enabling, but if, for example, you mig
 If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions](https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/) instead.
 
 == Changelog ==
-= 8.2.0 =
+= 8.1.1 =
 * May 14th, 2024
 * New: detection of non-recommended permissions on files
 * New: Configure region restrictions for your site
