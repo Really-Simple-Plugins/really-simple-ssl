@@ -111,7 +111,7 @@ To install this plugin:
 
 == Frequently Asked Questions ==
 = Knowledge Base =
-For more detailed explanations and documentation on all Really Simple SSL features, please search the [Knowlegde Base](https://www.really-simple-ssl.com/knowledge-base/)
+For more detailed explanations and documentation on all Really Simple SSL features, please search the [Knowledge Base](https://www.really-simple-ssl.com/knowledge-base/)
 
 = Mixed Content issues =
 Most mixed content issues are caused by URLs in CSS or JS files. For detailed instructions on how to find mixed content read this [article](https://really-simple-ssl.com/knowledge-base/how-to-track-down-mixed-content-or-insecure-content/).
