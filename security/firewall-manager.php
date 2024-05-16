@@ -691,6 +691,10 @@ class rsssl_firewall_manager {
 	 * @return string
 	 */
 	public function add_htaccess_rules_before_wp_rocket($rules) {
+		if ( !file_exists( $this->file ) ) {
+			return $rules;
+		}
+
 		$rules = $this->get_htaccess_rules()."\n".$rules;
 		if ( ! empty( $rules ) ) {
 			$start           = '#Begin Really Simple Auto Prepend File' . "\n";
