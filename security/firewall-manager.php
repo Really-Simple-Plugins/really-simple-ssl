@@ -60,7 +60,7 @@ class rsssl_firewall_manager {
 	 * @return void
 	 */
 	public function install(): void {
-		if ( ! rsssl_user_can_manage() && ! defined( 'RSSSL_LEARNING_MODE' ) ) {
+		if ( ! rsssl_admin_logged_in() && ! defined( 'RSSSL_LEARNING_MODE' ) ) {
 			return;
 		}
 
@@ -76,7 +76,6 @@ class rsssl_firewall_manager {
 			$this->remove_prepend_file_in_wpconfig();
 			return;
 		}
-
 		// update the file to be included.
 		$this->update_firewall( $rules );
 
@@ -315,7 +314,6 @@ class rsssl_firewall_manager {
 		}
 
 		$rules           = $this->get_htaccess_rules();
-
 		$start           = '#Begin Really Simple Auto Prepend File' . "\n";
 		$end             = "\n" . '#End Really Simple Auto Prepend File' . "\n";
 		$pattern_content = '/' . $start . '(.*?)' . $end . '/is';

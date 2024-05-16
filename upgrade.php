@@ -185,6 +185,14 @@ function rsssl_upgrade() {
 	if ( $prev_version && version_compare( $prev_version, '8.0', '<' ) ) {
 		RSSSL_SECURITY()->firewall_manager->update_wp_config_rule();
 	}
+	//free
+	if ( $prev_version && version_compare( $prev_version, '8.1.2', '<' ) ) {
+		do_action('rsssl_update_rules');
+	}
+	//pro
+	if ( $prev_version && version_compare( $prev_version, '8.2.1', '<' ) ) {
+		do_action('rsssl_update_rules');
+	}
 
 	//don't clear on each update.
 	//RSSSL()->admin->clear_admin_notices_cache();
