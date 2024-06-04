@@ -6,7 +6,7 @@ Requires at least: 5.9
 License: GPL2
 Tested up to: 6.5
 Requires PHP: 7.4
-Stable tag: 8.1.3
+Stable tag: 8.1.4
 
 Easily improve site security with WordPress hardening, vulnerability detection and SSL certificate generation.
 
@@ -131,6 +131,15 @@ The plugin checks your certificate before enabling, but if, for example, you mig
 If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions](https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/) instead.
 
 == Changelog ==
+= 8.1.4 =
+* June 11th, 2024
+* Improvement: dropdown in onboarding not entirely visible
+* Improvement: Styling of locked XML RPC overview
+* Fix: Not loading cookie expiration change
+* Fix: Visual Composer compatibility icw Enforce Strong Password
+* Fix: Multiple CloudFlare detected notices in onboarding
+* Fix: Checkbox position in onboarding
+
 = 8.1.3 =
 * May 16th, 2024
 * Fix: WP Rocket compatibility causing an issue when advanced-headers.php does not exist

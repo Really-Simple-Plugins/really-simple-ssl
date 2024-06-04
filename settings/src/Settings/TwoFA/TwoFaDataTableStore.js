@@ -25,6 +25,7 @@ const DynamicDataTableStore = create((set, get) => ({
                     meta: {
                         rsssl_two_fa_status: 'open',
                     },
+                    _wpnonce: rsssl_settings.nonce,
                 },
             }).catch((error) => {
                 console.error(error);

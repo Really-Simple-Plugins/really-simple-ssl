@@ -194,6 +194,10 @@ function rsssl_upgrade() {
 		do_action('rsssl_update_rules');
 	}
 
+	if ( $prev_version && version_compare( $prev_version, '8.2.3', '<' ) ) {
+		update_site_option('rsssl_geo_ip_database_file', get_option('rsssl_geo_ip_database_file') );
+	}
+
 	//don't clear on each update.
 	//RSSSL()->admin->clear_admin_notices_cache();
 

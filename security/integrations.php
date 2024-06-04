@@ -115,6 +115,7 @@ if ( ! function_exists('rsssl_integrations') ) {
 					'always_include' => false,
 					'folder'         => false,
 					'admin_only'     => false,
+					'is_pro'         => false,
 				]
 			);
 
@@ -123,7 +124,8 @@ if ( ! function_exists('rsssl_integrations') ) {
 			}
 
 			if ( rsssl_is_integration_enabled( $plugin, $details ) ) {
-				$path = apply_filters( 'rsssl_integrations_path', rsssl_path, $plugin );
+				$path = apply_filters( 'rsssl_integrations_path', rsssl_path, $plugin, $details );
+
 				$file = $path . 'security/' . $details['folder'] . "/" . $plugin . '.php';
 				if ( ! file_exists( $file ) ) {
 					continue;

@@ -51,7 +51,7 @@ function rsssl_remove_fields($fields){
 
 	return $fields;
 }
-add_filter('rsssl_fields', 'rsssl_remove_fields', 10, 1);
+add_filter('rsssl_fields', 'rsssl_remove_fields', 500, 1);
 
 function rsssl_email_help_text() {
 

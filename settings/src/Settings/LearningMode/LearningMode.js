@@ -276,6 +276,13 @@ const LearningMode = (props) => {
                         theme={theme}
                         customStyles={customStyles}
                         conditionalRowStyles={conditionalRowStyles}
+                        paginationComponentOptions={{
+                            rowsPerPageText: __('Rows per page:', 'really-simple-ssl'),
+                            rangeSeparatorText: __('of', 'really-simple-ssl'),
+                            noRowsPerPage: false,
+                            selectAllRowsItem: false,
+                            selectAllRowsItemText: __('All', 'really-simple-ssl'),
+                        }}
                         selectableRows
                         selectableRowsHighlight={true}
                         onSelectedRowsChange={handleSelection}

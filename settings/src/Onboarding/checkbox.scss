@@ -1,6 +1,5 @@
 .rsssl-modal-body, .rsssl-le-activate_ssl {
   .rsssl-modal-checkbox-container {
-    margin-right: 35px;
     display: block;
     position: relative;
     margin-bottom: 5px;
@@ -48,7 +47,6 @@
     }
 
     input {
-      position: absolute;
       height: 0;
       width: 0;
       opacity: 0;

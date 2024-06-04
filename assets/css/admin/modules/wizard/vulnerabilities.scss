@@ -7,6 +7,14 @@
 .rsssl-processing {
   opacity:0.5;
 }
+.rsssl-vulnerabilities_measures-overview {
+  .allowRowEvents {
+    .wp-core-ui select {
+      max-width: 100%;
+    }
+  }
+}
+
 .rsssl-vulnerabilities_measures {
   .rsssl-locked-overlay {
     input[type=checkbox] {

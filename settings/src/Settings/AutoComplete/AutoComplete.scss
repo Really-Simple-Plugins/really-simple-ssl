@@ -29,7 +29,8 @@
     padding-left:10px;
   }
   .MuiPopper-root, .MuiPaper-root {
-    max-height:40vh;
+    max-height:150px;
+    z-index: 15;
     div {
       font-family: inherit !important;
     }

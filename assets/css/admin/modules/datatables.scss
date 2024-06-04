@@ -4,6 +4,14 @@
     flex-direction: row;
   }
 
+  #cell-2-force_update > div > select {
+    max-width: 100%;
+  }
+
+  #cell-2-quarantine > div > select {
+    max-width: 100%;
+  }
+
   .rdt_TableCol:first-child, .rdt_TableCell:first-child {
     min-width: initial;
   }
@@ -314,6 +322,21 @@ nav.rdt_Pagination > div > svg {
 
 /* EdgeCase: hardening-xml */
 .rsssl-hardening-xml {
+
+  .rdt_Table {
+    height: 300px;
+    align-items: initial;
+
+    div:nth-child(2) {
+      align-items: baseline;
+    }
+
+  }
+
+  .rdt_TableHead {
+    padding-bottom: 10px;
+  }
+
   .rdt_TableCol:first-child {
     padding: 0 25px !important;
   }

@@ -1,5 +1,6 @@
 @import '../../../../assets/css/variables.scss';
 .rsssl-modal {
+  overflow: visible;
   width: 700px;
   //background:var(--rsp-grey-100);
   padding:var(--rsp-spacing-m) var(--rsp-spacing-l);
@@ -63,6 +64,8 @@
     position: absolute;
     left: 0;
     right: 0;
+    border-bottom-left-radius: var(--rsp-border-radius) var(--rsp-border-radius);
+    border-bottom-right-radius: var(--rsp-border-radius) var(--rsp-border-radius);
     img {
       width: 150px;
 

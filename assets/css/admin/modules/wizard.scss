@@ -20,7 +20,7 @@
 
     .rsssl-locked {
       position: absolute;
-      z-index: 10;
+      z-index: 20;
       top: 0;
       left: 0;
       bottom: 0;
@@ -28,10 +28,10 @@
       background: rgba(255, 255, 255, 0.8);
       border-radius: var(--rsp-border-radius);
       .rsssl-shield-overlay {
+        height:445px;
         align-items: center;
-        display: flex;
         justify-content: center;
-        margin-top: 30%;
+        display:flex;
       }
       .rsssl-locked-overlay {
         z-index: 1;
@@ -93,7 +93,7 @@
       bottom: 0;
       display: flex;
       flex-direction: column;
-      z-index: 12; //should be above 10, for the text editor, which has 10.
+      z-index: 16; //should be above 10, for the text editor, which has 10.
 
       .rsssl-grid-item-footer-buttons {
         a.button, button {
