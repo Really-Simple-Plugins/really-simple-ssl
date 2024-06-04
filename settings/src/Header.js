@@ -2,6 +2,7 @@ import {useEffect} from "@wordpress/element";
 import { __ } from '@wordpress/i18n';
 import Notices from "./Settings/Notices";
 import useMenu from "./Menu/MenuData";
+import {addUrlRef} from "./utils/AddUrlRef";
 
 const Header = () => {
     const {menu, selectedMainMenuItem, fetchMenuData} = useMenu();
@@ -26,7 +27,7 @@ const Header = () => {
                 </div>
                 <div className="rsssl-header-right">
                     { !rsssl_settings.le_generated_by_rsssl &&
-                        <a className="rsssl-knowledge-base-link" href="https://really-simple-ssl.com/knowledge-base" target="_blank" rel="noopener noreferrer">{__("Documentation", "really-simple-ssl")}</a>}
+                        <a className="rsssl-knowledge-base-link" href={addUrlRef("https://really-simple-ssl.com/knowledge-base")} target="_blank" rel="noopener noreferrer">{__("Documentation", "really-simple-ssl")}</a>}
                     { rsssl_settings.le_generated_by_rsssl &&
                         <a href={rsssl_settings.letsencrypt_url}>{__("Let's Encrypt","really-simple-ssl")}</a>
                     }

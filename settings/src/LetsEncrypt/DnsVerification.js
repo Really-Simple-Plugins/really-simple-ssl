@@ -10,6 +10,7 @@ import useMenu from "../Menu/MenuData";
 import * as rsssl_api from "../utils/api";
 import sleeper from "../utils/sleeper";
 import useLetsEncryptData from "./letsEncryptData";
+import {addUrlRef} from "../utils/AddUrlRef";
 
 const DnsVerification = (props) => {
     const {updateVerificationType} = useLetsEncryptData();
@@ -62,7 +63,7 @@ const DnsVerification = (props) => {
                     <h4>{__("Next step", "really-simple-ssl")}</h4>
                     <p>{__("Add the following token as text record to your DNS records. We recommend to use a short TTL during installation, in case you need to change it.", "really-simple-ssl")}
                         <Hyperlink target="_blank" rel="noopener noreferrer" text={__("Read more", "really-simple-ssl")}
-                                   url="https://really-simple-ssl.com/how-to-add-a-txt-record-to-dns"/>
+                                   url={addUrlRef("https://really-simple-ssl.com/how-to-add-a-txt-record-to-dns")}/>
                     </p>
                     <div  className="rsssl-dns-text-records">
                         <div>

@@ -66,7 +66,7 @@ if ( ! class_exists( 'rsssl_mailer' ) ) {
 				[
 					'title'   => __( "About notifications", "really-simple-ssl" ),
 					'message' => __( "Email notifications are only sent for important updates, security notices or when certain features are enabled.", "really-simple-ssl" ),
-					'url'     => 'https://really-simple-ssl.com/email-notifications/',
+					'url'     => rsssl_link('email-notifications/'),
 				]
 			];
 

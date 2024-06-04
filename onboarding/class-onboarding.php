@@ -167,7 +167,7 @@ class rsssl_onboarding {
 		}
 
 		if( !defined('rsssl_pro')) {
-			$info = __('You can also let the automatic scan of the pro version handle this for you, and get premium support, increased security with HSTS and more!', 'really-simple-ssl'). " " . sprintf('<a target="_blank" rel="noopener noreferrer" href="%s">%s</a>', RSSSL()->admin->pro_url, __("Check out Really Simple SSL Pro", "really-simple-ssl"));;
+			$info = __('You can also let the automatic scan of the pro version handle this for you, and get premium support, increased security with HSTS and more!', 'really-simple-ssl'). " " . sprintf('<a target="_blank" rel="noopener noreferrer" href="%s">%s</a>',rsssl_link(), __("Check out Really Simple SSL Pro", "really-simple-ssl"));;
 		}
 
 		$steps = [

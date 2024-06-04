@@ -7,6 +7,7 @@ import useFields from "../Settings/FieldsData";
 import useMenu from "../Menu/MenuData";
 import {useEffect} from '@wordpress/element';
 import useLetsEncryptData from "./letsEncryptData";
+import {addUrlRef} from "../utils/AddUrlRef";
 
 const Directories = (props) => {
     const {updateVerificationType} = useLetsEncryptData();
@@ -76,7 +77,7 @@ const Directories = (props) => {
                 <><p>
                     <Hyperlink target="_blank" rel="noopener noreferrer"
                                text={__("If you also want to secure subdomains like mail.domain.com, cpanel.domain.com, you have to use the %sDNS%s challenge.", "really-simple-ssl")}
-                               url="https://really-simple-ssl.com/lets-encrypt-authorization-with-dns"/>
+                               url={addUrlRef("https://really-simple-ssl.com/lets-encrypt-authorization-with-dns")}/>
                     &nbsp;{__("Please note that auto-renewal with a DNS challenge might not be possible.", "really-simple-ssl")}
                 </p>
                     <Button

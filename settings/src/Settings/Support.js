@@ -2,6 +2,7 @@ import {TextareaControl,} from '@wordpress/components';
 import {__} from '@wordpress/i18n';
 import * as rsssl_api from "../utils/api";
 import {useState} from "@wordpress/element";
+import {addUrlRef} from "../utils/AddUrlRef";
 
 const Support = () => {
     const [message, setMessage] = useState('');
@@ -24,6 +25,7 @@ const Support = () => {
             + '&supportrequest=' + encodeURIComponent(encodedMessage)
             + '&htaccesscontents=' + encodeURIComponent(response.htaccess_contents)
             + '&debuglog=' + encodeURIComponent(response.system_status);
+            url = addUrlRef(url);
             window.location.assign(url);
         });
     }

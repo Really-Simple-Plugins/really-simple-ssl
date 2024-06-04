@@ -362,7 +362,7 @@ if ( !function_exists('rsssl_get_manual_instructions_text')) {
 	 * @return string
 	 */
 	function rsssl_get_manual_instructions_text( $url ) {
-		$default_url = 'https://really-simple-ssl.com/install-ssl-certificate';
+		$default_url = rsssl_link('install-ssl-certificate');
 		$dashboard_activation_required = rsssl_activation_required();
 		$activated_by_default = rsssl_activated_by_default();
 		$paid_only = rsssl_paid_only();
@@ -392,7 +392,7 @@ if ( !function_exists('rsssl_get_manual_instructions_text')) {
 		} else if ( $paid_only ) {
 			$msg
 				= sprintf( __( "According to our information, your hosting provider does not allow any kind of SSL installation, other then their own paid certificate. For an alternative hosting provider with SSL, see this %sarticle%s.",
-				"really-simple-ssl" ), '<a target="_blank" rel="noopener noreferrer" href="https://really-simple-ssl.com/hosting-providers-with-free-ssl">', '</a>' );
+				"really-simple-ssl" ), '<a target="_blank" rel="noopener noreferrer" href='.rsssl_link("hosting-providers-with-free-ssl").'>', '</a>' );
 		} else {
 			$msg = __( "Your hosting environment does not allow automatic SSL installation.", "really-simple-ssl" ) . ' ' .
 			       $complete_manually . ' ' .

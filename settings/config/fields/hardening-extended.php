@@ -15,7 +15,7 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'email'            => [
 					'title'   => __( "Settings update: Debug.log file relocated", 'really-simple-ssl' ),
 					'message' => __( "From now on, the debug.log won’t be publicly accessible whenever wp-debugging is enabled. The debug log will be stored in a randomly named folder in /wp-content/. This prevents possible leakage of sensitive debugging information.", 'really-simple-ssl' ),
-					'url'     => 'https://really-simple-ssl.com/instructions/debug-log-has-been-relocated-but-where/',
+					'url'     => 'instructions/debug-log-has-been-relocated-but-where',
 				],
 				'label'              => __( "Change debug.log file location", 'really-simple-ssl' ),
 				'disabled'           => false,
@@ -39,7 +39,7 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'tooltip'  => __( "This setting will block attempts to assign administrator roles outside the native user creation process by WordPress. This might include other plugins that create, edit or assign roles to users. If you need to create an administrator in a third-party plugin, temporarily disable this setting while you make the changes.", 'really-simple-ssl' ),
 				'help'               => [
 					'label' => 'default',
-					'url'   => 'https://really-simple-ssl.com/instructions/about-hardening-features/',
+					'url'   => 'instructions/about-hardening-features/',
 					'title' => __( "Unauthorized administrators", 'really-simple-ssl' ),
 					'text'  => __( 'Many vulnerabilities are exploited by injecting a user with administrator capabilities outside of the native WordPress creation process. Under advanced hardening you can prevent this from happening.', 'really-simple-ssl' ),
 				],
@@ -68,7 +68,7 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'email'            => [
 					'title'   => __( "You have changed your login URL", 'really-simple-ssl' ),
 					'message' => __( "Your login URL has changed to {login_url} to prevent common bot attacks on standard login URLs. Learn more about this feature, common questions and measures to prevent any issues.", 'really-simple-ssl' ),
-					'url'     => 'https://really-simple-ssl.com/instructions/login-url-changed',
+					'url'     => 'instructions/login-url-changed',
 				],
 				'disabled' => false,
 				'default'  => false,

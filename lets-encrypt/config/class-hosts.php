@@ -494,6 +494,7 @@ if ( ! class_exists( "rsssl_le_hosts" ) ) {
 		            'local_ssl_generation_needed' => false,
 		            'free_ssl_available' => true,
 		            'hosting_dashboard' => 'cpanel',
+		            'detected' => defined('HBRW_PLATFORM_ID') && (int) HBRW_PLATFORM_ID === 1,
 		            'api' => false,
 		            'ssl_installation_link' => false,
 	            ),

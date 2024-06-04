@@ -26,7 +26,7 @@ function rsssl_le_get_notices_list($notices) {
 					'output'    => array(
 						'true' => array(
 							'msg'         => __( "Your Key and Certificate directories are not properly protected.", "really-simple-ssl" ),
-							'url'         => "https://really-simple-ssl.com/protect-ssl-generation-directories",
+							'url'         => rsssl_link( "protect-ssl-generation-directories"),
 							'icon'        => 'warning',
 							'plusone'     => true,
 							'dismissible' => true,
@@ -127,7 +127,7 @@ function rsssl_le_get_notices_list($notices) {
 				'true' => array(
 					'msg'         => __( "Your server provides shell functionality, which offers additional methods to install SSL. If installing SSL using the default methods is not possible, you can install the shell add on.", "really-simple-ssl" ),
 					'icon'        => 'open',
-					'url'         => "https://really-simple-ssl.com/installing-ssl-using-shell-functions",
+					'url'         => "installing-ssl-using-shell-functions",
 					'plusone'     => true,
 					'dismissible' => true,
 				),
@@ -143,7 +143,7 @@ function rsssl_le_get_notices_list($notices) {
 					'true' => array(
 						'msg'         => __( "You are using the Really Simple SSL Shell Exec add on, but your current version needs to be updated.", "really-simple-ssl" ),
 						'icon'        => 'warning',
-						'url'         => "https://really-simple-ssl.com/installing-ssl-using-shell-functions",
+						'url'         => "installing-ssl-using-shell-functions",
 						'plusone'     => true,
 						'dismissible' => false,
 					),

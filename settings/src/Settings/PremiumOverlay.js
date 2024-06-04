@@ -1,12 +1,12 @@
 import {__} from "@wordpress/i18n";
 import useLicense from "./License/LicenseData";
 
-const PremiumOverlay = ({msg, title, url, upgrade}) => {
+const PremiumOverlay = ({msg, title, upgrade}) => {
     const {licenseStatus} = useLicense();
     let pro_plugin_active = rsssl_settings.pro_plugin_active === '1'
     let target = pro_plugin_active ? '_self' : '_blank';
     let upgradeButtonText = pro_plugin_active ? __("Check license", "really-simple-ssl") : __("Go Pro", "really-simple-ssl");
-    let upgradeUrl = upgrade ? upgrade : 'https://really-simple-ssl.com/pro/?mtm_campaign=fallback&mtm_source=free&mtm_content=upgrade';
+    let upgradeUrl = upgrade ? upgrade : rsssl_settings.upgrade_link;
     if (pro_plugin_active) {
         upgradeUrl = '#settings/license';
     }
