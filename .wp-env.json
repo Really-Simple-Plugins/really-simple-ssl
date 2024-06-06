@@ -1,0 +1,17 @@
+{
+  "core": "WordPress/WordPress#6.5.3",
+  "plugins": [ "."],
+  "port": 9999,
+  "mappings": {
+    "wp-content/plugins/really-simple-ssl": "../really-simple-ssl"
+  },
+  "env": {
+    "development": {
+      "phpVersion": "7.4",
+      "config": {
+        "WP_DEBUG": true,
+        "WP_DEBUG_LOG": true
+      }
+    }
+  }
+}
