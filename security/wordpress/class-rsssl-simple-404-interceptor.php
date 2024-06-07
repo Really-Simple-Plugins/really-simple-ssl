@@ -97,7 +97,7 @@ class Rsssl_Simple_404_Interceptor {
 	 */
 	public function show_help_notices(array $notices): array {
 		if (get_option($this->notice_option)) {
-			$message = __('We detected a large numbers of 404 errors on your site, possibly caused by bots. It is recommended to block traffic from certain bots.', 'really-simple-ssl');
+			$message = __('We detected suspected bots triggering large numbers of 404 errors on your site.', 'really-simple-ssl');
 			$notice = [
 				'callback' => '_true_',
 				'score' => 1,
@@ -108,9 +108,10 @@ class Rsssl_Simple_404_Interceptor {
 						'icon' => 'warning',
 						'type' => 'warning',
 						'dismissible' => true,
-						'admin_notice' => true,
+						'admin_notice' => false,
+                        'highlight_field_id' => 'enable_firewall',
 						'plusone' => true,
-						'url' => 'https://really-simple-ssl.com/how-to-fix-detected-404-errors/',
+						'url' => 'https://really-simple-ssl.com/suspected-bots-causing-404-errors/',
 					]
 				]
 			];
