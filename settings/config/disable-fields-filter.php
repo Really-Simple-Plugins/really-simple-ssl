@@ -17,7 +17,7 @@ function rsssl_remove_fields($fields){
 			'label' => 'warning',
 			'title' => __( "Redirect method", 'really-simple-ssl' ),
 			'text'  => __( 'Enable .htaccess only if you know how to regain access in case of issues.', 'really-simple-ssl' ).' '.__( 'Redirects your site to https with a SEO friendly 301 redirect if it is requested over http.', 'really-simple-ssl' ),
-			'url'  => 'https://really-simple-ssl.com/remove-htaccess-redirect-site-lockout/',
+			'url'  => 'remove-htaccess-redirect-site-lockout',
 		];
 	}
 
@@ -58,7 +58,7 @@ function rsssl_email_help_text() {
 	return [
 		'label' => rsssl_is_email_verified() ? 'success' : 'warning',
 		'title' => __( "Email validation", 'really-simple-ssl' ),
-		'url'   => add_query_arg( [ 'page' => 'really-simple-security#settings/general/email' ], rsssl_admin_url() ),
+		'url'   => 'instructions/email-verification',
 		'text'  => rsssl_is_email_verified()
 			? __( "Email validation completed", 'really-simple-ssl' )
 			: ( rsssl_check_if_email_essential_feature()

@@ -655,20 +655,32 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 if ($this->check_vulnerability( $plugin_file ) ) {
 	                switch ( $this->check_severity( $plugin_file ) ) {
 		                case 'c':
-			                echo sprintf( '<a class="rsssl-btn-vulnerable rsssl-critical" target="_blank" rel="noopener noreferrer" href="%s">%s</a>',
-				                'https://really-simple-ssl.com/vulnerability/' . $this->getIdentifier( $plugin_file ), ucfirst( $this->risk_naming['c'] ) );
+			                printf(
+                                    '<a class="rsssl-btn-vulnerable rsssl-critical" target="_blank" rel="noopener noreferrer" href="%s">%s</a>',
+				                    rsssl_link('vulnerability/' . $this->getIdentifier( $plugin_file ) ),
+                                    ucfirst( $this->risk_naming['c'] )
+                            );
 			                break;
 		                case 'h':
-			                echo sprintf( '<a class="rsssl-btn-vulnerable rsssl-high" target="_blank" rel="noopener noreferrer" href="%s">%s</a>',
-				                'https://really-simple-ssl.com/vulnerability/' . $this->getIdentifier( $plugin_file ), ucfirst( $this->risk_naming['h'] ) );
+			                printf(
+                                    '<a class="rsssl-btn-vulnerable rsssl-high" target="_blank" rel="noopener noreferrer" href="%s">%s</a>',
+				                    rsssl_link('vulnerability/' . $this->getIdentifier( $plugin_file ) ),
+                                    ucfirst( $this->risk_naming['h'] )
+                            );
 			                break;
 		                case 'm':
-			                echo sprintf( '<a class="rsssl-btn-vulnerable rsssl-medium" target="_blank" rel="noopener noreferrer" href="%s">%s</a>',
-				                'https://really-simple-ssl.com/vulnerability/' . $this->getIdentifier( $plugin_file ), ucfirst( $this->risk_naming['m'] ) );
+			                printf(
+                                    '<a class="rsssl-btn-vulnerable rsssl-medium" target="_blank" rel="noopener noreferrer" href="%s">%s</a>',
+				                    rsssl_link('vulnerability/' . $this->getIdentifier( $plugin_file ) ),
+                                    ucfirst( $this->risk_naming['m'] )
+                            );
 			                break;
 		                default:
-			                echo sprintf( '<a class="rsssl-btn-vulnerable rsssl-low" target="_blank" rel="noopener noreferrer" href="%s">%s</a>',
-				                'https://really-simple-ssl.com/vulnerability/' . $this->getIdentifier( $plugin_file ), ucfirst( $this->risk_naming['l'] ) );
+			                echo sprintf(
+                                    '<a class="rsssl-btn-vulnerable rsssl-low" target="_blank" rel="noopener noreferrer" href="%s">%s</a>',
+				                    rsssl_link('vulnerability/' . $this->getIdentifier( $plugin_file ) ),
+                                    ucfirst( $this->risk_naming['l'] )
+                            );
 			                break;
 	                }
                 }

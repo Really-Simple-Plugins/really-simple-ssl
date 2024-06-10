@@ -3,6 +3,7 @@ import { __ } from '@wordpress/i18n';
 import Icon from "../../utils/Icon";
 import useSslLabs from "./SslLabsData";
 import {getRelativeTime} from "../../utils/formatting";
+import {addUrlRef} from "../../utils/AddUrlRef";
 const ScoreElement = ({className, content, id}) => {
     const [hover, setHover] = useState(false);
 
@@ -315,7 +316,7 @@ const SslLabs = () => {
                             {hasErrors && errorMessage}
                             {!hasErrors && __('What does my score mean?', 'really-simple-ssl')}
                         </p>
-                        <a href="https://really-simple-ssl.com/instructions/about-ssl-labs/" target="_blank" rel="noopener noreferrer">
+                        <a href={addUrlRef("https://really-simple-ssl.com/instructions/about-ssl-labs/")} target="_blank" rel="noopener noreferrer">
                             {__('Read more', 'really-simple-ssl')}
                         </a>
                     </div>

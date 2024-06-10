@@ -114,6 +114,7 @@ function rsssl_plugin_admin_scripts()
 			true
 		);
 		wp_set_script_translations($handle, 'really-simple-ssl');
+
 		wp_localize_script(
 			'rsssl-settings',
 			'rsssl_settings',
@@ -132,7 +133,8 @@ function rsssl_plugin_admin_scripts()
 				'dashboard_url' => add_query_arg(['page' => 'really-simple-security'], rsssl_admin_url()),
 				'letsencrypt_url' => rsssl_letsencrypt_wizard_url(),
 				'le_generated_by_rsssl' => rsssl_generated_by_rsssl(),
-				'upgrade_link' => is_multisite() ? 'https://really-simple-ssl.com/pro/?mtm_campaign=fallback&mtm_source=free&mtm_content=upgrade' : 'https://really-simple-ssl.com/pro/?mtm_campaign=fallback&mtm_source=free&mtm_content=upgrade',
+				'upgrade_link' => rsssl_link('pro', 'upgrade' ),
+				'ref' => rsssl_get_url_ref(),
 				'plugin_url' => rsssl_url,
 				'network_link' => network_site_url('plugins.php'),
 				'pro_plugin_active' => defined('rsssl_pro'),

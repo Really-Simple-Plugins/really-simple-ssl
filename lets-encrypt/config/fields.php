@@ -119,7 +119,7 @@ function rsssl_le_add_fields($fields) {
 				'default' => false,
 				'help' => [
 					'label' => 'default',
-					'url'   => 'https://really-simple-ssl.com/ocsp-stapling',
+					'url'   => 'ocsp-stapling',
 					'title' => __( "Disable OCSP stapling", "really-simple-ssl" ),
 					'text'  => __( "OCSP stapling is configured as enabled by default. You can disable this option if this is not supported by your hosting provider.", "really-simple-ssl" ),
 				],

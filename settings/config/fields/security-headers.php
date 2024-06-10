@@ -20,7 +20,7 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'default'  => 'zero',
 				'help'     => [
 					'label' => 'default',
-					'url'   => 'https://really-simple-ssl.com/definition/about-recommended-security-headers/?mtm_campaign=definition&mtm_source=free',
+					'url'   => 'definition/about-recommended-security-headers',
 					'title' => __("About Recommended Security Headers", 'really-simple-ssl'),
 					'text'  => __('These security headers are the fundamental security measures to protect your website visitors while visiting your website.',
 						'really-simple-ssl'),
@@ -80,7 +80,7 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'default'          => false,
 				'help'             => [
 					'label' => 'default',
-					'url'   => 'https://really-simple-ssl.com/definition/what-is-hsts/?mtm_campaign=definition&mtm_source=free',
+					'url'   => 'definition/what-is-hsts/',
 					'title' => __("About HTTP Strict Transport Security", 'really-simple-ssl'),
 					'text'  => __('Leveraging your SSL certificate with HSTS is a staple for every website. Force your website over SSL, mitigating risks of malicious counterfeit websites in your name.',
 						'really-simple-ssl'),
@@ -165,7 +165,7 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				],
 				'help'     => [
 					'label' => 'default',
-					'url'   => 'https://really-simple-ssl.com/definition/what-is-a-cross-origin-policy/?mtm_campaign=definition&mtm_source=free',
+					'url'   => 'definition/what-is-a-cross-origin-policy/',
 					'title' => __("About Cross Origin Policies", 'really-simple-ssl'),
 					'text'  => __('One of the most powerful features, and therefore the most complex are the Cross-Origin headers that can isolate your website so any data leaks are minimized.',
 						'really-simple-ssl'),
@@ -215,7 +215,7 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'disabled' => false,
 				'help'     => [
 					'label' => 'default',
-					'url'   => 'https://really-simple-ssl.com/definition/what-is-a-permissions-policy/?mtm_campaign=definition&mtm_source=free',
+					'url'   => 'definition/what-is-a-permissions-policy',
 					'title' => __( "About the Permission Policy", 'really-simple-ssl' ),
 					'text'  => __( 'Browser features are plentiful, but most are not needed on your website.', 'really-simple-ssl' ).' '.__('They might be misused if you don’t actively tell the browser to disable these features.', 'really-simple-ssl' ),
 				],
@@ -313,7 +313,7 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'default'  => false,
 				'help'     => [
 					'label' => 'default',
-					'url'   => 'https://really-simple-ssl.com/definition/what-is-a-content-security-policy/?mtm_campaign=definition&mtm_source=free',
+					'url'   => 'definition/what-is-a-content-security-policy',
 					'title' => __( "About the Content Security Policy", 'really-simple-ssl' ),
 					'text'  => __( 'The content security policy has many options, so we always recommend starting in ‘learning mode’ to see what files and scripts are loaded.', 'really-simple-ssl' ),
 				],

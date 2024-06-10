@@ -27,7 +27,7 @@ add_filter( 'rsssl_fields', function( $fields ) {
 					'title'     => __("Settings update: .htaccess redirect", 'really-simple-ssl'),
 					'message'   => __("The .htaccess redirect has been enabled on your site. If the server configuration is non-standard, this might cause issues. Please check if all pages on your site are functioning properly.",
 						'really-simple-ssl'),
-					'url'       => 'https://really-simple-ssl.com/remove-htaccess-redirect-site-lockout/',
+					'url'       => 'remove-htaccess-redirect-site-lockout',
 					'condition' => ['redirect' => 'htaccess']
 				],
 				'react_conditions' => [
@@ -91,7 +91,7 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'label'       => __( "Mixed content scan", "really-simple-ssl" ),
 				'help'        => [
 					'label' => 'default',
-					'url' => 'https://really-simple-ssl.com/definition/what-is-mixed-content/?mtm_campaign=definition&mtm_source=free',
+					'url' => 'definition/what-is-mixed-content',
 					'title' => __( "About the Mixed Content Scan", 'really-simple-ssl' ),
 					'text'  => __( 'The extensive mixed content scan will list all current and future issues and provide a fix, or instructions to fix manually.', 'really-simple-ssl' ),
 				],

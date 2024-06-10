@@ -108,7 +108,7 @@ if ( ! class_exists( 'rsssl_site_health' ) ) {
 				'actions'     => sprintf(
 					'<p><a href="%s" target="_blank" rel="noopener noreferrer">%s <span class="screen-reader-text">%s</span><span aria-hidden="true" class="dashicons dashicons-external"></span></a></p>',
 					/* translators: Documentation explaining debugging in WordPress. */
-					esc_url( 'https://really-simple-ssl.com/security/debug-display-enabled' ),
+					esc_url( rsssl_link('security/debug-display-enabled') ),
 					__( 'Read more about security concerns with debug display enabled', 'really-simple-ssl' ),
 					/* translators: Accessibility text. */
 					__( '(opens in a new tab)' )// phpcs:ignore WordPress.WP.I18n.MissingArgDomain
@@ -150,7 +150,7 @@ if ( ! class_exists( 'rsssl_site_health' ) ) {
 				$result['description'] = sprintf( '<p>%s</p>', __( 'Your website does not send all recommended security headers.', 'really-simple-ssl' ) . $style . $list );
 				$result['actions']     = sprintf(
 					'<p><a href="%s" target="_blank" rel="noopener noreferrer">%s</a></p>',
-					'https://really-simple-ssl.com/site-health-recommended-security-headers/',
+					rsssl_link('site-health-recommended-security-headers/'),
 					__( 'Learn more about security headers', 'really-simple-ssl' )
 				);
 			}
