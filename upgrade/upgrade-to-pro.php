@@ -48,7 +48,7 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 						$this->prefix = "rsssl_";
 						$this->api_url = "https://really-simple-ssl.com";
 						$this->dashboard_url = add_query_arg(["page" => "really-simple-security"], $rsssl_admin_url );
-						$this->account_url = 'https://really-simple-ssl.com/account');
+						$this->account_url = 'https://really-simple-ssl.com/account';
 						$this->instructions = 'https://really-simple-ssl.com/knowledge-base/install-really-simple-ssl-pro';
 						break;
 					case "burst_pro":
