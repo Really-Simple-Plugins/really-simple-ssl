@@ -1,4 +1,4 @@
-=== Really Simple SSL ===
+=== Really Simple SSL - Simple and Lightweight Security ===
 Contributors: RogierLankhorst, markwolters, hesseldejong, vicocotea, marcelsanting, janwoostendorp
 Donate link: https://www.paypal.me/reallysimplessl
 Tags: Security, SSL, https, HSTS, mixed content
