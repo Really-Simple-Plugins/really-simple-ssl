@@ -671,10 +671,10 @@ class rsssl_firewall_manager {
 		do {
 			++$i;
 			if ( $this->file_exists( $dir . '/wp-config.php' ) ) {
-				return $dir . '/wp-config.php';
+				return apply_filters('rsssl_wpconfig_path', $dir . '/wp-config.php' );
 			}
 		} while ( ( $dir = realpath( "$dir/.." ) ) && ( $i < $maxiterations ) );//phpcs:ignore
-		return null;
+		return apply_filters( 'rsssl_wpconfig_path', null );
 	}
 
 	/**
