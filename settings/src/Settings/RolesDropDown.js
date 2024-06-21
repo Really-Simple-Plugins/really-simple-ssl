@@ -69,7 +69,12 @@ const RolesDropDown = ({ field }) => {
                 color: 'initial',
                 opacity: '1',
             },
-        })
+        }),
+        menuList: (provided) => ({
+            ...provided,
+            height: '125px',
+            zIndex: 999
+        }),
     };
 
     return (

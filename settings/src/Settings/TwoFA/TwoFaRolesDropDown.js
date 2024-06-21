@@ -2,15 +2,16 @@ import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 import useFields from "../FieldsData";
 import useRolesData from './RolesStore';
-import {__} from "@wordpress/i18n";
+import { __ } from "@wordpress/i18n";
 import './select.scss';
+
 /**
  * TwoFaRolesDropDown component represents a dropdown select for excluding roles
  * from two-factor authentication email.
  * @param {object} field - The field object containing information about the field.
  */
 const TwoFaRolesDropDown = ({ field }) => {
-    const {fetchRoles, roles, rolesLoaded} = useRolesData();
+    const { fetchRoles, roles, rolesLoaded } = useRolesData();
     const [selectedRoles, setSelectedRoles] = useState([]);
     const [otherRoles, setOtherRoles] = useState([]);
     // Custom hook to manage form fields
@@ -24,7 +25,7 @@ const TwoFaRolesDropDown = ({ field }) => {
     }, [rolesLoaded]);
 
     useEffect(() => {
-        if ( field.id==='two_fa_forced_roles' ) {
+        if (field.id === 'two_fa_forced_roles') {
             let otherField = getField('two_fa_optional_roles');
             let roles = Array.isArray(otherField.value) ? otherField.value : [];
             setOtherRoles(roles);
@@ -36,15 +37,14 @@ const TwoFaRolesDropDown = ({ field }) => {
     }, [selectedRoles, getField('two_fa_optional_roles'), getField('two_fa_forced_roles')]);
 
     useEffect(() => {
-       if ( !field.value ) {
+        if (!field.value) {
             setChangedField(field.id, field.default);
             updateField(field.id, field.default);
-            setSelectedRoles(field.default.map((role, index) => ({ value: role, label: role.charAt(0).toUpperCase() + role.slice(1) })));
-       } else {
-           setSelectedRoles(field.value.map((role, index) => ({ value: role, label: role.charAt(0).toUpperCase() + role.slice(1) })));
-
-       }
-    },[fieldsLoaded]);
+            setSelectedRoles(field.default.map((role) => ({ value: role, label: role.charAt(0).toUpperCase() + role.slice(1) })));
+        } else {
+            setSelectedRoles(field.value.map((role) => ({ value: role, label: role.charAt(0).toUpperCase() + role.slice(1) })));
+        }
+    }, [fieldsLoaded]);
 
     /**
      * Handles the change event of the react-select component.
@@ -76,7 +76,7 @@ const TwoFaRolesDropDown = ({ field }) => {
                 color: 'initial',
                 opacity: '1',
             },
-        })
+        }),
     };
 
     if (field.id === 'two_fa_optional_roles') {
@@ -89,7 +89,7 @@ const TwoFaRolesDropDown = ({ field }) => {
     //merge alreadyselected and otherroles in one array
     let inRolesInUse = [...alreadySelected, ...otherRoles];
     roles.forEach(function (item, i) {
-        if ( Array.isArray(inRolesInUse) && inRolesInUse.includes(item.value) ) {
+        if (Array.isArray(inRolesInUse) && inRolesInUse.includes(item.value)) {
             filteredRoles.splice(i, 1);
         } else {
             filteredRoles.push(item);
@@ -97,7 +97,7 @@ const TwoFaRolesDropDown = ({ field }) => {
     });
 
     return (
-        <div style={{marginTop: '5px'}}>
+        <div style={{ marginTop: '5px' }}>
             <Select
                 isMulti
                 options={filteredRoles}
@@ -106,7 +106,7 @@ const TwoFaRolesDropDown = ({ field }) => {
                 menuPosition={"fixed"}
                 styles={customStyles}
             />
-            {! enabled &&
+            {!enabled &&
                 <div className="rsssl-locked">
                     <div className="rsssl-locked-overlay"><span
                         className="rsssl-task-status rsssl-open">{__('Disabled', 'really-simple-ssl')}</span><span>{__('Activate login protection to enable this block.', 'really-simple-ssl')}</span>

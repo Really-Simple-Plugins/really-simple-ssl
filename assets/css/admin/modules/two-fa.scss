@@ -19,3 +19,14 @@ a.rsssl-skip-link {
   display: flex;
   justify-content: flex-end;
 }
+
+.MuiPopper-root, .MuiPaper-root {
+  max-height:30px;
+  z-index: 15;
+  div {
+    font-family: inherit !important;
+  }
+  ul {
+    max-height:initial;
+  }
+}
