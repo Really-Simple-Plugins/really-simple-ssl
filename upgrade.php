@@ -194,6 +194,15 @@ function rsssl_upgrade() {
 		do_action('rsssl_update_rules');
 	}
 
+
+	if ( $prev_version && version_compare( $prev_version, '8.2.1', '<' ) ) {
+		delete_option( 'rsssl_xmlrpc_db_version' );
+		delete_option( 'rsssl_csp_db_version' );
+		delete_option( 'rsssl_geo_block_db_version' );
+		delete_option( 'rsssl_login_attempts_db_version' );
+		delete_option( 'rsssl_event_log_db_version' );
+	}
+
 	if ( $prev_version && version_compare( $prev_version, '8.2.3', '<' ) ) {
 		update_site_option('rsssl_geo_ip_database_file', get_option('rsssl_geo_ip_database_file') );
 	}

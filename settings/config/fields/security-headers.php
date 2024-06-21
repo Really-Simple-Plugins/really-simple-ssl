@@ -330,7 +330,7 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'group_id' => 'frame_ancestors',
 				'type'     => 'select',
 				'options'  => [
-					'disabled' => "Disable",
+					'disabled' => __("Yes (don't set header)", "really-simple-ssl"),
 					'none'     => "None",
 					'self'     => __("Self (Default)", "really-simple-ssl"),
 				],
@@ -344,8 +344,14 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'group_id' => 'frame_ancestors',
 				'type'     => 'textarea',
 				'label'    => __( "Add additional domains which can embed your website, if needed. Comma seperated.", "really-simple-ssl" ),
-				'disabled' => false,
+				'disabled' => maybe_disable_frame_ancestors_url_field(),
 				'default'  => false,
+				'react_conditions'        => [
+					'relation' => 'AND',
+					[
+						'csp_frame_ancestors' => 'NOT disabled',
+					]
+				],
 			],
 			[
 				'id'       => 'csp_status',
@@ -413,3 +419,4 @@ add_filter( 'rsssl_fields', function( $fields ) {
 		]
 	);
 }, 200 );
+

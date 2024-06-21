@@ -638,11 +638,6 @@ function rsssl_menu() {
  */
 function rsssl_add_url_param_ids( array $menu_items ): array {
 
-	$ref = rsssl_get_url_ref();
-	if ( !$ref ) {
-		return $menu_items;
-	}
-
 	foreach ( $menu_items as $key => $menu_item ) {
 		if (isset($menu_item['menu_items'])) {
 			$menu_items[ $key ]['menu_items'] = rsssl_add_url_param_ids( $menu_item['menu_items'] );

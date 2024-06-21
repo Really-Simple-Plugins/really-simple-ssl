@@ -76,10 +76,41 @@ class rsssl_admin {
 		$plugin = rsssl_plugin;
 		add_filter( "plugin_action_links_$plugin", array($this,'plugin_settings_link' ) );
 		add_filter( "network_admin_plugin_action_links_$plugin", array($this,'plugin_settings_link' ) );
+
+		add_action( 'upgrader_process_complete', array( $this, 'run_table_init_hook'), 10, 1);
+		add_action( 'wp_initialize_site', array( $this, 'run_table_init_hook'), 10, 1);
 	}
 
 	public static function this() {
 		return self::$_this;
+	}
+
+	/**
+	 * On Multisite site creation, run table init hook as well.
+	 * @return void
+	 */
+	public function run_table_init_hook(){
+		//only load on front-end if it's a cron job
+		if ( !is_admin() && !wp_doing_cron() ) {
+			return;
+		}
+
+		if (!wp_doing_cron() && !rsssl_user_can_manage() ) {
+			return;
+		}
+
+		do_action( 'rsssl_install_tables' );
+		//we need to run table creation across subsites as well.
+		if ( is_multisite() ) {
+			$sites = get_sites();
+			if (count($sites)>0) {
+				foreach ($sites as $site) {
+					switch_to_blog($site->blog_id);
+					do_action( 'rsssl_install_tables' );
+					restore_current_blog();
+				}
+			}
+		}
 	}
 
     public function handle_activation(){
@@ -92,7 +123,9 @@ class rsssl_admin {
 		        require_once( rsssl_path . 'lets-encrypt/config/class-hosts.php');
 	        }
 	        ( new rsssl_le_hosts() )->detect_host_on_activation();
-            do_action('rsssl_activation');
+	        $this->run_table_init_hook();
+
+	        do_action('rsssl_activation');
             delete_option('rsssl_activation');
         }
     }
@@ -2484,7 +2517,7 @@ class rsssl_admin {
 
             if ( isset($notice['output'][ $output ]['url'] ) ) {
                 $url = $notice['output'][ $output ]['url'];
-                if ( strpos( $url, 'https://') !==false ) {
+                if ( strpos( $url, 'https://') ===false && strpos( $url, 'http://') === false ) {
 	                $notice['output'][ $output ]['url'] = rsssl_link($url);
                 }
             }
@@ -3071,5 +3104,15 @@ if ( ! function_exists( 'rsssl_detected_duplicate_ssl_plugin' ) ) {
 if ( ! function_exists( 'rsssl_ssl_detection_overridden' ) ) {
 	function rsssl_ssl_detection_overridden() {
 		return get_option( 'rsssl_ssl_detection_overridden' ) !== false;
+	}
+}
+
+if ( ! function_exists('maybe_disable_frame_ancestors_url_field' ) ) {
+	function maybe_disable_frame_ancestors_url_field() {
+		if ( rsssl_get_option( 'csp_frame_ancestors' ) === 'disabled' ) {
+			return true;
+		}
+
+		return false;
 	}
 }
