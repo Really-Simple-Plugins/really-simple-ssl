@@ -6,7 +6,7 @@ Requires at least: 5.9
 License: GPL2
 Tested up to: 6.5
 Requires PHP: 7.4
-Stable tag: 8.1.4
+Stable tag: 8.1.5
 
 Easily improve site security with WordPress hardening, vulnerability detection and SSL certificate generation.
 
@@ -131,6 +131,12 @@ The plugin checks your certificate before enabling, but if, for example, you mig
 If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions](https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/) instead.
 
 == Changelog ==
+= 8.1.5 =
+* June 11th, 2024
+* Fix: documentation links to website broken
+* Improvement: some text changes in helptexts
+* Improvement: new structure to upgrade database tables
+
 = 8.1.4 =
 * June 11th, 2024
 * Improvement: dropdown in onboarding not entirely visible
