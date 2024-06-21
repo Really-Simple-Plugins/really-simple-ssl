@@ -132,7 +132,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 
 == Changelog ==
 = 8.1.5 =
-* June 11th, 2024
+* June 21th, 2024
 * Fix: documentation links to website broken
 * Improvement: some text changes in helptexts
 * Improvement: new structure to upgrade database tables
