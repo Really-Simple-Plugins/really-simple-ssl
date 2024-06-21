@@ -93,15 +93,6 @@ const SettingsGroup = (props) => {
         }
     }
 
-    let msg = activeGroup.premium_text ? activeGroup.premium_text : __("Learn more about %sPremium%s", "really-simple-ssl");
-    if (rsssl_settings.pro_plugin_active) {
-        if (licenseStatus === 'empty' || licenseStatus === 'deactivated') {
-            msg = rsssl_settings.messageInactive;
-        } else {
-            msg = rsssl_settings.messageInvalid;
-        }
-    }
-
     let disabled = licenseStatus !== 'valid' && activeGroup.premium;
     //if a feature can only be used on networkwide or single site setups, pass that info here.
     let networkwide_error = !rsssl_settings.networkwide_active && activeGroup.networkwide_required;

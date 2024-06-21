@@ -1,5 +1,6 @@
 import {__} from "@wordpress/i18n";
 import useLicense from "./License/LicenseData";
+import Hyperlink from "../utils/Hyperlink";
 
 const PremiumOverlay = ({msg, title, upgrade}) => {
     const {licenseStatus} = useLicense();
@@ -10,7 +11,7 @@ const PremiumOverlay = ({msg, title, upgrade}) => {
     if (pro_plugin_active) {
         upgradeUrl = '#settings/license';
     }
-    let message = msg ? msg : __("Learn more about %sPremium%s", "really-simple-ssl");
+    let message = msg ? msg : <Hyperlink text={__("Learn more about %sPremium%s", "really-simple-ssl")} url={upgradeUrl}/>;
     if ( pro_plugin_active ) {
         if (licenseStatus === 'empty' || licenseStatus === 'deactivated') {
             message = rsssl_settings.messageInactive;
