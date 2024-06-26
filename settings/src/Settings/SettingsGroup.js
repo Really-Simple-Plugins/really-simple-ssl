@@ -32,9 +32,6 @@ const SettingsGroup = (props) => {
 
     }, [selectedFilter]);
 
-
-    let upgrade = 'https://really-simple-ssl.com/pro/?mtm_campaign=fallback&mtm_source=free&mtm_content=upgrade';
-
     /*
     * On reset of LE, send this info to the back-end, and redirect to the first step.
     * reload to ensure that.
@@ -96,19 +93,9 @@ const SettingsGroup = (props) => {
         }
     }
 
-    let msg = activeGroup.premium_text ? activeGroup.premium_text : __("Learn more about %sPremium%s", "really-simple-ssl");
-    if (rsssl_settings.pro_plugin_active) {
-        if (licenseStatus === 'empty' || licenseStatus === 'deactivated') {
-            msg = rsssl_settings.messageInactive;
-        } else {
-            msg = rsssl_settings.messageInvalid;
-        }
-    }
-
     let disabled = licenseStatus !== 'valid' && activeGroup.premium;
     //if a feature can only be used on networkwide or single site setups, pass that info here.
     let networkwide_error = !rsssl_settings.networkwide_active && activeGroup.networkwide_required;
-    upgrade = activeGroup.upgrade ? activeGroup.upgrade : upgrade;
     let helplinkText = activeGroup.helpLink_text ? activeGroup.helpLink_text : __("Instructions", "really-simple-ssl");
     let anchor = getAnchor('main');
     let disabledClass = disabled || networkwide_error ? 'rsssl-disabled' : '';

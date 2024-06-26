@@ -15,7 +15,7 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'default'            => false,
 				'help'               => [
 					'label' => 'default',
-					'url'   => 'https://really-simple-ssl.com/definition/what-are-hardening-features/?mtm_campaign=definition&mtm_source=free',
+					'url'   => 'definition/what-are-hardening-features',
 					'title' => __( "About Hardening", 'really-simple-ssl' ),
 					'text'  => __( 'Hardening features limit the possibility of potential weaknesses and vulnerabilities which can be misused.', 'really-simple-ssl' ),
 				],
@@ -92,7 +92,7 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'email'              => [
 					'title'   => __( "Settings update: Username 'admin' renamed", 'really-simple-ssl' ),
 					'message' => sprintf(__( "As a security precaution, the username ‘admin’ has been changed on %s. From now on, you can login with '%s' or an email address.", 'really-simple-ssl' ), '{site_url}','{username}'),
-					'url'     => 'https://really-simple-ssl.com/instructions/locked-our-after-renaming-the-admin-username/',
+					'url'     => 'instructions/locked-our-after-renaming-the-admin-username',
 					'condition'    => 'rsssl_username_admin_changed',
 				],
 				'tooltip'            => __( "If the username 'admin' currently exists, you can rename it here. Please note that you can no longer use this username, and should use the new username or an email address",
@@ -159,7 +159,7 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'email'            => [
 					'title'   => __( "Settings update: Database prefix changed", 'really-simple-ssl' ),
 					'message' => __( "Security through obscurity. Your site is no longer using the default wp_ prefix for database tables. The process has been designed to only complete and replace the tables after all wp_ tables are successfully renamed. In the unlikely event that this does lead to database issues on your site, please navigate to our troubleshooting article.", 'really-simple-ssl' ),
-					'url'     => 'https://really-simple-ssl.com/instructions/database-issues-after-changing-prefix/',
+					'url'     => 'instructions/database-issues-after-changing-prefix',
 				],
 				'tooltip'  => __( "This will permanently change your database prefixes and you can NOT rollback this feature. Please make sure you have a back-up.", 'really-simple-ssl' ),
 				'warning'  => __( "This will permanently change your database prefixes and you can NOT rollback this feature. Please make sure you have a back-up.", 'really-simple-ssl' ),

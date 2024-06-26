@@ -26,7 +26,7 @@ const useFields = create(( set, get ) => ({
     refreshTests:false,
     highLightField: '',
     setHighLightField: (highLightField) => {
-        set(state => ({ highLightField }))
+        set({ highLightField });
     },
 
     setRefreshTests: (refreshTests) => set(state => ({ refreshTests })),

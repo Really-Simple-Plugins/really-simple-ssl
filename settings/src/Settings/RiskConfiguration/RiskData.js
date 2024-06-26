@@ -4,6 +4,7 @@ import * as rsssl_api from "../../utils/api";
 import {__} from "@wordpress/i18n";
 import {produce} from "immer";
 import React from "react";
+import {addUrlRef} from "../../utils/AddUrlRef";
 
 const UseRiskData = create((set, get) => ({
 
@@ -110,7 +111,7 @@ const UseRiskData = create((set, get) => ({
                     let updateUrl = item.update_available ? rsssl_settings.plugins_url + "?plugin_status=upgrade" : '#settings/vulnerabilities';
                     item.vulnerability_action = <div className="rsssl-action-buttons">
                         <a className="rsssl-button button-secondary"
-                            href={"https://really-simple-ssl.com/vulnerability/" + item.rss_identifier}
+                            href={addUrlRef("https://really-simple-ssl.com/vulnerability/" + item.rss_identifier)}
                            target={"_blank"}  rel="noopener noreferrer">{__("Details", "really-simple-ssl")}</a>
                         <a disabled={!item.update_available} href={updateUrl}
                            className="rsssl-button button-primary"

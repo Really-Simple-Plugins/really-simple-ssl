@@ -34,7 +34,7 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'default'          => false,
 				'help'     => [
 					'label' => 'default',
-					'url'   => 'https://really-simple-ssl.com/definition/what-is-xml-rpc/',
+					'url'   => 'definition/what-is-xml-rpc',
 					'title' => __( "About XML-RPC", 'really-simple-ssl' ),
 					'text'  => __( 'XML-RPC is a mechanism originally implemented into WordPress to publish content without the need to actually login to the backend. It is also used to login to WordPress from devices other than desktop, or the regular wp-admin interface.', 'really-simple-ssl' ),
 				],

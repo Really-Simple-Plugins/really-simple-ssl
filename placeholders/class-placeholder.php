@@ -332,7 +332,7 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
 					'description' => [],
 					'view'        => '#',
 					'edit'        => '#',
-					'help'        => "https://really-simple-ssl.com/knowledge-base/fix-blocked-resources-content-files",
+					'help'        => "knowledge-base/fix-blocked-resources-content-files",
 					'action'      => 'ignore_url',
 				],
 			];
@@ -349,7 +349,7 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
 					'description' => [],
 					'view'        => '#',
 					'edit'        => '#',
-					'help'        => "https://really-simple-ssl.com/knowledge-base/fix-css-and-js-files-with-mixed-content",
+					'help'        => "knowledge-base/fix-css-and-js-files-with-mixed-content",
 					'action'      => 'ignore_url',
 				],
 				'fix'         => [
@@ -373,7 +373,7 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
 					'description' => [],
 					'view'        => '',
 					'edit'        => '',
-					'help'        => "https://really-simple-ssl.com/knowledge-base/fix-css-js-files-mixed-content-domains/",
+					'help'        => "knowledge-base/fix-css-js-files-mixed-content-domains/",
 					'action'      => 'ignore_url',
 				]
 			];
@@ -390,7 +390,7 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
 					'description' => [],
 					'view'        => '',
 					'edit'        => get_admin_url( null, 'post.php?post=1&action=edit' ),
-					'help'        => "https://really-simple-ssl.com/fix-posts-with-blocked-resources-domains-without-ssl-certificate/",
+					'help'        => "fix-posts-with-blocked-resources-domains-without-ssl-certificate/",
 					'action'      => 'ignore_url'
 				],
 				'fix'         => [
@@ -416,7 +416,7 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
 					'description' => [],
 					'view'        => '#',
 					'edit'        => get_admin_url( null, 'post.php?post=1&action=edit' ),
-					'help'        => "https://really-simple-ssl.com/knowledge-base/fix-blocked-resources-content-postmeta",
+					'help'        => "knowledge-base/fix-blocked-resources-content-postmeta",
 					'action'      => 'ignore_url'
 				],
 				'fix'         => [
@@ -441,7 +441,7 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
 					'description' => [],
 					'view'        => '',
 					'edit'        => get_admin_url( null, '/widgets.php' ),
-					'help'        => "https://really-simple-ssl.com/knowledge-base/locating-mixed-content-in-widgets/",
+					'help'        => "knowledge-base/locating-mixed-content-in-widgets/",
 					'action'      => 'ignore_url'
 				],
 				'fix'         => [

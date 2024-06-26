@@ -13,7 +13,7 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'label'    => __( "Enable login protection", "really-simple-ssl" ),
 				'help'     => [
 					'label' => 'default',
-					'url'   => 'https://really-simple-ssl.com/instructions/about-login-protection/?mtm_campaign=instructions&mtm_source=2fa',
+					'url'   => 'instructions/about-login-protection',
 					'title' => __("About Login Protection", 'really-simple-ssl'),
 					'text'  => __('Two-step verification is the first feature we regard as login protection. Want to know more about this feature, and what is to come?',
 						'really-simple-ssl'),

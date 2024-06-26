@@ -30,7 +30,7 @@ function rsssl_general_security_notices( $notices ) {
 			'true' => array(
 				'msg' => __("Disable application passwords", "really-simple-ssl"),
 				'icon' => 'premium',
-				'url' => 'https://really-simple-ssl.com/definition/what-are-application-passwords/',
+				'url' => 'definition/what-are-application-passwords/',
 				'dismissible' => true,
 				'highlight_field_id' => 'disable_application_passwords',
 			),
@@ -47,7 +47,7 @@ function rsssl_general_security_notices( $notices ) {
 				'icon' => 'warning',
 				'dismissible' => true,
 				'plusone' => true,
-				'url' => 'https://really-simple-ssl.com/manual/editing-htaccess/',
+				'url' => 'manual/editing-htaccess/',
 			),
 			'not-exists' => array(
 				'title' => __(".htaccess does not exist", "really-simple-ssl"),
@@ -55,7 +55,7 @@ function rsssl_general_security_notices( $notices ) {
 				'icon' => 'warning',
 				'dismissible' => true,
 				'plusone' => true,
-				'url' => 'https://really-simple-ssl.com/manual/editing-htaccess/',
+				'url' => 'manual/editing-htaccess/',
 			),
 		),
 		'show_with_options' => [
@@ -74,7 +74,7 @@ function rsssl_general_security_notices( $notices ) {
 				'icon' => 'warning',
 				'dismissible' => true,
 				'plusone' => true,
-				'url' => 'https://really-simple-ssl.com/manual/editing-htaccess/',
+				'url' => 'manual/editing-htaccess/',
 			),
 		),
 		'show_with_options' => [
@@ -102,7 +102,7 @@ function rsssl_general_security_notices( $notices ) {
 		'score' => 5,
 		'output' => array(
 			'true' => array(
-				'url' => 'https://really-simple-ssl.com/manual/login-and-display-names-should-be-different-for-wordpress/',
+				'url' => 'manual/login-and-display-names-should-be-different-for-wordpress/',
 				'msg' => __("We have detected administrator roles where the login and display names are the same.", "really-simple-ssl") . "&nbsp;<b>" . rsssl_list_users_where_display_name_is_login_name() . "</b>",
 				'icon' => 'open',
 				'dismissible' => true,
@@ -119,7 +119,7 @@ function rsssl_general_security_notices( $notices ) {
 				'highlight_field_id' => 'change_debug_log_location',
 				'title' => __("Debugging", "really-simple-ssl"),
 				'msg' => __("Your site logs information to a public debugging file.", "really-simple-ssl"),
-				'url' => 'https://really-simple-ssl.com/instructions/about-hardening-features/',
+				'url' => 'instructions/about-hardening-features/',
 				'icon' => 'premium',
 				'dismissible' => true,
 			),
@@ -138,7 +138,7 @@ function rsssl_general_security_notices( $notices ) {
 				'msg' => __("Your site is vulnerable to user enumeration attacks.", "really-simple-ssl"),
 				'icon' => 'warning',
 				'title' => __('Prevent user enumeration','really-simple-ssl'),
-				'url' => 'https://really-simple-ssl.com/what-are-user-enumeration-attacks/',
+				'url' => 'definition/what-are-user-enumeration-attacks/',
 				'dismissible' => true,
 				'highlight_field_id' => 'disable_user_enumeration',
 			),
@@ -207,7 +207,7 @@ function rsssl_general_security_notices( $notices ) {
 				'msg' => __("Your database prefix is set to the default 'wp_'.", "really-simple-ssl"),
 				'icon' => 'premium',
 				'dismissible' => true,
-				'url' => 'https://really-simple-ssl.com/instructions/about-hardening-features/'
+				'url' => 'instructions/about-hardening-features'
 			),
 		),
 	);
@@ -221,7 +221,7 @@ function rsssl_general_security_notices( $notices ) {
 				'msg' => __("Really Simple SSL has a new feature! Introducing Vulnerability Detection, enable it now.", "really-simple-ssl"),
 				'icon' => 'open',
 				'dismissible' => true,
-				'url' => 'https://really-simple-ssl.com/vulnerability-detection/',
+				'url' => 'vulnerability-detection',
 				'highlight_field_id' => 'enable_vulnerability_scanner',
 				'plusone' => true,
 			),

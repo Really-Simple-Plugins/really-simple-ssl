@@ -9,6 +9,7 @@ function rsssl_fields( $load_values = true ) {
 	}
 
 	$fields = apply_filters( 'rsssl_fields', [] );
+
 	if ( is_multisite() && rsssl_is_networkwide_active() ) {
 		$stored_options = get_site_option( 'rsssl_options', [] );
 	} else {
@@ -26,7 +27,6 @@ function rsssl_fields( $load_values = true ) {
 			}
 		}
 		if ( $load_values ) {
-
 			$value          = rsssl_sanitize_field( rsssl_get_option( $field['id'], $field['default'] ), $field['type'], $field['id'] );
 			$field['never_saved'] = !array_key_exists( $field['id'], $stored_options );
 			$field['value'] = apply_filters( 'rsssl_field_value_' . $field['id'], $value, $field );
@@ -35,6 +35,10 @@ function rsssl_fields( $load_values = true ) {
 	}
 
 	$fields = apply_filters( 'rsssl_fields_values', $fields );
-
+	foreach ( $fields as $key => $field ) {
+		if (isset($field['help']['url'])) {
+			$fields[ $key ]['help']['url'] = rsssl_link( $field['help']['url'], 'instructions', $field['id'] );
+		}
+	}
 	return array_values( $fields );
 }

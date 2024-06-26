@@ -4,52 +4,49 @@
  * @returns {function(*): Promise<unknown>}
  */
 const getAnchor = (level) => {
-        let url = window.location.href;
-        if ( url.indexOf('#') === -1) {
-            return false;
-        }
+    let url = window.location.href;
+    if (url.indexOf('#') === -1) {
+        return false;
+    }
 
-       let queryString = url.split('#');
-        if ( queryString.length === 1) {
-            return false;
-        }
+    let queryString = url.split('#')[1];
+    if (!queryString) {
+        return false;
+    }
 
-        let urlPart = queryString[1];
+    // Split the query string to handle multiple parameters
+    let urlParts = queryString.split('&');
 
-        //for submenu, we have to get the string after the slash.
-        if ( level === 'anchor' ) {
-            //if there is no slash, there is no menu level
-            if ( urlPart.indexOf('/') === -1 ) {
-                return false;
-            } else {
-                let urlParts = urlPart.split('/');
-                if (urlParts.length<=2) {
-                    return false;
-                } else {
-                    return urlParts[2];
-                }
-            }
-        } else if ( level === 'menu' ) {
-            //if there is no slash, there is no menu level
-            if ( urlPart.indexOf('/') === -1 ) {
-                return false;
-            } else {
-                let urlParts = urlPart.split('/');
-                if (urlParts.length<=1) {
-                    return false;
-                } else {
-                    return urlParts[1];
-                }
-            }
-        } else {
-            //main, just get the first.
-            if ( urlPart.indexOf('/') === -1 ) {
-                return urlPart;
-            } else {
-                let urlParts = urlPart.split('/');
-               return urlParts[0];
+    if (level === 'highlightfield') {
+        // Extract highlightfield parameter
+        for (let part of urlParts) {
+            if (part.startsWith('highlightfield=')) {
+                return part.split('=')[1];
             }
         }
         return false;
-}
+    }
+
+    // Default behavior for 'anchor' and 'menu'
+    let urlPart = urlParts[0];
+
+    if (level === 'anchor') {
+        if (urlPart.indexOf('/') === -1) {
+            return false;
+        } else {
+            let urlSegments = urlPart.split('/');
+            return urlSegments.length > 2 ? urlSegments[2] : false;
+        }
+    } else if (level === 'menu') {
+        if (urlPart.indexOf('/') === -1) {
+            return false;
+        } else {
+            let urlSegments = urlPart.split('/');
+            return urlSegments.length > 1 ? urlSegments[1] : false;
+        }
+    } else {
+        return urlPart.indexOf('/') === -1 ? urlPart : urlPart.split('/')[0];
+    }
+};
+
 export default getAnchor;
