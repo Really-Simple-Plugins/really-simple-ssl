@@ -10,7 +10,7 @@ class Rsssl_Simple_404_Interceptor {
 	public function __construct() {
 
         add_filter( 'rsssl_notices', array($this, 'show_help_notices') );
-        if (defined('rsssl_pro') || get_option($this->notice_option)) {
+        if (defined('rsssl_pro') ) {
             return;
         }
         add_action( 'template_redirect', array($this, 'detect_404') );
@@ -21,6 +21,9 @@ class Rsssl_Simple_404_Interceptor {
      */
     public function detect_404(): void {
         if (is_404()) {
+            if ( get_option( $this->notice_option ) ) {
+                return;
+            }
             $ip_address = $this->get_ip_address();
             $current_time = time();
 
