@@ -444,12 +444,11 @@ if (!class_exists('rsssl_multisite')) {
 
         public function deactivate()
         {
-	        if (!rsssl_user_can_manage()) {
+	        if ( !rsssl_user_can_manage() ) {
 		        return;
 	        }
 			$ssl_was_enabled = rsssl_get_option('ssl_enabled');
 	        delete_site_option('rsssl_network_activation_status');
-	        update_option('ssl_enabled', false);
 			//main site first
 	        $site_id = get_main_site_id();
 			switch_to_blog($site_id);
