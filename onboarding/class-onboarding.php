@@ -201,7 +201,7 @@ class rsssl_onboarding {
 			[
 				"id" => 'pro',
 				"title" => __("Really Simple Security Pro", "really-simple-ssl"),
-				"subtitle" => __("Heavyweight security features, in a lightweight performant plugin from Really Simple Plugins. Get started with below features and get the latest and greatest updates for a peace of mind!", "really-simple-ssl"),
+				"subtitle" => __("Heavyweight security features, in a lightweight performant plugin from Really Simple Plugins. Get started with below features and get the latest and greatest updates for peace of mind!", "really-simple-ssl"),
 				"items" => $this->pro_features(),
 				"button" => __("Install", "really-simple-ssl"),
 			],
@@ -445,7 +445,7 @@ class rsssl_onboarding {
 		if ( get_transient('rsssl_redirect_to_settings_page' ) ) {
 			delete_transient('rsssl_redirect_to_settings_page' );
 			if ( !RSSSL()->admin->is_settings_page() ) {
-				wp_redirect( add_query_arg(array('page' => 'really-simple-security'), rsssl_admin_url() ) );
+				wp_redirect( rsssl_admin_url() );
 				exit;
 			}
 		}

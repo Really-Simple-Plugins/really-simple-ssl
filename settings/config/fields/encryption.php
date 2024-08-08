@@ -27,7 +27,7 @@ add_filter( 'rsssl_fields', function( $fields ) {
 					'title'     => __("Settings update: .htaccess redirect", 'really-simple-ssl'),
 					'message'   => __("The .htaccess redirect has been enabled on your site. If the server configuration is non-standard, this might cause issues. Please check if all pages on your site are functioning properly.",
 						'really-simple-ssl'),
-					'url'       => 'remove-htaccess-redirect-site-lockout',
+					'url'       => 'https://really-simple-ssl.com/remove-htaccess-redirect-site-lockout',
 					'condition' => ['redirect' => 'htaccess']
 				],
 				'react_conditions' => [

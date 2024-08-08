@@ -76,3 +76,8 @@ class rsssl_wp_cli {
 }
 
 WP_CLI::add_command( 'rsssl', 'rsssl_wp_cli' );
+
+//We add the devtools command to the WP-CLI
+if (file_exists(rsssl_path . 'pro/assets/tools/cli/class-rsssl-stub-generator.php')) {
+	require_once rsssl_path . 'pro/assets/tools/cli/class-rsssl-stub-generator.php';
+}

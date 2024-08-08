@@ -31,7 +31,7 @@ import getAnchor from "../utils/getAnchor";
 import useMenu from "../Menu/MenuData";
 import UserDatatable from "./LimitLoginAttempts/UserDatatable";
 import CountryDatatable from "./LimitLoginAttempts/CountryDatatable";
-// import DynamicDataTable from "./DynamicDataTable/DynamicDataTable";
+import BlockListDatatable from "./GeoBlockList/BlockListDatatable";
 import TwoFaDataTable from "./TwoFA/TwoFaDataTable";
 import EventLogDataTable from "./EventLog/EventLogDataTable";
 import DOMPurify from "dompurify";
@@ -40,6 +40,7 @@ import GeoDatatable from "./GeoBlockList/GeoDatatable";
 import WhiteListDatatable from "./GeoBlockList/WhiteListDatatable";
 import Captcha from "./Captcha/Captcha";
 import CaptchaKey from "./Captcha/CaptchaKey";
+import FileChangeDetection from "./FileChangeDetection/FileChangeDetection";
 const Field = (props) => {
     const scrollAnchor = useRef(null);
     const { updateField, setChangedField, highLightField, setHighLightField , getFieldValue} = useFields();
@@ -462,16 +463,6 @@ const Field = (props) => {
             </div>
         )
     }
-    // if (field.type === 'dynamic-datatable') {
-    //     return (
-    //         <div className={highLightClass} ref={scrollAnchor}>
-    //             <DynamicDataTable
-    //                 field={props.field}
-    //                 action={props.field.action}
-    //             />
-    //         </div>
-    //     )
-    // }
 
     if (field.type === 'ip-address-datatable') {
         return (
@@ -490,6 +481,16 @@ const Field = (props) => {
                 <UserDatatable
                     field={props.field}
                     action={props.field.action}
+                />
+            </div>
+        )
+    }
+
+    if (field.type === 'file-change-detection') {
+        return (
+            <div className={highLightClass} ref={scrollAnchor}>
+                <FileChangeDetection
+                    field={props.field}
                 />
             </div>
         )
@@ -521,6 +522,17 @@ const Field = (props) => {
         return (
             <div className={highLightClass} ref={scrollAnchor}>
                 <WhiteListDatatable
+                    field={props.field}
+                    action={props.field.action}
+                />
+            </div>
+        )
+    }
+
+    if (field.type === 'blocklist-datatable') {
+        return (
+            <div className={highLightClass} ref={scrollAnchor}>
+                <BlockListDatatable
                     field={props.field}
                     action={props.field.action}
                 />

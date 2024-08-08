@@ -1,9 +1,7 @@
 /* Creates A Store For Risk Data using Zustand */
 import {create} from 'zustand';
 import * as rsssl_api from "../../utils/api";
-import {__} from "@wordpress/i18n";
 import {produce} from "immer";
-import React from "react";
 
 const IpAddressDataTableStore = create((set, get) => ({
 

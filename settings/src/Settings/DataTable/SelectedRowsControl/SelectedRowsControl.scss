@@ -1,0 +1,14 @@
+.rsssl-selected-rows-control {
+  margin-top: 1em;
+  margin-bottom: 1em;
+
+  //blue container above datatable for multiselect
+  .rsssl-multiselect-datatable-form {
+    display: flex;
+    align-items: center;
+    Justify-content: space-between;
+    width: 100%;
+    padding: 1em 2em;
+    background: var(--rsp-blue-faded);
+  }
+}

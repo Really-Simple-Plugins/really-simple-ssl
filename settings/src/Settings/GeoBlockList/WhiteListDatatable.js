@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback } from '@wordpress/element';
 import DataTable, { createTheme } from "react-data-table-component";
 import FieldsData from "../FieldsData";
 import WhiteListTableStore from "./WhiteListTableStore";
@@ -6,9 +6,7 @@ import FilterData from "../FilterData";
 import Flag from "../../utils/Flag/Flag";
 import { __ } from '@wordpress/i18n';
 import useFields from "../FieldsData";
-import SearchBar from "../DynamicDataTable/SearchBar";
 import AddButton from "./AddButton";
-import AddIpAddressModal from "../LimitLoginAttempts/AddIpAddressModal";
 import TrustIpAddressModal from "./TrustIpAddressModal";
 
 const WhiteListDatatable = (props) => {
@@ -83,9 +81,9 @@ const WhiteListDatatable = (props) => {
     useEffect(() => {
             fetchWhiteListData(field.action);
 
-    }, [fieldAlreadyEnabled('firewall_enabled')]);
+    }, [fieldAlreadyEnabled('enable_firewall')]);
 
-    let enabled = getFieldValue('firewall_enabled');
+    let enabled = getFieldValue('enable_firewall');
 
 
     useEffect(() => {
@@ -162,13 +160,14 @@ const WhiteListDatatable = (props) => {
                     showSavedSettingsNotice(result.message);
                 });
             });
+            fetchWhiteListData(field.action);
             setRowsSelected([]);
         } else {
             resetRow(id).then((result) => {
                 showSavedSettingsNotice(result.message);
+                fetchWhiteListData(field.action);
             });
         }
-        fetchWhiteListData(field.action);
     }, [resetRow]);
 
     const blockRegionByCode = useCallback(async (code, region = '') => {

@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback, useReducer} from 'react';
+import {useEffect, useState, useCallback} from '@wordpress/element';
 import DataTable, {createTheme} from "react-data-table-component";
 import FieldsData from "../FieldsData";
 import GeoDataTableStore from "./GeoDataTableStore";
@@ -7,6 +7,7 @@ import FilterData from "../FilterData";
 import Flag from "../../utils/Flag/Flag";
 import {__} from '@wordpress/i18n';
 import useFields from "../FieldsData";
+import useMenu from "../../Menu/MenuData";
 
 /**
  * A component for displaying a geo datatable.
@@ -34,18 +35,19 @@ const GeoDatatable = (props) => {
         resetRowSelection,
     } = GeoDataTableStore();
 
-    const moduleName = 'rsssl-group-filter-geo_block_list_listing';
+    const moduleName = 'rsssl-group-filter-firewall_list_listing';
     const [localData, setLocalData] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [visualData, setVisualData] = useState([]);
     const {showSavedSettingsNotice, saveFields} = FieldsData();
     const [rowsSelected, setRowsSelected] = useState([]);
     const [columns, setColumns] = useState([]);
-    const {fields, fieldAlreadyEnabled, getFieldValue} = useFields();
+    const {fields, fieldAlreadyEnabled, getFieldValue, setHighLightField, getField} = useFields();
     const [currentPage, setCurrentPage] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(10);
+    const {setSelectedSubMenuItem} = useMenu();
 
-    let enabled = getFieldValue('firewall_enabled');
+    let enabled = getFieldValue('enable_firewall');
 
     const handlePageChange = (page) => {
         setCurrentPage(page);
@@ -76,6 +78,41 @@ const GeoDatatable = (props) => {
         selector: row => row[column.column],
     }), [filter]);
     let field = props.field;
+
+    useEffect(() => {
+        const element = document.getElementById('set_to_captcha_configuration');
+        const clickListener = async event => {
+            event.preventDefault();
+            if (element) {
+                await redirectToAddCaptcha(element);
+            }
+        };
+
+        if (element) {
+            element.addEventListener('click', clickListener);
+        }
+
+        return () => {
+            if (element) {
+                element.removeEventListener('click', clickListener);
+            }
+        };
+    }, []);
+
+    const redirectToAddCaptcha = async (element) => {
+        // We fetch the props from the menu item
+        let menuItem = getField('enabled_captcha_provider');
+
+        // Create a new object based on the menuItem, including the new property
+        let highlightingMenuItem = {
+            ...menuItem,
+            highlight_field_id: 'enabled_captcha_provider',
+        };
+
+        setHighLightField(highlightingMenuItem.highlight_field_id);
+        let highlightField = getField(highlightingMenuItem.highlight_field_id);
+        await setSelectedSubMenuItem(highlightField.menu_id);
+    }
 
     const blockCountryByCode = useCallback(async (code, name) => {
         if (Array.isArray(code)) {
@@ -463,7 +500,7 @@ const GeoDatatable = (props) => {
                 customStyles={customStyles}
             >
             </DataTable>
-            {!getFieldValue('firewall_enabled') && (
+            {!getFieldValue('enable_firewall') && (
                 <div className="rsssl-locked">
                     <div className="rsssl-locked-overlay"><span
                         className="rsssl-task-status rsssl-open">{__('Disabled', 'really-simple-ssl')}</span><span>{__('Restrict access from specific countries or continents. You can also allow only specific countries.', 'really-simple-ssl')}</span>

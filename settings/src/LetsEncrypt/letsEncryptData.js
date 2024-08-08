@@ -40,12 +40,19 @@ const useLetsEncryptData = create(( set, get ) => ({
     setActionsListProperty: (index, property, value) => {
         set(
             produce((state) => {
+                //first, check if the actionsList has index and property
+                if (typeof state.actionsList[index] === 'undefined' || typeof state.actionsList[index][property]) {
+                    return;
+                }
+
                 state.actionsList[index][property] = value;
             })
         )
     },
     setRefreshTests: (refreshTests) => {set(state => ({ refreshTests }))},
     setActionIndex: (actionIndex) => {set(state => ({ actionIndex }))},
+    switchButtonDisabled:false,
+    setSwitchButtonDisabled: (switchButtonDisabled) => {set(state => ({ switchButtonDisabled }))},
 }));
 export default useLetsEncryptData;
 

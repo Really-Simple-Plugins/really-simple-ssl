@@ -49,12 +49,14 @@ if ( !function_exists('rsssl_has_fix')) {
 if ( !function_exists('rsssl_admin_url')) {
 	/**
 	 * Get admin url, adjusted for multisite
-	 * @param string $path
-	 * @return string|null
+	 * @param array $args //query args
+	 * @param string $path //hash slug for the settings pages (e.g. #dashboard)
+	 * @return string
 	 */
-	function rsssl_admin_url(string $path = ''): string {
+	function rsssl_admin_url( array $args=[], string $path = '' ): string {
 		$url = is_multisite() ? network_admin_url('settings.php') : admin_url("options-general.php");
-		return $url.$path;
+		$args = wp_parse_args($args, ['page' => 'really-simple-security']);
+		return add_query_arg($args, $url).$path;
 	}
 }
 

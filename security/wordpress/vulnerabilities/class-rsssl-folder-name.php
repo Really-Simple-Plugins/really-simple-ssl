@@ -1,8 +1,10 @@
 <?php
 
 namespace security\wordpress\vulnerabilities;
-
+require_once rsssl_path . '/lib/admin/class-helper.php';
+use RSSSL\lib\admin\Helper;
 class Rsssl_Folder_Name {
+	use Helper;
 	public $folderName;
 
 	private function __construct() {
@@ -42,9 +44,7 @@ class Rsssl_Folder_Name {
 
 		if ( ! file_exists( $folder_path ) && is_writable($upload_dir['basedir'] ) ) {
 			if ( ! mkdir( $folder_path, 0755, true ) && ! is_dir( $folder_path ) ) {
-				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-					error_log( sprintf( 'Really Simple SSL: Directory "%s" was not created', $folder_path ) );
-				}
+				$this->log( sprintf( 'Really Simple SSL: Directory "%s" was not created', $folder_path ) );
 			}
 		}
 	}

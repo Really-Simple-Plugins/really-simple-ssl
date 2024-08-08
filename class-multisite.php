@@ -26,9 +26,6 @@ if (!class_exists('rsssl_multisite')) {
                 add_action('network_admin_notices', array($this, 'show_notices'), 10);
             }
 
-            $plugin = rsssl_plugin;
-	        add_filter( "network_admin_plugin_action_links_$plugin", array($this, 'plugin_settings_link') );
-
             //If WP version is 5.1 or higher, use wp_insert_site hook for multisite SSL activation in new blogs
             if( version_compare(get_bloginfo('version'),'5.1', '>=') ) {
                 add_action('wp_initialize_site', array($this, 'maybe_activate_ssl_in_new_blog'), 20, 1);
@@ -199,35 +196,6 @@ if (!class_exists('rsssl_multisite')) {
                 return 'subdomains-no-wildcard';
 		    }
 		    return 'success';
-	    }
-
-	    /**
-         * Add settings link on plugins overview page
-	     *
-	     * @param array $links
-         *
-         * @return array
-	     * @since  2.0
-	     * @access public
-	     */
-
-	    public function plugin_settings_link(array $links): array {
-		    if ( !rsssl_user_can_manage() ) {
-			    return $links;
-		    }
-
-		    $url = add_query_arg(array('page' => 'really-simple-security'), network_admin_url('settings.php') );
-		    $settings_link = '<a href="' . $url . '">' . __("Settings", "really-simple-ssl") . '</a>';
-		    array_unshift($links, $settings_link);
-
-		    $support = apply_filters('rsssl_support_link', '<a target="_blank" rel="noopener noreferrer" href="https://wordpress.org/support/plugin/really-simple-ssl/">' . __('Support', 'really-simple-ssl') . '</a>');
-		    array_unshift($links, $support);
-
-		    if ( ! defined( 'rsssl_pro' ) ) {
-			    $upgrade_link = '<a style="color:#2271b1;font-weight:bold" target="_blank" rel="noopener noreferrer" href="'.rsssl_link().'">' . __( 'Improve security - Upgrade', 'really-simple-ssl' ) . '</a>';
-			    array_unshift( $links, $upgrade_link );
-		    }
-		    return $links;
 	    }
 
 	    /**

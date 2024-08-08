@@ -1,5 +1,3 @@
-import React from 'react';
-
 const AddButton = ({ getCurrentFilter, moduleName, handleOpen, processing, blockedText, allowedText }) => {
     return (
         <div className="rsssl-add-button">

@@ -58,9 +58,25 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	        add_filter('rsssl_vulnerability_data', array($this, 'get_stats'));
 
 	        //now we add the action to the cron.
-	        add_filter('rsssl_every_three_hours_cron', array($this, 'run_cron'));
+	        add_action('rsssl_three_hours_cron', array($this, 'run_cron'));
 	        add_filter('rsssl_notices', [$this, 'show_help_notices'], 10, 1);
 	        add_action( 'rsssl_after_save_field', array( $this, 'maybe_delete_local_files' ), 10, 4 );
+	        add_action( 'rsssl_upgrade', array( $this, 'upgrade_encrypted_files') );
+        }
+
+	    /**
+         * Upgrade to the new encryption system by deleting all files en re-downloading
+         *
+	     * @return void
+	     */
+        public function upgrade_encrypted_files($prev_version) : void {
+	        if ( $prev_version && version_compare( $prev_version, '8.3.0', '<' ) ) {
+		        //delete all files and reload
+		        Rsssl_File_Storage::DeleteAll();
+		        $this->force_reload_files();
+		        delete_option( 'rsssl_hashkey' );
+            }
+
         }
 
 //	    /**
@@ -284,7 +300,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 			    ),
 			    'actions'     => sprintf(
 				    '<p><a href="%s" target="_blank" rel="noopener noreferrer">%s</a></p>',
-				    esc_url( __( add_query_arg(array('page'=>'really-simple-security#settings/vulnerabilities/vulnerabilities-overview'), rsssl_admin_url() ) ) ),
+				    esc_url( rsssl_admin_url([], '#settings/vulnerabilities/vulnerabilities-overview') ),
 				    __( 'View vulnerabilities', 'really-simple-ssl' )
 			    ),
 			    'test' => 'rsssl_vulnerabilities',
@@ -358,7 +374,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 				            'true' => [
 					            'title'        => __( 'Site wide - Test Notification', 'really-simple-ssl' ),
 					            'msg'          => __( 'This is a test notification from Really Simple SSL. You can safely dismiss this message.', 'really-simple-ssl' ),
-					            'url' => add_query_arg(['page'=>'really-simple-security#settings/vulnerabilities/vulnerabilities-overview'], rsssl_admin_url() ),
+					            'url' => rsssl_admin_url([], '#settings/vulnerabilities/vulnerabilities-overview'),
 					            'icon'         => $site_wide_icon,
 					            'dismissible'  => true,
 					            'admin_notice' => true,
@@ -1530,7 +1546,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 'message' => $message . ' ' .
                              __('Based on your settings, Really Simple SSL will take appropriate action, or you will need to solve it manually.','really-simple-ssl') .' '.
                              sprintf(__('Get more information from the Really Simple SSL dashboard on %s'), $this->domain() ),
-                'url' => rsssl_admin_url('#settings/vulnerabilities_notifications'),
+                'url' => rsssl_admin_url( [], '#settings/vulnerabilities_notifications'),
             ];
         }
 

@@ -1,5 +1,5 @@
 import {__} from '@wordpress/i18n';
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import {useCallback, useEffect, useState} from '@wordpress/element';
 import DataTable, {createTheme} from "react-data-table-component";
 import UserDataTableStore from "./UserDataTableStore";
 import FilterData from "../FilterData";
@@ -35,7 +35,6 @@ const UserDatatable = (props) => {
     } = UserDataTableStore()
     const {showSavedSettingsNotice} = FieldsData();
     const {
-        DynamicDataTable,
         fetchDynamicData,
     } = EventLogDataTableStore();
     //here we set the selectedFilter from the Settings group
@@ -256,7 +255,6 @@ return (
             </div>
         )}
         {/*Display the datatable*/}
-        <div style={{ height: `${tableHeight}px`, position: 'relative' }}>
             <DataTable
                 columns={columns}
                 data={processing && !dataLoaded? [] : Object.values(data)}
@@ -277,7 +275,6 @@ return (
                 theme="really-simple-plugins"
                 customStyles={customStyles}
             ></DataTable>
-        </div>
         {!enabled && (
             <div className="rsssl-locked">
                 <div className="rsssl-locked-overlay"><span

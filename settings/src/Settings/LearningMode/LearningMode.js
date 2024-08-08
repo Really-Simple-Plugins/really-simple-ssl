@@ -160,7 +160,8 @@ const LearningMode = (props) => {
             name: item.name,
             sortable: item.sortable,
             width: item.width,
-            selector: row => row[item.column],
+            selector: item.column === 'documenturi' || item.column === 'method'
+                ? row => <span title={row[item.column]}>{row[item.column]}</span>: row => row[item.column],
         }
         columns.push(newItem);
     });

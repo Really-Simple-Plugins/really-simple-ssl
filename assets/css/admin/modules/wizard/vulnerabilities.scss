@@ -13,6 +13,13 @@
       max-width: 100%;
     }
   }
+  .rdt_TableCell {
+    &:nth-child(2) {
+      select {
+        max-width: 100%;
+      }
+    }
+  }
 }
 
 .rsssl-vulnerabilities_measures {

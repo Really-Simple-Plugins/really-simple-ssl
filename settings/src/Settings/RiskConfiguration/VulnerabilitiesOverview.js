@@ -1,6 +1,6 @@
 import {__} from '@wordpress/i18n';
 import useRiskData from "./RiskData";
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from '@wordpress/element';
 import DataTable, {createTheme} from "react-data-table-component";
 import useFields from "../FieldsData";
 import useProgress from "../../Dashboard/Progress/ProgressData";
@@ -133,8 +133,10 @@ const VulnerabilitiesOverview = (props) => {
     }
     let data = vulList.map(item => ({
         ...item,
-        risk_name: <span
-            className={"rsssl-badge-large rsp-risk-level-" + item.risk_level}>{item.risk_name.replace('-risk', '')}</span>
+        risk_name: <span className={"rsssl-badge-large rsp-risk-level-" + item.risk_level}>
+        {/* Convert the first character to uppercase and append the rest of the string */}
+            {item.risk_name.charAt(0).toUpperCase() + item.risk_name.slice(1).replace('-risk', '')}
+    </span>
     }));
     if (searchTerm.length > 0) {
         data = data.filter(function (item) {

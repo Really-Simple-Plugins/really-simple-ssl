@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {Modal, MenuItem, SelectControl, Button} from "@wordpress/components";
+import { useState} from '@wordpress/element';
+import {Modal, Button} from "@wordpress/components";
 import UserDataTableStore from "./UserDataTableStore";
 import EventLogDataTableStore from "../EventLog/EventLogDataTableStore";
 import {__} from "@wordpress/i18n";

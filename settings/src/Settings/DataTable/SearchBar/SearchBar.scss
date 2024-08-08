@@ -1,0 +1,32 @@
+.rsssl-search-bar {
+  float: right;
+  padding: 0;
+}
+
+.rsssl-search-bar__inner {
+  display: flex;
+  align-items: center;
+  border-radius: 3px;
+  transition: background-color 0.3s ease;
+}
+
+.rsssl-search-bar__inner:focus-within {
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.rsssl-search-bar__icon {
+  /* Add styles for the search icon */
+}
+
+.rsssl-search-bar__input {
+  border: none;
+  outline: none;
+  padding: 3px 5px;
+  width: 150px; /* Adjust width as needed */
+  transition: width 0.3s ease;
+}
+
+.rsssl-search-bar__input:focus {
+  width: 200px; /* Adjust width as needed */
+}

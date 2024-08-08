@@ -115,22 +115,6 @@
     }
   }
 
-  .rsssl-premium-menu-item {
-    background: var(--rsp-dark-blue-faded);
-    div {
-      display: flex;
-      align-items: center;
-      gap: var(--rsp-spacing-xs);
-      text-decoration: none;
-      color: var(--rsp-text-color);
-      font-size: var(--rsp-fs-400);
-      padding-block: var(--rsp-spacing-xs);
-      @include rsssl-inline-block-padding;
-      transition: all 0.2s ease-in-out;
-      border-left: 4px solid transparent;
-    }
-  }
-
   .rsssl-submenu-item{
     a{
       padding-left: calc(var(--rsp-spacing-xs) + var(--rsp-spacing-s)) !important;

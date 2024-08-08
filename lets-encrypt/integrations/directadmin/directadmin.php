@@ -1,6 +1,7 @@
 <?php
 defined( 'ABSPATH' ) or die();
-
+require_once rsssl_path . 'lib/admin/class-encryption.php';
+use RSSSL\lib\admin\Encryption;
 /**
  * @package    DirectAdmin
  * @author     Rogier Lankhorst
@@ -15,6 +16,7 @@ require_once( rsssl_le_path . 'integrations/directadmin/httpsocket.php' );
 require_once( rsssl_le_path . 'integrations/directadmin/functions.php' );
 
 class rsssl_directadmin {
+	use Encryption;
 	public $host;
 	private $login;
 	private $password;
@@ -25,7 +27,7 @@ class rsssl_directadmin {
 	 *
 	 */
 	public function __construct() {
-		$password                   = RSSSL_LE()->letsencrypt_handler->decode( rsssl_get_option( 'directadmin_password' ) );
+		$password                   = $this->decrypt_if_prefixed( rsssl_get_option( 'directadmin_password' ) );
 		$host                       = rsssl_get_option( 'directadmin_host' );
 		$this->host                 = str_replace( array( 'http://', 'https://', ':2222' ), '', $host );
 		$this->login                = rsssl_get_option( 'directadmin_username' );

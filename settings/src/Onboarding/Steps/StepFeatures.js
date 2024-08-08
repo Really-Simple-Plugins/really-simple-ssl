@@ -14,8 +14,20 @@ const StepFeatures = () => {
     return (
         <>
             <ul>
-                { freeItems && freeItems.map( (item, index) => <CheckboxItem key={'step-features'+index} item={item} />) }
-                { premiumItems && premiumItems.map( (item, index) => <PremiumItem key={'step-features'+index} item={item} />) }
+                {freeItems && (
+                    <div className="rsssl-checkbox-items">
+                        {freeItems.map((item, index) => (
+                            <CheckboxItem key={'step-features' + index} item={item}/>
+                        ))}
+                    </div>
+                )}
+                {premiumItems && (
+                    <div className="rsssl-premium-items">
+                        {premiumItems.map((item, index) => (
+                            <PremiumItem key={'step-features' + index} item={item}/>
+                        ))}
+                    </div>
+                )}
             </ul>
         </>
     );

@@ -1,0 +1,26 @@
+.rsssl-datatable-component {
+
+  .rsssl-action-buttons__inner {
+    .rsssl-action-buttons__button {
+      &.rsssl-red {
+        border: 0 solid transparent;
+        background: var(--rsp-red);
+        color: var(--rsp-text-color-white);
+
+        &:hover {
+          background: var(--rsp-dark-red);
+          color: var(--rsp-text-color-white);
+
+        }
+      }
+    }
+  }
+
+  .rsssl-add-button__button, .rsssl-action-buttons__button {
+    display: flex;
+
+    .rsssl-icon {
+      margin-right: 10px;
+    }
+  }
+}

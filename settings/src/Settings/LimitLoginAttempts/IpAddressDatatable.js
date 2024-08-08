@@ -1,5 +1,5 @@
 import {__} from '@wordpress/i18n';
-import React, {useEffect, useRef, useState, StrictMode, useCallback} from 'react';
+import {useEffect, useState, useCallback} from '@wordpress/element';
 import DataTable, {createTheme} from "react-data-table-component";
 import IpAddressDataTableStore from "./IpAddressDataTableStore";
 import EventLogDataTableStore from "../EventLog/EventLogDataTableStore";
@@ -17,7 +17,6 @@ const IpAddressDatatable = (props) => {
         dataLoaded,
         dataActions,
         handleIpTableRowsChange,
-        updateMultiRow,
         fetchData,
         handleIpTableSort,
         handleIpTablePageChange,
@@ -34,22 +33,19 @@ const IpAddressDatatable = (props) => {
     } = IpAddressDataTableStore()
 
     const {
-        DynamicDataTable,
         fetchDynamicData,
     } = EventLogDataTableStore();
 
     //here we set the selectedFilter from the Settings group
     const {
-        selectedFilter,
         setSelectedFilter,
-        activeGroupId,
         getCurrentFilter,
         setProcessingFilter,
     } = FilterData();
 
     const [addingIpAddress, setAddingIpAddress] = useState(false);
     const [rowsSelected, setRowsSelected] = useState([]);
-    const {fields, fieldAlreadyEnabled, getFieldValue, saveFields} = useFields();
+    const {fieldAlreadyEnabled, getFieldValue} = useFields();
     const {showSavedSettingsNotice} = FieldsData();
     const [tableHeight, setTableHeight] = useState(600);  // Starting height
     const rowHeight = 50; // Height of each row.
@@ -152,7 +148,6 @@ const IpAddressDatatable = (props) => {
 
     //we convert the data to an array
     let data = Object.values({...IpDataTable.data});
-
     const resetIpAddresses = useCallback(async (data) => {
         if (Array.isArray(data)) {
             const ids = data.map((item) => item.id);
@@ -175,51 +170,6 @@ const IpAddressDatatable = (props) => {
         }
         await fetchDynamicData('event_log')
     }, [resetMultiRow, resetRow, fetchDynamicData, dataActions]);
-
-
-    function generateOptions(status, id) {
-        //if the there is no id we set it to new
-        if (!id) {
-            id = 'new';
-        }
-        return (
-            <select
-                className="rsssl-select"
-                value={status}
-                onChange={(event) => handleStatusChange(event.target.value, id)}
-            >
-                {options.map((item, i) => {
-                    //if item value = locked the option will show but is nog selectable
-                    let disabled = false;
-                    if (item.value === 'locked') {
-                        disabled = true;
-                    }
-
-                    return (
-                        <option key={'ip-options-'+i} value={item.value} disabled={disabled}>
-                            {item.label}
-                        </option>
-                    );
-                })}
-            </select>
-        );
-    }
-
-    function generateFlag(flag, title) {
-        return (
-            <>
-                <Flag
-                    countryCode={flag}
-                    style={{
-                        fontSize: '2em',
-                        marginLeft: '0.3em',
-                    }}
-                    title={title}
-                ></Flag>
-            </>
-
-        )
-    }
 
     const ActionButton = ({onClick, children, className}) => (
         <div className={`rsssl-action-buttons__inner`}>
@@ -332,7 +282,6 @@ const IpAddressDatatable = (props) => {
             )}
 
             {/*Display the datatable*/}
-            <div style={{ height: `${tableHeight}px`, position: 'relative' }}>
             <DataTable
                 columns={columns}
                 data={processing ? [] : data}
@@ -364,7 +313,6 @@ const IpAddressDatatable = (props) => {
                 theme="really-simple-plugins"
                 customStyles={customStyles}
             ></DataTable>
-            </div>
             {!enabled && (
                 <div className="rsssl-locked">
                     <div className="rsssl-locked-overlay"><span

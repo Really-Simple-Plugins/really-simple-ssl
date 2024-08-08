@@ -7,7 +7,6 @@ import {Autocomplete} from "@mui/material";
 import TextField from '@material-ui/core/TextField';
 import './AutoComplete.scss';
 import { makeStyles } from "@material-ui/styles";
-import {useEffect, useState} from "react";
 
 const useStyles = makeStyles(() => ({
     autoComplete: {

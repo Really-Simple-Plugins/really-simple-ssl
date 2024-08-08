@@ -100,6 +100,17 @@ const SettingsGroup = (props) => {
     let anchor = getAnchor('main');
     let disabledClass = disabled || networkwide_error ? 'rsssl-disabled' : '';
     const filterId = "rsssl-group-filter-" + activeGroup.id;
+    //filter out all fields that are not visible
+    selectedFields = selectedFields.filter((field) => {
+        if (field.hasOwnProperty('visible')) {
+            return field.visible;
+        }
+        return true;
+    });
+    //if there are no visible fields, return null
+    if (selectedFields.length === 0) {
+        return null;
+    }
     return (
         <div className={"rsssl-grid-item rsssl-" + activeGroup.id + ' ' + disabledClass}>
             {activeGroup.title && <div className="rsssl-grid-item-header">

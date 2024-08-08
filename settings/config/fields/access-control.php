@@ -76,9 +76,22 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'default'  => '48',
 				'options'   => [
 					'8' => __( "8 hours (recommended)", "really-simple-ssl" ),
-					'48' => __( "48 hours", "really-simple-ssl" ),
+					'48' => __( "48 hours (default)", "really-simple-ssl" ),
 				],
-				'label'    => __( "Let login cookie expire after", "really-simple-ssl" ),
+				'label'    => __( "Limit logged in session duration", "really-simple-ssl" ),
+				'help'             => [
+					'label' => 'default',
+					'title' => __( "Prevent session hijacking", 'really-simple-ssl' ),
+					'text'  => __( "Really Simple SSL allows you to limit the default logged in session duration. By default, WordPress will keep users logged in for 48 hours, or even 14 days when clicking the ‘remember me’ checkbox. An attacker could possibly steal the logged in cookie and gain access to a user’s account. Limiting the logged in duration to 8 hours will greatly reduce the risk of session hijacking.", 'really-simple-ssl' ),
+				],
+			],
+			[
+				'id'       => 'hide_rememberme',
+				'menu_id'  => 'password_security',
+				'group_id' => 'password_security_passwords',
+				'type'     => 'checkbox',
+				'default'  => false,
+				'label'    => __( "Hide the remember me checkbox", "really-simple-ssl" ),
 			],
 		]
 	);

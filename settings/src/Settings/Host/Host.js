@@ -1,4 +1,4 @@
-import {useRef, useEffect, memo} from "@wordpress/element";
+import {useState, useEffect, memo} from "@wordpress/element";
 import useFields from "../FieldsData";
 import AutoCompleteControl from "../AutoComplete/AutoCompleteControl";
 import useHostData from "./HostData";
@@ -6,27 +6,29 @@ import {__} from "@wordpress/i18n";
 
 const Host = ({field, showDisabledWhenSaving=true}) => {
     const {updateField, setChangedField, saveFields, handleNextButtonDisabled} = useFields();
-    const disabled = useRef(false);
+    const [disabled, setDisabled] = useState(false);
     const {fetchHosts, hosts, hostsLoaded} = useHostData();
 
     useEffect ( () => {
+
         if ( !hostsLoaded ) {
             fetchHosts();
         }
     }, []);
+
+    useEffect(() => {
+        handleNextButtonDisabled(disabled);
+    }, [disabled]);
+
     const onChangeHandler = async (fieldValue) => {
         //force update, and get new fields.
-        handleNextButtonDisabled(true);
         if (showDisabledWhenSaving) {
-            disabled.current = true;
+          setDisabled(true);
         }
         updateField(field.id, fieldValue);
         setChangedField(field.id, fieldValue);
-
         await saveFields(true, false);
-
-        handleNextButtonDisabled(false);
-        disabled.current = false;
+        setDisabled(false);
     }
 
     let loadedHosts = hostsLoaded ? hosts : [];
@@ -55,7 +57,7 @@ const Host = ({field, showDisabledWhenSaving=true}) => {
               onChange={ ( fieldValue ) => onChangeHandler(fieldValue) }
               value= { field.value }
               options={ options }
-              disabled={disabled.current}
+              disabled={disabled}
           />
     )
 }

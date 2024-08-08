@@ -4,7 +4,6 @@ defined( 'ABSPATH' ) or die();
 add_filter( 'rsssl_fields', function( $fields ) {
 	return array_merge( $fields,
 		[
-
 			[
 				'id'       => 'xmlrpc_status',
 				'menu_id'  => 'hardening-xml',
@@ -49,7 +48,8 @@ add_filter( 'rsssl_fields', function( $fields ) {
 						'name'     => __( 'Method', 'really-simple-ssl' ),
 						'sortable' => false,
 						'column'   => 'method',
-						'width'     => '20%',
+                        'grow'     => 2,
+                        'width'    => '30%',
 					],
 					[
 						'name'     => __( 'Login status', 'really-simple-ssl' ),
@@ -67,13 +67,13 @@ add_filter( 'rsssl_fields', function( $fields ) {
 						'name'     => __( '', 'really-simple-ssl' ),
 						'sortable' => false,
 						'column'   => 'statusControl',
-						'width'     => '20%',
+						'width'     => '10%',
 					],
 					[
 						'name'     => __( '', 'really-simple-ssl' ),
 						'sortable' => false,
 						'column'   => 'deleteControl',
-						'width'     => '20%',
+						'width'     => '10%',
 					],
 				],
 			],

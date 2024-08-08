@@ -3,11 +3,13 @@
 namespace security\wordpress\vulnerabilities;
 
 defined( 'ABSPATH' ) or die();
-
+require_once rsssl_path . 'lib/admin/class-encryption.php';
 require_once 'class-rsssl-folder-name.php';
 
+use RSSSL\lib\admin\Encryption;
+
 class Rsssl_File_Storage {
-	private $hash;
+	use Encryption;
 	public $folder; //for the folder name
 
 	/**
@@ -15,7 +17,6 @@ class Rsssl_File_Storage {
 	 */
 	public function __construct() {
 		//Fetching the key from the database
-		$this->generateHashKey();
 		$upload_dir   = wp_upload_dir();
 		$this->folder = $upload_dir['basedir'] . '/' . Rsssl_Folder_Name::getFolderName();
 	}
@@ -49,8 +50,7 @@ class Rsssl_File_Storage {
 	public function get( $file ) {
 		if ( file_exists( $file ) ) {
 			$data = file_get_contents( $file );
-			$data = $this->Decode64WithHash( $data );
-
+			$data = $this->decrypt( $data );
 			return json_decode( $data );
 		}
 
@@ -71,76 +71,13 @@ class Rsssl_File_Storage {
 			return;
 		}
 
-		$data = $this->Encode64WithHash( json_encode( $data ) );
+		$data = $this->encrypt( json_encode( $data ) );
 		//first we check if the storage folder is already in the $file string
 		if ( strpos( $file, $this->folder ) !== false ) {
 			$file = str_replace( $this->folder . '/', '', $file );
 		}
 
 		file_put_contents( $this->folder . '/' . $file, $data );
-	}
-
-	/** encode the data with a hash
-	 *
-	 * @param $data
-	 *
-	 * @return string
-	 * @throws \Exception
-	 */
-	private function Encode64WithHash( $data ): string {
-		$crypto_strong = false;
-		$iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'), $crypto_strong);
-
-		// Check if IV generation was successful and cryptographically strong
-		if ($iv === false || $crypto_strong === false) {
-			return '';
-		}
-
-		$encrypted = openssl_encrypt($data, 'aes-256-cbc', $this->hash, 0, $iv);
-		// Store the $iv along with the $encrypted data, so we can use it during decryption
-		$encrypted = base64_encode($encrypted . '::' . $iv);
-		return $encrypted;
-	}
-
-	/** decode the data with a hash
-	 *
-	 * @param $data
-	 *
-	 * @return string
-	 * @throws \Exception
-	 */
-	private function Decode64WithHash($data): string {
-		$data = base64_decode( $data );
-		[ $encrypted_data, $iv ] = explode( '::', $data, 2 );
-
-		// Check if IV was successfully retrieved
-		if ( $iv === false ) {
-			return '';
-		}
-
-		if ( function_exists( 'openssl_decrypt' ) ) {
-			$decrypted = openssl_decrypt( $encrypted_data, 'aes-256-cbc', $this->hash, 0, $iv );
-		} else {
-			$decrypted = '';
-			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-				error_log( 'Really Simple SSL: OpenSSL functions do not exist. Check with your host if the OpenSSL library for PHP can be enabled.' );
-			}
-		}
-
-		return $decrypted;
-	}
-
-
-	/** Generate a hashkey and store it in the database
-	 * @return void
-	 */
-	private function generateHashKey(): void {
-		if ( get_option( 'rsssl_hashkey' ) && get_option( 'rsssl_hashkey' ) !== "" ) {
-			$this->hash = get_option( 'rsssl_hashkey' );
-		} else {
-			$this->hash = md5( uniqid( rand(), true ) );
-			update_option( 'rsssl_hashkey', $this->hash, false );
-		}
 	}
 
 	public static function GetDate( string $file ) {

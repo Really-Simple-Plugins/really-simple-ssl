@@ -1,5 +1,22 @@
 .rsssl-lets-encrypt-tests {
-  margin:var(--rsp-spacing-xs) var(--rsp-spacing-xl);
+  margin: var(--rsp-spacing-xs) var(--rsp-spacing-xl);
+
+  .rsssl-features {
+    ul {
+      display: flex;
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+
+      .rsssl-checkbox-items {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        margin-right: var(--rsp-spacing-l);
+      }
+    }
+  }
+
   .rsssl-progress-bar {
     padding-block: 0;
     margin-bottom:var(--rsp-spacing-m);

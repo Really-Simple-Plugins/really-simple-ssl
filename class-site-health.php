@@ -78,7 +78,7 @@ if ( ! class_exists( 'rsssl_site_health' ) ) {
 				'actions'     => sprintf(
 					'<p><a href="%s" target="_blank" rel="noopener noreferrer">%s <span class="screen-reader-text">%s</span><span aria-hidden="true" class="dashicons dashicons-external"></span></a></p>',
 					/* translators: Documentation explaining debugging in WordPress. */
-					esc_url( add_query_arg( array( 'page' => 'really-simple-security#settings/hardening' ), rsssl_admin_url() ) ),
+					esc_url( rsssl_admin_url([], '#settings/hardening') ),
 					__( 'Remove from public location with Really Simple SSL', 'really-simple-ssl' ),
 					/* translators: Accessibility text. */
 					__( '(opens in a new tab)' )// phpcs:ignore WordPress.WP.I18n.MissingArgDomain
@@ -163,7 +163,7 @@ if ( ! class_exists( 'rsssl_site_health' ) ) {
 		 * @return array
 		 */
 		public function ssl_tests() {
-			$url = add_query_arg( array( 'page' => 'really-simple-security' ), rsssl_admin_url() );
+			$url = rsssl_admin_url();
 
 			$result = array(
 				'label'       => __( '301 SSL redirect enabled', 'really-simple-ssl' ),

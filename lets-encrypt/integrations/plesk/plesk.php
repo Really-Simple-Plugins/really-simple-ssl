@@ -23,13 +23,16 @@
  *
  */
 
-use PleskX\Api\Client;
 
+use PleskX\Api\Client;
+require_once rsssl_path . 'lib/admin/class-encryption.php';
+use RSSSL\lib\admin\Encryption;
 require_once rsssl_le_path . 'vendor/autoload.php';
 require_once( rsssl_le_path . 'integrations/plesk/functions.php' );
 
 class rsssl_plesk
 {
+	use Encryption;
 	public $host;
 	private $login;
 	private $password;
@@ -41,7 +44,7 @@ class rsssl_plesk
 	 */
 	public function __construct()
 	{
-		$password = RSSSL_LE()->letsencrypt_handler->decode( rsssl_get_option('plesk_password') );
+		$password = $this->decrypt_if_prefixed( rsssl_get_option('plesk_password') );
 		$host = rsssl_get_option('plesk_host');
 		$this->host =  str_replace(array('http://', 'https://', ':8443'), '', $host);
 		$this->login = rsssl_get_option('plesk_username');

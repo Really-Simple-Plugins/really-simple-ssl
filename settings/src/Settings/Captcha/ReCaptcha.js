@@ -1,4 +1,3 @@
-import React from 'react';
 import {useEffect} from "@wordpress/element";
 import useFields from '../FieldsData';
 import CaptchaData from "./CaptchaData";

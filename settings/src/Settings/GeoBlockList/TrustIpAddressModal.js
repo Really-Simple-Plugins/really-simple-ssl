@@ -1,21 +1,17 @@
-import React, {useEffect, useState} from 'react';
+import {useState} from '@wordpress/element';
 import Icon from "../../utils/Icon";
 import {
     Modal,
-    MenuItem,
-    SelectControl,
     Button,
-    __experimentalConfirmDialog as ConfirmDialog, TextControl
+    TextControl
 } from "@wordpress/components";
 import {__} from "@wordpress/i18n";
-import IpAddressInput from "../LimitLoginAttempts/IpAddressInput";
 import FieldsData from "../FieldsData";
 import WhiteListTableStore from "./WhiteListTableStore";
 
 const TrustIpAddressModal = (props) => {
-    const { inputRangeValidated,note, setNote, ipAddress, setIpAddress, maskError, dataLoaded, updateRow, resetRange} = WhiteListTableStore();
+    const { note, setNote, ipAddress, setIpAddress, maskError, dataLoaded, updateRow, resetRange} = WhiteListTableStore();
     const [rangeDisplay, setRangeDisplay] = useState(false);
-    const [resetFlag, setResetFlag] = useState(false);
     const {showSavedSettingsNotice} = FieldsData();
 
     //we add a function to handle the range fill
@@ -27,7 +23,7 @@ const TrustIpAddressModal = (props) => {
     async function handleSubmit() {
         // we check if statusSelected is not empty
         if (ipAddress && maskError === false) {
-            await updateRow(ipAddress, note, props.dataActions).then((response) => {
+            await updateRow(ipAddress, note, props.status ,props.filter).then((response) => {
                 if (response.success) {
                     showSavedSettingsNotice(response.message);
                 } else {

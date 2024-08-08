@@ -189,22 +189,27 @@ function rsssl_upgrade() {
 	if ( $prev_version && version_compare( $prev_version, '8.1.2', '<' ) ) {
 		do_action('rsssl_update_rules');
 	}
-	//pro
-	if ( $prev_version && version_compare( $prev_version, '8.2.1', '<' ) ) {
-		do_action('rsssl_update_rules');
-	}
 
+	if ( $prev_version && version_compare( $prev_version, '8.3.0', '<' ) ) {
+		wp_clear_scheduled_hook('rsssl_pro_every_hour_hook');
+		wp_clear_scheduled_hook('rsssl_pro_every_day_hook');
+		wp_clear_scheduled_hook('rsssl_pro_five_minutes_hook');
+		wp_clear_scheduled_hook('rsssl_le_every_week_hook');
+		wp_clear_scheduled_hook('rsssl_le_every_day_hook');
 
-	if ( $prev_version && version_compare( $prev_version, '8.2.1', '<' ) ) {
-		delete_option( 'rsssl_xmlrpc_db_version' );
-		delete_option( 'rsssl_csp_db_version' );
-		delete_option( 'rsssl_geo_block_db_version' );
-		delete_option( 'rsssl_login_attempts_db_version' );
-		delete_option( 'rsssl_event_log_db_version' );
-	}
+		//split rsssl_key in two options so we can upgrade separately
+		$key = get_option( 'rsssl_key');
+		$site_key = get_site_option( 'rsssl_key');
+		if ( $key ) {
+			update_option( 'rsssl_license_key', $key, false );
+		}
+		if ( $site_key ) {
+			update_site_option( 'rsssl_le_key', $site_key );
+		}
 
-	if ( $prev_version && version_compare( $prev_version, '8.2.3', '<' ) ) {
-		update_site_option('rsssl_geo_ip_database_file', get_option('rsssl_geo_ip_database_file') );
+		delete_site_option('rsssl_key');
+		delete_option('rsssl_key');
+		update_option('rsssl_upgrade_le_key', true, false);
 	}
 
 	//don't clear on each update.

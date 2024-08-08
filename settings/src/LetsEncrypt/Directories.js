@@ -9,17 +9,16 @@ import {useEffect} from '@wordpress/element';
 import useLetsEncryptData from "./letsEncryptData";
 import {addUrlRef} from "../utils/AddUrlRef";
 
-const Directories = (props) => {
-    const {updateVerificationType} = useLetsEncryptData();
+const Directories = ({action, field}) => {
+    const {switchButtonDisabled, updateVerificationType, setRefreshTests} = useLetsEncryptData();
+
     const {addHelpNotice, updateField, setChangedField, saveFields, fetchFieldsData} = useFields();
     const { setSelectedSubMenuItem} = useMenu();
-
-    let action = props.action;
 
     useEffect(() => {
         if ((action && action.action === 'challenge_directory_reachable' && action.status === 'error')) {
             addHelpNotice(
-                props.field.id,
+                field.id,
                 'default',
                 __("The challenge directory is used to verify the domain ownership.", "really-simple-ssl"),
             );
@@ -27,7 +26,7 @@ const Directories = (props) => {
 
         if ((action && action.action === 'check_key_directory' && action.status === 'error')) {
             addHelpNotice(
-                props.field.id,
+                field.id,
                 'default',
                 __("The key directory is needed to store the generated keys.", "really-simple-ssl") + ' ' + __("By placing it outside the root folder, it is not publicly accessible.", "really-simple-ssl"),
             );
@@ -35,7 +34,7 @@ const Directories = (props) => {
 
         if ((action && action.action === 'check_certs_directory' && action.status === 'error')) {
             addHelpNotice(
-                props.field.id,
+                field.id,
                 'default',
                 __("The certificate will get stored in this directory.", "really-simple-ssl") + ' ' + __("By placing it outside the root folder, it is not publicly accessible.", "really-simple-ssl"),
             );
@@ -48,43 +47,43 @@ const Directories = (props) => {
     }
 
     const handleSwitchToDNS = async () => {
+
         updateField('verification_type', 'dns');
         setChangedField('verification_type', 'dns');
         await saveFields(true, true);
         await updateVerificationType('dns');
         await setSelectedSubMenuItem('le-dns-verification');
-        await fetchFieldsData('le-directories');
+        await fetchFieldsData('le-dns-verification');
+        setRefreshTests(true);
     }
+
+    let dirError = action.status === 'error' && action.action === 'challenge_directory_reachable';
 
     return (
         <div className="rsssl-test-results">
             {action.status === 'error' && <h4>{__("Next step", "really-simple-ssl")}</h4>}
-
-            {(action.status === 'error' && action.action === 'challenge_directory_reachable') &&
-                <div>
-                    <p>
-                        {__("If the challenge directory cannot be created, or is not reachable, you can either remove the server limitation, or change to DNS verification.", "really-simple-ssl")}
-                    </p>
-                    <Button
-                        variant="secondary"
-                        onClick={() => handleSwitchToDNS()}
-                    >
-                        {__('Switch to DNS verification', 'really-simple-ssl')}
-                    </Button>
-                </div>
-            }
-            {rsssl_settings.hosting_dashboard === 'cpanel' &&
+            {!dirError && rsssl_settings.hosting_dashboard === 'cpanel' &&
                 <><p>
                     <Hyperlink target="_blank" rel="noopener noreferrer"
                                text={__("If you also want to secure subdomains like mail.domain.com, cpanel.domain.com, you have to use the %sDNS%s challenge.", "really-simple-ssl")}
                                url={addUrlRef("https://really-simple-ssl.com/lets-encrypt-authorization-with-dns")}/>
                     &nbsp;{__("Please note that auto-renewal with a DNS challenge might not be possible.", "really-simple-ssl")}
-                </p>
-                    <Button
-                        variant="secondary"
-                        onClick={() => handleSwitchToDNS()}
-                    >{__('Switch to DNS verification', 'really-simple-ssl')}</Button></>
+                </p></>
             }
+            <div>
+                <p>
+                    {__("If the challenge directory cannot be created, or is not reachable, you can either remove the server limitation, or change to DNS verification.", "really-simple-ssl")}
+                </p>
+                <Button
+                    disabled={switchButtonDisabled}
+                    variant="secondary"
+                    onClick={() => handleSwitchToDNS()}
+                >
+                    {__('Switch to DNS verification', 'really-simple-ssl')}
+                </Button>
+            </div>
+
+
             {(action.status === 'error' && action.action === 'check_challenge_directory') &&
                 <div>
                     <h4>
@@ -109,6 +108,7 @@ const Directories = (props) => {
                     </h4>
                     <p>{__("If the challenge directory cannot be created, you can either remove the server limitation, or change to DNS verification.", "really-simple-ssl")}</p>
                     <Button
+                        disabled={switchButtonDisabled}
                         variant="secondary"
                         onClick={() => handleSwitchToDNS()}
                     >

@@ -1,8 +1,11 @@
 <?php
+
 defined( 'ABSPATH' ) or die();
 
+require_once rsssl_path . '/lib/admin/class-helper.php';
+use RSSSL\lib\admin\Helper;
 class rsssl_admin {
-
+    use Helper;
 	private static $_this;
 	public $wpconfig_siteurl_not_fixed   = false;
 	public $no_server_variable           = false;
@@ -42,9 +45,6 @@ class rsssl_admin {
 		add_action( 'admin_init', array( $this, 'listen_for_deactivation' ), 40 );
 		add_action( 'plugins_loaded', array( $this, 'maybe_redirect_old_settings_url' ), 10 );
 
-		$plugin = rsssl_plugin;
-		add_filter( "plugin_action_links_$plugin", array( $this, 'plugin_settings_link' ) );
-
 		//Add update notification to Settings admin menu
 		add_action( 'admin_menu', array( $this, 'add_plus_ones' ) );
 
@@ -74,7 +74,7 @@ class rsssl_admin {
 		add_action( 'rocket_activation', 'rsssl_wrap_htaccess' );
 		add_action( 'rocket_deactivation', 'rsssl_wrap_htaccess' );
 		$plugin = rsssl_plugin;
-		add_filter( "plugin_action_links_$plugin", array($this,'plugin_settings_link' ) );
+		add_filter( "plugin_action_links_$plugin", array( $this, 'plugin_settings_link' ) );
 		add_filter( "network_admin_plugin_action_links_$plugin", array($this,'plugin_settings_link' ) );
 
 		add_action( 'upgrader_process_complete', array( $this, 'run_table_init_hook'), 10, 1);
@@ -124,7 +124,6 @@ class rsssl_admin {
 	        }
 	        ( new rsssl_le_hosts() )->detect_host_on_activation();
 	        $this->run_table_init_hook();
-
 	        do_action('rsssl_activation');
             delete_option('rsssl_activation');
         }
@@ -143,7 +142,7 @@ class rsssl_admin {
 			return $links;
 		}
 		$settings_link = '';
-		$url = add_query_arg( array( 'page' => 'really-simple-security' ), rsssl_admin_url() );
+		$url = rsssl_admin_url();
 		//settings only on network wide activated, or no multisite at all.
 		if ( is_multisite() && rsssl_is_networkwide_active() && is_super_admin() ) {
 			$settings_link = '<a href="' . $url . '">' . __( 'Settings', 'really-simple-ssl' ) . '</a>';
@@ -175,7 +174,7 @@ class rsssl_admin {
 			return;
 		}
 		if ( isset( $_GET['page'] ) && 'rlrsssl_really_simple_ssl' === $_GET['page'] ) {
-			wp_redirect( add_query_arg( [ 'page' => 'really-simple-security' ], rsssl_admin_url() ) );
+			wp_redirect( rsssl_admin_url() );
 			exit;
 		}
 	}
@@ -366,8 +365,11 @@ class rsssl_admin {
 				update_option( 'active_plugins', $current );
 			}
 			do_action( 'rsssl_deactivate' );
+
+			rsssl_clear_scheduled_hooks();
+
 			wp_redirect( admin_url( 'plugins.php' ) );
-			exit;
+            exit;
 		}
 	}
 
@@ -582,7 +584,7 @@ class rsssl_admin {
 		<div id="rsssl-message" class="<?php echo esc_attr( $css_class ); ?> really-simple-plugins">
 			<div class="rsssl-notice">
 				<div class="rsssl-notice-content">
-					<?php echo $content; ?>
+					Really Simple SSL: <?php echo $content; ?>
 				</div>
 				<?php if ( $more_info || $dismiss_id ) { ?>
 					<div class="rsssl-admin-notice-more-info">
@@ -609,7 +611,7 @@ class rsssl_admin {
 	 */
 
 	public function wpconfig_is_writable() {
-		$wpconfig_path = $this->find_wp_config_path();
+		$wpconfig_path = $this->wpconfig_path();
 		if ( empty( $wpconfig_path ) ) {
 			return false;
 		}
@@ -661,29 +663,6 @@ class rsssl_admin {
 	}
 
 	/**
-	 * Find the path to wp-config
-	 *
-	 * @since  2.1
-	 *
-	 * @access public
-	 * @return string|false
-	 *
-	 */
-
-	public function find_wp_config_path() {
-		$location_of_wp_config = ABSPATH;
-		if ( ! file_exists( ABSPATH . 'wp-config.php' ) && file_exists( dirname( ABSPATH ) . '/wp-config.php' ) ) {
-			$location_of_wp_config = dirname( ABSPATH );
-		}
-		$location_of_wp_config = trailingslashit( $location_of_wp_config );
-		$wpconfig_path         = $location_of_wp_config . 'wp-config.php';
-		if ( file_exists( $wpconfig_path ) ) {
-			return $wpconfig_path;
-		}
-		return false;
-	}
-
-	/**
 	 * remove https from defined siteurl and homeurl in the wpconfig, if present
 	 *
 	 * @since  2.1
@@ -697,7 +676,7 @@ class rsssl_admin {
 		if ( ! rsssl_user_can_manage() ) {
 			return;
 		}
-		$wpconfig_path = $this->find_wp_config_path();
+		$wpconfig_path = $this->wpconfig_path();
 		if ( ! empty( $wpconfig_path ) ) {
 			$wpconfig    = file_get_contents( $wpconfig_path );
 			$homeurl_pos = strpos( $wpconfig, "define('WP_HOME','https://" );
@@ -726,7 +705,7 @@ class rsssl_admin {
 			return;
 		}
 
-		$wpconfig_path = $this->find_wp_config_path();
+		$wpconfig_path = $this->wpconfig_path();
 		if ( empty( $wpconfig_path ) ) {
 			return;
 		}
@@ -756,7 +735,7 @@ class rsssl_admin {
 		if ( ! rsssl_user_can_manage() ) {
 			return;
 		}
-		$wpconfig_path = $this->find_wp_config_path();
+		$wpconfig_path = $this->wpconfig_path();
 		if ( empty( $wpconfig_path ) ) {
 			return;
 		}
@@ -788,7 +767,7 @@ class rsssl_admin {
 	 */
 
 	public function wpconfig_has_fixes() {
-		$wpconfig_path = $this->find_wp_config_path();
+		$wpconfig_path = $this->wpconfig_path();
 		if ( empty( $wpconfig_path ) ) {
 			return false;
 		}
@@ -822,7 +801,7 @@ class rsssl_admin {
 			return;
 		}
 
-		$wpconfig_path = $this->find_wp_config_path();
+		$wpconfig_path = $this->wpconfig_path();
 		if ( empty( $wpconfig_path ) ) {
 			return;
 		}
@@ -864,7 +843,7 @@ class rsssl_admin {
 			return;
 		}
 
-		$wpconfig_path = $this->find_wp_config_path();
+		$wpconfig_path = $this->wpconfig_path();
 		if ( empty( $wpconfig_path ) ) {
 			return;
 		}
@@ -990,7 +969,7 @@ class rsssl_admin {
 			return;
 		}
 
-		$wpconfig_path = $this->find_wp_config_path();
+		$wpconfig_path = $this->wpconfig_path();
 		if ( empty( $wpconfig_path ) ) {
 			return;
 		}
@@ -1729,29 +1708,11 @@ class rsssl_admin {
 							   href="https://wordpress.org/support/plugin/really-simple-ssl/reviews/#new-post"><?php _e( 'Leave a review', 'really-simple-ssl' ); ?></a>
 							<div class="dashicons dashicons-calendar"></div><a rel="noopener noreferrer" href="
 							<?php
-							echo esc_url(
-								add_query_arg(
-									array(
-										'page' => 'really-simple-security',
-										'rsssl_review_notice' => 'later',
-									),
-									rsssl_admin_url()
-								)
-							);
+							echo esc_url( rsssl_admin_url(['rsssl_review_notice' => 'later']) );
 							?>
 																						"><?php _e( 'Maybe later', 'really-simple-ssl' ); ?></a>
 							<div class="dashicons dashicons-no-alt"></div><a rel="noopener noreferrer" href="
-							<?php
-							echo esc_url(
-								add_query_arg(
-									array(
-										'page' => 'really-simple-security',
-										'rsssl_review_notice' => 'dismiss',
-									),
-									rsssl_admin_url()
-								)
-							);
-							?>
+							<?php echo esc_url(	rsssl_admin_url(['rsssl_review_notice' => 'dismiss']) ); ?>
 																					"><?php _e( 'Don\'t show again', 'really-simple-ssl' ); ?></a>
 						</div>
 					</div>
@@ -1775,19 +1736,7 @@ class rsssl_admin {
 		<script>
 			document.addEventListener('click', e => {
 				if ( e.target.closest('.rsssl-review.notice.is-dismissible .notice-dismiss') ) {
-					window.location.href='
-					<?php
-					echo esc_url_raw(
-						add_query_arg(
-							array(
-								'page'                => 'really-simple-security',
-								'rsssl_review_notice' => 'dismiss',
-							),
-							rsssl_admin_url()
-						)
-					);
-					?>
-											';
+					window.location.href='<?php echo esc_url_raw(rsssl_admin_url(['rsssl_review_notice' => 'dismiss']) );?>';
 				}
 			});
 		</script>
@@ -2045,7 +1994,7 @@ class rsssl_admin {
 				'output'   => array(
 					'true' => array(
 						'msg'          => __( "The 'force-deactivate.php' file has to be renamed to .txt. Otherwise your ssl can be deactivated by anyone on the internet.", 'really-simple-ssl' ) . ' ' .
-								'<a href="' . add_query_arg( array( 'page' => 'really-simple-security' ), rsssl_admin_url() ) . '">' . __( 'Check again', 'really-simple-ssl' ) . '</a>',
+								'<a href="' . rsssl_admin_url(). '">' . __( 'Check again', 'really-simple-ssl' ) . '</a>',
 						'icon'         => 'warning',
 						'admin_notice' => true,
 						'plusone'      => true,
@@ -2100,13 +2049,9 @@ class rsssl_admin {
 					'no-ssl-detected' => array(
 						'title'       => __( 'No SSL detected', 'really-simple-ssl' ),
 						'msg'         => __( 'No SSL detected. Use the retry button to check again.', 'really-simple-ssl' ) .
-								'<form class="rsssl-task-form"  action="" method="POST"><a href="' . add_query_arg(
-									array(
-										'page'        => 'really-simple-security',
-										'letsencrypt' => '1',
-									),
-									rsssl_admin_url()
-								) . '#letsencrypt" type="submit" class="button button-default  rsssl-button-small">' . __( 'Install SSL certificate', 'really-simple-ssl' ) . '</a>' .
+								'<form class="rsssl-task-form"  action="" method="POST"><a href="' .
+									rsssl_admin_url(['letsencrypt' => '1'], '#letsencrypt')
+								 . '" type="submit" class="button button-default  rsssl-button-small">' . __( 'Install SSL certificate', 'really-simple-ssl' ) . '</a>' .
 								'<input type="submit" class="button button-default rsssl-button-small" value="' . __( 'Retry', 'really-simple-ssl' ) . '" id="rsssl_recheck_certificate" name="rsssl_recheck_certificate"></form>',
 						'icon'        => 'warning',
 						'dismissible' => rsssl_get_option( 'ssl_enabled' ),
@@ -2114,13 +2059,9 @@ class rsssl_admin {
 					'no-response'     => array(
 						'title'       => __( 'Could not test certificate', 'really-simple-ssl' ),
 						'msg'         => __( 'Automatic certificate detection is not possible on your server.', 'really-simple-ssl' ) . '<br>' .
-								'<a href="' . add_query_arg(
-									array(
-										'page'        => 'really-simple-security',
-										'letsencrypt' => 1,
-									),
-									rsssl_admin_url()
-								) . '#letsencrypt" type="submit" class="button button-default  rsssl-button-small">' . __( 'Install SSL certificate', 'really-simple-ssl' ) . '</a>' .
+								'<a href="' .
+									rsssl_admin_url(['letsencrypt' => 1], '#letsencrypt')
+								 . '" type="submit" class="button button-default  rsssl-button-small">' . __( 'Install SSL certificate', 'really-simple-ssl' ) . '</a>' .
 								'<button class="button button-default rsssl-button-small" id="ssl-labs-check-button">' . __( 'Check manually', 'really-simple-ssl' ) . '</button>',
 						'icon'        => 'warning',
 						'dismissible' => true,
@@ -2138,13 +2079,9 @@ class rsssl_admin {
 							// translators: %1$ and %2$s are replaced with the opening and closing tag with link.
 							sprintf( __( 'Depending on your hosting provider, %1$smanual installation%2$s may be required.', 'really-simple-ssl' ), '<a target="_blank" rel="noopener noreferrer" href="https://really-simple-ssl.com/install-ssl-certificate">', '</a>' ) .
 
-								'<br><br><form action="" method="POST"><a href="' . add_query_arg(
-									array(
-										'page'        => 'really-simple-security',
-										'letsencrypt' => 1,
-									),
-									rsssl_admin_url()
-								) . '#letsencrypt" type="submit" class="button button-default">' . __( 'Install SSL certificate', 'really-simple-ssl' ) . '</a>' .
+								'<br><br><form action="" method="POST"><a href="' .
+									rsssl_admin_url(['letsencrypt' => 1], '#letsencrypt')
+								 . '" type="submit" class="button button-default">' . __( 'Install SSL certificate', 'really-simple-ssl' ) . '</a>' .
 								'&nbsp;<input type="submit" class="button button-default" value="' . __( 'Re-check', 'really-simple-ssl' ) . '" id="rsssl_recheck_certificate" name="rsssl_recheck_certificate"></form>',
 						'icon'  => 'warning',
 					),
@@ -2651,13 +2588,11 @@ class rsssl_admin {
 				$base     = $matches[1];
 				$class    = $matches[2];
 				$function = $matches[3];
-				if ( property_exists($base(), $class) && method_exists($base()->{$class}, $function) ) {
+				if ( property_exists($base(), $class) && $base()->{$class} && method_exists($base()->{$class}, $function) ) {
 					$output   = call_user_func(array($base()->{$class}, $function));
 				} else {
 					$output = false;
-					if ( defined('WP_DEBUG') && WP_DEBUG ) {
-                        error_log('Really Simple SSL: ' . $func . ' not found');
-                    }
+                    $this->log( $func . ' not found');
 				}
 			} else {
 				$output = $func();
@@ -2749,7 +2684,7 @@ class rsssl_admin {
 	 */
 
 	public function secure_cookie_settings_status() {
-		$wpconfig_path = $this->find_wp_config_path();
+		$wpconfig_path = $this->wpconfig_path();
 		if ( ! $wpconfig_path ) {
 			return 'wpconfig-not-writable';
 		}
@@ -2786,7 +2721,7 @@ class rsssl_admin {
 
 		//only if cookie settings were not inserted yet
 		if ( $this->secure_cookie_settings_status() !== 'set' ) {
-			$wpconfig_path = RSSSL()->admin->find_wp_config_path();
+			$wpconfig_path = $this->wpconfig_path();
 			if ( empty( $wpconfig_path ) ) {
 				return;
 			}

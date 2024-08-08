@@ -1,12 +1,14 @@
 <?php
 defined( 'ABSPATH' ) or die();
-
+require_once rsssl_path . 'lib/admin/class-encryption.php';
+use RSSSL\lib\admin\Encryption;
 require_once( rsssl_le_path . 'integrations/cpanel/functions.php' );
 /**
  * Completely rebuilt and improved on the FreeSSL.tech Auto CPanel class by Anindya Sundar Mandal
  */
 class rsssl_cPanel
 {
+	use Encryption;
     public $host;
     private $username;
     private $password;
@@ -18,7 +20,7 @@ class rsssl_cPanel
     public function __construct()
     {
 	    $username = rsssl_get_option('cpanel_username');
-	    $password = RSSSL_LE()->letsencrypt_handler->decode( rsssl_get_option('cpanel_password') );
+	    $password = $this->decrypt_if_prefixed( rsssl_get_option('cpanel_password') );
 	    $host = rsssl_get_option('cpanel_host');
 	    $this->host =  str_replace( array('http://', 'https://', ':2083',':'), '', $host );
         $this->username = $username;

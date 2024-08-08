@@ -108,7 +108,7 @@ if ( ! class_exists( 'rsssl_mailer' ) ) {
 					'rsssl_nonce'             => wp_create_nonce( 'rsssl_email_verification_' . $user_id ),
 					'rsssl_verification_code' => $verification_code,
 				),
-				rsssl_admin_url() . '#settings/general'
+				rsssl_admin_url([], '#settings/general')
 			);
 
 			$this->subject          = __( "Really Simple SSL - Verify your email address", "really-simple-ssl" );

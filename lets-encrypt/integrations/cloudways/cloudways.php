@@ -22,7 +22,11 @@
  *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+require_once rsssl_path . 'lib/admin/class-encryption.php';
+use RSSSL\lib\admin\Encryption;
 class rsssl_Cloudways {
+	use Encryption;
 	private $email;
 	private $api_key;
 	public $ssl_installation_url;
@@ -36,7 +40,7 @@ class rsssl_Cloudways {
 
 	public function __construct( ) {
 		$this->email             = rsssl_get_option('cloudways_user_email');
-		$this->api_key = RSSSL_LE()->letsencrypt_handler->decode( rsssl_get_option('cloudways_api_key') );
+		$this->api_key = $this->decrypt_if_prefixed( rsssl_get_option('cloudways_api_key') );
 		$this->ssl_installation_url = "";
 	}
 

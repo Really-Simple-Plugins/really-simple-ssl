@@ -1,6 +1,6 @@
 import {__} from '@wordpress/i18n';
-import React, {useEffect, useState, useRef} from 'react';
-import DataTable, {createTheme, ExpanderComponentProps} from "react-data-table-component";
+import {useEffect, useState} from '@wordpress/element';
+import DataTable, {createTheme} from "react-data-table-component";
 import EventLogDataTableStore from "./EventLogDataTableStore";
 import FilterData from "../FilterData";
 import * as rsssl_api from "../../utils/api";
@@ -34,12 +34,13 @@ const EventLogDataTable = (props) => {
         setProcessingFilter,
     } = FilterData();
 
-    const moduleName = 'rsssl-group-filter-limit_login_attempts_event_log';
+
 
     const {fields, fieldAlreadyEnabled, getFieldValue} = useFields();
     const [tableHeight, setTableHeight] = useState(600);  // Starting height
     const rowHeight = 50; // Height of each row.
-
+    const moduleName = 'rsssl-group-filter-' + props.field.id;
+    let field = props.field;
     useEffect(() => {
         const currentFilter = getCurrentFilter(moduleName);
 
@@ -55,7 +56,7 @@ const EventLogDataTable = (props) => {
     useEffect(() => {
         //we make sure the dataActions are changed in the store before we fetch the data
         if (dataActions) {
-            fetchDynamicData(field.action, dataActions)
+            fetchDynamicData(field.action, field.event_type, dataActions)
         }
     }, [dataActions.sortDirection, dataActions.filterValue, dataActions.search, dataActions.page, dataActions.currentRowsPerPage]);
 
@@ -63,16 +64,15 @@ const EventLogDataTable = (props) => {
 
     //we create the columns
     let columns = [];
-    //getting the fields from the propsß
-    let field = props.field;
+    //getting the fields from the props
+
     //we loop through the fields
     field.columns.forEach(function (item, i) {
         let newItem = buildColumn(item)
         columns.push(newItem);
     });
 
-
-    let enabled = getFieldValue('enable_limited_login_attempts');
+    let enabled = fieldAlreadyEnabled('event_log_enabled');
 
     const customStyles = {
         headCells: {
@@ -188,7 +188,6 @@ const EventLogDataTable = (props) => {
 
     }, [paginationSet, pagination?.perPage, data]);
 
-
     return (
         <>
             <div className="rsssl-container">
@@ -197,7 +196,6 @@ const EventLogDataTable = (props) => {
                 <SearchBar handleSearch={handleEventTableSearch} searchableColumns={searchableColumns}/>
             </div>
             {/*Display the datatable*/}
-            <div style={{ height: `${tableHeight}px`, position: 'relative' }}>
             <DataTable
                 columns={columns}
                 data={processing? [] : data}
@@ -228,7 +226,6 @@ const EventLogDataTable = (props) => {
                 theme="really-simple-plugins"
                 customStyles={customStyles}
             ></DataTable>
-            </div>
             {!enabled && (
                 <div className="rsssl-locked">
                     <div className="rsssl-locked-overlay"><span

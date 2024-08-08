@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import {useState} from '@wordpress/element';
 import {__} from "@wordpress/i18n";
 import Icon from "../../utils/Icon";
 import IpAddressDataTableStore from "./IpAddressDataTableStore";

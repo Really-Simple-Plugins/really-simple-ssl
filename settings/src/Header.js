@@ -31,11 +31,23 @@ const Header = () => {
                     { rsssl_settings.le_generated_by_rsssl &&
                         <a href={rsssl_settings.letsencrypt_url}>{__("Let's Encrypt","really-simple-ssl")}</a>
                     }
-                    { rsssl_settings.pro_plugin_active &&
-                        <a href="https://wordpress.org/support/plugin/really-simple-ssl/"
-                           className="button button-black"
-                           target="_blank" rel="noopener noreferrer">{__("Support", "really-simple-ssl")}</a>
-                    }
+                    {rsssl_settings.pro_plugin_active && (
+                        <>
+                            {(() => {
+                                const supportUrl = rsssl_settings.dashboard_url + '#settings&highlightfield=premium_support';
+                                return (
+                                    <a
+                                        href={supportUrl}
+                                        className="button button-black"
+                                        target="_self"
+                                        rel="noopener noreferrer"
+                                    >
+                                        {__("Support", "really-simple-ssl")}
+                                    </a>
+                                );
+                            })()}
+                        </>
+                    )}
                     { !rsssl_settings.pro_plugin_active &&
                         <a href={rsssl_settings.upgrade_link}
                            className="button button-black"

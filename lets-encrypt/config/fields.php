@@ -158,25 +158,6 @@ function rsssl_le_add_fields($fields) {
 				],
 			],
 			[
-				'id'       => 'other_host_type',
-				'menu_id'  => 'le-hosting',
-				'group_id'  => 'le-hosting',
-				'type'     => 'host',
-				//options loaded in data store
-				'help'     => [
-					'label' => 'default',
-					'title' => __( "Hosting provider", "really-simple-ssl" ),
-					'text'  => __( "By selecting your hosting provider we can tell you if your hosting provider already supports free SSL, and/or where you can activate it.", "really-simple-ssl" )
-					           . "&nbsp;" .
-					           sprintf( __( "If your hosting provider is not listed, and there's an SSL activation/installation link, please let us %sknow%s.", "really-simple-ssl" ),
-						           '<a target="_blank" href="https://really-simple-ssl.com/install-ssl-certificate/#hostingdetails">', '</a>' ),
-				],
-				'default'  => false,
-				'label'    => __( "Hosting provider", 'really-simple-ssl' ),
-				'required' => false,
-				'disabled' => false,
-			],
-			[
 				'id'                => 'cpanel_host',
 				'menu_id'           => 'le-hosting',
 				'group_id'           => 'le-hosting',

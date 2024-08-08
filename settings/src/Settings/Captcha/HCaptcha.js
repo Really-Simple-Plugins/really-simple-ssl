@@ -1,6 +1,4 @@
-import React from 'react';
 import {useEffect} from "@wordpress/element";
-
 const HCaptcha = ({ sitekey, handleCaptchaResponse }) => {
     const hcaptchaCallback = (response) => {
         handleCaptchaResponse(response);

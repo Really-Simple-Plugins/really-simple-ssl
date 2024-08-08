@@ -15,7 +15,7 @@ const EventLogDataTableStore = create((set, get) => ({
     sorting: [],
     rowCleared: false,
 
-    fetchDynamicData: async (action, dataActions = {}) => {
+    fetchDynamicData: async (action, event_type, dataActions = {}) => {
         //cool we can fetch the data so first we set the processing to true
         set({processing: true});
         set({dataLoaded: false});
@@ -23,6 +23,8 @@ const EventLogDataTableStore = create((set, get) => ({
         if (Object.keys(dataActions).length === 0) {
             dataActions = get().dataActions;
         }
+        // add the data_type to the dataActions
+        dataActions = {...dataActions, event_type};
         //now we fetch the data
         try {
             const response = await rsssl_api.doAction(

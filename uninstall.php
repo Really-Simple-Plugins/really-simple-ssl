@@ -7,7 +7,6 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 $rsssl_settings = get_option( 'rsssl_options' );
 if ( isset( $rsssl_settings['delete_data_on_uninstall'] ) && $rsssl_settings['delete_data_on_uninstall'] ) {
 	$rsssl_options = [
-		"rsssl_changed_files",
 		"rsssl_enable_csp_defaults",
 		"rsssl_elementor_upgraded",
 		"rsssl_redirect_to_http_check",
@@ -100,7 +99,16 @@ if ( isset( $rsssl_settings['delete_data_on_uninstall'] ) && $rsssl_settings['de
 		'rsssl_htaccess_error',
 		'rsssl_htaccess_rules',
 		'rsssl_options',
+        'rsssl_404_cache'.
+        'rsssl_404_notice_shown',
 		'rsssl_key',
+		'rsssl_change_detection_next_index',
+		'rsssl_change_detection_completed',
+		'rsssl_change_detection_mail_recently_sent',
+		'rsssl_files_with_wrong_permissions',
+		'rsssl_permissions_mail_recently_sent',
+		'rsssl_permission_check_next_index',
+		'rsssl_permission_check_completed',
 	];
 	foreach ( $rsssl_options as $rsssl_option_name ) {
 		delete_option( $rsssl_option_name );
@@ -170,6 +178,10 @@ if ( isset( $rsssl_settings['delete_data_on_uninstall'] ) && $rsssl_settings['de
 		$wpdb->base_prefix . 'rsssl_xmlrpc',
 		$wpdb->base_prefix . 'rsssl_country',
 		$wpdb->base_prefix . 'rsssl_login_attempts',
+		$wpdb->base_prefix . 'rsssl_file_change_detection_directory_indexes',
+		$wpdb->base_prefix . 'rsssl_file_hashes',
+		$wpdb->base_prefix . 'rsssl_geo_block',
+        $wpdb->base_prefix . 'rsssl_event_logs',
 	);
 
 	foreach($table_names as $table_name){

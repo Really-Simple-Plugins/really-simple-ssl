@@ -1,4 +1,3 @@
-import React from 'react';
 import ReCaptcha from './ReCaptcha';
 import HCaptcha from './HCaptcha';
 import useFields from '../FieldsData';

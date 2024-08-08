@@ -1,5 +1,5 @@
 import {__} from '@wordpress/i18n';
-import React, {useRef, useEffect, useState} from 'react';
+import {useRef, useEffect, useState} from '@wordpress/element';
 import DataTable, {createTheme} from "react-data-table-component";
 import useFields from "../FieldsData";
 import TwoFaDataTableStore from "./TwoFaDataTableStore";

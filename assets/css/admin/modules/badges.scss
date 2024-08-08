@@ -54,7 +54,7 @@
     height: var(--badge-height);
     line-height: var(--badge-height);
     padding: 0 10px;
-
+    min-width: 80px;
     text-align: center;
     border-radius: var(--rsp-border-radius-xs);
     color: var(--rsp-white);

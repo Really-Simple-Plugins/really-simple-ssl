@@ -1,5 +1,3 @@
-import React from 'react';
-
 import Icon from "../../utils/Icon";
 import useFields from "../FieldsData";
 import {TextControl} from "@wordpress/components"; // assuming you're using WordPress components

@@ -266,6 +266,36 @@ function rsssl_menu() {
 								],
 							],
 						],
+						[
+							'id' => 'hardening-file-change',
+							'group_id' => 'hardening-file-change',
+							'title' => __( 'File Change Detection', 'really-simple-ssl' ),
+							'premium' => true,
+							'groups' => [
+								[
+									'id' => 'hardening-file-change-main',
+									'group_id' => 'hardening-file-change-main',
+									'premium' => true,
+									'premium_text' =>__( 'Keep your site secure by monitoring unexpected file changes.', 'really-simple-ssl' ),
+									'upgrade' => 'https://really-simple-ssl.com/pro/?mtm_campaign=hardening&mtm_source=free&mtm_content=upgrade',
+									'helpLink' => 'https://really-simple-ssl.com/instructions/about-file-change-detection?mtm_campaign=instructions&mtm_source=free',
+									'title' => __( 'File Change Detection', 'really-simple-ssl' ),
+									'intro' => __( "File Change Detection generates a snapshot of every .php and .js file. On a daily basis, each file is then compared to this snapshot.", 'really-simple-ssl' )
+									           . ' ' .__( "You will receive an email warning if changes are detected.", 'really-simple-ssl' )
+									           . ' ' .__( "If unexpected file changes have occurred, this could be an indication that your site is compromised.", 'really-simple-ssl' )
+									           . ' ' .__( "The snapshots will be updated after WordPress, plugins or themes are activated or updated.", 'really-simple-ssl' ),
+								],
+								[
+									'id' => 'hardening-file-change-datatable',
+									'group_id' => 'hardening-file-change-datatable',
+									'helpLink' => 'https://really-simple-ssl.com/instructions/about-file-change-detection',
+									'title' => __( 'Detected File Changes', 'really-simple-ssl' ),
+									'intro' => __( 'The daily scan will report any detected file changes in the table below.', 'really-simple-ssl' )
+									.' '.__( 'If you recognize the detected changes, you can add the files to the exclude list, or ignore them just once.', 'really-simple-ssl' )
+									.' '.__( 'You can reset the report and generate a new snapshot, for example if you made changes via FTP.', 'really-simple-ssl' ),
+								],
+							],
+						],
 					],
 				],
 				[
@@ -501,46 +531,48 @@ function rsssl_menu() {
 
 				],
 				[
-					'id' => 'access_control',
-					'title' => __( 'Access Control', 'really-simple-ssl' ),
+					'id' => 'firewall',
+					'title' => __( 'Firewall', 'really-simple-ssl' ),
 					'featured'   => false,
+					'premium'    => true,
 					'new'        => true,
 					'menu_items' => [
 						[
-							'id'      => 'geo_block_list',
-							'title'   => __( 'Region restrictions', 'really-simple-ssl' ),
+							'id'      => 'rules',
+							'title'   => __( 'Rules', 'really-simple-ssl' ),
 							'premium' => true,
 							'groups'  => [
 								[
-									'id'            => 'geo_block_list_general',
-									'group_id'      => 'geo_block_list_general',
-									'helpLink'      => 'instructions/about-region-restrictions',
+									'id'            => 'firewall_list_general',
+									'group_id'      => 'firewall_list_general',
+									'helpLink'      => 'https://really-simple-ssl.com/instructions/instructions/about-region-restrictions',
 									'premium'       => true,
-									'premium_title' => __( 'Region restrictions', 'really-simple-ssl' ),
+									'premium_title' => __( 'Firewall Rules', 'really-simple-ssl' ),
 									'premium_text'  => __( 'Restrict access from specific countries or continents. You can also allow only specific countries.', 'really-simple-ssl' ),
-									'title'         => __( 'Region restrictions', 'really-simple-ssl' ),
-									'intro'         => __( 'Block visitors from specific countries, or continents. You can also allow only specific countries.',
+									'upgrade'       => 'https://really-simple-ssl.com/pro/?mtm_campaign=lla&mtm_source=free&mtm_content=upgrade',
+									'title'         => __( 'Firewall', 'really-simple-ssl' ),
+									'intro'         => __( 'The lightweight Firewall can be used to lockout malicious traffic from your site. You can configure generic rules below, or block specific IP addresses by adding them to the Blocklist.',
 										'really-simple-ssl' ),
 								],
 								[
-									'id'                   => 'geo_block_list_listing',
-									'group_id'             => 'geo_block_list_white_listing',
-									'networkwide_required' => true,
-									'premium'              => true,
-									'premium_text'         => __( 'This feature allows you to block visitors from your website based on country', 'really-simple-ssl' ),
-									'title'                => __( 'Trusted IP addresses', 'really-simple-ssl' ),
-									'premium_title'        => __( 'Trusted IP addresses', 'really-simple-ssl' ),
-									'intro' 			  => __( 'Here you can add IP addresses that should never be blocked by region restrictions. We will automatically add the IP address of the administrator that enabled Region Restrictions.', 'really-simple-ssl' ),
+									'id' => '404_blocking',
+									'group_id' => '404_blocking',
+									'premium' => true,
+									'title' => __( '404 Blocking', 'really-simple-ssl' ),
+									'premium_title' => __( '404 Blocking', 'really-simple-ssl' ),
+									'premium_text' => __( 'Crawlers might scan your site looking for possible exploits. One way to detect this is the fact that they trigger more 404 (not found) errors than legitimate visitors would. Below you can set the threshold and lockout duration for 404 blocking.', 'really-simple-ssl' ),
+									'intro' => __( 'Crawlers might scan your site looking for possible exploits. One way to detect this is the fact that they trigger more 404 (not found) errors than legitimate visitors would. Below you can set the threshold and lockout duration for 404 blocking.', 'really-simple-ssl' ),
 								],
 								[
-									'id'                   => 'geo_block_list_listing',
-									'group_id'             => 'geo_block_list_listing',
+									'id'                   => 'firewall_list_listing',
+									'group_id'             => 'firewall_list_listing',
 									'networkwide_required' => true,
 									'premium'              => true,
-									'premium_text'         => __( 'This feature allows you to block visitors from your website based on country', 'really-simple-ssl' ),
+									'premium_text'         => __( 'This feature allows you to block visitors from your website based on country',
+										'really-simple-ssl' ),
 									'title'                => __( 'Regions', 'really-simple-ssl' ),
 									'premium_title'        => __( 'Regions', 'really-simple-ssl' ),
-									'intro' 			  => __( 'Restrict access to your site based on user location. By default, all regions are allowed. You can also block countries from a continent.',
+									'intro' 			  => __( 'Restrict access to your site based on user location. By default, all regions are allowed. You can also block entire continents.',
 										'really-simple-ssl' ),
 									'groupFilter'          => [
 										'default' => 'countries',
@@ -563,6 +595,90 @@ function rsssl_menu() {
 								],
 							]
 						],
+						[
+							'id'      => 'firewall_blocklists',
+							'title'   => __( 'Blocklists', 'really-simple-ssl' ),
+							'premium' => true,
+							'groups' => [
+								[
+									'id'                   => 'firewall_white_list_listing',
+									'group_id'             => 'firewall_white_list_listing',
+									'networkwide_required' => true,
+									'premium'              => true,
+									'premium_text'         => __( 'This feature allows you to block visitors from your website based on country',
+										'really-simple-ssl' ),
+									'upgrade'              => 'https://really-simple-ssl.com/pro/?mtm_campaign=cops&mtm_source=free&mtm_content=upgrade',
+									'title'                => __( 'Trusted IP addresses', 'really-simple-ssl' ),
+									'premium_title'        => __( 'Trusted IP addresses', 'really-simple-ssl' ),
+									'intro' 			  => __( 'Here you can add IP addresses that should never be blocked by the Firewall. We will automatically add the IP address of the administrator that enabled the Firewall.',
+										'really-simple-ssl' ),
+								],
+								[
+									'id'                   => 'firewall_block_list_listing',
+									'group_id'             => 'firewall_block_list_listing',
+									'networkwide_required' => true,
+									'premium'              => true,
+									'premium_text'         => __( 'This feature allows you to block visitors from your website based on country',
+										'really-simple-ssl' ),
+									'upgrade'              => 'https://really-simple-ssl.com/pro/?mtm_campaign=cops&mtm_source=free&mtm_content=upgrade',
+									'title'                => __( 'IP Blocklist', 'really-simple-ssl' ),
+									'premium_title'        => __( 'IP Blocklist', 'really-simple-ssl' ),
+									'intro' 			  => __( 'This list shows all individually blocked IP addresses. On top the top-right you can filter between permanent blocks and temporary blocks. By default, blocks are only temporary, as attackers and bots will frequently alter between IP addresses. However, you can manually configure permanent blocks.',
+										'really-simple-ssl' ),
+									'groupFilter'          => [
+										'default' => 'all',
+										'id'      => 'rsssl-group-filter-geo_block_list',
+										'options' => [
+											[
+												'id'    => 'all',
+												'title' => __( 'All', 'really-simple-ssl' ),
+											],
+											[
+												'id'    => 'temp',
+												'title' => __( 'Temporary', 'really-simple-ssl' ),
+											],
+											[
+												'id'    => 'permanent',
+												'title' => __( 'Permanent', 'really-simple-ssl' ),
+											],
+										],
+									],
+								],
+							]
+						],
+						[
+							'id' => 'firewall_logs',
+							'title' => __( 'Logs', 'really-simple-ssl' ),
+							'premium' => true,
+							'groups' => [
+								[
+									'id'                   => 'firewall_logs_content',
+									'group_id'             => 'firewall_logs_content',
+									'premium'              => true,
+									'premium_text'         => __( 'This feature allows you to block visitors from your website based on country',
+										'really-simple-ssl' ),
+									'upgrade'              => 'https://really-simple-ssl.com/pro/?mtm_campaign=cops&mtm_source=free&mtm_content=upgrade',
+									'title'                => __( 'Event Logs', 'really-simple-ssl' ),
+									'premium_title'        => __( 'Event Logs', 'really-simple-ssl' ),
+									'intro' 			  => __( 'The Event Log shows all relevant events related to the Firewall and IP lockouts. You can filter the log using the dropdown on the top-right to only show warnings.',
+										'really-simple-ssl' ),
+									'groupFilter'          => [
+										'default' => 'all',
+										'id'      => 'rsssl-group-filter-firewall_logs_content',
+										'options' => [
+											[
+												'id'    => 'all',
+												'title' => __( 'All', 'really-simple-ssl' ),
+											],
+											[
+												'id'    => 'warning',
+												'title' => __( 'Warnings', 'really-simple-ssl' ),
+											],
+										],
+									],
+								],
+							]
+						]
 					]
 				],
 			],

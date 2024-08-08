@@ -30,6 +30,8 @@ if ( ! class_exists( "rsssl_le_restapi" ) ) {
 	        $type = $data['id'];
             $type = $type === 'dns' ? 'dns' : 'dir';
 	        rsssl_update_option('verification_type', $type );
+			//register this manual change, so we don't force change it back.
+			update_option('rsssl_manually_changed_verification_type', true, false);
             if ($type==='dns') {
 	            rsssl_progress_add('directories');
             } else {
@@ -132,7 +134,7 @@ if ( ! class_exists( "rsssl_le_restapi" ) ) {
             delete_option('rsssl_skip_challenge_directory_request' );
             delete_option('rsssl_create_folders_in_root');
             delete_option('rsssl_hosting_dashboard');
-            RSSSL_LE()->letsencrypt_handler->clear_keys_directory();
+            delete_option('rsssl_manually_changed_verification_type');
 
 			return new RSSSL_RESPONSE(
 				'success',

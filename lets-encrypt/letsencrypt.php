@@ -39,8 +39,9 @@ class RSSSL_LETSENCRYPT {
 	public $letsencrypt_handler;
 
 	private function __construct() {
-
 	}
+
+
 
 	public static function instance() {
 		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof RSSSL_LETSENCRYPT ) ) {

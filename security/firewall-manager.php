@@ -24,6 +24,9 @@ class rsssl_firewall_manager {
 	 */
 	private $use_dynamic_path = WP_CONTENT_DIR === ABSPATH . 'wp-content';
 
+	//rules to add to the firewall.
+	private $rules;
+
 	/**
 	 * Our constructor
 	 */
@@ -60,7 +63,7 @@ class rsssl_firewall_manager {
 	 * @return void
 	 */
 	public function install(): void {
-		if ( ! rsssl_admin_logged_in() && ! defined( 'RSSSL_LEARNING_MODE' ) ) {
+		if ( ! rsssl_admin_logged_in() ) {
 			return;
 		}
 
@@ -68,16 +71,19 @@ class rsssl_firewall_manager {
 			return;
 		}
 
-		$rules = apply_filters( 'rsssl_firewall_rules', '' );
+		if ( empty( $this->rules ) ) {
+			$this->rules = apply_filters( 'rsssl_firewall_rules', '' );
+		}
+
 		// no rules? remove the file.
-		if ( empty( trim( $rules ) ) ) {
+		if ( empty( trim( $this->rules ) ) ) {
 			// $this->delete_file();
 			$this->remove_prepend_file_in_htaccess();
-			$this->remove_prepend_file_in_wpconfig();
+			$this->remove_prepend_file_in_wp_config();
 			return;
 		}
 		// update the file to be included.
-		$this->update_firewall( $rules );
+		$this->update_firewall( $this->rules );
 
 		$this->include_prepend_file_in_wp_config();
 		if ( $this->uses_htaccess() ) {
@@ -151,7 +157,7 @@ class rsssl_firewall_manager {
 	 * @return void
 	 */
 	private function update_firewall( string $rules ): void {
-		if ( ! rsssl_user_can_manage() ) {
+		if ( ! rsssl_admin_logged_in() ) {
 			return;
 		}
 		$contents  = '<?php' . "\n";
@@ -177,7 +183,7 @@ class rsssl_firewall_manager {
 	 * @return void
 	 */
 	private function put_contents( $file, $contents ): void {
-		if ( ! rsssl_user_can_manage() ) {
+		if ( ! rsssl_admin_logged_in() ) {
 			return;
 		}
 
@@ -336,8 +342,12 @@ class rsssl_firewall_manager {
 					if ( strpos( $content, "\n\n\n" ) !== false ) {
 						$content = str_replace( "\n\n\n", "\n\n", $content );
 					}
-					$this->put_contents( $htaccess_file, $content );
 				}
+			}
+
+			//by putting this outside the empty($rules) condition, the rules get removed if disabled or not available
+			if ( $this->is_writable( $htaccess_file ) ) {
+				$this->put_contents( $htaccess_file, $content );
 			}
 		}
 	}
@@ -349,7 +359,17 @@ class rsssl_firewall_manager {
 	 * @return string //the string containing the lines of rules
 	 */
 	private function get_htaccess_rules() : string {
-		$config = RSSSL()->server->auto_prepend_config();
+		if ( defined('RSSSL_HTACCESS_SKIP_AUTO_PREPEND') && RSSSL_HTACCESS_SKIP_AUTO_PREPEND ) {
+			return '';
+		}
+        if (isset(RSSSL()->server) ) {
+            $config = RSSSL()->server->auto_prepend_config();
+        } else {
+            $config = get_option('rsssl_auto_prepend_config');
+            if (empty($config)) {
+                return '';
+            }
+        }
 		$file = addcslashes($this->file, "'");
 		switch ($config) {
 			case 'litespeed':
@@ -455,16 +475,12 @@ class rsssl_firewall_manager {
 		}
 	}
 
-	public function remove_prepend_file_in_wp_config(){
-
-	}
-
 	/**
 	 * Remove the prepend file from the config
 	 *
 	 * @return void
 	 */
-	private function remove_prepend_file_in_wpconfig(): void {
+	private function remove_prepend_file_in_wp_config(): void {
 		if ( ! rsssl_user_can_manage() ) {
 			return;
 		}
@@ -531,8 +547,11 @@ class rsssl_firewall_manager {
 	 * @return bool
 	 */
 	public function has_rules() {
-		$rules = apply_filters( 'rsssl_firewall_rules', '' );
-		return ! empty( trim( $rules ) );
+
+		if ( empty( $this->rules ) ) {
+			$this->rules = apply_filters( 'rsssl_firewall_rules', '' );
+		}
+		return ! empty( trim( $this->rules ) );
 	}
 
 	/**
@@ -670,11 +689,11 @@ class rsssl_firewall_manager {
 		$dir           = ABSPATH;
 		do {
 			++$i;
-			if ( $this->file_exists( $dir . '/wp-config.php' ) ) {
-				return $dir . '/wp-config.php';
+			if ( $this->file_exists( $dir . 'wp-config.php' ) ) {
+				return apply_filters('rsssl_wpconfig_path', $dir . 'wp-config.php' );
 			}
 		} while ( ( $dir = realpath( "$dir/.." ) ) && ( $i < $maxiterations ) );//phpcs:ignore
-		return null;
+		return apply_filters( 'rsssl_wpconfig_path', null );
 	}
 
 	/**
@@ -722,8 +741,12 @@ class rsssl_firewall_manager {
 	 *
 	 * @return void
 	 */
-	private function include_prepend_file_in_user_ini(){
+	private function include_prepend_file_in_user_ini():void{
 		if ( ! rsssl_user_can_manage() ) {
+			return;
+		}
+
+		if ( defined('RSSSL_HTACCESS_SKIP_AUTO_PREPEND') && RSSSL_HTACCESS_SKIP_AUTO_PREPEND ) {
 			return;
 		}
 

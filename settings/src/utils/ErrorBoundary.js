@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from '@wordpress/element';
 import PropTypes from 'prop-types';
 
 class ErrorBoundary extends Component {

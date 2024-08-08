@@ -259,10 +259,18 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				],
 			],
 			[
+				'id' 			 => 'event_log_enabled',
+				'menu_id'        => 'limit_login_attempts',
+				'group_id'       => 'limit_login_attempts_event_log',
+				'type'           => 'hidden',
+				'default'        => false,
+			],
+			[
 				'id'               => 'event_log_viewer',
 				'menu_id'          => 'limit_login_attempts',
 				'group_id'         => 'limit_login_attempts_event_log',
 				'type'             => 'eventlog-datatable',
+				'event_type'        => 'login-protection',
 				'action'           => 'event_log',
 				'label'            => __('IP address overview', 'really-simple-ssl'),
 				'disabled'         => false,
@@ -270,7 +278,7 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'react_conditions' => [
 					'relation' => 'AND',
 					[
-						'enable_limited_login_attempts' => true,
+						'event_log_enabled' => true,
 					]
 				],
 				'columns'          => [

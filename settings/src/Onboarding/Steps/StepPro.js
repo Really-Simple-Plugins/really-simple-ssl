@@ -12,8 +12,20 @@ const StepPro = () => {
     return (
         <>
             <ul>
-                { !rsssl_settings.pro_plugin_active && premiumItems && premiumItems.map( (item, index) => <PremiumItem key={'step-pro'+index} item={item} />) }
-                { rsssl_settings.pro_plugin_active && premiumItems && premiumItems.map( (item, index) => <CheckboxItem key={'step-pro'+index} item={item} />) }
+                {!rsssl_settings.pro_plugin_active && premiumItems && (
+                    <div className="rsssl-premium-items">
+                        {premiumItems.map((item, index) => (
+                            <PremiumItem key={'step-pro' + index} item={item}/>
+                        ))}
+                    </div>
+                )}
+                {rsssl_settings.pro_plugin_active && premiumItems && (
+                    <div className="rsssl-checkbox-items">
+                        {premiumItems.map((item, index) => (
+                            <CheckboxItem key={'step-pro' + index} item={item}/>
+                        ))}
+                    </div>
+                )}
             </ul>
         </>
     );

@@ -1,107 +1,144 @@
-.rsssl-field-wrap {
-  .rdt_TableCol, .rdt_TableCell, .rdt_TableCol_Sortable {
-    //all text to the left
-    flex-direction: row;
-  }
+.rsssl-content_security_policy_source_directives,.rsssl-firewall_block_list_listing, .rsssl-two_fa_users, .rsssl-firewall_list_listing, .rsssl-vulnerabilities_overview, .rsssl-permissions_policy, .rsssl-firewall_white_list_listing, .rsssl-firewall_logs_content, .rsssl-limit_login_attempts_country, .rsssl-limit_login_attempts_users, .rsssl-limit_login_attempts_event_log, .rsssl-mixed-content-scan, .rsssl-limit_login_attempts_ip_address, .rsssl-content_security_policy, .rsssl-hardening-xml {
 
-  #cell-2-force_update > div > select {
-    max-width: 100%;
-  }
+  .rsssl-field-wrap {
+    //wp-core also adds an svg for the select dropdown, so we hide the one from the react datatables component
+    nav.rdt_Pagination > div > svg {
+      display: none !important;
+    }
 
-  #cell-2-quarantine > div > select {
-    max-width: 100%;
-  }
 
-  .rdt_TableCol:first-child, .rdt_TableCell:first-child {
-    min-width: initial;
-  }
+    .rsssl-search-bar {
+      float: right;
+      padding: 0;
+    }
 
-  .rdt_TableHeadRow {
-    .rdt_TableCol:last-child {
-      flex-grow: 0;
-      flex-direction: row-reverse;
+    .rsssl-search-bar__inner {
+      display: flex;
+      align-items: center;
+      border-radius: 3px;
+      transition: background-color 0.3s ease;
+    }
+
+    .rsssl-search-bar__inner:focus-within {
+      background-color: #fff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .rsssl-search-bar__icon {
+      /* Add styles for the search icon */
+    }
+
+    .rsssl-search-bar__input {
+      width: 150px; /* Adjust width as needed */
+      transition: width 0.3s ease;
+    }
+
+    .rsssl-search-bar__input:focus {
+      width: 200px; /* Adjust width as needed */
+    }
+
+    .rsssl-container {
+      padding: 2em;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .rsssl-multiselect-datatable-form {
+      display: flex;
+      align-items: center;
+      Justify-content: space-between;
+      width: 100%;
+      padding: 1em 2em;
+      background: var(--rsp-blue-faded);
+    }
+
+    .rdt_TableRow .rdt_TableCell:last-child {
+      min-width: 20px;
+      float: right;
+    }
+
+    .rdt_TableRow .rdt_TableCell:last-child button,
+    .rdt_TableRow .rdt_TableCell:last-child span {
+      min-width: 20px;
+      float: right;
+    }
+
+    .rdt_TableCol, .rdt_TableCell, .rdt_TableCol_Sortable {
+      //all text to the left
+      flex-direction: row;
+    }
+
+    #cell-2-force_update > div > select {
+      max-width: 100%;
+    }
+
+    #cell-2-quarantine > div > select {
+      max-width: 100%;
+    }
+
+    .rdt_TableCol:first-child, .rdt_TableCell:first-child {
       min-width: initial;
     }
-  }
 
-  .rdt_TableRow {
-    &:nth-child(odd) {
-      background-color: var(--rsp-grey-200)
+    .rdt_TableHeadRow {
+      .rdt_TableCol:last-child {
+        flex-grow: 0;
+        flex-direction: row-reverse;
+        min-width: initial;
+      }
     }
 
-    padding: var(--rsp-spacing-xs) 0;
+    .rdt_TableRow {
+      &:nth-child(odd) {
+        background-color: var(--rsp-grey-200)
+      }
 
-    .rdt_TableCell:last-child {
-      flex-grow: 0;
+      padding: var(--rsp-spacing-xs) 0;
+
+      .rdt_TableCell:last-child {
+        flex-grow: 0;
+      }
+
+      //.rsssl-status-allowed, .rsssl-status-revoked {
+      //  min-width: 110px;
+      //  margin-right: 10px;
+      //}
     }
 
-    .rsssl-status-allowed, .rsssl-status-revoked {
-      min-width: 110px;
-      margin-right: 10px;
+    .rsssl-csp-revoked > div:nth-child(-n+3) {
+      opacity: 0.3;
     }
-  }
-
-  .rsssl-csp-revoked > div:nth-child(-n+3) {
-    opacity: 0.3;
   }
 }
 
-.rsssl-content_security_policy .rsssl-field-wrap {
+.rsssl-content_security_policy, .rsssl-permissions_policy, .rsssl-field-wrap {
   .rdt_TableHeadRow {
     .rdt_TableCol:last-child {
       flex-grow: 0;
       min-width: initial;
       justify-content: flex-end;
     }
-
-    .rdt_TableCol:nth-last-child(2) {
-      //flex-direction: row-reverse;
-    }
-  }
-
-
-  .rdt_TableRow {
-    .rsssl-status-allowed, .rsssl-status-revoked, .rsssl-learning-mode-delete {
-      //margin-right:0;
-    }
-
-    .rdt_TableCell:last-child {
-      flex-grow: 0;
-      min-width: initial;
-    }
-
-    .rdt_TableCell:nth-last-child(2) {
-      //flex-direction: row-reverse;
-      //margin-right:10px;
-    }
-  }
-
-  .rsssl-csp-revoked > div:nth-child(-n+3) {
-    opacity: 0.3;
   }
 }
 
-//wp-core also adds an svg for the select dropdown, so we hide the one from the react datatables component
-nav.rdt_Pagination > div > svg {
-  display: none !important;
+
+.rdt_TableRow {
+  .rdt_TableCell:last-child {
+    flex-grow: 0;
+    min-width: initial;
+  }
 }
+
+.rsssl-csp-revoked > div:nth-child(-n+3) {
+  opacity: 0.3;
+}
+
 
 .rsssl-content_security_policy, .rsssl-xml_rpc {
   .rsssl-field-wrap > div > div {
     overflow-x: inherit;
     overflow-y: inherit;
-  }
-}
-
-.rsssl-permissions_policy {
-  .rdt_TableRow {
-    .rdt_TableCell:last-child {
-      min-width: fit-content;
-
-      .components-input-control__container {
-        min-width: fit-content;
-      }
-    }
   }
 }
 
@@ -117,7 +154,7 @@ nav.rdt_Pagination > div > svg {
   }
 }
 
-.rsssl-geo_block_list_listing, .rsssl-vulnerabilities_overview, .two_fa_users_table, .rsssl-vulnerabilities_measures, .rsssl-limit_login_attempts_country, .rsssl-limit_login_attempts_users, .rsssl-limit_login_attempts_event_log, .rsssl-mixed-content-scan, .rsssl-limit_login_attempts_ip_address, .rsssl-permissions_policy, .rsssl-content_security_policy, .rsssl-two_fa_users, .rsssl-hardening-xml {
+.rsssl-firewall_logs, .rsssl-permissions_policy, .rsssl-two_fa_users, .rsssl-content_security_policy_source_directives, .rsssl-firewall_white_list_listing, .rsssl-firewall_block_list_listing, .rsssl-firewall_list_listing, .rsssl-vulnerabilities_overview, .rsssl-vulnerabilities_measures, .rsssl-limit_login_attempts_country, .rsssl-limit_login_attempts_users, .rsssl-firewall_event_log_viewer, .rsssl-firewall_logs_content, .rsssl-limit_login_attempts_event_log, .rsssl-mixed-content-scan, .rsssl-limit_login_attempts_ip_address, .rsssl-content_security_policy, .rsssl-hardening-xml {
   .rsssl-field-wrap {
     margin-left: CALC(-1 * var(--rsp-spacing-l));
     margin-right: CALC(-1 * var(--rsp-spacing-l));
@@ -142,12 +179,6 @@ nav.rdt_Pagination > div > svg {
     }
   }
 
-  //.rdt_Pagination {
-  //  position: absolute;
-  //  bottom: 0;
-  //  width: 100%;
-  //}
-
   .rdt_TableCell, .rdt_TableCol {
     &:first-child {
       padding-left: var(--rsp-spacing-l);
@@ -160,75 +191,23 @@ nav.rdt_Pagination > div > svg {
   }
 }
 
-.rsssl-search-bar {
-  float: right;
-  padding: 0;
-}
-
-.rsssl-search-bar__inner {
-  display: flex;
-  align-items: center;
-  background-color: gray;
-  border-radius: 3px;
-  transition: background-color 0.3s ease;
-}
-
-.rsssl-search-bar__inner:focus-within {
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.rsssl-search-bar__icon {
-  /* Add styles for the search icon */
-}
-
-.rsssl-search-bar__input {
-  border: none;
-  outline: none;
-  background: gray;
-  padding: 3px 5px;
-  width: 150px; /* Adjust width as needed */
-  transition: width 0.3s ease;
-}
-
-.rsssl-search-bar__input:focus {
-  width: 200px; /* Adjust width as needed */
-}
-
-.rsssl-container {
-  padding: 2em;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.rsssl-multiselect-datatable-form {
-  display: flex;
-  align-items:center;
-  Justify-content: space-between;
-  width: 100%;
-  padding: 1em 2em;
-  background: var(--rsp-blue-faded);
-}
-
-.rdt_TableRow .rdt_TableCell:last-child {
-  min-width: 20px;
-}
-
-.rdt_TableRow .rdt_TableCell:last-child button,
-.rdt_TableRow .rdt_TableCell:last-child span {
-  min-width: 20px;
-}
 
 /* Section for EdgeCases and other specific styling */
 /* EdgeCase: EventLog */
 .rsssl-content_security_policy,
-.rsssl-geo_block_list_listing,
+.rsssl-permissions_policy,
+.rsssl-firewall_list_listing,
+.rsssl-firewall_white_list_listing,
+.rsssl-firewall_block_list_listing,
 .rsssl-hardening-xml,
 .rsssl-vulnerabilities_overview,
+.rsssl-content_security_policy_source_directives,
 .rsssl-limit_login_attempts_ip_address,
 .rsssl-limit_login_attempts_users,
 .rsssl-limit_login_attempts_country,
+.rsssl-two_fa_users,
+.rsssl-firewall_logs,
+.rsssl-firewall_logs_content,
 .rsssl-limit_login_attempts_event_log {
   //first off we remove the min-width from table cell and table col
   .rdt_TableCell, .rdt_TableCol {
@@ -262,8 +241,17 @@ nav.rdt_Pagination > div > svg {
       }
     }
 
+    .rdt_TableHeadRow {
+      border: none;
+    }
+
+    .rdt_Pagination {
+      border: none;
+    }
+
     .rdt_TableBody {
       .rdt_TableRow {
+        border: none;
         .rdt_TableCell:last-child {
           //we calculate the remaining width of the table and set it to the last column
           flex-grow: 1;
@@ -300,13 +288,39 @@ nav.rdt_Pagination > div > svg {
       div {
         width: 100%;
 
-        button,a {
+        button, a {
           margin-left: 10px;
         }
       }
     }
 
   }
+}
+
+.rsssl-limit_login_attempts_event_log, .rsssl-firewall_logs_content  {
+  // making sure the last child of the tablehead is positioned to the left
+    .rdt_TableHeadRow {
+      .rdt_TableCol:last-child {
+        justify-content: flex-start;
+      }
+    }
+}
+
+.rsssl-vulnerabilities-measures-overview {
+  .allowRowEvents {
+    .wp-core-ui select {
+      max-width: 100%;
+    }
+  }
+
+  .rdt_TableCell {
+    &:nth-child(2) {
+      select {
+        max-width: 100%;
+      }
+    }
+  }
+
 }
 
 /* EdgeCase: CountryTable */
@@ -320,44 +334,46 @@ nav.rdt_Pagination > div > svg {
   }
 }
 
-/* EdgeCase: hardening-xml */
-.rsssl-hardening-xml {
-
-  .rdt_Table {
-    height: 300px;
-    align-items: initial;
-
-    div:nth-child(2) {
-      align-items: baseline;
-    }
-
-  }
-
-  .rdt_TableHead {
-    padding-bottom: 10px;
-  }
-
-  .rdt_TableCol:first-child {
-    padding: 0 25px !important;
-  }
-  .rdt_TableCell:last-child {
-    padding: 0 25px !important;
-  }
-  .rdt_TableRow .rdt_TableCell:last-child {
-    flex:1;
-    display: flex;
-    justify-content: flex-end;
-  }
-}
+///* EdgeCase: hardening-xml */
+//.rsssl-hardening-xml {
+//
+//  .rdt_Table {
+//    height: 300px;
+//    align-items: initial;
+//
+//    div:nth-child(2) {
+//      align-items: baseline;
+//    }
+//
+//  }
+//
+//  .rdt_TableHead {
+//    padding-bottom: 10px;
+//  }
+//
+//  .rdt_TableCol:first-child {
+//    padding: 0 25px !important;
+//  }
+//
+//  .rdt_TableCell:last-child {
+//    padding: 0 25px !important;
+//  }
+//
+//  .rdt_TableRow .rdt_TableCell:last-child {
+//    flex: 1;
+//    display: flex;
+//    justify-content: flex-end;
+//  }
+//}
 
 /* EdgeCase: Permission_Policy */
-.rsssl-content_security_policy,
-.rsssl-permissions_policy {
+.rsssl-content_security_policy, .rsssl-permissions_policy {
   .rdt_TableCol {
     &:last-child {
       //we calculate the remaining width of the table and set it to the last column
       flex-grow: 1;
       text-align: right;
+
       div {
         width: 100%;
         display: flex;
@@ -365,15 +381,19 @@ nav.rdt_Pagination > div > svg {
       }
     }
   }
+
+
   .rdt_TableCell {
     &:last-child {
       //we calculate the remaining width of the table and set it to the last column
       flex-grow: 1;
       text-align: right;
+
       div {
         width: 100%;
         display: flex;
         justify-content: flex-end;
+
         button {
           margin-right: 0 !important;
         }

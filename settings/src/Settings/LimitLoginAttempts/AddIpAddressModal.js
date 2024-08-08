@@ -1,10 +1,7 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from '@wordpress/element';
 import {
     Modal,
-    MenuItem,
-    SelectControl,
     Button,
-    __experimentalConfirmDialog as ConfirmDialog
 } from "@wordpress/components";
 import IpAddressDataTableStore   from "./IpAddressDataTableStore";
 import {__} from "@wordpress/i18n";
@@ -16,14 +13,7 @@ const AddIpAddressModal = (props) => {
     const { inputRangeValidated, fetchCidrData, ipAddress, setIpAddress, maskError, dataLoaded, updateRow, resetRange} = IpAddressDataTableStore();
     const [rangeDisplay, setRangeDisplay] = useState(false);
     const {fetchDynamicData} = EventLogDataTableStore();
-    const [resetFlag, setResetFlag] = useState(false);
     const {showSavedSettingsNotice} = FieldsData();
-
-    //we add a function to handle the range fill
-    const handleRangeFill = () => {
-        //we toggle the range display.
-        setRangeDisplay(!rangeDisplay);
-    }
 
     useEffect(() => {
         //we validate the range

@@ -1,4 +1,4 @@
-import React, {useEffect,useState} from 'react';
+import {useEffect,useState} from '@wordpress/element';
 import UseRiskData from "./RiskData";
 import useFields from "../FieldsData";
 

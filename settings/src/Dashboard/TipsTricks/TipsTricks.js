@@ -1,7 +1,6 @@
 import {addUrlRef} from "../../utils/AddUrlRef";
 
 const Tip = ({link, content}) => {
-    console.log("content", content)
     return (
         <div className="rsssl-tips-tricks-element">
             <a href={link} target="_blank" rel="noopener noreferrer" title={content}>

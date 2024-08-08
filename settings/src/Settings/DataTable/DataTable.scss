@@ -1,0 +1,55 @@
+.rsssl-datatable-component {
+  margin-left: calc(0px - var(--rsp-spacing-l));
+  margin-right: calc(0px - var(--rsp-spacing-l));
+  >div {
+    //prevent scrollbar on datatable
+    overflow: hidden;
+  }
+
+
+
+    .rdt_TableCol, .rdt_TableCell, .rdt_TableCol_Sortable {
+      flex-direction: row;
+    }
+
+    .rdt_TableCol:first-child, .rdt_TableCell:first-child {
+      min-width: initial;
+    }
+
+    .rdt_TableHeadRow {
+      .rdt_TableCol:last-child {
+        flex-grow: 0;
+        flex-direction: row-reverse;
+        min-width: initial;
+      }
+    }
+
+    .rdt_TableRow {
+      &:nth-child(odd) {
+        background-color: var(--rsp-grey-200)
+      }
+
+      padding: var(--rsp-spacing-xs) 0;
+      .rdt_TableCell:last-child {
+        flex-grow: 0;
+      }
+    }
+
+
+
+  //wp-core also adds an svg for the select dropdown, so we hide the one from the react datatables component
+  nav.rdt_Pagination > div > svg {
+    display: none !important;
+  }
+
+
+
+  .rsssl-container {
+    padding: 2em;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+}
+

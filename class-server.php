@@ -69,22 +69,26 @@ if ( ! class_exists( 'rsssl_server' ) ) {
 		 *
 		 * @return string
 		 */
-		public function auto_prepend_config(){
+		public function auto_prepend_config(): string
+        {
+            $return = '';
 			if ( $this->isApacheModPHP() ){
-				return "apache-mod_php"; //Apache _ modphp
+				$return = "apache-mod_php"; //Apache _ modphp
 			} else if ( $this->isApacheSuPHP() ) {
-				return "apache-suphp"; //Apache + SuPHP
+                $return = "apache-suphp"; //Apache + SuPHP
 			} else if ( $this->isApache() && !$this->isApacheSuPHP() && ($this->isCGI() || $this->isFastCGI()) ) {
-				return "cgi"; //Apache + CGI/FastCGI
+                $return = "cgi"; //Apache + CGI/FastCGI
 			} else if ($this->isLiteSpeed()){
-				return "litespeed";
+                $return = "litespeed";
 			} else if ( $this->isNGINX() ) {
-				return "nginx";
+                $return = "nginx";
 			} else if ( $this->isIIS() ) {
-				return "iis";
+                $return = "iis";
 			} else {
-				return "manual";
+                $return = "apache-mod_php";
 			}
+            update_option('rsssl_auto_prepend_config', $return, true);
+            return $return;
 		}
 
 		/**

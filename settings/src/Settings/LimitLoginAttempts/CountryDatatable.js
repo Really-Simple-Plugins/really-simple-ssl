@@ -1,4 +1,4 @@
-import {useEffect, useState, useCallback} from 'react';
+import {useEffect, useState, useCallback} from '@wordpress/element';
 import DataTable, {createTheme} from "react-data-table-component";
 import CountryDataTableStore from "./CountryDataTableStore";
 import EventLogDataTableStore from "../EventLog/EventLogDataTableStore";
@@ -37,14 +37,11 @@ const CountryDatatable = (props) => {
     const {setSelectedSubMenuItem} = useMenu();
 
     const {
-        DynamicDataTable,
         fetchDynamicData,
     } = EventLogDataTableStore();
 
     const {
-        selectedFilter,
         setSelectedFilter,
-        activeGroupId,
         getCurrentFilter,
         setProcessingFilter,
     } = FilterData();
@@ -418,7 +415,6 @@ const CountryDatatable = (props) => {
                     </div>
                 </div>
             )}
-            <div style={{ height: `${tableHeight}px`, position: 'relative' }}>
             <DataTable
                 columns={columns}
                 data={Object.values(data)}
@@ -449,7 +445,6 @@ const CountryDatatable = (props) => {
                 theme="really-simple-plugins"
                 customStyles={customStyles}
             />
-            </div>
             {!enabled && (
                 <div className="rsssl-locked">
                     <div className="rsssl-locked-overlay"><span

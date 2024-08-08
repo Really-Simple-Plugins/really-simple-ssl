@@ -26,7 +26,7 @@ if ( ! function_exists('rsssl_plugin_plugin_page_scripts')) {
         );
         wp_set_script_translations($handle, 'really-simple-ssl');
 	    $token = wp_create_nonce('rsssl_deactivate_plugin');
-	    $deactivate_keep_ssl_link = add_query_arg( [ 'page' => 'really-simple-security', 'action' => 'uninstall_keep_ssl', 'token' => $token ], rsssl_admin_url() );
+	    $deactivate_keep_ssl_link = rsssl_admin_url([ 'action' => 'uninstall_keep_ssl', 'token' => $token ]);
 
 	    wp_localize_script(
 	        $handle,

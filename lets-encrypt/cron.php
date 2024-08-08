@@ -12,23 +12,9 @@ function rsssl_le_schedule_cron() {
 	if ( ! get_option( 'rsssl_le_certificate_generated_by_rsssl' ) ) {
 		return;
 	}
-	
-	$useCron = true;
-	if ( $useCron ) {
-		if ( ! wp_next_scheduled( 'rsssl_le_every_week_hook' ) ) {
-			wp_schedule_event( time(), 'rsssl_le_weekly', 'rsssl_le_every_week_hook' );
-		}
 
-		if ( ! wp_next_scheduled( 'rsssl_le_every_day_hook' ) ) {
-			wp_schedule_event( time(), 'rsssl_le_daily', 'rsssl_le_every_day_hook' );
-		}
-
-		add_action( 'rsssl_le_every_week_hook', 'rsssl_le_cron_maybe_start_renewal' );
-		add_action( 'rsssl_le_every_day_hook', 'rsssl_le_check_renewal_status' );
-	} else {
-		add_action( 'init', 'rsssl_le_cron_maybe_start_renewal' );
-		add_action( 'init', 'rsssl_le_check_renewal_status' );
-	}
+	add_action( 'rsssl_week_cron', 'rsssl_le_cron_maybe_start_renewal' );
+	add_action( 'rsssl_daily_cron', 'rsssl_le_check_renewal_status' );
 }
 
 /**
@@ -46,7 +32,6 @@ function rsssl_le_cron_maybe_start_renewal(){
 	if ( RSSSL_LE()->letsencrypt_handler->certificate_install_required() ) {
 		update_option("rsssl_le_start_installation", true, false);
 	}
-
 }
 
 function rsssl_le_check_renewal_status(){
@@ -67,31 +52,6 @@ function rsssl_le_check_renewal_status(){
 	} else if ( $installation_active ) {
 		RSSSL_LE()->letsencrypt_handler->cron_renew_installation();
 	}
-}
-
-add_filter( 'cron_schedules', 'rsssl_le_filter_cron_schedules' );
-function rsssl_le_filter_cron_schedules( $schedules ) {
-	$schedules['rsssl_le_weekly']  = array(
-		'interval' => WEEK_IN_SECONDS,
-		'display'  => __( 'Once every week' )
-	);
-	$schedules['rsssl_le_daily']   = array(
-		'interval' => DAY_IN_SECONDS,
-		'display'  => __( 'Once every day' )
-	);
-	$schedules['rsssl_le_five_minutes']   = array(
-		'interval' => 5 * MINUTE_IN_SECONDS,
-		'display'  => __( 'Once every 5 minutes' )
-	);
-
-	return $schedules;
-}
-
-
-register_deactivation_hook( rsssl_file, 'rsssl_le_clear_scheduled_hooks' );
-function rsssl_le_clear_scheduled_hooks() {
-	wp_clear_scheduled_hook( 'rsssl_le_every_week_hook' );
-	wp_clear_scheduled_hook( 'rsssl_le_every_day_hook' );
 }
 
 

@@ -41,7 +41,7 @@ const Generation = (props) => {
                     <p>{ __("We could not check the DNS records. If you just added the record, please check in a few minutes.","really-simple-ssl")}&nbsp;
                                     <Hyperlink target="_blank" rel="noopener noreferrer" text={__("You can manually check the DNS records in an %sonline tool%s.","really-simple-ssl")}
                                     url="https://mxtoolbox.com/SuperTool.aspx"/>
-                        { __("If you're sure it's set correctly, you can click the button to skip the DNS check.","really-simple-ssl")}&nbsp;
+                        { ' '+__("If you're sure it's set correctly, you can click the button to skip the DNS check.","really-simple-ssl")}&nbsp;
                     </p>
                     <Button
                         variant="secondary"
