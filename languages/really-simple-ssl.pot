@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-08-08T13:55:38+00:00\n"
+"POT-Creation-Date: 2024-08-12T10:03:57+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.9.0\n"
 "X-Domain: really-simple-ssl\n"
@@ -2467,69 +2467,69 @@ msgstr ""
 msgid "Records deleted successfully."
 msgstr ""
 
-#: pro/security/wordpress/class-rsssl-password-security.php:141
+#: pro/security/wordpress/class-rsssl-password-security.php:139
 msgid "Password Expires On"
 msgstr ""
 
 #. translators: %1$s: The date the password expires. %2$d: The number of days until the password expires.
-#: pro/security/wordpress/class-rsssl-password-security.php:174
+#: pro/security/wordpress/class-rsssl-password-security.php:172
 msgid "%1$s - expires in %2$d days"
 msgstr ""
 
 #. translators: %s: Not required.
-#: pro/security/wordpress/class-rsssl-password-security.php:181
+#: pro/security/wordpress/class-rsssl-password-security.php:179
 msgid "Not required"
 msgstr ""
 
-#: pro/security/wordpress/class-rsssl-password-security.php:377
+#: pro/security/wordpress/class-rsssl-password-security.php:375
 msgid "Your password has expired. Please change your password."
 msgstr ""
 
-#: pro/security/wordpress/class-rsssl-password-security.php:594
-#: pro/security/wordpress/class-rsssl-password-security.php:598
+#: pro/security/wordpress/class-rsssl-password-security.php:592
+#: pro/security/wordpress/class-rsssl-password-security.php:596
 msgid "Invalid nonce."
 msgstr ""
 
-#: pro/security/wordpress/class-rsssl-password-security.php:648
+#: pro/security/wordpress/class-rsssl-password-security.php:646
 msgid "Your password contains (part of) your (user)name or email address. Choose a different password"
 msgstr ""
 
-#: pro/security/wordpress/class-rsssl-password-security.php:807
-#: pro/security/wordpress/class-rsssl-password-security.php:808
+#: pro/security/wordpress/class-rsssl-password-security.php:805
+#: pro/security/wordpress/class-rsssl-password-security.php:806
 msgid "Your account is locked"
 msgstr ""
 
-#: pro/security/wordpress/class-rsssl-password-security.php:810
+#: pro/security/wordpress/class-rsssl-password-security.php:808
 msgid "Hi %1$s, Your password expired on %2$s , please change your password."
 msgstr ""
 
-#: pro/security/wordpress/class-rsssl-password-security.php:814
+#: pro/security/wordpress/class-rsssl-password-security.php:812
 msgid "Unlock Account"
 msgstr ""
 
-#: pro/security/wordpress/class-rsssl-password-security.php:816
-#: pro/security/wordpress/class-rsssl-password-security.php:839
+#: pro/security/wordpress/class-rsssl-password-security.php:814
+#: pro/security/wordpress/class-rsssl-password-security.php:837
 msgid "Copy this URL to your browser to change your password: %1$s "
 msgstr ""
 
-#: pro/security/wordpress/class-rsssl-password-security.php:825
+#: pro/security/wordpress/class-rsssl-password-security.php:823
 msgid "Account Locked"
 msgstr ""
 
-#: pro/security/wordpress/class-rsssl-password-security.php:830
-#: pro/security/wordpress/class-rsssl-password-security.php:831
+#: pro/security/wordpress/class-rsssl-password-security.php:828
+#: pro/security/wordpress/class-rsssl-password-security.php:829
 msgid "Your password will expire in 7 days"
 msgstr ""
 
-#: pro/security/wordpress/class-rsssl-password-security.php:833
+#: pro/security/wordpress/class-rsssl-password-security.php:831
 msgid "Hi %1$s, Your password on %2$s will expire in 7 days, please change your password."
 msgstr ""
 
-#: pro/security/wordpress/class-rsssl-password-security.php:837
+#: pro/security/wordpress/class-rsssl-password-security.php:835
 msgid "Change password"
 msgstr ""
 
-#: pro/security/wordpress/class-rsssl-password-security.php:848
+#: pro/security/wordpress/class-rsssl-password-security.php:846
 msgid "Change your password"
 msgstr ""
 
@@ -5084,38 +5084,6 @@ msgstr ""
 msgid "Block user registrations when login and display name are the same"
 msgstr ""
 
-#: settings/config/fields/hardening-basic.php:160
-#: settings/config/fields/hardening-extended.php:117
-msgid "This will limit or fully disable HTTP requests that are not needed, but could be used with malicious intent."
-msgstr ""
-
-#: settings/config/fields/hardening-basic.php:161
-#: settings/config/fields/hardening-extended.php:118
-msgid "Disable HTTP methods"
-msgstr ""
-
-#: settings/config/fields/hardening-basic.php:170
-#: settings/config/fields/hardening-extended.php:127
-msgid "Settings update: Database prefix changed"
-msgstr ""
-
-#: settings/config/fields/hardening-basic.php:171
-#: settings/config/fields/hardening-extended.php:128
-msgid "Security through obscurity. Your site is no longer using the default wp_ prefix for database tables. The process has been designed to only complete and replace the tables after all wp_ tables are successfully renamed. In the unlikely event that this does lead to database issues on your site, please navigate to our troubleshooting article."
-msgstr ""
-
-#: settings/config/fields/hardening-basic.php:174
-#: settings/config/fields/hardening-basic.php:175
-#: settings/config/fields/hardening-extended.php:131
-#: settings/config/fields/hardening-extended.php:132
-msgid "This will permanently change your database prefixes and you can NOT rollback this feature. Please make sure you have a back-up."
-msgstr ""
-
-#: settings/config/fields/hardening-basic.php:177
-#: settings/config/fields/hardening-extended.php:134
-msgid "Rename and randomize your database prefix"
-msgstr ""
-
 #: settings/config/fields/hardening-extended.php:14
 msgid "A debug.log is publicly accessibile and has a standard location. This will change the location to a randomly named folder in /wp-content/"
 msgstr ""
@@ -5150,73 +5118,68 @@ msgid "Restrict creation of administrator roles"
 msgstr ""
 
 #: settings/config/fields/hardening-extended.php:55
-msgid "Really Simple SSL will scan for insecure file and folder permissions on a weekly basis. You will receive an email report and Dashboard notice if insecure permissions are found."
+msgid "This will limit or fully disable HTTP requests that are not needed, but could be used with malicious intent."
 msgstr ""
 
 #: settings/config/fields/hardening-extended.php:56
-msgid "File permissions check"
+msgid "Disable HTTP methods"
+msgstr ""
+
+#: settings/config/fields/hardening-extended.php:65
+msgid "Settings update: Database prefix changed"
 msgstr ""
 
 #: settings/config/fields/hardening-extended.php:66
-msgid "Allows you to enter a custom login URL."
-msgstr ""
-
-#: settings/config/fields/hardening-extended.php:67
-msgid "Enable Custom login URL"
+msgid "Security through obscurity. Your site is no longer using the default wp_ prefix for database tables. The process has been designed to only complete and replace the tables after all wp_ tables are successfully renamed. In the unlikely event that this does lead to database issues on your site, please navigate to our troubleshooting article."
 msgstr ""
 
 #: settings/config/fields/hardening-extended.php:69
-msgid "You have changed your login URL"
+#: settings/config/fields/hardening-extended.php:70
+msgid "This will permanently change your database prefixes and you can NOT rollback this feature. Please make sure you have a back-up."
 msgstr ""
 
-#: settings/config/fields/hardening-extended.php:70
-msgid "Your login URL has changed to {login_url} to prevent common bot attacks on standard login URLs. Learn more about this feature, common questions and measures to prevent any issues."
+#: settings/config/fields/hardening-extended.php:72
+msgid "Rename and randomize your database prefix"
 msgstr ""
 
 #: settings/config/fields/hardening-extended.php:81
-msgid "Enter a custom login URL. This allows you to log in via this custom URL instead of /wp-admin or /wp-login.php"
+msgid "Really Simple SSL will scan for insecure file and folder permissions on a weekly basis. You will receive an email report and Dashboard notice if insecure permissions are found."
 msgstr ""
 
 #: settings/config/fields/hardening-extended.php:82
+msgid "File permissions check"
+msgstr ""
+
+#: settings/config/fields/hardening-extended.php:92
+msgid "Allows you to enter a custom login URL."
+msgstr ""
+
+#: settings/config/fields/hardening-extended.php:93
+msgid "Enable Custom login URL"
+msgstr ""
+
+#: settings/config/fields/hardening-extended.php:95
+msgid "You have changed your login URL"
+msgstr ""
+
+#: settings/config/fields/hardening-extended.php:96
+msgid "Your login URL has changed to {login_url} to prevent common bot attacks on standard login URLs. Learn more about this feature, common questions and measures to prevent any issues."
+msgstr ""
+
+#: settings/config/fields/hardening-extended.php:107
+msgid "Enter a custom login URL. This allows you to log in via this custom URL instead of /wp-admin or /wp-login.php"
+msgstr ""
+
+#: settings/config/fields/hardening-extended.php:108
 msgid "Example: If you want to change your login page from /wp-admin/ to /control/ answer: control"
 msgstr ""
 
-#: settings/config/fields/hardening-extended.php:83
+#: settings/config/fields/hardening-extended.php:109
 msgid "Custom login URL"
 msgstr ""
 
-#: settings/config/fields/hardening-extended.php:100
+#: settings/config/fields/hardening-extended.php:126
 msgid "Users trying to enter via /wp-admin or /wp-login.php will be redirected to this URL."
-msgstr ""
-
-#: settings/config/fields/hardening-file-change-detection.php:12
-msgid "Enable File Change Detection"
-msgstr ""
-
-#: settings/config/fields/hardening-file-change-detection.php:21
-msgid "Exclude files/directories"
-msgstr ""
-
-#: settings/config/fields/hardening-file-change-detection.php:52
-#: settings/config/fields/hardening-file-change-detection.php:96
-#: settings/build/381.9b8465294454b49768a3.js:1
-#: settings/build/439.98a0ea7305ad7622c383.js:1
-#: settings/src/Modal/Modal.js:65
-#: settings/src/Settings/MixedContentScan/MixedContentScan.js:179
-msgid "Ignore"
-msgstr ""
-
-#: settings/config/fields/hardening-file-change-detection.php:58
-#: settings/config/fields/hardening-file-change-detection.php:84
-msgid "Exclude"
-msgstr ""
-
-#: settings/config/fields/hardening-file-change-detection.php:64
-msgid "Changed file"
-msgstr ""
-
-#: settings/config/fields/hardening-file-change-detection.php:71
-msgid "Detected"
 msgstr ""
 
 #: settings/config/fields/hardening-xml.php:37
@@ -6997,6 +6960,13 @@ msgstr ""
 #: settings/src/Modal/Modal.js:64
 #: settings/src/Settings/MixedContentScan/MixedContentScan.js:169
 msgid "Help"
+msgstr ""
+
+#: settings/build/381.9b8465294454b49768a3.js:1
+#: settings/build/439.98a0ea7305ad7622c383.js:1
+#: settings/src/Modal/Modal.js:65
+#: settings/src/Settings/MixedContentScan/MixedContentScan.js:179
+msgid "Ignore"
 msgstr ""
 
 #: settings/build/381.9b8465294454b49768a3.js:1

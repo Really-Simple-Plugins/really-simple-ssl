@@ -76,18 +76,30 @@ trait Encryption {
 	}
 	/**
 	 * Decrypt data
-	 * @param string $data
+	 * @param mixed $data
 	 * @param string $type
 	 * @param string|bool $deprecated_key
 	 *
 	 * @return array|string
 	 */
-	public function decrypt( string $data, string $type = 'string', $deprecated_key = '' ) {
-		//make it only available for cron, or logged in users.
-		if ( !rsssl_admin_logged_in() ) {
+	public function decrypt( $data, string $type = 'string', $deprecated_key = '' ) {
+		// Check if user is logged in
+		if ( ! rsssl_admin_logged_in() ) {
 			return strtolower( $type ) === 'string' ? '' : [];
 		}
-		$key = !empty($deprecated_key) ? $deprecated_key: $this->get_encryption_key();
+
+		$key = ! empty( $deprecated_key ) ? $deprecated_key : $this->get_encryption_key();
+
+		// If $data is empty, return appropriate empty value based on type
+		if ( empty( $data ) ) {
+			return strtolower( $type ) === 'string' ? '' : [];
+		}
+
+		// If $data is not a string (i.e., it's already an array), return it as is
+		if ( ! is_string( $data ) ) {
+			return $data;
+		}
+
 		$decoded = base64_decode( $data );
 		if ( false === $decoded ) {
 			return strtolower( $type ) === 'string' ? '' : [];
@@ -96,26 +108,27 @@ trait Encryption {
 		if ( strpos( $decoded, '::' ) !== false ) {
 			[ $encrypted_data, $iv ] = explode( '::', $decoded, 2 );
 		} else {
-			//deprecated method, for backwards compatibility (license decryption)
+			// Deprecated method, for backwards compatibility (license decryption)
 			$ivlength       = openssl_cipher_iv_length( 'aes-256-cbc' );
 			$iv             = substr( $decoded, 0, $ivlength );
 			$encrypted_data = substr( $decoded, $ivlength );
 		}
 
-		if ( function_exists('openssl_decrypt' ) ) {
-			$data = openssl_decrypt( $encrypted_data, 'aes-256-cbc', $key, 0, $iv );
+		if ( function_exists( 'openssl_decrypt' ) ) {
+			$decrypted_data = openssl_decrypt( $encrypted_data, 'aes-256-cbc', $key, 0, $iv );
 		} else {
 			$this->log( 'The function openssl_decrypt does not exist. Check with your host if the OpenSSL library for PHP can be enabled.' );
-			$data = '';
+
+			return strtolower( $type ) === 'string' ? '' : [];
 		}
 
 		if ( 'array' === strtolower( $type ) ) {
-			$data = unserialize($data);
-			if ( !is_array($data) ) {
-				$data = [];
-			}
+			$unserialized_data = @unserialize( $decrypted_data );
+
+			return ( is_array( $unserialized_data ) ) ? $unserialized_data : [];
 		}
-		return $data;
+
+		return $decrypted_data;
 	}
 
 	/**
