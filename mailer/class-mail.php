@@ -164,7 +164,9 @@ if ( ! class_exists( 'rsssl_mailer' ) ) {
 				}
 			}
 			$username  = rsssl_get_option( 'new_admin_user_login' );
-			$login_url = wp_login_url();
+			$login_url = ! empty( rsssl_get_option( 'change_login_url' ) )
+				? trailingslashit( site_url() ) . rsssl_get_option( 'change_login_url' )
+				: wp_login_url();
 			$body      = str_replace(
 				[
 					'{title}',

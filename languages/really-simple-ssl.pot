@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-08-12T10:03:57+00:00\n"
+"POT-Creation-Date: 2024-08-12T13:16:37+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.9.0\n"
 "X-Domain: really-simple-ssl\n"
@@ -201,12 +201,12 @@ msgid "Retry"
 msgstr ""
 
 #: class-admin.php:2060
-#: onboarding/class-onboarding.php:249
+#: onboarding/class-onboarding.php:255
 msgid "Could not test certificate"
 msgstr ""
 
 #: class-admin.php:2061
-#: onboarding/class-onboarding.php:249
+#: onboarding/class-onboarding.php:255
 msgid "Automatic certificate detection is not possible on your server."
 msgstr ""
 
@@ -983,7 +983,7 @@ msgid "I agree to the Terms & Conditions from Let's Encrypt."
 msgstr ""
 
 #: lets-encrypt/config/fields.php:111
-#: onboarding/class-onboarding.php:283
+#: onboarding/class-onboarding.php:289
 msgid "Terms & Conditions"
 msgstr ""
 
@@ -1448,30 +1448,30 @@ msgstr ""
 msgid "Email could not be sent. No message or subject set."
 msgstr ""
 
-#: mailer/class-mail.php:203
+#: mailer/class-mail.php:205
 #: settings/config/fields/general.php:91
 msgid "Email verification"
 msgstr ""
 
-#: mailer/class-mail.php:204
+#: mailer/class-mail.php:206
 msgid "Email sent! Please check your mail"
 msgstr ""
 
-#: mailer/class-mail.php:209
+#: mailer/class-mail.php:211
 msgid "Email could not be sent."
 msgstr ""
 
-#: mailer/class-mail.php:211
+#: mailer/class-mail.php:213
 #: upgrade/upgrade-to-pro.php:372
 #: upgrade/upgrade-to-pro.php:373
 msgid "An error occurred:"
 msgstr ""
 
-#: mailer/class-mail.php:216
+#: mailer/class-mail.php:218
 msgid "Email notification error"
 msgstr ""
 
-#: onboarding/class-onboarding.php:9
+#: onboarding/class-onboarding.php:15
 #: pro/class-admin.php:14
 #: pro/class-headers.php:12
 #: pro/class-importer.php:12
@@ -1481,72 +1481,72 @@ msgstr ""
 msgid "%s is a singleton class and you cannot create a second instance."
 msgstr ""
 
-#: onboarding/class-onboarding.php:170
+#: onboarding/class-onboarding.php:176
 msgid "You can also let the automatic scan of the pro version handle this for you, and get premium support, increased security with HSTS and more!"
 msgstr ""
 
-#: onboarding/class-onboarding.php:170
+#: onboarding/class-onboarding.php:176
 msgid "Check out Really Simple SSL Pro"
 msgstr ""
 
-#: onboarding/class-onboarding.php:176
+#: onboarding/class-onboarding.php:182
 msgid "Really Simple SSL & Security"
 msgstr ""
 
-#: onboarding/class-onboarding.php:177
+#: onboarding/class-onboarding.php:183
 msgid "We have added many new features to our plugin, now bearing the name Really Simple SSL & Security. But we start like we did almost 10 years ago. Optimising your Encryption with SSL."
 msgstr ""
 
-#: onboarding/class-onboarding.php:182
+#: onboarding/class-onboarding.php:188
 msgid "Thanks for updating!"
 msgstr ""
 
-#: onboarding/class-onboarding.php:182
+#: onboarding/class-onboarding.php:188
 msgid "Congratulations!"
 msgstr ""
 
-#: onboarding/class-onboarding.php:183
+#: onboarding/class-onboarding.php:189
 msgid "These are some of our new features, and weʼre just getting started."
 msgstr ""
 
-#: onboarding/class-onboarding.php:184
+#: onboarding/class-onboarding.php:190
 msgid "A lightweight plugin with heavyweight security features, focusing on performance and usability."
 msgstr ""
 
-#: onboarding/class-onboarding.php:186
+#: onboarding/class-onboarding.php:192
 #: settings/build/43.7284bbc570a57053a399.js:1
 #: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:116
 msgid "Enable"
 msgstr ""
 
-#: onboarding/class-onboarding.php:190
+#: onboarding/class-onboarding.php:196
 msgid "Get notified!"
 msgstr ""
 
-#: onboarding/class-onboarding.php:191
+#: onboarding/class-onboarding.php:197
 msgid "We use email notification to explain important updates in plugin settings."
 msgstr ""
 
-#: onboarding/class-onboarding.php:191
+#: onboarding/class-onboarding.php:197
 msgid "Add your email address below."
 msgstr ""
 
-#: onboarding/class-onboarding.php:192
+#: onboarding/class-onboarding.php:198
 #: settings/build/778.1cc24e8aa09719269ad5.js:1
 #: settings/src/Settings/Settings.js:153
 msgid "Save and continue"
 msgstr ""
 
-#: onboarding/class-onboarding.php:196
+#: onboarding/class-onboarding.php:202
 msgid "Free plugins"
 msgstr ""
 
-#: onboarding/class-onboarding.php:197
+#: onboarding/class-onboarding.php:203
 msgid "Really Simple Plugins is also the author of the below privacy-focused plugins, including consent management, legal documents and analytics!"
 msgstr ""
 
-#: onboarding/class-onboarding.php:199
-#: onboarding/class-onboarding.php:206
+#: onboarding/class-onboarding.php:205
+#: onboarding/class-onboarding.php:212
 #: upgrade/upgrade-to-pro.php:146
 #: upgrade/upgrade-to-pro.php:159
 #: upgrade/upgrade-to-pro.php:176
@@ -1555,61 +1555,61 @@ msgstr ""
 msgid "Install"
 msgstr ""
 
-#: onboarding/class-onboarding.php:203
+#: onboarding/class-onboarding.php:209
 msgid "Really Simple Security Pro"
 msgstr ""
 
-#: onboarding/class-onboarding.php:204
+#: onboarding/class-onboarding.php:210
 msgid "Heavyweight security features, in a lightweight performant plugin from Really Simple Plugins. Get started with below features and get the latest and greatest updates for peace of mind!"
 msgstr ""
 
-#: onboarding/class-onboarding.php:235
+#: onboarding/class-onboarding.php:241
 msgid "You may need to login in again, have your credentials prepared."
 msgstr ""
 
-#: onboarding/class-onboarding.php:243
+#: onboarding/class-onboarding.php:249
 msgid "An SSL certificate has been detected"
 msgstr ""
 
-#: onboarding/class-onboarding.php:255
+#: onboarding/class-onboarding.php:261
 msgid "No SSL certificate has been detected."
 msgstr ""
 
-#: onboarding/class-onboarding.php:255
+#: onboarding/class-onboarding.php:261
 msgid "Please refresh the SSL status if a certificate has been installed recently."
 msgstr ""
 
-#: onboarding/class-onboarding.php:271
+#: onboarding/class-onboarding.php:277
 msgid "Privacy-friendly analytics tool."
 msgstr ""
 
-#: onboarding/class-onboarding.php:277
+#: onboarding/class-onboarding.php:283
 msgid "Consent Management as it should be."
 msgstr ""
 
-#: onboarding/class-onboarding.php:321
+#: onboarding/class-onboarding.php:327
 #: modal/build/index.dfb590895b2465568630.js:1
 #: modal/src/components/DeactivationModal/DeactivationModal.js:124
 msgid "Mixed Content Fixer"
 msgstr ""
 
-#: onboarding/class-onboarding.php:327
+#: onboarding/class-onboarding.php:333
 #: modal/build/index.dfb590895b2465568630.js:1
 #: modal/src/components/DeactivationModal/DeactivationModal.js:72
 #: modal/src/components/DeactivationModal/DeactivationModal.js:114
 msgid "Vulnerability Detection"
 msgstr ""
 
-#: onboarding/class-onboarding.php:333
+#: onboarding/class-onboarding.php:339
 msgid "Recommended Hardening Features"
 msgstr ""
 
-#: onboarding/class-onboarding.php:339
+#: onboarding/class-onboarding.php:345
 msgid "Run System Health Scan"
 msgstr ""
 
-#: onboarding/class-onboarding.php:345
-#: onboarding/class-onboarding.php:382
+#: onboarding/class-onboarding.php:351
+#: onboarding/class-onboarding.php:388
 #: settings/config/menu.php:382
 #: settings/config/menu.php:390
 #: modal/build/index.dfb590895b2465568630.js:1
@@ -1617,21 +1617,21 @@ msgstr ""
 msgid "Limit Login Attempts"
 msgstr ""
 
-#: onboarding/class-onboarding.php:352
-#: onboarding/class-onboarding.php:389
+#: onboarding/class-onboarding.php:358
+#: onboarding/class-onboarding.php:395
 msgid "Two Factor Authentication"
 msgstr ""
 
-#: onboarding/class-onboarding.php:359
-#: onboarding/class-onboarding.php:396
+#: onboarding/class-onboarding.php:365
+#: onboarding/class-onboarding.php:402
 msgid "Advanced Security Headers"
 msgstr ""
 
-#: onboarding/class-onboarding.php:366
+#: onboarding/class-onboarding.php:372
 msgid "Advanced Hardening Features"
 msgstr ""
 
-#: onboarding/class-onboarding.php:410
+#: onboarding/class-onboarding.php:416
 #: settings/config/menu.php:365
 #: settings/config/menu.php:371
 #: modal/build/index.dfb590895b2465568630.js:1
@@ -1640,14 +1640,14 @@ msgstr ""
 msgid "Password security"
 msgstr ""
 
-#: onboarding/class-onboarding.php:416
+#: onboarding/class-onboarding.php:422
 #: settings/config/menu.php:254
 #: modal/build/index.dfb590895b2465568630.js:1
 #: modal/src/components/DeactivationModal/DeactivationModal.js:82
 msgid "Advanced Hardening"
 msgstr ""
 
-#: onboarding/class-onboarding.php:423
+#: onboarding/class-onboarding.php:429
 msgid "Vulnerability Measures"
 msgstr ""
 

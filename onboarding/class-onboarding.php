@@ -1,9 +1,15 @@
 <?php
 defined('ABSPATH') or die();
+
+require_once rsssl_path . 'lib/admin/class-encryption.php';
 require_once(rsssl_path . 'class-installer.php');
+
+use RSSSL\lib\admin\Encryption;
 
 class rsssl_onboarding {
 	private static $_this;
+
+	use Encryption;
 	function __construct() {
 		if ( isset( self::$_this ) ) {
 			wp_die( sprintf( __( '%s is a singleton class and you cannot create a second instance.', 'really-simple-ssl' ), get_class( $this ) ) );
@@ -134,7 +140,7 @@ class rsssl_onboarding {
 		$license_key = '';
 		if ( defined('rsssl_pro') ) {
 			$license_key = RSSSL()->licensing->license_key();
-			$license_key = RSSSL()->licensing->maybe_decode( $license_key );
+			$license_key = $this->decrypt_if_prefixed( $license_key, 'really_simple_ssl_' );
 		}
 
 		$api_params = array(

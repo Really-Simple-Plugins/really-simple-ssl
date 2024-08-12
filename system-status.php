@@ -109,7 +109,7 @@ function rsssl_get_system_status() {
 		$output .= 'not able to fix wpconfig siteurl/homeurl.<br>';
 	}
 
-	if ( ! is_writable( RSSSL()->admin->find_wp_config_path() ) ) {
+	if ( ! is_writable( rsssl_find_wp_config_path() ) ) {
 		$output .= 'wp-config.php not writable<br>';
 	}
 	$output .= 'Detected SSL setup: ' . RSSSL()->admin->ssl_type . '<br>';
