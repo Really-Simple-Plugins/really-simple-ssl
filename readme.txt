@@ -6,7 +6,7 @@ Requires at least: 5.9
 License: GPL2
 Tested up to: 6.5
 Requires PHP: 7.4
-Stable tag: 8.3.0
+Stable tag: 8.3.0.1
 
 Easily improve site security with WordPress hardening, vulnerability detection and SSL certificate generation.
 
@@ -131,6 +131,9 @@ The plugin checks your certificate before enabling, but if, for example, you mig
 If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions](https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/) instead.
 
 == Changelog ==
+= 8.3.0.1 =
+* Fix: Issues with the decryption model
+
 = 8.3.0 =
 * August 12th, 2024
 * Feature: Password security scan. This feature scans your users for weak passwords, and allows you to enforce non-compromised passwords.

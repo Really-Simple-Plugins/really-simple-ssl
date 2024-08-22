@@ -2,14 +2,14 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Really Simple SSL Pro 8.3.0\n"
+"Project-Id-Version: Really Simple SSL Pro 8.3.0.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/really-simple-ssl-pro\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-08-12T13:16:37+00:00\n"
+"POT-Creation-Date: 2024-08-20T11:28:02+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.9.0\n"
 "X-Domain: really-simple-ssl\n"
@@ -109,14 +109,14 @@ msgid "Completed"
 msgstr ""
 
 #: class-admin.php:1892
-#: pro/class-licensing.php:626
+#: pro/class-licensing.php:648
 #: settings/build/381.9b8465294454b49768a3.js:1
 #: settings/src/Settings/MixedContentScan/MixedContentScan.js:58
 msgid "Warning"
 msgstr ""
 
 #: class-admin.php:1893
-#: pro/class-licensing.php:627
+#: pro/class-licensing.php:649
 #: pro/security/wordpress/class-rsssl-geo-block.php:1408
 #: settings/config/menu.php:351
 msgid "Open"
@@ -1854,143 +1854,143 @@ msgstr ""
 msgid "Something went wrong"
 msgstr ""
 
-#: pro/class-licensing.php:94
+#: pro/class-licensing.php:113
 msgid "Activate your license for automatic updates."
 msgstr ""
 
-#: pro/class-licensing.php:165
-#: pro/class-licensing.php:187
-#: pro/class-licensing.php:695
-#: pro/class-licensing.php:702
-#: pro/class-licensing.php:709
-#: pro/class-licensing.php:716
-#: pro/class-licensing.php:723
+#: pro/class-licensing.php:184
+#: pro/class-licensing.php:206
+#: pro/class-licensing.php:717
+#: pro/class-licensing.php:724
+#: pro/class-licensing.php:731
 #: pro/class-licensing.php:738
+#: pro/class-licensing.php:745
+#: pro/class-licensing.php:760
 msgid "License"
 msgstr ""
 
-#: pro/class-licensing.php:166
+#: pro/class-licensing.php:185
 msgid "Manage your license here."
 msgstr ""
 
-#: pro/class-licensing.php:491
+#: pro/class-licensing.php:513
 msgid "unlimited"
 msgstr ""
 
-#: pro/class-licensing.php:498
+#: pro/class-licensing.php:520
 msgid "You have a lifetime license."
 msgstr ""
 
-#: pro/class-licensing.php:498
+#: pro/class-licensing.php:520
 msgid "Valid until %s."
 msgstr ""
 
-#: pro/class-licensing.php:504
+#: pro/class-licensing.php:526
 msgid "Upgrade to a %s5 sites or Agency%s license."
 msgstr ""
 
-#: pro/class-licensing.php:507
+#: pro/class-licensing.php:529
 msgid "Upgrade to an %sAgency%s license."
 msgstr ""
 
-#: pro/class-licensing.php:510
+#: pro/class-licensing.php:532
 msgid "You can renew your license on your %saccount%s."
 msgstr ""
 
-#: pro/class-licensing.php:515
+#: pro/class-licensing.php:537
 msgid "Unlimited activations available."
 msgstr ""
 
-#: pro/class-licensing.php:518
-#: pro/class-licensing.php:614
+#: pro/class-licensing.php:540
+#: pro/class-licensing.php:636
 msgid "%s/%s activations available."
 msgstr ""
 
-#: pro/class-licensing.php:534
+#: pro/class-licensing.php:556
 msgid "Valid license for %s."
 msgstr ""
 
-#: pro/class-licensing.php:559
+#: pro/class-licensing.php:581
 msgid "Multisite detected. Please upgrade to %smultisite%s."
 msgstr ""
 
-#: pro/class-licensing.php:567
+#: pro/class-licensing.php:589
 msgid "The license information could not be retrieved at this moment. Please try again at a later time."
 msgstr ""
 
-#: pro/class-licensing.php:573
+#: pro/class-licensing.php:595
 msgid "Please enter your license key. Available in your %saccount%s."
 msgstr ""
 
-#: pro/class-licensing.php:581
+#: pro/class-licensing.php:603
 msgid "Please activate your license key."
 msgstr ""
 
-#: pro/class-licensing.php:587
+#: pro/class-licensing.php:609
 msgid "Your license has been revoked. Please contact %ssupport%s."
 msgstr ""
 
-#: pro/class-licensing.php:593
+#: pro/class-licensing.php:615
 msgid "Your license could not be found in our system. Please contact %ssupport%s."
 msgstr ""
 
-#: pro/class-licensing.php:600
+#: pro/class-licensing.php:622
 msgid "This license is not valid. Find out why on your %saccount%s."
 msgstr ""
 
-#: pro/class-licensing.php:607
+#: pro/class-licensing.php:629
 msgid "This license is not valid for this product. Find out why on your %saccount%s."
 msgstr ""
 
-#: pro/class-licensing.php:620
+#: pro/class-licensing.php:642
 msgid "Your license key has expired. Please renew your license key on your %saccount%s."
 msgstr ""
 
-#: pro/class-licensing.php:628
+#: pro/class-licensing.php:650
 msgid "Success"
 msgstr ""
 
-#: pro/class-licensing.php:629
+#: pro/class-licensing.php:651
 msgid "Premium"
 msgstr ""
 
-#: pro/class-licensing.php:672
+#: pro/class-licensing.php:694
 msgid "Your Really Simple SSL Pro license hasn't been activated."
 msgstr ""
 
-#: pro/class-licensing.php:673
+#: pro/class-licensing.php:695
 msgid "Your Really Simple SSL Pro license is not valid."
 msgstr ""
 
-#: pro/class-licensing.php:687
+#: pro/class-licensing.php:709
 msgid "%sActivate%s your license."
 msgstr ""
 
-#: pro/class-licensing.php:689
+#: pro/class-licensing.php:711
 msgid "You can upgrade on your %saccount%s."
 msgstr ""
 
-#: pro/class-licensing.php:696
+#: pro/class-licensing.php:718
 msgid "Your Really Simple SSL Pro license key has expired. Please renew your license to continue receiving updates and premium support."
 msgstr ""
 
-#: pro/class-licensing.php:703
+#: pro/class-licensing.php:725
 msgid "Your Really Simple SSL Pro license key is not activated. Please activate your license to continue receiving updates and premium support."
 msgstr ""
 
-#: pro/class-licensing.php:710
+#: pro/class-licensing.php:732
 msgid "This domain is not activated for this Really Simple SSL Pro license. Please activate the license for this domain."
 msgstr ""
 
-#: pro/class-licensing.php:717
+#: pro/class-licensing.php:739
 msgid "You do not have any activations left on your Really Simple SSL Pro license. Please upgrade your plan for additional activations."
 msgstr ""
 
-#: pro/class-licensing.php:724
+#: pro/class-licensing.php:746
 msgid "Your Really Simple SSL Pro license key hasn't been activated yet. You can activate your license key on the license tab."
 msgstr ""
 
-#: pro/class-licensing.php:739
+#: pro/class-licensing.php:761
 msgid "You are using Really Simple SSL Pro single site on a multisite environment. Please install Really Simple SSL multisite networkwide for multisite support."
 msgstr ""
 
@@ -2209,20 +2209,20 @@ msgstr ""
 msgid "Block admin creation was disabled, because the registration of admin users has failed."
 msgstr ""
 
-#: pro/security/wordpress/block-admin-creation.php:312
+#: pro/security/wordpress/block-admin-creation.php:318
 msgid "Manual approval required"
 msgstr ""
 
-#: pro/security/wordpress/block-admin-creation.php:313
+#: pro/security/wordpress/block-admin-creation.php:319
 msgid "Because of your settings in Really Simple SSL, this user has been set to subscriber until you change the role manually."
 msgstr ""
 
-#: pro/security/wordpress/block-admin-creation.php:319
-#: pro/security/wordpress/block-admin-creation.php:320
+#: pro/security/wordpress/block-admin-creation.php:325
+#: pro/security/wordpress/block-admin-creation.php:326
 msgid "Suspicious admin account detected"
 msgstr ""
 
-#: pro/security/wordpress/block-admin-creation.php:321
+#: pro/security/wordpress/block-admin-creation.php:327
 msgid "A user account with administrator privileges was created outside the WordPress dashboard."
 msgstr ""
 

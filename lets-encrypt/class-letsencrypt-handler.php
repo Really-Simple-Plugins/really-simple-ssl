@@ -1829,6 +1829,12 @@ class rsssl_letsencrypt_handler {
 
 	public function upgrade(){
 		if ( get_option('rsssl_upgrade_le_key') ) {
+			// Check if the encryption key is not empty before upgrading. On slow servers, the write to wp-config.php can be
+			// incomplete before the plugin gets here
+			$key = $this->get_encryption_key();
+			if ( empty( $key ) ) {
+				return;
+			}
 			delete_option('rsssl_upgrade_le_key');
 			$site_key = get_site_option( 'rsssl_le_key');
 			if ( $site_key ) {

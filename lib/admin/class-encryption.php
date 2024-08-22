@@ -48,6 +48,7 @@ trait Encryption {
 			return $data;
 		}
 		$data = substr($data, strlen($prefix));
+
 		return $this->decrypt($data, 'string', $deprecated_key);
 	}
 
@@ -62,6 +63,7 @@ trait Encryption {
 	public function encrypt( $data, string $type = 'string' ): string {
 
 		$key = $this->get_encryption_key();
+
 		if ( 'array' === strtolower( $type ) ) {
 			$data = serialize($data);
 		}
@@ -74,20 +76,18 @@ trait Encryption {
 		$encrypted = openssl_encrypt($data, 'aes-256-cbc', $key, 0, $iv);
 		return base64_encode($encrypted . '::' . $iv);
 	}
+
 	/**
 	 * Decrypt data
+	 *
 	 * @param mixed $data
 	 * @param string $type
-	 * @param string|bool $deprecated_key
+	 * @param string $deprecated_key
 	 *
 	 * @return array|string
 	 */
 	public function decrypt( $data, string $type = 'string', $deprecated_key = '' ) {
 		// Check if user is logged in
-		if ( ! rsssl_admin_logged_in() ) {
-			return strtolower( $type ) === 'string' ? '' : [];
-		}
-
 		$key = ! empty( $deprecated_key ) ? $deprecated_key : $this->get_encryption_key();
 
 		// If $data is empty, return appropriate empty value based on type
@@ -131,48 +131,14 @@ trait Encryption {
 		return $decrypted_data;
 	}
 
-	/**
-	 * Get the encryption key. The key is NOT autoloaded, so if encryption is required on the front-end, this should be changed.
-	 * @return string
-	 */
 	private function get_encryption_key(): string {
-		$wp_config_path = $this->wpconfig_path();
-
-		//first, check if we have a key
-		if ( defined('RSSSL_KEY' ) ) {
+		// First, check if we have a key defined as a constant
+		if ( defined( 'RSSSL_KEY' ) ) {
 			return RSSSL_KEY;
 		}
 
-		$key = get_site_option('rsssl_main_key' );
-		$new_generated = false;
-		//if we don't have a key, generate one
-		if ( !$key ) {
-			$new_generated = true;
-			$key = wp_generate_password( 64, false );
-		}
+		// If not, check if we have a key stored in the database
+		return get_site_option( 'rsssl_main_key' );
 
-		if ( is_writable($wp_config_path) ) {
-			//add the key to the wp-config file
-			$rule = '//Begin Really Simple SSL key' . "\n";
-			$rule .= "define('RSSSL_KEY', '" . $key . "');" . "\n";
-			$rule .= '//END Really Simple SSL key' . "\n";
-			$insert_after = '<?php';
-
-			$contents = file_get_contents( $wp_config_path );
-			$pos          = strpos( $contents, $insert_after );
-			if ( false !== $pos && strpos( $contents, 'RSSSL_KEY' ) === false ) {
-				$contents = substr_replace( $contents, $rule, $pos + 1 + strlen( $insert_after ), 0 );
-				file_put_contents( $wp_config_path, $contents );
-			}
-
-			//if the wp-config was just set to writable, we can delete the key from the database now.
-			delete_site_option( 'rsssl_main_key' );
-		} else if ( $new_generated ) {
-			//if we can't write to the wp-config file, store the key in the database
-			//when wp-config is set to writable, auto upgrade to constant
-			update_site_option( 'rsssl_main_key', $key, false );
-		}
-
-		return $key;
 	}
 }
