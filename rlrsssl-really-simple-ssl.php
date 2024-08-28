@@ -1,9 +1,9 @@
 <?php
 /**
- * Plugin Name: Really Simple SSL
+ * Plugin Name: Really Simple Security
  * Plugin URI: https://really-simple-ssl.com
  * Description: Lightweight SSL & Hardening Plugin
- * Version: 8.3.0.1
+ * Version: 9.0
  * Requires at least: 5.9
  * Requires PHP: 7.4
  * Author: Really Simple Plugins
@@ -173,7 +173,7 @@ if ( !class_exists('REALLY_SIMPLE_SSL')) {
 			) {
 				?>
                 <div id="message" class="error notice really-simple-plugins">
-                    <p><?php echo __("Update Really Simple SSL Pro: the plugin needs to be updated to the latest version to be compatible.","really-simple-ssl");?></p>
+                    <p><?php echo __("Update Really Simple Security Pro: the plugin needs to be updated to the latest version to be compatible.","really-simple-ssl");?></p>
                     <p>
 						<?php printf(__("Visit the plugins overview or %srenew your license%s.","really-simple-ssl"),'<a href="https://really-simple-ssl.com/pro/?mtm_campaign=renew&mtm_source=free&mtm_content=upgrade" target="_blank" rel="noopener noreferrer">','</a>'); ?>
                     </p>
@@ -197,7 +197,7 @@ if ( !class_exists('REALLY_SIMPLE_SSL')) {
 				return true;
 			}
 
-			if ($data && $data['Name']==='Really Simple SSL social' && version_compare($data['Version'], '4.0.8', '<')) {
+			if ($data && $data['Name']==='Really Simple Security social' && version_compare($data['Version'], '4.0.8', '<')) {
 				return true;
 			}
 			return false;
