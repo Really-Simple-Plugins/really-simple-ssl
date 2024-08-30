@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Really Simple Security
  * Plugin URI: https://really-simple-ssl.com
- * Description: Lightweight SSL & Hardening Plugin
+ * Description: Simple and performant security
  * Version: 9.0
  * Requires at least: 5.9
  * Requires PHP: 7.4
