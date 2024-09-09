@@ -4,7 +4,7 @@ Donate link: https://www.paypal.me/reallysimplessl
 Tags: Security, SSL, https, HSTS, mixed content
 Requires at least: 5.9
 License: GPL2
-Tested up to: 6.5
+Tested up to: 6.6
 Requires PHP: 7.4
 Stable tag: 8.3.0.1
 
