@@ -1,4 +1,4 @@
-=== Really Simple Security - Simple and Performant Security (formerly Really Simple Security)===
+=== Really Simple Security - Simple and Performant Security (formerly Really Simple SSL)===
 Contributors: RogierLankhorst, markwolters, hesseldejong, vicocotea, marcelsanting, janwoostendorp
 Donate link: https://www.paypal.me/reallysimplessl
 Tags: security, ssl, 2fa, vulnerabilities, two factor
