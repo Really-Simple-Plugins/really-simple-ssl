@@ -596,7 +596,7 @@ class rsssl_admin {
 				<?php if ( $more_info || $dismiss_id ) { ?>
 					<div class="rsssl-admin-notice-more-info">
 						<?php if ( $dashboard_button ) { ?>
-							<a id="rsssl-dashboard-button" class="button button-primary" rel="noopener noreferrer" href="<?php echo add_query_arg(array('page' => 'really-simple-security'), rsssl_admin_url() ); ?>"><?php _e( 'View Dashboard', 'really-simple-ssl' ); ?></a>
+                            <a id="rsssl-dashboard-button" class="button button-primary" rel="noopener noreferrer" href="<?php echo add_query_arg(array('page' => 'really-simple-security', 'dismiss_notice' => $dismiss_id), rsssl_admin_url() ); ?>"><?php _e( 'View Dashboard', 'really-simple-ssl' ); ?></a>
 						<?php } ?>
 						<?php if ( $dismiss_id ) { ?>
 							<a class="button" rel="noopener noreferrer" href="<?php echo add_query_arg( [ 'dismiss_notice' => $dismiss_id ], $url ); ?>"><?php _e( 'Dismiss', 'really-simple-ssl' ); ?></a>
@@ -1304,10 +1304,6 @@ class rsssl_admin {
 				array(
 					'name'    => 'Referrer-Policy',
 					'pattern' => 'Referrer-Policy',
-				),
-				array(
-					'name'    => 'X-Frame-Options',
-					'pattern' => 'X-Frame-Options',
 				),
 				array(
 					'name'    => 'Permissions-Policy',
@@ -3062,9 +3058,8 @@ if ( ! function_exists('rsssl_upgrade_to_nine_notice' ) ) {
 		       );
 
 		if ( ! defined( 'rsssl_pro' ) ) {
-
-			$link = rsssl_link('checkout/?edd_action=add_to_cart&download_id=860&edd_options%5Bprice_id%5D=1&currency=EUR&discount=REALLYSIMPLESECURITY');
-			$msg .= "<br>" . sprintf(
+			$link = rsssl_link( 'checkout/?edd_action=add_to_cart&download_id=860&edd_options%5Bprice_id%5D=1&currency=EUR', 'notification', 'free', 'REALLYSIMPLESECURITY' );
+			$msg  .= "<br>" . sprintf(
 					__( "Experience all powerful features of Really Simple Security Pro using this %slimited time discount%s: %s", 'really-simple-ssl' ),
 					'<strong>',
 					'</strong>',

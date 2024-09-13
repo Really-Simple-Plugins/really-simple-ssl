@@ -175,7 +175,7 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 					'disabled' => '',
 					'button_text' => __("Install", "really-simple-ssl"),
 					'slug' => 'really-simple-ssl',
-					'description' => __('Really Simple Security automatically detects your settings and configures your website to run over HTTPS. To keep it lightweight, we kept the options to a minimum. Your website will move to SSL with one click.', "really-simple-ssl"),
+					'description' => __('Easily improve site security with WordPress Hardening, Two-Factor Authentication (2FA), Login Protection, Vulnerability Detection and SSL certificate generation.', "really-simple-ssl"),
 					'install_url' => 'ssl%20really%20simple%20plugins%20complianz+HSTS&tab=search&type=term',
 				];
 				if ( $current_plugin==='really-simple-ssl' ) {

@@ -561,7 +561,7 @@ function rsssl_menu() {
 								[
 									'id'            => 'firewall_list_general',
 									'group_id'      => 'firewall_list_general',
-									'helpLink'      => 'https://really-simple-ssl.com/instructions/instructions/about-region-restrictions',
+									'helpLink'      => 'instructions/about-region-restrictions',
 									'premium'       => true,
 									'premium_title' => __( 'Firewall Rules', 'really-simple-ssl' ),
 									'premium_text'  => __( 'Restrict access from specific countries or continents. You can also allow only specific countries.', 'really-simple-ssl' ),
@@ -805,18 +805,26 @@ function rsssl_get_url_ref(){
 	return $param_ids[ $id ] ?? false;
 }
 
-function rsssl_link($slug = 'pro', $mtm_campaign = 'notification', $mtm_src='free' ): string {
-	$mtm_src = sanitize_title($mtm_src);
-	$mtm_campaign = sanitize_title($mtm_campaign);
-	$ref = rsssl_get_url_ref();
+function rsssl_link( $slug = 'pro', $mtm_campaign = 'notification', $mtm_src = 'free', $discount = '' ): string {
+	$mtm_src      = sanitize_title( $mtm_src );
+	$mtm_campaign = sanitize_title( $mtm_campaign );
+	$ref          = rsssl_get_url_ref();
 	//remove slash at start of $slug, if existing, and add at the end.
-	$slug = trailingslashit( ltrim($slug, '/') );
+	$slug = trailingslashit( ltrim( $slug, '/' ) );
 
 	$multisite = is_multisite() ? 'mtm_kwd=multisite&' : '';
-	$url = "https://really-simple-ssl.com/$slug?{$multisite}mtm_campaign=$mtm_campaign&mtm_source=$mtm_src&mtm_content=upgrade";
+	$url       = "https://really-simple-ssl.com/$slug?{$multisite}mtm_campaign=$mtm_campaign&mtm_source=$mtm_src&mtm_content=upgrade";
+
 	if ( (int) $ref > 0 ) {
-		$url = add_query_arg( 'ref', $ref, $url);
+		$url = add_query_arg( 'ref', $ref, $url );
 	}
+
+	// Add discount code separately if provided
+	if ( ! empty( $discount ) ) {
+		$url = add_query_arg( 'discount', $discount, $url );
+	}
+
 	return $url;
 }
+
 
