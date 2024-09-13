@@ -32,12 +32,12 @@ rsssl_run_force_deactivate();
 function rsssl_run_force_deactivate() {
 	$core_plugin = 'really-simple-ssl/rlrsssl-really-simple-ssl.php';
 	if ( ! is_plugin_active( $core_plugin ) ) {
-		echo "<h1>Really Simple SSL is already deactivated!</h1>";
+		echo "<h1>Really Simple Security is already deactivated!</h1>";
 		exit;
 	}
 
 	$step = 1;
-	echo "<h1>Force deactivation of Really Simple SSL</h1>";
+	echo "<h1>Force deactivation of Really Simple Security</h1>";
 	echo $step . ". Resetting options" . "<br>";
 	//ensure we can run the code
 	define( 'WP_CLI',true );

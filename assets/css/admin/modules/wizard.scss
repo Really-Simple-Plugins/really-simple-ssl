@@ -40,12 +40,12 @@
         align-items: center;
         gap: var(--rsp-spacing-s);
         background-color: var(--rsp-white);
-        @include rsssl-block-padding;
-        border-radius: var(--rsp-border-radius-s);
         margin: var(--rsp-spacing-s);
+        border-radius: var(--rsp-border-radius-s);
         box-shadow: var(--rsp-box-shadow);
         bottom: 0;
         width: calc(100% - (2 * var(--rsp-spacing-s)));
+        @include rsssl-block-padding;
 
         .rsssl-open {
           float: left;
@@ -121,12 +121,12 @@
     }
     .rsssl-grid-item-footer {
       background: var(--rsp-grey-100);
-      @include rsssl-block-padding();
-      box-shadow: var(--rsp-box-shadow);
       border-radius: 0 0 var(--rsp-border-radius) var(--rsp-border-radius);
       border-top: 1px solid var(--rsp-grey-300);
       box-sizing: border-box;
       align-items: center;
+      @include rsssl-block-padding();
+      box-shadow: var(--rsp-box-shadow);
       gap: var(--rsp-grid-margin);
       width: 100%;
       min-height: 20px;

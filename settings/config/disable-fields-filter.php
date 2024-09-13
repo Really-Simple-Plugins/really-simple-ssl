@@ -13,12 +13,14 @@ function rsssl_remove_fields($fields){
 	} else {
 		$fields[$redirect_index]['warning'] = true;
 		$fields[$redirect_index]['tooltip'] = ' '.__('On Apache you can use a .htaccess redirect, which is usually faster, but may cause issues on some configurations. Read the instructions in the sidebar first.', 'really-simple-ssl');
-		$fields[$redirect_index]['help'] = [
-			'label' => 'warning',
-			'title' => __( "Redirect method", 'really-simple-ssl' ),
-			'text'  => __( 'Enable .htaccess only if you know how to regain access in case of issues.', 'really-simple-ssl' ).' '.__( 'Redirects your site to https with a SEO friendly 301 redirect if it is requested over http.', 'really-simple-ssl' ),
-			'url'  => 'remove-htaccess-redirect-site-lockout',
-		];
+		if ( rsssl_get_option('redirect' ) !== 'htaccess' ) {
+			$fields[ $redirect_index ]['help'] = [
+				'label' => 'warning',
+				'title' => __( "Redirect method", 'really-simple-ssl' ),
+				'text'  => __( 'Enable .htaccess only if you know how to regain access in case of issues.', 'really-simple-ssl' ) . ' ' . __( 'Redirects your site to https with a SEO friendly 301 redirect if it is requested over http.', 'really-simple-ssl' ),
+				'url'   => 'remove-htaccess-redirect-site-lockout',
+			];
+		}
 	}
 
 	if ( is_multisite() && !rsssl_is_networkwide_active() ){
@@ -33,8 +35,8 @@ function rsssl_remove_fields($fields){
 		$fields = array_values($fields);
 	}
 
-	if ( ! rsssl_is_email_verified() && rsssl_get_option('two_fa_enabled') == '1' ) {
-		$index = array_search( 'two_fa_enabled', array_column( $fields, 'id' ), true );
+	if ( ! rsssl_is_email_verified() && rsssl_get_option('two_fa_enabled_email') == '1' ) {
+		$index = array_search( 'two_fa_enabled_email', array_column( $fields, 'id' ), true );
 		$fields[$index]['help'] = rsssl_email_help_text();
 		$fields = array_values($fields);
 	}
@@ -63,7 +65,7 @@ function rsssl_email_help_text() {
 			? __( "Email validation completed", 'really-simple-ssl' )
 			: ( rsssl_check_if_email_essential_feature()
 				? __( "You're using a feature where email is an essential part of the functionality. Please validate that you can send emails on your server.", 'really-simple-ssl' )
-				: __("Email not verified yet. Verify your email address to get the most out of Really Simple SSL", "really-simple-ssl")
+				: __("Email not verified yet. Verify your email address to get the most out of Really Simple Security.", "really-simple-ssl")
 			),
 	];
 }

@@ -1,5 +1,4 @@
 import {useEffect, useState, useCallback} from '@wordpress/element';
-import DataTable, {createTheme} from "react-data-table-component";
 import FieldsData from "../FieldsData";
 import GeoDataTableStore from "./GeoDataTableStore";
 import EventLogDataTableStore from "../EventLog/EventLogDataTableStore";
@@ -22,7 +21,6 @@ const GeoDatatable = (props) => {
         CountryDataTable,
         dataLoaded,
         fetchCountryData,
-        processing,
         addRow,
         addMultiRow,
         removeRegion,
@@ -46,6 +44,20 @@ const GeoDatatable = (props) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const {setSelectedSubMenuItem} = useMenu();
+    const [DataTable, setDataTable] = useState(null);
+    const [theme, setTheme] = useState(null);
+
+    useEffect( () => {
+        import('react-data-table-component').then(({ default: DataTable, createTheme }) => {
+            setDataTable(() => DataTable);
+            setTheme(() => createTheme('really-simple-plugins', {
+                divider: {
+                    default: 'transparent',
+                },
+            }, 'light'));
+        });
+
+    }, []);
 
     let enabled = getFieldValue('enable_firewall');
 
@@ -475,6 +487,7 @@ const GeoDatatable = (props) => {
                     </div>
                 </div>
             )}
+            {DataTable &&
             <DataTable
                 columns={columns}
                 data={visualData}
@@ -499,7 +512,7 @@ const GeoDatatable = (props) => {
                 theme="really-simple-plugins"
                 customStyles={customStyles}
             >
-            </DataTable>
+            </DataTable> }
             {!getFieldValue('enable_firewall') && (
                 <div className="rsssl-locked">
                     <div className="rsssl-locked-overlay"><span

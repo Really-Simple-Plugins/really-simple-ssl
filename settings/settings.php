@@ -1,6 +1,5 @@
 <?php
 defined('ABSPATH') or die();
-
 /**
  * Enqueue Gutenberg block assets for backend editor.
  *
@@ -162,31 +161,68 @@ function rsssl_uses_cloudflare(): bool {
  *
  * @return void
  */
-function rsssl_add_option_menu()
-{
-	if ( ! rsssl_user_can_manage()) {
+function rsssl_add_top_level_menu() {
+	if ( ! rsssl_user_can_manage() ) {
 		return;
 	}
 
-	//hides the settings page the plugin is network activated. The settings can be found on the network settings menu.
-	if (is_multisite() && rsssl_is_networkwide_active()) {
+	if ( is_multisite() && rsssl_is_networkwide_active() ) {
 		return;
 	}
 
-	$count            = RSSSL()->admin->count_plusones();
-	$update_count     = $count > 0 ? "<span class='update-plugins rsssl-update-count'><span class='update-count'>$count</span></span>" : "";
-	$page_hook_suffix = add_options_page(
-		__("SSL & Security", "really-simple-ssl"),
-		__("SSL & Security", "really-simple-ssl").$update_count,
+	$count        = RSSSL()->admin->count_plusones();
+	$update_count = $count > 0 ? "<span class='update-plugins rsssl-update-count'><span class='update-count'>$count</span></span>" : "";
+
+	$icon_svg = '<?xml version="1.0" encoding="UTF-8"?>
+<svg id="rss-menu-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 -15 90 130" width="34" height="34">
+    <defs>
+        <style>.cls-1{fill:#fff;stroke-width:0px;}</style>
+    </defs>
+    <g fill="none" stroke-width="2">
+        <path class="cls-1" d="M72.92,26.6h-13v-9.4c0-7.6-6.1-13.7-13.7-13.7s-13.8,6.1-13.8,13.7v9.4h-13.1v-9.4C19.32,2.4,31.32,-9.6,46.12,-9.6s26.8,12,26.8,26.8v9.4h0Z"/>
+        <rect class="cls-1" x="10.02" y="84.6" width="72.3" height="5.6"/>
+        <path class="cls-1" d="M82.32,82H10.02V31.8c0-2.9,2.3-5.2,5.2-5.2h61.9c2.9,0,5.2,2.3,5.2,5.2V82h0ZM64.62,37.8c-2.2-2.2-5.9-2.2-8.2,0l-15.7,15.3l-4.9-4.9c-2.2-2.2-5.9-2.2-8.2,0l-1.9,1.9c-2.2,2.2-2.2,5.9,0,8.2l8.5,8.5c0.1,0.2,0.3,0.4,0.5,0.6l1.9,1.9l4.2,4l3.5-3.5c0.2-0.1,0.4-0.3,0.6-0.5l1.9-1.9c0.2-0.2,0.4-0.4,0.5-0.6l19.1-18.9c2.2-2.2,2.2-5.9,0-8.2l-1.8-1.9Z"/>
+    </g>
+</svg>';
+
+	$icon_base64 = 'data:image/svg+xml;base64,' . base64_encode($icon_svg);
+
+	$page_hook_suffix = add_menu_page(
+		__( "Security", "really-simple-ssl" ),
+		__( "Security", "really-simple-ssl" ) . $update_count,
 		'manage_security',
 		'really-simple-security',
-		'rsssl_settings_page'
+		'rsssl_settings_page',
+		$icon_base64,
+		100 // This will place it near the bottom of the menu
 	);
 
-	add_action("admin_print_scripts-{$page_hook_suffix}", 'rsssl_plugin_admin_scripts');
+	add_action( "admin_print_scripts-{$page_hook_suffix}", 'rsssl_plugin_admin_scripts' );
+    // Update the page title to prevent issues with an empty title causing strip_tags deprecation warnings
+	add_action("load-{$page_hook_suffix}", 'rsssl_set_admin_page_title');
+	add_action('admin_head', 'rsssl_override_wordpress_svg_size');
+
 }
 
-add_action('admin_menu', 'rsssl_add_option_menu');
+add_action( 'admin_menu', 'rsssl_add_top_level_menu' );
+
+function rsssl_override_wordpress_svg_size() {
+	echo '<style>
+        #adminmenu .toplevel_page_really-simple-security div.wp-menu-image.svg {
+            background-size: 23px auto !important;
+        }
+    </style>';
+}
+
+/**
+ * @return void
+ *
+ * Set title of RSSSL admin page
+ */
+function rsssl_set_admin_page_title() {
+	global $title;
+	$title = __( "Security", "really-simple-ssl" );
+}
 
 /**
  * Render the settings page
@@ -619,6 +655,7 @@ function rsssl_sanitize_field_type($type)
 		'LetsEncrypt',
 		'postdropdown',
 		'two_fa_roles',
+		'roles_enabled_dropdown',
 		'roles_dropdown',
 		'captcha',
 		'captcha_key',
@@ -862,6 +899,7 @@ function rsssl_sanitize_field($value, string $type, string $id)
 		case 'mixedcontentscan':
 			return $value;
 		case 'roles_dropdown':
+		case 'roles_enabled_dropdown':
 		case 'two_fa_roles':
 			$value = !is_array($value) ? [] : $value;
 			$roles = rsssl_get_roles();

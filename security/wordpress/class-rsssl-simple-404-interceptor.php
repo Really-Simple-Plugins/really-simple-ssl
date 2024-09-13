@@ -1,5 +1,5 @@
 <?php
-namespace REALLY_SIMPLE_SSL\Security\WordPress;
+namespace RSSSL\Pro\Security\WordPress;
 
 class Rsssl_Simple_404_Interceptor {
     private $attempts = 10; // Default attempts threshold

@@ -58,9 +58,8 @@ const VulnerabilitiesOverview = (props) => {
 
     useEffect(() => {
         if (!fieldsLoaded) return;
-
-        setEnabled(getFieldValue('enable_vulnerability_scanner')==1);
-    },[fieldsLoaded]);
+        setEnabled(getFieldValue('enable_vulnerability_scanner') == 1);
+    }, [getFieldValue('enable_vulnerability_scanner')])
 
     let dummyData = [['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', '']];
     field.columns.forEach(function (item, i) {
@@ -71,15 +70,6 @@ const VulnerabilitiesOverview = (props) => {
     //get data if field was already enabled, so not changed right now.
     useEffect(() => {
         let vulnerabilityDetectionEnabledAndSaved = fieldAlreadyEnabled('enable_vulnerability_scanner');
-        let vulnerabilityDetectionEnabled = getFieldValue('enable_vulnerability_scanner')==1;
-
-        //if the field is just toggled on, disable the next button
-        //this prevents the user from continuing without having completed the modal.
-        if (vulnerabilityDetectionEnabled && !vulnerabilityDetectionEnabledAndSaved) {
-            handleNextButtonDisabled(true);
-        } else {
-            handleNextButtonDisabled(false);
-        }
 
         // let introShown = getFieldValue('vulnerabilities_intro_shown') == 1;
         if ( !vulnerabilityDetectionEnabledAndSaved ) {
@@ -108,29 +98,6 @@ const VulnerabilitiesOverview = (props) => {
         await getProgressData();
     }
 
-    if ( ! enabled ) {
-        return (
-            //If there is no data or vulnerabilities scanner is disabled we show some dummy data behind a mask
-            <>
-                <DataTable
-                    columns={columns}
-                    data={dummyData}
-                    dense
-                    pagination
-                    noDataComponent={__("No results", "really-simple-ssl")}
-                    persistTableHead
-                    theme="really-simple-plugins"
-                    customStyles={customStyles}
-                >
-                </DataTable>
-                <div className="rsssl-locked">
-                    <div className="rsssl-locked-overlay"><span
-                        className="rsssl-task-status rsssl-open">{__('Disabled', 'really-simple-ssl')}</span><span>{__('Activate vulnerability detection to enable this block.', 'really-simple-ssl')}</span>
-                    </div>
-                </div>
-            </>
-        )
-    }
     let data = vulList.map(item => ({
         ...item,
         risk_name: <span className={"rsssl-badge-large rsp-risk-level-" + item.risk_level}>
@@ -148,43 +115,61 @@ const VulnerabilitiesOverview = (props) => {
     }
 
     return (
-        <>
-            {/* We add a searchbox */}
-            <div className="rsssl-container">
-                <div>
-
-                </div>
-                {/*Display the search bar*/}
-                <div className="rsssl-search-bar">
-                    <div className="rsssl-search-bar__inner">
-                        <div className="rsssl-search-bar__icon"></div>
-                        <input
-                            type="text"
-                            className="rsssl-search-bar__input"
-                            placeholder={__("Search", "really-simple-ssl")}
-                            onKeyUp={event => {
-                                //we get the value from the search bar
-                                setSearchTerm(event.target.value);
-                            }}
-                        />
+        <div style={{marginTop: '5px'}}>
+            {!enabled ? (
+                <>
+                    <DataTable
+                        columns={columns}
+                        data={dummyData}
+                        dense
+                        pagination
+                        noDataComponent={__("No results", "really-simple-ssl")}
+                        persistTableHead
+                        theme="really-simple-plugins"
+                        customStyles={customStyles}
+                    />
+                    <div className="rsssl-locked">
+                        <div className="rsssl-locked-overlay">
+                            <span className="rsssl-task-status rsssl-open">
+                                {__('Disabled', 'really-simple-ssl')}
+                            </span>
+                            <span>
+                                {__('Activate vulnerability detection to enable this block.', 'really-simple-ssl')}
+                            </span>
+                        </div>
                     </div>
-                </div>
-            </div>
-            <DataTable
-                columns={columns}
-                data={data}
-                dense
-                pagination
-                persistTableHead
-                noDataComponent={__("No vulnerabilities found", "really-simple-ssl")}
-                theme="really-simple-plugins"
-                customStyles={customStyles}
-            >
-            </DataTable>
-
-
-        </>
-    )
+                </>
+            ) : (
+                <>
+                    <div className="rsssl-container">
+                        <div className="rsssl-search-bar">
+                            <div className="rsssl-search-bar__inner">
+                                <div className="rsssl-search-bar__icon"></div>
+                                <input
+                                    type="text"
+                                    className="rsssl-search-bar__input"
+                                    placeholder={__("Search", "really-simple-ssl")}
+                                    onKeyUp={event => {
+                                        setSearchTerm(event.target.value);
+                                    }}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <DataTable
+                        columns={columns}
+                        data={data}
+                        dense
+                        pagination
+                        persistTableHead
+                        noDataComponent={__("No vulnerabilities found", "really-simple-ssl")}
+                        theme="really-simple-plugins"
+                        customStyles={customStyles}
+                    />
+                </>
+            )}
+        </div>
+    );
 
 }
 

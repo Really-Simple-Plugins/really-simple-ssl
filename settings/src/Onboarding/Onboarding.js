@@ -7,13 +7,13 @@ import useOnboardingData from "./OnboardingData";
 import OnboardingControls from "./OnboardingControls";
 import StepEmail from "./Steps/StepEmail";
 import StepConfig from "./Steps/StepConfig";
+import StepLicense from "./Steps/StepLicense";
 import StepFeatures from "./Steps/StepFeatures";
 import StepPlugins from "./Steps/StepPlugins";
 import StepPro from "./Steps/StepPro";
 import './PremiumItem.scss';
 import './checkbox.scss';
 import './onboarding.scss';
-
 import DOMPurify from 'dompurify';
 const Onboarding = ({isModal}) => {
     const { fetchFieldsData, fieldsLoaded} = useFields();
@@ -47,12 +47,12 @@ const Onboarding = ({isModal}) => {
         }
     }, []);
 
-
     useEffect( () => {
         const run = async () => {
             await getSteps(false);
-            if ( dataLoaded && sslEnabled && currentStepIndex===0) {
-                setCurrentStepIndex(1)
+
+            if (dataLoaded && steps.length > 0) {
+                setCurrentStepIndex(0); // Always start at the first step
             }
         }
         run();
@@ -80,39 +80,44 @@ const Onboarding = ({isModal}) => {
             }
             {
                 dataLoaded &&
-                    <div className={ processingClass+" rsssl-"+currentStep.id }>
-                        { currentStep.id === 'activate_ssl' &&
-                          <>
-                              <StepConfig isModal={isModal}/>
-                          </>
-                        }
-                        { currentStep.id === 'features'&&
-                            <>
-                                <StepFeatures />
-                            </>
-                        }
-                        { currentStep.id === 'email'&&
-                            <>
-                                <StepEmail />
-                            </>
-                        }
+                <div className={ processingClass+" rsssl-"+currentStep.id }>
+                    { currentStep.id === 'activate_ssl' &&
+                        <>
+                            <StepConfig isModal={isModal}/>
+                        </>
+                    }
+                    { currentStep.id === 'activate_license' &&
+                        <>
+                            <StepLicense />
+                        </>
+                    }
+                    { currentStep.id === 'features'&&
+                        <>
+                            <StepFeatures />
+                        </>
+                    }
+                    { currentStep.id === 'email'&&
+                        <>
+                            <StepEmail />
+                        </>
+                    }
 
-                        { currentStep.id === 'plugins' &&
-                            <>
-                                <StepPlugins />
-                            </>
-                        }
+                    { currentStep.id === 'plugins' &&
+                        <>
+                            <StepPlugins />
+                        </>
+                    }
 
-                        { currentStep.id === 'pro' &&
-                            <>
-                                <StepPro />
-                            </>
-                        }
+                    { currentStep.id === 'pro' &&
+                        <>
+                            <StepPro />
+                        </>
+                    }
 
-                        { !isModal &&
-                            <OnboardingControls isModal={false}/>
-                        }
-                    </div>
+                    { !isModal &&
+                        <OnboardingControls isModal={false}/>
+                    }
+                </div>
             }
         </>
     )

@@ -103,9 +103,9 @@ const useOnboardingData = create(( set, get ) => ({
         let currentStep = get().steps[get().currentStepIndex];
         set(
             produce((state) => {
-                state.currentStep = currentStep;
-            }
-        ))
+                    state.currentStep = currentStep;
+                }
+            ))
     },
     fetchOnboardingModalStatus: async () => {
         rsssl_api.doAction('get_modal_status').then((response) => {
@@ -138,11 +138,12 @@ const useOnboardingData = create(( set, get ) => ({
         set((state) => ({processing:false}));
     },
     getSteps: async (forceRefresh) => {
-        const {steps, networkActivationStatus, certificateValid, networkProgress, networkwide, overrideSSL, error, sslEnabled} = await retrieveSteps(forceRefresh);
+        const {steps, networkActivationStatus, certificateValid, networkProgress, networkwide, overrideSSL, error, sslEnabled, upgradedFromFree} = await retrieveSteps(forceRefresh);
         //if ssl is already enabled, the server will send only one step. In that case we can skip the below.
         //it's only needed when SSL is activated just now, client side.
         let currentStepIndex = 0;
-        if ( sslEnabled || ( networkwide && networkActivationStatus === 'completed') ) {
+
+        if ( ! upgradedFromFree && ( sslEnabled || (networkwide && networkActivationStatus === 'completed' ) ) ) {
             currentStepIndex = 1;
         }
 
@@ -158,6 +159,7 @@ const useOnboardingData = create(( set, get ) => ({
             sslEnabled: sslEnabled,
             dataLoaded: true,
             error:error,
+            // licenseField: licenseField,
         });
 
         if (networkActivationStatus==='completed') {
@@ -227,7 +229,7 @@ const useOnboardingData = create(( set, get ) => ({
                 }
             }
         });
-}
+    }
 }));
 
 const retrieveSteps = (forceRefresh) => {
@@ -242,7 +244,8 @@ const retrieveSteps = (forceRefresh) => {
         let networkwide = response.networkwide;
         let overrideSSL = response.ssl_detection_overridden;
         let error = response.error;
-        return {steps, networkActivationStatus, certificateValid, networkProgress, networkwide, overrideSSL, error, sslEnabled};
+        let upgradedFromFree = response.rsssl_upgraded_from_free;
+        return {steps, networkActivationStatus, certificateValid, networkProgress, networkwide, overrideSSL, error, sslEnabled, upgradedFromFree};
     });
 }
 

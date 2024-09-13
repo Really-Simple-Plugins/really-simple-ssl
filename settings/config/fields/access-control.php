@@ -82,7 +82,7 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'help'             => [
 					'label' => 'default',
 					'title' => __( "Prevent session hijacking", 'really-simple-ssl' ),
-					'text'  => __( "Really Simple SSL allows you to limit the default logged in session duration. By default, WordPress will keep users logged in for 48 hours, or even 14 days when clicking the ‘remember me’ checkbox. An attacker could possibly steal the logged in cookie and gain access to a user’s account. Limiting the logged in duration to 8 hours will greatly reduce the risk of session hijacking.", 'really-simple-ssl' ),
+					'text'  => __( "Really Simple Security allows you to limit the default logged in session duration. By default, WordPress will keep users logged in for 48 hours, or even 14 days when clicking the ‘remember me’ checkbox. An attacker could possibly steal the logged in cookie and gain access to a user’s account. Limiting the logged in duration to 8 hours will greatly reduce the risk of session hijacking.", 'really-simple-ssl' ),
 				],
 			],
 			[

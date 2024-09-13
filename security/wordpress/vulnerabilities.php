@@ -7,7 +7,7 @@ defined('ABSPATH') or die();
 require_once(rsssl_path . 'security/wordpress/vulnerabilities/class-rsssl-file-storage.php');
 
 /**
- * @package Really Simple SSL
+ * @package Really Simple Security
  * @subpackage RSSSL_VULNERABILITIES
  */
 if (!class_exists("rsssl_vulnerabilities")) {
@@ -373,7 +373,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 			            'output'            => [
 				            'true' => [
 					            'title'        => __( 'Site wide - Test Notification', 'really-simple-ssl' ),
-					            'msg'          => __( 'This is a test notification from Really Simple SSL. You can safely dismiss this message.', 'really-simple-ssl' ),
+					            'msg'          => __( 'This is a test notification from Really Simple Security. You can safely dismiss this message.', 'really-simple-ssl' ),
 					            'url' => rsssl_admin_url([], '#settings/vulnerabilities/vulnerabilities-overview'),
 					            'icon'         => $site_wide_icon,
 					            'dismissible'  => true,
@@ -395,7 +395,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 			                'output'            => [
 				                'true' => [
 					                'title'        => __( 'Dashboard - Test Notification', 'really-simple-ssl' ),
-					                'msg'          => __( 'This is a test notification from Really Simple SSL. You can safely dismiss this message.', 'really-simple-ssl' ),
+					                'msg'          => __( 'This is a test notification from Really Simple Security. You can safely dismiss this message.', 'really-simple-ssl' ),
 					                'icon'         => $dashboard_icon,
 					                'dismissible'  => true,
 					                'admin_notice' => false,
@@ -1506,7 +1506,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
             $mailer = new rsssl_mailer();
             $mailer->subject = sprintf(__("Vulnerability Alert: %s", "really-simple-ssl"), $this->site_url() );
 	        $mailer->title = sprintf(_n("%s: %s vulnerability found", "%s: %s vulnerabilities found", $total, "really-simple-ssl"), $this->date(), $total);
-            $message = sprintf(__("This is a vulnerability alert from Really Simple SSL for %s. ","really-simple-ssl"), $this->domain() );
+            $message = sprintf(__("This is a vulnerability alert from Really Simple Security for %s. ","really-simple-ssl"), $this->domain() );
             $mailer->message = $message;
             $mailer->warning_blocks = $blocks;
             if ($total > 0) {
@@ -1544,8 +1544,8 @@ if (!class_exists("rsssl_vulnerabilities")) {
             return [
                 'title' => $title,
                 'message' => $message . ' ' .
-                             __('Based on your settings, Really Simple SSL will take appropriate action, or you will need to solve it manually.','really-simple-ssl') .' '.
-                             sprintf(__('Get more information from the Really Simple SSL dashboard on %s'), $this->domain() ),
+                             __('Based on your settings, Really Simple Security will take appropriate action, or you will need to solve it manually.','really-simple-ssl') .' '.
+                             sprintf(__('Get more information from the Really Simple Security dashboard on %s'), $this->domain() ),
                 'url' => rsssl_admin_url( [], '#settings/vulnerabilities_notifications'),
             ];
         }
@@ -1593,7 +1593,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	    }
 
 	    /**
-         * Cron triggers may sometimes result in http URL's, even though SSL is enabled in Really Simple SSL.
+         * Cron triggers may sometimes result in http URL's, even though SSL is enabled in Really Simple Security.
          * We ensure that the URL is returned with https if SSL is enabled.
          *
 	     * @return string

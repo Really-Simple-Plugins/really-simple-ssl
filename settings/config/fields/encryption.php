@@ -53,16 +53,10 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'group_id' => 'mixed-content-general',
 				'type'             => 'checkbox',
 				'label'            => __("Mixed content fixer - init hook", 'really-simple-ssl'),
-				'help'             => [
-					'label' => 'default',
-					'title' => __("Mixed content fixer - init hook", 'really-simple-ssl'),
-					'text'  => __('If this option is set to true, the mixed content fixer will fire on the init hook instead of the template_redirect hook. Only use this option when you experience problems with the mixed content fixer.',
-						'really-simple-ssl'),
-				],
 				'disabled'         => false,
 				'required'         => false,
 				'default'          => false,
-				'tooltip'          => __("Only enable if the default mixed content fixer does not fix your front-end mixed content.",
+				'tooltip'          => __('If this option is set to true, the mixed content fixer will fire on the init hook instead of the template_redirect hook. Only use this option when you experience problems with the mixed content fixer.',
 					'really-simple-ssl'),
 				'react_conditions' => [
 					'relation' => 'AND',
@@ -93,7 +87,7 @@ add_filter( 'rsssl_fields', function( $fields ) {
 					'label' => 'default',
 					'url' => 'definition/what-is-mixed-content',
 					'title' => __( "About the Mixed Content Scan", 'really-simple-ssl' ),
-					'text'  => __( 'The extensive mixed content scan will list all current and future issues and provide a fix, or instructions to fix manually.', 'really-simple-ssl' ),
+					'text'  => __( 'The extensive mixed content scan will list all issues and provide a fix, or instructions to fix manually.', 'really-simple-ssl' ),
 				],
 				'columns'     => [
 					[

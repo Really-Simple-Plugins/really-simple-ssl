@@ -14,12 +14,11 @@ if (!class_exists('rsssl_multisite')) {
             self::$_this = $this;
 
             register_activation_hook( __DIR__ . "/" . rsssl_plugin, array($this, 'activate'));
-	        add_action('network_admin_menu', array($this, 'add_plus_ones') );
+	        add_action( 'network_admin_menu', array( $this, 'add_multisite_menu' ) );
             /*filters to make sure WordPress returns the correct protocol */
             add_filter("admin_url", array($this, "check_admin_protocol"), 20, 3);
             add_filter('home_url', array($this, 'check_site_protocol'), 20, 4);
             add_filter('site_url', array($this, 'check_site_protocol'), 20, 4);
-            add_action('network_admin_menu', array(&$this, 'add_multisite_menu'));
 	        add_action('plugins_loaded', array($this, 'maybe_redirect_old_settings_url'), 10);
 
 	        if ( is_network_admin() ) {
@@ -54,37 +53,6 @@ if (!class_exists('rsssl_multisite')) {
 			    wp_redirect(add_query_arg(['page' => 'really-simple-security'], network_admin_url('settings.php') ) );
 			    exit;
 		    }
-	    }
-
-	    /**
-	     *
-	     * @since 3.1.6
-	     *
-	     * Add an update count to the WordPress admin Settings menu item
-	     * Doesn't work when the Admin Menu Editor plugin is active
-	     *
-	     */
-
-	    public function add_plus_ones()
-	    {
-		    if (!rsssl_user_can_manage()) {
-			    return;
-		    }
-
-		    $count = RSSSL()->admin->count_plusones();
-			if ( $count > 0 ) {
-				global $menu;
-				foreach( $menu as $index => $menu_item ){
-					if (!isset($menu_item[2]) || !isset($menu_item[0])) continue;
-					if ( $menu_item[2]==='settings.php' ){
-						$pattern = '/<span.*>([1-9])<\/span><\/span>/i';
-						if (preg_match($pattern, $menu_item[0], $matches)){
-							if (isset($matches[1])) $count = (int) $count + (int) $matches[1];
-						}
-						$menu[$index][0] = __('Settings') .  "<span class='update-plugins rsssl-update-count'><span class='update-count'>$count</span></span>";
-					}
-				}
-			}
 	    }
 
 	    /**
@@ -241,27 +209,48 @@ if (!class_exists('rsssl_multisite')) {
             Only when plugin is network activated.
         */
 
-        public function add_multisite_menu()
-        {
-            if ( !is_multisite() || !rsssl_is_networkwide_active() ) {
-				return;
-            }
+	    public function add_multisite_menu() {
+		    if ( ! is_multisite() || ! rsssl_is_networkwide_active() ) {
+			    return;
+		    }
 
-	        if ( !rsssl_user_can_manage() ) {
-		        return;
-	        }
-	        $count = RSSSL()->admin->count_plusones();
-	        $update_count = $count > 0 ? "<span class='update-plugins rsssl-update-count'><span class='update-count'>$count</span></span>" : "";
-	        $page_hook_suffix = add_submenu_page(
-				'settings.php',
-				__("SSL & Security","really-simple-ssl"),
-		        __("SSL & Security","really-simple-ssl").' '.$update_count,
-				'manage_security',
-				"really-simple-security",
-				'rsssl_settings_page'
-	        );
-	        add_action( "admin_print_scripts-{$page_hook_suffix}", 'rsssl_plugin_admin_scripts' );
-        }
+		    if ( ! rsssl_user_can_manage() ) {
+			    return;
+		    }
+
+		    $count = RSSSL()->admin->count_plusones();
+		    $update_count = $count > 0 ? "<span class='update-plugins rsssl-update-count'><span class='update-count'>$count</span></span>" : "";
+
+		    $icon_svg = '<?xml version="1.0" encoding="UTF-8"?>
+<svg id="rss-menu-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 -15 100 130" width="28" height="28">
+    <defs>
+        <style>.cls-1{fill:#fff;stroke-width:0px;}</style>
+    </defs>
+    <g fill="none" stroke-width="2">
+        <path class="cls-1" d="M72.92,26.6h-13v-9.4c0-7.6-6.1-13.7-13.7-13.7s-13.8,6.1-13.8,13.7v9.4h-13.1v-9.4C19.32,2.4,31.32,-9.6,46.12,-9.6s26.8,12,26.8,26.8v9.4h0Z"/>
+        <rect class="cls-1" x="10.02" y="84.6" width="72.3" height="5.6"/>
+        <path class="cls-1" d="M82.32,82H10.02V31.8c0-2.9,2.3-5.2,5.2-5.2h61.9c2.9,0,5.2,2.3,5.2,5.2V82h0ZM64.62,37.8c-2.2-2.2-5.9-2.2-8.2,0l-15.7,15.3l-4.9-4.9c-2.2-2.2-5.9-2.2-8.2,0l-1.9,1.9c-2.2,2.2-2.2,5.9,0,8.2l8.5,8.5c0.1,0.2,0.3,0.4,0.5,0.6l1.9,1.9l4.2,4l3.5-3.5c0.2-0.1,0.4-0.3,0.6-0.5l1.9-1.9c0.2-0.2,0.4-0.4,0.5-0.6l19.1-18.9c2.2-2.2,2.2-5.9,0-8.2l-1.8-1.9Z"/>
+    </g>
+</svg>';
+
+		    $icon_base64 = 'data:image/svg+xml;base64,' . base64_encode($icon_svg);
+
+		    $page_hook_suffix = add_menu_page(
+			    __( "Security", "really-simple-ssl" ),
+			    __( "Security", "really-simple-ssl" ) . $update_count,
+			    'manage_security',
+			    'really-simple-security',
+			    'rsssl_settings_page',
+			    $icon_base64,
+			    100 // This will place it near the bottom of the menu
+		    );
+
+		    add_action( "admin_print_scripts-{$page_hook_suffix}", 'rsssl_plugin_admin_scripts' );
+		    // Update the page title to prevent issues with an empty title causing strip_tags deprecation warnings
+		    add_action("load-{$page_hook_suffix}", 'rsssl_set_admin_page_title');
+		    add_action('admin_head', 'rsssl_override_wordpress_svg_size');
+
+	    }
 
 	    /**
 	     * Check if an SSL process is active
@@ -417,7 +406,7 @@ if (!class_exists('rsssl_multisite')) {
 	        }
 			$ssl_was_enabled = rsssl_get_option('ssl_enabled');
 	        delete_site_option('rsssl_network_activation_status');
-	        update_option('ssl_enabled', false);
+	        rsssl_update_option('ssl_enabled', false);
 			//main site first
 	        $site_id = get_main_site_id();
 			switch_to_blog($site_id);
@@ -577,11 +566,13 @@ if (!class_exists('rsssl_multisite')) {
 	        if ( !$this->is_settings_page() ) {
 		        $notices = RSSSL()->admin->get_notices_list( array('admin_notices'=>true) );
 		        foreach ( $notices as $id => $notice ){
-			        $notice = $notice['output'];
-			        $class = ( $notice['status'] !== 'completed' ) ? 'error' : 'updated';
-			        $more_info = $notice['url'] ?? false;
-			        $dismiss_id = isset($notice['dismissible']) && $notice['dismissible'] ? $id : false;
-			        echo RSSSL()->admin->notice_html( $class.' '.$id, $notice['msg'], $more_info, $dismiss_id);
+			        $notice           = $notice['output'];
+			        $class            = 'open' === $notice['status'] ? 'warning' : 'error';
+			        $more_info        = $notice['url'] ?? false;
+			        $logo             = $notice['logo'] ?? false;
+			        $dismiss_id       = isset( $notice['dismissible'] ) && $notice['dismissible'] ? $id : false;
+			        $dashboard_button = isset( $notice['dashboard_button'] ) && $notice['dashboard_button'] ? $id : false;
+			        echo RSSSL()->admin->notice_html( $class . ' ' . $id, $notice['msg'], $more_info, $logo, $dismiss_id, $dashboard_button );
 		        }
             }
         }

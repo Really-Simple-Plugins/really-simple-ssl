@@ -78,7 +78,7 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'menu_id'  => 'hardening-extended',
 				'group_id' => 'hardening-extended',
 				'type'     => 'checkbox',
-				'tooltip'  => __( "Really Simple SSL will scan for insecure file and folder permissions on a weekly basis. You will receive an email report and Dashboard notice if insecure permissions are found.", 'really-simple-ssl' ),
+				'tooltip'  => __( "Really Simple Security will scan for insecure file and folder permissions on a weekly basis. You will receive an email report and Dashboard notice if insecure permissions are found.", 'really-simple-ssl' ),
 				'label'    => __( "File permissions check", 'really-simple-ssl' ),
 				'disabled' => false,
 				'default'  => false,

@@ -195,7 +195,7 @@ const PermissionsPolicy = (props) => {
                     </div>
                     <div className="rsssl-locked-overlay">
                         <span className="rsssl-progress-status rsssl-learning-mode-enforced">{__("Enforced","really-simple-ssl")}</span>
-                        { props.disabled && <>{ __("Permissions Policy is set outside Really Simple SSL.", "really-simple-ssl")}&nbsp;</>}
+                        { props.disabled && <>{ __("Permissions Policy is set outside Really Simple Security.", "really-simple-ssl")}&nbsp;</>}
                         { !props.disabled && <>{__("Permissions Policy is enforced.", "really-simple-ssl")}&nbsp;</>}
                         { !props.disabled && <a className="rsssl-learning-mode-link" href="#" onClick={ (e) => togglePermissionsPolicyStatus(e, false) }>{__("Disable", "really-simple-ssl") }</a> }
                     </div>

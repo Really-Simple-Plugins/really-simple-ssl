@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useCallback } from '@wordpress/element';
-import DataTable, { createTheme } from "react-data-table-component";
+import DataTable, {createTheme} from "react-data-table-component";
 import FieldsData from "../FieldsData";
 import WhiteListTableStore from "./WhiteListTableStore";
 import FilterData from "../FilterData";
 import Flag from "../../utils/Flag/Flag";
-import { __ } from '@wordpress/i18n';
+import {__} from '@wordpress/i18n';
 import useFields from "../FieldsData";
 import AddButton from "./AddButton";
 import TrustIpAddressModal from "./TrustIpAddressModal";
@@ -13,7 +13,6 @@ const BlockListDatatable = (props) => {
     const {
         BlockListData,
         WhiteListTable,
-        dataLoaded_block,
         fetchData,
         processing_block,
         ipAddress,
@@ -33,7 +32,20 @@ const BlockListDatatable = (props) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [DataTable, setDataTable] = useState(null);
+    const [theme, setTheme] = useState(null);
 
+    useEffect(() => {
+        import('react-data-table-component').then((module) => {
+            const { default: DataTable, createTheme } = module;
+            setDataTable(() => DataTable);
+            setTheme(() => createTheme('really-simple-plugins', {
+                divider: {
+                    default: 'transparent',
+                },
+            }, 'light'));
+        });
+    }, []);
 
     const handlePageChange = (page) => {
         setCurrentPage(page);
@@ -43,11 +55,7 @@ const BlockListDatatable = (props) => {
     };
 
     const {
-        selectedFilter,
-        setSelectedFilter,
-        activeGroupId,
         getCurrentFilter,
-        setProcessingFilter,
     } = FilterData();
 
     const [filter, setFilter] = useState(getCurrentFilter(moduleName));
@@ -311,7 +319,8 @@ const BlockListDatatable = (props) => {
                     </div>
                 </div>
             )}
-            <DataTable
+            {DataTable &&
+                <DataTable
                 columns={columns}
                 data={Object.values(data).filter((row) => {
                     return Object.values(row).some((val) => ((val ?? '').toString().toLowerCase()).includes(searchTerm.toLowerCase()));
@@ -336,7 +345,7 @@ const BlockListDatatable = (props) => {
                 onSelectedRowsChange={handleSelection}
                 theme="really-simple-plugins"
                 customStyles={customStyles}
-            />
+            />}
             {!enabled && (
                 <div className="rsssl-locked">
                     <div className="rsssl-locked-overlay"><span

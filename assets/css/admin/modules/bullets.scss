@@ -45,6 +45,16 @@
 		&:first-of-type{
 			margin-left: auto;
 		}
+		.rsssl-progress-footer-link {
+			a {
+				color: inherit;
+				text-decoration: none;
+
+				&:hover {
+					text-decoration: underline;
+				}
+			}
+		}
 	}
 
   @keyframes gradient {

@@ -8,6 +8,7 @@ import FilterData from "../FilterData";
 const DynamicDataTable = (props) => {
     const {
         resetUserMethod,
+        hardResetUser,
         handleUsersTableFilter,
         handleRowsPerPageChange,
         totalRecords,
@@ -36,70 +37,91 @@ const DynamicDataTable = (props) => {
     const {fields, getFieldValue, saveFields, changedFields} = useFields();
     const [rowsSelected, setRowsSelected] = useState([]);
     const [rowCleared, setRowCleared] = useState(false);
-    const twoFAEnabledRef = useRef();
 
-    useEffect(() => {
-        twoFAEnabledRef.current = getFieldValue('two_fa_enabled');
-        saveFields(true, false)
-    }, [getFieldValue('two_fa_enabled')]);
-
-    //we want to reload the table, but only after the save action has completed. So we store this for now.
+    //Reloading the table
     useEffect(() => {
         setReloadWhenSaved(true);
-    }, [getFieldValue('two_fa_forced_roles'), getFieldValue('two_fa_optional_roles')]);
+        fetchDynamicData();
+    }, [getFieldValue('two_fa_forced_roles'), getFieldValue('two_fa_optional_roles'), getFieldValue('two_fa_forced_roles_totp'), getFieldValue('two_fa_optional_roles_totp')]);
 
     //when the data is saved, changefields=0 again,
     useEffect(() => {
-        if (!reloadWhenSaved) {
-            return;
+        if (reloadWhenSaved) {
+            if (changedFields.length === 0) {
+                setDataLoaded(false);
+                setReloadWhenSaved(false);
+                fetchDynamicData();
+            }
         }
-        if (changedFields.length===0) {
-            setDataLoaded(false);
-            setReloadWhenSaved(false);
-            fetchDynamicData();
-        }
-    }, [changedFields]);
+    }, [reloadWhenSaved]);
 
     useEffect(() => {
-        if (!dataLoaded) {
-            return;
+        if (dataLoaded) {
+            const currentFilter = getCurrentFilter(moduleName);
+            if (!currentFilter) {
+                setSelectedFilter('all', moduleName);
+            }
+            setRowCleared(true);
+            handleUsersTableFilter('rsssl_two_fa_status', currentFilter);
         }
-
-        const currentFilter = getCurrentFilter(moduleName);
-        if ( !currentFilter ) {
-            setSelectedFilter('active', moduleName);
-        }
-        setRowCleared(true);
-        handleUsersTableFilter('rsssl_two_fa_status', currentFilter);
     }, [getCurrentFilter(moduleName)]);
 
     useEffect(() => {
-        const value = getFieldValue('two_fa_enabled');
-        setEnabled(value);
+        let enabledEmailRoles = getFieldValue('two_fa_enabled_roles_email');
+        let enabledTotpRoles = getFieldValue('two_fa_enabled_roles_totp');
+        // merge the roles from both methods
+        let enabledRoles = enabledEmailRoles.concat(enabledTotpRoles);
+        // if the roles are nor empty, then the field is enabled
+        setEnabled(getFieldValue('login_protection_enabled') );
     }, [fields]);
 
     useEffect(() => {
-        if (!dataLoaded || enabled !== getFieldValue('two_fa_enabled')) {
+        if (!dataLoaded || enabled !== (getFieldValue('two_fa_enabled_email') || getFieldValue('two_fa_enabled_totp'))) {
             fetchDynamicData()
          }
-    }, [dataLoaded, getFieldValue('two_fa_enabled')]); // Add getFieldValue('login_protection_enabled') as a dependency
+    }, [dataLoaded, getFieldValue('two_fa_enabled'), getFieldValue('two_fa_enabled_totp')]); // Add getFieldValue('login_protection_enabled') as a dependency
 
     const allAreForced = (users) => {
         let forcedRoles = getFieldValue('two_fa_forced_roles');
+        let forcedRolesTotp = getFieldValue('two_fa_forced_roles_totp');
         if (!Array.isArray(forcedRoles)) {
             forcedRoles = [];
+        }
+
+        if (!Array.isArray(forcedRolesTotp)) {
+            forcedRolesTotp = [];
         }
 
         if (Array.isArray(users)) {
             //for each users, check if the user has a forced role
             for (const user of users) {
-                if ( !forcedRoles.includes(user.user_role.toLowerCase()) ) {
+                if ( user.user_role === undefined ) {
+                    return true;
+                }
+                if (user.rsssl_two_fa_providers.toLowerCase() === 'none') {
+                    return true;
+                }
+                //if the user has an active or disabled status, it can be reset
+                if (user.status_for_user.toLowerCase() === 'active' || user.status_for_user.toLowerCase() === 'disabled' ) {
+                    return false;
+                }
+                if ( !forcedRoles.includes(user.user_role.toLowerCase() || !forcedRolesTotp.includes(user.user_role.toLowerCase())) ) {
                     return false;
                 }
             }
             return true;
         } else {
-            return forcedRoles.includes(users.user_role.toLowerCase());
+            if (users.user_role === undefined) {
+                return true;
+            }
+            if (users.rsssl_two_fa_providers.toLowerCase() === 'none') {
+                return true;
+            }
+            //if the user has an active or disabled status, it can be reset
+            if ( users.status_for_user.toLowerCase() === 'active' || users.status_for_user.toLowerCase() === 'disabled' ) {
+                return false;
+            }
+            return (forcedRoles.includes(users.user_role.toLowerCase()) || forcedRolesTotp.includes(users.user_role.toLowerCase()));
         }
     }
 
@@ -112,18 +134,18 @@ const DynamicDataTable = (props) => {
         if (Array.isArray(users)) {
             //for each users, check if the user has a forced role
             for (const user of users) {
-                if ( user.rsssl_two_fa_status !== 'open' ) {
+                if ( user.status_for_user.toLowerCase() !== 'open' ) {
                     return false;
                 }
             }
             return true;
         } else {
-            return users.rsssl_two_fa_status === 'open';
+            return users.status_for_user.toLowerCase() === 'open';
         }
     }
 
-    function buildColumn(column) {
-        let newColumn = {
+    const buildColumn = (column) => {
+        return {
             name: column.name,
             column: column.column,
             sortable: column.sortable,
@@ -132,8 +154,6 @@ const DynamicDataTable = (props) => {
             visible: column.visible,
             selector: row => row[column.column],
         };
-
-        return newColumn;
     }
 
     let columns = [];
@@ -162,7 +182,6 @@ const DynamicDataTable = (props) => {
                 paddingRight: '0',
             },
         },
-        padding: '0'
     };
     createTheme('really-simple-plugins', {
         divider: {
@@ -170,16 +189,21 @@ const DynamicDataTable = (props) => {
         },
     }, 'light');
 
-    async function handleReset(users) {
-        // Function to handle reset logic
-        const resetRoles = getFieldValue('two_fa_optional_roles');
+    const handleReset = async (users) => {
+        let resetRolesEmail = getFieldValue('two_fa_forced_roles_email');
+        let resetRolesTotp = getFieldValue('two_fa_forced_roles_totp');
+        resetRolesEmail = Array.isArray(resetRolesEmail) ? resetRolesEmail : [resetRolesEmail];
+        resetRolesTotp = Array.isArray(resetRolesTotp) ? resetRolesTotp : [resetRolesTotp];
+
+        const resetRoles = resetRolesEmail.concat(resetRolesTotp);
+
         if (Array.isArray(users)) {
             //loop through all users one by one, and reset the user
             for (const user of users) {
-                await resetUserMethod(user.id, resetRoles, user.user_role.toLowerCase());
+                await hardResetUser(user.id, resetRoles, user.user_role.toLowerCase());
             }
         } else {
-            await resetUserMethod(users.id, resetRoles, users.user_role.toLowerCase());
+            await hardResetUser(users.id, resetRoles, users.user_role.toLowerCase());
         }
 
         await fetchDynamicData();
@@ -187,13 +211,7 @@ const DynamicDataTable = (props) => {
         setRowCleared(true);
     }
 
-    const rowStyles = {
-        cursor: 'pointer', // Change cursor on hover
-        backgroundColor: '#f0f0f0', // Change background color
-        color: 'blue', // Change text color
-    };
-
-    function handleSelection(state) {
+    const handleSelection = (state) => {
         setRowsSelected(state.selectedRows);
     }
 
@@ -259,6 +277,7 @@ const DynamicDataTable = (props) => {
                     </div>
                 </div>
             )}
+
             {dataLoaded &&
                 <DataTable
                     columns={columns}
@@ -287,7 +306,7 @@ const DynamicDataTable = (props) => {
             {!enabled &&
                 <div className="rsssl-locked">
                     <div className="rsssl-locked-overlay"><span
-                        className="rsssl-task-status rsssl-open">{__('Disabled', 'really-simple-ssl')}</span><span>{__('Activate Two Step Verification to enable this block.', 'really-simple-ssl')}</span>
+                        className="rsssl-task-status rsssl-open">{__('Disabled', 'really-simple-ssl')}</span><span>{__('Activate Two-Factor Authentication and one method to enable this block.', 'really-simple-ssl')}</span>
                     </div>
                 </div>
             }

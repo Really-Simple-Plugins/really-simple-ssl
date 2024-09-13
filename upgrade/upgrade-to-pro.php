@@ -43,7 +43,7 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 					case "rsssl_pro":
 						$rsssl_admin_url = is_multisite() ? network_admin_url('settings.php') : admin_url("options-general.php");
 						$this->slug = is_multisite() ? "really-simple-ssl-pro-multisite/really-simple-ssl-pro-multisite.php" :  "really-simple-ssl-pro/really-simple-ssl-pro.php";
-						$this->plugin_name = "Really Simple SSL Pro";
+						$this->plugin_name = "Really Simple Security Pro";
 						$this->plugin_constant = "rsssl_pro";
 						$this->prefix = "rsssl_";
 						$this->api_url = "https://really-simple-ssl.com";
@@ -170,12 +170,12 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 				$suggestion = [
 					'icon_url' => $dir_url.'really-simple-ssl.png',
 					'constant' => 'rsssl_version',
-					'title' => 'Really Simple SSL',
+					'title' => 'Really Simple Security',
 					'description_short' => __('One click SSL optimization', "really-simple-ssl"),
 					'disabled' => '',
 					'button_text' => __("Install", "really-simple-ssl"),
 					'slug' => 'really-simple-ssl',
-					'description' => __('Really Simple SSL automatically detects your settings and configures your website to run over HTTPS. To keep it lightweight, we kept the options to a minimum. Your website will move to SSL with one click.', "really-simple-ssl"),
+					'description' => __('Really Simple Security automatically detects your settings and configures your website to run over HTTPS. To keep it lightweight, we kept the options to a minimum. Your website will move to SSL with one click.', "really-simple-ssl"),
 					'install_url' => 'ssl%20really%20simple%20plugins%20complianz+HSTS&tab=search&type=term',
 				];
 				if ( $current_plugin==='really-simple-ssl' ) {

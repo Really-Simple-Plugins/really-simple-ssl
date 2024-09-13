@@ -151,6 +151,7 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'label'    => __( "Block user registrations when login and display name are the same", 'really-simple-ssl' ),
 				'disabled' => false,
 				'default'  => false,
+				'recommended' => true,
 			],
 		]
 	);

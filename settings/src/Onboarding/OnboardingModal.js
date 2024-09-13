@@ -61,16 +61,17 @@ const OnboardingModal = () => {
 
     return (
         <>
-                <RssslModal
-                    className={"rsssl-onboarding-modal"}
-                    title={currentStep.title}
-                    subTitle={currentStep.subtitle}
-                    content={modalContent()}
-                    isOpen={showOnboardingModal}
-                    setOpen={setOpen}
-                    buttons = <OnboardingControls isModal={true} />
-                    footer = {handleFooterStatus() }
-                />
+            <RssslModal
+                className={"rsssl-onboarding-modal"}
+                title={currentStep.title}
+                subTitle={currentStep.subtitle}
+                currentStep = {currentStep}
+                content={modalContent()}
+                isOpen={showOnboardingModal}
+                setOpen={setOpen}
+                buttons = <OnboardingControls isModal={true} />
+            footer = {handleFooterStatus() }
+            />
         </>
     )
 }

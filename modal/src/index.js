@@ -3,6 +3,7 @@ import {
 } from '@wordpress/element';
 import DeactivationModal from "./components/DeactivationModal/DeactivationModal";
 document.addEventListener( 'DOMContentLoaded', () => {
+
     const container = document.getElementById( 'rsssl-modal-root' );
     if ( container ) {
         if ( createRoot ) {

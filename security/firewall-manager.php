@@ -162,7 +162,7 @@ class rsssl_firewall_manager {
 		}
 		$contents  = '<?php' . "\n";
 		$contents .= '/**' . "\n";
-		$contents .= '* This file is created by Really Simple SSL' . "\n";
+		$contents .= '* This file is created by Really Simple Security' . "\n";
 		$contents .= '*/' . "\n\n";
 		// allow disabling of headers for detection purposes.
 		$contents .= 'if ( isset($_GET["rsssl_header_test"]) && (int) $_GET["rsssl_header_test"] ===  ' . $this->get_headers_nonce() . ' ) return;' . "\n\n";
@@ -429,7 +429,7 @@ class rsssl_firewall_manager {
 			$rule = $this->get_wp_config_rule();
 
 			// if RSSSL comment is found, insert after.
-			$rsssl_comment = '//END Really Simple SSL Server variable fix';
+			$rsssl_comment = '//END Really Simple Security Server variable fix';
 			if ( strpos( $content, $rsssl_comment ) !== false ) {
 				$pos     = strrpos( $content, $rsssl_comment );
 				$updated = substr_replace( $content, $rsssl_comment . "\n" . $rule . "\n", $pos, strlen( $rsssl_comment ) );

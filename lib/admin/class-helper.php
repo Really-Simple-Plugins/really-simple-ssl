@@ -8,7 +8,7 @@ namespace RSSSL\lib\admin;
  * @package RSSSL\helper
  * @since   8.2
  *
- * @author  Really Simple SSL
+ * @author  Really Simple Security
  * @see     https://really-simple-ssl.com
  */
 trait Helper {
@@ -39,7 +39,7 @@ trait Helper {
 	 */
 	public function log( string $message ): void {
 		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-			error_log( "Really Simple SSL: ".$message );
+			error_log( "Really Simple Security: ".$message );
 		}
 	}
 

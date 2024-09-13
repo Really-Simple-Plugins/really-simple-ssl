@@ -141,7 +141,7 @@ function rsssl_le_get_notices_list($notices) {
 				'score'     => 10,
 				'output'    => array(
 					'true' => array(
-						'msg'         => __( "You are using the Really Simple SSL Shell Exec add on, but your current version needs to be updated.", "really-simple-ssl" ),
+						'msg'         => __( "You are using the Really Simple Security Shell Exec add on, but your current version needs to be updated.", "really-simple-ssl" ),
 						'icon'        => 'warning',
 						'url'         => "installing-ssl-using-shell-functions",
 						'plusone'     => true,

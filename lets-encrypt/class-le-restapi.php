@@ -119,7 +119,8 @@ if ( ! class_exists( "rsssl_le_restapi" ) ) {
 		 * Reset the LE wizard
 		 * @return bool[]|RSSSL_RESPONSE
 		 */
-		public function reset(){
+		public function reset() {
+
 			if ( !rsssl_user_can_manage() ) {
 				return new RSSSL_RESPONSE(
 					'success',
@@ -128,7 +129,7 @@ if ( ! class_exists( "rsssl_le_restapi" ) ) {
 				);
 			}
 
-            RSSSL_LE()->letsencrypt_handler->clear_order();
+            RSSSL_LE()->letsencrypt_handler->clear_order(true);
             rsssl_update_option('verification_type', 'dir' );
             delete_option('rsssl_skip_dns_check' );
             delete_option('rsssl_skip_challenge_directory_request' );

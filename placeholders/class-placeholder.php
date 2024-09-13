@@ -12,7 +12,7 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
 			add_filter( "rsssl_run_test", array( $this, 'mixed_content_scan' ), 9, 3 );
 			add_filter( 'rsssl_do_action', array( $this, 'learningmode_table_data' ), 10, 3 );
 
-			add_filter( 'rsssl_do_action', array( $this, 'two_factor_users_data' ), 11, 3 );
+//			add_filter( 'rsssl_do_action', array( $this, 'two_factor_users_data' ), 11, 3 );
 
                 // really-simple-ssl-pro plugin is active
             add_filter( 'rsssl_do_action', array( $this, 'limit_login_attempts_data' ), 11, 3 );
@@ -482,35 +482,35 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
 					[
 						'id'                  => 1,
 						'user'                => 'JaneDoe',
-						'rsssl_two_fa_status' => 'Active',
+						'rsssl_two_fa_providers' => 'email',
 						'user_role'           => 'Administrator',
-						'status_for_user'     => 'Enabled'
+						'status_for_user'     => 'active'
 					],
 					[
 						'id'                  => 2,
 						'user'                => 'JohnDoe',
-						'rsssl_two_fa_status' => 'open',
+						'rsssl_two_fa_providers' => 'email',
 						'user_role'           => 'Editor',
 						'status_for_user'     => 'open'
 					],
 					[
 						'id'                  => 3,
 						'user'                => 'JanieDoe',
-						'rsssl_two_fa_status' => 'disabled',
+						'rsssl_two_fa_providers' => 'disabled',
 						'user_role'           => 'Subscriber',
 						'status_for_user'     => 'Disabled'
 					],
 					[
 						'id'                  => 4,
 						'user'                => 'JonnyDoe',
-						'rsssl_two_fa_status' => 'Active',
+						'rsssl_two_fa_providers' => 'Active',
 						'user_role'           => 'Contributor',
 						'status_for_user'     => 'Active'
 					],
 					[
 						'id'                  => 5,
 						'user'                => 'BabyDoe',
-						'rsssl_two_fa_status' => 'open',
+						'rsssl_two_fa_providers' => 'open',
 						'user_role'           => 'Author',
 						'status_for_user'     => 'open'
 					],

@@ -6,11 +6,13 @@ import useOnboardingData from "./OnboardingData";
 import useProgress from "../Dashboard/Progress/ProgressData";
 import useRiskData from "../Settings/RiskConfiguration/RiskData";
 import useSslLabs from "../Dashboard/SslLabs/SslLabsData";
+import useLicense from "../Settings/License/LicenseData";
 
 const OnboardingControls = ({isModal}) => {
     const { getProgressData} = useProgress();
-    const { updateField, setChangedField, updateFieldsData, fetchFieldsData, saveFields} = useFields();
+    const { updateField, setChangedField, updateFieldsData, fetchFieldsData, saveFields, getFieldValue} = useFields();
     const { setSelectedMainMenuItem, selectedSubMenuItem} = useMenu();
+    const { licenseStatus, toggleActivation } = useLicense();
     const {
         fetchFirstRun, fetchVulnerabilities
     } = useRiskData();
@@ -37,12 +39,13 @@ const OnboardingControls = ({isModal}) => {
 
     const goToDashboard = () => {
         if ( isModal ) {
-           dismissModal(true);
+            dismissModal(true);
         }
         setSelectedMainMenuItem('dashboard');
     }
 
     const saveAndContinue = async () => {
+
         let vulnerabilityDetectionEnabled = false;
         if (currentStep.id === 'features') {
             setCurrentStepIndex(currentStepIndex+1);
@@ -56,8 +59,9 @@ const OnboardingControls = ({isModal}) => {
 
                 if ( ! item.premium || ! item.activated ) {
                     for (const fieldId of Object.values(item.options)) {
-                        updateField(fieldId, item.activated);
-                        setChangedField(fieldId, item.activated);
+                        const value = item.value || item.activated;
+                        updateField(fieldId, value);
+                        setChangedField(fieldId, value);
                     }
                 }
 
@@ -79,6 +83,7 @@ const OnboardingControls = ({isModal}) => {
             setFooterStatus( '' );
             setProcessing(false);
         }
+
         if ( currentStep.id === 'email' ) {
             await saveEmail();
             setCurrentStepIndex(currentStepIndex+1);
@@ -119,8 +124,9 @@ const OnboardingControls = ({isModal}) => {
                             }
                         } else {
                             for (const fieldId of Object.values(item.options)) {
-                                updateField(fieldId, true);
-                                setChangedField(fieldId, true);
+                                const value = item.value || item.activated;
+                                updateField(fieldId, value);
+                                setChangedField(fieldId, value);
                             }
                         }
                     }
@@ -134,6 +140,17 @@ const OnboardingControls = ({isModal}) => {
                 setProcessing(false);
             }
             goToDashboard();
+        }
+
+        if ( currentStep.id === 'activate_license' ) {
+            if ( licenseStatus !== 'valid' ) {
+                await toggleActivation(getFieldValue('license'));
+                //if the license is valid, allow the user to go to the next step
+                if ( licenseStatus === 'valid' ) {
+                    setCurrentStepIndex( currentStepIndex + 1 );
+                }
+            }
+
         }
     }
 
@@ -149,19 +166,39 @@ const OnboardingControls = ({isModal}) => {
     }
 
     let ActivateSSLText = networkwide ? __("Activate SSL networkwide", "really-simple-ssl") : __("Activate SSL", "really-simple-ssl");
-    if ( currentStepIndex === 0 ) {
+    if (currentStep.id === 'activate_ssl') {
         return (
             <>
-                { isModal && !certificateValid && <Button onClick={() => {goToLetsEncrypt()}}>{__("Install SSL", "really-simple-ssl")}</Button>}
-                <Button disabled={processing || (!certificateValid && !overrideSSL) } isPrimary onClick={() => {handleActivateSSL()}}>{ActivateSSLText}</Button>
+                {isModal && !certificateValid && (
+                    <Button onClick={() => { goToLetsEncrypt() }}>
+                        {__("Install SSL", "really-simple-ssl")}
+                    </Button>
+                )}
+                <Button
+                    disabled={processing || (!certificateValid && !overrideSSL)}
+                    isPrimary
+                    onClick={() => { handleActivateSSL() }}
+                >
+                    {ActivateSSLText}
+                </Button>
             </>
         );
     }
 
-    if (currentStepIndex>0 && currentStepIndex<steps.length-1) {
+    if (currentStep.id === 'activate_license') {
         return (
             <>
-                <Button  onClick={() => {setCurrentStepIndex(currentStepIndex+1)}}>{__('Skip', 'really-simple-ssl')}</Button>
+                <Button isPrimary onClick={() => saveAndContinue()}>
+                    {currentStep.button || __('Activate', 'really-simple-ssl')}
+                </Button>
+            </>
+        );
+    }
+
+    if (currentStepIndex>0 && currentStepIndex<steps.length-1 ) {
+        return (
+            <>
+                {currentStep.id !== 'activate_license' && <Button  onClick={() => {setCurrentStepIndex(currentStepIndex+1)}}>{__('Skip', 'really-simple-ssl')}</Button> }
                 <Button isPrimary onClick={() => saveAndContinue() }>
                     {currentStep.button}
                 </Button>
@@ -172,10 +209,26 @@ const OnboardingControls = ({isModal}) => {
     //for last step only
     if ( steps.length-1 === currentStepIndex ) {
         let upgradeText = rsssl_settings.is_bf ? __("Get 40% off", "really-simple-ssl") : __("Get Pro", "really-simple-ssl");
+
         return (
             <>
-                <Button isPrimary onClick={() => saveAndContinue() }>{__('Finish', 'really-simple-ssl')}</Button>
-                { !rsssl_settings.pro_plugin_active && <Button rel="noreferrer noopener" target="_blank" isPrimary href={rsssl_settings.upgrade_link} >{upgradeText}</Button>}
+                <Button
+                    isPrimary
+                    onClick={() => saveAndContinue()}
+                    disabled={ rsssl_settings.pro_plugin_active && licenseStatus !== 'valid' }
+                >
+                    {__('Finish', 'really-simple-ssl')}
+                </Button>
+                { !rsssl_settings.pro_plugin_active &&
+                    <Button
+                        rel="noreferrer noopener"
+                        target="_blank"
+                        isPrimary
+                        href={rsssl_settings.upgrade_link}
+                    >
+                        {upgradeText}
+                    </Button>
+                }
             </>
         );
     }

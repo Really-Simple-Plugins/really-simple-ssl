@@ -3,12 +3,14 @@ defined( 'ABSPATH' ) or die();
 
 add_action( 'plugins_loaded', 'rsssl_upgrade', 20 );
 function rsssl_upgrade() {
+
 	#only run upgrade check if cron, or if admin.
 	if ( ! rsssl_admin_logged_in() ) {
 		return;
 	}
 
 	$prev_version = get_option( 'rsssl_current_version', false );
+
 	//no version change, skip upgrade.
 	if ( $prev_version && version_compare( $prev_version, rsssl_version, '==' ) ) {
 		return;
@@ -41,8 +43,8 @@ function rsssl_upgrade() {
 			$htaccess      = file_get_contents( RSSSL()->admin->htaccess_file() );
 			$pattern_start = '/rlrssslReallySimpleSSL rsssl_version\[.*.]/';
 			if ( preg_match_all( $pattern_start, $htaccess ) ) {
-				$htaccess = preg_replace( $pattern_start, 'Really Simple SSL Redirect ' . rsssl_version, $htaccess );
-				$htaccess = str_replace( 'rlrssslReallySimpleSSL', 'Really Simple SSL Redirect', $htaccess );
+				$htaccess = preg_replace( $pattern_start, 'Really Simple Security Redirect ' . rsssl_version, $htaccess );
+				$htaccess = str_replace( 'rlrssslReallySimpleSSL', 'Really Simple Security Redirect', $htaccess );
 				file_put_contents( RSSSL()->admin->htaccess_file(), $htaccess );
 			}
 		}
@@ -210,6 +212,13 @@ function rsssl_upgrade() {
 		delete_site_option('rsssl_key');
 		delete_option('rsssl_key');
 		update_option('rsssl_upgrade_le_key', true, false);
+	}
+
+	if ( $prev_version && version_compare( $prev_version, '9.0', '<' ) ) {
+		// Replace Really Simple SSL with Really Simple Security in wp-config.php, .htaccess,
+		// advanced-headers.php
+		RSSSL()->admin->update_branding_in_files();
+		RSSSL()->admin->clear_admin_notices_cache();
 	}
 
 	//don't clear on each update.

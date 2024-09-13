@@ -17,23 +17,23 @@ const Tip = ({link, content}) => {
 const TipsTricks = () => {
     const items = [
         {
-            content: "Definition: What is a Content Security Policy?",
-            link: 'https://really-simple-ssl.com/definition/What-is-a-Content-Security-Policy/',
+            content: "Why WordPress is (in)secure",
+            link: 'https://really-simple-ssl.com/why-wordpress-is-insecure/',
         }, {
-            content: "Installing a Let's Encrypt certificate",
-            link: 'https://really-simple-ssl.com/install-ssl-certificate/',
+            content: "Always be ahead of vulnerabilities",
+            link: 'https://really-simple-ssl.com/staying-ahead-of-vulnerabilities/',
         }, {
-            content: "Improve Security: (HSTS) HTTP Strict Transport Security",
-            link: 'https://really-simple-ssl.com/instructions/about-hsts/',
+            content: "Harden your website's security",
+            link: 'https://really-simple-ssl.com/hardening-your-websites-security/',
         }, {
-            content: "Improve Security: About vulnerabilities",
-            link: 'https://really-simple-ssl.com/instructions/about-vulnerabilities',
+            content: "Login protection as essential security",
+            link: 'https://really-simple-ssl.com/login-protection-as-essential-security/',
         }, {
-            content: "Instructions: Debugging with Really Simple SSL",
-            link: 'https://really-simple-ssl.com/instructions/debugging/',
+            content: "Protect site visitors with Security Headers",
+            link: 'https://really-simple-ssl.com/protecting-site-visitors-with-security-headers',
         }, {
-            content: "Instructions: Configuring Hardening Features",
-            link: 'https://really-simple-ssl.com/instructions/about-hardening-features/',
+            content: "Enable an efficient and performant firewall",
+            link: 'https://really-simple-ssl.com/enable-an-efficient-and-performant-firewall/',
         },
     ];
 

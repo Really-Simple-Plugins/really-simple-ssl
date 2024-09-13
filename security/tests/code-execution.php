@@ -1,6 +1,6 @@
 <?php
 /**
- * Test file for Really Simple SSL to check if uploads directory has code execution permissions
+ * Test file for Really Simple Security to check if uploads directory has code execution permissions
  *
  */
 

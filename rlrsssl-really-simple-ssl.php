@@ -141,6 +141,7 @@ if ( !class_exists('REALLY_SIMPLE_SSL')) {
 
 			require_once( rsssl_path . 'lets-encrypt/cron.php' );
 			require_once( rsssl_path . '/security/security.php');
+            require_once( rsssl_path . '/rsssl-auto-loader.php' );
 		}
 
 		private function hooks()

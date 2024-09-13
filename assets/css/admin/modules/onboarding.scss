@@ -1,5 +1,8 @@
 .rsssl-modal.rsssl-onboarding {
   width: clamp(300px, 100ch, 100vw );
+  padding-top: var(--rsp-spacing-m);
+  line-height: 2.2;
+  min-height:295px;
   .rsssl-logo {
     height: 26px;
   }
@@ -14,10 +17,6 @@
       flex-direction: column;
       width:100%;
     }
-
-    padding-top: var(--rsp-spacing-m);
-    line-height: 2.2;
-    min-height:295px;
     .rsssl-processing {
       opacity:0.5;
     }
@@ -33,5 +32,4 @@
       }
     }
   }
-
 }

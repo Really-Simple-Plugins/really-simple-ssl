@@ -459,3 +459,49 @@ function rsssl_src_contains_wp_version() {
 	}
 	return $result==='found';
 }
+
+/**
+ * Count the number of open hardening features
+ * @return int
+ */
+function rsssl_count_open_hardening_features() {
+	$open   = 0;
+	$fields = rsssl_fields( false );
+
+	// Filter out unused fields
+	$recommended_hardening_fields = array_filter($fields, function($field){
+		return isset($field['recommended']) && $field['recommended'];
+	});
+
+	// Create $hardening_options dynamically based on recommended field IDs
+	$hardening_options = array_map(function($field) {
+		return $field['id'];
+	}, $recommended_hardening_fields);
+
+	foreach ( $hardening_options as $option ) {
+
+		// Get the field
+		$field = array_filter( $fields, function ( $f ) use ( $option ) {
+			return $f['id'] === $option;
+		} );
+
+		if ( ! empty( $field ) ) {
+			$field = reset( $field );
+			// Apply the rsssl_disable_fields filter
+			$field = apply_filters( 'rsssl_field', $field, $field['id'] );
+
+			// Check if the option is not set to true and the field is not disabled
+			if ( rsssl_get_option( $option ) !== true &&
+			     ( ! isset( $field['disabled'] ) || $field['disabled'] !== true ) &&
+			     ( ! isset( $field['value'] ) || $field['value'] !== true ) ) {
+				$open ++;
+			}
+		}
+	}
+
+	return $open;
+}
+
+function rsssl_has_open_hardening_features() {
+	return rsssl_count_open_hardening_features() > 0;
+}

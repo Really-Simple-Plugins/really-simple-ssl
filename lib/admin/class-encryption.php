@@ -11,7 +11,7 @@ require_once __DIR__ . '/class-helper.php';
  * @package RSSSL\lib\admin\encryption
  * @since   8.2
  *
- * @author  Really Simple SSL
+ * @author  Really Simple Security
  * @see     https://really-simple-ssl.com
  */
 trait Encryption {

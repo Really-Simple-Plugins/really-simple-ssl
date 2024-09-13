@@ -1,0 +1,174 @@
+#two-factor-qr-code {
+    display: flex;
+ /* Enables Flexbox */
+    justify-content: left;
+ /* Centers horizontally */
+    align-items: center;
+ /* Centers vertically */
+    width: 100%;
+    min-height: 100%;
+}
+
+#qr-code-container {
+    margin-bottom: 20px;
+    position: relative;
+    text-align: center;
+}
+
+#two-factor-totp-authcode {
+    width: 100%;
+}
+
+tr.rsssl_verify_email {
+    display: none;
+}
+
+.error {
+    color: red;
+    margin-top: -5px;
+}
+
+span.rsssl-backup-codes {
+    padding: 5px;
+    background: #fbebed;
+    border-radius: 8px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0 4px 6px -1px;
+}
+
+.input {
+    margin-bottom: 5px !important;
+}
+
+#totp-key {
+    cursor: pointer;
+    display: flex;
+ /* Enables Flexbox */
+    justify-content: center;
+ /* Centers horizontally */
+    align-items: center;
+ /* Centers vertically */
+}
+
+table.rsssl-table-two-fa {
+    padding-bottom: 20px;
+}
+
+.rsssl-methods-tag {
+    padding: 2px 5px;
+    border: 1px solid #000;
+    color: #000;
+    margin-left: 5px;
+    background: dimgrey;
+}
+
+.rsssl-methods-tag.active {
+    background: darkgreen;
+    color: #fff;
+}
+
+/* Style radio inputs */
+.radio-input {
+    position: absolute;
+    right: 0;
+    margin-left: 10px;
+ /* Adjust this value to your preferred spacing */
+    vertical-align: middle;
+    top: 5px;
+}
+
+/* Style radio labels */
+.radio-label {
+    display: inline-block;
+    vertical-align: middle;
+    width: 100%;
+    position: relative;
+    margin: 20px 0;
+}
+
+.badge {
+    margin-left: 10px;
+    padding: 2px 4px;
+}
+
+.badge-default {
+    background-color: #e5e5e5;
+    color: black;
+}
+
+.badge-enabled {
+    background-color: #fbc43e;
+    color: black;
+}
+
+/**
+ * The following styles are for the onboarding form
+ */
+#two_fa_onboarding_form {
+    margin-top: 20px;
+}
+
+#two_fa_onboarding_form div {
+    transition: height 0.5s;
+}
+
+#skip_onboarding {
+    margin-right: 20px;
+}
+
+.skip_container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.skip_container a {
+    text-decoration: none;
+}
+
+.totp-submit {
+    margin-top: 10px;
+}
+
+div.rsssl_step_one_onboarding {
+    display: block;
+}
+
+div.rsssl_step_two_onboarding {
+    display: none;
+}
+
+div.rsssl_step_three_onboarding {
+    margin-top: 10px;
+    display: none;
+}
+
+#two-factor-qr-code {
+    display: flex;
+ /* Enables Flexbox */
+    justify-content: center;
+ /* Centers horizontally */
+    align-items: center;
+ /* Centers vertically */
+    min-width: 205px;
+    min-height: 205px;
+}
+
+.error {
+    color: red;
+    margin-top: -5px;
+}
+
+.input {
+    margin-bottom: 5px !important;
+}
+
+#totp-key {
+    cursor: pointer;
+    display: flex;
+ /* Enables Flexbox */
+    justify-content: center;
+ /* Centers horizontally */
+    align-items: center;
+ /* Centers vertically */
+}

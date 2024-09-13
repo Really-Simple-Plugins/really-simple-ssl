@@ -21,7 +21,7 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'help'     => [
 					'label' => 'default',
 					'url'   => 'definition/about-recommended-security-headers',
-					'title' => __("About Recommended Security Headers", 'really-simple-ssl'),
+					'title' => __("About Essential Security Headers", 'really-simple-ssl'),
 					'text'  => __('These security headers are the fundamental security measures to protect your website visitors while visiting your website.',
 						'really-simple-ssl'),
 				],
@@ -337,7 +337,7 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				],
 				'label'    => __( "Allow your domain to be embedded", "really-simple-ssl" ),
 				'disabled' => false,
-				'default'  => 'disabled',
+				'default'  => 'self',
 			],
 			[
 				'id'       => 'csp_frame_ancestors_urls',

@@ -1,9 +1,12 @@
 .rsssl {
   .rsssl-locked {
+    position: relative;
+    z-index: 0;
     &.rsssl-locked-premium {
       .rsssl-locked-overlay {
         bottom: var(--rsp-spacing-s);
         flex-direction: column;
+        z-index: 0;
       }
     }
     .rsssl-locked-overlay {
@@ -12,6 +15,7 @@
       text-align: left;
       margin-bottom: 20px;
       padding: 0;
+      z-index: 0;
 
       &.rsssl-premium {
         bottom: 0;

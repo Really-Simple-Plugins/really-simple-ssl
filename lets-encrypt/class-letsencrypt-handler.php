@@ -100,16 +100,16 @@ class rsssl_letsencrypt_handler {
 		$htaccess = file_get_contents( $htaccess_file );
 
 		//if it's already inserted, skip.
-		if ( strpos($htaccess, 'Really Simple SSL LETS ENCRYPT') !== FALSE ) {
+		if ( strpos($htaccess, 'Really Simple Security LETS ENCRYPT') !== FALSE ) {
 			return;
 		}
 
-		$htaccess = preg_replace("/#\s?BEGIN\s?Really Simple SSL LETS ENCRYPT.*?#\s?END\s?Really Simple SSL LETS ENCRYPT/s", "", $htaccess);
+		$htaccess = preg_replace("/#\s?BEGIN\s?Really Simple Security LETS ENCRYPT.*?#\s?END\s?Really Simple Security LETS ENCRYPT/s", "", $htaccess);
 		$htaccess = preg_replace("/\n+/", "\n", $htaccess);
 
-		$rules = '#BEGIN Really Simple SSL LETS ENCRYPT'."\n";
+		$rules = '#BEGIN Really Simple Security LETS ENCRYPT'."\n";
 		$rules .= 'RewriteRule ^.well-known/(.*)$ - [L]'."\n";
-		$rules .= '#END Really Simple SSL LETS ENCRYPT'."\n";
+		$rules .= '#END Really Simple Security LETS ENCRYPT'."\n";
 		$htaccess = $rules . $htaccess;
 		file_put_contents($htaccess_file, $htaccess);
 
@@ -314,7 +314,7 @@ class rsssl_letsencrypt_handler {
 	 * @return bool
 	 */
 
-	public function certificate_about_to_expire(){
+	public function certificate_about_to_expire() {
 		$about_to_expire = RSSSL()->certificate->about_to_expire();
 		if ( !$about_to_expire ) {
 			//if the certificate is valid, stop any attempt to renew.
@@ -356,7 +356,7 @@ class rsssl_letsencrypt_handler {
 	 * @return RSSSL_RESPONSE
 	 */
 
-    public function curl_exists(){
+    public function curl_exists() {
 	    if( function_exists('curl_init') === false ){
 		    $action = 'stop';
 		    $status = 'error';
@@ -374,7 +374,7 @@ class rsssl_letsencrypt_handler {
 	 * Get or create an account
 	 * @return RSSSL_RESPONSE
 	 */
-    public function get_account(){
+    public function get_account() {
 	    $account_email = $this->account_email();
         if ( is_email($account_email) ) {
 	        try {
@@ -613,14 +613,14 @@ class rsssl_letsencrypt_handler {
 	/**
 	 * Clear an existing order
 	 */
-	public function clear_order( $clear_keys = false ){
-		if ($clear_keys) {
+	public function clear_order( $clear_keys = false ) {
+		if ( $clear_keys ) {
 			$this->clear_keys_directory();
 		}
 		$this->get_account();
 		if ( $this->account ) {
 			$response = $this->get_order();
-			$order = $response->output;
+			$order    = $response->output;
 			if ( $order ) {
 				$order->clear();
 			}
@@ -731,7 +731,7 @@ class rsssl_letsencrypt_handler {
 					    $this->count_attempt();
 					    $message = $this->get_error( $e );
 						if ( defined('WP_DEBUG') && WP_DEBUG ) {
-							error_log("Really Simple SSL: ".$message);
+							error_log("Really Simple Security: ".$message);
 						}
 					    $response = new RSSSL_RESPONSE(
 						    'error',
@@ -1206,7 +1206,7 @@ class rsssl_letsencrypt_handler {
 				$action = 'continue';
 				$status = 'error';
 				$message = sprintf(__("According to our information, your hosting provider supplies your account with an SSL certificate by default. Please contact your %shosting support%s if this is not the case.","really-simple-ssl"), '<a target="_blank" href="'.$url.'">', '</a>').'&nbsp'.
-				       __("After completing the installation, you can let Really Simple SSL automatically configure your site for SSL by using the 'Activate SSL' button.","really-simple-ssl");
+				       __("After completing the installation, you can let Really Simple Security automatically configure your site for SSL by using the 'Activate SSL' button.","really-simple-ssl");
 			}
 		}
 		return new RSSSL_RESPONSE($status, $action, $message);
@@ -1312,7 +1312,7 @@ class rsssl_letsencrypt_handler {
 			return false;
 		}
 
-		fwrite($test_file, 'file to test writing permissions for Really Simple SSL');
+		fwrite($test_file, 'file to test writing permissions for Really Simple Security');
 		fclose( $test_file );
 		restore_error_handler();
 		if (!file_exists($directory . "/really-simple-ssl-permissions-check.txt")) {
@@ -1334,7 +1334,7 @@ class rsssl_letsencrypt_handler {
 		$url = str_replace('https://', 'http://', site_url('.well-known/acme-challenge/really-simple-ssl-permissions-check.txt'));
 
 		$error_message = sprintf(__( "Could not reach challenge directory over %s.", "really-simple-ssl"), '<a target="_blank" href="'.$url.'">'.$url.'</a>');
-		$test_string = 'Really Simple SSL';
+		$test_string = 'Really Simple Security';
 		$folders = $this->directories_without_writing_permissions();
 		if ( !$this->challenge_directory() || count($folders) !==0 ) {
 			$status  = 'error';
@@ -1570,7 +1570,7 @@ class rsssl_letsencrypt_handler {
 		            . '<ifModule !mod_authz_core.c>' . "\n"
 		            . '    Deny from all' . "\n"
 		            . '</ifModule>';
-		insert_with_markers($path, 'Really Simple SSL LETS ENCRYPT', $htaccess);
+		insert_with_markers($path, 'Really Simple Security LETS ENCRYPT', $htaccess);
 
 		$htaccess = file_get_contents( $path );
 		if ( strpos($htaccess, 'deny from all') !== FALSE ) {

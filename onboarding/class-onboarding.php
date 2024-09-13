@@ -1,15 +1,9 @@
 <?php
 defined('ABSPATH') or die();
-
-require_once rsssl_path . 'lib/admin/class-encryption.php';
 require_once(rsssl_path . 'class-installer.php');
-
-use RSSSL\lib\admin\Encryption;
 
 class rsssl_onboarding {
 	private static $_this;
-
-	use Encryption;
 	function __construct() {
 		if ( isset( self::$_this ) ) {
 			wp_die( sprintf( __( '%s is a singleton class and you cannot create a second instance.', 'really-simple-ssl' ), get_class( $this ) ) );
@@ -19,6 +13,7 @@ class rsssl_onboarding {
 		add_action( 'admin_init', array( $this, 'maybe_redirect_to_settings_page'), 40);
 		add_filter("rsssl_run_test", array($this, 'handle_onboarding_request'), 10, 3);
 		add_filter("rsssl_do_action", array($this, 'handle_onboarding_action'), 10, 3);
+
 	}
 
 	static function this() {
@@ -29,8 +24,6 @@ class rsssl_onboarding {
 		if ( ! rsssl_user_can_manage() ) {
 			return [];
 		}
-//		delete_option('rsssl_network_activation_status');
-//		delete_option("rsssl_onboarding_dismissed");
 		switch( $test ){
 			case 'activate_ssl':
 				$data['is_rest_request'] = true;
@@ -47,9 +40,9 @@ class rsssl_onboarding {
 	}
 
 	/**
-	 * @param $data
+	 * @param $response
 	 * @param $action
-	 * @param $request
+	 * @param $data
 	 *
 	 * @return array|bool[]|false|mixed
 	 */
@@ -98,8 +91,8 @@ class rsssl_onboarding {
 					if ( $data['includeTips'] ) {
 						$this->signup_for_mailinglist( $email );
 					}
-                    $mailer = new rsssl_mailer();
-                    $mailer->send_verification_mail( $email );
+					$mailer = new rsssl_mailer();
+					$mailer->send_verification_mail( $email );
 				}
 
 				$response = [
@@ -118,6 +111,9 @@ class rsssl_onboarding {
 					rsssl_update_option('enable_vulnerability_scanner', 1);
 
 				}
+                if ($id === 'two_fa_enabled_roles_totp') {
+                    rsssl_update_option('two_fa_enabled_roles_totp', ['administrator']);
+                }
 				$response = [
 					'next_action' => 'completed',
 					'success' => true,
@@ -130,7 +126,7 @@ class rsssl_onboarding {
 	}
 
 	/**
-	 * Signup for Tips & Tricks from Really Simple SSL
+	 * Signup for Tips & Tricks from Really Simple Security
 	 *
 	 * @param string $email
 	 *
@@ -140,7 +136,7 @@ class rsssl_onboarding {
 		$license_key = '';
 		if ( defined('rsssl_pro') ) {
 			$license_key = RSSSL()->licensing->license_key();
-			$license_key = $this->decrypt_if_prefixed( $license_key, 'really_simple_ssl_' );
+			$license_key = RSSSL()->licensing->maybe_decode( $license_key );
 		}
 
 		$api_params = array(
@@ -166,73 +162,104 @@ class rsssl_onboarding {
 		// "warning", // yellow dot
 		// "error", // red dot
 		// "active" // green dot
-		$refresh = isset($data['forceRefresh']) && $data['forceRefresh']===true;
-		$nonce = $data['nonce'] ?? false;
-		if ( !wp_verify_nonce($nonce, 'rsssl_nonce') ) {
+		$refresh = isset( $data['forceRefresh'] ) && $data['forceRefresh'] === true;
+		$nonce   = $data['nonce'] ?? false;
+		if ( ! wp_verify_nonce( $nonce, 'rsssl_nonce' ) ) {
 			return [];
-		}
-
-		if( !defined('rsssl_pro')) {
-			$info = __('You can also let the automatic scan of the pro version handle this for you, and get premium support, increased security with HSTS and more!', 'really-simple-ssl'). " " . sprintf('<a target="_blank" rel="noopener noreferrer" href="%s">%s</a>',rsssl_link(), __("Check out Really Simple SSL Pro", "really-simple-ssl"));;
 		}
 
 		$steps = [
 			[
-				"id" => 'activate_ssl',
-				"title" => __( "Really Simple SSL & Security", 'really-simple-ssl' ),
-				"subtitle" => __("We have added many new features to our plugin, now bearing the name Really Simple SSL & Security. But we start like we did almost 10 years ago. Optimising your Encryption with SSL.", "really-simple-ssl"),
-				"items" => $this->activate_ssl(),
+				"id"       => 'activate_ssl',
+				"title"    => __( "Welcome to Really Simple Security", 'really-simple-ssl' ),
+				"subtitle" => __( "The onboarding wizard will help to configure essential security features in 1 minute! Select your hosting provider to start.", "really-simple-ssl" ),
+				"items"    => $this->activate_ssl(),
 			],
 			[
-				"id" => 'features',
-				"title" => get_option('rsssl_show_onboarding') ? __( "Thanks for updating!", 'really-simple-ssl' ) : __( "Congratulations!", 'really-simple-ssl' ),
-				"subtitle" => __("These are some of our new features, and weʼre just getting started.", "really-simple-ssl")." ".
-				              __("A lightweight plugin with heavyweight security features, focusing on performance and usability.", "really-simple-ssl"),
-				"items" => $this->recommended_features(),
-				"button" => __("Enable", "really-simple-ssl"),
+				"id"       => 'email',
+				"title"    => __( "Verify your email", 'really-simple-ssl' ),
+				"subtitle" => __( "Really Simple Security will send email notifications and security warnings from your server. We will send a test email to confirm that email is correctly configured on your site. Look for the confirmation button in the email.", "really-simple-ssl" ),
+				"button"   => __( "Save and continue", "really-simple-ssl" ),
 			],
 			[
-				"id" => 'email',
-				"title" => __( "Get notified!", 'really-simple-ssl' ),
-				"subtitle" => __("We use email notification to explain important updates in plugin settings.", "really-simple-ssl").' '.__("Add your email address below.", "really-simple-ssl"),
-				"button" => __("Save and continue", "really-simple-ssl"),
+				"id"       => 'features',
+				"title"    => __( "Essential security", 'really-simple-ssl' ),
+				"subtitle" => $this->features_subtitle(),
+				"items"    => $this->recommended_features(),
+				"button"   => __( "Enable", "really-simple-ssl" ),
 			],
 			[
-				"id" => 'plugins',
-				"title" => __("Free plugins", "really-simple-ssl"),
-				"subtitle" => __("Really Simple Plugins is also the author of the below privacy-focused plugins, including consent management, legal documents and analytics!", "really-simple-ssl"),
-				"items" => $this->plugins(),
-				"button" => __("Install", "really-simple-ssl"),
+				"id"       => 'activate_license',
+				"title"    => __( "Activate your license key", 'really-simple-ssl' ),
+				"subtitle" => '',
+				"items"    => [
+					'type' => 'license',
+				],
+				"button"   => __( "Activate", "really-simple-ssl" ),
+				"value"    => '',
 			],
 			[
-				"id" => 'pro',
-				"title" => __("Really Simple Security Pro", "really-simple-ssl"),
-				"subtitle" => __("Heavyweight security features, in a lightweight performant plugin from Really Simple Plugins. Get started with below features and get the latest and greatest updates for peace of mind!", "really-simple-ssl"),
-				"items" => $this->pro_features(),
-				"button" => __("Install", "really-simple-ssl"),
+				"id"       => 'plugins',
+				"title"    => __( "We think you will like this", "really-simple-ssl" ),
+				"subtitle" => __( "Really Simple Plugins is also the author of the below privacy-focused plugins, including consent management, legal documents and analytics!", "really-simple-ssl" ),
+				"items"    => $this->plugins(),
+				"button"   => __( "Install", "really-simple-ssl" ),
+			],
+			[
+				"id"       => 'pro',
+				"title"    => __( "Really Simple Security Pro", "really-simple-ssl" ),
+				"subtitle" => __( "Heavyweight security features, in a lightweight performant plugin from Really Simple Plugins. Get started with below features and get the latest and greatest updates for peace of mind!", "really-simple-ssl" ),
+				"items"    => $this->pro_features(),
+				"button"   => __( "Install", "really-simple-ssl" ),
 			],
 		];
 
-		//if the user called with a refresh action, clear the cache
-		if ($refresh) {
-			delete_transient('rsssl_certinfo');
+		// Only add activate_license field when rsssl_pro is defined
+		if ( ! defined( 'rsssl_pro' ) ) {
+			$steps = array_filter( $steps, static function ( $step ) {
+				return ! in_array( $step['id'], [ 'activate_license' ] );
+			} );
+		} else if ( get_option( "rsssl_upgraded_from_free" ) ) {
+			$steps = array_filter( $steps, static function ( $step ) {
+				return ! in_array( $step['id'], [ 'activate_ssl', 'features', 'email', 'plugins' ] );
+			} );
+
 		}
-		return [
-			"request_success" =>true,
-			"steps" => $steps,
-			"ssl_enabled" => rsssl_get_option("ssl_enabled"),
-			"ssl_detection_overridden" => get_option('rsssl_ssl_detection_overridden'),
-			'certificate_valid' => RSSSL()->certificate->is_valid(),
-			"networkwide" => is_multisite() && rsssl_is_networkwide_active(),
-			"network_activation_status" => get_site_option('rsssl_network_activation_status'),
+
+		// Re-order keys to prevent issues after array_filter
+		$steps = array_values( $steps );
+
+		//if the user called with a refresh action, clear the cache
+		if ( $refresh ) {
+			delete_transient( 'rsssl_certinfo' );
+		}
+
+		$data_to_return = [
+			"request_success"           => true,
+			"steps"                     => $steps,
+			"ssl_enabled"               => rsssl_get_option( "ssl_enabled" ),
+			"ssl_detection_overridden"  => get_option( 'rsssl_ssl_detection_overridden' ),
+			'certificate_valid'         => RSSSL()->certificate->is_valid(),
+			"networkwide"               => is_multisite() && rsssl_is_networkwide_active(),
+			"network_activation_status" => get_site_option( 'rsssl_network_activation_status' ),
+			'rsssl_upgraded_from_free'  => get_option( "rsssl_upgraded_from_free" ),
 		];
+
+
+		if ( get_option('rsssl_upgraded_from_free' ) ) {
+			delete_option('rsssl_upgraded_from_free' );
+		}
+
+		return $data_to_return;
+
 	}
 
 	/**
 	 * Return onboarding items for fresh installs
 	 * @return array[]
 	 */
-	function activate_ssl () {
+	function activate_ssl (): array
+    {
 		$items = [];
 
 		//if the site url is not yet https, the user may need to login again
@@ -321,69 +348,93 @@ class rsssl_onboarding {
 	 * Returns onboarding items if user upgraded plugin to 6.0 or SSL is detected
 	 * @return array
 	 */
-	public function recommended_features () {
-		return [
+	public function recommended_features(): array
+    {
+		$features = [
 			[
-				"title" => __("Mixed Content Fixer", "really-simple-ssl"),
-				"id" => "mixed_content_fixer",
-				"options" => ["mixed_content_fixer"],
+				"title"     => __( "Vulnerability scan", "really-simple-ssl" ),
+				"id"        => "vulnerability_detection",
+				"options"   => [ "enable_vulnerability_scanner" ],
 				"activated" => true,
 			],
 			[
-				"title" => __("Vulnerability Detection", "really-simple-ssl"),
-				"id" => "vulnerability_detection",
-				"options" => ["enable_vulnerability_scanner"],
+				"title"     => __( "Essential WordPress hardening", "really-simple-ssl" ),
+				"id"        => "hardening",
+				"options"   => $this->get_hardening_fields(),
 				"activated" => true,
 			],
 			[
-				"title" => __("Recommended Hardening Features", "really-simple-ssl"),
-				"id" => "hardening",
-				"options" => $this->get_hardening_fields(),
+				"title"     => __( "E-mail login", "really-simple-ssl" ),
+				"id"        => "two_fa",
+				"options"   => [ "login_protection_enabled" ],
 				"activated" => true,
 			],
 			[
-				"title" => __("Run System Health Scan", "really-simple-ssl"),
-				"id" => "health_scan",
-				"options" => [],
-				"activated" => true,
-			],
-			[
-				"title" => __("Limit Login Attempts", "really-simple-ssl"),
-				"id" => "limit_login_attempts",
-				"premium" => true,
-				"options" => ['enable_limited_login_attempts'],
-				"activated" => true,
-			],
-			[
-				"title" => __("Two Factor Authentication", "really-simple-ssl"),
-				"id" => "two_fa",
-				"premium" => true,
-				"options" => ['login_protection_enabled', 'two_fa_enabled'],
-				"activated" => true,
-			],
-			[
-				"title" => __("Advanced Security Headers", "really-simple-ssl"),
-				"id" => "advanced_headers",
-				"premium" => true,
-				"options" => [],
-				"activated" => true,
-			],
-			[
-				"title" => __("Advanced Hardening Features", "really-simple-ssl"),
-				"id" => "advanced_hardening",
-				"premium" => true,
-				"options" => [],
+				"title"     => __( "Mixed Content Fixer", "really-simple-ssl" ),
+				"id"        => "mixed_content_fixer",
+				"options"   => [ "mixed_content_fixer" ],
 				"activated" => true,
 			],
 		];
+
+		if ( ! defined( 'rsssl_pro' ) ) {
+			$features += [
+				[
+					"title"     => __( "Firewall", "really-simple-ssl" ),
+					"id"        => "firewall",
+					"premium"   => true,
+					"options"   => [ "enable_firewall" ],
+					"activated" => true,
+				],
+				[
+					"title"     => __( "Two-Factor Authentication", "really-simple-ssl" ),
+					"id"        => "two_fa",
+					"premium"   => true,
+					"options"   => [ 'login_protection_enabled'],
+					"activated" => true,
+				],
+				[
+					"title"     => __( "Limit Login Attempts", "really-simple-ssl" ),
+					"id"        => "limit_login_attempts",
+					"premium"   => true,
+					"options"   => [ 'enable_limited_login_attempts' ],
+					"activated" => true,
+				],
+				[
+					"title"     => __( "Security Headers", "really-simple-ssl" ),
+					"id"        => "advanced_headers",
+					"premium"   => true,
+					"options"   => [],
+					"activated" => true,
+				],
+			];
+		}
+
+		return $features;
 	}
 
 	/**
 	 * Returns onboarding items if user upgraded plugin to 6.0 or SSL is detected
 	 * @return array
 	 */
-	public function pro_features () {
+	public function pro_features (): array
+    {
 		return [
+			[
+				"title" => __("Firewall", "really-simple-ssl"),
+				"id" => "firewall",
+				"premium" => true,
+				"options" => ['enable_firewall'],
+				"activated" => true,
+			],
+			[
+				"title" => __("Two-Factor Authentication", "really-simple-ssl"),
+				"id" => "two_fa",
+				"premium" => true,
+				"options" => ['two_fa_enabled_roles_totp'],
+                "value" => ['administrator'],
+                "activated" => true,
+			],
 			[
 				"title" => __("Limit Login Attempts", "really-simple-ssl"),
 				"id" => "limit_login_attempts",
@@ -392,43 +443,43 @@ class rsssl_onboarding {
 				"activated" => true,
 			],
 			[
-				"title" => __("Two Factor Authentication", "really-simple-ssl"),
-				"id" => "two_fa",
-				"premium" => true,
-				"options" => ['login_protection_enabled', 'two_fa_enabled'],
-				"activated" => true,
-			],
-			[
-				"title" => __("Advanced Security Headers", "really-simple-ssl"),
+				"title" => __("Security Headers", "really-simple-ssl"),
 				"id" => "advanced_headers",
 				"premium" => true,
 				"options" => [  'upgrade_insecure_requests',
-								'x_content_type_options',
-								['x_xss_protection' => 'zero'],
-								'x_content_type_options',
-								['x_frame_options' => 'SAMEORIGIN'],
-								['referrer_policy' => 'strict-origin-when-cross-origin'],
-								['csp_frame_ancestors' => 'self'],
-							 ],
-				"activated" => true,
-			],
-			[
-				"title" => __("Password security", "really-simple-ssl"),
-				"id" => "password_security",
-				"options" => ['enforce_password_security_enabled'],
-				"activated" => true,
-			],
-			[
-				"title" => __("Advanced Hardening", "really-simple-ssl"),
-				"id" => "advanced_hardening",
-				"premium" => true,
-				"options" => [ 'change_debug_log_location', 'disable_http_methods' ],
+					'x_content_type_options',
+					'hsts',
+					['x_xss_protection' => 'zero'],
+					'x_content_type_options',
+					['x_frame_options' => 'SAMEORIGIN'],
+					['referrer_policy' => 'strict-origin-when-cross-origin'],
+					['csp_frame_ancestors' => 'self'],
+				],
 				"activated" => true,
 			],
 			[
 				"title" => __("Vulnerability Measures", "really-simple-ssl"),
 				"id" => "vulnerability_measures",
-				"options" => ["vulnerabilities_measures"],
+				"options" => ["enable_vulnerability_scanner", "measures_enabled"],
+				"activated" => true,
+			],
+			[
+				"title" => __("Advanced WordPress Hardening", "really-simple-ssl"),
+				"id" => "advanced_hardening",
+				"premium" => true,
+				"options" => [ 'change_debug_log_location', 'disable_http_methods' ],
+				"activated" => true,
+			],
+//			[
+//				"title" => __("File Change Detection", "really-simple-ssl"),
+//				"id" => "file_change_detection",
+//				"options" => ['file_change_detection'],
+//				"activated" => true,
+//			],
+			[
+				"title" => __("Strong Password policy", "really-simple-ssl"),
+				"id" => "password_security",
+				"options" => ['enforce_password_security_enabled', 'enable_hibp_check'],
 				"activated" => true,
 			],
 		];
@@ -441,17 +492,19 @@ class rsssl_onboarding {
 	 *
 	 * @return void
 	 */
-	public function dismiss_modal($data){
+	public function dismiss_modal($data): void
+    {
 		if (!rsssl_user_can_manage()) return;
 		$dismiss =  $data['dismiss'] ?? false;
 		update_option("rsssl_onboarding_dismissed", (bool) $dismiss, false);
 	}
 
-	public function maybe_redirect_to_settings_page() {
+	public function maybe_redirect_to_settings_page(): void
+    {
 		if ( get_transient('rsssl_redirect_to_settings_page' ) ) {
 			delete_transient('rsssl_redirect_to_settings_page' );
 			if ( !RSSSL()->admin->is_settings_page() ) {
-				wp_redirect( rsssl_admin_url() );
+				wp_redirect( add_query_arg(array('page' => 'really-simple-security'), rsssl_admin_url() ) );
 				exit;
 			}
 		}
@@ -515,7 +568,8 @@ class rsssl_onboarding {
 	 * Logic if the activation notice should be shown
 	 */
 
-	function show_onboarding_modal() {
+	public function show_onboarding_modal(): bool
+    {
 		if ( get_option("rsssl_onboarding_dismissed") ) {
 			return false;
 		}
@@ -557,6 +611,39 @@ class rsssl_onboarding {
 		}
 
 		return true;
+	}
+
+	/**
+	 * @return void
+	 *
+	 * Maybe reset onboarding modal
+	 */
+	public function reset_onboarding(): void
+    {
+		//ensure onboarding triggers again so user gets to enter the license on reload.
+		update_option( "rsssl_show_onboarding", true, false );
+		update_option( "rsssl_onboarding_dismissed", false, false );
+		update_option( "rsssl_upgraded_from_free", true, false );
+	}
+
+	/**
+	 * @return string|null
+	 *
+	 * Generate notice based on Pro being installed or not
+	 */
+	public function features_subtitle(): ?string
+    {
+		$notice = __( "Instantly configure these essential features.", "really-simple-ssl" );
+
+		if ( ! defined('rsssl_pro') ) {
+			$notice .= ' ' . sprintf(
+					__( "Please %sconsider upgrading to Pro%s to enjoy all simple and performant security features.", "really-simple-ssl" ),
+					'<a href="https://really-simple-ssl.com/pro?mtm_campaign=security&mtm_source=free&mtm_content=upgrade" target="_blank">',
+					'</a>'
+				);
+		}
+
+		return $notice;
 	}
 
 }

@@ -5,10 +5,10 @@ defined( 'ABSPATH' ) or die();
  */
 
 /**
- * Get a Really Simple SSL option by name
+ * Get a Really Simple Security option by name
  *
- * @param string $name
- * @param mixed  $default_value
+ * @param string $name The name of the option to retrieve.
+ * @param mixed  $default_value The default value to return if the option does not exist.
  *
  * @return mixed
  */
@@ -99,7 +99,7 @@ function rsssl_get_legacy_option( $options, string $name ): array {
 function rsssl_check_if_email_essential_feature() {
 	$essential_features = array(
 		'limit_login_attempts' => rsssl_get_option( 'enable_limited_login_attempts' ) == 1,//phpcs:ignore
-		'two_fa_enabled'       => rsssl_get_option( 'two_fa_enabled' ) == 1,//phpcs:ignore
+		'login_protection_enabled'       => rsssl_get_option( 'login_protection_enabled' ) == 1,//phpcs:ignore
 	);
 
 	// Check if the current feature is in the essential features array
@@ -222,9 +222,9 @@ if ( ! function_exists('rsssl_set_encryption_key')) {
 
 		if ( is_writable( $wp_config_path ) ) {
 			// Add the key to the wp-config file
-			$rule         = "//Begin Really Simple SSL key\n";
+			$rule         = "//Begin Really Simple Security key\n";
 			$rule         .= "define('RSSSL_KEY', '" . $key . "');\n";
-			$rule         .= "//END Really Simple SSL key\n";
+			$rule         .= "//END Really Simple Security key\n";
 			$insert_after = '<?php';
 
 			$contents = file_get_contents( $wp_config_path );

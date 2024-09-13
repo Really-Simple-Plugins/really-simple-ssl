@@ -4,6 +4,10 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit();
 }
 
+if ( defined('RSSSL_UPGRADING_TO_PRO') ) {
+	exit();
+}
+
 $rsssl_settings = get_option( 'rsssl_options' );
 if ( isset( $rsssl_settings['delete_data_on_uninstall'] ) && $rsssl_settings['delete_data_on_uninstall'] ) {
 	$rsssl_options = [

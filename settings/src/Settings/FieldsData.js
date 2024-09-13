@@ -161,7 +161,7 @@ const useFields = create(( set, get ) => ({
             let fieldIsIncluded = changedFields.filter(changedField => changedField.id === field.id).length > 0;
             //also check if there's no saved value yet for radio fields, by checking the never_saved attribute.
             //a radio or select field looks like it's completed, but won't save if it isn't changed.
-            //this should not be the case for disabled fields, as these fields often are enabled server side because they're enabled outside Really Simple SSL.
+            //this should not be the case for disabled fields, as these fields often are enabled server side because they're enabled outside Really Simple Security.
             let select_or_radio = field.type === 'select' || field.type === 'radio';
             if (fieldIsIncluded || (field.never_saved && !field.disabled && select_or_radio)) {
                 saveFields.push(field);
@@ -303,8 +303,6 @@ const handleShowSavedSettingsNotice = ( text, type ) => {
         toast.success(text);
     }
 }
-
-
 
 const validateConditions = (conditions, fields, fieldId) => {
     let relation = conditions[0].relation === 'OR' ? 'OR' : 'AND';

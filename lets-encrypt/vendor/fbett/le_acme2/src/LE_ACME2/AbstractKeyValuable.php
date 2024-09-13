@@ -41,7 +41,7 @@ abstract class AbstractKeyValuable {
 
         if(!file_exists($this->getKeyDirectoryPath())) {
 
-            mkdir($this->getKeyDirectoryPath());
+            mkdir($this->getKeyDirectoryPath(), 0755, true);
         }
 
         if(!$ignoreIfKeysExist && (

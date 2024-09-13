@@ -5,8 +5,8 @@ const PagePlaceholder = (props) => {
             <div className="rsssl-header-container">
                 <div className="rsssl-header">
                     <img className="rsssl-logo"
-                         src={rsssl_settings.plugin_url + 'assets/img/really-simple-ssl-logo.svg'}
-                         alt="Really Simple SSL logo"/>
+                         src={rsssl_settings.plugin_url + 'assets/img/really-simple-security-logo.svg'}
+                         alt="Really Simple Security logo"/>
                 </div>
             </div>
             <div className="rsssl-content-area rsssl-grid rsssl-dashboard rsssl-page-placeholder">

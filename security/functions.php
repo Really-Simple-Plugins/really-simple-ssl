@@ -53,10 +53,10 @@ if ( !function_exists('rsssl_admin_url')) {
 	 * @param string $path //hash slug for the settings pages (e.g. #dashboard)
 	 * @return string
 	 */
-	function rsssl_admin_url( array $args=[], string $path = '' ): string {
-		$url = is_multisite() ? network_admin_url('settings.php') : admin_url("options-general.php");
+	function rsssl_admin_url(array $args = [], string $path = ''): string {
+		$url = is_multisite() ? network_admin_url('admin.php') : admin_url('admin.php');
 		$args = wp_parse_args($args, ['page' => 'really-simple-security']);
-		return add_query_arg($args, $url).$path;
+		return add_query_arg($args, $url) . $path;
 	}
 }
 
@@ -155,7 +155,7 @@ if ( !function_exists('rsssl_remove_htaccess_security_edits') ) {
 		$content_htaccess = file_get_contents($htaccess_file);
 		//remove old style rules
 		$pattern_1 = "/#\s?BEGIN\s?rlrssslReallySimpleSSL.*?#\s?END\s?rlrssslReallySimpleSSL/s";
-		$pattern_2 = "/#\s?BEGIN\s?Really Simple SSL Redirect.*?#\s?END\s?Really Simple SSL Redirect/s";
+		$pattern_2 = "/#\s?BEGIN\s?Really Simple Security Redirect.*?#\s?END\s?Really Simple Security Redirect/s";
 		$content_htaccess = preg_replace([$pattern_1, $pattern_2], "", $content_htaccess);
 		if (preg_match($pattern, $content_htaccess) && is_writable( $htaccess_file ) ) {
 			$content_htaccess = preg_replace($pattern, "", $content_htaccess);
@@ -296,7 +296,7 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 			$content_htaccess = preg_replace(
 				[
 					"/#\s?BEGIN\s?rlrssslReallySimpleSSL.*?#\s?END\s?rlrssslReallySimpleSSL/s",
-					"/#\s?BEGIN\s?Really Simple SSL Redirect.*?#\s?END\s?Really Simple SSL Redirect/s"
+					"/#\s?BEGIN\s?Really Simple Security Redirect.*?#\s?END\s?Really Simple Security Redirect/s"
 				], "", $content_htaccess);
 			preg_match( $pattern_content, $content_htaccess, $matches );
 

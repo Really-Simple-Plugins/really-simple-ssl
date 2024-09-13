@@ -20,8 +20,8 @@ class RequestSigner {
 
         Logger::getInstance()->add(Logger::LEVEL_DEBUG, 'JWK sign request for ' . $url, $payload);
 
-        $privateKey = openssl_pkey_get_private(file_get_contents($privateKeyDir . $privateKeyFile));
-        $details = openssl_pkey_get_details($privateKey);
+        $privateKey = @openssl_pkey_get_private(file_get_contents($privateKeyDir . $privateKeyFile));
+        $details = @openssl_pkey_get_details($privateKey);
 
         $protected = [
             "alg" => "RS256",

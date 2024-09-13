@@ -139,9 +139,6 @@
 
   .rsssl-grid-item {
     @include rsssl-block;
-    &.rsssl-disabled {
-      min-height:320px;//add min height on disabled so the settings is visible behind the locked div.
-    }
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
@@ -150,6 +147,9 @@
     //min-height: 200px;//seems odd for blocks with only one item: lots of white space
     grid-column: span 1;
     grid-row: span 1;
+    &.rsssl-disabled {
+      min-height:320px;//add min height on disabled so the settings is visible behind the locked div.
+    }
     &.rsssl-two_fa_users {
       .rsssl-grid-item-content {
         .rsssl-field-wrap {
@@ -205,11 +205,10 @@
     }
 
     &-content {
+      flex-grow: 100;
       width: 100%;
       box-sizing: border-box;
       @include rsssl-inline-block-padding;
-      flex-grow: 100;
-
       &:empty {
         display: none;
       }
@@ -219,14 +218,13 @@
       display: flex;
       flex-wrap: wrap;
       align-items: center;
+      align-self: flex-end;
       justify-content: space-between;
       gap: var(--rsp-grid-margin);
       width: 100%;
       min-height: calc(30px + var(--rsp-spacing-s) * 2);
       box-sizing: border-box;
       @include rsssl-block-padding;
-      align-self: flex-end;
-
       .rsssl-legend {
         display: flex;
 

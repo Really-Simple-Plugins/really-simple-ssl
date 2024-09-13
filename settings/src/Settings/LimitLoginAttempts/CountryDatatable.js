@@ -172,16 +172,19 @@ const CountryDatatable = (props) => {
         if (Array.isArray(code)) {
             const ids = code.map(item => item.id);
             const regions = code.map(item => item.iso2_code);
+            let no_error = true;
             regions.forEach((code) => {
                 resetRegions(code, dataActions).then(
                     (response) => {
-                        if (response.success) {
-                            showSavedSettingsNotice(response.message);
-                        } else {
+                        if (!response.success) {
                             showSavedSettingsNotice(response.message, 'error');
+                            no_error = false;
                         }
                     });
             });
+            if(no_error) {
+                showSavedSettingsNotice(__('Selected regions are now allowed', 'really-simple-ssl'));
+            }
             setRowsSelected([]);
         } else {
             await resetRegions(code, dataActions);

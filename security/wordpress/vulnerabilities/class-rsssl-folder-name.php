@@ -44,7 +44,7 @@ class Rsssl_Folder_Name {
 
 		if ( ! file_exists( $folder_path ) && is_writable($upload_dir['basedir'] ) ) {
 			if ( ! mkdir( $folder_path, 0755, true ) && ! is_dir( $folder_path ) ) {
-				$this->log( sprintf( 'Really Simple SSL: Directory "%s" was not created', $folder_path ) );
+				$this->log( sprintf( 'Really Simple Security: Directory "%s" was not created', $folder_path ) );
 			}
 		}
 	}
