@@ -151,6 +151,14 @@ The plugin checks your certificate before enabling, but if, for example, you mig
 If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions](https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/) instead.
 
 == Changelog ==
+= 9.0.0 =
+* September 16th
+* Fix: Instructions URL in the Firewall settings.
+* Fix: Fixed incorrect instructions URL
+* Fix: Let's Encrypt returning an old certificate on auto-renewed certificates
+* Improvement: As the X-Frame-Options is deprecated and replaced by frame ancestors, we drop the header as recommendation.
+* Improvement: save and continue in vulnerabilities overview not working correctly
+
 = 8.3.0.1 =
 * Fix: Issues with the decryption model
 
