@@ -69,7 +69,6 @@ const DataTableStore = create((set, get) => ({
         get().restoreView();
     },
     rowAction: async ( ids, action, actionType, reloadFields ) => {
-        console.log("rowAction ", ids, action, actionType);
         actionType = typeof actionType !== 'undefined' ? actionType : '';
         set({processing: true});
         if ( actionType === 'delete' ) {
@@ -93,7 +92,6 @@ const DataTableStore = create((set, get) => ({
             }
 
         } catch (e) {
-            console.log("an error occurred during ", action, e)
         } finally {
             set({processing: false});
         }

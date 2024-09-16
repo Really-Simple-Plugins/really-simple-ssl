@@ -57,32 +57,7 @@ class Rsssl_Two_Factor_Admin {
 		self::$instance = $this;
 		add_filter( 'rsssl_do_action', array( $this, 'two_fa_table' ), 10, 3 );
 		add_filter( 'rsssl_after_save_field', array( $this, 'maybe_reset_two_fa' ), 20, 2 );
-		add_filter( 'rsssl_after_save_field', array( $this, 'maybe_show_warning' ), 20, 2 );
 		add_filter( 'rsssl_after_save_field', array( $this, 'change_disabled_users_when_forced' ), 20, 2 );
-		if ( ! $this->can_i_use_2fa() ) {
-			add_filter( 'rsssl_notices', array( $this, 'show_2fa_notices' ) );
-		}
-	}
-
-	/**
-	 * If the login protection is enabled and a new value is set to true,
-	 * check if the current user is allowed to use two-factor authentication.
-	 * If not, add a filter to display a warning notice.
-	 *
-	 * @param  string $field_id  The ID of the field being checked.
-	 * @param  mixed  $new_value  The new value being set.
-	 *
-	 * @return void
-	 */
-	public function maybe_show_warning( string $field_id, $new_value ): void {
-		if ( 'login_protection_enabled' === $field_id && true === (bool) $new_value ) {
-			if ( $this->can_i_use_2fa() ) {
-				// if the user can use 2fa, remove the filter.
-				remove_filter( 'rsssl_notices', array( $this, 'show_2fa_notices' ) );
-			} else {
-				add_filter( 'rsssl_notices', array( $this, 'show_2fa_notices' ) );
-			}
-		}
 	}
 
     /**
@@ -125,22 +100,6 @@ class Rsssl_Two_Factor_Admin {
 	 */
 	public function can_i_use_2fa(): bool {
 		return rsssl_get_option( 'login_protection_enabled' );
-	}
-
-	/**
-	 * Show 2FA notices.
-	 *
-	 * @param  array $notices  An array of existing notices.
-	 *
-	 * @return array An array of notices including the "enabled_2fa_provider_no_provider_enabled" notice.
-	 */
-	public function show_2fa_notices( array $notices ): array {
-		$notice = $this->create_2fa_notice(
-			__( 'No Two-Factor method was enabled', 'really-simple-ssl' ),
-			__( 'Please enable a Two-Factor Authentication method and assign the roles needed to be visible for the collection of users needed.', 'really-simple-ssl' )
-		);
-		$notices['enabled_2fa_provider_no_provider_enabled'] = $notice;
-		return $notices;
 	}
 
 	/**
@@ -468,7 +427,7 @@ class Rsssl_Two_Factor_Admin {
 	 */
 	public function get_status_by_method( int $user_id ): array {
 		$user_id = absint( $user_id );
-        if(defined('rsssl_pro') && !rsssl_pro ) {
+        if(defined('rsssl_pro') && rsssl_pro ) {
             $result  = $this->get_status_for_method( 'totp', $user_id );
         }
 

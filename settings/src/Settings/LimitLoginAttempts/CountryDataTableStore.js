@@ -100,7 +100,6 @@ const CountryDataTableStore = create((set, get) => ({
  */
     updateRow: async (value, status, dataActions) => {
         set({processing: true});
-        console.log(value);
         let data = {
             value: value,
             status: status

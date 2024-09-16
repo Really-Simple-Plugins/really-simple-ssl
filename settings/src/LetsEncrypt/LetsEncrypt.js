@@ -54,7 +54,6 @@ const LetsEncrypt = ({field}) => {
     }, [actionsList])
 
     useEffect(() => {
-        console.log('actionIndex', actionIndex, maxIndex.current);
     }, [actionIndex, maxIndex.current]);
 
     const startInterval = () => {

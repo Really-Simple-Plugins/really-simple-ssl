@@ -22,8 +22,6 @@ const FileChangeDetection = ({field}) => {
                 'reset_changed_files',
                 {}
             );
-            console.log("show toast")
-
 
         } catch (e) {
             console.log(e);
