@@ -1,8 +1,8 @@
 <?php
 /**
- * Plugin Name: Really Simple SSL
+ * Plugin Name: Really Simple Security
  * Plugin URI: https://really-simple-ssl.com
- * Description: Lightweight SSL & Hardening Plugin
+ * Description: Easily improve site security with WordPress Hardening, Two-Factor Authentication (2FA), Login Protection, Vulnerability Detection and SSL certificate generation.
  * Version: 9.0.0
  * Requires at least: 5.9
  * Requires PHP: 7.4
