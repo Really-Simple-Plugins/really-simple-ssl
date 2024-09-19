@@ -36,7 +36,7 @@ class REALLY_SIMPLE_SECURITY
 		require_once( $path . 'hardening.php' );
 		require_once( $path . 'cron.php' );
 		require_once( $path . 'wordpress/class-rsssl-simple-404-interceptor.php' );
-		require_once( $path . 'wordpress/two-fa/class-rsssl-two-factor.php' );
+
 
 
 		/**

@@ -2,14 +2,14 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Really Simple Security Pro 9.0.1\n"
+"Project-Id-Version: Really Simple Security Pro 9.0.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/really-simple-ssl-pro\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-09-16T07:34:23+00:00\n"
+"POT-Creation-Date: 2024-09-19T14:35:45+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: really-simple-ssl\n"
@@ -4529,14 +4529,6 @@ msgstr ""
 
 #: security/wordpress/two-fa/class-rsssl-parameter-validation.php:133
 msgid "The key is not valid."
-msgstr ""
-
-#: security/wordpress/two-fa/class-rsssl-two-factor-admin.php:139
-msgid "No Two-Factor method was enabled"
-msgstr ""
-
-#: security/wordpress/two-fa/class-rsssl-two-factor-admin.php:140
-msgid "Please enable a Two-Factor Authentication method and assign the roles needed to be visible for the collection of users needed."
 msgstr ""
 
 #. translators: %s: URL for code regeneration
