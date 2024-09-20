@@ -102,7 +102,7 @@ const DynamicDataTable = (props) => {
                     return true;
                 }
                 //if the user has an active or disabled status, it can be reset
-                if (user.status_for_user.toLowerCase() === 'active' || user.status_for_user.toLowerCase() === 'disabled' ) {
+                if (user.status_for_user.toLowerCase() === 'active' || user.status_for_user.toLowerCase() === 'disabled' || user.status_for_user.toLowerCase() === 'expired'  ) {
                     return false;
                 }
                 if ( !forcedRoles.includes(user.user_role.toLowerCase() || !forcedRolesTotp.includes(user.user_role.toLowerCase())) ) {
@@ -118,7 +118,7 @@ const DynamicDataTable = (props) => {
                 return true;
             }
             //if the user has an active or disabled status, it can be reset
-            if ( users.status_for_user.toLowerCase() === 'active' || users.status_for_user.toLowerCase() === 'disabled' ) {
+            if ( users.status_for_user.toLowerCase() === 'active' || users.status_for_user.toLowerCase() === 'disabled' || users.status_for_user.toLowerCase() === 'expired' ) {
                 return false;
             }
             return (forcedRoles.includes(users.user_role.toLowerCase()) || forcedRolesTotp.includes(users.user_role.toLowerCase()));
