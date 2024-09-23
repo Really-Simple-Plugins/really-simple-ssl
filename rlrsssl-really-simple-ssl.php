@@ -6,7 +6,7 @@
  * Version: 9.0.2
  * Requires at least: 5.9
  * Requires PHP: 7.4
- * Author: Really Simple Plugins
+ * Author: Really Simple Security
  * Author URI: https://really-simple-plugins.com
  * License: GPL2
  * Text Domain: really-simple-ssl
