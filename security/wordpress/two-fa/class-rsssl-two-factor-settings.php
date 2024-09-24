@@ -251,7 +251,7 @@ class Rsssl_Two_Factor_Settings {
 	 */
 	public static function get_email_method_action( int $user_id ): string {
 		$email = Rsssl_Two_Factor_Email::get_instance();
-
+        $grace_period = self::is_user_in_grace_period( get_userdata( $user_id ) );
 		$return = 'login';
 
 		if ( $email::is_enabled( get_userdata( $user_id ) ) ) {
@@ -269,7 +269,17 @@ class Rsssl_Two_Factor_Settings {
 			if ( 'open' === $user_status ) {
 				// if the role status is forced or optional, we show onboarding.
 				if ( 'forced' === $role_status || 'optional' === $role_status ) {
-					$return = 'onboarding';
+
+                    // The role is forced. So check if the grace period is over.
+                    if ( $grace_period > 0 &&  'forced' === $role_status ) {
+                        return 'onboarding';
+                    }
+
+                    if ('optional' === $role_status) {
+                        return 'onboarding';
+                    }
+
+                    return 'expired';
 				}
 			}
 		}

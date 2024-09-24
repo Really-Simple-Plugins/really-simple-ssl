@@ -81,8 +81,16 @@ class Rsssl_Two_Factor_Admin {
             foreach ($users as $user) {
                 $user = new WP_User($user);
                 $status_per_methods = Rsssl_Two_Factor_Settings::get_user_status_per_method($user->ID);
+
                 // if there is an active or open method, We do nothing.
                 if (in_array('active', $status_per_methods) || in_array('open', $status_per_methods)) {
+                    // I the method is open we check if the user has a last_login if not we set it to now.
+//                    if (in_array('open', $status_per_methods)) {
+//                        $last_login = get_user_meta($user->ID, 'rsssl_two_fa_last_login', true);
+//                        if (empty($last_login)) {
+//                            update_user_meta($user->ID, 'rsssl_two_fa_last_login', gmdate('Y-m-d H:i:s'));
+//                        }
+//                    }
                     continue;
                 }
                 // now we reset the user.
