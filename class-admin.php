@@ -2181,6 +2181,7 @@ class rsssl_admin {
 						'highlight_field_id' => 'login_protection_enabled',
 						'msg'                => __( 'Implement Two-Factor Authentication or Passkey login.', 'really-simple-ssl' ),
 						'icon'               => 'premium',
+                        'url'                => 'login-protection',
 					),
 				),
 			),
@@ -2192,6 +2193,7 @@ class rsssl_admin {
                         'highlight_field_id' => 'enable_limited_login_attempts',
                         'msg'                => __( 'Protect your login form with Limit Login Attempts.', 'really-simple-ssl' ),
                         'icon'               => 'premium',
+                        'url'                => 'login-protection',
 				    ),
 			    ),
 		    ),
@@ -2203,24 +2205,9 @@ class rsssl_admin {
                         'highlight_field_id' => 'enable_firewall',
                         'msg'                => __( 'Protect your site with a performant Firewall.', 'really-simple-ssl' ),
                         'icon'               => 'premium',
+                        'url'                => 'firewall',
                     ),
                 ),
-			),
-			'recommended_security_headers_not_set' => array(
-				'callback' => 'RSSSL()->admin->recommended_headers_enabled',
-				'score'    => 5,
-				'output'   => array(
-					'false' => array(
-						'msg'         => __( 'See which recommended security headers are not present on your website.', 'really-simple-ssl' ),
-						'icon'        => 'premium',
-						'dismissible' => false,
-						'url'         => 'https://scan.really-simple-ssl.com/',
-					),
-					'true'  => array(
-						'msg'  => __( 'Recommended security headers enabled.', 'really-simple-ssl' ),
-						'icon' => 'success',
-					),
-				),
 			),
 			'duplicate-ssl-plugins'                => array(
 				'condition' => array( 'rsssl_detected_duplicate_ssl_plugin' ),
