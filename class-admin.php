@@ -2516,6 +2516,11 @@ class rsssl_admin {
                     $this->log( $func . ' not found');
 				}
 			} else {
+                if ( !is_string($func) || !function_exists($func) ) {
+                    error_log("missing function");
+                    error_log(print_r($func, true));
+                    return false;
+                }
                 $output = $func();
 			}
 		}
