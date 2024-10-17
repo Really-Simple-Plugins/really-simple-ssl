@@ -78,6 +78,11 @@ class Rsssl_Request_Parameters {
     public $token;
 
     /**
+     * @var bool
+     */
+    public $profile;
+
+    /**
 	 * Constructor for the class.
 	 *
 	 * @param WP_REST_Request $request The WordPress REST request object.
@@ -97,6 +102,7 @@ class Rsssl_Request_Parameters {
 		}
         if ('email' === $this->provider) {
             $this->token = wp_unslash($request->get_param('token'));
+            $this->profile = wp_unslash($request->get_param('profile')?? false);
         }
 	}
 }

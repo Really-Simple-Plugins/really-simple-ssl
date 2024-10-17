@@ -19,12 +19,13 @@ const DynamicDataTableStore = create((set, get) => ({
         }
         if ( optionalRoles.includes(currentRole) ) {
             set({processing: true});
+            set({dataLoaded: false});
             const response = await apiFetch({
                 path: `/wp/v2/users/${id}`,
                 method: 'POST',
                 data: {
                     meta: {
-                        rsssl_two_fa_status: 'open',
+                        rsssl_two_fa_status_email: 'open',
                         rsssl_two_fa_status_totp: 'open',
                     },
                     _wpnonce: rsssl_settings.nonce,
@@ -33,6 +34,7 @@ const DynamicDataTableStore = create((set, get) => ({
                 console.error(error);
             });
             set({processing: false});
+            set({dataLoaded: true});
         }
     },
     hardResetUser: async (id) => {
@@ -63,7 +65,7 @@ const DynamicDataTableStore = create((set, get) => ({
                 'two_fa_table',
                 get().dataActions
             );
-            if (response) {
+            if (response && response.data) {
                 set(state => ({
                     ...state,
                     DynamicDataTable: response.data,
@@ -74,6 +76,12 @@ const DynamicDataTableStore = create((set, get) => ({
                 }));
                 // Return the response for the calling function to use
                 return response;
+            } else {
+                set(state => ({
+                    ...state,
+                    processing: false,
+                    dataLoaded: true,
+                }));
             }
         } catch (e) {
             console.log(e);

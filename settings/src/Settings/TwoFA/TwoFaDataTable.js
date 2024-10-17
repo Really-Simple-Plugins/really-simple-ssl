@@ -1,5 +1,5 @@
 import {__} from '@wordpress/i18n';
-import {useRef, useEffect, useState} from '@wordpress/element';
+import {useEffect, useState} from '@wordpress/element';
 import DataTable, {createTheme} from "react-data-table-component";
 import useFields from "../FieldsData";
 import TwoFaDataTableStore from "./TwoFaDataTableStore";
@@ -10,17 +10,12 @@ const DynamicDataTable = (props) => {
         resetUserMethod,
         hardResetUser,
         handleUsersTableFilter,
-        handleRowsPerPageChange,
         totalRecords,
         DynamicDataTable,
         setDataLoaded,
         dataLoaded,
-        pagination,
-        dataActions,
         fetchDynamicData,
         handleTableSort,
-        handlePageChange,
-        handleTableSearch,
         processing
     } = TwoFaDataTableStore();
 
@@ -34,26 +29,45 @@ const DynamicDataTable = (props) => {
     let field = props.field;
     const [enabled, setEnabled] = useState(false);
     const [reloadWhenSaved, setReloadWhenSaved] = useState(false);
-    const {fields, getFieldValue, saveFields, changedFields} = useFields();
+    const {fields, getFieldValue, changedFields} = useFields();
     const [rowsSelected, setRowsSelected] = useState([]);
     const [rowCleared, setRowCleared] = useState(false);
+    const [data, setData] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
 
-    //Reloading the table
+    useEffect(() => {
+        if (!dataLoaded) {
+            fetchDynamicData();
+        } else {
+            setData(DynamicDataTable);
+        }
+    }, [dataLoaded, DynamicDataTable]);
+
     useEffect(() => {
         setReloadWhenSaved(true);
-        fetchDynamicData();
+        setDataLoaded(false);
     }, [getFieldValue('two_fa_forced_roles'), getFieldValue('two_fa_optional_roles'), getFieldValue('two_fa_forced_roles_totp'), getFieldValue('two_fa_optional_roles_totp')]);
 
-    //when the data is saved, changefields=0 again,
     useEffect(() => {
         if (reloadWhenSaved) {
             if (changedFields.length === 0) {
                 setDataLoaded(false);
                 setReloadWhenSaved(false);
-                fetchDynamicData();
             }
         }
     }, [reloadWhenSaved]);
+
+    const handleTableSearch = (value, columns) => {
+        const search = value.toLowerCase();
+        const searchColumns = columns;
+        const filteredData = DynamicDataTable.filter((item) => {
+            return searchColumns.some((column) => {
+                return item[column].toString().toLowerCase().includes(search);
+            });
+        });
+        setData(filteredData);
+    }
 
     useEffect(() => {
         if (dataLoaded) {
@@ -69,17 +83,15 @@ const DynamicDataTable = (props) => {
     useEffect(() => {
         let enabledEmailRoles = getFieldValue('two_fa_enabled_roles_email');
         let enabledTotpRoles = getFieldValue('two_fa_enabled_roles_totp');
-        // merge the roles from both methods
         let enabledRoles = enabledEmailRoles.concat(enabledTotpRoles);
-        // if the roles are nor empty, then the field is enabled
-        setEnabled(getFieldValue('login_protection_enabled') );
+        setEnabled(getFieldValue('login_protection_enabled'));
     }, [fields]);
 
     useEffect(() => {
         if (!dataLoaded || enabled !== (getFieldValue('two_fa_enabled_email') || getFieldValue('two_fa_enabled_totp'))) {
-            fetchDynamicData()
-         }
-    }, [dataLoaded, getFieldValue('two_fa_enabled'), getFieldValue('two_fa_enabled_totp')]); // Add getFieldValue('login_protection_enabled') as a dependency
+            setDataLoaded(false);
+        }
+    }, [getFieldValue('two_fa_enabled'), getFieldValue('two_fa_enabled_totp')]);
 
     const allAreForced = (users) => {
         let forcedRoles = getFieldValue('two_fa_forced_roles');
@@ -87,25 +99,21 @@ const DynamicDataTable = (props) => {
         if (!Array.isArray(forcedRoles)) {
             forcedRoles = [];
         }
-
         if (!Array.isArray(forcedRolesTotp)) {
             forcedRolesTotp = [];
         }
-
         if (Array.isArray(users)) {
-            //for each users, check if the user has a forced role
             for (const user of users) {
-                if ( user.user_role === undefined ) {
+                if (user.user_role === undefined) {
                     return true;
                 }
                 if (user.rsssl_two_fa_providers.toLowerCase() === 'none') {
                     return true;
                 }
-                //if the user has an active or disabled status, it can be reset
-                if (user.status_for_user.toLowerCase() === 'active' || user.status_for_user.toLowerCase() === 'disabled' || user.status_for_user.toLowerCase() === 'expired'  ) {
+                if (user.status_for_user.toLowerCase() === 'active' || user.status_for_user.toLowerCase() === 'disabled' || user.status_for_user.toLowerCase() === 'expired') {
                     return false;
                 }
-                if ( !forcedRoles.includes(user.user_role.toLowerCase() || !forcedRolesTotp.includes(user.user_role.toLowerCase())) ) {
+                if (!forcedRoles.includes(user.user_role.toLowerCase()) && !forcedRolesTotp.includes(user.user_role.toLowerCase())) {
                     return false;
                 }
             }
@@ -114,27 +122,17 @@ const DynamicDataTable = (props) => {
             if (users.user_role === undefined) {
                 return true;
             }
-            if (users.rsssl_two_fa_providers.toLowerCase() === 'none') {
-                return true;
-            }
-            //if the user has an active or disabled status, it can be reset
-            if ( users.status_for_user.toLowerCase() === 'active' || users.status_for_user.toLowerCase() === 'disabled' || users.status_for_user.toLowerCase() === 'expired' ) {
+            if (users.status_for_user.toLowerCase() === 'active' || users.status_for_user.toLowerCase() === 'disabled' || users.status_for_user.toLowerCase() === 'expired') {
                 return false;
             }
             return (forcedRoles.includes(users.user_role.toLowerCase()) || forcedRolesTotp.includes(users.user_role.toLowerCase()));
         }
     }
 
-    /**
-     * Check if the one, or all users have an open status
-     * @param users
-     * @returns {boolean}
-     */
     const allAreOpen = (users) => {
         if (Array.isArray(users)) {
-            //for each users, check if the user has a forced role
             for (const user of users) {
-                if ( user.status_for_user.toLowerCase() !== 'open' ) {
+                if (user.status_for_user.toLowerCase() !== 'open') {
                     return false;
                 }
             }
@@ -159,7 +157,7 @@ const DynamicDataTable = (props) => {
     let columns = [];
 
     field.columns.forEach(function (item, i) {
-        let newItem = {...item, key: item.column};
+        let newItem = { ...item, key: item.column };
         newItem = buildColumn(newItem);
         newItem.visible = newItem.visible ?? true;
         columns.push(newItem);
@@ -198,7 +196,6 @@ const DynamicDataTable = (props) => {
         const resetRoles = resetRolesEmail.concat(resetRolesTotp);
 
         if (Array.isArray(users)) {
-            //loop through all users one by one, and reset the user
             for (const user of users) {
                 await hardResetUser(user.id, resetRoles, user.user_role.toLowerCase());
             }
@@ -206,7 +203,7 @@ const DynamicDataTable = (props) => {
             await hardResetUser(users.id, resetRoles, users.user_role.toLowerCase());
         }
 
-        await fetchDynamicData();
+        setDataLoaded(false);
         setRowsSelected([]);
         setRowCleared(true);
     }
@@ -215,29 +212,44 @@ const DynamicDataTable = (props) => {
         setRowsSelected(state.selectedRows);
     }
 
+    const capitalizeFirstLetter = (string) => {
+        //if the string is totp we capitlize it
+        if (string === 'totp') {
+            return string.toUpperCase();
+        }
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+
     let resetDisabled = allAreForced(rowsSelected) || allAreOpen(rowsSelected);
+    let inputData = data ? data : [];
+    const paginatedData = inputData.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
     let displayData = [];
-    let inputData= DynamicDataTable ? DynamicDataTable : [];
-    inputData.forEach(user => {
-        let recordCopy = {...user}
-        //forced roles can't be reset if it's just the email method. An open status also can't be reset.
-        let btnDisabled =  allAreForced(user) || allAreOpen(user);
-        recordCopy.resetControl = <button disabled={processing || btnDisabled}
-                                      className="button button-red rsssl-action-buttons__button"
-                                      onClick={() => handleReset(user)}
-                                    >
-                                    {__("Reset", "really-simple-ssl")}
-                                </button>
+    paginatedData.forEach(user => {
+        let recordCopy = { ...user }
+        recordCopy.user = capitalizeFirstLetter(user.user);
+        recordCopy.user_role = capitalizeFirstLetter(user.user_role);
+        recordCopy.status_for_user = __(capitalizeFirstLetter(user.status_for_user), 'really-simple-ssl');
+        recordCopy.rsssl_two_fa_providers = __(capitalizeFirstLetter(user.rsssl_two_fa_providers), 'really-simple-ssl');
+        let btnDisabled = allAreForced(user) || allAreOpen(user);
+        recordCopy.resetControl = <button disabled={btnDisabled}
+                                          className="button button-red rsssl-action-buttons__button"
+                                          onClick={() => handleReset(user)}
+        >
+            {__("Reset", "really-simple-ssl")}
+        </button>
         displayData.push(recordCopy);
     });
+    const CustomLoader = () => (
+        <div className="custom-loader">
+            <div className="dot"></div>
+            <div className="dot"></div>
+            <div className="dot"></div>
+        </div>
+    );
 
     return (
         <>
-            <div className="rsssl-container" style={
-                {
-                    marginTop: "20px",
-                }
-            }>
+            <div className="rsssl-container" style={{ marginTop: "20px" }}>
                 <div>
                     {/* Reserved for actions left */}
                 </div>
@@ -254,12 +266,7 @@ const DynamicDataTable = (props) => {
                 </div>
             </div>
             {rowsSelected.length > 0 && (
-                <div
-                    style={{
-                        marginTop: '1em',
-                        marginBottom: '1em',
-                    }}
-                >
+                <div style={{ marginTop: '1em', marginBottom: '1em' }}>
                     <div className={"rsssl-multiselect-datatable-form rsssl-primary"}>
                         <div>
                             {__("You have selected %s users", "really-simple-ssl").replace("%s", rowsSelected.length)}
@@ -267,8 +274,8 @@ const DynamicDataTable = (props) => {
                         <div className="rsssl-action-buttons">
                             <div className="rsssl-action-buttons__inner">
                                 <button disabled={resetDisabled || processing}
-                                    className="button button-red rsssl-action-buttons__button"
-                                    onClick={() => handleReset(rowsSelected)}
+                                        className="button button-red rsssl-action-buttons__button"
+                                        onClick={() => handleReset(rowsSelected)}
                                 >
                                     {__("Reset", "really-simple-ssl")}
                                 </button>
@@ -278,20 +285,24 @@ const DynamicDataTable = (props) => {
                 </div>
             )}
 
-            {dataLoaded &&
-                <DataTable
+            <DataTable
                     columns={columns}
                     data={displayData}
                     dense
                     pagination
-                    paginationServer
-                    onChangePage={handlePageChange}
-                    onChangeRowsPerPage={handleRowsPerPageChange}
-                    paginationTotalRows={totalRecords}
+                    paginationServer={true}
+                    onChangePage={page => {
+                        setCurrentPage(page);
+                    }}
+                    onChangeRowsPerPage={rows => {
+                        setRowsPerPage(rows);
+                        setCurrentPage(1);
+                    }}
+                    paginationTotalRows={data.length}
                     paginationRowsPerPageOptions={[5, 25, 50, 100]}
-                    paginationPerPage={dataActions.currentRowsPerPage}
-                    paginationState={pagination}
-                    sortServer
+                    paginationPerPage={rowsPerPage}
+                    progressPending={processing} // Show loading indicator
+                    progressComponent={<CustomLoader />}
                     onSort={handleTableSort}
                     noDataComponent={__("No results", "really-simple-ssl")}
                     persistTableHead
@@ -301,18 +312,16 @@ const DynamicDataTable = (props) => {
                     clearSelectedRows={rowCleared}
                     theme="really-simple-plugins"
                     customStyles={customStyles}
-                ></DataTable>
-            }
+                />
             {!enabled &&
                 <div className="rsssl-locked">
-                    <div className="rsssl-locked-overlay"><span
-                        className="rsssl-task-status rsssl-open">{__('Disabled', 'really-simple-ssl')}</span><span>{__('Activate Two-Factor Authentication and one method to enable this block.', 'really-simple-ssl')}</span>
+                    <div className="rsssl-locked-overlay">
+                        <span className="rsssl-task-status rsssl-open">{__('Disabled', 'really-simple-ssl')}</span>
+                        <span>{__('Activate Two-Factor Authentication and one method to enable this block.', 'really-simple-ssl')}</span>
                     </div>
                 </div>
             }
         </>
     );
-
-
 }
 export default DynamicDataTable;

@@ -77,20 +77,17 @@ class rsssl_progress {
 		if (!rsssl_user_can_manage()) return '';
 		ob_start();
 
-		$lowest_possible_task_count = $this->get_lowest_possible_task_count();
 		$open_task_count = count( RSSSL()->admin->get_notices_list( array( 'status' => ['open','warning'] ) ));
 		if ( rsssl_get_option('ssl_enabled') ) {
-			$doing_well = sprintf( _n( "Security configuration not completed yet. You still have %s task open.", "You still have %s tasks open.", $open_task_count, 'really-simple-ssl' ), $open_task_count );
-			if ( $open_task_count === 0 ) {
+			if ( $open_task_count !== 0 ) {
+				echo sprintf( _n( "Security configuration not completed yet. You still have %s task open.", "You still have %s tasks open.", $open_task_count, 'really-simple-ssl' ), $open_task_count );
+			}
+			if ( $open_task_count === 0 && defined('rsssl_pro') ) {
 				_e("Security configuration completed!", "really-simple-ssl");
-			} elseif ( !defined('rsssl_pro') ){
-				if ( $open_task_count >= $lowest_possible_task_count) {
-					echo $doing_well;
-				} else {
-					printf(__("Basic security configuration finished! Improve your score with %sReally Simple Security Pro%s.", "really-simple-ssl"), '<a target="_blank" rel="noopener noreferrer" href="' .rsssl_link() . '">', '</a>');
-				}
-			} else {
-				echo $doing_well;
+			}
+
+			if ( $open_task_count === 0 && ! defined('rsssl_pro') ) {
+				_e( "Basic security configuration completed!", "really-simple-ssl" );
 			}
 		} else if ( !is_network_admin() ) {
 			_e( "SSL is not yet enabled on this site.", "really-simple-ssl" );

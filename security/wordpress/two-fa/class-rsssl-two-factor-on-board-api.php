@@ -100,13 +100,13 @@ class Rsssl_Two_Factor_On_Board_Api {
      *
      * @return WP_REST_Response The REST response object.
      */
-    private function start_email_validation(int $user_id, string $redirect_to = ''): WP_REST_Response
+    private function start_email_validation(int $user_id, string $redirect_to = '', $profile = false): WP_REST_Response
     {
         $redirect_to = $redirect_to ?: home_url();
         $user = get_user_by('id', $user_id);
         Rsssl_Two_Fa_Authentication::create_login_nonce($user_id);
         // Sending the email with the code.
-        Rsssl_Two_Factor_Email::get_instance()->generate_and_email_token($user);
+        Rsssl_Two_Factor_Email::get_instance()->generate_and_email_token($user, $profile);
         $token = get_user_meta( $user_id, Rsssl_Two_Factor_Email::RSSSL_TOKEN_META_KEY, true );
         if ( $redirect_to === 'profile') {
             return new WP_REST_Response( array( 'token' => $token,  'validation_action' => 'validate_email_setup' ), 200 );
@@ -130,7 +130,7 @@ class Rsssl_Two_Factor_On_Board_Api {
 		}
 
 		// Finally redirect the user to the redirect_to page with a response.
-		return $this->start_email_validation( $parameters->user_id, $parameters->redirect_to );
+		return $this->start_email_validation( $parameters->user_id, $parameters->redirect_to , $parameters->profile );
 	}
 
     /**
@@ -149,7 +149,7 @@ class Rsssl_Two_Factor_On_Board_Api {
         }
 
         // Finally redirect the user to the redirect_to page with a response.
-        return $this->start_email_validation( $parameters->user_id, $parameters->redirect_to );
+        return $this->start_email_validation( $parameters->user_id, $parameters->redirect_to, $parameters->profile );
     }
 
     /**
@@ -178,6 +178,7 @@ class Rsssl_Two_Factor_On_Board_Api {
         }
 
         Rsssl_Two_Factor_Email::set_user_status( $parameters->user_id, 'active' );
+	    Rsssl_Two_Factor_Totp::set_user_status( $parameters->user_id, 'disabled' );
         // Mark all other statuses as inactive.
         self::set_other_providers_inactive( $parameters->user_id, 'email' );
 
@@ -193,7 +194,7 @@ class Rsssl_Two_Factor_On_Board_Api {
      */
     public function resend_email_code( WP_REST_Request $request ): WP_REST_Response {
        $parameters = new Rsssl_Request_Parameters( $request );
-        Rsssl_Two_Factor_Email::get_instance()->generate_and_email_token($parameters->user);
+        Rsssl_Two_Factor_Email::get_instance()->generate_and_email_token($parameters->user, $parameters->profile);
         return new WP_REST_Response( array( 'message' => __('A verification code has been sent to the email address associated with your account to verify functionality.', 'really-simple.ssl-pro') ), 200 );
     }
 
@@ -221,6 +222,7 @@ class Rsssl_Two_Factor_On_Board_Api {
 
 		if ( Rsssl_Two_Factor_Totp::setup_totp( $user, $parameters->key, $parameters->code ) ) {
 			Rsssl_Two_Factor_Totp::set_user_status( $user->ID, 'active' );
+			Rsssl_Two_Factor_Email::set_user_status( $user->ID, 'disabled' );
 			// Mark all other statuses as inactive.
 			self::set_other_providers_inactive( $user->ID, 'totp' );
 			// Finally we redirect the user to the redirect_to page.

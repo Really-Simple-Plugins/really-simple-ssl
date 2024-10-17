@@ -74,6 +74,7 @@ class rsssl_admin {
 		add_filter( "plugin_action_links_$plugin", array( $this, 'plugin_settings_link' ) );
 		add_filter( "network_admin_plugin_action_links_$plugin", array($this,'plugin_settings_link' ) );
 
+		add_action( 'rsssl_upgrade', array( $this, 'run_table_init_hook'), 10, 1);
 		add_action( 'upgrader_process_complete', array( $this, 'run_table_init_hook'), 10, 1);
 		add_action( 'wp_initialize_site', array( $this, 'run_table_init_hook'), 10, 1);
 	}
@@ -92,9 +93,16 @@ class rsssl_admin {
 			return;
 		}
 
-		if (!wp_doing_cron() && !rsssl_user_can_manage() ) {
+		if ( !wp_doing_cron() && !rsssl_user_can_manage() ) {
 			return;
 		}
+
+        //if this is already triggered, exit.
+        if ( defined('RSSSL_INSTALLING_TABLES') && RSSSL_INSTALLING_TABLES ) {
+            return;
+        }
+
+        define('RSSSL_INSTALLING_TABLES', true);
 
 		do_action( 'rsssl_install_tables' );
 		//we need to run table creation across subsites as well.
@@ -2165,7 +2173,10 @@ class rsssl_admin {
 						'msg'         => __( 'See which recommended security headers are not present on your website.', 'really-simple-ssl' ),
 						'icon'        => 'premium',
 						'dismissible' => false,
-						'url'         => 'https://scan.really-simple-ssl.com/',
+						'url' => add_query_arg(
+							array( 'domain' => site_url() ),
+							'https://scan.really-simple-ssl.com'
+						),
 					),
 					'true'  => array(
 						'msg'  => __( 'Recommended security headers enabled.', 'really-simple-ssl' ),
@@ -2181,6 +2192,7 @@ class rsssl_admin {
 						'highlight_field_id' => 'login_protection_enabled',
 						'msg'                => __( 'Implement Two-Factor Authentication or Passkey login.', 'really-simple-ssl' ),
 						'icon'               => 'premium',
+                        'url'                => 'login-protection',
 					),
 				),
 			),
@@ -2192,6 +2204,7 @@ class rsssl_admin {
                         'highlight_field_id' => 'enable_limited_login_attempts',
                         'msg'                => __( 'Protect your login form with Limit Login Attempts.', 'really-simple-ssl' ),
                         'icon'               => 'premium',
+                        'url'                => 'login-protection',
 				    ),
 			    ),
 		    ),
@@ -2203,24 +2216,9 @@ class rsssl_admin {
                         'highlight_field_id' => 'enable_firewall',
                         'msg'                => __( 'Protect your site with a performant Firewall.', 'really-simple-ssl' ),
                         'icon'               => 'premium',
+                        'url'                => 'firewall',
                     ),
                 ),
-			),
-			'recommended_security_headers_not_set' => array(
-				'callback' => 'RSSSL()->admin->recommended_headers_enabled',
-				'score'    => 5,
-				'output'   => array(
-					'false' => array(
-						'msg'         => __( 'See which recommended security headers are not present on your website.', 'really-simple-ssl' ),
-						'icon'        => 'premium',
-						'dismissible' => false,
-						'url'         => 'https://scan.really-simple-ssl.com/',
-					),
-					'true'  => array(
-						'msg'  => __( 'Recommended security headers enabled.', 'really-simple-ssl' ),
-						'icon' => 'success',
-					),
-				),
 			),
 			'duplicate-ssl-plugins'                => array(
 				'condition' => array( 'rsssl_detected_duplicate_ssl_plugin' ),
@@ -2529,6 +2527,13 @@ class rsssl_admin {
                     $this->log( $func . ' not found');
 				}
 			} else {
+				if ( !is_string($func) || !function_exists($func) ) {
+                    if ( defined('WP_DEBUG') && WP_DEBUG ) {
+                        error_log("missing function:");
+                        error_log(print_r($func, true));
+                    }
+					return false;
+				}
                 $output = $func();
 			}
 		}

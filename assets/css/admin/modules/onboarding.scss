@@ -8,7 +8,7 @@
   }
   .rsssl-modal-content{
     display:flex;
-
+    min-height:295px;
     .rsssl-onboarding-placeholder {
       flex-grow:1
     }
@@ -32,4 +32,5 @@
       }
     }
   }
+
 }

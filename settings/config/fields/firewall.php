@@ -154,6 +154,52 @@ add_filter( 'rsssl_fields', function( $fields ) {
 					],
 				],
 			],
+            [
+                'id'               => 'user_agent_listing_overview',
+                'menu_id'          => 'rules',
+                'group_id'         => 'user_agents',
+                'type'             => 'user-agents-datatable',
+                'action'           => 'rsssl_user_agent_list',
+                'options'          => [
+                    'deleted' => __('Deleted', 'really-simple-ssl'),
+                    'blocked'  => __('Blocked', 'really-simple-ssl'),
+                ],
+                'disabled'         => false,
+                'default'          => false,
+                'react_conditions' => [
+                    'relation' => 'AND',
+                    [
+                        'enable_firewall' => true,
+                    ]
+                ],
+                'columns'          => [
+                    [
+                        'name'       => __('User-Agent', 'really-simple-ssl'),
+                        'sortable'   => true,
+                        'searchable' => true,
+                        'column'     => 'user_agent',
+                        'width'      => '20%',
+                    ],
+                    [
+                        'name'    => __('Note', 'really-simple-ssl'),
+                        'sortable' => false,
+                        'searchable' => false,
+                        'column'  => 'note',
+                        'width'   => '40%',
+                    ],
+                    [
+                        'name'     => __('Date Added', 'really-simple-ssl'),
+                        'sortable' => false,
+                        'column'   => 'created_at',
+                        'width'    => '20%',
+                    ],
+                    [
+                        'name'     => '',
+                        'sortable' => false,
+                        'column'   => 'action',
+                    ],
+                ],
+            ],
 			[
 				'id'               => 'firewall_listing_overview',
 				'menu_id'          => 'rules',
