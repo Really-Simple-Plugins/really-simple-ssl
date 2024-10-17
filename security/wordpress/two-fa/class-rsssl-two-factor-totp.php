@@ -996,4 +996,8 @@ class Rsssl_Two_Factor_Totp extends Rsssl_Two_Factor_Provider implements Rsssl_T
         $status = get_user_meta( $user->ID, 'rsssl_two_fa_status_totp', true );
         return 'active' === $status;
     }
+
+    public static function get_status( WP_User $user ): string {
+	    return Rsssl_Two_Factor_Settings::get_user_status( 'totp', $user->ID );
+    }
 }

@@ -30,3 +30,12 @@ a.rsssl-skip-link {
     max-height:initial;
   }
 }
+
+.rsssl-add-button__inner .button {
+  display: flex;
+  align-items: center;
+}
+
+.rsssl-add-button__inner .button .icon {
+  margin-left: 8px; /* Adjust the spacing as needed */
+}

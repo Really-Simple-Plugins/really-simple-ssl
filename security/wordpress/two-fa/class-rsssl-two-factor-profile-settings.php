@@ -94,6 +94,14 @@ if (!class_exists('Rsssl_Two_Factor_Profile_Settings')) {
             add_action('admin_enqueue_scripts', array($this, 'enqueue_styles'));
             add_action('personal_options_update', array($this, 'save_user_profile'));
             add_action('edit_user_profile_update', array($this, 'save_user_profile'));
+
+            if (isset($_GET['profile'], $_GET['_wpnonce'])) {
+                $profile = rest_sanitize_boolean(wp_unslash($_GET['profile']));
+                if ($profile) {
+                    Rsssl_Two_Factor_Email::set_user_status(get_current_user_id(), 'active');
+                    Rsssl_Two_Factor_Totp::set_user_status(get_current_user_id(), 'disabled');
+                }
+            }
         }
 
         /**
@@ -137,7 +145,7 @@ if (!class_exists('Rsssl_Two_Factor_Profile_Settings')) {
                 return;
             }
 
-            if(!isset($_POST['preferred_method'])){
+            if (!isset($_POST['preferred_method'])) {
                 return;
             }
 
@@ -200,7 +208,7 @@ if (!class_exists('Rsssl_Two_Factor_Profile_Settings')) {
                     }
                     $user = get_user_by('ID', $user_id);
                     // fetch current status of the user for the email method.
-                    $status = Rsssl_Two_Factor_Settings::get_user_status('email',$user->ID );
+                    $status = Rsssl_Two_Factor_Settings::get_user_status('email', $user->ID);
                     if ('active' === $status) {
                         return;
                     }
@@ -344,7 +352,7 @@ if (!class_exists('Rsssl_Two_Factor_Profile_Settings')) {
                     'download_codes' => esc_html__('Download Backup Codes', 'really-simple-ssl'),
                     'keyCopied' => __('Key copied', 'really-simple-ssl'),
                     'keyCopiedFailed' => __('Could not copy text: ', 'really-simple-ssl')
-                    ]
+                ]
             ));
         }
 

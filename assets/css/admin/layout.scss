@@ -158,51 +158,51 @@
       }
     }
 
+  @media(max-width: $rsp-break-s) {
+    grid-column: span 4;
+  }
+
+  &.no-background {
+    background: none;
+    border: none;
+    box-shadow: none;
+  }
+
+  &.rsssl-column-2 {
+    grid-column: span 2;
     @media(max-width: $rsp-break-s) {
       grid-column: span 4;
     }
+  }
 
-    &.no-background {
-      background: none;
-      border: none;
-      box-shadow: none;
+  &.rsssl-row-2 {
+    grid-row: span 2;
+    min-height: 400px;
+  }
+
+  &-header {
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: calc(30px + var(--rsp-spacing-s) * 2);
+    @include rsssl-block-padding;
+
+    &:empty {
+      display: none;
     }
+  }
 
-    &.rsssl-column-2 {
-      grid-column: span 2;
-      @media(max-width: $rsp-break-s) {
-        grid-column: span 4;
-      }
-    }
+  &-title {
+    margin: 4px 0 4px 0;
+  }
 
-    &.rsssl-row-2 {
-      grid-row: span 2;
-      min-height: 400px;
-    }
-
-    &-header {
-      width: 100%;
-      box-sizing: border-box;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      min-height: calc(30px + var(--rsp-spacing-s) * 2);
-      @include rsssl-block-padding;
-
-      &:empty {
-        display: none;
-      }
-    }
-
-    &-title {
-      margin: 4px 0 4px 0;
-    }
-
-    &-controls {
-      font-size: var(--rsp-fs-200);
-      display: flex;
-      gap: var(--rsp-spacing-s);
-    }
+  &-controls {
+    font-size: var(--rsp-fs-200);
+    display: flex;
+    gap: var(--rsp-spacing-s);
+  }
 
     &-content {
       flex-grow: 100;
@@ -228,22 +228,22 @@
       .rsssl-legend {
         display: flex;
 
-        span {
-          padding-left: 5px;
-        }
-      }
-
-      &:empty {
-        display: none;
+      span {
+        padding-left: 5px;
       }
     }
 
-    .rsssl-flex-push-right {
-      margin-left: auto;
-    }
-
-    .rsssl-flex-push-left {
-      margin-right: auto;
+    &:empty {
+      display: none;
     }
   }
+
+  .rsssl-flex-push-right {
+    margin-left: auto;
+  }
+
+  .rsssl-flex-push-left {
+    margin-right: auto;
+  }
+}
 }

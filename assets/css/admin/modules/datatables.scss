@@ -1,4 +1,4 @@
-.rsssl-content_security_policy_source_directives,.rsssl-firewall_block_list_listing, .rsssl-two_fa_users, .rsssl-firewall_list_listing, .rsssl-vulnerabilities_overview, .rsssl-permissions_policy, .rsssl-firewall_white_list_listing, .rsssl-firewall_logs_content, .rsssl-limit_login_attempts_country, .rsssl-limit_login_attempts_users, .rsssl-limit_login_attempts_event_log, .rsssl-mixed-content-scan, .rsssl-limit_login_attempts_ip_address, .rsssl-content_security_policy, .rsssl-hardening-xml {
+.rsssl-user_agents, .rsssl-content_security_policy_source_directives,.rsssl-firewall_block_list_listing, .rsssl-two_fa_users, .rsssl-firewall_list_listing, .rsssl-vulnerabilities_overview, .rsssl-permissions_policy, .rsssl-404_blocking, .rsssl-firewall_white_list_listing, .rsssl-firewall_logs_content, .rsssl-limit_login_attempts_country, .rsssl-limit_login_attempts_users, .rsssl-limit_login_attempts_event_log, .rsssl-mixed-content-scan, .rsssl-limit_login_attempts_ip_address, .rsssl-content_security_policy, .rsssl-hardening-xml {
 
   .rsssl-field-wrap {
     //wp-core also adds an svg for the select dropdown, so we hide the one from the react datatables component
@@ -154,7 +154,7 @@
   }
 }
 
-.rsssl-firewall_logs, .rsssl-permissions_policy, .rsssl-two_fa_users, .rsssl-content_security_policy_source_directives, .rsssl-firewall_white_list_listing, .rsssl-firewall_block_list_listing, .rsssl-firewall_list_listing, .rsssl-vulnerabilities_overview, .rsssl-vulnerabilities_measures, .rsssl-limit_login_attempts_country, .rsssl-limit_login_attempts_users, .rsssl-firewall_event_log_viewer, .rsssl-firewall_logs_content, .rsssl-limit_login_attempts_event_log, .rsssl-mixed-content-scan, .rsssl-limit_login_attempts_ip_address, .rsssl-content_security_policy, .rsssl-hardening-xml {
+.rsssl-user_agents, .rsssl-404_blocking, .rsssl-firewall_logs, .rsssl-permissions_policy, .rsssl-two_fa_users, .rsssl-content_security_policy_source_directives, .rsssl-firewall_white_list_listing, .rsssl-firewall_block_list_listing, .rsssl-firewall_list_listing, .rsssl-vulnerabilities_overview, .rsssl-vulnerabilities_measures, .rsssl-limit_login_attempts_country, .rsssl-limit_login_attempts_users, .rsssl-firewall_event_log_viewer, .rsssl-firewall_logs_content, .rsssl-limit_login_attempts_event_log, .rsssl-mixed-content-scan, .rsssl-limit_login_attempts_ip_address, .rsssl-content_security_policy, .rsssl-hardening-xml {
   .rsssl-field-wrap {
     margin-left: CALC(-1 * var(--rsp-spacing-l));
     margin-right: CALC(-1 * var(--rsp-spacing-l));
@@ -197,6 +197,8 @@
 .rsssl-content_security_policy,
 .rsssl-permissions_policy,
 .rsssl-firewall_list_listing,
+.rsssl-user_agents,
+.rsssl-404_blocking,
 .rsssl-firewall_white_list_listing,
 .rsssl-firewall_block_list_listing,
 .rsssl-hardening-xml,

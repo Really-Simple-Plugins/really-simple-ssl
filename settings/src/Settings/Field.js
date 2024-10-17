@@ -41,8 +41,8 @@ import WhiteListDatatable from "./GeoBlockList/WhiteListDatatable";
 import Captcha from "./Captcha/Captcha";
 import CaptchaKey from "./Captcha/CaptchaKey";
 import FileChangeDetection from "./FileChangeDetection/FileChangeDetection";
+import UserAgentTable from "./firewall/UserAgentTable";
 import TwoFaEnabledDropDown from "./TwoFA/TwoFaEnabledDropDown";
-
 const Field = (props) => {
     const scrollAnchor = useRef(null);
     const { updateField, setChangedField, highLightField, setHighLightField , getFieldValue} = useFields();
@@ -247,7 +247,7 @@ const Field = (props) => {
             <div className={highLightClass} ref={scrollAnchor} style={{position: 'relative'}}>
                 <CaptchaKey field={field} fields={props.fields} label={labelWrap(field)} />
             </div>
-        )
+            )
     }
 
     if ( field.type==='number' ){
@@ -553,6 +553,17 @@ const Field = (props) => {
         return (
             <div className={highLightClass} ref={scrollAnchor}>
                 <BlockListDatatable
+                    field={props.field}
+                    action={props.field.action}
+                />
+            </div>
+        )
+    }
+
+    if (field.type === 'user-agents-datatable') {
+        return (
+            <div className={highLightClass} ref={scrollAnchor}>
+                <UserAgentTable
                     field={props.field}
                     action={props.field.action}
                 />

@@ -71,7 +71,7 @@ class Rsssl_Two_FA_Data_Parameters {
 	 *
 	 * @var array $allowed_filters The allowed filters.
 	 */
-	private const allowed_filters = array( 'all', 'open', 'disabled', 'active' );
+	private const allowed_filters = array( 'all', 'open', 'disabled', 'active', 'expired' );
 
 	/**
 	 * Constructs a new object with given data.

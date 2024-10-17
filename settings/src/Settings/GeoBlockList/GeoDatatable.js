@@ -325,7 +325,8 @@ const GeoDatatable = (props) => {
     useEffect(() => {
         const currentFilter = getCurrentFilter(moduleName);
         if (typeof currentFilter === 'undefined') {
-            setFilter('blocked');
+            setFilter('regions');
+            setSelectedFilter('regions', moduleName);
         } else {
             setFilter(currentFilter);
         }

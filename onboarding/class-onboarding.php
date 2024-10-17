@@ -2,7 +2,13 @@
 defined('ABSPATH') or die();
 require_once(rsssl_path . 'class-installer.php');
 
+require_once rsssl_path . 'lib/admin/class-encryption.php';
+use RSSSL\lib\admin\Encryption;
+
 class rsssl_onboarding {
+
+	use Encryption;
+
 	private static $_this;
 	function __construct() {
 		if ( isset( self::$_this ) ) {
@@ -136,7 +142,7 @@ class rsssl_onboarding {
 		$license_key = '';
 		if ( defined('rsssl_pro') ) {
 			$license_key = RSSSL()->licensing->license_key();
-			$license_key = RSSSL()->licensing->maybe_decode( $license_key );
+			$license_key = $this->decrypt_if_prefixed( $license_key , 'really_simple_ssl_');
 		}
 
 		$api_params = array(

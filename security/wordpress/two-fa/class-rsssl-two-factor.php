@@ -132,9 +132,9 @@ class Rsssl_Two_Factor
          */
         add_action('set_auth_cookie', array(__CLASS__, 'rsssl_collect_auth_cookie_tokens'));
         add_action('set_logged_in_cookie', array(__CLASS__, 'rsssl_collect_auth_cookie_tokens'));
-
         if (isset($_GET['rsssl_one_time_login']) && isset($_GET['_wpnonce'])) {
             $nonce = sanitize_text_field(wp_unslash($_GET['_wpnonce']));
+
             if (wp_verify_nonce($nonce)) {
                 add_action('init', array(__CLASS__, 'maybe_skip_auth'));
             }
@@ -144,8 +144,8 @@ class Rsssl_Two_Factor
 
         // Run only after the core wp_authenticate_username_password() check.
         add_filter('authenticate', array(__CLASS__, 'rsssl_filter_authenticate'));
-
-        // Run as late as possible to prevent other plugins from unintentionally bypassing.
+//
+//        // Run as late as possible to prevent other plugins from unintentionally bypassing.
         add_filter('authenticate', array(__CLASS__, 'rsssl_filter_authenticate_block_cookies'), PHP_INT_MAX);
         add_action('admin_init', array(__CLASS__, 'rsssl_enable_dummy_method_for_debug'));
         add_filter('rsssl_two_factor_providers', array(__CLASS__, 'enable_dummy_method_for_debug'));
@@ -189,7 +189,7 @@ class Rsssl_Two_Factor
             }
 
             // fetching the users that have active 2FA enabled.
-            $users = get_users(array('meta_key' => 'rsssl_two_fa_status', 'meta_value' => 'active'));
+            $users = get_users(array('meta_key' => 'rsssl_two_fa_status_email', 'meta_value' => 'active'));
             foreach ($users as $user) {
                 // We set the user status to active.
                 Rsssl_Two_Factor_Email::set_user_status($user->ID, 'active');
@@ -234,11 +234,11 @@ class Rsssl_Two_Factor
                 // Delete the transient to invalidate the token.
                 delete_transient('skip_two_fa_token_' . $user_id);
 
-                $provider = get_user_meta($user->ID, 'rsssl_two_fa_status', true);
+                $provider = get_user_meta($user->ID, 'rsssl_two_fa_status_email', true);
 
                 // Only allow skipping for users which have 2FA value open.
                 if (isset($_GET['rsssl_two_fa_disable']) && 'open' === $provider) {
-                    update_user_meta($user_id, 'rsssl_two_fa_status', 'disabled');
+                    update_user_meta($user_id, 'rsssl_two_fa_status_email', 'disabled');
                 }
 
                 wp_set_auth_cookie($user_id);
@@ -484,7 +484,7 @@ class Rsssl_Two_Factor
             // If the provider specified isn't enabled, just grab the first one that is based on the Weight.
             $best_valued_provider = self::WEIGHT[0];
 
-            if (isset($available_providers[$best_valued_provider])) {
+            if (isset($available_providers[$best_valued_provider]) && $best_valued_provider::is_enabled($user)) {
                 $provider = $best_valued_provider;
             } else {
                 $provider = key($available_providers);
@@ -518,20 +518,29 @@ class Rsssl_Two_Factor
         $enabled_providers_meta = Rsssl_Provider_Loader::get_user_enabled_providers($user);
         // Initialize as empty arrays if they are empty.
         $two_fa_forced_roles = rsssl_get_option('two_fa_forced_roles');
-        $two_fa_optional_roles = rsssl_get_option('two_fa_optional_roles');
-        if (empty($two_fa_forced_roles)) {
-            $two_fa_forced_roles = array();
-        }
-        if (empty($two_fa_optional_roles)) {
-            $two_fa_optional_roles = array();
-        }
+        $two_fa_optional_roles = rsssl_get_option('two_fa_enabled_roles_email');
+        $two_fa_optional_roles_totp = rsssl_get_option('two_fa_enabled_roles_totp');
 
-        if ('active' === $enabled_providers_meta) {
-            return true;
-        }
+        //ensure an array for all.
+        if (!is_array($two_fa_forced_roles)) $two_fa_forced_roles = [];
+        if (!is_array($two_fa_optional_roles)) $two_fa_optional_roles = [];
+        if (!is_array($two_fa_optional_roles_totp)) $two_fa_optional_roles_totp = [];
+        $two_fa_optional_roles = array_unique(array_merge($two_fa_optional_roles, $two_fa_optional_roles_totp));
 
-        if ('open' === $enabled_providers_meta) {
-            return true;
+        foreach ($enabled_providers_meta as $enabled_provider) {
+            $status = $enabled_provider::get_status($user);
+            if ('disabled' === $status) {
+                if (is_object($provider) && get_class($provider) === $enabled_provider) {
+                    $provider = [];
+                }
+            }
+	        if ('active' === $status ) {
+		        return true;
+	        }
+
+	        if ('open' === $status) {
+		        return true;
+	        }
         }
 
         foreach ($user->roles as $role) {
@@ -782,7 +791,7 @@ class Rsssl_Two_Factor
 
         $user_name = sanitize_user(wp_unslash($_POST['log']));
         $attempted_user = get_user_by('login', $user_name);
-        if (!$attempted_user && str_contains($user_name, '@')) {
+        if ( $user_name && ! $attempted_user && strpos( $user_name, '@') !== false ) {
             $attempted_user = get_user_by('email', $user_name);
         }
 

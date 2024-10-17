@@ -117,7 +117,7 @@ class Rsssl_Two_Factor_Settings {
 	 *
 	 * @return string //the generated URL.
 	 */
-	public static function rsssl_one_time_login_url( int $user_id, bool $disable_two_fa = false ): string {
+	public static function rsssl_one_time_login_url( int $user_id, bool $disable_two_fa = false, $profile = false ): string {
 
 		$token = bin2hex( openssl_random_pseudo_bytes( 16 ) ); // 16 bytes * 8 bits/byte = 128 bits.
 		set_transient( 'skip_two_fa_token_' . $user_id, $token, 2 * MINUTE_IN_SECONDS );
@@ -125,19 +125,26 @@ class Rsssl_Two_Factor_Settings {
 		$obfuscated_user_id = self::obfuscate_user_id( $user_id );
 
 		$nonce = wp_create_nonce( 'one_time_login_' . $user_id );
+        if(!$profile) {
+            $args = array(
+                'rsssl_one_time_login' => $obfuscated_user_id,
+                'token'                => $token,
+                '_wpnonce'             => $nonce,
+            );
+        } else {
+            $args = array(
+                '_wpnonce'             => $nonce,
+                'profile'              => $profile,
+            );
+        }
 
-		$args = array(
-			'rsssl_one_time_login' => $obfuscated_user_id,
-			'token'                => $token,
-			'_wpnonce'             => $nonce,
-		);
 
 		if ( $disable_two_fa ) {
 			$args['rsssl_two_fa_disable'] = true;
 		}
 
 		// Return the URL with the added query arguments.
-		return add_query_arg( $args, admin_url() );
+		return add_query_arg( $args, $profile? get_edit_profile_url( $user_id ):admin_url() );
 	}
 
 
@@ -309,7 +316,7 @@ class Rsssl_Two_Factor_Settings {
 	 * @return string //open, active or disabled
 	 */
 	public static function get_user_status( string $method, int $user_id ): string {
-		$method = 'email' === $method ? '' : '_' . self::sanitize_method( $method );
+		$method = 'email' === $method ? '_email' : '_' . self::sanitize_method( $method );
 
 		// first check if a user meta rsssl_two_fa_status is set.
 		$status = get_user_meta( $user_id, "rsssl_two_fa_status$method", true );
@@ -589,7 +596,7 @@ class Rsssl_Two_Factor_Settings {
 	public static function get_configured_provider( int $user_id ): string {
 		// With 2 providers, TOTP and Email we check both options and get the one that is not disabled.
 		$totp_meta  = get_user_meta( $user_id, 'rsssl_two_fa_status_totp', true );
-		$email_meta = get_user_meta( $user_id, 'rsssl_two_fa_status', true );
+		$email_meta = get_user_meta( $user_id, 'rsssl_two_fa_status_email', true );
 		$provider   = __( 'None', 'really-simple-ssl' );
 		// if the status is active, return the method.
 		if ( 'active' === $totp_meta ) {

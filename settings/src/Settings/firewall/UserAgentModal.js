@@ -1,4 +1,4 @@
-import {useState} from '@wordpress/element';
+import {useState, useEffect, useRef} from '@wordpress/element';
 import Icon from "../../utils/Icon";
 import {
     Modal,
@@ -7,73 +7,89 @@ import {
 } from "@wordpress/components";
 import {__} from "@wordpress/i18n";
 import FieldsData from "../FieldsData";
-import WhiteListTableStore from "./WhiteListTableStore";
+import UserAgentStore from "./UserAgentStore";
 
-const TrustIpAddressModal = (props) => {
-    const { note, setNote, ipAddress, setIpAddress, maskError, setDataLoaded, dataLoaded, updateRow, resetRange} = WhiteListTableStore();
-    const [rangeDisplay, setRangeDisplay] = useState(false);
+const UserAgentModal = (props) => {
+    const {note, setNote, user_agent, setUserAgent, dataLoaded, addRow, fetchData} = UserAgentStore();
     const {showSavedSettingsNotice} = FieldsData();
-
-    //we add a function to handle the range fill
-    const handleRangeFill = () => {
-        //we toggle the range display.
-        setRangeDisplay(!rangeDisplay);
-    }
+    const userAgentInputRef = useRef(null);
+    const noteInputRef = useRef(null);
 
     async function handleSubmit() {
         // we check if statusSelected is not empty
-        if (ipAddress && maskError === false) {
-            await updateRow(ipAddress, note, props.status ,props.filter).then((response) => {
+        if (user_agent.length) {
+            await addRow(user_agent, note).then((response) => {
+                console.log(response);
                 if (response.success) {
                     showSavedSettingsNotice(response.message);
-                    //we fetch the data again
-                    setDataLoaded(false);
-
+                    fetchData('rsssl_user_agent_list');
                 } else {
                     showSavedSettingsNotice(response.message, 'error');
                 }
             });
             //we clear the input
-            resetRange();
+            resetValues();
             //we close the modal
             props.onRequestClose();
         }
     }
 
-    function handleCancel() {
-        // Reset all local state
-        setRangeDisplay(false);
-        resetRange();
+    function resetValues() {
+        setUserAgent('');
+        setNote('');
+    }
 
+    function handleCancel() {
+        resetValues();
         // Close the modal
         props.onRequestClose();
     }
+
+    function handleKeyPress(event) {
+        console.log('i pressed a key' + event.key);
+        if (event.key === 'Enter') {
+            handleSubmit();
+        }
+    }
+
+    useEffect(() => {
+        if (userAgentInputRef.current) {
+            userAgentInputRef.current.addEventListener('keypress', handleKeyPress);
+        }
+        if (noteInputRef.current) {
+            noteInputRef.current.addEventListener('keypress', handleKeyPress);
+        }
+
+        // cleanup event listeners
+        return () => {
+            if (userAgentInputRef.current) {
+                userAgentInputRef.current.removeEventListener('keypress', handleKeyPress);
+            }
+            if (noteInputRef.current) {
+                noteInputRef.current.removeEventListener('keypress', handleKeyPress);
+            }
+        }
+    }, []);
+
     if (!props.isOpen) {
         return null;
     }
 
-    const changeHandler = (e) => {
-       if (e.length > 0) {
-           setIpAddress(e);
-        } else {
-           resetRange()
-       }
-    }
-
     return (
         <Modal
-            title={__("Add IP Address", "really-simple-ssl")}
+            title={__("Block User-Agent", "really-simple-ssl")}
             shouldCloseOnClickOutside={true}
             shouldCloseOnEsc={true}
             overlayClassName="rsssl-modal-overlay"
             className="rsssl-modal"
             onRequestClose={props.onRequestClose}
+            onKeyPress={handleKeyPress}
         >
             <div className="modal-content">
                 <div className="modal-body"
-                    style={{
-                        padding: "0.5em",
-                        }}
+                     style={{
+                         padding: "0.5em",
+                     }}
                 >
                     <div
                         style={{
@@ -84,21 +100,20 @@ const TrustIpAddressModal = (props) => {
                     >
                         <div style={{position: 'relative'}}>
                             <label
-                                htmlFor={'ip-address'}
+                                htmlFor={'user_agent'}
                                 className={'rsssl-label'}
-                            >{__('IP Address', 'really-simple-ssl')}</label>
-                            <TextControl
-                                id="ip-address"
-                                name="ip-address"
-                                onChange={changeHandler}
-                                value={ipAddress}
+                            >{__('User-Agent', 'really-simple-ssl')}</label>
+                            <input
+                                id={'user_agent'}
+                                type={'text'}
+                                value={user_agent}
+                                name={'user_agent'}
+                                onChange={(e) => setUserAgent(e.target.value)}
+                                style={{
+                                    width: '100%',
+                                }}
+                                ref={userAgentInputRef}
                             />
-                            <div className="rsssl-ip-verified">
-                                {Boolean(!maskError && ipAddress.length > 0)
-                                    ? <Icon name='circle-check' color={'green'}/>
-                                    : <Icon name='circle-times' color={'red'}/>
-                                }
-                            </div>
                         </div>
                         <div>
                             <label
@@ -114,28 +129,25 @@ const TrustIpAddressModal = (props) => {
                                 style={{
                                     width: '100%',
                                 }}
+                                ref={noteInputRef}
                             />
                         </div>
                     </div>
                 </div>
                 <div className="modal-footer">
-                    {/*//we add two buttons here for add row and cancel*/}
                     <div
                         className={'rsssl-grid-item-footer'}
-                        style
-                        ={{
+                        style={{
                             display: 'flex',
                             justifyContent: 'flex-end',
                             alignItems: 'center',
                             padding: '1em',
-                            }
-                        }
+                        }}
                     >
                         <Button
                             isSecondary
                             onClick={handleCancel}
-                            style={{ marginRight: '10px' }}
-
+                            style={{marginRight: '10px'}}
                         >
                             {__("Cancel", "really-simple-ssl")}
                         </Button>
@@ -146,11 +158,10 @@ const TrustIpAddressModal = (props) => {
                             {__("Add", "really-simple-ssl")}
                         </Button>
                     </div>
-
                 </div>
             </div>
         </Modal>
     )
 }
 
-export default TrustIpAddressModal;
+export default UserAgentModal;

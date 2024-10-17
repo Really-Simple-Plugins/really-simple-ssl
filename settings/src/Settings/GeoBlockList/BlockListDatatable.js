@@ -13,6 +13,9 @@ const BlockListDatatable = (props) => {
     const {
         BlockListData,
         WhiteListTable,
+        setDataLoaded,
+        dataLoaded,
+        dataLoaded_block,
         fetchData,
         processing_block,
         ipAddress,
@@ -118,7 +121,13 @@ const BlockListDatatable = (props) => {
         if (typeof filter !== 'undefined') {
             fetchData(field.action, filter);
         }
-    }, [filter, WhiteListTable]);
+    }, [filter]);
+
+    useEffect(() => {
+        if(!dataLoaded_block) {
+            fetchData(field.action, filter);
+        }
+    }, [dataLoaded_block]);
 
     const customStyles = {
         headCells: {
@@ -166,17 +175,18 @@ const BlockListDatatable = (props) => {
                     showSavedSettingsNotice(result.message);
                 });
             });
-            // if the filter is still undefined we set it to all
-            fetchData(field.action, filter ? filter : 'all');
+            // fetchData(field.action, filter ? filter : 'all');
             setRowsSelected([]);
         } else {
             resetRow(id).then((result) => {
                showSavedSettingsNotice(result.message);
             });
-            fetchData(field.action, filter ? filter : 'all');
+            // fetchData(field.action, filter ? filter : 'all');
         }
-    }, [resetRow]);
 
+        setDataLoaded(false);
+
+    }, [resetRow]);
     const data = {...BlockListData.data};
 
     const generateFlag = useCallback((flag, title) => (

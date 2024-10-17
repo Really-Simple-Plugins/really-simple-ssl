@@ -579,6 +579,29 @@ function rsssl_menu() {
 									'premium_text' => __( 'Crawlers might scan your site looking for possible exploits. One way to detect this is the fact that they trigger more 404 (not found) errors than legitimate visitors would. Below you can set the threshold and lockout duration for 404 blocking.', 'really-simple-ssl' ),
 									'intro' => __( 'Crawlers might scan your site looking for possible exploits. One way to detect this is the fact that they trigger more 404 (not found) errors than legitimate visitors would. Below you can set the threshold and lockout duration for 404 blocking.', 'really-simple-ssl' ),
 								],
+                                [
+                                    'id' => 'user_agents',
+                                    'group_id' => 'user_agents',
+                                    'premium' => true,
+                                    'title' => __( 'User-Agents', 'really-simple-ssl' ),
+                                    'premium_title' => __( 'User-Agents', 'really-simple-ssl' ),
+                                    'premium_text' => __( 'The Firewall can also block traffic from malicious or resource-consuming bots that might crawl your website. A list of well-known bad user-agents is automatically included. You can manually add or delete user-agents if so desired.', 'really-simple-ssl' ),
+                                    'intro' => __( 'The Firewall can also block traffic from malicious or resource-consuming bots that might crawl your website. A list of well-known bad user-agents is automatically included. You can manually add or delete user-agents if so desired.', 'really-simple-ssl' ),
+                                    'groupFilter'          => [
+                                        'default' => 'blocked',
+                                        'id'      => 'rsssl-group-filter-user_agent_listing_overview',
+                                        'options' => [
+                                            [
+                                                'id'    => 'blocked',
+                                                'title' => __( 'Blocked', 'really-simple-ssl' ),
+                                            ],
+                                            [
+                                                'id'   => 'deleted',
+                                                'title' => __( 'Deleted', 'really-simple-ssl' ),
+                                            ],
+                                        ],
+                                    ],
+                                    ],
 								[
 									'id'                   => 'firewall_list_listing',
 									'group_id'             => 'firewall_list_listing',
@@ -591,7 +614,7 @@ function rsssl_menu() {
 									'intro' 			  => __( 'Restrict access to your site based on user location. By default, all regions are allowed. You can also block entire continents.',
 										'really-simple-ssl' ),
 									'groupFilter'          => [
-										'default' => 'countries',
+										'default' => 'regions',
 										'id'      => 'rsssl-group-filter-geo_block_list',
 										'options' => [
 											[

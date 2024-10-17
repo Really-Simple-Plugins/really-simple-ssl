@@ -61,6 +61,7 @@ class Profile extends BaseAuth {
                             user_id: rsssl_profile.user_id,
                             login_nonce: document.getElementById('rsssl_two_fa_nonce').value,
                             redirect_to: rsssl_profile.redirect_to,
+                            profile: true
                         };
                         let urlExtension = '/save_default_method_email_profile';
                         that.performFetchOp(urlExtension, data)
@@ -80,7 +81,8 @@ class Profile extends BaseAuth {
                 let data = {
                     user_id: this.settings.user_id,
                     login_nonce: document.getElementById('rsssl_two_fa_nonce').value,
-                    provider: 'email'
+                    provider: 'email',
+                    profile: true
                 };
                 this.performFetchOp('/resend_email_code', data)
                     .then(response => response.json())

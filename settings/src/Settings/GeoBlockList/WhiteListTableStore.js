@@ -1,10 +1,6 @@
 /* Creates A Store For Risk Data using Zustand */
 import {create} from 'zustand';
 import * as rsssl_api from "../../utils/api";
-import {__} from "@wordpress/i18n";
-import {produce} from "immer";
-import React from "react";
-import GeoDatatable from "./GeoDatatable";
 
 const WhiteListTableStore = create((set, get) => ({
 
@@ -49,7 +45,6 @@ const WhiteListTableStore = create((set, get) => ({
     fetchData: async (action, filter) => {
 //we check if the processing is already true, if so we return
         set({processing_block: true});
-        set({dataLoaded_block: false});
         set({rowCleared: true});
 
         try {
@@ -196,6 +191,11 @@ const WhiteListTableStore = create((set, get) => ({
         set({ipAddress: ''});
         set({maskError: false});
     },
+
+    setDataLoaded: (dataLoaded) => {
+        set({dataLoaded});
+        set({dataLoaded_block: dataLoaded});
+    }
 
 }));
 
