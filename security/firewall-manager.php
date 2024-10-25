@@ -31,10 +31,12 @@ class rsssl_firewall_manager {
 	 * Our constructor
 	 */
 	public function __construct() {
+
 		if ( isset( self::$this ) ) {
 			wp_die();
 		}
 		self::$this = $this;
+
 		// trigger this action to force rules update
 		add_action( 'rsssl_update_rules', array( $this, 'install' ), 10 );
 		add_action( 'rsssl_after_saved_fields', array( $this, 'install' ), 100 );
@@ -156,7 +158,7 @@ class rsssl_firewall_manager {
 	 *
 	 * @return void
 	 */
-	private function update_firewall( string $rules ): void {
+	public function update_firewall( string $rules ): void {
 		if ( ! rsssl_admin_logged_in() ) {
 			return;
 		}
@@ -164,11 +166,18 @@ class rsssl_firewall_manager {
 		$contents .= '/**' . "\n";
 		$contents .= '* This file is created by Really Simple Security' . "\n";
 		$contents .= '*/' . "\n\n";
+		$contents .= '$base_path = dirname(__FILE__);' . "\n";
+		$contents .= 'if( file_exists( $base_path . "/rsssl-safe-mode.lock" ) ) {' . "\n";
+		$contents .= '    if ( ! defined( "RSSSL_SAFE_MODE" ) ) {' . "\n";
+		$contents .= '        define( "RSSSL_SAFE_MODE", true );' . "\n";
+		$contents .= '    }' . "\n";
+		$contents .= '    return;' . "\n";
+		$contents .= '}' . "\n\n";
 		// allow disabling of headers for detection purposes.
 		$contents .= 'if ( isset($_GET["rsssl_header_test"]) && (int) $_GET["rsssl_header_test"] ===  ' . $this->get_headers_nonce() . ' ) return;' . "\n\n";
 		//if already included at some point, don't execute again.
-		$contents .= 'if (defined("RSSSL_HEADERS_ACTIVE")) return;' . "\n";
-		$contents .= 'define("RSSSL_HEADERS_ACTIVE", true);' . "\n";
+		$contents .= 'if ( defined("RSSSL_HEADERS_ACTIVE" ) ) return;' . "\n";
+		$contents .= 'define( "RSSSL_HEADERS_ACTIVE", true );' . "\n";
 		$contents .= "//RULES START\n" . $rules;
 
 		$this->put_contents( $this->file, $contents );

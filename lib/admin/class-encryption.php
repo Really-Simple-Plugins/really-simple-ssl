@@ -1,6 +1,5 @@
 <?php
 namespace RSSSL\lib\admin;
-use function cli\err;
 
 require_once __DIR__ . '/class-helper.php';
 

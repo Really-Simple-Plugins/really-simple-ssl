@@ -553,3 +553,11 @@ function rsssl_version_compare($version, $compare_to, $operator = null) {
 	$compare_to = rsssl_remove_prefix_from_version($compare_to);
 	return version_compare($version, $compare_to, $operator);
 }
+
+function rsssl_lock_file_exists() {
+	if ( file_exists( trailingslashit( WP_CONTENT_DIR ) . 'rsssl-safe-mode.lock' ) ) {
+		return true;
+	}
+
+	return false;
+}

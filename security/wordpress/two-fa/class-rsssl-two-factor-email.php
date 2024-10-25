@@ -18,6 +18,7 @@ namespace RSSSL\Security\WordPress\Two_Fa;
 //require_once __DIR__ . '/interface-rsssl-provider-interface.php';
 require_once rsssl_path . 'mailer/class-mail.php';
 
+use RSSSL\Security\WordPress\Two_Fa\Rsssl_Two_Factor_Settings;
 use rsssl_mailer;
 use Exception;
 use WP_User;

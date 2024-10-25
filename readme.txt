@@ -6,7 +6,7 @@ Requires at least: 5.9
 License: GPL2
 Tested up to: 6.6.1
 Requires PHP: 7.4
-Stable tag: 9.1.0
+Stable tag: 9.1.1
 
 Easily improve site security with WordPress Hardening, Two-Factor Authentication (2FA), Login Protection, Vulnerability Detection and SSL certificate.
 
@@ -151,19 +151,21 @@ The plugin checks your certificate before enabling, but if, for example, you mig
 If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions](https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/) instead.
 
 == Changelog ==
+= 9.1.1 =
+* November 7th, 2024
+* Improvement: setting a rsssl-safe-mode.lock file now also enables safe mode and deactivates the Firewall, 2FA and LLA for debugging purposes.
+* Improvement: update to system status
+* Improvement: textual changes
+* Improvement: Updated instructions URLs
+* Improvement: Changed site health notices from critical to recommended
+* Improvement: dropped obsolete react library
+
 = 9.1.0 =
-* October 22th
-* New: User Agent Blocking.
-* Improvement: add captcha URL's to default Content Security Policy rules.
-* Improvement: Auto-removal of Free plugin and translation files when Pro is activated.
-* Improvement: Resize logo in 2FA e-mails.
+* October 22nd
 * Improvement: Allow scanning for security headers via http://scan.really-simple-ssl.com  with one click
-* Improvement: Exclude MPDF library in Complianz from Permission Detection.
 * Improvement: Remove unnecessary rsssl_update_option calls.
 * Fix: prevent potential errors with login feedback..
 * Fix: Catch type error when $transients is not an array.
-* Fix: Custom Login URL compatibility with password protected pages.
-* Fix: Prevent potential errors when adding IP addresses to the Firewall allowlist.
 
 = 9.0.2 =
 * Fix: issue with deactivating 2fa

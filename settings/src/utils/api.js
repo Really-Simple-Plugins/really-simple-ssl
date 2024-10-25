@@ -1,14 +1,5 @@
 import getAnchor from "./getAnchor";
-import axios from 'axios';
 import apiFetch from '@wordpress/api-fetch';
-
-/*
- * Makes a get request to the fields list
- *
- * @param {string|boolean} restBase - rest base for the query.
- * @param {object} args
- * @returns {AxiosPromise<any>}
- */
 
 export const getNonce = () => {
     return '&nonce='+rsssl_settings.rsssl_nonce+'&token='+Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
@@ -128,57 +119,25 @@ const invalidDataError = (apiResponse, status, code ) => {
     response.error = error;
     return response;
 }
-
 const apiGet = (path) => {
-
-    if ( usesPlainPermalinks() ) {
-        let config = {
-            headers: {
-                'X-WP-Nonce': rsssl_settings.nonce,
-            }
+    return apiFetch( { path: path } ).then((response) => {
+        if ( !response.request_success ) {
+            return ajaxGet(path);
         }
-        return axios.get(siteUrl()+path, config ).then(
-            ( response ) => {
-                if (!response.data.request_success) {
-                    return ajaxGet(path);
-                }
-                return response.data;
-            }
-        ).catch((error) => {
-            //try with admin-ajax
-            return ajaxGet(path);
-        });
-    } else {
-        return apiFetch( { path: path } ).then((response) => {
-            if ( !response.request_success ) {
-                return ajaxGet(path);
-            }
-            return response;
-        }).catch((error) => {
-            return ajaxGet(path);
-        });
-    }
+        return response;
+    }).catch((error) => {
+        return ajaxGet(path);
+    });
 }
 
 const apiPost = (path, data) => {
-    if ( usesPlainPermalinks() ) {
-        let config = {
-            headers: {
-                'X-WP-Nonce': rsssl_settings.nonce,
-            }
-        }
-        return axios.post(siteUrl()+path, data, config ).then( ( response ) => {return response.data;}).catch((error) => {
-            return ajaxPost(path, data);
-        });
-    } else {
-        return apiFetch( {
-            path: path,
-            method: 'POST',
-            data: data,
-        } ).catch((error) => {
-            return ajaxPost(path, data);
-        });
-    }
+    return apiFetch( {
+        path: path,
+        method: 'POST',
+        data: data,
+    } ).catch((error) => {
+        return ajaxPost(path, data);
+    });
 }
 
 const glue = () => {
@@ -194,8 +153,8 @@ export const getFields = () => {
 /*
  * Post our data to the back-end
  * @param data
- * @returns {Promise<AxiosResponse<any>>}
  */
+
 export const setFields = (data) => {
     //we pass the anchor, so we know when LE is loaded
     let anchor = getAnchor('main');

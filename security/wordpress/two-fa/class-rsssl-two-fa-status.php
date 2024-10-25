@@ -76,13 +76,15 @@ class Rsssl_Two_Fa_Status {
 	 *
 	 * @return void
 	 */
+
 	public static function delete_two_fa_meta( $user ): void {
         if( is_object($user) ){
             $user = $user->ID;
         }
 		delete_user_meta( $user, '_rsssl_two_factor_totp_last_successful_login' );
 		delete_user_meta( $user, '_rsssl_two_factor_nonce' );
-		delete_user_meta( $user, 'rsssl_two_fa_status_email' );
+        delete_user_meta( $user, 'rsssl_two_fa_status' );
+        delete_user_meta( $user, 'rsssl_two_fa_status_email' );
 		delete_user_meta( $user, 'rsssl_two_fa_status_totp' );
 		delete_user_meta( $user, '_rsssl_two_factor_totp_key' );
 		delete_user_meta( $user, '_rsssl_two_factor_backup_codes' );
@@ -90,6 +92,7 @@ class Rsssl_Two_Fa_Status {
 		delete_user_meta( $user, 'rsssl_two_fa_skip_token' );
 		delete_user_meta( $user, '_rsssl_factor_email_token_timestamp' );
 		delete_user_meta( $user, '_rsssl_factor_email_token' );
+        delete_user_meta( $user, 'rsssl_two_fa_reminder_sent' );
 	}
 
 	/**

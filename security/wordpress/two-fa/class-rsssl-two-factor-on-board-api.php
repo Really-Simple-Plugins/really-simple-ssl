@@ -274,9 +274,8 @@ class Rsssl_Two_Factor_On_Board_Api {
 	public function skip_onboarding( WP_REST_Request $request ): WP_REST_Response {
 		$parameters = new Rsssl_Request_Parameters( $request );
 		// As a double we check the user_id with the login nonce.
-		$user = $this->check_login_and_get_user( $parameters->user_id, $parameters->login_nonce );
-
-		return $this->authenticate_and_redirect( $user->ID, $parameters->redirect_to );
+		$user = $this->check_login_and_get_user( (int)$parameters->user_id, $parameters->login_nonce );
+		return $this->authenticate_and_redirect( $parameters->user_id, $parameters->redirect_to );
 	}
 
 	/**

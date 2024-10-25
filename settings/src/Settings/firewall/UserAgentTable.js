@@ -208,7 +208,7 @@ const UserAgentTable = (props) => {
                 <AddButton
                     handleOpen={handleOpen}
                     processing={processing}
-                    allowedText={__("Block user-Agent", "really-simple-ssl")}
+                    allowedText={__("Block User-Agent", "really-simple-ssl")}
                     disabled={!dataLoaded}
                 />
                 <div className="rsssl-search-bar">

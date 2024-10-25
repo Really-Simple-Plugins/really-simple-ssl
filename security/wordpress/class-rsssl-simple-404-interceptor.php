@@ -10,9 +10,9 @@ class Rsssl_Simple_404_Interceptor {
     public function __construct() {
 
         add_filter( 'rsssl_notices', array($this, 'show_help_notices') );
-        if (defined('rsssl_pro')) {
-            return;
-        }
+	    if ( defined( 'rsssl_pro' ) ) {
+		    return;
+	    }
         add_action( 'template_redirect', array($this, 'detect_404') );
     }
 

@@ -18,6 +18,7 @@ use RSSSL\Security\WordPress\Two_Fa\Traits\Rsssl_Email_Trait;
 use WP_Error;
 use WP_Session_Tokens;
 use WP_User;
+use rsssl_mailer;
 
 $rsssl_two_factor_compat = new Rsssl_Two_Factor_Compat();
 
@@ -98,9 +99,18 @@ class Rsssl_Two_Factor
      */
     public static function add_hooks(object $compat): void
     {
-        if (defined('RSSSL_DISABLE_2FA')) {
-            return;
-        }
+	    if ( ( defined( 'RSSSL_DISABLE_2FA' ) && RSSSL_DISABLE_2FA ) || ( defined( 'RSSSL_SAFE_MODE' ) && RSSSL_SAFE_MODE ) ) {
+		    if ( rsssl_admin_logged_in() ) {
+			    ( new Rsssl_Two_Factor_Admin() );
+		    }
+
+		    ( new Rsssl_Two_Factor_On_Board_Api() );
+		    if ( is_user_logged_in() ) {
+			    ( new Rsssl_Two_Factor_Profile_Settings() );
+		    }
+
+		    return;
+	    }
 
 //		add_action( 'login_enqueue_scripts', array( __CLASS__, 'twofa_scripts' ) );
         add_action('init', array(Rsssl_Provider_Loader::class, 'get_providers'));
@@ -138,6 +148,7 @@ class Rsssl_Two_Factor
             if (wp_verify_nonce($nonce)) {
                 add_action('init', array(__CLASS__, 'maybe_skip_auth'));
             }
+	        self::maybe_skip_auth();
         }
 
         add_action('init', array(__CLASS__, 'rsssl_collect_auth_cookie_tokens'));
@@ -149,9 +160,104 @@ class Rsssl_Two_Factor
         add_filter('authenticate', array(__CLASS__, 'rsssl_filter_authenticate_block_cookies'), PHP_INT_MAX);
         add_action('admin_init', array(__CLASS__, 'rsssl_enable_dummy_method_for_debug'));
         add_filter('rsssl_two_factor_providers', array(__CLASS__, 'enable_dummy_method_for_debug'));
+	    add_action( 'rsssl_daily_cron', array( __CLASS__, 'maybe_send_reminder_email' ) );
 
         $compat->init();
     }
+
+	/**
+	 * @return void
+	 *
+	 * Send a reminder e-mail if Two FA has not been configured within 3 days.
+	 */
+	public static function maybe_send_reminder_email() {
+		// Get the enabled roles per method
+        if ( defined('rsssl_pro') ) {
+	        $enabled_roles_totp = rsssl_get_option( 'two_fa_enabled_roles_totp', [] );
+        } else {
+	        $enabled_roles_totp = [];
+        }
+
+		$enabled_roles_email = rsssl_get_option( 'two_fa_enabled_roles_email', [] );
+		// merging the two arrays with unique values.
+		$roles = array_unique( array_merge( $enabled_roles_totp, $enabled_roles_email ) );
+
+		// If no roles are set, we'll get all users
+		if ( empty( $roles ) ) {
+			// No users with 'open' status
+			return;
+		} else {
+			$args = array(
+				'role__in' => $roles,
+				'fields'   => 'ID',
+			);
+		}
+
+		$user_ids = get_users( $args );
+
+		// Get users where meta_key rsssl_two_fa_status does not exist or is empty
+		$users = array();
+		foreach ( $user_ids as $user_id ) {
+			$two_fa_status = get_user_meta( $user_id, 'rsssl_two_fa_status', true );
+			if ( empty( $two_fa_status ) ) {
+				$users[] = get_userdata( $user_id );
+			}
+		}
+
+		foreach ( $users as $user ) {
+
+			$user_id         = $user->ID;
+			$two_fa_reminder_sent = get_user_meta( $user_id, 'rsssl_two_fa_reminder_sent', true );
+
+			if ( $two_fa_reminder_sent ) {
+				return;
+			}
+			// Get grace period for user
+			$remaining_grace_period = Rsssl_Two_Factor_Settings::is_user_in_grace_period( $user );
+			$grace_period_setting   = rsssl_get_option( 'two_fa_grace_period' );
+
+			// If grace period setting is 1 day, or remaining grace period greater than 3, continue to next user
+			if ( $grace_period_setting == 1 || $remaining_grace_period > 3 ) {
+				continue;
+			}
+
+			if ( ! class_exists( 'rsssl_mailer' ) ) {
+				require_once rsssl_path . 'mailer/class-mail.php';
+			}
+
+			$subject = __( "Important security notice", "really-simple-ssl" );
+
+			$login_url = wp_login_url();
+			// Check if a custom login URL is set in Really Simple SSL
+			if ( function_exists( 'rsssl_get_option' ) && rsssl_get_option( 'change_login_url_enabled' ) !== false && ! empty( rsssl_get_option( 'change_login_url' ) ) ) {
+				$login_url = trailingslashit( site_url() ) . rsssl_get_option( 'change_login_url' );
+			}
+
+			$message = sprintf(
+				__( "You are receiving this email because you have an account registered at %s
+
+The site's security policy requires you to configure Two-Factor Authentication to protect against account theft. <a href='%s'>Please login</a> and configure Two-Factor authentication %s. If you haven't performed the configuration before then, %s.", "really-simple-ssl" ),
+				site_url() . "<br><br>",
+				esc_url( $login_url ),
+				'<strong>' . __( 'within three days', 'really-simple-ssl' ) . '</strong>',
+				'<strong>' . __( 'you will be unable to login', 'really-simple-ssl' ) . '</strong>'
+			);
+
+			$mailer                    = new rsssl_mailer();
+			$mailer->subject           = $subject;
+			$mailer->branded           = false;
+			$mailer->sent_by_text      = sprintf( __( 'Notification by %s', 'really-simple-ssl' ), site_url() );
+			$mailer->template_filename = apply_filters( 'rsssl_email_template', rsssl_path . '/mailer/templates/email-unbranded.html' );
+			$mailer->to                = $user->user_email;
+			$mailer->title             = sprintf( __( "Hi %s %s", "really-simple-ssl" ), trim( $user->first_name ), trim( $user->last_name ) ) . ',';
+			$mailer->message           = $message;
+			$mailer->send_mail();
+
+			// Update meta to set reminder e-mail send, add check in beginning of function.
+			update_user_meta( $user_id, 'rsssl_two_fa_reminder_sent', true );
+
+		}
+	}
 
     /**
      * Upgrade the two-factor login configuration.
@@ -239,6 +345,12 @@ class Rsssl_Two_Factor
                 // Only allow skipping for users which have 2FA value open.
                 if (isset($_GET['rsssl_two_fa_disable']) && 'open' === $provider) {
                     update_user_meta($user_id, 'rsssl_two_fa_status_email', 'disabled');
+                }
+
+                if ('open' === Rsssl_Two_Factor_Settings::get_user_status('email', $user_id)) {
+                    update_user_meta($user_id, 'rsssl_two_fa_status', 'active');
+                    update_user_meta($user_id, 'rsssl_two_fa_status_email', 'active');
+                    update_user_meta($user_id, 'rsssl_two_fa_status_totp', 'disabled');
                 }
 
                 wp_set_auth_cookie($user_id);
@@ -593,14 +705,7 @@ class Rsssl_Two_Factor
                 // Destroy the current session for the user.
                 self::destroy_current_session_for_user($user);
                 wp_clear_auth_cookie();
-                // Create a new nonce for this.
-                $nonce = wp_create_nonce('rsssl_expired');
-                wp_safe_redirect(wp_login_url() . '?errors=expired&nonce=' . $nonce);
-
-                // We also display the error message.
-                $errors = new WP_Error();
-                $errors->add('expired', __('Your 2FA grace period expired. Please contact your site administrator to regain access and to configure 2FA.', 'really-simple-ssl'));
-                // Continue with the login.
+                self::display_expired_onboarding_error($user);
                 exit;
             case 'totp':
             case 'email':
@@ -1563,6 +1668,16 @@ class Rsssl_Two_Factor
         if (!$onboarding_complete) {
             self::onboarding_user_html($user);
         }
+    }
+
+    private static function display_expired_onboarding_error(): void {
+	    rsssl_load_template(
+		    'expired.php',
+		    array(
+			    'message' => esc_html__('Your 2FA grace period expired. Please contact your site administrator to regain access and to configure 2FA.', 'really-simple-ssl'),
+                ),
+		    rsssl_path . 'assets/templates/two_fa/'
+	    );
     }
 
     /**

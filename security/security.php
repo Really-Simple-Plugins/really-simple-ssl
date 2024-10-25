@@ -31,6 +31,7 @@ class REALLY_SIMPLE_SECURITY
 
 	private function includes()
 	{
+
 		$path = rsssl_path.'security/';
 		require_once( $path . 'integrations.php' );
 		require_once( $path . 'hardening.php' );

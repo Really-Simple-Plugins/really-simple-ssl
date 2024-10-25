@@ -141,7 +141,7 @@ if ( ! function_exists('rsssl_integrations') ) {
 				$path = apply_filters( 'rsssl_integrations_path', rsssl_path, $plugin, $details );
 
 				$file = $path . 'security/' . $details['folder'] . "/" . $plugin . '.php';
-				if ( ! file_exists( $file ) ) {
+				if ( ! file_exists( $file ) && $safe_mode ) {
 					continue;
 				}
 				require_once( $file );

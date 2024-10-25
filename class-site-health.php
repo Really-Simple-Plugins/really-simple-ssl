@@ -77,7 +77,7 @@ if ( ! class_exists( 'rsssl_site_health' ) ) {
 		 * @return array
 		 */
 		public function two_factor_auth_test() {
-			$status = 'critical';
+			$status = 'recommended';
 			$description = __( 'We recommend to enable Two-Factor Authentication at least for administrators.', 'really-simple-ssl' );
 
 			// Check if RSSSL 2FA, WordFence, Solid Security, AIOS are installed and 2FA is enabled
@@ -108,11 +108,11 @@ if ( ! class_exists( 'rsssl_site_health' ) ) {
 		 * @return array
 		 */
 		public function limit_login_attempts_test() {
-			$status = 'critical';
+			$status = 'recommended';
 			$description = __( 'Enable Limit Login Attempts to protect the login form against brute-force attacks.', 'really-simple-ssl' );
 
 			// Check if RSSSL LLA or Limit Login Attempts Reloaded is installed and active
-			if ( rsssl_get_option('enable_limited_login_attempts') == '1' || is_plugin_active('limit-login-attempts-reloaded/limit-login-attempts-reloaded.php') ) {
+			if ( rsssl_get_option('enable_limited_login_attempts') == '1' || is_plugin_active('wordfence/wordfence.php') || is_plugin_active('limit-login-attempts-reloaded/limit-login-attempts-reloaded.php') ) {
 				$status = 'good';
 				$description = __( 'Your site is protected by Limit Login Attempts.', 'really-simple-ssl' );
 			}
@@ -139,7 +139,7 @@ if ( ! class_exists( 'rsssl_site_health' ) ) {
 		 * @return array
 		 */
 		public function firewall_test() {
-			$status = 'critical';
+			$status = 'recommended';
 			$description = __( 'Secure your site with the performant Firewall.', 'really-simple-ssl' );
 
 			// Check if WordFence, AIOS, or Solid Security is installed
@@ -172,7 +172,7 @@ if ( ! class_exists( 'rsssl_site_health' ) ) {
 		public function site_health_debug_log_test() {
 			$result = array(
 				'label'       => __( 'Your site is set to log errors to a potentially public file' ), // phpcs:ignore WordPress.WP.I18n.MissingArgDomain
-				'status'      => 'critical',
+				'status'      => 'recommended',
 				'badge'       => array(
 					'label' => __( 'Security' ), // phpcs:ignore WordPress.WP.I18n.MissingArgDomain
 					'color' => 'blue',
@@ -258,7 +258,7 @@ if ( ! class_exists( 'rsssl_site_health' ) ) {
 
 			if ( ! rsssl_get_option( 'ssl_enabled' ) ) {
 				if ( rsssl_get_option( 'site_has_ssl' ) ) {
-					$result['status']      = 'critical';
+					$result['status']      = 'recommended';
 					$result['label']       = __( 'SSL is not enabled.', 'really-simple-ssl' );
 					$result['description'] = sprintf(
 						'<p>%s</p>',
@@ -273,7 +273,7 @@ if ( ! class_exists( 'rsssl_site_health' ) ) {
 						__( 'Activate SSL', 'really-simple-ssl' )
 					);
 				} else {
-					$result['status']      = 'critical';
+					$result['status']      = 'recommended';
 					$result['label']       = __( 'No SSL detected', 'really-simple-ssl' );
 					$result['description'] = sprintf(
 						'<p>%s</p>',
