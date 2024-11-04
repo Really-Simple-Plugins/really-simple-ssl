@@ -145,6 +145,17 @@ function rsssl_general_security_notices( $notices ) {
 		),
 	);
 
+    $notices['lock_file_exists'] = array(
+        'callback' => 'rsssl_lock_file_exists',
+        'score'    => 5,
+        'output'   => array(
+            'true'  => array(
+                'msg'  => __( 'The Firewall, LLA and 2FA are currently inactive, as you have activated Safe Mode with the rsssl-safe-mode.lock file. Remove the file from your /wp-content folder after you have finished debugging.', 'really-simple-ssl' ),
+                'icon' => 'warning',
+            ),
+        ),
+    );
+
 	return $notices;
 }
 add_filter('rsssl_notices', 'rsssl_general_security_notices');

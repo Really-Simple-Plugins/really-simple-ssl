@@ -89,6 +89,7 @@ class Rsssl_Two_Fa_Status {
 		delete_user_meta( $user, '_rsssl_two_factor_totp_key' );
 		delete_user_meta( $user, '_rsssl_two_factor_backup_codes' );
 		delete_user_meta( $user, 'rsssl_activation_date' );
+		delete_user_meta( $user, 'rsssl_two_fa_last_login' );
 		delete_user_meta( $user, 'rsssl_two_fa_skip_token' );
 		delete_user_meta( $user, '_rsssl_factor_email_token_timestamp' );
 		delete_user_meta( $user, '_rsssl_factor_email_token' );

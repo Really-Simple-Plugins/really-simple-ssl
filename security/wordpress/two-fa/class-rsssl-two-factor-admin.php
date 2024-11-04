@@ -53,12 +53,12 @@ class Rsssl_Two_Factor_Admin
         if (isset(self::$instance)) {
             wp_die();
         }
-
         self::$instance = $this;
         add_filter('rsssl_do_action', array($this, 'two_fa_table'), 10, 3);
         add_filter('rsssl_after_save_field', array($this, 'maybe_reset_two_fa'), 20, 2);
         add_filter('rsssl_after_save_field', array($this, 'change_disabled_users_when_forced'), 20, 3);
 	    add_action('process_user_batch_event', [$this, 'process_user_batch'], 10 , 5);
+
     }
 
 	/**
@@ -84,7 +84,7 @@ class Rsssl_Two_Factor_Admin
 		$fields = ['id', 'user', 'status_for_user', 'rsssl_two_fa_providers', 'user_role']; // Example fields
 		$enabled_roles_placeholders = implode(',', array_map(function($role) { return "'$role'"; }, $enabled_roles));
 		$forced_roles_placeholder = implode(',', array_map(function($role) { return "'$role'"; }, $forced_roles));
-		$query = $this->generate_query($fields, $enabled_roles_placeholders, $forced_roles_placeholder, $forced_roles);
+		$query = self::generate_query($fields, $enabled_roles_placeholders, $forced_roles_placeholder, $forced_roles);
 
 		if ($filter_value !== 'all') {
 			$query .= $wpdb->prepare(" HAVING status_for_user = %s", $filter_value);
@@ -119,7 +119,7 @@ class Rsssl_Two_Factor_Admin
 	 * @param array $fields The fields to include in the SELECT clause.
 	 * @return string The generated SELECT clause.
 	 */
-	private function generate_select_clause(array $fields, array $forced_roles): string
+	public static function generate_select_clause(array $fields, array $forced_roles): string
 	{
 		$select_parts = [];
 
@@ -194,11 +194,11 @@ class Rsssl_Two_Factor_Admin
 	 * @param string|null $forced_roles_placeholder The placeholders for forced roles.
 	 * @return string The generated SQL query.
 	 */
-	private function generate_query(array $fields, string $enabled_roles_placeholders, string $forced_roles_placeholder = '', $forced_roles = array() ): string
+	public static function generate_query(array $fields, string $enabled_roles_placeholders, string $forced_roles_placeholder = '', $forced_roles = array() ): string
 	{
 	    global $wpdb;
 
-	    $select_clause = $this->generate_select_clause($fields, $forced_roles);
+	    $select_clause = self::generate_select_clause($fields, $forced_roles);
 
 	    $where_clause = "SUBSTRING_INDEX(SUBSTRING_INDEX(ur.meta_value, '\"', 2), '\"', -1) in ($enabled_roles_placeholders)";
 //	    if (!empty($forced_roles_placeholder)) {
@@ -268,7 +268,7 @@ class Rsssl_Two_Factor_Admin
 			//This line is forcefully setting the forced roles to the enabled roles. Because we only impact enforced users with this action.
 			$enabled_roles_placeholders = implode(',', array_map(function($role) { return "'$role'"; }, $forced_roles));
 			$forced_roles_placeholder = implode(',', array_map(function($role) { return "'$role'"; }, $forced_roles));
-			$query = $this->generate_query($fields, $enabled_roles_placeholders, $forced_roles_placeholder, $forced_roles);
+			$query = self::generate_query($fields, $enabled_roles_placeholders, $forced_roles_placeholder, $forced_roles);
 
 			$batch_size = 1000;
 			$offset = 0;
@@ -532,87 +532,6 @@ class Rsssl_Two_Factor_Admin
             switch ($action) {
                 case 'two_fa_table':
 	                return $this->server_side_handler($data_parameters);
-//                    $args = array(
-//                        'fields' => array('ID', 'user_login'), // Only get necessary fields.
-//                    );
-//
-//                    $args['orderby'] = 'user' === $data_parameters->sort_column ? 'user_login' : $data_parameters->sort_column;
-//                    $args['order'] = $data_parameters->sort_direction;
-//
-//                    if ('' !== $data_parameters->search_term) {
-//                        $args['search'] = '*' . $data_parameters->search_term . '*';
-//                    }
-//
-//                    $total_data = self::get_users($args, $data_parameters->method);
-//
-//                    // Filtering out users that have roles that are enabled.
-//                    $total_data = array_filter($total_data, function ($data) {
-//                        $user = new WP_User($data); // Replace this with your actual objects
-//                        $enabled_roles = Rsssl_Two_Factor_Settings::get_enabled_roles($user->ID);
-//                        return !empty($enabled_roles);
-//                    });
-//
-//                    // now limit to one page only.
-//                    $args['number'] = $data_parameters->page_size;
-//                    $args['offset'] = $data_parameters->page - 1;
-//
-//
-//                    $formatted_data = array();
-//                    foreach ($total_data as $user) {
-//                        // Convert the user object to WP_User.
-//                        $user = new WP_User($user);
-//                        $status_method = $this->get_status_by_method($user->ID);
-//
-//                        // Get the user role.
-//                        $user_role = Rsssl_Two_Factor_Settings::get_user_roles($user->ID);
-//                        // Format user data.
-//                        $login_action = Rsssl_Two_Factor_Settings::get_login_action($user->ID);
-//
-//                        $user_status = $status_method[1];
-//
-//                        if ($login_action === 'onboarding' || $login_action === 'login') {
-//                            $login_action = '';
-//                        }
-//
-//                        if ($login_action === 'expired') {
-//                            $user_status = 'expired';
-//                        }
-//
-//                        if ($login_action === 'totp') {
-//                            $login_action = strtoupper($login_action);
-//                        } else {
-//                            $login_action = ucfirst($login_action);
-//                        }
-//
-//                        $role = $user_role[0];
-//                        $formatted_data[] = array(
-//                            'id' => $user->ID,
-//                            'user' => ucfirst($user->user_login),
-//                            'rsssl_two_fa_providers' => $login_action,
-//                            'user_role' => ucfirst($role),
-//                            'status_for_user' => ucfirst($user_status),
-//                        );
-//                    }
-//
-//                    $formatted_data = array_values($formatted_data);
-//                    // Define the callback function for array_filter.
-//                    $filter_callback = static function ($item) use ($data_parameters) {
-//                        if ('all' !== $data_parameters->filter_value) {
-//                            return ucfirst($data_parameters->filter_value) === $item['status_for_user'];
-//                        }
-//                        return $item;
-//                    };
-//
-//                    // Use array_filter to filter the array.
-//                    $formatted_data = array_filter($formatted_data, $filter_callback);
-//
-//                    $new_response = array(
-//                        'request_success' => true,
-//                        'data' => array_values($formatted_data),
-//                        'args' => $args,
-//                        'totalRecords' => count($total_data),
-//                    );
-//                    break;
                 case 'two_fa_reset_user':
                     // if the user has been disabled, it needs to reset the two-factor authentication.
                     $user = get_user_by('id', $data['id']);

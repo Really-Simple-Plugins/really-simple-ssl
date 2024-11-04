@@ -13,7 +13,6 @@
 namespace RSSSL\Security\WordPress\Two_Fa;
 
 use Exception;
-use RSSSL\Security\WordPress\Two_Fa\Rsssl_Two_Factor_Compat;
 use RSSSL\Security\WordPress\Two_Fa\Traits\Rsssl_Email_Trait;
 use WP_Error;
 use WP_Session_Tokens;
@@ -110,6 +109,13 @@ class Rsssl_Two_Factor
 		    }
 
 		    return;
+	    }
+
+        /**
+         * Runs the fix for the reset error in 9.1.1
+         */
+	    if (filter_var(get_option('rsssl_reset_fix', false), FILTER_VALIDATE_BOOLEAN)) {
+		    RSSSL_Two_Factor_Reset_Factory::reset_fix();
 	    }
 
 //		add_action( 'login_enqueue_scripts', array( __CLASS__, 'twofa_scripts' ) );

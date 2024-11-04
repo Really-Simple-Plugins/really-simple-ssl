@@ -2,41 +2,36 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Really Simple Security Pro 9.1.1\n"
+"Project-Id-Version: Really Simple Security Pro 9.1.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/really-simple-ssl-pro\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-10-25T13:07:05+00:00\n"
+"POT-Creation-Date: 2024-11-04T08:30:27+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.11.0\n"
+"X-Generator: WP-CLI 2.8.1\n"
 "X-Domain: really-simple-ssl\n"
 
 #. Plugin Name of the plugin
-#: really-simple-ssl-pro.php
 #: onboarding/class-onboarding.php:216
 msgid "Really Simple Security Pro"
 msgstr ""
 
 #. Plugin URI of the plugin
-#: really-simple-ssl-pro.php
 msgid "https://really-simple-ssl.com"
 msgstr ""
 
 #. Description of the plugin
-#: really-simple-ssl-pro.php
 msgid "Simple and performant security"
 msgstr ""
 
 #. Author of the plugin
-#: really-simple-ssl-pro.php
 msgid "Really Simple Plugins"
 msgstr ""
 
 #. Author URI of the plugin
-#: really-simple-ssl-pro.php
 msgid "https://really-simple-plugins.com"
 msgstr ""
 
@@ -2398,10 +2393,6 @@ msgstr ""
 msgid "Performant Firewall enabled."
 msgstr ""
 
-#: pro/security/notices.php:104
-msgid "The Firewall, LLA and 2FA are currently inactive, as you have activated Safe Mode with the rsssl-safe-mode.lock file. Remove the file from your /wp-content folder after you have finished debugging."
-msgstr ""
-
 #: pro/security/wordpress/block-admin-creation.php:318
 msgid "Manual approval required"
 msgstr ""
@@ -4159,13 +4150,13 @@ msgstr ""
 
 #: pro/security/wordpress/two_fa/class-rsssl-two-factor.php:565
 #: pro/security/wordpress/two_fa/class-rsssl-two-factor.php:596
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:682
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1677
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:688
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1683
 msgid "Your 2FA grace period expired. Please contact your site administrator to regain access and to configure 2FA."
 msgstr ""
 
 #: pro/security/wordpress/two_fa/class-rsssl-two-factor.php:643
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:756
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:762
 msgid "API login for user disabled."
 msgstr ""
 
@@ -4176,18 +4167,18 @@ msgstr ""
 #: pro/security/wordpress/two_fa/class-rsssl-two-factor.php:1277
 #: pro/security/wordpress/two_fa/class-rsssl-two-factor.php:1318
 #: pro/security/wordpress/two_fa/class-rsssl-two-factor.php:1371
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:835
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1159
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1197
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1242
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1402
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1443
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1497
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:841
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1165
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1203
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1248
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1408
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1449
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1503
 msgid "Failed to create a login nonce."
 msgstr ""
 
 #: pro/security/wordpress/two_fa/class-rsssl-two-factor.php:745
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:863
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:869
 msgid "Warning: There has been %1$s failed login attempt on your account without providing a valid two-factor token. The last failed login occurred %2$s ago. If this wasn't you, you should reset your password."
 msgid_plural "Warning: %1$s failed login attempts have been detected on your account without providing a valid two-factor token. The last failed login occurred %2$s ago. If this wasn't you, you should reset your password."
 msgstr[0] ""
@@ -4195,29 +4186,29 @@ msgstr[1] ""
 
 #. translators: %s: URL to reset password
 #: pro/security/wordpress/two_fa/class-rsssl-two-factor.php:800
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:918
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:924
 msgid "Your password was reset because of too many failed Two Factor attempts. You will need to <a href=\"%s\">create a new password</a> to regain access. Please check your email for more information."
 msgstr ""
 
 #: pro/security/wordpress/two_fa/class-rsssl-two-factor.php:1002
 #: pro/security/wordpress/two_fa/class-rsssl-two-factor.php:1238
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1126
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1363
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1132
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1369
 msgid "Cheatin&#8217; uh?"
 msgstr ""
 
 #: pro/security/wordpress/two_fa/class-rsssl-two-factor.php:1014
 #: pro/security/wordpress/two_fa/class-rsssl-two-factor.php:1127
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1138
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1251
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1144
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1257
 msgid "Your verification code expired, click “Resend Code” to receive a new verification code."
 msgstr ""
 
 #. translators: %s: time delay between login attempts
 #: pro/security/wordpress/two_fa/class-rsssl-two-factor.php:1058
 #: pro/security/wordpress/two_fa/class-rsssl-two-factor.php:1262
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1182
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1387
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1188
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1393
 msgid "Too many invalid verification codes, you can try again in %s. This limit protects your account against automated attacks."
 msgstr ""
 
@@ -4225,18 +4216,18 @@ msgstr ""
 #: pro/security/wordpress/two_fa/class-rsssl-two-factor.php:1140
 #: pro/security/wordpress/two_fa/class-rsssl-two-factor.php:1297
 #: pro/security/wordpress/two_fa/class-rsssl-two-factor.php:1324
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1218
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1264
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1224
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1270
 msgid "Invalid verification code."
 msgstr ""
 
 #: pro/security/wordpress/two_fa/class-rsssl-two-factor.php:1174
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1298
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1304
 msgid "You have logged in successfully."
 msgstr ""
 
 #: pro/security/wordpress/two_fa/class-rsssl-two-factor.php:1246
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1371
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1377
 msgid "Authentication provider not specified."
 msgstr ""
 
@@ -4245,17 +4236,17 @@ msgid "Invalid two-factor authentication provider."
 msgstr ""
 
 #: pro/security/wordpress/two_fa/class-rsssl-two-factor.php:1493
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1625
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1631
 msgid "There have been too many failed two-factor authentication attempts, which often indicates that the password has been compromised. The password has been reset in order to protect the account."
 msgstr ""
 
 #: pro/security/wordpress/two_fa/class-rsssl-two-factor.php:1497
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1629
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1635
 msgid "If you are the owner of this account, please check your email for instructions on regaining access."
 msgstr ""
 
 #: pro/security/wordpress/two_fa/class-rsssl-two-factor.php:1504
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1636
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1642
 msgid "Password Reset"
 msgstr ""
 
@@ -4521,6 +4512,10 @@ msgstr[1] ""
 msgid "All recommended hardening features enabled."
 msgstr ""
 
+#: security/notices.php:153
+msgid "The Firewall, LLA and 2FA are currently inactive, as you have activated Safe Mode with the rsssl-safe-mode.lock file. Remove the file from your /wp-content folder after you have finished debugging."
+msgstr ""
+
 #: security/sync-settings.php:34
 msgid "Debug.log"
 msgstr ""
@@ -4648,7 +4643,7 @@ msgstr ""
 
 #. translators: %s is replaced with the site url
 #: security/wordpress/two-fa/class-rsssl-two-factor-email.php:320
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:249
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:255
 #: security/wordpress/two-fa/traits/trait-rsssl-email-trait.php:142
 msgid "Notification by %s"
 msgstr ""
@@ -4812,26 +4807,26 @@ msgstr ""
 msgid "Use an authenticator app on your mobile device to generate a code."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:228
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:234
 msgid "Important security notice"
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:237
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:243
 msgid ""
 "You are receiving this email because you have an account registered at %s\n"
 "\n"
 "The site's security policy requires you to configure Two-Factor Authentication to protect against account theft. <a href='%s'>Please login</a> and configure Two-Factor authentication %s. If you haven't performed the configuration before then, %s."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:242
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:248
 msgid "within three days"
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:243
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:249
 msgid "you will be unable to login"
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:252
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:258
 msgid "Hi %s %s"
 msgstr ""
 

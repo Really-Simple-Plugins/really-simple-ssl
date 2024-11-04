@@ -13,7 +13,9 @@ class REALLY_SIMPLE_SECURITY
 
 	private function __construct()
 	{
-
+        if (!defined('RSSSL_SAFE_MODE') && file_exists(trailingslashit(WP_CONTENT_DIR) . 'rsssl-safe-mode.lock')) {
+            define('RSSSL_SAFE_MODE', true);
+        }
 	}
 
 	public static function instance()
