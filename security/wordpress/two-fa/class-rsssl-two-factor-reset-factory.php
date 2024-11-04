@@ -15,8 +15,14 @@ class RSSSL_Two_Factor_Reset_Factory {
     public static function reset_fix(): void
     {
         $self = new self();
+		$forced_roles = rsssl_get_option('two_fa_forced_roles', array());
+		if(empty($forced_roles)) {
+			update_option('rsssl_reset_fix', false, false);
+			return;
+		}
         $user_count = (int)$self->get_count_expired_users($self->get_expired_users_query());
-        if ($user_count > 0) {
+
+        if ($user_count > 0 ) {
             $batch_size = 1000;
             wp_schedule_single_event(time()+ 20, 'rsssl_process_batched_users', [$self->get_expired_users_query(), $user_count, $batch_size]);
         } else {
