@@ -159,6 +159,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 * Improvement: Updated instructions URLs
 * Improvement: Changed site health notices from critical to recommended
 * Improvement: dropped obsolete react library
+* Fix: 2FA Grace period reset fix
 
 = 9.1.0 =
 * October 22nd
