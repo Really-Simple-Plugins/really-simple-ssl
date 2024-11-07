@@ -218,17 +218,15 @@ class rsssl_admin {
 			return false;
 		}
 
-		$start_day     = 20;
-		$end_day       = 27;
-		$current_year  = gmdate( 'Y' );//e.g. 2021
-		$current_month = gmdate( 'n' );//e.g. 3
-		$current_day   = gmdate( 'j' );//e.g. 4
+		// Get current date and time in GMT as timestamp
+		$current_date = strtotime( gmdate( 'Y-m-d H:i:s' ) );
 
-		if ( 2023 === $current_year &&
-			11 === $current_month &&
-			$current_day >= $start_day &&
-			$current_day <= $end_day
-		) {
+		// Define the start and end dates for the range in GMT (including specific times)
+		$start_date = strtotime( 'November 25 2024 00:00:00 GMT' );
+		$end_date   = strtotime( 'December 2 2024 23:59:59 GMT' );
+
+		// Check if the current date and time falls within the date range
+		if ( $current_date >= $start_date && $current_date <= $end_date ) {
 			return true;
 		}
 
