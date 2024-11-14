@@ -357,6 +357,7 @@ The site's security policy requires you to configure Two-Factor Authentication t
                     update_user_meta($user_id, 'rsssl_two_fa_status', 'active');
                     update_user_meta($user_id, 'rsssl_two_fa_status_email', 'active');
                     update_user_meta($user_id, 'rsssl_two_fa_status_totp', 'disabled');
+	                delete_user_meta( $user_id, '_rsssl_factor_email_token' );
                 }
 
                 wp_set_auth_cookie($user_id);

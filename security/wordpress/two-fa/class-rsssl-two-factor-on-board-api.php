@@ -10,6 +10,7 @@
 
 namespace RSSSL\Security\WordPress\Two_Fa;
 
+use Exception;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_User;
@@ -64,15 +65,19 @@ class Rsssl_Two_Factor_On_Board_Api {
 	 */
 	private function check_login_and_get_user( int $user_id, string $login_nonce ) {
 		if ( ! Rsssl_Two_Fa_Authentication::verify_login_nonce( $user_id, $login_nonce ) ) {
-			return new WP_REST_Response( array( 'error' => 'Invalid login nonce' ), 403 );
+			// We throw an error
+			wp_die();
 		}
-
 		/**
 		 * Get the user by the user ID.
 		 *
 		 * @var WP_User $user
 		 */
-		$user = get_user_by( 'id', $user_id );
+		$user = get_user_by('id', $user_id);
+		if (!$user) {
+			throw new Exception('User not found');
+		}
+
 		return $user;
 	}
 
@@ -122,15 +127,17 @@ class Rsssl_Two_Factor_On_Board_Api {
 	 * @return WP_REST_Response The REST response object if user is not logged in or provider is invalid.
 	 */
 	public function set_as_email( WP_REST_Request $request ): WP_REST_Response {
-		$parameters = new Rsssl_Request_Parameters( $request );
-		$user       = $this->check_login_and_get_user( $parameters->user_id, $parameters->login_nonce );
-		// Check if the provider.
-		if ( 'email' !== $parameters->provider ) {
-			return new WP_REST_Response( array( 'error' => 'Invalid provider' ), 401 );
+		$parameters = new Rsssl_Request_Parameters($request);
+		try {
+			$this->check_login_and_get_user($parameters->user_id, $parameters->login_nonce);
+		} catch (Exception $e) {
+			return new WP_REST_Response(['error' => $e->getMessage()], 403);
+		}
+		if ('email' !== $parameters->provider) {
+			return new WP_REST_Response(['error' => 'Invalid provider'], 401);
 		}
 
-		// Finally redirect the user to the redirect_to page with a response.
-		return $this->start_email_validation( $parameters->user_id, $parameters->redirect_to , $parameters->profile );
+		return $this->start_email_validation($parameters->user_id, $parameters->redirect_to, $parameters->profile);
 	}
 
     /**
@@ -141,15 +148,17 @@ class Rsssl_Two_Factor_On_Board_Api {
      * @return WP_REST_Response The REST response object.
      */
     public function set_profile_email(WP_REST_Request $request ): WP_REST_Response {
-        $parameters = new Rsssl_Request_Parameters( $request );
-        $user       = $this->check_login_and_get_user( $parameters->user_id, $parameters->login_nonce );
-        // Check if the provider.
-        if ( 'email' !== $parameters->provider ) {
-            return new WP_REST_Response( array( 'error' => 'Invalid provider' ), 401 );
-        }
+	    $parameters = new Rsssl_Request_Parameters($request);
+	    try {
+		    $this->check_login_and_get_user($parameters->user_id, $parameters->login_nonce);
+	    } catch (Exception $e) {
+		    return new WP_REST_Response(['error' => $e->getMessage()], 403);
+	    }
+	    if ('email' !== $parameters->provider) {
+		    return new WP_REST_Response(['error' => 'Invalid provider'], 401);
+	    }
 
-        // Finally redirect the user to the redirect_to page with a response.
-        return $this->start_email_validation( $parameters->user_id, $parameters->redirect_to, $parameters->profile );
+	    return $this->start_email_validation($parameters->user_id, $parameters->redirect_to, $parameters->profile);
     }
 
     /**
@@ -160,29 +169,24 @@ class Rsssl_Two_Factor_On_Board_Api {
      * @return WP_REST_Response The REST response object.
      */
     public function validate_email_setup(WP_REST_Request $request ): WP_REST_Response {
-        $parameters = new Rsssl_Request_Parameters( $request );
-        $user = $this->check_login_and_get_user( $parameters->user_id, $parameters->login_nonce );
-        // Check if the provider.
-        if ( 'email' !== $parameters->provider ) {
-            return new WP_REST_Response( array( 'error' => 'Invalid provider' ), 401 );
-        }
-        if ( !Rsssl_Two_Factor_Email::get_instance()->validate_token( $parameters->user_id, self::sanitize_token($parameters->token) ) ) {
-            // we reset all the settings.
-            Rsssl_Two_Factor_Email::set_user_status( $parameters->user_id, 'open' );
-            Rsssl_Two_Factor_Totp::set_user_status( $parameters->user_id, 'open' );
+	    $parameters = new Rsssl_Request_Parameters($request);
 
-            // we logout the user
-            wp_logout();
+	    if ('email' !== $parameters->provider) {
+		    return new WP_REST_Response(['error' => 'Invalid provider'], 401);
+	    }
 
-            return new WP_REST_Response( array( 'error' =>  __('Code was was invalid, try "Resend Code"', 'really-simple.ssl-pro') ), 401 );
-        }
+	    if (!Rsssl_Two_Factor_Email::get_instance()->validate_token($parameters->user_id, self::sanitize_token($parameters->token))) {
+		    Rsssl_Two_Factor_Email::set_user_status($parameters->user_id, 'open');
+		    Rsssl_Two_Factor_Totp::set_user_status($parameters->user_id, 'open');
+		    wp_logout();
+		    return new WP_REST_Response(['error' => __('Code was invalid, try "Resend Code"', 'really-simple.ssl-pro')], 401);
+	    }
 
-        Rsssl_Two_Factor_Email::set_user_status( $parameters->user_id, 'active' );
-	    Rsssl_Two_Factor_Totp::set_user_status( $parameters->user_id, 'disabled' );
-        // Mark all other statuses as inactive.
-        self::set_other_providers_inactive( $parameters->user_id, 'email' );
+	    Rsssl_Two_Factor_Email::set_user_status($parameters->user_id, 'active');
+	    Rsssl_Two_Factor_Totp::set_user_status($parameters->user_id, 'disabled');
+	    self::set_other_providers_inactive($parameters->user_id, 'email');
 
-        return $this->authenticate_and_redirect( $parameters->user_id, $parameters->redirect_to );
+	    return $this->authenticate_and_redirect($parameters->user_id, $parameters->redirect_to);
     }
 
     /**
@@ -244,24 +248,19 @@ class Rsssl_Two_Factor_On_Board_Api {
 	 * @return WP_REST_Response The REST response object.
 	 */
 	public function disable_two_fa_for_user( WP_REST_Request $request ): WP_REST_Response {
-		$parameters = new Rsssl_Request_Parameters( $request );
-		// As a double we check the user_id with the login nonce.
-		$user = $this->check_login_and_get_user( $parameters->user_id, $parameters->login_nonce );
-
-		// We get all the available providers for the user.
-		$user_available_providers = Rsssl_Provider_Loader::get_providers();
-
-        foreach ( $user_available_providers as $provider ) {
-			/**
-			 * Set the user status to disable.
-			 *
-			 * @var Rsssl_Two_Factor_Provider $provider
-			 */
-			$provider::set_user_status( $user->ID, 'disabled' );
+		$parameters = new Rsssl_Request_Parameters($request);
+		try {
+			$user = $this->check_login_and_get_user($parameters->user_id, $parameters->login_nonce);
+		} catch (Exception $e) {
+			return new WP_REST_Response(['error' => $e->getMessage()], 403);
 		}
 
-		// Finally we redirect the user to the redirect_to page.
-		return $this->authenticate_and_redirect( $parameters->user_id, $parameters->redirect_to );
+		$user_available_providers = Rsssl_Provider_Loader::get_providers();
+		foreach ($user_available_providers as $provider) {
+			$provider::set_user_status($user->ID, 'disabled');
+		}
+
+		return $this->authenticate_and_redirect($parameters->user_id, $parameters->redirect_to);
 	}
 
 	/**
@@ -274,7 +273,11 @@ class Rsssl_Two_Factor_On_Board_Api {
 	public function skip_onboarding( WP_REST_Request $request ): WP_REST_Response {
 		$parameters = new Rsssl_Request_Parameters( $request );
 		// As a double we check the user_id with the login nonce.
-		$user = $this->check_login_and_get_user( (int)$parameters->user_id, $parameters->login_nonce );
+		try {
+			$this->check_login_and_get_user($parameters->user_id, $parameters->login_nonce);
+		} catch (Exception $e) {
+			return new WP_REST_Response(['error' => $e->getMessage()], 403);
+		}
 		return $this->authenticate_and_redirect( $parameters->user_id, $parameters->redirect_to );
 	}
 
