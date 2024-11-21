@@ -1,6 +1,7 @@
 import {useEffect,useState} from '@wordpress/element';
 import UseRiskData from "./RiskData";
 import useFields from "../FieldsData";
+import {__} from "@wordpress/i18n";
 
 const RiskComponent = (props) => {
     //first we put the data in a state
@@ -74,10 +75,14 @@ const RiskComponent = (props) => {
     let processingClass = disabled ? 'rsssl-processing' : '';
 
     return (
-        <div className={processingClass}>
+        <div>
             {DataTable && <DataTable
                 columns={columns}
                 data={Object.values(data)}
+                dense
+                pagination={false}
+                persistTableHead
+                noDataComponent={__("No vulnerabilities found", "really-simple-ssl")}
                 theme={theme}
             /> }
         </div>

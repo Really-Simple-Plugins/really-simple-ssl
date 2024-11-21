@@ -1,11 +1,15 @@
-.rsssl-user_agents, .rsssl-content_security_policy_source_directives,.rsssl-firewall_block_list_listing, .rsssl-two_fa_users, .rsssl-firewall_list_listing, .rsssl-vulnerabilities_overview, .rsssl-permissions_policy, .rsssl-404_blocking, .rsssl-firewall_white_list_listing, .rsssl-firewall_logs_content, .rsssl-limit_login_attempts_country, .rsssl-limit_login_attempts_users, .rsssl-limit_login_attempts_event_log, .rsssl-mixed-content-scan, .rsssl-limit_login_attempts_ip_address, .rsssl-content_security_policy, .rsssl-hardening-xml {
+ .rsssl-404_blocking,  .rsssl-user_agents,.rsssl-content_security_policy_source_directives,
+   .rsssl-firewall_block_list_listing, .rsssl-vulnerabilities-measures-overview, .rsssl-two_fa_users,
+   .rsssl-firewall_list_listing, .rsssl-vulnerabilities_overview, .rsssl-permissions_policy, .rsssl-firewall_white_list_listing,
+   .rsssl-firewall_logs_content, .rsssl-limit_login_attempts_country, .rsssl-limit_login_attempts_users,
+   .rsssl-limit_login_attempts_event_log, .rsssl-mixed-content-scan, .rsssl-limit_login_attempts_ip_address,
+   .rsssl-content_security_policy, .rsssl-hardening-xml {
 
   .rsssl-field-wrap {
     //wp-core also adds an svg for the select dropdown, so we hide the one from the react datatables component
     nav.rdt_Pagination > div > svg {
       display: none !important;
     }
-
 
     .rsssl-search-bar {
       float: right;
@@ -147,14 +151,18 @@
     display: flex;
   }
 }
+ .rsssl-vulnerabilities_measures {
+   .rdt_TableRow .rdt_TableCell:nth-child(3) {
+     max-width: 50%;
+   }
+ }
 
-.rsssl-vulnerabilities_measures {
-  .rdt_TableRow .rdt_TableCell:nth-child(3) {
-    max-width: 50%;
-  }
-}
-
-.rsssl-user_agents, .rsssl-404_blocking, .rsssl-firewall_logs, .rsssl-permissions_policy, .rsssl-two_fa_users, .rsssl-content_security_policy_source_directives, .rsssl-firewall_white_list_listing, .rsssl-firewall_block_list_listing, .rsssl-firewall_list_listing, .rsssl-vulnerabilities_overview, .rsssl-vulnerabilities_measures, .rsssl-limit_login_attempts_country, .rsssl-limit_login_attempts_users, .rsssl-firewall_event_log_viewer, .rsssl-firewall_logs_content, .rsssl-limit_login_attempts_event_log, .rsssl-mixed-content-scan, .rsssl-limit_login_attempts_ip_address, .rsssl-content_security_policy, .rsssl-hardening-xml {
+.rsssl-vulnerabilities_measures, .rsssl-404_blocking, .rsssl-user_agents, .rsssl-firewall_logs, .rsssl-permissions_policy, .rsssl-two_fa_users,
+.rsssl-vulnerabilities-measures-overview, .rsssl-content_security_policy_source_directives,
+.rsssl-firewall_white_list_listing, .rsssl-firewall_block_list_listing, .rsssl-firewall_list_listing,
+.rsssl-vulnerabilities_overview, .rsssl-limit_login_attempts_country, .rsssl-limit_login_attempts_users,
+.rsssl-firewall_event_log_viewer, .rsssl-firewall_logs_content, .rsssl-limit_login_attempts_event_log,
+.rsssl-mixed-content-scan, .rsssl-limit_login_attempts_ip_address, .rsssl-content_security_policy, .rsssl-hardening-xml {
   .rsssl-field-wrap {
     margin-left: CALC(-1 * var(--rsp-spacing-l));
     margin-right: CALC(-1 * var(--rsp-spacing-l));
@@ -204,6 +212,7 @@
 .rsssl-hardening-xml,
 .rsssl-vulnerabilities_overview,
 .rsssl-content_security_policy_source_directives,
+.rsssl-vulnerabilities-measures-overview,
 .rsssl-limit_login_attempts_ip_address,
 .rsssl-limit_login_attempts_users,
 .rsssl-limit_login_attempts_country,
@@ -315,6 +324,10 @@
     }
   }
 
+  div:first-child {
+    white-space: initial !important;
+  }
+
   .rdt_TableCell {
     &:nth-child(2) {
       select {
@@ -325,16 +338,16 @@
 
 }
 
-/* EdgeCase: CountryTable */
-.rsssl-vulnerabilities_measures {
-  .rdt_TableCell {
-    &:nth-child(2) {
-      select {
-        max-width: 100%;
-      }
-    }
-  }
-}
+///* EdgeCase: CountryTable */
+//.rsssl-vulnerabilities_measures {
+//  .rdt_TableCell {
+//    &:nth-child(2) {
+//      select {
+//        max-width: 100%;
+//      }
+//    }
+//  }
+//}
 
 ///* EdgeCase: hardening-xml */
 //.rsssl-hardening-xml {
@@ -401,5 +414,12 @@
         }
       }
     }
+  }
+}
+.rsssl-vulnerabilities-measures-overview {
+  .rdt_TableRow .rdt_TableCell:last-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 200px;
   }
 }

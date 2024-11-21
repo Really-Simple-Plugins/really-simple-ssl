@@ -112,7 +112,7 @@ if ( ! class_exists( 'rsssl_site_health' ) ) {
 			$description = __( 'Enable Limit Login Attempts to protect the login form against brute-force attacks.', 'really-simple-ssl' );
 
 			// Check if RSSSL LLA or Limit Login Attempts Reloaded is installed and active
-			if ( rsssl_get_option('enable_limited_login_attempts') == '1' || is_plugin_active('wordfence/wordfence.php') || is_plugin_active('limit-login-attempts-reloaded/limit-login-attempts-reloaded.php') ) {
+			if ( rsssl_get_option('enable_limited_login_attempts') == '1' || is_plugin_active('wordfence/wordfence.php') || is_plugin_active('limit-login-attempts-reloaded/limit-login-attempts-reloaded.php') || is_plugin_active('better-wp-security/better-wp-security.php') ) {
 				$status = 'good';
 				$description = __( 'Your site is protected by Limit Login Attempts.', 'really-simple-ssl' );
 			}

@@ -701,7 +701,7 @@ class Rsssl_Two_Factor_Settings {
             $roles = self::sort_roles_by_default_first($roles);
             $forced_roles = rsssl_get_option('two_fa_forced_roles', []);
             // if there are forced roles, prioritize them by removing all other roles
-            if (!empty($forced_roles)) {
+            if (!empty($forced_roles) && array_intersect($roles, $forced_roles)) {
                 $roles = array_intersect($roles, $forced_roles);
             }
         }

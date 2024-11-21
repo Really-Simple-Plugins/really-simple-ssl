@@ -139,7 +139,7 @@ This is an automated notification. If you would like to speak to a site administ
 		$mailer                    = new rsssl_mailer();
 		$mailer->subject           = $subject;
 		$mailer->branded           = false;
-		$mailer->sent_by_text      = sprintf( __( 'Notification by %s', 'really-simple-ssl' ), site_url() );
+		$mailer->sent_by_text      = "<b>" . sprintf( __( 'Notification by %s', 'really-simple-ssl' ), site_url() ) . "</b>";
 		$mailer->template_filename = apply_filters( 'rsssl_email_template', rsssl_path . '/mailer/templates/email-unbranded.html' );
 		$mailer->to                = $user->user_email;
 		$mailer->title             = __( 'Compromised password reset', 'really-simple-ssl' );

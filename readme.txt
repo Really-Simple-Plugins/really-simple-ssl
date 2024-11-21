@@ -6,7 +6,7 @@ Requires at least: 5.9
 License: GPL2
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 9.1.2
+Stable tag: 9.1.3
 
 Easily improve site security with WordPress Hardening, Two-Factor Authentication (2FA), Login Protection, Vulnerability Detection and SSL certificate.
 
@@ -151,6 +151,21 @@ The plugin checks your certificate before enabling, but if, for example, you mig
 If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions](https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/) instead.
 
 == Changelog ==
+= 9.1.3 =
+* Improvement: Width Vulnerabilities -> configuration
+* Improvement: 2Fa lockout notice
+* Improvement: catch use of short init in advanced-headers file
+* Improvement: string improvements and translator comments
+* Improvement: Bitnami support for rsssl_find_wordpress_base_path()
+* Improvement: integrate Site health notifications with Solid Security
+* Improvement: Enhanced random password generation in Rename Admin User feature
+* Improvement: Always return string in wpconfig_path() function
+* Improvement: Removes configuration options for a user in edit user.
+* Fix: Remove duplicate site URL.
+* Fix: ensure rsssl_sanitize_uri_value() function always returns a string, to prevent errors.
+* Fix: multisite users who have enabled roles couldn’t use the 2fa if an other role than theirs has been forced.
+* Fix: The ‘Skip Onboarding’ button presented an undefined page after selecting the email method as an option.
+
 = 9.1.2 =
 * security: authentication bypass
 

@@ -79,7 +79,7 @@ function rsssl_rename_admin_user() {
 
 			// Populate the new user data. Use current 'admin' userdata wherever available
 			$new_userdata = array(
-				'user_pass'            => rsssl_generate_random_string( 12 ), //temp, overwrite with actual hash later.
+				'user_pass'            => wp_generate_password( 12 ), //temp, overwrite with actual hash later.
 				//(string) The plain-text user password.
 				'user_login'           => $new_user_login,
 				//(string) The user's login username.

@@ -166,6 +166,7 @@ class rsssl_firewall_manager {
 		$contents .= '/**' . "\n";
 		$contents .= '* This file is created by Really Simple Security' . "\n";
 		$contents .= '*/' . "\n\n";
+		$contents .= 'if (defined("SHORTINIT") && SHORTINIT) return;' . "\n\n";
 		$contents .= '$base_path = dirname(__FILE__);' . "\n";
 		$contents .= 'if( file_exists( $base_path . "/rsssl-safe-mode.lock" ) ) {' . "\n";
 		$contents .= '    if ( ! defined( "RSSSL_SAFE_MODE" ) ) {' . "\n";
@@ -702,7 +703,7 @@ class rsssl_firewall_manager {
 				return apply_filters('rsssl_wpconfig_path', $dir . 'wp-config.php' );
 			}
 		} while ( ( $dir = realpath( "$dir/.." ) ) && ( $i < $maxiterations ) );//phpcs:ignore
-		return apply_filters( 'rsssl_wpconfig_path', null );
+		return apply_filters( 'rsssl_wpconfig_path', '' );
 	}
 
 	/**

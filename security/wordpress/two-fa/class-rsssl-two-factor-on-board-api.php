@@ -109,7 +109,6 @@ class Rsssl_Two_Factor_On_Board_Api {
     {
         $redirect_to = $redirect_to ?: home_url();
         $user = get_user_by('id', $user_id);
-        Rsssl_Two_Fa_Authentication::create_login_nonce($user_id);
         // Sending the email with the code.
         Rsssl_Two_Factor_Email::get_instance()->generate_and_email_token($user, $profile);
         $token = get_user_meta( $user_id, Rsssl_Two_Factor_Email::RSSSL_TOKEN_META_KEY, true );

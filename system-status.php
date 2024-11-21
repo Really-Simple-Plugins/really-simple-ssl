@@ -300,6 +300,11 @@ if ( rsssl_user_can_manage() && isset( $_GET['download'] ) ) {
 function rsssl_find_wordpress_base_path() {
 	$path = __DIR__;
 
+	// Check for Bitnami WordPress installation
+	if ( isset( $_SERVER['DOCUMENT_ROOT'] ) && $_SERVER['DOCUMENT_ROOT'] === '/opt/bitnami/wordpress' ) {
+		return '/opt/bitnami/wordpress';
+	}
+
 	do {
 		if ( file_exists( $path . '/wp-config.php' ) ) {
 			//check if the wp-load.php file exists here. If not, we assume it's in a subdir.

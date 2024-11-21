@@ -317,7 +317,7 @@ class Rsssl_Two_Factor_Email extends Rsssl_Two_Factor_Provider implements Rsssl_
 		$mailer->subject = $subject;
 		$mailer->branded = false;
 		/* translators: %s is replaced with the site url */
-		$mailer->sent_by_text      = sprintf( __( 'Notification by %s', 'really-simple-ssl' ), site_url() );
+		$mailer->sent_by_text      = "<b>" . sprintf( __( 'Notification by %s', 'really-simple-ssl' ), site_url() ) . "</b>";
 		$mailer->template_filename = apply_filters( 'rsssl_email_template', rsssl_path . '/mailer/templates/email-unbranded.html' );
 		$mailer->to                = $user->user_email;
 		$mailer->title             = __( 'Hi', 'really-simple-ssl' ) . ' ' . $user->display_name . ',';

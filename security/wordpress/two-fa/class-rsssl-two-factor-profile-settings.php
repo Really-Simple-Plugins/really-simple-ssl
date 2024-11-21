@@ -261,6 +261,9 @@ if (!class_exists('Rsssl_Two_Factor_Profile_Settings')) {
          */
         public function show_user_profile(WP_User $user): void
         {
+	        if ($user->ID !== get_current_user_id()) {
+		        return;
+	        }
             settings_errors('two-factor-authentication');
             settings_errors('rsssl-two-factor-authentication-error');
             Rsssl_Two_Factor_Totp::enqueue_qrcode_script();
