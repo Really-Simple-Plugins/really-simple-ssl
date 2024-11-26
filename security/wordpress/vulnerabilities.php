@@ -47,7 +47,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
         public function __construct()
         {
-	        add_action('plugins_loaded', [$this, 'initialize_risk_naming'] );
 
 	        $this->init();
 	        add_filter('rsssl_vulnerability_data', array($this, 'get_stats'));
@@ -57,9 +56,10 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	        add_filter('rsssl_notices', [$this, 'show_help_notices'], 10, 1);
 	        add_action( 'rsssl_after_save_field', array( $this, 'maybe_delete_local_files' ), 10, 4 );
 	        add_action( 'rsssl_upgrade', array( $this, 'upgrade_encrypted_files') );
+	        add_action('admin_init', [$this, 'load_translations'] );
         }
 
-        public function initialize_risk_naming(): void {
+        public function load_translations(): void {
             $this->risk_naming = [
                 'l' => __('low-risk', 'really-simple-ssl'),
                 'm' => __('medium-risk', 'really-simple-ssl'),
