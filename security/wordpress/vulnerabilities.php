@@ -47,7 +47,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
         public function __construct()
         {
-	        add_action('admin_init', [$this, 'initialize_risk_naming']);
+	        add_action('plugins_loaded', [$this, 'initialize_risk_naming'] );
 
 	        $this->init();
 	        add_filter('rsssl_vulnerability_data', array($this, 'get_stats'));
