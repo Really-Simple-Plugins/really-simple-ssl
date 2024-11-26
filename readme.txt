@@ -165,6 +165,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 * Fix: ensure rsssl_sanitize_uri_value() function always returns a string, to prevent errors.
 * Fix: multisite users who have enabled roles couldn’t use the 2fa if an other role than theirs has been forced.
 * Fix: The ‘Skip Onboarding’ button presented an undefined page after selecting the email method as an option.
+* Fix: Update translation loading according to the new 6.7 method.
 
 = 9.1.2 =
 * security: authentication bypass
