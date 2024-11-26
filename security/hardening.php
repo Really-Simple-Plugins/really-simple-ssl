@@ -9,13 +9,17 @@ class rsssl_hardening {
 			wp_die(sprintf(__('%s is a singleton class and you cannot create a second instance.', 'really-simple-ssl'), get_class($this)));
 		add_filter( 'rsssl_do_action', array($this, 'hardening_data'), 10, 3 );
 
+		add_action("admin_init", array($this, "load_translations"));
+		self::$_this = $this;
+	}
+
+	public function load_translations(){
 		$this->risk_naming = [
 			'l' => __('low-risk', 'really-simple-ssl'),
 			'm' => __('medium-risk', 'really-simple-ssl'),
 			'h' => __('high-risk', 'really-simple-ssl'),
 			'c' => __('critical', 'really-simple-ssl'),
 		];
-		self::$_this = $this;
 	}
 
 	function hardening_data( array $response, string $action, $data ): array {

@@ -213,7 +213,7 @@ class rsssl_onboarding {
 			],
 			[
 				"id"       => 'pro',
-				"title"    => __( "Really Simple Security Pro", "really-simple-ssl" ),
+				"title"    => "Really Simple Security Pro",
 				"subtitle" => __( "Heavyweight security features, in a lightweight performant plugin from Really Simple Plugins. Get started with below features and get the latest and greatest updates for peace of mind!", "really-simple-ssl" ),
 				"items"    => $this->pro_features(),
 				"button"   => __( "Install", "really-simple-ssl" ),

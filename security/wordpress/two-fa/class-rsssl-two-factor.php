@@ -1437,7 +1437,7 @@ class Rsssl_Two_Factor
                         $user->user_login,
                         new WP_Error(
                             'rsssl_two_factor_invalid',
-                            __('Invalid verification code.', 'really-simple-ssl-pro')));//phpcs:ignore
+                            __('Invalid verification code.', 'really-simple-ssl')));//phpcs:ignore
 
                     // Store the last time a failed login occurred.
                     update_user_meta($user->ID, self::RSSSL_USER_RATE_LIMIT_KEY, time());
@@ -1464,7 +1464,7 @@ class Rsssl_Two_Factor
                         $user,
                         $login_nonce['rsssl_key'],
                         isset($_REQUEST['redirect_to']) ? sanitize_text_field(wp_unslash($_REQUEST['redirect_to'])) : '',
-                        esc_html__('Invalid verification code.', 'really-simple-ssl-pro'),
+                        esc_html__('Invalid verification code.', 'really-simple-ssl'),
                         $provider
                     );
                     exit;
@@ -1474,7 +1474,7 @@ class Rsssl_Two_Factor
                 // Create a WP_Error object.
                 $error = new WP_Error();
                 // Add an error message to the object.
-                $error->add('rsssl_two_factor_invalid_provider', __('Invalid two-factor authentication provider.', 'really-simple-ssl-pro'));
+                $error->add('rsssl_two_factor_invalid_provider', __('Invalid two-factor authentication provider.', 'really-simple-ssl'));
                 // Trigger the 'rsssl_wp_login_failed' action.
                 do_action('rsssl_wp_login_failed', $user->user_login, $error);//phpcs:ignore
                 // Redirect the user to the login page and clear all $_POST data.

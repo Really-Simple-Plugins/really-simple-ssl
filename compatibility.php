@@ -39,9 +39,9 @@ if ( is_admin() && rsssl_user_can_manage() ) {
 		$ms_file     = WP_CONTENT_DIR . '/plugins/really-simple-ssl-pro-multisite/really-simple-ssl-pro-multisite.php';
 		$pro_file    = WP_CONTENT_DIR . '/plugins/really-simple-ssl-pro/really-simple-ssl-pro.php';
 		if ( file_exists( $ms_file ) && is_plugin_active('really-simple-ssl-pro-multisite/really-simple-ssl-pro-multisite.php') ) {
-			$plugin_data = get_plugin_data( $ms_file );
+			$plugin_data = get_plugin_data( $ms_file, false, false );
 		} else if ( file_exists( $pro_file ) && is_plugin_active('really-simple-ssl-pro/really-simple-ssl-pro.php')) {
-			$plugin_data = get_plugin_data( $pro_file );
+			$plugin_data = get_plugin_data( $pro_file, false, false );
 		}
 
 		if ( $plugin_data ) {

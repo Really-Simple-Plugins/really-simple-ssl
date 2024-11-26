@@ -1104,7 +1104,12 @@ class rsssl_admin {
 			}
 		}
 		$this->check_for_siteurl_in_wpconfig();
-		rsssl_update_option( 'site_has_ssl', $site_has_ssl );
+        //check againt current status, to prevent unnecessary loading of fields array during update_option
+        $current_ssl_status = rsssl_get_option( 'site_has_ssl' );
+        if ( (bool) $current_ssl_status !== (bool) $site_has_ssl ) {
+	        rsssl_update_option( 'site_has_ssl', $site_has_ssl );
+        }
+
 	}
 
 	/**
