@@ -56,7 +56,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	        add_filter('rsssl_notices', [$this, 'show_help_notices'], 10, 1);
 	        add_action( 'rsssl_after_save_field', array( $this, 'maybe_delete_local_files' ), 10, 4 );
 	        add_action( 'rsssl_upgrade', array( $this, 'upgrade_encrypted_files') );
-	        add_action('admin_init', [$this, 'load_translations'] );
+	        add_action('init', [$this, 'load_translations']);
         }
 
         public function load_translations(): void {
