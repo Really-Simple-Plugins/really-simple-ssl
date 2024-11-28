@@ -152,6 +152,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 
 == Changelog ==
 = 9.1.3 =
+* November 28th
 * Improvement: Width Vulnerabilities -> configuration
 * Improvement: 2Fa lockout notice
 * Improvement: catch use of short init in advanced-headers file
