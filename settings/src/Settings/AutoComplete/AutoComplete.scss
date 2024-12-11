@@ -30,7 +30,7 @@
   }
   .MuiPopper-root, .MuiPaper-root {
     max-height:150px;
-    z-index: 15;
+    z-index: 999999;
     div {
       font-family: inherit !important;
     }

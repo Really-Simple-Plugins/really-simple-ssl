@@ -423,3 +423,8 @@
     width: 200px;
   }
 }
+
+//For the shields
+ .rsssl-content_security_policy_source_directives:has(.rsssl-shield-overlay) {
+   min-height: 250px;
+ }

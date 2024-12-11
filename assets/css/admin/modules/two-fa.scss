@@ -20,14 +20,21 @@ a.rsssl-skip-link {
   justify-content: flex-end;
 }
 
-.MuiPopper-root, .MuiPaper-root {
-  max-height:30px;
-  z-index: 15;
-  div {
-    font-family: inherit !important;
-  }
-  ul {
-    max-height:initial;
+.rsssl-two_fa_general,
+.rsssl-two_fa_email,
+.rsssl-two_fa_totp,
+.rsssl-two_fa_users {
+  .MuiPopper-root, .MuiPaper-root {
+    max-height: 30px;
+    z-index: 15;
+
+    div {
+      font-family: inherit !important;
+    }
+
+    ul {
+      max-height: initial;
+    }
   }
 }
 

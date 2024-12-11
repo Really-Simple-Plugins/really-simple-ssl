@@ -30,6 +30,11 @@ const AutoCompleteControl = ({field, disabled, value, options, label, onChange }
                 value={ value }
                 id={field.id}
                 options={options}
+                isOptionEqualToValue={(option, value) => {
+                    const optionValue = typeof option.value === "string" ? option.value.toLowerCase() : option.value;
+                    const valueValue = typeof value.value === "string" ? value.value.toLowerCase() : value.value;
+                    return optionValue === valueValue;
+                }}
                 getOptionLabel={(option) => {
                     if ( option && option.label ) {
                         return option.label;
@@ -40,9 +45,6 @@ const AutoCompleteControl = ({field, disabled, value, options, label, onChange }
                     }
                     return option;
                 } }
-                isOptionEqualToValue={(option, value) => {
-                    return option.value === value;
-                }}
                 onChange={(event, newValue) => {
                     let value = newValue && newValue.value ? newValue.value : '';
                     onChange(value);
