@@ -436,21 +436,35 @@ function rsssl_uploads_htaccess_status(){
  * @return string|null
  * Get the wp-config.php path
  */
-function rsssl_find_wp_config_path()
-{
-	if ( !rsssl_user_can_manage() ) {
+function rsssl_find_wp_config_path() {
+	if ( ! rsssl_user_can_manage() ) {
 		return null;
 	}
-    //limit nr of iterations to 5
-    $i = 0;
-    $dir = __DIR__;
-    do {
-        $i++;
-        if (file_exists($dir . "/wp-config.php")) {
-            return $dir . "/wp-config.php";
-        }
-    } while (($dir = realpath("$dir/..")) && ($i < 10));
-    return null;
+
+	// Allow the wp-config.php path to be overridden via a filter.
+	$filtered_path = apply_filters( 'rsssl_wpconfig_path', '' );
+
+	// If a filtered path is provided, validate it.
+	if ( ! empty( $filtered_path ) ) {
+		$directory = dirname( $filtered_path );
+
+		// Ensure the directory exists before checking for the file.
+		if ( is_dir( $directory ) && file_exists( $filtered_path ) ) {
+			return $filtered_path;
+		}
+	}
+
+	// Limit number of iterations to 10
+	$i   = 0;
+	$dir = __DIR__;
+	do {
+		$i ++;
+		if ( file_exists( $dir . "/wp-config.php" ) ) {
+			return $dir . "/wp-config.php";
+		}
+	} while ( ( $dir = realpath( "$dir/.." ) ) && ( $i < 10 ) );
+
+	return null;
 }
 
 /**

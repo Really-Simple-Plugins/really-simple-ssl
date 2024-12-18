@@ -132,7 +132,7 @@ class rsssl_firewall_manager {
 	}
 
 	/**
-	 * Initialize the WP_Filesyste
+	 * Initialize the WP_Filesystem
 	 *
 	 * @return false|WP_Filesystem_Base
 	 */
@@ -693,17 +693,32 @@ class rsssl_firewall_manager {
 	 * @return string|null
 	 */
 	public function wpconfig_path() {
-		// limit nr of iterations to 5.
+
+		// Allow the wp-config.php path to be overridden via a filter.
+		$filtered_path = apply_filters( 'rsssl_wpconfig_path', '' );
+
+		// If a filtered path is provided, validate it.
+		if ( ! empty( $filtered_path ) ) {
+			$directory = dirname( $filtered_path );
+
+			// Ensure the directory exists before checking for the file.
+			if ( is_dir( $directory ) && file_exists( $filtered_path ) ) {
+				return $filtered_path;
+			}
+		}
+
+		// Limit number of iterations to 5.
 		$i             = 0;
 		$maxiterations = 5;
 		$dir           = ABSPATH;
 		do {
-			++$i;
+			++ $i;
 			if ( $this->file_exists( $dir . 'wp-config.php' ) ) {
-				return apply_filters('rsssl_wpconfig_path', $dir . 'wp-config.php' );
+				return $dir . 'wp-config.php';
 			}
 		} while ( ( $dir = realpath( "$dir/.." ) ) && ( $i < $maxiterations ) );//phpcs:ignore
-		return apply_filters( 'rsssl_wpconfig_path', '' );
+
+		return '';
 	}
 
 	/**

@@ -28,13 +28,30 @@
       background: rgba(255, 255, 255, 0.8);
       border-radius: var(--rsp-border-radius);
       .rsssl-shield-overlay {
-        height:445px;
+        position: absolute;
+        top: 50%; /* Center vertically */
+        left: 50%; /* Center horizontally */
+        transform: translate(-50%, -50%); /* Offset for centering */
+        display: flex;
         align-items: center;
         justify-content: center;
-        display:flex;
+        height: calc(100px + 2 * var(--rsp-spacing-s)); /* Adjust shield height dynamically */
+        width: calc(200px + 2 * var(--rsp-spacing-s)); /* Ensure consistent width for a square shield */
+        z-index: 19; /* Place it below the overlay */
       }
+
+      .rsssl-locked:has(.rsssl-shield-overlay) {
+        /* Apply dynamic styles when .rsssl-shield-overlay is present */
+        min-height: calc(100px + 4 * var(--rsp-spacing-s)); /* Adjust to fit the shield and extra spacing */
+        display: flex;
+        align-items: center; /* Vertically center contents */
+        justify-content: center; /* Horizontally center contents */
+        position: relative; /* Context for absolutely positioned children */
+        padding: var(--rsp-spacing-s); /* Add padding to avoid cutting off elements */
+      }
+
       .rsssl-locked-overlay {
-        z-index: 18;
+        z-index: 20; /* Ensure this stays on top */
         position: absolute;
         display: flex;
         align-items: center;

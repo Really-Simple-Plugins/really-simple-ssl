@@ -2666,6 +2666,7 @@ class rsssl_admin {
 		//only if cookie settings were not inserted yet
 		if ( $this->secure_cookie_settings_status() !== 'set' ) {
 			$wpconfig_path = $this->wpconfig_path();
+
 			if ( empty( $wpconfig_path ) ) {
 				return;
 			}

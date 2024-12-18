@@ -31,7 +31,7 @@ class Rsssl_Two_Factor_Totp extends Rsssl_Two_Factor_Provider implements Rsssl_T
 	 *
 	 * @var string
 	 */
-	public const LAST_SUCCESSFUL_LOGIN_META_KEY = '_two_factor_totp_last_successful_login';
+	public const LAST_SUCCESSFUL_LOGIN_META_KEY = '_rsssl_two_factor_totp_last_successful_login';
 
 	public const DEFAULT_KEY_BIT_SIZE        = 160;
 	public const DEFAULT_CRYPTO              = 'sha1';
@@ -220,7 +220,7 @@ class Rsssl_Two_Factor_Totp extends Rsssl_Two_Factor_Provider implements Rsssl_T
 			return new WP_Error( 'db_error', __( 'Unable to save Two Factor Authentication code. Please re-scan the QR code and enter the code provided by your application.', 'really-simple-ssl' ), array( 'status' => 500 ) );
 		}
 
-		if ( $request->get_param( 'enable_provider' ) && ! Rsssl_Two::enable_provider_for_user( $user_id, 'Two_Factor_Totp' ) ) {
+		if ( $request->get_param( 'enable_provider' ) && ! Rsssl_Two_Factor::enable_provider_for_user( $user_id, 'Two_Factor_Totp' ) ) {
 			return new WP_Error( 'db_error', __( 'Unable to enable TOTP provider for this user.', 'really-simple-ssl' ), array( 'status' => 500 ) );
 		}
 
@@ -507,7 +507,7 @@ class Rsssl_Two_Factor_Totp extends Rsssl_Two_Factor_Provider implements Rsssl_T
 			return true;
 		}
 
-		$code = $this->sanitize_code_from_request( 'authcode', self::DEFAULT_DIGIT_COUNT );
+		$code = self::sanitize_code_from_request( 'authcode', self::DEFAULT_DIGIT_COUNT );
 		if ( ! $code ) {
 			return false;
 		}
@@ -542,6 +542,8 @@ class Rsssl_Two_Factor_Totp extends Rsssl_Two_Factor_Provider implements Rsssl_T
 		}
 
 		update_user_meta( $user->ID, self::LAST_SUCCESSFUL_LOGIN_META_KEY, $valid_timestamp );
+        delete_user_meta( $user->ID, '_rsssl_two_factor_failed_login_attempts');
+        delete_user_meta( $user->ID, '_rsssl_two_factor_last_login_failure');
 
 		return true;
 	}

@@ -2201,31 +2201,31 @@ button.button .cmplz-icon.rsssl-icon-loading > div {
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(1) {
-    width: 65%;
+    width: 99%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(2) {
-    width: 77%;
+    width: 66%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(3) {
-    width: 86%;
+    width: 94%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(4) {
-    width: 79%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(5) {
     width: 75%;
 }
 
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(5) {
+    width: 78%;
+}
+
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(6) {
-    width: 79%;
+    width: 66%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(7) {
-    width: 80%;
+    width: 67%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
@@ -2233,51 +2233,51 @@ button.button .cmplz-icon.rsssl-icon-loading > div {
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
-    width: 87%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
-    width: 64%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
     width: 79%;
 }
 
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
-    width: 81%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
     width: 85%;
 }
 
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
+    width: 92%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
+    width: 78%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
+    width: 65%;
+}
+
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(14) {
-    width: 88%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
-    width: 80%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(16) {
-    width: 94%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(17) {
-    width: 81%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(18) {
-    width: 70%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(19) {
     width: 75%;
 }
 
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
+    width: 73%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(16) {
+    width: 92%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(17) {
+    width: 96%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(18) {
+    width: 91%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(19) {
+    width: 99%;
+}
+
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(20) {
-    width: 84%;
+    width: 79%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line ~ .rsssl-placeholder-line {
@@ -2502,14 +2502,42 @@ button.button .cmplz-icon.rsssl-icon-loading > div {
 }
 
 .rsssl div[class^=rsssl-wizard-] .rsssl-locked .rsssl-shield-overlay {
-    height: 445px;
+    position: absolute;
+    top: 50%;
+ /* Center vertically */
+    left: 50%;
+ /* Center horizontally */
+    transform: translate(-50%, -50%);
+ /* Offset for centering */
+    display: flex;
     align-items: center;
     justify-content: center;
+    height: calc(100px + 2 * var(--rsp-spacing-s));
+ /* Adjust shield height dynamically */
+    width: calc(200px + 2 * var(--rsp-spacing-s));
+ /* Ensure consistent width for a square shield */
+    z-index: 19;
+ /* Place it below the overlay */
+}
+
+.rsssl div[class^=rsssl-wizard-] .rsssl-locked .rsssl-locked:has(.rsssl-shield-overlay) {
+  /* Apply dynamic styles when .rsssl-shield-overlay is present */
+    min-height: calc(100px + 4 * var(--rsp-spacing-s));
+ /* Adjust to fit the shield and extra spacing */
     display: flex;
+    align-items: center;
+ /* Vertically center contents */
+    justify-content: center;
+ /* Horizontally center contents */
+    position: relative;
+ /* Context for absolutely positioned children */
+    padding: var(--rsp-spacing-s);
+ /* Add padding to avoid cutting off elements */
 }
 
 .rsssl div[class^=rsssl-wizard-] .rsssl-locked .rsssl-locked-overlay {
-    z-index: 18;
+    z-index: 20;
+ /* Ensure this stays on top */
     position: absolute;
     display: flex;
     align-items: center;
@@ -3143,13 +3171,6 @@ input.rsssl-input.rsssl-success:focus {
     background-color: var(--rsp-grey-200);
     margin: 10px 0;
     height: 20px;
-}
-
-.rsssl-mixed-content-scan .rsssl-shield-overlay {
-    height: 250px;
-    align-items: center;
-    justify-content: center;
-    display: flex;
 }
 
 .rsssl-mixed-content-scan .rsssl-field-wrap .rdt_TableCell[data-column-id="2"] {
@@ -4243,6 +4264,10 @@ Admin notice
     width: 200px;
 }
 
+.rsssl-content_security_policy_source_directives:has(.rsssl-shield-overlay) {
+    min-height: 250px;
+}
+
 .rsssl .rsssl-new-features-block .rsssl-grid-item-content {
     display: flex;
     flex-direction: column;
@@ -4302,16 +4327,34 @@ a.rsssl-skip-link {
     justify-content: flex-end;
 }
 
-.MuiPopper-root, .MuiPaper-root {
+.rsssl-two_fa_general .MuiPopper-root, .rsssl-two_fa_general .MuiPaper-root,
+.rsssl-two_fa_email .MuiPopper-root,
+.rsssl-two_fa_email .MuiPaper-root,
+.rsssl-two_fa_totp .MuiPopper-root,
+.rsssl-two_fa_totp .MuiPaper-root,
+.rsssl-two_fa_users .MuiPopper-root,
+.rsssl-two_fa_users .MuiPaper-root {
     max-height: 30px;
     z-index: 15;
 }
 
-.MuiPopper-root div, .MuiPaper-root div {
+.rsssl-two_fa_general .MuiPopper-root div, .rsssl-two_fa_general .MuiPaper-root div,
+.rsssl-two_fa_email .MuiPopper-root div,
+.rsssl-two_fa_email .MuiPaper-root div,
+.rsssl-two_fa_totp .MuiPopper-root div,
+.rsssl-two_fa_totp .MuiPaper-root div,
+.rsssl-two_fa_users .MuiPopper-root div,
+.rsssl-two_fa_users .MuiPaper-root div {
     font-family: inherit !important;
 }
 
-.MuiPopper-root ul, .MuiPaper-root ul {
+.rsssl-two_fa_general .MuiPopper-root ul, .rsssl-two_fa_general .MuiPaper-root ul,
+.rsssl-two_fa_email .MuiPopper-root ul,
+.rsssl-two_fa_email .MuiPaper-root ul,
+.rsssl-two_fa_totp .MuiPopper-root ul,
+.rsssl-two_fa_totp .MuiPaper-root ul,
+.rsssl-two_fa_users .MuiPopper-root ul,
+.rsssl-two_fa_users .MuiPaper-root ul {
     max-height: initial;
 }
 

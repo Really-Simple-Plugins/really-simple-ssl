@@ -1,17 +1,17 @@
-import {useState, useEffect, memo} from "@wordpress/element";
+import { useState, useEffect, memo } from "@wordpress/element";
+import { ThemeProvider } from '@mui/material/styles';
 import useFields from "../FieldsData";
 import AutoCompleteControl from "../AutoComplete/AutoCompleteControl";
 import useHostData from "./HostData";
-import {__} from "@wordpress/i18n";
-
-const Host = ({field, showDisabledWhenSaving=true}) => {
-    const {updateField, setChangedField, saveFields, handleNextButtonDisabled} = useFields();
+import { __ } from "@wordpress/i18n";
+import autoCompleteSharedTheme from "../../utils/autoCompleteTheme";
+const Host = ({ field, showDisabledWhenSaving = true }) => {
+    const { updateField, setChangedField, saveFields, handleNextButtonDisabled } = useFields();
     const [disabled, setDisabled] = useState(false);
-    const {fetchHosts, hosts, hostsLoaded} = useHostData();
+    const { fetchHosts, hosts, hostsLoaded } = useHostData();
 
-    useEffect ( () => {
-
-        if ( !hostsLoaded ) {
+    useEffect(() => {
+        if (!hostsLoaded) {
             fetchHosts();
         }
     }, []);
@@ -21,15 +21,14 @@ const Host = ({field, showDisabledWhenSaving=true}) => {
     }, [disabled]);
 
     const onChangeHandler = async (fieldValue) => {
-        //force update, and get new fields.
         if (showDisabledWhenSaving) {
-          setDisabled(true);
+            setDisabled(true);
         }
         updateField(field.id, fieldValue);
         setChangedField(field.id, fieldValue);
         await saveFields(true, false);
         setDisabled(false);
-    }
+    };
 
     let loadedHosts = hostsLoaded ? hosts : [];
     let options = [];
@@ -37,7 +36,7 @@ const Host = ({field, showDisabledWhenSaving=true}) => {
         label: __('Optional - Select your hosting provider.', 'really-simple-ssl'),
         value: '',
     };
-    if ( field.value.length === 0 ) {
+    if (field.value.length === 0) {
         options.push(item);
     }
     for (let key in loadedHosts) {
@@ -50,15 +49,18 @@ const Host = ({field, showDisabledWhenSaving=true}) => {
     }
 
     return (
-          <AutoCompleteControl
-              className="rsssl-select"
-              field={field}
-              label={ field.label }
-              onChange={ ( fieldValue ) => onChangeHandler(fieldValue) }
-              value= { field.value }
-              options={ options }
-              disabled={disabled}
-          />
-    )
-}
+        <ThemeProvider theme={autoCompleteSharedTheme}>
+            <AutoCompleteControl
+                className="rsssl-select"
+                field={field}
+                label={field.label}
+                onChange={(fieldValue) => onChangeHandler(fieldValue)}
+                value={field.value}
+                options={options}
+                disabled={disabled}
+            />
+        </ThemeProvider>
+    );
+};
+
 export default memo(Host);

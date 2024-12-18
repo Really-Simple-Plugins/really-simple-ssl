@@ -172,22 +172,51 @@ function rsssl_load_template( string $template, array $vars = array(), string $p
 }
 
 /**
- * @return string
+ * Determines the path to WordPress configuration file (wp-config.php)
  *
- * Get wp-config.php path
+ * This function attempts to locate the wp-config.php file in the following order:
+ * 1. Checks for a filtered path via 'rsssl_wpconfig_path' filter
+ * 2. Looks in the WordPress installation root directory (ABSPATH)
+ * 3. Looks in the parent directory of the WordPress installation
+ *
+ * @return string The full path to wp-config.php if found, empty string otherwise
+ *
+ * @filter rsssl_wpconfig_path Allows modification of the wp-config.php path
+ *
+ * @example
+ * // Get wp-config.php path
+ * $config_path = rsssl_wpconfig_path();
+ *
+ * // Filter example
+ * add_filter('rsssl_wpconfig_path', function($path) {
+ *     return '/custom/path/to/wp-config.php';
+ * });
  */
-if ( ! function_exists('rsssl_wpconfig_path' ) ) {
+if ( ! function_exists( 'rsssl_wpconfig_path' ) ) {
 	function rsssl_wpconfig_path(): string {
+		// Allow the wp-config.php path to be overridden via a filter.
+		$filtered_path = apply_filters( 'rsssl_wpconfig_path', '' );
+
+		// If a filtered path is provided and valid, use it.
+		if ( ! empty( $filtered_path ) && file_exists( $filtered_path ) ) {
+			return $filtered_path;
+		}
+
+		// Default behavior to locate wp-config.php
 		$location_of_wp_config = ABSPATH;
 		if ( ! file_exists( ABSPATH . 'wp-config.php' ) && file_exists( dirname( ABSPATH ) . '/wp-config.php' ) ) {
 			$location_of_wp_config = dirname( ABSPATH );
 		}
+
 		$location_of_wp_config = trailingslashit( $location_of_wp_config );
 		$wpconfig_path         = $location_of_wp_config . 'wp-config.php';
+
+		// Check if the file exists and return the path if valid.
 		if ( file_exists( $wpconfig_path ) ) {
 			return $wpconfig_path;
 		}
 
+		// Return an empty string if no valid wp-config.php path is found.
 		return '';
 	}
 }
