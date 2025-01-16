@@ -536,10 +536,10 @@ class Rsssl_Two_Factor_Totp extends Rsssl_Two_Factor_Provider implements Rsssl_T
 
 		$last_totp_login = (int) get_user_meta( $user->ID, self::LAST_SUCCESSFUL_LOGIN_META_KEY, true );
 
-		// The TOTP authentication is not valid, if we've seen the same or newer code.
-		if ( $last_totp_login && $last_totp_login >= $valid_timestamp ) {
-			return false;
-		}
+//		// The TOTP authentication is not valid, if we've seen the same or newer code.
+//		if ( $last_totp_login && $last_totp_login >= $valid_timestamp ) {
+//			return false;
+//		}
 
 		update_user_meta( $user->ID, self::LAST_SUCCESSFUL_LOGIN_META_KEY, $valid_timestamp );
         delete_user_meta( $user->ID, '_rsssl_two_factor_failed_login_attempts');

@@ -19,8 +19,6 @@ use WP_Session_Tokens;
 use WP_User;
 use rsssl_mailer;
 
-$rsssl_two_factor_compat = new Rsssl_Two_Factor_Compat();
-
 /**
  * Class Rsssl_Two_Factor.
  *
@@ -79,7 +77,7 @@ class Rsssl_Two_Factor
      *
      * @var string
      */
-    public const REST_NAMESPACE = 'rsssl';
+    public const REST_NAMESPACE = 'reallysimplessl/v1/two_fa/v2';
 
     /**
      * Keep track of all the password-based authentication sessions that
@@ -1784,7 +1782,7 @@ class Rsssl_Two_Factor
 
         wp_localize_script('rsssl-profile-settings', 'rsssl_onboard', array(
             'nonce' => wp_create_nonce('wp_rest'),
-            'root' => esc_url_raw(rest_url(Rsssl_Two_Factor_On_Board_Api::NAMESPACE)),
+            'root' => esc_url_raw(rest_url(self::REST_NAMESPACE)),
             'login_nonce' => $login_nonce,
             'redirect_to' => isset($_REQUEST['redirect_to']) ? sanitize_text_field(wp_unslash($_REQUEST['redirect_to'])) : '',
             'user_id' => $user->ID,
@@ -1850,10 +1848,9 @@ class Rsssl_Two_Factor
     }
 }
 
-
-add_action(
-    'init',
-    static function () use ($rsssl_two_factor_compat) {
-        Rsssl_Two_Factor::add_hooks($rsssl_two_factor_compat);
-    }
-);
+/**
+ * Hook as soon as the file is required. Which is the plugins_loaded hook.
+ * @see security/integrations.php
+ */
+$rsssl_two_factor_compat = new Rsssl_Two_Factor_Compat();
+Rsssl_Two_Factor::add_hooks($rsssl_two_factor_compat);

@@ -50,6 +50,18 @@ if ( ! class_exists( 'rsssl_site_health' ) ) {
 					);
 				}
 
+				if ( rsssl_maybe_disable_404_blocking() ) {
+					$tests['direct']['rsssl_404_test'] = array(
+						'test' => array( $this, 'site_health_404_display' ),
+					);
+				}
+
+				if ( rsssl_get_option( 'enable_vulnerability_scanner' ) ) {
+					$vulnerabilities                          = new rsssl_vulnerabilities();
+					$tests['direct']['rsssl_vulnerabilities'] = array(
+						'test' => [ $vulnerabilities, 'get_site_health_notice' ],
+					);
+				}
 				// Two-Factor Authentication (2FA) test
 				$tests['direct']['rsssl_2fa_test'] = array(
 					'label' => __( 'Two-Factor Authentication', 'really-simple-ssl' ),
@@ -67,6 +79,7 @@ if ( ! class_exists( 'rsssl_site_health' ) ) {
 					'label' => __( 'Firewall Protection', 'really-simple-ssl' ),
 					'test'  => array( $this, 'firewall_test' ),
 				);
+
 			}
 
 			return $tests;
@@ -190,6 +203,66 @@ if ( ! class_exists( 'rsssl_site_health' ) ) {
 					__( '(opens in a new tab)' )// phpcs:ignore WordPress.WP.I18n.MissingArgDomain
 				),
 				'test'        => 'rsssl_debug_log',
+			);
+
+			return $result;
+		}
+
+		/**
+		 * Explain users about risks of debug display
+		 *
+		 */
+		public function site_health_debug_display_test() {
+			$result = array(
+				'label'       => __( 'Your site is set to display errors on your website', 'really-simple-ssl' ),
+				'status'      => 'critical',
+				'badge'       => array(
+					'label' => __( 'Security' ), // phpcs:ignore WordPress.WP.I18n.MissingArgDomain
+					'color' => 'blue',
+				),
+				'description' => sprintf(
+					'<p>%s</p>',
+					__( 'The value, WP_DEBUG_DISPLAY, has either been enabled by WP_DEBUG or added to your configuration file. This will make errors display on the front end of your site.', 'really-simple-ssl' )
+				),
+				'actions'     => sprintf(
+					'<p><a href="%s" target="_blank" rel="noopener noreferrer">%s <span class="screen-reader-text">%s</span><span aria-hidden="true" class="dashicons dashicons-external"></span></a></p>',
+					/* translators: Documentation explaining debugging in WordPress. */
+					esc_url( rsssl_link('security/debug-display-enabled') ),
+					__( 'Read more about security concerns with debug display enabled', 'really-simple-ssl' ),
+					/* translators: Accessibility text. */
+					__( '(opens in a new tab)' )// phpcs:ignore WordPress.WP.I18n.MissingArgDomain
+				),
+				'test'        => 'rsssl_debug_display',
+			);
+
+			return $result;
+		}
+
+		/**
+		 * Check for 404 errors.
+		 *
+		 */
+		public function site_health_404_display() {
+			$result = array(
+				'label'       => __( '404 errors detected on your homepage', 'really-simple-ssl' ),
+				'status'      => 'critical',
+				'badge'       => array(
+					'label' => __( 'Security' ), // phpcs:ignore WordPress.WP.I18n.MissingArgDomain
+					'color' => 'blue',
+				),
+				'description' => sprintf(
+					'<p>%s</p>',
+					__( '404 errors detected on your homepage. This means that the page requests images, scripts or other resources that are no longer available. It can interfere with your Firewall as well.', 'really-simple-ssl' )
+				),
+				'actions'     => sprintf(
+					'<p><a href="%s" target="_blank" rel="noopener noreferrer">%s <span class="screen-reader-text">%s</span><span aria-hidden="true" class="dashicons dashicons-external"></span></a></p>',
+					/* translators: Documentation explaining debugging in WordPress. */
+					esc_url( rsssl_link('404-not-found-errors') ),
+					__( 'Read more', 'really-simple-ssl' ),
+					/* translators: Accessibility text. */
+					__( '(opens in a new tab)' )// phpcs:ignore WordPress.WP.I18n.MissingArgDomain
+				),
+				'test'        => 'rsssl_404_test',
 			);
 
 			return $result;

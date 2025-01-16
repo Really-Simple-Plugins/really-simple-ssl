@@ -1,21 +1,27 @@
 <?php
-namespace RSSSL\Pro\Security\WordPress;
+namespace RSSSL\Security\Includes\Check404;
 
 class Rsssl_Simple_404_Interceptor {
+
     private $attempts = 10; // Default attempts threshold
     private $time_span = 5; // Time span in seconds (5 seconds)
     private $option_name = 'rsssl_404_cache';
     private $notice_option = 'rsssl_404_notice_shown';
 
-    public function __construct() {
+	public function __construct() {
+		// Load the 404 test class only if the firewall has been enabled
+		if ( rsssl_get_option('enable_firewall') == '1' ) {
+			add_action( 'admin_init', array( $this, 'maybe_load_class_404_test' ), 20, 4 );
+		}
 
-        add_filter( 'rsssl_notices', array($this, 'show_help_notices') );
-	    if ( defined( 'rsssl_pro' ) ) {
-		    return;
-	    }
-        add_action( 'template_redirect', array($this, 'detect_404') );
-    }
+		add_filter( 'rsssl_notices', array( $this, 'show_help_notices' ) );
 
+		if ( defined( 'rsssl_pro' ) ) {
+			return;
+		}
+
+		add_action( 'template_redirect', array( $this, 'detect_404' ) );
+	}
     /**
      * Detect and handle 404 errors.
      */
@@ -46,7 +52,6 @@ class Rsssl_Simple_404_Interceptor {
             update_option($this->option_name, $cache, false);
         }
     }
-
 
     /**
      * Cleans up old entries based on the given timestamps.
@@ -123,6 +128,20 @@ class Rsssl_Simple_404_Interceptor {
         }
         return $notices;
     }
+
+	/**
+	 * @param $field
+	 * @param $value
+	 * @param $old_value
+	 * @param $option_name
+	 *
+	 * @return void
+	 */
+	public function maybe_load_class_404_test() {
+		if ( ! get_option( 'rsssl_homepage_contains_404_resources' ) ) {
+			Rsssl_Test_404::get_instance();
+		}
+	}
 }
 
 new Rsssl_Simple_404_Interceptor();

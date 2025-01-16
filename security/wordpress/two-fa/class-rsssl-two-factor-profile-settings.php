@@ -348,7 +348,7 @@ if (!class_exists('Rsssl_Two_Factor_Profile_Settings')) {
             wp_enqueue_script('rsssl-profile-settings', $uri, array(), rsssl_version, true);
             wp_localize_script('rsssl-profile-settings', 'rsssl_profile', array(
                 'backup_codes' => $backup_codes,
-                'root' => esc_url_raw(rest_url(Rsssl_Two_Factor_On_Board_Api::NAMESPACE)),
+                'root' => esc_url_raw(rest_url(Rsssl_Two_Factor::REST_NAMESPACE)),
                 'user_id' => get_current_user_id(),
                 'redirect_to' => 'profile', //added this for comparison in the json output.
                 'translatables' => [

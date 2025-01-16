@@ -319,6 +319,7 @@
 
 .rsssl-vulnerabilities-measures-overview {
   .allowRowEvents {
+    overflow: visible !important;
     .wp-core-ui select {
       max-width: 100%;
     }

@@ -51,6 +51,21 @@ function rsssl_remove_fields($fields){
 
 	}
 
+	if ( rsssl_maybe_disable_404_blocking() ) {
+		$index = array_search( '404_blocking_threshold', array_column( $fields, 'id' ), true );
+		//if LLA is not included yet, this index will be false.
+		if ( $index !== false ) {
+			$fields[$index]['help'] = [
+				'label' => 'warning',
+				'title' => __( "404 errors detected on your homepage", 'really-simple-ssl' ),
+				'url'   => '404-not-found-errors',
+				'text'  => '404 errors detected on your homepage. 404 blocking is unavailable, to prevent blocking of legitimate visitors. It is strongly recommended to resolve these errors.',
+			];
+
+			$fields = array_values($fields);
+		}
+	}
+
 	return $fields;
 }
 add_filter('rsssl_fields', 'rsssl_remove_fields', 500, 1);

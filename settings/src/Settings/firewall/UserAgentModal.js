@@ -46,7 +46,6 @@ const UserAgentModal = (props) => {
     }
 
     function handleKeyPress(event) {
-        console.log('i pressed a key' + event.key);
         if (event.key === 'Enter') {
             handleSubmit();
         }

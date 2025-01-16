@@ -87,31 +87,23 @@
     cursor: pointer;
   }
 
-
   .rsssl-action-buttons {
     /* Making sure we use the full width of the container */
-    display: flex;
-    justify-content: flex-end;
+    //display: flex;
+    //justify-content: flex-end;
   }
 
   .rsssl-action-buttons__inner {
-    display: flex;
-    justify-content: flex-end;
-  }
-
-  .rsssl-action-buttons__inner {
-    //all buttons are floating right
-    float: right;
+    overflow: visible;
   }
 
   .rsssl-action-buttons__button {
     //add some spacing between the buttons
-    margin-right: 10px;
   }
 
   /* Remove margin for the last button to ensure clean alignment */
   .rsssl-action-buttons__inner:last-child {
-    margin-right: 0;
+    //margin-right: 0;
   }
 
   /**

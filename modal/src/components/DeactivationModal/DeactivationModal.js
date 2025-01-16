@@ -10,7 +10,7 @@ const DeactivationModal = () => {
 
     useEffect(() => {
         // Dynamically set the targetPluginLink based on isPremium
-        const linkId = isPremium ? 'deactivate-really-simple-ssl-pro' : 'deactivate-really-simple-ssl';
+        const linkId = isPremium ? 'deactivate-really-simple-security-pro' : 'deactivate-really-simple-security';
         const linkElement = document.getElementById(linkId);
         setTargetPluginLink(linkElement);
 
@@ -38,9 +38,7 @@ const DeactivationModal = () => {
 
     const deactivateAndRevert = () => {
         setOpen(false);
-        if (targetPluginLink) {
-            window.location.href = targetPluginLink.getAttribute('href');
-        }
+        window.location.href = rsssl_modal.deactivate_revert_https;
     };
 
     useEffect(() => {

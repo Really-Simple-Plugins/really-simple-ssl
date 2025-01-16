@@ -23,15 +23,8 @@ use WP_User;
  * @package REALLY_SIMPLE_SSL
  * @subpackage Security\WordPress\Two_Fa
  */
-class Rsssl_Two_Factor_On_Board_Api {
-
-	/**
-	 * The namespace for the API routes.
-	 *
-	 * @package reallysimplessl/v1/two_fa
-	 */
-	public const NAMESPACE = 'reallysimplessl/v1/two_fa';
-
+class Rsssl_Two_Factor_On_Board_Api
+{
 	/**
 	 * Initializes the object and registers API routes.
 	 *
@@ -285,7 +278,7 @@ class Rsssl_Two_Factor_On_Board_Api {
 	 */
 	public function register_api_routes(): void {
 		register_rest_route(
-			self::NAMESPACE,
+			Rsssl_Two_Factor::REST_NAMESPACE,
 			'/save_default_method_email',
 			array(
 				'methods'             => 'POST',
@@ -311,7 +304,7 @@ class Rsssl_Two_Factor_On_Board_Api {
 		);
 
         register_rest_route(
-            self::NAMESPACE,
+            Rsssl_Two_Factor::REST_NAMESPACE,
             '/save_default_method_email_profile',
             array(
                 'methods'             => 'POST',
@@ -337,7 +330,7 @@ class Rsssl_Two_Factor_On_Board_Api {
         );
 
         register_rest_route(
-            self::NAMESPACE,
+            Rsssl_Two_Factor::REST_NAMESPACE,
             '/validate_email_setup',
             array(
                 'methods' => 'POST',
@@ -371,7 +364,7 @@ class Rsssl_Two_Factor_On_Board_Api {
         );
 
         register_rest_route(
-            self::NAMESPACE,
+            Rsssl_Two_Factor::REST_NAMESPACE,
             '/resend_email_code',
             array(
                 'methods' => 'POST',
@@ -397,7 +390,7 @@ class Rsssl_Two_Factor_On_Board_Api {
         );
 
 		register_rest_route(
-			self::NAMESPACE,
+			Rsssl_Two_Factor::REST_NAMESPACE,
 			'/save_default_method_totp',
 			array(
 				'methods'             => 'POST',
@@ -427,7 +420,7 @@ class Rsssl_Two_Factor_On_Board_Api {
 		);
 
 		register_rest_route(
-			self::NAMESPACE,
+			Rsssl_Two_Factor::REST_NAMESPACE,
 			'do_not_ask_again',
 			array(
 				'methods'             => 'POST',
@@ -453,7 +446,7 @@ class Rsssl_Two_Factor_On_Board_Api {
 		);
 
 		register_rest_route(
-			self::NAMESPACE,
+			Rsssl_Two_Factor::REST_NAMESPACE,
 			'skip_onboarding',
 			array(
 				'methods'             => 'POST',

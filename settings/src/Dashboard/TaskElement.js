@@ -9,7 +9,7 @@ import {useState} from "@wordpress/element";
 
 const TaskElement = (props) => {
     const {dismissNotice, getProgressData} = useProgress();
-    const {getField, setHighLightField, showSavedSettingsNotice} = useFields();
+    const {getField, setHighLightField, showSavedSettingsNotice, updateFieldAttribute} = useFields();
     const {setSelectedSubMenuItem} = useMenu();
     const [processing, setProcessing] = useState(false);
     const handleClick = async () => {
@@ -29,15 +29,29 @@ const TaskElement = (props) => {
         });
     }
 
-    const handleClearCache = (cache_id) => {
+    const handleClearCache = async (cache_id) => {
         setProcessing(true)
         let data = {};
         data.cache_id = cache_id;
-        rsssl_api.doAction('clear_cache', data).then( ( response ) => {
-            setProcessing(false)
-            showSavedSettingsNotice(__( 'Re-started test', 'really-simple-ssl' ));
-            getProgressData();
-        });
+        try {
+            // First clear the cache on the server
+            await rsssl_api.doAction('clear_cache', data);
+
+            // If this is the 404 resources cache clear, update our field states
+            if (cache_id === 'rsssl_homepage_contains_404_resources') {
+                // Update the disabled state for both 404-related fields
+                updateFieldAttribute('404_blocking_threshold', 'disabled', false);
+                updateFieldAttribute('404_blocking_lockout_duration', 'disabled', false);
+            }
+
+            // Show notice and refresh progress data
+            showSavedSettingsNotice(__('Re-started test', 'really-simple-ssl'));
+            await getProgressData();
+        } catch (error) {
+            console.error('Error clearing cache:', error);
+        } finally {
+            setProcessing(false);
+        }
     }
 
     let notice = props.notice;

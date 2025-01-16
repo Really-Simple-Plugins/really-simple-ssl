@@ -11,7 +11,6 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'group_id' => 'firewall_list_general',
 				'type' => 'checkbox',
 				'label' => __( 'Enable Firewall', 'really-simple-ssl' ),
-				'disabled' => false,
 				'default' => false,
 			],
 			[
@@ -102,6 +101,7 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'label' => __( 'Threshold', 'really-simple-ssl' ),
 				'tooltip' => sprintf(__('A lockout will occur if an IP address exceeds the threshold within the given timeframe. Select ‘%s’ if you want to disable 404 blocking.', 'really-simple-ssl'), __('Disabled', 'really-simple-ssl')),
 				'default' => 'lax',
+				'disabled' => rsssl_maybe_disable_404_blocking(),
 				'options' => [
 					'disabled' => __( 'Disabled', 'really-simple-ssl' ),
 					'lax' => __( 'Lax - 10 errors in 2 seconds', 'really-simple-ssl' ),
@@ -122,6 +122,7 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'type' => 'select',
 				'label' => __( 'Lockout duration', 'really-simple-ssl' ),
 				'tooltip' => __('The IP address will see a locked out screen for the selected duration.', 'really-simple-ssl'),
+				'disabled' => rsssl_maybe_disable_404_blocking(),
 				'options' => [
 					'30' => __( '30 minutes', 'really-simple-ssl' ),
 					'60' => __( '1 hour', 'really-simple-ssl' ),

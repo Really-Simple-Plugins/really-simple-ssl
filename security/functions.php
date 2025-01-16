@@ -568,6 +568,12 @@ function rsssl_version_compare($version, $compare_to, $operator = null) {
 	return version_compare($version, $compare_to, $operator);
 }
 
+function rsssl_maybe_disable_404_blocking() {
+	$option_value = get_option( 'rsssl_homepage_contains_404_resources', false );
+	// Explicitly check for boolean true or string "true"
+	return $option_value === true || $option_value === "true";
+}
+
 function rsssl_lock_file_exists() {
 	if ( file_exists( trailingslashit( WP_CONTENT_DIR ) . 'rsssl-safe-mode.lock' ) ) {
 		return true;
