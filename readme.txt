@@ -152,8 +152,8 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 
 == Changelog ==
 = 9.2.0 =
-Fix: Added nonce check to certificate re-check button.
-Fix: In some cases the review notice was not properly dismissible.
+* Fix: Added nonce check to certificate re-check button.
+* Fix: In some cases the review notice was not properly dismissible.
 
 = 9.1.4 =
 * Improvement: do not track 404's for logged in users
