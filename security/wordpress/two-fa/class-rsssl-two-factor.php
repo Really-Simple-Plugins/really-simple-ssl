@@ -1686,14 +1686,23 @@ class Rsssl_Two_Factor
         }
     }
 
-    private static function display_expired_onboarding_error(): void {
-	    rsssl_load_template(
-		    'expired.php',
-		    array(
-			    'message' => esc_html__('Your 2FA grace period expired. Please contact your site administrator to regain access and to configure 2FA.', 'really-simple-ssl'),
-                ),
-		    rsssl_path . 'assets/templates/two_fa/'
-	    );
+    /**
+     * Display the expired onboarding error. Manually load our login header and
+     * footer functions to ensure they are  available.
+     */
+    private static function display_expired_onboarding_error(): void
+    {
+        if (!function_exists('login_header')) {
+            include_once __DIR__ . '/function-login-header.php';
+        }
+
+        if (!function_exists('login_footer')) {
+            include_once __DIR__ . '/function-login-footer.php';
+        }
+
+        rsssl_load_template('expired.php', [
+            'message' => esc_html__('Your 2FA grace period expired. Please contact your site administrator to regain access and to configure 2FA.', 'really-simple-ssl'),
+        ], rsssl_path . 'assets/templates/two_fa/');
     }
 
     /**
