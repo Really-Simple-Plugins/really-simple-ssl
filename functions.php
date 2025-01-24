@@ -275,3 +275,91 @@ if ( ! function_exists('rsssl_set_encryption_key')) {
 	}
 	rsssl_set_encryption_key();
 }
+
+if ( ! function_exists( 'rsssl_deactivate_alternate' ) ) {
+    /**
+     * Deactivate the alternate version if active. This function is included in
+     * both the pro and free plugin and should be used to deactivate the
+     * alternate version upon activation.
+     * @param string $target The target plugin to deactivate
+     */
+    function rsssl_deactivate_alternate(string $target = 'free') {
+
+        // we use this to ensure the base function doesn't load, as the active
+        // plugins function does not update yet. See RSSSL() in main plugin file
+        define( "RSSSL_DEACTIVATING_ALTERNATE", true );
+
+        include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+        $alternate_plugin_path = 'really-simple-ssl-pro/really-simple-ssl-pro.php';
+
+        if ($target === 'free') {
+            $alternate_plugin_path = 'really-simple-ssl/rlrsssl-really-simple-ssl.php';
+        }
+
+        if ( is_plugin_active( $alternate_plugin_path ) ) {
+
+            $delete_data_on_uninstall_was_enabled = false;
+
+            # Temporarily disable delete_data_on_uninstall option in rsssl_options
+            if ( is_multisite() && rsssl_is_networkwide_active() ) {
+                $options = get_site_option( 'rsssl_options', [] );
+            } else {
+                $options = get_option( 'rsssl_options', [] );
+            }
+
+            if ( isset( $options['delete_data_on_uninstall'] ) && $options['delete_data_on_uninstall'] ) {
+                $options['delete_data_on_uninstall'] = false;
+                $delete_data_on_uninstall_was_enabled = true;
+            }
+
+            if ( is_multisite() && rsssl_is_networkwide_active() ) {
+                update_site_option( 'rsssl_options', $options );
+            } else {
+                update_option( 'rsssl_options', $options );
+            }
+
+            update_option('rsssl_free_deactivated', true);
+
+            if ( function_exists('deactivate_plugins' ) ) {
+                deactivate_plugins( $alternate_plugin_path );
+            }
+
+            // Ensure the function exists to prevent fatal errors in case of
+            // direct access. Don't delete if debug enabled, for dev purposes.
+            // Also, only delete the free plugin.
+            $debug_enabled = defined('WP_DEBUG') && WP_DEBUG;
+            if ($target === 'free' && !$debug_enabled && function_exists( 'delete_plugins' ) && function_exists('request_filesystem_credentials' ) ) {
+                delete_plugins( array( $alternate_plugin_path ) );
+            }
+
+            # Now re-enable delete_data_on_uninstall if it was enabled
+            if ( $delete_data_on_uninstall_was_enabled ) {
+                $options['delete_data_on_uninstall'] = true;
+                if ( is_multisite() && rsssl_is_networkwide_active() ) {
+                    update_site_option( 'rsssl_options', $options );
+                } else {
+                    update_option( 'rsssl_options', $options );
+                }
+            }
+
+            $ssl_enabled = rsssl_get_option('ssl_enabled');
+            if ( $ssl_enabled ) {
+                rsssl_update_option('ssl_enabled', true);
+            }
+
+            // Delete free translations files from /wp-content/languages/plugins where files contain really-simple-ssl
+            if ($target === 'free' && defined( 'WP_CONTENT_DIR' ) ) {
+                $languages_plugins_dir = WP_CONTENT_DIR . '/languages/plugins';
+                if ( is_dir( $languages_plugins_dir ) && is_writable( $languages_plugins_dir ) ) {
+                    $files = scandir( $languages_plugins_dir );
+                    foreach ( $files as $file ) {
+                        if ( is_file( $languages_plugins_dir . '/' . $file ) &&
+                            strpos( $file, 'really-simple-ssl' ) === 0 ) {
+                            @unlink( $languages_plugins_dir . '/' . $file );
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
