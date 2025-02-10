@@ -9,7 +9,7 @@ import {__} from '@wordpress/i18n';
 const CheckboxControl = (props) => {
 
     const checkboxRef = useRef(null);
-    const tooltipText = __("404 errors detected on your home page. 404 blocking is unavailable, to prevent blocking of legitimate visitors. It is strongly recommended to resolve these errors.", "really-simple-ssl");
+    const tooltipText = __("404 errors detected on your homepage. 404 blocking is unavailable, to prevent blocking of legitimate visitors. It is strongly recommended to resolve these errors.", "really-simple-ssl");
     // Pass props.disabled as the condition
     hoverTooltip(checkboxRef, props.disabled, tooltipText);
 

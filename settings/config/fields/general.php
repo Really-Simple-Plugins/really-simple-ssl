@@ -70,7 +70,6 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'label'    => __("Delete all data on plugin deletion", 'really-simple-ssl'),
 				'default'  => false,
 			],
-
 			[
 				'id'       => 'notifications_email_address',
 				'menu_id'  => 'general',
@@ -88,7 +87,7 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'action'      => 'send_verification_mail',
 				'button_text' => __( "Send", "really-simple-ssl" ),
 				'warning'     => true,
-				'label'       => __( "Email verification", 'really-simple-ssl' ),
+				'label'       => __( "Email validation", 'really-simple-ssl' ),
 				'disabled'    => rsssl_is_email_verified(),
 				'tooltip'  => __( "Verify your email address to get the most out of Really Simple Security.", 'really-simple-ssl' ),
 			],

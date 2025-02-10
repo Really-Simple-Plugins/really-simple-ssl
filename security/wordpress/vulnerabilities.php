@@ -47,8 +47,9 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
         public function __construct()
         {
-
 	        $this->init();
+            $this->load_translations_just_in_time();
+
 	        add_filter('rsssl_vulnerability_data', array($this, 'get_stats'));
 
 	        //now we add the action to the cron.
@@ -56,10 +57,29 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	        add_filter('rsssl_notices', [$this, 'show_help_notices'], 10, 1);
 	        add_action( 'rsssl_after_save_field', array( $this, 'maybe_delete_local_files' ), 10, 4 );
 	        add_action( 'rsssl_upgrade', array( $this, 'upgrade_encrypted_files') );
-	        add_action('init', [$this, 'load_translations']);
         }
 
-        public function load_translations(): void {
+        /**
+         * As this class is not only instantiated by requiring this file
+         * but also in other class instances, we are not 100% sure of the
+         * current filter or action. So we check if we are in the init action
+         * or if the init action has already been executed. If so, we load the
+         * translations immediately and just in time.
+         */
+        public function load_translations_just_in_time(): void
+        {
+            add_action('init', [$this, 'load_translations']);
+
+            if (current_filter() === 'init' || did_action('init') > 0) {
+                $this->load_translations();
+            }
+        }
+
+        /**
+         * Load the translations for the risk levels
+         */
+        public function load_translations(): void
+        {
             $this->risk_naming = [
                 'l' => __('low-risk', 'really-simple-ssl'),
                 'm' => __('medium-risk', 'really-simple-ssl'),
@@ -477,6 +497,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
             if ( !$force_update && !empty($this->workable_plugins) ) {
                 return;
             }
+
 		    //first we get all installed plugins
 		    $installed_plugins = get_plugins();
 

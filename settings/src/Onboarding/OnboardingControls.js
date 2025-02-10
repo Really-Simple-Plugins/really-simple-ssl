@@ -157,7 +157,7 @@ const OnboardingControls = ({isModal}) => {
     const handleActivateSSL = async () => {
         await activateSSL();
         await getProgressData();
-        await fetchFieldsData( );
+        await fetchFieldsData();
     }
 
     const goToLetsEncrypt = () => {

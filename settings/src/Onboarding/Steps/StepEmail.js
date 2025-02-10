@@ -12,28 +12,54 @@ const StepEmail = () => {
         setIncludeTips,
     } = useOnboardingData();
 
+    // Initialize state if needed
     useEffect(() => {
-        if ( !fieldsLoaded ) {
+        if (!fieldsLoaded) {
             fetchFieldsData();
         }
     }, []);
 
-    useEffect( () => {
-        if (getFieldValue('notifications_email_address') !== '' && email==='') {
-            setEmail(getFieldValue('notifications_email_address'))
+    // Set initial email if available
+    useEffect(() => {
+        const savedEmail = getFieldValue('notifications_email_address');
+        if (savedEmail && !email) {
+            setEmail(savedEmail);
         }
-    }, [])
+    }, [fieldsLoaded, getFieldValue, email, setEmail]);
+
+    if (!fieldsLoaded) {
+        return null;
+    }
+
     return (
-        <>
-            <div>
-                <input type="email" value={email} placeholder={__("Your email address", "really-simple-ssl")} onChange={(e) => setEmail(e.target.value)} />
+        <div className="rsssl-step-email">
+            <div className="rsssl-email-input">
+                <input
+                    type="email"
+                    value={email || ''}
+                    placeholder={__("Your email address", "really-simple-ssl")}
+                    onChange={(e) => setEmail(e.target.value)}
+                />
             </div>
-            <div>
-                <label>
-                    <input onChange={ (e) => setIncludeTips(e.target.checked)} type="checkbox" checked={includeTips} />{__("Include 6 Tips & Tricks to get started with Really Simple Security.","really-simple-ssl")}&nbsp;<a href="https://really-simple-ssl.com/legal/privacy-statement/" target="_blank">{__("Privacy Statement", "really-simple-ssl")}</a>
+            <div className="rsssl-email-options">
+                <label className="rsssl-tips-checkbox">
+                    <input
+                        onChange={(e) => setIncludeTips(e.target.checked)}
+                        type="checkbox"
+                        checked={!!includeTips}
+                    />
+                    <span>{__("Include 6 Tips & Tricks to get started with Really Simple Security.", "really-simple-ssl")}</span>&nbsp;
+                    <a
+                        href="https://really-simple-ssl.com/legal/privacy-statement/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        {__("Privacy Statement", "really-simple-ssl")}
+                    </a>
                 </label>
             </div>
-        </>
+        </div>
     );
 }
+
 export default memo(StepEmail)

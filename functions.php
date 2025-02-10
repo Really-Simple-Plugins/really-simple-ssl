@@ -12,6 +12,7 @@ defined( 'ABSPATH' ) or die();
  *
  * @return mixed
  */
+
 if (!function_exists('rsssl_get_option')) {
     function rsssl_get_option( string $name, $default_value = false ) {
         $name = sanitize_title( $name );

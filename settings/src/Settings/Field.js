@@ -574,7 +574,7 @@ const Field = (props) => {
     if (field.type === 'roles_dropdown') {
         return (
             <div className={highLightClass} ref={scrollAnchor}>
-                <label htmlFor="rsssl-roles-dropdown-{field.id}">
+                <label htmlFor={`rsssl-two-fa-dropdown-${field.id}`}>
                     {labelWrap(field)}
                 </label>
                 <RolesDropDown field={props.field}
@@ -586,7 +586,7 @@ const Field = (props) => {
     if (field.type === 'roles_enabled_dropdown') {
         return (
             <div className={highLightClass} ref={scrollAnchor}>
-                <label htmlFor="rsssl-roles-dropdown-{field.id}">
+                <label htmlFor={`rsssl-two-fa-dropdown-${field.id}`}>
                     {labelWrap(field)}
                 </label>
                 <TwoFaEnabledDropDown field={props.field}

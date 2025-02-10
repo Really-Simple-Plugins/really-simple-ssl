@@ -4,13 +4,18 @@ import ChangeStatus from "./ChangeStatus";
 import Delete from "./Delete";
 import Icon from "../../utils/Icon";
 import useFields from "./../FieldsData";
-import useLearningMode from "./LearningModeData";
+import UseLearningMode from "./LearningModeData";
 import {Button} from "@wordpress/components";
 import React from "react";
+import ManualCspAdditionModal from "./ManualCspAdditionModal";
+import AddButton from "../GeoBlockList/AddButton";
+import ManualCspAddition from "./ManualCspAddition";
 
 const LearningMode = (props) => {
+
     const {updateField, getFieldValue, getField, setChangedField, highLightField, saveFields} = useFields();
-    const {fetchLearningModeData, learningModeData, dataLoaded, updateStatus, deleteData } = useLearningMode();
+    const {fetchLearningModeData, learningModeData, dataLoaded, updateStatus, deleteData} = UseLearningMode();
+    const {manualAdditionProcessing} = ManualCspAddition();
 
     //used to show if a feature is already enforced by a third party
     const [enforcedByThirdparty, setEnforcedByThirdparty] = useState(0);
@@ -33,6 +38,9 @@ const LearningMode = (props) => {
 
     const [DataTable, setDataTable] = useState(null);
     const [theme, setTheme] = useState(null);
+
+    const [modalOpen, setModalOpen] = useState(false);
+
     useEffect( () => {
         import('react-data-table-component').then(({ default: DataTable, createTheme }) => {
             setDataTable(() => DataTable);
@@ -207,145 +215,183 @@ const LearningMode = (props) => {
         setRowsSelected(state.selectedRows);
     }
 
+    const handleClose = () => {
+        setModalOpen(false);
+    }
+
+    const handleOpen = () => {
+        setModalOpen(true);
+    }
+
     if (!DataTable || !theme) return null;
+
     return (
         <>
-            <div>
-                { !dataLoaded && <>
-                    <div className="rsssl-learningmode-placeholder">
-                        <div></div><div></div><div></div><div></div>
-                    </div>
-                </>}
-                {rowsSelected.length > 0 && (
+            {props.field.id === 'content_security_policy_source_directives' && (<>
+                <ManualCspAdditionModal
+                    isOpen={modalOpen}
+                    onRequestClose={handleClose}
+                    status={'blocked'}
+                    directives={props.field.modal.options}
+                    parentId={props.field.id}
+                />
+                <div className="rsssl-container" style={{paddingTop: "0px"}}>
+                    <AddButton
+                        handleOpen={handleOpen}
+                        processing={manualAdditionProcessing}
+                        allowedText={__("Add Entry", "really-simple-ssl")}
+                    />
+                </div>
+            </>)}
+            {!dataLoaded && <>
+                <div className="rsssl-learningmode-placeholder">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </>}
+            {rowsSelected.length > 0 && (
+                <div
+                    style={{
+                        marginTop: '1em',
+                        marginBottom: '1em',
+                    }}
+                >
                     <div
-                        style={{
-                            marginTop: '1em',
-                            marginBottom: '1em',
-                        }}
+                        className={"rsssl-multiselect-datatable-form rsssl-primary"}
                     >
-                        <div
-                            className={"rsssl-multiselect-datatable-form rsssl-primary"}
-                        >
-                            <div>
-                                {__("You have selected", "really-simple-ssl")} {rowsSelected.length} {__("rows", "really-simple-ssl")}
-                            </div>
+                        <div>
+                            {__("You have selected", "really-simple-ssl")} {rowsSelected.length} {__("rows", "really-simple-ssl")}
+                        </div>
 
-                            <div className="rsssl-action-buttons">
-                                {(Number(filterValue) === -1 || Number(filterValue) === 0 ) &&
+                        <div className="rsssl-action-buttons">
+                            {(Number(filterValue) === -1 || Number(filterValue) === 0) &&
                                 <div className="rsssl-action-buttons__inner">
                                     <Button
                                         // className={"button button-red rsssl-action-buttons__button"}
                                         className={"button button-secondary rsssl-status-allowed rsssl-action-buttons__button"}
-                                        onClick={ () => handleMultiRowStatus( 0, rowsSelected, props.field.id ) }
+                                        onClick={() => handleMultiRowStatus(0, rowsSelected, props.field.id)}
                                     >
                                         {__('Allow', 'really-simple-ssl')}
                                     </Button>
                                 </div>
-                                }
-                                {(Number(filterValue) === -1 || Number(filterValue) === 1 ) &&
-                                    <div className="rsssl-action-buttons__inner">
-                                        <Button
-                                            // className={"button button-red rsssl-action-buttons__button"}
-                                            className={"button button-primary rsssl-action-buttons__button"}
-                                            onClick={ () => handleMultiRowStatus( 1, rowsSelected, props.field.id ) }
-                                        >
-                                            {__('Revoke', 'really-simple-ssl')}
-                                        </Button>
-                                    </div>
-                                }
+                            }
+                            {(Number(filterValue) === -1 || Number(filterValue) === 1) &&
                                 <div className="rsssl-action-buttons__inner">
                                     <Button
                                         // className={"button button-red rsssl-action-buttons__button"}
-                                        className={"button button-red rsssl-action-buttons__button"}
-                                        onClick={ () => handleMultiRowDelete( rowsSelected, props.field.id ) }
+                                        className={"button button-primary rsssl-action-buttons__button"}
+                                        onClick={() => handleMultiRowStatus(1, rowsSelected, props.field.id)}
                                     >
-                                        {__('Remove', 'really-simple-ssl')}
+                                        {__('Revoke', 'really-simple-ssl')}
                                     </Button>
                                 </div>
+                            }
+                            <div className="rsssl-action-buttons__inner">
+                                <Button
+                                    // className={"button button-red rsssl-action-buttons__button"}
+                                    className={"button button-red rsssl-action-buttons__button"}
+                                    onClick={() => handleMultiRowDelete(rowsSelected, props.field.id)}
+                                >
+                                    {__('Remove', 'really-simple-ssl')}
+                                </Button>
                             </div>
                         </div>
                     </div>
-                )}
-                {dataLoaded && <>
-                    <DataTable
-                        columns={columns}
-                        data={data}
-                        dense
-                        pagination
-                        noDataComponent={__("No results", "really-simple-ssl")}
-                        persistTableHead
-                        theme={theme}
-                        customStyles={customStyles}
-                        conditionalRowStyles={conditionalRowStyles}
-                        paginationComponentOptions={{
-                            rowsPerPageText: __('Rows per page:', 'really-simple-ssl'),
-                            rangeSeparatorText: __('of', 'really-simple-ssl'),
-                            noRowsPerPage: false,
-                            selectAllRowsItem: false,
-                            selectAllRowsItemText: __('All', 'really-simple-ssl'),
-                        }}
-                        selectableRows
-                        selectableRowsHighlight={true}
-                        onSelectedRowsChange={handleSelection}
-                        clearSelectedRows={rowCleared}
-                    /></>
+                </div>
+            )}
+            {dataLoaded && <>
+                <DataTable
+                    columns={columns}
+                    data={data}
+                    dense
+                    pagination
+                    noDataComponent={__("No results", "really-simple-ssl")}
+                    persistTableHead
+                    theme={theme}
+                    customStyles={customStyles}
+                    conditionalRowStyles={conditionalRowStyles}
+                    paginationComponentOptions={{
+                        rowsPerPageText: __('Rows per page:', 'really-simple-ssl'),
+                        rangeSeparatorText: __('of', 'really-simple-ssl'),
+                        noRowsPerPage: false,
+                        selectAllRowsItem: false,
+                        selectAllRowsItemText: __('All', 'really-simple-ssl'),
+                    }}
+                    selectableRows
+                    selectableRowsHighlight={true}
+                    onSelectedRowsChange={handleSelection}
+                    clearSelectedRows={rowCleared}
+                /></>
+            }
+            <div className={"rsssl-learning-mode-footer"} style={{marginLeft:'0px'}}>
+                {hasError && <div className="rsssl-locked">
+                    <div className="rsssl-locked-overlay">
+                        <span
+                            className="rsssl-progress-status rsssl-learning-mode-error">{__("Error detected", "really-simple-ssl")}</span>
+                        {__("%s cannot be implemented due to server limitations. Check your notices for the detected issue.", "really-simple-ssl").replace('%s', field.label)}&nbsp;
+                        <a className="rsssl-learning-mode-link" href="#"
+                           onClick={(e) => toggleEnforce(e, false)}>{__("Disable", "really-simple-ssl")}</a>
+                    </div>
+                </div>
                 }
-              <div className={"rsssl-learning-mode-footer "}>
-                  {hasError && <div className="rsssl-locked">
-                          <div className="rsssl-locked-overlay">
-                              <span className="rsssl-progress-status rsssl-learning-mode-error">{__("Error detected","really-simple-ssl")}</span>
-                              {__("%s cannot be implemented due to server limitations. Check your notices for the detected issue.", "really-simple-ssl").replace('%s', field.label)}&nbsp;
-                              <a className="rsssl-learning-mode-link" href="#" onClick={ (e) => toggleEnforce(e, false ) }>{__("Disable", "really-simple-ssl") }</a>
-                          </div>
-                      </div>
-                  }
-                  {!hasError && <>
-                      { enforce!=1 && <button disabled={enforceDisabled} className="button button-primary" onClick={ (e) => toggleEnforce(e, true ) }>{__("Enforce","really-simple-ssl")}</button> }
-                      { !enforcedByThirdparty && enforce==1 && <button className="button" onClick={ (e) => toggleEnforce(e, false ) }>{__("Disable","really-simple-ssl")}</button> }
-                      <label>
-                          <input type="checkbox"
-                              disabled = {enforce}
-                              checked ={learningMode==1}
-                              value = {learningMode}
-                              onChange={ ( e ) => toggleLearningMode(e) }
-                          />
-                          {__("Enable Learning Mode to configure automatically","really-simple-ssl")}
-                      </label>
-                    { enforce==1 && <div className="rsssl-locked">
+                {!hasError && <>
+                    {enforce != 1 && <button disabled={enforceDisabled} className="button button-primary"
+                                             onClick={(e) => toggleEnforce(e, true)}>{__("Enforce", "really-simple-ssl")}</button>}
+                    {!enforcedByThirdparty && enforce == 1 && <button className="button"
+                                                                      onClick={(e) => toggleEnforce(e, false)}>{__("Disable", "really-simple-ssl")}</button>}
+                    <label>
+                        <input type="checkbox"
+                               disabled={enforce}
+                               checked={learningMode == 1}
+                               value={learningMode}
+                               onChange={(e) => toggleLearningMode(e)}
+                        />
+                        {__("Enable Learning Mode to configure automatically", "really-simple-ssl")}
+                    </label>
+                    {enforce == 1 && <div className="rsssl-locked">
                         <div className="rsssl-shield-overlay">
-                              <Icon name = "shield"  size="80px"/>
+                            <Icon name="shield" size="80px"/>
                         </div>
                         <div className="rsssl-locked-overlay">
-                            <span className="rsssl-progress-status rsssl-learning-mode-enforced">{__("Enforced","really-simple-ssl")}</span>
+                            <span
+                                className="rsssl-progress-status rsssl-learning-mode-enforced">{__("Enforced", "really-simple-ssl")}</span>
                             {enforcedString}&nbsp;
-                            <a className="rsssl-learning-mode-link" href="#" onClick={ (e) => toggleEnforce(e) }>{__("Disable to configure", "really-simple-ssl") }</a>
+                            <a className="rsssl-learning-mode-link" href="#"
+                               onClick={(e) => toggleEnforce(e)}>{__("Disable to configure", "really-simple-ssl")}</a>
                         </div>
                     </div>}
-                    {learningMode==1 && <div className="rsssl-locked">
+                    {learningMode == 1 && <div className="rsssl-locked">
                         <div className="rsssl-locked-overlay">
-                            <span className="rsssl-progress-status rsssl-learning-mode">{__("Learning Mode","really-simple-ssl")}</span>
+                            <span
+                                className="rsssl-progress-status rsssl-learning-mode">{__("Learning Mode", "really-simple-ssl")}</span>
                             {configuringString}&nbsp;
-                            <a className="rsssl-learning-mode-link" href="#" onClick={ (e) => toggleLearningMode(e) }>{__("Exit", "really-simple-ssl") }</a>
+                            <a className="rsssl-learning-mode-link" href="#"
+                               onClick={(e) => toggleLearningMode(e)}>{__("Exit", "really-simple-ssl")}</a>
                         </div>
                     </div>}
-                    { learningModeCompleted==1 && <div className="rsssl-locked">
+                    {learningModeCompleted == 1 && <div className="rsssl-locked">
                         <div className="rsssl-locked-overlay">
-                            <span className="rsssl-progress-status rsssl-learning-mode-completed">{__("Learning Mode","really-simple-ssl")}</span>
+                            <span
+                                className="rsssl-progress-status rsssl-learning-mode-completed">{__("Learning Mode", "really-simple-ssl")}</span>
                             {__("We finished the configuration.", "really-simple-ssl")}&nbsp;
-                            <a className="rsssl-learning-mode-link" href="#" onClick={ (e) => toggleLearningMode(e) }>{__("Review the settings and enforce the policy", "really-simple-ssl") }</a>
-                        </div>
-                    </div> }
-                    { rsssl_settings.pro_plugin_active && props.disabled && <div className="rsssl-locked ">
-                        <div className="rsssl-locked-overlay">
-                            { !enforcedByThirdparty && <span className="rsssl-progress-status rsssl-disabled">{__("Disabled","really-simple-ssl")}</span> }
-                            { enforcedByThirdparty && <span className="rsssl-progress-status rsssl-learning-mode-enforced">{__("Enforced","really-simple-ssl")}</span> }
-                            { disabledString }
+                            <a className="rsssl-learning-mode-link" href="#"
+                               onClick={(e) => toggleLearningMode(e)}>{__("Review the settings and enforce the policy", "really-simple-ssl")}</a>
                         </div>
                     </div>}
-                  </>
-                  }
-                <Filter />
-            </div>
+                    {rsssl_settings.pro_plugin_active && props.disabled && <div className="rsssl-locked ">
+                        <div className="rsssl-locked-overlay">
+                            {!enforcedByThirdparty && <span
+                                className="rsssl-progress-status rsssl-disabled">{__("Disabled", "really-simple-ssl")}</span>}
+                            {enforcedByThirdparty && <span
+                                className="rsssl-progress-status rsssl-learning-mode-enforced">{__("Enforced", "really-simple-ssl")}</span>}
+                            {disabledString}
+                        </div>
+                    </div>}
+                </>
+                }
+                <Filter/>
             </div>
         </>
     )

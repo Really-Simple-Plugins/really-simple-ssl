@@ -363,12 +363,12 @@ class Rsssl_Two_Factor
                 }
 
                 if ('open' === Rsssl_Two_Factor_Settings::get_user_status('email', $user_id)) {
-                    update_user_meta($user_id, 'rsssl_two_fa_status', 'active');
                     update_user_meta($user_id, 'rsssl_two_fa_status_email', 'active');
                     update_user_meta($user_id, 'rsssl_two_fa_status_totp', 'disabled');
-	                delete_user_meta( $user_id, '_rsssl_factor_email_token' );
-                }
 
+                }
+	            delete_user_meta( $user_id, '_rsssl_factor_email_token' );
+                delete_user_meta( $user_id, '_rsssl_two_factor_backup_codes' );
                 wp_set_auth_cookie($user_id);
                 wp_safe_redirect(admin_url());
                 exit;
@@ -721,7 +721,7 @@ class Rsssl_Two_Factor
                 // Destroy the current session for the user.
                 self::destroy_current_session_for_user($user);
                 wp_clear_auth_cookie();
-                self::display_expired_onboarding_error($user);
+                self::display_expired_onboarding_error();
                 exit;
             case 'totp':
             case 'email':
@@ -1686,14 +1686,23 @@ class Rsssl_Two_Factor
         }
     }
 
-    private static function display_expired_onboarding_error(): void {
-	    rsssl_load_template(
-		    'expired.php',
-		    array(
-			    'message' => esc_html__('Your 2FA grace period expired. Please contact your site administrator to regain access and to configure 2FA.', 'really-simple-ssl'),
-                ),
-		    rsssl_path . 'assets/templates/two_fa/'
-	    );
+    /**
+     * Display the expired onboarding error. Manually load our login header and
+     * footer functions to ensure they are  available.
+     */
+    private static function display_expired_onboarding_error(): void
+    {
+        if (!function_exists('login_header')) {
+            include_once __DIR__ . '/function-login-header.php';
+        }
+
+        if (!function_exists('login_footer')) {
+            include_once __DIR__ . '/function-login-footer.php';
+        }
+
+	    rsssl_load_template('expired.php', [
+            'message' => esc_html__('Your 2FA grace period expired. Please contact your site administrator to regain access and to configure 2FA.', 'really-simple-ssl'),
+        ], rsssl_path . 'assets/templates/two_fa/');
     }
 
     /**

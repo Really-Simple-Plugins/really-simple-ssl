@@ -1,7 +1,7 @@
 import * as rsssl_api from "../../utils/api";
 import useFields from "../FieldsData";
 import {__} from "@wordpress/i18n";
-import {useEffect, useState} from "react";
+import {useEffect, useState, useRef} from '@wordpress/element';
 import useRiskData from "./RiskData";
 
 const NotificationTester = (props) => {
@@ -14,12 +14,15 @@ const NotificationTester = (props) => {
     const [vulnerabilitiesEnabled, setVulnerabilitiesEnabled] = useState(false);
     const [vulnerabilitiesSaved, setVulnerabilitiesSaved] = useState(false);
     const {addHelpNotice, fields, getFieldValue, updateField, setChangedField, fieldAlreadyEnabled, fetchFieldsData, updateFieldAttribute} = useFields();
+    const buttonRef = useRef(null);
+
     useEffect ( () => {
         let mailEnabled = getFieldValue('send_notifications_email') == 1;
+        let mailVerified = rsssl_settings.email_verified;
         let vulnerabilities = fieldAlreadyEnabled('enable_vulnerability_scanner');
         setMailNotificationsEnabled(mailEnabled);
-        let enableButton = mailEnabled && vulnerabilities;
-        setDisabled(!enableButton);
+        let enableButton = mailVerified && vulnerabilities;
+        setDisabled(! enableButton);
         setMailNotificationsEnabled(mailEnabled);
         setVulnerabilitiesSaved(vulnerabilities);
         setVulnerabilitiesEnabled(getFieldValue('enable_vulnerability_scanner') == 1)
@@ -83,7 +86,14 @@ const NotificationTester = (props) => {
     return (
         <>
             <label>{props.labelWrap(fieldCopy)}</label>
-            <button onClick={ () => doTestNotification()} disabled={ disabled } className="button button-default">{field.button_text}</button>
+            <button
+                ref={buttonRef}
+                onClick={() => doTestNotification()}
+                disabled={disabled}
+                className="button button-default"
+            >
+                {field.button_text}
+            </button>
         </>
     )
 }

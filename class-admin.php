@@ -3189,8 +3189,37 @@ if ( ! function_exists('rsssl_upgrade_to_nine_notice' ) ) {
 }
 
 /**
- * Do not show notice after 2024-10-01
+ * RSSSL Pro Trial Notice
+ */
+if ( ! function_exists('rsssl_pro_trial_notice' ) ) {
+	function rsssl_pro_trial_notice() {
 
+        $link = rsssl_link( 'checkout/?edd_action=add_to_cart&download_id=860&edd_options%5Bprice_id%5D=4&currency=EUR', 'notification', 'free' );
+        $msg  = sprintf(
+                __( "Thank you for being a long-time user! As a token of our gratitude, we want to offer you %s6 months Really Simple Security Pro, 100%% Free!%s", 'really-simple-ssl' ),
+                '<strong>',
+                '</strong>',
+            );
+
+        $msg .= "<br><br>" . __('Discover:', 'really-simple-ssl');
+
+        $msg .= "<br><ul style='list-style-type: disc; margin-left: 20px;'>
+            <li>" . __('Performant Firewall', 'really-simple-ssl') . "</li>
+            <li>" . __('Advanced Hardening', 'really-simple-ssl') . "</li>
+            <li>" . __('Two-Factor Authentication', 'really-simple-ssl') . "</li>
+            <li>" . __('Security Headers', 'really-simple-ssl') . "</li>
+            <li>" . __('And many more powerful Security features..', 'really-simple-ssl') . "</li>
+        </ul>";
+
+        $msg .= "<a href='" . esc_url($link) . "' class='button button-primary' target='_blank'>" . __('Claim your 6 Free months', 'really-simple-ssl') . "</a>";
+
+        return $msg;
+
+    }
+}
+
+/**
+ * Do not show notice after 2024-10-01
  */
 if ( ! function_exists('rsssl_show_upgrade_to_nine_notice' ) ) {
 	function rsssl_show_upgrade_to_nine_notice() {

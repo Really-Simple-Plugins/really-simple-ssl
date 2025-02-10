@@ -4,6 +4,7 @@ if ( ! class_exists( 'rsssl_site_health' ) ) {
 	class rsssl_site_health {
 		private static $_this;
 		public function __construct() {
+
 			if ( isset( self::$_this ) ) {
 				wp_die( 'you cannot create a second instance.' );
 			}
@@ -43,13 +44,6 @@ if ( ! class_exists( 'rsssl_site_health' ) ) {
 					);
 				}
 
-				if ( rsssl_get_option( 'enable_vulnerability_scanner' ) ) {
-					$tests['direct']['rsssl_vulnerabilities'] = array(
-						'label' => __( 'Vulnerability detection', 'really-simple-ssl' ),
-						'test' => array( $this, 'vulnerabilities_test' ),
-					);
-				}
-
 				if ( rsssl_maybe_disable_404_blocking() ) {
 					$tests['direct']['rsssl_404_test'] = array(
 						'test' => array( $this, 'site_health_404_display' ),
@@ -57,7 +51,7 @@ if ( ! class_exists( 'rsssl_site_health' ) ) {
 				}
 
 				if ( rsssl_get_option( 'enable_vulnerability_scanner' ) ) {
-					$vulnerabilities                          = new rsssl_vulnerabilities();
+					$vulnerabilities = new rsssl_vulnerabilities();
 					$tests['direct']['rsssl_vulnerabilities'] = array(
 						'test' => [ $vulnerabilities, 'get_site_health_notice' ],
 					);

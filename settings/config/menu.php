@@ -80,7 +80,7 @@ function rsssl_menu() {
 							'id' => 'mixed-content-general',
 							'group_id' => 'mixed-content-general',
 							'title' => __( 'Mixed content', 'really-simple-ssl' ),
-							'helpLink' => 'remove-htaccess-redirect-site-lockout',
+							'helpLink' => 'instructions/using-the-mixed-content-scan',
 						],
 						[
 							'id' => 'mixed-content-scan',
@@ -89,7 +89,7 @@ function rsssl_menu() {
 							'premium' => true,
 							'premium_title' => __( "Mixed Content Scan", 'really-simple-ssl' ),
 							'premium_text' => __( "The extensive mixed content scan will list all issues and provide a fix, or instructions to fix manually.", 'really-simple-ssl' ),
-							'helpLink' => rsssl_link('mixedcontent', 'instructions'),
+							'helpLink' => 'instructions/using-the-mixed-content-scan',
 						],
 					],
 				],
@@ -157,9 +157,9 @@ function rsssl_menu() {
 									'id'                   => 'content_security_policy_source_directives',
 									'group_id'             => 'content_security_policy_source_directives',
 									'networkwide_required' => true,
-									'helpLink'             => 'instructions/source-directives/',
+									'helpLink'             => 'instructions/configuring-the-content-security-policy/',
 									'premium'              => true,
-									'premium_title'                => 'Source Directives with Learning Mode',
+									'premium_title'        => 'Source Directives with Learning Mode',
 									'premium_text'         => __( "Allow only necessary third party resources to be loaded on your website, thus preventing common attacks. Use our unique learning mode to automatically configure your Content Security Policy.", 'really-simple-ssl' ),
 									'title'                => 'Source Directives',
 								]
@@ -278,7 +278,7 @@ function rsssl_menu() {
 									'premium' => true,
 									'premium_text' =>__( 'Keep your site secure by monitoring unexpected file changes.', 'really-simple-ssl' ),
 									'upgrade' => 'https://really-simple-ssl.com/pro/?mtm_campaign=hardening&mtm_source=free&mtm_content=upgrade',
-									'helpLink' => 'https://really-simple-ssl.com/instructions/about-file-change-detection?mtm_campaign=instructions&mtm_source=free',
+									'helpLink' => 'instructions/about-file-change-detection',
 									'title' => __( 'File Change Detection', 'really-simple-ssl' ),
 									'intro' => __( "File Change Detection generates a snapshot of every .php and .js file. On a daily basis, each file is then compared to this snapshot.", 'really-simple-ssl' )
 									           . ' ' .__( "You will receive an email warning if changes are detected.", 'really-simple-ssl' )
@@ -324,7 +324,8 @@ function rsssl_menu() {
 								[
 									'id'            => 'two_fa_email',
 									'group_id'      => 'two_fa_email',
-									'premium'       => false,
+									'premium'       => true,
+									'disabled'      => rsssl_is_email_verified(),
 									'premium_text'  => __( 'Send an email code during login. You can force user roles to use two-factor authentication, or leave the choose with your users, if so desired.', 'really-simple-ssl' ),
 									'upgrade'              => 'https://really-simple-ssl.com/pro/?mtm_campaign=2fa&mtm_source=free&mtm_content=upgrade',
 									'helpLink' => 'instructions/two-factor-authentication',
@@ -849,5 +850,3 @@ function rsssl_link( $slug = 'pro', $mtm_campaign = 'notification', $mtm_src = '
 
 	return $url;
 }
-
-

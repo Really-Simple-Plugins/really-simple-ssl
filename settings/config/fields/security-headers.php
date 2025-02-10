@@ -421,8 +421,10 @@ add_filter( 'rsssl_fields', function( $fields ) {
 //						'name'     => '',
 //					],
 				],
+                'modal' => [
+                    'options' => (defined('rsssl_pro') ? array_keys(RSSSL()->headers->directives) : []),
+                ]
 			],
 		]
 	);
 }, 200 );
-

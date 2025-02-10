@@ -61,6 +61,8 @@ if (!class_exists('Rsssl_Two_Factor_Profile_Settings')) {
                         add_action('admin_init', array($this, 'add_hooks'));
                     }
                 }
+                add_action( 'wp_ajax_resend_email_code_profile', [$this, 'resend_email_code_profile_callback'] );
+                add_action( 'wp_ajax_change_method_to_email', [$this, 'start_email_validation_callback'] );
             }
         }
 
@@ -102,6 +104,47 @@ if (!class_exists('Rsssl_Two_Factor_Profile_Settings')) {
                     Rsssl_Two_Factor_Totp::set_user_status(get_current_user_id(), 'disabled');
                 }
             }
+        }
+
+        /**
+         * Resend the email code for the user.
+         *
+         * @return void
+         */
+        public function resend_email_code_profile_callback(): void
+        {
+            // Check for nonce (make sure your nonce name and action match what you output to the page)
+            if ( ! isset( $_POST['login_nonce'] ) ||
+                ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['login_nonce'] ) ), 'update_user_two_fa_settings' ) ) {
+                wp_send_json_error( array( 'message' => __( 'Invalid nonce.', 'really-simple-ssl' ) ), 403 );
+            }
+
+            // Ensure the user is logged in.
+            if ( ! is_user_logged_in() ) {
+                wp_send_json_error( array( 'message' => __( 'User not logged in.', 'really-simple-ssl' ) ), 401 );
+            }
+
+            // Get the user ID.
+            $user_id = get_current_user_id();
+            $user = get_user_by( 'ID', $user_id );
+            Rsssl_Two_Factor_Email::get_instance()->generate_and_email_token($user, true);
+            wp_send_json_success( array( 'message' => __('Verification code re-sent', 'really-simple.ssl') ), 200 );
+        }
+
+        /**
+         * Starts the process of email validation for a user.
+         *
+         */
+        public function start_email_validation_callback(): void
+        {
+            if(!is_user_logged_in()) {
+                wp_send_json_error( array( 'message' => __( 'User not logged in.', 'really-simple-ssl' ) ), 401 );
+            }
+            $user = get_user_by('id', get_current_user_id());
+            // Sending the email with the code.
+            Rsssl_Two_Factor_Email::get_instance()->generate_and_email_token($user, true);
+            $token = get_user_meta( $user->ID, Rsssl_Two_Factor_Email::RSSSL_TOKEN_META_KEY, true );
+            wp_send_json_success( array( 'message' => __('Verification code sent', 'really-simple-ssl'), 'token' => $token ), 200 );
         }
 
         /**
@@ -347,6 +390,7 @@ if (!class_exists('Rsssl_Two_Factor_Profile_Settings')) {
             // We check if the backup codes are available.
             wp_enqueue_script('rsssl-profile-settings', $uri, array(), rsssl_version, true);
             wp_localize_script('rsssl-profile-settings', 'rsssl_profile', array(
+                'ajax_url'      => admin_url( 'admin-ajax.php' ),
                 'backup_codes' => $backup_codes,
                 'root' => esc_url_raw(rest_url(Rsssl_Two_Factor::REST_NAMESPACE)),
                 'user_id' => get_current_user_id(),

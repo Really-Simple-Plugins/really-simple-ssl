@@ -57,15 +57,43 @@ class Profile extends BaseAuth {
                             validationEmail.style.display = "table-row";
                         }
                         let data = {
+                            action: 'change_method_to_email',
                             provider: selectedMethod,
                             user_id: rsssl_profile.user_id,
                             login_nonce: document.getElementById('rsssl_two_fa_nonce').value,
                             redirect_to: rsssl_profile.redirect_to,
                             profile: true
                         };
-                        let urlExtension = '/save_default_method_email_profile';
-                        that.performFetchOp(urlExtension, data)
+                        fetch(rsssl_profile.ajax_url, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+                            },
+                            body: new URLSearchParams(data)
+                        })
                             .then(response => response.json())
+                            .then(responseData => {
+                                // Expected structure: { success: true, data: { message: "Verification code sent", token: ... } }
+                                let errorDiv = document.getElementById('login-message');
+                                let inPutField = document.getElementById('rsssl-two-factor-email-code');
+                                if (inPutField) {
+                                    if (!errorDiv) {
+                                        errorDiv = document.createElement('p');
+                                        errorDiv.classList.add('notice', 'notice-success');
+                                        inPutField.insertAdjacentElement('afterend', errorDiv);
+                                    }
+                                    // Use the message returned from your PHP callback
+                                    if (responseData.data.message) {
+                                        errorDiv.innerHTML = `<p>${responseData.data.message}</p>`;
+                                    } else {
+                                        console.error('No message returned from the server.');
+                                    }
+                                    // Optionally, do something with responseData.data.token if needed.
+                                    setTimeout(() => {
+                                        errorDiv.remove();
+                                    }, 5000);
+                                }
+                            })
                             .catch(that.logFetchError);
                     } else {
                         qrCodeContainer.style.display = "none";
@@ -74,19 +102,28 @@ class Profile extends BaseAuth {
             });
         }
 
-        let resendButton = this.getElement('rsssl_resend_code');
+        let resendButton = this.getElement('rsssl_resend_code_action');
         if(resendButton !== null) {
             resendButton.addEventListener('click', (event) => {
                 event.preventDefault();
                 let data = {
+                    action: 'resend_email_code_profile',
                     user_id: this.settings.user_id,
                     login_nonce: document.getElementById('rsssl_two_fa_nonce').value,
                     provider: 'email',
                     profile: true
                 };
-                this.performFetchOp('/resend_email_code', data)
+                let ajaxUrl = rsssl_profile.ajax_url;
+                fetch(ajaxUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+                    },
+                    body: new URLSearchParams(data)
+                })
                     .then(response => response.json())
-                    .then(data => {
+                    .then(responseData => {
+                        // responseData will have the structure: { success: true, data: { message: "..." } }
                         let errorDiv = document.getElementById('login-message');
                         let inPutField = document.getElementById('rsssl-two-factor-email-code');
                         if (inPutField) {
@@ -95,10 +132,9 @@ class Profile extends BaseAuth {
                                 errorDiv.classList.add('notice', 'notice-success');
                                 inPutField.insertAdjacentElement('afterend', errorDiv);
                             }
-                            errorDiv.innerHTML = `<p>${data.message}</p>`;
-                            // Fading the meassage after 5 seconds
+                            errorDiv.innerHTML = `<p>${responseData.data.message}</p>`;
+                            // Fade out the message after 5 seconds.
                             setTimeout(() => {
-                                // removing the error box from the loginForm
                                 errorDiv.remove();
                             }, 5000);
                         }
