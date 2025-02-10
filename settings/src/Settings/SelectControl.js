@@ -16,7 +16,7 @@ const SelectControl = (props) => {
     let optionsDisabled = Array.isArray(props.disabled) ? props.disabled : false;
 
     const selectRef = useRef(null);
-    const tooltipText = __("404 errors detected on your home page. 404 blocking is unavailable, to prevent blocking of legitimate visitors. It is strongly recommended to resolve these errors.", "really-simple-ssl");
+    const tooltipText = __("404 errors detected on your homepage. 404 blocking is unavailable, to prevent blocking of legitimate visitors. It is strongly recommended to resolve these errors.", "really-simple-ssl");
 
     // Pass originalDisabled instead of selectDisabled - we want to show the tooltip
     // when the field is disabled due to the PHP condition
@@ -34,17 +34,18 @@ const SelectControl = (props) => {
             <div className="components-base-control">
                 <div className="components-base-control__field">
                     <div data-wp-component="HStack" className="components-flex components-select-control">
-                        <label htmlFor={field.id} className="components-toggle-control__label">{props.label}</label>
+                        <label htmlFor={field.id} className="components-toggle-control__label" style={props.style && props.style.label ? props.style.label : undefined}>{props.label}</label>
                         <select
                             ref={selectRef}
                             className={field.id}
                             disabled={selectDisabled}
                             value={props.value}
                             onChange={(e) => props.onChangeHandler(e.target.value)}
+                            style={props.style && props.style.select ? props.style.select : undefined}
                         >
                             {props.options.map((option, i) => (
                                 <option
-                                    key={'option-'+i}
+                                    key={'option-' + i}
                                     value={option.value}
                                     disabled={optionsDisabled && optionsDisabled.includes(option.value)}
                                 >

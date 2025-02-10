@@ -62,6 +62,17 @@ class Rsssl_Two_Factor_Backup_Codes extends Rsssl_Two_Factor_Provider {
 	}
 
 	/**
+     * Deletes all backup codes for a user.
+     *
+	 * @param int $id
+	 *
+	 * @return void
+	 */
+	public static function delete_backup_codes( int $id ): void {
+        delete_user_meta( $id, self::BACKUP_CODES_META_KEY );
+	}
+
+	/**
 	 * Register the rest-api endpoints required for this provider.
 	 *
 	 * @codeCoverageIgnore

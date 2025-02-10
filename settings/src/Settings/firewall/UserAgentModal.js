@@ -19,7 +19,6 @@ const UserAgentModal = (props) => {
         // we check if statusSelected is not empty
         if (user_agent.length) {
             await addRow(user_agent, note).then((response) => {
-                console.log(response);
                 if (response.success) {
                     showSavedSettingsNotice(response.message);
                     fetchData('rsssl_user_agent_list');
@@ -46,6 +45,7 @@ const UserAgentModal = (props) => {
     }
 
     function handleKeyPress(event) {
+        console.log('i pressed a key' + event.key);
         if (event.key === 'Enter') {
             handleSubmit();
         }
@@ -114,7 +114,7 @@ const UserAgentModal = (props) => {
                                 ref={userAgentInputRef}
                             />
                         </div>
-                        <div>
+                        <div style={{marginTop: '10px'}}>
                             <label
                                 htmlFor={'note'}
                                 className={'rsssl-label'}

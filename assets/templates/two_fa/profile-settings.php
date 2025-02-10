@@ -126,7 +126,7 @@ use RSSSL\Security\WordPress\Two_Fa\Rsssl_Two_Factor_Settings;
             <input type="text" inputmode="numeric" name="rsssl-two-factor-email-code" id="rsssl-two-factor-email-code"
                    class="input rsssl-authcode" value="" size="20" pattern="[0-9 ]*" placeholder="1234 5678"
                    data-digits="8"/>
-            <p class="two-factor-prompt"><i><?php esc_html_e('A verification code has been sent to the email address associated with your account to verify functionality.', 'really-simple-ssl'); ?> <a href="#" id="rsssl_resend_code"> <?php esc_attr_e('Resend Code', 'really-simple-ssl'); ?></a></i></p>
+            <p class="two-factor-prompt"><i><?php esc_html_e('A verification code has been sent to the email address associated with your account to verify functionality.', 'really-simple-ssl'); ?> <a href="#" id="rsssl_resend_code_action"> <?php esc_attr_e('Resend Code', 'really-simple-ssl'); ?></a></i></p>
         </td>
     </tr>
 </table>

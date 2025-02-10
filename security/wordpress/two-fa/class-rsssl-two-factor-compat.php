@@ -52,6 +52,6 @@ class Rsssl_Two_Factor_Compat {
 	 * @return boolean
 	 */
 	public function jetpack_is_sso_active() {
-		return ( method_exists( 'Jetpack', 'is_module_active' ) && Jetpack::is_module_active( 'sso' ) );
+		return ( method_exists( '\Jetpack', 'is_module_active' ) && \Jetpack::is_module_active( 'sso' ) );
 	}
 }

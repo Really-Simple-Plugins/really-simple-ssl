@@ -26,45 +26,24 @@ const Onboarding = ({isModal}) => {
         processing,
         currentStep,
         currentStepIndex,
-        setCurrentStepIndex,
         networkActivationStatus,
         networkProgress,
         activateSSLNetworkWide,
+        emailVerified
     } = useOnboardingData();
 
-    useEffect( () => {
-        if (networkwide && networkActivationStatus==='main_site_activated') {
-            //run networkwide activation with a delay
-            setTimeout( () => {
-                activateSSLNetworkWide();
-            }, 1000);
-        }
-    }, [networkActivationStatus, networkProgress])
-
+    // Single effect to initialize
     useEffect(() => {
-        if ( !fieldsLoaded ) {
-            fetchFieldsData();
-        }
-    }, []);
-
-    useEffect( () => {
-        const run = async () => {
-            await getSteps(false);
-
-            if (dataLoaded && steps.length > 0) {
-                setCurrentStepIndex(0); // Always start at the first step
-            }
-        }
-        run();
-    }, [])
+        getSteps(false);
+    }, []); // Empty dependency array
 
     if (error){
         return (
             <Placeholder lines="3" error={error}></Placeholder>
         )
     }
-    let processingClass = '';//processing ? 'rsssl-processing' : '';
-    //get 'other_host_type' field from fields
+
+    let processingClass = '';
 
     return (
         <>
@@ -96,24 +75,19 @@ const Onboarding = ({isModal}) => {
                             <StepFeatures />
                         </>
                     }
-                    { currentStep.id === 'email'&&
-                        <>
-                            <StepEmail />
-                        </>
-                    }
-
+                    {currentStep.id === 'email' && !emailVerified && (
+                        <StepEmail />
+                    )}
                     { currentStep.id === 'plugins' &&
                         <>
                             <StepPlugins />
                         </>
                     }
-
                     { currentStep.id === 'pro' &&
                         <>
                             <StepPro />
                         </>
                     }
-
                     { !isModal &&
                         <OnboardingControls isModal={false}/>
                     }

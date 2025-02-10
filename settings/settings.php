@@ -142,6 +142,7 @@ function rsssl_plugin_admin_scripts()
 				'rsssl_nonce' => wp_create_nonce('rsssl_nonce'),
 				'wpconfig_fix_required' => RSSSL()->admin->do_wpconfig_loadbalancer_fix() && ! RSSSL()->admin->wpconfig_has_fixes() && ! RSSSL()->admin->uses_bitnami(),
 				'cloudflare' => rsssl_uses_cloudflare(),
+				'email_verified' => rsssl_is_email_verified(),
 			])
 		);
 	}
@@ -1189,3 +1190,13 @@ function rsssl_add_user_role_to_api_response( $response, $user, $request ) {
 	return $response;
 }
 add_filter( 'rest_prepare_user', 'rsssl_add_user_role_to_api_response', 10, 3 );
+
+if ( ! function_exists('rsssl_change_email_status_on_email_change' ) ) {
+	function rsssl_change_email_status_on_email_change(string $field_id, $new_value, $previous_value) {
+		if ( $field_id === 'notifications_email_address' && $new_value !== $previous_value ) {
+			update_option( 'rsssl_email_verification_status', 'email_changed' );
+		}
+	}
+}
+
+add_filter('rsssl_after_save_field', 'rsssl_change_email_status_on_email_change', 10, 3);

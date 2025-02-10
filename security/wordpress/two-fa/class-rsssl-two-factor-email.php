@@ -559,29 +559,36 @@ class Rsssl_Two_Factor_Email extends Rsssl_Two_Factor_Provider implements Rsssl_
 	 * @return bool Whether the user is enabled or not.
 	 */
 	public static function is_enabled( WP_User $user ): bool {
+        // todo - Do we need to check for a pro version here too?
 		if ( ! $user->exists() ) {
 			return false;
 		}
-		// Get all the user roles.
-		$user_roles = $user->roles;
-		// Then get the enabled roles.
-		$enabled_roles = rsssl_get_option( 'two_fa_enabled_roles_email' );
 
-        if( is_multisite() ) {
+        // Get and normalize the user roles.
+        $user_roles = $user->roles;
+        if ( ! is_array( $user_roles ) ) {
+            $user_roles = array();
+        }
+
+        if ( is_multisite() ) {
             $user_roles = Rsssl_Two_Factor_Settings::get_strictest_role_across_sites($user->ID, ['email']);
         }
 
-		// if the user has the role that is enabled, return true.
-		if ( ! is_array( $enabled_roles ) ) {
-			$enabled_roles = array();
-		}
+        // Get and normalize enabled roles.
+        $enabled_roles = rsssl_get_option( 'two_fa_enabled_roles_email' );
+        if ( ! is_array( $enabled_roles ) ) {
+            $enabled_roles = array();
+        }
 
-        if(is_multisite()) {
-            //compare the user roles with the enabled roles and if there is a match, return true
+        // Return true if one of the user roles is in the enabled roles.
+        if ( (count($user_roles) > 1) || is_multisite() ) {
             return count(array_intersect($user_roles, $enabled_roles)) > 0;
         }
 
-		return in_array( $user_roles[0], $enabled_roles, true );
+        // If the user role is in the enabled roles, return true.
+        $firstKey = ( empty($user_roles) ? 0 : array_key_first($user_roles) );
+        $firstFoundRole = $user_roles[$firstKey];
+		return in_array( $firstFoundRole, $enabled_roles, true );
 	}
 
     public static function is_configured( WP_User $user ): bool {

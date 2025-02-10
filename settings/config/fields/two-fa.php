@@ -4,15 +4,12 @@ defined( 'ABSPATH' ) or die();
 add_filter( 'rsssl_fields', function( $fields ) {
 	return array_merge( $fields,
 		[
-
 			[
 				'id'       => 'login_protection_enabled',
 				'menu_id'  => 'two-fa',
 				'group_id' => 'two_fa_general',
 				'type'     => 'checkbox',
 				'label'    => __( "Enable Two-Factor Authentication", "really-simple-ssl" ),
-				'disabled' => false,
-				'default'  => 'disabled',
 				'server_conditions'    => [
 					'relation' => 'AND',
 					[

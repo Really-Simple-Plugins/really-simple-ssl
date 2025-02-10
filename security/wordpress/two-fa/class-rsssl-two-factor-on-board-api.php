@@ -11,6 +11,8 @@
 namespace RSSSL\Security\WordPress\Two_Fa;
 
 use Exception;
+use RSSSL\Pro\Security\WordPress\Limitlogin\Rsssl_IP_Fetcher;
+use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_User;
@@ -48,15 +50,12 @@ class Rsssl_Two_Factor_On_Board_Api
 		return Rsssl_Two_Fa_Authentication::verify_login_nonce( $params->user_id, $params->login_nonce );
 	}
 
-	/**
-	 * Verifies a login nonce, gets user by the user id, and returns an error response if any steps fail.
-	 *
-	 * @param int    $user_id The user ID.
-	 * @param string $login_nonce The login nonce.
-	 *
-	 * @return WP_User|WP_REST_Response
-	 */
-	private function check_login_and_get_user( int $user_id, string $login_nonce ) {
+    /**
+     * Verifies a login nonce, gets user by the user id, and returns an error response if any steps fail.
+     *
+     * @throws Exception
+     */
+	private function check_login_and_get_user( int $user_id, string $login_nonce ): WP_User {
 		if ( ! Rsssl_Two_Fa_Authentication::verify_login_nonce( $user_id, $login_nonce ) ) {
 			// We throw an error
 			wp_die();
@@ -77,10 +76,6 @@ class Rsssl_Two_Factor_On_Board_Api
 	/**
 	 * Sets the authentication cookie and returns a success response.
 	 *
-	 * @param int    $user_id The user ID.
-	 * @param string $redirect_to The redirect URL.
-	 *
-	 * @return WP_REST_Response
 	 */
 	private function authenticate_and_redirect( int $user_id, string $redirect_to = '' ): WP_REST_Response {
 		// Okay checked the provider now authenticate the user.
@@ -167,18 +162,23 @@ class Rsssl_Two_Factor_On_Board_Api
 		    return new WP_REST_Response(['error' => 'Invalid provider'], 401);
 	    }
 
-	    if (!Rsssl_Two_Factor_Email::get_instance()->validate_token($parameters->user_id, self::sanitize_token($parameters->token))) {
-		    Rsssl_Two_Factor_Email::set_user_status($parameters->user_id, 'open');
-		    Rsssl_Two_Factor_Totp::set_user_status($parameters->user_id, 'open');
+        /*
+         * This will result in a wp_die otherwise it will return the user.
+         */
+        $user = $this->check_login_and_get_user($parameters->user_id, $parameters->login_nonce);
+
+	    if (!Rsssl_Two_Factor_Email::get_instance()->validate_token($user->ID, self::sanitize_token($parameters->token))) {
+		    Rsssl_Two_Factor_Email::set_user_status($user->ID, 'open');
+		    Rsssl_Two_Factor_Totp::set_user_status($user->ID, 'open');
 		    wp_logout();
-		    return new WP_REST_Response(['error' => __('Code was invalid, try "Resend Code"', 'really-simple.ssl-pro')], 401);
+		    return new WP_REST_Response(['error' => __('Code was invalid, try "Resend Code"', 'really-simple.ssl')], 401);
 	    }
 
-	    Rsssl_Two_Factor_Email::set_user_status($parameters->user_id, 'active');
-	    Rsssl_Two_Factor_Totp::set_user_status($parameters->user_id, 'disabled');
-	    self::set_other_providers_inactive($parameters->user_id, 'email');
+	    Rsssl_Two_Factor_Email::set_user_status($user->ID, 'active');
+	    Rsssl_Two_Factor_Totp::set_user_status($user->ID, 'disabled');
+	    self::set_other_providers_inactive($user->ID, 'email');
 
-	    return $this->authenticate_and_redirect($parameters->user_id, $parameters->redirect_to);
+	    return $this->authenticate_and_redirect($user->ID, $parameters->redirect_to);
     }
 
     /**
@@ -191,7 +191,7 @@ class Rsssl_Two_Factor_On_Board_Api
     public function resend_email_code( WP_REST_Request $request ): WP_REST_Response {
        $parameters = new Rsssl_Request_Parameters( $request );
         Rsssl_Two_Factor_Email::get_instance()->generate_and_email_token($parameters->user, $parameters->profile);
-        return new WP_REST_Response( array( 'message' => __('A verification code has been sent to the email address associated with your account to verify functionality.', 'really-simple.ssl-pro') ), 200 );
+        return new WP_REST_Response( array( 'message' => __('Verification code re-sent', 'really-simple.ssl') ), 200 );
     }
 
 	/**
@@ -335,8 +335,9 @@ class Rsssl_Two_Factor_On_Board_Api
             array(
                 'methods' => 'POST',
                 'callback' => array( $this, 'validate_email_setup' ),
-                'permission_callback' => function ( WP_REST_Request $request ) {
-                    return true;  // Allow all requests; handle auth in the callback.
+                'permission_callback' => function (WP_REST_Request $request) {
+                    $login_actions = array('onboarding', 'email'); // Define allowed login actions here
+                    return $this->permission_callback_login_actions($request, $login_actions);
                 },
                 'args' => array(
                     'provider' => array(
@@ -369,8 +370,9 @@ class Rsssl_Two_Factor_On_Board_Api
             array(
                 'methods' => 'POST',
                 'callback' => array( $this, 'resend_email_code' ),
-                'permission_callback' => function ( WP_REST_Request $request ) {
-                    return true;  // Allow all requests; handle auth in the callback.
+                'permission_callback' => function (WP_REST_Request $request) {
+                    $login_actions = array('onboarding', 'email'); // Define allowed login actions here
+                    return $this->permission_callback_login_actions($request, $login_actions);
                 },
                 'args' => array(
                     'provider' => array(
@@ -425,9 +427,10 @@ class Rsssl_Two_Factor_On_Board_Api
 			array(
 				'methods'             => 'POST',
 				'callback'            => array( $this, 'disable_two_fa_for_user' ),
-				'permission_callback' => function ( WP_REST_Request $request ) {
-					return true;  // Allow all requests; handle auth in the callback.
-				},
+				'permission_callback' => function (WP_REST_Request $request) {
+                    $login_actions = array('onboarding'); // Define allowed login actions here
+                    return $this->permission_callback_login_actions($request, $login_actions);
+                },
 				'args'                => array(
 					'redirect_to' => array(
 						'required' => false,
@@ -451,7 +454,10 @@ class Rsssl_Two_Factor_On_Board_Api
 			array(
 				'methods'             => 'POST',
 				'callback'            => array( $this, 'skip_onboarding' ),
-				'permission_callback' => '__return_true',
+                'permission_callback' => function (WP_REST_Request $request) {
+                    $login_actions = array('onboarding'); // Define allowed login actions here
+                    return $this->permission_callback_login_actions($request, $login_actions);
+                },
 				'args'                => array(
 					'redirect_to' => array(
 						'required' => false,
@@ -491,6 +497,10 @@ class Rsssl_Two_Factor_On_Board_Api
 			if ( ucfirst( $allowed_method ) !== $provider_name ) {
 				$provider::set_user_status( $id, 'disabled' );
 			}
+			if ( 'email' === $allowed_method ) {
+				//We delete backup codes if email is the provider.
+				Rsssl_Two_Factor_Backup_Codes::delete_backup_codes( $id );
+			}
 		}
 	}
 
@@ -512,5 +522,88 @@ class Rsssl_Two_Factor_On_Board_Api
         }
 
         return (string) $code;
+    }
+
+    /**
+     * Permission callback for routes that need to:
+     * 1) Verify a login nonce
+     * 2) Ensure the user exists
+     * 3) Check that "email" is the active login action (as an example)
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return true|WP_Error
+     */
+    public function permission_callback_login_actions( WP_REST_Request $request, array $login_actions ) {
+        $user_id = $request->get_param( 'user_id' );
+        $login_nonce = $request->get_param( 'login_nonce' );
+
+        // we check if the login nonce is a string.
+        if ( ! is_string( $login_nonce ) ) {
+            return new WP_Error(
+                'rest_forbidden',
+                esc_html__( 'Access denied.', 'really-simple-ssl' ),
+                array( 'status' => 403 )
+            );
+        }
+
+        //TODO: Incompatible with free vesion currently needs the following branch: get-ip-functionality
+        // for now we will skip if the Rsssl_IP_Fetcher does not exist.
+        if( class_exists( 'RSSSL\Pro\Security\WordPress\Limitlogin\Rsssl_IP_Fetcher' ) ) {
+            $ip_array_found = (new Rsssl_IP_Fetcher)->get_ip_address();
+            $ip_address = $ip_array_found[0] ?? $_SERVER['REMOTE_ADDR'];
+        } else {
+            // As a temporary solution we will get the ip from the remote header
+            $ip_address = $_SERVER['REMOTE_ADDR'];
+        }
+
+        // Check if ip is a valid ip address.
+        if ( ! filter_var( $ip_address, FILTER_VALIDATE_IP ) ) {
+            return new WP_Error(
+                'rest_forbidden',
+                esc_html__( 'Access denied.', 'really-simple-ssl' ),
+                array( 'status' => 403 )
+            );
+        }
+
+        // Rate limiting
+        $route = $request->get_route();
+        $transient_key = 'rsssl_rate_limit_' . md5($ip_address . $route );
+        $attempts = get_transient( $transient_key );
+
+        if ($attempts === false) {
+            $attempts = 0;
+        }
+
+        if ($attempts >= 5) {
+            return new WP_Error(
+                'rest_forbidden',
+                esc_html__('Too many attempts. Please try again later.', 'really-simple-ssl'),
+                array('status' => 429)
+            );
+        }
+
+        // Perform all checks silently
+        $current_login_action_is_allowed_for_user = in_array(
+            Rsssl_Two_Factor_Settings::get_login_action( $user_id ),
+            $login_actions,
+            true );
+        if (
+            ! $current_login_action_is_allowed_for_user ||
+            ! Rsssl_Two_Fa_Authentication::verify_login_nonce( $user_id, $login_nonce ) ||
+            ! get_user_by( 'id', $user_id )
+        ) {
+                // Increment the attempts count
+                set_transient( $transient_key, $attempts + 1, 10 * MINUTE_IN_SECONDS );
+            // Use a short, generic message so the user doesn't know *why* it failed
+            return new WP_Error(
+                'rest_forbidden',
+                esc_html__( 'Access denied.', 'really-simple-ssl' ),
+                array( 'status' => 403 )
+            );
+        }
+            // Reset the attempts count on successful validation
+            delete_transient($transient_key);
+        return true;
     }
 }

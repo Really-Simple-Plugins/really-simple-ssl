@@ -107,6 +107,7 @@ if ( ! class_exists( 'rsssl_mailer' ) ) {
 					'page'                    => 'really-simple-security',
 					'rsssl_nonce'             => wp_create_nonce( 'rsssl_email_verification_' . $user_id ),
 					'rsssl_verification_code' => $verification_code,
+					'verified_email'          => '1',
 				),
 				rsssl_admin_url([], '#settings/general')
 			);
@@ -200,7 +201,7 @@ if ( ! class_exists( 'rsssl_mailer' ) ) {
 			if ( $success ) {
 				return [
 					'success' => true,
-					'title'   => __( "Email verification", 'really-simple-ssl' ),
+					'title'   => __( "Email validation", 'really-simple-ssl' ),
 					'message' => __( 'Email sent! Please check your mail', "really-simple-ssl" )
 				];
 			}

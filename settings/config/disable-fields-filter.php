@@ -35,20 +35,17 @@ function rsssl_remove_fields($fields){
 		$fields = array_values($fields);
 	}
 
-	if ( ! rsssl_is_email_verified() && rsssl_get_option('two_fa_enabled_email') == '1' ) {
-		$index = array_search( 'two_fa_enabled_email', array_column( $fields, 'id' ), true );
+	if ( ! rsssl_is_email_verified() && rsssl_get_option('login_protection_enabled') == '1' ) {
+		$index = array_search( 'login_protection_enabled', array_column( $fields, 'id' ), true );
 		$fields[$index]['help'] = rsssl_email_help_text();
+//		$fields[$index]['disabled'] = true;
 		$fields = array_values($fields);
 	}
 
-	if ( ! rsssl_is_email_verified() && rsssl_get_option('enable_limited_login_attempts') == '1' ) {
-		$index = array_search( 'limit_login_attempts_amount', array_column( $fields, 'id' ), true );
-		//if LLA is not included yet, this index will be false.
-		if ( $index !== false ) {
-			$fields[$index]['help'] = rsssl_email_help_text();
-			$fields = array_values($fields);
-		}
-
+	if ( ! rsssl_is_email_verified() && rsssl_get_option('enable_vulnerability_scanner') == '1' ) {
+		$index = array_search( 'vulnerability_notification_email_admin', array_column( $fields, 'id' ), true );
+		$fields[$index]['help'] = rsssl_email_help_text();
+		$fields = array_values($fields);
 	}
 
 	if ( rsssl_maybe_disable_404_blocking() ) {
