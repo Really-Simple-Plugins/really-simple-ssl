@@ -152,7 +152,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 
 == Changelog ==
 = 9.3.1 =
-* February 11th, 2025
+* February 12th, 2025
 * Improvement: Not able to use email needed functions when email is not yet verified.
 * Fix: All instruction links are now correct.
 * Fix: Undefined array key "m" when showing vulnerability details.
