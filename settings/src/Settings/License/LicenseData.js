@@ -13,7 +13,7 @@ const UseLicenseData = create(( set, get ) => ({
         const disabledState = {output: {
                 dismissible: false,
                 icon: 'skeleton',
-                label: __( 'Loading', 'burst-statistics' ),
+                label: __( 'Loading', 'really-simple-ssl' ),
                 msg: false,
                 plusone: false,
                 url: false

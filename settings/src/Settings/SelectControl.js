@@ -1,43 +1,53 @@
-// src/components/SelectControl.js
-import {useRef, useEffect} from '@wordpress/element';
 import DOMPurify from "dompurify";
-import hoverTooltip from "../utils/hoverTooltip";
-import {__} from '@wordpress/i18n';
+import {useEffect, useRef} from '@wordpress/element';
+import hoverTooltip from '../utils/hoverTooltip';
 
 const SelectControl = (props) => {
-    let field = props.field;
-    // Track the original disabled state from PHP separately
-    let originalDisabled = field.disabled;
-    // Handle conditional disable state
-    let conditionalDisabled = !Array.isArray(props.disabled) && props.disabled;
-    // Combine them for the actual select disabled state
-    let selectDisabled = originalDisabled || conditionalDisabled;
-
-    let optionsDisabled = Array.isArray(props.disabled) ? props.disabled : false;
 
     const selectRef = useRef(null);
-    const tooltipText = __("404 errors detected on your homepage. 404 blocking is unavailable, to prevent blocking of legitimate visitors. It is strongly recommended to resolve these errors.", "really-simple-ssl");
 
-    // Pass originalDisabled instead of selectDisabled - we want to show the tooltip
-    // when the field is disabled due to the PHP condition
-    hoverTooltip(selectRef, originalDisabled, tooltipText);
+    const disabledPropIsArray = Array.isArray(props.disabled);
+    let disabledOptionsArray = (disabledPropIsArray ? props.disabled : false);
+    let disabledSelectPropBoolean = (disabledPropIsArray === false && props.disabled);
+    let disabledSelectViaFieldConfig = (props.field.disabled === true);
+
+    let selectDisabled = (
+        disabledSelectViaFieldConfig
+        || disabledSelectPropBoolean
+    );
+
+    let tooltipText = '';
+    let emptyValues = [undefined, null, ''];
+
+    if (selectDisabled
+        && props.field.hasOwnProperty('disabledTooltipHoverText')
+        && !emptyValues.includes(props.field.disabledTooltipHoverText)
+    ) {
+        tooltipText = props.field.disabledTooltipHoverText;
+    }
+
+    hoverTooltip(
+        selectRef,
+        (selectDisabled && (tooltipText !== '')),
+        tooltipText
+    );
 
     // Add effect to disable the select element when the selectDisabled state changes
     useEffect(() => {
         if (selectRef.current) {
             selectRef.current.disabled = selectDisabled;
         }
-    }, [field.disabled, selectDisabled]);
+    }, [disabledSelectViaFieldConfig, selectDisabled]);
 
     return (
         <>
             <div className="components-base-control">
                 <div className="components-base-control__field">
                     <div data-wp-component="HStack" className="components-flex components-select-control">
-                        <label htmlFor={field.id} className="components-toggle-control__label" style={props.style && props.style.label ? props.style.label : undefined}>{props.label}</label>
+                        <label htmlFor={props.field.id} className="components-toggle-control__label"
+                               style={props.style && props.style.label ? props.style.label : undefined}>{props.label}</label>
                         <select
                             ref={selectRef}
-                            className={field.id}
                             disabled={selectDisabled}
                             value={props.value}
                             onChange={(e) => props.onChangeHandler(e.target.value)}
@@ -47,7 +57,7 @@ const SelectControl = (props) => {
                                 <option
                                     key={'option-' + i}
                                     value={option.value}
-                                    disabled={optionsDisabled && optionsDisabled.includes(option.value)}
+                                    disabled={disabledOptionsArray && disabledOptionsArray.includes(option.value)}
                                 >
                                     {option.label}
                                 </option>
@@ -56,14 +66,12 @@ const SelectControl = (props) => {
                     </div>
                 </div>
             </div>
-            {field.comment && (
-                <div
-                    className="rsssl-comment"
-                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(field.comment) }}
-                ></div>
+            {props.field.comment && (
+                <div className="rsssl-comment" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(props.field.comment) }} ></div>
+                /* nosemgrep: react-dangerouslysetinnerhtml */
             )}
         </>
     );
-};
+}
 
 export default SelectControl;

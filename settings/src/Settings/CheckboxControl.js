@@ -9,9 +9,34 @@ import {__} from '@wordpress/i18n';
 const CheckboxControl = (props) => {
 
     const checkboxRef = useRef(null);
-    const tooltipText = __("404 errors detected on your homepage. 404 blocking is unavailable, to prevent blocking of legitimate visitors. It is strongly recommended to resolve these errors.", "really-simple-ssl");
-    // Pass props.disabled as the condition
-    hoverTooltip(checkboxRef, props.disabled, tooltipText);
+
+    let disabledCheckboxPropBoolean = (props.disabled === true);
+    let disabledCheckboxViaFieldConfig = (props.field.disabled === true);
+
+    let checkboxDisabled = (
+        disabledCheckboxViaFieldConfig
+        || disabledCheckboxPropBoolean
+    );
+
+    let tooltipText = '';
+    let emptyValues = [undefined, null, ''];
+
+    if (checkboxDisabled
+        && props.field.hasOwnProperty('disabledTooltipHoverText')
+        && !emptyValues.includes(props.field.disabledTooltipHoverText)
+    ) {
+        tooltipText = props.field.disabledTooltipHoverText;
+    }
+
+    hoverTooltip(
+        checkboxRef,
+        (checkboxDisabled && (tooltipText !== '')),
+        tooltipText
+    );
+
+    // const tooltipText = __("404 errors detected on your home page. 404 blocking is unavailable, to prevent blocking of legitimate visitors. It is strongly recommended to resolve these errors.", "really-simple-ssl");
+    // // Pass props.disabled as the condition
+    // hoverTooltip(checkboxRef, props.disabled, tooltipText);
 
     const [ isOpen, setIsOpen ] = useState( false );
         const onChangeHandler = (e) => {

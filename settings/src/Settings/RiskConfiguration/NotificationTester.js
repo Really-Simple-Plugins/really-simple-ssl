@@ -3,18 +3,39 @@ import useFields from "../FieldsData";
 import {__} from "@wordpress/i18n";
 import {useEffect, useState, useRef} from '@wordpress/element';
 import useRiskData from "./RiskData";
+import hoverTooltip from "../../utils/hoverTooltip";
 
 const NotificationTester = (props) => {
     const {
         fetchVulnerabilities,riskLevels
     } = useRiskData();
-    const {field} = props;
     const [disabled, setDisabled] = useState(true);
     const [mailNotificationsEnabled, setMailNotificationsEnabled] = useState(true);
     const [vulnerabilitiesEnabled, setVulnerabilitiesEnabled] = useState(false);
     const [vulnerabilitiesSaved, setVulnerabilitiesSaved] = useState(false);
     const {addHelpNotice, fields, getFieldValue, updateField, setChangedField, fieldAlreadyEnabled, fetchFieldsData, updateFieldAttribute} = useFields();
+
+    let disabledButtonPropBoolean = props.disabled;
+    let disabledButtonViaFieldConfig = props.field.disabled;
+    let disabledButton = (disabledButtonViaFieldConfig || disabledButtonPropBoolean);
+
     const buttonRef = useRef(null);
+
+    let tooltipText = '';
+    let emptyValues = [undefined, null, ''];
+
+    if (disabled
+        && props.field.hasOwnProperty('disabledTooltipText')
+        && !emptyValues.includes(props.field.disabledTooltipHoverText)
+    ) {
+        tooltipText = props.field.disabledTooltipHoverText;
+    }
+
+    hoverTooltip(
+        buttonRef,
+        (disabledButton && (tooltipText !== '')),
+        tooltipText
+    );
 
     useEffect ( () => {
         let mailEnabled = getFieldValue('send_notifications_email') == 1;
@@ -36,7 +57,7 @@ const NotificationTester = (props) => {
             fetchFieldsData('vulnerabilities');
             fetchVulnerabilities();
             addHelpNotice(
-                field.id,
+                props.field.id,
                 'success',
                 __('All notifications are triggered successfully, please check your email to double-check if you can receive emails.','really-simple-ssl'),
                 __('Test notifications','really-simple-ssl'),
@@ -75,7 +96,7 @@ const NotificationTester = (props) => {
         }
     },[getFieldValue('vulnerability_notification_dashboard')])
 
-    let fieldCopy = {...field};
+    let fieldCopy = {...props.field};
     if (!mailNotificationsEnabled) {
         fieldCopy.tooltip = __('You have not enabled the email notifications in the general settings.','really-simple-ssl');
         fieldCopy.warning = true;
@@ -92,7 +113,7 @@ const NotificationTester = (props) => {
                 disabled={disabled}
                 className="button button-default"
             >
-                {field.button_text}
+                {props.field.button_text}
             </button>
         </>
     )

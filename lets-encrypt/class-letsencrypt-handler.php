@@ -27,8 +27,8 @@ class rsssl_letsencrypt_handler {
 	public $certs_directory = false;
     public $subjects = array();
 
-	function __construct() {
-
+	public function __construct()
+    {
 		if ( isset( self::$_this ) ) {
 			wp_die();
 		}
@@ -71,7 +71,7 @@ class rsssl_letsencrypt_handler {
 		self::$_this = $this;
 	}
 
-	static function this() {
+	public static function this() {
 		return self::$_this;
 	}
 
@@ -408,7 +408,8 @@ class rsssl_letsencrypt_handler {
 	/**
 	 * @return RSSSL_RESPONSE
 	 */
-    public function get_dns_token(){
+    public function get_dns_token()
+    {
 	    if ( rsssl_is_ready_for('dns-verification') ) {
 		    $use_dns        = rsssl_dns_verification_required();
 		    $challenge_type = $use_dns ? Order::CHALLENGE_TYPE_DNS : Order::CHALLENGE_TYPE_HTTP;
@@ -517,9 +518,10 @@ class rsssl_letsencrypt_handler {
     }
 
 	/**
-	 * @return array
+     * Get the DNS tokens
 	 */
-	public function get_dns_tokens(){
+	public function get_dns_tokens(): array
+    {
 		$tokens = get_option( 'rsssl_le_dns_tokens', [] );
 		$output = [];
 		foreach ($tokens as $domain => $token ) {
@@ -533,10 +535,9 @@ class rsssl_letsencrypt_handler {
 
 	/**
 	 * Check DNS txt records.
-	 * @return RSSSL_RESPONSE
 	 */
-
-	public function verify_dns(){
+	public function verify_dns(): RSSSL_RESPONSE
+    {
 		if ( rsssl_is_ready_for('generation') ) {
 			update_option('rsssl_le_dns_records_verified', false, false );
 
@@ -594,7 +595,8 @@ class rsssl_letsencrypt_handler {
 		return $response;
 	}
 
-	private function format_duration($seconds) {
+	private function format_duration($seconds)
+    {
 		$seconds = (int) $seconds;
 		if ($seconds >= 3600) {
 			$hours = floor($seconds / 3600);
@@ -613,7 +615,8 @@ class rsssl_letsencrypt_handler {
 	/**
 	 * Clear an existing order
 	 */
-	public function clear_order( $clear_keys = false ) {
+	public function clear_order( $clear_keys = false )
+    {
 		if ( $clear_keys ) {
 			$this->clear_keys_directory();
 		}
@@ -629,10 +632,9 @@ class rsssl_letsencrypt_handler {
 
 	/**
      * Authorize the order
-	 * @return RSSSL_RESPONSE
 	 */
-
-    public function create_bundle_or_renew(){
+    public function create_bundle_or_renew(): RSSSL_RESPONSE
+    {
 	    $bundle_completed = false;
     	$use_dns = rsssl_dns_verification_required();
 	    $attempt_count = (int) get_transient( 'rsssl_le_generate_attempt_count' );
@@ -816,12 +818,11 @@ class rsssl_letsencrypt_handler {
     }
 
 	/**
-	 * For each file, check if the path exists, update the path options, and return success or false accordingly
-	 * @param $order
-	 *
-	 * @return bool
+	 * For each file, check if the path exists, update the path options, and
+     * return success or false accordingly
 	 */
-	private function update_certificate_paths($order){
+	private function update_certificate_paths($order): bool
+    {
 		$bundle             = $order->getCertificateBundle();
 		$pathToPrivateKey   = $bundle->path . $bundle->private;
 		$pathToCertificate  = $bundle->path . $bundle->certificate;
@@ -852,17 +853,15 @@ class rsssl_letsencrypt_handler {
 
 	/**
 	 * Get the order object
-	 *
-	 * @return RSSSL_RESPONSE
 	 */
-    public function get_order(){
-
-		#if we don't have an account, try to retrieve it
+    public function get_order(): RSSSL_RESPONSE
+    {
+		// if we don't have an account, try to retrieve it
 		if ( !$this->account ) {
 			$this->get_account();
 		}
 
-		#still no account, then exit
+		// still no account, then exit
 		if ( !$this->account ) {
 			return new RSSSL_RESPONSE(
 				'error',
@@ -903,7 +902,8 @@ class rsssl_letsencrypt_handler {
 	/**
 	 * Keep track of certain request counts, to prevent rate limiting by LE
 	 */
-    public function count_attempt(){
+    public function count_attempt()
+    {
 	    $attempt_count = (int) get_transient( 'rsssl_le_generate_attempt_count' );
 	    $attempt_count++;
 	    set_transient('rsssl_le_generate_attempt_count', $attempt_count, 5 * MINUTE_IN_SECONDS);
@@ -913,49 +913,47 @@ class rsssl_letsencrypt_handler {
 		delete_transient('rsssl_le_generate_attempt_count');
 	}
 
-
-
 	/**
 	 * Check if SSL generation renewal can be handled automatically
-	 * @return bool
 	 */
-    public function ssl_generation_can_auto_renew(){
+    public function ssl_generation_can_auto_renew(): bool
+    {
 	    if ( rsssl_get_option('verification_type')==='dns' && !get_option('rsssl_le_dns_configured_by_rsssl') ) {
 		    return false;
-	    } else {
-		    return true;
 	    }
+
+        return true;
     }
 
 	/**
 	 * Check if it's possible to autorenew
-	 * @return bool
 	 */
-	public function certificate_automatic_install_possible(){
+	public function certificate_automatic_install_possible(): bool
+    {
 
 		$install_method = get_option('rsssl_le_certificate_installed_by_rsssl');
 
 		//if it was never auto installed, we probably can't autorenew.
 		if ($install_method === false ) {
 			return false;
-		} else {
-			return true;
 		}
+
+        return true;
     }
 
 	/**
 	 * Check if the manual renewal should start.
-	 *
-	 * @return bool
 	 */
-    public function should_start_manual_installation_renewal(){
+    public function should_start_manual_installation_renewal(): bool
+    {
 	    if ( !$this->should_start_manual_ssl_generation() && get_option( "rsssl_le_start_installation" ) ) {
 			return true;
 	    }
 	    return false;
     }
 
-	public function should_start_manual_ssl_generation(){
+	public function should_start_manual_ssl_generation()
+    {
 		return get_option( "rsssl_le_start_renewal" );
 	}
 
@@ -963,10 +961,9 @@ class rsssl_letsencrypt_handler {
 	 * Only used if
 	 * - SSL generated by RSSSL
 	 * - certificate is about to expire
-	 *
-	 * @return string
 	 */
-	public function certificate_renewal_status_notice(){
+	public function certificate_renewal_status_notice(): string
+    {
     	if ( !RSSSL_LE()->letsencrypt_handler->ssl_generation_can_auto_renew()){
 		    return 'manual-generation';
 	    }
@@ -986,12 +983,11 @@ class rsssl_letsencrypt_handler {
 	}
 
 	/**
-	 * Check if the certificate has to be installed on each renewal
-	 * defaults to true.
-	 *
+	 * Check if the certificate has to be installed on each renewal defaults to
+     * true.
 	 */
-
-    public function certificate_install_required(){
+    public function certificate_install_required(): bool
+    {
 	    $install_method = get_option('rsssl_le_certificate_installed_by_rsssl');
 	    $hosting_company = rsssl_get_other_host();
 	    if ( in_array($install_method, RSSSL_LE()->hosts->no_installation_renewal_needed) || in_array($hosting_company, RSSSL_LE()->hosts->no_installation_renewal_needed)) {
@@ -1003,11 +999,9 @@ class rsssl_letsencrypt_handler {
 
 	/**
      * Check if the certificate needs renewal.
-     *
-	 * @return bool
 	 */
-    public function cron_certificate_needs_renewal(){
-
+    public function cron_certificate_needs_renewal(): bool
+    {
 	    $cert_file = get_option('rsssl_certificate_path');
 	    if ( empty($cert_file) ) {
 	    	return false;
@@ -1019,26 +1013,26 @@ class rsssl_letsencrypt_handler {
 	    $in_expiry_days = strtotime( "+".rsssl_le_cron_generation_renewal_check." days" );
 	    if ( $in_expiry_days > $valid_to ) {
 	        return true;
-        } else {
-	        return false;
 	    }
+        return false;
     }
 
 
 	/**
      * Get account email
-	 * @return string
+     * @return string
 	 */
-	public function account_email(){
+	public function account_email()
+    {
 	    //don't use the default value: we want users to explicitly enter a value
-	    return rsssl_get_option('email_address' );
+	    return rsssl_get_option('email_address');
     }
+
 	/**
      * Get terms accepted
-	 * @return RSSSL_RESPONSE
 	 */
-
-	public function terms_accepted(){
+	public function terms_accepted(): RSSSL_RESPONSE
+    {
 	    //don't use the default value: we want users to explicitly enter a value
 	    $accepted =  rsssl_get_option('accept_le_terms');
 		if ( $accepted ) {
@@ -1060,8 +1054,8 @@ class rsssl_letsencrypt_handler {
      * Change the email address in an account
 	 * @param $new_email
 	 */
-
-    public function update_account( $new_email ){
+    public function update_account( $new_email )
+    {
 	    if (!$this->account) return;
 
 	    try {
@@ -1072,9 +1066,9 @@ class rsssl_letsencrypt_handler {
 
 	/**
      * Get list of common names on the certificate
-	 * @return array
 	 */
-	public function get_subjects(){
+	public function get_subjects(): array
+    {
 		$subjects = array();
 		$domain = rsssl_get_domain();
 		$root = str_replace( 'www.', '', $domain );;
@@ -1111,7 +1105,8 @@ class rsssl_letsencrypt_handler {
 	 *
 	 * @return array | bool
 	 */
-	public function is_ready_for($item) {
+	public function is_ready_for($item)
+    {
 		if ( !rsssl_do_local_lets_encrypt_generation() ) {
 			rsssl_progress_add('directories');
 			rsssl_progress_add('generation');
@@ -1124,9 +1119,9 @@ class rsssl_letsencrypt_handler {
 
 		if (empty(rsssl_get_not_completed_steps($item))){
             return true;
-        } else{
-            return false;
         }
+
+        return false;
 	}
 
 	/**
@@ -1143,12 +1138,12 @@ class rsssl_letsencrypt_handler {
 	 *
 	 * @return bool
 	 */
-
 	public function custom_error_handling( $errno, $errstr, $errfile, $errline, $errcontext = array() ) {
 		return true;
 	}
 
-	public function not_completed_steps_message($step){
+	public function not_completed_steps_message($step)
+    {
 		$not_completed_steps = rsssl_get_not_completed_steps($step);
 		$nice_names = array();
 		$steps = rsssl_le_steps();
@@ -1163,8 +1158,8 @@ class rsssl_letsencrypt_handler {
 	 * Test for writing permissions
 	 * @return RSSSL_RESPONSE
 	 */
-
-	public function check_writing_permissions(){
+	public function check_writing_permissions(): RSSSL_RESPONSE
+    {
 		$directories_without_permissions = $this->directories_without_writing_permissions();
 		$has_missing_permissions = count($directories_without_permissions)>0;
 
@@ -1188,7 +1183,8 @@ class rsssl_letsencrypt_handler {
 	/**
 	 * Verify if a host has been selected, and if so, if this host supports LE, or if it's already active
 	 */
-	public function check_host(){
+	public function check_host(): RSSSL_RESPONSE
+    {
 		$action = 'continue';
 		$status = 'success';
 		$message = __("We have not detected any known hosting limitations.", "really-simple-ssl" );
@@ -1214,10 +1210,9 @@ class rsssl_letsencrypt_handler {
 
 	/**
 	 * Test for directory
-	 * @return RSSSL_RESPONSE
 	 */
-
-	public function check_challenge_directory(){
+	public function check_challenge_directory(): RSSSL_RESPONSE
+    {
 		if ( !$this->challenge_directory() ) {
 			rsssl_progress_remove('directories');
 			$action = 'stop';
@@ -1231,12 +1226,12 @@ class rsssl_letsencrypt_handler {
 
 		return new RSSSL_RESPONSE($status, $action, $message);
 	}
+
 	/**
 	 * Test for directory
-	 * @return RSSSL_RESPONSE
 	 */
-
-	public function check_key_directory(){
+	public function check_key_directory(): RSSSL_RESPONSE
+    {
 		$action = 'stop';
 		$status = 'error';
 		$message = __("The key directory is not created yet.", "really-simple-ssl" );
@@ -1258,10 +1253,9 @@ class rsssl_letsencrypt_handler {
 
 	/**
 	 * Test for directory
-	 * @return RSSSL_RESPONSE
 	 */
-
-	public function check_certs_directory(){
+	public function check_certs_directory(): RSSSL_RESPONSE
+    {
 		if ( !$this->certs_directory() ) {
 			rsssl_progress_remove('directories');
 			$action = 'stop';
@@ -1317,17 +1311,16 @@ class rsssl_letsencrypt_handler {
 		restore_error_handler();
 		if (!file_exists($directory . "/really-simple-ssl-permissions-check.txt")) {
 			return false;
-		} else {
-			return true;
 		}
+        return true;
 	}
 
 	/**
-	 * Check if the challenage directory is reachable over the http protocol
+	 * Check if the challenge directory is reachable over the http protocol
 	 * @return RSSSL_RESPONSE
 	 */
-
-	public function challenge_directory_reachable(){
+	public function challenge_directory_reachable()
+    {
 		$file_content = false;
 		$status_code = __('no response','really-simple-ssl');
 		//make sure we request over http, otherwise the request might fail if the url is already https.
@@ -1378,10 +1371,12 @@ class rsssl_letsencrypt_handler {
 	}
 
 	/**
-	 * Check if exists, create .well-known/acme-challenge directory if not existing
+	 * Check if exists, create .well-known/acme-challenge directory if not
+     * existing
 	 * @return bool|string
 	 */
-	public function challenge_directory() {
+	public function challenge_directory()
+    {
 		$root_directory = trailingslashit(ABSPATH);
 		if ( ! file_exists( $root_directory . '.well-known' ) ) {
 			mkdir( $root_directory . '.well-known', 0755 );
@@ -1393,38 +1388,20 @@ class rsssl_letsencrypt_handler {
 
 		if ( file_exists( $root_directory . '.well-known/acme-challenge' ) ){
 			return $root_directory . '.well-known/acme-challenge';
-		} else {
-			return false;
-		}
-	}
-
-	/**
-	 * Check if exists, create ssl/certs directory above the wp root if not existing
-	 * @return bool|string
-	 */
-	public function certs_directory(){
-		$directory = $this->get_directory_path();
-		if ( ! file_exists( $directory . 'ssl' ) ) {
-			mkdir( $directory . 'ssl', 0755 );
 		}
 
-		if ( ! file_exists( $directory . 'ssl/certs' ) ) {
-			mkdir( $directory . 'ssl/certs', 0755 );
-		}
-
-		if ( file_exists( $directory . 'ssl/certs' ) ){
-			return $directory . 'ssl/certs';
-		} else {
-			return false;
-		}
+        return false;
 	}
 
 	/**
 	 * Get path to location where to create the directories.
-	 * @return string
+	 * @uses apply_filters 'rsssl_le_directory_path'
 	 */
-	public function get_directory_path(){
+	public function get_directory_path(): string
+    {
 		$root_directory = trailingslashit(ABSPATH);
+        $directoryPath = trailingslashit(dirname($root_directory));
+
 		if ( get_option('rsssl_create_folders_in_root') ) {
 			if ( !get_option('rsssl_ssl_dirname') ) {
 				$token = str_shuffle ( time() );
@@ -1433,57 +1410,111 @@ class rsssl_letsencrypt_handler {
 			if ( ! file_exists( $root_directory . get_option('rsssl_ssl_dirname') ) ) {
 				mkdir( $root_directory . get_option('rsssl_ssl_dirname'), 0755 );
 			}
-			return $root_directory . trailingslashit( get_option('rsssl_ssl_dirname') );
-		} else {
-			return trailingslashit(dirname($root_directory));
+            $directoryPath = ($root_directory . trailingslashit( get_option('rsssl_ssl_dirname') ));
 		}
+
+        /**
+         * Filter: 'rsssl_le_directory_path'
+         * Can be used to change the directory path where the ssl/keys directory
+         * is created.
+         *
+         * @param string $directoryPath
+         * @return string
+         */
+        return apply_filters('rsssl_le_directory_path', $directoryPath);
 	}
 
+    /**
+     * Get path to ssl directory. Note that here is NO trailing slash.
+     * @uses apply_filters 'rsssl_le_ssl_path'
+     */
+    public function get_ssl_path(): string
+    {
+        $directoryPath = $this->get_directory_path();
+        $sslPath = ($directoryPath . 'ssl');
+
+        /**
+         * Filter: 'rsssl_le_ssl_path'
+         * Can be used to change the ssl path where the ssl/keys directory
+         * is created.
+         *
+         * @param string $sslPath
+         * @param string $directoryPath
+         * @return string
+         */
+        return apply_filters('rsssl_le_ssl_path', $sslPath, $directoryPath);
+    }
+
+    /**
+     * Check if exists, create ssl/certs directory above the wp root if not existing
+     * @return bool|string
+     */
+    public function certs_directory()
+    {
+        $sslPath = $this->get_ssl_path();
+
+        if (!file_exists($sslPath)) {
+            mkdir($sslPath, 0755 );
+        }
+
+        if (!file_exists( $sslPath . '/certs')) {
+            mkdir( $sslPath . '/certs', 0755 );
+        }
+
+        if (file_exists($sslPath . '/certs')) {
+            return $sslPath . '/certs';
+        }
+
+        return false;
+    }
+
 	/**
-     * Check if exists, create ssl/keys directory above the wp root if not existing
+     * Check if exists, create ssl/keys directory above the wp root if not
 	 * @return bool|string
 	 */
-
-	public function key_directory(){
+	public function key_directory()
+    {
 		$directory = $this->get_directory_path();
+        $sslPath = $this->get_ssl_path();
+
 		try {
-			$openbasedir_restriction = $this->openbasedir_restriction($directory);
-			if ( !$openbasedir_restriction ) {
-				if ( ! file_exists( $directory . 'ssl' ) && is_writable( $directory ) ) {
-					mkdir( $directory . 'ssl', 0755 );
+			$openbasedirHasRestrictions = $this->openbasedir_restriction($directory);
+
+			if ($openbasedirHasRestrictions === false) {
+				if (!file_exists($sslPath) && is_writable($directory)) {
+					mkdir($sslPath, 0755);
 				}
 
-				if ( ! file_exists( $directory . 'ssl/keys' ) && is_writable( $directory . 'ssl' ) ) {
-					mkdir( $directory . 'ssl/keys', 0755 );
+				if (!file_exists($sslPath . '/keys') && is_writable($sslPath)) {
+					mkdir($sslPath . '/keys', 0755);
 				}
+
+                if (file_exists($sslPath . '/keys')) {
+                    return $sslPath . '/keys';
+                }
 			}
 
-			if ( !$openbasedir_restriction && file_exists( $directory . 'ssl/keys' ) ) {
-				return $directory . 'ssl/keys';
-			} else {
-				//if creating the folder has failed, we're on apache, and can write to these folders, we create a root directory.
-				$challenge_dir           = $this->challenge_directory;
-				$has_writing_permissions = $this->directory_has_writing_permissions( $challenge_dir );
-				//we're guessing that if the challenge dir has writing permissions, the new dir will also have it.
-				if ( RSSSL()->server->uses_htaccess() && $has_writing_permissions ) {
-					update_option( 'rsssl_create_folders_in_root', true, false );
-				}
+            // If creating the folder has failed, we're on apache, and can write
+            // to these folders, we create a root directory.
+            $has_writing_permissions = $this->directory_has_writing_permissions($this->challenge_directory);
 
-				return false;
-			}
+            // We're guessing that if the challenge dir has writing permissions,
+            // the new dir will also have it.
+            if (RSSSL()->server->uses_htaccess() && $has_writing_permissions) {
+                update_option('rsssl_create_folders_in_root', true, false);
+            }
 		} catch ( Exception $e ) {
 			return false;
 		}
+
+        return false;
 	}
 
 	/**
 	 * Check for openbasedir restrictions
-	 *
-	 * @param string $path
-	 *
-	 * @return bool
 	 */
-	private function openbasedir_restriction( string $path): bool {
+	private function openbasedir_restriction(string $path): bool
+    {
 
 		// Default error handler is required
 		set_error_handler(null);
@@ -1506,16 +1537,14 @@ class rsssl_letsencrypt_handler {
 	 * Clear the keys directory, used in reset function
 	 * @since 5.0
 	 */
-
-	public function clear_keys_directory() {
-
+	public function clear_keys_directory()
+    {
 		if (!rsssl_user_can_manage()) {
 			return;
 		}
 
 		$dir = $this->key_directory();
 		$this->delete_files_directories_recursively( $dir );
-
 	}
 
 	/**
@@ -1523,9 +1552,7 @@ class rsssl_letsencrypt_handler {
 	 * Delete files and directories recursively. Used to clear the order from keys directory
 	 * @since 5.0.11
 	 */
-
 	private function delete_files_directories_recursively( $dir ) {
-
 		if ( strpos( $dir, 'ssl/keys' ) !== false ) {
 			foreach ( glob( $dir . '/*' ) as $file ) {
 				if ( is_dir( $file ) ) {
@@ -1538,7 +1565,7 @@ class rsssl_letsencrypt_handler {
 		}
 	}
 
-	public function maybe_create_htaccess_directories(){
+	public function maybe_create_htaccess_directories() {
 		if (!rsssl_user_can_manage()) {
 			return;
 		}

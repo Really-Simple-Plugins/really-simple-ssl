@@ -1,5 +1,5 @@
 import { __ } from '@wordpress/i18n';
-import {useEffect, useState} from "react";
+import {useEffect, useState} from "@wordpress/element";
 import useFields from "../../Settings/FieldsData";
 const VulnerabilitiesHeader = () => {
     const {fields, getFieldValue} = useFields();

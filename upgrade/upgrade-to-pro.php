@@ -51,16 +51,6 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 						$this->account_url = 'https://really-simple-ssl.com/account';
 						$this->instructions = 'https://really-simple-ssl.com/knowledge-base/install-really-simple-ssl-pro';
 						break;
-					case "burst_pro":
-						$this->slug = "burst-pro/burst-pro.php";
-						$this->plugin_name = "Burst";
-						$this->plugin_constant = "burst_pro";
-						$this->prefix = "burst_";
-						$this->api_url = "https://burst-statistics.com";
-						$this->dashboard_url = add_query_arg(["page" => "burst"], admin_url( "index.php" ));
-						$this->account_url = 'https://burst-statistics.com/account';
-						$this->instructions = 'https://burst-statistics.com/how-to-install-burst-premium';
-						break;
 					case "cmplz_pro":
 					default:
                         $this->slug = is_multisite() ? "complianz-gdpr-premium-multisite/complianz-gpdr-premium.php" : "complianz-gdpr-premium/complianz-gpdr-premium.php";
@@ -123,8 +113,6 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 				$plugin_to_be_installed = 'complianz-gdpr';
 			} else if (isset($_GET['plugin']) && $_GET['plugin']==='rsssl_pro' ) {
 				$plugin_to_be_installed = 'really-simple-ssl';
-			} else if (isset($_GET['plugin']) && $_GET['plugin']==='burst_pro' ) {
-				$plugin_to_be_installed = 'burst';
 			}
 
 			$path = __FILE__;
@@ -132,24 +120,11 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 				$current_plugin = 'really-simple-ssl';
 			} else if (strpos($path, 'complianz')!==false){
 				$current_plugin = 'complianz-gdpr';
-			} else if (strpos($path, 'burst')!==false){
-				$current_plugin = 'burst';
 			}
 			$dir_url = plugin_dir_url(__FILE__).'img/';
 
-			$suggestion = $fallback_suggestion = [
-				'icon_url' => $dir_url.'burst.png',
-				'constant' => 'burst_version',
-				'title' => 'Burst – Privacy Friendly Statistics',
-				'description_short' => __('Self-hosted and privacy-friendly analytics tool.', "really-simple-ssl"),
-				'disabled' => '',
-				'button_text' => __("Install", "really-simple-ssl"),
-				'slug' => 'burst-statistics',
-				'description' => __("Get detailed insights into visitors' behaviour with Burst Statistics, the privacy-friendly analytics dashboard from Really Simple Plugins.", "really-simple-ssl"),
-				'install_url' => 'burst%20statistics%20hesseldejong%20%20burst-statistics.com&tab=search&type=term',
-			];
 
-			if ( $plugin_to_be_installed === 'really-simple-ssl' || $plugin_to_be_installed === 'burst' ){
+			if ( $plugin_to_be_installed === 'really-simple-ssl' ){
 				$suggestion = [
 					'icon_url' => $dir_url.'complianz-gdpr.png',
 					'constant' => 'cmplz_version',
@@ -161,9 +136,6 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 					'description' => __('Configure your Cookie Notice, Consent Management and Cookie Policy with our Wizard and Cookie Scan. Supports GDPR, DSGVO, TTDSG, LGPD, POPIA, RGPD, CCPA and PIPEDA.', "really-simple-ssl"),
 					'install_url' => 'complianz+gdpr+POPIA&tab=search&type=term',
 				];
-				if ($current_plugin==='complianz-gdpr') {
-					$suggestion = $fallback_suggestion;
-				}
 			}
 
 			if ( $plugin_to_be_installed === 'complianz-gdpr' ){

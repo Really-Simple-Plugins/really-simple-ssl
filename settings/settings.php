@@ -576,14 +576,6 @@ function rsssl_other_plugins_data($slug = false)
 	}
 	$plugins = array(
 		[
-			'slug' => 'burst-statistics',
-			'constant_free' => 'burst_version',
-			'constant_premium' => 'burst_pro',
-			'wordpress_url' => 'https://wordpress.org/plugins/burst-statistics/',
-			'upgrade_url' => 'https://burst-statistics.com/pricing?src=rsssl-plugin',
-			'title' => 'Burst Statistics - '. __("Self-hosted and privacy-friendly analytics tool.", 'really-simple-ssl'),
-		],
-		[
 			'slug' => 'complianz-gdpr',
 			'constant_free' => 'cmplz_plugin',
 			'constant_premium' => 'cmplz_premium',
@@ -632,41 +624,39 @@ function rsssl_other_plugins_data($slug = false)
  * List of allowed field types
  * @param $type
  *
- * @return mixed|string
+ * @return string|bool
  */
-function rsssl_sanitize_field_type($type)
-{
-	$types = [
-		'hidden',
-		'license',
-		'database',
-		'checkbox',
-		'password',
-		'radio',
-		'text',
-		'textarea',
-		'number',
-		'email',
-		'select',
-		'host',
-		'permissionspolicy',
-		'learningmode',
-		'mixedcontentscan',
-		'vulnerablemeasures',
-		'LetsEncrypt',
-		'postdropdown',
-		'two_fa_roles',
-		'roles_enabled_dropdown',
-		'roles_dropdown',
-		'captcha',
-		'captcha_key',
-//        'two_fa_table',
-//        'verify_email',
-	];
-	if ( in_array( $type, $types, true ) ) {
-		return $type;
-	}
-	return 'checkbox';
+function rsssl_sanitize_field_type($type) {
+    $types = [
+        'hidden',
+        'license',
+        'database',
+        'checkbox',
+        'password',
+        'radio',
+        'text',
+        'textarea',
+        'number',
+        'email',
+        'select',
+        'host',
+        'permissionspolicy',
+        'learningmode',
+        'mixedcontentscan',
+        'vulnerablemeasures',
+        'LetsEncrypt',
+        'postdropdown',
+        'two_fa_roles',
+        'roles_enabled_dropdown',
+        'roles_dropdown',
+        'captcha',
+        'captcha_key',
+    ];
+    if (in_array($type, $types, true)) {
+        return $type;
+    }
+    // re-moving checkbox as a return type to the end of the function
+    return false;
 }
 
 /**
@@ -705,6 +695,12 @@ function rsssl_rest_api_fields_set(WP_REST_Request $request, $ajax_data = false)
 			continue;
 		}
 		$type = rsssl_sanitize_field_type($field['type']);
+        if ($type === false) {
+            return [
+                'success' => false,
+                'error'   => 'Invalid field type provided for field ' . sanitize_text_field($field['id']),
+            ];
+        }
 		$field_id = sanitize_text_field($field['id']);
 		$value = rsssl_sanitize_field($field['value'], $type, $field_id);
 		//if an endpoint is defined, we use that endpoint instead

@@ -324,8 +324,8 @@ function rsssl_menu() {
 								[
 									'id'            => 'two_fa_email',
 									'group_id'      => 'two_fa_email',
-									'premium'       => false,
-									'disabled'      => rsssl_is_email_verified(),
+									'premium'       => true,
+									'disabled'      => (rsssl_is_email_verified() === false),
 									'premium_text'  => __( 'Send an email code during login. You can force user roles to use two-factor authentication, or leave the choose with your users, if so desired.', 'really-simple-ssl' ),
 									'upgrade'              => 'https://really-simple-ssl.com/pro/?mtm_campaign=2fa&mtm_source=free&mtm_content=upgrade',
 									'helpLink' => 'instructions/two-factor-authentication',

@@ -1,6 +1,6 @@
 import Icon from "../../utils/Icon";
 import {__, _n} from "@wordpress/i18n";
-import {useEffect, useState} from "react";
+import {useEffect, useState} from "@wordpress/element";
 import useFields from "../../Settings/FieldsData";
 import useRiskData from "../../Settings/RiskConfiguration/RiskData";
 

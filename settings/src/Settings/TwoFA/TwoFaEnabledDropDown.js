@@ -15,26 +15,39 @@ const TwoFaEnabledDropDown = (props) => {
     const [otherRoles, setOtherRoles] = useState([]);
     const { updateField, getFieldValue, setChangedField, getField, fieldsLoaded, saveFields } = useFields();
     const selectRef = useRef(null);
-    const featureEnabled = getFieldValue('login_protection_enabled');
-    let featureEnabledEmailVerified;
 
-    if ( props.field.id === 'two_fa_enabled_roles_email' ) {
-        // Determine if the feature should be enabled based on login_protection_enabled and email_verified
-        featureEnabledEmailVerified = getFieldValue('login_protection_enabled') && rsssl_settings?.email_verified;
-    } else {
-        // Determine if the feature should be enabled based on login_protection_enabled
-        featureEnabledEmailVerified = getFieldValue('login_protection_enabled');
+    const loginProtectionEnabled = getFieldValue('login_protection_enabled');
+
+    let disabledSelectPropBoolean = (props.disabled === true);
+    let disabledSelectViaFieldConfig = (props.field.disabled === true);
+
+    let selectDisabled = (
+        disabledSelectViaFieldConfig
+        || disabledSelectPropBoolean
+    );
+
+    let tooltipText = '';
+    let emptyValues = [undefined, null, ''];
+
+    if (selectDisabled
+        && props.field.hasOwnProperty('disabledTooltipText')
+        && !emptyValues.includes(props.field.disabledTooltipHoverText)
+    ) {
+        tooltipText = props.field.disabledTooltipHoverText;
     }
 
-    // Tooltip condition to display tooltip if either featureEnabled is false or email_verified is false
-    const tooltipCondition = !featureEnabledEmailVerified;
+    hoverTooltip(
+        selectRef,
+        (selectDisabled && (tooltipText !== '')),
+        tooltipText
+    );
 
     useEffect(() => {
         if (getFieldValue('login_protection_enabled') === 1 && props.field.id === 'two_fa_enabled_roles_totp') {
             setChangedField(props.field.id, props.field.value);
             saveFields(true, false);
         }
-    }, [featureEnabled]);
+    }, [loginProtectionEnabled]);
 
     useEffect(() => {
         if (!rolesLoaded) {
@@ -63,9 +76,6 @@ const TwoFaEnabledDropDown = (props) => {
             setSelectedRoles(props.field.default.map((role) => ({ value: role, label: role.charAt(0).toUpperCase() + role.slice(1) })));
         }
     }, [fieldsLoaded]);
-
-    // Attach tooltip when the dropdown is disabled
-    hoverTooltip(selectRef, tooltipCondition, __('Activate Two-Factor Authentication and verify email to enable this option.', 'really-simple-ssl'));
 
     const handleChange = (selectedOptions) => {
         const rolesExcluded = selectedOptions.map(option => option.value);
@@ -115,9 +125,9 @@ const TwoFaEnabledDropDown = (props) => {
                 value={selectedRoles}
                 menuPosition={"fixed"}
                 styles={customStyles}
-                isDisabled={!featureEnabledEmailVerified}  // Disable the dropdown based on featureEnabledEmailVerified
+                isDisabled={selectDisabled}
             />
-            {! featureEnabled &&
+            {! loginProtectionEnabled &&
                 <div className="rsssl-locked">
                     <div className="rsssl-locked-overlay"><span
                         className="rsssl-task-status rsssl-open">{__('Disabled', 'really-simple-ssl')}</span><span>{__('Activate Two-Factor Authentication to enable this block.', 'really-simple-ssl')}</span>

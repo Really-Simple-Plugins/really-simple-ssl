@@ -74,12 +74,14 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'menu_id'  => 'two-fa',
 				'group_id' => 'two_fa_email',
 				'type'     => 'roles_enabled_dropdown',
+                'disabled' => (rsssl_is_email_verified() === false),
+                'disabledTooltipText' => __("This feature is disabled because you have not verified that e-mail is correctly configured on your site.", "really-simple-ssl"),
 				'default'  => [],
 				'label'    => __( 'Enable for:', 'really-simple-ssl' ),
 				'react_conditions' => [
 					'relation' => 'AND',
 					[
-						'login_protection_enabled' => 1
+						'login_protection_enabled' => 1,
 					]
 				],
 				'server_conditions'    => [

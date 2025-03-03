@@ -6,7 +6,7 @@ Requires at least: 5.9
 License: GPL2
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 9.3.1
+Stable tag: 9.3.2
 
 Easily improve site security with WordPress Hardening, Two-Factor Authentication (2FA), Login Protection, Vulnerability Detection and SSL certificate.
 
@@ -151,6 +151,12 @@ The plugin checks your certificate before enabling, but if, for example, you mig
 If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions](https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/) instead.
 
 == Changelog ==
+= 9.3.2 =
+* March 4th, 2025
+* Improvement: Added filters to customize Let's Encrypt Wizard behaviour
+* Fix: Removed default checkbox behaviour from configuration settings.
+* Fix: Handle multiple tooltip reasons for disabled select fields
+
 = 9.3.1 =
 * February 12th, 2025
 * Improvement: Not able to use email needed functions when email is not yet verified.

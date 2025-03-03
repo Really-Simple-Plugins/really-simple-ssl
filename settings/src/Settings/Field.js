@@ -128,6 +128,7 @@ const Field = (props) => {
                 }
             }
         }
+
         setChangedField(field.id, fieldValue);
     };
 
@@ -218,7 +219,7 @@ const Field = (props) => {
 
     if (field.type==='email'){
         const sendVerificationEmailField = props.fields.find(field => field.id === 'send_verification_email');
-        const emailIsVerified = sendVerificationEmailField && sendVerificationEmailField.disabled;
+        const emailIsVerified = sendVerificationEmailField && (sendVerificationEmailField.disabled === false);
 
         return (
             <div className={highLightClass} ref={scrollAnchor} style={{position: 'relative'}}>
@@ -233,7 +234,7 @@ const Field = (props) => {
                 />
                 { sendVerificationEmailField &&
                     <div className="rsssl-email-verified" >
-                        {emailIsVerified
+                        {!emailIsVerified
                             ? <Icon name='circle-check' color={'green'} />
                             : <Icon name='circle-times' color={'red'} />}
                     </div>
@@ -589,7 +590,7 @@ const Field = (props) => {
                 <label htmlFor={`rsssl-two-fa-dropdown-${field.id}`}>
                     {labelWrap(field)}
                 </label>
-                <TwoFaEnabledDropDown field={props.field}
+                <TwoFaEnabledDropDown field={props.field} disabled={disabled}
                 />
             </div>
         );
@@ -598,7 +599,7 @@ const Field = (props) => {
     if(field.type === 'notificationtester') {
         return (
             <div className={'rsssl-field-button ' + highLightClass} ref={scrollAnchor}>
-                <NotificationTester field={props.field} labelWrap={labelWrap}/>
+                <NotificationTester field={props.field} disabled={disabled} labelWrap={labelWrap}/>
             </div>
         )
     }
