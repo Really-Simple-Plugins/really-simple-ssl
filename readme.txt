@@ -152,7 +152,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 
 == Changelog ==
 = 9.3.3 =
-* March 31st, 2025
+* April 1st, 2025
 * Improvement: Added multiple WP-CLI commands to better align with recent plugin features
 * Improvement: Added support for custom/multiple roles in Two Factor Authentication
 
