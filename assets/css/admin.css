@@ -1074,20 +1074,6 @@ button.button .cmplz-icon.rsssl-icon-loading > div {
     color: black;
 }
 
-.dKzMcW, .fcbkgN {
-    padding-right: 0 !important;
-}
-
-.rsssl-exclude-button {
-    margin-left: 40px !important;
-}
-
-@media (max-width: 1440px) {
-    .rsssl-exclude-button {
-        margin-left: 5px !important;
-    }
-}
-
 :root {
     --toastify-color-light: var(--rsp-white);
     --toastify-color-dark: var(--rsp-black);
@@ -2200,79 +2186,79 @@ button.button .cmplz-icon.rsssl-icon-loading > div {
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(1) {
-    width: 80%;
+    width: 99%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(2) {
-    width: 78%;
+    width: 69%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(3) {
-    width: 96%;
+    width: 91%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(4) {
-    width: 82%;
+    width: 91%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(5) {
-    width: 78%;
+    width: 76%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(6) {
-    width: 85%;
+    width: 77%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(7) {
-    width: 81%;
+    width: 71%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
-    width: 84%;
+    width: 78%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
-    width: 73%;
+    width: 78%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
-    width: 88%;
+    width: 68%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
-    width: 94%;
+    width: 92%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
-    width: 78%;
+    width: 72%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
-    width: 75%;
+    width: 92%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(14) {
-    width: 69%;
+    width: 100%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
-    width: 84%;
+    width: 74%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(16) {
-    width: 96%;
+    width: 75%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(17) {
-    width: 78%;
+    width: 86%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(18) {
-    width: 69%;
+    width: 83%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(19) {
-    width: 74%;
+    width: 82%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(20) {
@@ -3442,22 +3428,22 @@ Admin notice
     display: none !important;
 }
 
-.rsssl-404_blocking .rsssl-field-wrap .rsssl-search-bar, .rsssl-user_agents .rsssl-field-wrap .rsssl-search-bar, .rsssl-content_security_policy_source_directives .rsssl-field-wrap .rsssl-search-bar,
-.rsssl-firewall_block_list_listing .rsssl-field-wrap .rsssl-search-bar, .rsssl-vulnerabilities-measures-overview .rsssl-field-wrap .rsssl-search-bar, .rsssl-two_fa_users .rsssl-field-wrap .rsssl-search-bar,
-.rsssl-firewall_list_listing .rsssl-field-wrap .rsssl-search-bar, .rsssl-vulnerabilities_overview .rsssl-field-wrap .rsssl-search-bar, .rsssl-permissions_policy .rsssl-field-wrap .rsssl-search-bar, .rsssl-firewall_white_list_listing .rsssl-field-wrap .rsssl-search-bar,
-.rsssl-firewall_logs_content .rsssl-field-wrap .rsssl-search-bar, .rsssl-limit_login_attempts_country .rsssl-field-wrap .rsssl-search-bar, .rsssl-limit_login_attempts_users .rsssl-field-wrap .rsssl-search-bar,
-.rsssl-limit_login_attempts_event_log .rsssl-field-wrap .rsssl-search-bar, .rsssl-mixed-content-scan .rsssl-field-wrap .rsssl-search-bar, .rsssl-limit_login_attempts_ip_address .rsssl-field-wrap .rsssl-search-bar,
-.rsssl-content_security_policy .rsssl-field-wrap .rsssl-search-bar, .rsssl-hardening-xml .rsssl-field-wrap .rsssl-search-bar {
+.rsssl-404_blocking .rsssl-field-wrap .rsssl-role-select .rsssl-search-bar, .rsssl-user_agents .rsssl-field-wrap .rsssl-role-select .rsssl-search-bar, .rsssl-content_security_policy_source_directives .rsssl-field-wrap .rsssl-role-select .rsssl-search-bar,
+.rsssl-firewall_block_list_listing .rsssl-field-wrap .rsssl-role-select .rsssl-search-bar, .rsssl-vulnerabilities-measures-overview .rsssl-field-wrap .rsssl-role-select .rsssl-search-bar, .rsssl-two_fa_users .rsssl-field-wrap .rsssl-role-select .rsssl-search-bar,
+.rsssl-firewall_list_listing .rsssl-field-wrap .rsssl-role-select .rsssl-search-bar, .rsssl-vulnerabilities_overview .rsssl-field-wrap .rsssl-role-select .rsssl-search-bar, .rsssl-permissions_policy .rsssl-field-wrap .rsssl-role-select .rsssl-search-bar, .rsssl-firewall_white_list_listing .rsssl-field-wrap .rsssl-role-select .rsssl-search-bar,
+.rsssl-firewall_logs_content .rsssl-field-wrap .rsssl-role-select .rsssl-search-bar, .rsssl-limit_login_attempts_country .rsssl-field-wrap .rsssl-role-select .rsssl-search-bar, .rsssl-limit_login_attempts_users .rsssl-field-wrap .rsssl-role-select .rsssl-search-bar,
+.rsssl-limit_login_attempts_event_log .rsssl-field-wrap .rsssl-role-select .rsssl-search-bar, .rsssl-mixed-content-scan .rsssl-field-wrap .rsssl-role-select .rsssl-search-bar, .rsssl-limit_login_attempts_ip_address .rsssl-field-wrap .rsssl-role-select .rsssl-search-bar,
+.rsssl-content_security_policy .rsssl-field-wrap .rsssl-role-select .rsssl-search-bar, .rsssl-hardening-xml .rsssl-field-wrap .rsssl-role-select .rsssl-search-bar {
     float: right;
     padding: 0;
 }
 
-.rsssl-404_blocking .rsssl-field-wrap .rsssl-search-bar__inner, .rsssl-user_agents .rsssl-field-wrap .rsssl-search-bar__inner, .rsssl-content_security_policy_source_directives .rsssl-field-wrap .rsssl-search-bar__inner,
-.rsssl-firewall_block_list_listing .rsssl-field-wrap .rsssl-search-bar__inner, .rsssl-vulnerabilities-measures-overview .rsssl-field-wrap .rsssl-search-bar__inner, .rsssl-two_fa_users .rsssl-field-wrap .rsssl-search-bar__inner,
-.rsssl-firewall_list_listing .rsssl-field-wrap .rsssl-search-bar__inner, .rsssl-vulnerabilities_overview .rsssl-field-wrap .rsssl-search-bar__inner, .rsssl-permissions_policy .rsssl-field-wrap .rsssl-search-bar__inner, .rsssl-firewall_white_list_listing .rsssl-field-wrap .rsssl-search-bar__inner,
-.rsssl-firewall_logs_content .rsssl-field-wrap .rsssl-search-bar__inner, .rsssl-limit_login_attempts_country .rsssl-field-wrap .rsssl-search-bar__inner, .rsssl-limit_login_attempts_users .rsssl-field-wrap .rsssl-search-bar__inner,
-.rsssl-limit_login_attempts_event_log .rsssl-field-wrap .rsssl-search-bar__inner, .rsssl-mixed-content-scan .rsssl-field-wrap .rsssl-search-bar__inner, .rsssl-limit_login_attempts_ip_address .rsssl-field-wrap .rsssl-search-bar__inner,
-.rsssl-content_security_policy .rsssl-field-wrap .rsssl-search-bar__inner, .rsssl-hardening-xml .rsssl-field-wrap .rsssl-search-bar__inner {
+.rsssl-404_blocking .rsssl-field-wrap .rsssl-role-select .rsssl-search-bar__inner, .rsssl-user_agents .rsssl-field-wrap .rsssl-role-select .rsssl-search-bar__inner, .rsssl-content_security_policy_source_directives .rsssl-field-wrap .rsssl-role-select .rsssl-search-bar__inner,
+.rsssl-firewall_block_list_listing .rsssl-field-wrap .rsssl-role-select .rsssl-search-bar__inner, .rsssl-vulnerabilities-measures-overview .rsssl-field-wrap .rsssl-role-select .rsssl-search-bar__inner, .rsssl-two_fa_users .rsssl-field-wrap .rsssl-role-select .rsssl-search-bar__inner,
+.rsssl-firewall_list_listing .rsssl-field-wrap .rsssl-role-select .rsssl-search-bar__inner, .rsssl-vulnerabilities_overview .rsssl-field-wrap .rsssl-role-select .rsssl-search-bar__inner, .rsssl-permissions_policy .rsssl-field-wrap .rsssl-role-select .rsssl-search-bar__inner, .rsssl-firewall_white_list_listing .rsssl-field-wrap .rsssl-role-select .rsssl-search-bar__inner,
+.rsssl-firewall_logs_content .rsssl-field-wrap .rsssl-role-select .rsssl-search-bar__inner, .rsssl-limit_login_attempts_country .rsssl-field-wrap .rsssl-role-select .rsssl-search-bar__inner, .rsssl-limit_login_attempts_users .rsssl-field-wrap .rsssl-role-select .rsssl-search-bar__inner,
+.rsssl-limit_login_attempts_event_log .rsssl-field-wrap .rsssl-role-select .rsssl-search-bar__inner, .rsssl-mixed-content-scan .rsssl-field-wrap .rsssl-role-select .rsssl-search-bar__inner, .rsssl-limit_login_attempts_ip_address .rsssl-field-wrap .rsssl-role-select .rsssl-search-bar__inner,
+.rsssl-content_security_policy .rsssl-field-wrap .rsssl-role-select .rsssl-search-bar__inner, .rsssl-hardening-xml .rsssl-field-wrap .rsssl-role-select .rsssl-search-bar__inner {
     display: flex;
     align-items: center;
     border-radius: 3px;
@@ -3492,6 +3478,25 @@ Admin notice
     width: 150px;
  /* Adjust width as needed */
     transition: width 0.3s ease;
+}
+
+.rsssl-404_blocking .rsssl-field-wrap .rsssl-role-select__input, .rsssl-user_agents .rsssl-field-wrap .rsssl-role-select__input, .rsssl-content_security_policy_source_directives .rsssl-field-wrap .rsssl-role-select__input,
+.rsssl-firewall_block_list_listing .rsssl-field-wrap .rsssl-role-select__input, .rsssl-vulnerabilities-measures-overview .rsssl-field-wrap .rsssl-role-select__input, .rsssl-two_fa_users .rsssl-field-wrap .rsssl-role-select__input,
+.rsssl-firewall_list_listing .rsssl-field-wrap .rsssl-role-select__input, .rsssl-vulnerabilities_overview .rsssl-field-wrap .rsssl-role-select__input, .rsssl-permissions_policy .rsssl-field-wrap .rsssl-role-select__input, .rsssl-firewall_white_list_listing .rsssl-field-wrap .rsssl-role-select__input,
+.rsssl-firewall_logs_content .rsssl-field-wrap .rsssl-role-select__input, .rsssl-limit_login_attempts_country .rsssl-field-wrap .rsssl-role-select__input, .rsssl-limit_login_attempts_users .rsssl-field-wrap .rsssl-role-select__input,
+.rsssl-limit_login_attempts_event_log .rsssl-field-wrap .rsssl-role-select__input, .rsssl-mixed-content-scan .rsssl-field-wrap .rsssl-role-select__input, .rsssl-limit_login_attempts_ip_address .rsssl-field-wrap .rsssl-role-select__input,
+.rsssl-content_security_policy .rsssl-field-wrap .rsssl-role-select__input, .rsssl-hardening-xml .rsssl-field-wrap .rsssl-role-select__input {
+    width: 500px;
+ /* Adjust width as needed */
+}
+
+.rsssl-404_blocking .rsssl-field-wrap .rsssl-role-select__input select, .rsssl-user_agents .rsssl-field-wrap .rsssl-role-select__input select, .rsssl-content_security_policy_source_directives .rsssl-field-wrap .rsssl-role-select__input select,
+.rsssl-firewall_block_list_listing .rsssl-field-wrap .rsssl-role-select__input select, .rsssl-vulnerabilities-measures-overview .rsssl-field-wrap .rsssl-role-select__input select, .rsssl-two_fa_users .rsssl-field-wrap .rsssl-role-select__input select,
+.rsssl-firewall_list_listing .rsssl-field-wrap .rsssl-role-select__input select, .rsssl-vulnerabilities_overview .rsssl-field-wrap .rsssl-role-select__input select, .rsssl-permissions_policy .rsssl-field-wrap .rsssl-role-select__input select, .rsssl-firewall_white_list_listing .rsssl-field-wrap .rsssl-role-select__input select,
+.rsssl-firewall_logs_content .rsssl-field-wrap .rsssl-role-select__input select, .rsssl-limit_login_attempts_country .rsssl-field-wrap .rsssl-role-select__input select, .rsssl-limit_login_attempts_users .rsssl-field-wrap .rsssl-role-select__input select,
+.rsssl-limit_login_attempts_event_log .rsssl-field-wrap .rsssl-role-select__input select, .rsssl-mixed-content-scan .rsssl-field-wrap .rsssl-role-select__input select, .rsssl-limit_login_attempts_ip_address .rsssl-field-wrap .rsssl-role-select__input select,
+.rsssl-content_security_policy .rsssl-field-wrap .rsssl-role-select__input select, .rsssl-hardening-xml .rsssl-field-wrap .rsssl-role-select__input select {
+    width: 100%;
 }
 
 .rsssl-404_blocking .rsssl-field-wrap .rsssl-search-bar__input:focus, .rsssl-user_agents .rsssl-field-wrap .rsssl-search-bar__input:focus, .rsssl-content_security_policy_source_directives .rsssl-field-wrap .rsssl-search-bar__input:focus,
@@ -3692,6 +3697,14 @@ Admin notice
 
 .rsssl-vulnerabilities_measures .rdt_TableRow .rdt_TableCell:nth-child(3) {
     max-width: 50%;
+}
+
+.rsssl-two_fa_users .rdt_TableHeadRow .rdt_TableCol:last-child {
+    max-width: 20% !important;
+}
+
+.rsssl-two_fa_users .rdt_TableRow .rdt_TableCell:last-child {
+    max-width: 20% !important;
 }
 
 .rsssl-vulnerabilities_measures .rsssl-field-wrap, .rsssl-404_blocking .rsssl-field-wrap, .rsssl-user_agents .rsssl-field-wrap, .rsssl-firewall_logs .rsssl-field-wrap, .rsssl-permissions_policy .rsssl-field-wrap, .rsssl-two_fa_users .rsssl-field-wrap,

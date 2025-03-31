@@ -5,9 +5,10 @@
  * @package REALLY_SIMPLE_SSL
  */
 
-namespace RSSSL\Security\WordPress\Two_Fa;
+namespace RSSSL\Security\WordPress\Two_Fa\Models;
 
 use WP_REST_Request;
+use WP_User;
 
 /**
  * Holds the request parameters for a specific action.

@@ -12,6 +12,7 @@ namespace RSSSL\Security\WordPress\Two_Fa;
 
 use Exception;
 use RSSSL\Pro\Security\WordPress\Limitlogin\Rsssl_IP_Fetcher;
+use RSSSL\Security\WordPress\Two_Fa\Models\Rsssl_Request_Parameters;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;

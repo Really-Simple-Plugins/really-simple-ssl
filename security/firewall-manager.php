@@ -329,38 +329,61 @@ class rsssl_firewall_manager {
 			return;
 		}
 
-		$rules           = $this->get_htaccess_rules();
-		$start           = '#Begin Really Simple Auto Prepend File' . "\n";
-		$end             = "\n" . '#End Really Simple Auto Prepend File' . "\n";
-		$pattern_content = '/' . $start . '(.*?)' . $end . '/is';
-		$htaccess_file   = $this->htaccess_path();
-		if ( $this->file_exists( $htaccess_file ) ) {
-			$content = $this->get_contents( $htaccess_file );
-			// remove first, to ensure we are at the top of the file.
-			$content = preg_replace( $pattern_content, '', $content );
-			if ( ! empty( $rules ) ) {
-				if ( ! $this->is_writable( $htaccess_file ) ) {
-					update_site_option( 'rsssl_htaccess_error', 'not-writable' );
-					update_site_option( 'rsssl_htaccess_rules', $rules . get_site_option( 'rsssl_htaccess_rules' ) );
-				} else {
-					delete_site_option( 'rsssl_htaccess_error' );
-					delete_site_option( 'rsssl_htaccess_rules' );
-					// add rules as new block.
-					$content = $start . $rules . $end . $content;
+        $htaccess_file   = $this->htaccess_path();
+        $rules           = $this->get_htaccess_rules();
+        $pluginBlockStart = "#Begin Really Simple Auto Prepend File\n";
+        $pluginBlockEnd   = "\n#End Really Simple Auto Prepend File\n";
 
-					// clean up.
-					if ( strpos( $content, "\n\n\n" ) !== false ) {
-						$content = str_replace( "\n\n\n", "\n\n", $content );
-					}
-				}
-			}
+        // Build a regex pattern to target only the plugin's block.
+        $pattern = '/' . preg_quote($pluginBlockStart, '/') . '(.*?)' . preg_quote($pluginBlockEnd, '/') . '/is';
 
-			//by putting this outside the empty($rules) condition, the rules get removed if disabled or not available
-			if ( $this->is_writable( $htaccess_file ) ) {
-				$this->put_contents( $htaccess_file, $content );
-			}
-		}
+        if ( $this->file_exists( $htaccess_file ) ) {
+            $content = $this->get_contents( $htaccess_file );
+            // Remove any existing plugin block.
+            $content = preg_replace( $pattern, '', $content );
+            // Preserve existing WordPress rules (for both single and multisite) while adding the plugin block.
+            $content = $this->preserve_wp_rules( $content, $rules, $pluginBlockStart, $pluginBlockEnd );
+            // Clean up any extra newlines.
+            $content = preg_replace( "/\n\n+/", "\n\n", $content );
+            if ( $this->is_writable( $htaccess_file ) ) {
+                $this->put_contents( $htaccess_file, $content );
+            }
+        }
 	}
+
+    /**
+     * Preserve existing WordPress rules while injecting the plugin's firewall block.
+     *
+     * This function extracts the WordPress block (the section between "# BEGIN WordPress" and "# END WordPress"),
+     * temporarily removes it from the .htaccess content, then prepends the plugin's firewall block and re-appends
+     * the WordPress block. This applies to both single and multisite environments.
+     *
+     * @param string $content           The current .htaccess content.
+     * @param string $rules             The firewall rules to inject.
+     * @param string $pluginBlockStart  The starting marker for the plugin block.
+     * @param string $pluginBlockEnd    The ending marker for the plugin block.
+     * @return string                   The updated .htaccess content.
+     */
+    private function preserve_wp_rules( string $content, string $rules, string $pluginBlockStart, string $pluginBlockEnd ): string {
+        $wpBlock = '';
+        // Look for the WordPress block in the content.
+        if ( preg_match( '/(# BEGIN WordPress.*?# END WordPress)/s', $content, $matches ) ) {
+            $wpBlock = $matches[1];
+            // Remove the WordPress block temporarily.
+            $content = str_replace( $wpBlock, '', $content );
+        }
+        $pluginBlock = '';
+        if ( ! empty( trim( $rules ) ) ) {
+            $pluginBlock = $pluginBlockStart . $rules . $pluginBlockEnd;
+        }
+        // Prepend the plugin block to the content.
+        $content = $pluginBlock . "\n" . $content;
+        // Re-append the WordPress block if it was present.
+        if ( ! empty( $wpBlock ) ) {
+            $content .= "\n" . $wpBlock;
+        }
+        return $content;
+    }
 
 	/**
 	 * Get the .htaccess rules for the prepend file

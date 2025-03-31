@@ -470,12 +470,6 @@ class rsssl_onboarding {
 				"options" => [ 'change_debug_log_location', 'disable_http_methods' ],
 				"activated" => true,
 			],
-//			[
-//				"title" => __("File Change Detection", "really-simple-ssl"),
-//				"id" => "file_change_detection",
-//				"options" => ['file_change_detection'],
-//				"activated" => true,
-//			],
 			[
 				"title" => __("Strong Password policy", "really-simple-ssl"),
 				"id" => "password_security",
@@ -524,7 +518,7 @@ class rsssl_onboarding {
 		return true;
 	}
 
-	private function get_hardening_fields(): array {
+	public function get_hardening_fields(): array {
 		$fields = rsssl_fields(false);
 		//get all fields that are recommended
 		$recommended = array_filter($fields, function($field){
