@@ -69,31 +69,38 @@ class Rsssl_Two_Fa_Status {
 		return self::sanitize_status( $status );
 	}
 
+    /**
+     * Reset the two-factor authentication for a user.
+     */
+    public static function reset_user_two_fa(\WP_User $user): void
+    {
+        self::delete_two_fa_meta($user->ID);
+
+        // Set the rsssl_two_fa_last_login to now, so the user will be forced to use 2fa.
+        update_user_meta($user->ID, 'rsssl_two_fa_last_login', gmdate('Y-m-d H:i:s'));
+    }
+
 	/**
 	 * Delete two-factor authentication metadata for a user.
 	 *
-	 * @param  WP_User $user  The user object for whom to delete the metadata.
+	 * @param  int $user  The user object for whom to delete the metadata.
 	 *
 	 * @return void
 	 */
-
-	public static function delete_two_fa_meta( $user ): void {
-        if( is_object($user) ){
-            $user = $user->ID;
-        }
-		delete_user_meta( $user, '_rsssl_two_factor_totp_last_successful_login' );
-		delete_user_meta( $user, '_rsssl_two_factor_nonce' );
-        delete_user_meta( $user, 'rsssl_two_fa_status' );
-        delete_user_meta( $user, 'rsssl_two_fa_status_email' );
-		delete_user_meta( $user, 'rsssl_two_fa_status_totp' );
-		delete_user_meta( $user, '_rsssl_two_factor_totp_key' );
-		delete_user_meta( $user, '_rsssl_two_factor_backup_codes' );
-		delete_user_meta( $user, 'rsssl_activation_date' );
-		delete_user_meta( $user, 'rsssl_two_fa_last_login' );
-		delete_user_meta( $user, 'rsssl_two_fa_skip_token' );
-		delete_user_meta( $user, '_rsssl_factor_email_token_timestamp' );
-		delete_user_meta( $user, '_rsssl_factor_email_token' );
-        delete_user_meta( $user, 'rsssl_two_fa_reminder_sent' );
+	public static function delete_two_fa_meta( int $user_id ): void {
+		delete_user_meta( $user_id, '_rsssl_two_factor_totp_last_successful_login' );
+		delete_user_meta( $user_id, '_rsssl_two_factor_nonce' );
+        delete_user_meta( $user_id, 'rsssl_two_fa_status' );
+        delete_user_meta( $user_id, 'rsssl_two_fa_status_email' );
+		delete_user_meta( $user_id, 'rsssl_two_fa_status_totp' );
+		delete_user_meta( $user_id, '_rsssl_two_factor_totp_key' );
+		delete_user_meta( $user_id, '_rsssl_two_factor_backup_codes' );
+		delete_user_meta( $user_id, 'rsssl_activation_date' );
+		delete_user_meta( $user_id, 'rsssl_two_fa_last_login' );
+		delete_user_meta( $user_id, 'rsssl_two_fa_skip_token' );
+		delete_user_meta( $user_id, '_rsssl_factor_email_token_timestamp' );
+		delete_user_meta( $user_id, '_rsssl_factor_email_token' );
+        delete_user_meta( $user_id, 'rsssl_two_fa_reminder_sent' );
 	}
 
 	/**

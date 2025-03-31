@@ -270,7 +270,10 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 						if (strpos($new_htaccess, "\n" ."\n" . "\n" )!==false) {
 							$new_htaccess = str_replace("\n" . "\n" . "\n", "\n" ."\n", $new_htaccess);
 						}
-						file_put_contents( $htaccess_file_uploads, $new_htaccess );
+                        $current_uploads_content = file_get_contents($htaccess_file_uploads);
+                        if ($current_uploads_content !== $new_htaccess) {
+                            file_put_contents($htaccess_file_uploads, $new_htaccess);
+                        }
 					}
 				}
 			}
@@ -335,7 +338,10 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 							$new_htaccess = str_replace("\n" . "\n" . "\n", "\n" ."\n", $new_htaccess);
 						}
 
-						file_put_contents( $htaccess_file, $new_htaccess );
+                        $current_contents = file_get_contents($htaccess_file);
+                        if ($current_contents !== $new_htaccess) {
+                            file_put_contents($htaccess_file, $new_htaccess);
+                        }
 					}
 				}
 			}

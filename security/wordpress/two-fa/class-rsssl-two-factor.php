@@ -13,11 +13,16 @@
 namespace RSSSL\Security\WordPress\Two_Fa;
 
 use Exception;
+use RSSSL\Security\WordPress\Two_Fa\Models\Rsssl_Two_Factor_User_Factory;
+use RSSSL\Security\WordPress\Two_Fa\Repositories\Rsssl_Two_Fa_User_Query_Builder;
+use RSSSL\Security\WordPress\Two_Fa\Repositories\Rsssl_Two_Fa_User_Repository;
+use RSSSL\Security\WordPress\Two_Fa\Services\Rsssl_Two_Fa_Reminder_Service;
+use RSSSL\Security\WordPress\Two_Fa\Services\Rsssl_Two_Fa_Status_Service;
+use RSSSL\Security\WordPress\Two_Fa\Services\Rsssl_Two_Factor_Reset_Service;
 use RSSSL\Security\WordPress\Two_Fa\Traits\Rsssl_Email_Trait;
 use WP_Error;
 use WP_Session_Tokens;
 use WP_User;
-use rsssl_mailer;
 
 /**
  * Class Rsssl_Two_Factor.
@@ -113,7 +118,11 @@ class Rsssl_Two_Factor
          * Runs the fix for the reset error in 9.1.1
          */
 	    if (filter_var(get_option('rsssl_reset_fix', false), FILTER_VALIDATE_BOOLEAN)) {
-		    RSSSL_Two_Factor_Reset_Factory::reset_fix();
+            global $wpdb;
+            $queryBuilder = new Rsssl_Two_Fa_User_Query_Builder($wpdb);
+            $factory = new Rsssl_Two_Factor_User_Factory(new Rsssl_Two_Fa_Status_Service());
+            $repository = new Rsssl_Two_Fa_User_Repository($queryBuilder, $factory);
+            (new Rsssl_Two_Factor_Reset_Service($repository))->resetFix();
 	    }
 
 //		add_action( 'login_enqueue_scripts', array( __CLASS__, 'twofa_scripts' ) );
@@ -165,6 +174,7 @@ class Rsssl_Two_Factor
         add_action('admin_init', array(__CLASS__, 'rsssl_enable_dummy_method_for_debug'));
         add_filter('rsssl_two_factor_providers', array(__CLASS__, 'enable_dummy_method_for_debug'));
 	    add_action( 'rsssl_daily_cron', array( __CLASS__, 'maybe_send_reminder_email' ) );
+        add_action( 'user_register', [__CLASS__, 'set_2fa_activation_date'], 10, 1 );
 
         $compat->init();
     }
@@ -174,105 +184,38 @@ class Rsssl_Two_Factor
 	 *
 	 * Send a reminder e-mail if Two FA has not been configured within 3 days.
 	 */
-	public static function maybe_send_reminder_email() {
-		$roles = rsssl_get_option('two_fa_forced_roles');
-		// If no roles are set, we'll get all users
-		if ( empty( $roles ) ) {
-			// No users with 'open' status
-			return;
-		} else {
-			$args = array(
-				'role__in' => $roles,
-			);
-		}
-
-		$users = get_users( $args );
-
-		// Get users where meta_key rsssl_two_fa_status_totp or rsssl_two_fa_status_email does not exist or is not set to 'active'
-		$users_in_grace_period_without_two_fa = array();
-		foreach ( $users as $user ) {
-			$statusses = Rsssl_Two_Fa_Status::get_user_two_fa_status( $user );
-			$methods   = Rsssl_Provider_Loader::METHODS;
-            // if the status active is in the array, we don't need to send a reminder.
-            if ( in_array('active', $statusses, true) ) {
-                continue;
-            }
-
-            $users_in_grace_period_without_two_fa[] = $user;
-		}
-
-		foreach ( $users_in_grace_period_without_two_fa as $user ) {
-
-			$user_id         = $user->ID;
-			$two_fa_reminder_sent = get_user_meta( $user_id, 'rsssl_two_fa_reminder_sent', true );
-
-			if ( $two_fa_reminder_sent ) {
-				continue;
-			}
-			// Get grace period for user
-			$remaining_grace_period = Rsssl_Two_Factor_Settings::is_user_in_grace_period( $user );
-			$grace_period_setting   = rsssl_get_option( 'two_fa_grace_period' );
-
-			// If grace period setting is 1 day, and remaining grace period greater than 3, continue to next user
-			if ( $grace_period_setting == 1 || $remaining_grace_period > 3 ) {
-				continue;
-			}
-
-			if ( ! class_exists( 'rsssl_mailer' ) ) {
-				require_once rsssl_path . 'mailer/class-mail.php';
-			}
-
-			$subject = __( "Important security notice", "really-simple-ssl" );
-
-			$login_url = wp_login_url();
-			// Check if a custom login URL is set in Really Simple SSL
-			if ( function_exists( 'rsssl_get_option' ) && rsssl_get_option( 'change_login_url_enabled' ) !== false && ! empty( rsssl_get_option( 'change_login_url' ) ) ) {
-				$login_url = trailingslashit( site_url() ) . rsssl_get_option( 'change_login_url' );
-			}
-
-			$login_link = sprintf('<a href="%s">%s</a>', esc_url($login_url), __('Please login', 'really-simple-ssl'));
-
-			$message = sprintf(
-			/* translators:
-			1: Site URL.
-			*/
-				__("You are receiving this email because you have an account registered at %s.", "really-simple-ssl"),
-				site_url(),
-			);
-
-            $message .= "<br><br>";
-
-			$message .= sprintf(
-			/* translators:
-			1: Login link with the text "Please login".
-			2: Opening <strong> tag to emphasize the "within three days" text.
-			3: Closing </strong> tag for "within three days".
-			4: Opening <strong> tag to emphasize "you will be unable to login".
-			5 Closing </strong> tag for "you will be unable to login".
-			*/
-
-                __("The site's security policy requires you to configure Two-Factor Authentication to protect against account theft. %1\$s and configure Two-Factor authentication %2\$swithin three days%3\$s. If you haven't performed the configuration by then, %4\$syou will be unable to login%5\$s.", "really-simple-ssl"),
-				$login_link,
-				'<strong>',
-				'</strong>',
-				'<strong>',
-				'</strong>'
-			);
-
-			$mailer                    = new rsssl_mailer();
-			$mailer->subject           = $subject;
-			$mailer->branded           = false;
-			$mailer->sent_by_text      = "<b>".sprintf( __( 'Notification by %s', 'really-simple-ssl' ), site_url() )."</b>";
-			$mailer->template_filename = apply_filters( 'rsssl_email_template', rsssl_path . '/mailer/templates/email-unbranded.html' );
-			$mailer->to                = $user->user_email;
-			$mailer->title             = sprintf( __( "Hi %s %s", "really-simple-ssl" ), trim( $user->first_name ), trim( $user->last_name ) ) . ',';
-			$mailer->message           = $message;
-			$mailer->send_mail();
-
-			// Update meta to set reminder e-mail send, add check in beginning of function.
-			update_user_meta( $user_id, 'rsssl_two_fa_reminder_sent', true );
-		}
+	public static function maybe_send_reminder_email():void {
+        $forcedRoles = rsssl_get_option('two_fa_forced_roles', []);
+        if(empty($forcedRoles)) {
+            return;
+        }
+        (new Rsssl_Two_Fa_Reminder_Service())->maybeSendReminderEmails($forcedRoles);
 	}
+
+    /**
+     * Simple Date setter for Two Factor Forced roles.
+     * @param $user_id
+     * @return void
+     */
+    public static function set_2fa_activation_date($user_id): void {
+        // Get the user data; if not found, return early.
+        $user_data = get_userdata($user_id);
+        if (!$user_data) {
+            return;
+        }
+        $user_roles = $user_data->roles;
+
+        // Ensure forced roles is an array (empty if not set).
+        $forcedRoles = rsssl_get_option('two_fa_forced_roles') ?: [];
+
+        // If there is no intersection between forced roles and user's roles, do nothing.
+        if (!array_intersect($forcedRoles, $user_roles)) {
+            return;
+        }
+
+        // TODO: I really regret the meta_key name here. It should be rsssl_two_fa_activation_date. Need to fix this in the future.
+        update_user_meta($user_id, 'rsssl_two_fa_last_login', gmdate('Y-m-d H:i:s'));
+    }
 
     /**
      * Upgrade the two-factor login configuration.

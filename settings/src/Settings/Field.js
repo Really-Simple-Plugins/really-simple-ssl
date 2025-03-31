@@ -40,7 +40,6 @@ import GeoDatatable from "./GeoBlockList/GeoDatatable";
 import WhiteListDatatable from "./GeoBlockList/WhiteListDatatable";
 import Captcha from "./Captcha/Captcha";
 import CaptchaKey from "./Captcha/CaptchaKey";
-import FileChangeDetection from "./FileChangeDetection/FileChangeDetection";
 import UserAgentTable from "./firewall/UserAgentTable";
 import TwoFaEnabledDropDown from "./TwoFA/TwoFaEnabledDropDown";
 const Field = (props) => {
@@ -502,16 +501,6 @@ const Field = (props) => {
                 <UserDatatable
                     field={props.field}
                     action={props.field.action}
-                />
-            </div>
-        )
-    }
-
-    if (field.type === 'file-change-detection') {
-        return (
-            <div className={highLightClass} ref={scrollAnchor}>
-                <FileChangeDetection
-                    field={props.field}
                 />
             </div>
         )

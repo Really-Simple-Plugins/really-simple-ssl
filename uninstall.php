@@ -184,8 +184,6 @@ if ( isset( $rsssl_settings['delete_data_on_uninstall'] ) && $rsssl_settings['de
 		$wpdb->base_prefix . 'rsssl_xmlrpc',
 		$wpdb->base_prefix . 'rsssl_country',
 		$wpdb->base_prefix . 'rsssl_login_attempts',
-//		$wpdb->base_prefix . 'rsssl_file_change_detection_directory_indexes',
-		$wpdb->base_prefix . 'rsssl_file_hashes',
 		$wpdb->base_prefix . 'rsssl_geo_block',
         $wpdb->base_prefix . 'rsssl_event_logs',
 	);

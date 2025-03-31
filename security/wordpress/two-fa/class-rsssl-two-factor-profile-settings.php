@@ -180,7 +180,7 @@ if (!class_exists('Rsssl_Two_Factor_Profile_Settings')) {
             if (!isset($_POST['two-factor-authentication'])) {
                 // reset the user's 2fa settings.
                 // Delete all 2fa related user meta.
-                Rsssl_Two_Fa_Status::delete_two_fa_meta($user);
+                Rsssl_Two_Fa_Status::delete_two_fa_meta($user->ID);
                 // Set the rsssl_two_fa_last_login to now, so the user will be forced to use 2fa.
                 update_user_meta($user->ID, 'rsssl_two_fa_last_login', gmdate('Y-m-d H:i:s'));
                 // also make sure no lingering errpr messages are shown.
@@ -271,7 +271,7 @@ if (!class_exists('Rsssl_Two_Factor_Profile_Settings')) {
                     break;
                 case 'none':
                     // We disable the Two-Factor Authentication.
-                    Rsssl_Two_Fa_Status::delete_two_fa_meta($user);
+                    Rsssl_Two_Fa_Status::delete_two_fa_meta($user->ID);
                     break;
                 default:
                     break;
@@ -424,11 +424,10 @@ if (!class_exists('Rsssl_Two_Factor_Profile_Settings')) {
          */
         private function maybe_the_user_resets_config(int $user_id, $reset_input): bool
         {
-            $user = get_user_by('ID', $user_id);
             // If the reset is true, we do the reset.
-            if ($reset_input && $user) {
+            if ($reset_input && $user_id) {
                 // We reset the user's Two-Factor Authentication settings.
-                Rsssl_Two_Fa_Status::delete_two_fa_meta($user);
+                Rsssl_Two_Fa_Status::delete_two_fa_meta($user_id);
             }
 
             return $reset_input;

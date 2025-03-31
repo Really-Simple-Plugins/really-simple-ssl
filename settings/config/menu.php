@@ -266,36 +266,6 @@ function rsssl_menu() {
 								],
 							],
 						],
-						[
-							'id' => 'hardening-file-change',
-							'group_id' => 'hardening-file-change',
-							'title' => __( 'File Change Detection', 'really-simple-ssl' ),
-							'premium' => true,
-							'groups' => [
-								[
-									'id' => 'hardening-file-change-main',
-									'group_id' => 'hardening-file-change-main',
-									'premium' => true,
-									'premium_text' =>__( 'Keep your site secure by monitoring unexpected file changes.', 'really-simple-ssl' ),
-									'upgrade' => 'https://really-simple-ssl.com/pro/?mtm_campaign=hardening&mtm_source=free&mtm_content=upgrade',
-									'helpLink' => 'instructions/about-file-change-detection',
-									'title' => __( 'File Change Detection', 'really-simple-ssl' ),
-									'intro' => __( "File Change Detection generates a snapshot of every .php and .js file. On a daily basis, each file is then compared to this snapshot.", 'really-simple-ssl' )
-									           . ' ' .__( "You will receive an email warning if changes are detected.", 'really-simple-ssl' )
-									           . ' ' .__( "If unexpected file changes have occurred, this could be an indication that your site is compromised.", 'really-simple-ssl' )
-									           . ' ' .__( "The snapshots will be updated after WordPress, plugins or themes are activated or updated.", 'really-simple-ssl' ),
-								],
-								[
-									'id' => 'hardening-file-change-datatable',
-									'group_id' => 'hardening-file-change-datatable',
-									'helpLink' => 'https://really-simple-ssl.com/instructions/about-file-change-detection',
-									'title' => __( 'Detected File Changes', 'really-simple-ssl' ),
-									'intro' => __( 'The daily scan will report any detected file changes in the table below.', 'really-simple-ssl' )
-									.' '.__( 'If you recognize the detected changes, you can add the files to the exclude list, or ignore them just once.', 'really-simple-ssl' )
-									.' '.__( 'You can reset the report and generate a new snapshot, for example if you made changes via FTP.', 'really-simple-ssl' ),
-								],
-							],
-						],
 					],
 				],
 				[
@@ -324,7 +294,7 @@ function rsssl_menu() {
 								[
 									'id'            => 'two_fa_email',
 									'group_id'      => 'two_fa_email',
-									'premium'       => true,
+									'premium'       => false,
 									'disabled'      => (rsssl_is_email_verified() === false),
 									'premium_text'  => __( 'Send an email code during login. You can force user roles to use two-factor authentication, or leave the choose with your users, if so desired.', 'really-simple-ssl' ),
 									'upgrade'              => 'https://really-simple-ssl.com/pro/?mtm_campaign=2fa&mtm_source=free&mtm_content=upgrade',
@@ -353,25 +323,23 @@ function rsssl_menu() {
 									'intro'         => __( 'Here you can see which users have configured Two-Factor Authentication. The reset button will trigger the 2FA onboarding for the selected user(s) again and allow the configured grace period.', 'really-simple-ssl' ),
 									'groupFilter'  => [
 										'default' => 'active',
-										'id'      => 'two_fa_user_filter',
+										'id'      => 'user_role',
 										'options' => [
 											[
 												'id'   => 'all',
 												'title' => __('All', 'really-simple-ssl'),
 											],
-											[
-												'id'    => 'active',
-												'title' => __('Active', 'really-simple-ssl'),
-											],
-											[
-												'id'    => 'open',
-												'title' => __('Open', 'really-simple-ssl'),
-											],
-											[
-												'id'    => 'disabled',
-												'title' => __('Disabled', 'really-simple-ssl'),
-											]
-										],
+                                            ...array_map(
+                                                static function( $role, $roleKey ) {
+                                                    return [
+                                                        'id'    => $roleKey,               // Use the key as the id.
+                                                        'title' => ucfirst( $role['name'] ), // Capitalize the role name.
+                                                    ];
+                                                },
+                                                (new WP_Roles())->roles,           // The roles array.
+                                                array_keys( (new WP_Roles())->roles ) // Its keys.
+                                            ),
+                                        ]
 									],
 								],
 							],
