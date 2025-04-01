@@ -1178,7 +1178,7 @@ class rsssl_wp_cli {
                         'description' => __( 'Optional note for the block.', 'really-simple-ssl' ),
                     ],
                 ],
-                'pro'         => false,
+                'pro'         => true,
             ],
 			'remove_firewall_ip_block' => [
 				'description' => __( 'Remove IP block.', 'really-simple-ssl' ),
@@ -1190,32 +1190,32 @@ class rsssl_wp_cli {
                         'description' => __( 'The IP to remove the block for.', 'really-simple-ssl' ),
                     ],
                 ],
-				'pro'         => false,
+				'pro'         => true,
 			],
 			'show_blocked_ips' => [
 				'description' => __( 'Show blocked IP\'s.', 'really-simple-ssl' ),
 				'synopsis'    => [],
-				'pro'         => false,
+				'pro'         => true,
 			],
 			'add_firewall_trusted_ip' => [
 				'description' => __( 'Add a trusted IP to the firewall.', 'really-simple-ssl' ),
 				'synopsis'    => [],
-				'pro'         => false,
+				'pro'         => true,
 			],
             'remove_firewall_trusted_ip' => [
 				'description' => __( 'Remove a trusted IP from the firewall.', 'really-simple-ssl' ),
 				'synopsis'    => [],
-				'pro'         => false,
+				'pro'         => true,
 			],
             'add_lla_trusted_ip' => [
                 'description' => __( 'Add a trusted IP to the limit login attempts table.', 'really-simple-ssl' ),
                 'synopsis'    => [],
-                'pro'         => false,
+                'pro'         => true,
             ],
             'remove_lla_trusted_ip' => [
                 'description' => __( 'Remove a trusted IP from the limit login attempts table.', 'really-simple-ssl' ),
                 'synopsis'    => [],
-                'pro'         => false,
+                'pro'         => true,
             ],
             'add_lla_blocked_ip' => [
                 'description' => __( 'Add a blocked IP to the limit login attempts table.', 'really-simple-ssl' ),
@@ -1233,7 +1233,7 @@ class rsssl_wp_cli {
                         'description' => __( 'Flag to add a permanent block.', 'really-simple-ssl' ),
                     ],
                 ],
-                'pro'         => false,
+                'pro'         => true,
             ],
             'remove_lla_blocked_ip' => [
                 'description' => __( 'Remove a blocked IP from the limit login attempts table.', 'really-simple-ssl' ),
@@ -1251,17 +1251,17 @@ class rsssl_wp_cli {
                         'description' => __( 'Flag to add a permanent block.', 'really-simple-ssl' ),
                     ],
                 ],
-                'pro'         => false,
+                'pro'         => true,
             ],
             'add_lla_trusted_username' => [
                 'description' => __( 'Add a trusted username to the limit login attempts table.', 'really-simple-ssl' ),
                 'synopsis'    => [],
-                'pro'         => false,
+                'pro'         => true,
             ],
             'remove_lla_trusted_username' => [
                 'description' => __( 'Remove a trusted username from the limit login attempts table.', 'really-simple-ssl' ),
                 'synopsis'    => [],
-                'pro'         => false,
+                'pro'         => true,
             ],
             'add_lla_blocked_username' => [
                 'description' => __( 'Add a blocked username to the limit login attempts table.', 'really-simple-ssl' ),
@@ -1279,7 +1279,7 @@ class rsssl_wp_cli {
                         'description' => __( 'Flag to add a permanent block.', 'really-simple-ssl' ),
                     ],
                 ],
-                'pro'         => false,
+                'pro'         => true,
             ],
             'remove_lla_blocked_username' => [
                 'description' => __( 'Remove a blocked username from the limit login attempts table.', 'really-simple-ssl' ),
@@ -1297,7 +1297,7 @@ class rsssl_wp_cli {
                         'description' => __( 'Flag to remove a permanent block.', 'really-simple-ssl' ),
                     ],
                 ],
-                'pro'         => false,
+                'pro'         => true,
             ],
 		];
 	}
