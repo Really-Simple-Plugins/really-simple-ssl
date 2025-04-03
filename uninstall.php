@@ -103,7 +103,7 @@ if ( isset( $rsssl_settings['delete_data_on_uninstall'] ) && $rsssl_settings['de
 		'rsssl_htaccess_error',
 		'rsssl_htaccess_rules',
 		'rsssl_options',
-        'rsssl_404_cache'.
+        'rsssl_404_cache',
         'rsssl_404_notice_shown',
 		'rsssl_key',
 		'rsssl_change_detection_next_index',
