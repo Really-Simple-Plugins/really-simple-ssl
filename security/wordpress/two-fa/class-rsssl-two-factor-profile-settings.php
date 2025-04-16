@@ -27,7 +27,15 @@ if (!class_exists('Rsssl_Two_Factor_Profile_Settings')) {
     class Rsssl_Two_Factor_Profile_Settings
     {
 
-        /**
+	    /**
+	     * Instance of this class.
+	     *
+	     * @var Rsssl_Two_Factor_Profile_Settings
+	     */
+	    private static $instance = null;
+
+
+	    /**
          * The available providers.
          *
          * @var array $available_providers An array to store the available providers.
@@ -41,6 +49,18 @@ if (!class_exists('Rsssl_Two_Factor_Profile_Settings')) {
          */
         private $forced_two_fa = array();
 
+	    /**
+	     * Get instance of this class.
+	     *
+	     * @return Rsssl_Two_Factor_Profile_Settings
+	     */
+	    public static function get_instance() {
+		    if (null === self::$instance) {
+			    self::$instance = new self();
+		    }
+		    return self::$instance;
+	    }
+
         /**
          * Constructor for the class.
          *
@@ -49,7 +69,7 @@ if (!class_exists('Rsssl_Two_Factor_Profile_Settings')) {
          *
          * @return void
          */
-        public function __construct()
+        private function __construct()
         {
             if (is_user_logged_in()) {
                 $user_id = get_current_user_id();
@@ -61,8 +81,6 @@ if (!class_exists('Rsssl_Two_Factor_Profile_Settings')) {
                         add_action('admin_init', array($this, 'add_hooks'));
                     }
                 }
-                add_action( 'wp_ajax_resend_email_code_profile', [$this, 'resend_email_code_profile_callback'] );
-                add_action( 'wp_ajax_change_method_to_email', [$this, 'start_email_validation_callback'] );
             }
         }
 
@@ -96,6 +114,9 @@ if (!class_exists('Rsssl_Two_Factor_Profile_Settings')) {
             add_action('admin_enqueue_scripts', array($this, 'enqueue_styles'));
             add_action('personal_options_update', array($this, 'save_user_profile'));
             add_action('edit_user_profile_update', array($this, 'save_user_profile'));
+
+	        add_action( 'wp_ajax_resend_email_code_profile', [$this, 'resend_email_code_profile_callback'] );
+	        add_action( 'wp_ajax_change_method_to_email', [$this, 'start_email_validation_callback'] );
 
             if (isset($_GET['profile'], $_GET['_wpnonce'])) {
                 $profile = rest_sanitize_boolean(wp_unslash($_GET['profile']));

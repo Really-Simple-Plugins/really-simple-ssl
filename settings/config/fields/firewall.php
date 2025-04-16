@@ -101,7 +101,7 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'tooltip' => sprintf(__('A lockout will occur if an IP address exceeds the threshold within the given timeframe. Select ‘%s’ if you want to disable 404 blocking.', 'really-simple-ssl'), __('Disabled', 'really-simple-ssl')),
 				'default' => 'lax',
 				'disabled' => rsssl_maybe_disable_404_blocking(),
-                'disabledTooltipText' => __("404 errors detected on your home page. 404 blocking is unavailable, to prevent blocking of legitimate visitors. It is strongly recommended to resolve these errors.", "really-simple-ssl"),
+                'disabledTooltipText' => __("404 errors detected on your homepage. 404 blocking is unavailable, to prevent blocking of legitimate visitors. It is strongly recommended to resolve these errors.", "really-simple-ssl"),
 				'options' => [
 					'disabled' => __( 'Disabled', 'really-simple-ssl' ),
 					'lax' => __( 'Lax - 10 errors in 2 seconds', 'really-simple-ssl' ),
@@ -123,7 +123,7 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'label' => __( 'Lockout duration', 'really-simple-ssl' ),
 				'tooltip' => __('The IP address will see a locked out screen for the selected duration.', 'really-simple-ssl'),
 				'disabled' => rsssl_maybe_disable_404_blocking(),
-                'disabledTooltipText' => __("404 errors detected on your home page. 404 blocking is unavailable, to prevent blocking of legitimate visitors. It is strongly recommended to resolve these errors.", "really-simple-ssl"),
+                'disabledTooltipText' => __("404 errors detected on your homepage. 404 blocking is unavailable, to prevent blocking of legitimate visitors. It is strongly recommended to resolve these errors.", "really-simple-ssl"),
 				'options' => [
 					'30' => __( '30 minutes', 'really-simple-ssl' ),
 					'60' => __( '1 hour', 'really-simple-ssl' ),
@@ -145,7 +145,7 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'tooltip' => __('Allow visitors that might accidentally exceed the threshold to unblock themselves using a Captcha.', 'really-simple-ssl'),
 				'label' => __( 'Trigger Captcha on lockout', 'really-simple-ssl' ),
                 'disabled' => rsssl_maybe_disable_404_blocking(),
-                'disabledTooltipText' => __("404 errors detected on your home page. 404 blocking is unavailable, to prevent blocking of legitimate visitors. It is strongly recommended to resolve these errors.", "really-simple-ssl"),
+                'disabledTooltipText' => __("404 errors detected on your homepage. 404 blocking is unavailable, to prevent blocking of legitimate visitors. It is strongly recommended to resolve these errors.", "really-simple-ssl"),
 				'default'          => false,
 				'comment'                 => sprintf(__( 'Please configure your %sCaptcha settings%s before enabling this setting',
 					'really-simple-ssl' ), '<a id="set_to_captcha_configuration" href="#settings/general/enable_captcha_provider">', '</a>'),

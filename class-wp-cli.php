@@ -50,9 +50,9 @@ class rsssl_wp_cli {
 			// Add commands individually.
 			foreach ( $command_details as $command => $details ) {
 
-				if (isset($details['inactive']) && $details['inactive'] === true) {
-					continue;
-				}
+                if (isset($details['inactive']) && $details['inactive'] === true) {
+                    continue;
+                }
 
 				// Do not add Pro commands on free environment
 				if ( ! defined( 'rsssl_pro' ) ) {
@@ -311,33 +311,33 @@ class rsssl_wp_cli {
 	/**
 	 * Activate recommended security headers via CLI
 	 */
-	public function activate_security_headers() {
-		try {
-			foreach (RSSSL()->headers->get_recommended_security_headers() as $header ) {
-				if (isset($header['option_name'], $header['recommended_setting'])) {
-					rsssl_update_option( $header['option_name'], $header['recommended_setting'] );
-				}
-			}
-			WP_CLI::success( 'Recommended security header settings saved. Run "update_advanced_headers" command to activate them.' );
-			do_action('rsssl_update_rules');
-		} catch ( Exception $e ) {
-			WP_CLI::error( 'Failed to activate security headers: ' . $e->getMessage() );
-		}
-	}
+    public function activate_security_headers() {
+        try {
+            foreach (RSSSL()->headers->get_recommended_security_headers() as $header ) {
+                if (isset($header['option_name'], $header['recommended_setting'])) {
+                    rsssl_update_option( $header['option_name'], $header['recommended_setting'] );
+                }
+            }
+            WP_CLI::success( 'Recommended security header settings saved. Run "update_advanced_headers" command to activate them.' );
+            do_action('rsssl_update_rules');
+        } catch ( Exception $e ) {
+            WP_CLI::error( 'Failed to activate security headers: ' . $e->getMessage() );
+        }
+    }
 
 
 	/**
 	 * Deactivate recommended security headers via CLI
 	 */
 	public function deactivate_security_headers()
-	{
+    {
 		try {
 			$recommended_headers = RSSSL()->headers->get_recommended_security_headers();
 
 			foreach ( $recommended_headers as $header ) {
-				if ( isset( $header['option_name'] ) && isset( $header['disabled_setting'] ) ) {
-					rsssl_update_option($header['option_name'], $header['disabled_setting']);
-				}
+                if ( isset( $header['option_name'] ) && isset( $header['disabled_setting'] ) ) {
+                    rsssl_update_option($header['option_name'], $header['disabled_setting']);
+                }
 			}
 			do_action('rsssl_update_rules');
 			WP_CLI::success( 'Recommended security headers deactivated.' );
@@ -440,8 +440,8 @@ class rsssl_wp_cli {
 
 		try {
 			rsssl_update_option( 'enforce_password_security_enabled', false );
-			rsssl_update_option( 'enforce_frequent_password_change', false );
-			rsssl_update_option( 'hide_rememberme', false );
+            rsssl_update_option( 'enforce_frequent_password_change', false );
+            rsssl_update_option( 'hide_rememberme', false );
 			rsssl_update_option( 'enable_hibp_check', false );
 			do_action('rsssl_update_rules');
 			WP_CLI::success( 'Password security features deactivated.' );
@@ -649,30 +649,30 @@ class rsssl_wp_cli {
 
 	/**
 	 * Reset the 2FA status of a user to disabled
-	 *
-	 * Usage: wp rsssl reset_2fa 123
-	 *
-	 * @param array $args User ID should be the first element
+     *
+     * Usage: wp rsssl reset_2fa 123
+     *
+     * @param array $args User ID should be the first element
 	 */
 	public function reset_2fa( $args ): void
-	{
-		// When empty array is passed, WP_CLI will return an error
-		if ( empty( $args ) ) {
-			WP_CLI::error( 'Please provide a user ID.', true );
-		}
-		$user_id = intval( $args[0] );
-		$user = get_user_by('id', $user_id);
+    {
+        // When empty array is passed, WP_CLI will return an error
+        if ( empty( $args ) ) {
+            WP_CLI::error( 'Please provide a user ID.', true );
+        }
+        $user_id = intval( $args[0] );
+        $user = get_user_by('id', $user_id);
 
-		if (empty($user)) {
-			WP_CLI::error('User not found.', true);
-		}
+        if (empty($user)) {
+            WP_CLI::error('User not found.', true);
+        }
 
-		if (!class_exists('Rsssl_Two_Fa_Status')) {
-			require_once rsssl_path . '/security/wordpress/two-fa/class-rsssl-two-fa-status.php';
-		}
+        if (!class_exists('Rsssl_Two_Fa_Status')) {
+            require_once rsssl_path . '/security/wordpress/two-fa/class-rsssl-two-fa-status.php';
+        }
 
-		\RSSSL\Security\WordPress\Two_Fa\Rsssl_Two_Fa_Status::reset_user_two_fa($user);
-		WP_CLI::success( 'Successfully reset 2FA for user id ' . $user_id );
+        \RSSSL\Security\WordPress\Two_Fa\Rsssl_Two_Fa_Status::reset_user_two_fa($user);
+        WP_CLI::success( 'Successfully reset 2FA for user id ' . $user_id );
 	}
 
 	/**
@@ -682,50 +682,50 @@ class rsssl_wp_cli {
 	 */
 	public function update_advanced_headers() {
 		do_action('rsssl_update_rules');
-		WP_CLI::success( 'Successfully update advanced headers.' );
+        WP_CLI::success( 'Successfully update advanced headers.' );
 	}
 
-	/**
-	 * Add an IP to the firewall blocklist.
-	 *
-	 * @example wp rsssl add_firewall_ip_block 123.123.123.1 --note="This is a temporary block"
-	 * @example wp rsssl add_firewall_ip_block 123.123.123.1 --permanent --note="This is a permanent block"
-	 *
-	 * @param array $args Should contain IP as the first element
-	 * @param array $assoc_args Can contain a note with a 'note' key
-	 */
-	public function add_firewall_ip_block(array $args, array $assoc_args): void
-	{
-		$this->handleFirewallTableEntry($args, $assoc_args, 'blocked', 'add');
-	}
+    /**
+     * Add an IP to the firewall blocklist.
+     *
+     * @example wp rsssl add_firewall_ip_block 123.123.123.1 --note="This is a temporary block"
+     * @example wp rsssl add_firewall_ip_block 123.123.123.1 --permanent --note="This is a permanent block"
+     *
+     * @param array $args Should contain IP as the first element
+     * @param array $assoc_args Can contain a note with a 'note' key
+     */
+    public function add_firewall_ip_block(array $args, array $assoc_args): void
+    {
+        $this->handleFirewallTableEntry($args, $assoc_args, 'blocked', 'add');
+    }
 
 	/**
-	 * Can be used to remove a (temporary) block from the firewall blocklist.
-	 * @example wp rsssl remove_firewall_ip_block 123.123.123.1
-	 *
+     * Can be used to remove a (temporary) block from the firewall blocklist.
+     * @example wp rsssl remove_firewall_ip_block 123.123.123.1
+     *
 	 * @param $args array Should contain the ip address
 	 */
 	public function remove_firewall_ip_block(array $args, array $assoc_args ): void
-	{
-		$this->handleFirewallTableEntry($args, $assoc_args, 'blocked', 'remove');
+    {
+        $this->handleFirewallTableEntry($args, $assoc_args, 'blocked', 'remove');
 	}
 
-	/**
-	 * Return a table of the current blocked IPs with the headers:
-	 * IP Address, Note, Permanent
-	 */
-	public function show_blocked_ips() {
-		$columns = [
-			'ip_address',
-			'note',
-			'permanent',
-		];
+    /**
+     * Return a table of the current blocked IPs with the headers:
+     * IP Address, Note, Permanent
+     */
+    public function show_blocked_ips() {
+        $columns = [
+            'ip_address',
+            'note',
+            'permanent',
+        ];
 
-		$blocked404Model = new Rsssl_404_Block();
-		$blockedIps = $blocked404Model->get_blocked_ips($columns);
+        $blocked404Model = new Rsssl_404_Block();
+        $blockedIps = $blocked404Model->get_blocked_ips($columns);
 
-		WP_CLI\Utils\format_items('table', $blockedIps, $columns);
-	}
+        WP_CLI\Utils\format_items('table', $blockedIps, $columns);
+    }
 
 	/**
 	 * Add an IP to the firewall's trusted list.
@@ -734,285 +734,285 @@ class rsssl_wp_cli {
 	 *
 	 * @param array $args Should contain IP as the first element
 	 * @param array $assoc_args Can contain a note with a 'note' key
-	 * @uses handleFirewallTableEntry()
+     * @uses handleFirewallTableEntry()
 	 */
 	public function add_firewall_trusted_ip(array $args, array $assoc_args) {
-		$this->handleFirewallTableEntry($args, $assoc_args, 'trusted', 'add');
+        $this->handleFirewallTableEntry($args, $assoc_args, 'trusted', 'add');
 	}
 
-	/**
-	 * Remove an IP from the firewall's trusted list.
-	 *
-	 * Usage: wp rsssl remove_firewall_trusted_ip 123.123.123.1
-	 *
-	 * @param array $args Should contain IP as the first element
-	 * @param array $assoc_args Can contain a note with a 'note' key
-	 * @uses handleFirewallTableEntry()
-	 */
-	public function remove_firewall_trusted_ip(array $args, array $assoc_args) {
-		$this->handleFirewallTableEntry($args, $assoc_args, 'trusted', 'remove');
-	}
+    /**
+     * Remove an IP from the firewall's trusted list.
+     *
+     * Usage: wp rsssl remove_firewall_trusted_ip 123.123.123.1
+     *
+     * @param array $args Should contain IP as the first element
+     * @param array $assoc_args Can contain a note with a 'note' key
+     * @uses handleFirewallTableEntry()
+     */
+    public function remove_firewall_trusted_ip(array $args, array $assoc_args) {
+        $this->handleFirewallTableEntry($args, $assoc_args, 'trusted', 'remove');
+    }
 
-	/**
-	 * Add an IP to the LLA's trusted list.
-	 *
-	 * Usage: wp rsssl add_lla_trusted_ip 123.123.123.1
-	 *
-	 * @param array $args Command arguments.
-	 * @uses handleLlaTableEntry()
-	 */
-	public function add_lla_trusted_ip( $args ) {
-		$this->handleLlaTableEntry($args, 'allowed', 'source_ip', 'add');
-	}
+    /**
+     * Add an IP to the LLA's trusted list.
+     *
+     * Usage: wp rsssl add_lla_trusted_ip 123.123.123.1
+     *
+     * @param array $args Command arguments.
+     * @uses handleLlaTableEntry()
+     */
+    public function add_lla_trusted_ip( $args ) {
+        $this->handleLlaTableEntry($args, 'allowed', 'source_ip', 'add');
+    }
 
-	/**
-	 * Add an IP to the LLA's blocklist.
-	 *
-	 * Usage: wp rsssl remove_lla_trusted_ip 123.123.123.1
-	 *
-	 * @param array $args Command arguments.
-	 * @uses handleLlaTableEntry()
-	 */
-	public function remove_lla_trusted_ip( $args ) {
-		$this->handleLlaTableEntry($args, 'allowed', 'source_ip', 'remove');
-	}
+    /**
+     * Add an IP to the LLA's blocklist.
+     *
+     * Usage: wp rsssl remove_lla_trusted_ip 123.123.123.1
+     *
+     * @param array $args Command arguments.
+     * @uses handleLlaTableEntry()
+     */
+    public function remove_lla_trusted_ip( $args ) {
+        $this->handleLlaTableEntry($args, 'allowed', 'source_ip', 'remove');
+    }
 
-	/**
-	 * Remove an IP from the LLA's trusted list.
-	 *
-	 * Usage: wp rsssl add_lla_blocked_ip 123.123.123.1
-	 * Usage: wp rsssl add_lla_blocked_ip 123.123.123.1 --permanent
-	 *
-	 * @param array $args Command arguments.
-	 * @param array $assoc_args Associative arguments.
-	 * @uses handleLlaTableEntry()
-	 */
-	public function add_lla_blocked_ip( $args, $assoc_args ) {
-		$status = (isset($assoc_args['permanent']) ? 'blocked' : 'locked');
-		$this->handleLlaTableEntry($args, $status, 'source_ip', 'add');
-	}
+    /**
+     * Remove an IP from the LLA's trusted list.
+     *
+     * Usage: wp rsssl add_lla_blocked_ip 123.123.123.1
+     * Usage: wp rsssl add_lla_blocked_ip 123.123.123.1 --permanent
+     *
+     * @param array $args Command arguments.
+     * @param array $assoc_args Associative arguments.
+     * @uses handleLlaTableEntry()
+     */
+    public function add_lla_blocked_ip( $args, $assoc_args ) {
+        $status = (isset($assoc_args['permanent']) ? 'blocked' : 'locked');
+        $this->handleLlaTableEntry($args, $status, 'source_ip', 'add');
+    }
 
-	/**
-	 * Remove an IP from the LLA's blocklist.
-	 *
-	 * Usage: wp rsssl remove_lla_blocked_ip 123.123.123.1
-	 * Usage: wp rsssl remove_lla_blocked_ip 123.123.123.1 --permanent
-	 *
-	 * @param array $args Command arguments.
-	 * @param array $assoc_args Associative arguments.
-	 * @uses handleLlaTableEntry()
-	 */
-	public function remove_lla_blocked_ip( $args, $assoc_args ) {
-		$status = (isset($assoc_args['permanent']) ? 'blocked' : 'locked');
-		$this->handleLlaTableEntry($args, $status, 'source_ip', 'remove');
-	}
+    /**
+     * Remove an IP from the LLA's blocklist.
+     *
+     * Usage: wp rsssl remove_lla_blocked_ip 123.123.123.1
+     * Usage: wp rsssl remove_lla_blocked_ip 123.123.123.1 --permanent
+     *
+     * @param array $args Command arguments.
+     * @param array $assoc_args Associative arguments.
+     * @uses handleLlaTableEntry()
+     */
+    public function remove_lla_blocked_ip( $args, $assoc_args ) {
+        $status = (isset($assoc_args['permanent']) ? 'blocked' : 'locked');
+        $this->handleLlaTableEntry($args, $status, 'source_ip', 'remove');
+    }
 
-	/**
-	 * Add a username to the LLA's trusted list.
-	 *
-	 * Usage: wp rsssl add_lla_trusted_username username
-	 *
-	 * @param array $args Command arguments.
-	 * @uses handleLlaTableEntry()
-	 */
-	public function add_lla_trusted_username( $args ) {
-		$this->handleLlaTableEntry($args, 'allowed', 'username', 'add');
-	}
+    /**
+     * Add a username to the LLA's trusted list.
+     *
+     * Usage: wp rsssl add_lla_trusted_username username
+     *
+     * @param array $args Command arguments.
+     * @uses handleLlaTableEntry()
+     */
+    public function add_lla_trusted_username( $args ) {
+        $this->handleLlaTableEntry($args, 'allowed', 'username', 'add');
+    }
 
-	/**
-	 * Remove a username to the LLA's trusted list.
-	 *
-	 * Usage: wp rsssl remove_lla_trusted_username username
-	 *
-	 * @param array $args Command arguments.
-	 * @uses handleLlaTableEntry()
-	 */
-	public function remove_lla_trusted_username( $args ) {
-		$this->handleLlaTableEntry($args, 'allowed', 'username', 'remove');
-	}
+    /**
+     * Remove a username to the LLA's trusted list.
+     *
+     * Usage: wp rsssl remove_lla_trusted_username username
+     *
+     * @param array $args Command arguments.
+     * @uses handleLlaTableEntry()
+     */
+    public function remove_lla_trusted_username( $args ) {
+        $this->handleLlaTableEntry($args, 'allowed', 'username', 'remove');
+    }
 
-	/**
-	 * Add a username to the LLA's blocked list.
-	 *
-	 * Usage: wp rsssl add_lla_blocked_username username
-	 * Usage: wp rsssl add_lla_blocked_username username --permanent
-	 *
-	 * @param array $args Command arguments.
-	 * @param array $assoc_args Associative arguments.
-	 * @uses handleLlaTableEntry()
-	 */
-	public function add_lla_blocked_username( array $args, array $assoc_args ) {
-		$status = (isset($assoc_args['permanent']) ? 'blocked' : 'locked');
-		$this->handleLlaTableEntry($args, $status, 'username', 'add');
-	}
+    /**
+     * Add a username to the LLA's blocked list.
+     *
+     * Usage: wp rsssl add_lla_blocked_username username
+     * Usage: wp rsssl add_lla_blocked_username username --permanent
+     *
+     * @param array $args Command arguments.
+     * @param array $assoc_args Associative arguments.
+     * @uses handleLlaTableEntry()
+     */
+    public function add_lla_blocked_username( array $args, array $assoc_args ) {
+        $status = (isset($assoc_args['permanent']) ? 'blocked' : 'locked');
+        $this->handleLlaTableEntry($args, $status, 'username', 'add');
+    }
 
-	/**
-	 * Remove a username to the LLA's blocked list.
-	 *
-	 * Usage: wp rsssl remove_lla_blocked_username username
-	 * Usage: wp rsssl remove_lla_blocked_username username --permanent
-	 *
-	 * @param array $args Command arguments.
-	 * @param array $assoc_args Associative arguments.
-	 * @uses handleLlaTableEntry()
-	 */
-	public function remove_lla_blocked_username( $args, $assoc_args ) {
-		$status = (isset($assoc_args['permanent']) ? 'blocked' : 'locked');
-		$this->handleLlaTableEntry($args, $status, 'username', 'remove');
-	}
+    /**
+     * Remove a username to the LLA's blocked list.
+     *
+     * Usage: wp rsssl remove_lla_blocked_username username
+     * Usage: wp rsssl remove_lla_blocked_username username --permanent
+     *
+     * @param array $args Command arguments.
+     * @param array $assoc_args Associative arguments.
+     * @uses handleLlaTableEntry()
+     */
+    public function remove_lla_blocked_username( $args, $assoc_args ) {
+        $status = (isset($assoc_args['permanent']) ? 'blocked' : 'locked');
+        $this->handleLlaTableEntry($args, $status, 'username', 'remove');
+    }
 
-	/**
-	 * Handle an action for the firewall table for a specific IP address.
-	 *
-	 * @param array $args Command arguments.
-	 * @param array $assoc_args Associative arguments.
-	 * @param string $status Should be either 'trusted' or 'blocked'.
-	 * @param string $action Should be either 'add' or 'remove'.
-	 *
-	 * @uses remove_white_list_ip() & add_white_list_ip() from Rsssl_Geo_Block -
-	 * Those also handle a block request for an IP address.
-	 */
-	protected function handleFirewallTableEntry(array $args, array $assoc_args, string $status, string $action)
-	{
-		if (rsssl_get_option('enable_firewall', false) !== true) {
-			WP_CLI::error('The firewall is not enabled.', true);
-		}
+    /**
+     * Handle an action for the firewall table for a specific IP address.
+     *
+     * @param array $args Command arguments.
+     * @param array $assoc_args Associative arguments.
+     * @param string $status Should be either 'trusted' or 'blocked'.
+     * @param string $action Should be either 'add' or 'remove'.
+     *
+     * @uses remove_white_list_ip() & add_white_list_ip() from Rsssl_Geo_Block -
+     * Those also handle a block request for an IP address.
+     */
+    protected function handleFirewallTableEntry(array $args, array $assoc_args, string $status, string $action)
+    {
+        if (rsssl_get_option('enable_firewall', false) !== true) {
+            WP_CLI::error('The firewall is not enabled.', true);
+        }
 
-		if (!in_array($status, ['trusted', 'blocked']) || !in_array($action, ['add', 'remove'])) {
-			WP_CLI::error('Could not handle action for the firewall table.', true);
-		}
+        if (!in_array($status, ['trusted', 'blocked']) || !in_array($action, ['add', 'remove'])) {
+            WP_CLI::error('Could not handle action for the firewall table.', true);
+        }
 
-		if (empty($args[0])) {
-			WP_CLI::error('Please provide an IP address.', true);
-		}
+        if (empty($args[0])) {
+            WP_CLI::error('Please provide an IP address.', true);
+        }
 
-		$ip = $this->getFilteredIpAddress($args[0]);
+        $ip = $this->getFilteredIpAddress($args[0]);
 
-		// Prepare data for adding to the whitelist.
-		$data = [
-			'ip_address' => $ip,
-			'note'       => $assoc_args['note'] ?? '',
-			'status'     => $status,
-			'permanent'  => isset($assoc_args['permanent']),
-		];
+        // Prepare data for adding to the whitelist.
+        $data = [
+            'ip_address' => $ip,
+            'note'       => $assoc_args['note'] ?? '',
+            'status'     => $status,
+            'permanent'  => isset($assoc_args['permanent']),
+        ];
 
-		// Use the Rsssl_Geo_Block class to add the trusted IP.
-		if (!class_exists('\RSSSL\Pro\Security\WordPress\Rsssl_Geo_Block')) {
-			require_once rsssl_path . 'pro/security/wordpress/rsssl-geo-block.php';
-		}
+        // Use the Rsssl_Geo_Block class to add the trusted IP.
+        if (!class_exists('\RSSSL\Pro\Security\WordPress\Rsssl_Geo_Block')) {
+            require_once rsssl_path . 'pro/security/wordpress/rsssl-geo-block.php';
+        }
 
-		try {
-			$geo_block = new \RSSSL\Pro\Security\WordPress\Rsssl_Geo_Block();
+        try {
+            $geo_block = new \RSSSL\Pro\Security\WordPress\Rsssl_Geo_Block();
 
-			// fallback
-			$response = ['success' => false, 'message' => 'Something went wrong!'];
+            // fallback
+            $response = ['success' => false, 'message' => 'Something went wrong!'];
 
-			if ($action === 'remove') {
-				$response = $geo_block->remove_white_list_ip( $data );
-			}
+            if ($action === 'remove') {
+                $response = $geo_block->remove_white_list_ip( $data );
+            }
 
-			if ($action === 'add') {
-				$response = $geo_block->add_white_list_ip( $data );
-			}
-		} catch ( \Exception $e ) {
-			WP_CLI::error( 'Failed to handle IP entry: ' . $e->getMessage(), true );
-		}
+            if ($action === 'add') {
+                $response = $geo_block->add_white_list_ip( $data );
+            }
+        } catch ( \Exception $e ) {
+            WP_CLI::error( 'Failed to handle IP entry: ' . $e->getMessage(), true );
+        }
 
-		// Handle response.
-		if ( $response['success'] ) {
-			WP_CLI::success( $response['message'] );
-			return;
-		}
+        // Handle response.
+        if ( $response['success'] ) {
+            WP_CLI::success( $response['message'] );
+            return;
+        }
 
-		WP_CLI::error( $response['message'], true );
-	}
+        WP_CLI::error( $response['message'], true );
+    }
 
-	/**
-	 * Handle an action for the LLA table for a specific IP address.
-	 *
-	 * @param array $args Command arguments.
-	 * @param string $status Should be either 'allowed' or 'blocked'.
-	 * @param string $type Should be either 'source_ip' or 'username'.
-	 * @param string $action Should be either 'add' or 'remove'.
-	 * @return void
-	 */
-	protected function handleLlaTableEntry(array $args, string $status, string $type, string $action): void
-	{
-		if (rsssl_get_option('enable_limited_login_attempts', false) !== true) {
-			WP_CLI::error('The LLA feature is not enabled.', true);
-		}
+    /**
+     * Handle an action for the LLA table for a specific IP address.
+     *
+     * @param array $args Command arguments.
+     * @param string $status Should be either 'allowed' or 'blocked'.
+     * @param string $type Should be either 'source_ip' or 'username'.
+     * @param string $action Should be either 'add' or 'remove'.
+     * @return void
+     */
+    protected function handleLlaTableEntry(array $args, string $status, string $type, string $action): void
+    {
+        if (rsssl_get_option('enable_limited_login_attempts', false) !== true) {
+            WP_CLI::error('The LLA feature is not enabled.', true);
+        }
 
-		if (empty($args[0])) {
-			WP_CLI::error('Please provide the command the necessary arguments', true);
-		}
+        if (empty($args[0])) {
+            WP_CLI::error('Please provide the command the necessary arguments', true);
+        }
 
-		if (!in_array($status, ['allowed', 'blocked', 'locked']) || !in_array($type, ['source_ip', 'username'])) {
-			WP_CLI::error('Something went wrong! Could not handle command.', true);
-		}
+        if (!in_array($status, ['allowed', 'blocked', 'locked']) || !in_array($type, ['source_ip', 'username'])) {
+            WP_CLI::error('Something went wrong! Could not handle command.', true);
+        }
 
-		$value = '';
-		if ($type === 'source_ip') {
-			$value = $this->getFilteredIpAddress($args[0]);
-		}
+        $value = '';
+        if ($type === 'source_ip') {
+            $value = $this->getFilteredIpAddress($args[0]);
+        }
 
-		if ($type === 'username') {
-			$value = sanitize_text_field($args[0]);
-		}
+        if ($type === 'username') {
+            $value = sanitize_text_field($args[0]);
+        }
 
-		// Use the Rsssl_Limit_Login_Admin class to add the trusted IP.
-		if (!class_exists('\RSSSL\Pro\Security\WordPress\Rsssl_Limit_Login_Admin')) {
-			require_once rsssl_path . 'pro/security/wordpress/class-rsssl-limit-login-admin.php';
-		}
+        // Use the Rsssl_Limit_Login_Admin class to add the trusted IP.
+        if (!class_exists('\RSSSL\Pro\Security\WordPress\Rsssl_Limit_Login_Admin')) {
+            require_once rsssl_path . 'pro/security/wordpress/class-rsssl-limit-login-admin.php';
+        }
 
-		try {
-			$lla = new \RSSSL\Pro\Security\WordPress\Rsssl_Limit_Login_Admin();
+        try {
+            $lla = new \RSSSL\Pro\Security\WordPress\Rsssl_Limit_Login_Admin();
 
-			// fallback
-			$response = ['success' => false, 'message' => 'Something went wrong!'];
+            // fallback
+            $response = ['success' => false, 'message' => 'Something went wrong!'];
 
-			if ($action === 'add') {
-				$response = $lla->handle_entity([
-					'value' => $value,
-					'status'  => sanitize_text_field($status),
-				], $type);
-			}
+            if ($action === 'add') {
+                $response = $lla->handle_entity([
+                    'value' => $value,
+                    'status'  => sanitize_text_field($status),
+                ], $type);
+            }
 
-			if ($action === 'remove') {
-				$entry = $lla->get_entry($type, $value, $status);
-				$response = $lla->delete_entries([
-					'id' => $entry['id'],
-				]);
-			}
-		} catch ( Exception $e ) {
-			WP_CLI::error( 'Failed to handle LLA entry: ' . $e->getMessage(), true );
-		}
+            if ($action === 'remove') {
+                $entry = $lla->get_entry($type, $value, $status);
+                $response = $lla->delete_entries([
+                    'id' => $entry['id'],
+                ]);
+            }
+        } catch ( Exception $e ) {
+            WP_CLI::error( 'Failed to handle LLA entry: ' . $e->getMessage(), true );
+        }
 
-		// Handle response.
-		if ( $response['success'] ) {
-			WP_CLI::success( $response['message'] );
-			return;
-		}
+        // Handle response.
+        if ( $response['success'] ) {
+            WP_CLI::success( $response['message'] );
+            return;
+        }
 
-		WP_CLI::error( $response['message'], true );
-	}
+        WP_CLI::error( $response['message'], true );
+    }
 
-	/**
-	 * Return a filtered IP address. Method will exit() if the IP address is
-	 * invalid with the WP_CLI error message: Invalid IP address provided.
-	 */
-	protected function getFilteredIpAddress(string $originalIp): string
-	{
-		$ip = filter_var($originalIp, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4);
-		if (strpos($originalIp, ':')) {
-			$ip = filter_var($originalIp, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6);
-		}
+    /**
+     * Return a filtered IP address. Method will exit() if the IP address is
+     * invalid with the WP_CLI error message: Invalid IP address provided.
+     */
+    protected function getFilteredIpAddress(string $originalIp): string
+    {
+        $ip = filter_var($originalIp, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4);
+        if (strpos($originalIp, ':')) {
+            $ip = filter_var($originalIp, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6);
+        }
 
-		if (empty($ip)) {
-			WP_CLI::error('Invalid IP address provided.', true);
-		}
+        if (empty($ip)) {
+            WP_CLI::error('Invalid IP address provided.', true);
+        }
 
-		return $ip;
-	}
+        return $ip;
+    }
 
 	/**
 	 * Get command details for WP-CLI commands.
@@ -1156,40 +1156,40 @@ class rsssl_wp_cli {
 				'synopsis'    => [],
 				'pro'         => false,
 			],
-			'add_firewall_ip_block' => [
-				'description' => __( 'Add IP block.', 'really-simple-ssl' ),
-				'synopsis'    => [
-					[
-						'type'        => 'positional',
-						'name'        => 'ip_address',
-						'optional'    => false,
-						'description' => __( 'The IP to block.', 'really-simple-ssl' ),
-					],
-					[
-						'type'        => 'flag',
-						'name'        => 'permanent',
-						'optional'    => true,
-						'description' => __( 'Flag to add a permanent block.', 'really-simple-ssl' ),
-					],
-					[
-						'type'        => 'assoc',
-						'name'        => 'note',
-						'optional'    => true,
-						'description' => __( 'Optional note for the block.', 'really-simple-ssl' ),
-					],
-				],
-				'pro'         => true,
-			],
+            'add_firewall_ip_block' => [
+                'description' => __( 'Add IP block.', 'really-simple-ssl' ),
+                'synopsis'    => [
+                    [
+                        'type'        => 'positional',
+                        'name'        => 'ip_address',
+                        'optional'    => false,
+                        'description' => __( 'The IP to block.', 'really-simple-ssl' ),
+                    ],
+                    [
+                        'type'        => 'flag',
+                        'name'        => 'permanent',
+                        'optional'    => true,
+                        'description' => __( 'Flag to add a permanent block.', 'really-simple-ssl' ),
+                    ],
+                    [
+                        'type'        => 'assoc',
+                        'name'        => 'note',
+                        'optional'    => true,
+                        'description' => __( 'Optional note for the block.', 'really-simple-ssl' ),
+                    ],
+                ],
+                'pro'         => true,
+            ],
 			'remove_firewall_ip_block' => [
 				'description' => __( 'Remove IP block.', 'really-simple-ssl' ),
-				'synopsis'    => [
-					[
-						'type'        => 'positional',
-						'name'        => 'ip_address',
-						'optional'    => false,
-						'description' => __( 'The IP to remove the block for.', 'really-simple-ssl' ),
-					],
-				],
+                'synopsis'    => [
+                    [
+                        'type'        => 'positional',
+                        'name'        => 'ip_address',
+                        'optional'    => false,
+                        'description' => __( 'The IP to remove the block for.', 'really-simple-ssl' ),
+                    ],
+                ],
 				'pro'         => true,
 			],
 			'show_blocked_ips' => [
@@ -1202,103 +1202,103 @@ class rsssl_wp_cli {
 				'synopsis'    => [],
 				'pro'         => true,
 			],
-			'remove_firewall_trusted_ip' => [
+            'remove_firewall_trusted_ip' => [
 				'description' => __( 'Remove a trusted IP from the firewall.', 'really-simple-ssl' ),
 				'synopsis'    => [],
 				'pro'         => true,
 			],
-			'add_lla_trusted_ip' => [
-				'description' => __( 'Add a trusted IP to the limit login attempts table.', 'really-simple-ssl' ),
-				'synopsis'    => [],
-				'pro'         => true,
-			],
-			'remove_lla_trusted_ip' => [
-				'description' => __( 'Remove a trusted IP from the limit login attempts table.', 'really-simple-ssl' ),
-				'synopsis'    => [],
-				'pro'         => true,
-			],
-			'add_lla_blocked_ip' => [
-				'description' => __( 'Add a blocked IP to the limit login attempts table.', 'really-simple-ssl' ),
-				'synopsis'    => [
-					[
-						'type'        => 'positional',
-						'name'        => 'ip_address',
-						'optional'    => false,
-						'description' => __( 'The IP to block.', 'really-simple-ssl' ),
-					],
-					[
-						'type'        => 'flag',
-						'name'        => 'permanent',
-						'optional'    => true,
-						'description' => __( 'Flag to add a permanent block.', 'really-simple-ssl' ),
-					],
-				],
-				'pro'         => true,
-			],
-			'remove_lla_blocked_ip' => [
-				'description' => __( 'Remove a blocked IP from the limit login attempts table.', 'really-simple-ssl' ),
-				'synopsis'    => [
-					[
-						'type'        => 'positional',
-						'name'        => 'ip_address',
-						'optional'    => false,
-						'description' => __( 'The IP to block.', 'really-simple-ssl' ),
-					],
-					[
-						'type'        => 'flag',
-						'name'        => 'permanent',
-						'optional'    => true,
-						'description' => __( 'Flag to add a permanent block.', 'really-simple-ssl' ),
-					],
-				],
-				'pro'         => true,
-			],
-			'add_lla_trusted_username' => [
-				'description' => __( 'Add a trusted username to the limit login attempts table.', 'really-simple-ssl' ),
-				'synopsis'    => [],
-				'pro'         => true,
-			],
-			'remove_lla_trusted_username' => [
-				'description' => __( 'Remove a trusted username from the limit login attempts table.', 'really-simple-ssl' ),
-				'synopsis'    => [],
-				'pro'         => true,
-			],
-			'add_lla_blocked_username' => [
-				'description' => __( 'Add a blocked username to the limit login attempts table.', 'really-simple-ssl' ),
-				'synopsis'    => [
-					[
-						'type'        => 'positional',
-						'name'        => 'ip_address',
-						'optional'    => false,
-						'description' => __( 'The username to block.', 'really-simple-ssl' ),
-					],
-					[
-						'type'        => 'flag',
-						'name'        => 'permanent',
-						'optional'    => true,
-						'description' => __( 'Flag to add a permanent block.', 'really-simple-ssl' ),
-					],
-				],
-				'pro'         => true,
-			],
-			'remove_lla_blocked_username' => [
-				'description' => __( 'Remove a blocked username from the limit login attempts table.', 'really-simple-ssl' ),
-				'synopsis'    => [
-					[
-						'type'        => 'positional',
-						'name'        => 'username',
-						'optional'    => false,
-						'description' => __( 'The username to remove the block for.', 'really-simple-ssl' ),
-					],
-					[
-						'type'        => 'flag',
-						'name'        => 'permanent',
-						'optional'    => true,
-						'description' => __( 'Flag to remove a permanent block.', 'really-simple-ssl' ),
-					],
-				],
-				'pro'         => true,
-			],
+            'add_lla_trusted_ip' => [
+                'description' => __( 'Add a trusted IP to the limit login attempts table.', 'really-simple-ssl' ),
+                'synopsis'    => [],
+                'pro'         => true,
+            ],
+            'remove_lla_trusted_ip' => [
+                'description' => __( 'Remove a trusted IP from the limit login attempts table.', 'really-simple-ssl' ),
+                'synopsis'    => [],
+                'pro'         => true,
+            ],
+            'add_lla_blocked_ip' => [
+                'description' => __( 'Add a blocked IP to the limit login attempts table.', 'really-simple-ssl' ),
+                'synopsis'    => [
+                    [
+                        'type'        => 'positional',
+                        'name'        => 'ip_address',
+                        'optional'    => false,
+                        'description' => __( 'The IP to block.', 'really-simple-ssl' ),
+                    ],
+                    [
+                        'type'        => 'flag',
+                        'name'        => 'permanent',
+                        'optional'    => true,
+                        'description' => __( 'Flag to add a permanent block.', 'really-simple-ssl' ),
+                    ],
+                ],
+                'pro'         => true,
+            ],
+            'remove_lla_blocked_ip' => [
+                'description' => __( 'Remove a blocked IP from the limit login attempts table.', 'really-simple-ssl' ),
+                'synopsis'    => [
+                    [
+                        'type'        => 'positional',
+                        'name'        => 'ip_address',
+                        'optional'    => false,
+                        'description' => __( 'The IP to block.', 'really-simple-ssl' ),
+                    ],
+                    [
+                        'type'        => 'flag',
+                        'name'        => 'permanent',
+                        'optional'    => true,
+                        'description' => __( 'Flag to add a permanent block.', 'really-simple-ssl' ),
+                    ],
+                ],
+                'pro'         => true,
+            ],
+            'add_lla_trusted_username' => [
+                'description' => __( 'Add a trusted username to the limit login attempts table.', 'really-simple-ssl' ),
+                'synopsis'    => [],
+                'pro'         => true,
+            ],
+            'remove_lla_trusted_username' => [
+                'description' => __( 'Remove a trusted username from the limit login attempts table.', 'really-simple-ssl' ),
+                'synopsis'    => [],
+                'pro'         => true,
+            ],
+            'add_lla_blocked_username' => [
+                'description' => __( 'Add a blocked username to the limit login attempts table.', 'really-simple-ssl' ),
+                'synopsis'    => [
+                    [
+                        'type'        => 'positional',
+                        'name'        => 'ip_address',
+                        'optional'    => false,
+                        'description' => __( 'The username to block.', 'really-simple-ssl' ),
+                    ],
+                    [
+                        'type'        => 'flag',
+                        'name'        => 'permanent',
+                        'optional'    => true,
+                        'description' => __( 'Flag to add a permanent block.', 'really-simple-ssl' ),
+                    ],
+                ],
+                'pro'         => true,
+            ],
+            'remove_lla_blocked_username' => [
+                'description' => __( 'Remove a blocked username from the limit login attempts table.', 'really-simple-ssl' ),
+                'synopsis'    => [
+                    [
+                        'type'        => 'positional',
+                        'name'        => 'username',
+                        'optional'    => false,
+                        'description' => __( 'The username to remove the block for.', 'really-simple-ssl' ),
+                    ],
+                    [
+                        'type'        => 'flag',
+                        'name'        => 'permanent',
+                        'optional'    => true,
+                        'description' => __( 'Flag to remove a permanent block.', 'really-simple-ssl' ),
+                    ],
+                ],
+                'pro'         => true,
+            ],
 		];
 	}
 

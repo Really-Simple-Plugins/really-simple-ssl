@@ -108,7 +108,7 @@ class Rsssl_Two_Factor
 
 		    ( new Rsssl_Two_Factor_On_Board_Api() );
 		    if ( is_user_logged_in() ) {
-			    ( new Rsssl_Two_Factor_Profile_Settings() );
+			    (Rsssl_Two_Factor_Profile_Settings::get_instance());
 		    }
 
 		    return;
@@ -140,7 +140,7 @@ class Rsssl_Two_Factor
 
         (new Rsssl_Two_Factor_On_Board_Api());
         if(is_user_logged_in()) {
-            (new Rsssl_Two_Factor_Profile_Settings());
+	        Rsssl_Two_Factor_Profile_Settings::get_instance();
         }
 
         //add_action('rsssl_upgrade',  array(__CLASS__, 'upgrade'));

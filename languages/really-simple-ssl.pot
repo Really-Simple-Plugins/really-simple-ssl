@@ -2,14 +2,14 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Really Simple Security Pro 9.3.3\n"
+"Project-Id-Version: Really Simple Security Pro 9.3.4\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/really-simple-ssl-pro\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-03-19T10:46:42+00:00\n"
+"POT-Creation-Date: 2025-04-16T13:03:56+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: really-simple-ssl\n"
@@ -142,7 +142,7 @@ msgstr ""
 
 #: assets/templates/two_fa/profile-settings.php:61
 #: assets/templates/two_fa/totp-config.php:23
-#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:399
+#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:420
 #: security/wordpress/two-fa/class-rsssl-two-factor-totp.php:925
 msgid "Download Backup Codes"
 msgstr ""
@@ -521,6 +521,9 @@ msgid "Your site uses plain permalinks, which causes issues with the REST API. P
 msgstr ""
 
 #: class-admin.php:2367
+#: settings/config/fields/firewall.php:104
+#: settings/config/fields/firewall.php:126
+#: settings/config/fields/firewall.php:148
 msgid "404 errors detected on your homepage. 404 blocking is unavailable, to prevent blocking of legitimate visitors. It is strongly recommended to resolve these errors."
 msgstr ""
 
@@ -1906,8 +1909,8 @@ msgid "Email could not be sent."
 msgstr ""
 
 #: mailer/class-mail.php:212
-#: upgrade/upgrade-to-pro.php:344
-#: upgrade/upgrade-to-pro.php:345
+#: upgrade/upgrade-to-pro.php:338
+#: upgrade/upgrade-to-pro.php:339
 msgid "An error occurred:"
 msgstr ""
 
@@ -1982,8 +1985,8 @@ msgstr ""
 
 #: onboarding/class-onboarding.php:212
 #: onboarding/class-onboarding.php:219
-#: upgrade/upgrade-to-pro.php:134
-#: upgrade/upgrade-to-pro.php:148
+#: upgrade/upgrade-to-pro.php:132
+#: upgrade/upgrade-to-pro.php:145
 #: settings/build/43.0e3a76e200aea03c4a34.js:1
 #: settings/src/Dashboard/OtherPlugins/OtherPluginsData.js:73
 msgid "Install"
@@ -2704,21 +2707,21 @@ msgstr ""
 msgid "Captcha was not verified successfully. Please try again."
 msgstr ""
 
-#: pro/security/wordpress/class-rsssl-event-listener.php:150
+#: pro/security/wordpress/class-rsssl-event-listener.php:174
 msgid "<strong>Error</strong>: Captcha validation failed."
 msgstr ""
 
-#: pro/security/wordpress/class-rsssl-event-listener.php:165
+#: pro/security/wordpress/class-rsssl-event-listener.php:190
 msgid "Your access has been denied due to too many failed login attempts."
 msgstr ""
 
-#: pro/security/wordpress/class-rsssl-event-listener.php:227
-#: pro/security/wordpress/class-rsssl-event-listener.php:282
+#: pro/security/wordpress/class-rsssl-event-listener.php:252
+#: pro/security/wordpress/class-rsssl-event-listener.php:307
 msgid "Your access has been denied, too many login attempts"
 msgstr ""
 
-#: pro/security/wordpress/class-rsssl-event-listener.php:249
-#: pro/security/wordpress/class-rsssl-event-listener.php:275
+#: pro/security/wordpress/class-rsssl-event-listener.php:274
+#: pro/security/wordpress/class-rsssl-event-listener.php:300
 msgid "Your access has been denied, please contact the webmaster for support"
 msgstr ""
 
@@ -2851,7 +2854,7 @@ msgid "This website is unavailable in your region."
 msgstr ""
 
 #: pro/security/wordpress/class-rsssl-geo-block.php:1132
-#: pro/security/wordpress/firewall/class-rsssl-404-interceptor.php:329
+#: pro/security/wordpress/firewall/class-rsssl-404-interceptor.php:335
 msgid "Your access to this site has been temporarily denied"
 msgstr ""
 
@@ -2946,7 +2949,7 @@ msgstr ""
 
 #: pro/security/wordpress/class-rsssl-password-security.php:628
 #: pro/security/wordpress/class-rsssl-password-security.php:632
-#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:119
+#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:140
 msgid "Invalid nonce."
 msgstr ""
 
@@ -3225,23 +3228,23 @@ msgstr ""
 msgid "Login blocked by Geo-IP list"
 msgstr ""
 
-#: pro/security/wordpress/firewall/class-rsssl-404-interceptor.php:326
+#: pro/security/wordpress/firewall/class-rsssl-404-interceptor.php:332
 msgid "We're sorry!"
 msgstr ""
 
-#: pro/security/wordpress/firewall/class-rsssl-404-interceptor.php:327
+#: pro/security/wordpress/firewall/class-rsssl-404-interceptor.php:333
 msgid "Please verify that you are human"
 msgstr ""
 
-#: pro/security/wordpress/firewall/class-rsssl-404-interceptor.php:331
+#: pro/security/wordpress/firewall/class-rsssl-404-interceptor.php:337
 msgid "Error code: 404"
 msgstr ""
 
-#: pro/security/wordpress/firewall/models/class-rsssl-404-block.php:107
+#: pro/security/wordpress/firewall/models/class-rsssl-404-block.php:108
 msgid "Added to watchlist by 404 interceptor"
 msgstr ""
 
-#: pro/security/wordpress/firewall/models/class-rsssl-404-block.php:172
+#: pro/security/wordpress/firewall/models/class-rsssl-404-block.php:173
 msgid "404 threshold exceeded"
 msgstr ""
 
@@ -4766,7 +4769,7 @@ msgstr ""
 
 #. translators: %s is replaced with the site url
 #: security/wordpress/two-fa/class-rsssl-two-factor-email.php:320
-#: security/wordpress/two-fa/services/class-rsssl-two-fa-reminder-service.php:115
+#: security/wordpress/two-fa/services/class-rsssl-two-fa-reminder-service.php:118
 #: security/wordpress/two-fa/traits/trait-rsssl-email-trait.php:142
 msgid "Notification by %s"
 msgstr ""
@@ -4849,33 +4852,33 @@ msgstr ""
 msgid "Too many attempts. Please try again later."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:124
-#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:141
+#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:145
+#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:162
 msgid "User not logged in."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:147
+#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:168
 msgid "Verification code sent"
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:214
+#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:235
 msgid "Two-Factor Authentication for TOTP failed. No Authentication code provided, please try again."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:240
+#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:261
 msgid "The Two-Factor Authentication setup for TOTP failed. Please try again."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:267
+#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:288
 msgid "The Two-Factor Authentication setup for email failed. Please try again."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:400
+#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:421
 #: security/wordpress/two-fa/class-rsssl-two-factor-totp.php:926
 msgid "Key copied"
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:401
+#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:422
 #: security/wordpress/two-fa/class-rsssl-two-factor-totp.php:927
 msgid "Could not copy text: "
 msgstr ""
@@ -5025,25 +5028,25 @@ msgstr ""
 msgid "Password Reset"
 msgstr ""
 
-#: security/wordpress/two-fa/services/class-rsssl-two-fa-reminder-service.php:72
+#: security/wordpress/two-fa/services/class-rsssl-two-fa-reminder-service.php:75
 msgid "Important security notice"
 msgstr ""
 
-#: security/wordpress/two-fa/services/class-rsssl-two-fa-reminder-service.php:84
+#: security/wordpress/two-fa/services/class-rsssl-two-fa-reminder-service.php:87
 msgid "Please login"
 msgstr ""
 
 #. translators: 1: Site URL.
-#: security/wordpress/two-fa/services/class-rsssl-two-fa-reminder-service.php:91
+#: security/wordpress/two-fa/services/class-rsssl-two-fa-reminder-service.php:94
 msgid "You are receiving this email because you have an account registered at %s."
 msgstr ""
 
-#: security/wordpress/two-fa/services/class-rsssl-two-fa-reminder-service.php:104
+#: security/wordpress/two-fa/services/class-rsssl-two-fa-reminder-service.php:107
 msgid "The site's security policy requires you to configure Two-Factor Authentication to protect against account theft. %1$s and configure Two-Factor authentication %2$swithin three days%3$s. If you haven't performed the configuration by then, %4$syou will be unable to login%5$s."
 msgstr ""
 
 #. translators: %s: First name. %s: Last name.
-#: security/wordpress/two-fa/services/class-rsssl-two-fa-reminder-service.php:139
+#: security/wordpress/two-fa/services/class-rsssl-two-fa-reminder-service.php:142
 msgid "Hi %s %s"
 msgstr ""
 
@@ -5411,12 +5414,6 @@ msgstr ""
 
 #: settings/config/fields/firewall.php:101
 msgid "A lockout will occur if an IP address exceeds the threshold within the given timeframe. Select ‘%s’ if you want to disable 404 blocking."
-msgstr ""
-
-#: settings/config/fields/firewall.php:104
-#: settings/config/fields/firewall.php:126
-#: settings/config/fields/firewall.php:148
-msgid "404 errors detected on your home page. 404 blocking is unavailable, to prevent blocking of legitimate visitors. It is strongly recommended to resolve these errors."
 msgstr ""
 
 #: settings/config/fields/firewall.php:107
@@ -6685,105 +6682,105 @@ msgstr ""
 msgid "Terms and Conditions"
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:71
+#: upgrade/upgrade-to-pro.php:77
 msgid "Checking if plugin folder exists..."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:72
+#: upgrade/upgrade-to-pro.php:78
 msgid "Able to create destination folder"
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:73
+#: upgrade/upgrade-to-pro.php:79
 msgid "Destination folder already exists"
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:78
+#: upgrade/upgrade-to-pro.php:84
 msgid "Validating license..."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:79
+#: upgrade/upgrade-to-pro.php:85
 msgid "License valid"
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:80
+#: upgrade/upgrade-to-pro.php:86
 msgid "License invalid"
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:85
+#: upgrade/upgrade-to-pro.php:91
 msgid "Retrieving package information..."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:86
+#: upgrade/upgrade-to-pro.php:92
 msgid "Package information retrieved"
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:87
+#: upgrade/upgrade-to-pro.php:93
 msgid "Failed to gather package information"
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:92
+#: upgrade/upgrade-to-pro.php:98
 msgid "Installing plugin..."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:93
+#: upgrade/upgrade-to-pro.php:99
 msgid "Plugin installed"
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:94
+#: upgrade/upgrade-to-pro.php:100
 msgid "Failed to install plugin"
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:99
+#: upgrade/upgrade-to-pro.php:105
 msgid "Activating plugin..."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:100
+#: upgrade/upgrade-to-pro.php:106
 msgid "Plugin activated"
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:101
+#: upgrade/upgrade-to-pro.php:107
 msgid "Failed to activate plugin"
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:132
+#: upgrade/upgrade-to-pro.php:130
 msgid "GDPR/CCPA Privacy Suite"
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:136
+#: upgrade/upgrade-to-pro.php:134
 msgid "Configure your Cookie Notice, Consent Management and Cookie Policy with our Wizard and Cookie Scan. Supports GDPR, DSGVO, TTDSG, LGPD, POPIA, RGPD, CCPA and PIPEDA."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:146
+#: upgrade/upgrade-to-pro.php:143
 msgid "One click SSL optimization"
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:150
+#: upgrade/upgrade-to-pro.php:147
 msgid "Easily improve site security with WordPress Hardening, Two-Factor Authentication (2FA), Login Protection, Vulnerability Detection and SSL certificate generation."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:162
+#: upgrade/upgrade-to-pro.php:156
 #: settings/build/43.0e3a76e200aea03c4a34.js:1
 #: settings/src/Dashboard/OtherPlugins/OtherPlugins.js:24
 msgid "Installed"
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:205
+#: upgrade/upgrade-to-pro.php:199
 msgid "Installation finished"
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:303
+#: upgrade/upgrade-to-pro.php:297
 msgid "Recommended by Really Simple Plugins"
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:328
+#: upgrade/upgrade-to-pro.php:322
 msgid "Installing"
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:339
+#: upgrade/upgrade-to-pro.php:333
 msgid "Visit Dashboard"
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:342
+#: upgrade/upgrade-to-pro.php:336
 #: modal/build/433.ef6236b038b45328e4c7.js:1
 #: modal/src/components/Modal/RssslModal.js:68
 #: settings/build/288.6791823778f8b8c60d18.js:1
@@ -6796,48 +6793,52 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:344
+#: upgrade/upgrade-to-pro.php:338
 msgid "Install %sManually%s."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:345
+#: upgrade/upgrade-to-pro.php:339
 msgid "Check your %slicense%s."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:422
+#: upgrade/upgrade-to-pro.php:402
+msgid "Unknown plugin encountered."
+msgstr ""
+
+#: upgrade/upgrade-to-pro.php:425
 msgid "Could not rename folder!"
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:522
-#: upgrade/upgrade-to-pro.php:554
+#: upgrade/upgrade-to-pro.php:525
+#: upgrade/upgrade-to-pro.php:557
 msgid "An error occurred, please try again."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:530
+#: upgrade/upgrade-to-pro.php:533
 msgid "Your license key expired on %s."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:536
+#: upgrade/upgrade-to-pro.php:539
 msgid "Your license key has been disabled."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:539
+#: upgrade/upgrade-to-pro.php:542
 msgid "Missing license."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:542
+#: upgrade/upgrade-to-pro.php:545
 msgid "Invalid license."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:545
+#: upgrade/upgrade-to-pro.php:548
 msgid "Your license is not active for this URL."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:548
+#: upgrade/upgrade-to-pro.php:551
 msgid "This appears to be an invalid license key for this plugin."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:551
+#: upgrade/upgrade-to-pro.php:554
 msgid "Your license key has reached its activation limit."
 msgstr ""
 

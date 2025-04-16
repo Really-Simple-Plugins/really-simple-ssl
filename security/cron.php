@@ -1,5 +1,11 @@
 <?php
 defined('ABSPATH') or die();
+
+$autoloader = dirname(__FILE__) . '/../rsssl-auto-loader.php';
+if (file_exists($autoloader)) {
+    require_once($autoloader);
+}
+
 /**
 	Schedule cron jobs if useCron is true
 	Else start the functions for testing

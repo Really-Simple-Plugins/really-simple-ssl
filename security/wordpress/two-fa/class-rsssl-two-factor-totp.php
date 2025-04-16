@@ -170,7 +170,7 @@ class Rsssl_Two_Factor_Totp extends Rsssl_Two_Factor_Provider implements Rsssl_T
 	 * @return boolean Returns true if TOTP setup is successful. Returns an error message string if there is an error during setup.
 	 */
 	public static function setup_totp( WP_User $user, string $key, string $code ): bool {
-		$code = preg_replace( '/\s+/', '', $code );
+		$code = preg_replace( '/\D/', '', $code );
 
 		if ( ! self::is_valid_key( $key ) ) {
 			// Set an error message for after redirect login using transients.
@@ -206,7 +206,7 @@ class Rsssl_Two_Factor_Totp extends Rsssl_Two_Factor_Provider implements Rsssl_T
 		$user    = get_user_by( 'id', $user_id );
 
 		$key  = $request['key'];
-		$code = preg_replace( '/\s+/', '', $request['code'] );
+		$code = preg_replace( '/\D/', '', $request['code'] );
 
 		if ( ! self::is_valid_key( $key ) ) {
 			return new WP_Error( 'invalid_key', __( 'Invalid Two Factor Authentication secret key.', 'really-simple-ssl' ), array( 'status' => 400 ) );
