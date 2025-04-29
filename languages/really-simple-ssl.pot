@@ -9,33 +9,28 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-04-10T06:41:48+00:00\n"
+"POT-Creation-Date: 2025-04-29T08:17:53+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.11.0\n"
+"X-Generator: WP-CLI 2.8.1\n"
 "X-Domain: really-simple-ssl\n"
 
 #. Plugin Name of the plugin
-#: really-simple-ssl-pro.php
 msgid "Really Simple Security Pro"
 msgstr ""
 
 #. Plugin URI of the plugin
-#: really-simple-ssl-pro.php
 msgid "https://really-simple-ssl.com"
 msgstr ""
 
 #. Description of the plugin
-#: really-simple-ssl-pro.php
 msgid "Simple and performant security"
 msgstr ""
 
 #. Author of the plugin
-#: really-simple-ssl-pro.php
 msgid "Really Simple Plugins"
 msgstr ""
 
 #. Author URI of the plugin
-#: really-simple-ssl-pro.php
 msgid "https://really-simple-plugins.com"
 msgstr ""
 
@@ -142,7 +137,7 @@ msgstr ""
 
 #: assets/templates/two_fa/profile-settings.php:61
 #: assets/templates/two_fa/totp-config.php:23
-#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:420
+#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:458
 #: security/wordpress/two-fa/class-rsssl-two-factor-totp.php:925
 msgid "Download Backup Codes"
 msgstr ""
@@ -2949,7 +2944,7 @@ msgstr ""
 
 #: pro/security/wordpress/class-rsssl-password-security.php:628
 #: pro/security/wordpress/class-rsssl-password-security.php:632
-#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:140
+#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:146
 msgid "Invalid nonce."
 msgstr ""
 
@@ -4852,33 +4847,41 @@ msgstr ""
 msgid "Too many attempts. Please try again later."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:145
-#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:162
+#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:151
+#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:170
 msgid "User not logged in."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:168
-msgid "Verification code sent"
+#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:180
+msgid "User could not be retrieved."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:235
+#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:193
+msgid "Failed to generate verification token."
+msgstr ""
+
+#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:201
+msgid "Verification code sent."
+msgstr ""
+
+#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:273
 msgid "Two-Factor Authentication for TOTP failed. No Authentication code provided, please try again."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:261
+#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:299
 msgid "The Two-Factor Authentication setup for TOTP failed. Please try again."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:288
+#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:326
 msgid "The Two-Factor Authentication setup for email failed. Please try again."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:421
+#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:459
 #: security/wordpress/two-fa/class-rsssl-two-factor-totp.php:926
 msgid "Key copied"
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:422
+#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:460
 #: security/wordpress/two-fa/class-rsssl-two-factor-totp.php:927
 msgid "Could not copy text: "
 msgstr ""
