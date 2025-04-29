@@ -6,7 +6,7 @@ Requires at least: 5.9
 License: GPL2
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 9.3.4
+Stable tag: 9.3.5
 
 Easily improve site security with WordPress Hardening, Two-Factor Authentication (2FA), Login Protection, Vulnerability Detection and SSL certificate.
 
@@ -151,8 +151,8 @@ The plugin checks your certificate before enabling, but if, for example, you mig
 If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions](https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/) instead.
 
 == Changelog ==
-= 9.3.4 =
-= April 29th, 2025
+= 9.3.5 =
+* April 29th, 2025
 * Improvement: Tested up to WordPress 6.8
 * Improvement: Some translation updates
 * Improvement: Check for autoloader in cron
