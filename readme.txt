@@ -152,8 +152,11 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 
 == Changelog ==
 = 9.3.4 =
-= Tested up to WordPress 6.8
-= Some translation updates
+= April 29th, 2025
+* Improvement: Tested up to WordPress 6.8
+* Improvement: Some translation updates
+* Improvement: Check for autoloader in cron
+* Fix: 2FA methods can now be set on profile page
 
 = 9.3.3 =
 * April 2nd, 2025

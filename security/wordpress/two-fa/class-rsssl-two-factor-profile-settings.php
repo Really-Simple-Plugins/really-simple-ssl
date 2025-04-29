@@ -69,20 +69,26 @@ if (!class_exists('Rsssl_Two_Factor_Profile_Settings')) {
          *
          * @return void
          */
-        private function __construct()
-        {
-            if (is_user_logged_in()) {
-                $user_id = get_current_user_id();
-                $user = get_user_by('ID', $user_id);
-                global $pagenow;
+	    private function __construct() {
+		    if ( is_user_logged_in() ) {
+			    $user_id = get_current_user_id();
+			    $user    = get_user_by( 'ID', $user_id );
+			    global $pagenow;
 
-                if ('profile.php' === $pagenow || ('user-edit.php' === $pagenow && isset($_GET['user_id']))) {
-                    if ($this->validate_two_turned_on_for_user($user)) {
-                        add_action('admin_init', array($this, 'add_hooks'));
-                    }
-                }
-            }
-        }
+			    $relevant_ajax_actions = [ 'change_method_to_email', 'resend_email_code_profile' ];
+
+			    if (
+				    'profile.php' === $pagenow ||
+				    ( 'user-edit.php' === $pagenow && isset( $_GET['user_id'] ) ) ||
+				    ( defined( 'DOING_AJAX' ) && DOING_AJAX && isset( $_REQUEST['action'] ) && in_array( $_REQUEST['action'], $relevant_ajax_actions, true ) )
+			    ) {
+				    if ( $this->validate_two_turned_on_for_user( $user ) ) {
+					    add_action( 'admin_init', array( $this, 'add_hooks' ) );
+				    }
+			    }
+
+		    }
+	    }
 
         /**
          * Add hooks for user profile page.
@@ -156,17 +162,49 @@ if (!class_exists('Rsssl_Two_Factor_Profile_Settings')) {
          * Starts the process of email validation for a user.
          *
          */
-        public function start_email_validation_callback(): void
-        {
-            if(!is_user_logged_in()) {
-                wp_send_json_error( array( 'message' => __( 'User not logged in.', 'really-simple-ssl' ) ), 401 );
-            }
-            $user = get_user_by('id', get_current_user_id());
-            // Sending the email with the code.
-            Rsssl_Two_Factor_Email::get_instance()->generate_and_email_token($user, true);
-            $token = get_user_meta( $user->ID, Rsssl_Two_Factor_Email::RSSSL_TOKEN_META_KEY, true );
-            wp_send_json_success( array( 'message' => __('Verification code sent', 'really-simple-ssl'), 'token' => $token ), 200 );
-        }
+	    public function start_email_validation_callback(): void
+	    {
+
+		    if ( ! is_user_logged_in() ) {
+			    wp_send_json_error(
+				    array( 'message' => __( 'User not logged in.', 'really-simple-ssl' ) ),
+				    401
+			    );
+			    return;
+		    }
+
+		    $user = get_user_by( 'id', get_current_user_id() );
+
+		    if ( ! $user ) {
+			    wp_send_json_error(
+				    array( 'message' => __( 'User could not be retrieved.', 'really-simple-ssl' ) ),
+				    500
+			    );
+			    return;
+		    }
+
+		    // Sending the email with the code.
+		    Rsssl_Two_Factor_Email::get_instance()->generate_and_email_token( $user, true );
+
+		    $token = get_user_meta( $user->ID, Rsssl_Two_Factor_Email::RSSSL_TOKEN_META_KEY, true );
+
+		    if ( ! $token ) {
+			    wp_send_json_error(
+				    array( 'message' => __( 'Failed to generate verification token.', 'really-simple-ssl' ) ),
+				    500
+			    );
+			    return;
+		    }
+
+		    wp_send_json_success(
+			    array(
+				    'message' => __( 'Verification code sent.', 'really-simple-ssl' ),
+				    'token'   => $token,
+			    ),
+			    200
+		    );
+	    }
+
 
         /**
          * Save the Two-Factor Authentication settings for the user.
