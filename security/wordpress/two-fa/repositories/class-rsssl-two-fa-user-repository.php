@@ -29,7 +29,6 @@ class Rsssl_Two_Fa_User_Repository implements Rsssl_Two_Fa_User_Repository_Inter
     /**
      * Retrieve two-factor authentication users based on the provided parameters.
      *
-     * @param Rsssl_Two_FA_Data_Parameters $params
      * @return Rsssl_Two_Fa_User_Collection
      */
     public function getTwoFaUsers(Rsssl_Two_FA_Data_Parameters $params): Rsssl_Two_Fa_User_Collection
@@ -64,7 +63,6 @@ class Rsssl_Two_Fa_User_Repository implements Rsssl_Two_Fa_User_Repository_Inter
     /**
      * Retrieve two-factor authentication users that are disabled.
      *
-     * @param Rsssl_Two_FA_Data_Parameters $params
      * @return Rsssl_Two_Fa_User_Collection
      */
     public function getTwoFaDisabledUsers(Rsssl_Two_FA_Data_Parameters $params): Rsssl_Two_Fa_User_Collection
@@ -79,7 +77,6 @@ class Rsssl_Two_Fa_User_Repository implements Rsssl_Two_Fa_User_Repository_Inter
      * to a Rsssl_Two_Fa_User_Collection.
      *
      * @param array $args Query arguments for WP_User_Query.
-     * @param Rsssl_Two_FA_Data_Parameters $params
      * @return Rsssl_Two_Fa_User_Collection
      */
     private function buildUserCollection(array $args, Rsssl_Two_FA_Data_Parameters $params): Rsssl_Two_Fa_User_Collection
@@ -116,7 +113,6 @@ class Rsssl_Two_Fa_User_Repository implements Rsssl_Two_Fa_User_Repository_Inter
      * Retrieve forced two-factor authentication users with an "open" status. and nearing expiry.
      * within the forced roles.
      *
-     * @param Rsssl_Two_FA_Data_Parameters $params
      * @return Rsssl_Two_Fa_User_Collection
      */
     public function getForcedTwoFaUsersWithOpenStatus(Rsssl_Two_FA_Data_Parameters $params ): Rsssl_Two_Fa_User_Collection
@@ -133,7 +129,6 @@ class Rsssl_Two_Fa_User_Repository implements Rsssl_Two_Fa_User_Repository_Inter
      * Retrieve forced two-factor authentication users with an "open" status. and nearing expiry.
      * within the forced roles.
      *
-     * @param Rsssl_Two_FA_Data_Parameters $params
      * @return Rsssl_Two_Fa_User_Collection
      */
     public function getAddedForcedTwoFaUsersWithOpenStatus(Rsssl_Two_FA_Data_Parameters $params, array $changedRoles): Rsssl_Two_Fa_User_Collection
@@ -146,7 +141,6 @@ class Rsssl_Two_Fa_User_Repository implements Rsssl_Two_Fa_User_Repository_Inter
     /**
      * Retrieve forced two-factor authentication users with disabled status.
      *
-     * @param Rsssl_Two_FA_Data_Parameters $params
      * @return Rsssl_Two_Fa_User_Collection
      */
     public function getForcedTwoFaUsersWithDisabledStatus(Rsssl_Two_FA_Data_Parameters $params, array $newForcedRoles): Rsssl_Two_Fa_User_Collection
@@ -161,7 +155,6 @@ class Rsssl_Two_Fa_User_Repository implements Rsssl_Two_Fa_User_Repository_Inter
     /**
      * Retrieve forced two-factor authentication users with disabled status.
      *
-     * @param Rsssl_Two_FA_Data_Parameters $params
      * @return Rsssl_Two_Fa_User_Collection
      */
     public function getForcedTwoFaUsersWithExpiredStatus(Rsssl_Two_FA_Data_Parameters $params, array $newForcedRoles): Rsssl_Two_Fa_User_Collection

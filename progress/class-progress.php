@@ -109,11 +109,18 @@ class rsssl_progress {
 	 * @return void
 	 */
 	public function dismiss_from_admin_notice(){
-		if ( !rsssl_user_can_manage() ) {
+		if ( ! rsssl_user_can_manage() ) {
 			return;
 		}
-		if (isset($_GET['dismiss_notice'])) {
+
+		if ( isset($_GET['dismiss_notice']) ) {
 			$id = sanitize_title($_GET['dismiss_notice']);
+
+			// Verify nonce
+			if ( ! isset($_GET['_wpnonce']) || ! wp_verify_nonce($_GET['_wpnonce'], 'rsssl_dismiss_notice_' . $id) ) {
+				return; // or wp_die('Invalid request');
+			}
+
 			$this->dismiss_task($id);
 		}
 	}

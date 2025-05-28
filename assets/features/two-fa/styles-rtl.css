@@ -1,0 +1,405 @@
+/*!**********************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/@wordpress/scripts/node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!../security/wordpress/two-fa/assets/css/two-fa.scss ***!
+  \**********************************************************************************************************************************************************************************************************************************************************************************************************/
+/* Style radio inputs */
+.radio-input {
+  position: absolute;
+  left: 0;
+  margin-right: 10px; /* Adjust this value to your preferred spacing */
+  vertical-align: middle;
+  top: 5px;
+}
+
+/* Style radio labels */
+.radio-label {
+  display: inline-block;
+  vertical-align: middle;
+  width: 100%;
+  position: relative;
+  margin: 20px 0;
+}
+
+.badge {
+  margin-right: 10px;
+  padding: 2px 4px;
+}
+
+.badge-default {
+  background-color: #e5e5e5;
+  color: black;
+}
+
+.badge-enabled {
+  background-color: #fbc43e;
+  color: black;
+}
+
+/**
+ * The following styles are for the onboarding form
+ */
+#two_fa_onboarding_form {
+  margin-top: 20px;
+}
+
+#two_fa_onboarding_form div {
+  transition: height 0.5s;
+}
+
+#skip_onboarding {
+  margin-left: 20px;
+}
+
+.skip_container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+.skip_container a {
+  text-decoration: none;
+}
+
+.totp-submit {
+  margin-top: 10px;
+}
+
+div.rsssl_step_one_onboarding {
+  display: block;
+}
+
+div.rsssl_step_two_onboarding {
+  display: none;
+}
+
+div.rsssl_step_three_onboarding {
+  margin: 10px 0 50px 0;
+  display: none;
+}
+div.rsssl_step_three_onboarding button {
+  margin-top: 10px;
+}
+
+div.rsssl_step_four_onboarding {
+  margin-top: 10px;
+  display: none;
+}
+
+#two-factor-qr-code {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 245px;
+  height: 270px;
+}
+#two-factor-qr-code a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+#two-factor-qr-code svg {
+  width: 100%;
+  height: 100%;
+}
+
+.error {
+  color: red;
+  margin-top: -5px;
+}
+
+.input {
+  margin-bottom: 5px !important;
+}
+
+#totp-key {
+  cursor: pointer;
+  display: flex; /* Enables Flexbox */
+  justify-content: center; /* Centers horizontally */
+  align-items: center; /* Centers vertically */
+}
+
+#two-factor-qr-code {
+  display: flex; /* Enables Flexbox */
+  justify-content: left; /* Centers horizontally */
+  align-items: center; /* Centers vertically */
+  width: 100%;
+  min-height: 100%;
+}
+
+#qr-code-container {
+  margin-bottom: 20px;
+  position: relative;
+  text-align: center;
+}
+
+#two-factor-totp-authcode {
+  width: 100%;
+}
+
+tr.rsssl_verify_email {
+  display: none;
+}
+
+.error {
+  color: red;
+  margin-top: -5px;
+}
+
+span.rsssl-backup-codes {
+  padding: 5px;
+  background: #fbebed;
+  border-radius: 8px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0 4px 6px -1px;
+}
+
+.input {
+  margin-bottom: 5px !important;
+}
+
+#totp-key {
+  cursor: pointer;
+  display: flex; /* Enables Flexbox */
+  justify-content: center; /* Centers horizontally */
+  align-items: center; /* Centers vertically */
+}
+
+table.rsssl-table-two-fa {
+  padding-bottom: 20px;
+}
+
+#rsssl_step_three_onboarding {
+  display: none;
+}
+
+.rsssl-methods-tag {
+  padding: 2px 5px;
+  border: 1px solid #000;
+  color: #000;
+  margin-right: 5px;
+  background: dimgrey;
+}
+.rsssl-methods-tag.active {
+  background: darkgreen;
+  color: #fff;
+}
+
+.rsssl_datatable {
+  background: white;
+}
+.rsssl_datatable thead {
+  border-bottom: black 1px solid;
+}
+
+.column-device_name, .column-actions {
+  padding-right: 10px !important;
+}
+
+.column-registered, .column-last_used {
+  padding-top: 13px !important;
+}
+
+.passkey-datatable {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: -10px;
+  background-color: #f1f1f1;
+  border-bottom: 1px solid #ddd;
+}
+.passkey-datatable .rsssl-passkey-button {
+  background-color: #f6f7f7;
+  color: #2271b1;
+  border: 1px solid #2271b1;
+  padding: 5px 10px;
+  text-decoration: none;
+  border-radius: 3px;
+}
+.passkey-datatable .rsssl-passkey-button.pending {
+  background-color: #f5e6ab;
+  border-color: #f0c33c;
+  color: #1e1e1e;
+  opacity: 1;
+  cursor: not-allowed;
+}
+.passkey-datatable .rsssl-passkey-button.failed {
+  background-color: #facfd2;
+  border-color: #f86368;
+  color: black;
+}
+.passkey-datatable .rsssl-passkey-button.success {
+  background-color: #b8e6bf;
+  border-color: #68de7c;
+  color: #1d2327;
+  opacity: 1;
+}
+.passkey-datatable .rsssl-passkey-button.login {
+  background-color: #f5e6ab;
+  border-color: #f0c33c;
+  color: #1d2327;
+  opacity: 1;
+  cursor: not-allowed;
+}
+.passkey-datatable .rsssl-passkey-button.login-failed {
+  background-color: #facfd2;
+  border-color: #f86368;
+  color: black;
+}
+.passkey-datatable .passkey-datatable-title {
+  font-size: 16px;
+  font-weight: 600;
+  padding: 10px 0;
+}
+
+.passkey-integration {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.passkey-integration .passkey-registration-button {
+  width: 100%;
+  background: #2271b1;
+  border-color: #2271b1;
+  color: #fff;
+  text-decoration: none;
+  text-shadow: none;
+  display: inline-block;
+  font-size: 13px;
+  line-height: 2.15384615;
+  min-height: 30px;
+  margin: 0;
+  padding: 0 10px;
+  cursor: pointer;
+  border-width: 1px;
+  border-style: solid;
+  -webkit-appearance: none;
+  border-radius: 3px;
+  white-space: nowrap;
+  box-sizing: border-box;
+}
+.passkey-integration .passkey-registration-button.pending {
+  background-color: #f5e6ab;
+  border-color: #f0c33c;
+  color: #1e1e1e;
+  opacity: 1;
+  cursor: not-allowed;
+}
+.passkey-integration .passkey-registration-button.failed {
+  background-color: #facfd2;
+  border-color: #f86368;
+  color: black;
+}
+.passkey-integration .passkey-registration-button.success {
+  background-color: #b8e6bf;
+  border-color: #68de7c;
+  color: #1d2327;
+  opacity: 1;
+}
+.passkey-integration .passkey-registration-button.login {
+  background-color: #f5e6ab;
+  border-color: #f0c33c;
+  color: #1d2327;
+  opacity: 1;
+  cursor: not-allowed;
+}
+.passkey-integration .passkey-registration-button.login-failed {
+  background-color: #facfd2;
+  border-color: #f86368;
+  color: black;
+}
+
+#rsssl-passkey-error {
+  color: #dc3232;
+  background-color: #fef7f7;
+  border: 1px solid #dc3232;
+  padding: 10px;
+  margin-top: 10px;
+  width: 100%;
+  min-width: 280px;
+  box-sizing: border-box;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: normal;
+  -webkit-hyphens: none;
+          hyphens: none;
+  white-space: normal;
+  text-align: right;
+  display: none;
+}
+
+/* Extra css styling for login when passkey is enabled */
+#login:has(#passkey-login-button) #wp-submit, #login:has(#passkey-login-button) #rememberme {
+  margin-top: 4px;
+}
+#login:has(#passkey-login-button) #passkey-login-button.button-primary {
+  margin: 0 auto;
+  display: block;
+  font-size: 16px;
+  padding: 0 16px;
+}
+#login:has(#passkey-login-button) .or-divider {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  color: #000;
+  position: relative;
+}
+#login:has(#passkey-login-button) .or-divider::before, #login:has(#passkey-login-button) .or-divider::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px solid #000;
+}
+#login:has(#passkey-login-button) .or-divider::before {
+  margin-left: 10px;
+}
+#login:has(#passkey-login-button) .or-divider::after {
+  margin-right: 10px;
+}
+
+.validation_button_holder {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.validation_button_holder #rsssl-passkey-button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  width: 100%;
+}
+.validation_button_holder #rsssl-passkey-button.pending {
+  background-color: #f5e6ab;
+  border-color: #f0c33c;
+  opacity: 1;
+  color: #1e1e1e;
+  cursor: not-allowed;
+}
+.validation_button_holder #rsssl-passkey-button.failed {
+  background-color: #facfd2;
+  border-color: #f86368;
+  color: black;
+}
+.validation_button_holder #rsssl-passkey-button.success {
+  background-color: #b8e6bf;
+  border-color: #68de7c;
+  color: #1d2327;
+  opacity: 1;
+}
+.validation_button_holder #rsssl-passkey-button.login {
+  background-color: #f5e6ab;
+  border-color: #f0c33c;
+  color: #1d2327;
+  opacity: 1;
+  cursor: not-allowed;
+}
+.validation_button_holder #rsssl-passkey-button.login-failed {
+  background-color: #facfd2;
+  border-color: #f86368;
+  color: black;
+}
+.validation_button_holder .button {
+  width: 100%;
+}

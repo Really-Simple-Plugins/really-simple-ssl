@@ -1,4 +1,4 @@
-/** @jsx wp.element.createElement */
+// /** @jsx wp.element.createElement */
 import { Modal, Button } from "@wordpress/components";
 import {useEffect, useState} from "@wordpress/element";
 import { __ } from "@wordpress/i18n";

@@ -4,7 +4,7 @@
  *
  * The Rsssl_Two_Factor_Admin class is responsible for handling the administrative
  * aspects of the two-factor authentication feature in the Really Simple SSL plugin.
- * It includes methods for displaying the two-factor authentication settings in the
+ * It includes two_fa_provider for displaying the two-factor authentication settings in the
  * admin area, handling user input, and managing user roles and capabilities related
  * to two-factor authentication.
  *
@@ -24,11 +24,13 @@ use RSSSL\Security\WordPress\Two_Fa\Repositories\Rsssl_Two_Fa_User_Repository;
 use RSSSL\Security\WordPress\Two_Fa\Services\Rsssl_Two_Fa_Forced_Role_Service;
 use RSSSL\Security\WordPress\Two_Fa\Services\Rsssl_Callback_Queue;
 
+use RSSSL\Pro\Security\WordPress\Passkey\Models\Rsssl_Webauthn;
+use WP_User;
 
 /**
  * The Rsssl_Two_Factor_Admin class is responsible for handling the administrative
  * aspects of the two-factor authentication feature in the Really Simple SSL plugin.
- * It includes methods for displaying the two-factor authentication settings in the
+ * It includes two_fa_provider for displaying the two-factor authentication settings in the
  * admin area, handling user input, and managing user roles and capabilities related
  * to two-factor authentication.
  *
@@ -36,14 +38,13 @@ use RSSSL\Security\WordPress\Two_Fa\Services\Rsssl_Callback_Queue;
  * @package Really_Simple_SSL
  * @subpackage Two_Factor
  */
-class Rsssl_Two_Factor_Admin
-{
-    /**
-     * The Rsssl_Two_Factor_Admin instance.
-     *
-     * @var Rsssl_Two_Factor_Settings $instance The settings object.
-     */
-    private static $instance;
+class Rsssl_Two_Factor_Admin {
+	/**
+	 * The Rsssl_Two_Factor_Admin instance.
+	 *
+	 * @var Rsssl_Two_Factor_Settings $instance The settings object.
+	 */
+	private static $instance;
 
     private Rsssl_Callback_Queue $queue;
 
@@ -65,10 +66,40 @@ class Rsssl_Two_Factor_Admin
         add_filter('rsssl_do_action', [$this, 'two_fa_table'], 10, 3);
         add_filter('rsssl_after_save_field', [$this, 'change_disabled_users_when_forced'], 20, 3);
         add_filter('rsssl_after_save_field', [$this, 'process_added_removed_enabled_roles'], 20, 3);
+		add_filter('rsssl_after_save_field', [$this, 'set_passkey_table'], 20, 3);
+		add_filter('rsssl_after_save_field', [$this, 'set_passkey_disabled_check'], 20, 3);
         $this->queue = new Rsssl_Callback_Queue();
         $this->queue->process_tasks(1);
-
     }
+
+	public function set_passkey_disabled_check(string $field_id, $new_value, $prev_value): void
+	{
+		// checking if the field is the passkey enabled field
+		if ('login_protection_enabled' === $field_id) {
+			// if the passkey is disabled, it needs to remove the passkey table.
+			if ( ! $new_value ) {
+				// If login protection is disabled, we disable the passkey login as well.
+				rsssl_update_option('enable_passkey_login', false);
+			}
+		}
+	}
+
+
+	/**
+	 * Sets the passkey table.
+	 */
+	public function set_passkey_table(string $field_id, $new_value, $prev_value ): void
+	{
+		// checking if the field is the passkey enabled field
+		if ('enable_passkey_login' === $field_id) {
+			// if the passkey is enabled, it needs to set the passkey table.
+			if ($new_value) {
+				new Rsssl_Webauthn(); // Initialize the Webauthn class. It will install everything needed.
+				do_action('rsssl_install_tables');
+			}
+			//TODO think of what needs to be done when the passkey is disabled.
+		}
+	}
 
     /**
      * Change the disabled status of users when forced.
@@ -78,15 +109,21 @@ class Rsssl_Two_Factor_Admin
      * @param array  $prev_value The previous value of the field.
      * @return void
      */
-    public function change_disabled_users_when_forced( string $field_id, $new_value, $prev_value ): void {
-        if ( ! is_array($prev_value) ) {
-            $prev_value = [];
-        }
-
-        if ( 'two_fa_forced_roles' !== $field_id || empty($new_value) ) {
+    public function change_disabled_users_when_forced( string $field_id, $new_value, $prev_value = [] ): void {
+        if ( 'two_fa_forced_roles' !== $field_id
+            || empty($new_value)
+        ) {
             return;
         }
 
+        //making sure that the new value is an array as well as the old value
+        if (!is_array($new_value)) {
+            $new_value = [];
+        }
+
+        if (!is_array($prev_value)) {
+            $prev_value = [];
+        }
 
         $changedRoles = Rsssl_Two_Fa_Forced_Role_Service::getForForcedRolesChange($prev_value, $new_value);
 
@@ -112,11 +149,6 @@ class Rsssl_Two_Factor_Admin
     /**
      * Process a batch of forced two-factor users with disabled status.
      *
-     * @param array $changedRoles
-     * @param Rsssl_Two_FA_Data_Parameters $params
-     * @param int $batch_size
-     * @param int $offset
-     * @param string $status
      * @return void
      */
     public function process_users_batch(array $changedRoles, Rsssl_Two_FA_Data_Parameters $params, int $batch_size, int $offset, string $status): void {
@@ -124,7 +156,7 @@ class Rsssl_Two_Factor_Admin
 
         foreach ($collection->getUsers() as $user) {
             $statusForUser = $user->getStatus();
-            if (in_array($status, ['open', 'disabled','expired'])) {
+            if (in_array($statusForUser, ['open', 'disabled','expired'])) {
                 // Check if the user has a role that has been changed.
                 $rolesForUser = $user->getRoles();
                 $matchingRoles = array_intersect($rolesForUser, $changedRoles);
@@ -149,11 +181,15 @@ class Rsssl_Two_Factor_Admin
 
     public function process_added_removed_enabled_roles(string $field_id, $new_value, $prev_value = [])
     {
-        if ( 'two_fa_enabled_roles_email' !== $field_id || empty($new_value) ) {
+        if ( 'two_fa_enabled_roles_email' !== $field_id
+            || empty($new_value)
+        ) {
             return;
         }
 
-        if ( 'two_fa_enabled_roles_totp' !== $field_id || empty($new_value) ) {
+        if ( 'two_fa_enabled_roles_totp' !== $field_id
+            || empty($new_value)
+        ) {
             return;
         }
     }
@@ -174,8 +210,8 @@ class Rsssl_Two_Factor_Admin
 	 *
 	 * This method creates and returns an array representing a captcha notice.
 	 *
-	 * @param  string $title  The title of the notice.
-	 * @param  string $msg  The message of the notice.
+	 * @param string $title The title of the notice.
+	 * @param string $msg The message of the notice.
 	 *
 	 * @return array The captcha notice array.
 	 */
@@ -217,7 +253,7 @@ class Rsssl_Two_Factor_Admin
 			$user = get_user_by( 'id', $data['user_id'] );
 			if ( $user ) {
 				// Delete all 2fa related user meta.
-				self::delete_two_fa_meta( $user );
+				Rsssl_Two_Fa_Status::delete_two_fa_meta( $user->ID );
 				// Set the last login to now, so the user will be forced to use 2fa.
 				update_user_meta( $user->ID, 'rsssl_two_fa_last_login', gmdate( 'Y-m-d H:i:s' ) );
 			}

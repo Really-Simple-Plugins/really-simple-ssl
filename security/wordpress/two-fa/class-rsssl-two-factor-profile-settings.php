@@ -7,13 +7,12 @@
 
 namespace RSSSL\Security\WordPress\Two_Fa;
 
-//require_once __DIR__ . '/class-rsssl-provider-loader.php';
-//require_once __DIR__ . '/class-rsssl-parameter-validation.php';
-//require_once __DIR__ . '/class-rsssl-parameter-validation.php';
-//require_once __DIR__ . '/class-rsssl-two-factor-on-board-api.php';
-ob_start();
-
 use Exception;
+use RSSSL\Pro\Security\WordPress\Two_Fa\Providers\Rsssl_Two_Factor_Totp;
+use RSSSL\Pro\Security\WordPress\Two_Fa\Rsssl_Two_Factor_Backup_Codes;
+use RSSSL\Security\WordPress\Two_Fa\Providers\Rsssl_Provider_Loader;
+use RSSSL\Security\WordPress\Two_Fa\Providers\Rsssl_Two_Factor_Email;
+use RSSSL\Security\WordPress\Two_Fa\Traits\Rsssl_Two_Fa_Helper;
 use WP_User;
 
 if (!class_exists('Rsssl_Two_Factor_Profile_Settings')) {
@@ -26,6 +25,7 @@ if (!class_exists('Rsssl_Two_Factor_Profile_Settings')) {
      */
     class Rsssl_Two_Factor_Profile_Settings
     {
+	    use Rsssl_Two_Fa_Helper;
 
 	    /**
 	     * Instance of this class.
@@ -42,12 +42,13 @@ if (!class_exists('Rsssl_Two_Factor_Profile_Settings')) {
          */
         private $available_providers = array();
 
+
         /**
          * The forced Two-Factor Authentication roles.
          *
          * @var array $forced_two_fa An array to store the forced Two-Factor Authentication roles.
          */
-        private $forced_two_fa = array();
+        private array $forced_two_fa = array();
 
 	    /**
 	     * Get instance of this class.
@@ -86,7 +87,6 @@ if (!class_exists('Rsssl_Two_Factor_Profile_Settings')) {
 					    add_action( 'admin_init', array( $this, 'add_hooks' ) );
 				    }
 			    }
-
 		    }
 	    }
 
@@ -113,7 +113,6 @@ if (!class_exists('Rsssl_Two_Factor_Profile_Settings')) {
                     }
                 }
             }
-            $error = Rsssl_Parameter_Validation::get_cached_errors(get_current_user_id());
             add_action('show_user_profile', array($this, 'show_user_profile'));
             add_action('edit_user_profile', array($this, 'show_user_profile'));
             add_action('admin_enqueue_scripts', array($this, 'enqueue_scripts'));
@@ -124,12 +123,8 @@ if (!class_exists('Rsssl_Two_Factor_Profile_Settings')) {
 	        add_action( 'wp_ajax_resend_email_code_profile', [$this, 'resend_email_code_profile_callback'] );
 	        add_action( 'wp_ajax_change_method_to_email', [$this, 'start_email_validation_callback'] );
 
-            if (isset($_GET['profile'], $_GET['_wpnonce'])) {
-                $profile = rest_sanitize_boolean(wp_unslash($_GET['profile']));
-                if ($profile) {
-                    Rsssl_Two_Factor_Email::set_user_status(get_current_user_id(), 'active');
-                    Rsssl_Two_Factor_Totp::set_user_status(get_current_user_id(), 'disabled');
-                }
+            if (isset($_GET['profile'], $_GET['_wpnonce']) && rest_sanitize_boolean(wp_unslash($_GET['profile']))) {
+                self::set_active_provider(get_current_user_id(), 'email');
             }
         }
 
@@ -141,8 +136,8 @@ if (!class_exists('Rsssl_Two_Factor_Profile_Settings')) {
         public function resend_email_code_profile_callback(): void
         {
             // Check for nonce (make sure your nonce name and action match what you output to the page)
-            if ( ! isset( $_POST['login_nonce'] ) ||
-                ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['login_nonce'] ) ), 'update_user_two_fa_settings' ) ) {
+            if ( ! isset( $_POST['login_nonce'] )
+                || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['login_nonce'] ) ), 'update_user_two_fa_settings' ) ) {
                 wp_send_json_error( array( 'message' => __( 'Invalid nonce.', 'really-simple-ssl' ) ), 403 );
             }
 
@@ -155,68 +150,58 @@ if (!class_exists('Rsssl_Two_Factor_Profile_Settings')) {
             $user_id = get_current_user_id();
             $user = get_user_by( 'ID', $user_id );
             Rsssl_Two_Factor_Email::get_instance()->generate_and_email_token($user, true);
-            wp_send_json_success( array( 'message' => __('Verification code re-sent', 'really-simple.ssl') ), 200 );
+            wp_send_json_success( array( 'message' => __('Verification code re-sent', 'really-simple-ssl') ), 200 );
         }
 
         /**
          * Starts the process of email validation for a user.
          *
          */
-	    public function start_email_validation_callback(): void
-	    {
-
-		    if ( ! is_user_logged_in() ) {
-			    wp_send_json_error(
-				    array( 'message' => __( 'User not logged in.', 'really-simple-ssl' ) ),
-				    401
-			    );
-			    return;
-		    }
-
-		    $user = get_user_by( 'id', get_current_user_id() );
-
-		    if ( ! $user ) {
-			    wp_send_json_error(
-				    array( 'message' => __( 'User could not be retrieved.', 'really-simple-ssl' ) ),
-				    500
-			    );
-			    return;
-		    }
-
-		    // Sending the email with the code.
-		    Rsssl_Two_Factor_Email::get_instance()->generate_and_email_token( $user, true );
-
-		    $token = get_user_meta( $user->ID, Rsssl_Two_Factor_Email::RSSSL_TOKEN_META_KEY, true );
-
-		    if ( ! $token ) {
-			    wp_send_json_error(
-				    array( 'message' => __( 'Failed to generate verification token.', 'really-simple-ssl' ) ),
-				    500
-			    );
-			    return;
-		    }
-
-		    wp_send_json_success(
-			    array(
-				    'message' => __( 'Verification code sent.', 'really-simple-ssl' ),
-				    'token'   => $token,
-			    ),
-			    200
-		    );
-	    }
-
+        public function start_email_validation_callback(): void
+        {
+            if(!is_user_logged_in()) {
+                wp_send_json_error( array( 'message' => __( 'User not logged in.', 'really-simple-ssl' ) ), 401 );
+            }
+            $user = get_user_by('id', get_current_user_id());
+            // Sending the email with the code.
+            Rsssl_Two_Factor_Email::get_instance()->generate_and_email_token($user, true);
+            $token = get_user_meta( $user->ID, Rsssl_Two_Factor_Email::RSSSL_TOKEN_META_KEY, true );
+            wp_send_json_success( array( 'message' => __('Verification code sent', 'really-simple-ssl'), 'token' => $token ), 200 );
+        }
 
         /**
          * Save the Two-Factor Authentication settings for the user.
          *
          * @param int $user_id The user ID.
          *
+         * @noinspection UnusedFunctionResultInspection
          * @return void
          */
         public function save_user_profile(int $user_id): void
         {
             // We check if the user owns the profile.
             if (!current_user_can('edit_user', $user_id)) {
+                return;
+            }
+
+            // Handle reset action
+            if (isset($_POST['change_2fa_config_field'])) {
+                if (
+                    isset($_POST['reset_two_fa_nonce']) &&
+                    wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['reset_two_fa_nonce'])), 'reset_two_fa_settings')
+                ) {
+                    $reset_input = filter_var($_POST['change_2fa_config_field'], FILTER_VALIDATE_BOOLEAN);
+                    $this->maybe_the_user_resets_config($user_id, $reset_input);
+                    add_settings_error(
+                        'two-factor-authentication',
+                        'rsssl-two-factor-authentication-reset',
+                        __('Two-Factor Authentication settings have been reset.', 'really-simple-ssl'),
+                        'updated'
+                    );
+                    // Redirect to avoid form resubmission
+                    wp_redirect(add_query_arg('settings-updated', 'true'));
+                    exit;
+                }
                 return;
             }
 
@@ -263,15 +248,16 @@ if (!class_exists('Rsssl_Two_Factor_Profile_Settings')) {
             switch ($selected_provider) {
                 case 'totp':
                     $current_status = Rsssl_Two_Factor_Settings::get_user_status('totp', $user_id);
-                    if ('active' === $current_status) {
-                        return;
-                    }
-                    if ((empty($_POST['two-factor-totp-authcode'])) || !isset($_POST['two-factor-totp-key'])) {
+//                    if ('active' === $current_status) {
+//                        return;
+//                    }
+                    if ((empty($_POST['two-factor-totp-authcode']))
+                        || !isset($_POST['two-factor-totp-key'])
+                    ) {
                         add_settings_error(
                             'two-factor-authentication',
                             'rsssl-two-factor-authentication-error',
                             __('Two-Factor Authentication for TOTP failed. No Authentication code provided, please try again.', 'really-simple-ssl'),
-                            'error'
                         );
                         $params::cache_errors($user_id);
                         return;
@@ -281,10 +267,9 @@ if (!class_exists('Rsssl_Two_Factor_Profile_Settings')) {
                     $params::validate_key(sanitize_text_field(wp_unslash($_POST['two-factor-totp-key'])));
                     $auth_code = sanitize_text_field(wp_unslash($_POST['two-factor-totp-authcode']));
                     $key = sanitize_text_field(wp_unslash($_POST['two-factor-totp-key']));
+
                     if (Rsssl_Two_Factor_Totp::setup_totp($user, $key, $auth_code)) {
-                        Rsssl_Two_Factor_Totp::set_user_status($user_id, 'active');
-                        // We disable the email.
-                        Rsssl_Two_Factor_Email::set_user_status($user_id, 'disabled');
+                        self::set_active_provider($user_id, 'totp');
                         // We generate the backup codes.
                         Rsssl_Two_Factor_Backup_Codes::generate_codes(
                             $user,
@@ -297,7 +282,6 @@ if (!class_exists('Rsssl_Two_Factor_Profile_Settings')) {
                             'two-factor-authentication',
                             'rsssl-two-factor-authentication-error',
                             __('The Two-Factor Authentication setup for TOTP failed. Please try again.', 'really-simple-ssl'),
-                            'error'
                         );
                     }
                     // We cache the errors.
@@ -315,16 +299,12 @@ if (!class_exists('Rsssl_Two_Factor_Profile_Settings')) {
                         return;
                     }
                     if (Rsssl_Two_Factor_Email::get_instance()->validate_authentication($user)) {
-                        // We set the user status to active.
-                        Rsssl_Two_Factor_Email::set_user_status($user_id, 'active');
-                        // We disable the TOTP.
-                        Rsssl_Two_Factor_Totp::set_user_status($user_id, 'disabled');
+                        self::set_active_provider($user->ID, 'email');
                     } else {
                         add_settings_error(
                             'two-factor-authentication',
                             'rsssl-two-factor-authentication-error',
                             __('The Two-Factor Authentication setup for email failed. Please try again.', 'really-simple-ssl'),
-                            'error'
                         );
                     }
                     break;
@@ -348,7 +328,7 @@ if (!class_exists('Rsssl_Two_Factor_Profile_Settings')) {
          */
         private function sanitize_method(string $method): string
         {
-            $methods = array('totp', 'email', 'none');
+            $methods = array('totp', 'email', 'passkey', 'none');
 
             return in_array($method, $methods, true) ? sanitize_text_field($method) : 'email';
         }
@@ -358,30 +338,40 @@ if (!class_exists('Rsssl_Two_Factor_Profile_Settings')) {
          *
          * @param WP_User $user The user object.
          *
+         * @noinspection UnusedFunctionResultInspection
          * @return void
          * @throws Exception Throws an exception if the template file is not found.
          */
         public function show_user_profile(WP_User $user): void
         {
-	        if ($user->ID !== get_current_user_id()) {
-		        return;
-	        }
+            // Check if the current user is viewing their own profile
+            if ($user->ID !== get_current_user_id()) {
+                return;
+            }
             settings_errors('two-factor-authentication');
             settings_errors('rsssl-two-factor-authentication-error');
-            Rsssl_Two_Factor_Totp::enqueue_qrcode_script();
 
-            $available_providers = $this->available_providers;
+            $loader = Rsssl_Provider_Loader::get_loader();
+            $available_providers = $loader::get_enabled_providers_for_user($user);
             $forced = !empty(array_intersect($user->roles, $this->forced_two_fa));
             $one_enabled = 'onboarding' !== Rsssl_Two_Factor_Settings::get_login_action($user->ID);
-            $providers = Rsssl_Provider_Loader::get_user_enabled_providers($user);
             $selected_provider = '';
             if ($one_enabled) {
-                $selected_provider = Rsssl_Two_Factor_Settings::get_configured_provider($user->ID);
+                $selected_provider = strtolower(Rsssl_Two_Factor_Settings::get_configured_provider($user->ID));
             }
+			$backup_codes = '';
+			$key = '';
+			$totp_url = '';
 
-            $backup_codes = Rsssl_Two_Factor_Settings::get_backup_codes($user->ID);
-            $key = Rsssl_Two_Factor_Totp::generate_key();
-            $totp_url = Rsssl_Two_Factor_Totp::generate_qr_code_url($user, $key);
+			/*
+			 * Added this as a temporary fix to prevent errors when TOTP is not available.
+			 * TODO: Make a better solution to handle the case when TOTP is not available.
+			 */
+			if (isset($available_providers['totp'])) {
+				$backup_codes = Rsssl_Two_Factor_Settings::get_backup_codes( $user->ID );
+				$key          = Rsssl_Two_Factor_Totp::generate_key();
+				$totp_url     = Rsssl_Two_Factor_Totp::generate_qr_code_url( $user, $key );
+			}
 
             wp_nonce_field('update_user_two_fa_settings', 'rsssl_two_fa_nonce');
 
@@ -394,11 +384,14 @@ if (!class_exists('Rsssl_Two_Factor_Profile_Settings')) {
                 'forced' => $forced,
                 'available_providers' => $available_providers,
                 'user' => $user,
+                'login_nonce' => wp_create_nonce('rsssl_login_nonce'),
             );
+            $data = self::removeCircularReferences($data);
+            $data_js = 'rsssl_profile.totp_data = ' . json_encode($data, JSON_THROW_ON_ERROR) . ';';
 
-            $data_js = 'rsssl_profile.totp_data = ' . json_encode($data) . ';';
+            $passkeys_enabled = rsssl_get_option('enable_passkey_login' );
 
-            wp_add_inline_script('rsssl-profile-settings', $data_js, 'after');
+            wp_add_inline_script('rsssl-profile-settings', $data_js);
 
             // We load the needed template for the Two-Factor Authentication settings.
             rsssl_load_template(
@@ -406,13 +399,13 @@ if (!class_exists('Rsssl_Two_Factor_Profile_Settings')) {
                 compact(
                     'user',
                     'available_providers',
-                    'providers',
                     'forced',
                     'one_enabled',
                     'selected_provider',
                     'backup_codes',
                     'totp_url',
-                    'key'
+                    'key',
+                    'passkeys_enabled'
                 ),
                 rsssl_path . 'assets/templates/two_fa/'
             );
@@ -429,10 +422,9 @@ if (!class_exists('Rsssl_Two_Factor_Profile_Settings')) {
         {
             // Get the setting for the system to check if it is turned on.
             $enabled_two_fa = rsssl_get_option('login_protection_enabled');
-            $providers = Rsssl_Provider_Loader::get_enabled_providers_for_user($user);
+            $providers = Rsssl_Provider_Loader::get_loader()::get_user_enabled_providers($user);
             $option = rsssl_get_option('two_fa_forced_roles');
             $this->forced_two_fa = $option !== false ? $option : array();
-            $this->available_providers = $providers;
 
             return $enabled_two_fa && !empty($providers);
         }
@@ -444,21 +436,24 @@ if (!class_exists('Rsssl_Two_Factor_Profile_Settings')) {
          */
         public function enqueue_scripts(): void
         {
-            $uri = trailingslashit(rsssl_url) . 'assets/two-fa/rtl/two-fa-assets.min.js';
+            $path = trailingslashit(rsssl_url) . 'assets/features/two-fa/assets.min.js';
+            $file_path = trailingslashit(rsssl_path) . 'assets/features/two-fa/assets.min.js';
             $backup_codes = Rsssl_Two_Factor_Settings::get_backup_codes(get_current_user_id());
+            $user = get_user_by('ID', get_current_user_id());
             // We check if the backup codes are available.
-            wp_enqueue_script('rsssl-profile-settings', $uri, array(), rsssl_version, true);
+            wp_register_script('rsssl-profile-settings', $path, array(), filemtime($file_path), true);
+            wp_enqueue_script('rsssl-profile-settings');
             wp_localize_script('rsssl-profile-settings', 'rsssl_profile', array(
                 'ajax_url'      => admin_url( 'admin-ajax.php' ),
                 'backup_codes' => $backup_codes,
                 'root' => esc_url_raw(rest_url(Rsssl_Two_Factor::REST_NAMESPACE)),
                 'user_id' => get_current_user_id(),
-                'redirect_to' => 'profile', //added this for comparison in the json output.
-                'translatables' => [
-                    'download_codes' => esc_html__('Download Backup Codes', 'really-simple-ssl'),
-                    'keyCopied' => __('Key copied', 'really-simple-ssl'),
-                    'keyCopiedFailed' => __('Could not copy text: ', 'really-simple-ssl')
-                ]
+                'origin' => 'profile',
+                'redirect_to' => 'rsssl_no_redirect', //added this for comparison in the json output.
+                'login_nonce' => Rsssl_Two_Fa_Authentication::create_login_nonce(get_current_user_id())['rsssl_key'],
+                'user_name' => $user->display_name,
+                'display_name' => $user->user_nicename . ' (' . $user->user_email . ')',
+                'translatables' => apply_filters('rsssl_two_factor_translatables', []),
             ));
         }
 
@@ -469,8 +464,9 @@ if (!class_exists('Rsssl_Two_Factor_Profile_Settings')) {
          */
         public function enqueue_styles(): void
         {
-            $uri = trailingslashit(rsssl_url) . 'assets/two-fa/rtl/two-fa-assets.min.css';
-            wp_enqueue_style('rsssl-profile-settings', $uri, array(), rsssl_version);
+            $path = trailingslashit(rsssl_url) . 'assets/features/two-fa/styles.css';
+            $file_path = trailingslashit(rsssl_path) . 'assets/features/two-fa/styles.css';
+            wp_enqueue_style('rsssl-profile-style', $path, array(), filemtime($file_path));
         }
 
         /**
@@ -490,6 +486,29 @@ if (!class_exists('Rsssl_Two_Factor_Profile_Settings')) {
             }
 
             return $reset_input;
+        }
+
+        /**
+         * Remove circular references from the data.
+         *
+         * @param $data
+         * @param array $seen
+         * @return mixed|null
+         */
+        public static function removeCircularReferences(&$data, array &$seen = [])
+        {
+            if (is_array($data)
+                || is_object($data)
+            ) {
+                if (in_array($data, $seen, true)) {
+                    return null; // Circular reference detected, return null or handle appropriately
+                }
+                $seen[] = $data;
+                foreach ($data as &$value) {
+                    $value = self::removeCircularReferences($value, $seen);
+                }
+            }
+            return $data;
         }
     }
 }

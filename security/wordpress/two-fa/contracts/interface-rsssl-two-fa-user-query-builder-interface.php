@@ -7,7 +7,6 @@ interface Rsssl_Two_Fa_User_Query_Builder_Interface {
     /**
      * Build query args based on data parameters.
      *
-     * @param Rsssl_Two_FA_Data_Parameters $params
      * @return array
      */
     public function buildQueryArgs(Rsssl_Two_FA_Data_Parameters $params): array;

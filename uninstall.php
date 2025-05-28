@@ -115,6 +115,7 @@ if ( isset( $rsssl_settings['delete_data_on_uninstall'] ) && $rsssl_settings['de
 		'rsssl_permission_check_completed',
 		'rsssl_homepage_contains_404_resources',
 		'rsssl_pro_password_change_required_users_checked',
+		'rsssl_activated_recommended_features_extendify',
 	];
 	foreach ( $rsssl_options as $rsssl_option_name ) {
 		delete_option( $rsssl_option_name );

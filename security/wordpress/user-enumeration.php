@@ -24,17 +24,46 @@ add_filter('wpseo_sitemap_exclude_author', 'rsssl_remove_author_from_yoast_sitem
 
 /**
  * Prevent WP JSON API User Enumeration
- * Do not disable in when logged in, preventing issues in the Gutenberg Editor
+ * Return 401 Unauthorized
  */
-
 if ( !is_user_logged_in() || !current_user_can('edit_posts') ) {
 	add_filter( 'rest_endpoints', function ( $endpoints ) {
 		if ( isset( $endpoints['/wp/v2/users'] ) ) {
-			unset( $endpoints['/wp/v2/users'] );
+			// Save the original endpoint
+			$original_endpoint = $endpoints['/wp/v2/users'];
+
+			// Override the GET callback
+			$endpoints['/wp/v2/users'][0]['callback'] = function() {
+				return new WP_Error(
+					'rest_user_cannot_view',
+					__( 'Sorry, you are not allowed to access users without authentication.', 'really-simple-ssl' ),
+					array( 'status' => 401 )
+				);
+			};
+
+			// Preserve the original args and permission callback
+			$endpoints['/wp/v2/users'][0]['args'] = $original_endpoint[0]['args'];
+			$endpoints['/wp/v2/users'][0]['permission_callback'] = '__return_true';
 		}
-		if ( isset( $endpoints['/wp/v2/users/(?P[\d]+)'] ) ) {
-			unset( $endpoints['/wp/v2/users/(?P[\d]+)'] );
+
+		if ( isset( $endpoints['/wp/v2/users/(?P<id>[\d]+)'] ) ) {
+			// Save the original endpoint
+			$original_endpoint = $endpoints['/wp/v2/users/(?P<id>[\d]+)'];
+
+			// Override the GET callback
+			$endpoints['/wp/v2/users/(?P<id>[\d]+)'][0]['callback'] = function() {
+				return new WP_Error(
+					'rest_user_cannot_view',
+					__( 'Sorry, you are not allowed to access user data without authentication.', 'really-simple-ssl' ),
+					array( 'status' => 401 )
+				);
+			};
+
+			// Preserve the original args and permission callback
+			$endpoints['/wp/v2/users/(?P<id>[\d]+)'][0]['args'] = $original_endpoint[0]['args'];
+			$endpoints['/wp/v2/users/(?P<id>[\d]+)'][0]['permission_callback'] = '__return_true';
 		}
+
 		return $endpoints;
 	} );
 }

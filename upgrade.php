@@ -228,6 +228,16 @@ function rsssl_upgrade() {
         update_option('rsssl_reset_fix', true, false);
     }
 
+	// Fetch Google crawler IP's when Geo Block is enabled
+	if ( $prev_version && version_compare( $prev_version, '9.3.6', '<=' ) ) {
+		if ( class_exists( '\RSSSL\Pro\Security\WordPress\Rsssl_Geo_Block' ) ) {
+			// Trigger action to update rules
+			do_action( 'rsssl_update_rules' );
+			$geo_block = \RSSSL\Pro\Security\WordPress\Rsssl_Geo_Block::get_instance();
+			$geo_block->fetch_google_crawler_ips();
+		}
+	}
+
 	//don't clear on each update.
 	//RSSSL()->admin->clear_admin_notices_cache();
 

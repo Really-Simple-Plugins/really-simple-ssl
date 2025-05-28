@@ -21,8 +21,6 @@ class Rsssl_Two_Fa_User_Collection
 
     /**
      * Add a TwoFaUser to the collection.
-     *
-     * @param Rsssl_Two_FA_user $user
      */
     public function add(Rsssl_Two_FA_user $user): void
     {
@@ -41,8 +39,6 @@ class Rsssl_Two_Fa_User_Collection
 
     /**
      * Set the total number of records.
-     *
-     * @param int $totalRecords
      */
     public function setTotalRecords(int $totalRecords): void
     {

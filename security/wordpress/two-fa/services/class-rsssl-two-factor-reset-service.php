@@ -13,8 +13,6 @@ class Rsssl_Two_Factor_Reset_Service {
 
     /**
      * Inject the repository and hook the batched process callback.
-     *
-     * @param Rsssl_Two_Fa_User_Repository_Interface $userRepository
      */
     public function __construct(Rsssl_Two_Fa_User_Repository_Interface $userRepository)
     {
@@ -62,9 +60,6 @@ class Rsssl_Two_Factor_Reset_Service {
      * a batch of expired users (based on the passed-in parameters) and resets the two-factor
      * status on each user.
      *
-     * @param Rsssl_Two_FA_Data_Parameters $params
-     * @param int $user_count
-     * @param int $batch_size
      * @return void
      */
     public function batchedProcess(Rsssl_Two_FA_Data_Parameters $params, int $user_count, int $batch_size = 500): void

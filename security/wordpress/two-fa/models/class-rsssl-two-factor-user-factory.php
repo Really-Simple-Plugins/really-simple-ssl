@@ -32,10 +32,6 @@ class Rsssl_Two_Factor_User_Factory {
     /**
      * Create a TwoFaUser from a WP_User object.
      *
-     * @param WP_User $user
-     * @param array $forcedRoles
-     * @param array $enabledRoles
-     * @param int $daysThreshold
      * @return Rsssl_Two_FA_user|null Returns null if the user has no roles.
      */
     public function createFromWPUser(WP_User $user, array $forcedRoles, array $enabledRoles, int $daysThreshold): ?Rsssl_Two_FA_user {
@@ -90,19 +86,22 @@ class Rsssl_Two_Factor_User_Factory {
     /**
      * Determine the active two-factor provider.
      *
-     * @param int $userId
      * @return string
      */
     protected function determineTwoFaProvider(int $userId): string {
-        $totpStatus  = get_user_meta($userId, 'rsssl_two_fa_status_totp', true);
-        $emailStatus = get_user_meta($userId, 'rsssl_two_fa_status_email', true);
-        if ($totpStatus === 'active') {
-            return 'totp';
+        $providers = [
+            ['provider' => 'totp',   'meta_key' => 'rsssl_two_fa_status_totp'],
+            ['provider' => 'email',  'meta_key' => 'rsssl_two_fa_status_email'],
+            // Note: if you really want to return 'email' even when passkey is active, do it this way:
+            ['provider' => 'passkey',  'meta_key' => 'rsssl_two_fa_status_passkey'],
+        ];
+
+        foreach ($providers as $entry) {
+            if (get_user_meta($userId, $entry['meta_key'], true) === 'active') {
+                return $entry['provider'];
+            }
         }
 
-        if ($emailStatus === 'active') {
-            return 'email';
-        }
         return 'none';
     }
 }

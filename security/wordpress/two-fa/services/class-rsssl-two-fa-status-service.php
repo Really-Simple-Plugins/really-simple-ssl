@@ -6,17 +6,15 @@ class Rsssl_Two_Fa_Status_Service {
     /**
      * Determine the two-factor status for a user.
      *
-     * @param int $userId
-     * @param array $forcedRoles
-     * @param int $daysThreshold
      * @return string
      */
     public function determineStatus(int $userId, array $forcedRoles, int $daysThreshold): string {
         $totpStatus   = get_user_meta($userId, 'rsssl_two_fa_status_totp', true);
         $emailStatus  = get_user_meta($userId, 'rsssl_two_fa_status_email', true);
+        $passkeyStatus  = get_user_meta($userId, 'rsssl_two_fa_status_passkey', true);
         $lastLogin    = get_user_meta($userId, 'rsssl_two_fa_last_login', true);
 
-        if (in_array('active', [$totpStatus, $emailStatus], true)) {
+        if (in_array('active', [$totpStatus, $emailStatus, $passkeyStatus], true)) {
             return 'active';
         }
         if ($totpStatus === 'disabled' && $emailStatus === 'disabled') {

@@ -1,7 +1,7 @@
 <?php
 login_header();
 
-if ( ! empty( $error_msg ) ) {
+if ( ! empty( $error_msg ) && $error_msg !== 'passkey') {
 	echo '<div id="login_error" class="notice notice-error"><strong>Error: </strong>' . esc_html( $error_msg ) . '<br /></div>';
 } else {
 	\RSSSL\Security\WordPress\Two_Fa\Rsssl_Two_Factor::maybe_show_last_login_failure_notice( $user );
@@ -11,7 +11,7 @@ if ( ! empty( $error_msg ) ) {
 <form name="rsssl_validate_2fa_form" id="loginform"
       action="<?php echo esc_url( \RSSSL\Security\WordPress\Two_Fa\Rsssl_Two_Factor::login_url( array( 'action' => 'validate_2fa' ), 'login_post' ) ); ?>"
       method="post" autocomplete="off">
-    <input type="hidden" name="provider" id="provider" value="<?php echo esc_attr( $provider_class ); ?>"/>
+    <input type="hidden" name="provider" id="provider" value="<?php echo esc_attr( $provider_class::METHOD ); ?>"/>
     <input type="hidden" name="rsssl-wp-auth-id" id="rsssl-wp-auth-id"
            value="<?php echo esc_attr( $user->ID ); ?>"/>
     <input type="hidden" name="rsssl-wp-auth-nonce" id="rsssl-wp-auth-nonce"
@@ -23,11 +23,13 @@ if ( ! empty( $error_msg ) ) {
 	<?php } ?>
     <input type="hidden" name="rememberme" id="rememberme" value="<?php echo esc_attr( $rememberme ); ?>"/>
 
-	<?php $provider->authentication_page( $user ); ?>
+	<?php
+    $provider_class->authentication_page( $user );
+    ?>
 </form>
 
 <?php
- if ( get_class($provider) === 'RSSSL\Pro\Security\WordPress\Two_Fa\Rsssl_Two_Factor_Totp') {
+ if ( get_class($provider_class) === 'RSSSL\Pro\Security\WordPress\Two_Fa\Rsssl_Two_Factor_Totp') {
 ?>
 <div class="backup-methods-wrap">
 <!--    <p class="backup-methods">-->

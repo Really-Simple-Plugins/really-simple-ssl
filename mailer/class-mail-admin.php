@@ -40,18 +40,9 @@ if ( !class_exists('rsssl_mailer_admin') ) {
 				return;
 			}
 
-			if ( isset($_GET['rsssl_force_verification'] ) ){
-				update_option( 'rsssl_email_verification_status', 'completed', false );
-			}
-
-			if ( ! isset( $_GET['rsssl_verification_code'] )  ) {
+			if ( ! isset( $_GET['rsssl_verification_code'] ) || ! isset( $_GET['rsssl_nonce'] ) ) {
 				return;
 			}
-
-			// Handle e-mail verification
-			$verification_code = $_GET['rsssl_verification_code'];
-			$verification_code = preg_replace( "/[^0-9]/", "", $verification_code );
-			$verification_code = substr( $verification_code, 0, 6 );
 
 			// verify code
 			$user_id = get_current_user_id();
@@ -59,6 +50,15 @@ if ( !class_exists('rsssl_mailer_admin') ) {
 			if ( ! wp_verify_nonce( $nonce, 'rsssl_email_verification_' . $user_id ) ) {
 				return;
 			}
+
+			if ( isset($_GET['rsssl_force_verification'] ) ){
+				update_option( 'rsssl_email_verification_status', 'completed', false );
+			}
+
+			// Handle e-mail verification
+			$verification_code = $_GET['rsssl_verification_code'];
+			$verification_code = preg_replace( "/[^0-9]/", "", $verification_code );
+			$verification_code = substr( $verification_code, 0, 6 );
 
 			$current_time                  = time();
 			$saved_verification_code       = get_option('rsssl_email_verification_code');

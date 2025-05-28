@@ -42,7 +42,7 @@ function rsssl_menu() {
 							'helpLink' => 'instructions/about-our-general-settings',
 							'premium'  => true,
 							'premium_title' => __( 'Captcha', 'really-simple-ssl' ),
-							'intro'      => __( "Really Simple Security can trigger a Captcha to limit access to your site or the login form.", 'really-simple-ssl' ),
+							'intro'      => __( "Really Simple Security can trigger a Captcha to limit access to your site or the log in form.", 'really-simple-ssl' ),
 							'premium_text' => __( 'Protect your website against brute-force attacks with a captcha. Choose between Google reCAPTCHA or hCaptcha.', 'really-simple-ssl' ),
 						],
 						[
@@ -280,7 +280,7 @@ function rsssl_menu() {
 							'premium'              => false,
 							'premium_text'         => __( 'Get two-factor authentication with Really Simple Security Pro', 'really-simple-ssl' ),
 							'helpLink'             => 'instructions/about-login-protection',
-							'title'                =>  __('Two-Factor Authentication', 'really-simple-ssl'),
+							'title'                =>  __('Login Authentication', 'really-simple-ssl'),
 							'groups'  => [
 								[
 									'id'       => 'two_fa_general',
@@ -288,8 +288,8 @@ function rsssl_menu() {
 									'premium'              => false,
 									'premium_text'         => __( "Start login protection by adding an additional layer during authentication. This will leave authentication less dependent on just a single password. Want to force strong passwords? Check out Password Security.", 'really-simple-ssl' ),
 									'helpLink'      => 'instructions/about-login-protection',
-									'title'    => __( 'Two-Factor Authentication', 'really-simple-ssl' ),
-									'intro'    => __( 'Two-Factor authentication allows users to login using a second authentication method, other than their e-mail address and password. It is one of the most powerful ways to prevent account theft.', 'really-simple-ssl' ),
+									'title'    => __( 'Login Authentication', 'really-simple-ssl' ),
+									'intro'    => __( 'Prevent account theft by offering more secure authentication methods. You can configure which methods are available per user role, or even enforce usage of secure authentication. Secure authentication can be either Two-Factor Authentication or Passkey login.', 'really-simple-ssl' ),
 								],
 								[
 									'id'            => 'two_fa_email',
@@ -299,9 +299,18 @@ function rsssl_menu() {
 									'premium_text'  => __( 'Send an email code during login. You can force user roles to use two-factor authentication, or leave the choose with your users, if so desired.', 'really-simple-ssl' ),
 									'upgrade'              => 'https://really-simple-ssl.com/pro/?mtm_campaign=2fa&mtm_source=free&mtm_content=upgrade',
 									'helpLink' => 'instructions/two-factor-authentication',
-									'title'         => __( 'Email Verification', 'really-simple-ssl' ),
-									'intro'         => __( 'Email Verification sends a verification code to the user’s email address. This method provides protection against leaked or weak passwords, though it is less secure than other 2FA methods. If a user’s email inbox is compromised, one could still get access to the user account. It is not recommended to allow Email Verification for administrators.', 'really-simple-ssl' ),
+									'title'         => __( 'Two-Factor Authentication', 'really-simple-ssl' ),
+									'intro'         => __( 'Choose between Email Verification (less secure and not recommended for administrators) or the TOTP method with an authenticator app, depending on your convenience and security needs.', 'really-simple-ssl' ),
 								],
+                                [
+                                    'id'       => 'two_fa_passkey',
+                                    'group_id' => 'two_fa_passkey',
+                                    'premium'              => true,
+                                    'premium_text'         => __( 'Get Login Protection with %sReally Simple SSL Pro%s', 'really-simple-ssl' ),
+                                    'helpLink' => 'https://really-simple-ssl.com/instructions/two-factor-authentication',
+                                    'title'    => __( 'Passkey', 'really-simple-ssl' ),
+                                    'intro'    => __( '', 'really-simple-ssl' ),
+                                ],
 								[
 									'id'       => 'two_fa_totp',
 									'group_id' => 'two_fa_totp',

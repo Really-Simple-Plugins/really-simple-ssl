@@ -259,7 +259,7 @@ class rsssl_admin {
 		 * this way we lower the memory impact on activation
 		 * Flush should happen on shutdown, not on init, as often happens in other plugins
 		 * https://codex.wordpress.org/Function_Reference/flush_rewrite_rules
-		 * */
+		 */
 
 		$activation_time          = get_option( 'rsssl_flush_rewrite_rules' );
 		$more_than_one_minute_ago = $activation_time < strtotime( '-1 minute' );
@@ -282,15 +282,35 @@ class rsssl_admin {
 		*/
 
 		//when configuration detection should run again
-		if ( ! rsssl_get_option( 'ssl_enabled' ) || $this->is_settings_page() || defined( 'RSSSL_DOING_SYSTEM_STATUS' ) ) {
-			$this->detect_configuration();
-			if ( ! $this->wpconfig_ok() ) {
-				rsssl_update_option( 'ssl_enabled', false );
-			} else {
-				//when one of the used server variables was found, test if the redirect works
-				if ( RSSSL()->server->uses_htaccess() && 'NA' !== $this->ssl_type ) {
-					$this->htaccess_test_success();
-				}
+        add_action('admin_init', array($this, 'detect_configuration_init'), 20);
+	}
+
+	/**
+	 * Run SSL configuration detection on the init hook
+	 *
+	 * This function is hooked to the init action with priority 20,
+	 * ensuring translations are properly loaded before running.
+	 * It performs SSL configuration detection and followup actions
+	 * including wpconfig checks and htaccess redirect tests.
+	 *
+	 * @since  6.3.7
+	 * @access public
+	 * @return void
+	 */
+	public function detect_configuration_init() {
+
+		if ( rsssl_get_option( 'ssl_enabled' ) || ! $this->is_settings_page() || ! defined( 'RSSSL_DOING_SYSTEM_STATUS' ) ) {
+            return;
+		}
+
+        $this->detect_configuration();
+
+		if ( ! $this->wpconfig_ok() ) {
+			rsssl_update_option( 'ssl_enabled', false );
+		} else {
+			//when one of the used server variables was found, test if the redirect works
+			if ( RSSSL()->server->uses_htaccess() && 'NA' !== $this->ssl_type ) {
+				$this->htaccess_test_success();
 			}
 		}
 	}
@@ -631,8 +651,15 @@ class rsssl_admin {
 						<?php if ( $dashboard_button ) { ?>
                             <a id="rsssl-dashboard-button" class="button button-primary" rel="noopener noreferrer" href="<?php echo add_query_arg(array('page' => 'really-simple-security', 'dismiss_notice' => $dismiss_id), rsssl_admin_url() ); ?>"><?php _e( 'View Dashboard', 'really-simple-ssl' ); ?></a>
 						<?php } ?>
-						<?php if ( $dismiss_id ) { ?>
-							<a class="button" rel="noopener noreferrer" href="<?php echo add_query_arg( [ 'dismiss_notice' => $dismiss_id ], $url ); ?>"><?php _e( 'Dismiss', 'really-simple-ssl' ); ?></a>
+						<?php if ( $dismiss_id ) {
+							$dismiss_url = wp_nonce_url(
+								add_query_arg( [ 'dismiss_notice' => $dismiss_id ], $url ),
+								'rsssl_dismiss_notice_' . $dismiss_id
+							);
+							?>
+                            <a class="button" rel="noopener noreferrer" href="<?php echo esc_url($dismiss_url); ?>">
+								<?php _e( 'Dismiss', 'really-simple-ssl' ); ?>
+                            </a>
 						<?php } ?>
 						<?php if ( $more_info ) { ?>
 							<a class="button" <?php echo $target; ?> rel="noopener noreferrer" href="<?php echo esc_url_raw( $more_info ); ?>"><?php $is_internal_link ? _e( 'View', 'really-simple-ssl' ) : _e( 'More info', 'really-simple-ssl' ); ?></a>
@@ -1723,33 +1750,45 @@ class rsssl_admin {
 					<div style="margin-left:30px">
 						<?php if ( get_option( 'rsssl_before_review_notice_user' ) ) { ?>
 							<p>
-							<?php
+								<?php
 								// translators: %1$ and %2$ are replaced with opening and closing a tag containing hyperlink
-								printf( __( 'Hi, Really Simple Security has kept your site secure for some time now, awesome! If you have a moment, please consider leaving a review on WordPress.org to spread the word. We greatly appreciate it! If you have any questions or feedback, leave us a %1$smessage%2$s.', 'really-simple-ssl' ), '<a href="https://really-simple-ssl.com/contact"  rel="noopener noreferrer"  target="_blank">', '</a>' );
-							?>
-								</p>
+								echo wp_kses_post( sprintf( __( 'Hi, Really Simple Security has kept your site secure for some time now, awesome! If you have a moment, please consider leaving a review on WordPress.org to spread the word. We greatly appreciate it! If you have any questions or feedback, leave us a %1$smessage%2$s.', 'really-simple-ssl' ), '<a href="https://really-simple-ssl.com/contact" rel="noopener noreferrer" target="_blank">', '</a>' ) );
+								?>
+                            </p>
 						<?php } else { ?>
-							<p>
-							<?php
+                            <p>
+								<?php
 								// translators: %1$ and %2$ are replaced with opening and closing a tag containing hyperlink
-								printf( __( 'Hi, Really Simple Security has kept your site secure for a month now, awesome! If you have a moment, please consider leaving a review on WordPress.org to spread the word. We greatly appreciate it! If you have any questions or feedback, leave us a %1$smessage%2$s.', 'really-simple-ssl' ), '<a href="https://really-simple-ssl.com/contact"  rel="noopener noreferrer"  target="_blank">', '</a>' );
-							?>
-								</p>
+								echo wp_kses_post( sprintf( __( 'Hi, Really Simple Security has kept your site secure for a month now, awesome! If you have a moment, please consider leaving a review on WordPress.org to spread the word. We greatly appreciate it! If you have any questions or feedback, leave us a %1$smessage%2$s.', 'really-simple-ssl' ), '<a href="https://really-simple-ssl.com/contact" rel="noopener noreferrer" target="_blank">', '</a>' ) );
+								?>
+                            </p>
 						<?php } ?>
-
 						<i>- Rogier</i>
-						<div class="rsssl-buttons-row">
-							<a class="button button-primary" target="_blank" rel="noopener noreferrer"
-							   href="https://wordpress.org/support/plugin/really-simple-ssl/reviews/#new-post"><?php _e( 'Leave a review', 'really-simple-ssl' ); ?></a>
-							<div class="dashicons dashicons-calendar"></div><a rel="noopener noreferrer" href="
-							<?php
-							echo esc_url( rsssl_admin_url(['rsssl_review_notice' => 'later']) );
-							?>
-																						"><?php _e( 'Maybe later', 'really-simple-ssl' ); ?></a>
-							<div class="dashicons dashicons-no-alt"></div><a rel="noopener noreferrer" href="
-							<?php echo esc_url(	rsssl_admin_url(['rsssl_review_notice' => 'dismiss']) ); ?>
-																					"><?php _e( 'Don\'t show again', 'really-simple-ssl' ); ?></a>
-						</div>
+						<?php
+						$maybe_later_url = wp_nonce_url(
+							rsssl_admin_url(['rsssl_review_notice' => 'later']),
+							'rsssl_review_notice_action_later'
+						);
+
+						$dismiss_url = wp_nonce_url(
+							rsssl_admin_url(['rsssl_review_notice' => 'dismiss']),
+							'rsssl_review_notice_action_dismiss'
+						);
+						?>
+                        <div class="rsssl-buttons-row">
+                            <a class="button button-primary" target="_blank" rel="noopener noreferrer"
+                               href="https://wordpress.org/support/plugin/really-simple-ssl/reviews/#new-post"><?php _e( 'Leave a review', 'really-simple-ssl' ); ?></a>
+
+                            <div class="dashicons dashicons-calendar"></div>
+                            <a rel="noopener noreferrer" href="<?php echo esc_url($maybe_later_url); ?>">
+								<?php _e( 'Maybe later', 'really-simple-ssl' ); ?>
+                            </a>
+
+                            <div class="dashicons dashicons-no-alt"></div>
+                            <a rel="noopener noreferrer" href="<?php echo esc_url($dismiss_url); ?>">
+								<?php _e( 'Don\'t show again', 'really-simple-ssl' ); ?>
+                            </a>
+                        </div>
 					</div>
 				</div>
 			</div>
@@ -1768,13 +1807,18 @@ class rsssl_admin {
 	public function insert_dismiss_review() {
 
 		?>
-		<script>
-			document.addEventListener('click', e => {
-				if ( e.target.closest('.rsssl-review.notice.is-dismissible .notice-dismiss') ) {
-					window.location.href='<?php echo esc_url_raw(rsssl_admin_url(['rsssl_review_notice' => 'dismiss']) );?>';
-				}
-			});
-		</script>
+        <script>
+            document.addEventListener('click', e => {
+                if ( e.target.closest('.rsssl-review.notice.is-dismissible .notice-dismiss') ) {
+                    window.location.href='<?php echo esc_url_raw(
+						wp_nonce_url(
+							rsssl_admin_url(['rsssl_review_notice' => 'dismiss']),
+							'rsssl_review_notice_action_dismiss'
+						)
+					); ?>';
+                }
+            });
+        </script>
 		<?php
 	}
 
@@ -1783,14 +1827,24 @@ class rsssl_admin {
 	 */
 
 	public function maybe_dismiss_review_notice() {
-		if ( isset( $_GET['rsssl_review_notice'] ) && 'dismiss' === $_GET['rsssl_review_notice'] ) {
-			rsssl_update_option( 'review_notice_shown', true );
-		}
-		if ( isset( $_GET['rsssl_review_notice'] ) && 'later' === $_GET['rsssl_review_notice'] ) {
-			//Reset activation timestamp, notice will show again in one month.
-			update_option( 'rsssl_activation_timestamp', time(), false );
+		if ( isset($_GET['rsssl_review_notice']) ) {
+			$action = sanitize_text_field($_GET['rsssl_review_notice']);
+			$nonce_action = 'rsssl_review_notice_action_' . $action;
+
+			if ( ! isset($_GET['_wpnonce']) || ! wp_verify_nonce($_GET['_wpnonce'], $nonce_action) ) {
+				return;
+			}
+
+			if ( $action === 'dismiss' ) {
+				rsssl_update_option( 'review_notice_shown', true );
+			}
+
+			if ( $action === 'later' ) {
+				update_option( 'rsssl_activation_timestamp', time(), false );
+			}
 		}
 	}
+
 
 	/**
 	 * Show notices
@@ -2955,6 +3009,70 @@ class rsssl_admin {
 			}
 		}
 
+	}
+
+	/**
+	 * Activates all recommended security features for Really Simple Security.
+	 *
+	 * This includes enabling the vulnerability scanner, WordPress hardening options,
+	 * login protection, mixed content fixer, and additional premium features if the
+	 * PRO version is active. It is safe to call this method from both CLI and admin contexts.
+	 *
+	 * @since 9.3.4
+	 *
+	 */
+	public function activate_recommended_features() {
+        // Activate Vulnerability Scanner
+        rsssl_update_option( 'enable_vulnerability_scanner', true );
+
+        // Activate essential WordPress hardening features
+        $recommended_hardening_fields = RSSSL()->onboarding->get_hardening_fields();
+        foreach ( $recommended_hardening_fields as $field ) {
+            rsssl_update_option( $field, true );
+        }
+
+        // Enable Email login protection
+        rsssl_update_option( 'login_protection_enabled', true );
+
+        // Enable Mixed Content Fixer
+        rsssl_update_option( 'mixed_content_fixer', true );
+
+        // Check if PRO version is active, then activate premium features
+        if ( defined( 'rsssl_pro' ) ) {
+            // Enable Two-Factor Authentication for administrator role
+            rsssl_update_option( 'two_fa_enabled_roles_totp', [ 'administrator' ] );
+
+            // Enable Limit Login Attempts
+            rsssl_update_option( 'enable_limited_login_attempts', true );
+
+            // Enable firewall
+            rsssl_update_option( 'enable_firewall', true );
+            rsssl_update_option( 'event_log_enabled', true );
+
+            // Enable advanced security headers
+            $security_headers = [
+                'upgrade_insecure_requests',
+                'x_content_type_options',
+                'hsts',
+                'x_xss_protection'    => 'zero',
+                'x_frame_options'     => 'SAMEORIGIN',
+                'referrer_policy'     => 'strict-origin-when-cross-origin',
+                'csp_frame_ancestors' => 'self',
+            ];
+            foreach ( $security_headers as $header_key => $header_value ) {
+                if ( is_string( $header_key ) ) {
+                    rsssl_update_option( $header_key, $header_value );
+                } else {
+                    rsssl_update_option( $header_value, true );
+                }
+            }
+
+            // Activate password security enforcement
+            rsssl_update_option( 'enforce_password_security_enabled', true );
+            rsssl_update_option( 'enable_hibp_check', true );
+        }
+
+        do_action('rsssl_update_rules');
 	}
 
     /**

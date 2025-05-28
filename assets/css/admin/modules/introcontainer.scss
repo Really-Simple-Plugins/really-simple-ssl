@@ -36,34 +36,22 @@
     margin: 0;
     padding: 0;
   }
+
   @media (max-width: 768px) {
     .rsssl-intro-logo {
-      display:none;
+      display: none;
     }
   }
 
   .rsssl-ssl-intro-container {
     .rsssl-details {
-      display:flex;
+      display: flex;
       padding: var(--rsp-spacing-xs) var(--rsp-spacing-m);
       gap: var(--rsp-spacing-xs);
+
       .rsssl-icon {
-        min-width:25px;
+        min-width: 25px;
       }
     }
-  }
-
-  .rsssl-modal-footer {
-    padding: var(--rsp-spacing-m) var(--rsp-spacing-m);
-  }
-
-  /* spinner for React Icons */
-  .icon-spin {
-    animation: spin 2s linear infinite;
-  }
-
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
   }
 }

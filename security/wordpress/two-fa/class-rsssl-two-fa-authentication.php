@@ -36,7 +36,10 @@ class Rsssl_Two_Fa_Authentication {
 	public static function verify_login_nonce( int $user_id, string $nonce ): bool {
 		$login_nonce = get_user_meta( $user_id, self::RSSSL_USER_META_NONCE_KEY, true );
 
-		if ( ! $login_nonce || empty( $login_nonce['rsssl_key'] ) || empty( $login_nonce['rsssl_expiration'] ) ) {
+		if ( ! $login_nonce
+            || empty( $login_nonce['rsssl_key'] )
+            || empty( $login_nonce['rsssl_expiration'] )
+        ) {
 			return false;
 		}
 

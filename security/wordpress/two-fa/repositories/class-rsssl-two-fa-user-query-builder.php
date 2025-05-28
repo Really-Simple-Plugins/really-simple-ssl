@@ -11,6 +11,7 @@ class Rsssl_Two_Fa_User_Query_Builder implements Rsssl_Two_Fa_User_Query_Builder
     private array $statusKeys = [
         'rsssl_two_fa_status_email',
         'rsssl_two_fa_status_totp',
+        'rsssl_two_fa_status_passkey'
     ];
 
     public function __construct() {
@@ -21,7 +22,6 @@ class Rsssl_Two_Fa_User_Query_Builder implements Rsssl_Two_Fa_User_Query_Builder
     /**
      * Build query args based on data parameters.
      *
-     * @param Rsssl_Two_FA_Data_Parameters $params
      * @return array
      */
     public function buildQueryArgs(Rsssl_Two_FA_Data_Parameters $params): array {
@@ -46,7 +46,6 @@ class Rsssl_Two_Fa_User_Query_Builder implements Rsssl_Two_Fa_User_Query_Builder
     /**
      * Build the meta query for the user role specifically for two_fa_users.
      *
-     * @param Rsssl_Two_FA_Data_Parameters $params
      * @return array|array[]
      */
     protected function buildRoleMetaQuery(Rsssl_Two_FA_Data_Parameters $params): array {
@@ -89,8 +88,6 @@ class Rsssl_Two_Fa_User_Query_Builder implements Rsssl_Two_Fa_User_Query_Builder
     /**
      * Check if the role is valid.
      *
-     * @param string $role
-     * @param Rsssl_Two_FA_Data_Parameters $params
      * @return bool
      */
     protected function isValidRole(string $role, Rsssl_Two_FA_Data_Parameters $params): bool {
@@ -178,7 +175,6 @@ class Rsssl_Two_Fa_User_Query_Builder implements Rsssl_Two_Fa_User_Query_Builder
      *
      * This condition checks that the user's 'rsssl_two_fa_last_login' date is older than the current time minus the threshold days.
      *
-     * @param array $args
      * @param int $daysThreshold The number of days to subtract from now.
      * @return array
      */
@@ -208,7 +204,6 @@ class Rsssl_Two_Fa_User_Query_Builder implements Rsssl_Two_Fa_User_Query_Builder
     /**
      * Add the disabled condition to the query arguments.
      *
-     * @param array $args
      * @return array
      */
     public function addDisabledConditionToArgs(array $args): array
@@ -245,7 +240,6 @@ class Rsssl_Two_Fa_User_Query_Builder implements Rsssl_Two_Fa_User_Query_Builder
     /**
      * Add the open status condition to the query arguments.
      *
-     * @param array $args
      * @return array
      */
     public function addOpenStatusConditionToArgs(array $args): array
@@ -284,9 +278,7 @@ class Rsssl_Two_Fa_User_Query_Builder implements Rsssl_Two_Fa_User_Query_Builder
      *   - now - $daysThreshold (i.e. the point of expiry), and
      *   - now - ($daysThreshold - 3) (i.e. when 3 days remain).
      *
-     * @param array $args
      * @param int $daysThreshold The total number of days in the grace period.
-     * @param int $reminderBeforeClosingPeriod
      * @return array
      */
     public function addNearingExpiryCondition(array $args, int $daysThreshold, int $reminderBeforeClosingPeriod = 3): array {
@@ -318,8 +310,6 @@ class Rsssl_Two_Fa_User_Query_Builder implements Rsssl_Two_Fa_User_Query_Builder
     /**
      * Filter Specific on the forced roles
      *
-     * @param array $args
-     * @param array $getForcedRoles
      * @return array
      */
     public function addForcedRolesConditionToArgs(array $args, array $getForcedRoles): array

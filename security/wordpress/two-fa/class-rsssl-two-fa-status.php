@@ -8,6 +8,7 @@
 
 namespace RSSSL\Security\WordPress\Two_Fa;
 
+use RSSSL\Security\WordPress\Two_Fa\Providers\Rsssl_Provider_Loader;
 use RSSSL\Security\WordPress\Two_Fa\Traits\Rsssl_Two_Fa_Helper;
 use WP_User;
 
@@ -28,21 +29,21 @@ class Rsssl_Two_Fa_Status {
 	/**
 	 * Get the status of two-factor authentication for a user.
 	 *
-	 * @param  WP_User|null $user  (optional) The user for which to retrieve the status. Defaults to current user.
+	 * @param  WP_User $user  (optional) The user for which to retrieve the status. Defaults to current user.
 	 *
 	 * @return array  An associative array where the method names are the keys and the status values are the values.
 	 *               The status can be one of the following: 'disabled' if the method is disabled for the user,
 	 *               'enabled' if the method is enabled for the user, or 'unknown' if the status could not be determined.
 	 */
-	public static function get_user_two_fa_status( $user = null ): array {
-		$methods  = Rsssl_Provider_Loader::METHODS; // Assume this function returns all available methods.
+	public static function get_user_two_fa_status( WP_User $user ): array {
+        $loader = Rsssl_Provider_Loader::get_loader();
+		$two_fa_providers  = $loader::TWO_FA_PROVIDERS; // Assume this function returns all available methods.
 		$statuses = array();
 
-		foreach ( $methods as $method ) {
-			$status              = self::get_user_status( $method, $user->ID );
-			$statuses[ $method ] = $status ? $status : 'disabled';
+		foreach ( $two_fa_providers as $two_fa_provider ) {
+			$status              = self::get_user_status( $two_fa_provider, $user->ID );
+			$statuses[ $two_fa_provider ] = $status ?: 'disabled';
 		}
-
 		return $statuses;
 	}
 
@@ -70,37 +71,16 @@ class Rsssl_Two_Fa_Status {
 	}
 
     /**
-     * Reset the two-factor authentication for a user.
+     * Delete two-factor authentication metadata for a user.
+     *
+     * @return void
      */
-    public static function reset_user_two_fa(\WP_User $user): void
-    {
-        self::delete_two_fa_meta($user->ID);
-
-        // Set the rsssl_two_fa_last_login to now, so the user will be forced to use 2fa.
-        update_user_meta($user->ID, 'rsssl_two_fa_last_login', gmdate('Y-m-d H:i:s'));
-    }
-
-	/**
-	 * Delete two-factor authentication metadata for a user.
-	 *
-	 * @param  int $user  The user object for whom to delete the metadata.
-	 *
-	 * @return void
-	 */
-	public static function delete_two_fa_meta( int $user_id ): void {
-		delete_user_meta( $user_id, '_rsssl_two_factor_totp_last_successful_login' );
-		delete_user_meta( $user_id, '_rsssl_two_factor_nonce' );
-        delete_user_meta( $user_id, 'rsssl_two_fa_status' );
-        delete_user_meta( $user_id, 'rsssl_two_fa_status_email' );
-		delete_user_meta( $user_id, 'rsssl_two_fa_status_totp' );
-		delete_user_meta( $user_id, '_rsssl_two_factor_totp_key' );
-		delete_user_meta( $user_id, '_rsssl_two_factor_backup_codes' );
-		delete_user_meta( $user_id, 'rsssl_activation_date' );
-		delete_user_meta( $user_id, 'rsssl_two_fa_last_login' );
-		delete_user_meta( $user_id, 'rsssl_two_fa_skip_token' );
-		delete_user_meta( $user_id, '_rsssl_factor_email_token_timestamp' );
-		delete_user_meta( $user_id, '_rsssl_factor_email_token' );
-        delete_user_meta( $user_id, 'rsssl_two_fa_reminder_sent' );
+    public static function delete_two_fa_meta(int $user_id ): void {
+        // Reset the user based on the providers list.
+		foreach ( Rsssl_Provider_Loader::get_loader()::available_providers() as $provider ) {
+            $provider::reset_meta_data( $user_id );
+            update_user_meta($user_id,  'rsssl_two_fa_last_login', gmdate('Y-m-d H:i:s'));
+        }
 	}
 
 	/**
@@ -118,9 +98,7 @@ class Rsssl_Two_Fa_Status {
 			return false;
 		}
 
-		$user_roles = $user->roles;
-
-		foreach ( $user_roles as $role ) {
+		foreach ( $user->roles as $role ) {
 			if ( in_array( $role, $enabled_roles, true ) ) {
 				return true;
 			}

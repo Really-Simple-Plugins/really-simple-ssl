@@ -7,7 +7,6 @@ interface Rsssl_Has_Processing_Interface
 {
     /**
      * Processes a collection of Data Transfer Objects.
-     * @param array $args
      * @return Rsssl_Two_Fa_User_Collection
      */
     public function processBatch(array $args, string $switchValue): Rsssl_Two_Fa_User_Collection;

@@ -589,6 +589,191 @@ if ( ! class_exists( "rsssl_le_hosts" ) ) {
 		            'api' => false,
 		            'ssl_installation_link' => '',
 	            ),
+	            'amenfr' => array(
+		            'name' => 'Amen.fr',
+		            'hosting_dashboard' => 'cpanel',
+		            'api' => false,
+	            ),
+	            'amenpt' => array(
+		            'name' => 'Amen.pt',
+		            'hosting_dashboard' => 'cpanel',
+		            'api' => false,
+	            ),
+	            'dominiospt' => array(
+		            'name' => 'Dominios.pt',
+		            'hosting_dashboard' => 'cpanel',
+		            'api' => false,
+	            ),
+	            'lcn' => array(
+		            'name' => 'LCN',
+		            'hosting_dashboard' => 'cpanel',
+		            'api' => false,
+	            ),
+	            'nominalia' => array(
+		            'name' => 'Nominalia',
+		            'hosting_dashboard' => 'cpanel',
+		            'api' => false,
+	            ),
+	            'ptisp' => array(
+		            'name' => 'PTisp',
+		            'hosting_dashboard' => 'cpanel',
+		            'api' => false,
+	            ),
+	            'register365' => array(
+		            'name' => 'Register365',
+		            'hosting_dashboard' => 'cpanel',
+		            'api' => false,
+	            ),
+	            'registerit' => array(
+		            'name' => 'Register.it',
+		            'hosting_dashboard' => 'cpanel',
+		            'api' => false,
+	            ),
+	            'swizzonic' => array(
+		            'name' => 'Swizzonic',
+		            'hosting_dashboard' => 'cpanel',
+		            'api' => false,
+	            ),
+	            'vimexx' => array(
+		            'name' => 'Vimexx',
+		            'hosting_dashboard' => 'cpanel',
+		            'api' => false,
+	            ),
+	            'hostingireland' => array(
+		            'name' => 'HostingIreland',
+		            'hosting_dashboard' => 'cpanel',
+		            'api' => false,
+	            ),
+	            'letshost' => array(
+		            'name' => 'Letshost',
+		            'hosting_dashboard' => 'cpanel',
+		            'api' => false,
+	            ),
+	            'webempresa' => array(
+		            'name' => 'Webempresa',
+		            'hosting_dashboard' => 'cpanel',
+		            'api' => false,
+	            ),
+	            'superhostingbg' => array(
+		            'name' => 'СуперХостинг.БГ',
+		            'hosting_dashboard' => 'cpanel',
+		            'api' => false,
+	            ),
+	            'keliweb' => array(
+		            'name' => 'Keliweb',
+		            'hosting_dashboard' => 'cpanel',
+		            'api' => false,
+	            ),
+	            'papaki' => array(
+		            'name' => 'Papaki',
+		            'hosting_dashboard' => 'cpanel',
+		            'api' => false,
+	            ),
+	            'natro' => array(
+		            'name' => 'Natro',
+		            'hosting_dashboard' => 'cpanel',
+		            'api' => false,
+	            ),
+	            'turhost' => array(
+		            'name' => 'Turhost',
+		            'hosting_dashboard' => 'cpanel',
+		            'api' => false,
+	            ),
+	            'ukdedicated' => array(
+		            'name' => 'UkDedicated',
+		            'hosting_dashboard' => 'cpanel',
+		            'api' => false,
+	            ),
+	            'catalyst2' => array(
+		            'name' => 'Catalyst2',
+		            'hosting_dashboard' => 'cpanel',
+		            'api' => false,
+	            ),
+	            'guru' => array(
+		            'name' => 'Guru',
+		            'hosting_dashboard' => 'cpanel',
+		            'api' => false,
+	            ),
+	            'scannet' => array(
+		            'name' => 'Scannet',
+		            'hosting_dashboard' => 'cpanel',
+		            'api' => false,
+	            ),
+	            'curanet' => array(
+		            'name' => 'Curanet',
+		            'hosting_dashboard' => 'cpanel',
+		            'api' => false,
+	            ),
+	            'tophost' => array(
+		            'name' => 'Tophost',
+		            'hosting_dashboard' => 'cpanel',
+		            'api' => false,
+	            ),
+	            'magyarhosting' => array(
+		            'name' => 'Magyar Hosting',
+		            'hosting_dashboard' => 'cpanel',
+		            'api' => false,
+	            ),
+	            'ezit' => array(
+		            'name' => 'Ezit',
+		            'hosting_dashboard' => 'cpanel',
+		            'api' => false,
+	            ),
+	            'hostingpalvelu' => array(
+		            'name' => 'Hostingpalvelu',
+		            'hosting_dashboard' => 'cpanel',
+		            'api' => false,
+	            ),
+	            'domainhotelli' => array(
+		            'name' => 'Domainhotelli',
+		            'hosting_dashboard' => 'cpanel',
+		            'api' => false,
+	            ),
+	            'hypernode' => array(
+		            'name' => 'Hypernode',
+		            'hosting_dashboard' => 'cpanel',
+		            'api' => false,
+	            ),
+	            'proserve' => array(
+		            'name' => 'Proserve',
+		            'hosting_dashboard' => 'cpanel',
+		            'api' => false,
+	            ),
+	            'vdx' => array(
+		            'name' => 'VDX',
+		            'hosting_dashboard' => 'cpanel',
+		            'api' => false,
+	            ),
+	            'maxcluster' => array(
+		            'name' => 'maxcluster',
+		            'hosting_dashboard' => 'cpanel',
+		            'api' => false,
+	            ),
+	            'raidboxes' => array(
+		            'name' => 'Raidboxes',
+		            'hosting_dashboard' => 'cpanel',
+		            'api' => false,
+	            ),
+	            'loopia' => array(
+		            'name' => 'Loopia',
+		            'hosting_dashboard' => 'cpanel',
+		            'api' => false,
+	            ),
+	            'active24' => array(
+		            'name' => 'Active24',
+		            'hosting_dashboard' => 'cpanel',
+		            'api' => false,
+	            ),
+	            'websupport' => array(
+		            'name' => 'Websupport',
+		            'hosting_dashboard' => 'cpanel',
+		            'api' => false,
+	            ),
+	            'planeetta' => array(
+		            'name' => 'Planeetta',
+		            'hosting_dashboard' => 'cpanel',
+		            'api' => false,
+	            ),
             );
 
 	        $this->not_local_certificate_hosts = $this->filter_hosts( 'local_ssl_generation_needed', false);
@@ -619,17 +804,23 @@ if ( ! class_exists( "rsssl_le_hosts" ) ) {
 
 
 	    /**
-	     * @param array $array
-	     * @param mixed $filter_value
-	     * @param mixed $filter_key
+	     * Filter hosts based on a specific key and value
 	     *
-	     * @return array
+	     * @param string $filter_key The key to filter on
+	     * @param mixed $filter_value The value to match
+	     *
+	     * @return array               Array of filtered host keys
 	     */
-        public function filter_hosts( $filter_key, $filter_value){
-	        return array_keys(array_filter($this->hosts, function ($var) use ($filter_value, $filter_key) {
-		        return ($var[$filter_key] == $filter_value);
-	        }) );
-        }
+	    public function filter_hosts( string $filter_key, $filter_value ): array {
+		    return array_keys( array_filter( $this->hosts, function ( $var ) use ( $filter_value, $filter_key ) {
+			    // Only check if the key exists
+			    if ( ! isset( $var[ $filter_key ] ) ) {
+				    return false;
+			    }
+
+			    return $var[ $filter_key ] === $filter_value;
+		    } ) );
+	    }
 
 	    /**
 	     * @param string | bool $type

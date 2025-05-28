@@ -10,14 +10,15 @@
  */
 
 require_once rsssl_path . 'security/wordpress/two-fa/class-rsssl-two-factor-settings.php';
-use RSSSL\Security\WordPress\Two_Fa\Rsssl_Two_Factor_Email;
+
+use RSSSL\Security\WordPress\Two_Fa\RSSSL_Passkey_List_Table;
 use RSSSL\Security\WordPress\Two_Fa\Rsssl_Two_Factor_Settings;
 
 ?>
 <br>
 <p>
-<h2><?php esc_html__('Two-Factor Authentication', 'really-simple-ssl'); ?></h2>
-<p><?php esc_html__('Two-Factor Authentication adds an extra layer of security to your account. You can enable it here.', 'really-simple-ssl'); ?></p>
+<h2><?php esc_html_e('Login protection', 'really-simple-ssl'); ?></h2>
+<p><?php esc_html_e('Two-Factor Authentication adds an extra layer of security to your account. You can enable it here.', 'really-simple-ssl'); ?></p>
 <?php if ($forced && !$one_enabled) : ?>
     <p class="notice notice-warning">
         <?php esc_html_e('Two-Factor Authentication is mandatory for your account, so you need to make a selection.', 'really-simple-ssl'); ?>
@@ -26,22 +27,12 @@ use RSSSL\Security\WordPress\Two_Fa\Rsssl_Two_Factor_Settings;
 <table class="form-table rsssl-table-two-fa">
     <!-- Two-Factor Authentication Selection -->
     <tr>
-        <th scope="row">
-            <label for="two-factor-authentication"><?php esc_html_e('Two-Factor Authentication', 'really-simple-ssl'); ?></label>
-        </th>
-        <td>
-            <fieldset>
-                <legend class="screen-reader-text">
-                    <span><?php esc_html_e('Two-Factor Authentication', 'really-simple-ssl'); ?></span>
-                </legend>
-                <label for="two-factor-authentication">
+        <td colspan="2" style="padding-left:0">
+            <?php esc_html_e('Enable Two-Factor Authentication', 'really-simple-ssl'); ?>
                     <input type="hidden" name="two-factor-authentication" value="<?php echo $forced ?>" />
-                    <input type="checkbox" name="two-factor-authentication" id="two-factor-authentication"
-                           value="1" <?php checked($one_enabled || $forced);
-                    disabled($forced) ?> />
-                    <?php esc_html_e('Enable Two-Factor Authentication', 'really-simple-ssl'); ?>
-                </label>
-            </fieldset>
+                    <input type="checkbox" style="padding-left:20px;" name="two-factor-authentication" id="two-factor-authentication"
+                           value="1" <?php esc_html_e(checked($one_enabled || $forced));
+                    esc_html_e(disabled($forced)) ?> />
         </td>
     </tr>
     <!-- Two-Factor Authentication Selection -->
@@ -74,16 +65,15 @@ use RSSSL\Security\WordPress\Two_Fa\Rsssl_Two_Factor_Settings;
                 <legend class="screen-reader-text">
                     <span><?php esc_html_e('Preferred Method', 'really-simple-ssl'); ?></span>
                 </legend>
-                    <?php foreach (!$one_enabled? $available_providers:$providers as $provider) : ?>
-                        <label for="two-factor-method-<?php echo esc_attr($provider); ?>">
-                            <input type="radio" name="preferred_method" class="preferred_method_selection" id="preferred_method_<?= $provider::METHOD ?>"
+                    <?php foreach ($available_providers as $provider) : ?>
+                        <label for="two-factor-method-<?php echo esc_attr(get_class($provider)); ?>">
+                            <input type="radio" name="preferred_method" class="preferred_method_selection" id="preferred_method_<?php echo $provider::METHOD ?>"
                                    value="<?= esc_attr($provider::METHOD) ?>" <?php checked(strtolower($provider::METHOD) === strtolower(Rsssl_Two_Factor_Settings::get_login_action(  $user->ID ))); ?> />
                             <?= esc_html($provider::NAME) ?>
                         <br/>
                     <?php endforeach; ?>
             </fieldset>
         </td>
-
     </tr>
         <tr class="totp-config">
             <td>
@@ -129,5 +119,24 @@ use RSSSL\Security\WordPress\Two_Fa\Rsssl_Two_Factor_Settings;
             <p class="two-factor-prompt"><i><?php esc_html_e('A verification code has been sent to the email address associated with your account to verify functionality.', 'really-simple-ssl'); ?> <a href="#" id="rsssl_resend_code_action"> <?php esc_attr_e('Resend Code', 'really-simple-ssl'); ?></a></i></p>
         </td>
     </tr>
+    <tr id="rsssl_step_three_onboarding">
+        <td colspan="2">
+            <p class="passkey-integration" id="passkey-integration">
+            </p>
+        </td>
+    </tr>
+    <?php
+
+    if ( $passkeys_enabled ) {
+        ?>
+        <tr style="padding: 0;opacity: <?php echo ($selected_provider === 'passkey') ? '1' : '0'; ?>" id="passkey-table">
+            <!-- Datatable for the Passkey -->
+            <td colspan="2" style="padding: 0;">
+                <?php RSSSL_Passkey_List_Table::display_table() ?>
+            </td>
+        </tr>
+        <?php
+    }
+    ?>
 </table>
 

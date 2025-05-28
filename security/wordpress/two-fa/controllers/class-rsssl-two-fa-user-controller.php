@@ -10,7 +10,6 @@ class Rsssl_Two_Fa_User_Controller {
 
     /**
      * Rsssl_Two_Fa_User_Controller constructor.
-     * @param Rsssl_Two_Fa_User_Repository_Interface $userRepository
      */
     public function __construct(
         Rsssl_Two_Fa_User_Repository_Interface $userRepository
@@ -21,7 +20,6 @@ class Rsssl_Two_Fa_User_Controller {
     /**
      * Get users for the admin overview.
      *
-     * @param Rsssl_Two_FA_Data_Parameters $params
      * @return array
      */
     public function getUsersForAdminOverview(Rsssl_Two_FA_Data_Parameters $params): array {

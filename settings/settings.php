@@ -577,7 +577,6 @@ function rsssl_other_plugins_data($slug = false)
 	$plugins = array(
 		[
 			'slug' => 'complianz-gdpr',
-			'constant_free' => 'cmplz_plugin',
 			'constant_premium' => 'cmplz_premium',
 			'wordpress_url' => 'https://wordpress.org/plugins/complianz-gdpr/',
 			'upgrade_url' => 'https://complianz.io/pricing?src=rsssl-plugin',
@@ -585,10 +584,15 @@ function rsssl_other_plugins_data($slug = false)
 		],
 		[
 			'slug' => 'complianz-terms-conditions',
-			'constant_free' => 'cmplz_tc_version',
 			'wordpress_url' => 'https://wordpress.org/plugins/complianz-terms-conditions/',
 			'upgrade_url' => 'https://complianz.io?src=rsssl-plugin',
 			'title' => 'Complianz - ' . __("Terms and Conditions", "really-simple-ssl"),
+		],
+		[
+			'slug' => 'simplybook',
+			'wordpress_url' => 'https://wordpress.org/plugins/simplybook/',
+			'upgrade_url' => 'https://simplybook.me/en/pricing',
+			'title' => 'SimplyBook.me - ' . __("Online Booking System", "really-simple-ssl"),
 		],
 	);
 

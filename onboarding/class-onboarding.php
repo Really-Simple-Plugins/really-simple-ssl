@@ -300,47 +300,85 @@ class rsssl_onboarding {
 		return $items;
 	}
 
+	/**
+	 * Get the list of recommended plugins for the onboarding process.
+	 *
+	 * This function prepares plugin data for display in the onboarding wizard.
+	 * It handles plugin status, actions, and checkbox initialization based on configuration.
+	 *
+	 * Each plugin can be configured with a 'pre_checked' parameter:
+	 * - pre_checked = true: Plugin checkbox starts checked, will be installed/activated by default
+	 * - pre_checked = false: Plugin checkbox starts unchecked, requires user selection for installation
+	 *
+	 * Special action handling:
+	 * - Plugins with pre_checked = false are assigned an action of "none" and a default_action of "install_plugin"
+	 * - When the user checks these plugins, the frontend component will use the default_action value instead of action
+	 *
+	 * @access public
+	 *
+	 * @return array List of plugin items with their status, actions and UI properties
+	 */
 	public function plugins(): array {
-		$items = [];
+		$items              = [];
 		$plugins_to_install = [
 			[
-				"slug" => "complianz-gdpr",
+				"slug"             => "complianz-gdpr",
 				'constant_premium' => 'cmplz_premium',
-				"title" => "Complianz",
-				"description" => __("Consent Management as it should be.", "really-simple-ssl"),
+				"title"            => "Complianz",
+				"description"      => __( "Consent Management as it should be.", "really-simple-ssl" ),
+				"pre_checked"      => true,
 			],
 			[
-				"slug" => "complianz-terms-conditions",
+				"slug"             => "complianz-terms-conditions",
 				'constant_premium' => false,
-				"title" => "Complianz Terms & Conditions",
-				"description" => __("Terms & Conditions", "really-simple-ssl"),
+				"title"            => "Complianz Terms & Conditions",
+				"description"      => __( "Terms & Conditions", "really-simple-ssl" ),
+				"pre_checked"      => true,
+			],
+			[
+				"slug"             => "simplybook",
+				'constant_premium' => false,
+				"title"            => "SimplyBook.me",
+				"description"      => __( "Online Booking System", "really-simple-ssl" ),
+				"pre_checked"      => false,
 			]
 		];
-		foreach ($plugins_to_install as $plugin_info) {
-			require_once(rsssl_path . 'class-installer.php');
-			$plugin = new rsssl_installer($plugin_info["slug"]);
-			$premium_active = $plugin_info['constant_premium'] && defined($plugin_info['constant_premium']);
-			$free_active = $plugin->plugin_is_downloaded() && $plugin->plugin_is_activated();
 
-			if( $premium_active || $free_active ) {
+		foreach ( $plugins_to_install as $plugin_info ) {
+			require_once( rsssl_path . 'class-installer.php' );
+			$plugin         = new rsssl_installer( sanitize_key( $plugin_info["slug"] ) );
+			$premium_active = $plugin_info['constant_premium'] && defined( $plugin_info['constant_premium'] );
+			$free_active    = $plugin->plugin_is_downloaded() && $plugin->plugin_is_activated();
+
+			// Determine whether plugin should be checked or not
+			$is_pre_checked = isset( $plugin_info['pre_checked'] ) ? $plugin_info['pre_checked'] : true;
+
+			if (!$is_pre_checked && !$premium_active && !$free_active) {
 				$action = "none";
-			} else if( !$plugin->plugin_is_downloaded() ){
+				$default_action = "install_plugin";
+			} else if ($premium_active || $free_active) {
+				$action = "none";
+			} else if (!$plugin->plugin_is_downloaded()) {
 				$action = "install_plugin";
-			} else if ( $plugin->plugin_is_downloaded() && !$plugin->plugin_is_activated() ) {
+			} else if ( $plugin->plugin_is_downloaded() && ! $plugin->plugin_is_activated() ) {
 				$action = "activate";
 			} else {
 				$action = "none";
 			}
 
+			$activated = $is_pre_checked;
+
 			$items[] = [
-				"id" => $plugin_info['slug'],
-				"title" => $plugin_info["title"],
-				"description" => $plugin_info["description"],
-				"action" => $action,
-				"activated" => true,
+				"id"             => $plugin_info['slug'],
+				"title"          => $plugin_info["title"],
+				"description"    => $plugin_info["description"],
+				"action"         => $action,
+				"activated"      => $activated,
 				"current_action" => "none",
+				"default_action" => ($default_action ?? null)
 			];
 		}
+
 		return $items;
 	}
 

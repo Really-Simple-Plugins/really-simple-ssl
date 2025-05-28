@@ -22,7 +22,6 @@ class Rsssl_Two_Fa_Forced_Role_Service implements Rsssl_Has_Processing_Interface
     /**
      * Process a batch of forced two-factor users with disabled status.
      *
-     * @param array $args
      * @param string $statusType
      * @return Rsssl_Two_Fa_User_Collection
      */
@@ -41,8 +40,6 @@ class Rsssl_Two_Fa_Forced_Role_Service implements Rsssl_Has_Processing_Interface
     /**
      * Check if the forced roles have changed.
      *
-     * @param array $oldForcedRoles
-     * @param array $newForcedRoles
      * @return array
      */
     public static function getForForcedRolesChange(array $oldForcedRoles, array $newForcedRoles): array
@@ -53,8 +50,6 @@ class Rsssl_Two_Fa_Forced_Role_Service implements Rsssl_Has_Processing_Interface
 
     /**
      * Reset the status of the forced users when the forced roles are added.
-     *
-     * @param array $changedRoles
      */
     public function maybeResetForcedUsersWhenDisabled(array $changedRoles): void
     {
@@ -67,8 +62,6 @@ class Rsssl_Two_Fa_Forced_Role_Service implements Rsssl_Has_Processing_Interface
 
     /**
      * Reset the status of the forced users when the forced roles are added.
-     *
-     * @param array $changedRoles
      */
     public function maybeResetForcedUsersWhenExpired(array $changedRoles): void
     {

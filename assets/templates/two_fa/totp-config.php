@@ -24,12 +24,12 @@ if (isset($_GET['error']) && $_GET['error'] === 1) {
     );
     ?>
 </p>
-<p id="two-factor-qr-code">
+<div id="two-factor-qr-code">
     <a href="#">
         Loading...
         <img src="<?php echo esc_url(admin_url('images/spinner.gif')); ?>" alt=""/>
     </a>
-</p>
+</div>
 <p style="margin-bottom: 10px;">
     <i id="totp-key">
         <?php

@@ -1,6 +1,7 @@
 <?php
 namespace RSSSL\Security\WordPress\Two_Fa\Services;
 
+use rsssl_mailer;
 use RSSSL\Security\WordPress\Two_Fa\Contracts\Rsssl_Two_Fa_User_Repository_Interface;
 use RSSSL\Security\WordPress\Two_Fa\Models\Rsssl_Two_FA_Data_Parameters;
 use RSSSL\Security\WordPress\Two_Fa\Models\Rsssl_Two_Fa_User_Collection;
@@ -26,7 +27,6 @@ class Rsssl_Two_Fa_Reminder_Service {
      * Checks whether forced roles are set and then schedules a WP event
      * to process the reminder emails in a separate request.
      *
-     * @param array $forcedRoles
      * @return bool
      */
     public function maybeSendReminderEmails(array $forcedRoles):bool
@@ -55,7 +55,6 @@ class Rsssl_Two_Fa_Reminder_Service {
      *
      * This method is hooked to a WP action and is executed via a scheduled event.
      *
-     * @param Rsssl_Two_Fa_User_Collection $collection
      * @return void
      */
     public function processReminders(Rsssl_Two_Fa_User_Collection $collection ): void
@@ -112,7 +111,7 @@ class Rsssl_Two_Fa_Reminder_Service {
             '</strong>'
         );
 
-        $mailer                    = new \rsssl_mailer();
+        $mailer                    = new rsssl_mailer();
         $mailer->subject           = $subject;
         $mailer->branded           = false;
         $mailer->sent_by_text      = "<b>".sprintf( __( 'Notification by %s', 'really-simple-ssl' ), site_url() )."</b>";

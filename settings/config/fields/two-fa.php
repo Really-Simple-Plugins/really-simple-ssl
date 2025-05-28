@@ -24,8 +24,32 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'group_id' => 'two_fa_general',
 				'type'     => 'two_fa_roles',
 				'default'  => [],
-				'label'    => __( 'Enforce for:', 'really-simple-ssl' ),
-				'tooltip'  => __( 'Enforcing 2FA ensures that all users with the selected roles must login using Two-Factor Authentication. It is strongly recommended to at least enforce 2FA for Administrators.', 'really-simple-ssl' ),
+				'label'    => __( 'Enforce secure authentication for:', 'really-simple-ssl' ),
+				'tooltip'  => __( 'These user roles will be enforced to either configure Two-factor Authentication or Passkey log in. We recommend to enforce at least administrators.', 'really-simple-ssl' ),
+				'react_conditions' => [
+					'relation' => 'AND',
+					[
+						'login_protection_enabled' => true,
+					]
+				],
+				'server_conditions'    => [
+					'relation' => 'AND',
+					[
+						'is_multisite' => false,
+					]
+				],
+			],
+			[
+				'id'       => 'enable_passkey_login',
+				'menu_id'  => 'two-fa',
+				'group_id' => 'two_fa_general',
+				'type'     => 'checkbox',
+				'premium'  => true,
+				'upgrade'  => 'https://really-simple-ssl.com/login-protection/',
+				'label'    => __( "Allow secure log in with Passkeys", "really-simple-ssl" ),
+				'disabled' => false,
+				'tooltip'  => __('Passkeys are a very secure and convenient way to log in. It allows the user to authenticate using their device, browser or password manager.', 'really-simple-ssl'),
+				'default'  => 'disabled',
 				'react_conditions' => [
 					'relation' => 'AND',
 					[
@@ -45,7 +69,7 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'group_id' => 'two_fa_general',
 				'type'     => 'select',
 				'label'    => __( 'Allow grace period', 'really-simple-ssl' ),
-				'tooltip'  => __( 'During the grace period users can configure their Two-Factor method. When the grace period ends, users for which 2FA is enforced won’t be able to login unless 2FA is correctly configured. The grace period is also applied to new users.', 'really-simple-ssl' ),
+				'tooltip'  => __( 'During the grace period users can configure their secure authentication method. When the grace period ends, users for which secure authentication is enforced won’t be able to log in unless secure authentication is correctly configured. The grace period is also applied to new users.', 'really-simple-ssl' ),
 				'disabled' => false,
 				'options'          => [
 					'1'   => sprintf(__('%s day', 'really-simple-ssl'), 1),
@@ -77,13 +101,14 @@ add_filter( 'rsssl_fields', function( $fields ) {
                 'disabled' => (rsssl_is_email_verified() === false),
                 'disabledTooltipText' => __("This feature is disabled because you have not verified that e-mail is correctly configured on your site.", "really-simple-ssl"),
 				'default'  => [],
-				'label'    => __( 'Enable for:', 'really-simple-ssl' ),
-				'react_conditions' => [
-					'relation' => 'AND',
-					[
-						'login_protection_enabled' => 1,
-					]
-				],
+                'tooltip'  => __('Email log in will send an authentication code to the user’s email address. This is considered less secure than other 2FA methods.', 'really-simple-ssl'),
+				'label'    => __( 'Enable Email Authentication for:', 'really-simple-ssl' ),
+                'react_conditions' => [
+                    'relation' => 'AND',
+                    [
+                        'login_protection_enabled' => 1,
+                    ]
+                ],
 				'server_conditions'    => [
 					'relation' => 'AND',
 					[
@@ -95,17 +120,13 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'id'       => 'two_fa_enabled_roles_totp',
 				'enabled_roles_id'         => 'two_fa_forced_roles',
 				'menu_id'  => 'two-fa',
-				'group_id' => 'two_fa_totp',
+				'group_id' => 'two_fa_email',
 				'type'     => 'roles_enabled_dropdown',
                 'premium'   => true,
-				'default'  => [],
-				'label'    => __( 'Enable for:', 'really-simple-ssl' ),
-				'react_conditions' => [
-					'relation' => 'AND',
-					[
-						'login_protection_enabled' => true
-					]
-				],
+				'upgrade'  => 'https://really-simple-ssl.com/login-protection/',
+				'default'  => ['administrator'],
+                'tooltip'  => __('TOTP means authentication using apps like Google Authenticator.', 'really-simple-ssl'),
+				'label'    => __( 'Enable TOTP Authentication for:', 'really-simple-ssl' ),
 				'server_conditions'    => [
 					'relation' => 'AND',
 					[

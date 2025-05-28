@@ -9,6 +9,10 @@
 
 namespace RSSSL\Security\WordPress\Two_Fa;
 
+use RSSSL\Pro\Security\WordPress\Two_Fa\Providers\Rsssl_Two_Factor_Passkey;
+use RSSSL\Security\WordPress\Two_Fa\Providers\Rsssl_Provider_Loader;
+use RSSSL\Security\WordPress\Two_Fa\Providers\Rsssl_Two_Factor_Email;
+use RSSSL\Pro\Security\WordPress\Two_Fa\Providers\Rsssl_Two_Factor_Totp;
 use WP_User;
 
 /**
@@ -58,6 +62,20 @@ class Rsssl_Two_Factor_Settings {
 	 * @var array $enabled_roles_email
 	 */
 	public static $enabled_roles_email;
+
+    /**
+	 * The enabled roles for Passkey, hint they all are.
+	 *
+	 * @var array $enabled_roles_passkey
+	 */
+	public static $enabled_roles_passkey;
+
+    /**
+	 * The forced roles for Passkey.
+	 *
+	 * @var array $forced_roles_passkey
+	 */
+	public static $forced_roles_passkey;
 
 	/**
 	 * If the previous roles variables are loaded or not.
@@ -167,7 +185,7 @@ class Rsssl_Two_Factor_Settings {
 		$provider = 'email' === $method ? '_email' : '_' . self::sanitize_method( $method );
 
 		// Check if the method is enabled.
-		$enabled = rsssl_get_option( "two_fa_enabled_roles$provider" );
+        $enabled = ($method === 'passkey') ? array_keys(wp_roles()->roles) : rsssl_get_option("two_fa_enabled_roles$provider");
 
 		$forced  = false;
 
@@ -180,6 +198,18 @@ class Rsssl_Two_Factor_Settings {
 			$return = 'forced';
 			$forced = true;
 		}
+
+        // if the method = 'passkeys' and the role is forced, return forced.
+        if ('passkey' === $method && self::contains_role_of_type($method, $roles, 'forced')) {
+            $return = 'forced';
+            $forced = true;
+        }
+
+        //if the method = 'passkey' and the role is enabled, return optional.
+        if ('passkey' === $method && $enabled) {
+            $return = 'optional';
+        }
+
 		// if the role is enabled, return optional.
 		if ( self::contains_role_of_type( $method, $roles, 'enabled' ) && ! $forced ) {
 			$return = 'optional';
@@ -192,61 +222,84 @@ class Rsssl_Two_Factor_Settings {
 		return $return;
 	}
 
-	/**
-	 * Get required 2fa action for a user.
-	 *
-	 * @param int|null $user_id //the user id to get the roles for.
-	 * @return string //email, totp, onboarding or login
-	 */
-	public static function get_login_action( int $user_id = null ): string {
+	public static function get_login_action(?int $user_id = null): string {
 		if ( null === $user_id ) {
 			$user_id = get_current_user_id();
 		}
 
 		$user = get_userdata( $user_id );
+		$loader = Rsssl_Provider_Loader::get_loader();
+		$available_providers = $loader::available_providers();
+		$ProvidersWithStatus = self::addStatusToProviders($available_providers, $user);
 
-		$totp = Rsssl_Two_Factor_Totp::get_instance();
+		// first we filter if the array gas an active status.
+		$active = array_filter( $ProvidersWithStatus, function ( $provider ) {
+			return 'active' === $provider['status'];
+		} );
 
-		if ( $totp::is_enabled( $user ) ) {
-			// first, check TOTP.
-			$user_status = self::get_user_status( 'totp', $user_id );
-			$role_status = self::get_role_status( 'totp', $user_id );
+		// if the array is not empty, we return the first key.
+		if ( ! empty( $active ) ) {
+			$active = array_keys( $active );
+			return reset( $active );
+		}
 
-			// if it's active, it's simple: the user should enter the code.
-			if ( 'active' === $user_status ) {
-				// Check the role status, in case the admin has disabled this for this role.
-				if ( 'forced' === $role_status || 'optional' === $role_status ) {
-					return 'totp';
+		foreach ($available_providers as $method => $provider_class ) {
+			if ( $provider_class::is_enabled( $user ) ) {
+				$user_status = self::get_user_status( $method, $user_id );
+				$role_status = self::get_role_status( $method, $user_id );
+				if ( 'active' === $user_status && ( 'forced' === $role_status
+                        || 'optional' === $role_status )
+                ) {
+					return $method; // Return the method directly if active and role status matches.
 				}
-			}
-			if ( 'open' === $user_status ) {
-				// if the status is open, the user should get onboarding if the role status either forced or optional.
-				if ( 'forced' === $role_status || 'optional' === $role_status ) {
-					// The role is forced. So check if the grace period is over.
+
+				if ( 'open' === $user_status && ( 'forced' === $role_status
+                        || 'optional' === $role_status )
+                ) {
 					$grace_period = self::is_user_in_grace_period( $user );
 
-					if ( $grace_period > 0 &&  'forced' === $role_status ) {
+					if ( $grace_period > 0 && 'forced' === $role_status ) {
 						return 'onboarding';
 					}
 
-                    if ('optional' === $role_status) {
-                        return 'onboarding';
-                    }
+					if ( 'optional' === $role_status ) {
+						return 'onboarding';
+					}
 
-                    return 'expired';
+					return 'expired';
 				}
-				// if empty, nothing is currently activated for this role, so check if there's an email method enabled.
-				return self::get_email_method_action( $user_id );
-			}
 
-			// Check if the role_status is not 'forced' currently. If so, show onboarding TODO: test this code below.
-			$role_status = self::get_role_status( 'totp', $user_id );
-			if ( 'forced' === $role_status && 'disabled' !== $user_status ) {
-				return 'onboarding';
+				// If role is forced and status isn't disabled, return onboarding.
+				if ( 'forced' === $role_status && 'disabled' !== $user_status ) {
+					return 'onboarding';
+				}
 			}
 		}
 
-		return self::get_email_method_action( $user_id );
+		return self::get_email_method_action( $user_id ); // Fallback to email or other default behavior.
+	}
+
+	public static function addStatusToProviders( array $providers, $user ): array {
+		$filtered_providers = [];
+		foreach ( $providers as $method => $provider_class ) {
+			if ( $provider_class::is_enabled( $user ) ) {
+				$user_status = self::get_user_status( $method, $user->ID );
+				$role_status = self::get_role_status( $method, $user->ID  );
+
+				$filtered_providers[ $method ] = array(
+					'status' => $user_status,
+					'role'   => $role_status,
+					'class'  => $provider_class,
+				);
+			} else {
+				$filtered_providers[ $method ] = array(
+					'status' => 'disabled',
+					'role'   => 'disabled',
+					'class'  => $provider_class,
+				);
+			}
+		}
+		return $filtered_providers;
 	}
 
 	/**
@@ -338,6 +391,8 @@ class Rsssl_Two_Factor_Settings {
 			// if the option is a boolean we convert it to an array.
 			self::$enabled_roles_totp  = rsssl_get_option( 'two_fa_enabled_roles_totp', [] );
 			self::$enabled_roles_email = rsssl_get_option( 'two_fa_enabled_roles_email', [] );
+            // Passkey is always enabled. So all roles are enabled.
+			self::$enabled_roles_passkey = array_values(wp_roles()->get_names());
 			self::$forced_roles        = rsssl_get_option( 'two_fa_forced_roles', [] );
 			self::$roles_loaded        = true;
 		}
@@ -428,7 +483,7 @@ class Rsssl_Two_Factor_Settings {
 	 * @return string
 	 */
 	public static function sanitize_method( string $method ): string {
-		return in_array( $method, array( 'email', 'totp' ), true ) ? $method : 'email';
+		return in_array( $method, array( 'email', 'totp', 'passkey' ), true ) ? $method : 'email';
 	}
 
 	/**
@@ -511,7 +566,8 @@ class Rsssl_Two_Factor_Settings {
         }
 
 		$email         = rsssl_get_option( 'two_fa_enabled_roles_email', [] );
-		$enabled_roles = array_merge( $totp, $email );
+        $passkey       = array_keys(wp_roles()->roles);
+		$enabled_roles = array_merge( $totp, $email, $passkey );
 		return array_intersect( $roles, $enabled_roles );
 	}
 
@@ -596,7 +652,8 @@ class Rsssl_Two_Factor_Settings {
 	public static function get_configured_provider( int $user_id ): string {
 		// With 2 providers, TOTP and Email we check both options and get the one that is not disabled.
 		$totp_meta  = get_user_meta( $user_id, 'rsssl_two_fa_status_totp', true );
-		$email_meta = get_user_meta( $user_id, 'rsssl_two_fa_status_email', true );
+		$email_meta = get_user_meta( $user_id, 'rsssl_two_fa_status', true );
+        $passkey_meta = get_user_meta( $user_id, 'rsssl_two_fa_status_passkey', true );
 		$provider   = __( 'None', 'really-simple-ssl' );
 		// if the status is active, return the method.
 		if ( 'active' === $totp_meta ) {
@@ -605,6 +662,9 @@ class Rsssl_Two_Factor_Settings {
 		if ( 'active' === $email_meta ) {
 			$provider = Rsssl_Two_Factor_Email::NAME;
 		}
+        if ('active' === $passkey_meta) {
+            $provider = Rsssl_Two_Factor_Passkey::NAME;
+        }
 		return $provider;
 	}
 
@@ -638,7 +698,6 @@ class Rsssl_Two_Factor_Settings {
     /**
      * Ensure that the default roles are first in the array
      *
-     * @param array $roles
      *
      * @return array
      */
@@ -689,9 +748,7 @@ class Rsssl_Two_Factor_Settings {
     /**
      * Get the strictest role from a list of roles
      *
-     * @param array $methods
      * @param array $roles // The list of roles
-     *
      * @return array // The strictest role
      */
     protected static function get_strictest_role(array $methods, array $roles): array

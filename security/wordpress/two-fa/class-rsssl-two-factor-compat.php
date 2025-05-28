@@ -7,6 +7,8 @@
 
 namespace RSSSL\Security\WordPress\Two_Fa;
 
+use Jetpack;
+
 /**
  * A compatibility layer for some of the most popular plugins.
  *
@@ -52,6 +54,6 @@ class Rsssl_Two_Factor_Compat {
 	 * @return boolean
 	 */
 	public function jetpack_is_sso_active() {
-		return ( method_exists( '\Jetpack', 'is_module_active' ) && \Jetpack::is_module_active( 'sso' ) );
+		return ( method_exists( '\Jetpack', 'is_module_active' ) && Jetpack::is_module_active( 'sso' ) );
 	}
 }

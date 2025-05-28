@@ -7,11 +7,13 @@
 
 namespace RSSSL\Security\WordPress\Two_Fa\Models;
 
+use RSSSL\Pro\Security\WordPress\Two_Fa\Providers\Rsssl_Two_Factor_Passkey;
 use WP_REST_Request;
 use WP_User;
 
 /**
- * Holds the request parameters for a specific action.
+ * Class Rsssl_Request_Parameters
+ *
  * This class holds the request parameters for a specific action.
  * It is used to store the parameters and pass them to the functions.
  *
@@ -21,89 +23,202 @@ class Rsssl_Request_Parameters {
 	/**
 	 * User ID.
 	 *
-	 * @var integer
+	 * @var int
 	 */
-	public $user_id;
+	public int $user_id;
 
 	/**
 	 * Login nonce.
 	 *
 	 * @var string
 	 */
-	public $login_nonce;
+	public string $login_nonce;
 
 	/**
-	 * User.
+	 * User object.
 	 *
 	 * @var WP_User
 	 */
-	public $user;
+	public WP_User $user;
 
 	/**
 	 * Service provider.
 	 *
-	 * @var object
+	 * @var string|object
 	 */
-	public $provider;
+	public string $provider;
 
 	/**
-	 * Redirect to URL.
+	 * Redirect URL.
 	 *
 	 * @var string
 	 */
-	public $redirect_to;
+	public string $redirect_to;
 
 	/**
-	 * The code.
+	 * Authentication code.
 	 *
 	 * @var string
 	 */
-	public $code;
+	public string $code;
 
 	/**
-	 * The key.
+	 * Authentication key.
 	 *
 	 * @var string
 	 */
-	public $key;
+	public string $key;
 
 	/**
-	 * The nonce.
+	 * Nonce value.
 	 *
 	 * @var mixed|null
 	 */
-	public $nonce;
-    /**
-     * @var array|string
-     */
-    public $token;
+	public string $nonce;
 
-    /**
-     * @var bool
-     */
-    public $profile;
+	/**
+	 * Authentication token.
+	 *
+	 * @var string
+	 */
+	public string $token;
 
-    /**
+	/**
+	 * Passkey ID.
+	 *
+	 * @var string
+	 */
+	public string $id;
+
+	/**
+	 * Raw ID for passkey.
+	 *
+	 * @var string
+	 */
+	public string $rawId;
+
+	/**
+	 * Response data.
+	 *
+	 * @var array
+	 */
+	public array $response;
+
+	/**
+	 * Request type.
+	 *
+	 * @var string
+	 */
+	public string $type;
+
+	/**
+	 * Unique browser identifier.
+	 *
+	 * @var string
+	 */
+	public string $unique_browser_identifier;
+
+	/**
+	 * User login.
+	 *
+	 * @var string
+	 */
+	public string $user_login;
+
+	/**
+	 * User handle.
+	 *
+	 * @var mixed|null
+	 */
+	public string $user_handle;
+
+	/**
+	 * Onboarding flag.
+	 *
+	 * @var bool
+	 */
+	public bool $onboarding;
+
+	/**
+	 * Auth device ID.
+	 *
+	 * @var string
+	 */
+	public string $auth_device_id;
+
+	public int $entry_id;
+
+	public bool $profile;
+
+	/**
 	 * Constructor for the class.
 	 *
 	 * @param WP_REST_Request $request The WordPress REST request object.
-	 *
-	 * @return void
 	 */
 	public function __construct( WP_REST_Request $request ) {
-		$this->user_id     = $request->get_param( 'user_id' );
-		$this->login_nonce = $request->get_param( 'login_nonce' );
-		$this->nonce       = $request->get_header( 'X-WP-Nonce' );
-		$this->user        = get_user_by( 'id', $this->user_id );
-		$this->provider    = $request->get_param( 'provider' );
-		$this->redirect_to = $request->get_param( 'redirect_to' )?? admin_url();
-		if ( 'totp' === $this->provider ) {
-			$this->code = wp_unslash( $request->get_param( 'two-factor-totp-authcode' ) );
-			$this->key  = wp_unslash( $request->get_param( 'key' ) );
+		$this->initialize_parameters( $request );
+	}
+
+	/**
+	 * Initialize the class properties based on the request parameters.
+	 *
+	 * @param WP_REST_Request $request The WordPress REST request object.
+	 */
+	private function initialize_parameters( WP_REST_Request $request ): void {
+		$allowed_providers = array( 'passkey', 'email', 'totp', 'passkey_register' );
+		$this->nonce       = sanitize_text_field( $request->get_header( 'X-WP-Nonce' ) );
+		$this->redirect_to = $request->get_param( 'redirect_to' ) ? esc_url_raw( $request->get_param( 'redirect_to' ) ) : admin_url();
+		$this->login_nonce = sanitize_text_field( $request->get_param( 'login_nonce' ) );
+		$provider          = $request->get_param( 'provider' );
+
+		if ( ! in_array( $provider, $allowed_providers, true ) ) {
+			$provider = null;
 		}
-        if ('email' === $this->provider) {
-            $this->token = wp_unslash($request->get_param('token'));
-            $this->profile = wp_unslash($request->get_param('profile')?? false);
-        }
+
+		if ( $request->has_param( 'credential' ) || $request->has_param( 'credentials' ) ) {
+			$this->initialize_passkey_parameters( $request );
+		} else {
+			$this->user_id  = $request->get_param( 'user_id' )?? 0;
+			$this->provider = $provider?? 'none';
+			$this->user = get_user_by( 'id', $this->user_id );
+			if ($request->has_param('entry_id')) {
+				$this->entry_id = (int) $request->get_param('entry_id');
+			}
+		}
+
+		if ( $provider === 'totp' ) {
+			$this->code = sanitize_text_field( wp_unslash( $request->get_param( 'two-factor-totp-authcode' ) ) );
+			$this->key  = sanitize_text_field( wp_unslash( $request->get_param( 'key' ) ) );
+		}
+
+		if ( $provider === 'email' ) {
+			$this->token   = sanitize_text_field( wp_unslash( $request->get_param( 'token' ) ) );
+			$this->profile = wp_unslash( $request->get_param( 'profile' ) ?? false );
+		}
+
+		$this->unique_browser_identifier = sanitize_text_field( $request->get_param( 'unique_browser_identifier' ) );
+		$this->user_login                = sanitize_user( wp_unslash( $request->get_param( 'user_login' ) ) );
+
+		$this->user_handle    = sanitize_text_field( $request->get_param( 'userHandle' ) );
+		$this->onboarding     = (bool) $request->get_param( 'onboarding' );
+		$this->auth_device_id = sanitize_text_field( $request->get_param( 'device_name' ) ?? 'unknown' );
+	}
+
+	/**
+	 * Initialize passkey-specific parameters.
+	 *
+	 * @param WP_REST_Request $request The WordPress REST request object.
+	 */
+	private function initialize_passkey_parameters( WP_REST_Request $request ): void {
+		$this->user_id  = $request->get_param( 'user_id' ) ? absint( $request->get_param( 'user_id' ) ) : get_current_user_id();
+		$this->provider = Rsssl_Two_Factor_Passkey::class;
+		$this->id       = sanitize_text_field( $request->get_param( 'id' ) );
+		$this->rawId    = sanitize_text_field( $request->get_param( 'rawId' ) );
+		if( !$request->has_param( 'credentials' ) ) {
+			//To do regex sanitation
+			$this->response = $request->get_param( 'credential' );
+		}
+		$this->type     = sanitize_text_field( $request->get_param( 'type' ) );
+		$this->entry_id = (int) $request->get_param( 'entry_id' );
 	}
 }
