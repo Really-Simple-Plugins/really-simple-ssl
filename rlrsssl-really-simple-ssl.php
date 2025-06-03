@@ -276,3 +276,24 @@ if ( !function_exists('rsssl_is_logged_in_rest')){
         return is_user_logged_in();
     }
 }
+
+if ( ! function_exists( 'rsssl_maybe_activate_recommended_features_extendify' ) ) {
+	function rsssl_maybe_activate_recommended_features_extendify() {
+		if ( get_option( 'rsssl_activated_recommended_features_extendify' ) || ! defined( 'EXTENDIFY_PARTNER_ID' ) || defined( 'rsssl_pro' ) ) {
+			return;
+		}
+
+		try {
+			RSSSL()->admin->activate_recommended_features();
+		} catch ( Exception $e ) {
+			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+				error_log( 'Really Simple Security: recommended features activation failed: ' . $e->getMessage() );
+				return;
+			}
+		}
+
+		update_option( 'rsssl_activated_recommended_features_extendify', true );
+	}
+
+	add_action( 'admin_init', 'rsssl_maybe_activate_recommended_features_extendify', 99 );
+}
