@@ -150,6 +150,10 @@ class Rsssl_Request_Parameters {
 
 	public bool $profile;
 
+	public array $forced_roles = [];
+
+	public int $days_threshold = 0;
+
 	/**
 	 * Constructor for the class.
 	 *
@@ -170,6 +174,8 @@ class Rsssl_Request_Parameters {
 		$this->redirect_to = $request->get_param( 'redirect_to' ) ? esc_url_raw( $request->get_param( 'redirect_to' ) ) : admin_url();
 		$this->login_nonce = sanitize_text_field( $request->get_param( 'login_nonce' ) );
 		$provider          = $request->get_param( 'provider' );
+		$this->forced_roles = rsssl_get_option( 'two_fa_forced_role' , [] );
+		$this->days_threshold = rsssl_get_option( 'two_fa_days_threshold', 0 );
 
 		if ( ! in_array( $provider, $allowed_providers, true ) ) {
 			$provider = null;

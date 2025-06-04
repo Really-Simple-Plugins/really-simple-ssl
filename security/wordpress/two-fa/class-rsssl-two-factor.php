@@ -292,10 +292,10 @@ class Rsssl_Two_Factor
                 // Delete the transient to invalidate the token.
                 delete_transient('skip_two_fa_token_' . $user_id);
 
-                $provider = get_user_meta($user->ID, 'rsssl_two_fa_status_email', true);
+                $status = get_user_meta($user->ID, 'rsssl_two_fa_status_email', true);
 
                 // Only allow skipping for users which have 2FA value open.
-                if (isset($_GET['rsssl_two_fa_disable']) && 'open' === $provider) {
+                if (isset($_GET['rsssl_two_fa_disable']) && 'open' === $status) {
                     update_user_meta($user_id, 'rsssl_two_fa_status_email', 'disabled');
                 }
 

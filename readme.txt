@@ -158,6 +158,8 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
  * Improvement: "Disable user enumeration" now returns 401 Unauthorized (instead of 404 Not Found) for non-authenticated requests to the /wp/v2/users/ endpoint.
  * Include SimplyBook in “onboarding” and “other plugins” sections.
  * Fix: Adjust plugin initialization timing to prevent a textdomain warning.
+ * Fix: Fixed the feedback when an email is resend during Two-Factor Authentication setup.
+ * Fix: Fixed the Single Sign on link to support custom login urls.
 
 = 9.3.5 =
 * April 29th, 2025

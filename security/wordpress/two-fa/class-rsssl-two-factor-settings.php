@@ -156,13 +156,18 @@ class Rsssl_Two_Factor_Settings {
             );
         }
 
+		if (function_exists('rsssl_get_option') && rsssl_get_option('change_login_url_enabled') !== false && !empty(rsssl_get_option('change_login_url'))) {
+			$login_url = trailingslashit(site_url()) . rsssl_get_option('change_login_url');
+		} else {
+			$login_url = wp_login_url();
+		}
 
 		if ( $disable_two_fa ) {
 			$args['rsssl_two_fa_disable'] = true;
 		}
 
 		// Return the URL with the added query arguments.
-		return add_query_arg( $args, $profile? get_edit_profile_url( $user_id ):admin_url() );
+		return add_query_arg( $args, $profile? get_edit_profile_url( $user_id ):$login_url );
 	}
 
 

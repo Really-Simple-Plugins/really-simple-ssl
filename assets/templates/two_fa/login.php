@@ -1,11 +1,8 @@
 <?php
 login_header();
 
-if ( ! empty( $error_msg ) && $error_msg !== 'passkey') {
-	echo '<div id="login_error" class="notice notice-error"><strong>Error: </strong>' . esc_html( $error_msg ) . '<br /></div>';
-} else {
 	\RSSSL\Security\WordPress\Two_Fa\Rsssl_Two_Factor::maybe_show_last_login_failure_notice( $user );
-}
+
 ?>
 
 <form name="rsssl_validate_2fa_form" id="loginform"

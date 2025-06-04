@@ -2,6 +2,8 @@
 
 namespace RSSSL\Security\WordPress\Two_Fa\Controllers;
 
+
+use RSSSL\Security\WordPress\Two_Fa\Rsssl_Two_Factor_Settings;
 use WP_Error;
 use Exception;
 use RSSSL\Pro\Security\WordPress\Limitlogin\Rsssl_IP_Fetcher;
@@ -9,7 +11,6 @@ use RSSSL\Pro\Security\WordPress\Two_Fa\Providers\Rsssl_Two_Factor_Totp;
 use RSSSL\Security\WordPress\Two_Fa\Providers\Rsssl_Two_Factor_Email;
 use RSSSL\Security\WordPress\Two_Fa\Models\Rsssl_Request_Parameters;
 use RSSSL\Security\WordPress\Two_Fa\Rsssl_Two_Fa_Authentication;
-use RSSSL\Security\WordPress\Two_Fa\Traits\Rsssl_Two_Fa_Helper;
 use WP_REST_Request;
 use WP_REST_Response;
 
@@ -169,10 +170,9 @@ final class Rsssl_Email_Controller extends Rsssl_Abstract_Controller
     }
 
     /**
-     * Resends the email code for a user.
+     * Resends the email verification code for a user.
      *
      * @param WP_REST_Request $request The REST request object.
-     *
      * @return WP_REST_Response The REST response object.
      */
     public function resend_email_code( WP_REST_Request $request ): WP_REST_Response {
@@ -185,21 +185,36 @@ final class Rsssl_Email_Controller extends Rsssl_Abstract_Controller
             return new WP_REST_Response(['error' => $e->getMessage()], 403);
         }
 
-        // Check if the provider is 'email'.
-        if ('email' !== $parameters->provider) {
-            return new WP_REST_Response(array('error' => __('Invalid provider', 'really-simple-ssl')), 400);
+        // Sanitize and verify the provider.
+        $provider = sanitize_text_field($parameters->provider);
+        if ('email' !== $provider) {
+            return new WP_REST_Response(['error' => __('Invalid provider', 'really-simple-ssl')], 400);
         }
 
-        // Check if email is the active provider for this user
-        $email_status = get_user_meta($user->ID, 'rsssl_two_fa_status_email', true);
-        if ('active' !== $email_status) {
-            return new WP_REST_Response(array('error' => __('Email authentication is not active for this user', 'really-simple-ssl')), 403);
+        // Determine email 2FA status for this user.
+	    $email_status = get_user_meta($parameters->user_id, 'rsssl_two_fa_status_email', true ) ?? 'open';
+        $login_action = Rsssl_Two_Factor_Settings::get_login_action($parameters->user_id);
+
+		// if the status has an empty value, set it to 'open'
+	    if (empty($email_status)) {
+		    $email_status = 'open';
+	    }
+
+	    if ('active' !== $email_status && !('open' === $email_status && 'onboarding' === $login_action)) {
+		    return new WP_REST_Response([
+			    'error' => __('Email authentication is not active for this user', 'really-simple-ssl')
+		    ], 403);
+	    }
+
+        // Generate and send a new token.
+        try {
+            Rsssl_Two_Factor_Email::get_instance()->generate_and_email_token($user, (bool) $parameters->profile);
+        } catch (WP_Error $e) {
+            return new WP_REST_Response(['error' => $e->get_error_message()], 500);
         }
 
-        // Generate and send a new token using the verified user.
-        Rsssl_Two_Factor_Email::get_instance()->generate_and_email_token($user, $parameters->profile);
         return new WP_REST_Response(
-            array('message' => __('A verification code has been sent to the email address associated with your account to verify functionality.', 'really-simple-ssl')),
+            ['message' => __('A verification code has been sent to the email address associated with your account.', 'really-simple-ssl')],
             200
         );
     }
