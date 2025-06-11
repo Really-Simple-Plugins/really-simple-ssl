@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-06-04T11:50:48+00:00\n"
+"POT-Creation-Date: 2025-06-11T11:03:50+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: really-simple-ssl\n"
@@ -73,7 +73,7 @@ msgid "Please make sure to configure a method, access to your account will be de
 msgstr ""
 
 #: assets/templates/two_fa/onboarding.php:116
-#: security/wordpress/two-fa/controllers/class-rsssl-email-controller.php:217
+#: security/wordpress/two-fa/controllers/class-rsssl-email-controller.php:214
 #: security/wordpress/two-fa/providers/class-rsssl-two-factor-email.php:354
 msgid "A verification code has been sent to the email address associated with your account."
 msgstr ""
@@ -144,7 +144,7 @@ msgstr ""
 #: assets/templates/two_fa/profile-settings.php:52
 #: assets/templates/two_fa/totp-config.php:23
 #: pro/security/wordpress/two-fa/providers/class-rsssl-two-factor-totp.php:668
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1434
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1435
 msgid "Download Backup Codes"
 msgstr ""
 
@@ -791,220 +791,220 @@ msgstr ""
 msgid "Enable 301 .htaccess redirect"
 msgstr ""
 
-#: class-wp-cli.php:94
+#: class-wp-cli.php:65
 msgid "This command is related to functionality available in Really Simple Security Pro, please consider upgrading to unlock all powerful security features. Read more: https://really-simple-ssl.com/pro"
 msgstr ""
 
-#: class-wp-cli.php:112
+#: class-wp-cli.php:83
 msgid "It seems that no valid license key is activated for this domain. Activate your license key using the `%s` command, or purchase a valid license key via https://really-simple-ssl.com/pro"
 msgstr ""
 
-#: class-wp-cli.php:1199
+#: class-wp-cli.php:1170
 msgid "Failed to reach %s. The site does not appear to be accessible over HTTPS. Please ensure your server is configured for SSL."
 msgstr ""
 
-#: class-wp-cli.php:1215
+#: class-wp-cli.php:1186
 msgid "Failed to reach %s. The site does not appear to be accessible over HTTPS (Error: %s). Check debug logs for details."
 msgstr ""
 
-#: class-wp-cli.php:1237
+#: class-wp-cli.php:1208
 msgid "Reached %s, but received an error response code: %d. HTTPS is not properly configured."
 msgstr ""
 
-#: class-wp-cli.php:1252
+#: class-wp-cli.php:1223
 msgid ".htaccess file (%s) is not writable. Redirects cannot be configured automatically."
 msgstr ""
 
-#: class-wp-cli.php:1259
+#: class-wp-cli.php:1230
 msgid "Pre-flight checks passed."
 msgstr ""
 
-#: class-wp-cli.php:1271
+#: class-wp-cli.php:1242
 msgid "Activate SSL on the site."
 msgstr ""
 
-#: class-wp-cli.php:1276
+#: class-wp-cli.php:1247
 msgid "Deactivate SSL on the site."
 msgstr ""
 
-#: class-wp-cli.php:1281
+#: class-wp-cli.php:1252
 msgid "Update a Really Simple Security option. Usage: wp rsssl update_option --name=option_name --value=option_value. Use 0 and 1 for booleans."
 msgstr ""
 
-#: class-wp-cli.php:1287
+#: class-wp-cli.php:1258
 msgid "Name of the option to update."
 msgstr ""
 
-#: class-wp-cli.php:1293
+#: class-wp-cli.php:1264
 msgid "Value to set for the option."
 msgstr ""
 
-#: class-wp-cli.php:1299
+#: class-wp-cli.php:1270
 msgid "Activate all recommended features."
 msgstr ""
 
-#: class-wp-cli.php:1304
+#: class-wp-cli.php:1275
 msgid "Deactivate all recommended features."
 msgstr ""
 
-#: class-wp-cli.php:1309
+#: class-wp-cli.php:1280
 msgid "Activate essential security headers."
 msgstr ""
 
-#: class-wp-cli.php:1314
+#: class-wp-cli.php:1285
 msgid "Deactivate essential security headers."
 msgstr ""
 
-#: class-wp-cli.php:1319
+#: class-wp-cli.php:1290
 msgid "Activate the firewall."
 msgstr ""
 
-#: class-wp-cli.php:1324
+#: class-wp-cli.php:1295
 msgid "Deactivate the firewall."
 msgstr ""
 
-#: class-wp-cli.php:1329
+#: class-wp-cli.php:1300
 msgid "Activate Two-Factor Authentication."
 msgstr ""
 
-#: class-wp-cli.php:1334
+#: class-wp-cli.php:1305
 msgid "Deactivate Two-Factor Authentication."
 msgstr ""
 
-#: class-wp-cli.php:1339
+#: class-wp-cli.php:1310
 msgid "Activate password security features."
 msgstr ""
 
-#: class-wp-cli.php:1344
+#: class-wp-cli.php:1315
 msgid "Deactivate password security features."
 msgstr ""
 
-#: class-wp-cli.php:1349
+#: class-wp-cli.php:1320
 msgid "Activate limit login attempts."
 msgstr ""
 
-#: class-wp-cli.php:1354
+#: class-wp-cli.php:1325
 msgid "Deactivate limit login attempts."
 msgstr ""
 
-#: class-wp-cli.php:1359
+#: class-wp-cli.php:1330
 msgid "Activate vulnerability scanning."
 msgstr ""
 
-#: class-wp-cli.php:1364
+#: class-wp-cli.php:1335
 msgid "Deactivate vulnerability scanning."
 msgstr ""
 
-#: class-wp-cli.php:1369
+#: class-wp-cli.php:1340
 msgid "Activate a license key. Usage: wp rsssl activate_license YOUR_LICENSE_KEY."
 msgstr ""
 
-#: class-wp-cli.php:1375
+#: class-wp-cli.php:1346
 msgid "The license key to activate."
 msgstr ""
 
-#: class-wp-cli.php:1381
+#: class-wp-cli.php:1352
 msgid "Deactivate the license."
 msgstr ""
 
-#: class-wp-cli.php:1386
+#: class-wp-cli.php:1357
 msgid "Add a lock file for safe mode."
 msgstr ""
 
-#: class-wp-cli.php:1391
+#: class-wp-cli.php:1362
 msgid "Remove the lock file for safe mode."
 msgstr ""
 
-#: class-wp-cli.php:1396
+#: class-wp-cli.php:1367
 msgid "Reset the 2FA status of a user to disabled."
 msgstr ""
 
-#: class-wp-cli.php:1401
+#: class-wp-cli.php:1372
 msgid "Update the advanced-headers.php with the latest rules."
 msgstr ""
 
-#: class-wp-cli.php:1406
+#: class-wp-cli.php:1377
 msgid "Add IP block."
 msgstr ""
 
-#: class-wp-cli.php:1412
-#: class-wp-cli.php:1473
-#: class-wp-cli.php:1491
+#: class-wp-cli.php:1383
+#: class-wp-cli.php:1444
+#: class-wp-cli.php:1462
 msgid "The IP to block."
 msgstr ""
 
-#: class-wp-cli.php:1418
-#: class-wp-cli.php:1479
-#: class-wp-cli.php:1497
-#: class-wp-cli.php:1525
+#: class-wp-cli.php:1389
+#: class-wp-cli.php:1450
+#: class-wp-cli.php:1468
+#: class-wp-cli.php:1496
 msgid "Flag to add a permanent block."
 msgstr ""
 
-#: class-wp-cli.php:1424
+#: class-wp-cli.php:1395
 msgid "Optional note for the block."
 msgstr ""
 
-#: class-wp-cli.php:1430
+#: class-wp-cli.php:1401
 msgid "Remove IP block."
 msgstr ""
 
-#: class-wp-cli.php:1436
+#: class-wp-cli.php:1407
 msgid "The IP to remove the block for."
 msgstr ""
 
-#: class-wp-cli.php:1442
+#: class-wp-cli.php:1413
 msgid "Show blocked IP's."
 msgstr ""
 
-#: class-wp-cli.php:1447
+#: class-wp-cli.php:1418
 msgid "Add a trusted IP to the firewall."
 msgstr ""
 
-#: class-wp-cli.php:1452
+#: class-wp-cli.php:1423
 msgid "Remove a trusted IP from the firewall."
 msgstr ""
 
-#: class-wp-cli.php:1457
+#: class-wp-cli.php:1428
 msgid "Add a trusted IP to the limit login attempts table."
 msgstr ""
 
-#: class-wp-cli.php:1462
+#: class-wp-cli.php:1433
 msgid "Remove a trusted IP from the limit login attempts table."
 msgstr ""
 
-#: class-wp-cli.php:1467
+#: class-wp-cli.php:1438
 msgid "Add a blocked IP to the limit login attempts table."
 msgstr ""
 
-#: class-wp-cli.php:1485
+#: class-wp-cli.php:1456
 msgid "Remove a blocked IP from the limit login attempts table."
 msgstr ""
 
-#: class-wp-cli.php:1503
+#: class-wp-cli.php:1474
 msgid "Add a trusted username to the limit login attempts table."
 msgstr ""
 
-#: class-wp-cli.php:1508
+#: class-wp-cli.php:1479
 msgid "Remove a trusted username from the limit login attempts table."
 msgstr ""
 
-#: class-wp-cli.php:1513
+#: class-wp-cli.php:1484
 msgid "Add a blocked username to the limit login attempts table."
 msgstr ""
 
-#: class-wp-cli.php:1519
+#: class-wp-cli.php:1490
 msgid "The username to block."
 msgstr ""
 
-#: class-wp-cli.php:1531
+#: class-wp-cli.php:1502
 msgid "Remove a blocked username from the limit login attempts table."
 msgstr ""
 
-#: class-wp-cli.php:1537
+#: class-wp-cli.php:1508
 msgid "The username to remove the block for."
 msgstr ""
 
-#: class-wp-cli.php:1543
+#: class-wp-cli.php:1514
 msgid "Flag to remove a permanent block."
 msgstr ""
 
@@ -4452,8 +4452,8 @@ msgid "Enter a backup verification code."
 msgstr ""
 
 #: pro/security/wordpress/two-fa/controllers/class-rsssl-totp-controller.php:66
-#: security/wordpress/two-fa/controllers/class-rsssl-email-controller.php:117
-#: security/wordpress/two-fa/controllers/class-rsssl-email-controller.php:191
+#: security/wordpress/two-fa/controllers/class-rsssl-email-controller.php:116
+#: security/wordpress/two-fa/controllers/class-rsssl-email-controller.php:188
 msgid "Invalid provider"
 msgstr ""
 
@@ -4653,12 +4653,12 @@ msgid "Use an authenticator app on your mobile device to generate a code."
 msgstr ""
 
 #: pro/security/wordpress/two-fa/providers/class-rsssl-two-factor-totp.php:669
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1435
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1436
 msgid "Key copied"
 msgstr ""
 
 #: pro/security/wordpress/two-fa/providers/class-rsssl-two-factor-totp.php:670
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1436
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1437
 msgid "Could not copy text: "
 msgstr ""
 
@@ -5090,7 +5090,7 @@ msgid "None"
 msgstr ""
 
 #: security/wordpress/two-fa/class-rsssl-two-factor.php:551
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1298
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1299
 msgid "Your 2FA grace period expired. Please contact your site administrator to regain access and to configure 2FA."
 msgstr ""
 
@@ -5122,41 +5122,41 @@ msgstr ""
 msgid "Invalid verification code."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1235
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1236
 msgid "There have been too many failed two-factor authentication attempts, which often indicates that the password has been compromised. The password has been reset in order to protect the account."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1239
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1240
 msgid "If you are the owner of this account, please check your email for instructions on regaining access."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1246
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1247
 msgid "Password Reset"
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1352
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1353
 msgid "Two-Factor Authentication Setup"
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1454
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1455
 msgid "Failed to create a login nonce."
 msgstr ""
 
-#: security/wordpress/two-fa/controllers/class-rsssl-email-controller.php:162
+#: security/wordpress/two-fa/controllers/class-rsssl-email-controller.php:159
 msgid "Code was was invalid, try \"Resend Code\""
 msgstr ""
 
-#: security/wordpress/two-fa/controllers/class-rsssl-email-controller.php:205
+#: security/wordpress/two-fa/controllers/class-rsssl-email-controller.php:202
 msgid "Email authentication is not active for this user"
 msgstr ""
 
-#: security/wordpress/two-fa/controllers/class-rsssl-email-controller.php:278
-#: security/wordpress/two-fa/controllers/class-rsssl-email-controller.php:296
-#: security/wordpress/two-fa/controllers/class-rsssl-email-controller.php:326
+#: security/wordpress/two-fa/controllers/class-rsssl-email-controller.php:275
+#: security/wordpress/two-fa/controllers/class-rsssl-email-controller.php:293
+#: security/wordpress/two-fa/controllers/class-rsssl-email-controller.php:323
 msgid "Access denied."
 msgstr ""
 
-#: security/wordpress/two-fa/controllers/class-rsssl-email-controller.php:313
+#: security/wordpress/two-fa/controllers/class-rsssl-email-controller.php:310
 msgid "Too many attempts. Please try again later."
 msgstr ""
 
