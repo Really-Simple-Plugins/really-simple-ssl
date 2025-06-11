@@ -993,7 +993,7 @@ class Rsssl_Two_Factor
 		$provider_instance = $provider_class::get_instance();
 		// Allow the provider to re-send codes, etc.
 		if ( ( 'email' === $provider_key ) && true === $provider_instance->pre_process_authentication( $user ) ) {
-			self::login_html($user, $redirect_to, '', $provider_class);
+			self::login_html( $user, $nonce, $redirect_to, $provider_key );
 			exit;
 		}
 
@@ -1112,6 +1112,7 @@ class Rsssl_Two_Factor
 
         self::login_html(
             $user,
+            $login_nonce,
             isset($_REQUEST['redirect_to']) ? esc_url_raw(wp_unslash($_REQUEST['redirect_to'])) : '',
             '',
             $provider

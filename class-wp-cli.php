@@ -39,37 +39,8 @@ class rsssl_wp_cli {
 	use Encryption;
 
 	public function __construct() {
-
-		if ( ! $this->wp_cli_active() ) {
-			return;
-		}
-
-		if ( defined( 'WP_CLI' ) && WP_CLI ) {
-			// Get overview of commands and description/synopsis
-			$command_details = $this->get_command_list();
-
-			// Add commands individually.
-			foreach ( $command_details as $command => $details ) {
-
-                if (isset($details['inactive']) && $details['inactive'] === true) {
-                    continue; //TODO: maybe better to not load the commands vs show they are not available
-                }
-
-				// Only check if Pro is defined here. License check moved to handlers.
-//				if ( $details['pro'] === true && ! defined( 'rsssl_pro' ) ) {
-//					continue; // Don't register Pro commands in Free version
-//				}
-
-				// Register the command with its actual handler
-				WP_CLI::add_command(
-					"rsssl $command",
-					[ $this, $command ], // Use the default handler
-					[
-						'shortdesc' => $details['description'],
-						'synopsis'  => $details['synopsis'],
-					]
-				);
-			}
+		if ( $this->wp_cli_active() ) {
+			add_action( 'init', [ $this, 'register_wp_cli_commands' ], 0 );
 		}
 	}
 
@@ -1548,6 +1519,26 @@ class rsssl_wp_cli {
 		];
 	}
 
+	/**
+	 * This method registers our WP-CLI commands and uses {@see get_command_list()}
+	 * to retrieve the list. Do not execute this method before the init hook.
+	 */
+	public function register_wp_cli_commands() {
+		$command_details = $this->get_command_list();
+		foreach ( $command_details as $command => $details ) {
+			if ( isset( $details['inactive'] ) && $details['inactive'] === true ) {
+				continue;
+			}
+			WP_CLI::add_command(
+				"rsssl $command",
+				[ $this, $command ],
+				[
+					'shortdesc' => $details['description'],
+					'synopsis'  => $details['synopsis'],
+				]
+			);
+		}
+	}
 }
 
 // Add devtools command if present

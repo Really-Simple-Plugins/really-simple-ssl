@@ -7,7 +7,6 @@ use RSSSL\Security\WordPress\Two_Fa\Rsssl_Two_Factor_Settings;
 use WP_Error;
 use Exception;
 use RSSSL\Pro\Security\WordPress\Limitlogin\Rsssl_IP_Fetcher;
-use RSSSL\Pro\Security\WordPress\Two_Fa\Providers\Rsssl_Two_Factor_Totp;
 use RSSSL\Security\WordPress\Two_Fa\Providers\Rsssl_Two_Factor_Email;
 use RSSSL\Security\WordPress\Two_Fa\Models\Rsssl_Request_Parameters;
 use RSSSL\Security\WordPress\Two_Fa\Rsssl_Two_Fa_Authentication;
@@ -154,8 +153,6 @@ final class Rsssl_Email_Controller extends Rsssl_Abstract_Controller
         if (!Rsssl_Two_Factor_Email::get_instance()->validate_token($user->ID, self::sanitize_token($parameters->token))) {
             // Reset all the settings if the token is invalid.
             Rsssl_Two_Factor_Email::set_user_status($user->ID, 'open');
-            Rsssl_Two_Factor_Totp::set_user_status($user->ID, 'open');
-
             // Log out the user.
             wp_logout();
 
