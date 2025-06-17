@@ -6,7 +6,7 @@ Requires at least: 5.9
 License: GPL2
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 9.4.0
+Stable tag: 9.4.1
 
 Easily improve site security with WordPress Hardening, Two-Factor Authentication (2FA), Login Protection, Vulnerability Detection and SSL certificate.
 
@@ -151,6 +151,9 @@ The plugin checks your certificate before enabling, but if, for example, you mig
 If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions](https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/) instead.
 
 == Changelog ==
+= 9.4.1 =
+ * Fix: fixed a translations error where text domain was loaded too early.
+
 = 9.4.0 =
  * Improvement: More detailed feedback when using CLI commands.
  * Improvement: On activation, detect `EXTENDIFY_PARTNER_ID` constant and run `wp rsssl activate_recommended_features`.

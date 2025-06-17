@@ -17,11 +17,12 @@ function rsssl_upgrade() {
 	}
 	//dismiss notices that should be dismissed on plugin upgrade
 	if ( $prev_version && version_compare( $prev_version, rsssl_version, '!=' ) ) {
-		$dismiss_options = RSSSL()->admin->get_notices_list(
-			array(
-				'dismiss_on_upgrade' => true,
-			)
-		);
+		// $dismiss_options = RSSSL()->admin->get_notices_list(
+		// 	array(
+		// 		'dismiss_on_upgrade' => true,
+		// 	)
+		// );
+		$dismiss_options = ['mixed_content_scan']; // Temporary fix for translation issues on plugins_loaded.
 		foreach ( $dismiss_options as $dismiss_option ) {
 			if ( !is_string($dismiss_option) ) continue;
 			update_option( 'rsssl_' . $dismiss_option . '_dismissed', true, false );
@@ -172,7 +173,12 @@ function rsssl_upgrade() {
 	}
 
 	if ( $prev_version && version_compare( $prev_version, '6.2.3', '<' ) ) {
-		rsssl_update_option( 'send_notifications_email', 1 );
+		//rsssl_update_option( 'send_notifications_email', 1 );
+		//do not use rsssl_update_option as it will load all fields, causing translation issues on plugins_loaded hook.
+		$options = get_option('rsssl_options', []);
+		if ( !is_array($options) ) $options = [];
+			$options['send_notifications_email'] = 1;
+		update_option( 'rsssl_options', $options);
 	}
 
 	if ( $prev_version && version_compare( $prev_version, '6.2.4', '<' ) ) {
