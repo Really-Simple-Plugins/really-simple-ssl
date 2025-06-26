@@ -2411,6 +2411,24 @@ class rsssl_admin {
                 ),
             ),
 
+            'pro_trial' => array(
+                'condition' => array(
+                    'rsssl_show_pro_trial_notice',
+                ),
+                'callback' => '_true_',
+                'output' => array(
+                    'true' => array(
+	                    'msg'              => rsssl_pro_trial_notice(),
+	                    'icon'             => 'open',
+	                    'admin_notice'     => true,
+	                    'logo'             => true,
+	                    'dashboard_button' => true,
+	                    'dismissible'      => true,
+	                    'plusone'          => true,
+                    ),
+                ),
+            ),
+
 			'test_404s' => array(
                 'condition' => array(
                     'wp_option_rsssl_homepage_contains_404_resources',
@@ -3333,6 +3351,28 @@ if ( ! function_exists('rsssl_pro_trial_notice' ) ) {
 
         return $msg;
 
+    }
+}
+
+/**
+ * Determine whether to show Pro trial notice
+ *
+ */
+if (!function_exists('rsssl_show_pro_trial_notice')) {
+    function rsssl_show_pro_trial_notice() {
+
+    if (defined('RSSSL_PRO')) {
+        return false;
+    }
+
+	$activation_timestamp = get_option('rsssl_activation_timestamp');
+
+    // If activation timestamp is more than one year ago, show the notice
+	if ($activation_timestamp && time() - $activation_timestamp > YEAR_IN_SECONDS) {
+		return true;
+	}
+
+    return false;
     }
 }
 
