@@ -1,7 +1,10 @@
 <?php
 login_header();
 
-	\RSSSL\Security\WordPress\Two_Fa\Rsssl_Two_Factor::maybe_show_last_login_failure_notice( $user );
+\RSSSL\Security\WordPress\Two_Fa\Rsssl_Two_Factor::maybe_show_last_login_failure_notice( $user );
+if ( get_class($provider_class) === 'RSSSL\\Security\\WordPress\\Two_Fa\\Providers\\Rsssl_Two_Factor_Email' ) {
+    \RSSSL\Security\WordPress\Two_Fa\Providers\Rsssl_Two_Factor_Email::maybe_show_email_resend_notice( $user );
+}
 
 ?>
 

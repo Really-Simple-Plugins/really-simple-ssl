@@ -374,3 +374,115 @@ if ( ! function_exists( 'rsssl_deactivate_alternate' ) ) {
         }
     }
 }
+
+/**
+ * Handle resending the verification e-mail.
+ */
+function rsssl_resend_verification_email()
+{
+	if (!rsssl_user_can_manage()) {
+		return;
+	}
+
+	if ( !isset($_POST['rsssl_resend_email_nonce']) || ! wp_verify_nonce( $_POST['rsssl_resend_email_nonce'], 'rsssl_resend_verification_email_nonce' ) ) {
+        wp_die();
+	}
+
+	$mailer = new rsssl_mailer();
+	$mailer->send_verification_mail();
+
+	wp_send_json_success();
+}
+
+/**
+ * Handle the force confirm email action.
+ */
+function rsssl_handle_force_confirm_email(): void
+{
+	if (!rsssl_user_can_manage()) {
+		return;
+	}
+
+	if ( !isset($_POST['rsssl_force_email_action_nonce']) || ! wp_verify_nonce( $_POST['rsssl_force_email_action_nonce'], 'rsssl_force_confirm_email_nonce' ) ) {
+		wp_die();
+	}
+
+	update_option( 'rsssl_email_verification_status', 'completed', false );
+	wp_send_json_success();
+}
+
+/**
+ * Add JavaScript for email verification and re-send buttons.
+ */
+function rsssl_generate_email_verification_buttons_js(): void
+{
+	if (!rsssl_user_can_manage()) {
+		return;
+	}
+
+	?>
+	<script type="text/javascript">
+        jQuery(document).ready(function($) {
+            // Force confirm button handler
+            $(document).on('click', '#rsssl-force-confirm', function(e) {
+                e.preventDefault();
+                var button = $(this);
+                button.prop('disabled', true);
+
+                $.ajax({
+                    url: ajaxurl,
+                    type: 'POST',
+                    data: {
+                        action: 'rsssl_force_confirm_email',
+                        rsssl_force_email_action_nonce: '<?php echo wp_create_nonce('rsssl_force_confirm_email_nonce'); ?>'
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            location.reload();
+                        }
+                    }
+                });
+            });
+
+            // Resend verification email button handler
+            $(document).on('click', '#rsssl-resend-verification', function(e) {
+                e.preventDefault();
+                var button = $(this);
+                button.prop('disabled', true);
+                button.text('<?php echo esc_js(__('Sending...', 'really-simple-ssl')); ?>');
+
+                $.ajax({
+                    url: ajaxurl,
+                    type: 'POST',
+                    data: {
+                        action: 'rsssl_resend_verification_email',
+                        rsssl_resend_email_nonce: '<?php echo wp_create_nonce('rsssl_resend_verification_email_nonce'); ?>'
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            button.text('<?php echo esc_js(__('Email sent!', 'really-simple-ssl')); ?>');
+                            setTimeout(function() {
+                                button.text('<?php echo esc_js(__('Resend verification email', 'really-simple-ssl')); ?>');
+                                button.prop('disabled', false);
+                            }, 3000);
+                        } else {
+                            button.text('<?php echo esc_js(__('Failed to send', 'really-simple-ssl')); ?>');
+                            setTimeout(function() {
+                                button.text('<?php echo esc_js(__('Resend verification email', 'really-simple-ssl')); ?>');
+                                button.prop('disabled', false);
+                            }, 3000);
+                        }
+                    },
+                    error: function() {
+                        button.text('<?php echo esc_js(__('Error occurred', 'really-simple-ssl')); ?>');
+                        setTimeout(function() {
+                            button.text('<?php echo esc_js(__('Resend verification email', 'really-simple-ssl')); ?>');
+                            button.prop('disabled', false);
+                        }, 3000);
+                    }
+                });
+            });
+        });
+	</script>
+	<?php
+}

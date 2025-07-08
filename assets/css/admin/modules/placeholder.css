@@ -1,0 +1,129 @@
+.rsssl-datatable-placeholder div {
+  background-color: var(--rsp-grey-300);
+  height: 25px;
+}
+.rsssl-datatable-placeholder div:nth-child(even) {
+  background-color: #fff;
+}
+
+.rsssl-rest-error-message {
+  margin: 30px;
+}
+.rsssl-rest-error-message ul {
+  list-style: disc;
+  margin: 20px;
+}
+
+.rsssl-placeholder {
+  box-sizing: border-box;
+  width: 100%;
+  text-align: left;
+  margin: 0;
+  padding-bottom: 24px;
+  color: #1e1e1e;
+  -moz-font-smoothing: subpixel-antialiased;
+  -webkit-font-smoothing: subpixel-antialiased;
+  border-radius: 2px;
+}
+.rsssl-placeholder {
+  flex-grow: 100;
+}
+.rsssl-placeholder .rsssl-placeholder-line {
+  float: left;
+  width: 100%;
+  height: 16px;
+  margin-top: 12px;
+  border-radius: 7px;
+  animation: shine-lines 1.6s infinite linear;
+  background-image: linear-gradient(90deg, #ddd 0px, #e8e8e8 40px, #ddd 80px);
+  background-size: 600px;
+}
+.rsssl-placeholder .rsssl-placeholder-line:last-of-type {
+  margin-bottom: 24px;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(1) {
+  width: 85%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(2) {
+  width: 89%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(3) {
+  width: 85%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(4) {
+  width: 76%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(5) {
+  width: 62%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(6) {
+  width: 86%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(7) {
+  width: 91%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
+  width: 78%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
+  width: 94%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
+  width: 67%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
+  width: 74%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
+  width: 80%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
+  width: 67%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(14) {
+  width: 92%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
+  width: 75%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(16) {
+  width: 65%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(17) {
+  width: 98%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(18) {
+  width: 91%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(19) {
+  width: 71%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(20) {
+  width: 93%;
+}
+.rsssl-placeholder .rsssl-placeholder-line ~ .rsssl-placeholder-line {
+  background-color: #ddd;
+}
+
+.rsssl-dashboard-placeholder.rsssl-grid-item.rsssl-row-2 {
+  grid-row: span 1;
+}
+
+.rsssl-settings-placeholder .rsssl-grid-item {
+  min-height: 400px;
+}
+
+.rsssl-menu-placeholder {
+  min-height: 400px;
+}
+
+@keyframes shine-lines {
+  0% {
+    background-position: -400px;
+  }
+  100% {
+    background-position: 220px;
+  }
+}
+
+/*# sourceMappingURL=placeholder.css.map */

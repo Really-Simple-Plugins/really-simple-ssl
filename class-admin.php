@@ -1287,9 +1287,12 @@ class rsssl_admin {
 	 */
 
 	public function htaccess_redirect_allowed() {
-		if ( is_multisite() && ! $this->can_apply_networkwide() ) {
+		if ( ( is_multisite() && ! $this->can_apply_networkwide() )
+             || $this->is_subdirectory_install() ) {
 			return false;
-		} if ( RSSSL()->server->uses_htaccess() ) {
+		}
+
+        if ( RSSSL()->server->uses_htaccess() ) {
 			return true;
 		}
 
@@ -2411,6 +2414,24 @@ class rsssl_admin {
                 ),
             ),
 
+            'pro_trial' => array(
+                'condition' => array(
+                    'rsssl_show_pro_trial_notice',
+                ),
+                'callback' => '_true_',
+                'output' => array(
+                    'true' => array(
+	                    'msg'              => rsssl_pro_trial_notice(),
+	                    'icon'             => 'open',
+	                    'admin_notice'     => true,
+	                    'logo'             => true,
+	                    'dashboard_button' => true,
+	                    'dismissible'      => true,
+	                    'plusone'          => true,
+                    ),
+                ),
+            ),
+
 			'test_404s' => array(
                 'condition' => array(
                     'wp_option_rsssl_homepage_contains_404_resources',
@@ -2840,16 +2861,20 @@ class rsssl_admin {
 	}
 
 	/**
-	 * Find if this WordPress installation is installed in a subdirectory
+	 * Detects if WordPress is running in a subdirectory/subfolder install.
 	 *
-	 * @since  2.0
+	 * A subfolder install means the site is accessed via example.com/folder/
+	 * rather than directly at the domain root (example.com).
 	 *
-	 * @access protected
-	 *
+	 * @return bool True if running in a subfolder, false if at domain root
 	 */
-
 	protected function is_subdirectory_install() {
-		return strlen( site_url() ) > strlen( home_url() );
+		$url   = home_url();
+		$parts = wp_parse_url( $url );
+		$path  = isset( $parts['path'] ) ? trim( $parts['path'], '/' ) : '';
+
+		// If path is empty, we're at root; otherwise we're in a subdirectory
+		return ( $path !== '' );
 	}
 
 	/**
@@ -3333,6 +3358,28 @@ if ( ! function_exists('rsssl_pro_trial_notice' ) ) {
 
         return $msg;
 
+    }
+}
+
+/**
+ * Determine whether to show Pro trial notice
+ *
+ */
+if (!function_exists('rsssl_show_pro_trial_notice')) {
+    function rsssl_show_pro_trial_notice() {
+
+    if (defined('RSSSL_PRO')) {
+        return false;
+    }
+
+	$activation_timestamp = get_option('rsssl_activation_timestamp');
+
+    // If activation timestamp is more than one year ago, show the notice
+	if ($activation_timestamp && time() - $activation_timestamp > YEAR_IN_SECONDS) {
+		return true;
+	}
+
+    return false;
     }
 }
 

@@ -90,6 +90,15 @@ class Rsssl_Two_Factor_Email extends Rsssl_Two_Factor_Provider implements Rsssl_
         new Rsssl_Email_Controller($namespace, $version, $featureVersion);
     }
 
+    /**
+     * Ensure PHP session is started.
+     */
+    public static function ensure_session_started() {
+        if ( php_sapi_name() !== 'cli' && ! headers_sent() && ! session_id() ) {
+            session_start();
+        }
+    }
+
 	/**
 	 * Returns the name of the provider.
 	 *
@@ -252,8 +261,9 @@ class Rsssl_Two_Factor_Email extends Rsssl_Two_Factor_Provider implements Rsssl_
 	 * @return void
 	 * @since 0.1-dev
 	 */
-	public function generate_and_email_token( WP_User $user, $profile = false ): void {
-		$token = $this->generate_token( $user->ID );
+	public function generate_and_email_token( WP_User $user, $profile = false, $is_resend = false ): void {
+        self::ensure_session_started();
+        $token = $this->generate_token( $user->ID );
 
         $skip_two_fa_url = Rsssl_Two_Factor_Settings::rsssl_one_time_login_url( $user->ID, false, $profile );
 		// Add skip button to email content.
@@ -330,7 +340,19 @@ class Rsssl_Two_Factor_Email extends Rsssl_Two_Factor_Provider implements Rsssl_
 		$mailer->title             = __( 'Hi', 'really-simple-ssl' ) . ' ' . $user->display_name . ',';
 		$mailer->message           = $message;
 		$mailer->send_mail();
+
+        if ( $is_resend ) {
+            $_SESSION['rsssl_email_resent'] = true;
+        }
 	}
+
+    public static function maybe_show_email_resend_notice( $user ) {
+        self::ensure_session_started();
+        if ( ! empty( $_SESSION['rsssl_email_resent'] ) ) {
+            echo '<div class="notice notice-success" style="margin-bottom:16px;"><p>' . esc_html__( 'A new verification code has been sent to your email address.', 'really-simple-ssl' ) . '</p></div>';
+            unset( $_SESSION['rsssl_email_resent'] );
+        }
+    }
 
 	/**
 	 * Prints the form that prompts the user to authenticate.
@@ -407,7 +429,7 @@ class Rsssl_Two_Factor_Email extends Rsssl_Two_Factor_Provider implements Rsssl_
 	 */
 	public function pre_process_authentication( $user ): bool {
 		if ( isset( $user->ID ) && isset( $_REQUEST[ self::RSSSL_INPUT_NAME_RESEND_CODE ] ) ) {
-			$this->generate_and_email_token( $user );
+			$this->generate_and_email_token( $user, false, true );
 			return true;
 		}
 
@@ -618,3 +640,4 @@ class Rsssl_Two_Factor_Email extends Rsssl_Two_Factor_Provider implements Rsssl_
         delete_user_meta( $user_id, '_rsssl_two_factor_nonce' );
     }
 }
+

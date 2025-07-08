@@ -1,0 +1,249 @@
+/* Grid */
+.rsssl {
+  .rsssl-header, .rsssl-content-area {
+    max-width: clamp(300px, calc(100% - var(--rsp-grid-gap) * 2), 1600px);
+    margin: 0 auto;
+    @media(max-width: $rsp-break-xxl) {
+      --rsp-grid-gap: var(--rsp-spacing-m);
+    }
+    @media(max-width: $rsp-break-xl) { // 1440px
+      --rsp-grid-gap: var(--rsp-spacing-s);
+    }
+    @media(max-width: $rsp-break-l) { // 1366px
+      --rsp-grid-gap: var(--rsp-spacing-xs);
+    }
+    @media(max-width: $rsp-break-m) { // 1280px
+    }
+    @media(max-width: $rsp-break-s) { // 1080px
+
+    }
+  }
+
+  .rsssl-header-container .rsssl-header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    height: 70px;
+    box-sizing: border-box;
+    background-color: var(--rsp-background-block-color);
+    @media(max-width: $rsp-break-s) {
+      height: 100%;
+    }
+  }
+  .rsssl-logo {
+    @media(max-width: $rsp-break-xxs) {
+      display:none;
+    }
+  }
+  .rsssl-header-left {
+    display: flex;
+    font-size: var(--rsp-fs-400);
+
+    @media(max-width: $rsp-break-s) {
+      justify-content: center;
+      margin: var(--rsp-spacing-xs) 0;
+      order: 3;
+      width: 100%;
+      background-color: var(--rsp-background-block-color);
+    }
+
+    .rsssl-header-menu {
+      margin: auto 15px;
+
+      ul {
+        display: flex;
+      }
+
+      li {
+        margin-bottom: 0;
+      }
+
+      a {
+        padding: 23px 15px;
+        text-decoration: none;
+        color: var(--rsp-text-color);
+        height: 100%;
+        border-bottom: 4px solid transparent;
+        transition: border 0.3s ease-out;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        @media(max-width: $rsp-break-s) {
+          padding: 10px 15px;
+        }
+        &.active {
+          border-bottom: 4px solid var(--rsp-brand-primary);
+        }
+
+        &:hover {
+          color: var(--rsp-brand-primary);
+        }
+      }
+    }
+  }
+
+  .rsssl-header-right {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-left: auto;
+    gap: var(--rsp-spacing-s);
+    min-height: 52px;
+
+    select {
+      max-width: 60ch;
+    }
+    @media(max-width: $rsp-break-xxs) {
+      display:none;
+    }
+    @media(max-width: $rsp-break-xs) {
+      .button {
+        display: none;
+      }
+    }
+  }
+
+
+  .rsssl-content-area {
+    margin-top: var(--rsp-grid-gap);
+  }
+
+  .rsssl-header-container {
+    background: var(--rsp-background-block-color);
+  }
+
+  .rsssl-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: max-content;
+    gap: var(--rsp-grid-gap);
+    min-height: calc(100vh - 32px - 80px - 20px - var(--rsp-grid-gap)); //32px = wordpress bar, 80px = cmplz bar, 20px = margin-top, 20px is grid gap
+    &.rsssl-settings, &.rsssl-letsencrypt{
+      grid-template-columns: minmax(235px, max-content) 2fr minmax(min-content, 1fr);
+      @media only screen and ( max-width: $rsp-break-s)  {
+        grid-template-columns: repeat(4, 1fr);
+        .rsssl-wizard-menu, .rsssl-wizard-settings, .rsssl-wizard-help {
+            grid-column: 1 / -1;
+        }
+      }
+    }
+    @media only screen and ( max-width: $rsp-break-m)  {
+      grid-template-columns: repeat(2,1fr);
+    }
+
+    @media only screen and ( max-width: $rsp-break-s)  {
+      max-width:790px;
+      width: calc(100% - var(--rsp-grid-gap) * 2)
+    }
+  }
+
+  .rsssl-grid-item {
+    @include rsssl-block;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    flex-direction: column;
+    flex-basis: 100%;
+    //min-height: 200px;//seems odd for blocks with only one item: lots of white space
+    grid-column: span 1;
+    grid-row: span 1;
+    &.rsssl-disabled {
+      min-height:320px;//add min height on disabled so the settings is visible behind the locked div.
+    }
+    &.rsssl-two_fa_users {
+      .rsssl-grid-item-content {
+        .rsssl-field-wrap {
+          margin-top: -50px;
+        }
+      }
+    }
+
+  @media(max-width: $rsp-break-s) {
+    grid-column: span 4;
+  }
+
+  &.no-background {
+    background: none;
+    border: none;
+    box-shadow: none;
+  }
+
+  &.rsssl-column-2 {
+    grid-column: span 2;
+    @media(max-width: $rsp-break-s) {
+      grid-column: span 4;
+    }
+  }
+
+  &.rsssl-row-2 {
+    grid-row: span 2;
+    min-height: 400px;
+  }
+
+  &-header {
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: calc(30px + var(--rsp-spacing-s) * 2);
+    @include rsssl-block-padding;
+
+    &:empty {
+      display: none;
+    }
+  }
+
+  &-title {
+    margin: 4px 0 4px 0;
+  }
+
+  &-controls {
+    font-size: var(--rsp-fs-200);
+    display: flex;
+    gap: var(--rsp-spacing-s);
+  }
+
+    &-content {
+      flex-grow: 100;
+      width: 100%;
+      box-sizing: border-box;
+      @include rsssl-inline-block-padding;
+      &:empty {
+        display: none;
+      }
+    }
+
+    &-footer {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      align-self: flex-end;
+      justify-content: space-between;
+      gap: var(--rsp-grid-margin);
+      width: 100%;
+      min-height: calc(30px + var(--rsp-spacing-s) * 2);
+      box-sizing: border-box;
+      @include rsssl-block-padding;
+      .rsssl-legend {
+        display: flex;
+
+      span {
+        padding-left: 5px;
+      }
+    }
+
+    &:empty {
+      display: none;
+    }
+  }
+
+  .rsssl-flex-push-right {
+    margin-left: auto;
+  }
+
+  .rsssl-flex-push-left {
+    margin-right: auto;
+  }
+}
+}

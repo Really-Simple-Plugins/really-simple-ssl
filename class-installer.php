@@ -13,7 +13,7 @@ if ( ! class_exists( 'rsssl_installer' ) ) {
 	class rsssl_installer {
 		private $slug = '';
 		public function __construct( $slug ) {
-			if ( ! current_user_can( 'install_plugins' ) ) {
+			if ( ! wp_doing_cron() && ! current_user_can( 'install_plugins' ) ) {
 				return;
 			}
 
@@ -90,7 +90,7 @@ if ( ! class_exists( 'rsssl_installer' ) ) {
 		 * @return bool
 		 */
 		public function download_plugin() {
-			if ( ! current_user_can( 'install_plugins' ) ) {
+			if ( ! wp_doing_cron() && ! current_user_can( 'install_plugins' ) ) {
 				return false;
 			}
 
@@ -129,7 +129,7 @@ if ( ! class_exists( 'rsssl_installer' ) ) {
 		 * @return bool
 		 */
 		public function activate_plugin() {
-			if ( ! current_user_can( 'install_plugins' ) ) {
+			if ( ! wp_doing_cron() && ! current_user_can( 'install_plugins' ) ) {
 				return false;
 			}
 

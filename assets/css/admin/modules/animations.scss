@@ -51,3 +51,14 @@
   overflow: hidden;
   transition: max-height 0.3s ease;
 }
+
+.rsssl-accordeon--open .rsssl-accordeon__content {
+  /* When the accordion is open, show the content */
+  max-height: 300px; /* You may need to adjust this value */
+}
+
+.rsssl-accordeon__content__inner {
+  /* Basic styling for the inner content container */
+  padding: 15px;
+  background-color: #fff;
+}

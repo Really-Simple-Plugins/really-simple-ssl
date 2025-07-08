@@ -993,7 +993,9 @@ class Rsssl_Two_Factor
 		$provider_instance = $provider_class::get_instance();
 		// Allow the provider to re-send codes, etc.
 		if ( ( 'email' === $provider_key ) && true === $provider_instance->pre_process_authentication( $user ) ) {
-			self::login_html( $user, $nonce, $redirect_to, $provider_key );
+			// Always generate a new nonce.
+			$new_nonce = self::generate_login_nonce_for_user($user->ID);
+			self::login_html($user, $new_nonce, $redirect_to, '', $provider_class);
 			exit;
 		}
 

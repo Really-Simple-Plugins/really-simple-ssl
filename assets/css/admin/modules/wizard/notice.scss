@@ -10,6 +10,11 @@
         flex-direction: row;
         margin-top: 12px;
     }
+    .rsssl-text-link {
+      text-decoration: underline;
+      cursor: pointer;
+      margin-right: 10px;
+    }
     summary {
 
       display: grid;

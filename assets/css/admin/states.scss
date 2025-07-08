@@ -1,0 +1,114 @@
+.rsssl{
+  /*skeleton*/
+  $panelheight : 38px;
+  $panelborder : 1px;
+  $paneloffset : 3*($panelborder+$panelheight);
+  $rows : 6;
+  .rsssl-skeleton:empty {
+	margin: auto;
+	margin-bottom: 25px;
+	width: 100%;
+	height: ($rows*$panelheight)+($rows+1)*$panelborder; /* change height to see repeat-y behavior */
+
+	background-image:
+			linear-gradient( 100deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.5) 70%, rgba(255, 255, 255, 0.5) 15% ),
+			linear-gradient( #f2f2f2 $panelheight, transparent 0 ),
+			linear-gradient( #f2f2f2 $panelheight, transparent 0 ),
+			linear-gradient( #f2f2f2 $panelheight, transparent 0 ),
+			linear-gradient( #f2f2f2 $panelheight, transparent 0 );
+
+	background-repeat: repeat-y;
+
+	background-size:
+			50px 200px, /* highlight */
+			100% $paneloffset,
+			100% $paneloffset,
+			100% $paneloffset,
+			100% $paneloffset;
+
+	background-position:
+			0 0, /* highlight */
+			$panelborder $panelborder,
+			$panelborder $panelheight+(2*$panelborder),
+			$panelborder (2*$panelheight)+(3*$panelborder),
+			$panelborder (3*$panelheight)+(4*$panelborder);
+
+	background-color:#d6d8db;
+	border-right: $panelborder solid #d6d8db;
+	animation: shine 2.5s infinite;
+  }
+  @keyframes shine {
+	to {
+	  background-position:
+			  100% 0, /* move highlight to right */
+			  $panelborder $panelborder,
+			  $panelborder $panelheight+(2*$panelborder),
+			  $panelborder (2*$panelheight)+(3*$panelborder),
+			  $panelborder (3*$panelheight)+(4*$panelborder);
+	}
+  }
+
+  /*loader*/
+  .rsssl-loader {
+	margin: 0;
+	width: 50px;
+	height: 15px;
+	text-align: center;
+	font-size: 10px;
+	> div {
+	  margin:1px;
+	  background-color: #333;
+	  height: 100%;
+	  width: 3px;
+	  display: inline-block;
+	  -webkit-animation: sk-stretchdelay 1.2s infinite ease-in-out;
+	  animation: sk-stretchdelay 1.2s infinite ease-in-out;
+	}
+
+	&.rsssl-loader-white >div {
+	  background-color: #fff;
+	}
+
+	.rect2 {
+	  -webkit-animation-delay: -1.1s;
+	  animation-delay: -1.1s;
+	}
+
+	.rect3 {
+	  -webkit-animation-delay: -1.0s;
+	  animation-delay: -1.0s;
+	}
+
+	.rect4 {
+	  -webkit-animation-delay: -0.9s;
+	  animation-delay: -0.9s;
+	}
+
+	.rect5 {
+	  -webkit-animation-delay: -0.8s;
+	  animation-delay: -0.8s;
+	}
+  }
+
+  .button-primary .rsssl-loader div {
+	background-color: #fff;
+  }
+
+
+
+  @-webkit-keyframes sk-stretchdelay {
+	0%, 40%, 100% { -webkit-transform: scaleY(0.4) }
+	20% { -webkit-transform: scaleY(1.0) }
+  }
+
+  @keyframes sk-stretchdelay {
+	0%, 40%, 100% {
+	  transform: scaleY(0.4);
+	  -webkit-transform: scaleY(0.4);
+	}  20% {
+		 transform: scaleY(1.0);
+		 -webkit-transform: scaleY(1.0);
+	   }
+  }
+
+}

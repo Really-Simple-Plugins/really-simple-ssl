@@ -20,6 +20,7 @@ class rsssl_onboarding {
 		add_filter("rsssl_run_test", array($this, 'handle_onboarding_request'), 10, 3);
 		add_filter("rsssl_do_action", array($this, 'handle_onboarding_action'), 10, 3);
 
+		add_action('rsssl_process_plugin_actions_queue', array($this, 'process_plugin_actions_queue'));
 	}
 
 	static function this() {
@@ -52,12 +53,10 @@ class rsssl_onboarding {
 	 *
 	 * @return array|bool[]|false|mixed
 	 */
-	public function handle_onboarding_action($response, $action, $data){
+	public function handle_onboarding_action($response, $action, $data) {
 		if ( ! rsssl_user_can_manage() ) {
 			return false;
 		}
-		$error = false;
-		$next_action = 'none';
 		switch( $action ){
 			case 'onboarding_data':
 				$response = $this->onboarding_data($data);
@@ -72,23 +71,27 @@ class rsssl_onboarding {
 				$response = $this->override_ssl_detection($data);
 				break;
 			case 'install_plugin':
-				require_once(rsssl_path . 'class-installer.php');
-				$plugin = new rsssl_installer(sanitize_title($data['id']));
-				$success = $plugin->download_plugin();
+				$plugin_id = sanitize_title($data['id']);
+
+				$this->add_plugin_to_actions_queue($plugin_id, 'install');
+
 				$response = [
 					'next_action' => 'activate',
-					'success' => $success
+					'success' => true,
 				];
 				break;
+
 			case 'activate':
-				require_once(rsssl_path . 'class-installer.php');
-				$plugin = new rsssl_installer(sanitize_title($data['id']));
-				$success = $plugin->activate_plugin();
+				$plugin_id = sanitize_title($data['id']);
+
+				$this->add_plugin_to_actions_queue($plugin_id, 'activate');
+
 				$response = [
 					'next_action' => 'completed',
-					'success' => $success
+					'success' => true,
 				];
 				break;
+
 			case 'update_email':
 				$email = sanitize_email($data['email']);
 				if  (is_email($email )) {
@@ -117,9 +120,9 @@ class rsssl_onboarding {
 					rsssl_update_option('enable_vulnerability_scanner', 1);
 
 				}
-                if ($id === 'two_fa_enabled_roles_totp') {
-                    rsssl_update_option('two_fa_enabled_roles_totp', ['administrator']);
-                }
+				if ($id === 'two_fa_enabled_roles_totp') {
+					rsssl_update_option('two_fa_enabled_roles_totp', ['administrator']);
+				}
 				$response = [
 					'next_action' => 'completed',
 					'success' => true,
@@ -129,6 +132,104 @@ class rsssl_onboarding {
 		}
 		$response['request_success'] = true;
 		return $response;
+	}
+
+	/**
+	 * Add plugin to processing queue
+	 */
+	private function add_plugin_to_actions_queue(string $plugin_id,  string $action): void
+	{
+		$queue = get_option('rsssl_plugin_actions_queue', []);
+
+		$plugin_id = sanitize_key($plugin_id);
+		$action = sanitize_key($action);
+
+		$key = $plugin_id . '_' . $action;
+
+		$queue[$key] = [
+			'plugin_id' => $plugin_id,
+			'action' => $action,
+			'status' => 'pending',
+		];
+
+		update_option('rsssl_plugin_actions_queue', $queue);
+
+		// Schedule and spawn the queue processing at once
+		if (!wp_next_scheduled('rsssl_process_plugin_actions_queue')) {
+			wp_schedule_single_event(time() + 3, 'rsssl_process_plugin_actions_queue');
+			spawn_cron();
+		}
+
+	}
+
+	/**
+	 * Process the plugins to install/activate queue
+	 */
+	public function process_plugin_actions_queue(): void {
+
+		$queue = get_option('rsssl_plugin_actions_queue', []);
+		$processed_count = 0;
+
+		foreach ($queue as $key => &$item) {
+			if ($item['status'] !== 'pending') {
+				continue;
+			}
+
+			// Mark as processing
+			$item['status'] = 'processing';
+			update_option('rsssl_plugin_actions_queue', $queue);
+
+			// Execute the action
+			require_once(rsssl_path . 'class-installer.php');
+			$installer = new rsssl_installer($item['plugin_id']);
+			$success = false;
+
+			switch($item['action']) {
+				case 'install':
+					$success = $installer->download_plugin();
+					break;
+				case 'activate':
+					$success = $installer->activate_plugin();
+					break;
+				default:
+					break;
+			}
+
+			// Update status
+			$item['status'] = $success ? 'completed' : 'failed';
+			$item['completed'] = time();
+
+			$processed_count++;
+		}
+
+		// Save updated queue
+		update_option('rsssl_plugin_actions_queue', $queue);
+
+		// Clean up completed items
+		$this->cleanup_plugin_actions_queue();
+	}
+
+	/**
+	 * Clean up completed queue items
+	 */
+	private function cleanup_plugin_actions_queue(): void {
+		$queue = get_option('rsssl_plugin_actions_queue', []);
+		$cleaned_queue = [];
+
+		foreach ($queue as $key => $item) {
+			// Only keep failed or processing items
+			if ($item['status'] === 'failed' || $item['status'] === 'processing') {
+				$cleaned_queue[$key] = $item;
+			}
+		}
+
+		if (empty($cleaned_queue)) {
+			delete_option('rsssl_plugin_actions_queue');
+		} else {
+			update_option('rsssl_plugin_actions_queue', $cleaned_queue);
+			// Queue contains failed or processing items, schedule a next run
+			wp_schedule_single_event(time() + 600, 'rsssl_process_plugin_actions_queue');
+		}
 	}
 
 	/**
@@ -265,7 +366,7 @@ class rsssl_onboarding {
 	 * @return array[]
 	 */
 	function activate_ssl (): array
-    {
+	{
 		$items = [];
 
 		//if the site url is not yet https, the user may need to login again
@@ -387,7 +488,7 @@ class rsssl_onboarding {
 	 * @return array
 	 */
 	public function recommended_features(): array
-    {
+	{
 		$features = [
 			[
 				"title"     => __( "Vulnerability scan", "really-simple-ssl" ),
@@ -435,7 +536,7 @@ class rsssl_onboarding {
 					"title"     => __( "Limit Login Attempts", "really-simple-ssl" ),
 					"id"        => "limit_login_attempts",
 					"premium"   => true,
-					"options"   => [ 'enable_limited_login_attempts' ],
+					"options"   => [ 'enable_limited_login_attempts', 'enable_limited_password_reset_attempts' ],
 					"activated" => true,
 				],
 				[
@@ -456,7 +557,7 @@ class rsssl_onboarding {
 	 * @return array
 	 */
 	public function pro_features (): array
-    {
+	{
 		return [
 			[
 				"title" => __("Firewall", "really-simple-ssl"),
@@ -470,14 +571,14 @@ class rsssl_onboarding {
 				"id" => "two_fa",
 				"premium" => true,
 				"options" => ['two_fa_enabled_roles_totp'],
-                "value" => ['administrator'],
-                "activated" => true,
+				"value" => ['administrator'],
+				"activated" => true,
 			],
 			[
 				"title" => __("Limit Login Attempts", "really-simple-ssl"),
 				"id" => "limit_login_attempts",
 				"premium" => true,
-				"options" => ['enable_limited_login_attempts'],
+				"options"   => [ 'enable_limited_login_attempts', 'enable_limited_password_reset_attempts' ],
 				"activated" => true,
 			],
 			[
@@ -525,7 +626,7 @@ class rsssl_onboarding {
 	 * @return void
 	 */
 	public function dismiss_modal($data): void
-    {
+	{
 		if (!rsssl_user_can_manage()) return;
 		$dismiss =  $data['dismiss'] ?? false;
 		update_option("rsssl_onboarding_dismissed", (bool) $dismiss, false);
@@ -533,8 +634,13 @@ class rsssl_onboarding {
 
 	public function maybe_redirect_to_settings_page(): void
     {
-		if ( get_transient('rsssl_redirect_to_settings_page' ) ) {
-			delete_transient('rsssl_redirect_to_settings_page' );
+		if ( get_option('rsssl_redirect_to_settings_page' ) ) {
+
+			if (function_exists('wp_cache_flush')) {
+				wp_cache_flush();
+			}
+
+			delete_option('rsssl_redirect_to_settings_page' );
 			if ( !RSSSL()->admin->is_settings_page() ) {
 				wp_redirect( add_query_arg(array('page' => 'really-simple-security'), rsssl_admin_url() ) );
 				exit;
@@ -601,7 +707,7 @@ class rsssl_onboarding {
 	 */
 
 	public function show_onboarding_modal(): bool
-    {
+	{
 		if ( get_option("rsssl_onboarding_dismissed") ) {
 			return false;
 		}
@@ -651,7 +757,7 @@ class rsssl_onboarding {
 	 * Maybe reset onboarding modal
 	 */
 	public function reset_onboarding(): void
-    {
+	{
 		//ensure onboarding triggers again so user gets to enter the license on reload.
 		update_option( "rsssl_show_onboarding", true, false );
 		update_option( "rsssl_onboarding_dismissed", false, false );
@@ -664,7 +770,7 @@ class rsssl_onboarding {
 	 * Generate notice based on Pro being installed or not
 	 */
 	public function features_subtitle(): ?string
-    {
+	{
 		$notice = __( "Instantly configure these essential features.", "really-simple-ssl" );
 
 		if ( ! defined('rsssl_pro') ) {

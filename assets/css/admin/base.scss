@@ -1,0 +1,114 @@
+.rsssl {
+  font-variant-numeric: tabular-nums; // https://css-tricks.com/almanac/properties/f/font-variant-numeric/
+  margin: 0;
+  margin-left: -20px;
+  font-size: var(--rsp-fs-300);
+  box-sizing: border-box;
+  color: var(--rsp-text-color);
+  font-weight: 400;
+  line-height: 1.5;
+  @media only screen and ( max-width: $rsp-break-xs)  {
+    margin-left: -9px;
+  }
+  *, *:before, *:after {
+    box-sizing: inherit;
+  }
+
+  body, h1, h2, h3, h4, h5, h6, p, ol, ul {
+    margin: 0;
+    padding: 0;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    color: var(--rsp-text-color);
+    line-height: 1.5;
+  }
+
+  .rsssl-h0 {
+    font-size: var(--rsp-fs-900);
+    font-weight: 700;
+    letter-spacing: 0.025rem;
+  }
+
+  h1, .rsssl-h1 {
+    font-size: var(--rsp-fs-800);
+    line-height: 1.5;
+    font-weight: 500;
+    letter-spacing: 0.025rem;
+  }
+
+  h2, .rsssl-h2 {
+    font-size: var(--rsp-fs-700);
+    font-weight: 700;
+    letter-spacing: 0.025rem;
+  }
+
+  h3, .rsssl-h3 {
+    font-size: var(--rsp-fs-600);
+    font-weight: 600;
+    letter-spacing: 0.0125rem;
+  }
+
+  h4, .rsssl-h4 {
+    font-size: var(--rsp-fs-500);
+    font-weight: 600;
+    letter-spacing: 0.0125rem;
+  }
+
+  h5, .rsssl-h5 {
+    font-size: var(--rsp-fs-400);
+    font-weight: 400;
+    letter-spacing: 0.1px;
+  }
+
+  h6, .rsssl-h6 {
+    font-size: var(--rsp-fs-300);
+    letter-spacing: 0.1px;
+  }
+
+  p {
+    color: var(--rsp-text-color);
+    font-weight: 400;
+    font-size: var(--rsp-fs-300);
+    line-height: 1.5;
+  }
+
+  .rsssl-small-text {
+    font-size: var(--rsp-fs-200);
+    line-height: 1.5;
+    color: var(--rsp-text-color-light);
+  }
+
+  a {
+    font-size: 1em;
+  }
+
+  //wordpress inserts notices after the first h1 or h2. To prevent breaking layout we insert an empty h1 tag at the start of our page, where WP can insert the notice.
+  .rsssl-notice-hook-element {
+    display: none !important;
+  }
+  .rsssl-divider {
+    width: 1px;
+    height: 1.3rem;
+    background-color: #cccccc;
+  }
+}
+// Hide nags from other plugins
+.error, .notice, .update-nag, .notice-info {
+  &:not(.really-simple-plugins) {
+    display: none !important;
+  }
+  &.really-simple-plugins{
+    margin: var(--rsp-grid-gap);
+  }
+}
+
+.number_full input[type=number] {
+  width: 100% !important;
+  position: relative;
+}

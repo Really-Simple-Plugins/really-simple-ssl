@@ -1,0 +1,7 @@
+.rsssl {
+  --rsp-brand-primary: var(--rsp-yellow);
+  --rsp-brand-secondary: var(--rsp-blue);
+  --rsp-brand-primary-faded: var(--rsp-yellow-faded);
+}
+
+/*# sourceMappingURL=theme.css.map */

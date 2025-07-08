@@ -2,11 +2,11 @@
 Contributors: RogierLankhorst, markwolters, hesseldejong, vicocotea, marcelsanting, janwoostendorp, wimbraam
 Donate link: https://www.paypal.me/reallysimplessl
 Tags: security, ssl, 2fa, vulnerabilities, two factor
-Requires at least: 5.9
+Requires at least: 6.6
 License: GPL2
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 9.4.1
+Stable tag: 9.4.2
 
 Easily improve site security with WordPress Hardening, Two-Factor Authentication (2FA), Login Protection, Vulnerability Detection and SSL certificate.
 
@@ -151,6 +151,15 @@ The plugin checks your certificate before enabling, but if, for example, you mig
 If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions](https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/) instead.
 
 == Changelog ==
+= 9.4.2 =
+* Fix: Adjusted .htaccess redirect requirements for subfolder configurations
+* Fix: re-send e-mail button on the 2FA page will now show a message when the e-mail is sent.
+* Fix: restored SCSS files.
+* Fix: fixed an issue where the plugin kept redirecting to its settings page after activation.
+* Improvement: updated the way other plugins are installed via the onboarding and dashboard page.
+* Improvement: added notice with an option to force verify e-mail address.
+* Improvement: updated minimum WordPress version to 6.6.
+
 = 9.4.1 =
  * Fix: fixed a translations error where text domain was loaded too early.
 
