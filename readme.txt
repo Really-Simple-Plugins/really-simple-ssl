@@ -1,7 +1,7 @@
 === Really Simple Security - Simple and Performant Security (formerly Really Simple SSL)===
 Contributors: RogierLankhorst, markwolters, hesseldejong, vicocotea, marcelsanting, janwoostendorp, wimbraam
 Donate link: https://www.paypal.me/reallysimplessl
-Tags: security, ssl, 2fa, vulnerabilities, two factor
+Tags: security, https, 2fa, vulnerabilities, two factor
 Requires at least: 6.6
 License: GPL2
 Tested up to: 6.8
@@ -13,7 +13,7 @@ Easily improve site security with WordPress Hardening, Two-Factor Authentication
 == Description ==
 
 === Really simple, Effective and Performant WordPress Security ===
-Really Simple Security is the most lightweight and easy-to-use security plugin for WordPress. It secures your WordPress website with SSL certificate generation, properly enforcing en redirecting to https, scanning for possible vulnerabilities, Login Protection and implementing essential WordPress hardening features.
+Really Simple Security is the most lightweight and easy-to-use security plugin for WordPress. It secures your WordPress website with SSL certificate generation, including proper 301 https redirection and SSL enforcement, scanning for possible vulnerabilities, Login Protection and implementing essential WordPress hardening features.
 
 We believe that security should have the absolute minimum effect on website performance, user experience and maintainability. Therefore, Really Simple Security is:
 
@@ -50,7 +50,7 @@ Allow or enforce Two-Factor Authentication (2FA) for specific user roles. Users 
 [Protect your site with all essential security features by upgrading to Really Simple Security Pro.](https://really-simple-ssl.com/)
 
 = Advanced SSL enforcement =
-* Mixed Content Scan & Fixer. Detect files that are requested over HTTP and fix it, both Front- and Back-end.
+* Mixed Content Scan & Fixer. Detect files that are requested over HTTP and fix them to HTTPS, both Front- and Back-end.
 * Enable HTTP Strict Transport Security and configure your site for the HSTS Preload list.
 
 = Firewall =
@@ -87,6 +87,8 @@ When a vulnerability is detected in a plugin, theme or WordPress core you will g
 Secure your website's login process and user accounts with powerful security measures.
 
 * Two-Step verification (Email login)
+* 2FA (two factor authentication) with TOTP
+* Passwordless login with passkey login
 * Enforce strong passwords and frequent password change
 * Limit Login Attempts
 
@@ -125,7 +127,7 @@ To install this plugin:
 For more detailed explanations and documentation on all Really Simple Security features, please search the [Knowledge Base](https://www.really-simple-ssl.com/knowledge-base/)
 
 = What happened with Really Simple SSL? =
-All features that made Really Simple SSL the most powerful and easy-to-use SSL plugin are still part of Really Simple Security. The plugin is developed with a modular approach: if you don't want to use the full set of security features, the unused code will not be loaded and won't have any effect on your site's performance.
+All features that made Really Simple SSL the most powerful and easy-to-use SSL generation and redirect plugin are still part of Really Simple Security. The plugin is developed with a modular approach: if you don't want to use the full set of security features, the unused code will not be loaded and won't have any effect on your site's performance.
 
 = Why Really Simple Security? =
 In our experience, security solutions for WordPress are often hard to configure, trigger many false positives and have a significant impact on site performance. We have been receiving requests from our users to simplify WordPress security for years, so that has become our mission!
@@ -133,22 +135,29 @@ In our experience, security solutions for WordPress are often hard to configure,
 = I want to share my feedback or contribute to Really Simple Security =
 You couldn't make us happier! Really Simple Security is GPL licensed and co-created by the WordPress community. All feedback is highly appreciated and has always helped us to better understand users' needs. For code contributions or suggestions, we're on [GitHub](https://github.com/really-simple-plugins/really-simple-ssl). For suggestions, please [open a support ticket](https://wordpress.org/support/plugin/really-simple-ssl/) You can also express your appreciation by [leaving a review](https://wordpress.org/support/plugin/really-simple-ssl/reviews/).
 
-= Mixed Content issues =
+= What are Mixed Content issues? =
 Most mixed content issues are caused by URLs in CSS or JS files. For detailed instructions on how to find mixed content read this [article](https://really-simple-ssl.com/knowledge-base/how-to-track-down-mixed-content-or-insecure-content/).
 
 = Generating a Let's Encrypt SSL Certificate =
 We added the possibility to generate a Free SSL Certificate with Let's Encrypt in our Really Simple Security Wizard. We have an updated list available for all possible integrations [here](https://really-simple-ssl.com/install-ssl-certificate/). Please leave feedback about another integration, incorrect information, or you need help.
 
-= Redirect loop issues =
-If you are experiencing redirect loops on your site, try these [instructions](https://really-simple-ssl.com/knowledge-base/my-website-is-in-a-redirect-loop/).
+= How do I fix a redirect loop? =
+If you are experiencing redirect loops on your site, try these [instructions](https://really-simple-ssl.com/knowledge-base/my-website-is-in-a-redirect-loop/). This can sometimes happen during the migration to HTTPS or due to conflicting redirect rules.
 
 = Is the plugin multisite compatible? =
 Yes. There is a dedicated network settings page where you can control settings for your entire network, at once.
 
-= Uninstalling Really Simple Security =
-The plugin checks your certificate before enabling, but if, for example, you migrated the site to a non-SSL environment, you might get locked out of the back-end.
+= How do I enforce strong passwords? =
+Under Login Protection, you can configure minimum strength settings and require users to change their passwords after a defined interval. Disabling weak password usage is a best practice.
 
-If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions](https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/) instead.
+= How can I change my login URL? =
+You can set a custom login URL under Advanced Site Hardening, which helps prevent brute force login attacks and bots targeting wp-login.php.
+
+= Does this plugin redirect HTTP to HTTPS? =
+Yes. The plugin enforces HTTPS and handles all necessary redirects, optionally using .htaccess or PHP.
+
+= Can I use Really Simple Security besides WordFence? =
+Really Simple Security and WordFence greatly overlap in term of functionality. If you like to use specific features from both plugins, we strongly recommend not to enable similar features twice. The benefit of Really Simple Security is that disabled features don't load any code, so won't have an impact on site performance.
 
 == Changelog ==
 = 9.4.2 =
