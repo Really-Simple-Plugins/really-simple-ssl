@@ -3368,7 +3368,7 @@ if ( ! function_exists('rsssl_pro_trial_notice' ) ) {
 if (!function_exists('rsssl_show_pro_trial_notice')) {
     function rsssl_show_pro_trial_notice() {
 
-    if (defined('RSSSL_PRO')) {
+    if (defined('rsssl_pro')) {
         return false;
     }
 
