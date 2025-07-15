@@ -33,7 +33,7 @@ if (!function_exists('rsssl_activation_check')) {
     {
         update_option('rsssl_activation', true, false );
         update_option('rsssl_show_onboarding', true, false );
-        set_transient('rsssl_redirect_to_settings_page', true, HOUR_IN_SECONDS );
+        update_option('rsssl_redirect_to_settings_page', true, HOUR_IN_SECONDS );
     }
     register_activation_hook( __FILE__, 'rsssl_activation_check' );
 }
