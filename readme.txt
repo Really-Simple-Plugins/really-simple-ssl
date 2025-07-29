@@ -6,7 +6,7 @@ Requires at least: 6.6
 License: GPL2
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 9.4.2
+Stable tag: 9.4.3
 
 Easily improve site security with WordPress Hardening, Two-Factor Authentication (2FA), Login Protection, Vulnerability Detection and SSL certificate.
 
@@ -109,7 +109,7 @@ With Limit Login Attempts you can configure a threshold to temporarily or perman
 If you want to support the continuing development of this plugin, please consider buying [Really Simple Security Pro](https://www.really-simple-ssl.com/pro/), which includes some excellent security features and premium support.
 
 == About Really Simple Plugins ==
-Our mission is to make complex WordPress requirements really easy. Really Simple Security is developed by [Really Simple Plugins](https://www.really-simple-plugins.com).
+Our mission is to make complex WordPress requirements really easy. Really Simple Security is developed by [Really Simple Plugins](https://www.really-simple-ssl.com/about-us).
 
 For generating SSL certificates, Really Simple Security uses the [le acme2 PHP](https://github.com/fbett/le-acme2-php/) Let's Encrypt client library, thanks to 'fbett' for providing it. Vulnerability Detection uses WP Vulnerability, an open-source initiative by Javier Casares. Want to join as a collaborator? We're on [GitHub](https://github.com/really-simple-plugins/really-simple-ssl) as well!
 
@@ -160,6 +160,13 @@ Yes. The plugin enforces HTTPS and handles all necessary redirects, optionally u
 Really Simple Security and WordFence greatly overlap in term of functionality. If you like to use specific features from both plugins, we strongly recommend not to enable similar features twice. The benefit of Really Simple Security is that disabled features don't load any code, so won't have an impact on site performance.
 
 == Changelog ==
+= 9.4.3 =
+* Improvement: improved compatibility with plain permalinks.
+* Improvement: updated links in the plugin.
+* Fix: handled a case where the user ID could be empty in 2FA.
+* Fix: learn more button in vulnerability e-mail link now links to the correct page.
+* Fix: fixed an issue where rsssl_user_can_manage could be undefined when downloading the system status.
+
 = 9.4.2 =
 * Fix: Adjusted .htaccess redirect requirements for subfolder configurations
 * Fix: re-send e-mail button on the 2FA page will now show a message when the e-mail is sent.

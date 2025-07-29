@@ -94,7 +94,13 @@ class Rsssl_Two_Fa_User_Repository implements Rsssl_Two_Fa_User_Repository_Inter
         $enabledRoles = $params->getEnabledRoles();
         $daysThreshold = $params->getDaysThreshold();
         foreach ($results as $user) {
-            $wpUser    = get_userdata($user->ID);
+            $wpUser = get_userdata($user->ID);
+
+	        // Skip if user data is not available
+	        if (!$wpUser) {
+		        continue;
+	        }
+
             $twoFaUser = $this->factory->createFromWPUser(
                 $wpUser,
                 $forcedRoles,

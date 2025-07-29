@@ -244,6 +244,11 @@ function rsssl_upgrade() {
 		}
 	}
 
+	// Delete the ajax fallback option as it is no longer used.
+	if ( $prev_version && version_compare( $prev_version, '9.4.2.1', '<=' ) ) {
+		delete_option('rsssl_ajax_fallback_active');
+	}
+
 	//don't clear on each update.
 	//RSSSL()->admin->clear_admin_notices_cache();
 

@@ -2,14 +2,14 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Really Simple Security Pro 9.4.2\n"
+"Project-Id-Version: Really Simple Security Pro 9.4.3\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/really-simple-ssl-pro\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-07-03T11:03:15+00:00\n"
+"POT-Creation-Date: 2025-07-29T11:24:59+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.8.1\n"
 "X-Domain: really-simple-ssl\n"
@@ -31,12 +31,12 @@ msgid "Really Simple Plugins"
 msgstr ""
 
 #. Author URI of the plugin
-msgid "https://really-simple-plugins.com"
+msgid "https://really-simple-ssl.com/about-us"
 msgstr ""
 
 #: assets/templates/two_fa/expired.php:3
 #: assets/templates/two_fa/onboarding.php:44
-#: class-admin.php:3352
+#: class-admin.php:3320
 #: class-site-health.php:61
 #: onboarding/class-onboarding.php:529
 #: onboarding/class-onboarding.php:570
@@ -194,14 +194,14 @@ msgstr ""
 #: class-admin.php:158
 #: settings/config/menu.php:17
 #: settings/config/menu.php:394
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:237
 #: settings/src/Dashboard/Vulnerabilities/VulnerabilitiesFooter.js:24
 msgid "Settings"
 msgstr ""
 
 #: class-admin.php:163
-#: settings/build/index.a4cc556db77e3384994b.js:1
+#: settings/build/index.c2ac76bdb7421daf20f4.js:1
 #: settings/src/Header.js:45
 msgid "Support"
 msgstr ""
@@ -224,7 +224,7 @@ msgid "Dismiss"
 msgstr ""
 
 #: class-admin.php:665
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/build/485.47f7474dc2a61c04262b.js:1
 #: settings/build/829.0d69f68a1345874307b1.js:1
 #: settings/src/Dashboard/TaskElement.js:72
@@ -234,7 +234,7 @@ msgid "View"
 msgstr ""
 
 #: class-admin.php:665
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/build/485.47f7474dc2a61c04262b.js:1
 #: settings/build/829.0d69f68a1345874307b1.js:1
 #: settings/build/995.7a0675fe0519b06656b3.js:1
@@ -278,12 +278,12 @@ msgstr ""
 
 #: class-admin.php:1948
 #: pro/class-licensing.php:654
-#: pro/security/wordpress/class-rsssl-geo-block.php:1529
+#: pro/security/wordpress/class-rsssl-geo-block.php:1530
 msgid "Open"
 msgstr ""
 
 #: class-admin.php:1949
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/src/Dashboard/OtherPlugins/OtherPlugins.js:21
 msgid "Upgrade"
 msgstr ""
@@ -394,7 +394,7 @@ msgid "Depending on your hosting provider, %1$smanual installation%2$s may be re
 msgstr ""
 
 #: class-admin.php:2136
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/build/485.47f7474dc2a61c04262b.js:1
 #: settings/build/829.0d69f68a1345874307b1.js:1
 #: settings/src/Dashboard/TaskElement.js:66
@@ -497,23 +497,15 @@ msgstr ""
 msgid "Black Friday sale! Get 40% Off Really Simple Security Pro"
 msgstr ""
 
-#: class-admin.php:2352
-msgid "Please check if your REST API is loading correctly. Your site currently is using the slower Ajax fallback method to load the settings."
-msgstr ""
-
-#: class-admin.php:2366
+#: class-admin.php:2350
 msgid "Complete email validation and enable notifications to make sure you will receive security warnings."
 msgstr ""
 
-#: class-admin.php:2374
+#: class-admin.php:2358
 msgid "Email address successfully verified."
 msgstr ""
 
-#: class-admin.php:2390
-msgid "Your site uses plain permalinks, which causes issues with the REST API. Please use a different permalinks configuration."
-msgstr ""
-
-#: class-admin.php:2442
+#: class-admin.php:2410
 #: settings/config/fields/firewall.php:104
 #: settings/config/fields/firewall.php:126
 #: settings/config/fields/firewall.php:148
@@ -521,47 +513,47 @@ msgid "404 errors detected on your homepage. 404 blocking is unavailable, to pre
 msgstr ""
 
 #. translators: %1$s: opening bold tag, %2$s: closing bold tag
-#: class-admin.php:3310
+#: class-admin.php:3278
 msgid "Really Simple SSL is now %1$sReally Simple Security!%2$s"
 msgstr ""
 
-#: class-admin.php:3317
+#: class-admin.php:3285
 msgid "Read about our journey towards Really Simple Security"
 msgstr ""
 
-#: class-admin.php:3323
+#: class-admin.php:3291
 msgid "Experience all powerful features of Really Simple Security Pro using this %slimited time discount%s: %s"
 msgstr ""
 
-#: class-admin.php:3342
+#: class-admin.php:3310
 msgid "Thank you for being a long-time user! As a token of our gratitude, we want to offer you %s6 months Really Simple Security Pro, 100%% Free!%s"
 msgstr ""
 
-#: class-admin.php:3347
+#: class-admin.php:3315
 msgid "Discover:"
 msgstr ""
 
-#: class-admin.php:3350
+#: class-admin.php:3318
 msgid "Performant Firewall"
 msgstr ""
 
-#: class-admin.php:3351
+#: class-admin.php:3319
 #: settings/config/menu.php:254
 msgid "Advanced Hardening"
 msgstr ""
 
-#: class-admin.php:3353
+#: class-admin.php:3321
 #: onboarding/class-onboarding.php:543
 #: onboarding/class-onboarding.php:585
 #: settings/config/menu.php:98
 msgid "Security Headers"
 msgstr ""
 
-#: class-admin.php:3354
+#: class-admin.php:3322
 msgid "And many more powerful Security features.."
 msgstr ""
 
-#: class-admin.php:3357
+#: class-admin.php:3325
 msgid "Claim your 6 Free months"
 msgstr ""
 
@@ -614,9 +606,9 @@ msgstr ""
 #: class-site-health.php:100
 #: class-site-health.php:131
 #: class-site-health.php:162
-#: settings/settings.php:192
-#: settings/settings.php:193
-#: settings/settings.php:225
+#: settings/settings.php:197
+#: settings/settings.php:198
+#: settings/settings.php:230
 msgid "Security"
 msgstr ""
 
@@ -655,7 +647,7 @@ msgstr ""
 #: class-site-health.php:255
 #: class-site-health.php:297
 #: settings/config/fields/vulnerability-detection.php:234
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/build/485.47f7474dc2a61c04262b.js:1
 #: settings/src/Dashboard/SslLabs/SslLabs.js:320
 #: settings/src/LetsEncrypt/DnsVerification.js:57
@@ -750,7 +742,7 @@ msgid "Really Simple Security detected an SSL certificate, but has not been conf
 msgstr ""
 
 #: class-site-health.php:340
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/build/485.47f7474dc2a61c04262b.js:1
 #: settings/build/829.0d69f68a1345874307b1.js:1
 #: settings/src/Dashboard/Progress/ProgressFooter.js:24
@@ -1861,7 +1853,7 @@ msgstr ""
 
 #: mailer/class-mail.php:33
 #: mailer/class-mail.php:37
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:192
 msgid "Learn more"
 msgstr ""
@@ -1998,7 +1990,7 @@ msgid "Essential security"
 msgstr ""
 
 #: onboarding/class-onboarding.php:296
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:116
 msgid "Enable"
 msgstr ""
@@ -2009,7 +2001,7 @@ msgstr ""
 
 #: onboarding/class-onboarding.php:305
 #: settings/config/menu.php:755
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/build/485.47f7474dc2a61c04262b.js:1
 #: settings/build/829.0d69f68a1345874307b1.js:1
 #: settings/src/Dashboard/OtherPlugins/OtherPluginsData.js:74
@@ -2030,7 +2022,7 @@ msgstr ""
 #: onboarding/class-onboarding.php:320
 #: upgrade/upgrade-to-pro.php:132
 #: upgrade/upgrade-to-pro.php:145
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/src/Dashboard/OtherPlugins/OtherPluginsData.js:73
 msgid "Install"
 msgstr ""
@@ -2060,14 +2052,14 @@ msgid "Consent Management as it should be."
 msgstr ""
 
 #: onboarding/class-onboarding.php:443
-#: settings/settings.php:595
+#: settings/settings.php:526
 msgid "Online Booking System"
 msgstr ""
 
 #: onboarding/class-onboarding.php:494
 #: settings/config/menu.php:187
 #: settings/config/menu.php:192
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/src/Dashboard/Progress/ProgressFooter.js:58
 #: settings/src/Dashboard/Progress/ProgressFooter.js:62
 msgid "Vulnerability scan"
@@ -2094,7 +2086,7 @@ msgstr ""
 #: settings/config/menu.php:547
 #: modal/build/index.d4bca8705bbc6e3e5777.js:1
 #: modal/src/components/DeactivationModal/DeactivationModal.js:71
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/src/Dashboard/Progress/ProgressFooter.js:44
 #: settings/src/Dashboard/Progress/ProgressFooter.js:48
 msgid "Firewall"
@@ -2146,7 +2138,7 @@ msgstr ""
 #: pro/class-scan.php:1771
 #: pro/class-scan.php:1809
 #: pro/class-scan.php:1856
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/build/485.47f7474dc2a61c04262b.js:1
 #: settings/build/829.0d69f68a1345874307b1.js:1
 #: settings/src/Settings/MixedContentScan/MixedContentScan.js:90
@@ -2318,7 +2310,7 @@ msgid "The file could not be downloaded. The file might not exist, or downloadin
 msgstr ""
 
 #: pro/class-importer.php:537
-#: settings/build/index.a4cc556db77e3384994b.js:1
+#: settings/build/index.c2ac76bdb7421daf20f4.js:1
 #: settings/src/Settings/FieldsData.js:184
 msgid "Something went wrong"
 msgstr ""
@@ -2842,7 +2834,7 @@ msgstr ""
 #: pro/security/wordpress/class-rsssl-geo-block.php:694
 #: pro/security/wordpress/class-rsssl-geo-block.php:812
 #: pro/security/wordpress/class-rsssl-geo-block.php:859
-#: pro/security/wordpress/class-rsssl-geo-block.php:1462
+#: pro/security/wordpress/class-rsssl-geo-block.php:1463
 msgid "An error occurred: "
 msgstr ""
 
@@ -2860,9 +2852,9 @@ msgid "An error occurred while adding countries to the list."
 msgstr ""
 
 #: pro/security/wordpress/class-rsssl-geo-block.php:779
-#: pro/security/wordpress/class-rsssl-geo-block.php:1775
-#: pro/security/wordpress/class-rsssl-geo-block.php:1819
-#: pro/security/wordpress/class-rsssl-geo-block.php:1928
+#: pro/security/wordpress/class-rsssl-geo-block.php:1776
+#: pro/security/wordpress/class-rsssl-geo-block.php:1820
+#: pro/security/wordpress/class-rsssl-geo-block.php:1929
 msgid "Invalid data provided."
 msgstr ""
 
@@ -2894,34 +2886,34 @@ msgstr ""
 msgid "Permanent"
 msgstr ""
 
-#: pro/security/wordpress/class-rsssl-geo-block.php:1140
+#: pro/security/wordpress/class-rsssl-geo-block.php:1141
 msgid "We're sorry."
 msgstr ""
 
-#: pro/security/wordpress/class-rsssl-geo-block.php:1141
+#: pro/security/wordpress/class-rsssl-geo-block.php:1142
 msgid "This website is unavailable in your region."
 msgstr ""
 
-#: pro/security/wordpress/class-rsssl-geo-block.php:1142
-#: pro/security/wordpress/firewall/class-rsssl-404-interceptor.php:337
+#: pro/security/wordpress/class-rsssl-geo-block.php:1143
+#: pro/security/wordpress/firewall/class-rsssl-404-interceptor.php:335
 msgid "Your access to this site has been temporarily denied"
 msgstr ""
 
-#: pro/security/wordpress/class-rsssl-geo-block.php:1143
+#: pro/security/wordpress/class-rsssl-geo-block.php:1144
 msgid "Your access to this site has been denied"
 msgstr ""
 
-#: pro/security/wordpress/class-rsssl-geo-block.php:1144
+#: pro/security/wordpress/class-rsssl-geo-block.php:1145
 msgid "Error code: 403"
 msgstr ""
 
-#: pro/security/wordpress/class-rsssl-geo-block.php:1366
-#: pro/security/wordpress/class-rsssl-geo-block.php:1402
+#: pro/security/wordpress/class-rsssl-geo-block.php:1367
+#: pro/security/wordpress/class-rsssl-geo-block.php:1403
 #: pro/security/wordpress/limitlogin/class-rsssl-admin-config-countries.php:165
 msgid "Missing filter value."
 msgstr ""
 
-#: pro/security/wordpress/class-rsssl-geo-block.php:1489
+#: pro/security/wordpress/class-rsssl-geo-block.php:1490
 #: settings/config/fields/firewall.php:168
 #: settings/config/fields/firewall.php:213
 #: settings/config/fields/limit-login-attempts.php:139
@@ -2936,19 +2928,19 @@ msgid "Blocked"
 msgstr ""
 
 #. translators: %s: Name of the country that was removed from the blocked list.
-#: pro/security/wordpress/class-rsssl-geo-block.php:1804
+#: pro/security/wordpress/class-rsssl-geo-block.php:1805
 msgid "IP address %s is now %s."
 msgstr ""
 
-#: pro/security/wordpress/class-rsssl-geo-block.php:1834
+#: pro/security/wordpress/class-rsssl-geo-block.php:1835
 msgid "IP removed from list."
 msgstr ""
 
-#: pro/security/wordpress/class-rsssl-geo-block.php:1922
+#: pro/security/wordpress/class-rsssl-geo-block.php:1923
 msgid "User agent added."
 msgstr ""
 
-#: pro/security/wordpress/class-rsssl-geo-block.php:1962
+#: pro/security/wordpress/class-rsssl-geo-block.php:1963
 msgid "User agent removed from current list."
 msgstr ""
 
@@ -3277,23 +3269,19 @@ msgstr ""
 msgid "Login blocked by Geo-IP list"
 msgstr ""
 
-#: pro/security/wordpress/firewall/class-rsssl-404-interceptor.php:334
+#: pro/security/wordpress/firewall/class-rsssl-404-interceptor.php:332
 msgid "We're sorry!"
 msgstr ""
 
-#: pro/security/wordpress/firewall/class-rsssl-404-interceptor.php:335
+#: pro/security/wordpress/firewall/class-rsssl-404-interceptor.php:333
 msgid "Please verify that you are human"
 msgstr ""
 
-#: pro/security/wordpress/firewall/class-rsssl-404-interceptor.php:339
+#: pro/security/wordpress/firewall/class-rsssl-404-interceptor.php:337
 msgid "Error code: 404"
 msgstr ""
 
-#: pro/security/wordpress/firewall/models/class-rsssl-404-block.php:108
-msgid "Added to watchlist by 404 interceptor"
-msgstr ""
-
-#: pro/security/wordpress/firewall/models/class-rsssl-404-block.php:173
+#: pro/security/wordpress/firewall/models/class-rsssl-404-block.php:186
 msgid "404 threshold exceeded"
 msgstr ""
 
@@ -5333,7 +5321,7 @@ msgstr ""
 
 #: security/wordpress/vulnerabilities.php:625
 #: settings/config/menu.php:182
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/src/Dashboard/Vulnerabilities/VulnerabilitiesHeader.js:15
 msgid "Vulnerabilities"
 msgstr ""
@@ -5732,7 +5720,7 @@ msgstr ""
 #: settings/config/fields/limit-login-attempts.php:206
 #: settings/config/fields/limit-login-attempts.php:266
 #: settings/config/fields/two-fa.php:179
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/src/Dashboard/SslLabs/SslLabsHeader.js:5
 msgid "Status"
 msgstr ""
@@ -6500,7 +6488,7 @@ msgid "Debugging with Really Simple Security"
 msgstr ""
 
 #: settings/config/menu.php:68
-#: settings/build/index.a4cc556db77e3384994b.js:1
+#: settings/build/index.c2ac76bdb7421daf20f4.js:1
 #: settings/src/Header.js:32
 msgid "Let's Encrypt"
 msgstr ""
@@ -6609,7 +6597,7 @@ msgid "Maintain peace of mind with our simple, but effective automated measures 
 msgstr ""
 
 #: settings/config/menu.php:233
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/src/Dashboard/Vulnerabilities/VulnerabilitiesHeader.js:15
 msgid "Hardening"
 msgstr ""
@@ -6933,11 +6921,11 @@ msgstr ""
 msgid "Below you will find the instructions for different hosting environments and configurations. If you start the process with the necessary instructions and credentials the next steps will be done in no time."
 msgstr ""
 
-#: settings/settings.php:583
+#: settings/settings.php:514
 msgid "Complianz - Consent Management as it should be"
 msgstr ""
 
-#: settings/settings.php:589
+#: settings/settings.php:520
 msgid "Terms and Conditions"
 msgstr ""
 
@@ -7018,7 +7006,7 @@ msgid "Easily improve site security with WordPress Hardening, Two-Factor Authent
 msgstr ""
 
 #: upgrade/upgrade-to-pro.php:156
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/src/Dashboard/OtherPlugins/OtherPlugins.js:24
 msgid "Installed"
 msgstr ""
@@ -7173,7 +7161,7 @@ msgid "Ignore"
 msgstr ""
 
 #: settings/build/91.b0f863c7b47144cb4cdf.js:1
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/build/485.47f7474dc2a61c04262b.js:1
 #: settings/build/829.0d69f68a1345874307b1.js:1
 #: settings/src/Dashboard/TaskElement.js:68
@@ -7183,22 +7171,22 @@ msgstr ""
 msgid "Fix"
 msgstr ""
 
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/src/Dashboard/Progress/ProgressBlockHeader.js:37
 msgid "Progress"
 msgstr ""
 
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/src/Dashboard/Progress/ProgressBlockHeader.js:41
 msgid "All tasks"
 msgstr ""
 
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/src/Dashboard/Progress/ProgressBlockHeader.js:45
 msgid "Remaining tasks"
 msgstr ""
 
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/build/485.47f7474dc2a61c04262b.js:1
 #: settings/src/Dashboard/Progress/ProgressBlock.js:41
 #: settings/src/Dashboard/Progress/ProgressBlock.js:47
@@ -7210,173 +7198,173 @@ msgstr ""
 msgid "Loading..."
 msgstr ""
 
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/src/Dashboard/Progress/ProgressFooter.js:14
 msgid "SSL"
 msgstr ""
 
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/build/995.7a0675fe0519b06656b3.js:1
-#: settings/build/index.a4cc556db77e3384994b.js:1
+#: settings/build/index.c2ac76bdb7421daf20f4.js:1
 #: settings/src/Dashboard/Progress/ProgressFooter.js:29
 #: settings/src/Header.js:54
 #: settings/src/Settings/PremiumOverlay.js:9
 msgid "Go Pro"
 msgstr ""
 
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/src/Dashboard/SslLabs/SslLabsHeader.js:7
 msgid "Powered by Qualys"
 msgstr ""
 
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/src/Dashboard/SslLabs/SslLabs.js:255
 msgid "No test started yet"
 msgstr ""
 
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/src/Dashboard/SslLabs/SslLabs.js:281
 msgid "Not available on localhost"
 msgstr ""
 
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/src/Dashboard/SslLabs/SslLabs.js:178
 msgid "Cipher strength"
 msgstr ""
 
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/src/Dashboard/SslLabs/SslLabs.js:317
 msgid "What does my score mean?"
 msgstr ""
 
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/src/Dashboard/SslLabs/SslLabs.js:326
 msgid "Last check:"
 msgstr ""
 
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/src/Dashboard/SslLabs/SslLabs.js:333
 msgid "View detailed report on Qualys SSL Labs"
 msgstr ""
 
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/src/Dashboard/SslLabs/SslLabsFooter.js:9
 msgid "Continue SSL Health check"
 msgstr ""
 
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/src/Dashboard/SslLabs/SslLabsFooter.js:10
 msgid "Check SSL Health"
 msgstr ""
 
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:38
 msgid "vulnerability"
 msgstr ""
 
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:38
 msgid "vulnerabilities"
 msgstr ""
 
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:41
 msgid "update"
 msgstr ""
 
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:41
 msgid "updates"
 msgstr ""
 
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:42
 msgid "You have %s update pending"
 msgid_plural "You have %s updates pending"
 msgstr[0] ""
 msgstr[1] ""
 
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:46
 msgid "hardening feature"
 msgstr ""
 
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:46
 msgid "hardening features"
 msgstr ""
 
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:235
 msgid "You have %s open %d"
 msgstr ""
 
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:245
 msgid "Hardening features are configured"
 msgstr ""
 
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:115
 msgid "Enable vulnerability detection"
 msgstr ""
 
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:187
 #: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:202
 msgid "You have %s %d"
 msgstr ""
 
-#: settings/build/366.79830113ad25eba9fb57.js:1
-#: settings/build/index.a4cc556db77e3384994b.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
+#: settings/build/index.c2ac76bdb7421daf20f4.js:1
 #: settings/src/Dashboard/TipsTricks/TipsTricksFooter.js:9
 #: settings/src/Header.js:30
 msgid "Documentation"
 msgstr ""
 
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/src/Dashboard/OtherPlugins/OtherPluginsHeader.js:5
 msgid "Other Plugins"
 msgstr ""
 
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/src/Dashboard/OtherPlugins/OtherPluginsData.js:75
 msgid "Activating..."
 msgstr ""
 
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/src/Dashboard/OtherPlugins/OtherPluginsData.js:76
 #: settings/src/Dashboard/OtherPlugins/OtherPluginsData.js:77
 msgid "Downloading..."
 msgstr ""
 
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/src/Dashboard/DashboardPage.js:47
 msgid "Tips & Tricks"
 msgstr ""
 
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/build/485.47f7474dc2a61c04262b.js:1
 #: settings/build/829.0d69f68a1345874307b1.js:1
 #: settings/src/Dashboard/TaskElement.js:48
 msgid "Re-started test"
 msgstr ""
 
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/build/485.47f7474dc2a61c04262b.js:1
 #: settings/build/829.0d69f68a1345874307b1.js:1
 #: settings/src/Settings/RiskConfiguration/RiskData.js:12
 msgid "Force update the plugin or theme"
 msgstr ""
 
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/build/485.47f7474dc2a61c04262b.js:1
 #: settings/build/829.0d69f68a1345874307b1.js:1
 #: settings/src/Settings/RiskConfiguration/RiskData.js:13
 msgid "Isolates the plugin or theme if no update can be performed"
 msgstr ""
 
-#: settings/build/366.79830113ad25eba9fb57.js:1
+#: settings/build/366.5ee9613565c0155c0f8e.js:1
 #: settings/build/485.47f7474dc2a61c04262b.js:1
 #: settings/build/829.0d69f68a1345874307b1.js:1
 #: settings/src/Settings/RiskConfiguration/RiskData.js:118
@@ -8256,84 +8244,84 @@ msgstr ""
 msgid "Collapse all"
 msgstr ""
 
-#: settings/build/index.a4cc556db77e3384994b.js:1
+#: settings/build/index.c2ac76bdb7421daf20f4.js:1
 #: settings/src/Onboarding/OnboardingData.js:82
 msgid "Updating email preferences.."
 msgstr ""
 
-#: settings/build/index.a4cc556db77e3384994b.js:1
+#: settings/build/index.c2ac76bdb7421daf20f4.js:1
 #: settings/src/Onboarding/OnboardingData.js:126
 msgid "Installing %d..."
 msgstr ""
 
-#: settings/build/index.a4cc556db77e3384994b.js:1
+#: settings/build/index.c2ac76bdb7421daf20f4.js:1
 #: settings/src/Onboarding/OnboardingData.js:132
 msgid "Activating %d..."
 msgstr ""
 
-#: settings/build/index.a4cc556db77e3384994b.js:1
+#: settings/build/index.c2ac76bdb7421daf20f4.js:1
 #: settings/src/Onboarding/OnboardingData.js:196
 msgid "Re-checking SSL certificate, please wait..."
 msgstr ""
 
-#: settings/build/index.a4cc556db77e3384994b.js:1
+#: settings/build/index.c2ac76bdb7421daf20f4.js:1
 #: settings/src/Settings/FieldsData.js:182
 msgid "Saving settings..."
 msgstr ""
 
-#: settings/build/index.a4cc556db77e3384994b.js:1
+#: settings/build/index.c2ac76bdb7421daf20f4.js:1
 #: settings/src/Settings/FieldsData.js:183
 #: settings/src/Settings/FieldsData.js:205
 #: settings/src/Settings/FieldsData.js:289
 msgid "Settings saved"
 msgstr ""
 
-#: settings/build/index.a4cc556db77e3384994b.js:1
+#: settings/build/index.c2ac76bdb7421daf20f4.js:1
 #: settings/src/utils/Error.js:12
 msgid "Please check if security settings on the server or a plugin is blocking the requests from Really Simple Security."
 msgstr ""
 
-#: settings/build/index.a4cc556db77e3384994b.js:1
+#: settings/build/index.c2ac76bdb7421daf20f4.js:1
 #: settings/src/utils/Error.js:20
 msgid "The Really Simple Security Rest API is disabled."
 msgstr ""
 
-#: settings/build/index.a4cc556db77e3384994b.js:1
+#: settings/build/index.c2ac76bdb7421daf20f4.js:1
 #: settings/src/utils/Error.js:22
 msgid "The Really Simple Security Rest API returned a not found."
 msgstr ""
 
-#: settings/build/index.a4cc556db77e3384994b.js:1
+#: settings/build/index.c2ac76bdb7421daf20f4.js:1
 #: settings/src/utils/Error.js:24
 msgid "The Really Simple Security Rest API returned a 403 forbidden error."
 msgstr ""
 
-#: settings/build/index.a4cc556db77e3384994b.js:1
+#: settings/build/index.c2ac76bdb7421daf20f4.js:1
 #: settings/src/utils/Error.js:35
 msgid "A problem was detected during the loading of the settings"
 msgstr ""
 
-#: settings/build/index.a4cc556db77e3384994b.js:1
+#: settings/build/index.c2ac76bdb7421daf20f4.js:1
 #: settings/src/utils/Error.js:41
 msgid "The request returned the following errors:"
 msgstr ""
 
-#: settings/build/index.a4cc556db77e3384994b.js:1
+#: settings/build/index.c2ac76bdb7421daf20f4.js:1
 #: settings/src/utils/Error.js:43
 msgid "Response code:"
 msgstr ""
 
-#: settings/build/index.a4cc556db77e3384994b.js:1
+#: settings/build/index.c2ac76bdb7421daf20f4.js:1
 #: settings/src/utils/Error.js:44
 msgid "Status code:"
 msgstr ""
 
-#: settings/build/index.a4cc556db77e3384994b.js:1
+#: settings/build/index.c2ac76bdb7421daf20f4.js:1
 #: settings/src/utils/Error.js:45
 msgid "Server response:"
 msgstr ""
 
-#: settings/build/index.a4cc556db77e3384994b.js:1
+#: settings/build/index.c2ac76bdb7421daf20f4.js:1
 #: settings/src/utils/Error.js:48
 msgid "More information"
 msgstr ""

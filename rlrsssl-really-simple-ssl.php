@@ -3,11 +3,11 @@
  * Plugin Name: Really Simple Security
  * Plugin URI: https://really-simple-ssl.com
  * Description: Easily improve site security with WordPress Hardening, Two-Factor Authentication (2FA), Login Protection, Vulnerability Detection and SSL certificate generation.
- * Version: 9.4.2
+ * Version: 9.4.3
  * Requires at least: 6.6
  * Requires PHP: 7.4
  * Author: Really Simple Security
- * Author URI: https://really-simple-plugins.com
+ * Author URI: https://really-simple-ssl.com/about-us
  * License: GPL2
  * Text Domain: really-simple-ssl
  * Domain Path: /languages
@@ -113,7 +113,7 @@ if ( class_exists('REALLY_SIMPLE_SSL') ) {
             if ( !defined('rsssl_file') ){
                 define('rsssl_file', __FILE__);
             }
-            define('rsssl_version', '9.4.2');
+            define('rsssl_version', '9.4.3');
             define('rsssl_le_cron_generation_renewal_check', 20);
             define('rsssl_le_manual_generation_renewal_check', 15);
         }

@@ -191,7 +191,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 		    if ( ! rsssl_admin_logged_in() ) {
 			    return;
 		    }
-            
+
 		    \security\wordpress\vulnerabilities\Rsssl_File_Storage::DeleteOldFiles();
 
 		    if ( get_option('rsssl_reload_vulnerability_files') ) {
@@ -1572,7 +1572,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 'message' => $message . ' ' .
                              __('Based on your settings, Really Simple Security will take appropriate action, or you will need to solve it manually.','really-simple-ssl') .' '.
                              sprintf(__('Get more information from the Really Simple Security dashboard on %s'), $this->domain() ),
-                'url' => rsssl_admin_url( [], '#settings/vulnerabilities_notifications'),
+                'url' => rsssl_admin_url( [], '#settings/vulnerabilities/vulnerabilities-overview'),
             ];
         }
 

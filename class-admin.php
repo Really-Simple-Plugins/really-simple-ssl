@@ -2342,22 +2342,6 @@ class rsssl_admin {
 					),
 				),
 			),
-			'ajax_fallback' => array(
-	            'condition'  => array(
-                        'wp_option_rsssl_ajax_fallback_active',
-                ),
-	            'callback' => '_true_',
-	            'output' => array(
-		            'true' => array(
-			            'msg' => __( "Please check if your REST API is loading correctly. Your site currently is using the slower Ajax fallback method to load the settings.", 'really-simple-ssl' ),
-			            'icon' => 'warning',
-			            'admin_notice' => false,
-			            'url' => 'instructions/how-to-debug-a-blank-settings-page-in-really-simple-ssl',
-			            'dismissible' => true,
-			            'plusone' => true,
-		            ),
-	            ),
-            ),
 	        'email_verification_not_verified' => array(
 		        'callback' => 'RSSSL()->mailer_admin->email_verification_completed',
 		        'output' => array(
@@ -2380,22 +2364,6 @@ class rsssl_admin {
 			        ),
 		        ),
 	        ),
-			'plain_permalinks' => array(
-				'condition'  => array(
-					'rsssl_plain_permalinks_enabled',
-				),
-				'callback' => '_true_',
-				'output' => array(
-					'true' => array(
-						'msg' => __( "Your site uses plain permalinks, which causes issues with the REST API. Please use a different permalinks configuration.", 'really-simple-ssl' ),
-						'icon' => 'open',
-						'admin_notice' => false,
-						'dismissible' => true,
-						'plusone' => false,
-						'url' => admin_url('options-permalink.php'),
-					),
-				),
-			),
             'upgraded_to_nine' => array(
                 'condition' => array(
                     'rsssl_show_upgrade_to_nine_notice',
