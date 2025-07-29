@@ -267,14 +267,28 @@ if ( !function_exists('rsssl_admin_logged_in')){
 
 
 
-if ( !function_exists('rsssl_is_logged_in_rest')){
-    function rsssl_is_logged_in_rest(){
-        $valid_request = isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], '/reallysimplessl/v1/')!==false;
-        if ( !$valid_request ) {
-            return false;
-        }
-        return is_user_logged_in();
-    }
+if ( ! function_exists( 'rsssl_is_logged_in_rest' ) ) {
+	function rsssl_is_logged_in_rest() {
+		// Check if the request URI is valid
+		if (!isset($_SERVER['REQUEST_URI'])) {
+			return false;
+		}
+
+		$request_uri = $_SERVER['REQUEST_URI'];
+
+		// Check for a direct REST API path
+		if (strpos($request_uri, '/reallysimplessl/v1/') !== false) {
+			return is_user_logged_in();
+		}
+
+		// Check for rest_route parameter with reallysimplessl (plain permalinks)
+		if (strpos($request_uri, 'rest_route=') !== false &&
+		    strpos($request_uri, 'reallysimplessl') !== false) {
+			return is_user_logged_in();
+		}
+
+		return false;
+	}
 }
 
 if ( ! function_exists( 'rsssl_maybe_activate_recommended_features_extendify' ) ) {
