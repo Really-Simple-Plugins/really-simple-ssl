@@ -248,17 +248,20 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
             }
 
             if ( $request && isset( $request->sections ) ) {
-                $request->sections = maybe_unserialize( $request->sections );
+                // Use json_decode instead of maybe_unserialize to prevent PHP object injection
+                $request->sections = is_string( $request->sections ) ? json_decode( $request->sections, true ) : $request->sections;
             } else {
                 $request = false;
             }
 
             if ( $request && isset( $request->banners ) ) {
-                $request->banners = maybe_unserialize( $request->banners );
+                // Use json_decode instead of maybe_unserialize to prevent PHP object injection
+                $request->banners = is_string( $request->banners ) ? json_decode( $request->banners, true ) : $request->banners;
             }
 
             if ( $request && isset( $request->icons ) ) {
-                $request->icons = maybe_unserialize( $request->icons );
+                // Use json_decode instead of maybe_unserialize to prevent PHP object injection
+                $request->icons = is_string( $request->icons ) ? json_decode( $request->icons, true ) : $request->icons;
             }
 
             if( ! empty( $request->sections ) ) {

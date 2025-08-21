@@ -4,6 +4,8 @@ defined( 'ABSPATH' ) or die();
 
 require_once rsssl_path . '/lib/admin/class-helper.php';
 use RSSSL\lib\admin\Helper;
+use RSSSL\Security\RSSSL_Htaccess_File_Manager;
+
 class rsssl_admin {
     use Helper;
 	private static $_this;
@@ -15,6 +17,8 @@ class rsssl_admin {
 	public $abs_path;
 	public $ssl_type = 'NA';
 	public $configuration_loaded = false;
+
+    public $htaccess_file_manager;
 
 	public function __construct() {
 
@@ -34,6 +38,7 @@ class rsssl_admin {
 
 		self::$_this    = $this;
 		$this->abs_path = $this->getabs_path();
+        $this->htaccess_file_manager = RSSSL_Htaccess_File_Manager::get_instance();
 
 		register_deactivation_hook( __DIR__ . '/' . $this->plugin_filename, array( $this, 'deactivate' ) );
 		add_action( 'admin_init', array( $this, 'add_privacy_info' ) );
@@ -64,12 +69,12 @@ class rsssl_admin {
 			add_action( 'admin_init', array( $this, 'insert_secure_cookie_settings' ), 70 );
 			add_action( 'admin_init', array( $this, 'recheck_certificate' ) );
 		}
-
+        add_action('admin_init', array($this, 'autoFixHtaccess'), 100);
 		add_filter( 'rsssl_htaccess_security_rules', array( $this, 'add_htaccess_redirect' ) );
-		add_filter( 'before_rocket_htaccess_rules', array( $this, 'add_htaccess_redirect_before_wp_rocket' ) );
 		add_filter( 'admin_init', array( $this, 'handle_activation' ) );
 		add_action( 'rocket_activation', 'rsssl_wrap_htaccess' );
 		add_action( 'rocket_deactivation', 'rsssl_wrap_htaccess' );
+        add_action('rocket_after_activation', array($this, 'enableAutoFix'), 100);
 		$plugin = rsssl_plugin;
 		add_filter( "plugin_action_links_$plugin", array( $this, 'plugin_settings_link' ) );
 		add_filter( "network_admin_plugin_action_links_$plugin", array($this,'plugin_settings_link' ) );
@@ -85,6 +90,34 @@ class rsssl_admin {
 	public static function this() {
 		return self::$_this;
 	}
+
+    /**
+     * Simply fixes the .htaccess file of the wordpress installation.
+     *
+     * @return void
+     */
+    public function autoFixHtaccess() {
+        if ( ! rsssl_user_can_manage() ) {
+            return;
+        }
+        if (get_option('rsssl_upgrade_firewall', false ) == true) {
+            do_action('rsssl_update_rules');
+            update_option('rsssl_upgrade_firewall', false);
+        }
+    }
+
+    /**
+     * Enable the auto fix for the htaccess rules
+     * This is used to automatically fix the htaccess rules when the plugin is updated. Or when an external party
+     * has changed the htaccess rules.
+     * @return void
+     */
+    public function enableAutoFix() {
+        if ( ! rsssl_user_can_manage() ) {
+            return;
+        }
+        update_option('rsssl_upgrade_firewall', true);
+    }
 
 	/**
 	 * On Multisite site creation, run table init hook as well.
@@ -266,7 +299,9 @@ class rsssl_admin {
 		$less_than_2_minutes_ago  = $activation_time > strtotime( '-2 minute' );
 		if ( $more_than_one_minute_ago && $less_than_2_minutes_ago && get_option( 'rsssl_flush_rewrite_rules' ) ) {
 			delete_option( 'rsssl_flush_rewrite_rules' );
-			add_action( 'shutdown', 'flush_rewrite_rules' );
+			add_action( 'shutdown', static function() {
+				flush_rewrite_rules( false ); // soft flush – doesn’t rewrite .htaccess
+            });
 		}
 		$more_than_2_minute_ago  = get_option( 'rsssl_flush_caches' ) < strtotime( '-2 minute' );
 		$less_than_5_minutes_ago = get_option( 'rsssl_flush_caches' ) > strtotime( '-5 minute' );
@@ -321,18 +356,13 @@ class rsssl_admin {
 	 * @param array $rules
 	 * @return []
 	 */
-
 	public function add_htaccess_redirect( $rules ) {
-		//we don't want these rules added by rsssl if wp rocket active.
-		//if it's deactivating, start adding them again.
-		if ( $this->is_deactivating_wprocket() || ! function_exists( 'rocket_clean_domain' ) ) {
-			$rule = $this->get_redirect_rules();
-			if ( ! empty( $rule ) ) {
-				$rules[] = [
-					'rules'      => $rule,
-					'identifier' => 'RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1',
-				];
-			}
+        $rule = $this->get_redirect_rules();
+		if ( ! empty( $rule ) ) {
+			$rules[] = [
+				'rules'      => $rule,
+				'identifier' => 'RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1',
+			];
 		}
 
 		return $rules;
@@ -662,7 +692,7 @@ class rsssl_admin {
                             </a>
 						<?php } ?>
 						<?php if ( $more_info ) { ?>
-							<a class="button" <?php echo $target; ?> rel="noopener noreferrer" href="<?php echo esc_url_raw( $more_info ); ?>"><?php $is_internal_link ? _e( 'View', 'really-simple-ssl' ) : _e( 'More info', 'really-simple-ssl' ); ?></a>
+							<a class="button" <?php echo $target; ?> rel="noopener noreferrer" href="<?php echo esc_url( $more_info ); ?>"><?php $is_internal_link ? _e( 'View', 'really-simple-ssl' ) : _e( 'More info', 'really-simple-ssl' ); ?></a>
 						<?php } ?>
 					</div>
 				<?php } ?>
@@ -1308,13 +1338,12 @@ class rsssl_admin {
 	 *
 	 */
 
-	public function htaccess_contains_redirect_rules() {
-		if ( ! file_exists( $this->htaccess_file() ) ) {
+	public function htaccess_contains_redirect_rules():bool {
+		if ( $this->htaccess_file_manager->validate_htaccess_file_path() === false ) {
 			return false;
 		}
-
 		$pattern  = '/RewriteRule \^\(\.\*\)\$ https:\/\/%{HTTP_HOST}(\/\$1|%{REQUEST_URI}) (\[R=301,.*L\]|\[L,.*R=301\])/i';
-		$htaccess = file_get_contents( $this->htaccess_file() );
+		$htaccess = $this->htaccess_file_manager->get_htaccess_content();
 		return preg_match( $pattern, $htaccess );
 	}
 
@@ -1331,7 +1360,7 @@ class rsssl_admin {
 			return true;
 		}
 
-		if ( RSSSL()->server->uses_htaccess() && $this->htaccess_contains_redirect_rules() ) {
+		if ( $this->htaccess_contains_redirect_rules() && RSSSL()->server->uses_htaccess() ) {
 			return true;
 		}
 
@@ -1450,8 +1479,8 @@ class rsssl_admin {
 		}
 
 		if ( 'no' === $curl_check_done ) {
-			if ( RSSSL()->server->uses_htaccess() && file_exists( $this->htaccess_file() ) ) {
-				$htaccess = file_get_contents( $this->htaccess_file() );
+			if ( $this->htaccess_file_manager->validate_htaccess_file_path() && RSSSL()->server->uses_htaccess() ) {
+				$htaccess = $this->htaccess_file_manager->get_htaccess_content();
 				foreach ( $check_headers as $check_header ) {
 					if ( ! preg_match( '/' . $check_header['pattern'] . '/', $htaccess, $check ) ) {
 						$not_used_headers[] = $check_header['name'];
@@ -1494,20 +1523,6 @@ class rsssl_admin {
 				rocket_generate_config_file();
 			}
 		}
-	}
-
-	/**
-	 * Return .htaccess redirect when using WP Rocket
-	 * @return string
-	 */
-	public function add_htaccess_redirect_before_wp_rocket() {
-		$rules = $this->get_redirect_rules();
-		if ( ! empty( $rules ) ) {
-			$start = "\n" . '#Begin Really Simple Security Redirect';
-			$end   = "\n" . '#End Really Simple Security Redirect' . "\n";
-			$rules = $start . $rules . $end;
-		}
-		return $rules;
 	}
 
 	/**
@@ -1573,7 +1588,6 @@ class rsssl_admin {
 	 *
 	 * @return string
 	 */
-
 	public function get_redirect_rules( $manual = false ) {
 		//ensure the configuration check has run always.
 		if ( ! $this->configuration_loaded ) {
@@ -1595,6 +1609,7 @@ class rsssl_admin {
 			} elseif ( 'SERVER-HTTPS-1' === $this->ssl_type ) {
 				$rule .= 'RewriteCond %{HTTPS} !=1' . "\n";
 			} elseif ( 'LOADBALANCER' === $this->ssl_type ) {
+				$rule .= 'RewriteCond %{HTTP_USER_AGENT} !lscache_runner [NC]' . "\n";
 				$rule .= 'RewriteCond %{HTTP:X-Forwarded-Proto} !https' . "\n";
 			} elseif ( 'HTTP_X_PROTO' === $this->ssl_type ) {
 				$rule .= 'RewriteCond %{HTTP:X-Proto} !SSL' . "\n";
@@ -1655,18 +1670,13 @@ class rsssl_admin {
 	 */
 
 	public function has_well_known_needle() {
-		$file = $this->htaccess_file();
-		if ( ! file_exists( $file ) ) {
+		if ( $this->htaccess_file_manager->validate_htaccess_file_path() === false ) {
 			return false;
 		}
-		$htaccess          = file_get_contents( $file );
+		$htaccess          = $this->htaccess_file_manager->get_htaccess_content();
 		$well_known_needle = 'RewriteCond %{REQUEST_URI} !^/\.well-known/acme-challenge/';
 
-		if ( strpos( $htaccess, $well_known_needle ) !== false ) {
-			return true;
-		}
-
-		return false;
+		return strpos( $htaccess, $well_known_needle ) !== false;
 	}
 
 	/**
@@ -1813,7 +1823,7 @@ class rsssl_admin {
         <script>
             document.addEventListener('click', e => {
                 if ( e.target.closest('.rsssl-review.notice.is-dismissible .notice-dismiss') ) {
-                    window.location.href='<?php echo esc_url_raw(
+                    window.location.href='<?php echo esc_url(
 						wp_nonce_url(
 							rsssl_admin_url(['rsssl_review_notice' => 'dismiss']),
 							'rsssl_review_notice_action_dismiss'
@@ -2939,21 +2949,22 @@ class rsssl_admin {
      *
      * Update branding in .htaccess. Load .htaccess if it exists and is writable, replace branding, write back
 	 */
-    public function maybe_update_branding_in_htaccess(): void {
+	public function maybe_update_branding_in_htaccess(): void {
+		if ( $this->htaccess_file_manager->validate_htaccess_file_path() === false ) {
+			return;
+		}
 
-	    if ( ! file_exists( $this->htaccess_file() ) || ! is_writable( $this->htaccess_file() ) ) {
-		    return;
-	    }
+		$htaccess = $this->htaccess_file_manager->get_htaccess_content();
 
-	    $htaccess = file_get_contents( $this->htaccess_file() );
+		if ( strpos( $htaccess, 'Really Simple SSL' ) !== false ) {
+			$updated = str_replace( 'Really Simple SSL', 'Really Simple Security', $htaccess );
 
-	    if ( strpos( $htaccess, 'Really Simple Security') !== false ) {
-		    str_replace("Really Simple SSL", "Really Simple Security", $htaccess);
-	    }
-
-        file_put_contents( $this->htaccess_file(), $htaccess );
-
-    }
+			if ( $updated !== $htaccess ) {
+                error_log( 'Updating branding in .htaccess' );
+				file_put_contents( $this->htaccess_file(), $updated );
+			}
+		}
+	}
 
 	/**
 	 * @return void

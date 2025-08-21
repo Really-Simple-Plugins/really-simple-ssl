@@ -11,7 +11,7 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'group_id'           => 'hardening-extended',
 				'menu_id'            => 'hardening-extended',
 				'type'               => 'checkbox',
-				'tooltip'  => __( "A debug.log is publicly accessibile and has a standard location. This will change the location to a randomly named folder in /wp-content/", 'really-simple-ssl' ),
+				'tooltip'  => __( "A debug.log is publicly accessible and has a standard location. This will change the location to a randomly named folder in /wp-content/", 'really-simple-ssl' ),
 				'email'            => [
 					'title'   => __( "Settings update: Debug.log file relocated", 'really-simple-ssl' ),
 					'message' => __( "From now on, the debug.log won’t be publicly accessible whenever wp-debugging is enabled. The debug log will be stored in a randomly named folder in /wp-content/. This prevents possible leakage of sensitive debugging information.", 'really-simple-ssl' ),

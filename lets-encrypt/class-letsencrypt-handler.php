@@ -12,6 +12,7 @@ use LE_ACME2\Connector\Connector;
 use LE_ACME2\Order;
 use LE_ACME2\Utilities\Certificate;
 use LE_ACME2\Utilities\Logger;
+use RSSSL\Security\RSSSL_Htaccess_File_Manager;
 
 class rsssl_letsencrypt_handler {
 	use Encryption;
@@ -27,12 +28,14 @@ class rsssl_letsencrypt_handler {
 	public $certs_directory = false;
     public $subjects = array();
 
+	public $htaccess_file_manager;
+
 	public function __construct()
     {
 		if ( isset( self::$_this ) ) {
 			wp_die();
 		}
-
+		$this->htaccess_file_manager = Rsssl_Htaccess_File_Manager::get_instance();
 		add_action('admin_init', array($this, 'upgrade'));
 
 		//loading of these hooks is stricter. The class can be used in the notices, which are needed on the generic dashboard
@@ -78,7 +81,7 @@ class rsssl_letsencrypt_handler {
 	/**
 	 * If we're on apache, add a line to the .htaccess so the acme challenge directory won't get blocked.
 	 */
-	public function maybe_add_htaccess_exclude(){
+	public function maybe_add_htaccess_exclude(): void {
 
 		if (!rsssl_user_can_manage()) {
 			return;
@@ -88,31 +91,41 @@ class rsssl_letsencrypt_handler {
 			return;
 		}
 
-		$htaccess_file = RSSSL()->admin->htaccess_file();
-		if ( !file_exists($htaccess_file) ) {
+		$htaccess_file = $this->htaccess_file_manager->htaccess_file_path;
+		if ( $this->htaccess_file_manager->validate_htaccess_file_path() === false ) {
 			return;
 		}
 
-		if ( !is_writable($htaccess_file) ) {
+		$htaccess = $this->htaccess_file_manager->get_htaccess_content();
+
+		// if the htaccess file is null we return early
+		if ( $htaccess === null ) {
 			return;
 		}
 
-		$htaccess = file_get_contents( $htaccess_file );
+		// We validate if the old markers are still present, and remove them if they are.
+		if ( $this->maybe_remove_old_markers( $htaccess ) ) {
+			$this->htaccess_file_manager->clear_legacy_rule('Really Simple Security LETS ENCRYPT');
+		}
 
+		$content_with_marker = [
+			'marker' => 'Really Simple Security LETS ENCRYPT',
+			'lines' => [
+				'RewriteRule ^.well-known/(.*)$ - [L]',
+			],
+		];
+
+		$this->htaccess_file_manager->write_rule($content_with_marker, 'created lines for acme challenge directory');
+
+	}
+
+	/**
+	 * Validates if the old markers are still present, and removes them if they are.
+	 */
+	private function maybe_remove_old_markers(string $htAccessContent ) :bool
+	{
 		//if it's already inserted, skip.
-		if ( strpos($htaccess, 'Really Simple Security LETS ENCRYPT') !== FALSE ) {
-			return;
-		}
-
-		$htaccess = preg_replace("/#\s?BEGIN\s?Really Simple Security LETS ENCRYPT.*?#\s?END\s?Really Simple Security LETS ENCRYPT/s", "", $htaccess);
-		$htaccess = preg_replace("/\n+/", "\n", $htaccess);
-
-		$rules = '#BEGIN Really Simple Security LETS ENCRYPT'."\n";
-		$rules .= 'RewriteRule ^.well-known/(.*)$ - [L]'."\n";
-		$rules .= '#END Really Simple Security LETS ENCRYPT'."\n";
-		$htaccess = $rules . $htaccess;
-		file_put_contents($htaccess_file, $htaccess);
-
+		return strpos($htAccessContent, '#BEGIN Really Simple Security LETS ENCRYPT');
 	}
 
 	/**
@@ -1194,7 +1207,7 @@ class rsssl_letsencrypt_handler {
 			if ( RSSSL_LE()->hosts->hosts[$host]['free_ssl_available'] === 'paid_only' ) {
 				$action = 'stop';
 				$status = 'error';
-				$message = sprintf(__("According to our information, your hosting provider does not allow any kind of SSL installation, other then their own paid certificate. For an alternative hosting provider with SSL, see this %sarticle%s.","really-simple-ssl"), '<a target="_blank" href="https://really-simple-ssl.com/hosting-providers-with-free-ssl">', '</a>');
+				$message = sprintf(__("According to our information, your hosting provider does not allow any kind of SSL installation, other than their own paid certificate. For an alternative hosting provider with SSL, see this %sarticle%s.","really-simple-ssl"), '<a target="_blank" href="https://really-simple-ssl.com/hosting-providers-with-free-ssl">', '</a>');
 			}
 
 			if ( RSSSL_LE()->hosts->hosts[$host]['free_ssl_available'] === 'activated_by_default' ) {

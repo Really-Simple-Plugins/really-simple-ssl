@@ -197,7 +197,7 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'menu_id' => 'general',
 				'group_id' => 'general_captcha',
 				'type'    => 'captcha',
-				'info'     => __( "Captcha has not yet been verified, you need to complete the process of a Captcha to verify it's availability.", 'really-simple-ssl' ),
+				'info'     => __( "Captcha has not yet been verified, you need to complete the process of a Captcha to verify its availability.", 'really-simple-ssl' ),
 				'label'   => '',
 				'default' => false,
 			],

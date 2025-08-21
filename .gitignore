@@ -4,3 +4,4 @@ modal/node_modules/*
 node_modules/*
 .idea
 vendor/
+mu-plugins/*

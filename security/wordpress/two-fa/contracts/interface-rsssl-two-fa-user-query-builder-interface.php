@@ -13,7 +13,7 @@ interface Rsssl_Two_Fa_User_Query_Builder_Interface {
 
     public function addDisabledConditionToArgs(array $args): array;
 
-    public function addOpenStatusConditionToArgs(array $args): array;
+    public function addUnconfigured2FAConditionToArgs(array $args): array;
 
     public function addNearingExpiryCondition(array $args, int $daysThreshold, int $reminderBeforeClosingPeriod = 3): array;
 

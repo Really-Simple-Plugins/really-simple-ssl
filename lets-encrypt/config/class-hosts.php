@@ -479,15 +479,6 @@ if ( ! class_exists( "rsssl_le_hosts" ) ) {
 		            'api' => false,
 		            'ssl_installation_link' => false,
 	            ),
-	            'xxl' => array(
-		            'name' => 'XXL Hosting',
-		            'installation_renewal_required' => false,
-		            'local_ssl_generation_needed' => false,
-		            'free_ssl_available' => true,
-		            'hosting_dashboard' => 'cpanel',
-		            'api' => false,
-		            'ssl_installation_link' => false,
-	            ),
 	            'combell' => array(
 		            'name' => 'Combell',
 		            'installation_renewal_required' => false,
@@ -628,6 +619,15 @@ if ( ! class_exists( "rsssl_le_hosts" ) ) {
 		            'name' => 'Register.it',
 		            'hosting_dashboard' => 'cpanel',
 		            'api' => false,
+	            ),
+	            'superspace' => array(
+		            'name' => 'Superspace',
+		            'installation_renewal_required' => false,
+		            'local_ssl_generation_needed' => false,
+		            'free_ssl_available' => true,
+		            'hosting_dashboard' => 'cpanel',
+		            'api' => false,
+		            'ssl_installation_link' => false,
 	            ),
 	            'swizzonic' => array(
 		            'name' => 'Swizzonic',

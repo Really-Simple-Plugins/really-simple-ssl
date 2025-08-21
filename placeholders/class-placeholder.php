@@ -365,7 +365,7 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
 				'id'          => 3,
 				'ignored'     => false,
 				'type'        => 'css_js_other_domains',
-				'description' => __( "Mixed content in CSS/JS file from other domain", "really-simple-ssl" ),
+				'description' => __( "Mixed content in CSS/JS file from another domain", "really-simple-ssl" ),
 				'blocked_url' => '#',
 				'location'    => site_url(),
 				'details'     => [

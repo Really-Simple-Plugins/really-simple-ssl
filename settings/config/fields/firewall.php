@@ -121,7 +121,7 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'group_id' => '404_blocking',
 				'type' => 'select',
 				'label' => __( 'Lockout duration', 'really-simple-ssl' ),
-				'tooltip' => __('The IP address will see a locked out screen for the selected duration.', 'really-simple-ssl'),
+				'tooltip' => __('The IP address will see a locked-out screen for the selected duration.', 'really-simple-ssl'),
 				'disabled' => rsssl_maybe_disable_404_blocking(),
                 'disabledTooltipText' => __("404 errors detected on your homepage. 404 blocking is unavailable, to prevent blocking of legitimate visitors. It is strongly recommended to resolve these errors.", "really-simple-ssl"),
 				'options' => [

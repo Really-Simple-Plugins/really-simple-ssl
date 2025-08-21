@@ -1,4 +1,7 @@
 <?php
+
+use RSSSL\Security\RSSSL_Htaccess_File_Manager;
+
 defined( 'ABSPATH' ) or die();
 
 add_action( 'plugins_loaded', 'rsssl_upgrade', 20 );
@@ -40,13 +43,21 @@ function rsssl_upgrade() {
 	}
 
 	if ( $prev_version && version_compare( $prev_version, '5.3.0', '<=' ) ) {
-		if ( file_exists( RSSSL()->admin->htaccess_file() ) && is_writable( RSSSL()->admin->htaccess_file() ) ) {
-			$htaccess      = file_get_contents( RSSSL()->admin->htaccess_file() );
-			$pattern_start = '/rlrssslReallySimpleSSL rsssl_version\[.*.]/';
-			if ( preg_match_all( $pattern_start, $htaccess ) ) {
-				$htaccess = preg_replace( $pattern_start, 'Really Simple Security Redirect ' . rsssl_version, $htaccess );
-				$htaccess = str_replace( 'rlrssslReallySimpleSSL', 'Really Simple Security Redirect', $htaccess );
-				file_put_contents( RSSSL()->admin->htaccess_file(), $htaccess );
+		$fileManager = RSSSL_Htaccess_File_Manager::get_instance();
+		if ( $fileManager->validate_htaccess_file_path() ) {
+			$htaccess =$fileManager->get_htaccess_content();
+
+			// Safely match the legacy pattern: rlrssslReallySimpleSSL rsssl_version[...]
+			$pattern = '/rlrssslReallySimpleSSL\s+rsssl_version\[[^]]+]/';
+			$replacement = 'Really Simple Security Redirect ' . rsssl_version;
+
+			$updated = preg_replace( $pattern, $replacement, $htaccess );
+			$updated = str_replace( 'rlrssslReallySimpleSSL', 'Really Simple Security Redirect', $updated );
+
+			// Only write if the updated content differs from the current content and is not empty.
+			if ( $updated !== $htaccess && ! empty( trim( $updated ) ) ) {
+				// Use an exclusive lock when writing to avoid race conditions with other writers.
+				file_put_contents( $fileManager->htaccess_file_path, $updated, LOCK_EX );
 			}
 		}
 	}
@@ -244,9 +255,25 @@ function rsssl_upgrade() {
 		}
 	}
 
+	// Upgrade .htaccess rules for sites using LiteSpeed cache
+	if ( $prev_version && version_compare( $prev_version, '9.4.2.1', '<=' ) ) {
+		// Check for LiteSpeed Cache plugin
+		if ( defined( 'LSCWP_V' ) && LSCWP_V ) {
+			do_action('rsssl_update_rules');
+		}
+	}
+
 	// Delete the ajax fallback option as it is no longer used.
 	if ( $prev_version && version_compare( $prev_version, '9.4.2.1', '<=' ) ) {
 		delete_option('rsssl_ajax_fallback_active');
+	}
+
+	// Upgrade .htaccess rules for sites using LiteSpeed cache
+	if ( $prev_version && version_compare( $prev_version, '9.4.2.1', '<=' ) ) {
+		// Check for LiteSpeed Cache plugin
+		if ( defined( 'LSCWP_V' ) && LSCWP_V ) {
+			do_action('rsssl_update_rules');
+		}
 	}
 
 	//don't clear on each update.

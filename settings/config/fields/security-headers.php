@@ -344,7 +344,7 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'menu_id'  => 'content_security_policy',
 				'group_id' => 'frame_ancestors',
 				'type'     => 'textarea',
-				'label'    => __( "Add additional domains which can embed your website, if needed. Comma seperated.", "really-simple-ssl" ),
+				'label'    => __( "Add additional domains which can embed your website, if needed. Comma separated.", "really-simple-ssl" ),
 				'disabled' => maybe_disable_frame_ancestors_url_field(),
 				'default'  => false,
 				'react_conditions'        => [

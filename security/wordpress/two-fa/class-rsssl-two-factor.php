@@ -693,7 +693,7 @@ class Rsssl_Two_Factor
      */
     public static function show_two_factor_login(WP_User $user): void
     {
-	    $redirect_to = isset($_REQUEST['redirect_to']) ? esc_url_raw(wp_unslash($_REQUEST['redirect_to'])) : admin_url();
+	    $redirect_to = isset($_REQUEST['redirect_to']) ? wp_validate_redirect(wp_unslash($_REQUEST['redirect_to']), admin_url()) : admin_url();
         $provider = Rsssl_Two_Factor_Settings::get_login_action($user->ID);
 		$login_nonce = Rsssl_Two_Fa_Authentication::create_login_nonce($user->ID)['rsssl_key'];
 
@@ -1095,6 +1095,9 @@ class Rsssl_Two_Factor
 		do_action('rsssl_two_factor_user_authenticated', $user);
 
 		$redirect_to = apply_filters('login_redirect', $redirect_to, $redirect_to, $user);
+		// cleaning up the user meta.
+	    delete_user_meta( $user->ID, self::RSSSL_USER_FAILED_LOGIN_ATTEMPTS_KEY);
+	    delete_user_meta( $user->ID, self::RSSSL_USER_RATE_LIMIT_KEY);
 		wp_safe_redirect($redirect_to);
 		exit;
 	}
@@ -1115,7 +1118,7 @@ class Rsssl_Two_Factor
         self::login_html(
             $user,
             $login_nonce,
-            isset($_REQUEST['redirect_to']) ? esc_url_raw(wp_unslash($_REQUEST['redirect_to'])) : '',
+            isset($_REQUEST['redirect_to']) ? wp_validate_redirect(wp_unslash($_REQUEST['redirect_to']), '') : '',
             '',
             $provider
         );
@@ -1317,7 +1320,7 @@ class Rsssl_Two_Factor
         $onboarding_url = self::login_url(array('action' => 'rsssl_onboarding'), 'login_post');
         $provider_loader = Rsssl_Provider_Loader::get_loader();
         $provider = self::get_primary_provider_for_user($user);
-        $redirect_to = isset($_REQUEST['redirect_to']) ? esc_url_raw(wp_unslash($_REQUEST['redirect_to'])) : admin_url();
+        $redirect_to = isset($_REQUEST['redirect_to']) ? wp_validate_redirect(wp_unslash($_REQUEST['redirect_to']), admin_url()) : admin_url();
         $enabled_providers = $provider_loader::get_user_enabled_providers($user);
         $login_nonce = self::generate_login_nonce_for_user($user->ID);
         $is_forced = Rsssl_Two_Factor_Settings::is_user_forced_to_use_2fa($user->ID);
@@ -1376,7 +1379,7 @@ class Rsssl_Two_Factor
             ),
             rsssl_path . 'assets/templates/two_fa/'
         );
-        
+
         wp_enqueue_script('rsssl-rest-settings');
 
 
@@ -1405,6 +1408,7 @@ class Rsssl_Two_Factor
 		}
 		return $attributes;
 	}
+
 
     /**
      * Enqueues the RSSSL profile settings stylesheet.

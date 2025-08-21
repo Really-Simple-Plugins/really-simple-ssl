@@ -171,7 +171,7 @@ class Rsssl_Request_Parameters {
 	private function initialize_parameters( WP_REST_Request $request ): void {
 		$allowed_providers = array( 'passkey', 'email', 'totp', 'passkey_register' );
 		$this->nonce       = sanitize_text_field( $request->get_header( 'X-WP-Nonce' ) );
-		$this->redirect_to = $request->get_param( 'redirect_to' ) ? esc_url_raw( $request->get_param( 'redirect_to' ) ) : admin_url();
+		$this->redirect_to = $request->get_param( 'redirect_to' ) ? wp_validate_redirect( $request->get_param( 'redirect_to' ), admin_url() ) : admin_url();
 		$this->login_nonce = sanitize_text_field( $request->get_param( 'login_nonce' ) );
 		$provider          = $request->get_param( 'provider' );
 		$this->forced_roles = rsssl_get_option( 'two_fa_forced_role' , [] );

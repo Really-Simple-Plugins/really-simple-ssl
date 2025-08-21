@@ -398,7 +398,7 @@ if ( !function_exists('rsssl_get_manual_instructions_text')) {
 			       . $button_activate;
 		} else if ( $paid_only ) {
 			$msg
-				= sprintf( __( "According to our information, your hosting provider does not allow any kind of SSL installation, other then their own paid certificate. For an alternative hosting provider with SSL, see this %sarticle%s.",
+				= sprintf( __( "According to our information, your hosting provider does not allow any kind of SSL installation, other than their own paid certificate. For an alternative hosting provider with SSL, see this %sarticle%s.",
 				"really-simple-ssl" ), '<a target="_blank" rel="noopener noreferrer" href='.rsssl_link("hosting-providers-with-free-ssl").'>', '</a>' );
 		} else {
 			$msg = __( "Your hosting environment does not allow automatic SSL installation.", "really-simple-ssl" ) . ' ' .

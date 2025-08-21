@@ -118,6 +118,8 @@ if ( isset( $rsssl_settings['delete_data_on_uninstall'] ) && $rsssl_settings['de
 		'rsssl_activated_recommended_features_extendify',
 		'rsssl_pro_redirect_to_settings_page',
 		'rsssl_redirect_to_settings_page',
+		'rsssl_csp_header_test_status',
+		'rsssl_csp_header_test_status_expiry',
 	];
 	foreach ( $rsssl_options as $rsssl_option_name ) {
 		delete_option( $rsssl_option_name );
@@ -150,6 +152,7 @@ if ( isset( $rsssl_settings['delete_data_on_uninstall'] ) && $rsssl_settings['de
 		'rsssl_cw_t',
 		'rsssl_cw_server_id',
 		'rsssl_certinfo',
+		'rsssl_csp_header_test_status',
 	];
 	foreach ( $rsssl_transients as $rsssl_transient ) {
 		delete_transient( $rsssl_transient );

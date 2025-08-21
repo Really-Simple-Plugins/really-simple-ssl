@@ -238,11 +238,13 @@ class Rsssl_Two_Fa_User_Query_Builder implements Rsssl_Two_Fa_User_Query_Builder
     }
 
     /**
-     * Add the open status condition to the query arguments.
+     * Add condition to find users with unconfigured 2FA.
+     *
+     * Finds users who have no active 2FA methods configured.
      *
      * @return array
      */
-    public function addOpenStatusConditionToArgs(array $args): array
+    public function addUnconfigured2FAConditionToArgs(array $args): array
     {
         $metaQuery = [];
         foreach ($this->statusKeys as $key) {
@@ -250,8 +252,8 @@ class Rsssl_Two_Fa_User_Query_Builder implements Rsssl_Two_Fa_User_Query_Builder
                 'relation' => 'OR',
                 [
                     'key'     => $key,
-                    'value'   => 'open',
-                    'compare' => '='
+                    'value'   => 'active',
+                    'compare' => '!='
                 ],
                 [
                     'key'     => $key,
@@ -260,9 +262,8 @@ class Rsssl_Two_Fa_User_Query_Builder implements Rsssl_Two_Fa_User_Query_Builder
             ];
         }
 
-        // Use 'OR' at the top-level if you want a user returned if any one of the keys is open or not set.
-        // Use 'AND' if you need all keys to be open or not set.
-        $args['meta_query'] = array_merge(['relation' => 'OR'], $metaQuery);
+        // Use AND relation to ensure ALL methods are not active
+        $args['meta_query'] = array_merge(['relation' => 'AND'], $metaQuery);
 
         return $args;
     }
@@ -294,14 +295,23 @@ class Rsssl_Two_Fa_User_Query_Builder implements Rsssl_Two_Fa_User_Query_Builder
         // Upper bound: The date corresponding to when exactly three days remain.
         $upperBound = date("Y-m-d H:i:s", strtotime("-" . ($daysThreshold - $reminderBeforeClosingPeriod) . " days"));
 
-        $metaQuery[] = [
+        $nearingExpiryCondition = [
             'key'     => 'rsssl_two_fa_last_login',
             'value'   => [$lowerBound, $upperBound],
             'compare' => 'BETWEEN',
             'type'    => 'DATETIME',
         ];
 
-        $args['meta_query'] = array_merge(['relation' => 'AND'], $metaQuery);
+        if (isset($args['meta_query'])) {
+            // Preserve existing meta_query and add our condition
+            $args['meta_query'] = [
+                'relation' => 'AND',
+                $args['meta_query'],
+                $nearingExpiryCondition,
+            ];
+        } else {
+            $args['meta_query'] = ['relation' => 'AND', $nearingExpiryCondition];
+        }
 
         return $args;
     }
