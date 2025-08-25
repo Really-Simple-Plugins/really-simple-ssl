@@ -162,7 +162,6 @@ Really Simple Security and WordFence greatly overlap in term of functionality. I
 == Changelog ==
 = 9.5.0 =
 * Improvement: reworked .htaccess handling with insert_with_markers and improved WP Rocket integration.
-* Improvement: moved firewall rules to separate firewall.php with dedicated rule classes.
 * Improvement: SBOM added to plugin.
 * Improvement: corrected spelling, grammar, and consistency issues in plugin strings; updated geopolitical terms.
 * Fix: whitelisted LiteSpeed Cache crawler in .htaccess to prevent redirect issues.
