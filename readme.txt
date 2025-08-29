@@ -160,6 +160,9 @@ Yes. The plugin enforces HTTPS and handles all necessary redirects, optionally u
 Really Simple Security and WordFence greatly overlap in term of functionality. If you like to use specific features from both plugins, we strongly recommend not to enable similar features twice. The benefit of Really Simple Security is that disabled features don't load any code, so won't have an impact on site performance.
 
 == Changelog ==
+= 9.5.0.1 =
+* Fix: Prevented .htaccess from being overwritten with an empty file, auto-creation now requires explicit filter opt-in
+
 = 9.5.0 =
 * Improvement: reworked .htaccess handling with insert_with_markers and improved WP Rocket integration.
 * Improvement: SBOM added to plugin.

@@ -23,6 +23,7 @@ namespace RSSSL\Security {
 	 *  – reading/writing rules,
 	 *  – recording history,
 	 *  – cooperating with WP Rocket.
+	 *  – will no longer auto-create a missing .htaccess (opt-in via `rsssl_allow_create_htaccess`).
 	 */
 class RSSSL_Htaccess_File_Manager {
 
@@ -77,7 +78,7 @@ class RSSSL_Htaccess_File_Manager {
             return apply_filters('rsssl_htaccess_file_path', $defaultPath);
         }
 
-        // Fallback to WP_CONTENT_DIR/.htaccess
+        // Fallback to WP_CONTENT_DIR/.htaccess (path only; file will not be auto-created)
         $contentPath = apply_filters('rsssl_wp_content_htaccess_path', WP_CONTENT_DIR . '/.htaccess');
         return apply_filters('rsssl_htaccess_file_path', $contentPath);
     }
@@ -201,28 +202,38 @@ class RSSSL_Htaccess_File_Manager {
 	 */
 	private function ensure_htaccess_is_writable(): bool
 	{
-		$dir = dirname( $this->htaccess_file_path );
+	    $dir = dirname( $this->htaccess_file_path );
 
-		if ( ! is_dir( $dir ) && ! wp_mkdir_p( $dir ) ) {
-			$this->log_error( 'Cannot create directory for .htaccess at: ' . esc_html( $dir ) );
-			return false;
-		}
+	    // Ensure the directory exists (same as before)
+	    if ( ! is_dir( $dir ) && ! wp_mkdir_p( $dir ) ) {
+	        $this->log_error( 'Cannot create directory for .htaccess at: ' . esc_html( $dir ) );
+	        return false;
+	    }
 
-		if ( ! is_file( $this->htaccess_file_path ) ) {
-			if ( @file_put_contents( $this->htaccess_file_path, '' ) === false ) {
-				$this->log_error( 'Could not create .htaccess file at: ' . esc_html( $this->htaccess_file_path ) );
-				return false;
-			} else {
-				$this->log_error( 'Created new .htaccess file at: ' . esc_html( $this->htaccess_file_path ) );
-			}
-		}
+	    // Do **not** create a new .htaccess automatically anymore.
+	    // This previously led to empty files overwriting existing rewrite rules in some environments.
+	    // If a site really wants us to create the file, they must opt in via the filter below.
+	    if ( ! is_file( $this->htaccess_file_path ) ) {
+	        $allow_create = apply_filters( 'rsssl_allow_create_htaccess', false, $this->htaccess_file_path );
+	        if ( $allow_create ) {
+	            if ( @file_put_contents( $this->htaccess_file_path, '' ) === false ) {
+	                $this->log_error( 'Could not create .htaccess file at: ' . esc_html( $this->htaccess_file_path ) );
+	                return false;
+	            } else {
+	                $this->log_error( 'Created new .htaccess file at: ' . esc_html( $this->htaccess_file_path ) );
+	            }
+	        } else {
+	            $this->log_error( '.htaccess file does not exist and automatic creation is disabled. Path: ' . esc_html( $this->htaccess_file_path ) );
+	            return false;
+	        }
+	    }
 
-		if ( ! is_writable( $this->htaccess_file_path ) ) {
-			$this->log_error( '.htaccess file is not writable at: ' . esc_html( $this->htaccess_file_path ) );
-			return false;
-		}
+	    if ( ! is_writable( $this->htaccess_file_path ) ) {
+	        $this->log_error( '.htaccess file is not writable at: ' . esc_html( $this->htaccess_file_path ) );
+	        return false;
+	    }
 
-		return true;
+	    return true;
 	}
 
     /**
