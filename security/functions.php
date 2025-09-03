@@ -307,7 +307,7 @@ function rsssl_handle_root_htaccess(): void {
         if ( ! empty( $definition['lines'] ) ) {
             $manager->write_rule( $definition, 'Writing redirect block' );
         }
-        if ( empty( $definition['lines'] ) && rsssl_get_option('redirect') !== 'htaccess' ) {
+        if ( rsssl_get_option('redirect') !== 'htaccess' ) {
             $manager->clear_rule( 'Really Simple Security Redirect', 'clear redirect 2 and value of config:' . rsssl_get_option('redirect') );
         }
 	}

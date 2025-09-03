@@ -186,7 +186,13 @@ class RSSSL_Htaccess_File_Manager {
 	        $result = $this->write_top_marker_block( $markerName, $lines );
 	    } else {
 	        // WP core will preserve everything outside of your marker
-	        $result = insert_with_markers( $this->htaccess_file_path, $markerName, $lines );
+		    $probe = $this->get_htaccess_content();
+		    if ( $this->is_effectively_empty( $probe ) ) {
+			    $result = false;
+		    } else {
+			    // WP core will preserve everything outside of your marker
+			    $result = insert_with_markers( $this->htaccess_file_path, $markerName, $lines );
+		    }
 	    }
 
 	    if ( $result ) {
@@ -247,6 +253,10 @@ class RSSSL_Htaccess_File_Manager {
     {
         // Preserve original content for history
         $originalHtaccess = $this->get_htaccess_content() ?: '';
+	    // SAFETY: if .htaccess is (effectively) empty or unreadable, do not write our markers
+	    if ( $this->is_effectively_empty( $originalHtaccess ) ) {
+		    return false;
+	    }
 		// we remove the redirect marker block if it exists, so we can write a new one
 	    // this is needed because the redirect marker block is not removed by insert_with_markers
 	    // We added this function because not on every save we can determine when to remove options when the rule is not present.
@@ -330,13 +340,24 @@ class RSSSL_Htaccess_File_Manager {
 	 */
 	private function save_htaccess_if_changed(string $original, string $modified, string $markerName): bool
 	{
-		if ($modified === $original) {
+		if ( $modified === $original ) {
 			return true;
 		}
 
-		$cleaned = $this->cleanupEmptyLines($modified);
-		@file_put_contents($this->htaccess_file_path, $cleaned, LOCK_EX);
-		$this->record_history($original, $cleaned, $markerName);
+		// SAFETY: do not write when the current .htaccess is effectively empty
+		if ( $this->is_effectively_empty( $original ) ) {
+			return false;
+		}
+
+		$cleaned = $this->cleanupEmptyLines( $modified );
+
+		// Avoid writing an empty result
+		if ( $this->is_effectively_empty( $cleaned ) ) {
+			return true;
+		}
+
+		@file_put_contents( $this->htaccess_file_path, $cleaned, LOCK_EX );
+		$this->record_history( $original, $cleaned, $markerName );
 
 		return true;
 	}
@@ -455,6 +476,11 @@ public function clear_legacy_rule(string $marker): bool
         return false;
     }
 
+	// SAFETY: if the file is effectively empty, do not attempt to rewrite it
+	if ( $this->is_effectively_empty( $content ) ) {
+		return false;
+	}
+
     // Match and remove the block with the exact marker name
     $escaped = preg_quote($marker, '/');
     $pattern = '/^#+\s*Begin\s+' . $escaped . '.*?^#+\s*End\s+' . $escaped . '.*?$/ms';
@@ -467,7 +493,7 @@ public function clear_legacy_rule(string $marker): bool
     }
 
     // Write the updated content back to the .htaccess file
-    if ($new_content !== $content && empty( trim( $new_content ) ) === false) {
+    if ( $new_content !== $content && ! $this->is_effectively_empty( $new_content ) ) {
         return file_put_contents($this->htaccess_file_path, $new_content) !== false;
     }
 
@@ -572,5 +598,15 @@ public function clear_legacy_rule(string $marker): bool
         $content = preg_replace( array( "/\r\n?/", "/\n{3,}/" ), array( "\n", "\n\n" ), $content );
         return $content;
     }
+
+	/**
+	 * Checks if the given content is effectively empty (only whitespace).
+	 */
+	private function is_effectively_empty( $content ): bool {
+		if ( $content === null || $content === false ) {
+			return true;
+		}
+		return trim( (string) $content ) === '';
+	}
 }
 }
