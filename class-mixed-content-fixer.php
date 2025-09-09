@@ -104,7 +104,7 @@ if (!class_exists('rsssl_admin_mixed_content_fixer')) {
 
         public function end_buffer()
         {
-            if (ob_get_length()) ob_end_flush();
+            if (ob_get_length() && !ini_get('zlib.output_compression')) ob_end_flush();
         }
 
         /**
