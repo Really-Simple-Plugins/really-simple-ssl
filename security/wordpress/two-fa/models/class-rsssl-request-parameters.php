@@ -37,9 +37,9 @@ class Rsssl_Request_Parameters {
 	/**
 	 * User object.
 	 *
-	 * @var WP_User
+	 * @var WP_User|null
 	 */
-	public WP_User $user;
+	public ?WP_User $user = null;
 
 	/**
 	 * Service provider.
@@ -186,7 +186,10 @@ class Rsssl_Request_Parameters {
 		} else {
 			$this->user_id  = $request->get_param( 'user_id' )?? 0;
 			$this->provider = $provider?? 'none';
-			$this->user = get_user_by( 'id', $this->user_id );
+			$user = get_user_by( 'id', $this->user_id );
+			if ($user) {
+				$this->user = $user;
+			}
 			if ($request->has_param('entry_id')) {
 				$this->entry_id = (int) $request->get_param('entry_id');
 			}
@@ -208,6 +211,25 @@ class Rsssl_Request_Parameters {
 		$this->user_handle    = sanitize_text_field( $request->get_param( 'userHandle' ) );
 		$this->onboarding     = (bool) $request->get_param( 'onboarding' );
 		$this->auth_device_id = sanitize_text_field( $request->get_param( 'device_name' ) ?? 'unknown' );
+
+		// If user_id is set, we try to get the user object.
+		if ( $this->user_id ) {
+			$user = get_user_by( 'id', $this->user_id );
+			if ($user) {
+				$this->user = $user;
+			}
+			return;
+		}
+
+		// If user_login is set, we try to get the user object by login. Since we probably are in the login flow,
+		// we want to get the user by login.
+		if ( $this->user_login ) {
+			$user = get_user_by( 'login', $this->user_login );
+			if ( $user ) {
+				$this->user_id = $user->ID;
+				$this->user    = $user;
+			}
+		}
 	}
 
 	/**

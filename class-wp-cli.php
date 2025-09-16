@@ -721,13 +721,13 @@ class rsssl_wp_cli {
 	/**
 	 * Reset the 2FA status of a user to disabled
 	 *
-	 * Usage: wp rsssl reset_2fa 123
+	 * Usage: wp rsssl reset_login_protection 123
 	 *
 	 * @param array $args User ID should be the first element
 	 *
 	 * @throws \WP_CLI\ExitException
 	 */
-	public function reset_2fa( $args ): void
+	public function reset_login_protection( $args ): void
     {
         if ( ! $this->check_pro_command_preconditions() ) return;
         // When empty array is passed, WP_CLI will return an error
@@ -750,9 +750,10 @@ class rsssl_wp_cli {
 		    Rsssl_Two_Fa_Status::delete_two_fa_meta( $user->ID );
 		    // Set the last login to now, so the user will be forced to use 2fa.
 		    update_user_meta( $user->ID, 'rsssl_two_fa_last_login', gmdate( 'Y-m-d H:i:s' ) );
+		    delete_user_meta( $user->ID, 'rsssl_passkey_configured'); // Remove passkey configuration if it exists
 	    }
 
-        WP_CLI::success( 'Successfully reset 2FA for user id ' . $user_id );
+        WP_CLI::success( 'Successfully reset Login Protection for user id ' . $user_id );
 	}
 
 	/**
@@ -1363,8 +1364,8 @@ class rsssl_wp_cli {
 				'synopsis'    => [],
 				'pro'         => false,
 			],
-			'reset_2fa'    => [
-				'description' => __( 'Reset the 2FA status of a user to disabled.', 'really-simple-ssl' ),
+			'reset_login_protection'    => [
+				'description' => __( 'Reset the settings for the Login Protection.', 'really-simple-ssl' ),
 				'synopsis'    => [],
 				'pro'         => false,
 			],

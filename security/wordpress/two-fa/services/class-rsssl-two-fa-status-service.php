@@ -24,6 +24,11 @@ class Rsssl_Two_Fa_Status_Service {
             if (in_array($role, get_userdata($userId)->roles, true)
                 && strtotime($lastLogin) < strtotime("-$daysThreshold days")
             ) {
+				// if the user has an empty last login, we assume the user was just created
+	            if (empty($lastLogin)) {
+		            update_user_meta($userId, 'rsssl_two_fa_last_login', gmdate('Y-m-d H:i:s'));
+					return 'open';
+				}
                 return 'expired';
             }
         }

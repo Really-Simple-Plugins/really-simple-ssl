@@ -1,11 +1,14 @@
 const path = require('path');
 const defaultConfig = require("@wordpress/scripts/config/webpack.config");
 const featureFolders = ['two-fa']; // Add more folders as needed
-const isProduction = process.env.NODE_ENV === 'production';
+const isProduction = true;
 const { ProvidePlugin, Compilation } = require('webpack');
 const fs = require('fs');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 
 module.exports = {
+    mode: 'production',
     ...defaultConfig,
     entry: featureFolders.reduce((entries, folder) => {
         const jsPath = path.resolve(__dirname, `../security/wordpress/${folder}/assets/js/index.js`);
@@ -28,6 +31,8 @@ module.exports = {
         filename: '[name].min.js',
         clean: false,
     },
+    // disable source maps to prevent invalid JSON errors in RtlCssPlugin
+    devtool: false,
     resolve: {
         ...defaultConfig.resolve,
         modules: [
@@ -44,29 +49,56 @@ module.exports = {
     module: {
         ...defaultConfig.module,
         rules: [
-            ...defaultConfig.module.rules,
+            // remove default CSS/SCSS rules, including those in oneOf blocks
+            ...defaultConfig.module.rules.flatMap(rule => {
+                if (rule.oneOf) {
+                    return [{
+                        ...rule,
+                        oneOf: rule.oneOf.filter(r => !(r.test && (r.test.test('.css') || r.test.test('.scss')))),
+                    }];
+                }
+                if (rule.test && (rule.test.test('.css') || rule.test.test('.scss'))) {
+                    return [];
+                }
+                return [rule];
+            }),
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
                 use: {
                     loader: 'babel-loader',
-                    options: {
-                        presets: ['@babel/preset-env'],
-                    },
+                    options: { presets: ['@babel/preset-env'] },
                 },
+            },
+            {
+                test: /\.(css|scss)$/i,
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    'css-loader',
+                    'sass-loader'
+                ],
             },
         ],
     },
     plugins: [
-        ...defaultConfig.plugins,
+        // keep default plugins except the RtlCssPlugin to avoid source-map parsing errors
+        ...defaultConfig.plugins.filter(plugin => plugin.constructor && plugin.constructor.name !== 'RtlCssPlugin'),
         new ProvidePlugin({
             Buffer: ['buffer', 'Buffer'],
             process: 'process/browser',
         }),
+        new MiniCssExtractPlugin({
+            filename: '[name].min.css',
+        }),
     ],
     optimization: {
         ...defaultConfig.optimization,
+        splitChunks: false,
         minimize: isProduction,
+        minimizer: [
+            '...',
+            new CssMinimizerPlugin(),
+        ],
     },
     stats: {
         errors: true,

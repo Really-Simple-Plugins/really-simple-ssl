@@ -106,7 +106,7 @@
 .rsssl {
     font-variant-numeric: tabular-nums;
     margin: 0;
-    margin-left: -20px;
+    margin-right: -20px;
     font-size: var(--rsp-fs-300);
     box-sizing: border-box;
     color: var(--rsp-text-color);
@@ -116,7 +116,7 @@
 
 @media only screen and (max-width: 768px) {
     .rsssl {
-        margin-left: -9px;
+        margin-right: -9px;
     }
 }
 
@@ -323,7 +323,7 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    margin-left: auto;
+    margin-right: auto;
     gap: var(--rsp-spacing-s);
     min-height: 52px;
 }
@@ -524,7 +524,7 @@
 }
 
 .rsssl .rsssl-grid-item-footer .rsssl-legend span {
-    padding-left: 5px;
+    padding-right: 5px;
 }
 
 .rsssl .rsssl-grid-item-footer:empty {
@@ -532,11 +532,11 @@
 }
 
 .rsssl .rsssl-grid-item .rsssl-flex-push-right {
-    margin-left: auto;
+    margin-right: auto;
 }
 
 .rsssl .rsssl-grid-item .rsssl-flex-push-left {
-    margin-right: auto;
+    margin-left: auto;
 }
 
 .rsssl-header-container .rsssl-header {
@@ -568,11 +568,11 @@
 }
 
 .rsssl-header-container .rsssl-header .rsssl-header-menu .rsssl-header-menu-item:first-child {
-    margin-left: 0;
+    margin-right: 0;
 }
 
 .rsssl-header-container .rsssl-header .rsssl-header-menu .rsssl-header-menu-item:last-child {
-    margin-right: 0;
+    margin-left: 0;
 }
 
 .rsssl-header-container .rsssl-header .rsssl-header-menu .rsssl-header-menu-item.rsssl-header-menu-item-active {
@@ -582,7 +582,7 @@
 .rsssl-header-container .rsssl-header .rsssl-header-actions {
     display: flex;
     align-items: center;
-    margin-left: auto;
+    margin-right: auto;
     gap: var(--rsp-spacing-s);
 }
 
@@ -603,8 +603,8 @@
 }
 
 .rsssl-grid .border-to-border.rsssl-ssllabs .rsssl-grid-item-content > *, .rsssl-grid .border-to-border.rsssl-wpvul .rsssl-grid-item-content > * {
-    padding-left: 0;
     padding-right: 0;
+    padding-left: 0;
 }
 
 .rsssl .rsssl-wpvul .rsssl-icon {
@@ -688,7 +688,7 @@
 
 .rsssl .rsssl-ssl-labs-list-item-text, .rsssl .rsssl-hardening-list-item-text {
     width: 100%;
-    margin-right: auto;
+    margin-left: auto;
 }
 
 .rsssl .rsssl-ssl-labs-list-item-number, .rsssl .rsssl-hardening-list-item-number {
@@ -715,7 +715,7 @@
     font-size: var(--rsp-fs-100);
     border-radius: var(--rsp-border-radius-xs);
     color: var(--rsp-text-color);
-    text-align: left;
+    text-align: right;
 }
 
 .rsssl .rsssl-ssl-labs .rsssl-score-snippet.rsssl-hover {
@@ -780,7 +780,7 @@
 
 .rsssl a.button .rsssl-icon, .rsssl button.button .rsssl-icon, .rsssl input.button .rsssl-icon, .rsssl span.button .rsssl-icon {
     padding-top: 7px;
-    padding-left: 7px;
+    padding-right: 7px;
 }
 
 .rsssl a.button.button-black, .rsssl button.button.button-black, .rsssl input.button.button-black, .rsssl span.button.button-black {
@@ -818,11 +818,11 @@
 }
 
 .rsssl .rsssl-button-small + .rsssl-button-small {
-    margin-left: 10px;
+    margin-right: 10px;
 }
 
 .rsssl .rsssl-shortcode {
-    right: 10000px;
+    left: 10000px;
     position: absolute;
     background-color: #fff;
     padding: 0;
@@ -842,15 +842,15 @@
 }
 
 .rsssl .rsssl-mixed-content-scan .rsssl-grid-item-content-footer {
-    margin-left: 0;
     margin-right: 0;
-    padding-left: 25px;
+    margin-left: 0;
+    padding-right: 25px;
 }
 
 .rsssl .rsssl-mixed-content-scan .rsssl-grid-item-content-footer .button {
     display: block;
-    margin-right: 0;
     margin-left: 0;
+    margin-right: 0;
 }
 
 .rsssl .rsssl-mixed-content-scan .rsssl-grid-item-content-footer .components-toggle-control {
@@ -894,7 +894,7 @@
 
 .rsssl .rsssl-bullet.rsp-blue-yellow {
     background: var(--rsp-blue);
-    background: linear-gradient(77deg, rgb(0, 159, 255) 0%, rgb(0, 159, 255) 30%, rgb(244, 191, 62) 70%, rgb(244, 191, 62) 100%);
+    background: linear-gradient(-77deg, rgb(0, 159, 255) 0%, rgb(0, 159, 255) 30%, rgb(244, 191, 62) 70%, rgb(244, 191, 62) 100%);
     animation: gradient 2s ease infinite;
     background-size: 200% 200%;
 }
@@ -910,7 +910,7 @@
 }
 
 .rsssl .rsssl-legend:first-of-type {
-    margin-left: auto;
+    margin-right: auto;
 }
 
 .rsssl .rsssl-legend .rsssl-progress-footer-link a {
@@ -924,15 +924,15 @@
 
 @keyframes gradient {
     0% {
-        background-position: 0% 50%;
-    }
-
-    50% {
         background-position: 100% 50%;
     }
 
-    100% {
+    50% {
         background-position: 0% 50%;
+    }
+
+    100% {
+        background-position: 100% 50%;
     }
 }
 
@@ -960,7 +960,7 @@
     }
 
     100% {
-        transform: rotate(360deg);
+        transform: rotate(-360deg);
     }
 }
 
@@ -1129,41 +1129,41 @@ button.button .cmplz-icon.rsssl-icon-loading > div {
 
 .Toastify__toast-container--top-left {
     top: 1em;
-    left: 1em;
+    right: 1em;
 }
 
 .Toastify__toast-container--top-center {
     top: calc(2em + 32px);
-    left: 50%;
-    transform: translateX(-50%);
+    right: 50%;
+    transform: translateX(50%);
 }
 
 .Toastify__toast-container--top-right {
     top: 1em;
-    right: 1em;
+    left: 1em;
 }
 
 .Toastify__toast-container--bottom-left {
     bottom: 1em;
-    left: 1em;
+    right: 1em;
 }
 
 .Toastify__toast-container--bottom-center {
     bottom: 1em;
-    left: 50%;
-    transform: translateX(-50%);
+    right: 50%;
+    transform: translateX(50%);
 }
 
 .Toastify__toast-container--bottom-right {
     bottom: 1em;
-    right: 1em;
+    left: 1em;
 }
 
 @media only screen and (max-width : 480px) {
     .Toastify__toast-container {
         width: 100vw;
         padding: 0;
-        left: 0;
+        right: 0;
         margin: 0;
     }
 
@@ -1178,8 +1178,8 @@ button.button .cmplz-icon.rsssl-icon-loading > div {
     }
 
     .Toastify__toast-container--rtl {
-        right: 0;
-        left: initial;
+        left: 0;
+        right: initial;
     }
 }
 
@@ -1199,13 +1199,13 @@ button.button .cmplz-icon.rsssl-icon-loading > div {
     overflow: hidden;
     font-family: var(--toastify-font-family);
     cursor: default;
-    direction: ltr;
+    direction: rtl;
   /* webkit only issue #791 */
     z-index: 0;
 }
 
 .Toastify__toast--rtl {
-    direction: rtl;
+    direction: ltr;
 }
 
 .Toastify__toast--close-on-click {
@@ -1352,12 +1352,12 @@ button.button .cmplz-icon.rsssl-icon-loading > div {
 .Toastify__progress-bar {
     position: absolute;
     bottom: 0;
-    left: 0;
+    right: 0;
     width: 100%;
     height: 5px;
     z-index: var(--toastify-z-index);
     opacity: 0.7;
-    transform-origin: left;
+    transform-origin: right;
 }
 
 .Toastify__progress-bar--animated {
@@ -1369,9 +1369,9 @@ button.button .cmplz-icon.rsssl-icon-loading > div {
 }
 
 .Toastify__progress-bar--rtl {
-    right: 0;
-    left: initial;
-    transform-origin: right;
+    left: 0;
+    right: initial;
+    transform-origin: left;
 }
 
 .Toastify__spinner {
@@ -1381,7 +1381,7 @@ button.button .cmplz-icon.rsssl-icon-loading > div {
     border: 2px solid;
     border-radius: 100%;
     border-color: var(--toastify-spinner-color-empty-area);
-    border-right-color: var(--toastify-spinner-color);
+    border-left-color: var(--toastify-spinner-color);
     animation: Toastify__spin 0.65s linear infinite;
 }
 
@@ -1391,46 +1391,6 @@ button.button .cmplz-icon.rsssl-icon-loading > div {
     }
 
     from {
-        opacity: 0;
-        transform: translate3d(3000px, 0, 0);
-    }
-
-    60% {
-        opacity: 1;
-        transform: translate3d(-25px, 0, 0);
-    }
-
-    75% {
-        transform: translate3d(10px, 0, 0);
-    }
-
-    90% {
-        transform: translate3d(-5px, 0, 0);
-    }
-
-    to {
-        transform: none;
-    }
-}
-
-@keyframes Toastify__bounceOutRight {
-    20% {
-        opacity: 1;
-        transform: translate3d(-20px, 0, 0);
-    }
-
-    to {
-        opacity: 0;
-        transform: translate3d(2000px, 0, 0);
-    }
-}
-
-@keyframes Toastify__bounceInLeft {
-    from, 60%, 75%, 90%, to {
-        animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
-    }
-
-    0% {
         opacity: 0;
         transform: translate3d(-3000px, 0, 0);
     }
@@ -1453,7 +1413,7 @@ button.button .cmplz-icon.rsssl-icon-loading > div {
     }
 }
 
-@keyframes Toastify__bounceOutLeft {
+@keyframes Toastify__bounceOutRight {
     20% {
         opacity: 1;
         transform: translate3d(20px, 0, 0);
@@ -1462,6 +1422,46 @@ button.button .cmplz-icon.rsssl-icon-loading > div {
     to {
         opacity: 0;
         transform: translate3d(-2000px, 0, 0);
+    }
+}
+
+@keyframes Toastify__bounceInLeft {
+    from, 60%, 75%, 90%, to {
+        animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    }
+
+    0% {
+        opacity: 0;
+        transform: translate3d(3000px, 0, 0);
+    }
+
+    60% {
+        opacity: 1;
+        transform: translate3d(-25px, 0, 0);
+    }
+
+    75% {
+        transform: translate3d(10px, 0, 0);
+    }
+
+    90% {
+        transform: translate3d(-5px, 0, 0);
+    }
+
+    to {
+        transform: none;
+    }
+}
+
+@keyframes Toastify__bounceOutLeft {
+    20% {
+        opacity: 1;
+        transform: translate3d(-20px, 0, 0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translate3d(2000px, 0, 0);
     }
 }
 
@@ -1621,23 +1621,23 @@ button.button .cmplz-icon.rsssl-icon-loading > div {
 
 @keyframes Toastify__flipIn {
     from {
-        transform: perspective(400px) rotate3d(1, 0, 0, 90deg);
+        transform: perspective(400px) rotate3d(-1, 0, 0, -90deg);
         animation-timing-function: ease-in;
         opacity: 0;
     }
 
     40% {
-        transform: perspective(400px) rotate3d(1, 0, 0, -20deg);
+        transform: perspective(400px) rotate3d(-1, 0, 0, 20deg);
         animation-timing-function: ease-in;
     }
 
     60% {
-        transform: perspective(400px) rotate3d(1, 0, 0, 10deg);
+        transform: perspective(400px) rotate3d(-1, 0, 0, -10deg);
         opacity: 1;
     }
 
     80% {
-        transform: perspective(400px) rotate3d(1, 0, 0, -5deg);
+        transform: perspective(400px) rotate3d(-1, 0, 0, 5deg);
     }
 
     to {
@@ -1651,12 +1651,12 @@ button.button .cmplz-icon.rsssl-icon-loading > div {
     }
 
     30% {
-        transform: perspective(400px) rotate3d(1, 0, 0, -20deg);
+        transform: perspective(400px) rotate3d(-1, 0, 0, 20deg);
         opacity: 1;
     }
 
     to {
-        transform: perspective(400px) rotate3d(1, 0, 0, 90deg);
+        transform: perspective(400px) rotate3d(-1, 0, 0, -90deg);
         opacity: 0;
     }
 }
@@ -1671,7 +1671,7 @@ button.button .cmplz-icon.rsssl-icon-loading > div {
 
 @keyframes Toastify__slideInRight {
     from {
-        transform: translate3d(110%, 0, 0);
+        transform: translate3d(-110%, 0, 0);
         visibility: visible;
     }
 
@@ -1682,7 +1682,7 @@ button.button .cmplz-icon.rsssl-icon-loading > div {
 
 @keyframes Toastify__slideInLeft {
     from {
-        transform: translate3d(-110%, 0, 0);
+        transform: translate3d(110%, 0, 0);
         visibility: visible;
     }
 
@@ -1720,7 +1720,7 @@ button.button .cmplz-icon.rsssl-icon-loading > div {
 
     to {
         visibility: hidden;
-        transform: translate3d(110%, 0, 0);
+        transform: translate3d(-110%, 0, 0);
     }
 }
 
@@ -1731,7 +1731,7 @@ button.button .cmplz-icon.rsssl-icon-loading > div {
 
     to {
         visibility: hidden;
-        transform: translate3d(-110%, 0, 0);
+        transform: translate3d(110%, 0, 0);
     }
 }
 
@@ -1795,7 +1795,7 @@ button.button .cmplz-icon.rsssl-icon-loading > div {
     }
 
     to {
-        transform: rotate(360deg);
+        transform: rotate(-360deg);
     }
 }
 
@@ -1924,7 +1924,7 @@ button.button .cmplz-icon.rsssl-icon-loading > div {
 }
 
 .rsssl-progress-block .rsssl-progress-text .rsssl-progress-text-span a {
-    margin-left: 3px;
+    margin-right: 3px;
 }
 
 @media only screen and (max-width: 1366px) and (min-width: 1280px) {
@@ -1948,12 +1948,12 @@ button.button .cmplz-icon.rsssl-icon-loading > div {
 }
 
 .rsssl-task-switcher-container .rsssl-task-switcher:first-of-type {
-    border-right: 1px solid var(--rsp-grey-400);
-    padding-right: 10px;
+    border-left: 1px solid var(--rsp-grey-400);
+    padding-left: 10px;
 }
 
 .rsssl-task-switcher-container .rsssl-task-switcher:last-of-type {
-    padding-left: 10px;
+    padding-right: 10px;
 }
 
 .rsssl-task-switcher {
@@ -2061,7 +2061,7 @@ button.button .cmplz-icon.rsssl-icon-loading > div {
 }
 
 .rsssl-progress-status-container {
-    margin-right: 40px;
+    margin-left: 40px;
 }
 
 .rsssl-task-status, .rsssl-locked-overlay .rsssl-progress-status {
@@ -2123,7 +2123,7 @@ button.button .cmplz-icon.rsssl-icon-loading > div {
     display: inline-block;
     vertical-align: top;
     box-sizing: border-box;
-    margin: 1px 0 -1px 2px;
+    margin: 1px 2px -1px 0;
     padding: 0 5px;
     border-radius: 9px;
     background-color: #d63638;
@@ -2158,7 +2158,7 @@ button.button .cmplz-icon.rsssl-icon-loading > div {
 .rsssl-placeholder {
     box-sizing: border-box;
     width: 100%;
-    text-align: left;
+    text-align: right;
     margin: 0;
     padding-bottom: 24px;
     color: #1e1e1e;
@@ -2172,13 +2172,13 @@ button.button .cmplz-icon.rsssl-icon-loading > div {
 }
 
 .rsssl-placeholder .rsssl-placeholder-line {
-    float: left;
+    float: right;
     width: 100%;
     height: 16px;
     margin-top: 12px;
     border-radius: 7px;
     animation: shine-lines 1.6s infinite linear;
-    background-image: linear-gradient(90deg, #ddd 0px, #e8e8e8 40px, #ddd 80px);
+    background-image: linear-gradient(-90deg, #ddd 0px, #e8e8e8 40px, #ddd 80px);
     background-size: 600px;
 }
 
@@ -2480,9 +2480,9 @@ button.button .cmplz-icon.rsssl-icon-loading > div {
     position: absolute;
     z-index: 20;
     top: 0;
-    left: 0;
-    bottom: 0;
     right: 0;
+    bottom: 0;
+    left: 0;
     background: rgba(255, 255, 255, 0.8);
     border-radius: var(--rsp-border-radius);
 }
@@ -2491,9 +2491,9 @@ button.button .cmplz-icon.rsssl-icon-loading > div {
     position: absolute;
     top: 50%;
  /* Center vertically */
-    left: 50%;
+    right: 50%;
  /* Center horizontally */
-    transform: translate(-50%, -50%);
+    transform: translate(50%, -50%);
  /* Offset for centering */
     display: flex;
     align-items: center;
@@ -2550,13 +2550,13 @@ button.button .cmplz-icon.rsssl-icon-loading > div {
 }
 
 .rsssl div[class^=rsssl-wizard-] .rsssl-locked .rsssl-locked-overlay .rsssl-open {
-    float: left;
-    margin-right: 12px;
+    float: right;
+    margin-left: 12px;
 }
 
 .rsssl div[class^=rsssl-wizard-] .rsssl-locked .rsssl-locked-overlay .rsssl-progress-status {
-    float: left;
-    margin-right: 20px;
+    float: right;
+    margin-left: 20px;
 }
 
 .rsssl div[class^=rsssl-wizard-] > div:nth-last-of-type(2) {
@@ -2621,7 +2621,7 @@ button.button .cmplz-icon.rsssl-icon-loading > div {
 }
 
 .rsssl div[class^=rsssl-wizard-] .rsssl-grid-item-footer > div:last-of-type {
-    margin-left: auto;
+    margin-right: auto;
 }
 
 .rsssl div[class^=rsssl-wizard-] .rsssl-grid-item-footer-buttons {
@@ -2636,7 +2636,7 @@ button.button .cmplz-icon.rsssl-icon-loading > div {
 }
 
 .rsssl div[class^=rsssl-wizard-] .rsssl-grid-item-footer .rsssl-legend span {
-    padding-left: 5px;
+    padding-right: 5px;
 }
 
 .rsssl div[class^=rsssl-wizard-] .rsssl-grid-item-footer-upsell-bar .button {
@@ -2667,7 +2667,7 @@ button.button .cmplz-icon.rsssl-icon-loading > div {
 .rsssl-wizard-help details .rsssl-text-link {
     text-decoration: underline;
     cursor: pointer;
-    margin-right: 10px;
+    margin-left: 10px;
 }
 
 .rsssl-wizard-help details summary {
@@ -2711,7 +2711,7 @@ button.button .cmplz-icon.rsssl-icon-loading > div {
 }
 
 .rsssl-wizard-help details[open] summary .rsssl-icon {
-    transform: rotate(180deg);
+    transform: rotate(-180deg);
 }
 
 .rsssl-wizard-help .rsssl-help-header {
@@ -2725,7 +2725,7 @@ button.button .cmplz-icon.rsssl-icon-loading > div {
 }
 
 .rsssl-wizard-help .rsssl-help-header .rsssl-help-control {
-    margin-left: auto;
+    margin-right: auto;
     cursor: pointer;
 }
 
@@ -2763,7 +2763,7 @@ button.button .cmplz-icon.rsssl-icon-loading > div {
 }
 
 .rsssl-wizard-menu .rsssl-grid-item-header {
-    padding-left: var(--rsp-spacing-xs);
+    padding-right: var(--rsp-spacing-xs);
 }
 
 .rsssl-wizard-menu .rsssl-grid-item-content {
@@ -2799,7 +2799,7 @@ button.button .cmplz-icon.rsssl-icon-loading > div {
     font-size: var(--rsp-fs-400);
     padding-block: var(--rsp-spacing-xs);
     transition: all 0.2s ease-in-out;
-    padding-left: var(--rsp-spacing-xs);
+    padding-right: var(--rsp-spacing-xs);
 }
 
 .rsssl-wizard-menu-items .rsssl-menu-item a:hover {
@@ -2863,7 +2863,7 @@ button.button .cmplz-icon.rsssl-icon-loading > div {
 }
 
 .rsssl-wizard-menu-items .rsssl-submenu-item a {
-    padding-left: calc(var(--rsp-spacing-xs) + var(--rsp-spacing-s)) !important;
+    padding-right: calc(var(--rsp-spacing-xs) + var(--rsp-spacing-s)) !important;
     font-size: var(--rsp-fs-300);
 }
 
@@ -2881,7 +2881,7 @@ button.button .cmplz-icon.rsssl-icon-loading > div {
     color: var(--rsp-dark-blue);
     font-size: 3em;
     position: absolute;
-    left: var(--rsp-spacing-xxs) !important;
+    right: var(--rsp-spacing-xxs) !important;
     margin-bottom: 7px;
 }
 
@@ -2934,7 +2934,7 @@ html {
 }
 
 .rsssl div[class^=rsssl-wizard-] .components-toggle-control .components-base-control__field .components-form-toggle, .rsssl div[class^=rsssl-wizard-] .components-toggle-control .components-flex .components-form-toggle {
-    margin-right: 0;
+    margin-left: 0;
 }
 
 .rsssl div[class^=rsssl-wizard-] select option {
@@ -2989,7 +2989,7 @@ html {
 
 .rsssl .rsssl-highlight {
     background-color: transparent;
-    border-left: 4px solid var(--rsp-green);
+    border-right: 4px solid var(--rsp-green);
     -o-animation: fadeIt 3s ease-in-out;
     animation: fadeIt 3s ease-in-out;
     scroll-margin-top: 100px;
@@ -3043,7 +3043,7 @@ html {
     }
 
     100% {
-        border-right: 0;
+        border-left: 0;
         background-color: inherit;
     }
 }
@@ -3051,7 +3051,7 @@ html {
 @keyframes fadeIt {
     0% {
         background-color: transparent;
-        border-right: 0;
+        border-left: 0;
     }
 
     30% {
@@ -3066,13 +3066,13 @@ html {
 .rsssl-email-verified {
     position: absolute;
     bottom: 23px;
-    right: 35px;
+    left: 35px;
 }
 
 .rsssl-ip-verified {
     position: absolute;
     bottom: 8px;
-    right: 6px;
+    left: 6px;
 }
 
 .rsssl-license .rsssl-task-element {
@@ -3092,7 +3092,7 @@ html {
 
 input.rsssl-input.full {
     width: 100%;
-    padding-right: 40px;
+    padding-left: 40px;
 }
 
 input.rsssl-input.rsssl-error {
@@ -3121,7 +3121,7 @@ input.rsssl-input.rsssl-success:focus {
 
 .icon-button {
     position: absolute;
-    right: 10px;
+    left: 10px;
     top: 50%;
     transform: translateY(-50%);
     border: none;
@@ -3138,11 +3138,11 @@ input.rsssl-input.rsssl-success:focus {
     width: max-content;
     position: fixed;
     bottom: var(--rsp-spacing-m);
-    right: var(--rsp-spacing-l);
+    left: var(--rsp-spacing-l);
 }
 
 .rsssl .components-snackbar-list.edit-site-notices > div {
-    margin-left: auto;
+    margin-right: auto;
 }
 
 .rsssl .components-snackbar-list.edit-site-notices .components-snackbar {
@@ -3222,8 +3222,8 @@ input.rsssl-input.rsssl-success:focus {
 }
 
 .rsssl-locked-overlay .rsssl-open {
-    float: left;
-    margin-right: 12px;
+    float: right;
+    margin-left: 12px;
 }
 
 .rsssl-locked-overlay .rsssl-progress-status.rsssl-learning-mode-completed, .rsssl-locked-overlay .rsssl-progress-status.rsssl-learning-mode-enforced {
@@ -3252,7 +3252,7 @@ input.rsssl-input.rsssl-success:focus {
 }
 
 .rsssl-learning-mode-footer select {
-    margin-left: auto;
+    margin-right: auto;
 }
 
 .rsssl-learning-mode-footer label {
@@ -3279,7 +3279,7 @@ input.rsssl-input.rsssl-success:focus {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    margin-right: var(--rsp-spacing-l);
+    margin-left: var(--rsp-spacing-l);
 }
 
 .rsssl-lets-encrypt-tests .rsssl-progress-bar {
@@ -3333,13 +3333,13 @@ input.rsssl-input.rsssl-success:focus {
 }
 
 .rsssl-lets-encrypt-tests .rsssl-progress-text .rsssl-progress-text-span {
-    margin-left: 35px;
+    margin-right: 35px;
     font-size: 18px;
     font-weight: 600;
 }
 
 .rsssl-lets-encrypt-tests .rsssl-progress-text .rsssl-progress-text-span a {
-    margin-left: 3px;
+    margin-right: 3px;
 }
 
 .rsssl-lets-encrypt-tests ul li {
@@ -3349,7 +3349,7 @@ input.rsssl-input.rsssl-success:focus {
 }
 
 .rsssl-lets-encrypt-tests ul li .rsssl-icon {
-    margin-right: 7px;
+    margin-left: 7px;
 }
 
 .rsssl-lets-encrypt-tests ul li ul li:before {
@@ -3361,7 +3361,7 @@ input.rsssl-input.rsssl-success:focus {
     content: "";
     position: absolute;
     margin-top: 7px;
-    margin-left: -19px;
+    margin-right: -19px;
 }
 
 .rsssl-lets-encrypt-tests .rsssl-test-results ul li {
@@ -3373,7 +3373,7 @@ input.rsssl-input.rsssl-success:focus {
 }
 
 .rsssl-lets-encrypt-tests .rsssl-test-results a + button {
-    margin-left: var(--rsp-spacing-m);
+    margin-right: var(--rsp-spacing-m);
 }
 
 .rsssl-lets-encrypt-tests .rsssl-test-results .rsssl-certificate-data {
@@ -3383,11 +3383,11 @@ input.rsssl-input.rsssl-success:focus {
 .rsssl-lets-encrypt-tests .rsssl-test-results .rsssl-dns-text-records div {
     display: flex;
     flex-direction: row;
-    margin-right: 20px;
+    margin-left: 20px;
 }
 
 .rsssl-lets-encrypt-tests .rsssl-test-results .rsssl-dns-text-records div .rsssl-dns-domain, .rsssl-lets-encrypt-tests .rsssl-test-results .rsssl-dns-text-records div .rsssl-dns-field {
-    margin-right: var(--rsp-spacing-m);
+    margin-left: var(--rsp-spacing-m);
     width: 50%;
 }
 
@@ -3408,7 +3408,7 @@ input.rsssl-input.rsssl-success:focus {
 }
 
 .rsssl-vulnerability-action a.button {
-    margin-left: 10px;
+    margin-right: 10px;
 }
 
 .rsssl-processing {
@@ -3445,7 +3445,7 @@ Admin notice
 .rsssl-firewall_logs_content .rsssl-field-wrap .rsssl-role-select .rsssl-search-bar, .rsssl-limit_login_attempts_country .rsssl-field-wrap .rsssl-role-select .rsssl-search-bar, .rsssl-limit_login_attempts_users .rsssl-field-wrap .rsssl-role-select .rsssl-search-bar,
 .rsssl-limit_login_attempts_event_log .rsssl-field-wrap .rsssl-role-select .rsssl-search-bar, .rsssl-mixed-content-scan .rsssl-field-wrap .rsssl-role-select .rsssl-search-bar, .rsssl-limit_login_attempts_ip_address .rsssl-field-wrap .rsssl-role-select .rsssl-search-bar,
 .rsssl-content_security_policy .rsssl-field-wrap .rsssl-role-select .rsssl-search-bar, .rsssl-hardening-xml .rsssl-field-wrap .rsssl-role-select .rsssl-search-bar {
-    float: right;
+    float: left;
     padding: 0;
 }
 
@@ -3553,7 +3553,7 @@ Admin notice
 .rsssl-limit_login_attempts_event_log .rsssl-field-wrap .rdt_TableRow .rdt_TableCell:last-child, .rsssl-mixed-content-scan .rsssl-field-wrap .rdt_TableRow .rdt_TableCell:last-child, .rsssl-limit_login_attempts_ip_address .rsssl-field-wrap .rdt_TableRow .rdt_TableCell:last-child,
 .rsssl-content_security_policy .rsssl-field-wrap .rdt_TableRow .rdt_TableCell:last-child, .rsssl-hardening-xml .rsssl-field-wrap .rdt_TableRow .rdt_TableCell:last-child {
     min-width: 20px;
-    float: right;
+    float: left;
 }
 
 .rsssl-404_blocking .rsssl-field-wrap .rdt_TableRow .rdt_TableCell:last-child button,
@@ -3581,7 +3581,7 @@ Admin notice
 .rsssl-content_security_policy .rsssl-field-wrap .rdt_TableRow .rdt_TableCell:last-child span, .rsssl-hardening-xml .rsssl-field-wrap .rdt_TableRow .rdt_TableCell:last-child button,
 .rsssl-hardening-xml .rsssl-field-wrap .rdt_TableRow .rdt_TableCell:last-child span {
     min-width: 20px;
-    float: right;
+    float: left;
 }
 
 .rsssl-404_blocking .rsssl-field-wrap .rdt_TableCol, .rsssl-404_blocking .rsssl-field-wrap .rdt_TableCell, .rsssl-404_blocking .rsssl-field-wrap .rdt_TableCol_Sortable, .rsssl-user_agents .rsssl-field-wrap .rdt_TableCol, .rsssl-user_agents .rsssl-field-wrap .rdt_TableCell, .rsssl-user_agents .rsssl-field-wrap .rdt_TableCol_Sortable, .rsssl-content_security_policy_source_directives .rsssl-field-wrap .rdt_TableCol, .rsssl-content_security_policy_source_directives .rsssl-field-wrap .rdt_TableCell, .rsssl-content_security_policy_source_directives .rsssl-field-wrap .rdt_TableCol_Sortable,
@@ -3724,8 +3724,8 @@ Admin notice
 .rsssl-vulnerabilities_overview .rsssl-field-wrap, .rsssl-limit_login_attempts_country .rsssl-field-wrap, .rsssl-limit_login_attempts_users .rsssl-field-wrap,
 .rsssl-firewall_event_log_viewer .rsssl-field-wrap, .rsssl-firewall_logs_content .rsssl-field-wrap, .rsssl-limit_login_attempts_event_log .rsssl-field-wrap,
 .rsssl-mixed-content-scan .rsssl-field-wrap, .rsssl-limit_login_attempts_ip_address .rsssl-field-wrap, .rsssl-content_security_policy .rsssl-field-wrap, .rsssl-hardening-xml .rsssl-field-wrap {
-    margin-left: calc(-1 * var(--rsp-spacing-l));
     margin-right: calc(-1 * var(--rsp-spacing-l));
+    margin-left: calc(-1 * var(--rsp-spacing-l));
 }
 
 @media (max-width: 1280px) {
@@ -3735,8 +3735,8 @@ Admin notice
   .rsssl-vulnerabilities_overview .rsssl-field-wrap, .rsssl-limit_login_attempts_country .rsssl-field-wrap, .rsssl-limit_login_attempts_users .rsssl-field-wrap,
   .rsssl-firewall_event_log_viewer .rsssl-field-wrap, .rsssl-firewall_logs_content .rsssl-field-wrap, .rsssl-limit_login_attempts_event_log .rsssl-field-wrap,
   .rsssl-mixed-content-scan .rsssl-field-wrap, .rsssl-limit_login_attempts_ip_address .rsssl-field-wrap, .rsssl-content_security_policy .rsssl-field-wrap, .rsssl-hardening-xml .rsssl-field-wrap {
-        margin-left: calc(-1 * var(--rsp-spacing-m));
         margin-right: calc(-1 * var(--rsp-spacing-m));
+        margin-left: calc(-1 * var(--rsp-spacing-m));
     }
 }
 
@@ -3747,8 +3747,8 @@ Admin notice
   .rsssl-vulnerabilities_overview .rsssl-field-wrap, .rsssl-limit_login_attempts_country .rsssl-field-wrap, .rsssl-limit_login_attempts_users .rsssl-field-wrap,
   .rsssl-firewall_event_log_viewer .rsssl-field-wrap, .rsssl-firewall_logs_content .rsssl-field-wrap, .rsssl-limit_login_attempts_event_log .rsssl-field-wrap,
   .rsssl-mixed-content-scan .rsssl-field-wrap, .rsssl-limit_login_attempts_ip_address .rsssl-field-wrap, .rsssl-content_security_policy .rsssl-field-wrap, .rsssl-hardening-xml .rsssl-field-wrap {
-        margin-left: calc(-1 * var(--rsp-spacing-s));
         margin-right: calc(-1 * var(--rsp-spacing-s));
+        margin-left: calc(-1 * var(--rsp-spacing-s));
     }
 }
 
@@ -3868,8 +3868,8 @@ Admin notice
 .rsssl-hardening-xml .rsssl-field-wrap .rsssl-learning-mode-footer,
 .rsssl-hardening-xml .rsssl-field-wrap .rsssl-mixed-content-description,
 .rsssl-hardening-xml .rsssl-field-wrap .rsssl-current-scan-action {
-    margin-left: var(--rsp-spacing-l);
     margin-right: var(--rsp-spacing-l);
+    margin-left: var(--rsp-spacing-l);
 }
 
 .rsssl-vulnerabilities_measures .rdt_TableCell:first-child, .rsssl-vulnerabilities_measures .rdt_TableCol:first-child, .rsssl-404_blocking .rdt_TableCell:first-child, .rsssl-404_blocking .rdt_TableCol:first-child, .rsssl-user_agents .rdt_TableCell:first-child, .rsssl-user_agents .rdt_TableCol:first-child, .rsssl-firewall_logs .rdt_TableCell:first-child, .rsssl-firewall_logs .rdt_TableCol:first-child, .rsssl-permissions_policy .rdt_TableCell:first-child, .rsssl-permissions_policy .rdt_TableCol:first-child, .rsssl-two_fa_users .rdt_TableCell:first-child, .rsssl-two_fa_users .rdt_TableCol:first-child,
@@ -3883,8 +3883,8 @@ Admin notice
 .rsssl-firewall_event_log_viewer .rdt_TableCol:first-child, .rsssl-firewall_logs_content .rdt_TableCell:first-child, .rsssl-firewall_logs_content .rdt_TableCol:first-child, .rsssl-limit_login_attempts_event_log .rdt_TableCell:first-child, .rsssl-limit_login_attempts_event_log .rdt_TableCol:first-child,
 .rsssl-mixed-content-scan .rdt_TableCell:first-child,
 .rsssl-mixed-content-scan .rdt_TableCol:first-child, .rsssl-limit_login_attempts_ip_address .rdt_TableCell:first-child, .rsssl-limit_login_attempts_ip_address .rdt_TableCol:first-child, .rsssl-content_security_policy .rdt_TableCell:first-child, .rsssl-content_security_policy .rdt_TableCol:first-child, .rsssl-hardening-xml .rdt_TableCell:first-child, .rsssl-hardening-xml .rdt_TableCol:first-child {
-    padding-left: var(--rsp-spacing-l);
     padding-right: var(--rsp-spacing-l);
+    padding-left: var(--rsp-spacing-l);
 }
 
 .rsssl-vulnerabilities_measures .rdt_TableCell:last-child, .rsssl-vulnerabilities_measures .rdt_TableCol:last-child, .rsssl-404_blocking .rdt_TableCell:last-child, .rsssl-404_blocking .rdt_TableCol:last-child, .rsssl-user_agents .rdt_TableCell:last-child, .rsssl-user_agents .rdt_TableCol:last-child, .rsssl-firewall_logs .rdt_TableCell:last-child, .rsssl-firewall_logs .rdt_TableCol:last-child, .rsssl-permissions_policy .rdt_TableCell:last-child, .rsssl-permissions_policy .rdt_TableCol:last-child, .rsssl-two_fa_users .rdt_TableCell:last-child, .rsssl-two_fa_users .rdt_TableCol:last-child,
@@ -3898,7 +3898,7 @@ Admin notice
 .rsssl-firewall_event_log_viewer .rdt_TableCol:last-child, .rsssl-firewall_logs_content .rdt_TableCell:last-child, .rsssl-firewall_logs_content .rdt_TableCol:last-child, .rsssl-limit_login_attempts_event_log .rdt_TableCell:last-child, .rsssl-limit_login_attempts_event_log .rdt_TableCol:last-child,
 .rsssl-mixed-content-scan .rdt_TableCell:last-child,
 .rsssl-mixed-content-scan .rdt_TableCol:last-child, .rsssl-limit_login_attempts_ip_address .rdt_TableCell:last-child, .rsssl-limit_login_attempts_ip_address .rdt_TableCol:last-child, .rsssl-content_security_policy .rdt_TableCell:last-child, .rsssl-content_security_policy .rdt_TableCol:last-child, .rsssl-hardening-xml .rdt_TableCell:last-child, .rsssl-hardening-xml .rdt_TableCol:last-child {
-    padding-right: var(--rsp-spacing-l);
+    padding-left: var(--rsp-spacing-l);
 }
 
 /* Section for EdgeCases and other specific styling */
@@ -4172,7 +4172,7 @@ Admin notice
 .rsssl-firewall_logs .rsssl-field-wrap .rsssl-learning-mode-delete,
 .rsssl-firewall_logs_content .rsssl-field-wrap .rsssl-learning-mode-delete,
 .rsssl-limit_login_attempts_event_log .rsssl-field-wrap .rsssl-learning-mode-delete {
-    float: right;
+    float: left;
 }
 
 .rsssl-content_security_policy .rsssl-field-wrap .rdt_TableCell:last-child div,
@@ -4231,7 +4231,7 @@ Admin notice
 .rsssl-firewall_logs_content .rsssl-field-wrap .rdt_TableCell:last-child div a,
 .rsssl-limit_login_attempts_event_log .rsssl-field-wrap .rdt_TableCell:last-child div button,
 .rsssl-limit_login_attempts_event_log .rsssl-field-wrap .rdt_TableCell:last-child div a {
-    margin-left: 10px;
+    margin-right: 10px;
 }
 
 .rsssl-limit_login_attempts_event_log .rdt_TableHeadRow .rdt_TableCol:last-child, .rsssl-firewall_logs_content .rdt_TableHeadRow .rdt_TableCol:last-child {
@@ -4257,7 +4257,7 @@ Admin notice
 /* EdgeCase: Permission_Policy */
 .rsssl-content_security_policy .rdt_TableCol:last-child, .rsssl-permissions_policy .rdt_TableCol:last-child {
     flex-grow: 1;
-    text-align: right;
+    text-align: left;
 }
 
 .rsssl-content_security_policy .rdt_TableCol:last-child div, .rsssl-permissions_policy .rdt_TableCol:last-child div {
@@ -4268,7 +4268,7 @@ Admin notice
 
 .rsssl-content_security_policy .rdt_TableCell:last-child, .rsssl-permissions_policy .rdt_TableCell:last-child {
     flex-grow: 1;
-    text-align: right;
+    text-align: left;
 }
 
 .rsssl-content_security_policy .rdt_TableCell:last-child div, .rsssl-permissions_policy .rdt_TableCell:last-child div {
@@ -4278,7 +4278,7 @@ Admin notice
 }
 
 .rsssl-content_security_policy .rdt_TableCell:last-child div button, .rsssl-permissions_policy .rdt_TableCell:last-child div button {
-    margin-right: 0 !important;
+    margin-left: 0 !important;
 }
 
 .rsssl-vulnerabilities-measures-overview .rdt_TableRow .rdt_TableCell:last-child {
@@ -4387,7 +4387,7 @@ a.rsssl-skip-link {
 }
 
 .rsssl-add-button__inner .button .icon {
-    margin-left: 8px;
+    margin-right: 8px;
  /* Adjust the spacing as needed */
 }
 
@@ -4398,7 +4398,7 @@ a.rsssl-skip-link {
 .rsssl-modal .rsssl-intro-logo {
     width: 7em;
     position: absolute;
-    right: 1.6em;
+    left: 1.6em;
     height: auto;
     bottom: 0.15em;
     margin: 0;
@@ -4435,7 +4435,7 @@ a.rsssl-skip-link {
     }
 
     100% {
-        transform: rotate(360deg);
+        transform: rotate(-360deg);
     }
 }
 
@@ -4453,7 +4453,7 @@ a.rsssl-skip-link {
 .rsssl .rsssl-locked .rsssl-locked-overlay {
     display: flex;
     bottom: 0;
-    text-align: left;
+    text-align: right;
     margin-bottom: 20px;
     padding: 0;
     z-index: 0;
@@ -4488,7 +4488,7 @@ a.rsssl-skip-link {
 
 .rsssl .rsssl-locked .rsssl-locked-overlay .rsssl-locked-footer a {
     position: relative;
-    float: left !important;
+    float: right !important;
 }
 
 .rsssl .rsssl-locked .rsssl-locked-overlay .rsssl-locked-footer::after {
@@ -4536,7 +4536,7 @@ a.rsssl-skip-link {
   /* You can set a background-image or other styling here for the icon */
     width: 20px;
     height: 20px;
-    margin-right: 10px;
+    margin-left: 10px;
 }
 
 .rsssl-accordeon__header__title {
@@ -4582,7 +4582,7 @@ a.rsssl-skip-link {
 }
 
 .rsssl div[class^=rsssl-wizard-] .rsssl-field-wrap label .cmplz-label-text {
-    margin-right: 10px;
+    margin-left: 10px;
 }
 
 .rsssl div[class^=rsssl-wizard-] .rsssl-field-wrap .rsssl-icon {
@@ -4600,18 +4600,18 @@ a.rsssl-skip-link {
     width: 100%;
     height: 235px;
  /* change height to see repeat-y behavior */
-    background-image: linear-gradient(100deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.5) 70%, rgba(255, 255, 255, 0.5) 15%), linear-gradient(#f2f2f2 38px, transparent 0), linear-gradient(#f2f2f2 38px, transparent 0), linear-gradient(#f2f2f2 38px, transparent 0), linear-gradient(#f2f2f2 38px, transparent 0);
+    background-image: linear-gradient(-100deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.5) 70%, rgba(255, 255, 255, 0.5) 15%), linear-gradient(#f2f2f2 38px, transparent 0), linear-gradient(#f2f2f2 38px, transparent 0), linear-gradient(#f2f2f2 38px, transparent 0), linear-gradient(#f2f2f2 38px, transparent 0);
     background-repeat: repeat-y;
     background-size: 50px 200px, 100% 117px, 100% 117px, 100% 117px, 100% 117px;
-    background-position: 0 0, 1px 1px, 1px 40px, 1px 79px, 1px 118px;
+    background-position: 100% 0, 1px 1px, 1px 40px, 1px 79px, 1px 118px;
     background-color: #d6d8db;
-    border-right: 1px solid #d6d8db;
+    border-left: 1px solid #d6d8db;
     animation: shine 2.5s infinite;
 }
 
 @keyframes shine {
     to {
-        background-position: 100% 0, 1px 1px, 1px 40px, 1px 79px, 1px 118px;
+        background-position: 0% 0, 1px 1px, 1px 40px, 1px 79px, 1px 118px;
     }
 }
 

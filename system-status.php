@@ -191,8 +191,8 @@ function rsssl_get_system_status() {
 	if ( defined( 'RSSSL_LEARNING_MODE' ) ) {
 		$output .= "RSSSL_LEARNING_MODE defined\n";
 	}
-	if ( defined( 'RSSSL_DEACTIVATING_FREE' ) ) {
-		$output .= "RSSSL_DEACTIVATING_FREE defined\n";
+	if ( defined( 'RSSSL_DEACTIVATING_ALTERNATE' ) ) {
+		$output .= "RSSSL_DEACTIVATING_ALTERNATE defined\n";
 	}
 	if ( defined( 'RSSSL_UPGRADING_TO_PRO' ) ) {
 		$output .= "RSSSL_UPGRADING_TO_PRO defined\n";
@@ -210,7 +210,7 @@ function rsssl_get_system_status() {
 	     && ! defined( 'RSSSL_CSP_MAX_REQUESTS' )
 	     && ! defined( 'RSSSL_DISABLE_CHANGE_LOGIN_URL' )
 	     && ! defined( 'RSSSL_LEARNING_MODE' )
-	     && ! defined( 'RSSSL_DEACTIVATING_FREE' )
+	     && ! defined( 'RSSSL_DEACTIVATING_ALTERNATE' )
 	     && ! defined( 'RSSSL_UPGRADING_TO_PRO' )
 	) {
 		$output .= "No constants defined\n";

@@ -298,35 +298,54 @@ if ( ! function_exists( 'rsssl_deactivate_alternate' ) ) {
 
         // we use this to ensure the base function doesn't load, as the active
         // plugins function does not update yet. See RSSSL() in main plugin file
-        define( "RSSSL_DEACTIVATING_ALTERNATE", true );
+        if ( ! defined('RSSSL_DEACTIVATING_ALTERNATE')) {
+	        define( "RSSSL_DEACTIVATING_ALTERNATE", true );
+        }
 
         include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-        $alternate_plugin_path = 'really-simple-ssl-pro/really-simple-ssl-pro.php';
+        $alternate_plugin_path = '';
 
-        if ($target === 'free') {
-            $alternate_plugin_path = 'really-simple-ssl/rlrsssl-really-simple-ssl.php';
+	    switch ($target) {
+		    case 'free':
+			    $alternate_plugin_path = 'really-simple-ssl/rlrsssl-really-simple-ssl.php';
+			    break;
+		    case 'pro':
+			    $alternate_plugin_path = 'really-simple-ssl-pro/really-simple-ssl-pro.php';
+			    break;
+		    case 'multisite':
+			    $alternate_plugin_path = 'really-simple-ssl-pro-multisite/really-simple-ssl-pro-multisite.php';
+			    break;
+	    }
+
+        // If no valid target or alternate path, return early
+        if (empty($alternate_plugin_path)) {
+            return;
         }
 
         if ( is_plugin_active( $alternate_plugin_path ) ) {
 
-            $delete_data_on_uninstall_was_enabled = false;
-
-            # Temporarily disable delete_data_on_uninstall option in rsssl_options
-            if ( is_multisite() && rsssl_is_networkwide_active() ) {
+            # Get current options
+            $is_network_active = is_multisite() && is_plugin_active_for_network( $alternate_plugin_path );
+            if ( $is_network_active ) {
                 $options = get_site_option( 'rsssl_options', [] );
             } else {
                 $options = get_option( 'rsssl_options', [] );
             }
 
-            if ( isset( $options['delete_data_on_uninstall'] ) && $options['delete_data_on_uninstall'] ) {
-                $options['delete_data_on_uninstall'] = false;
-                $delete_data_on_uninstall_was_enabled = true;
-            }
+            # Store original values we need to preserve
+            $ssl_enabled_was_active = isset( $options['ssl_enabled'] ) && $options['ssl_enabled'];
+            $delete_data_on_uninstall_was_enabled = isset( $options['delete_data_on_uninstall'] ) && $options['delete_data_on_uninstall'];
 
-            if ( is_multisite() && rsssl_is_networkwide_active() ) {
-                update_site_option( 'rsssl_options', $options );
-            } else {
-                update_option( 'rsssl_options', $options );
+            # Temporarily disable delete_data_on_uninstall to prevent data loss during deactivation
+            if ( $delete_data_on_uninstall_was_enabled ) {
+                $options['delete_data_on_uninstall'] = false;
+
+                # Save this change before deactivation to prevent data loss
+                if ( $is_network_active ) {
+                    update_site_option( 'rsssl_options', $options );
+                } else {
+                    update_option( 'rsssl_options', $options );
+                }
             }
 
             update_option('rsssl_free_deactivated', true);
@@ -336,26 +355,43 @@ if ( ! function_exists( 'rsssl_deactivate_alternate' ) ) {
             }
 
             // Ensure the function exists to prevent fatal errors in case of
-            // direct access. Don't delete if debug enabled, for dev purposes.
-            // Also, only delete the free plugin.
-            $debug_enabled = defined('WP_DEBUG') && WP_DEBUG;
-            if ($target === 'free' && !$debug_enabled && function_exists( 'delete_plugins' ) && function_exists('request_filesystem_credentials' ) ) {
-                delete_plugins( array( $alternate_plugin_path ) );
-            }
-
-            # Now re-enable delete_data_on_uninstall if it was enabled
-            if ( $delete_data_on_uninstall_was_enabled ) {
-                $options['delete_data_on_uninstall'] = true;
-                if ( is_multisite() && rsssl_is_networkwide_active() ) {
-                    update_site_option( 'rsssl_options', $options );
-                } else {
-                    update_option( 'rsssl_options', $options );
+            // direct access
+            // Delete plugins based on environment and target
+            if (function_exists( 'delete_plugins' ) && function_exists('request_filesystem_credentials' ) ) {
+                // Always delete free plugin
+	            if ($target === 'free') {
+                    delete_plugins( array( $alternate_plugin_path ) );
+                }
+                // Delete multisite plugin on non-multisite environments
+                else if ($target === 'multisite' && !is_multisite()) {
+                    delete_plugins( array( $alternate_plugin_path ) );
+                }
+                // Delete pro plugin on multisite environments
+                else if ($target === 'pro' && is_multisite()) {
+                    delete_plugins( array( $alternate_plugin_path ) );
                 }
             }
 
-            $ssl_enabled = rsssl_get_option('ssl_enabled');
-            if ( $ssl_enabled ) {
-                rsssl_update_option('ssl_enabled', true);
+            # Re-read options after plugin operations to get current state
+            if ( $is_network_active ) {
+                $options = get_site_option( 'rsssl_options', [] );
+            } else {
+                $options = get_option( 'rsssl_options', [] );
+            }
+
+            # Restore preserved settings
+            if ( $ssl_enabled_was_active ) {
+                $options['ssl_enabled'] = true;
+            }
+            if ( $delete_data_on_uninstall_was_enabled ) {
+                $options['delete_data_on_uninstall'] = true;
+            }
+
+            # Save all option changes at once
+            if ( $is_network_active ) {
+                update_site_option( 'rsssl_options', $options );
+            } else {
+                update_option( 'rsssl_options', $options );
             }
 
             // Delete free translations files from /wp-content/languages/plugins where files contain really-simple-ssl
@@ -378,111 +414,130 @@ if ( ! function_exists( 'rsssl_deactivate_alternate' ) ) {
 /**
  * Handle resending the verification e-mail.
  */
-function rsssl_resend_verification_email()
-{
-	if (!rsssl_user_can_manage()) {
-		return;
-	}
+if ( ! function_exists('rsssl_resend_verification_email') ) {
+    function rsssl_resend_verification_email() {
+        if ( ! rsssl_user_can_manage() ) {
+            return;
+        }
 
-	if ( !isset($_POST['rsssl_resend_email_nonce']) || ! wp_verify_nonce( $_POST['rsssl_resend_email_nonce'], 'rsssl_resend_verification_email_nonce' ) ) {
-        wp_die();
-	}
+        if ( ! isset( $_POST['rsssl_resend_email_nonce'] ) || ! wp_verify_nonce( $_POST['rsssl_resend_email_nonce'], 'rsssl_resend_verification_email_nonce' ) ) {
+            wp_die();
+        }
 
-	$mailer = new rsssl_mailer();
-	$mailer->send_verification_mail();
+        $mailer = new rsssl_mailer();
+        $mailer->send_verification_mail();
 
-	wp_send_json_success();
+        wp_send_json_success();
+    }
 }
 
 /**
  * Handle the force confirm email action.
  */
-function rsssl_handle_force_confirm_email(): void
-{
-	if (!rsssl_user_can_manage()) {
-		return;
-	}
+if ( ! function_exists('rsssl_handle_force_confirm_email') ) {
 
-	if ( !isset($_POST['rsssl_force_email_action_nonce']) || ! wp_verify_nonce( $_POST['rsssl_force_email_action_nonce'], 'rsssl_force_confirm_email_nonce' ) ) {
-		wp_die();
-	}
+	function rsssl_handle_force_confirm_email(): void {
+		if ( ! rsssl_user_can_manage() ) {
+			return;
+		}
 
-	update_option( 'rsssl_email_verification_status', 'completed', false );
-	wp_send_json_success();
+		if ( ! isset( $_POST['rsssl_force_email_action_nonce'] ) || ! wp_verify_nonce( $_POST['rsssl_force_email_action_nonce'], 'rsssl_force_confirm_email_nonce' ) ) {
+			wp_die();
+		}
+
+		update_option( 'rsssl_email_verification_status', 'completed', false );
+		wp_send_json_success();
+	}
 }
 
 /**
  * Add JavaScript for email verification and re-send buttons.
  */
-function rsssl_generate_email_verification_buttons_js(): void
-{
-	if (!rsssl_user_can_manage()) {
-		return;
+if ( ! function_exists('rsssl_generate_email_verification_buttons_js') ) {
+    function rsssl_generate_email_verification_buttons_js(): void
+    {
+        if (!rsssl_user_can_manage()) {
+            return;
+        }
+
+        ?>
+        <script type="text/javascript">
+            jQuery(document).ready(function($) {
+                // Force confirm button handler
+                $(document).on('click', '#rsssl-force-confirm', function(e) {
+                    e.preventDefault();
+                    var button = $(this);
+                    button.prop('disabled', true);
+
+                    $.ajax({
+                        url: ajaxurl,
+                        type: 'POST',
+                        data: {
+                            action: 'rsssl_force_confirm_email',
+                            rsssl_force_email_action_nonce: '<?php echo wp_create_nonce('rsssl_force_confirm_email_nonce'); ?>'
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                location.reload();
+                            }
+                        }
+                    });
+                });
+
+                // Resend verification email button handler
+                $(document).on('click', '#rsssl-resend-verification', function(e) {
+                    e.preventDefault();
+                    var button = $(this);
+                    button.prop('disabled', true);
+                    button.text('<?php echo esc_js(__('Sending...', 'really-simple-ssl')); ?>');
+
+                    $.ajax({
+                        url: ajaxurl,
+                        type: 'POST',
+                        data: {
+                            action: 'rsssl_resend_verification_email',
+                            rsssl_resend_email_nonce: '<?php echo wp_create_nonce('rsssl_resend_verification_email_nonce'); ?>'
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                button.text('<?php echo esc_js(__('Email sent!', 'really-simple-ssl')); ?>');
+                                setTimeout(function() {
+                                    button.text('<?php echo esc_js(__('Resend verification email', 'really-simple-ssl')); ?>');
+                                    button.prop('disabled', false);
+                                }, 3000);
+                            } else {
+                                button.text('<?php echo esc_js(__('Failed to send', 'really-simple-ssl')); ?>');
+                                setTimeout(function() {
+                                    button.text('<?php echo esc_js(__('Resend verification email', 'really-simple-ssl')); ?>');
+                                    button.prop('disabled', false);
+                                }, 3000);
+                            }
+                        },
+                        error: function() {
+                            button.text('<?php echo esc_js(__('Error occurred', 'really-simple-ssl')); ?>');
+                            setTimeout(function() {
+                                button.text('<?php echo esc_js(__('Resend verification email', 'really-simple-ssl')); ?>');
+                                button.prop('disabled', false);
+                            }, 3000);
+                        }
+                    });
+                });
+            });
+        </script>
+        <?php
+    }
+}
+if ( ! function_exists('rsssl_free_active') ) {
+	if ( ! function_exists( 'rsssl_free_active' ) ) {
+		function rsssl_free_active() {
+			if ( function_exists( 'rsssl_activation_check' ) ) {
+				return true;
+			}
+
+			include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+			$free_plugin_path = 'really-simple-ssl/rlrsssl-really-simple-ssl.php';
+
+			return is_plugin_active( $free_plugin_path );
+		}
 	}
-
-	?>
-	<script type="text/javascript">
-        jQuery(document).ready(function($) {
-            // Force confirm button handler
-            $(document).on('click', '#rsssl-force-confirm', function(e) {
-                e.preventDefault();
-                var button = $(this);
-                button.prop('disabled', true);
-
-                $.ajax({
-                    url: ajaxurl,
-                    type: 'POST',
-                    data: {
-                        action: 'rsssl_force_confirm_email',
-                        rsssl_force_email_action_nonce: '<?php echo wp_create_nonce('rsssl_force_confirm_email_nonce'); ?>'
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            location.reload();
-                        }
-                    }
-                });
-            });
-
-            // Resend verification email button handler
-            $(document).on('click', '#rsssl-resend-verification', function(e) {
-                e.preventDefault();
-                var button = $(this);
-                button.prop('disabled', true);
-                button.text('<?php echo esc_js(__('Sending...', 'really-simple-ssl')); ?>');
-
-                $.ajax({
-                    url: ajaxurl,
-                    type: 'POST',
-                    data: {
-                        action: 'rsssl_resend_verification_email',
-                        rsssl_resend_email_nonce: '<?php echo wp_create_nonce('rsssl_resend_verification_email_nonce'); ?>'
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            button.text('<?php echo esc_js(__('Email sent!', 'really-simple-ssl')); ?>');
-                            setTimeout(function() {
-                                button.text('<?php echo esc_js(__('Resend verification email', 'really-simple-ssl')); ?>');
-                                button.prop('disabled', false);
-                            }, 3000);
-                        } else {
-                            button.text('<?php echo esc_js(__('Failed to send', 'really-simple-ssl')); ?>');
-                            setTimeout(function() {
-                                button.text('<?php echo esc_js(__('Resend verification email', 'really-simple-ssl')); ?>');
-                                button.prop('disabled', false);
-                            }, 3000);
-                        }
-                    },
-                    error: function() {
-                        button.text('<?php echo esc_js(__('Error occurred', 'really-simple-ssl')); ?>');
-                        setTimeout(function() {
-                            button.text('<?php echo esc_js(__('Resend verification email', 'really-simple-ssl')); ?>');
-                            button.prop('disabled', false);
-                        }, 3000);
-                    }
-                });
-            });
-        });
-	</script>
-	<?php
 }

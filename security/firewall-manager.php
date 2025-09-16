@@ -115,7 +115,7 @@ class rsssl_firewall_manager {
 
 		$this->include_prepend_file_in_wp_config();
 		if ( $this->uses_htaccess() ) {
-			// only inblude in the admin_init, to prevent issues with the htaccess file not being writable.
+			// only include in the admin_init, to prevent issues with the htaccess file not being writable.
 			if( current_filter() !== 'plugins_loaded' ) {
 				$this->include_prepend_file_in_htaccess();
 			}

@@ -26,7 +26,7 @@ class Rsssl_Two_Factor_On_Board_Api {
 	/**
 	 * The namespace for the API routes.
 	 *
-	 * @package reallysimplessl/v1/two_fa
+	 * @package really-simple-security/v1/two_fa
 	 */
 	public const NAMESPACE = 'really-simple-security/v1/two-fa/v2';
 

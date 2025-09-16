@@ -63,6 +63,12 @@ final class Rsssl_Base_Controller extends Rsssl_Abstract_Controller
             return new WP_REST_Response(['error' => $e->getMessage()], 403);
         }
 
+		// if the 2FA is not enabled for the user, we only handle the passkey meta key
+	    if ( ! rsssl_get_option( 'login_protection_enabled' ) ) {
+			// Remove the passkey meta key for the user.
+			update_user_meta( $user->ID, 'rsssl_passkey_configured', 'ignored' );
+			return $this->authenticate_and_redirect( $user->ID, $parameters->redirect_to );
+		}
         $loader = Rsssl_Provider_Loader::get_loader();
         // We get all the available providers for the user.
         foreach ($loader::get_providers() as $provider ) {

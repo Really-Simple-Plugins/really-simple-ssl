@@ -67,22 +67,9 @@ class Rsssl_Two_Factor_Admin {
         add_filter('rsssl_after_save_field', [$this, 'change_disabled_users_when_forced'], 20, 3);
         add_filter('rsssl_after_save_field', [$this, 'process_added_removed_enabled_roles'], 20, 3);
 		add_filter('rsssl_after_save_field', [$this, 'set_passkey_table'], 20, 3);
-		add_filter('rsssl_after_save_field', [$this, 'set_passkey_disabled_check'], 20, 3);
         $this->queue = new Rsssl_Callback_Queue();
         $this->queue->process_tasks(1);
     }
-
-	public function set_passkey_disabled_check(string $field_id, $new_value, $prev_value): void
-	{
-		// checking if the field is the passkey enabled field
-		if ('login_protection_enabled' === $field_id) {
-			// if the passkey is disabled, it needs to remove the passkey table.
-			if ( ! $new_value ) {
-				// If login protection is disabled, we disable the passkey login as well.
-				rsssl_update_option('enable_passkey_login', false);
-			}
-		}
-	}
 
 
 	/**

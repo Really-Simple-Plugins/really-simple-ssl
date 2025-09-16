@@ -139,6 +139,7 @@ if ( ! class_exists( 'rsssl_server' ) ) {
 		public function isApacheSuPHP():bool {
 			return $this->isApache() && $this->isCGI() &&
 			       function_exists('posix_getuid') &&
+			       function_exists('getmyuid') &&
 			       getmyuid() === posix_getuid();
 		}
 

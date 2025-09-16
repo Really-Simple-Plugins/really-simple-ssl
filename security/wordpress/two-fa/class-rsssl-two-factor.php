@@ -1315,7 +1315,7 @@ class Rsssl_Two_Factor
      */
     private static function onboarding_user_html(WP_User $user): void
     {
-
+        $passkey_onboarding = get_user_meta($user->ID, 'rsssl_two_fa_status_passkey', true) === 'open';
         // Variables needed for the template and scripts
         $onboarding_url = self::login_url(array('action' => 'rsssl_onboarding'), 'login_post');
         $provider_loader = Rsssl_Provider_Loader::get_loader();
@@ -1327,6 +1327,13 @@ class Rsssl_Two_Factor
         $grace_period = Rsssl_Two_Factor_Settings::is_user_in_grace_period($user);
         $is_today = Rsssl_Two_Factor_Settings::is_today($user);
 
+        if ($passkey_onboarding) {
+            $is_forced = false;
+            //if only passkey is available, set it as the only provider
+            if (count($enabled_providers) === 1 && isset($enabled_providers['passkey'])) {
+                $provider = 'passkey';
+            }
+        }
         // Ensure login_header and login_footer functions are available
         if (!function_exists('login_header')) {
             include_once __DIR__ . '/function-login-header.php';

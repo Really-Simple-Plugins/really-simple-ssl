@@ -50,12 +50,6 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'disabled' => false,
 				'tooltip'  => __('Passkeys are a very secure and convenient way to log in. It allows the user to authenticate using their device, browser or password manager.', 'really-simple-ssl'),
 				'default'  => 'disabled',
-				'react_conditions' => [
-					'relation' => 'AND',
-					[
-						'login_protection_enabled' => true,
-					]
-				],
 				'server_conditions'    => [
 					'relation' => 'AND',
 					[
@@ -148,6 +142,16 @@ add_filter( 'rsssl_fields', function( $fields ) {
 					[
 						'is_multisite' => false,
 					]
+				],
+				'react_conditions' => [
+					'relation' => 'OR',
+					[
+						'login_protection_enabled' => true,
+					],
+					[
+						'enable_passkey_login' => true,
+					],
+
 				],
                 'roles_filter' => true,
 				'columns' => [

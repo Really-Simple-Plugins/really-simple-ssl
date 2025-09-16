@@ -675,7 +675,7 @@ class rsssl_onboarding {
 	}
 
 	public function onboarding_rest_route() {
-		register_rest_route( 'reallysimplessl/v1', 'onboarding', array(
+		register_rest_route( 'really-simple-security/v1', 'onboarding', array(
 			'methods'  => 'GET',
 			'callback' => array($this, 'onboarding_data'),
 			'permission_callback' => function () {

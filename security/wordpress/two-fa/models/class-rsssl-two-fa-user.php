@@ -96,5 +96,8 @@ class Rsssl_Two_FA_user
         Rsssl_Two_Fa_Status::delete_two_fa_meta( $this->id );
         // Set the rsssl_two_fa_last_login to now, so the user will be forced to use 2fa.
         update_user_meta( $this->id, 'rsssl_two_fa_last_login', gmdate( 'Y-m-d H:i:s' ) );
+		// New: We add also a reset for the passkey meta key, so the user can reconfigure it.
+	    delete_user_meta( $this->id, 'rsssl_passkey_configured');
+
     }
 }

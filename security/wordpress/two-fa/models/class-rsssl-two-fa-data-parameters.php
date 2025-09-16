@@ -52,7 +52,7 @@ class Rsssl_Two_FA_Data_Parameters {
     public function getEnabledRoles(): array {
         if ($this->enabled_roles === null) {
             // if the passkey is enabled all roles are enabled
-            if (defined('rsssl_pro') && rsssl_get_option('two_fa_passkey_enabled', false)) {
+            if (defined('rsssl_pro') && rsssl_get_option('enable_passkey_login', false)) {
                 $this->enabled_roles = array_map('strtolower', array_values((new WP_RolesAlias())->get_names()));
             } else {
                 $this->enabled_roles = array_unique(array_merge(
