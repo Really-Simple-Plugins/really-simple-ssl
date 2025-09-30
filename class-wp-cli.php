@@ -6,6 +6,9 @@ require_once rsssl_path . 'lib/admin/class-encryption.php';
 use RSSSL\lib\admin\Encryption;
 use RSSSL\Pro\Security\WordPress\Firewall\Models\Rsssl_404_Block;
 use RSSSL\Security\WordPress\Two_Fa\Rsssl_Two_Fa_Status;
+use RSSSL\Security\WordPress\Two_Fa\Repositories\Rsssl_Two_Fa_User_Repository;
+use RSSSL\Security\WordPress\Two_Fa\Services\Rsssl_Two_Fa_Reminder_Service;
+use RSSSL\Security\WordPress\Two_Fa\Models\Rsssl_Two_FA_Data_Parameters;
 
 /**
  * WP-CLI integration for Really Simple Security
@@ -113,7 +116,7 @@ class rsssl_wp_cli {
 	 * : Show detailed steps during activation.
 	 *
 	 * [--force]
-	 * : Force activation even if pre-flight checks issue warnings.
+	 * : Force activation even if pre-flight checks issue warnings and skip confirmation prompt.
 	 *
 	 * [--yes]
 	 * : Skip the confirmation prompt before activating.
@@ -181,7 +184,8 @@ class rsssl_wp_cli {
 
 
 			// --- Suggestion 4: Confirmation Prompt ---
-			if ( ! $skip_confirm ) {
+			// Skip confirmation if --yes or --force is used
+			if ( ! $skip_confirm && ! $is_force ) {
 				WP_CLI::confirm( 'Are you sure you want to activate SSL for this site?' );
 				// WP_CLI::confirm exits script if user doesn't confirm
 			}
@@ -755,6 +759,163 @@ class rsssl_wp_cli {
 
         WP_CLI::success( 'Successfully reset Login Protection for user id ' . $user_id );
 	}
+
+    /**
+     * Preview (dry-run) which users are in scope for 2FA reminders, optionally across subsites.
+     *
+     * Usage examples:
+     *   wp rsssl twofa_preview
+     *   wp rsssl twofa_preview --role=editor
+     *   wp rsssl twofa_preview --include-subsites
+     *   wp rsssl twofa_preview --site=7 --format=json
+     *   wp rsssl twofa_preview --reset-meta
+     */
+    public function twofa_preview( $args, $assoc_args ) {
+        if ( ! $this->check_pro_command_preconditions() ) return;
+
+        $role           = $assoc_args['role'] ?? 'all';
+        $format         = $assoc_args['format'] ?? 'table';
+        $includeNetwork = \WP_CLI\Utils\get_flag_value( $assoc_args, 'include-subsites', false );
+        $specificSiteId = $assoc_args['site'] ?? null;
+        $doResetMeta    = \WP_CLI\Utils\get_flag_value( $assoc_args, 'reset-meta', false );
+
+        $rows = $this->collect_twofa_rows( $role, $includeNetwork, $specificSiteId, $doResetMeta );
+
+        if ( empty( $rows ) ) {
+            \WP_CLI::success( 'Geen gebruikers gevonden in de huidige 2FA scope.' );
+            return;
+        }
+
+        \WP_CLI\Utils\format_items( $format, $rows, [ 'blog_id','user_id','user_login','email','roles','reminder_sent' ] );
+    }
+
+    /**
+     * Send 2FA reminders for the current selection. Explicitly triggers the send flow per (sub)site.
+     *
+     * Usage examples:
+     *   wp rsssl twofa_send
+     *   wp rsssl twofa_send --role=author --site=3
+     *   wp rsssl twofa_send --include-subsites --reset-meta
+     */
+    public function twofa_send( $args, $assoc_args ) {
+        if ( ! $this->check_pro_command_preconditions() ) return;
+
+        $role           = $assoc_args['role'] ?? 'all';
+        $includeNetwork = \WP_CLI\Utils\get_flag_value( $assoc_args, 'include-subsites', false );
+        $specificSiteId = $assoc_args['site'] ?? null;
+        $doResetMeta    = \WP_CLI\Utils\get_flag_value( $assoc_args, 'reset-meta', false );
+
+        $service = new Rsssl_Two_Fa_Reminder_Service();
+        $siteIds = $this->determine_sites_for_twofa( $includeNetwork, $specificSiteId );
+        $total   = 0;
+
+        foreach ( $siteIds as $blog_id ) {
+            $this->with_blog_for_twofa( (int) $blog_id, function() use ( $role, $service, $doResetMeta, &$total, $blog_id ) {
+                $repo   = new Rsssl_Two_Fa_User_Repository();
+                $params = new Rsssl_Two_FA_Data_Parameters([
+                    'filter_column' => 'user_role',
+                    'filter_value'  => $role,
+                ]);
+                $collection = $repo->getForcedTwoFaUsersWithOpenStatus( $params );
+
+                if ( $doResetMeta ) {
+                    foreach ( $collection->getUsers() as $u ) {
+                        delete_user_meta( $u->getId(), 'rsssl_two_fa_reminder_sent' );
+                    }
+                }
+
+                $countBefore = (int) $collection->getTotalRecords();
+                if ( $countBefore > 0 ) {
+                    \WP_CLI::log( sprintf( 'Blog %d: verstuur reminders naar %d gebruiker(s)...', (int) $blog_id, $countBefore ) );
+                    $service->processReminders( $collection );
+                    $total += $countBefore;
+                } else {
+                    \WP_CLI::log( sprintf( 'Blog %d: geen kandidaten.', (int) $blog_id ) );
+                }
+            } );
+        }
+
+        \WP_CLI::success( sprintf( 'Verzenden gereed. Totaal verstuurd: %d', (int) $total ) );
+    }
+
+    /** ----------------- Helpers (private) ----------------- */
+
+    /**
+     * Build preview rows for users in scope.
+     */
+    private function collect_twofa_rows( string $role, bool $includeNetwork, $specificSiteId, bool $doResetMeta ): array {
+        $rows    = [];
+        $siteIds = $this->determine_sites_for_twofa( $includeNetwork, $specificSiteId );
+
+        foreach ( $siteIds as $blog_id ) {
+            $this->with_blog_for_twofa( (int) $blog_id, function() use ( $role, $doResetMeta, $blog_id, &$rows ) {
+                $repo   = new Rsssl_Two_Fa_User_Repository();
+                $params = new Rsssl_Two_FA_Data_Parameters([
+                    'filter_column' => 'user_role',
+                    'filter_value'  => $role,
+                ]);
+
+	            foreach ( $repo->getForcedTwoFaUsersWithOpenStatus( $params )->getUsers() as $u ) {
+                    $user_id = (int) $u->getId();
+                    $wp_user = get_userdata( $user_id );
+                    if ( ! $wp_user ) {
+                        continue;
+                    }
+
+                    if ( $doResetMeta ) {
+                        delete_user_meta( $user_id, 'rsssl_two_fa_reminder_sent' );
+                    }
+
+                    $rows[] = [
+                        'blog_id'       => (string) $blog_id,
+                        'user_id'       => (string) $user_id,
+                        'user_login'    => $wp_user->user_login,
+                        'email'         => $wp_user->user_email,
+                        'roles'         => implode( ',', $wp_user->roles ?? [] ),
+                        'reminder_sent' => get_user_meta( $user_id, 'rsssl_two_fa_reminder_sent', true ) ? 'yes' : 'no',
+                    ];
+                }
+            } );
+        }
+
+        return $rows;
+    }
+
+    /**
+     * Decide which sites to traverse for multisite support.
+     */
+    private function determine_sites_for_twofa( bool $includeNetwork, $specificSiteId ): array {
+        if ( is_multisite() ) {
+            if ( ! empty( $specificSiteId ) ) {
+                return [ (int) $specificSiteId ];
+            }
+            if ( $includeNetwork ) {
+                $ids = [];
+                foreach ( get_sites( [ 'fields' => 'ids', 'number' => 0 ] ) as $bid ) {
+                    $ids[] = (int) $bid;
+                }
+                return $ids;
+            }
+            return [ get_current_blog_id() ];
+        }
+        return [ 0 ];
+    }
+
+    /**
+     * Execute a callback within the context of a (sub)site.
+     */
+    private function with_blog_for_twofa( int $blog_id, callable $cb ): void {
+        if ( is_multisite() && $blog_id > 0 ) {
+            switch_to_blog( $blog_id );
+            try {
+                $cb();
+            } finally {
+                restore_current_blog();
+            }
+        } else {
+            $cb();
+        }
+    }
 
 	/**
 	 * Update the advanced-headers.php with the latest rules
@@ -1369,6 +1530,27 @@ class rsssl_wp_cli {
 				'synopsis'    => [],
 				'pro'         => false,
 			],
+            'twofa_preview' => [
+                'description' => __( 'Preview users in scope for 2FA reminders (dry-run).', 'really-simple-ssl' ),
+                'synopsis'    => [
+                    [ 'type' => 'assoc', 'name' => 'role',  'optional' => true,  'description' => __( 'Filter by user role (default: all).', 'really-simple-ssl' ) ],
+                    [ 'type' => 'assoc', 'name' => 'site',  'optional' => true,  'description' => __( 'Limit to a single blog_id (multisite).', 'really-simple-ssl' ) ],
+                    [ 'type' => 'flag',  'name' => 'include-subsites', 'optional' => true, 'description' => __( 'Traverse all subsites in the network.', 'really-simple-ssl' ) ],
+                    [ 'type' => 'assoc', 'name' => 'format','optional' => true,  'description' => __( 'Output format: table|json|csv (default: table).', 'really-simple-ssl' ) ],
+                    [ 'type' => 'flag',  'name' => 'reset-meta', 'optional' => true, 'description' => __( 'Reset rsssl_two_fa_reminder_sent meta for a clean run.', 'really-simple-ssl' ) ],
+                ],
+                'pro' => true,
+            ],
+            'twofa_send' => [
+                'description' => __( 'Send 2FA reminders for the current selection.', 'really-simple-ssl' ),
+                'synopsis'    => [
+                    [ 'type' => 'assoc', 'name' => 'role',  'optional' => true,  'description' => __( 'Filter by user role (default: all).', 'really-simple-ssl' ) ],
+                    [ 'type' => 'assoc', 'name' => 'site',  'optional' => true,  'description' => __( 'Limit to a single blog_id (multisite).', 'really-simple-ssl' ) ],
+                    [ 'type' => 'flag',  'name' => 'include-subsites', 'optional' => true, 'description' => __( 'Traverse all subsites in the network.', 'really-simple-ssl' ) ],
+                    [ 'type' => 'flag',  'name' => 'reset-meta', 'optional' => true, 'description' => __( 'Reset rsssl_two_fa_reminder_sent meta before sending.', 'really-simple-ssl' ) ],
+                ],
+                'pro' => true,
+            ],
 			'update_advanced_headers' => [
 				'description' => __( 'Update the advanced-headers.php with the latest rules.', 'really-simple-ssl' ),
 				'synopsis'    => [],

@@ -45,6 +45,10 @@ class rsssl_admin {
 		add_action( 'admin_init', array( $this, 'maybe_dismiss_review_notice' ) );
 		add_action( 'rsssl_daily_cron', array( $this, 'clear_admin_notices_cache' ) );
 
+		// Clear notice cache when permalinks are updated to fix multisite issues
+		add_action( 'update_option_permalink_structure', array( $this, 'clear_admin_notices_cache' ) );
+		add_action( 'update_option_rewrite_rules', array( $this, 'clear_admin_notices_cache' ) );
+
 		//add the settings page for the plugin
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
 		add_action( 'admin_init', array( $this, 'listen_for_deactivation' ), 40 );
@@ -1978,16 +1982,12 @@ class rsssl_admin {
 		if ( ! $this->is_settings_page() ) {
 			$cached_notices = get_option( 'rsssl_admin_notices' );
 			if ( 'empty' === $cached_notices ) {
-				return [];
-			}
-			if ( false !== $cached_notices ) {
+				// Clear the invalid cache entry
+				delete_option( 'rsssl_admin_notices' );
+				// Don't return empty array, continue to generate fresh notices
+			} elseif ( false !== $cached_notices && is_array($cached_notices) ) {
 				return $cached_notices;
 			}
-		}
-		//not cached, set a default here
-		//only cache if the admin_notices are retrieved.
-		if ( $args['admin_notices'] ) {
-			update_option( 'rsssl_admin_notices', 'empty' );
 		}
 
 		$rules = $this->get_redirect_rules( true );

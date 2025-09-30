@@ -27,9 +27,12 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'label'    => __( 'Enforce secure authentication for:', 'really-simple-ssl' ),
 				'tooltip'  => __( 'These user roles will be enforced to either configure Two-factor Authentication or Passkey log in. We recommend to enforce at least administrators.', 'really-simple-ssl' ),
 				'react_conditions' => [
-					'relation' => 'AND',
+					'relation' => 'OR',
 					[
 						'login_protection_enabled' => true,
+					],
+					[
+						'enable_passkey_login' => true,
 					]
 				],
 				'server_conditions'    => [
@@ -80,9 +83,12 @@ add_filter( 'rsssl_fields', function( $fields ) {
 					]
 				],
 				'react_conditions' => [
-					'relation' => 'AND',
+					'relation' => 'OR',
 					[
 						'login_protection_enabled' => true,
+					],
+					[
+						'enable_passkey_login' => true,
 					]
 				],
 			],

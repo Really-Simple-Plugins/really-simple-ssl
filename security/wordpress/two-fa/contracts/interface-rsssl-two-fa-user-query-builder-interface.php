@@ -18,4 +18,6 @@ interface Rsssl_Two_Fa_User_Query_Builder_Interface {
     public function addNearingExpiryCondition(array $args, int $daysThreshold, int $reminderBeforeClosingPeriod = 3): array;
 
     public function addForcedRolesConditionToArgs(array $args, array $getForcedRoles): array;
+
+
 }
