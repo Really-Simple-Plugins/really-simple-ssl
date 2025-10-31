@@ -45,6 +45,11 @@ class rsssl_admin {
 		add_action( 'admin_init', array( $this, 'maybe_dismiss_review_notice' ) );
 		add_action( 'rsssl_daily_cron', array( $this, 'clear_admin_notices_cache' ) );
 
+		// Clear notice cache when permalinks are updated to fix multisite issues
+		add_action( 'update_option_permalink_structure', array( $this, 'clear_admin_notices_cache' ) );
+		add_action( 'update_option_rewrite_rules', array( $this, 'clear_admin_notices_cache' ) );
+		add_action( 'update_option_permalink_structure', array( $this, 'check_permalink_change_for_custom_login_url' ), 10, 2 );
+
 		//add the settings page for the plugin
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
 		add_action( 'admin_init', array( $this, 'listen_for_deactivation' ), 40 );
@@ -200,6 +205,17 @@ class rsssl_admin {
 			$upgrade_link = '<a style="color:#2271b1;font-weight:bold" target="_blank" rel="noopener noreferrer" href="' .rsssl_link() . '">'
 			                . __( 'Improve security - Upgrade', 'really-simple-ssl' ) . '</a>';
 			array_unshift( $links, $upgrade_link );
+		}
+
+		// Always add the ID to deactivate link so JavaScript can find it reliably
+		if ( isset( $links['deactivate'] ) ) {
+			$deactivate_link_id = defined( 'rsssl_pro' ) ? 'deactivate-really-simple-security-pro' : 'deactivate-really-simple-security';
+			// Add the ID attribute to enable JavaScript event delegation
+			$links['deactivate'] = preg_replace(
+				'/<a /',
+				'<a id="' . esc_attr( $deactivate_link_id ) . '" ',
+				$links['deactivate']
+			);
 		}
 
 		return $links;
@@ -399,18 +415,18 @@ class rsssl_admin {
 
 		rsssl_clear_scheduled_hooks();
 
+		$ssl_was_enabled = rsssl_get_option( 'ssl_enabled' );
+
 		if ( isset( $_GET['action'] ) && 'uninstall_keep_ssl' === $_GET['action'] ) {
-			$this->deactivate_plugin();
-		}
+			$this->deactivate_site( $ssl_was_enabled ); // Don't revert to http
+            $this->deactivate_plugin();
+        }
 
 		if ( isset( $_GET['action'] ) && 'uninstall_revert_ssl' === $_GET['action'] ) {
 			// Update site url from https:// to http://
-			$this->remove_ssl_from_siteurl();
-            if ( ! is_multisite() ) {
-	            $this->remove_ssl_from_siteurl_in_wpconfig();
-            }
+			$this->deactivate_site( $ssl_was_enabled, true ); // Revert to http
             $this->deactivate_plugin();
-		}
+        }
 
 		wp_redirect( admin_url( 'plugins.php' ) );
 		exit;
@@ -1033,24 +1049,31 @@ class rsssl_admin {
 	/**
 	 * Deactivate SSL for the currently loaded site
 	 *
-	 * @param bool $ssl_was_enabled
+	 * @param bool $ssl_was_enabled Whether SSL was enabled before deactivation
+	 * @param bool $revert_to_http  Whether to revert URLs from https:// to http:// (default: false, keeps https://)
 	 *
 	 * @return void
 	 */
-	public function deactivate_site( bool $ssl_was_enabled ) {
+	public function deactivate_site( bool $ssl_was_enabled, bool $revert_to_http = false ) {
 
 		if ( ! rsssl_user_can_manage() ) {
 			return;
 		}
 
 		$this->remove_secure_cookie_settings();
-		if ( $ssl_was_enabled ) {
+		if ( $ssl_was_enabled && $revert_to_http ) {
 			$this->remove_ssl_from_siteurl();
 			if ( ! is_multisite() || is_main_site() ) {
 				$this->remove_ssl_from_siteurl_in_wpconfig();
 				$this->remove_wpconfig_edit();
-				rsssl_remove_htaccess_security_edits();
 			}
+		}
+
+		// Remove htaccess security edits
+		// Preserve redirect when staying on HTTPS, remove it when reverting to HTTP
+		if ( ! is_multisite() || is_main_site() ) {
+			$clear_htaccess_redirect = $revert_to_http;
+			rsssl_remove_htaccess_security_edits( $clear_htaccess_redirect );
 		}
 
 		do_action( 'rsssl_deactivate' );
@@ -1978,16 +2001,12 @@ class rsssl_admin {
 		if ( ! $this->is_settings_page() ) {
 			$cached_notices = get_option( 'rsssl_admin_notices' );
 			if ( 'empty' === $cached_notices ) {
-				return [];
-			}
-			if ( false !== $cached_notices ) {
+				// Clear the invalid cache entry
+				delete_option( 'rsssl_admin_notices' );
+				// Don't return empty array, continue to generate fresh notices
+			} elseif ( false !== $cached_notices && is_array($cached_notices) ) {
 				return $cached_notices;
 			}
-		}
-		//not cached, set a default here
-		//only cache if the admin_notices are retrieved.
-		if ( $args['admin_notices'] ) {
-			update_option( 'rsssl_admin_notices', 'empty' );
 		}
 
 		$rules = $this->get_redirect_rules( true );
@@ -3029,10 +3048,12 @@ class rsssl_admin {
         // Activate Vulnerability Scanner
         rsssl_update_option( 'enable_vulnerability_scanner', true );
 
-        // Activate essential WordPress hardening features
-        $recommended_hardening_fields = RSSSL()->onboarding->get_hardening_fields();
-        foreach ( $recommended_hardening_fields as $field ) {
-            rsssl_update_option( $field, true );
+        if (isset(RSSSL()->settingsConfigService)) {
+            // Activate essential WordPress hardening features
+            $recommended_hardening_fields = RSSSL()->settingsConfigService->getRecommendedHardeningSettings();
+            foreach ( $recommended_hardening_fields as $field ) {
+                rsssl_update_option( $field, true );
+            }
         }
 
         // Enable Email login protection
@@ -3103,6 +3124,33 @@ class rsssl_admin {
 		$this->clear_admin_notices_cache();
 
 		return [];
+	}
+
+	/**
+     * Method detects if permalink structure changed from non-plain to plain,
+     * and if so: disable the custom login url feature and set a flag in the
+     * database to trigger an admin notice by
+     * {@see rsssl_premium_security_notices}. To trigger the admin notice
+     * properly we also have to clear the admin notices cache.
+	 */
+	public function check_permalink_change_for_custom_login_url( $old_value, $new_value ) {
+		if ( ! rsssl_user_can_manage() ) {
+			return;
+		}
+
+		$was_plain = empty( $old_value );
+		$is_plain = empty( $new_value );
+
+		if ( ! $was_plain && $is_plain && rsssl_get_option( 'change_login_url_enabled' ) == 1 ) {
+			rsssl_update_option( 'change_login_url_enabled', false );
+			update_option( 'rsssl_permalink_changed_to_plain', true, false );
+			$this->clear_admin_notices_cache();
+		}
+
+		if ( $was_plain && ! $is_plain ) {
+			delete_option( 'rsssl_permalink_changed_to_plain' );
+			$this->clear_admin_notices_cache();
+		}
 	}
 
 } //class closure

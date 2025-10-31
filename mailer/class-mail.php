@@ -44,6 +44,12 @@ if ( ! class_exists( 'rsssl_mailer' ) ) {
 
 		}
 
+        public function set_to( $email )
+        {
+            $this->to = sanitize_email( $email );
+            rsssl_update_option('notifications_email_address', $email);
+        }
+
 		/**
 		 * Send a test email
 		 * @return array

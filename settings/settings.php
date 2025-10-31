@@ -371,7 +371,7 @@ function rsssl_do_action($request, $ajax_data = false)
             }
 			break;
 		default:
-			$response = apply_filters("rsssl_do_action", [], $action, $data);
+            $response = apply_filters("rsssl_do_action", [], $action, $data);
 	}
 
 	if (is_array($response)) {
@@ -430,6 +430,11 @@ function rsssl_plugin_actions($data)
 	}
 	$slug = sanitize_title($data['slug']);
 	$action = sanitize_title($data['pluginAction']);
+
+    if (class_exists('rsssl_installer') === false) {
+        require_once( rsssl_path . 'class-installer.php');
+    }
+
 	$installer = new rsssl_installer($slug);
 	if ($action === 'download') {
 		$installer->download_plugin();
@@ -526,6 +531,10 @@ function rsssl_other_plugins_data($slug = false)
 			'title' => 'SimplyBook.me - ' . __("Online Booking System", "really-simple-ssl"),
 		],
 	);
+
+    if (class_exists('rsssl_installer') === false) {
+        require_once( rsssl_path . 'class-installer.php');
+    }
 
 	foreach ($plugins as $index => $plugin) {
 		$installer = new rsssl_installer($plugin['slug']);

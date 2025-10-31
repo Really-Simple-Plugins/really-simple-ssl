@@ -13,11 +13,8 @@
 namespace RSSSL\Security\WordPress\Two_Fa;
 
 use Exception;
-use RSSSL\Security\WordPress\Two_Fa\Models\Rsssl_Two_Factor_User_Factory;
-use RSSSL\Security\WordPress\Two_Fa\Repositories\Rsssl_Two_Fa_User_Query_Builder;
 use RSSSL\Security\WordPress\Two_Fa\Repositories\Rsssl_Two_Fa_User_Repository;
 use RSSSL\Security\WordPress\Two_Fa\Services\Rsssl_Two_Fa_Reminder_Service;
-use RSSSL\Security\WordPress\Two_Fa\Services\Rsssl_Two_Fa_Status_Service;
 use RSSSL\Security\WordPress\Two_Fa\Services\Rsssl_Two_Factor_Reset_Service;
 use RSSSL\Security\WordPress\Two_Fa\Providers\Rsssl_Provider_Loader;
 use RSSSL\Security\WordPress\Two_Fa\Providers\Rsssl_Two_Factor_Provider;
@@ -116,10 +113,7 @@ class Rsssl_Two_Factor
          * Runs the fix for the reset error in 9.1.1
          */
 	    if (filter_var(get_option('rsssl_reset_fix', false), FILTER_VALIDATE_BOOLEAN)) {
-            global $wpdb;
-            $queryBuilder = new Rsssl_Two_Fa_User_Query_Builder($wpdb);
-            $factory = new Rsssl_Two_Factor_User_Factory(new Rsssl_Two_Fa_Status_Service());
-            $repository = new Rsssl_Two_Fa_User_Repository($queryBuilder, $factory);
+            $repository = new Rsssl_Two_Fa_User_Repository();
             (new Rsssl_Two_Factor_Reset_Service($repository))->resetFix();
 	    }
 
@@ -991,6 +985,10 @@ class Rsssl_Two_Factor
 
 		/** @var Rsssl_Two_Factor_Provider $provider_instance */
 		$provider_instance = $provider_class::get_instance();
+
+		// Check for corrupted/empty TOTP key before attempting authentication
+		self::validate_totp_key_exists( $user, $provider_key );
+
 		// Allow the provider to re-send codes, etc.
 		if ( ( 'email' === $provider_key ) && true === $provider_instance->pre_process_authentication( $user ) ) {
 			// Always generate a new nonce.
@@ -1302,6 +1300,65 @@ class Rsssl_Two_Factor
 
 	    rsssl_load_template('expired.php', [
             'message' => esc_html__('Your 2FA grace period expired. Please contact your site administrator to regain access and to configure 2FA.', 'really-simple-ssl'),
+        ], rsssl_path . 'assets/templates/two_fa/');
+    }
+
+    /**
+     * Validate that TOTP key exists for the user when TOTP provider is used.
+     * Destroys session and displays error if key is corrupted/missing.
+     *
+     * @param WP_User $user The user object.
+     * @param string $provider_key The provider key being used.
+     *
+     * @return void
+     */
+    private static function validate_totp_key_exists( WP_User $user, string $provider_key ): void
+    {
+        if ( 'totp' !== $provider_key ) {
+            return;
+        }
+
+        if ( ! class_exists( 'RSSSL\Pro\Security\WordPress\Two_Fa\Providers\Rsssl_Two_Factor_Totp' ) ) {
+            return;
+        }
+
+        $totp_key = get_user_meta(
+            $user->ID,
+            \RSSSL\Pro\Security\WordPress\Two_Fa\Providers\Rsssl_Two_Factor_Totp::SECRET_META_KEY,
+            true
+        );
+
+        if ( empty( $totp_key ) ) {
+            // Verify we have a valid user before destroying their session
+            if ( ! $user instanceof WP_User || ! $user->exists() ) {
+                wp_die( esc_html__( 'Invalid user.', 'really-simple-ssl' ), 403 );
+            }
+
+            // TOTP key is missing/corrupted
+            self::destroy_current_session_for_user( $user );
+            wp_clear_auth_cookie();
+            self::display_corrupted_totp_error();
+            exit;
+        }
+    }
+
+    /**
+     * Display error when TOTP key is corrupted/missing. Manually load our login header and
+     * footer functions to ensure they are available.
+     * Follows the same template as the expired onboarding error.
+     */
+    private static function display_corrupted_totp_error(): void
+    {
+        if (!function_exists('login_header')) {
+            include_once __DIR__ . '/function-login-header.php';
+        }
+
+        if (!function_exists('login_footer')) {
+            include_once __DIR__ . '/function-login-footer.php';
+        }
+
+	    rsssl_load_template('expired.php', [
+            'message' => esc_html__('Your Two-Factor Authentication configuration is corrupted. Please contact your site administrator to regain access.', 'really-simple-ssl'),
         ], rsssl_path . 'assets/templates/two_fa/');
     }
 

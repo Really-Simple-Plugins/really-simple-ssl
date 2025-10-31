@@ -7,7 +7,6 @@ if ( ! class_exists( "rsssl_le_hosts" ) ) {
         private static $_this;
         public $steps;
         public $hosts;
-        public $supported_hosts;
         public $not_local_certificate_hosts;
         public $no_installation_renewal_needed;
         public $dashboard_activation_required;
@@ -784,10 +783,6 @@ if ( ! class_exists( "rsssl_le_hosts" ) ) {
             $this->no_installation_renewal_needed[] = 'cpanel:autossl';
 
 	        ksort($this->hosts);
-	        $this->supported_hosts = array(
-		        'none' => __('I don\'t know, or not listed, proceed with installation', 'really-simple-ssl'),
-	        );
-	        $this->supported_hosts = $this->supported_hosts + wp_list_pluck($this->hosts, 'name');
         }
 
         static function this() {

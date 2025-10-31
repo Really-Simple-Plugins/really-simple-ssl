@@ -11,23 +11,28 @@ const DeactivationModal = () => {
     useEffect(() => {
         // Dynamically set the targetPluginLink based on isPremium
         const linkId = isPremium ? 'deactivate-really-simple-security-pro' : 'deactivate-really-simple-security';
-        const linkElement = document.getElementById(linkId);
-        setTargetPluginLink(linkElement);
 
-        const handleClick = (event) => {
-            event.preventDefault();
-            setOpen(true);
+        const handleDeactivationClick = (event) => {
+            const target = event.target.closest(`#${linkId}`);
+            if (target) {
+                event.preventDefault();
+                setTargetPluginLink(target);
+                setOpen(true); // Show modal
+            }
         };
 
+        // Ensure we intercept the click BEFORE any other handlers
+        document.addEventListener('click', handleDeactivationClick, true);
+
+        // Also try to set the link element immediately if it exists
+        const linkElement = document.getElementById(linkId);
         if (linkElement) {
-            linkElement.addEventListener('click', handleClick);
+            setTargetPluginLink(linkElement);
         }
 
         // Clean up the event listener
         return () => {
-            if (linkElement) {
-                linkElement.removeEventListener('click', handleClick);
-            }
+            document.removeEventListener('click', handleDeactivationClick, true);
         };
     }, [isPremium]); // Re-run this effect if isPremium changes
 

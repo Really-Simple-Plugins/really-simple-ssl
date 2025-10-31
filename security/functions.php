@@ -118,9 +118,10 @@ if ( !function_exists('rsssl_remove_htaccess_security_edits') ) {
 	/**
 	 * Clean up on deactivation
 	 *
+	 * @param bool $clear_htaccess_redirect Whether to clear the htaccess redirect when deactivating
 	 * @return void
 	 */
-	function rsssl_remove_htaccess_security_edits() {
+	function rsssl_remove_htaccess_security_edits( $clear_htaccess_redirect = false ) {
 
 		if ( ! rsssl_user_can_manage()  ) {
 			return;
@@ -164,18 +165,23 @@ if ( !function_exists('rsssl_remove_htaccess_security_edits') ) {
 		 *
 		 * note: Only this is for the root .htaccess file, not the uploads .htaccess file.
 		 */
-		if ( $root_manager->validate_htaccess_file_path() ) {
+		if ( ! $root_manager->validate_htaccess_file_path() ) {
+			return;
+		}
+
+		// Only clear redirect rules if explicitly requested
+		if ( $clear_htaccess_redirect ) {
 			// Clear redirect rules block
 			$root_manager->clear_rule( 'Really Simple Security Redirect', 'clear redirect 1' );
 			//Legacy rules
 			$root_manager->clear_legacy_rule( 'Really Simple Security Redirect' );
-			// Clear any remaining security rules block
-			$root_manager->clear_legacy_rule( 'Really Simple Security' );
-			// Clear no-indexing block
-			$root_manager->clear_rule( 'Really Simple Security No Index', 'clear no index' );
-			// Clear legacy Really Simple SSL block
-			$root_manager->clear_legacy_rule( 'rlrssslReallySimpleSSL' );
 		}
+		// Clear any remaining security rules block
+		$root_manager->clear_legacy_rule( 'Really Simple Security' );
+		// Clear no-indexing block
+		$root_manager->clear_rule( 'Really Simple Security No Index', 'clear no index' );
+		// Clear legacy Really Simple SSL block
+		$root_manager->clear_legacy_rule( 'rlrssslReallySimpleSSL' );
 	}
 }
 
