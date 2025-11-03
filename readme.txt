@@ -170,7 +170,8 @@ Improvement: refactored the onboarding code
 
 = 9.5.2.3 =
 Fix: the 2FA reset fix now correctly calls the 2FA reset service
-9.5.2.2
+
+= 9.5.2.2 =
 Fix: a TypeError in the 2FA query builder that could occur when updating from older plugin versions
 
 = 9.5.2 =
