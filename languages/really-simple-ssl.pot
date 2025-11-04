@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-11-03T10:10:08+00:00\n"
+"POT-Creation-Date: 2025-11-04T09:36:27+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.8.1\n"
 "X-Domain: really-simple-ssl\n"
@@ -36,7 +36,7 @@ msgstr ""
 
 #: assets/templates/two_fa/expired.php:3
 #: assets/templates/two_fa/onboarding.php:44
-#: class-admin.php:3379
+#: class-admin.php:3391
 #: class-site-health.php:61
 #: core/app/Services/SettingsConfigService.php:57
 #: core/app/Services/SettingsConfigService.php:124
@@ -519,47 +519,47 @@ msgid "404 errors detected on your homepage. 404 blocking is unavailable, to pre
 msgstr ""
 
 #. translators: %1$s: opening bold tag, %2$s: closing bold tag
-#: class-admin.php:3337
+#: class-admin.php:3349
 msgid "Really Simple SSL is now %1$sReally Simple Security!%2$s"
 msgstr ""
 
-#: class-admin.php:3344
+#: class-admin.php:3356
 msgid "Read about our journey towards Really Simple Security"
 msgstr ""
 
-#: class-admin.php:3350
+#: class-admin.php:3362
 msgid "Experience all powerful features of Really Simple Security Pro using this %slimited time discount%s: %s"
 msgstr ""
 
-#: class-admin.php:3369
+#: class-admin.php:3381
 msgid "Thank you for being a long-time user! As a token of our gratitude, we want to offer you %s6 months Really Simple Security Pro, 100%% Free!%s"
 msgstr ""
 
-#: class-admin.php:3374
+#: class-admin.php:3386
 msgid "Discover:"
 msgstr ""
 
-#: class-admin.php:3377
+#: class-admin.php:3389
 msgid "Performant Firewall"
 msgstr ""
 
-#: class-admin.php:3378
+#: class-admin.php:3390
 #: settings/config/menu.php:254
 msgid "Advanced Hardening"
 msgstr ""
 
-#: class-admin.php:3380
+#: class-admin.php:3392
 #: core/app/Services/SettingsConfigService.php:71
 #: core/app/Services/SettingsConfigService.php:139
 #: settings/config/menu.php:98
 msgid "Security Headers"
 msgstr ""
 
-#: class-admin.php:3381
+#: class-admin.php:3393
 msgid "And many more powerful Security features.."
 msgstr ""
 
-#: class-admin.php:3384
+#: class-admin.php:3396
 msgid "Claim your 6 Free months"
 msgstr ""
 
@@ -1036,7 +1036,7 @@ msgstr ""
 msgid "Flag to remove a permanent block."
 msgstr ""
 
-#: core/app/Features/Onboarding/OnboardingController.php:139
+#: core/app/Features/Onboarding/OnboardingController.php:138
 msgid "Nonce validation failed"
 msgstr ""
 
@@ -1064,43 +1064,43 @@ msgstr ""
 msgid "Please refresh the SSL status if a certificate has been installed recently."
 msgstr ""
 
-#: core/app/Features/Onboarding/OnboardingStepsGenerator.php:131
+#: core/app/Features/Onboarding/OnboardingStepsGenerator.php:126
 msgid "Verify your email"
 msgstr ""
 
-#: core/app/Features/Onboarding/OnboardingStepsGenerator.php:132
+#: core/app/Features/Onboarding/OnboardingStepsGenerator.php:127
 msgid "Really Simple Security will send email notifications and security warnings from your server. We will send a test email to confirm that email is correctly configured on your site. Look for the confirmation button in the email."
 msgstr ""
 
-#: core/app/Features/Onboarding/OnboardingStepsGenerator.php:133
+#: core/app/Features/Onboarding/OnboardingStepsGenerator.php:128
 #: settings/build/995.7a0675fe0519b06656b3.js:1
 #: settings/src/Settings/Settings.js:153
 msgid "Save and continue"
 msgstr ""
 
-#: core/app/Features/Onboarding/OnboardingStepsGenerator.php:150
+#: core/app/Features/Onboarding/OnboardingStepsGenerator.php:140
 msgid "Instantly configure these essential features."
 msgstr ""
 
-#: core/app/Features/Onboarding/OnboardingStepsGenerator.php:154
+#: core/app/Features/Onboarding/OnboardingStepsGenerator.php:144
 msgid "Please %sconsider upgrading to Pro%s to enjoy all simple and performant security features."
 msgstr ""
 
-#: core/app/Features/Onboarding/OnboardingStepsGenerator.php:165
+#: core/app/Features/Onboarding/OnboardingStepsGenerator.php:155
 msgid "Essential security"
 msgstr ""
 
-#: core/app/Features/Onboarding/OnboardingStepsGenerator.php:168
+#: core/app/Features/Onboarding/OnboardingStepsGenerator.php:158
 #: settings/build/366.0e8cd32aeda45546f72d.js:1
 #: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:116
 msgid "Enable"
 msgstr ""
 
-#: core/app/Features/Onboarding/OnboardingStepsGenerator.php:185
+#: core/app/Features/Onboarding/OnboardingStepsGenerator.php:175
 msgid "Activate your license key"
 msgstr ""
 
-#: core/app/Features/Onboarding/OnboardingStepsGenerator.php:190
+#: core/app/Features/Onboarding/OnboardingStepsGenerator.php:180
 #: settings/config/menu.php:755
 #: settings/build/366.0e8cd32aeda45546f72d.js:1
 #: settings/build/485.a8b6655c06610e5d5679.js:1
@@ -1111,12 +1111,12 @@ msgstr ""
 msgid "Activate"
 msgstr ""
 
-#: core/app/Features/Onboarding/OnboardingStepsGenerator.php:204
+#: core/app/Features/Onboarding/OnboardingStepsGenerator.php:194
 msgid "Heavyweight security features, in a lightweight performant plugin from Really Simple Plugins. Get started with below features and get the latest and greatest updates for peace of mind!"
 msgstr ""
 
-#: core/app/Features/Onboarding/OnboardingStepsGenerator.php:206
-#: core/app/Features/Onboarding/OnboardingStepsGenerator.php:227
+#: core/app/Features/Onboarding/OnboardingStepsGenerator.php:196
+#: core/app/Features/Onboarding/OnboardingStepsGenerator.php:212
 #: upgrade/upgrade-to-pro.php:132
 #: upgrade/upgrade-to-pro.php:145
 #: settings/build/366.0e8cd32aeda45546f72d.js:1
@@ -1124,11 +1124,11 @@ msgstr ""
 msgid "Install"
 msgstr ""
 
-#: core/app/Features/Onboarding/OnboardingStepsGenerator.php:224
+#: core/app/Features/Onboarding/OnboardingStepsGenerator.php:209
 msgid "We think you will like this"
 msgstr ""
 
-#: core/app/Features/Onboarding/OnboardingStepsGenerator.php:225
+#: core/app/Features/Onboarding/OnboardingStepsGenerator.php:210
 msgid "Really Simple Plugins is also the author of the below privacy-focused plugins including consent management and legal documents!"
 msgstr ""
 
@@ -2264,46 +2264,46 @@ msgstr ""
 msgid "%s is a singleton class and you cannot create a second instance."
 msgstr ""
 
-#: pro/class-admin.php:138
+#: pro/class-admin.php:137
 msgid "You have installed Really Simple Security Pro. We have deactivated and removed the free plugin."
 msgstr ""
 
-#: pro/class-admin.php:151
+#: pro/class-admin.php:150
 #: settings/config/fields/general.php:210
 #: settings/config/menu.php:51
 msgid "Premium Support"
 msgstr ""
 
-#: pro/class-admin.php:607
+#: pro/class-admin.php:606
 msgid "Elementor mixed content successfully converted."
 msgstr ""
 
-#: pro/class-admin.php:620
-#: pro/class-admin.php:625
+#: pro/class-admin.php:619
+#: pro/class-admin.php:624
 msgid "Potential redirect loop."
 msgstr ""
 
-#: pro/class-admin.php:621
+#: pro/class-admin.php:620
 msgid "No redirect to http detected."
 msgstr ""
 
-#: pro/class-admin.php:626
+#: pro/class-admin.php:625
 msgid "A redirect to http was detected. This might result in redirect loops."
 msgstr ""
 
-#: pro/class-admin.php:642
+#: pro/class-admin.php:641
 msgid "TLS version"
 msgstr ""
 
-#: pro/class-admin.php:643
+#: pro/class-admin.php:642
 msgid "Your site uses an outdated version of TLS. Upgrade to TLS 1.2 or TLS 1.3 to keep your site secure."
 msgstr ""
 
-#: pro/class-admin.php:657
+#: pro/class-admin.php:656
 msgid "Your site redirects 404 pages to the http:// version of your homepage. This can cause mixed content issues with images."
 msgstr ""
 
-#: pro/class-admin.php:670
+#: pro/class-admin.php:669
 msgid "You are using W3 Total Cache with Disk: Enhanced setting. This can prevent Security headers from being properly loaded."
 msgstr ""
 

@@ -5,27 +5,20 @@ declare(strict_types=1);
 namespace ReallySimplePlugins\RSS\Core\Features\Onboarding;
 
 use ReallySimplePlugins\RSS\Core\Bootstrap\App;
+use ReallySimplePlugins\RSS\Core\Services\GlobalOnboardingService;
 
 /**
- * Business logic for the onboarding.
- * @todo: Move public/global methods from RSSSL() to its own services.
+ * Business logic for the onboarding feature.
+ * Queue management and feature-specific onboarding logic.
+ * Extends {@see GlobalOnboardingService} to inherit global onboarding methods.
  */
-class OnboardingService
+class OnboardingFeatureService extends GlobalOnboardingService
 {
     protected App $app;
 
     public function __construct(App $app)
     {
         $this->app = $app;
-    }
-
-    /**
-     * Method processes the SSL activation step of the onboarding for multisite
-     * instances.
-     */
-    public function processMultisiteActivationStep(): array
-    {
-        return RSSSL()->multisite->process_ssl_activation_step();
     }
 
     /**
@@ -67,8 +60,10 @@ class OnboardingService
     }
 
     /**
-     * For multisite environments, we check if the activation process was
+     * For multisite environments, check if the activation process was
      * started but not completed.
+     *
+     * @return bool True if multisite activation is incomplete
      */
     private function multisiteActivationNotCompleted(): bool
     {
@@ -76,10 +71,14 @@ class OnboardingService
     }
 
     /**
+     * Check if wp-config needs fixing before showing onboarding.
+     *
      * @todo: This check seems very legacy as these admin checks are present
      * since 2.2. Do we still need to prevent loading the onboarding when
      * we need to fix the wp-config? Do we even still fix the wp-config?
      * If no, just remove this.
+     *
+     * @return bool True if wp-config needs fixing
      */
     private function wpConfigNeedsFixing(): bool
     {
@@ -98,6 +97,15 @@ class OnboardingService
         }
 
         return false;
+    }
+
+    /**
+     * Method processes the SSL activation step of the onboarding for multisite
+     * instances.
+     */
+    public function processMultisiteActivationStep(): array
+    {
+        return RSSSL()->multisite->process_ssl_activation_step();
     }
 
     /**

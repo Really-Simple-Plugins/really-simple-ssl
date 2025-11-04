@@ -13,7 +13,6 @@ class OnboardingStepsGenerator
 {
     public array $steps = [];
     private bool $proPluginEnabled;
-    private bool $isUpgradeFromFreeToPro;
 
     private App $app;
     private RelatedPluginService $pluginService;
@@ -28,26 +27,32 @@ class OnboardingStepsGenerator
         $this->certificateService = $certificateService;
 
         $this->proPluginEnabled = defined('rsssl_pro');
-        $this->isUpgradeFromFreeToPro = get_option('rsssl_upgraded_from_free');
     }
 
-    public function generate(): array
-    {
-        $steps = [
-            $this->activateSslStep(),
-            $this->emailStep(),
-            $this->essentialFeaturesStep(),
-            $this->activateLicenseStep(),
-            $this->relatedPluginsStep(),
-            $this->proStep(),
-        ];
+	public function generate(bool $isUpgradeFromFree = false): array
+	{
+		if ($isUpgradeFromFree) {
+			$steps = [
+				$this->activateLicenseStep(),
+				$this->proStep(),
+			];
+		} else {
+			$steps = [
+				$this->activateSslStep(),
+				$this->emailStep(),
+				$this->essentialFeaturesStep(),
+				$this->activateLicenseStep(),
+				$this->relatedPluginsStep(),
+				$this->proStep(),
+			];
+		}
 
-        // Remove empty steps
-        $steps = array_filter($steps);
+		// Remove empty steps
+		$steps = array_filter($steps);
 
-        //Re-order keys to prevent issues after array_filter
-        return array_values($steps);
-    }
+		// Re-order keys to prevent issues after array_filter
+		return array_values($steps);
+	}
 
     /**
      * The activate SSL step include items related to SSL detection and
@@ -57,11 +62,6 @@ class OnboardingStepsGenerator
     private function activateSslStep(): array
     {
         $items = [];
-
-        // Step already done in the freemium plugin
-        if ($this->isUpgradeFromFreeToPro) {
-            return $items;
-        }
 
         if (strpos(site_url(), 'https://') === false) {
             $items[] = [
@@ -121,11 +121,6 @@ class OnboardingStepsGenerator
      */
     private function emailStep(): array
     {
-        // Step already done in the freemium plugin
-        if ($this->isUpgradeFromFreeToPro) {
-            return [];
-        }
-
         return [
             'id' => 'email',
             'title' => esc_html__('Verify your email', 'really-simple-ssl'),
@@ -142,11 +137,6 @@ class OnboardingStepsGenerator
      */
     private function essentialFeaturesStep(): array
     {
-        // Step already done in the freemium plugin
-        if ($this->isUpgradeFromFreeToPro) {
-            return [];
-        }
-
         $subtitle = esc_html__('Instantly configure these essential features.', 'really-simple-ssl');
 
         if ($this->proPluginEnabled === false) {
@@ -214,11 +204,6 @@ class OnboardingStepsGenerator
      */
     private function relatedPluginsStep(): array
     {
-        // Step already done in the freemium plugin
-        if ($this->isUpgradeFromFreeToPro) {
-            return [];
-        }
-
         return [
             'id' => 'plugins',
             'title' => esc_html__('We think you will like this', 'really-simple-ssl'),

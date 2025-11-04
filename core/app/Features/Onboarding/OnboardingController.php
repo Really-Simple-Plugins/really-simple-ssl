@@ -18,13 +18,13 @@ class OnboardingController implements FeatureInterface
 
     private App $app;
     private EmailService $emailService;
-    private OnboardingService $service;
+    private OnboardingFeatureService $service;
     private SecureSocketsService $sslService;
     private RelatedPluginService $pluginService;
     private SettingsConfigService $settingsService;
     private CertificateService $certificateService;
 
-    public function __construct(App $app, OnboardingService $service, SecureSocketsService $sslService, EmailService $emailService, RelatedPluginService $pluginService, SettingsConfigService $settingsService, CertificateService $certificateService)
+    public function __construct(App $app, OnboardingFeatureService $service, SecureSocketsService $sslService, EmailService $emailService, RelatedPluginService $pluginService, SettingsConfigService $settingsService, CertificateService $certificateService)
     {
         $this->app = $app;
         $this->service = $service;
@@ -121,8 +121,7 @@ class OnboardingController implements FeatureInterface
      */
     private function onActivateSslClick(): void
     {
-        update_option('rsssl_show_onboarding', true, false);
-        update_option('rsssl_onboarding_dismissed', false, false);
+        $this->service->resetOnboarding();
     }
 
     /**
@@ -144,16 +143,21 @@ class OnboardingController implements FeatureInterface
             $this->onActivateSslClick();
         }
 
+	    // For an upgrade from free, we should check the rsssl_free_deactivated
+	    // option. When upgrading from Pro from Free, rsssl_deactivate_alternate
+	    // is called in the Free plugin. Therefore, we have to check this option.
+	    // This is not something we can easily change, because the free plugin has
+	    // to be updated before we can check this in Pro.
+	    $isUpgradeFromFree = get_option('rsssl_free_deactivated');
+	    delete_option('rsssl_free_deactivated');
+
         $stepsGenerator = $this->app->make(OnboardingStepsGenerator::class);
-        $onboardingSteps = $stepsGenerator->generate();
+        $onboardingSteps = $stepsGenerator->generate($isUpgradeFromFree);
 
         //if the user called with a refresh action, clear the cache
         if ($data->getBoolean('forceRefresh')) {
             delete_transient('rsssl_certinfo');
         }
-
-        $isUpgradeFromFree = get_option('rsssl_upgraded_from_free');
-        delete_option('rsssl_upgraded_from_free');
 
         return [
             'steps' => $onboardingSteps,

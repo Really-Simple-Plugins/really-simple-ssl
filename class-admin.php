@@ -3153,6 +3153,18 @@ class rsssl_admin {
 		}
 	}
 
+    /**
+     * Wrapper function that delegates the onboarding reset to the global onboardingService
+     *
+     * @return void
+     */
+    public function reset_onboarding() {
+        if ( class_exists( '\ReallySimplePlugins\RSS\Core\Services\GlobalOnboardingService' ) ) {
+            $globalOnboardingService = new \ReallySimplePlugins\RSS\Core\Services\GlobalOnboardingService();
+            $globalOnboardingService->resetOnboarding();
+        }
+    }
+
 } //class closure
 
 if ( ! function_exists( 'rsssl_ssl_enabled' ) ) {
