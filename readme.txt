@@ -6,7 +6,7 @@ Requires at least: 6.6
 License: GPL2
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 9.5.3.1
+Stable tag: 9.5.3.2
 
 Easily improve site security with WordPress Hardening, Two-Factor Authentication (2FA), Login Protection, Vulnerability Detection and SSL certificate.
 
@@ -160,29 +160,33 @@ Yes. The plugin enforces HTTPS and handles all necessary redirects, optionally u
 Really Simple Security and WordFence greatly overlap in term of functionality. If you like to use specific features from both plugins, we strongly recommend not to enable similar features twice. The benefit of Really Simple Security is that disabled features don't load any code, so won't have an impact on site performance.
 
 == Changelog ==
+= 9.5.3.2 =
+* November 18th, 2025
+* Improvement: updated black friday dates
+
 = 9.5.3.1 =
 * Fix: Added a fix for WP_CLI commands
 
 = 9.5.3 =
-Fix: removed an unused translation that could cause a textdomain loaded to early warning
-Fix: deactivation modal now always displays
-Improvement: refactored the onboarding code
+* Fix: removed an unused translation that could cause a textdomain loaded to early warning
+* Fix: deactivation modal now always displays
+* Improvement: refactored the onboarding code
 
 = 9.5.2.3 =
-Fix: the 2FA reset fix now correctly calls the 2FA reset service
+* Fix: the 2FA reset fix now correctly calls the 2FA reset service
 
 = 9.5.2.2 =
-Fix: a TypeError in the 2FA query builder that could occur when updating from older plugin versions
+* Fix: a TypeError in the 2FA query builder that could occur when updating from older plugin versions
 
 = 9.5.2 =
-Fix: all users will now appear in the 2FA list
-Fix: tasks will now always display on multisite
-Improvement: the activate_ssl WP-CLI command can now be run with the –force argument to skip confirmation
+* Fix: all users will now appear in the 2FA list
+* Fix: tasks will now always display on multisite
+* Improvement: the activate_ssl WP-CLI command can now be run with the –force argument to skip confirmation
 
 = 9.5.1 =
-Improvement: standardized REST namespaces to really-simple-security
-Fix: added a check for the getmyuid function to prevent errors in case this function was missing
-Fix: Right-To-Left CSS now works correctly when SCRIPT_DEBUG is enabled
+* Improvement: standardized REST namespaces to really-simple-security
+* Fix: added a check for the getmyuid function to prevent errors in case this function was missing
+* Fix: Right-To-Left CSS now works correctly when SCRIPT_DEBUG is enabled
 
 = 9.5.0.2 =
 * Fix: Prevent empty content to be written into htaccess
