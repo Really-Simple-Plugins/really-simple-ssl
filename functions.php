@@ -271,7 +271,7 @@ if ( ! function_exists('rsssl_set_encryption_key')) {
 			$pos      = strpos( $contents, $insert_after );
 			if ( false !== $pos && strpos( $contents, 'RSSSL_KEY' ) === false ) {
 				$contents = substr_replace( $contents, $rule, $pos + 1 + strlen( $insert_after ), 0 );
-				file_put_contents( $wp_config_path, $contents );
+				file_put_contents( $wp_config_path, $contents, LOCK_EX );
 			}
 
 			// If the wp-config was just set to writable, we can delete the key from the database now.

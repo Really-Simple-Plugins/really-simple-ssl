@@ -6,7 +6,7 @@ Requires at least: 6.6
 License: GPL2
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 9.5.3.2
+Stable tag: 9.5.4
 
 Easily improve site security with WordPress Hardening, Two-Factor Authentication (2FA), Login Protection, Vulnerability Detection and SSL certificate.
 
@@ -160,6 +160,17 @@ Yes. The plugin enforces HTTPS and handles all necessary redirects, optionally u
 Really Simple Security and WordFence greatly overlap in term of functionality. If you like to use specific features from both plugins, we strongly recommend not to enable similar features twice. The benefit of Really Simple Security is that disabled features don't load any code, so won't have an impact on site performance.
 
 == Changelog ==
+= 9.5.4 =
+* December 2nd, 2025
+* Fix: an issue where an undefined array key 0 could occur on the login page if a user had 2FA enabled but no WordPress user roles
+* Fix: prevent a potential fatal error by returning early when an empty wp-config.php path is detected
+* Improvement: added the LOCK_EX flag to file_put_contents() operations for .htaccess and wp-config.php to prevent race conditions
+* Improvement: updated the .htaccess "No index" comment to a clearer "Disable directory indexing" comment
+* Improvement: replaced site_url() with home_url() in the 404 resource check on the homepage
+* Improvement: added additional checks to prevent certain functions from running during cron jobs and in cli environments
+* Improvement: the final step of the Let’s Encrypt wizard now only displays an Activate SSL button instead of the entire onboarding
+* Improvement: added a license.txt file
+
 = 9.5.3.2 =
 * November 18th, 2025
 * Improvement: updated black friday dates

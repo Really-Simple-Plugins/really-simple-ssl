@@ -835,6 +835,22 @@ class Rsssl_Two_Factor
             include_once __DIR__ . '/function-login-header.php';
         }
 
+        // Enqueue two-fa JavaScript assets
+        $uri = trailingslashit(rsssl_url) . 'assets/features/two-fa/assets.min.js';
+        $uri_file = trailingslashit(rsssl_path) . 'assets/features/two-fa/assets.min.js';
+        add_filter('wp_script_attributes', [self::class, 'handle_script_attributes'], 10, 2);
+        wp_enqueue_script('rsssl-frontend-settings', $uri, array(), filemtime($uri_file), true);
+
+        wp_localize_script('rsssl-frontend-settings', 'rsssl_validate', array(
+            'nonce' => wp_create_nonce('wp_rest'),
+            'root' => esc_url_raw(rest_url(self::REST_NAMESPACE)),
+            'login_nonce' => $login_nonce,
+            'redirect_to' => $redirect_to,
+            'user_id' => $user->ID,
+            'origin' => 'validation',
+            'translatables' => apply_filters('rsssl_two_factor_translatables', []),
+        ));
+
         // Load the login template.
         rsssl_load_template(
             'login.php',

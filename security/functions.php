@@ -3,6 +3,10 @@
 use RSSSL\Security\RSSSL_Htaccess_File_Manager;
 
 defined( 'ABSPATH' ) or die( );
+
+// Htaccess marker constants
+const RSSSL_DISABLE_DIRECTORY_INDEXING_MARKER = 'Really Simple Security Disable directory indexing';
+const RSSSL_NO_INDEX_LEGACY_MARKER = 'Really Simple Security No Index';
 /**
  * Back-end available only
  */
@@ -148,8 +152,7 @@ if ( !function_exists('rsssl_remove_htaccess_security_edits') ) {
 		$content_htaccess_uploads = is_file($htaccess_file_uploads ) ? file_get_contents($htaccess_file_uploads) : '';
 		if (preg_match($pattern, $content_htaccess_uploads) && is_writable( $htaccess_file_uploads )) {
 			$content_htaccess_uploads = preg_replace($pattern, "", $content_htaccess_uploads);
-			error_log('Removing security edits from uploads .htaccess file');
-			file_put_contents( $htaccess_file_uploads, $content_htaccess_uploads );
+			file_put_contents( $htaccess_file_uploads, $content_htaccess_uploads, LOCK_EX );
 		}
 		// Uses the new conversion of the htaccess file manager
 		$root_htaccess_file = RSSSL()->admin->htaccess_file();
@@ -175,13 +178,13 @@ if ( !function_exists('rsssl_remove_htaccess_security_edits') ) {
 			$root_manager->clear_rule( 'Really Simple Security Redirect', 'clear redirect 1' );
 			//Legacy rules
 			$root_manager->clear_legacy_rule( 'Really Simple Security Redirect' );
+			// Clear any remaining security rules block
+			$root_manager->clear_legacy_rule( 'Really Simple Security' );
+			// Clear disable directory indexing block
+			$root_manager->clear_rule( RSSSL_DISABLE_DIRECTORY_INDEXING_MARKER, 'clear disable directory indexing' );
+			// Clear legacy Really Simple SSL block
+			$root_manager->clear_legacy_rule( 'rlrssslReallySimpleSSL' );
 		}
-		// Clear any remaining security rules block
-		$root_manager->clear_legacy_rule( 'Really Simple Security' );
-		// Clear no-indexing block
-		$root_manager->clear_rule( 'Really Simple Security No Index', 'clear no index' );
-		// Clear legacy Really Simple SSL block
-		$root_manager->clear_legacy_rule( 'rlrssslReallySimpleSSL' );
 	}
 }
 
@@ -281,8 +284,8 @@ function rsssl_handle_root_htaccess(): void {
             if ( isset( $rule['identifier'] ) && $rule['identifier'] === 'Options -Indexes' ) {
 	            // removing the identifier from the rule, as it is not used in the new htaccess file manager
 	            unset( $rule['identifier'] );
-                // 2.1) Add the no-indexing block
-                $no_index_definition = rsssl_build_no_index_block( $manager );
+                // 2.1) Add the disable directory indexing block
+                $no_index_definition = rsssl_build_disable_indexing_block( $manager );
                 // remove this rule
                 unset( $rules[ $idx ] );
                 break;  // stop after first match
@@ -306,8 +309,8 @@ function rsssl_handle_root_htaccess(): void {
             // If we have a no-indexing block, write it first
             $manager->write_rule( $no_index_definition, 'Writing no index block' );
         } elseif( ! rsssl_get_option( 'disable_indexing', false ) ) {
-            // If we don’t have a no-indexing block, clear it
-            $manager->clear_rule( 'Really Simple Security No Index', 'clear no index' );
+            // If we don't have a disable directory indexing block, clear it
+            $manager->clear_rule( RSSSL_DISABLE_DIRECTORY_INDEXING_MARKER, 'clear disable directory indexing' );
         }
 //			// 4) Write the redirect block but only if it’s not empty
         if ( ! empty( $definition['lines'] ) ) {
@@ -349,7 +352,13 @@ function rsssl_build_redirect_block( RSSSL_Htaccess_File_Manager $m, array $line
 	];
 }
 
-function rsssl_build_no_index_block( RSSSL_Htaccess_File_Manager $m ): array {
+/**
+ * Build the disable directory indexing block for the .htaccess file.
+ *
+ * @param RSSSL_Htaccess_File_Manager $m
+ * @return array
+ */
+function rsssl_build_disable_indexing_block( RSSSL_Htaccess_File_Manager $m ): array {
 	$content   = $m->get_htaccess_content() ?: '';
 	$no_index = 'Options -Indexes';
 	if ( strpos( $content, $no_index ) !== false ) {
@@ -357,8 +366,11 @@ function rsssl_build_no_index_block( RSSSL_Htaccess_File_Manager $m ): array {
 	}
 
 	return [
-		'marker' => 'Really Simple Security No Index',
-		'lines'  => [ $no_index ],
+		'marker' => RSSSL_DISABLE_DIRECTORY_INDEXING_MARKER,
+		'lines'  => [
+			'# Disable directory indexing to prevent listing of directory contents',
+			$no_index
+		],
 	];
 }
 
@@ -377,7 +389,7 @@ function rsssl_handle_uploads_htaccess(): void {
 
 	if ( ! is_file( $htaccess_uploads ) && count( $rules_uploads ) > 0 ) {
 		if ( is_writable( trailingslashit( $upload_dir['basedir'] ) ) ) {
-			file_put_contents( $htaccess_uploads, '' );
+			file_put_contents( $htaccess_uploads, '', LOCK_EX );
 		} else {
 			update_site_option( 'rsssl_uploads_htaccess_error', 'not-writable' );
 			$rules_uploads_result = implode( '', array_column( $rules_uploads, 'rules' ) );
@@ -401,7 +413,7 @@ function rsssl_handle_uploads_htaccess(): void {
 			$has_block = preg_match( '/#Begin Really Simple Security.*?#End Really Simple Security/is', $content );
 			if ( ! empty( $rules_uploads_result ) || $has_block ) {
 				if ( ! is_file( $htaccess_uploads ) ) {
-					file_put_contents( $htaccess_uploads, '' );
+					file_put_contents( $htaccess_uploads, '', LOCK_EX );
 				}
 				$new_block = empty( $rules_uploads_result ) ? '' : $start . $rules_uploads_result . $end;
 
@@ -415,7 +427,7 @@ function rsssl_handle_uploads_htaccess(): void {
 					$new     = $cleaned . "\n" . $new_block;
 					$new     = preg_replace( "/\n{3,}/", "\n\n", $new );
 					if ( file_get_contents( $htaccess_uploads ) !== $new ) {
-						file_put_contents( $htaccess_uploads, $new );
+						file_put_contents( $htaccess_uploads, $new, LOCK_EX );
 					}
 				}
 			}

@@ -327,6 +327,11 @@ class rsssl_firewall_manager {
 	 * @return string
 	 */
 	private function get_contents( string $file ): string {
+		// Validate that file path is not empty
+		if ( empty( $file ) ) {
+			return '';
+		}
+
 		$wp_filesystem = $this->get_file_system();
 
 		if ( $wp_filesystem === false ) {
@@ -525,7 +530,11 @@ class rsssl_firewall_manager {
 		if ( ! rsssl_user_can_manage() ) {
 			return;
 		}
-		$file    = $this->wpconfig_path();
+		$file = $this->wpconfig_path();
+		if ( empty( $file ) ) {
+			update_option( 'rsssl_firewall_error', 'wpconfig-notfound', false );
+			return;
+		}
 		$content = $this->get_contents( $file );
 		if ( strpos( $content, 'advanced-headers.php' ) === false ) {
 			$rule = $this->get_wp_config_rule();
@@ -594,6 +603,9 @@ class rsssl_firewall_manager {
 		}
 
 		$file = $this->wpconfig_path();
+		if ( empty( $file ) ) {
+			return;
+		}
 		if ( $this->is_writable( $file ) ) {
 			$content = $this->get_contents( $file );
 			$rule    = $this->get_wp_config_rule();

@@ -2,12 +2,16 @@
 
 defined( 'ABSPATH' ) or die();
 
+require_once rsssl_path . '/lib/admin/class-encryption.php';
+
 require_once rsssl_path . '/lib/admin/class-helper.php';
 use RSSSL\lib\admin\Helper;
+use RSSSL\lib\admin\Encryption;
 use RSSSL\Security\RSSSL_Htaccess_File_Manager;
 
 class rsssl_admin {
     use Helper;
+    use Encryption;
 	private static $_this;
 	public $wpconfig_siteurl_not_fixed   = false;
 	public $no_server_variable           = false;
@@ -804,7 +808,7 @@ class rsssl_admin {
 					$ssl_array    = array( "define('WP_HOME','http://", "define('WP_SITEURL','http://" );
 					//now replace these urls
 					$wpconfig = str_replace( $search_array, $ssl_array, $wpconfig );
-					file_put_contents( $wpconfig_path, $wpconfig );
+					file_put_contents( $wpconfig_path, $wpconfig, LOCK_EX );
 				}
 			}
 		}
@@ -864,7 +868,7 @@ class rsssl_admin {
 			if ( is_writable( $wpconfig_path ) ) {
 				$wpconfig = preg_replace( $homeurl_pattern, "define('WP_HOME','https://", $wpconfig );
 				$wpconfig = preg_replace( $siteurl_pattern, "define('WP_SITEURL','https://", $wpconfig );
-				file_put_contents( $wpconfig_path, $wpconfig );
+				file_put_contents( $wpconfig_path, $wpconfig, LOCK_EX );
 			} else {
 				//only when siteurl or homeurl is defined in wpconfig, and wpconfig is not writable is there a possible issue because we cannot edit the defined urls.
 				$this->wpconfig_siteurl_not_fixed = true;
@@ -941,7 +945,7 @@ class rsssl_admin {
 				$wpconfig = substr_replace( $wpconfig, $rule, $pos + 1 + strlen( $insert_after ), 0 );
 			}
 
-			file_put_contents( $wpconfig_path, $wpconfig );
+			file_put_contents( $wpconfig_path, $wpconfig, LOCK_EX );
 		}
 	}
 
@@ -973,7 +977,7 @@ class rsssl_admin {
 		//remove edits
 		$wpconfig = preg_replace( '/\/\/Begin\s?Really\s?Simple\s?SSL\s?Server\s?variable\s?fix.*?\/\/END\s?Really\s?Simple\s?SSL\s?Server\s?variable\s?fix/s', '', $wpconfig );
 		$wpconfig = preg_replace( "/\n+/", "\n", $wpconfig );
-		file_put_contents( $wpconfig_path, $wpconfig );
+		file_put_contents( $wpconfig_path, $wpconfig, LOCK_EX );
 	}
 
 	/**
@@ -1112,7 +1116,7 @@ class rsssl_admin {
 			$wpconfig = file_get_contents( $wpconfig_path );
 			$wpconfig = preg_replace( '/\/\/Begin\s?Really\s?Simple\s?SSL\s?session\s?cookie\s?settings.*?\/\/END\s?Really\s?Simple\s?SSL\s?cookie\s?settings/s', '', $wpconfig );
 			$wpconfig = preg_replace( "/\n+/", "\n", $wpconfig );
-			file_put_contents( $wpconfig_path, $wpconfig );
+			file_put_contents( $wpconfig_path, $wpconfig, LOCK_EX );
 		}
 	}
 
@@ -2809,7 +2813,7 @@ class rsssl_admin {
 					$wpconfig = substr_replace( $wpconfig, $rule, $pos + 1 + strlen( $insert_after ), 0 );
 				}
 
-				file_put_contents( $wpconfig_path, $wpconfig );
+				file_put_contents( $wpconfig_path, $wpconfig, LOCK_EX );
 			}
 		}
 	}
@@ -2979,8 +2983,7 @@ class rsssl_admin {
 			$updated = str_replace( 'Really Simple SSL', 'Really Simple Security', $htaccess );
 
 			if ( $updated !== $htaccess ) {
-                error_log( 'Updating branding in .htaccess' );
-				file_put_contents( $this->htaccess_file(), $updated );
+				file_put_contents( $this->htaccess_file(), $updated, LOCK_EX );
 			}
 		}
 	}
@@ -3000,7 +3003,7 @@ class rsssl_admin {
 			   str_replace( "Really Simple SSL", "Really Simple Security", $wp_config );
 		   }
 
-		   file_put_contents( $this->wpconfig_path(), $wp_config );
+		   file_put_contents( $this->wpconfig_path(), $wp_config, LOCK_EX );
 	   }
     }
 

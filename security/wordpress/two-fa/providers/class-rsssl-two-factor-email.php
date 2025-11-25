@@ -94,7 +94,7 @@ class Rsssl_Two_Factor_Email extends Rsssl_Two_Factor_Provider implements Rsssl_
      * Ensure PHP session is started.
      */
     public static function ensure_session_started() {
-        if ( php_sapi_name() !== 'cli' && ! headers_sent() && ! session_id() ) {
+        if ( PHP_SAPI !== 'cli' && ! headers_sent() && ! session_id() ) {
             session_start();
         }
     }
@@ -516,7 +516,7 @@ class Rsssl_Two_Factor_Email extends Rsssl_Two_Factor_Provider implements Rsssl_
 		if ( ! $user->exists() ) {
 			return false;
 		}
-		$user_roles     = $user->roles;
+		$user_roles     = ! empty( $user->roles ) && is_array( $user->roles ) ? $user->roles : [];
 		$optional_roles = rsssl_get_option( 'two_fa_enabled_roles_email' );
 		if ( empty( $optional_roles ) ) {
 			$optional_roles = array();
@@ -524,7 +524,8 @@ class Rsssl_Two_Factor_Email extends Rsssl_Two_Factor_Provider implements Rsssl_
 		if ( 'disabled' === Rsssl_Two_Factor_Settings::get_user_status( 'email', $user->ID ) ) {
 			return false;
 		}
-		return in_array( $user_roles[0], $optional_roles, true );
+		// Check if any of the user's roles are in the optional roles list.
+		return ! empty( array_intersect( $user_roles, $optional_roles ) );
 	}
 
 	/**
@@ -563,6 +564,11 @@ class Rsssl_Two_Factor_Email extends Rsssl_Two_Factor_Provider implements Rsssl_
 		$title             = esc_html__( 'Email', 'really-simple-ssl' );
 		$description       = esc_html__( 'Receive a code by email', 'really-simple-ssl' );
 
+		// Check if any of the user's roles are in the forced roles list.
+		$user_roles      = ! empty( $user->roles ) && is_array( $user->roles ) ? $user->roles : [];
+		$forced_roles    = (array) rsssl_get_option( 'two_fa_forced_roles' );
+		$is_forcible     = ! empty( array_intersect( $user_roles, $forced_roles ) );
+
 		// Load the template.
 		rsssl_load_template(
 			'selectable-option.php',
@@ -572,7 +578,7 @@ class Rsssl_Two_Factor_Email extends Rsssl_Two_Factor_Provider implements Rsssl_
 				'checked_attribute' => $checked_attribute,
 				'title'             => $title,
 				'type'              => 'email', // Used this to identify the provider.
-				'forcible'          => in_array( $user->roles[0], (array) rsssl_get_option( 'two_fa_forced_roles' ), true ),
+				'forcible'          => $is_forcible,
 				'description'       => $description,
 				'user'              => $user,
 			),
@@ -609,15 +615,8 @@ class Rsssl_Two_Factor_Email extends Rsssl_Two_Factor_Provider implements Rsssl_
             $enabled_roles = array();
         }
 
-        // Return true if one of the user roles is in the enabled roles.
-        if ( (count($user_roles) > 1) || is_multisite() ) {
-            return count(array_intersect($user_roles, $enabled_roles)) > 0;
-        }
-
-        // If the user role is in the enabled roles, return true.
-        $firstKey = ( empty($user_roles) ? 0 : array_key_first($user_roles) );
-        $firstFoundRole = $user_roles[$firstKey];
-		return in_array( $firstFoundRole, $enabled_roles, true );
+        // Return true if any of the user's roles are in the enabled roles list.
+        return ! empty( array_intersect( $user_roles, $enabled_roles ) );
 	}
 
     public static function is_configured( WP_User $user ): bool {

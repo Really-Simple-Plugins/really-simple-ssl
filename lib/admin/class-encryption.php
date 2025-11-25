@@ -56,12 +56,12 @@ trait Encryption {
 	 *
 	 * @param array|string $data
 	 * @param string $type //ARRAY or STRING
-	 *
+	 * @param string $publicFacingKey Use this param to pass an encryption key
 	 * @return string
 	 */
-	public function encrypt( $data, string $type = 'string' ): string {
+	public function encrypt( $data, string $type = 'string', string $publicFacingKey = '' ): string {
 
-		$key = $this->get_encryption_key();
+        $key = ! empty( $publicFacingKey ) ? $publicFacingKey : $this->get_encryption_key();
 
 		if ( 'array' === strtolower( $type ) ) {
 			$data = serialize($data);

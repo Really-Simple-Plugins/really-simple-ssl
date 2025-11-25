@@ -222,7 +222,7 @@ class RSSSL_Htaccess_File_Manager {
 	    if ( ! is_file( $this->htaccess_file_path ) ) {
 	        $allow_create = apply_filters( 'rsssl_allow_create_htaccess', false, $this->htaccess_file_path );
 	        if ( $allow_create ) {
-	            if ( @file_put_contents( $this->htaccess_file_path, '' ) === false ) {
+	            if ( @file_put_contents( $this->htaccess_file_path, '', LOCK_EX ) === false ) {
 	                $this->log_error( 'Could not create .htaccess file at: ' . esc_html( $this->htaccess_file_path ) );
 	                return false;
 	            } else {
@@ -482,8 +482,9 @@ public function clear_legacy_rule(string $marker): bool
 	}
 
     // Match and remove the block with the exact marker name
+    // Use case-insensitive matching for BEGIN/END to handle both legacy and WordPress standard formats
     $escaped = preg_quote($marker, '/');
-    $pattern = '/^#+\s*Begin\s+' . $escaped . '.*?^#+\s*End\s+' . $escaped . '.*?$/ms';
+    $pattern = '/^#+\s*BEGIN\s+' . $escaped . '.*?^#+\s*END\s+' . $escaped . '.*?$/msi';
 
     $new_content = trim(preg_replace($pattern, '', $content));
 
@@ -494,7 +495,7 @@ public function clear_legacy_rule(string $marker): bool
 
     // Write the updated content back to the .htaccess file
     if ( $new_content !== $content && ! $this->is_effectively_empty( $new_content ) ) {
-        return file_put_contents($this->htaccess_file_path, $new_content) !== false;
+        return file_put_contents($this->htaccess_file_path, $new_content, LOCK_EX) !== false;
     }
 
     return true; // No changes needed

@@ -789,21 +789,30 @@ function rsssl_add_url_param_ids( array $menu_items ): array {
 	return $menu_items;
 }
 
-function rsssl_get_url_ref(){
-	if ( !defined('HBRW_PLATFORM_ID') ) {
+function rsssl_get_url_ref() {
+	if (defined('rsssl_pro')) {
 		return false;
 	}
 
-	if ( defined( 'rsssl_pro') ) {
-		return false;
-	}
+    $id = 0;
+    if (defined('HBRW_PLATFORM_ID') && !empty(HBRW_PLATFORM_ID)) {
+        $id = (int) HBRW_PLATFORM_ID;
+    }
+    if (defined('EXTENDIFY_PARTNER_ID') && !empty(EXTENDIFY_PARTNER_ID)) {
+        $id = 3; // hard reference to Extendify platform
+    }
 
-	$param_ids = [
-		1 => 483,//Combell
-		2 => 492,//Easyhost
+    if (empty($id)) {
+        return false;
+    }
+
+	$references = [
+		1 => 483, // Combell
+		2 => 492, // Easyhost
+		3 => 673, // Extendify
 	];
-	$id = (int) HBRW_PLATFORM_ID;
-	return $param_ids[ $id ] ?? false;
+
+	return $references[$id] ?? false;
 }
 
 function rsssl_link( $slug = 'pro', $mtm_campaign = 'notification', $mtm_src = 'free', $discount = '' ): string {
@@ -819,6 +828,14 @@ function rsssl_link( $slug = 'pro', $mtm_campaign = 'notification', $mtm_src = '
 	if ( (int) $ref > 0 ) {
 		$url = add_query_arg( 'ref', $ref, $url );
 	}
+
+    // Add non-human-readable ID as the campaign
+    if ( ! defined( 'rsssl_pro' ) && defined( 'EXTENDIFY_PARTNER_ID' ) && ! empty( EXTENDIFY_PARTNER_ID ) ) {
+        $campaign = RSSSL()->admin->encrypt( EXTENDIFY_PARTNER_ID, 'string', 'C6E297149ABB6' );
+        if ( ! empty( $campaign ) ) {
+            $url = add_query_arg( 'campaign', sanitize_text_field( $campaign ), $url );
+        }
+    }
 
 	// Add discount code separately if provided
 	if ( ! empty( $discount ) ) {

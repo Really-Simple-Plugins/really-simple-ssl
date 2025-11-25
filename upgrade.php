@@ -276,6 +276,21 @@ function rsssl_upgrade() {
 		}
 	}
 
+	// Clean up old "No Index" marker and replace with clearer
+	// "Disable directory indexing" marker
+	if ( $prev_version && version_compare( $prev_version, '9.5.3.1', '<=' ) ) {
+		$fileManager = RSSSL_Htaccess_File_Manager::get_instance();
+		if ( $fileManager->validate_htaccess_file_path() ) {
+			// Remove the old "No Index" marker if it exists
+			$fileManager->clear_legacy_rule( 'Really Simple Security No Index' );
+			// If the disable_indexing option is enabled, the new marker will be
+			// added automatically when settings are saved or rules are updated
+			if ( rsssl_get_option( 'disable_indexing', false ) ) {
+				do_action('rsssl_update_rules');
+			}
+		}
+	}
+
 	//don't clear on each update.
 	//RSSSL()->admin->clear_admin_notices_cache();
 

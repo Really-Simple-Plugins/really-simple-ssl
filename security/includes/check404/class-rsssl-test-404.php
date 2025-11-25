@@ -76,7 +76,7 @@ class Rsssl_Test_404 {
 			return;
 		}
 
-		$site_url = trailingslashit( site_url() );
+		$site_url = trailingslashit( home_url() );
 
 		$response = wp_remote_get( $site_url );
 		if ( is_wp_error( $response ) ) {

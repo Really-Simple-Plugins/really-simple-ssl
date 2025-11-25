@@ -51,7 +51,7 @@ if ( ! class_exists( 'rsssl_front_end' ) ) {
 
 		public function wp_rest_api_force_ssl(): void {
 			//check for Command Line
-			if ( php_sapi_name() === 'cli' ) {
+			if ( PHP_SAPI === 'cli' ) {
 				return;
 			}
 
