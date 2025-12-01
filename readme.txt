@@ -4,7 +4,7 @@ Donate link: https://www.paypal.me/reallysimplessl
 Tags: security, https, 2fa, vulnerabilities, two factor
 Requires at least: 6.6
 License: GPL2
-Tested up to: 6.8
+Tested up to: 6.9
 Requires PHP: 7.4
 Stable tag: 9.5.4
 
