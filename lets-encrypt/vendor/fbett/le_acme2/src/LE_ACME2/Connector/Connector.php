@@ -49,7 +49,7 @@ class Connector {
      * @throws Exception\InvalidResponse
      * @throws Exception\RateLimitReached
      */
-    public function request(string $method, string $url, string $data = null) : RawResponse {
+    public function request(string $method, string $url, ?string $data = null) : RawResponse {
 
         Utilities\Logger::getInstance()->add(Utilities\Logger::LEVEL_INFO, 'will request from ' . $url, $data);
 

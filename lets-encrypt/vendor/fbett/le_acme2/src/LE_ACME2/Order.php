@@ -30,7 +30,7 @@ class Order extends AbstractKeyValuable {
     /** @var string|null $_preferredChain */
     private static $_preferredChain = null;
 
-    public static function setPreferredChain(string $issuerCN = null) {
+    public static function setPreferredChain(?string $issuerCN = null) {
         self::$_preferredChain = $issuerCN;
     }
 
@@ -354,7 +354,7 @@ class Order extends AbstractKeyValuable {
      * @param int|null $renewBefore Unix timestamp
      * @throws Exception\AbstractException
      */
-    public function enableAutoRenewal($keyType = self::KEY_TYPE_RSA, int $renewBefore = null) {
+    public function enableAutoRenewal($keyType = self::KEY_TYPE_RSA, ?int $renewBefore = null) {
 
         if($keyType === null) {
             $keyType = self::KEY_TYPE_RSA;

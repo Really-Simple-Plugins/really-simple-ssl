@@ -9,33 +9,28 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-11-25T13:27:18+00:00\n"
+"POT-Creation-Date: 2025-12-01T10:14:45+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.11.0\n"
+"X-Generator: WP-CLI 2.8.1\n"
 "X-Domain: really-simple-ssl\n"
 
 #. Plugin Name of the plugin
-#: really-simple-ssl-pro.php
 msgid "Really Simple Security Pro"
 msgstr ""
 
 #. Plugin URI of the plugin
-#: really-simple-ssl-pro.php
 msgid "https://really-simple-ssl.com"
 msgstr ""
 
 #. Description of the plugin
-#: really-simple-ssl-pro.php
 msgid "Simple and performant security"
 msgstr ""
 
 #. Author of the plugin
-#: really-simple-ssl-pro.php
 msgid "Really Simple Plugins"
 msgstr ""
 
 #. Author URI of the plugin
-#: really-simple-ssl-pro.php
 msgid "https://really-simple-ssl.com/about-us"
 msgstr ""
 
