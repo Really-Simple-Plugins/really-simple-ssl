@@ -239,23 +239,27 @@ if ( ! function_exists( 'rsssl_wpconfig_path' ) ) {
 if ( ! function_exists('rsssl_set_encryption_key')) {
 	function rsssl_set_encryption_key(): void {
 
-		// Return if key has been set
-		if ( get_site_option( 'rsssl_encryption_keys_set' ) ) {
-			return;
-		}
-
-		$wp_config_path = rsssl_wpconfig_path();
-
-		// Check if we already have a key defined
+		// Return if the key has already been defined
 		if ( defined( 'RSSSL_KEY' ) ) {
 			return;
 		}
 
-		$key           = get_site_option( 'rsssl_main_key' );
+		$key            = get_site_option( 'rsssl_main_key' );
+		$wp_config_path = rsssl_wpconfig_path();
+
+		// If we have a DB key, and the wp-config.php is not writable, return
+		if ( $key && ! is_writable( $wp_config_path ) ) {
+			return;
+		}
+
 		$new_generated = false;
 
 		// If we don't have a key, generate one
 		if ( ! $key ) {
+			// Ensure wp_generate_password() is available
+			if ( ! function_exists( 'wp_generate_password' ) ) {
+				require_once ABSPATH . WPINC . '/pluggable.php';
+			}
 			$new_generated = true;
 			$key           = wp_generate_password( 64, false );
 		}
@@ -272,6 +276,12 @@ if ( ! function_exists('rsssl_set_encryption_key')) {
 			if ( false !== $pos && strpos( $contents, 'RSSSL_KEY' ) === false ) {
 				$contents = substr_replace( $contents, $rule, $pos + 1 + strlen( $insert_after ), 0 );
 				file_put_contents( $wp_config_path, $contents, LOCK_EX );
+
+				// Define the constant for the current request. wp-config.php
+				// won't be re-parsed until next request.
+				if ( ! defined( 'RSSSL_KEY' ) ) {
+					define( 'RSSSL_KEY', $key );
+				}
 			}
 
 			// If the wp-config was just set to writable, we can delete the key from the database now.

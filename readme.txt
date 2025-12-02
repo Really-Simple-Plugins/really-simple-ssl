@@ -6,7 +6,7 @@ Requires at least: 6.6
 License: GPL2
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 9.5.4
+Stable tag: 9.5.5
 
 Easily improve site security with WordPress Hardening, Two-Factor Authentication (2FA), Login Protection, Vulnerability Detection and SSL certificate.
 
@@ -160,513 +160,486 @@ Yes. The plugin enforces HTTPS and handles all necessary redirects, optionally u
 Really Simple Security and WordFence greatly overlap in term of functionality. If you like to use specific features from both plugins, we strongly recommend not to enable similar features twice. The benefit of Really Simple Security is that disabled features don't load any code, so won't have an impact on site performance.
 
 == Changelog ==
-= 9.5.4 =
-* December 2nd, 2025
-* Fix: an issue where an undefined array key 0 could occur on the login page if a user had 2FA enabled but no WordPress user roles
-* Fix: prevent a potential fatal error by returning early when an empty wp-config.php path is detected
-* Improvement: added the LOCK_EX flag to file_put_contents() operations for .htaccess and wp-config.php to prevent race conditions
-* Improvement: updated the .htaccess "No index" comment to a clearer "Disable directory indexing" comment
-* Improvement: replaced site_url() with home_url() in the 404 resource check on the homepage
-* Improvement: added additional checks to prevent certain functions from running during cron jobs and in cli environments
-* Improvement: the final step of the Let’s Encrypt wizard now only displays an Activate SSL button instead of the entire onboarding
-* Improvement: added a license.txt file
+= 9.5.5 - 2025-12-09 =
+* Fixed: JavaScript error when using custom roles with 2FA
+* Fixed: fatal error caused by hosts class being instantiated twice
+* Fixed: fatal error when upgrading from older plugin versions
+* Fixed: WP-CLI activate_ssl command now works correctly on first attempt
+* Changed: removed two unused files from the plugin
+* Changed: updated readme to align with standards
 
-= 9.5.3.2 =
-* November 18th, 2025
-* Improvement: updated black friday dates
+= 9.5.4 - 2025-11-18 =
+* Fixed: 2FA login error when user has no assigned roles
+* Fixed: fatal error when wp-config.php path is empty
+* Changed: added file locking to .htaccess and wp-config.php to prevent race conditions
+* Changed: clarified .htaccess directory indexing comment
+* Changed: replaced site_url() with home_url() in the 404 resource check on the homepage
+* Changed: security functions now skip cron jobs and CLI environments
+* Changed: Let's Encrypt wizard final step now shows only SSL activation button
+* Changed: added a license.txt file
 
 = 9.5.3.1 =
-* Fix: Added a fix for WP_CLI commands
+* Fixed: WP-CLI commands not working correctly
 
 = 9.5.3 =
-* Fix: removed an unused translation that could cause a textdomain loaded to early warning
-* Fix: deactivation modal now always displays
-* Improvement: refactored the onboarding code
+* Fixed: text domain loaded too early warning from unused translation
+* Fixed: deactivation modal now always displays
+* Changed: refactored the onboarding code
 
 = 9.5.2.3 =
-* Fix: the 2FA reset fix now correctly calls the 2FA reset service
+* Fixed: 2FA reset now correctly calls the 2FA reset service
 
 = 9.5.2.2 =
-* Fix: a TypeError in the 2FA query builder that could occur when updating from older plugin versions
+* Fixed: 2FA TypeError when updating from older plugin versions
 
 = 9.5.2 =
-* Fix: all users will now appear in the 2FA list
-* Fix: tasks will now always display on multisite
-* Improvement: the activate_ssl WP-CLI command can now be run with the –force argument to skip confirmation
+* Fixed: all users will now appear in the 2FA list
+* Fixed: tasks will now always display on multisite
+* Changed: activate_ssl WP-CLI command supports --force to skip confirmation
 
 = 9.5.1 =
-* Improvement: standardized REST namespaces to really-simple-security
-* Fix: added a check for the getmyuid function to prevent errors in case this function was missing
-* Fix: Right-To-Left CSS now works correctly when SCRIPT_DEBUG is enabled
+* Fixed: missing getmyuid function check to prevent errors
+* Fixed: Right-To-Left CSS now works correctly when SCRIPT_DEBUG is enabled
+* Changed: standardized REST namespaces to really-simple-security
 
 = 9.5.0.2 =
-* Fix: Prevent empty content to be written into htaccess
+* Fixed: prevent empty content from being written into .htaccess
 
 = 9.5.0.1 =
-* Fix: Prevented .htaccess from being overwritten with an empty file, auto-creation now requires explicit filter opt-in
+* Fixed: .htaccess protected from empty overwrites, auto-creation requires filter opt-in
 
 = 9.5.0 =
-* Improvement: reworked .htaccess handling with insert_with_markers and improved WP Rocket integration.
-* Improvement: SBOM added to plugin.
-* Improvement: corrected spelling, grammar, and consistency issues in plugin strings; updated geopolitical terms.
-* Fix: whitelisted LiteSpeed Cache crawler in .htaccess to prevent redirect issues.
-* Fix: corrected 2FA grace period email logic to avoid sending reminders to users with active 2FA.
-* Fix: updated hosting provider name from "XXL Hosting" to "Superspace".
+* Fixed: whitelisted LiteSpeed Cache crawler in .htaccess to prevent redirect issues
+* Fixed: 2FA grace period email logic to avoid reminders to users with active 2FA
+* Fixed: updated hosting provider name from "XXL Hosting" to "Superspace"
+* Changed: reworked .htaccess handling with insert_with_markers and WP Rocket integration
+* Changed: SBOM added to plugin
+* Changed: improved text consistency and updated geopolitical terminology
 
 = 9.4.3 =
-* Improvement: improved compatibility with plain permalinks.
-* Improvement: updated links in the plugin.
-* Fix: handled a case where the user ID could be empty in 2FA.
-* Fix: learn more button in vulnerability e-mail link now links to the correct page.
-* Fix: fixed an issue where rsssl_user_can_manage could be undefined when downloading the system status.
+* Fixed: user ID could be empty in 2FA
+* Fixed: learn more button in vulnerability email now links to correct page
+* Fixed: rsssl_user_can_manage undefined error when downloading system status
+* Changed: improved compatibility with plain permalinks
+* Changed: updated links in the plugin
 
 = 9.4.2 =
-* Fix: Adjusted .htaccess redirect requirements for subfolder configurations
-* Fix: re-send e-mail button on the 2FA page will now show a message when the e-mail is sent.
-* Fix: restored SCSS files.
-* Fix: fixed an issue where the plugin kept redirecting to its settings page after activation.
-* Improvement: updated the way other plugins are installed via the onboarding and dashboard page.
-* Improvement: added notice with an option to force verify e-mail address.
-* Improvement: updated minimum WordPress version to 6.6.
+* Fixed: .htaccess redirect requirements for subfolder configurations
+* Fixed: re-send email button on 2FA page now shows confirmation message
+* Fixed: restored SCSS files
+* Fixed: plugin kept redirecting to settings page after activation
+* Changed: updated plugin installation via onboarding and dashboard page
+* Changed: added notice with option to force verify email address
+* Changed: updated minimum WordPress version to 6.6
 
 = 9.4.1 =
- * Fix: fixed a translations error where text domain was loaded too early.
+* Fixed: text domain loaded too early warning
 
 = 9.4.0 =
- * Improvement: More detailed feedback when using CLI commands.
- * Improvement: On activation, detect `EXTENDIFY_PARTNER_ID` constant and run `wp rsssl activate_recommended_features`.
- * Improvement: Standardize RSS onboarding hoster list to brand names.
- * Improvement: "Disable user enumeration" now returns 401 Unauthorized (instead of 404 Not Found) for non-authenticated requests to the /wp/v2/users/ endpoint.
- * Include SimplyBook in “onboarding” and “other plugins” sections.
- * Fix: Adjust plugin initialization timing to prevent a textdomain warning.
- * Fix: Fixed the feedback when an email is resend during Two-Factor Authentication setup.
- * Fix: Fixed the Single Sign on link to support custom login urls.
+* Fixed: plugin initialization timing to prevent textdomain warning
+* Fixed: feedback when email is resent during 2FA setup
+* Fixed: Single Sign On link now supports custom login URLs
+* Added: SimplyBook in onboarding and other plugins sections
+* Changed: more detailed feedback when using CLI commands
+* Changed: detect EXTENDIFY_PARTNER_ID and run activate_recommended_features
+* Changed: standardized onboarding hoster list to brand names
+* Changed: user enumeration now returns 401 instead of 404
 
-= 9.3.5 =
-* April 29th, 2025
-* Improvement: Tested up to WordPress 6.8
-* Improvement: Some translation updates
-* Improvement: Check for autoloader in cron
-* Fix: 2FA methods can now be set on profile page
+= 9.3.5 - 2025-04-29 =
+* Fixed: 2FA methods can now be set on profile page
+* Changed: tested up to WordPress 6.8
+* Changed: translation updates
+* Changed: check for autoloader in cron
 
-= 9.3.3 =
-* April 2nd, 2025
-* Improvement: Added multiple WP-CLI commands to better align with recent plugin features
-* Improvement: Added support for custom/multiple roles in Two Factor Authentication
+= 9.3.3 - 2025-04-02 =
+* Changed: added multiple WP-CLI commands to align with recent plugin features
+* Changed: added support for custom/multiple roles in Two Factor Authentication
 
-= 9.3.2.1 =
-* March 20th, 2025
-* Fix: Properly handle unknown plugins in upgrade requests, preventing unintended behavior.
+= 9.3.2.1 - 2025-03-20 =
+* Fixed: properly handle unknown plugins in upgrade requests
 
-= 9.3.2 =
-* March 5th, 2025
-* Improvement: Added filters to customize Let's Encrypt Wizard behavior
-* Fix: Removed default checkbox behavior from configuration settings.
-* Fix: Handle multiple tooltip reasons for disabled select fields
+= 9.3.2 - 2025-03-05 =
+* Fixed: removed default checkbox behavior from configuration settings
+* Fixed: handle multiple tooltip reasons for disabled select fields
+* Changed: added filters to customize Let's Encrypt Wizard behavior
 
-= 9.3.1 =
-* February 12th, 2025
-* Improvement: Not able to use email needed functions when email is not yet verified.
-* Fix: All instruction links are now correct.
-* Fix: Undefined array key "m" when showing vulnerability details.
-* Fix: Prevent errors when downgrading to free.
-* Fix: Compatibility between 2FA and JetPack “Log in using WordPress.com account” setting
+= 9.3.1 - 2025-02-12 =
+* Fixed: all instruction links are now correct
+* Fixed: undefined array key "m" when showing vulnerability details
+* Fixed: prevent errors when downgrading to free
+* Fixed: 2FA compatibility with JetPack WordPress.com login
+* Changed: email functions require verified email address
 
-= 9.2.0 =
-* January 20th, 2025
-* Fix: Added nonce check to certificate re-check button.
-* Fix: In some cases the review notice was not properly dismissible.
+= 9.2.0 - 2025-01-20 =
+* Fixed: added nonce check to certificate re-check button
+* Fixed: review notice was not properly dismissible in some cases
 
 = 9.1.4 =
-* Improvement: do not track 404's for logged in users
-* Improvement: implemented the rsssl_wpconfig_path filter in all wp-config functions
-* Improvement: Faster onboarding completion after clicking Finish button
-* Improvement: CSS. Shields in user interface on datatables are no longer cut off
+* Fixed: shields in UI datatables no longer cut off
+* Changed: do not track 404s for logged in users
+* Changed: implemented rsssl_wpconfig_path filter in all wp-config functions
+* Changed: faster onboarding completion after clicking Finish button
 
-= 9.1.3 =
-* November 28th
-* Improvement: Width Vulnerabilities -> configuration
-* Improvement: 2Fa lockout notice
-* Improvement: catch use of short init in advanced-headers file
-* Improvement: string improvements and translator comments
-* Improvement: Bitnami support for rsssl_find_wordpress_base_path()
-* Improvement: integrate Site health notifications with Solid Security
-* Improvement: Enhanced random password generation in Rename Admin User feature
-* Improvement: Always return string in wpconfig_path() function
-* Improvement: Removes configuration options for a user in edit user.
-* Fix: Remove duplicate site URL.
-* Fix: ensure rsssl_sanitize_uri_value() function always returns a string, to prevent errors.
-* Fix: multisite users who have enabled roles couldn’t use the 2fa if an other role than theirs has been forced.
-* Fix: The ‘Skip Onboarding’ button presented an undefined page after selecting the email method as an option.
-* Fix: Update translation loading according to the new 6.7 method.
+= 9.1.3 - 2024-11-28 =
+* Fixed: remove duplicate site URL
+* Fixed: rsssl_sanitize_uri_value() now always returns a string
+* Fixed: multisite 2FA role enforcement for users with multiple roles
+* Fixed: Skip Onboarding button undefined page with email method
+* Fixed: translation loading updated for WordPress 6.7
+* Changed: improved 2FA lockout notice
+* Changed: catch use of short init in advanced-headers file
+* Changed: string improvements and translator comments
+* Changed: Bitnami support for rsssl_find_wordpress_base_path()
+* Changed: integrate Site Health notifications with Solid Security
+* Changed: enhanced random password generation in Rename Admin User
+* Changed: always return string in wpconfig_path() function
 
 = 9.1.2 =
-* security: authentication bypass
+* Security: authentication bypass fix
 
-= 9.1.1.1 =
-* November 5th, 2024
-*Improvement: updated black friday dates
+= 9.1.1.1 - 2024-11-05 =
+* Fixed: 2FA grace period was kept active after a reset
 
-= 9.1.1 =
-* November 5th, 2024
-* Improvement: setting a rsssl-safe-mode.lock file now also enables safe mode and deactivates the Firewall, 2FA and LLA for debugging purposes.
-* Improvement: update to system status
-* Improvement: textual changes
-* Improvement: Updated instructions URLs
-* Improvement: Changed site health notices from critical to recommended
-* Improvement: dropped obsolete react library
-* Fix: fixed a bug where the 2FA grace period was kept active after a reset
+= 9.1.1 - 2024-10-30 =
+* Fixed: 2FA grace period kept active after reset
+* Changed: safe-mode.lock file deactivates Firewall, 2FA and LLA for debugging
+* Changed: update to system status
+* Changed: textual changes
+* Changed: updated instructions URLs
+* Changed: site health notices changed from critical to recommended
+* Changed: dropped obsolete react library
 
-= 9.1.0 =
-* October 22nd
-* Improvement: Allow scanning for security headers via http://scan.really-simple-ssl.com  with one click
-* Improvement: Remove unnecessary rsssl_update_option calls.
-* Fix: prevent potential errors with login feedback..
-* Fix: Catch type error when $transients is not an array.
+= 9.1.0 - 2024-10-22 =
+* Fixed: prevent potential errors with login feedback
+* Fixed: catch type error when $transients is not an array
+* Changed: allow scanning for security headers via scan.really-simple-ssl.com
+* Changed: remove unnecessary rsssl_update_option calls
 
 = 9.0.2 =
-* Fix: issue with deactivating 2fa
+* Fixed: issue with deactivating 2FA
 
-= 9.0.0 =
-* September 16th
-* Fix: Instructions URL in the Firewall settings.
-* Fix: Fixed incorrect instructions URL
-* Fix: Let's Encrypt returning an old certificate on auto-renewed certificates
-* Improvement: As the X-Frame-Options is deprecated and replaced by frame ancestors, we drop the header as recommendation.
-* Improvement: save and continue in vulnerabilities overview not working correctly
+= 9.0.0 - 2024-09-16 =
+* Fixed: instructions URL in the Firewall settings
+* Fixed: incorrect instructions URL
+* Fixed: Let's Encrypt returning old certificate on auto-renewed certificates
+* Changed: dropped X-Frame-Options header in favor of frame-ancestors
+* Changed: save and continue in vulnerabilities overview not working correctly
 
 = 8.3.0.1 =
-* Fix: Issues with the decryption model
+* Fixed: issues with the decryption model
 
-= 8.3.0 =
-* August 12th, 2024
-* Feature: Password security scan. This feature scans your users for weak passwords, and allows you to enforce non-compromised passwords.
-* Fix: Fixed some strings that were not translatable. This has been resolved.
-* Fix: Premium support link did not work. Now links to the correct page.
-* Improvement: Disable the cron schedules on deactivation.
-* Fix: Links in emails were sometimes not correct. This has been fixed.
-* Fix: Fatal error on permission detection. This has been resolved.
-* Improvement: Custom header for the license checks for better compatibility with some hosting environments.
-* Improvement: Added option to disable X-powered-by header.
-* Improvement: New improved encryption method for some settings.
+= 8.3.0 - 2024-08-12 =
+* Fixed: some strings were not translatable
+* Fixed: premium support link did not work
+* Fixed: links in emails were sometimes incorrect
+* Fixed: fatal error on permission detection
+* Added: password security scan detects weak and compromised passwords
+* Changed: disable cron schedules on deactivation
+* Changed: custom license check header improves hosting compatibility
+* Changed: added option to disable X-powered-by header
+* Changed: new improved encryption method for some settings
 
-= 8.1.5 =
-* June 21th, 2024
-* Fix: documentation links to website broken
-* Improvement: some text changes in helptexts
-* Improvement: new structure to upgrade database tables
+= 8.1.5 - 2024-06-21 =
+* Fixed: documentation links to website broken
+* Changed: some text changes in helptexts
+* Changed: new structure to upgrade database tables
 
-= 8.1.4 =
-* June 11th, 2024
-* Improvement: dropdown in onboarding not entirely visible
-* Improvement: Styling of locked XML RPC overview
-* Fix: Not loading cookie expiration change
-* Fix: Visual Composer compatibility icw Enforce Strong Password
-* Fix: Multiple CloudFlare detected notices in onboarding
-* Fix: Checkbox position in onboarding
+= 8.1.4 - 2024-06-11 =
+* Fixed: cookie expiration change not loading
+* Fixed: Visual Composer compatibility with Enforce Strong Password
+* Fixed: multiple CloudFlare detected notices in onboarding
+* Fixed: checkbox position in onboarding
+* Changed: dropdown in onboarding not entirely visible
+* Changed: styling of locked XML RPC overview
 
-= 8.1.3 =
-* May 16th, 2024
-* Fix: WP Rocket compatibility causing an issue when advanced-headers.php does not exist
+= 8.1.3 - 2024-05-16 =
+* Fixed: WP Rocket compatibility when advanced-headers.php does not exist
 
-= 8.1.2 =
-* May 16th, 2024
-* Fix: upgrade advanced-headers.php file to allow early inclusion of the file. The ABSPATH defined check causes in issue for early inclusion, so must be removed.
+= 8.1.2 - 2024-05-16 =
+* Fixed: advanced-headers.php now supports early inclusion
 
-= 8.1.1 =
-* May 14th, 2024
-* New: detection of non-recommended permissions on files
-* New: Configure region restrictions for your site
-* Improvement: Textual change on premium overlay
-* Improvement: Upgraded minimum required PHP version to 7.4
-* Improvement: compatibility with Bitnami
-* Improvement: compatibility of Limit Login Attempts with Woocommerce
-* Improvement: remove duplicate X-Really-Simple-SSL-Test from advanced-headers-test.php
-* Improvement: clear notice about .htaccess writable if do_not_edit_htaccess is enabled
-* Fix: upgrade from <6.0 version to >8.0 causing a fatal error
-* Fix: URL to details of detected vulnerabilities was incorrect
+= 8.1.1 - 2024-05-14 =
+* Fixed: upgrade from <6.0 to >8.0 causing fatal error
+* Fixed: URL to details of detected vulnerabilities was incorrect
+* Added: detection of non-recommended permissions on files
+* Added: configure region restrictions for your site
+* Changed: textual change on premium overlay
+* Changed: upgraded minimum required PHP version to 7.4
+* Changed: compatibility with Bitnami
+* Changed: compatibility of Limit Login Attempts with WooCommerce
+* Changed: remove duplicate X-Really-Simple-SSL-Test from advanced-headers-test.php
+* Changed: clear notice about .htaccess writable if do_not_edit_htaccess is enabled
 
 = 8.1.0 =
-* Improvement: some string corrections
-* Fix: show 'self' as default in Frame Ancestors
-* Improvement: catch not existing rsssl_version_compare
-* Improvement: check for openSSL module existence
-* Improvement: set default empty array for options, for legacy upgrades
-* Improvement: disable custom login URL when plain permalinks are enabled
-* New: Limit Login Attempts Captcha integration
-* Improvement: drop renamed folder notice, not needed anymore
-* Improvement: enable advanced headers in onboarding
-* Improvement: is_object check in updater
+* Fixed: show 'self' as default in Frame Ancestors
+* Added: Limit Login Attempts Captcha integration
+* Changed: some string corrections
+* Changed: catch not existing rsssl_version_compare
+* Changed: check for openSSL module existence
+* Changed: set default empty array for options, for legacy upgrades
+* Changed: disable custom login URL when plain permalinks are enabled
+* Changed: drop renamed folder notice, not needed anymore
+* Changed: enable advanced headers in onboarding
+* Changed: is_object check in updater
 
 = 8.0.1 =
-* Fix: enable 2FA during onboarding when not selected by user
-* Improvement: better CSP defaults
-* Fix: on upgrade to pro, free settings were cleared if "clear settings on deactivation" was enabled
-* Fix: catch several array key not existing errors
+* Fixed: enable 2FA during onboarding when not selected by user
+* Fixed: upgrading to Pro preserves settings when clear on deactivation enabled
+* Fixed: catch several array key not existing errors
+* Changed: better CSP defaults
 
 = 8.0.0 =
-* New: hide remember me checkbox
-* New: extend blocking of malicious admin creation to multisite
-* Improvement: drop prefetch-src from Content Security Policy
-* Improvement: disable two-fa when login protection is disabled
+* Added: hide remember me checkbox
+* Added: extend blocking of malicious admin creation to multisite
+* Changed: drop prefetch-src from Content Security Policy
+* Changed: disable two-fa when login protection is disabled
 
 = 7.2.8 =
-* Fix: clear cron schedules on deactivation
-* Improvement: translations update
-* Notice: inform users about upcoming merge of free and pro plugin, not action needed, everything will be handled automatically
+* Fixed: clear cron schedules on deactivation
+* Changed: translations update
+* Changed: info notice about automatic free and pro plugin merge
 
 = 7.2.7 =
-* Improvement: added integration with FlyingPress and Fastest Cache
-* Improvement: fix exiting a filter, causing a compatibility issue with BuddyPress
+* Changed: added integration with FlyingPress and Fastest Cache
+* Changed: fix exiting a filter, causing compatibility issue with BuddyPress
 
 = 7.2.6 =
-* Improvement: text changes
-* Improvement: css on login error message
-* Improvement: header detection improved by always checking the last url in the redirect chain
-* New: Added option to limit login cookie expiration time
-* Fix: custom 404 pages i.c.w. custom login url
+* Fixed: custom 404 pages with custom login URL
+* Added: option to limit login cookie expiration time
+* Changed: text changes
+* Changed: CSS on login error message
+* Changed: header detection improved by checking the last URL in redirect chain
 
 = 7.2.5 =
-* Fix: IP detection header order
-* Fix: table creation on activation of LLA module
+* Fixed: IP detection header order
+* Fixed: table creation on activation of LLA module
 
 = 7.2.4 =
-* Fix: PHP warning in Password Security module
-* Fix: change login url feature not working with password protected pages
-* Improvement: move database table creation to Limit Login Attempts module
-* Improvement: prevent php error caused by debug.log file hardening feature
+* Fixed: PHP warning in Password Security module
+* Fixed: change login URL feature not working with password protected pages
+* Changed: move database table creation to Limit Login Attempts module
+* Changed: prevent PHP error caused by debug.log file hardening feature
 
 = 7.2.3 =
-* Fix: CSP data not showing in datatable
+* Fixed: CSP data not showing in datatable
 
 = 7.2.2 =
-* Improvement: improved check for PharData class
+* Changed: improved check for PharData class
 
 = 7.2.1 =
-* Fix: Config for CSP preventing Learning mode from completing
-* Fix: datatable styling
-* Fix: using deactivate_https with wp-cli did not remove htaccess rules
-* Improvement: add query parameter to enforce email verification &rsssl_force_verification
-* Improvement: css for check certificate manually button
+* Fixed: config for CSP preventing Learning mode from completing
+* Fixed: datatable styling
+* Fixed: using deactivate_https with WP-CLI did not remove htaccess rules
+* Changed: add query parameter to enforce email verification
+* Changed: CSS for check certificate manually button
 
 = 7.2.0 =
-* Fix: changed link to article
-* Fix: remove flags .js file which was added twice, props @adamainsworth
-* Fix: typo in missing advanced-headers.php notice
-* Improvement: catch php warning when script src is empty when using hide wp version, props @chris-yau
-* Improvement: new save & continue feedback
-* Improvement: datatable styling
-* Improvement: new react based modal
-* Improvement: menu re-structured
-* Improvement: re-check vulnerability status after core update
-* Improvement: link in the email security notification to the vulnerability page instead of to a general explanation
+* Fixed: changed link to article
+* Fixed: remove flags .js file which was added twice
+* Fixed: typo in missing advanced-headers.php notice
+* Changed: catch PHP warning when script src is empty when using hide WP version
+* Changed: new save & continue feedback
+* Changed: datatable styling
+* Changed: new react based modal
+* Changed: menu re-structured
+* Changed: re-check vulnerability status after core update
+* Changed: vulnerability notification emails now link to specific details
 
-= 7.1.3 =
-* October 11th 2023
-* Fix: React ErrorBoundary preventing Let's Encrypt generation to complete.
+= 7.1.3 - 2023-10-11 =
+* Fixed: React ErrorBoundary preventing Let's Encrypt generation to complete
 
-= 7.1.2 =
-* October 6th 2023
-* Fix: hook change in integrations loader causing modules not to load. props @rami5342
+= 7.1.2 - 2023-10-06 =
+* Fixed: hook change in integrations loader causing modules not to load
 
-= 7.1.1 =
-* October 5th 2023
-* Fix: incorrect function usage, props @heutger
+= 7.1.1 - 2023-10-05 =
+* Fixed: incorrect function usage
 
-= 7.1.0 =
-* October 4th 2023
-* Improvement: detection if advanced-headers.php file is running
+= 7.1.0 - 2023-10-04 =
+* Changed: detection if advanced-headers.php file is running
 
-= 7.0.9 =
-* September 5th 2023
-* Improvement: typo update word
-* Improvement: translatability in several strings.
+= 7.0.9 - 2023-09-05 =
+* Changed: typo update word
+* Changed: translatability in several strings
 
-= 7.0.8 =
-* August 8th 2023
-* Improvement: WordPress tested up to 6.3
-* Improvement: improve file existence check json
-* Fix: handling of legacy options in php 8.1
-* Fix: count remaining tasks
+= 7.0.8 - 2023-08-08 =
+* Fixed: handling of legacy options in PHP 8.1
+* Fixed: count remaining tasks
+* Changed: WordPress tested up to 6.3
+* Changed: improve file existence check json
 
-= 7.0.7 =
-* July 25th 2023
-* Improvement: modal icon placement in wizard on smaller screens
-* Improvement: expire cached detected headers five minutes after saving the settings
-* Fix: handling of legacy options in php 8.1
-* Fix: prevent issues with CloudFlare when submitting support form from within the plugin
-* Fix: translations singular/plural for japanese translations @maboroshin
+= 7.0.7 - 2023-07-25 =
+* Fixed: handling of legacy options in PHP 8.1
+* Fixed: prevent issues with CloudFlare when submitting support form
+* Fixed: translations singular/plural for Japanese translations
+* Changed: modal icon placement in wizard on smaller screens
+* Changed: expire cached detected headers five minutes after saving settings
 
-= 7.0.6 =
-* July 4th 2023
-* Improvement: support custom wp-content directory in advanced-headers.php
-* Improvement: prevent usage of subdirectories in custom login url
-* Fix: translations not loading for chunked react components
-* Improvement: add option to manually re-check vulnerabilities '&rsssl_check_vulnerabilities', props @fawp
+= 7.0.6 - 2023-07-04 =
+* Fixed: translations not loading for chunked react components
+* Changed: support custom wp-content directory in advanced-headers.php
+* Changed: prevent usage of subdirectories in custom login URL
+* Changed: added manual vulnerability recheck parameter
 
 = 7.0.5 =
-* Fix: some users with a non www site reporting issues on the login page over http://www, due to the changes in the wp redirect. Reverting to the old method. props @pedalnorth, @mossifer.
+* Fixed: reverted redirect method to fix non-www site login issues
 
-= 7.0.4 =
-* June 14th 2023
-* Improvement: notice informing about the new free vulnerability detection feature
-* Improvement: improved the php redirect method
-* Improvement: make the wp-config.php not writable notice dismissable
-* Fix: feedback on hardening features enable action not showing as enabled, props @rtpHarry
+= 7.0.4 - 2023-06-14 =
+* Fixed: feedback on hardening features enable action not showing as enabled
+* Changed: notice informing about the new free vulnerability detection feature
+* Changed: improved the PHP redirect method
+* Changed: make the wp-config.php not writable notice dismissable
 
 = 7.0.3 =
-* Fix: fix false positives on some plugins
-* Improvement: vulnerability notifications in site health, if notifications are enabled.
+* Fixed: fix false positives on some plugins
+* Changed: vulnerability notifications in site health, if notifications are enabled
 
 = 7.0.2 =
-* Improvement: improve matching precision on plugins with vulnerabilities.
+* Changed: improve matching precision on plugins with vulnerabilities
 
 = 7.0.1 =
-* Fix: When the Rest API is not available, the ajax fallback should kick in, which didn't work correctly in 7.0. props @justaniceguy
+* Fixed: REST API ajax fallback now works correctly
 
 = 7.0.0 =
-* New: Vulnerability Detection is in Beta - [Read more](https://really-simple-ssl.com/vulnerability-detection/) or [Get Started](https://really-simple-ssl.com/instructions/about-vulnerabilities/)
-* Improvement: move onboarding rest api to do_action rest_route
-* Improvement: catch several edge situations in SSL Labs api
-* Improvement: SSL Labs block responsiveness
-* Improvement: more robust handling of wp-config.php detection
+* Added: Vulnerability Detection (Beta)
+* Changed: move onboarding rest api to do_action rest_route
+* Changed: catch several edge situations in SSL Labs api
+* Changed: SSL Labs block responsiveness
+* Changed: more robust handling of wp-config.php detection
 
 = 6.3.0 =
-* Improvement: added support for the new Let's Encrypt staging environment
+* Changed: added support for the new Let's Encrypt staging environment
 
 = 6.2.5 =
-* Improvement: add warning alert option
-* Fix: capability mismatch in multisite. props @verkkovaraani
+* Fixed: capability mismatch in multisite
+* Changed: add warning alert option
 
 = 6.2.4 =
-* Improvement: optionally enable notification emails in onboarding wizard
-* Improvement: onboarding styling
-* Fix: catch non array value from notices array, props @kenrichman
-* Fix: typo in documenation link, props @bookman53
+* Fixed: catch non array value from notices array
+* Fixed: typo in documentation link
+* Changed: optionally enable notification emails in onboarding wizard
+* Changed: onboarding styling
 
 = 6.2.3 =
-* Improvement: Changed Back-end react to functional components
-* Improvement: multisite notice should link to network admin page
-* Improvement: detect existing CAA records to check Let's Encrypt compatibility
-* Improvement: tested up to wp 6.2
-* Improvement: UX improvement learning mode
+* Changed: back-end react to functional components
+* Changed: multisite notice should link to network admin page
+* Changed: detect existing CAA records to check Let's Encrypt compatibility
+* Changed: tested up to WP 6.2
+* Changed: UX improvement learning mode
 
 = 6.2.2 =
-* Fix: capability mismatch for a non administrator in multisite admin, props @jg-visual
+* Fixed: capability mismatch for non-administrator in multisite admin
 
 = 6.2.1 =
-* Fix: race condition when activating SSL through wp-cli, because of upgrade script
-* Fix: missing disabled state in textarea and checkboxes
-* Fix: some strings not translatable
-* Fix: Let's Encrypt renewal with add on
-* Improvement: permissions check re-structuring
-* Improvement: notice on subsite within multisite environment about wildcard updated
+* Fixed: race condition when activating SSL through WP-CLI
+* Fixed: missing disabled state in textarea and checkboxes
+* Fixed: some strings not translatable
+* Fixed: Let's Encrypt renewal with add on
+* Changed: permissions check re-structuring
+* Changed: notice on subsite within multisite environment about wildcard updated
 
 = 6.2.0 =
-* New: optional email notifications on advanced settings
-* Improvement: added tooltips
-* Improvement: added warnings for .htaccess redirect
-* Improvement: don't send user email change on renaming admin user, as the email doesn't actually change
-* Improvement: Use BASEPATH only for wp-load.php, so symlinked folders will load based on ABSPATH
-* Improvement: Improved support for environments where Rest API is blocked
+* Added: optional email notifications on advanced settings
+* Changed: added tooltips
+* Changed: added warnings for .htaccess redirect
+* Changed: don't send user email change on renaming admin user
+* Changed: use BASEPATH only for wp-load.php, symlinked folders load based on ABSPATH
+* Changed: improved support for environments where Rest API is blocked
 
 = 6.1.1 =
-* Fix: WP CLI not completing SSL when because site_has_ssl option is not set if website has not been visited before, props @oolongm
-* Improvement: prevent 'undefined' status showing up in api calls on settings page
-* Improvement: show notice if users are using an <2.0 Let's Encrypt shell add-on which is not compatible with 6.0
+* Fixed: WP-CLI SSL activation fix when site not visited before
+* Changed: prevent 'undefined' status showing up in api calls on settings page
+* Changed: notice for incompatible Let's Encrypt shell add-on versions
 
 = 6.1.0 =
-* Improvement: some UX changes
-* Improvement: Limit number of notices in the dashboard
-* Improvement: load rest api request url over https if website is loaded over https
-* Fix: empty menu item visible in Let's Encrypt menu
+* Fixed: empty menu item visible in Let's Encrypt menu
+* Changed: some UX changes
+* Changed: limit number of notices in the dashboard
+* Changed: load rest api request URL over https if website is loaded over https
 
 = 6.0.14 =
-* Fix: settings page when using plain permalinks, props @mvsitecreator, props @doug2son
+* Fixed: settings page when using plain permalinks
 
 = 6.0.13 =
-* Improvement: improve method of dropping empty menu items in settings dashboard
-* Improvement: dynamic links in auto installer
-* Improvement: Let's Encrypt Auto installer not working correctly, props @mirkolofio
-* Improvement: change rest_api method to core wp apiFetch()
-* Improvement: scroll highlighted setting into view after clicking "fix" on a task
-* Improvement: run http method test in batches, and set a default, to prevent possibility of curl timeouts on systems with CURL issues
-* Improvement: clean up code-execution.php file after test, props @spinhead
-* Improvement: give notification if 'DISABLE_FILE_EDITING' is set to false in the wp-config.php props @joeri1977
-* Improvement: drop some unnecessary translations
-* Improvement: set better default, and change transients to option for more persistent behavior in wp version test, props @photomaldives
-* Fix: Burst Statistics not activating after installation
-* Fix: CSS for blue labels in progress dashboard below 1080px
-* Fix: WPCLI SSL activation not working due to capability checks, props @oolongm
-* Fix: catch invalid account error in Let's Encrypt generation, props @bugsjr
-* Fix: do not block user enumeration for gutenberg
+* Fixed: CSS for blue labels in progress dashboard below 1080px
+* Fixed: WP-CLI SSL activation not working due to capability checks
+* Fixed: catch invalid account error in Let's Encrypt generation
+* Fixed: do not block user enumeration for gutenberg
+* Changed: improve method of dropping empty menu items in settings dashboard
+* Changed: dynamic links in auto installer
+* Changed: change rest_api method to core wp apiFetch()
+* Changed: scroll highlighted setting into view after clicking "fix" on a task
+* Changed: HTTP method tests run in batches to prevent CURL timeouts
+* Changed: clean up code-execution.php file after test
+* Changed: notification when DISABLE_FILE_EDITING is set to false
+* Changed: drop some unnecessary translations
+* Changed: WP version test uses options for better persistence
 
 = 6.0.12 =
-* Fix: on multisite, the test for users with admin username did not use the correct prefix, $wpdb->base_prefix, props @jg-visual
-* Improvement: allow submenu in back-end react application
-* Improvement: Skip value update when no change has been made
-* Improvement: no redirect on dismiss of admin notice, props @gangesh, @rtpHarry, @dumel
-* Improvement: remove obsolete warning
-* Improvement: qtranslate support on settings page
+* Fixed: multisite admin username test uses correct database prefix
+* Changed: allow submenu in back-end react application
+* Changed: skip value update when no change has been made
+* Changed: no redirect on dismiss of admin notice
+* Changed: remove obsolete warning
+* Changed: qtranslate support on settings page
 
 = 6.0.11 =
-* Fix: on some environments, the HTTP_X_WP_NONCE is not available in the code, changed logged in check to accomodate such environments
-* Fix: dismiss on admin notices not immediately dismissing, requiring dismiss through dashboard, props @dumel
+* Fixed: login check works when HTTP_X_WP_NONCE unavailable
+* Fixed: admin notices now dismiss immediately
 
 = 6.0.10 =
-* Fix: Apache 2.4 support for the block code execution in the uploads directory hardening feature, props @overlake
-* Fix: When used with Varnish cache, Rest API get requests were cached, causing the settings page not to update.
-* Fix: Ensure manage_security capability for users upgraded from versions before introduction of this capability
-* Fix: allow for custom rest api prefixes, props @coderevolution
-* Fix: bug in Let's Encrypt generation with DNS verification: saving of 'disable_ocsp' setting, create_bundle_or_renew action with quotes
-* Fix: change REST API response method to prevent script errors on environments with PHP warnings and errors, causing blank settings page
-* Improvement: Simplify user enumeration test
-* Improvement: catch unexpected response in SSL Labs object
-* Improvement: z-index on on boarding modal on smaller screen sizes, props @rtpHarry
-* Improvement: hide username field if no admin username is present, props @rtpHarry
+* Fixed: Apache 2.4 compatibility for upload directory code blocking
+* Fixed: Varnish cache compatibility for REST API requests
+* Fixed: manage_security capability added for upgraded users
+* Fixed: allow for custom rest api prefixes
+* Fixed: Let's Encrypt DNS verification save and action issues
+* Fixed: REST API error handling prevents blank settings page
+* Changed: simplify user enumeration test
+* Changed: catch unexpected response in SSL Labs object
+* Changed: z-index on onboarding modal on smaller screen sizes
+* Changed: hide username field if no admin username is present
 
 = 6.0.9 =
-* Fix: incorrectly disabled email field in Let's Encrypt wizard, props @cburgess
-* Improvement: on rename admin user, catch existing username, and strange characters
-* Improvement: catch openBaseDir restriction in cpanel detection function, props @alofnur
-* Improvement: remove 6.0 update notices on subsites in a multisite network, props @wpcoderca, (@collizo4sky
+* Fixed: incorrectly disabled email field in Let's Encrypt wizard
+* Changed: on rename admin user, catch existing username, and strange characters
+* Changed: catch openBaseDir restriction in cpanel detection function
+* Changed: removed 6.0 update notices from subsites
 
 = 6.0.8 =
-* Improvement: Lets Encrypt wizard CSS styling
-* Improvement: re-add link to article about Let's Encrypt so users can easily find the URL
-* Improvement: let user choose a new username when selecting "rename admin user"
+* Changed: Let's Encrypt wizard CSS styling
+* Changed: re-add link to article about Let's Encrypt
+* Changed: let user choose a new username when selecting "rename admin user"
 
 = 6.0.7 =
-* Fix: restrict conditions in which htaccess rewrite runs, preventing conflicts with other rewriting plugins
+* Fixed: restricted .htaccess rewrite to prevent plugin conflicts
 
 = 6.0.6 =
-* Fix: drop upgrade of .htaccess file in upgrade script
+* Fixed: drop upgrade of .htaccess file in upgrade script
 
 = 6.0.5 =
-* Fix: race condition in .htaccess update script, where multiple updates simultaneously caused issues with the .htaccess file
+* Fixed: .htaccess race condition with simultaneous updates
 
 = 6.0.4 =
-* Fix: using the .htaccess redirect in combination with the block code execution in uploads causes an issue in the .htaccess redirect
-* Fix: deactivating Really Simple SSL does not completely remove the wp-config.php fixes, causing errors, props @minalukic812
+* Fixed: .htaccess redirect compatibility with upload code blocking
+* Fixed: deactivation now fully removes wp-config.php changes
 
 = 6.0.3 =
-* Fix: Rest Optimizer causing other plugins to deactivate when recommended plugins were activated, props @sardelich
+* Fixed: Rest Optimizer no longer deactivates other plugins
 
 = 6.0.2 =
-* Fix: do not show WP_DEBUG_DISPLAY notice if WP_DEBUG is false, props @janv01
-* Fix: empty cron schedule, props @gilvansilvabr
-* Improvement: several typo's and string improvements
-* Fix: auto installer used function not defined yet
-* Fix: rest api optimizer causing an error in some cases @giorgos93
+* Fixed: do not show WP_DEBUG_DISPLAY notice if WP_DEBUG is false
+* Fixed: empty cron schedule
+* Fixed: auto installer used function not defined yet
+* Fixed: rest api optimizer causing an error in some cases
+* Changed: several typos and string improvements
 
 = 6.0.1 =
-* Fix translations not loading for scripts
+* Fixed: translations not loading for scripts
 
 = 6.0.0 =
-* Tested up to WordPress 6.1.0
-* Improvement: User Interface
-* New: Server Health Check - powered by SSLLabs
-* New: WordPress Hardening Features
+* Added: Server Health Check - powered by SSLLabs
+* Added: WordPress Hardening Features
+* Changed: User Interface
+* Changed: Tested up to WordPress 6.1.0
 
 == Upgrade notice ==
 On settings page load, the .htaccess file is no rewritten. If you have made .htaccess customizations to the RSSSL block and have not blocked the plugin from editing it, do so before upgrading.

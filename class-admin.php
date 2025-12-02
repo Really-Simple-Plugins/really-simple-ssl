@@ -169,10 +169,9 @@ class rsssl_admin {
         }
 
         if ( get_option('rsssl_activation') ) {
-	        if ( !class_exists('rsssl_le_hosts')) {
-		        require_once( rsssl_path . 'lets-encrypt/config/class-hosts.php');
+	        if ( function_exists( 'RSSSL_LE' ) ) {
+		        RSSSL_LE()->hosts->detect_host_on_activation();
 	        }
-	        ( new rsssl_le_hosts() )->detect_host_on_activation();
 	        $this->run_table_init_hook();
 	        do_action('rsssl_activation');
             delete_option('rsssl_activation');
@@ -548,6 +547,12 @@ class rsssl_admin {
 			    'site_url_changed' => false,
 		    ];
         }
+
+		// Ensure configuration detection has run to populate required properties
+		// (do_wpconfig_loadbalancer_fix, no_server_variable, site_has_ssl option)
+		if ( ! $this->configuration_loaded ) {
+			$this->detect_configuration();
+		}
 
 		$safe_mode        = defined( 'RSSSL_SAFE_MODE' ) && RSSSL_SAFE_MODE;
 		$error            = false;

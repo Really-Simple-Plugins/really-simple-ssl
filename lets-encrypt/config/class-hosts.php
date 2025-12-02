@@ -6,7 +6,7 @@ if ( ! class_exists( "rsssl_le_hosts" ) ) {
     class rsssl_le_hosts {
         private static $_this;
         public $steps;
-        public $hosts;
+        private $hosts;
         public $not_local_certificate_hosts;
         public $no_installation_renewal_needed;
         public $dashboard_activation_required;
@@ -789,6 +789,14 @@ if ( ! class_exists( "rsssl_le_hosts" ) ) {
             return self::$_this;
         }
 
+	/**
+	 * Get the known hosts configuration array
+	 *
+	 * @return array
+	 */
+	public function getKnownHosts() {
+		return $this->hosts;
+	}
 		public function detect_host_on_activation(){
 			foreach ( $this->hosts as $host_key => $host ) {
 				if ( isset($host['detected']) && $host['detected'] ) {

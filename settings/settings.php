@@ -361,15 +361,14 @@ function rsssl_do_action($request, $ajax_data = false)
 			$response = [];
 			$response['roles'] = $roles;
 			break;
-		case 'get_hosts':
-			$response = [];
-			if ( !class_exists('rsssl_le_hosts')) {
-				require_once( rsssl_path . 'lets-encrypt/config/class-hosts.php');
-				$response['hosts'] = ( new rsssl_le_hosts() )->hosts;
-			} else {
-				$response['hosts'] = RSSSL_LE()->hosts->hosts;
-            }
-			break;
+	case 'get_hosts':
+		$response = [
+			'hosts' => [], // fallback response
+		];
+		if ( function_exists( 'RSSSL_LE' ) ) {
+			$response['hosts'] = RSSSL_LE()->hosts->getKnownHosts();
+		}
+		break;
 		default:
             $response = apply_filters("rsssl_do_action", [], $action, $data);
 	}

@@ -271,7 +271,7 @@ class rsssl_letsencrypt_handler {
 
 	    $hosting_company = rsssl_get_other_host();
 	    if ( $hosting_company && $hosting_company !== 'none' ) {
-		    $hosting_specific_link = RSSSL_LE()->hosts->hosts[$hosting_company]['ssl_installation_link'];
+		    $hosting_specific_link = RSSSL_LE()->hosts->getKnownHosts()[$hosting_company]['ssl_installation_link'];
 		    if ($hosting_specific_link) {
 			    $site = trailingslashit( str_replace(array('https://','http://', 'www.'),'', site_url()) );
 			    if ( strpos($hosting_specific_link,'{host}') !==false && empty($host) ) {
@@ -1003,7 +1003,8 @@ class rsssl_letsencrypt_handler {
     {
 	    $install_method = get_option('rsssl_le_certificate_installed_by_rsssl');
 	    $hosting_company = rsssl_get_other_host();
-	    if ( in_array($install_method, RSSSL_LE()->hosts->no_installation_renewal_needed) || in_array($hosting_company, RSSSL_LE()->hosts->no_installation_renewal_needed)) {
+	    $hosts = RSSSL_LE()->hosts;
+	    if ( in_array($install_method, $hosts->no_installation_renewal_needed) || in_array($hosting_company, $hosts->no_installation_renewal_needed)) {
 		    return false;
 	    }
 
@@ -1203,15 +1204,16 @@ class rsssl_letsencrypt_handler {
 		$message = __("We have not detected any known hosting limitations.", "really-simple-ssl" );
 		$host = rsssl_get_other_host();
 		if ( $host === 'none' ) $host = false;
-		if ( isset(RSSSL_LE()->hosts->hosts[$host]) ){
-			if ( RSSSL_LE()->hosts->hosts[$host]['free_ssl_available'] === 'paid_only' ) {
+	$known_hosts = RSSSL_LE()->hosts->getKnownHosts();
+		if ( isset($known_hosts[$host]) ){
+			if ( $known_hosts[$host]['free_ssl_available'] === 'paid_only' ) {
 				$action = 'stop';
 				$status = 'error';
 				$message = sprintf(__("According to our information, your hosting provider does not allow any kind of SSL installation, other than their own paid certificate. For an alternative hosting provider with SSL, see this %sarticle%s.","really-simple-ssl"), '<a target="_blank" href="https://really-simple-ssl.com/hosting-providers-with-free-ssl">', '</a>');
 			}
 
-			if ( RSSSL_LE()->hosts->hosts[$host]['free_ssl_available'] === 'activated_by_default' ) {
-				$url = RSSSL_LE()->hosts->hosts[$host]['ssl_installation_link'];
+			if ( $known_hosts[$host]['free_ssl_available'] === 'activated_by_default' ) {
+				$url = $known_hosts[$host]['ssl_installation_link'];
 				$action = 'continue';
 				$status = 'error';
 				$message = sprintf(__("According to our information, your hosting provider supplies your account with an SSL certificate by default. Please contact your %shosting support%s if this is not the case.","really-simple-ssl"), '<a target="_blank" href="'.$url.'">', '</a>').'&nbsp'.

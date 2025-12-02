@@ -261,8 +261,9 @@ if ( ! class_exists( "rsssl_le_restapi" ) ) {
 			}
 
 			if ( $field_id==='other_host_type'){
-			    if ( isset(RSSSL_LE()->hosts->hosts[$field_value]) ){
-			        $dashboard = RSSSL_LE()->hosts->hosts[$field_value]['hosting_dashboard'];
+			$known_hosts = RSSSL_LE()->hosts->getKnownHosts();
+			    if ( isset($known_hosts[$field_value]) ){
+			        $dashboard = $known_hosts[$field_value]['hosting_dashboard'];
 			        update_option('rsssl_hosting_dashboard', $dashboard, false);
                 } else {
 				    update_option('rsssl_hosting_dashboard', false, false);
