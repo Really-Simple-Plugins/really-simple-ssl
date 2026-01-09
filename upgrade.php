@@ -291,7 +291,15 @@ function rsssl_upgrade() {
 		}
 	}
 
-	//don't clear on each update.
+    // Upgrade uploads .htaccess to use IfModule syntax for Apache 2.2/2.4 compatibility.
+    // Fixes 500 errors on servers without mod_access_compat (Apache 2.4+ default).
+    if ( $prev_version && version_compare( $prev_version, '9.5.5', '<=' ) ) {
+        if ( rsssl_get_option( 'block_code_execution_uploads', false ) ) {
+            rsssl_handle_uploads_htaccess();
+        }
+    }
+
+    //don't clear on each update.
 	//RSSSL()->admin->clear_admin_notices_cache();
 
 	//delete in future upgrade. We want to check the review notice dismissed as fallback still.
