@@ -39,6 +39,11 @@ class Rsssl_Two_Fa_User_Query_Builder implements Rsssl_Two_Fa_User_Query_Builder
 			'fields' => [ 'ID', 'user_login' ],
 		] );
 
+		$enabledRoles = $params->getEnabledRoles();
+		if ( ! empty( $enabledRoles ) ) {
+			$args['role__in'] = $enabledRoles;
+		}
+
 		return $args;
 	}
 

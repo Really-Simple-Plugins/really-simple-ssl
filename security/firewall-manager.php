@@ -110,6 +110,10 @@ class rsssl_firewall_manager {
 	 * @return void
 	 */
 	public function install(): void {
+		// Don't regenerate files during deactivation
+		if ( doing_action( 'rsssl_deactivate' ) ) {
+			return;
+		}
 
 		if ( ! rsssl_admin_logged_in() ) {
 			return;
@@ -164,7 +168,14 @@ class rsssl_firewall_manager {
 		$this->remove_prepend_file_in_wp_config();
 		$this->remove_auto_prepend_file_in_user_ini();
 
-		$this->delete_file();
+		$this->empty_file();
+		$this->delete_test_file();
+
+		// Delete firewall.php file using the existing handler
+		if ( class_exists( '\RSSSL\Pro\Security\WordPress\Firewall\Rsssl_Firewall_File_Handler' ) ) {
+			$firewall_handler = new \RSSSL\Pro\Security\WordPress\Firewall\Rsssl_Firewall_File_Handler();
+			$firewall_handler->delete();
+		}
 	}
 
 	/**
@@ -316,7 +327,6 @@ class rsssl_firewall_manager {
 		if ( strpos($file, 'htaccess') === false && strpos($file, 'wp-config.php') === false ) {
 			$wp_filesystem->chmod( $file, 0644 );
 		}
-
 	}
 
 	/**
@@ -341,23 +351,58 @@ class rsssl_firewall_manager {
 		$result = $wp_filesystem->get_contents( $file );
 		return $result ? $result : '';
 	}
+
 	/**
-	 * Delete a file
+	 * Empty the advanced-headers.php file instead of deleting it.
+	 * This prevents 500 errors when user.ini is cached and still references this file.
 	 *
 	 * @return void
 	 */
-	private function delete_file(): void {
+	private function empty_file(): void {
 		if ( ! rsssl_user_can_manage() ) {
 			return;
 		}
 
-		$wp_filesystem = $this->get_file_system();
+		$contents = <<<PHP
+<?php
+// This file was created by Really Simple Security
+// It is no longer used and safe to delete
+PHP;
 
-		if ( $wp_filesystem === false ) {
-			unlink( $this->file );//phpcs:ignore
+		$this->put_contents( $this->file, $contents );
+	}
+
+	/**
+	 * Get the path to the advanced-headers-test.php file.
+	 *
+	 * @return string
+	 */
+	private function get_test_file_path(): string {
+		return WP_CONTENT_DIR . '/advanced-headers-test.php';
+	}
+
+	/**
+	 * Delete the advanced-headers-test.php file if it exists.
+	 *
+	 * @return void
+	 */
+	private function delete_test_file(): void {
+		if ( ! rsssl_user_can_manage() ) {
+			return;
 		}
 
-		$wp_filesystem->delete( $this->file );
+		$test_file = $this->get_test_file_path();
+		if ( ! file_exists( $test_file ) ) {
+			return;
+		}
+
+		$wp_filesystem = $this->get_file_system();
+		if ( $wp_filesystem === false ) {
+			unlink( $test_file );//phpcs:ignore
+			return;
+		}
+
+		$wp_filesystem->delete( $test_file );
 	}
 
 	/**

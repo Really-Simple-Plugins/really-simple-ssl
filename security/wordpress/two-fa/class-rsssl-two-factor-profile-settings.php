@@ -375,6 +375,9 @@ if (!class_exists('Rsssl_Two_Factor_Profile_Settings')) {
 
             wp_nonce_field('update_user_two_fa_settings', 'rsssl_two_fa_nonce');
 
+            // Pass user_id instead of user object to prevent object corruption during template rendering
+            $user_id = $user->ID;
+
             $data = array(
                 'key' => $key,
                 'totp_url' => $totp_url,
@@ -383,7 +386,7 @@ if (!class_exists('Rsssl_Two_Factor_Profile_Settings')) {
                 'one_enabled' => $one_enabled,
                 'forced' => $forced,
                 'available_providers' => $available_providers,
-                'user' => $user,
+                'user_id' => $user_id,
                 'login_nonce' => wp_create_nonce('rsssl_login_nonce'),
             );
             $data = self::removeCircularReferences($data);
@@ -397,7 +400,7 @@ if (!class_exists('Rsssl_Two_Factor_Profile_Settings')) {
             rsssl_load_template(
                 'profile-settings.php',
                 compact(
-                    'user',
+                    'user_id',
                     'available_providers',
                     'forced',
                     'one_enabled',

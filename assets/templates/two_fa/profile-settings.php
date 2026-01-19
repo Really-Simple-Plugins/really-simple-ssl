@@ -66,9 +66,11 @@ use RSSSL\Security\WordPress\Two_Fa\Rsssl_Two_Factor_Settings;
                     <span><?php esc_html_e('Preferred Method', 'really-simple-ssl'); ?></span>
                 </legend>
                     <?php foreach ($available_providers as $provider) : ?>
+                        <?php // Skip passkey - it has its own dedicated section on the profile page. ?>
+                        <?php if ( strtolower( $provider::METHOD ) === 'passkey' ) { continue; } ?>
                         <label for="two-factor-method-<?php echo esc_attr(get_class($provider)); ?>">
                             <input type="radio" name="preferred_method" class="preferred_method_selection" id="preferred_method_<?php echo $provider::METHOD ?>"
-                                   value="<?= esc_attr($provider::METHOD) ?>" <?php checked(strtolower($provider::METHOD) === strtolower(Rsssl_Two_Factor_Settings::get_login_action(  $user->ID ))); ?> />
+                                   value="<?= esc_attr($provider::METHOD) ?>" <?php checked(strtolower($provider::METHOD) === strtolower(Rsssl_Two_Factor_Settings::get_login_action( $user_id ))); ?> />
                             <?= esc_html($provider::NAME) ?>
                         <br/>
                     <?php endforeach; ?>
@@ -125,18 +127,12 @@ use RSSSL\Security\WordPress\Two_Fa\Rsssl_Two_Factor_Settings;
             </p>
         </td>
     </tr>
-    <?php
-
-    if ( $passkeys_enabled ) {
-        ?>
-        <tr style="padding: 0;opacity: <?php echo ($selected_provider === 'passkey') ? '1' : '0'; ?>" id="passkey-table">
-            <!-- Datatable for the Passkey -->
+    <?php if ( $passkeys_enabled ) : ?>
+        <tr style="padding: 0;" id="passkey-table">
             <td colspan="2" style="padding: 0;">
                 <?php RSSSL_Passkey_List_Table::display_table() ?>
             </td>
         </tr>
-        <?php
-    }
-    ?>
+    <?php endif; ?>
 </table>
 

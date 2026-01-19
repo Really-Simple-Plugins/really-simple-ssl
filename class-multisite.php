@@ -393,43 +393,6 @@ if (!class_exists('rsssl_multisite')) {
             }
         }
 
-	    /**
-	     * Deactivate SSL on all subsites
-	     *
-	     * @return void
-	     */
-
-        public function deactivate()
-        {
-	        if (!rsssl_user_can_manage()) {
-		        return;
-	        }
-			$ssl_was_enabled = rsssl_get_option('ssl_enabled');
-	        delete_site_option('rsssl_network_activation_status');
-	        rsssl_update_option('ssl_enabled', false);
-			//main site first
-	        $site_id = get_main_site_id();
-			switch_to_blog($site_id);
-			RSSSL()->admin->deactivate_site($ssl_was_enabled);
-	        restore_current_blog();
-
-	        //because the deactivation should be a one click procedure, chunking this would cause difficulties
-	        $args = array(
-		        'number' => $this->get_total_blog_count(),
-		        'offset' => 0,
-	        );
-	        $sites = get_sites($args);
-            foreach ($sites as $site) {
-	            switch_to_blog($site->blog_id);
-	            update_site_meta($site->blog_id, 'rsssl_ssl_activated', false );
-				//we already did the main site
-				if ( !is_main_site() ) {
-					RSSSL()->admin->deactivate_site($ssl_was_enabled);
-				}
-                restore_current_blog();
-            }
-        }
-
         /**
          * filters the get_admin_url function to correct the false https urls wordpress returns for non SSL websites.
          *

@@ -6,7 +6,7 @@ if ( ! defined('ABSPATH')) {
 if ( ! function_exists('rsssl_plugin_plugin_page_scripts')) {
     function rsssl_plugin_plugin_page_scripts($hook)
     {
-        if ( $hook !== 'plugins.php' ) {
+        if ( $hook !== 'plugins.php' && $hook !== 'plugins-network.php' ) {
             return;
         }
 
@@ -43,9 +43,9 @@ if ( ! function_exists('rsssl_plugin_plugin_page_scripts')) {
 
         function rsssl_add_modal_root_div()
         {
-            // Check if we're on the plugins.php page
+            // Check if we're on the plugins page (single site or network admin)
             $screen = get_current_screen();
-            if ($screen && $screen->id === 'plugins') {
+            if ($screen && ($screen->id === 'plugins' || $screen->id === 'plugins-network')) {
                 echo '<div id="rsssl-modal-root"></div>';
             }
         }

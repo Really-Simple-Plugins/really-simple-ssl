@@ -6,7 +6,7 @@ Requires at least: 6.6
 License: GPL2
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 9.5.5
+Stable tag: 9.5.6
 
 Easily improve site security with WordPress Hardening, Two-Factor Authentication (2FA), Login Protection, Vulnerability Detection and SSL certificate.
 
@@ -160,7 +160,12 @@ Yes. The plugin enforces HTTPS and handles all necessary redirects, optionally u
 Really Simple Security and WordFence greatly overlap in term of functionality. If you like to use specific features from both plugins, we strongly recommend not to enable similar features twice. The benefit of Really Simple Security is that disabled features don't load any code, so won't have an impact on site performance.
 
 == Changelog ==
-= 9.5.5 - 2025-12-09 =
+= 9.5.6 - 2025-01-20 =
+* Fixed: 2FA users list not displaying all users
+* Fixed: Cloudflare cache not clearing after SSL activation
+* Changed: improved deactivation process
+
+= 9.5.6 - 2025-12-16 =
 * Fixed: JavaScript error when using custom roles with 2FA
 * Fixed: fatal error caused by hosts class being instantiated twice
 * Fixed: fatal error when upgrading from older plugin versions

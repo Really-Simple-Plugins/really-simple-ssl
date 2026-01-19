@@ -516,14 +516,36 @@ class Rsssl_Two_Factor_Email extends Rsssl_Two_Factor_Provider implements Rsssl_
 		if ( ! $user->exists() ) {
 			return false;
 		}
-		$user_roles     = ! empty( $user->roles ) && is_array( $user->roles ) ? $user->roles : [];
-		$optional_roles = rsssl_get_option( 'two_fa_enabled_roles_email' );
-		if ( empty( $optional_roles ) ) {
-			$optional_roles = array();
-		}
+
 		if ( 'disabled' === Rsssl_Two_Factor_Settings::get_user_status( 'email', $user->ID ) ) {
 			return false;
 		}
+
+		$optional_roles = (array) rsssl_get_option( 'two_fa_enabled_roles_email', array() );
+		$user_roles     = $user->roles;
+
+		// Guard clause: if roles is not an array, no overlap possible.
+		if ( ! is_array( $user_roles ) ) {
+			return false;
+		}
+
+		// For multisite, get the strictest role across all sites.
+		if ( is_multisite() ) {
+			$strict_roles = Rsssl_Two_Factor_Settings::get_strictest_role_across_sites( $user->ID, array( 'email' ) );
+
+			// Array conversion for possible single-role.
+			if ( is_string( $strict_roles ) ) {
+				$strict_roles = ( '' === $strict_roles ) ? null : array( $strict_roles );
+			}
+
+			// No valid roles from multisite, no overlap possible.
+			if ( empty( $strict_roles ) || ! is_array( $strict_roles ) ) {
+				return false;
+			}
+
+			$user_roles = $strict_roles;
+		}
+
 		// Check if any of the user's roles are in the optional roles list.
 		return ! empty( array_intersect( $user_roles, $optional_roles ) );
 	}
@@ -599,14 +621,29 @@ class Rsssl_Two_Factor_Email extends Rsssl_Two_Factor_Provider implements Rsssl_
 			return false;
 		}
 
-        // Get and normalize the user roles.
+        // Get the user roles.
         $user_roles = $user->roles;
+
+        // Guard clause: if roles is not an array, no overlap possible.
         if ( ! is_array( $user_roles ) ) {
-            $user_roles = array();
+            return false;
         }
 
+        // For multisite, get the strictest role across all sites.
         if ( is_multisite() ) {
-            $user_roles = Rsssl_Two_Factor_Settings::get_strictest_role_across_sites($user->ID, ['email']);
+            $strict_roles = Rsssl_Two_Factor_Settings::get_strictest_role_across_sites( $user->ID, array( 'email' ) );
+
+            // Array conversion for possible single-role.
+            if ( is_string( $strict_roles ) ) {
+                $strict_roles = ( '' === $strict_roles ) ? null : array( $strict_roles );
+            }
+
+            // No valid roles from multisite, no overlap possible.
+            if ( empty( $strict_roles ) || ! is_array( $strict_roles ) ) {
+                return false;
+            }
+
+            $user_roles = $strict_roles;
         }
 
         // Get and normalize enabled roles.
@@ -615,7 +652,7 @@ class Rsssl_Two_Factor_Email extends Rsssl_Two_Factor_Provider implements Rsssl_
             $enabled_roles = array();
         }
 
-        // Return true if any of the user's roles are in the enabled roles list.
+        // Check if any user role is in the enabled roles list.
         return ! empty( array_intersect( $user_roles, $enabled_roles ) );
 	}
 

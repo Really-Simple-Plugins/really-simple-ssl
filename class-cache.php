@@ -19,7 +19,8 @@ if ( ! class_exists( 'rsssl_cache' ) ) {
 		/**
 		 * Flushes the cache for popular caching plugins to prevent mixed content errors
 		 * When .htaccess is changed, all traffic should flow over https, so clear cache when possible.
-		 * supported: W3TC, WP fastest Cache, Zen Cache, wp_rocket
+		 * Supported: W3TC, WP Optimize, LiteSpeed, Hummingbird, WP Fastest Cache,
+		 * Autoptimize, WP Rocket, Cache Enabler, WP Super Cache, Cloudflare
 		 *
 		 * @since  2.0
 		 *
@@ -41,6 +42,7 @@ if ( ! class_exists( 'rsssl_cache' ) ) {
 			add_action( 'admin_head', array( $this, 'maybe_flush_wp_rocket' ) );
 			add_action( 'admin_head', array( $this, 'maybe_flush_cache_enabler' ) );
 			add_action( 'admin_head', array( $this, 'maybe_flush_wp_super_cache' ) );
+			add_action( 'admin_head', array( $this, 'maybe_flush_cloudflare_cache' ) );
 		}
 
 		public function maybe_flush_w3tc_cache() {
@@ -131,6 +133,26 @@ if ( ! class_exists( 'rsssl_cache' ) ) {
 
 			if ( function_exists( 'wp_cache_clear_cache' ) ) {
 				wp_cache_clear_cache();
+			}
+		}
+
+		/**
+		 * Flush Cloudflare cache if the Cloudflare plugin is active.
+		 *
+		 * @see https://github.com/cloudflare/Cloudflare-WordPress
+		 */
+		public function maybe_flush_cloudflare_cache() {
+			if ( ! rsssl_user_can_manage() ) {
+				return;
+			}
+
+			if ( defined( 'CLOUDFLARE_PLUGIN_DIR' ) && class_exists( '\Cloudflare\APO\WordPress\Hooks' ) ) {
+				try {
+					$cloudflare_hooks = new \Cloudflare\APO\WordPress\Hooks();
+					$cloudflare_hooks->purgeCacheEverything();
+				} catch ( \Throwable $e ) {
+					// Silently fail if Cloudflare API is not configured.
+				}
 			}
 		}
 	}//class closure

@@ -8,13 +8,13 @@ if (!defined('ABSPATH')) {
 return [
     'plugin' => [
         'name' => 'Really Simple Security',
-        'version' => '9.5.5',
+        'version' => '9.5.6',
         'pro' => false,
         'core_path' => dirname(__DIR__),
         'path' => dirname(__DIR__, 2),
         'base_path' => dirname(__DIR__, 2). DIRECTORY_SEPARATOR . plugin_basename(dirname(__DIR__, 2)) . '.php',
         'assets_path' => dirname(__DIR__) . DIRECTORY_SEPARATOR .'assets' . DIRECTORY_SEPARATOR,
-        'lang_path' => dirname(__DIR__, 2). DIRECTORY_SEPARATOR . 'languages' . DIRECTORY_SEPARATOR,
+        'lang_path' => plugin_basename(dirname(__DIR__, 2)) . DIRECTORY_SEPARATOR . 'languages' . DIRECTORY_SEPARATOR,
         'view_path' => dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR,
         'feature_path' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'Features' . DIRECTORY_SEPARATOR,
         'react_path' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'react',

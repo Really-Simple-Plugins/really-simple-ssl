@@ -116,7 +116,14 @@ class Rsssl_Two_Factor_Settings {
 	 */
 	public static function get_user_roles( int $user_id ): array {
 		if ( is_multisite() ) {
-            return array_values(self::get_strictest_role_across_sites($user_id, ['totp', 'email']));
+            $strict_roles = self::get_strictest_role_across_sites($user_id, ['totp', 'email']);
+            if ( is_string( $strict_roles ) && '' !== $strict_roles ) {
+                return array( $strict_roles );
+            }
+            if ( is_array( $strict_roles ) ) {
+                return array_values( $strict_roles );
+            }
+            return array();
 		}
 
 		$user  = get_userdata( $user_id );
@@ -180,11 +187,23 @@ class Rsssl_Two_Factor_Settings {
 	 * @return string
 	 */
 	public static function get_role_status( string $method, int $user_id ): string {
-        if (is_multisite()) {
-            $roles = self::get_strictest_role_across_sites($user_id, [$method]);
-            $roles = array_values($roles); // Flatten the array to get the strictest role
+        $roles = array();
+
+        if ( is_multisite() ) {
+            $strict_roles = self::get_strictest_role_across_sites( $user_id, array( $method ) );
+            if ( is_string( $strict_roles ) && '' !== $strict_roles ) {
+                $roles = array( $strict_roles );
+            }
+            if ( is_array( $strict_roles ) ) {
+                $roles = array_values( $strict_roles );
+            }
         } else {
-            $roles = self::get_user_roles($user_id);
+            $roles = self::get_user_roles( $user_id );
+        }
+
+        // Early return for non-passkey methods with no roles.
+        if ( empty( $roles ) && 'passkey' !== $method ) {
+            return 'empty';
         }
 
 		$provider = 'email' === $method ? '_email' : '_' . self::sanitize_method( $method );
@@ -737,7 +756,7 @@ class Rsssl_Two_Factor_Settings {
         foreach ($sites as $site) {
             switch_to_blog($site->blog_id);
             $user = get_userdata($user_id);
-            if ($user) {
+            if ($user && is_array($user->roles)) {
                 foreach($user->roles as $role){
                     $all_roles[] = $role;
                 }

@@ -1615,7 +1615,7 @@ class rsssl_letsencrypt_handler {
 		insert_with_markers($path, 'Really Simple Security LETS ENCRYPT', $htaccess);
 
 		$htaccess = file_get_contents( $path );
-		if ( strpos($htaccess, 'deny from all') !== FALSE ) {
+		if ( stripos($htaccess, 'Require all denied') !== FALSE ) {
 			update_option('rsssl_htaccess_file_set_'.$type, true, false);
 			return;
 		}

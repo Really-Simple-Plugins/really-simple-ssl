@@ -93,8 +93,7 @@ class rsssl_admin {
 		add_action( 'upgrader_process_complete', array( $this, 'run_table_init_hook'), 10, 1);
 		add_action( 'wp_initialize_site', array( $this, 'run_table_init_hook'), 10, 1);
 		add_action( "rsssl_after_save_field", array($this, 'maybe_delete_permission_detection_option'), 101, 4 );
-
-	}
+    }
 
 	public static function this() {
 		return self::$_this;
@@ -414,24 +413,32 @@ class rsssl_admin {
 			return;
 		}
 
-		do_action( 'rsssl_deactivate' );
+        if ( ! isset( $_GET['action'] )
+             || ( 'uninstall_keep_ssl' !== $_GET['action'] && 'uninstall_revert_ssl' !== $_GET['action'] ) ) {
+            return;
+        }
 
 		rsssl_clear_scheduled_hooks();
 
-		$ssl_was_enabled = rsssl_get_option( 'ssl_enabled' );
+        $ssl_was_enabled = rsssl_get_option( 'ssl_enabled' );
+        $revert_to_http = isset( $_GET['action'] ) && 'uninstall_revert_ssl' === $_GET['action'];
 
-		if ( isset( $_GET['action'] ) && 'uninstall_keep_ssl' === $_GET['action'] ) {
-			$this->deactivate_site( $ssl_was_enabled ); // Don't revert to http
-            $this->deactivate_plugin();
+		if ( is_multisite() ) {
+			$this->deactivate_multisite_network( $ssl_was_enabled, $revert_to_http );
+		} else {
+			// Single site deactivation
+			$this->deactivate_site( $ssl_was_enabled, $revert_to_http );
+		}
+
+		$this->deactivate_plugin();
+
+		// Redirect to the correct plugins page (network admin or single site)
+        if ( is_multisite() ) {
+            $redirect_url = network_admin_url( 'plugins.php' );
+        } else {
+            $redirect_url = admin_url( 'plugins.php' );
         }
-
-		if ( isset( $_GET['action'] ) && 'uninstall_revert_ssl' === $_GET['action'] ) {
-			// Update site url from https:// to http://
-			$this->deactivate_site( $ssl_was_enabled, true ); // Revert to http
-            $this->deactivate_plugin();
-        }
-
-		wp_redirect( admin_url( 'plugins.php' ) );
+		wp_redirect( $redirect_url );
 		exit;
 	}
 
@@ -1047,12 +1054,58 @@ class rsssl_admin {
             return;
         }
 
+		$ssl_was_enabled = rsssl_get_option( 'ssl_enabled' );
+
 		if ( is_multisite() ) {
-			RSSSL()->multisite->deactivate();
+			$this->deactivate_multisite_network( $ssl_was_enabled, false );
 		} else {
-			$ssl_was_enabled = rsssl_get_option( 'ssl_enabled' );
+			// Single site deactivation
 			$this->deactivate_site( $ssl_was_enabled );
 		}
+	}
+
+	/**
+	 * Deactivate SSL across all sites in a multisite network
+	 *
+	 * @param bool $ssl_was_enabled Whether SSL was enabled before deactivation
+	 * @param bool $revert_to_http  Whether to revert URLs from https://
+     * to http:// (default: false, keeps https://)
+	 *
+	 * @return void
+	 */
+	private function deactivate_multisite_network( bool $ssl_was_enabled, bool $revert_to_http = false ) {
+		if ( ! rsssl_user_can_manage() ) {
+			return;
+		}
+
+		delete_site_option( 'rsssl_network_activation_status' );
+		rsssl_update_option( 'ssl_enabled', false );
+
+		// Deactivate main site first
+		$site_id = get_main_site_id();
+		switch_to_blog( $site_id );
+		// Do note fire action yet, fire once at the end
+		$this->deactivate_site( $ssl_was_enabled, $revert_to_http, false );
+		restore_current_blog();
+
+		// Then deactivate all other sites
+		$args = array(
+			'number' => RSSSL()->multisite->get_total_blog_count(),
+			'offset' => 0,
+		);
+		$sites = get_sites( $args );
+		foreach ( $sites as $site ) {
+			switch_to_blog( $site->blog_id );
+			update_site_meta( $site->blog_id, 'rsssl_ssl_activated', false );
+			// Skip main site (already done)
+			if ( ! is_main_site() ) {
+				$this->deactivate_site( $ssl_was_enabled, $revert_to_http, false );
+			}
+			restore_current_blog();
+		}
+
+		// Fire the deactivation action once for the entire network
+		do_action( 'rsssl_deactivate' );
 	}
 
 	/**
@@ -1060,11 +1113,11 @@ class rsssl_admin {
 	 *
 	 * @param bool $ssl_was_enabled Whether SSL was enabled before deactivation
 	 * @param bool $revert_to_http  Whether to revert URLs from https:// to http:// (default: false, keeps https://)
+	 * @param bool $fire_action     Whether to fire the rsssl_deactivate action (default: true). Set to false during multisite loops.
 	 *
 	 * @return void
 	 */
-	public function deactivate_site( bool $ssl_was_enabled, bool $revert_to_http = false ) {
-
+	public function deactivate_site( bool $ssl_was_enabled, bool $revert_to_http = false, bool $fire_action = true ) {
 		if ( ! rsssl_user_can_manage() ) {
 			return;
 		}
@@ -1085,8 +1138,15 @@ class rsssl_admin {
 			rsssl_remove_htaccess_security_edits( $clear_htaccess_redirect );
 		}
 
-		do_action( 'rsssl_deactivate' );
-		rsssl_update_option( 'ssl_enabled', false );
+		// Fire action only if requested (suppressed during multisite loops)
+		if ( $fire_action ) {
+			do_action( 'rsssl_deactivate' );
+		}
+
+		// Only disable ssl_enabled when actually reverting to HTTP
+		if ( $revert_to_http ) {
+			rsssl_update_option( 'ssl_enabled', false );
+		}
 	}
 
 	/**
