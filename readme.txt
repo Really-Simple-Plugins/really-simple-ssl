@@ -162,7 +162,6 @@ Really Simple Security and WordFence greatly overlap in term of functionality. I
 == Changelog ==
 = 9.5.7 - 2026-02-10 =
 * Fixed: scenario where users were stuck after an expired 2FA grace period due to missing authentication methods.
-* Fixed: Support for `wss://` URLs in CSP `connect-src`.
 * Changed: Email 2FA user experience by making Enter submit the verification code instead of resending it.
 * Changed: Simplified service bootstrapping by removing the Provider layer and registering all services directly in the App container.
 
