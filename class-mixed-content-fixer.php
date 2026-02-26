@@ -101,10 +101,12 @@ if (!class_exists('rsssl_admin_mixed_content_fixer')) {
          * @access public
          *
          */
-
         public function end_buffer()
         {
-            if (ob_get_length()) ob_end_flush();
+            // Only flush if buffer level is above zlib's level.
+            if (function_exists('wp_ob_end_flush_all')) {
+                wp_ob_end_flush_all();
+            }
         }
 
         /**

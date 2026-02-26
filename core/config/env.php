@@ -8,7 +8,7 @@ if (!defined('ABSPATH')) {
 return [
     'plugin' => [
         'name' => 'Really Simple Security',
-        'version' => '9.5.7',
+        'version' => '9.5.8.1',
         'pro' => false,
         'core_path' => dirname(__DIR__),
         'path' => dirname(__DIR__, 2),

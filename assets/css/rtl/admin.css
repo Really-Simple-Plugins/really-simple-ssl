@@ -2187,51 +2187,51 @@ button.button .cmplz-icon.rsssl-icon-loading > div {
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(1) {
-    width: 63%;
+    width: 72%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(2) {
-    width: 77%;
+    width: 76%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(3) {
-    width: 99%;
+    width: 89%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(4) {
-    width: 69%;
+    width: 64%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(5) {
-    width: 69%;
+    width: 98%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(6) {
-    width: 92%;
+    width: 76%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(7) {
-    width: 70%;
+    width: 94%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
-    width: 90%;
+    width: 99%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
-    width: 96%;
+    width: 77%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
-    width: 91%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
     width: 73%;
 }
 
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
+    width: 79%;
+}
+
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
-    width: 95%;
+    width: 79%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
@@ -2239,31 +2239,31 @@ button.button .cmplz-icon.rsssl-icon-loading > div {
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(14) {
-    width: 100%;
+    width: 72%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
-    width: 81%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(16) {
-    width: 62%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(17) {
-    width: 94%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(18) {
     width: 64%;
 }
 
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(16) {
+    width: 71%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(17) {
+    width: 63%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(18) {
+    width: 83%;
+}
+
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(19) {
-    width: 80%;
+    width: 97%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(20) {
-    width: 72%;
+    width: 85%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line ~ .rsssl-placeholder-line {

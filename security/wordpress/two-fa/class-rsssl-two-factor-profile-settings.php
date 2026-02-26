@@ -263,7 +263,7 @@ if (!class_exists('Rsssl_Two_Factor_Profile_Settings')) {
                         return;
                     }
 
-                    $params::validate_auth_code(absint(wp_unslash($_POST['two-factor-totp-authcode'])));
+                    $params::validate_auth_code(sanitize_text_field(wp_unslash($_POST['two-factor-totp-authcode'])));
                     $params::validate_key(sanitize_text_field(wp_unslash($_POST['two-factor-totp-key'])));
                     $auth_code = sanitize_text_field(wp_unslash($_POST['two-factor-totp-authcode']));
                     $key = sanitize_text_field(wp_unslash($_POST['two-factor-totp-key']));

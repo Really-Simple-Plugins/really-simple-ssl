@@ -1867,9 +1867,7 @@ class rsssl_admin {
 								echo wp_kses_post( sprintf( __( 'Hi, Really Simple Security has kept your site secure for a month now, awesome! If you have a moment, please consider leaving a review on WordPress.org to spread the word. We greatly appreciate it! If you have any questions or feedback, leave us a %1$smessage%2$s.', 'really-simple-ssl' ), '<a href="https://really-simple-ssl.com/contact" rel="noopener noreferrer" target="_blank">', '</a>' ) );
 								?>
                             </p>
-						<?php } ?>
-						<i>- Rogier</i>
-						<?php
+						<?php }
 						$maybe_later_url = wp_nonce_url(
 							rsssl_admin_url(['rsssl_review_notice' => 'later']),
 							'rsssl_review_notice_action_later'

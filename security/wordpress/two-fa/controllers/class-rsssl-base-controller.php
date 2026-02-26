@@ -3,12 +3,13 @@
 namespace RSSSL\Security\WordPress\Two_Fa\Controllers;
 
 use Exception;
-use RSSSL\Pro\Security\WordPress\Two_Fa\Providers\Rsssl_Two_Factor_Passkey;
 use RSSSL\Security\WordPress\Two_Fa\Models\Rsssl_Request_Parameters;
 use RSSSL\Security\WordPress\Two_Fa\Providers\Rsssl_Provider_Loader;
 use RSSSL\Security\WordPress\Two_Fa\Providers\Rsssl_Two_Factor_Provider;
+use RSSSL\Security\WordPress\Two_Fa\Rsssl_Two_Factor_Settings;
 use WP_REST_Request;
 use WP_REST_Response;
+use WP_User;
 
 final class Rsssl_Base_Controller extends Rsssl_Abstract_Controller
 {
@@ -64,11 +65,19 @@ final class Rsssl_Base_Controller extends Rsssl_Abstract_Controller
             return new WP_REST_Response(['error' => $e->getMessage()], 403);
         }
 
+		if ( $this->is_forced_user( $user->ID ) ) {
+			return new WP_REST_Response(
+				[
+					'error' => __( 'Two-Factor Authentication cannot be disabled for this account.', 'really-simple-ssl' ),
+				],
+				403
+			);
+		}
+
 		// if the 2FA is not enabled for the user, we only handle the passkey meta key
 	    if ( ! (bool) rsssl_get_option( 'login_protection_enabled' ) ) {
-			// Remove the passkey meta key for the user.
-			update_user_meta( $user->ID, 'rsssl_passkey_configured', 'ignored' );
-//			return $this->authenticate_and_redirect( $user->ID, $parameters->redirect_to );
+				// Remove the passkey meta key for the user.
+				update_user_meta( $user->ID, 'rsssl_passkey_configured', 'ignored' );
 		}
         $loader = Rsssl_Provider_Loader::get_loader();
         // We get all the available providers for the user.
@@ -101,6 +110,45 @@ final class Rsssl_Base_Controller extends Rsssl_Abstract_Controller
             return new WP_REST_Response(['error' => $e->getMessage()], 403);
         }
 
+		if ( ! $this->can_user_skip_onboarding( $user ) ) {
+			return new WP_REST_Response(
+				[
+					'error' => __( 'Two-Factor Authentication setup is required for this account.', 'really-simple-ssl' ),
+				],
+				403
+			);
+		}
+
         return $this->authenticate_and_redirect( $user->ID, $parameters->redirect_to );
     }
+
+	/**
+	 * Check if the user is in a forced 2FA role.
+	 *
+	 * @param int $user_id The user ID.
+	 *
+	 * @return bool
+	 */
+	private function is_forced_user( int $user_id ): bool {
+		if ( ! (bool) rsssl_get_option( 'login_protection_enabled' ) ) {
+			return false;
+		}
+
+		return Rsssl_Two_Factor_Settings::is_user_forced_to_use_2fa( $user_id );
+	}
+
+	/**
+	 * Check if onboarding can be skipped for the given user.
+	 *
+	 * @param WP_User $user The user object.
+	 *
+	 * @return bool
+	 */
+	private function can_user_skip_onboarding( WP_User $user ): bool {
+		if ( ! $this->is_forced_user( $user->ID ) ) {
+			return true;
+		}
+
+		return false !== Rsssl_Two_Factor_Settings::is_user_in_grace_period( $user );
+	}
 }

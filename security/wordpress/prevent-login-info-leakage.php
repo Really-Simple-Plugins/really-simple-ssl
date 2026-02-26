@@ -37,7 +37,9 @@ function rsssl_clear_username_on_correct_username() {
     ?>
     <script>
         if ( document.getElementById('login_error') ) {
-            document.getElementById('user_login').value = '';
+            let userLogin = document.getElementById('user_login');
+            userLogin.value = '';
+            userLogin.setAttribute('value', '');
         }
     </script>
     <?php

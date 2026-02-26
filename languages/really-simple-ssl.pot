@@ -2,46 +2,41 @@
 # This file is distributed under the GPLv2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Really Simple Security Pro 9.5.7\n"
+"Project-Id-Version: Really Simple Security Pro 9.5.8.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/really-simple-ssl-pro\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-02-03T08:17:24+00:00\n"
+"POT-Creation-Date: 2026-02-26T09:37:22+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.11.0\n"
+"X-Generator: WP-CLI 2.8.1\n"
 "X-Domain: really-simple-ssl\n"
 
 #. Plugin Name of the plugin
-#: really-simple-ssl-pro.php
 msgid "Really Simple Security Pro"
 msgstr ""
 
 #. Plugin URI of the plugin
-#: really-simple-ssl-pro.php
 msgid "https://really-simple-ssl.com"
 msgstr ""
 
 #. Description of the plugin
-#: really-simple-ssl-pro.php
 msgid "Simple and performant security"
 msgstr ""
 
 #. Author of the plugin
-#: really-simple-ssl-pro.php
 msgid "Really Simple Plugins"
 msgstr ""
 
 #. Author URI of the plugin
-#: really-simple-ssl-pro.php
 msgid "https://really-simple-ssl.com/about-us"
 msgstr ""
 
 #: assets/templates/two_fa/expired.php:3
 #: assets/templates/two_fa/onboarding.php:44
-#: class-admin.php:3459
+#: class-admin.php:3457
 #: class-site-health.php:61
 #: core/app/Services/SettingsConfigService.php:57
 #: core/app/Services/SettingsConfigService.php:124
@@ -263,146 +258,146 @@ msgstr ""
 msgid "Hi, Really Simple Security has kept your site secure for a month now, awesome! If you have a moment, please consider leaving a review on WordPress.org to spread the word. We greatly appreciate it! If you have any questions or feedback, leave us a %1$smessage%2$s."
 msgstr ""
 
-#: class-admin.php:1885
+#: class-admin.php:1883
 msgid "Leave a review"
 msgstr ""
 
-#: class-admin.php:1889
+#: class-admin.php:1887
 msgid "Maybe later"
 msgstr ""
 
-#: class-admin.php:1894
+#: class-admin.php:1892
 msgid "Don't show again"
 msgstr ""
 
-#: class-admin.php:2048
+#: class-admin.php:2046
 msgid "Completed"
 msgstr ""
 
-#: class-admin.php:2049
+#: class-admin.php:2047
 #: pro/class-licensing.php:653
 #: settings/build/485.09b2206e7cb2f9ad160e.js:1
 #: settings/src/Settings/MixedContentScan/MixedContentScan.js:58
 msgid "Warning"
 msgstr ""
 
-#: class-admin.php:2050
+#: class-admin.php:2048
 #: pro/class-licensing.php:654
 #: pro/security/wordpress/class-rsssl-geo-block.php:1414
 msgid "Open"
 msgstr ""
 
-#: class-admin.php:2051
+#: class-admin.php:2049
 #: settings/build/366.0e8cd32aeda45546f72d.js:1
 #: settings/src/Dashboard/OtherPlugins/OtherPlugins.js:21
 msgid "Upgrade"
 msgstr ""
 
-#: class-admin.php:2088
+#: class-admin.php:2086
 msgid "No recommended redirect rules detected."
 msgstr ""
 
-#: class-admin.php:2103
+#: class-admin.php:2101
 #: lets-encrypt/class-letsencrypt-handler.php:303
 msgid "(unknown)"
 msgstr ""
 
-#: class-admin.php:2112
+#: class-admin.php:2110
 msgid "Your wp-config.php has to be edited, but is not writable."
 msgstr ""
 
-#: class-admin.php:2113
-#: class-admin.php:2134
+#: class-admin.php:2111
+#: class-admin.php:2132
 msgid "Set your wp-config.php to writable and reload this page."
 msgstr ""
 
-#: class-admin.php:2114
+#: class-admin.php:2112
 msgid "To safely enable SSL on your server configuration, you should add the following line of code to your wp-config.php."
 msgstr ""
 
-#: class-admin.php:2134
+#: class-admin.php:2132
 msgid "A definition of a site url or home url was detected in your wp-config.php, but the file is not writable."
 msgstr ""
 
-#: class-admin.php:2149
+#: class-admin.php:2147
 msgid "The 'force-deactivate.php' file has to be renamed to .txt. Otherwise your ssl can be deactivated by anyone on the internet."
 msgstr ""
 
-#: class-admin.php:2150
+#: class-admin.php:2148
 #: settings/build/635.1aee1a8a0b3a1aed2ce2.js:1
 #: settings/src/Onboarding/Items/ListItem.js:46
 msgid "Check again"
 msgstr ""
 
-#: class-admin.php:2166
+#: class-admin.php:2164
 msgid "SSL is now activated. Follow the three steps in this article to check if your website is secure."
 msgstr ""
 
-#: class-admin.php:2178
+#: class-admin.php:2176
 msgid "SSL is enabled on your site."
 msgstr ""
 
-#: class-admin.php:2182
+#: class-admin.php:2180
 msgid "SSL is not enabled yet."
 msgstr ""
 
-#: class-admin.php:2199
+#: class-admin.php:2197
 msgid "The wp-config.php file is not writable, and needs to be edited. Please set this file to writable."
 msgstr ""
 
-#: class-admin.php:2203
+#: class-admin.php:2201
 #: class-site-health.php:344
 msgid "No SSL detected"
 msgstr ""
 
-#: class-admin.php:2204
+#: class-admin.php:2202
 msgid "No SSL detected. Use the retry button to check again."
 msgstr ""
 
-#: class-admin.php:2208
-#: class-admin.php:2218
-#: class-admin.php:2233
+#: class-admin.php:2206
+#: class-admin.php:2216
+#: class-admin.php:2231
 msgid "Install SSL certificate"
 msgstr ""
 
-#: class-admin.php:2209
+#: class-admin.php:2207
 msgid "Retry"
 msgstr ""
 
-#: class-admin.php:2214
+#: class-admin.php:2212
 #: core/app/Features/Onboarding/OnboardingStepsGenerator.php:110
 msgid "Could not test certificate"
 msgstr ""
 
-#: class-admin.php:2215
+#: class-admin.php:2213
 #: core/app/Features/Onboarding/OnboardingStepsGenerator.php:110
 msgid "Automatic certificate detection is not possible on your server."
 msgstr ""
 
-#: class-admin.php:2219
+#: class-admin.php:2217
 msgid "Check manually"
 msgstr ""
 
-#: class-admin.php:2224
+#: class-admin.php:2222
 msgid "Your SSL certificate will expire soon."
 msgstr ""
 
 #. translators: %s is replaced with date.
-#: class-admin.php:2227
+#: class-admin.php:2225
 msgid "SSL certificate will expire on %s."
 msgstr ""
 
 #. translators: %s is replaced with date.
-#: class-admin.php:2227
+#: class-admin.php:2225
 msgid "If your hosting provider auto-renews your certificate, no action is required. Alternatively, you have the option to generate an SSL certificate with Really Simple Security."
 msgstr ""
 
 #. translators: %1$ and %2$s are replaced with the opening and closing tag with link.
-#: class-admin.php:2229
+#: class-admin.php:2227
 msgid "Depending on your hosting provider, %1$smanual installation%2$s may be required."
 msgstr ""
 
-#: class-admin.php:2234
+#: class-admin.php:2232
 #: settings/build/366.0e8cd32aeda45546f72d.js:1
 #: settings/build/485.09b2206e7cb2f9ad160e.js:1
 #: settings/build/635.1aee1a8a0b3a1aed2ce2.js:1
@@ -410,111 +405,111 @@ msgstr ""
 msgid "Re-check"
 msgstr ""
 
-#: class-admin.php:2247
+#: class-admin.php:2245
 msgid "Really Simple Security has received no response from the webpage."
 msgstr ""
 
-#: class-admin.php:2254
+#: class-admin.php:2252
 msgid "The mixed content fixer is active, but was not detected on the frontpage."
 msgstr ""
 
-#: class-admin.php:2259
+#: class-admin.php:2257
 msgid "Error occurred when retrieving the webpage."
 msgstr ""
 
-#: class-admin.php:2265
+#: class-admin.php:2263
 msgid "Mixed content fixer not enabled. Enable the option to fix mixed content on your site."
 msgstr ""
 
 #. translators: %s is replaced with the error description.
-#: class-admin.php:2272
+#: class-admin.php:2270
 msgid "The mixed content fixer could not be detected due to a cURL error: %s. cURL errors are often caused by an outdated version of PHP or cURL and don't affect the front-end of your site. Contact your hosting provider for a fix."
 msgstr ""
 
-#: class-admin.php:2285
+#: class-admin.php:2283
 msgid "301 redirect to https set."
 msgstr ""
 
-#: class-admin.php:2289
+#: class-admin.php:2287
 msgid "No 301 redirect is set. Enable the WordPress 301 redirect in the settings to get a 301 permanent redirect."
 msgstr ""
 
-#: class-admin.php:2304
-#: class-admin.php:2310
+#: class-admin.php:2302
+#: class-admin.php:2308
 msgid "301 .htaccess redirect"
 msgstr ""
 
-#: class-admin.php:2305
+#: class-admin.php:2303
 msgid "The 301 redirect with .htaccess to HTTPS is now enabled."
 msgstr ""
 
-#: class-admin.php:2311
+#: class-admin.php:2309
 msgid "WordPress 301 redirect enabled. We recommend to enable a 301 .htaccess redirect."
 msgstr ""
 
-#: class-admin.php:2318
+#: class-admin.php:2316
 msgid "Enable a .htaccess redirect or PHP redirect in the settings to create a 301 redirect."
 msgstr ""
 
-#: class-admin.php:2323
+#: class-admin.php:2321
 msgid ".htaccess redirect."
 msgstr ""
 
-#: class-admin.php:2325
+#: class-admin.php:2323
 msgid "The .htaccess redirect rules selected by this plugin failed in the test. Set manually or dismiss to leave on PHP redirect."
 msgstr ""
 
-#: class-admin.php:2340
+#: class-admin.php:2338
 msgid "Your site uses Elementor. This can require some additional steps before getting the secure lock."
 msgstr ""
 
-#: class-admin.php:2354
+#: class-admin.php:2352
 msgid "Your site uses Divi. This can require some additional steps before getting the secure lock."
 msgstr ""
 
-#: class-admin.php:2365
+#: class-admin.php:2363
 msgid "See which recommended security headers are not present on your website."
 msgstr ""
 
-#: class-admin.php:2374
+#: class-admin.php:2372
 msgid "Recommended security headers enabled."
 msgstr ""
 
-#: class-admin.php:2385
+#: class-admin.php:2383
 msgid "Implement Two-Factor Authentication or Passkey login."
 msgstr ""
 
-#: class-admin.php:2397
+#: class-admin.php:2395
 msgid "Protect your login form with Limit Login Attempts."
 msgstr ""
 
-#: class-admin.php:2409
+#: class-admin.php:2407
 msgid "Protect your site with a performant Firewall."
 msgstr ""
 
 #. translators: %s is replaced with the plugin name.
-#: class-admin.php:2421
+#: class-admin.php:2419
 msgid "We have detected the %s plugin on your website."
 msgstr ""
 
 #. translators: %s is replaced with the plugin name.
-#: class-admin.php:2421
+#: class-admin.php:2419
 msgid "As Really Simple Security handles all the functionality this plugin provides, we recommend to disable this plugin to prevent unexpected behavior."
 msgstr ""
 
-#: class-admin.php:2435
+#: class-admin.php:2433
 msgid "Black Friday sale! Get 40% Off Really Simple Security Pro"
 msgstr ""
 
-#: class-admin.php:2448
+#: class-admin.php:2446
 msgid "Complete email validation and enable notifications to make sure you will receive security warnings."
 msgstr ""
 
-#: class-admin.php:2456
+#: class-admin.php:2454
 msgid "Email address successfully verified."
 msgstr ""
 
-#: class-admin.php:2508
+#: class-admin.php:2506
 #: settings/config/fields/firewall.php:104
 #: settings/config/fields/firewall.php:126
 #: settings/config/fields/firewall.php:148
@@ -522,47 +517,47 @@ msgid "404 errors detected on your homepage. 404 blocking is unavailable, to pre
 msgstr ""
 
 #. translators: %1$s: opening bold tag, %2$s: closing bold tag
-#: class-admin.php:3417
+#: class-admin.php:3415
 msgid "Really Simple SSL is now %1$sReally Simple Security!%2$s"
 msgstr ""
 
-#: class-admin.php:3424
+#: class-admin.php:3422
 msgid "Read about our journey towards Really Simple Security"
 msgstr ""
 
-#: class-admin.php:3430
+#: class-admin.php:3428
 msgid "Experience all powerful features of Really Simple Security Pro using this %slimited time discount%s: %s"
 msgstr ""
 
-#: class-admin.php:3449
+#: class-admin.php:3447
 msgid "Thank you for being a long-time user! As a token of our gratitude, we want to offer you %s6 months Really Simple Security Pro, 100%% Free!%s"
 msgstr ""
 
-#: class-admin.php:3454
+#: class-admin.php:3452
 msgid "Discover:"
 msgstr ""
 
-#: class-admin.php:3457
+#: class-admin.php:3455
 msgid "Performant Firewall"
 msgstr ""
 
-#: class-admin.php:3458
+#: class-admin.php:3456
 #: settings/config/menu.php:254
 msgid "Advanced Hardening"
 msgstr ""
 
-#: class-admin.php:3460
+#: class-admin.php:3458
 #: core/app/Services/SettingsConfigService.php:71
 #: core/app/Services/SettingsConfigService.php:139
 #: settings/config/menu.php:98
 msgid "Security Headers"
 msgstr ""
 
-#: class-admin.php:3461
+#: class-admin.php:3459
 msgid "And many more powerful Security features.."
 msgstr ""
 
-#: class-admin.php:3464
+#: class-admin.php:3462
 msgid "Claim your 6 Free months"
 msgstr ""
 
@@ -5413,6 +5408,14 @@ msgstr ""
 
 #: security/wordpress/two-fa/class-rsssl-two-factor.php:1541
 msgid "Failed to create a login nonce."
+msgstr ""
+
+#: security/wordpress/two-fa/controllers/class-rsssl-base-controller.php:71
+msgid "Two-Factor Authentication cannot be disabled for this account."
+msgstr ""
+
+#: security/wordpress/two-fa/controllers/class-rsssl-base-controller.php:116
+msgid "Two-Factor Authentication setup is required for this account."
 msgstr ""
 
 #: security/wordpress/two-fa/controllers/class-rsssl-email-controller.php:159
