@@ -53,11 +53,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		'option_id'            => 'disable_xmlrpc',
 		'always_include'       => false,
 	),
-	'vulnerabilities' => array(
-		'folder'               => 'wordpress',
-		'option_id'            => 'enable_vulnerability_scanner',
-		'admin_only'           => true,
-	),
 	'class-rsssl-two-factor' => array(
 		'folder'         => 'wordpress/two-fa',
 		'option_id'      => 'login_protection_enabled',

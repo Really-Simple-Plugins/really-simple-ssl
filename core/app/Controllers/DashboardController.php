@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace ReallySimplePlugins\RSS\Core\Controllers;
 
-use ReallySimplePlugins\RSS\Core\Bootstrap\App;
 use ReallySimplePlugins\RSS\Core\Interfaces\ControllerInterface;
 use ReallySimplePlugins\RSS\Core\Support\Helpers\Storages\EnvironmentConfig;
 

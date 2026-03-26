@@ -1,6 +1,6 @@
 <?php
 
-namespace  ReallySimplePlugins\RSS\Core\Support\Helpers;
+namespace ReallySimplePlugins\RSS\Core\Support\Helpers;
 
 use Adbar\Dot;
 

@@ -18,7 +18,7 @@ if (file_exists($autoloaderFilePath) === false) {
 require_once $autoloaderFilePath;
 
 // Prevent boot when the core Plugin file is missing.
-if (class_exists('\ReallySimplePlugins\RSS\Core\Bootstrap\Plugin') === false) {
+if (class_exists(\ReallySimplePlugins\RSS\Core\Bootstrap\Plugin::class) === false) {
     error_log('Really Simple Security: Core could not be booted, main `Plugin` class could not be found.');
     return;
 }

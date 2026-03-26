@@ -49,13 +49,6 @@ if ( ! class_exists( 'rsssl_site_health' ) ) {
 						'test' => array( $this, 'site_health_404_display' ),
 					);
 				}
-
-				if ( rsssl_get_option( 'enable_vulnerability_scanner' ) ) {
-					$vulnerabilities = new rsssl_vulnerabilities();
-					$tests['direct']['rsssl_vulnerabilities'] = array(
-						'test' => [ $vulnerabilities, 'get_site_health_notice' ],
-					);
-				}
 				// Two-Factor Authentication (2FA) test
 				$tests['direct']['rsssl_2fa_test'] = array(
 					'label' => __( 'Two-Factor Authentication', 'really-simple-ssl' ),

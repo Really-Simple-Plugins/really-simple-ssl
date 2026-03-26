@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace ReallySimplePlugins\RSS\Core\Managers;
 
 use ReallySimplePlugins\RSS\Core\Bootstrap\App;
-use ReallySimplePlugins\RSS\Core\Features\AbstractLoader;
 use ReallySimplePlugins\RSS\Core\Interfaces\FeatureInterface;
 
 /**
@@ -66,7 +65,6 @@ final class FeatureManager extends AbstractManager
         $featureClasses = [];
 
         foreach ($features as $featureName) {
-
             $needsPro = strpos($featureName, self::PRO_FEATURE_HANDLE) !== false;
             if ($needsPro && !$this->env->getBoolean('plugin.pro')) {
                 continue; // Pro not installed, don't register pro features
@@ -117,25 +115,24 @@ final class FeatureManager extends AbstractManager
                 continue;
             }
 
-            $proEnabled = $this->env->getBoolean('plugin.pro');
-            $skipPro = ($proEnabled === false && $fileInfo->getFilename() === 'Pro');
-            if ($skipPro) {
+            $isProFeature = ($fileInfo->getFilename() === 'Pro');
+            if (!$isProFeature) {
+                $features[] = $fileInfo->getFilename();
                 continue;
             }
 
-            if ($fileInfo->getFilename() === 'Pro') {
-                foreach (new \DirectoryIterator($fileInfo->getPathname()) as $proInfo) {
-                    if ($proInfo->isDot() || !$proInfo->isDir()) {
-                        continue;
-                    }
-                    $features[] = self::PRO_FEATURE_HANDLE . $proInfo->getFilename();
+            $proIsNotActive = ($this->env->getBoolean('plugin.pro') !== true);
+            if ($proIsNotActive || $this->license->isValid() !== true) {
+                continue;
+            }
+
+            foreach (new \DirectoryIterator($fileInfo->getPathname()) as $proInfo) {
+                if ($proInfo->isDot() || !$proInfo->isDir()) {
+                    continue;
                 }
-                continue;
+                $features[] = self::PRO_FEATURE_HANDLE . $proInfo->getFilename();
             }
-
-            $features[] = $fileInfo->getFilename();
         }
-
         return $features;
     }
 
@@ -155,5 +152,4 @@ final class FeatureManager extends AbstractManager
     {
         return 'ReallySimplePlugins\RSS\Core\Features\\' . ($needsPro ? 'Pro\\' : '') . $featureName . '\\';
     }
-
 }

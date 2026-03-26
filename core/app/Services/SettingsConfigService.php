@@ -1,4 +1,5 @@
 <?php
+
 namespace ReallySimplePlugins\RSS\Core\Services;
 
 /**

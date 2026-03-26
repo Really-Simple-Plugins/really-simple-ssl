@@ -4,16 +4,18 @@ declare(strict_types=1);
 
 namespace ReallySimplePlugins\RSS\Core\Bootstrap;
 
+use ReallySimplePlugins\RSS\Core\Controllers\DashboardController;
+use ReallySimplePlugins\RSS\Core\Controllers\ScheduledTasksController;
+use ReallySimplePlugins\RSS\Core\Managers\ControllerManager;
+use ReallySimplePlugins\RSS\Core\Managers\EndpointManager;
 use ReallySimplePlugins\RSS\Core\Managers\FeatureManager;
 use ReallySimplePlugins\RSS\Core\Managers\ProviderManager;
-use ReallySimplePlugins\RSS\Core\Managers\EndpointManager;
-use ReallySimplePlugins\RSS\Core\Managers\ControllerManager;
 use ReallySimplePlugins\RSS\Core\Support\Helpers\Storages\EnvironmentConfig;
 
 class Plugin
 {
     private App $app;
-	private EnvironmentConfig $env;
+    private EnvironmentConfig $env;
     private FeatureManager $featureManager;
     private ProviderManager $providerManager;
     private EndpointManager $endpointManager;
@@ -25,7 +27,7 @@ class Plugin
     public function __construct()
     {
         $this->app = App::getInstance();
-		$this->env = new EnvironmentConfig();
+        $this->env = $this->app->make(EnvironmentConfig::class);
 
         $this->featureManager = $this->app->make(FeatureManager::class);
         $this->providerManager = $this->app->make(ProviderManager::class);
@@ -40,11 +42,11 @@ class Plugin
     {
         $this->registerEnvironment();
 
-	    $pluginBaseFile = (defined('rsssl_file') && !empty(rsssl_file) ? rsssl_file : '');
-	    if (empty($pluginBaseFile)) {
-		    $pluginBaseFile = (dirname(__DIR__, 2). DIRECTORY_SEPARATOR . plugin_basename(dirname(__DIR__, 2)) . '.php');
-	    }
-		register_activation_hook($pluginBaseFile, [$this, 'activation']);
+        $pluginBaseFile = (defined('rsssl_file') && !empty(rsssl_file) ? rsssl_file : '');
+        if (empty($pluginBaseFile)) {
+            $pluginBaseFile = (dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . plugin_basename(dirname(__DIR__, 2)) . '.php');
+        }
+        register_activation_hook($pluginBaseFile, [$this, 'activation']);
         register_deactivation_hook($pluginBaseFile, [$this, 'deactivation']);
         register_uninstall_hook($pluginBaseFile, 'ReallySimplePlugins\RSS\Core\Bootstrap\Plugin::uninstall');
 
@@ -145,8 +147,6 @@ class Plugin
     public function registerProviders(): void
     {
         $this->providerManager->register([
-//            \ReallySimplePlugins\RSS\Core\Providers\ConfigServiceProvider::class,
-//            \ReallySimplePlugins\RSS\Core\Providers\RequestServiceProvider::class,
         ]);
     }
 
@@ -154,12 +154,15 @@ class Plugin
      * Register Controllers. Hooked into rss_core_features_loaded to make sure
      * features are available to the Controllers.
      * @uses do_action rss_core_controllers_loaded
+     * @uses apply_filters rss_core_controller_classes
      */
     public function registerControllers(): void
     {
-        $this->controllerManager->register([
-            \ReallySimplePlugins\RSS\Core\Controllers\DashboardController::class,
+        $controllers = apply_filters('rss_core_controller_classes', [
+            DashboardController::class,
         ]);
+
+        $this->controllerManager->register($controllers);
     }
 
     /**
@@ -188,5 +191,4 @@ class Plugin
     {
         // todo - upgrades not yet handled by core.
     }
-
 }

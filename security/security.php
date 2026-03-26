@@ -29,7 +29,6 @@ class REALLY_SIMPLE_SECURITY
 			if ( rsssl_admin_logged_in() ) {
 				$htaccessFileManager = new RSSSL_Htaccess_File_Manager();
 				self::$instance->firewall_manager = new rsssl_firewall_manager($htaccessFileManager);
-				self::$instance->hardening = new rsssl_hardening();
 			}
 		}
 		return self::$instance;
@@ -40,7 +39,6 @@ class REALLY_SIMPLE_SECURITY
 
 		$path = rsssl_path.'security/';
 		require_once( $path . 'integrations.php' );
-		require_once( $path . 'hardening.php' );
 		require_once( $path . 'cron.php' );
 		require_once( $path . 'includes/check404/class-rsssl-simple-404-interceptor.php' );
 

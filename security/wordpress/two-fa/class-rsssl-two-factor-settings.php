@@ -116,7 +116,7 @@ class Rsssl_Two_Factor_Settings {
 	 */
 	public static function get_user_roles( int $user_id ): array {
 		if ( is_multisite() ) {
-            $strict_roles = self::get_strictest_role_across_sites($user_id, ['totp', 'email']);
+            $strict_roles = self::get_strictest_role_across_sites( $user_id, array( 'totp', 'email', 'passkey' ) );
             if ( is_string( $strict_roles ) && '' !== $strict_roles ) {
                 return array( $strict_roles );
             }
@@ -132,6 +132,31 @@ class Rsssl_Two_Factor_Settings {
 			$roles = array();
 		}
 		return $roles;
+	}
+
+	/**
+	 * Get the user's actual role slugs across the network.
+	 *
+	 * This is intentionally separate from get_user_roles(), which returns the
+	 * strictest role for provider-selection logic. Enforcement needs the real
+	 * assigned roles and must not depend on enabled-method state.
+	 */
+	private static function get_user_role_slugs_across_network( int $user_id ): array {
+		if ( ! is_multisite() ) {
+			return self::get_user_roles( $user_id );
+		}
+
+		$roles = array();
+		foreach ( get_sites( [ 'fields' => 'ids' ] ) as $blog_id ) {
+			switch_to_blog( (int) $blog_id );
+			$user = get_userdata( $user_id );
+			if ( $user && is_array( $user->roles ) ) {
+				$roles = array_merge( $roles, $user->roles );
+			}
+			restore_current_blog();
+		}
+
+		return array_values( array_unique( $roles ) );
 	}
 
 	/**
@@ -209,7 +234,7 @@ class Rsssl_Two_Factor_Settings {
 		$provider = 'email' === $method ? '_email' : '_' . self::sanitize_method( $method );
 
 		// Check if the method is enabled.
-        $enabled = ($method === 'passkey') ? array_keys(wp_roles()->roles) : rsssl_get_option("two_fa_enabled_roles$provider");
+        $enabled = ($method === 'passkey') ? array_keys( wp_roles()->get_names() ) : rsssl_get_option("two_fa_enabled_roles$provider");
 
 		$forced  = false;
 
@@ -415,8 +440,9 @@ class Rsssl_Two_Factor_Settings {
 			// if the option is a boolean we convert it to an array.
 			self::$enabled_roles_totp  = rsssl_get_option( 'two_fa_enabled_roles_totp', [] );
 			self::$enabled_roles_email = rsssl_get_option( 'two_fa_enabled_roles_email', [] );
-            // Passkey is always enabled. So all roles are enabled.
-			self::$enabled_roles_passkey = array_values(wp_roles()->get_names());
+			// Passkey is always enabled. So all roles are enabled. Use role
+			// slugs, not translatable role labels.
+			self::$enabled_roles_passkey = array_keys( wp_roles()->get_names() );
 			self::$forced_roles        = rsssl_get_option( 'two_fa_forced_roles', [] );
 			self::$roles_loaded        = true;
 		}
@@ -518,7 +544,7 @@ class Rsssl_Two_Factor_Settings {
 	 * @return bool // true if the user is forced to use 2FA, false otherwise.
 	 */
 	public static function is_user_forced_to_use_2fa( int $user_id ): bool {
-		$roles        = self::get_user_roles( $user_id );
+		$roles        = self::get_user_role_slugs_across_network( $user_id );
 		$forced_roles = rsssl_get_option( 'two_fa_forced_roles', [] );
 		foreach ( $roles as $role ) {
 			if ( in_array( $role, $forced_roles, true ) ) {
@@ -590,7 +616,7 @@ class Rsssl_Two_Factor_Settings {
         }
 
 		$email         = rsssl_get_option( 'two_fa_enabled_roles_email', [] );
-        $passkey       = array_keys(wp_roles()->roles);
+		$passkey       = array_keys( wp_roles()->get_names() );
 		$enabled_roles = array_merge( $totp, $email, $passkey );
 		return array_intersect( $roles, $enabled_roles );
 	}

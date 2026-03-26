@@ -560,7 +560,6 @@ class Rsssl_Two_Factor
     {
         switch (Rsssl_Two_Factor_Settings::get_login_action($user->ID)) {
             case 'onboarding':
-                wp_clear_auth_cookie();
                 self::is_onboarding_complete($user);
                 exit;
             case 'expired':
@@ -1399,7 +1398,6 @@ class Rsssl_Two_Factor
         $is_forced = Rsssl_Two_Factor_Settings::is_user_forced_to_use_2fa($user->ID);
         $grace_period = Rsssl_Two_Factor_Settings::is_user_in_grace_period($user);
         $is_today = Rsssl_Two_Factor_Settings::is_today($user);
-
         if ($passkey_onboarding) {
             $is_forced = false;
             //if only passkey is available, set it as the only provider

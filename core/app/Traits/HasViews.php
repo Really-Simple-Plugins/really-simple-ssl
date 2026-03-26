@@ -47,5 +47,4 @@ trait HasViews
         // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         echo $this->view($path, $variables, $extension);
     }
-
 }

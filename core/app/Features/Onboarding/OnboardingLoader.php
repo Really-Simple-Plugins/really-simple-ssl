@@ -1,4 +1,5 @@
 <?php
+
 namespace ReallySimplePlugins\RSS\Core\Features\Onboarding;
 
 use ReallySimplePlugins\RSS\Core\Features\AbstractLoader;
@@ -19,10 +20,10 @@ class OnboardingLoader extends AbstractLoader
             return true; // To process the items
         }
 
-	    // Enable if user clicked "Activate SSL" button
-	    // This allows the modal to fetch data when explicitly opened by user
-	    // after dismissal
-        if ($this->requestBody->getBoolean('activateSSLClicked')) {
+        // Enable if user clicked "Activate SSL" button
+        // This allows the modal to fetch data when explicitly opened by user
+        // after dismissal
+        if ($this->request->getBoolean('body.activateSSLClicked')) {
             return true;
         }
 
@@ -63,36 +64,38 @@ class OnboardingLoader extends AbstractLoader
         return !empty($items);
     }
 
-	/**
-	 * Check if the current request is in the Let's Encrypt wizard context.
-	 * The Let's Encrypt wizard uses the onboarding component for the activate
-	 * SSL step, so we need to enable the onboarding feature when in this context.
-	 *
-	 * @internal We access $_GET and $_SERVER superglobals directly for read-only
-	 * context detection. These values are only used for comparison checks, not
-	 * output or database queries, so sanitization and nonce verification are not
-	 * required. The phpcs warnings are intentionally suppressed.
-	 */
-	protected function requestIsLetsEncryptRequest(): bool
-	{
-		// Check GET parameters for direct page loads
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		if (isset($_GET['letsencrypt']) && $_GET['letsencrypt'] === '1'
-		    // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		    && isset($_GET['page']) && $_GET['page'] === 'really-simple-security') {
-			return true;
-		}
+    /**
+     * Check if the current request is in the Let's Encrypt wizard context.
+     * The Let's Encrypt wizard uses the onboarding component for the activate
+     * SSL step, so we need to enable the onboarding feature when in this context.
+     *
+     * @internal We access $_GET and $_SERVER superglobals directly for read-only
+     * context detection. These values are only used for comparison checks, not
+     * output or database queries, so sanitization and nonce verification are not
+     * required. The phpcs warnings are intentionally suppressed.
+     */
+    protected function requestIsLetsEncryptRequest(): bool
+    {
+        // Check GET parameters for direct page loads
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        if (
+            isset($_GET['letsencrypt']) && $_GET['letsencrypt'] === '1'
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+            && isset($_GET['page']) && $_GET['page'] === 'really-simple-security'
+        ) {
+            return true;
+        }
 
-		// Check referer for REST API requests from the Let's Encrypt wizard
-		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-		$referer = ($_SERVER['HTTP_REFERER'] ?? '');
-		if (strpos($referer, 'letsencrypt=1') !== false
-		    && strpos($referer, 'page=really-simple-security') !== false) {
-			return true;
-		}
+        // Check referer for REST API requests from the Let's Encrypt wizard
+        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+        $referer = ($_SERVER['HTTP_REFERER'] ?? '');
+        if (
+            strpos($referer, 'letsencrypt=1') !== false
+            && strpos($referer, 'page=really-simple-security') !== false
+        ) {
+            return true;
+        }
 
-		return false;
-	}
-
-
+        return false;
+    }
 }

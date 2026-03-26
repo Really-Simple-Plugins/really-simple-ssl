@@ -123,18 +123,31 @@ final class Rsssl_Base_Controller extends Rsssl_Abstract_Controller
     }
 
 	/**
-	 * Check if the user is in a forced 2FA role.
+	 * Check if the user has an enabled provider that is forced for their role.
 	 *
 	 * @param int $user_id The user ID.
 	 *
 	 * @return bool
 	 */
 	private function is_forced_user( int $user_id ): bool {
-		if ( ! (bool) rsssl_get_option( 'login_protection_enabled' ) ) {
+		$user = get_userdata( $user_id );
+		if ( ! $user instanceof WP_User ) {
 			return false;
 		}
 
-		return Rsssl_Two_Factor_Settings::is_user_forced_to_use_2fa( $user_id );
+		$loader = Rsssl_Provider_Loader::get_loader();
+
+		foreach ( $loader::available_providers() as $method => $provider ) {
+			if ( ! $provider::is_enabled( $user ) ) {
+				continue;
+			}
+
+			if ( 'forced' === Rsssl_Two_Factor_Settings::get_role_status( $method, $user_id ) ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**
