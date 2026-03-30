@@ -115,23 +115,26 @@ final class FeatureManager extends AbstractManager
                 continue;
             }
 
-            $isProFeature = ($fileInfo->getFilename() === 'Pro');
-            if (!$isProFeature) {
-                $features[] = $fileInfo->getFilename();
-                continue;
-            }
-
             $proIsNotActive = ($this->env->getBoolean('plugin.pro') !== true);
-            if ($proIsNotActive || $this->license->isValid() !== true) {
+            $isProFeature = ($fileInfo->getFilename() === 'Pro');
+            $licenseIsInvalid = ($this->license->isValid() !== true);
+
+            if ($isProFeature && ($proIsNotActive || $licenseIsInvalid)) {
                 continue;
             }
 
-            foreach (new \DirectoryIterator($fileInfo->getPathname()) as $proInfo) {
-                if ($proInfo->isDot() || !$proInfo->isDir()) {
-                    continue;
+
+            if ($fileInfo->getFilename() === 'Pro') {
+                foreach (new \DirectoryIterator($fileInfo->getPathname()) as $proInfo) {
+                    if ($proInfo->isDot() || !$proInfo->isDir()) {
+                        continue;
+                    }
+                    $features[] = self::PRO_FEATURE_HANDLE . $proInfo->getFilename();
                 }
-                $features[] = self::PRO_FEATURE_HANDLE . $proInfo->getFilename();
+                continue;
             }
+
+            $features[] = $fileInfo->getFilename();
         }
         return $features;
     }
