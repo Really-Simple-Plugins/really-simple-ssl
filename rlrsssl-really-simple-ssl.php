@@ -32,6 +32,10 @@ if ( ! defined( 'rsssl_file' ) ) {
     define( 'rsssl_file', __FILE__ );
 }
 
+if ( ! defined( 'rsssl_plugin' ) ) {
+    define('rsssl_plugin', plugin_basename(__FILE__));
+}
+
 if (!function_exists('rsssl_activation_check')) {
     function rsssl_activation_check()
     {
@@ -118,7 +122,6 @@ if ( class_exists('REALLY_SIMPLE_SSL') ) {
             define('rsssl_url', plugin_dir_url(__FILE__));
             define('rsssl_path', trailingslashit(plugin_dir_path(__FILE__)));
             define('rsssl_template_path', trailingslashit(plugin_dir_path(__FILE__)).'grid/templates/');
-            define('rsssl_plugin', plugin_basename(__FILE__));
             define('rsssl_version', '9.5.9');
             define('rsssl_le_cron_generation_renewal_check', 20);
             define('rsssl_le_manual_generation_renewal_check', 15);
