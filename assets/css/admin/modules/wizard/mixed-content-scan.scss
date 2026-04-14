@@ -45,6 +45,28 @@
   .rsssl-grid-item-content-footer{
     display: flex;
     gap: var(--rsp-spacing-s);
+
+    .rsssl-show-ignored-urls-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .components-base-control.components-toggle-control {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 0;
+        margin-bottom: 0;
+
+        .components-base-control__field,
+        .components-flex {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: auto;
+        }
+      }
+    }
   }
   .rsssl-current-scan-action, .rsssl-mixed-content-description {
     margin:10px 5px;
