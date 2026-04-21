@@ -1,7 +1,6 @@
 <?php
 namespace  RSSSL\Security\WordPress\Two_Fa;
 
-use RSSSL\Pro\Security\WordPress\Passkey\Rsssl_Public_Credential_Resource;
 use WP_List_Table;
 
 if ( ! class_exists( 'WP_List_Table' ) ) {
@@ -157,29 +156,5 @@ class RSSSL_Passkey_List_Table extends WP_List_Table {
         $list_table = new self();
         $list_table->prepare_items($data);
         $list_table->display();
-    }
-}
-
-
-add_action('wp_ajax_remove_passkey', 'remove_passkey_callback');
-
-/**
- * Remove passkey callback
- *
- * @return void
- */
-function remove_passkey_callback() {
-    $device_id = isset($_POST['device_id']) ? (int) $_POST['device_id'] : 0;
-
-    if ($device_id > 0) {
-	    $resource = Rsssl_Public_Credential_Resource::get_instance();
-	    if (is_null($resource)) {
-		    wp_send_json_error(['message' => __('Resource not found', 'really-simple-ssl')]);
-		    return;
-	    }
-	    $resource->delete($device_id);
-        wp_send_json_success(['message' => __('Device removed successfully', 'really-simple-ssl')]);
-    } else {
-        wp_send_json_error(['message' => __('Invalid device ID', 'really-simple-ssl')]);
     }
 }

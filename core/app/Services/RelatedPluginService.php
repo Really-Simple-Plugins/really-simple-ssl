@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace ReallySimplePlugins\RSS\Core\Services;
 
-use ReallySimplePlugins\RSS\Core\Bootstrap\App;
 use ReallySimplePlugins\RSS\Core\Support\Helpers\Storage;
 use ReallySimplePlugins\RSS\Core\Support\Helpers\Storages\RelatedConfig;
 
@@ -14,17 +13,17 @@ final class RelatedPluginService
      * Should be a Storage object based on one entry in the related config
      */
     private Storage $pluginConfig;
-	private RelatedConfig $relatedConfig;
+    private RelatedConfig $relatedConfig;
 
     public function __construct(RelatedConfig $relatedConfig)
     {
-		$this->relatedConfig = $relatedConfig;
+        $this->relatedConfig = $relatedConfig;
     }
 
     public function setPluginConfigBySlug(string $slug): void
     {
         $plugins = $this->relatedConfig->get('plugins', []);
-        $plugins = array_filter($plugins, static function($plugin) use ($slug){
+        $plugins = array_filter($plugins, static function($plugin) use ($slug) {
             return isset($plugin['slug']) && ($plugin['slug'] === $slug);
         });
 
@@ -200,7 +199,6 @@ final class RelatedPluginService
         }
 
         return true;
-
     }
 
     /**
@@ -242,7 +240,7 @@ final class RelatedPluginService
      */
     protected function pluginFileExists(): bool
     {
-        return file_exists(trailingslashit(WP_PLUGIN_DIR).$this->pluginConfig->getString('activation_slug'));
+        return file_exists(trailingslashit(WP_PLUGIN_DIR) . $this->pluginConfig->getString('activation_slug'));
     }
 
     /**
@@ -287,5 +285,4 @@ final class RelatedPluginService
         set_transient($transientName, $pluginInfo, WEEK_IN_SECONDS);
         return $pluginInfo;
     }
-
 }

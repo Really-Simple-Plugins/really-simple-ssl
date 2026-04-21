@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace ReallySimplePlugins\RSS\Core\Bootstrap;
 
-use ReallySimplePlugins\RSS\Core\Support\Helpers\Storage;
-
 /**
  * Container class that provides dependency injection capabilities to manage
  * object creation and resolution. Class is used for retrieving and injecting
@@ -38,10 +36,20 @@ class App
     private array $instances = [];
 
     /**
+     * Context-aware bindings: when building a specific class, resolve an interface
+     * to the configured concrete implementation.
+     *
+     * @var array<class-string, array<class-string, class-string>>
+     */
+    private array $contextualBindings = [];
+
+    /**
      * Private constructor to enforce the singleton pattern. Prevents direct
      * instantiation; use getInstance() instead.
      */
-    private function __construct() {}
+    private function __construct()
+    {
+    }
 
     /**
      * Retrieve the shared container instance. Provides a central access point
@@ -64,6 +72,21 @@ class App
     public function set(string $name, \Closure $value): void
     {
         $this->registry[$name] ??= $value;
+    }
+
+    /**
+     * Register a contextual binding for constructor autowiring.
+     *
+     * When the container is building $when and encounters a dependency on $needs,
+     * it will instead resolve $give.
+     *
+     * @param class-string $when When building this class
+     * @param class-string $needs The interface or class needed
+     * @param class-string $give The concrete class to provide
+     */
+    public function bindContextual(string $when, string $needs, string $give): void
+    {
+        $this->contextualBindings[$when][$needs] = $give;
     }
 
     /**
@@ -169,14 +192,18 @@ class App
 
             $dependencyClass = $type->getName();
 
+            if (interface_exists($dependencyClass) && isset($this->contextualBindings[$class][$dependencyClass])) {
+                $dependencyClass = $this->contextualBindings[$class][$dependencyClass];
+            }
+
             // Inject the current container, never a new one.
-	        if ($dependencyClass === self::class) {
-		        throw new \Exception(sprintf(
-			        'Cannot resolve App container dependency for $%s in [%s] to prevent circular dependencies.',
-			        $parameter->getName(),
-			        $class
-		        ));
-	        }
+            if ($dependencyClass === self::class) {
+                throw new \Exception(sprintf(
+                    'Cannot resolve App container dependency for $%s in [%s] to prevent circular dependencies.',
+                    $parameter->getName(),
+                    $class
+                ));
+            }
 
 
             // Using get() will also resolve dependencies of dependencies

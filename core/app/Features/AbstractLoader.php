@@ -6,7 +6,6 @@ namespace ReallySimplePlugins\RSS\Core\Features;
 
 use ReallySimplePlugins\RSS\Core\Managers\FeatureManager;
 use ReallySimplePlugins\RSS\Core\Support\Helpers\Storages\EnvironmentConfig;
-use ReallySimplePlugins\RSS\Core\Support\Helpers\Storages\RequestBody;
 use ReallySimplePlugins\RSS\Core\Support\Helpers\Storages\RequestStorage;
 
 /**
@@ -21,19 +20,16 @@ use ReallySimplePlugins\RSS\Core\Support\Helpers\Storages\RequestStorage;
 abstract class AbstractLoader
 {
 	protected EnvironmentConfig $env;
-	protected RequestBody $requestBody;
 	protected RequestStorage $request;
 
 
     public function __construct(
 		EnvironmentConfig $environmentConfig,
-		RequestStorage $request,
-	    RequestBody $requestBody
+		RequestStorage $request
     )
     {
 		$this->env = $environmentConfig;
 		$this->request = $request;
-		$this->requestBody = $requestBody;
     }
 
     /**
@@ -94,5 +90,4 @@ abstract class AbstractLoader
 
         return (strpos($currentRequestUri, $restUrlPrefix) !== false) || $isPlainPermalink;
     }
-
 }

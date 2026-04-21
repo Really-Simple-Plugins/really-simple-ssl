@@ -60,20 +60,39 @@ add_filter('rest_url', 'rsssl_fix_rest_url_for_wpml', 10, 4);
  */
 function rsssl_get_chunk_translations($path = 'settings/build'  ) {
 	//get all files from the settings/build folder
-	$files = scandir(rsssl_path . $path );
+	$base_path = rsssl_path . $path;
+	$files = scandir($base_path );
 	$json_translations = [];
 
 	// filter the filenames to get the JavaScript and asset filenames
 	$jsFilename = '';
 	$assetFilename = '';
+	$candidates = [];
 
 	foreach ($files as $file) {
-		if (strpos($file, 'index.') === 0) {
-			if (substr($file, -3) === '.js') {
-				$jsFilename = $file;
-			} elseif (substr($file, -10) === '.asset.php') {
-				$assetFilename = $file;
+		// Collect build candidates and pick the newest matching index.<version>.js + asset.php pair.
+		if (strpos($file, 'index.') === 0 && substr($file, -10) === '.asset.php') {
+			$asset_file_path = trailingslashit($base_path) . $file;
+			$asset_data = require $asset_file_path;
+			if (!is_array($asset_data) || empty($asset_data['version']) || !is_string($asset_data['version'])) {
+				continue;
 			}
+
+			$version = $asset_data['version'];
+			$js_file = 'index.' . $version . '.js';
+			$js_file_path = trailingslashit($base_path) . $js_file;
+
+			if (!file_exists($js_file_path)) {
+				continue;
+			}
+
+			$mtime = max((int) @filemtime($asset_file_path), (int) @filemtime($js_file_path));
+			$candidates[] = [
+				'version' => $version,
+				'js' => $js_file,
+				'asset' => $file,
+				'mtime' => $mtime,
+			];
 		}
 
 		if (strpos($file, '.js') === false) {
@@ -90,6 +109,16 @@ function rsssl_get_chunk_translations($path = 'settings/build'  ) {
 		}
 		wp_deregister_script( $chunk_handle );
 	}
+
+	// Prefer the newest valid build output.
+	if (!empty($candidates)) {
+		usort($candidates, static function($a, $b) {
+			return ($b['mtime'] ?? 0) <=> ($a['mtime'] ?? 0);
+		});
+		$jsFilename = $candidates[0]['js'];
+		$assetFilename = $candidates[0]['asset'];
+	}
+
 	if (empty($jsFilename) || empty($assetFilename) ) {
 		return [];
 	}
@@ -371,6 +400,12 @@ function rsssl_do_action($request, $ajax_data = false)
 		break;
 		default:
             $response = apply_filters("rsssl_do_action", [], $action, $data);
+	}
+
+	// Backward compatibility: some legacy actions returned the payload at the top-level,
+	// while older Settings code expects it under `data`.
+	if (in_array($action, ['hardening_data'], true) && is_array($response) && !isset($response['data'])) {
+		$response = array_merge(['data' => $response], $response);
 	}
 
 	if (is_array($response)) {

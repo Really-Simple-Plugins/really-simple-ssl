@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace ReallySimplePlugins\RSS\Core\Managers;
 
-use ReallySimplePlugins\RSS\Core\Traits\HasNonces;
-use ReallySimplePlugins\RSS\Core\Traits\HasAllowlistControl;
-use ReallySimplePlugins\RSS\Core\Interfaces\ProviderInterface;
-use ReallySimplePlugins\RSS\Core\Interfaces\SingleEndpointInterface;
 use ReallySimplePlugins\RSS\Core\Interfaces\MultiEndpointInterface;
+use ReallySimplePlugins\RSS\Core\Interfaces\SingleEndpointInterface;
+use ReallySimplePlugins\RSS\Core\Traits\HasAllowlistControl;
+use ReallySimplePlugins\RSS\Core\Traits\HasNonces;
 
 final class EndpointManager extends AbstractManager
 {
@@ -203,5 +202,4 @@ final class EndpointManager extends AbstractManager
         // Convert back to CSV format for register_rest_route usage
         return implode(',', $methodsArray);
     }
-
 }

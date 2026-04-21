@@ -3,11 +3,13 @@
 namespace ReallySimplePlugins\RSS\Core\Managers;
 
 use ReallySimplePlugins\RSS\Core\Bootstrap\App;
+use ReallySimplePlugins\RSS\Core\Services\LicenseService;
 use ReallySimplePlugins\RSS\Core\Support\Helpers\Storages\EnvironmentConfig;
 
 abstract class AbstractManager
 {
-	protected EnvironmentConfig $env;
+    protected EnvironmentConfig $env;
+    protected LicenseService $license;
 
     /**
      * Overwrite this property to true when the entries that the child Manager
@@ -26,9 +28,13 @@ abstract class AbstractManager
     /**
      * Bind the container
      */
-    public function __construct(EnvironmentConfig $environmentConfig)
+    public function __construct(
+        EnvironmentConfig $environmentConfig,
+        LicenseService $licence
+    )
     {
-		$this->env = $environmentConfig;
+        $this->env = $environmentConfig;
+        $this->license = $licence;
     }
 
     /**

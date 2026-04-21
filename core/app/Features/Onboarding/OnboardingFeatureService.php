@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace ReallySimplePlugins\RSS\Core\Features\Onboarding;
 
-use ReallySimplePlugins\RSS\Core\Bootstrap\App;
 use ReallySimplePlugins\RSS\Core\Services\GlobalOnboardingService;
 use ReallySimplePlugins\RSS\Core\Support\Helpers\Storages\EnvironmentConfig;
 
@@ -15,11 +14,11 @@ use ReallySimplePlugins\RSS\Core\Support\Helpers\Storages\EnvironmentConfig;
  */
 class OnboardingFeatureService extends GlobalOnboardingService
 {
-	protected EnvironmentConfig $env;
+    protected EnvironmentConfig $env;
 
     public function __construct(EnvironmentConfig $environmentConfig)
     {
-		$this->env = $environmentConfig;
+        $this->env = $environmentConfig;
     }
 
     /**
@@ -177,7 +176,7 @@ class OnboardingFeatureService extends GlobalOnboardingService
         $shouldKeepStatusEvenWhenCleaned = apply_filters('rsssl_cleanup_onboarding_statuses', ['processing']);
 
         // Only keep failed or processing items
-        $cleanedQueue = array_filter($queuedItems, static function ($item) use($shouldKeepStatusEvenWhenCleaned) {
+        $cleanedQueue = array_filter($queuedItems, static function ($item) use ($shouldKeepStatusEvenWhenCleaned) {
             $status = $item['status'] ?? '';
             return in_array($status, $shouldKeepStatusEvenWhenCleaned);
         });

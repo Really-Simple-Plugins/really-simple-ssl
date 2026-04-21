@@ -2,7 +2,6 @@
 namespace RSSSL\Security\WordPress\Two_Fa\Models;
 
 use RSSSL\Security\WordPress\Two_Fa\Rsssl_Two_Factor_Settings;
-use WP_Roles as WP_RolesAlias;
 
 class Rsssl_Two_FA_Data_Parameters {
     // Other properties initialized in your constructor...
@@ -30,8 +29,8 @@ class Rsssl_Two_FA_Data_Parameters {
         $this->page_size   = isset($data['currentRowsPerPage']) ? (int)$data['currentRowsPerPage'] : 5;
         $this->search_term = isset($data['search']) ? sanitize_text_field($data['search']) : '';
 
-        $allowed_filters = array_map('strtolower', array_values((new WP_RolesAlias())->get_names()));
-        $this->filter_value = in_array($data['filterValue'] ?? 'all', $allowed_filters, true)
+        $allowed_role_filters = array_keys( wp_roles()->get_names() );
+        $this->filter_value = in_array($data['filterValue'] ?? 'all', $allowed_role_filters, true)
             ? sanitize_text_field($data['filterValue'] ?? 'all')
             : 'all';
         $this->sort_direction = in_array(strtoupper($data['sortDirection'] ?? 'DESC'), ['ASC', 'DESC'], true)
@@ -53,7 +52,7 @@ class Rsssl_Two_FA_Data_Parameters {
         if ($this->enabled_roles === null) {
             // if the passkey is enabled all roles are enabled
             if (defined('rsssl_pro') && rsssl_get_option('enable_passkey_login', false)) {
-                $this->enabled_roles = array_map('strtolower', array_values((new WP_RolesAlias())->get_names()));
+                $this->enabled_roles = array_keys( wp_roles()->get_names() );
             } else {
                 $this->enabled_roles = array_unique(array_merge(
                     defined('rsssl_pro') ? rsssl_get_option('two_fa_enabled_roles_totp', []) : [],

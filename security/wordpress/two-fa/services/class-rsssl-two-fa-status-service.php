@@ -9,29 +9,38 @@ class Rsssl_Two_Fa_Status_Service {
      * @return string
      */
     public function determineStatus(int $userId, array $forcedRoles, int $daysThreshold): string {
-        $totpStatus   = get_user_meta($userId, 'rsssl_two_fa_status_totp', true);
-        $emailStatus  = get_user_meta($userId, 'rsssl_two_fa_status_email', true);
-        $passkeyStatus  = get_user_meta($userId, 'rsssl_two_fa_status_passkey', true);
-        $lastLogin    = get_user_meta($userId, 'rsssl_two_fa_last_login', true);
+        $userData = get_userdata($userId);
+        if (!$userData) {
+            return 'open';
+        }
+
+        $providerStatuses = [];
+        foreach ( \RSSSL\Security\WordPress\Two_Fa\Providers\Rsssl_Provider_Loader::get_loader()::available_providers() as $method => $provider ) {
+            if (!$provider::is_enabled($userData)) {
+                continue;
+            }
+
+            $providerStatuses[] = \RSSSL\Security\WordPress\Two_Fa\Rsssl_Two_Factor_Settings::get_user_status($method, $userId);
+        }
+
+        $lastLogin = get_user_meta($userId, 'rsssl_two_fa_last_login', true);
 
         // User has active 2FA configured
-        if (in_array('active', [$totpStatus, $emailStatus, $passkeyStatus], true)) {
+        if (in_array('active', $providerStatuses, true)) {
             return 'active';
         }
 
-        // User has explicitly disabled 2FA
-        if ($totpStatus === 'disabled' && $emailStatus === 'disabled') {
+        // Only mark the user as disabled when every enabled provider is disabled.
+        if (!empty($providerStatuses) && !array_diff($providerStatuses, array('disabled'))) {
             return 'disabled';
         }
 
         // Check if user has a forced role
-        $userData = get_userdata($userId);
-        $userRoles = $userData ? $userData->roles : [];
-        $isForced = !empty(array_intersect($forcedRoles, $userRoles));
+        $isForced = !empty(array_intersect($forcedRoles, \RSSSL\Security\WordPress\Two_Fa\Rsssl_Two_Factor_Settings::get_user_roles($userId)));
 
-        // Non-forced user: return based on method status or default to open
+        // Non-forced users can still configure any remaining open provider.
         if (!$isForced) {
-            return $totpStatus ?: $emailStatus ?: 'open';
+            return 'open';
         }
 
         // New user without lastLogin - initialize grace period
@@ -49,6 +58,6 @@ class Rsssl_Two_Fa_Status_Service {
         }
 
         // Still within grace period
-        return $totpStatus ?: $emailStatus ?: 'open';
+        return 'open';
     }
 }

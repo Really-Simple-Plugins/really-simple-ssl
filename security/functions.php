@@ -645,7 +645,7 @@ function rsssl_list_users_where_display_name_is_login_name() {
  */
 function rsssl_is_email_verified() {
     $verificationStatus = get_option('rsssl_email_verification_status');
-    if (rsssl_user_can_manage() && $verificationStatus == 'completed') {
+    if (rsssl_user_can_manage() && $verificationStatus == 'completed' ) {
         return true;
     }
 

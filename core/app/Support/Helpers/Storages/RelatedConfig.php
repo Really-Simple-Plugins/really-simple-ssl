@@ -11,10 +11,10 @@ use ReallySimplePlugins\RSS\Core\Support\Helpers\Storage;
  */
 final class RelatedConfig extends Storage
 {
-	public function __construct()
-	{
-		parent::__construct(
-			require dirname(__FILE__, 5) . '/config/related.php'
-		);
-	}
+    public function __construct()
+    {
+        parent::__construct(
+            require dirname(__FILE__, 5) . '/config/related.php'
+        );
+    }
 }

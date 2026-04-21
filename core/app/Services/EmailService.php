@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace ReallySimplePlugins\RSS\Core\Services;
 
-use ReallySimplePlugins\RSS\Core\Bootstrap\App;
 use ReallySimplePlugins\RSS\Core\Support\Helpers\Storages\EnvironmentConfig;
 use ReallySimplePlugins\RSS\Core\Support\Helpers\Storages\UriConfig;
 use ReallySimplePlugins\RSS\Core\Traits\HasEncryption;
@@ -17,20 +16,20 @@ class EmailService
     use HasEncryption;
 
     private ?\rsssl_mailer $mailer = null;
-	protected EnvironmentConfig $env;
-	protected UriConfig $uriConfig;
+    protected EnvironmentConfig $env;
+    protected UriConfig $uriConfig;
 
     public function __construct(EnvironmentConfig $environmentConfig, UriConfig $uriConfig)
     {
-		$this->env = $environmentConfig;
-		$this->uriConfig = $uriConfig;
+        $this->env = $environmentConfig;
+        $this->uriConfig = $uriConfig;
     }
 
     /**
      * Method is used to lazyload the mailer property. This prevents overhead
      * but most importantly prevents _load_textdomain_just_in_time error
      */
-    private function getMailer(): \rsssl_mailer
+    protected function getMailer(): \rsssl_mailer
     {
         if ($this->mailer instanceof \rsssl_mailer) {
             return $this->mailer;
@@ -81,7 +80,7 @@ class EmailService
 
         if ($hasPremium) {
             $license = RSSSL()->licensing->license_key();
-            $license = $this->maybeDecryptPrefixed($license , 'really_simple_ssl_');
+            $license = $this->maybeDecryptPrefixed($license, 'really_simple_ssl_');
         }
 
         $payload = [
@@ -96,5 +95,56 @@ class EmailService
             'sslverify' => true,
             'body' => $payload
         ]);
+    }
+
+    /**
+     * Get the email address to which notifications should be sent, based on user configuration.
+     */
+    public function getNotificationsEmail(): string
+    {
+        if (!function_exists('rsssl_get_option')) {
+            return '';
+        }
+
+        return (string) rsssl_get_option('notifications_email_address', get_bloginfo('admin_email'));
+    }
+
+    /**
+     * Check if the user has enabled email notifications in their settings.
+     * @return bool True if email notifications are enabled, false otherwise.
+     */
+    public function isNotificationsEnabled(): bool
+    {
+        if (!function_exists('rsssl_get_option')) {
+            return false;
+        }
+
+        return (bool) rsssl_get_option('send_notifications_email', false);
+    }
+
+    /**
+     * Check if the email verification flow has been completed, based on the stored option.
+     *
+     * @return bool True if the email verification flow has been completed, false otherwise.
+     */
+    public function isEmailVerified(): bool
+    {
+        if (!\function_exists('get_option')) {
+            return false;
+        }
+
+        $status = (string) \get_option('rsssl_email_verification_status', '');
+        if ($status === 'completed') {
+            return true;
+        }
+
+        if (\function_exists('is_multisite') && \is_multisite() && \function_exists('get_site_option')) {
+            $networkStatus = (string) \get_site_option('rsssl_email_verification_status', '');
+            if ($networkStatus === 'completed') {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

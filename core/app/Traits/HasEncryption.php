@@ -1,4 +1,5 @@
 <?php
+
 namespace ReallySimplePlugins\RSS\Core\Traits;
 
 trait HasEncryption
@@ -23,7 +24,7 @@ trait HasEncryption
      */
     public function maybeDecryptPrefixed(string $data, string $prefix = 'rsssl_', string $deprecatedKey = ''): string
     {
-        if ( strpos($data, $prefix) !== 0 ) {
+        if (strpos($data, $prefix) !== 0) {
             return $data;
         }
 

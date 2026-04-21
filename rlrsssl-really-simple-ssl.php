@@ -3,7 +3,7 @@
  * Plugin Name: Really Simple Security
  * Plugin URI: https://really-simple-ssl.com
  * Description: Easily improve site security with WordPress Hardening, Two-Factor Authentication (2FA), Login Protection, Vulnerability Detection and SSL certificate generation.
- * Version: 9.5.8
+ * Version: 9.5.10
  * Requires at least: 6.6
  * Requires PHP: 7.4
  * Author: Really Simple Security
@@ -30,6 +30,10 @@ defined('ABSPATH') or die("you do not have access to this page!");
 
 if ( ! defined( 'rsssl_file' ) ) {
     define( 'rsssl_file', __FILE__ );
+}
+
+if ( ! defined( 'rsssl_plugin' ) ) {
+    define('rsssl_plugin', plugin_basename(__FILE__));
 }
 
 if (!function_exists('rsssl_activation_check')) {
@@ -118,8 +122,7 @@ if ( class_exists('REALLY_SIMPLE_SSL') ) {
             define('rsssl_url', plugin_dir_url(__FILE__));
             define('rsssl_path', trailingslashit(plugin_dir_path(__FILE__)));
             define('rsssl_template_path', trailingslashit(plugin_dir_path(__FILE__)).'grid/templates/');
-            define('rsssl_plugin', plugin_basename(__FILE__));
-            define('rsssl_version', '9.5.8');
+            define('rsssl_version', '9.5.10');
             define('rsssl_le_cron_generation_renewal_check', 20);
             define('rsssl_le_manual_generation_renewal_check', 15);
         }
@@ -228,6 +231,8 @@ if ( !defined('RSSSL_DEACTIVATING_ALTERNATE')
         return REALLY_SIMPLE_SSL::instance();
     }
     add_action('plugins_loaded', 'RSSSL', 8);
+
+    require_once __DIR__ . '/functions.php';
 
     if (file_exists(__DIR__  . '/core/really-simple-security-core.php')) {
         require_once __DIR__  . '/core/really-simple-security-core.php';
