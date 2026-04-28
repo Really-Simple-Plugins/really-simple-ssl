@@ -5,6 +5,7 @@ namespace RSSSL\Security\WordPress\Two_Fa\Controllers;
 use Exception;
 use ReflectionClass;
 use RSSSL\Security\WordPress\Two_Fa\Models\Rsssl_Request_Parameters;
+use RSSSL\Security\WordPress\Two_Fa\Providers\Rsssl_Provider_Loader;
 use RSSSL\Security\WordPress\Two_Fa\Rsssl_Two_Fa_Authentication;
 use RSSSL\Security\WordPress\Two_Fa\Traits\Rsssl_Args_Builder;
 use RSSSL\Security\WordPress\Two_Fa\Traits\Rsssl_Two_Fa_Helper;
@@ -112,8 +113,7 @@ abstract class Rsssl_Abstract_Controller
      */
     public function check_login_and_get_user( int $user_id, string $login_nonce ): WP_User {
         if ( ! Rsssl_Two_Fa_Authentication::verify_login_nonce( $user_id, $login_nonce ) ) {
-            // We throw an error
-            wp_die();
+            throw new Exception( __( 'Invalid authentication request.', 'really-simple-ssl' ) );
         }
         /**
          * Get the user by the user ID.
@@ -127,5 +127,85 @@ abstract class Rsssl_Abstract_Controller
 
         return $user;
     }
+
+	/**
+	 * Check if the user already has a configured two-factor provider.
+	 *
+	 * Users with an active provider must complete that provider's challenge before
+	 * the login can be completed or two-factor settings can be changed.
+	 * A login nonce only proves the password step was passed.
+	 *
+	 * @param WP_User $user The user object.
+	 *
+	 * @return bool
+	 */
+	protected function has_configured_provider( WP_User $user ): bool {
+		$loader = Rsssl_Provider_Loader::get_loader();
+		$login_protection_enabled = (bool) rsssl_get_option( 'login_protection_enabled' );
+
+		foreach ( $loader::available_providers() as $method => $provider ) {
+			if ( ! $this->is_provider_available_for_current_login_mode( $method, $login_protection_enabled ) ) {
+				continue;
+			}
+
+			if ( ! $provider::is_enabled( $user ) ) {
+				continue;
+			}
+
+			if ( $provider::is_configured( $user ) ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Check if the user has a configured provider other than the allowed method.
+	 *
+	 * Used when the allowed method still has its own challenge to verify. For
+	 * example, email may finish with an email token, but it may not replace TOTP.
+	 *
+	 * @param WP_User $user The user object.
+	 * @param string  $allowed_method The method that may complete the current challenge.
+	 *
+	 * @return bool
+	 */
+	protected function has_configured_provider_other_than( WP_User $user, string $allowed_method ): bool {
+		$loader = Rsssl_Provider_Loader::get_loader();
+		$login_protection_enabled = (bool) rsssl_get_option( 'login_protection_enabled' );
+
+		foreach ( $loader::available_providers() as $method => $provider ) {
+			if ( $allowed_method === $method ) {
+				continue;
+			}
+
+			if ( ! $this->is_provider_available_for_current_login_mode( $method, $login_protection_enabled ) ) {
+				continue;
+			}
+
+			if ( ! $provider::is_enabled( $user ) ) {
+				continue;
+			}
+
+			if ( $provider::is_configured( $user ) ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Check if the provider belongs to the active login protection mode.
+	 *
+	 * @param string $method The provider method.
+	 * @param bool   $login_protection_enabled Whether full login protection is enabled.
+	 *
+	 * @return bool
+	 */
+	protected function is_provider_available_for_current_login_mode( string $method, bool $login_protection_enabled ): bool {
+		return $login_protection_enabled || 'passkey' === $method;
+	}
 
 }

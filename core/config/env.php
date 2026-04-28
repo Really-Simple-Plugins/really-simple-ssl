@@ -11,7 +11,7 @@ $pluginBaseFile = $pluginRootPath . DIRECTORY_SEPARATOR . plugin_basename($plugi
 return [
     'plugin' => [
         'name' => 'Really Simple Security',
-        'version' => '9.5.10',
+        'version' => '9.5.10.1',
         'pro' => false,
         'path' => $pluginRootPath,
         'base_path' => $pluginBaseFile,

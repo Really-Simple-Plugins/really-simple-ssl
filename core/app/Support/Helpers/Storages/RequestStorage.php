@@ -25,13 +25,23 @@ final class RequestStorage extends Storage
     private function getRequestBody(): array
     {
         $body = [];
-        if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
-            $input = file_get_contents('php://input');
-            $decoded = json_decode($input, true);
-            if (is_array($decoded)) {
-                $body = $decoded;
-            }
+        if (!isset($_SERVER['REQUEST_METHOD'])) {
+            return $body;
         }
+
+        $requestMethod = strtoupper((string) $_SERVER['REQUEST_METHOD']);
+
+        if ($requestMethod === 'GET') {
+            return $body;
+        }
+
+        $input = file_get_contents('php://input');
+        $decoded = json_decode($input, true);
+
+        if (is_array($decoded)) {
+            $body = $decoded;
+        }
+
         return $body;
     }
 }

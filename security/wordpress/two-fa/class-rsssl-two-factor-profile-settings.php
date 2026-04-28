@@ -449,6 +449,7 @@ if (!class_exists('Rsssl_Two_Factor_Profile_Settings')) {
             wp_localize_script('rsssl-profile-settings', 'rsssl_profile', array(
                 'ajax_url'      => admin_url( 'admin-ajax.php' ),
                 'backup_codes' => $backup_codes,
+                'nonce' => wp_create_nonce('wp_rest'),
                 'root' => esc_url_raw(rest_url(Rsssl_Two_Factor::REST_NAMESPACE)),
                 'user_id' => get_current_user_id(),
                 'origin' => 'profile',
