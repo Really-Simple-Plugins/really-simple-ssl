@@ -74,6 +74,15 @@ final class Rsssl_Base_Controller extends Rsssl_Abstract_Controller
 			);
 		}
 
+		if ( $this->has_configured_provider( $user ) ) {
+			return new WP_REST_Response(
+				[
+					'error' => __( 'Two-Factor Authentication must be completed before it can be disabled.', 'really-simple-ssl' ),
+				],
+				403
+			);
+		}
+
 		// if the 2FA is not enabled for the user, we only handle the passkey meta key
 	    if ( ! (bool) rsssl_get_option( 'login_protection_enabled' ) ) {
 				// Remove the passkey meta key for the user.
@@ -136,8 +145,13 @@ final class Rsssl_Base_Controller extends Rsssl_Abstract_Controller
 		}
 
 		$loader = Rsssl_Provider_Loader::get_loader();
+		$login_protection_enabled = (bool) rsssl_get_option( 'login_protection_enabled' );
 
 		foreach ( $loader::available_providers() as $method => $provider ) {
+			if ( ! $this->is_provider_available_for_current_login_mode( $method, $login_protection_enabled ) ) {
+				continue;
+			}
+
 			if ( ! $provider::is_enabled( $user ) ) {
 				continue;
 			}
@@ -158,6 +172,10 @@ final class Rsssl_Base_Controller extends Rsssl_Abstract_Controller
 	 * @return bool
 	 */
 	private function can_user_skip_onboarding( WP_User $user ): bool {
+		if ( $this->has_configured_provider( $user ) ) {
+			return false;
+		}
+
 		if ( ! $this->is_forced_user( $user->ID ) ) {
 			return true;
 		}

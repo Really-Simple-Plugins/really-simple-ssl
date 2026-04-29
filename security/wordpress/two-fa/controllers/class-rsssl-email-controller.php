@@ -84,6 +84,17 @@ final class Rsssl_Email_Controller extends Rsssl_Abstract_Controller
         } catch (Exception $e) {
             return new WP_REST_Response(['error' => $e->getMessage()], 403);
         }
+
+		// Do not start a new email setup from the pre-auth flow after 2FA exists.
+		if ( $this->has_configured_provider( $user ) ) {
+			return new WP_REST_Response(
+				array(
+					'error' => __( 'Two-Factor Authentication must be completed before it can be changed.', 'really-simple-ssl' ),
+				),
+				403
+			);
+		}
+
         // Check if the provider.
         if ('email' !== $parameters->provider) {
             return new WP_REST_Response(array('error' => 'Invalid provider'), 401);
@@ -110,6 +121,16 @@ final class Rsssl_Email_Controller extends Rsssl_Abstract_Controller
         } catch (Exception $e) {
             return new WP_REST_Response(['error' => $e->getMessage()], 403);
         }
+
+		// Do not start a new email setup from the pre-auth flow after 2FA exists.
+		if ( $this->has_configured_provider( $user ) ) {
+			return new WP_REST_Response(
+				array(
+					'error' => __( 'Two-Factor Authentication must be completed before it can be changed.', 'really-simple-ssl' ),
+				),
+				403
+			);
+		}
 
         // Check if the provider.
         if ('email' !== $parameters->provider) {
@@ -147,6 +168,16 @@ final class Rsssl_Email_Controller extends Rsssl_Abstract_Controller
         } catch (Exception $e) {
             return new WP_REST_Response(['error' => $e->getMessage()], 403);
         }
+
+		// Email may finish only its own challenge; it may not replace another active method.
+		if ( $this->has_configured_provider_other_than( $user, 'email' ) ) {
+			return new WP_REST_Response(
+				array(
+					'error' => __( 'Two-Factor Authentication must be completed before it can be changed.', 'really-simple-ssl' ),
+				),
+				403
+			);
+		}
 
 
         // Validate the provided token.
