@@ -161,7 +161,7 @@ Really Simple Security and WordFence greatly overlap in term of functionality. I
 
 == Changelog ==
 = 9.5.11 - 2026-05-05 =
-* Fixed: fatal error that could occur with various pagebuilders.
+* Fixed: fatal error that could occur when a plugin uses admin_enqueue_scripts incorrectly.
 * Fixed: a bug where the wrong settings value could be saved.
 
 = 9.5.10.1 - 2026-04-29 =
