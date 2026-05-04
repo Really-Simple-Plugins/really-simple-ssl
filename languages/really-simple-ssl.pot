@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Really Simple Security Pro 9.5.10.1\n"
+"Project-Id-Version: Really Simple Security Pro 9.5.11\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/really-simple-ssl-pro\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-04-28T07:21:33+00:00\n"
+"POT-Creation-Date: 2026-05-04T12:18:10+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.8.1\n"
 "X-Domain: really-simple-ssl\n"
@@ -1304,7 +1304,7 @@ msgstr ""
 msgid "Vulnerabilities"
 msgstr ""
 
-#: core/app/Features/Vulnerability/Controllers/ThemeController.php:182
+#: core/app/Features/Vulnerability/Controllers/ThemeController.php:183
 msgid "Really Simple Security detected a vulnerability in this theme"
 msgstr ""
 
@@ -3093,21 +3093,21 @@ msgstr ""
 msgid "Captcha was not verified successfully. Please try again."
 msgstr ""
 
-#: pro/security/wordpress/class-rsssl-event-listener.php:184
+#: pro/security/wordpress/class-rsssl-event-listener.php:185
 msgid "<strong>Error</strong>: Captcha validation failed."
 msgstr ""
 
-#: pro/security/wordpress/class-rsssl-event-listener.php:200
+#: pro/security/wordpress/class-rsssl-event-listener.php:201
 msgid "Your access has been denied due to too many failed login attempts."
 msgstr ""
 
-#: pro/security/wordpress/class-rsssl-event-listener.php:262
-#: pro/security/wordpress/class-rsssl-event-listener.php:317
+#: pro/security/wordpress/class-rsssl-event-listener.php:263
+#: pro/security/wordpress/class-rsssl-event-listener.php:318
 msgid "Your access has been denied, too many login attempts"
 msgstr ""
 
-#: pro/security/wordpress/class-rsssl-event-listener.php:284
-#: pro/security/wordpress/class-rsssl-event-listener.php:310
+#: pro/security/wordpress/class-rsssl-event-listener.php:285
+#: pro/security/wordpress/class-rsssl-event-listener.php:311
 msgid "Your access has been denied, please contact the webmaster for support"
 msgstr ""
 
@@ -3327,7 +3327,7 @@ msgstr ""
 
 #: pro/security/wordpress/class-rsssl-password-security.php:628
 #: pro/security/wordpress/class-rsssl-password-security.php:632
-#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:141
+#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:148
 msgid "Invalid nonce."
 msgstr ""
 
@@ -5405,32 +5405,32 @@ msgstr ""
 msgid "Add Device"
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:146
-#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:163
+#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:153
+#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:170
 msgid "User not logged in."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:153
+#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:160
 msgid "Verification code re-sent"
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:169
+#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:176
 msgid "Verification code sent"
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:198
+#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:205
 msgid "Two-Factor Authentication settings have been reset."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:260
+#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:267
 msgid "Two-Factor Authentication for TOTP failed. No Authentication code provided, please try again."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:284
+#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:291
 msgid "The Two-Factor Authentication setup for TOTP failed. Please try again."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:307
+#: security/wordpress/two-fa/class-rsssl-two-factor-profile-settings.php:314
 msgid "The Two-Factor Authentication setup for email failed. Please try again."
 msgstr ""
 

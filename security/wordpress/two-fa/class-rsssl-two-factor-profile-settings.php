@@ -123,7 +123,14 @@ if (!class_exists('Rsssl_Two_Factor_Profile_Settings')) {
 	        add_action( 'wp_ajax_resend_email_code_profile', [$this, 'resend_email_code_profile_callback'] );
 	        add_action( 'wp_ajax_change_method_to_email', [$this, 'start_email_validation_callback'] );
 
-            if (isset($_GET['profile'], $_GET['_wpnonce']) && rest_sanitize_boolean(wp_unslash($_GET['profile']))) {
+            if (
+                isset($_GET['profile'], $_GET['_wpnonce']) &&
+                rest_sanitize_boolean(wp_unslash($_GET['profile'])) &&
+                wp_verify_nonce(
+                    sanitize_text_field(wp_unslash($_GET['_wpnonce'])),
+                    'one_time_login_' . get_current_user_id()
+                )
+            ) {
                 self::set_active_provider(get_current_user_id(), 'email');
             }
         }

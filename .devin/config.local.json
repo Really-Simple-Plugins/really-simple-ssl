@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Exec(git log)",
+      "Exec(git show)",
+      "Exec(git blame)",
+      "Exec(git diff)",
+      "Exec(sed)"
+    ]
+  }
+}
