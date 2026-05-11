@@ -666,21 +666,25 @@ function rsssl_rest_api_fields_set(WP_REST_Request $request, $ajax_data = false)
 	$config_fields = rsssl_fields(false);
 	$config_ids = array_column($config_fields, 'id');
 	foreach ($fields as $index => $field) {
-		$config_field_index = array_search($field['id'], $config_ids);
-		$config_field = $config_fields[$config_field_index];
+		if (!isset($field['id'])) {
+			unset($fields[$index]);
+			continue;
+		}
+		$field_id = sanitize_text_field($field['id']);
+		$config_field_index = array_search($field_id, $config_ids);
 		if ($config_field_index === false) {
 			unset($fields[$index]);
 			continue;
 		}
-		$type = rsssl_sanitize_field_type($field['type']);
+		$config_field = $config_fields[$config_field_index];
+		$type = isset($config_field['type']) ? rsssl_sanitize_field_type($config_field['type']) : false;
         if ($type === false) {
             return [
                 'success' => false,
-                'error'   => 'Invalid field type provided for field ' . sanitize_text_field($field['id']),
+                'error'   => 'Invalid field type configured for field ' . $field_id,
             ];
         }
-		$field_id = sanitize_text_field($field['id']);
-		$value = rsssl_sanitize_field($field['value'], $type, $field_id);
+		$value = rsssl_sanitize_field($field['value'] ?? false, $type, $field_id);
 		//if an endpoint is defined, we use that endpoint instead
 		if (isset($config_field['data_endpoint'])) {
 			//the updateItemId allows us to update one specific item in a field set.
@@ -703,6 +707,8 @@ function rsssl_rest_api_fields_set(WP_REST_Request $request, $ajax_data = false)
 		}
 
 		$field['value'] = $value;
+		$field['id'] = $field_id;
+		$field['type'] = $type;
 		$fields[$index] = $field;
 	}
 
