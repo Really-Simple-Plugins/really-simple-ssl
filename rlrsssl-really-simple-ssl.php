@@ -46,15 +46,12 @@ if (!function_exists('rsssl_activation_check')) {
     register_activation_hook( __FILE__, 'rsssl_activation_check' );
 }
 
-if ( class_exists('REALLY_SIMPLE_SSL') ) {
-    // Normally we can assume the function exists as class REALLY_SIMPLE_SSL
-    // also exists. But as this function is new we should be extra sure.
-    if (!function_exists('rsssl_deactivate_alternate')) {
-        $rsssl_path = trailingslashit( plugin_dir_path( __FILE__ ) );
-        require_once $rsssl_path . 'functions.php';
-    }
+// Load alternate deactivation helpers early without loading functions.php before constants are set.
+$rsssl_path = trailingslashit( plugin_dir_path( __FILE__ ) );
+require_once $rsssl_path . 'deactivate-alternate.php';
 
-    rsssl_deactivate_alternate('pro');
+if ( class_exists( 'REALLY_SIMPLE_SSL' ) ) {
+    rsssl_deactivate_alternate( 'pro' );
 } else {
     class REALLY_SIMPLE_SSL {
 
