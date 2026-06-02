@@ -50,9 +50,9 @@ if (!function_exists('rsssl_activation_check')) {
 $rsssl_path = trailingslashit( plugin_dir_path( __FILE__ ) );
 require_once $rsssl_path . 'deactivate-alternate.php';
 
-if ( class_exists( 'REALLY_SIMPLE_SSL' ) ) {
-    rsssl_deactivate_alternate( 'pro' );
-} else {
+rsssl_deactivate_alternate( 'pro' );
+
+if ( ! class_exists( 'REALLY_SIMPLE_SSL' ) ) {
     class REALLY_SIMPLE_SSL {
 
         private static $instance;

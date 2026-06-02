@@ -10,33 +10,19 @@ if ( ! function_exists( 'rsssl_deactivate_alternate' ) ) {
      */
     function rsssl_deactivate_alternate( string $target = 'free' ): void {
 
-        // we use this to ensure the base function doesn't load, as the active
-        // plugins function does not update yet. See RSSSL() in main plugin file
-        if ( ! defined( 'RSSSL_DEACTIVATING_ALTERNATE' ) ) {
-            define( 'RSSSL_DEACTIVATING_ALTERNATE', true );
-        }
-
-        include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-        $alternate_plugin_path = '';
-
-        switch ( $target ) {
-            case 'free':
-                $alternate_plugin_path = 'really-simple-ssl/rlrsssl-really-simple-ssl.php';
-                break;
-            case 'pro':
-                $alternate_plugin_path = 'really-simple-ssl-pro/really-simple-ssl-pro.php';
-                break;
-            case 'multisite':
-                $alternate_plugin_path = 'really-simple-ssl-pro-multisite/really-simple-ssl-pro-multisite.php';
-                break;
-        }
+        $alternate_plugin_path = rsssl_alternate_plugin_path( $target );
 
         // If no valid target or alternate path, return early
         if ( empty( $alternate_plugin_path ) ) {
             return;
         }
 
-        if ( is_plugin_active( $alternate_plugin_path ) ) {
+        if ( rsssl_alternate_plugin_active( $target ) ) {
+            // we use this to ensure the base function doesn't load, as the active
+            // plugins function does not update yet. See RSSSL() in main plugin file
+            if ( ! defined( 'RSSSL_DEACTIVATING_ALTERNATE' ) ) {
+                define( 'RSSSL_DEACTIVATING_ALTERNATE', true );
+            }
 
             # Get current options
             $is_network_active = is_multisite() && is_plugin_active_for_network( $alternate_plugin_path );
@@ -113,16 +99,46 @@ if ( ! function_exists( 'rsssl_deactivate_alternate' ) ) {
     }
 }
 
+if ( ! function_exists( 'rsssl_alternate_plugin_path' ) ) {
+    function rsssl_alternate_plugin_path( string $target ): string {
+        switch ( $target ) {
+            case 'free':
+                return 'really-simple-ssl/rlrsssl-really-simple-ssl.php';
+            case 'pro':
+                return 'really-simple-ssl-pro/really-simple-ssl-pro.php';
+            case 'multisite':
+                return 'really-simple-ssl-pro-multisite/really-simple-ssl-pro-multisite.php';
+        }
+
+        return '';
+    }
+}
+
+if ( ! function_exists( 'rsssl_alternate_plugin_active' ) ) {
+    function rsssl_alternate_plugin_active( string $target ): bool {
+        if ( $target === 'free' && function_exists( 'rsssl_activation_check' ) ) {
+            return true;
+        }
+
+        include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+
+        $alternate_plugin_path = rsssl_alternate_plugin_path( $target );
+        if ( empty( $alternate_plugin_path ) ) {
+            return false;
+        }
+
+        return is_plugin_active( $alternate_plugin_path )
+            || ( is_multisite() && is_plugin_active_for_network( $alternate_plugin_path ) );
+    }
+}
+
 if ( ! function_exists( 'rsssl_free_active' ) ) {
     function rsssl_free_active(): bool {
         if ( function_exists( 'rsssl_activation_check' ) ) {
             return true;
         }
 
-        include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-        $free_plugin_path = 'really-simple-ssl/rlrsssl-really-simple-ssl.php';
-
-        return is_plugin_active( $free_plugin_path );
+        return rsssl_alternate_plugin_active( 'free' );
     }
 }
 
