@@ -62,7 +62,7 @@ final class Rsssl_Base_Controller extends Rsssl_Abstract_Controller
         try {
            $user = $this->check_login_and_get_user($parameters->user_id, $parameters->login_nonce);
         } catch (Exception $e) {
-            return new WP_REST_Response(['error' => $e->getMessage()], 403);
+            return new WP_REST_Response(['message' => $e->getMessage()], 403);
         }
 
 		if ( $this->is_forced_user( $user->ID ) ) {
@@ -116,7 +116,7 @@ final class Rsssl_Base_Controller extends Rsssl_Abstract_Controller
         try {
             $user = $this->check_login_and_get_user($parameters->user_id, $parameters->login_nonce);
         } catch (Exception $e) {
-            return new WP_REST_Response(['error' => $e->getMessage()], 403);
+            return new WP_REST_Response(['message' => $e->getMessage()], 403);
         }
 
 		if ( ! $this->can_user_skip_onboarding( $user ) ) {
@@ -128,8 +128,8 @@ final class Rsssl_Base_Controller extends Rsssl_Abstract_Controller
 			);
 		}
 
-        return $this->authenticate_and_redirect( $user->ID, $parameters->redirect_to );
-    }
+	        return $this->authenticate_and_redirect( $user->ID, $parameters->redirect_to );
+	    }
 
 	/**
 	 * Check if the user has an enabled provider that is forced for their role.

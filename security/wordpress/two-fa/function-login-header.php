@@ -22,7 +22,7 @@
  * @global bool|string $interim_login Whether interim login modal is being displayed. String 'success'
  *                                    upon successful login.
  */
-function login_header( string $title = 'Log In', string $message = '', WP_Error $wp_error = null ) {
+function login_header( string $title = 'Log In', string $message = '', ?WP_Error $wp_error = null ) {
 	global $error, $interim_login, $action;
 
 	// Don't index any of these forms.

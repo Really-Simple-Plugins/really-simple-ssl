@@ -2,6 +2,8 @@
 defined( 'ABSPATH' ) or die();
 
 add_filter( 'rsssl_fields', function( $fields ) {
+	$applicationPasswordsBlockReason = rsssl_get_disable_application_passwords_block_reason();
+
 	return array_merge( $fields,
 		[
 
@@ -27,6 +29,8 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'group_id' => 'hardening-extended',
 				'type'     => 'checkbox',
 				'label'    => __( "Disable application passwords", 'really-simple-ssl' ),
+				'warning'  => $applicationPasswordsBlockReason !== '',
+				'tooltip'  => $applicationPasswordsBlockReason,
 				'disabled' => false,
 				'default'  => false,
 			],
@@ -87,7 +91,6 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'id'       => 'change_login_url_enabled',
 				'menu_id'  => 'hardening-extended',
 				'group_id' => 'hardening-extended',
-				'warning'  => true,
 				'type'     => 'checkbox',
 				'tooltip'  => __( "Allows you to enter a custom login URL.", 'really-simple-ssl' ),
 				'label'    => __( "Enable Custom login URL", 'really-simple-ssl' ),

@@ -5,6 +5,7 @@ require_once rsssl_path . 'lib/admin/class-encryption.php';
 
 use RSSSL\lib\admin\Encryption;
 use RSSSL\Pro\Security\WordPress\Firewall\Models\Rsssl_404_Block;
+use RSSSL\Security\RSSSL_Htaccess_File_Manager;
 use RSSSL\Security\WordPress\Two_Fa\Rsssl_Two_Fa_Status;
 use RSSSL\Security\WordPress\Two_Fa\Repositories\Rsssl_Two_Fa_User_Repository;
 use RSSSL\Security\WordPress\Two_Fa\Services\Rsssl_Two_Fa_Reminder_Service;
@@ -344,7 +345,7 @@ class rsssl_wp_cli {
 				rsssl_update_option( 'enable_hibp_check', false );
 			}
 
-			do_action('rsssl_update_rules');
+			rsssl_request_managed_rule_rebuild();
 			WP_CLI::success( 'Recommended features deactivated.' );
 		} catch ( Exception $e ) {
 			WP_CLI::error( 'Failed to deactivate recommended features: ' . $e->getMessage() );
@@ -365,7 +366,7 @@ class rsssl_wp_cli {
                     rsssl_update_option( $field, true );
                 }
             }
-			do_action('rsssl_update_rules');
+			rsssl_request_managed_rule_rebuild();
 			WP_CLI::success( 'Recommended hardening features activated.' );
 		} catch ( Exception $e ) {
 			WP_CLI::error( 'Failed to activate recommended hardening features: ' . $e->getMessage() );
@@ -386,7 +387,7 @@ class rsssl_wp_cli {
                     rsssl_update_option( $field, false );
                 }
             }
-			do_action('rsssl_update_rules');
+			rsssl_request_managed_rule_rebuild();
 			WP_CLI::success( 'Recommended hardening features deactivated.' );
 		} catch ( Exception $e ) {
 			WP_CLI::error( 'Failed to deactivate recommended hardening features: ' . $e->getMessage() );
@@ -397,7 +398,7 @@ class rsssl_wp_cli {
 	/**
 	 * Activate recommended security headers via CLI
 	 */
-    public function activate_security_headers() {
+	public function activate_security_headers() {
         if ( ! $this->check_pro_command_preconditions() ) return;
         try {
             foreach (RSSSL()->headers->get_recommended_security_headers() as $header ) {
@@ -405,8 +406,8 @@ class rsssl_wp_cli {
                     rsssl_update_option( $header['option_name'], $header['recommended_setting'] );
                 }
             }
-            WP_CLI::success( 'Recommended security header settings saved. Run "update_advanced_headers" command to activate them.' );
-            do_action('rsssl_update_rules');
+            rsssl_request_advanced_headers_rebuild();
+            WP_CLI::success( 'Recommended security headers activated.' );
         } catch ( Exception $e ) {
             WP_CLI::error( 'Failed to activate security headers: ' . $e->getMessage() );
         }
@@ -426,7 +427,7 @@ class rsssl_wp_cli {
                     rsssl_update_option($header['option_name'], $header['disabled_setting']);
                 }
 			}
-			do_action('rsssl_update_rules');
+			rsssl_request_advanced_headers_rebuild();
 			WP_CLI::success( 'Recommended security headers deactivated.' );
 		} catch ( Exception $e ) {
 			WP_CLI::error( 'Failed to deactivate security headers: ' . $e->getMessage() );
@@ -444,7 +445,7 @@ class rsssl_wp_cli {
 		try {
 			rsssl_update_option( 'enable_firewall', true );
 			rsssl_update_option( 'event_log_enabled', true );
-			do_action('rsssl_update_rules');
+			rsssl_request_managed_rule_rebuild();
 			WP_CLI::success( 'Firewall activated.' );
 		} catch ( Exception $e ) {
 			WP_CLI::error( 'Failed to activate firewall: ' . $e->getMessage() );
@@ -461,7 +462,7 @@ class rsssl_wp_cli {
 		try {
 			rsssl_update_option( 'enable_firewall', false );
 			rsssl_update_option( 'event_log_enabled', false );
-			do_action('rsssl_update_rules');
+			rsssl_request_managed_rule_rebuild();
 			WP_CLI::success( 'Firewall deactivated.' );
 		} catch ( Exception $e ) {
 			WP_CLI::error( 'Failed to deactivate firewall: ' . $e->getMessage() );
@@ -530,7 +531,6 @@ class rsssl_wp_cli {
             rsssl_update_option( 'enforce_frequent_password_change', false );
             rsssl_update_option( 'hide_rememberme', false );
 			rsssl_update_option( 'enable_hibp_check', false );
-			do_action('rsssl_update_rules');
 			WP_CLI::success( 'Password security features deactivated.' );
 		} catch ( Exception $e ) {
 			WP_CLI::error( 'Failed to deactivate password security: ' . $e->getMessage() );
@@ -548,7 +548,6 @@ class rsssl_wp_cli {
 			rsssl_update_option( 'enable_limited_login_attempts', true );
 			rsssl_update_option( 'event_log_enabled', true );
 			WP_CLI::success( 'Limit login attempts activated.' );
-			do_action('rsssl_update_rules');
 		} catch ( Exception $e ) {
 			WP_CLI::error( 'Failed to activate limit login attempts: ' . $e->getMessage() );
 		}
@@ -564,7 +563,6 @@ class rsssl_wp_cli {
 		try {
 			rsssl_update_option( 'enable_limited_login_attempts', false );
 			rsssl_update_option( 'event_log_enabled', false );
-			do_action('rsssl_update_rules');
 			WP_CLI::success( 'Limit login attempts deactivated.' );
 		} catch ( Exception $e ) {
 			WP_CLI::error( 'Failed to deactivate limit login attempts: ' . $e->getMessage() );
@@ -930,7 +928,7 @@ class rsssl_wp_cli {
 	 */
 	public function update_advanced_headers() {
 		if ( ! $this->check_pro_command_preconditions() ) return;
-		do_action('rsssl_update_rules');
+		rsssl_request_advanced_headers_rebuild();
         WP_CLI::success( 'Successfully update advanced headers.' );
 	}
 
@@ -1385,12 +1383,13 @@ class rsssl_wp_cli {
 		// Keep the previous check for .htaccess if the redirect method is set to htaccess
 		// $htaccess_writable = true; // Replace with actual check logic (e.g., check if WP_Filesystem allows writing)
 		if ( rsssl_get_option('redirect') === 'htaccess' ) {
-			 // Get the path to the .htaccess file
-			 $htaccess_file = RSSSL()->admin->htaccess_file(); // Assuming a method to get the correct path
-			 if ( ! is_writable( $htaccess_file ) ) {
-				 $warnings[] = sprintf( __( '.htaccess file (%s) is not writable. Redirects cannot be configured automatically.', 'really-simple-ssl' ), $htaccess_file );
-				 // This remains a warning, as activation might still work partially (WP URLs change)
-			 }
+			$htaccess_manager = RSSSL_Htaccess_File_Manager::get_instance();
+			// Match CLI diagnostics to the same resolved target path the runtime writer will use.
+			$htaccess_file = $htaccess_manager->get_root_htaccess_target_path();
+			if ( $htaccess_file !== '' && ! is_writable( $htaccess_file ) ) {
+				$warnings[] = sprintf( __( '.htaccess file (%s) is not writable. Redirects cannot be configured automatically.', 'really-simple-ssl' ), $htaccess_file );
+				// This remains a warning, as activation might still work partially (WP URLs change)
+			}
 		}
 
 		// Add more checks as needed (e.g., specific certificate details if possible/required)...
@@ -1734,6 +1733,7 @@ class rsssl_wp_cli {
 				]
 			);
 		}
+
 	}
 }
 

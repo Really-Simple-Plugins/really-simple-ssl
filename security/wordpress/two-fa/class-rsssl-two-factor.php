@@ -120,7 +120,8 @@ class Rsssl_Two_Factor
 //		add_action( 'login_enqueue_scripts', array( __CLASS__, 'twofa_scripts' ) );
         add_action('init', array(Rsssl_Provider_Loader::class, 'get_providers'));
         add_action('wp_login', array(__CLASS__, 'rsssl_wp_login'), 10, 2);
-        add_action('wp_login_errors', array(__CLASS__, 'show_expired_onboarding_error'));
+        add_filter('wp_login_errors', array(__CLASS__, 'show_expired_onboarding_error'));
+        add_filter('wp_login_errors', array(__CLASS__, 'maybe_add_login_error_notice'));
         add_filter('wp_login_errors', array(__CLASS__, 'rsssl_maybe_show_reset_password_notice'));
         add_action('after_password_reset', array(__CLASS__, 'rsssl_clear_password_reset_notice'));
         add_action('login_form_validate_2fa', array(__CLASS__, 'rsssl_login_form_validate_2fa'));
@@ -166,6 +167,9 @@ class Rsssl_Two_Factor
         add_filter('rsssl_two_factor_providers', array(__CLASS__, 'enable_dummy_method_for_debug'));
 	    add_action( 'rsssl_daily_cron', array( __CLASS__, 'maybe_send_reminder_email' ) );
         add_action( 'user_register', [__CLASS__, 'set_2fa_activation_date'], 10, 1 );
+
+        // Register object-cache invalidation hooks for the multisite candidate-IDs cache.
+        Rsssl_Two_Fa_User_Repository::registerCacheInvalidationHooks();
 
         $compat->init();
     }
@@ -544,6 +548,37 @@ class Rsssl_Two_Factor
         if ( isset( $_GET['nonce'], $_GET['errors'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['nonce'] ) ), 'rsssl_expired' ) && $_GET['errors'] === 'expired' ) {
             $errors->add('expired', __('Your 2FA grace period expired. Please contact your site administrator to regain access and to configure 2FA.', 'really-simple-ssl'));
         }
+        return $errors;
+    }
+
+    /**
+     * Add login errors for redirects that carry an explicit login error state.
+     *
+     * @param WP_Error $errors Error object to add the error to.
+     *
+     * @return WP_Error The updated error object.
+     */
+    public static function maybe_add_login_error_notice(WP_Error $errors): WP_Error
+    {
+        if ( ! isset( $_GET['login_error'] ) ) {
+            return $errors;
+        }
+
+        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- strict equality against a hardcoded whitelist value; no sanitization needed.
+        $login_error = $_GET['login_error'];
+
+        if ( 'nonce_invalid' === $login_error ) {
+            $errors->add(
+                'rsssl_two_factor_nonce_invalid',
+                __( 'Security nonce invalid or expired.', 'really-simple-ssl' )
+            );
+        } elseif ( 'token_invalid' === $login_error ) {
+            $errors->add(
+                'rsssl_two_factor_token_invalid',
+                __( 'Security token invalid or expired.', 'really-simple-ssl' )
+            );
+        }
+
         return $errors;
     }
 
@@ -974,8 +1009,8 @@ class Rsssl_Two_Factor
 			$is_post_request = false;
 		}
 
-		if (!$wp_auth_id || !$nonce) {
-			return;
+		if (!$nonce) {
+			self::redirect_to_login_error('nonce_invalid', $redirect_to);
 		}
 
 		$user = get_userdata($wp_auth_id);
@@ -985,8 +1020,7 @@ class Rsssl_Two_Factor
 
 		// Verify the nonce
 		if (true !== Rsssl_Two_Fa_Authentication::verify_login_nonce($user->ID, $nonce)) {
-			wp_safe_redirect(home_url());
-			exit;
+			self::redirect_to_login_error('nonce_invalid', $redirect_to);
 		}
 
 		$loader = Rsssl_Provider_Loader::get_loader();
@@ -1025,13 +1059,13 @@ class Rsssl_Two_Factor
 				'rsssl_two_factor_too_fast',
 				sprintf(
 				/* translators: %s: time delay between login attempts */
-					__(
-						'Too many invalid verification codes, you can try again in %s. This limit protects your account against automated attacks.',
-						'really-simple-ssl'
-					),
-					human_time_diff($last_failed + $time_delay)
-				)
-			);
+						__(
+							'Too many invalid verification codes, you can try again in %s. This limit protects your account against automated attacks.',
+							'really-simple-ssl'
+						),
+						human_time_diff($last_failed + $time_delay)
+					)
+				);
 
 			do_action('rsssl_wp_login_failed', $user->user_login, $error);
 
@@ -1136,6 +1170,26 @@ class Rsssl_Two_Factor
             $provider
         );
     }
+
+	/**
+	 * Redirect to the login page with a two-factor login error state.
+	 *
+	 * @param string $login_error Login error query value.
+	 * @param string $redirect_to Redirect URL after successful login.
+	 *
+	 * @return void
+	 */
+	private static function redirect_to_login_error(string $login_error, string $redirect_to = ''): void {
+		$validated_redirect = wp_validate_redirect($redirect_to, admin_url());
+		wp_safe_redirect(
+			add_query_arg(
+				'login_error',
+				$login_error,
+				wp_login_url($validated_redirect)
+			)
+		);
+		exit;
+	}
 
     /**
      * Get the request data for two-factor authentication.

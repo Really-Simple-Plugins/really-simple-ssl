@@ -29,11 +29,53 @@ class rsssl_directadmin {
 	public function __construct() {
 		$password                   = $this->decrypt_if_prefixed( rsssl_get_option( 'directadmin_password' ) );
 		$host                       = rsssl_get_option( 'directadmin_host' );
-		$this->host                 = str_replace( array( 'http://', 'https://', ':2222' ), '', $host );
+		$this->host                 = $this->normalize_host( $host );
 		$this->login                = rsssl_get_option( 'directadmin_username' );
 		$this->password             = $password;
 		$this->ssl_installation_url = 'https://' . $this->host . "";
 	}
+
+	/**
+	 * Normalize a user-supplied DirectAdmin host value into a bare hostname.
+	 *
+	 * Users commonly paste the full DirectAdmin URL into the host field,
+	 * including a scheme, the :2222 port and a trailing slash or path.
+	 * The previous `str_replace` only stripped the scheme and the literal
+	 * `:2222` substring, leaving any trailing slash or path in place. The
+	 * SSRF guard in `HTTPSocket::is_valid_host()` then rejected the value
+	 * as "Invalid connection host.".
+	 *
+	 * This method extracts just the host portion via `parse_url()` when a
+	 * scheme is present, and falls back to stripping any path/query/
+	 * fragment plus a trailing `:port` otherwise. The result is lowercased
+	 * and trimmed so equivalent inputs always collapse to the same bare
+	 * hostname or IP address.
+	 *
+	 * @param mixed $host Raw host value from the settings store.
+	 *
+	 * @return string
+	 */
+	private function normalize_host( $host ): string {
+		$host = trim( (string) $host );
+		if ( $host === '' ) {
+			return '';
+		}
+
+		// If a scheme is present, parse_url() reliably extracts the host.
+		if ( preg_match( '!^[a-z][a-z0-9+\-.]*://!i', $host ) ) {
+			$parsed = parse_url( $host );
+			if ( is_array( $parsed ) && ! empty( $parsed['host'] ) ) {
+				return strtolower( $parsed['host'] );
+			}
+		}
+
+		// Otherwise: strip any path/query/fragment and a trailing port.
+		$host = preg_replace( '![/?#].*$!', '', $host );
+		$host = preg_replace( '!:\d+$!', '', (string) $host );
+
+		return strtolower( trim( (string) $host ) );
+	}
+
 	/**
 	 * Check if all creds are available
 	 * @return bool
@@ -81,66 +123,62 @@ class rsssl_directadmin {
 		$cert_file     = get_option( 'rsssl_certificate_path' );
 		$cabundle_file = get_option( 'rsssl_intermediate_path' );
 
+		$server_ssl=true;
+		$server_port=2222;
+		$sock = new HTTPSocket;
+
 		try {
-			$server_ssl=true;
-			$server_port=2222;
-			$sock = new HTTPSocket;
 			if ($server_ssl){
 				$sock->connect("ssl://".$this->host, $server_port);
 			} else {
 				$sock->connect($this->host, $server_port);
 			}
-			$sock->set_login($this->login, $this->password);
-			$sock->method = "POST";
-			$sock->query('/CMD_API_SSL',
+		} catch ( RuntimeException $e ) {
+			update_option( 'rsssl_installation_error', 'directadmin', false );
+			return new RSSSL_RESPONSE( 'warning', 'continue', $e->getMessage() );
+		}
+
+		$sock->set_login($this->login, $this->password);
+		$sock->method = "POST";
+		$sock->query('/CMD_API_SSL',
+			array(
+				'domain' => $domain,
+				'action' => 'save',
+				'type' => 'paste',
+				'certificate' => file_get_contents( $key_file ) . file_get_contents( $cert_file )
+			));
+		$response = $sock->fetch_parsed_body();
+
+		//set a default error response
+		$status = 'warning';
+		$action = 'continue';
+		$message = rsssl_get_manual_instructions_text($this->ssl_installation_url);
+
+
+		//if successful, proceed to next step
+		if ( empty($response['details']) && stripos($response[0], 'Error' ) ) {
+			$sock->query('/CMD_SSL',
 				array(
 					'domain' => $domain,
 					'action' => 'save',
-					'type' => 'paste',
-					'certificate' => file_get_contents( $key_file ) . file_get_contents( $cert_file )
+					'type' => 'cacert',
+					'active' => 'yes',
+					'cacert' => file_get_contents( $cabundle_file )
 				));
 			$response = $sock->fetch_parsed_body();
-
-			//set a default error response
-			$status = 'warning';
-			$action = 'continue';
-			$message = rsssl_get_manual_instructions_text($this->ssl_installation_url);
-
-
-			//if successful, proceed to next step
 			if ( empty($response['details']) && stripos($response[0], 'Error' ) ) {
-				$sock->query('/CMD_SSL',
-					array(
-						'domain' => $domain,
-						'action' => 'save',
-						'type' => 'cacert',
-						'active' => 'yes',
-						'cacert' => file_get_contents( $cabundle_file )
-					));
-				$response = $sock->fetch_parsed_body();
-				if ( empty($response['details']) && stripos($response[0], 'Error' ) ) {
-					$status = 'success';
-					$action = 'finalize';
-					$message = sprintf(__("SSL successfully installed on %s","really-simple-ssl"), $domain);
-					update_option( 'rsssl_le_certificate_installed_by_rsssl', 'directadmin', false );
-					delete_option( 'rsssl_installation_error' );
-				}
+				$status = 'success';
+				$action = 'finalize';
+				$message = sprintf(__("SSL successfully installed on %s","really-simple-ssl"), $domain);
+				update_option( 'rsssl_le_certificate_installed_by_rsssl', 'directadmin', false );
+				delete_option( 'rsssl_installation_error' );
 			}
-
-
-		} catch ( Exception $e ) {
-			update_option( 'rsssl_installation_error', 'directadmin', false );
-			$status  = 'warning';
-			$action  = 'continue';
-			$message = $e->getMessage();
 		}
 
 		return new RSSSL_RESPONSE( $status, $action, $message );
 	}
 
 }
-
-
 
 
 

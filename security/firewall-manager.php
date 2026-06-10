@@ -18,9 +18,9 @@ class rsssl_firewall_manager {
 	private static rsssl_firewall_manager $this;
 
 	/**
-	 * The htaccess file manager
+	 * The htaccess manager
 	 */
-	public RSSSL_Htaccess_File_Manager $htAccessFile;
+	public RSSSL_Htaccess_File_Manager $htaccessManager;
 	/**
 	 * File
 	 *
@@ -44,22 +44,21 @@ class rsssl_firewall_manager {
 	 *
 	 * @var string
 	 */
-	private $rules;
+	private $rules = '';
 	/**
 	 * The WP_Filesystem instance, used for file operations.
 	 *
 	 */
 	private $wp_filesystem;
 
-	public function __construct(RSSSL_Htaccess_File_Manager $htaccessFile) {
+	public function __construct(RSSSL_Htaccess_File_Manager $htaccessManager) {
 
 		if ( isset( self::$this ) ) {
 			wp_die();
 		}
 		self::$this = $this;
 
-		// Store the injected htaccess file manager
-		$this->htAccessFile = $htaccessFile;
+		$this->htaccessManager = $htaccessManager;
 
 		// Set dynamic path detection dynamically to handle environment changes
 		$this->dynamic_path = $this->get_dynamic_path();
@@ -79,19 +78,20 @@ class rsssl_firewall_manager {
 		// Set the file path dynamically so we can detect WP_CONTENT_DIR changes
 		$this->file = $this->get_advanced_headers_path();
 
-		// trigger this action to force rules update
-		add_action( 'rsssl_update_rules', array( $this, 'install' ), 10 );
+		// Keep firewall generation aligned with the shared rule rebuild lifecycle.
+		add_action( 'rsssl_update_advanced_headers', array( $this, 'update_advanced_headers' ), 10 );
 		add_action( 'rsssl_after_saved_fields', array( $this, 'install' ), 100 );
 		add_action( 'rsssl_deactivate', array( $this, 'uninstall' ), 20 );
+		add_filter( 'rsssl_htaccess_security_rules', array( $this, 'add_prepend_file_htaccess_rule' ), 5 );
 
 		// Proactively check for environment changes on admin loads
 		add_action( 'admin_init', array( $this, 'maybe_regenerate_firewall' ), 5 );
 
 		add_filter( 'rsssl_notices', array( $this, 'notices' ) );
 
-		//handle activation and deactivation of wp rocket
-		add_action( 'rocket_activation', array( $this, 'remove_prepend_file_in_htaccess' ) );
-		add_action( 'rocket_deactivation', array( $this, 'include_prepend_file_in_htaccess' ) );
+		// WP Rocket changes whether auto-prepend should stay in the shared root rule set.
+		add_action( 'rocket_activation', array( $this, 'queue_prepend_file_htaccess_removal' ) );
+		add_action( 'rocket_deactivation', array( $this, 'queue_prepend_file_htaccess_sync' ) );
 
 		if ( ! defined( 'RSSSL_IS_WP_ENGINE' ) ) {
 			define( 'RSSSL_IS_WP_ENGINE', isset( $_SERVER['IS_WPE'] ) );
@@ -110,6 +110,23 @@ class rsssl_firewall_manager {
 	 * @return void
 	 */
 	public function install(): void {
+		$this->sync_advanced_headers_state( true );
+	}
+
+	/**
+	 * Refresh the advanced-headers / firewall files without directly queueing root `.htaccess` changes.
+	 *
+	 * This is used for advanced-headers-only updates such as CSP learning-mode writes where the file contents
+	 * need to change but the shared `.htaccess` flow should not be touched.
+	 */
+	public function update_advanced_headers(): void {
+		$this->sync_advanced_headers_state( false );
+	}
+
+	/**
+	 * Synchronize the advanced-headers bootstrap files and, when applicable, request a shared root `.htaccess` update.
+	 */
+	private function sync_advanced_headers_state( bool $maybe_queue_root_htaccess_update ): void {
 		// Don't regenerate files during deactivation
 		if ( doing_action( 'rsssl_deactivate' ) ) {
 			return;
@@ -123,26 +140,31 @@ class rsssl_firewall_manager {
 			return;
 		}
 
-		if ( empty( $this->rules ) ) {
-			$this->rules = apply_filters( 'rsssl_firewall_rules', '' );
-		}
+		$this->rules = apply_filters( 'rsssl_firewall_rules', '' );
+		$has_rules = ! empty( trim( $this->rules ) );
 
-		// no rules? remove the file.
-		if ( empty( trim( $this->rules ) ) ) {
-			$this->remove_prepend_file_in_htaccess();
+		// `true` means "keep the root prepend state aligned when applicable": queue removal when no rules remain,
+		// otherwise only queue a sync for an existing root `.htaccess` target outside `plugins_loaded`.
+		if ( ! $has_rules ) {
+			if ( $maybe_queue_root_htaccess_update ) {
+				$this->queue_prepend_file_htaccess_removal();
+			}
+
 			$this->remove_prepend_file_in_wp_config();
+			$this->remove_auto_prepend_file_in_user_ini();
 			return;
 		}
 
-		// update the file to be included.
 		$this->update_firewall( $this->rules );
 
 		$this->include_prepend_file_in_wp_config();
-		if ( $this->uses_htaccess() ) {
-			// only include in the admin_init, to prevent issues with the htaccess file not being writable.
-			if( current_filter() !== 'plugins_loaded' ) {
-				$this->include_prepend_file_in_htaccess();
-			}
+		$should_queue_root_htaccess_sync = $maybe_queue_root_htaccess_update
+			&& $this->has_root_htaccess_file()
+			&& current_filter() !== 'plugins_loaded';
+		if ( $should_queue_root_htaccess_sync ) {
+			// Avoid queueing the shared root sync during `plugins_loaded`
+			// later admin-side flows can request it when applicable.
+			$this->queue_prepend_file_htaccess_sync();
 		}
 
 		if ( $this->has_user_ini_file() ) {
@@ -164,7 +186,6 @@ class rsssl_firewall_manager {
 			return;
 		}
 
-		$this->remove_prepend_file_in_htaccess();
 		$this->remove_prepend_file_in_wp_config();
 		$this->remove_auto_prepend_file_in_user_ini();
 
@@ -314,9 +335,19 @@ class rsssl_firewall_manager {
 			return;
 		}
 
+		// Check if directory is writable before attempting to create new file
+		$directory = dirname( $file );
+		if ( ! $this->file_exists( $file ) && ! $this->is_writable( $directory ) ) {
+			return;
+		}
+
 		$wp_filesystem = $this->get_file_system();
 
 		if ( $wp_filesystem === false ) {
+			// Double-check directory writability before fallback to prevent PHP warnings
+			if ( ! is_writable( $directory ) ) {
+				return;
+			}
 			file_put_contents( $file, $contents );//phpcs:ignore
 			return;
 		}
@@ -406,38 +437,6 @@ PHP;
 	}
 
 	/**
-	 * @return bool
-	 *
-	 * Check if installation uses htaccess.conf (Bitnami)
-	 */
-	private function uses_htaccess_conf() {
-		$htaccess_conf_file = dirname( ABSPATH ) . '/conf/htaccess.conf';
-		//conf/htaccess.conf can be outside of open basedir, return false if so
-		$open_basedir = ini_get( 'open_basedir' );
-		if ( ! empty( $open_basedir ) ) {
-			return false;
-		}
-		return is_file( $htaccess_conf_file );
-	}
-
-	/**
-	 * Get the .htaccess path
-	 *
-	 * @return string
-	 */
-	private function htaccess_path(): string {
-
-		if ( $this->uses_htaccess_conf() ) {
-			$htaccess_file = realpath( dirname( ABSPATH ) . '/conf/htaccess.conf' );
-		} else {
-			$htaccess_file = $this->get_home_path() . '.htaccess';
-		}
-
-		return $htaccess_file;
-
-	}
-
-	/**
 	 * Get the home path
 	 *
 	 * @return string
@@ -465,53 +464,73 @@ PHP;
 	}
 
 	/**
-	 * Check if this server uses .htaccess. Not by checking the server header, but simply by checking
-	 * if the htaccess file exists.
+	 * Check whether the shared root `.htaccess` target already exists.
+	 * The prepend rule can only be managed through the centralized root writer when there is a real file to update.
 	 *
 	 * @return bool
 	 */
-	private function uses_htaccess(): bool {
-		return $this->file_exists( $this->htaccess_path() );
+	private function has_root_htaccess_file(): bool {
+		return $this->file_exists( $this->htaccessManager->get_root_htaccess_target_path() );
 	}
 
 	/**
-	 * Include the prepend file in the .htaccess
+	 * Add the prepend rule to the centralized root .htaccess rule batch.
+	 *
+	 * @param array $rules
+	 *
+	 * @return array
+	 */
+	public function add_prepend_file_htaccess_rule( array $rules ): array
+	{
+		$rule = $this->get_root_htaccess_prepend_rule_definition();
+		if ( empty( $rule ) ) {
+			return $rules;
+		}
+
+		$rules[] = $rule;
+		return $rules;
+	}
+
+	/**
+	 * Return the root-rule definition for the auto-prepend include when the file/config state is ready.
+	 */
+	private function get_root_htaccess_prepend_rule_definition(): array {
+		if ( $this->htaccessManager->determineExistingRootHtaccessFilePath() === '' ) {
+			return [];
+		}
+
+		if ( ! $this->file_exists( $this->file ) ) {
+			return [];
+		}
+
+		if ( ! $this->wp_config_contains_latest() ) {
+			return [];
+		}
+
+		return [
+			'identifier' => self::HTACCESS_MARKER_PREPEND,
+			'rules'      => $this->build_prepend_file_htaccess_rules(),
+		];
+	}
+
+	/**
+	 * Queue the centralized `.htaccess` writer so prepend inclusion follows the shared commit path.
 	 *
 	 * @return void
 	 */
-	public function include_prepend_file_in_htaccess(): void
+	public function queue_prepend_file_htaccess_sync(): void
 	{
-		if ( ! $this->file_exists( $this->file ) ) {
+		if ( ! function_exists( 'rsssl_request_managed_htaccess_rebuild' ) ) {
 			return;
 		}
 
-		// check if the wp-config contains the if constant condition, to prevent duplicate loading. If not, try upgrading. If that fails, skip.
-		if ( ! $this->wp_config_contains_latest() ) {
-			return;
-		}
-
-		$htaccess_file = $this->htaccess_path();
-		if ( !$this->file_exists($htaccess_file) || !$this->is_writable($htaccess_file) ) {
-			return;
-		}
-
-		$htaccess_manager = new RSSSL_Htaccess_File_Manager();
-		$rules_string = $this->get_htaccess_rules();
-
-		$rule_definition = [
-			'marker' => self::HTACCESS_MARKER_PREPEND,
-			'lines' => empty(trim($rules_string)) ? [] : explode("\n", $rules_string),
-		];
-		$htaccess_manager->write_rule($rule_definition, 'include prepend file in htaccess');
+		rsssl_request_managed_htaccess_rebuild();
 	}
 
 	/**
-	 * Get the .htaccess rules for the prepend file
-	 * Add user.ini blocking rules if user.ini filename exist.
-	 *
-	 * @return string //the string containing the lines of rules
+	 * Build the literal auto-prepend `.htaccess` lines, including any matching `user.ini` protection block.
 	 */
-	private function get_htaccess_rules() : string
+	private function build_prepend_file_htaccess_rules() : string
 	{
 		if ( defined('RSSSL_HTACCESS_SKIP_AUTO_PREPEND') && RSSSL_HTACCESS_SKIP_AUTO_PREPEND ) {
 			return '';
@@ -611,30 +630,17 @@ PHP;
 	}
 
 	/**
-	 * Clear the rules
+	 * Queue the centralized `.htaccess` writer so the prepend block is removed through the shared commit path.
 	 *
 	 * @return void
 	 */
-	public function remove_prepend_file_in_htaccess(): void
+	public function queue_prepend_file_htaccess_removal(): void
 	{
-		if ( ! rsssl_user_can_manage() ) {
+		if ( ! function_exists( 'rsssl_request_managed_htaccess_rebuild' ) ) {
 			return;
 		}
 
-		// Initialize htAccessFile if not set
-		if ( ! isset($this->htAccessFile) ) {
-			$this->htAccessFile = new RSSSL_Htaccess_File_Manager();
-		}
-
-		// Determine the correct .htaccess file path this instance of firewall manager should use.
-		$specific_htaccess_path = $this->htaccess_path();
-
-		// Ensure the injected htaccess_file_manager service instance is configured to use this specific path.
-		$this->htAccessFile->set_htaccess_file_path($specific_htaccess_path);
-
-		// Call clear_rule on the htaccess_file_manager service.
-		// The service itself is responsible for handling file existence and writability.
-		$this->htAccessFile->clear_rule(self::HTACCESS_MARKER_PREPEND, 'testregel');
+		rsssl_request_managed_htaccess_rebuild();
 	}
 
 	/**
@@ -713,10 +719,7 @@ PHP;
 	 * @return bool
 	 */
 	public function has_rules() {
-
-		if ( empty( $this->rules ) ) {
-			$this->rules = apply_filters( 'rsssl_firewall_rules', '' );
-		}
+		$this->rules = apply_filters( 'rsssl_firewall_rules', '' );
 		return ! empty( trim( $this->rules ) );
 	}
 
@@ -984,6 +987,10 @@ PHP;
 		}
 		$autoPrependIni = '';
 		$userIniPath = $this->get_user_ini_path();
+		if ( empty( $userIniPath ) ) {
+			return;
+		}
+
 		// .user.ini configuration
 		switch ($config) {
 			case 'cgi':
@@ -997,23 +1004,31 @@ auto_prepend_file = '%s'
 				break;
 		}
 
-		if ( !empty($autoPrependIni) ) {
-			// Modify .user.ini
-			$userIniContent = $this->get_contents($userIniPath);
-			if ( $userIniContent ) {
-				$userIniContent = str_replace('auto_prepend_file', ';auto_prepend_file', $userIniContent);
-				$regex = '/; BEGIN Really Simple Auto Prepend File.*?; END Really Simple Auto Prepend File/is';
-				if (preg_match($regex, $userIniContent, $matches)) {
-					$userIniContent = preg_replace($regex, $autoPrependIni, $userIniContent);
-				} else {
-					$userIniContent .= "\n" . $autoPrependIni;
-				}
-			} else {
-				$userIniContent = $autoPrependIni;
-			}
-
-			$this->put_contents($userIniPath, $userIniContent);
+		if ( empty( $autoPrependIni ) ) {
+			return;
 		}
+
+		$userIniContent = $this->get_contents( $userIniPath );
+		$updatedUserIniContent = $autoPrependIni;
+		if ( $userIniContent !== '' ) {
+			$updatedUserIniContent = str_replace( 'auto_prepend_file', ';auto_prepend_file', $userIniContent );
+			$regex = '/; BEGIN Really Simple Auto Prepend File.*?; END Really Simple Auto Prepend File/is';
+			if ( preg_match( $regex, $updatedUserIniContent ) === 1 ) {
+				$replacement = preg_replace( $regex, $autoPrependIni, $updatedUserIniContent );
+				if ( ! is_string( $replacement ) ) {
+					return;
+				}
+				$updatedUserIniContent = $replacement;
+			} else {
+				$updatedUserIniContent .= "\n" . $autoPrependIni;
+			}
+		}
+
+		if ( $updatedUserIniContent === $userIniContent ) {
+			return;
+		}
+
+		$this->put_contents( $userIniPath, $updatedUserIniContent );
 	}
 
 	/**
@@ -1044,13 +1059,25 @@ auto_prepend_file = '%s'
 		}
 
 		$userIniPath = $this->get_user_ini_path();
-		if ($userIniPath === null) {
+		if ( empty( $userIniPath ) ) {
 			return;
 		}
 		$userIniContent = $this->get_contents( $userIniPath );
-		$userIniContent = preg_replace( '/; BEGIN Really Simple Auto Prepend File.*?; END Really Simple Auto Prepend File/is', '', $userIniContent );
-		$userIniContent = str_replace( 'auto_prepend_file', ';auto_prepend_file', $userIniContent );
-		$this->put_contents( $userIniPath, $userIniContent );
+		$updatedUserIniContent = preg_replace(
+			'/; BEGIN Really Simple Auto Prepend File.*?; END Really Simple Auto Prepend File/is',
+			'',
+			$userIniContent
+		);
+		if ( ! is_string( $updatedUserIniContent ) ) {
+			return;
+		}
+
+		$updatedUserIniContent = str_replace( 'auto_prepend_file', ';auto_prepend_file', $updatedUserIniContent );
+		if ( $updatedUserIniContent === $userIniContent ) {
+			return;
+		}
+
+		$this->put_contents( $userIniPath, $updatedUserIniContent );
 	}
 
 }

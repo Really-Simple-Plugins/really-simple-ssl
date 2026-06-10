@@ -10,173 +10,90 @@ if ( defined('RSSSL_UPGRADING_TO_PRO') ) {
 
 $rsssl_settings = is_multisite() ? get_site_option( 'rsssl_options' ) : get_option( 'rsssl_options' );
 if ( isset( $rsssl_settings['delete_data_on_uninstall'] ) && $rsssl_settings['delete_data_on_uninstall'] ) {
-	$rsssl_options = [
-		"rsssl_enable_csp_defaults",
-		"rsssl_elementor_upgraded",
-		"rsssl_redirect_to_http_check",
-		"rsssl_pro_permissions_policy_headers_for_php",
-		"rsssl_license_attempts",
-		"rsssl_csp_report_url",
-		"rsssl_iteration",
-		"rsssl_scan",
-		"rsssl_progress",
-		"rsssl_current_action",
-		"rsssl_scan_type",
-		"rsssl_scan_active",
-		"rsssl_xmlrpc_db_version",
-		"rsssl_first_version",
-		"rsssl-pro-current-version",
-		"rsssl_xmlrpc_learning_mode_activation_time",
-		"rsssl_pro_defaults_set",
-		"rsssl_after_default_setup_completed",
-		"rsssl_ms_elementor_private_replace_progress",
-		"rsssl_ms_elementor_urls_upgraded",
-		"rsssl_ms_elementor_public_replace_progress",
-		"rsssl_csp_report_only_activation_time",
-		"rsssl_csp_report_token",
-		"rsssl_key",
-		"rsssl_transients",
-		"rsssl_pro_license_activation_limit",
-		"rsssl_ssl_verify",
-		"rsssl_pro_license_activations_left",
-		"rsssl_pro_license_expires",
-		"rsssl_csp_db_version",
-		"rsssl_debug_log_folder_suffix",
-		"rsssl_xmlrpc_learning_mode_activation_time",
-		"rsssl_port_check_2082",
-		"rsssl_port_check_8443",
-		"rsssl_port_check_2222",
-		"rsssl_csp_db_upgraded",
-		"rsssl_scan_completed_no_errors",
-		"rsssl_last_scan_time",
-		"rsssl_test_wp_login_available",
-		"rsssl_country_db_version",
-		"rsssl_country_import_version",
-		"rsssl_geo_ip_database_file",
-		"rsssl_login_attempts_db_version",
-		'rsssl_notification_email',
-		'rsssl_remaining_tasks',
-		'rsssl_activation_timestamp',
-		'rsssl_activation_timestamp',
-		'rsssl_flush_caches',
-		'rsssl_skip_dns_check',
-		'rsssl_skip_challenge_directory_request',
-		'rsssl_hosting_dashboard',
-		'rsssl_options',
-		'rsssl_le_dns_tokens',
-		'rsssl_le_dns_records_verified',
-		'rsssl_private_key_path',
-		'rsssl_certificate_path',
-		'rsssl_intermediate_path',
-		'rsssl_le_certificate_generated_by_rsssl',
-		'rsssl_ssl_dirname',
-		'rsssl_create_folders_in_root',
-		'rsssl_htaccess_file_set_',
-		'rsssl_initial_alias_domain_value_set',
-		'rsssl_le_start_renewal',
-		'rsssl_le_start_installation',
-		'rsssl_le_installation_progress',
-		'rsssl_activation_time',
-		'rsssl_le_certificate_installed_by_rsssl',
-		'rsssl_installation_error',
-		'rsssl_le_dns_configured_by_rsssl',
-		'rsssl_onboarding_dismissed',
-		'rsssl_ssl_detection_overridden',
-		'rsssl_http_methods_allowed',
-		'rsssl_show_onboarding',
-		'rsssl_deactivate_list',
-		'rsssl_firewall_error',
-		'rsssl_completed_fixes',
-		'rsssl_rest_api_optimizer_not_writable',
-		'rsssl_ssl_labs_data',
-		'rsssl_current_version',
-		'rsssl_network_activation_status',
-		'rsssl_run',
-		'rsssl_wp_version_detected',
-		'rsssl_admin_notices',
-		'rsssl_plusone_count',
-		'rsssl_siteprocessing_progress',
-		'rsssl_ssl_activation_active',
-		'rsssl_network_activation_status',
-		'rsssl_siteprocessing_progress',
-		'rsssl_header_detection_nonce',
-		'rsssl_htaccess_error',
-		'rsssl_htaccess_rules',
-		'rsssl_options',
-        'rsssl_404_cache',
-        'rsssl_404_notice_shown',
-		'rsssl_key',
-		'rsssl_change_detection_next_index',
-		'rsssl_change_detection_completed',
-		'rsssl_change_detection_mail_recently_sent',
-		'rsssl_files_with_wrong_permissions',
-		'rsssl_permissions_mail_recently_sent',
-		'rsssl_permission_check_next_index',
-		'rsssl_permission_check_completed',
-		'rsssl_homepage_contains_404_resources',
-		'rsssl_pro_password_change_required_users_checked',
-		'rsssl_activated_recommended_features_extendify',
-		'rsssl_pro_redirect_to_settings_page',
-		'rsssl_redirect_to_settings_page',
-		'rsssl_firewall_environment_signature',
-		'rsssl_csp_header_test_status',
-		'rsssl_csp_header_test_status_expiry',
-		'rsssl_permalink_changed_to_plain',
+	// Clean up plugin data.
+	global $wpdb;
+
+	/*
+	 * Option and transient records live in wp_options with predictable prefixes.
+	 * Using SQL LIKE patterns here keeps uninstall resilient against older keys
+	 * that may no longer be listed explicitly in the codebase.
+	 */
+	$option_patterns = [
+		'rsssl_%',
+		'rlrsssl_%',
+		'_transient_rsssl_%',
+		'_transient_timeout_rsssl_%',
+		'_transient_rlrsssl_%',
+		'_transient_timeout_rlrsssl_%',
+		'_site_transient_rsssl_%',
+		'_site_transient_timeout_rsssl_%',
+		'_site_transient_rlrsssl_%',
+		'_site_transient_timeout_rlrsssl_%',
 	];
-	foreach ( $rsssl_options as $rsssl_option_name ) {
-		delete_option( $rsssl_option_name );
-		delete_site_option( $rsssl_option_name );
-	}
-	$rsssl_transients = [
-		'rsssl_tls_version',
-		'rsssl_redirects_to_homepage',
-		'rsssl_cert_expiration_date',
-		'rsssl_sent_cert_expiration_warning',
-		'rsssl_scan_post_count',
-		'rsssl_scan',
-		'rsssl_stop_certificate_expiration_check',
-		'rsssl_pro_license_status',
-		'rsssl_xmlrpc_allowed',
-		'rsssl_http_methods_allowed',
-		'rsssl_code_execution_allowed_status',
-		'rsssl_directory_indexing_status',
-		'rsssl_htaccess_test_success',
-		'rsssl_can_use_curl_headers_check',
-		'rsssl_curl_error',
-		'rsssl_mixed_content_fixer_detected',
-		'rsssl_admin_notices',
-		'rsssl_plusone_count',
-		'rsssl_testpage',
-		'rsssl_plugin_download_active',
-		'rsssl_le_generate_attempt_count',
-		'rsssl_alias_domain_available',
-		'rsssl_le_install_attempt_count',
-		'rsssl_cw_t',
-		'rsssl_cw_server_id',
-		'rsssl_certinfo',
-		'rsssl_csp_header_test_status',
-	];
-	foreach ( $rsssl_transients as $rsssl_transient ) {
-		delete_transient( $rsssl_transient );
-		delete_site_transient( $rsssl_transient );
+
+	foreach ( $option_patterns as $pattern ) {
+		$wpdb->query(
+			$wpdb->prepare(
+				"DELETE FROM {$wpdb->options} WHERE option_name LIKE %s",
+				$pattern
+			)
+		);
 	}
 
-	// Clean up user meta data
-    global $wpdb;
-    $prefix = 'rsssl_';
+	if ( is_multisite() ) {
+		/*
+		 * Network-level settings and site transients are stored in sitemeta on
+		 * multisite installs, so they need the same prefix-based cleanup there.
+		 */
+		$site_meta_patterns = [
+			'rsssl_%',
+			'rlrsssl_%',
+			'_site_transient_rsssl_%',
+			'_site_transient_timeout_rsssl_%',
+			'_site_transient_rlrsssl_%',
+			'_site_transient_timeout_rlrsssl_%',
+		];
 
-    // Check for % rsssl_ % to also catch _rsssl_ keys
-    $wpdb->query(
-        $wpdb->prepare(
-            "DELETE FROM {$wpdb->usermeta} WHERE meta_key LIKE %s",
-            '%' . $wpdb->esc_like( $prefix ) . '%'
-        )
-    );
+		foreach ( $site_meta_patterns as $pattern ) {
+			$wpdb->query(
+				$wpdb->prepare(
+					"DELETE FROM {$wpdb->sitemeta} WHERE meta_key LIKE %s",
+					$pattern
+				)
+			);
+		}
+	}
+
+	/*
+	 * User meta keys are not always stored as strict prefixes. A contains-match
+	 * keeps the uninstall cleanup compatible with keys that embed rsssl names.
+	 */
+	$usermeta_patterns = [
+		'%rsssl_%',
+		'%rlrsssl_%',
+	];
+
+	foreach ( $usermeta_patterns as $pattern ) {
+		$wpdb->query(
+			$wpdb->prepare(
+				"DELETE FROM {$wpdb->usermeta} WHERE meta_key LIKE %s",
+				$pattern
+			)
+		);
+	}
 
 
 	require_once(ABSPATH . 'wp-admin/includes/file.php');
 	WP_Filesystem();
 
+	/**
+	 * Recursively remove the plugin upload directory via WP_Filesystem.
+	 *
+	 * This keeps uninstall cleanup compatible with the filesystem abstraction
+	 * WordPress has initialized for the current environment.
+	 *
+	 * @param string $dir Absolute path to the directory that should be removed.
+	 */
 	function rsssl_delete_directory_wpfilesystem($dir) {
 		global $wp_filesystem;
 		if ($wp_filesystem->is_dir($dir)) {

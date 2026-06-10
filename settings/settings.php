@@ -719,8 +719,10 @@ function rsssl_rest_api_fields_set(WP_REST_Request $request, $ajax_data = false)
 	}
 
 	//build a new options array
+	$previous_values = [];
 	foreach ($fields as $field) {
 		$prev_value = isset($options[$field['id']]) ? $options[$field['id']] : false;
+		$previous_values[ $field['id'] ] = $prev_value;
 		do_action("rsssl_before_save_option", $field['id'], $field['value'], $prev_value, $field['type']);
 		$options[$field['id']] = apply_filters("rsssl_fieldvalue", $field['value'], $field['id'], $field['type']);
 	}
@@ -732,10 +734,7 @@ function rsssl_rest_api_fields_set(WP_REST_Request $request, $ajax_data = false)
 		}
 	}
 	RSSSL()->admin->clear_admin_notices_cache();
-	do_action('rsssl_after_saved_fields', $fields );
-	foreach ( $fields as $field ) {
-		do_action( "rsssl_after_save_field", $field['id'], $field['value'], $prev_value, $field['type'] );
-	}
+	rsssl_finalize_saved_fields_actions( $fields, $previous_values );
 	return [
 		'success' => true,
 		'progress' => RSSSL()->progress->get(),
@@ -778,7 +777,7 @@ function rsssl_update_option($name, $value)
 	$name = sanitize_text_field($name);
 	$type = rsssl_sanitize_field_type($config_field['type']);
 	$value = rsssl_sanitize_field($value, $type, $name);
-	$value = apply_filters("rsssl_fieldvalue", $value, sanitize_text_field($name), $type);
+	$value = apply_filters('rsssl_fieldvalue', $value, sanitize_text_field($name), $type);
 	#skip if value wasn't changed
 	if (isset($options[$name]) && $options[$name] === $value) {
 		return;
@@ -792,8 +791,12 @@ function rsssl_update_option($name, $value)
 	}
 	$config_field['value'] = $value;
 	RSSSL()->admin->clear_admin_notices_cache();
-	do_action('rsssl_after_saved_fields',[$config_field] );
-	do_action( "rsssl_after_save_field", $name, $value, $prev_value, $type );
+	rsssl_finalize_saved_fields_actions(
+		[ $config_field ],
+		[
+			$name => $prev_value,
+		]
+	);
 }
 
 /**
@@ -1053,6 +1056,36 @@ function rsssl_sanitize_datatable($value, $type, $field_name)
 		}
 	}
 	return $value;
+}
+
+function rsssl_maybe_process_scheduled_htaccess_update(): void
+{
+	if ( ! function_exists( 'rsssl_flush_scheduled_htaccess_update' ) ) {
+		return;
+	}
+
+	rsssl_flush_scheduled_htaccess_update();
+}
+
+function rsssl_finalize_saved_fields_actions( array $fields, array $previous_values ): void
+{
+	do_action( 'rsssl_after_saved_fields', $fields );
+	rsssl_maybe_process_scheduled_htaccess_update();
+
+	foreach ( $fields as $field ) {
+		$field_id = $field['id'] ?? false;
+		if ( $field_id === false ) {
+			continue;
+		}
+
+		do_action(
+			'rsssl_after_save_field',
+			$field_id,
+			$field['value'] ?? '',
+			$previous_values[ $field_id ] ?? false,
+			$field['type'] ?? ''
+		);
+	}
 }
 
 
