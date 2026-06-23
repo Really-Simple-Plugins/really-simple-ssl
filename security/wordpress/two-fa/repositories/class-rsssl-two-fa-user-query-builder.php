@@ -514,12 +514,25 @@ class Rsssl_Two_Fa_User_Query_Builder implements Rsssl_Two_Fa_User_Query_Builder
 			$args['meta_query'] = $newConditionGroup;
 		}
 
-		var_dump( $args );
-
 		return $args;
 	}
 
 	public function addForcedRolesConditionToArgs( array $args, array $getForcedRoles ): array {
+		if ( empty( $getForcedRoles ) ) {
+			$args['role__in'] = [ 'non_existing_role' ];
+			return $args;
+		}
+
+		$enabledRoles = $this->params->getEnabledRoles();
+		$forcedRoles  = array_values( array_intersect( $getForcedRoles, $enabledRoles ) );
+
+		if ( empty( $forcedRoles ) ) {
+			$args['role__in'] = [ 'non_existing_role' ];
+			return $args;
+		}
+
+		$args['role__in'] = $forcedRoles;
+
 		return $args;
 	}
 }

@@ -2,6 +2,9 @@
 defined( 'ABSPATH' ) or die();
 
 add_filter( 'rsssl_fields', function( $fields ) {
+	$hasXmlrpcDependentPlugins = rsssl_has_xmlrpc_dependent_plugins();
+	$xmlrpcDependentPlugins    = rsssl_get_xmlrpc_dependent_plugins();
+
 	return array_merge( $fields,
 		[
 
@@ -140,6 +143,13 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'group_id' => 'hardening-basic',
 				'type'     => 'checkbox',
 				'label'    => __( "Disable XML-RPC", 'really-simple-ssl' ),
+				'warning'  => $hasXmlrpcDependentPlugins,
+				'tooltip'  => $hasXmlrpcDependentPlugins
+					? sprintf(
+						__( "Warning: The following plugins may use XML-RPC: %s. Disabling XML-RPC could break their functionality.", 'really-simple-ssl' ),
+						implode( ', ', $xmlrpcDependentPlugins )
+					)
+					: '',
 				'disabled' => false,
 				'default'  => false,
 			],

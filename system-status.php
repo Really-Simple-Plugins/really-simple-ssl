@@ -113,20 +113,23 @@ function rsssl_get_system_status() {
 		$output .= 'wp-config.php not writable<br>';
 	}
 	$output .= 'Detected SSL setup: ' . RSSSL()->admin->ssl_type . "\n";
-	if ( file_exists( RSSSL()->admin->htaccess_file() ) ) {
+	$htaccess_manager = \RSSSL\Security\RSSSL_Htaccess_File_Manager::get_instance();
+	$htaccess_file = $htaccess_manager->get_root_htaccess_target_path();
+	if ( $htaccess_file !== '' && is_file( $htaccess_file ) ) {
 		$output .= 'htaccess file exists.' . "\n";
-		if ( ! is_writable( RSSSL()->admin->htaccess_file() ) ) {
+		if ( ! is_writable( $htaccess_file ) ) {
 			$output .= 'htaccess file not writable.' . "\n";
 		}
 	} else {
 		$output .= 'no htaccess file available.' . "\n";
 	}
 
-	if ( get_transient( 'rsssl_htaccess_test_success' ) === 'success' ) {
+	$htaccess_test_status = RSSSL()->admin->get_cached_htaccess_test_result();
+	if ( $htaccess_test_status === 'success' ) {
 		$output .= 'htaccess redirect tested successfully.' . "\n";
-	} elseif ( get_transient( 'rsssl_htaccess_test_success' ) === 'error' ) {
+	} elseif ( $htaccess_test_status === 'error' ) {
 		$output .= 'htaccess redirect test failed.' . "\n";
-	} elseif ( get_transient( 'rsssl_htaccess_test_success' ) === 'no-response' ) {
+	} elseif ( $htaccess_test_status === 'no-response' ) {
 		$output .= 'htaccess redirect test failed: no response from server.' . "\n";
 	}
 	$mixed_content_fixer_detected = get_transient( 'rsssl_mixed_content_fixer_detected' );
