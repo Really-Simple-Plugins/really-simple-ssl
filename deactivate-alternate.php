@@ -50,8 +50,6 @@ if ( ! function_exists( 'rsssl_deactivate_alternate' ) ) {
 
             if ( $target === 'free' ) {
                 update_option( 'rsssl_free_deactivated', true );
-            } else {
-                delete_option( 'rsssl_free_deactivated' );
             }
 
             if ( function_exists( 'deactivate_plugins' ) ) {
