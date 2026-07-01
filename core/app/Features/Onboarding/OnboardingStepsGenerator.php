@@ -208,11 +208,17 @@ class OnboardingStepsGenerator
      */
     private function relatedPluginsStep(): array
     {
+        $items = $this->pluginService->getOnboardingConfig();
+
+        if (empty($items)) {
+            return [];
+        }
+
         return [
             'id' => 'plugins',
             'title' => esc_html__('We think you will like this', 'really-simple-ssl'),
             'subtitle' => esc_html__('Really Simple Plugins is also the author of the below privacy-focused plugins including consent management and legal documents!', 'really-simple-ssl'),
-            'items' => $this->pluginService->getOnboardingConfig(),
+            'items' => $items,
             'button' => esc_html__('Install', 'really-simple-ssl'),
         ];
     }

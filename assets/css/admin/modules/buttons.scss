@@ -88,22 +88,33 @@
   }
 
   .rsssl-action-buttons {
-    /* Making sure we use the full width of the container */
-    //display: flex;
-    //justify-content: flex-end;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--rsp-spacing-xs);
+    width: 100%;
   }
 
   .rsssl-action-buttons__inner {
+    display: flex;
+    flex: 0 1 auto;
     overflow: visible;
   }
 
-  .rsssl-action-buttons__button {
-    //add some spacing between the buttons
-  }
-
-  /* Remove margin for the last button to ensure clean alignment */
-  .rsssl-action-buttons__inner:last-child {
-    //margin-right: 0;
+  .rsssl-action-buttons__button,
+  .rsssl-action-buttons > button,
+  .rsssl-action-buttons__inner > button {
+    align-items: center;
+    display: inline-flex;
+    height: auto;
+    justify-content: center;
+    line-height: 1.4;
+    min-height: 30px;
+    min-width: max-content;
+    text-align: center;
+    white-space: nowrap;
+    width: auto;
   }
 
   /**

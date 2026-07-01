@@ -100,6 +100,10 @@ trait Rsssl_Two_Fa_Helper {
         wp_set_auth_cookie( $user_id, true );
         // Finally redirect the user to the redirect_to page or to the home page if the redirect_to is not set.
         $redirect_to = $redirect_to ?: home_url();
+        if ( function_exists( '\RSSSL\Pro\Security\WordPress\rsssl_maybe_get_expired_password_redirect' ) ) {
+            $redirect_to = \RSSSL\Pro\Security\WordPress\rsssl_maybe_get_expired_password_redirect( $redirect_to, $user_id );
+        }
+        $redirect_to = wp_validate_redirect( $redirect_to, admin_url() );
         return new WP_REST_Response( array( 'redirect_to' => $redirect_to ), 200 );
     }
 

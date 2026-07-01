@@ -47,9 +47,6 @@ final class RelatedPluginService
      * configuration.
      *
      * @return array List of plugin items with their status, actions and UI properties
-     *
-     * @todo: Plugins that are already installed and activated are still listed
-     * in the onboarding.
      */
     public function getOnboardingConfig(): array
     {
@@ -62,15 +59,25 @@ final class RelatedPluginService
             }
 
             $this->setPluginConfig($config);
+            $availableAction = $this->getAvailablePluginAction();
+
+            // Skip plugins that are already installed
+            // We need to use pluginFileExists because plugins with a premium
+            // variant like Complianz have action 'upgrade-to-premium' instead
+            // of 'installed'.
+            if ($this->pluginFileExists()) {
+                continue;
+            }
+
             $activated = $this->pluginConfig->getBoolean('pre_checked');
 
             $checkboxes[] = [
                 'id' => $config['slug'],
                 'title' => $config['title'],
-                'action' => ($activated ? $this->getAvailablePluginAction() : 'none'),
+                'action' => ($activated ? $availableAction : 'none'),
                 'activated' => $activated,
                 'current_action' => 'none',
-                'default_action' => ($activated ? null : $this->getAvailablePluginAction()),
+                'default_action' => ($activated ? null : $availableAction),
             ];
         }
 

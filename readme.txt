@@ -160,6 +160,12 @@ Yes. The plugin enforces HTTPS and handles all necessary redirects, optionally u
 Really Simple Security and WordFence greatly overlap in term of functionality. If you like to use specific features from both plugins, we strongly recommend not to enable similar features twice. The benefit of Really Simple Security is that disabled features don't load any code, so won't have an impact on site performance.
 
 == Changelog ==
+= 9.6.1 - 2026-07-06 =
+* Fixed: Alignment of the e-mail validation status icon.
+* Fixed: Vulnerability data is included in uninstall cleanup.
+* Changed: Updated translations to use the l10n PHP format.
+* Changed: Updated the Other Plugins section in onboarding and settings.
+
 = 9.6.0 - 2026-06-16 =
 * Fixed: 2FA grace period reminder emails could be sent unexpectedly.
 * Fixed: Review notice is now correctly dismissed when pressing the X.
