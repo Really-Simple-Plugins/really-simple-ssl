@@ -546,17 +546,9 @@ function rsssl_other_plugins_data($slug = false)
 	}
 	$plugins = array(
 		[
-			'slug' => 'complianz-gdpr',
-			'constant_premium' => 'cmplz_premium',
-			'wordpress_url' => 'https://wordpress.org/plugins/complianz-gdpr/',
-			'upgrade_url' => 'https://complianz.io/pricing?src=rsssl-plugin',
-			'title' => __("Complianz - Consent Management as it should be", "really-simple-ssl"),
-		],
-		[
-			'slug' => 'complianz-terms-conditions',
-			'wordpress_url' => 'https://wordpress.org/plugins/complianz-terms-conditions/',
-			'upgrade_url' => 'https://complianz.io?src=rsssl-plugin',
-			'title' => 'Complianz - ' . __("Terms and Conditions", "really-simple-ssl"),
+			'slug' => 'metricool',
+			'wordpress_url' => 'https://wordpress.org/plugins/metricool/',
+			'title' => 'Metricool - ' . __("Social Media Management", "really-simple-ssl"),
 		],
 		[
 			'slug' => 'simplybook',
@@ -564,7 +556,21 @@ function rsssl_other_plugins_data($slug = false)
 			'upgrade_url' => 'https://simplybook.me/en/pricing',
 			'title' => 'SimplyBook.me - ' . __("Online Booking System", "really-simple-ssl"),
 		],
+		[
+			'slug' => 'complianz-gdpr',
+			'constant_premium' => 'cmplz_premium',
+			'wordpress_url' => 'https://wordpress.org/plugins/complianz-gdpr/',
+			'upgrade_url' => 'https://complianz.io/pricing?src=rsssl-plugin',
+			'title' => __("Complianz - Consent Management as it should be", "really-simple-ssl"),
+		],
 	);
+
+	$plugins[] = [
+		'slug' => 'complianz-terms-conditions',
+		'wordpress_url' => 'https://wordpress.org/plugins/complianz-terms-conditions/',
+		'upgrade_url' => 'https://complianz.io?src=rsssl-plugin',
+		'title' => 'Complianz - ' . __("Terms and Conditions", "really-simple-ssl"),
+	];
 
     if (class_exists('rsssl_installer') === false) {
         require_once( rsssl_path . 'class-installer.php');

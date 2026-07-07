@@ -270,6 +270,15 @@ function rsssl_upgrade() {
 		rsssl_upgrade_delete_legacy_cache_option('rsssl_admin_cache');
 	}
 
+	// Migrate vulnerabilities option to the standard prefix so cleanup on uninstall removes it.
+	if ( $prev_version && version_compare( $prev_version, '9.6.0', '<=' ) ) {
+		$vulnerabilities = get_option( 'rss_vulnerabilities' );
+		if ( false !== $vulnerabilities ) {
+			update_option( 'rsssl_vulnerabilities', $vulnerabilities, false );
+			delete_option( 'rss_vulnerabilities' );
+		}
+	}
+
 	//don't clear on each update.
 	//RSSSL()->admin->clear_admin_notices_cache();
 

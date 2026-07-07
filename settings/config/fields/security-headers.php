@@ -425,16 +425,9 @@ add_filter( 'rsssl_fields', function( $fields ) {
 					[
 						'name'     => __( '', 'really-simple-ssl' ),
 						'sortable' => false,
-						'column'   => 'statusControl',
+						'column'   => 'grouped',
 						'grow'     => 1,
-                        'width'    => '10%',
-					],
-					[
-						'name'     => __('', 'really-simple-ssl'),
-						'sortable' => false,
-						'column'   => 'deleteControl',
-						'grow'     => 1,
-                        'width'    => '10%',
+                        'width'    => '20%',
 					],
 //					[   //placeholder until we have resolved the columns
 //						'name'     => '',

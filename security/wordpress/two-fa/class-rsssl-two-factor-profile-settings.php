@@ -255,9 +255,9 @@ if (!class_exists('Rsssl_Two_Factor_Profile_Settings')) {
             switch ($selected_provider) {
                 case 'totp':
                     $current_status = Rsssl_Two_Factor_Settings::get_user_status('totp', $user_id);
-//                    if ('active' === $current_status) {
-//                        return;
-//                    }
+                    if ('active' === $current_status) {
+                        return;
+                    }
                     if ((empty($_POST['two-factor-totp-authcode']))
                         || !isset($_POST['two-factor-totp-key'])
                     ) {

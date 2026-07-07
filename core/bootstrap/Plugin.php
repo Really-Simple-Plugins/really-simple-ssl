@@ -78,7 +78,7 @@ class Plugin
      */
     public function loadPluginTextDomain(): void
     {
-        load_plugin_textdomain('really-simple-ssl', false, $this->env->getString('plugin.lang_dir'));
+        load_plugin_textdomain('really-simple-ssl', false, $this->env->getString('plugin.lang_path'));
     }
 
     /**
