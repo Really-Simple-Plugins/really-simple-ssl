@@ -2,6 +2,8 @@
 defined( 'ABSPATH' ) or die();
 
 add_filter( 'rsssl_fields', function( $fields ) {
+	$isEmailVerified = rsssl_is_email_verified();
+
 	return array_merge( $fields,
 		[
 			[
@@ -50,9 +52,20 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'premium'  => true,
 				'upgrade'  => 'https://really-simple-ssl.com/login-protection/',
 				'label'    => __( "Allow secure log in with Passkeys", "really-simple-ssl" ),
-				'disabled' => false,
 				'tooltip'  => __('Passkeys are a very secure and convenient way to log in. It allows the user to authenticate using their device, browser or password manager.', 'really-simple-ssl'),
 				'default'  => 'disabled',
+				'react_conditions' => [
+					'relation' => 'OR',
+					[
+						'ssl_enabled' => '1',
+						'site_has_ssl' => '1',
+						'disabledTooltipText' => __( "Passkeys require HTTPS to function. Please enable SSL on your site first.", "really-simple-ssl" ),
+					],
+					[
+						'enable_passkey_login' => true,
+						'disabledTooltipText' => __( "Passkeys require HTTPS to function. Please enable SSL on your site first.", "really-simple-ssl" ),
+					]
+				],
 				'server_conditions'    => [
 					'relation' => 'AND',
 					[
@@ -98,10 +111,10 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'menu_id'  => 'two-fa',
 				'group_id' => 'two_fa_email',
 				'type'     => 'roles_enabled_dropdown',
-                'disabled' => (rsssl_is_email_verified() === false),
+                'disabled' => ( $isEmailVerified === false ),
                 'disabledTooltipText' => __("This feature is disabled because you have not verified that e-mail is correctly configured on your site.", "really-simple-ssl"),
 				'default'  => [],
-                'tooltip'  => __('Email log in will send an authentication code to the user’s email address. This is considered less secure than other 2FA methods.', 'really-simple-ssl'),
+                'tooltip'  => __('Email log in will send an authentication code to the user\'s email address. This is considered less secure than other 2FA methods.', 'really-simple-ssl'),
 				'label'    => __( 'Enable Email Authentication for:', 'really-simple-ssl' ),
                 'react_conditions' => [
                     'relation' => 'AND',
@@ -127,6 +140,12 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'default'  => ['administrator'],
                 'tooltip'  => __('TOTP means authentication using apps like Google Authenticator.', 'really-simple-ssl'),
 				'label'    => __( 'Enable TOTP Authentication for:', 'really-simple-ssl' ),
+				'react_conditions' => [
+					'relation' => 'AND',
+					[
+						'login_protection_enabled' => 1,
+					]
+				],
 				'server_conditions'    => [
 					'relation' => 'AND',
 					[

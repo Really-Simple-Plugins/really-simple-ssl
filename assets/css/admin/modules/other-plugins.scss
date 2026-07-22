@@ -34,6 +34,10 @@
 		--rsp-other-plugins-color: var(--rsp-pink);
 	  }
 
+	  &.rsssl-metricool {
+		--rsp-other-plugins-color: var(--rsp-metricool-plugin-color);
+	  }
+
 	  &.rsssl-complianz-gdpr {
 		--rsp-other-plugins-color: var(--rsp-blue);
 	  }

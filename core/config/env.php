@@ -5,24 +5,25 @@ if (!defined('ABSPATH')) {
 }
 
 $pluginRootPath = dirname(__DIR__, 2);
-$pluginBaseFile = $pluginRootPath . DIRECTORY_SEPARATOR . plugin_basename($pluginRootPath) . '.php';
+$pluginDir = plugin_basename($pluginRootPath);
+$pluginBaseFile = $pluginRootPath . DIRECTORY_SEPARATOR . $pluginDir . '.php';
 
 // The environment config can be used BEFORE the 'init' hook.
 return [
     'plugin' => [
         'name' => 'Really Simple Security',
-        'version' => '9.5.11',
+        'version' => '9.6.1',
         'pro' => false,
         'path' => $pluginRootPath,
         'base_path' => $pluginBaseFile,
         'assets_path' => $pluginRootPath . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR,
-        'lang_path' => $pluginRootPath . DIRECTORY_SEPARATOR . 'languages' . DIRECTORY_SEPARATOR,
+        // load_plugin_textdomain() expects this path relative to the plugins directory.
+        'lang_path' => $pluginDir . DIRECTORY_SEPARATOR . 'languages',
         'view_path' => dirname(__DIR__, 1) . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR,
         'feature_path' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'Features' . DIRECTORY_SEPARATOR,
         'react_path' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'react',
-        'dir'  => plugin_basename(dirname(__DIR__, 2)),
-        'base_file' => plugin_basename(dirname(__DIR__, 2)) . DIRECTORY_SEPARATOR . plugin_basename(dirname(__DIR__, 2)) . '.php',
-        'lang' => plugin_basename(dirname(__DIR__, 2)) . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'languages',
+        'dir'  => $pluginDir,
+        'base_file' => $pluginDir . DIRECTORY_SEPARATOR . $pluginDir . '.php',
         'url'  => plugin_dir_url($pluginBaseFile),
         'assets_url' => plugins_url('assets/', $pluginBaseFile),
         'plugin_url' => plugin_dir_url($pluginBaseFile),
@@ -46,5 +47,13 @@ return [
     'onboarding' => [
         'queue_option' => 'rsssl_onboarding_actions_queue',
         'queue_event' => 'rsssl_process_onboarding_actions_queue',
-    ]
+    ],
+    'logging' => [
+        // Verbose informational logging is opt-in on a per-site basis. Site
+        // owners enable it by adding `define('RSSSL_INFO_LOG', true);` to
+        // wp-config.php on a `WP_DEBUG`-enabled site. Resolved here once so
+        // consumers can read it via `$this->env->getBoolean('logging.info_enabled')`.
+        'info_enabled' => defined('WP_DEBUG') && WP_DEBUG
+            && defined('RSSSL_INFO_LOG') && RSSSL_INFO_LOG,
+    ],
 ];

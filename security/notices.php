@@ -1,4 +1,9 @@
-<?php defined( 'ABSPATH' ) or die();
+<?php
+
+use RSSSL\Security\RSSSL_Htaccess_File_Manager;
+
+defined( 'ABSPATH' ) or die();
+
 /**
  * Convert htaccess rules to html friendly layout
  *
@@ -7,13 +12,14 @@
  * @return string
  */
 function rsssl_parse_htaccess_to_html( string $code): string {
-	if ( strpos($code, "\n")===0 ) {
-		$code = 	preg_replace('/\n/', '', $code, 1);
+	$normalized_code = preg_replace( "/\r\n?|\r/", "\n", $code );
+	if ( is_string( $normalized_code ) ) {
+		$code = $normalized_code;
 	}
-	//split into linebreak separated array, so we can run esc_html on the result
-	$code = 	preg_replace('/\n/', '--br--', $code, 1);
-	$code = 	preg_replace('/<br>/', '--br--', $code, 1);
-	$code_arr = explode('--br--', $code);
+
+	$code = ltrim( $code, "\n" );
+	$code = str_replace( '<br>', "\n", $code );
+	$code_arr = explode( "\n", $code );
 	$code_arr = array_map('esc_html', $code_arr);
 	$code = implode('<br>', $code_arr);
 	return '<br><code>' . $code . '</code><br>';
@@ -24,21 +30,32 @@ function rsssl_general_security_notices( $notices ) {
 	$uploads_code         = rsssl_parse_htaccess_to_html( get_site_option( 'rsssl_uploads_htaccess_rules', '' ) );
 	$open_hardening_count = rsssl_count_open_hardening_features();
 
+	// Unified error message format for .htaccess issues
+	// Note: 'not-supported' (file doesn't exist) is handled silently - no notice shown
+	// as the plugin falls back to PHP redirect / advanced-headers.php
 	$notices['htaccess_status'] = array(
 		'callback'          => 'rsssl_htaccess_status',
 		'score'             => 5,
 		'output'            => array(
-			'not-writable' => array(
-				'title'       => __( ".htaccess not writable", "really-simple-ssl" ),
-				'msg'         => __( "An option that requires the .htaccess file is enabled, but the file is not writable.", "really-simple-ssl" ) . ' ' . __( "Please add the following lines to your .htaccess, or set it to writable:", "really-simple-ssl" ) . $code,
+			RSSSL_Htaccess_File_Manager::ERROR_NOT_WRITABLE => array(
+				'title'       => __( "Failed to update .htaccess", "really-simple-ssl" ),
+				'msg'         => __( "Failed to update security setting in your .htaccess file: file is not writable.", "really-simple-ssl" ) . '<br><br>'
+				                 . '<strong>' . __( "Resolution:", "really-simple-ssl" ) . '</strong><br>'
+				                 . __( "1. Update file permissions to make .htaccess writable, or", "really-simple-ssl" ) . '<br>'
+				                 . __( "2. Add the following code manually:", "really-simple-ssl" ) . $code,
+				'clear_cache_id' => 'managed_htaccess',
 				'icon'        => 'warning',
 				'dismissible' => true,
 				'plusone'     => true,
 				'url'         => 'manual/editing-htaccess/',
 			),
-			'not-exists'   => array(
-				'title'       => __( ".htaccess does not exist", "really-simple-ssl" ),
-				'msg'         => __( "An option that requires the .htaccess file is enabled, but the file does not exist.", "really-simple-ssl" ) . ' ' . __( "Please add the following lines to your .htaccess, or set it to writable:", "really-simple-ssl" ) . $code,
+			RSSSL_Htaccess_File_Manager::ERROR_NOT_READABLE => array(
+				'title'       => __( "Failed to update .htaccess", "really-simple-ssl" ),
+				'msg'         => __( "Failed to update security setting in your .htaccess file: file is not readable.", "really-simple-ssl" ) . '<br><br>'
+				                 . '<strong>' . __( "Resolution:", "really-simple-ssl" ) . '</strong><br>'
+				                 . __( "1. Update file permissions to make .htaccess readable and writable, or", "really-simple-ssl" ) . '<br>'
+				                 . __( "2. Add the following code manually:", "really-simple-ssl" ) . $code,
+				'clear_cache_id' => 'managed_htaccess',
 				'icon'        => 'warning',
 				'dismissible' => true,
 				'plusone'     => true,
@@ -56,8 +73,11 @@ function rsssl_general_security_notices( $notices ) {
 		'score'             => 5,
 		'output'            => array(
 			'not-writable' => array(
-				'title'       => __( ".htaccess in uploads not writable", "really-simple-ssl" ),
-				'msg'         => __( "An option that requires the .htaccess file in the uploads directory is enabled, but the file is not writable.", "really-simple-ssl" ) . ' ' . __( "Please add the following lines to your .htaccess, or set it to writable:", "really-simple-ssl" ) . $uploads_code,
+				'title'       => __( "Failed to update uploads .htaccess", "really-simple-ssl" ),
+				'msg'         => __( "Failed to update security setting in your uploads .htaccess file: file is not writable.", "really-simple-ssl" ) . '<br><br>'
+				                 . '<strong>' . __( "Resolution:", "really-simple-ssl" ) . '</strong><br>'
+				                 . __( "1. Update file permissions to make the uploads .htaccess writable, or", "really-simple-ssl" ) . '<br>'
+				                 . __( "2. Add the following code manually:", "really-simple-ssl" ) . $uploads_code,
 				'icon'        => 'warning',
 				'dismissible' => true,
 				'plusone'     => true,

@@ -139,6 +139,7 @@ class Rsssl_Two_Factor_Admin {
      * @return void
      */
     public function process_users_batch(array $changedRoles, Rsssl_Two_FA_Data_Parameters $params, int $batch_size, int $offset, string $status): void {
+        $params->setOffset($offset);
         $collection = (new Rsssl_Two_Fa_Forced_Role_Service($params))->processBatch($changedRoles, $status);
 
         foreach ($collection->getUsers() as $user) {

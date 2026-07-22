@@ -120,7 +120,8 @@ class Rsssl_Two_Factor
 //		add_action( 'login_enqueue_scripts', array( __CLASS__, 'twofa_scripts' ) );
         add_action('init', array(Rsssl_Provider_Loader::class, 'get_providers'));
         add_action('wp_login', array(__CLASS__, 'rsssl_wp_login'), 10, 2);
-        add_action('wp_login_errors', array(__CLASS__, 'show_expired_onboarding_error'));
+        add_filter('wp_login_errors', array(__CLASS__, 'show_expired_onboarding_error'));
+        add_filter('wp_login_errors', array(__CLASS__, 'maybe_add_login_error_notice'));
         add_filter('wp_login_errors', array(__CLASS__, 'rsssl_maybe_show_reset_password_notice'));
         add_action('after_password_reset', array(__CLASS__, 'rsssl_clear_password_reset_notice'));
         add_action('login_form_validate_2fa', array(__CLASS__, 'rsssl_login_form_validate_2fa'));
@@ -166,6 +167,9 @@ class Rsssl_Two_Factor
         add_filter('rsssl_two_factor_providers', array(__CLASS__, 'enable_dummy_method_for_debug'));
 	    add_action( 'rsssl_daily_cron', array( __CLASS__, 'maybe_send_reminder_email' ) );
         add_action( 'user_register', [__CLASS__, 'set_2fa_activation_date'], 10, 1 );
+
+        // Register object-cache invalidation hooks for the multisite candidate-IDs cache.
+        Rsssl_Two_Fa_User_Repository::registerCacheInvalidationHooks();
 
         $compat->init();
     }
@@ -548,6 +552,37 @@ class Rsssl_Two_Factor
     }
 
     /**
+     * Add login errors for redirects that carry an explicit login error state.
+     *
+     * @param WP_Error $errors Error object to add the error to.
+     *
+     * @return WP_Error The updated error object.
+     */
+    public static function maybe_add_login_error_notice(WP_Error $errors): WP_Error
+    {
+        if ( ! isset( $_GET['login_error'] ) ) {
+            return $errors;
+        }
+
+        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- strict equality against a hardcoded whitelist value; no sanitization needed.
+        $login_error = $_GET['login_error'];
+
+        if ( 'nonce_invalid' === $login_error ) {
+            $errors->add(
+                'rsssl_two_factor_nonce_invalid',
+                __( 'Security nonce invalid or expired.', 'really-simple-ssl' )
+            );
+        } elseif ( 'token_invalid' === $login_error ) {
+            $errors->add(
+                'rsssl_two_factor_token_invalid',
+                __( 'Security token invalid or expired.', 'really-simple-ssl' )
+            );
+        }
+
+        return $errors;
+    }
+
+    /**
      * Handle the browser-based login.
      *
      * @param string $user_login Username.
@@ -558,6 +593,8 @@ class Rsssl_Two_Factor
      */
     public static function rsssl_wp_login(string $user_login, WP_User $user): void
     {
+        self::maybe_redirect_expired_password_before_two_factor( $user );
+
         switch (Rsssl_Two_Factor_Settings::get_login_action($user->ID)) {
             case 'onboarding':
                 self::is_onboarding_complete($user);
@@ -578,6 +615,30 @@ class Rsssl_Two_Factor
             default:
                 break;
         }
+    }
+
+    /**
+     * Let password expiration win before 2FA can render a login/onboarding screen.
+     *
+     * Side effects: redirects and exits the request when the user's password is expired.
+     */
+    private static function maybe_redirect_expired_password_before_two_factor( WP_User $user ): void
+    {
+        if ( ! function_exists( '\RSSSL\Pro\Security\WordPress\rsssl_maybe_get_expired_password_redirect' ) ) {
+            return;
+        }
+
+        $redirect_to = isset( $_REQUEST['redirect_to'] )
+            ? wp_validate_redirect( wp_unslash( $_REQUEST['redirect_to'] ), admin_url() )
+            : admin_url();
+
+        $expired_password_redirect = \RSSSL\Pro\Security\WordPress\rsssl_maybe_get_expired_password_redirect( $redirect_to, $user->ID );
+        if ( $expired_password_redirect === $redirect_to ) {
+            return;
+        }
+
+        wp_safe_redirect( $expired_password_redirect );
+        exit;
     }
 
     /**
@@ -974,8 +1035,8 @@ class Rsssl_Two_Factor
 			$is_post_request = false;
 		}
 
-		if (!$wp_auth_id || !$nonce) {
-			return;
+		if (!$nonce) {
+			self::redirect_to_login_error('nonce_invalid', $redirect_to);
 		}
 
 		$user = get_userdata($wp_auth_id);
@@ -985,8 +1046,7 @@ class Rsssl_Two_Factor
 
 		// Verify the nonce
 		if (true !== Rsssl_Two_Fa_Authentication::verify_login_nonce($user->ID, $nonce)) {
-			wp_safe_redirect(home_url());
-			exit;
+			self::redirect_to_login_error('nonce_invalid', $redirect_to);
 		}
 
 		$loader = Rsssl_Provider_Loader::get_loader();
@@ -1025,13 +1085,13 @@ class Rsssl_Two_Factor
 				'rsssl_two_factor_too_fast',
 				sprintf(
 				/* translators: %s: time delay between login attempts */
-					__(
-						'Too many invalid verification codes, you can try again in %s. This limit protects your account against automated attacks.',
-						'really-simple-ssl'
-					),
-					human_time_diff($last_failed + $time_delay)
-				)
-			);
+						__(
+							'Too many invalid verification codes, you can try again in %s. This limit protects your account against automated attacks.',
+							'really-simple-ssl'
+						),
+						human_time_diff($last_failed + $time_delay)
+					)
+				);
 
 			do_action('rsssl_wp_login_failed', $user->user_login, $error);
 
@@ -1108,6 +1168,9 @@ class Rsssl_Two_Factor
 		do_action('rsssl_two_factor_user_authenticated', $user);
 
 		$redirect_to = apply_filters('login_redirect', $redirect_to, $redirect_to, $user);
+		if (function_exists('\RSSSL\Pro\Security\WordPress\rsssl_maybe_get_expired_password_redirect')) {
+			$redirect_to = \RSSSL\Pro\Security\WordPress\rsssl_maybe_get_expired_password_redirect($redirect_to, $user->ID);
+		}
 		// cleaning up the user meta.
 	    delete_user_meta( $user->ID, self::RSSSL_USER_FAILED_LOGIN_ATTEMPTS_KEY);
 	    delete_user_meta( $user->ID, self::RSSSL_USER_RATE_LIMIT_KEY);
@@ -1136,6 +1199,26 @@ class Rsssl_Two_Factor
             $provider
         );
     }
+
+	/**
+	 * Redirect to the login page with a two-factor login error state.
+	 *
+	 * @param string $login_error Login error query value.
+	 * @param string $redirect_to Redirect URL after successful login.
+	 *
+	 * @return void
+	 */
+	private static function redirect_to_login_error(string $login_error, string $redirect_to = ''): void {
+		$validated_redirect = wp_validate_redirect($redirect_to, admin_url());
+		wp_safe_redirect(
+			add_query_arg(
+				'login_error',
+				$login_error,
+				wp_login_url($validated_redirect)
+			)
+		);
+		exit;
+	}
 
     /**
      * Get the request data for two-factor authentication.

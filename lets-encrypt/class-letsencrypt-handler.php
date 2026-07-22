@@ -42,8 +42,9 @@ class rsssl_letsencrypt_handler {
 		//These functionality is not needed on the dashboard, so should only be loaded in strict circumstances
 		if ( rsssl_letsencrypt_generation_allowed( true ) ) {
 			add_action( 'rsssl_after_save_field', array( $this, 'after_save_field' ), 10, 4 );
-			add_action( 'admin_init', array( $this, 'maybe_add_htaccess_exclude'));
-			add_action( 'admin_init', array( $this, 'maybe_create_htaccess_directories'));
+			add_action( 'admin_init', array( $this, 'maybe_queue_root_htaccess_acme_exclusion_update' ) );
+			add_action( 'admin_init', array( $this, 'maybe_queue_letsencrypt_directory_htaccess_files' ) );
+			add_filter( 'rsssl_htaccess_security_rules', array( $this, 'add_root_htaccess_acme_exclusion_rule' ) );
 
 			$this->key_directory = $this->key_directory();
 			$this->challenge_directory = $this->challenge_directory();
@@ -78,54 +79,81 @@ class rsssl_letsencrypt_handler {
 		return self::$_this;
 	}
 
-	/**
-	 * If we're on apache, add a line to the .htaccess so the acme challenge directory won't get blocked.
-	 */
-	public function maybe_add_htaccess_exclude(): void {
+		/**
+		 * Queue a root `.htaccess` refresh when the ACME HTTP-01 bypass block is missing or stale.
+		 *
+		 * This method only schedules the centralized root writer. It does not modify the root file directly.
+		 * The actual ACME block is emitted through the shared root rule filter and committed together with the
+		 * rest of the desired root marker set in the single atomic root write.
+		 */
+		public function maybe_queue_root_htaccess_acme_exclusion_update(): void {
 
-		if (!rsssl_user_can_manage()) {
+		if ( ! rsssl_user_can_manage() ) {
 			return;
 		}
 
-		if ( !RSSSL()->server->uses_htaccess() ) {
+		if ( ! function_exists( 'rsssl_schedule_htaccess_update' ) ) {
 			return;
 		}
 
-		$htaccess_file = $this->htaccess_file_manager->htaccess_file_path;
-		if ( $this->htaccess_file_manager->validate_htaccess_file_path() === false ) {
+		if ( ! $this->should_include_root_htaccess_acme_exclusion_rule() ) {
 			return;
 		}
 
-		$htaccess = $this->htaccess_file_manager->get_htaccess_content();
-
-		// if the htaccess file is null we return early
-		if ( $htaccess === null ) {
+		$htaccess_file = $this->htaccess_file_manager->determineExistingRootHtaccessFilePath();
+		if ( ! $this->htaccess_file_manager->is_valid_htaccess_file_path( $htaccess_file ) ) {
 			return;
 		}
 
-		// We validate if the old markers are still present, and remove them if they are.
-		if ( $this->maybe_remove_old_markers( $htaccess ) ) {
-			$this->htaccess_file_manager->clear_legacy_rule('Really Simple Security LETS ENCRYPT');
+		// Normalize per line so indentation differences do not keep re-queueing the same marker block.
+		$current_lines  = array_map( 'trim', $this->htaccess_file_manager->get_rule_lines_for_path( $htaccess_file, 'Really Simple Security LETS ENCRYPT' ) );
+		$expected_lines = array_map( 'trim', $this->get_root_htaccess_acme_exclusion_rule_lines() );
+		if ( $current_lines === $expected_lines ) {
+			return;
 		}
 
-		$content_with_marker = [
-			'marker' => 'Really Simple Security LETS ENCRYPT',
-			'lines' => [
-				'RewriteRule ^.well-known/(.*)$ - [L]',
-			],
-		];
-
-		$this->htaccess_file_manager->write_rule($content_with_marker, 'created lines for acme challenge directory');
-
+		// Queue the shared root writer so ACME exclusions use the same lock/commit path as other root updates.
+		rsssl_schedule_htaccess_update();
 	}
 
 	/**
-	 * Validates if the old markers are still present, and removes them if they are.
+	 * Add the root-level ACME bypass block through the shared `.htaccess` rule filter.
+	 * HTTP-01 validation must reach `/.well-known/` before the plugin's broader root rewrites or protections run.
 	 */
-	private function maybe_remove_old_markers(string $htAccessContent ) :bool
+	public function add_root_htaccess_acme_exclusion_rule( array $rules ): array
 	{
-		//if it's already inserted, skip.
-		return strpos($htAccessContent, '#BEGIN Really Simple Security LETS ENCRYPT');
+		if ( ! $this->should_include_root_htaccess_acme_exclusion_rule() ) {
+			return $rules;
+		}
+
+		$rules[] = [
+			'identifier' => 'Really Simple Security LETS ENCRYPT',
+			'rules'      => implode( "\n", $this->get_root_htaccess_acme_exclusion_rule_lines() ),
+		];
+
+		return $rules;
+	}
+
+	/**
+	 * Only emit the ACME bypass block when the installation uses a real root `.htaccess` target.
+	 */
+	private function should_include_root_htaccess_acme_exclusion_rule(): bool
+	{
+		if ( ! RSSSL()->server->uses_htaccess() ) {
+			return false;
+		}
+
+		return $this->htaccess_file_manager->determineExistingRootHtaccessFilePath() !== '';
+	}
+
+	/**
+	 * Return the literal ACME bypass lines that the shared root writer should own.
+	 */
+	private function get_root_htaccess_acme_exclusion_rule_lines(): array
+	{
+		return [
+			'RewriteRule ^.well-known/(.*)$ - [L]',
+		];
 	}
 
 	/**
@@ -552,6 +580,8 @@ class rsssl_letsencrypt_handler {
 	public function verify_dns(): RSSSL_RESPONSE
     {
 		if ( rsssl_is_ready_for('generation') ) {
+			// Reset state at the start of every verification run; we only
+			// flip it back to true if every non-wildcard identifier matches.
 			update_option('rsssl_le_dns_records_verified', false, false );
 
 			$tokens = get_option('rsssl_le_dns_tokens');
@@ -561,51 +591,102 @@ class rsssl_letsencrypt_handler {
 				$message = __('Token not generated. Please complete the previous step.',"really-simple-ssl");
 				return new RSSSL_RESPONSE($status, $action, $message);
 			}
+
+			$skip_dns_check       = (bool) get_option('rsssl_skip_dns_check');
+			$failure_action       = $skip_dns_check ? 'continue' : 'stop';
+			$all_verified         = true;
+			$last_failure         = null;
+			$last_success_message = '';
+			$checked_count        = 0;
+
 			foreach ($tokens as $identifier => $token){
-				if (strpos($identifier, '*') !== false) continue;
+				if (strpos($identifier, '*') !== false) {
+					continue;
+				}
+
+				$checked_count++;
 				set_error_handler(array($this, 'custom_error_handling'));
 				ini_set('dns_cache_expiry', 0);
-				$response = dns_get_record( "_acme-challenge.$identifier", DNS_TXT );
+				$dns_records = dns_get_record( "_acme-challenge.$identifier", DNS_TXT );
 				restore_error_handler();
-				if ( isset($response[0]['txt']) ){
-					if ($response[0]['txt'] === $token) {
-						$response = new RSSSL_RESPONSE(
-							'success',
-							'continue',
-							sprintf(__('Successfully verified DNS records', "really-simple-ssl"), "_acme-challenge.$identifier")
-						);
-						update_option('rsssl_le_dns_records_verified', true, false );
-					} else {
-						$ttl = $response[0]['ttl'] ?? 0;
-						$ttl = $this->format_duration($ttl);
-						$action = get_option('rsssl_skip_dns_check') ? 'continue' : 'stop';
-						$response = new RSSSL_RESPONSE(
-							'error',
-							$action,
-							sprintf(__('The DNS response for %s was %s, while it should be %s.', "really-simple-ssl"), "_acme-challenge.$identifier", $response[0]['txt'], $token ). ' '.
-							sprintf(__("Please wait %s before trying again, as this is the expiration of the DNS record currently.", 'really-simple-ssl'), $ttl)
-						);
-						break;
-					}
+
+				if ( ! is_array( $dns_records ) ) {
+					$dns_records = array();
+				}
+
+				$txt_values = array_values( array_filter(
+					array_column( $dns_records, 'txt' ),
+					static function ( $value ) { return is_string( $value ) && $value !== ''; }
+				) );
+
+				if ( in_array( $token, $txt_values, true ) ) {
+					$last_success_message = sprintf(
+						__('Successfully verified DNS records', "really-simple-ssl"),
+						"_acme-challenge.$identifier"
+					);
+					continue;
+				}
+
+				$all_verified = false;
+
+				if ( ! empty( $txt_values ) ) {
+					// We found TXT records but none match our token. Surface
+					// the first one so the user has a concrete hint.
+					$ttl = $dns_records[0]['ttl'] ?? 0;
+					$ttl = $this->format_duration( $ttl );
+					$last_failure = new RSSSL_RESPONSE(
+						'error',
+						$failure_action,
+						sprintf(
+							__('The DNS response for %s was %s, while it should be %s.', "really-simple-ssl"),
+							"_acme-challenge.$identifier",
+							implode( ', ', $txt_values ),
+							$token
+						) . ' ' .
+						sprintf(
+							__("Please wait %s before trying again, as this is the expiration of the DNS record currently.", 'really-simple-ssl'),
+							$ttl
+						)
+					);
 				} else {
-					$action = get_option('rsssl_skip_dns_check') ? 'continue' : 'stop';
-					$response = new RSSSL_RESPONSE(
+					$last_failure = new RSSSL_RESPONSE(
 						'warning',
-						$action,
-						sprintf(__('Could not verify TXT record for domain %s', "really-simple-ssl"), "_acme-challenge.$identifier")
+						$failure_action,
+						sprintf(
+							__('Could not verify TXT record for domain %s', "really-simple-ssl"),
+							"_acme-challenge.$identifier"
+						)
 					);
 				}
 			}
 
-		} else {
-			$response = new RSSSL_RESPONSE(
-				'error',
-				'stop',
-				$this->not_completed_steps_message('dns-verification')
-			);
+			if ( $checked_count === 0 ) {
+				// All identifiers were wildcards; nothing to verify locally.
+				update_option('rsssl_le_dns_records_verified', true, false );
+				return new RSSSL_RESPONSE(
+					'success',
+					'continue',
+					__('Successfully verified DNS records', "really-simple-ssl")
+				);
+			}
+
+			if ( $all_verified ) {
+				update_option('rsssl_le_dns_records_verified', true, false );
+				return new RSSSL_RESPONSE(
+					'success',
+					'continue',
+					$last_success_message !== '' ? $last_success_message : __('Successfully verified DNS records', "really-simple-ssl")
+				);
+			}
+
+			return $last_failure;
 		}
 
-		return $response;
+		return new RSSSL_RESPONSE(
+			'error',
+			'stop',
+			$this->not_completed_steps_message('dns-verification')
+		);
 	}
 
 	private function format_duration($seconds)
@@ -1580,45 +1661,253 @@ class rsssl_letsencrypt_handler {
 		}
 	}
 
-	public function maybe_create_htaccess_directories() {
-		if (!rsssl_user_can_manage()) {
+		/**
+		 * Queue the shared managed-htaccess executor when a plugin-owned LE directory `.htaccess` file is missing or stale.
+		 *
+		 * These files are auxiliary managed targets. They are not folded into the root `.htaccess` write itself,
+		 * but they do run through the same centralized executor and atomic file manager.
+		 */
+		public function maybe_queue_letsencrypt_directory_htaccess_files(): void {
+		if ( ! rsssl_user_can_manage() ) {
 			return;
 		}
 
-		if ( !RSSSL()->server->uses_htaccess() ) {
+		if ( ! RSSSL()->server->uses_htaccess() ) {
 			return;
 		}
 
-		if ( !get_option('rsssl_create_folders_in_root') ) {
+		if ( ! get_option( 'rsssl_create_folders_in_root' ) ) {
 			return;
 		}
 
-		if ( !empty($this->get_directory_path()) ) {
-			$this->write_htaccess_dir_file( $this->get_directory_path().'ssl/.htaccess' ,'ssl');
+		if ( ! function_exists( 'rsssl_schedule_htaccess_update' ) ) {
+			return;
 		}
 
-		if ( !empty($this->key_directory()) ) {
-			$this->write_htaccess_dir_file( trailingslashit($this->key_directory()).'.htaccess' ,'key');
+		if ( ! empty( $this->get_directory_path() ) && $this->should_sync_letsencrypt_directory_htaccess_file( $this->get_directory_path() . 'ssl/.htaccess' ) ) {
+			rsssl_schedule_htaccess_update();
+			return;
 		}
-		if ( !empty($this->certs_directory()) ) {
-			$this->write_htaccess_dir_file( trailingslashit($this->certs_directory()).'.htaccess' ,'certs');
+
+		if ( ! empty( $this->key_directory() ) && $this->should_sync_letsencrypt_directory_htaccess_file( trailingslashit( $this->key_directory() ) . '.htaccess' ) ) {
+			rsssl_schedule_htaccess_update();
+			return;
+		}
+
+		if ( ! empty( $this->certs_directory() ) && $this->should_sync_letsencrypt_directory_htaccess_file( trailingslashit( $this->certs_directory() ) . '.htaccess' ) ) {
+			rsssl_schedule_htaccess_update();
 		}
 	}
 
-	public function write_htaccess_dir_file($path, $type){
-		$htaccess = '<ifModule mod_authz_core.c>' . "\n"
-		            . '    Require all denied' . "\n"
-		            . '</ifModule>' . "\n"
-		            . '<ifModule !mod_authz_core.c>' . "\n"
-		            . '    Deny from all' . "\n"
-		            . '</ifModule>';
-		insert_with_markers($path, 'Really Simple Security LETS ENCRYPT', $htaccess);
-
-		$htaccess = file_get_contents( $path );
-		if ( stripos($htaccess, 'Require all denied') !== FALSE ) {
-			update_option('rsssl_htaccess_file_set_'.$type, true, false);
-			return;
+		/**
+		 * Ensure the plugin-owned LE directories keep their deny-all `.htaccess` files in sync.
+		 *
+		 * The executor calls this after uploads and before root so the overall target order stays deterministic.
+		 * Each auxiliary file still gets its own atomic commit; there is no cross-file transaction.
+		 */
+		public function sync_letsencrypt_directory_htaccess_files(): bool {
+		if ( ! RSSSL()->server->uses_htaccess() ) {
+			return true;
 		}
+
+		if ( ! get_option( 'rsssl_create_folders_in_root' ) ) {
+			return true;
+		}
+
+		$success = true;
+
+		if ( ! empty( $this->get_directory_path() ) ) {
+			$success = $this->sync_letsencrypt_directory_htaccess_file( $this->get_directory_path() . 'ssl/.htaccess', 'ssl' ) && $success;
+		}
+
+		if ( ! empty( $this->key_directory() ) ) {
+			$success = $this->sync_letsencrypt_directory_htaccess_file( trailingslashit( $this->key_directory() ) . '.htaccess', 'key' ) && $success;
+		}
+
+		if ( ! empty( $this->certs_directory() ) ) {
+			$success = $this->sync_letsencrypt_directory_htaccess_file( trailingslashit( $this->certs_directory() ) . '.htaccess', 'certs' ) && $success;
+		}
+
+		return $success;
+	}
+
+	/**
+	 * Check whether a plugin-owned LE directory `.htaccess` file is missing or diverges from the managed rule block.
+	 */
+	private function should_sync_letsencrypt_directory_htaccess_file( string $path ): bool {
+		if ( $path === '' ) {
+			return false;
+		}
+
+		if ( ! is_file( $path ) ) {
+			return true;
+		}
+
+		return ! $this->has_expected_letsencrypt_directory_htaccess_rules( $path );
+	}
+
+	/**
+	 * Validate that the managed LE marker block exactly matches the expected deny-all lines.
+	 */
+	private function has_expected_letsencrypt_directory_htaccess_rules( string $path ): bool {
+		return $this->htaccess_file_manager->get_rule_lines_for_path( $path, 'Really Simple Security LETS ENCRYPT' ) === $this->get_letsencrypt_directory_htaccess_lines();
+	}
+
+    /**
+     * Write one plugin-owned LE directory `.htaccess` file through the shared atomic manager path.
+     *
+     * This is intentionally path-scoped. LE directory files reuse the same lock hierarchy and atomic writer as
+     * root/uploads, but create permission is granted only for the current auxiliary target.
+     */
+    public function sync_letsencrypt_directory_htaccess_file( string $path, string $type ): bool {
+		if ( $path === '' ) {
+			return true;
+		}
+
+		// Keep preconditions local so LE directory writes do not rely on global root .htaccess state.
+		if ( ! $this->ensure_htaccess_directory_is_ready( $path ) ) {
+			update_option( 'rsssl_htaccess_file_set_' . $type, false, false );
+			return false;
+		}
+
+		// Use the manager atomic write path to avoid partial/competing writes on concurrent requests.
+		if ( ! $this->write_letsencrypt_htaccess_rules_atomic( $path ) ) {
+			update_option( 'rsssl_htaccess_file_set_' . $type, false, false );
+			return false;
+		}
+
+		if ( ! $this->has_expected_letsencrypt_directory_htaccess_rules( $path ) ) {
+			update_option( 'rsssl_htaccess_file_set_' . $type, false, false );
+			return false;
+		}
+
+		update_option( 'rsssl_htaccess_file_set_' . $type, true, false );
+		return true;
+	}
+
+	/**
+	 * Remove empty plugin-owned LE placeholders left behind by an interrupted guarded create.
+	 * Empty files are never a valid end state here, and removing them lets the next write recreate the file cleanly.
+	 */
+	private function ensure_htaccess_directory_is_ready( string $path ): bool {
+		if ( is_link( $path ) ) {
+			return false;
+		}
+
+		$directory = dirname( $path );
+		if ( ! is_dir( $directory ) && ! wp_mkdir_p( $directory ) ) {
+			return false;
+		}
+
+		if ( ! is_file( $path ) ) {
+			return true;
+		}
+
+		$content = @file_get_contents( $path );
+		if ( $content === false ) {
+			return true;
+		}
+
+		if ( trim( $content ) !== '' ) {
+			return true;
+		}
+
+		// These per-directory files are plugin-owned. An interrupted guarded create can leave an empty file behind,
+		// and clearing that placeholder lets the next write use the same guarded create path again.
+		if ( ! $this->is_plugin_owned_letsencrypt_htaccess_path( $path ) ) {
+			return false;
+		}
+
+		return @unlink( $path );
+	}
+
+	/**
+	 * Only allow placeholder cleanup for the exact plugin-owned LE `.htaccess` targets.
+	 */
+	private function is_plugin_owned_letsencrypt_htaccess_path( string $path ): bool {
+		if ( basename( $path ) !== '.htaccess' ) {
+			return false;
+		}
+
+		if ( ! get_option( 'rsssl_create_folders_in_root' ) ) {
+			return false;
+		}
+
+		$ssl_dirname = get_option( 'rsssl_ssl_dirname' );
+		if ( ! is_string( $ssl_dirname ) || $ssl_dirname === '' ) {
+			return false;
+		}
+
+		$ssl_dirname = trim( $ssl_dirname, "/\\" );
+		if ( $ssl_dirname === '' || strpos( $ssl_dirname, '/' ) !== false || strpos( $ssl_dirname, '\\' ) !== false || strpos( $ssl_dirname, '..' ) !== false ) {
+			return false;
+		}
+
+		$normalized_path = $this->normalize_htaccess_target_path( $path );
+		// Use the canonical root-owned LE directory here, not the filtered runtime paths, so cleanup never
+		// expands the unlink scope beyond the plugin-managed targets created under ABSPATH.
+		$ssl_root = trailingslashit( trailingslashit( ABSPATH ) . $ssl_dirname ) . 'ssl';
+		$allowed_paths = [
+			$this->normalize_htaccess_target_path( $ssl_root . '/.htaccess' ),
+			$this->normalize_htaccess_target_path( $ssl_root . '/keys/.htaccess' ),
+			$this->normalize_htaccess_target_path( $ssl_root . '/certs/.htaccess' ),
+		];
+
+		return in_array( $normalized_path, $allowed_paths, true );
+	}
+
+	/**
+	 * Normalize `.htaccess` target paths before comparing scoped create permissions.
+	 */
+	private function normalize_htaccess_target_path( string $path ): string {
+		$normalized_path = function_exists( 'wp_normalize_path' ) ? wp_normalize_path( $path ) : str_replace( '\\', '/', $path );
+		return rtrim( $normalized_path, '/' );
+	}
+
+	/**
+	 * Scope create permission to the current LE directory target without leaking that allowance to root/uploads writes.
+	 *
+	 * `write_rule_for_path()` still reaches the shared atomic manager path, so LE writes keep the same advisory
+	 * locking, temp-swap commit, and fallback semantics as the rest of the `.htaccess` system.
+	 */
+	private function write_letsencrypt_htaccess_rules_atomic( string $path ): bool {
+		$manager = $this->htaccess_file_manager;
+		$normalized_path = $this->normalize_htaccess_target_path( $path );
+		// Temporarily allow creation only for this LE directory file. The shared manager also writes root
+		// and uploads rules, so this filter must stay scoped to the current target and be removed again.
+		$allow_create_filter = function( bool $allow, string $candidate_path ) use ( $normalized_path ): bool {
+			if ( $this->normalize_htaccess_target_path( $candidate_path ) !== $normalized_path ) {
+				return $allow;
+			}
+
+			return true;
+		};
+		add_filter( 'rsssl_allow_create_htaccess', $allow_create_filter, 9999, 2 );
+		try {
+			return $manager->write_rule_for_path(
+				$path,
+				[
+					'marker' => 'Really Simple Security LETS ENCRYPT',
+					'lines'  => $this->get_letsencrypt_directory_htaccess_lines(),
+				]
+			);
+		} finally {
+			remove_filter( 'rsssl_allow_create_htaccess', $allow_create_filter, 9999 );
+		}
+	}
+
+	/**
+	 * Return the deny-all block that protects plugin-owned LE directories from direct web access.
+	 */
+	private function get_letsencrypt_directory_htaccess_lines(): array {
+		return [
+			'<IfModule mod_authz_core.c>',
+			'    Require all denied',
+			'</IfModule>',
+			'<IfModule !mod_authz_core.c>',
+			'    Deny from all',
+			'</IfModule>',
+		];
 	}
 
 	/**

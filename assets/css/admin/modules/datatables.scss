@@ -57,10 +57,16 @@
     .rsssl-multiselect-datatable-form {
       display: flex;
       align-items: center;
-      Justify-content: space-between;
+      flex-wrap: wrap;
+      gap: var(--rsp-spacing-xs);
+      justify-content: space-between;
       width: 100%;
       padding: 1em 2em;
       background: var(--rsp-blue-faded);
+
+      .rsssl-action-buttons {
+        width: auto;
+      }
     }
 
     .rdt_TableRow .rdt_TableCell:last-child {
@@ -72,6 +78,11 @@
     .rdt_TableRow .rdt_TableCell:last-child span {
       min-width: 20px;
       float: right;
+    }
+
+    .rdt_TableRow .rdt_TableCell .rsssl-action-buttons button,
+    .rdt_TableRow .rdt_TableCell .rsssl-action-buttons span {
+      float: none;
     }
 
     .rdt_TableCol, .rdt_TableCell, .rdt_TableCol_Sortable {
@@ -318,6 +329,15 @@
           margin-left: 10px;
         }
       }
+
+      .rsssl-action-buttons {
+        justify-content: flex-end;
+        width: 100%;
+
+        button, a {
+          margin-left: 0;
+        }
+      }
     }
 
   }
@@ -397,7 +417,7 @@
 //  }
 //}
 
-/* EdgeCase: Permission_Policy */
+/* EdgeCase: Security header policy tables */
 .rsssl-content_security_policy, .rsssl-permissions_policy {
   .rdt_TableCol {
     &:last-child {
@@ -429,6 +449,48 @@
           margin-right: 0 !important;
         }
       }
+    }
+  }
+}
+
+.rsssl-content_security_policy_source_directives,
+.rsssl-permissions_policy {
+  --rsssl-policy-action-button-min-width: 9em;
+}
+
+.rsssl-content_security_policy_source_directives {
+  .rdt_TableCell:last-child {
+    .rsssl-status-allowed,
+    .rsssl-status-revoked,
+    .rsssl-learning-mode-delete {
+      flex: 1 1 var(--rsssl-policy-action-button-min-width);
+      min-width: var(--rsssl-policy-action-button-min-width);
+    }
+  }
+
+  .rsssl-multiselect-datatable-form {
+    .rsssl-action-buttons__button {
+      min-width: var(--rsssl-policy-action-button-min-width);
+    }
+  }
+}
+
+.rsssl-permissions_policy {
+  .rsssl-multiselect-datatable-form {
+    .rsssl-action-buttons {
+      align-items: stretch;
+      flex-direction: column;
+      max-width: 100%;
+      width: max-content;
+    }
+
+    .rsssl-action-buttons__inner {
+      width: 100%;
+    }
+
+    .rsssl-action-buttons__button {
+      min-width: var(--rsssl-policy-action-button-min-width);
+      width: 100%;
     }
   }
 }

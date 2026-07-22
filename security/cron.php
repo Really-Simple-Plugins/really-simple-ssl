@@ -145,5 +145,3 @@ function rsssl_multisite_schedule_cron()
 	}
 	add_action( 'rsssl_ssl_process_hook', array( RSSSL()->multisite, 'run_ssl_process' ) );
 }
-
-

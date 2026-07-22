@@ -38,6 +38,24 @@ class Rsssl_Two_Fa_User_Collection
     }
 
     /**
+     * Retrieve users who still need a reminder.
+     *
+     * @return Rsssl_Two_FA_user[]
+     */
+    public function getUsersToRemind(): array
+    {
+        $usersToRemind = [];
+
+        foreach ($this->users as $user) {
+            if ($user->getStatus() === 'open') {
+                $usersToRemind[] = $user;
+            }
+        }
+
+        return $usersToRemind;
+    }
+
+    /**
      * Set the total number of records.
      */
     public function setTotalRecords(int $totalRecords): void

@@ -51,6 +51,20 @@ function rsssl_modify_fields($fields){
 		$fields = array_values($fields);
 	}
 
+	// Show REST API blocked warning for 2FA.
+	if ( ! rsssl_rest_api_accessible_for_logged_out_users() ) {
+		$index = array_search( 'login_protection_enabled', array_column( $fields, 'id' ), true );
+		if ( $index !== false ) {
+			$fields[$index]['help'] = [
+				'label' => 'warning',
+				'url'   => 'instructions/two-factor-authentication',
+				'title' => __( 'REST API blocked', 'really-simple-ssl' ),
+				'text'  => __( 'Two-Factor Authentication requires the REST API to be accessible for logged-out users. A plugin that blocks the REST API has been detected. Disable it and make sure your logged-out users can access the REST API on your site.', 'really-simple-ssl' ),
+			];
+			$fields = array_values($fields);
+		}
+	}
+
 	if ( ! rsssl_is_email_verified() && rsssl_get_option('enable_vulnerability_scanner') == '1' ) {
 		$index = array_search( 'vulnerability_notification_email_admin', array_column( $fields, 'id' ), true );
 		$fields[$index]['help'] = rsssl_email_help_text();

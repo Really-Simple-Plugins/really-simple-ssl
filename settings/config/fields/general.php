@@ -2,6 +2,8 @@
 defined( 'ABSPATH' ) or die();
 
 add_filter( 'rsssl_fields', function( $fields ) {
+	$isEmailVerified = rsssl_is_email_verified();
+
 	return array_merge( $fields,
 		[
 			[
@@ -88,7 +90,7 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'button_text' => __( "Send", "really-simple-ssl" ),
 				'warning'     => true,
 				'label'       => __( "Email validation", 'really-simple-ssl' ),
-				'disabled'    => rsssl_is_email_verified(),
+				'disabled'    => $isEmailVerified,
 				'tooltip'  => __( "Verify your email address to get the most out of Really Simple Security.", 'really-simple-ssl' ),
 			],
 			[
@@ -98,7 +100,6 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'type'             => 'checkbox',
 				'label'      => __("Notifications by email", 'really-simple-ssl'),
 				'tooltip'            => __("Get notified of important changes, updates and settings. Recommended when using security features.", 'really-simple-ssl'),
-				'disabled'         => false,
 				'default'          => false,
 			],
 			[

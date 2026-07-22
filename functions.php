@@ -44,6 +44,268 @@ if (!function_exists('rsssl_get_option')) {
     }
 }
 
+if (!function_exists('rsssl_get_cache')) {
+	function rsssl_get_cache( $key, string $group = 'default', $default = false, $blog_id = false ) {
+		$key = (string) $key;
+		$group = rsssl_cache_group_name($group);
+		$cache = rsssl_get_cache_storage();
+		$scope = rsssl_get_cache_scope($cache, $group, $blog_id);
+
+		if (!isset($scope[$key])) {
+			return $default;
+		}
+
+		if (!is_array($scope[$key])) {
+			rsssl_delete_cache($key, $group, $blog_id);
+			return $default;
+		}
+
+		$data = $scope[$key];
+		$expires = isset($data['expires']) ? (int) $data['expires'] : 0;
+		if ($expires > 0 && $expires <= time()) {
+			rsssl_delete_cache($key, $group, $blog_id);
+			return $default;
+		}
+
+		return isset($data['value']) ? $data['value'] : $default;
+	}
+}
+
+if (!function_exists('rsssl_set_cache')) {
+	function rsssl_set_cache( $key, $value, string $group = 'default', int $expiration = 0, $blog_id = false ): bool {
+		$key = (string) $key;
+		$group = rsssl_cache_group_name($group);
+		$cache = rsssl_get_cache_storage();
+		$data = array(
+			'value' => $value,
+			'expires' => $expiration > 0 ? time() + $expiration : 0,
+		);
+
+		rsssl_set_cache_entry($cache, $key, $group, $data, $blog_id);
+		return rsssl_update_cache($cache);
+	}
+}
+
+if (!function_exists('rsssl_delete_cache')) {
+	function rsssl_delete_cache( $key, string $group = 'default', $blog_id = false ): bool {
+		$key = (string) $key;
+		$group = rsssl_cache_group_name($group);
+		$cache = rsssl_get_cache_storage();
+
+		if ($blog_id !== false) {
+			$blog_id = (int) $blog_id;
+			if (!isset($cache[$group]['blogs'][$blog_id][$key])) {
+				return false;
+			}
+			unset($cache[$group]['blogs'][$blog_id][$key]);
+			if (empty($cache[$group]['blogs'][$blog_id])) {
+				unset($cache[$group]['blogs'][$blog_id]);
+			}
+			if (empty($cache[$group]['global']) && empty($cache[$group]['blogs'])) {
+				unset($cache[$group]);
+			}
+			return rsssl_update_cache($cache);
+		}
+
+		if (!isset($cache[$group]['global'][$key])) {
+			return false;
+		}
+
+		unset($cache[$group]['global'][$key]);
+		if (empty($cache[$group]['global']) && empty($cache[$group]['blogs'])) {
+			unset($cache[$group]);
+		}
+
+		return rsssl_update_cache($cache);
+	}
+}
+
+if (!function_exists('rsssl_delete_cache_group')) {
+	function rsssl_delete_cache_group( string $group = 'default', $blog_id = false ): bool {
+		$group = rsssl_cache_group_name($group);
+		$cache = rsssl_get_cache_storage();
+
+		if (!isset($cache[$group])) {
+			return false;
+		}
+
+		if ($blog_id !== false) {
+			$blog_id = (int) $blog_id;
+			if (!isset($cache[$group]['blogs'][$blog_id])) {
+				return false;
+			}
+			unset($cache[$group]['blogs'][$blog_id]);
+			if (empty($cache[$group]['global']) && empty($cache[$group]['blogs'])) {
+				unset($cache[$group]);
+			}
+			return rsssl_update_cache($cache);
+		}
+
+		unset($cache[$group]);
+		return rsssl_update_cache($cache);
+	}
+}
+
+if (!function_exists('rsssl_get_cache_storage')) {
+	function rsssl_get_cache_storage(): array {
+		$cache = get_site_option('rsssl_cache', array());
+		$cache = is_array($cache) ? $cache : array();
+
+		foreach ($cache as $group => $group_cache) {
+			if (!is_array($group_cache)) {
+				unset($cache[$group]);
+				continue;
+			}
+			$cache[$group]['global'] = isset($group_cache['global']) && is_array($group_cache['global']) ? $group_cache['global'] : array();
+			$cache[$group]['blogs'] = isset($group_cache['blogs']) && is_array($group_cache['blogs']) ? $group_cache['blogs'] : array();
+		}
+
+		return $cache;
+	}
+}
+
+if (!function_exists('rsssl_get_cache_scope')) {
+	function rsssl_get_cache_scope( array $cache, string $group, $blog_id = false ): array {
+		if (!isset($cache[$group]) || !is_array($cache[$group])) {
+			return array();
+		}
+
+		if ($blog_id !== false) {
+			$blog_id = (int) $blog_id;
+			return isset($cache[$group]['blogs'][$blog_id]) && is_array($cache[$group]['blogs'][$blog_id]) ? $cache[$group]['blogs'][$blog_id] : array();
+		}
+
+		return isset($cache[$group]['global']) && is_array($cache[$group]['global']) ? $cache[$group]['global'] : array();
+	}
+}
+
+if (!function_exists('rsssl_set_cache_entry')) {
+	function rsssl_set_cache_entry( array &$cache, string $key, string $group, array $data, $blog_id = false ) {
+		if (!isset($cache[$group]) || !is_array($cache[$group])) {
+			$cache[$group] = array(
+				'global' => array(),
+				'blogs' => array(),
+			);
+		}
+
+		if (!isset($cache[$group]['global']) || !is_array($cache[$group]['global'])) {
+			$cache[$group]['global'] = array();
+		}
+
+		if (!isset($cache[$group]['blogs']) || !is_array($cache[$group]['blogs'])) {
+			$cache[$group]['blogs'] = array();
+		}
+
+		if ($blog_id !== false) {
+			$blog_id = (int) $blog_id;
+			if (!isset($cache[$group]['blogs'][$blog_id]) || !is_array($cache[$group]['blogs'][$blog_id])) {
+				$cache[$group]['blogs'][$blog_id] = array();
+			}
+			$cache[$group]['blogs'][$blog_id][$key] = $data;
+			return;
+		}
+
+		$cache[$group]['global'][$key] = $data;
+	}
+}
+
+if (!function_exists('rsssl_update_cache')) {
+	function rsssl_update_cache( array $cache ): bool {
+		return update_site_option('rsssl_cache', $cache);
+	}
+}
+
+if (!function_exists('rsssl_cache_group_name')) {
+	function rsssl_cache_group_name( string $group ): string {
+		$group = trim($group);
+		return $group !== '' ? $group : 'default';
+	}
+}
+
+if (!function_exists('rsssl_upgrade_migrate_cache_entry')) {
+	function rsssl_upgrade_migrate_cache_entry(
+		string $legacy_option,
+		string $legacy_key,
+		string $group = 'default',
+		?string $target_key = null,
+		bool $legacy_site_option = true,
+		$blog_id = false
+	) {
+		$target_key = $target_key ?: $legacy_key;
+		$group = rsssl_cache_group_name($group);
+		$cache = rsssl_get_cache_storage();
+		$scope = rsssl_get_cache_scope($cache, $group, $blog_id);
+
+		$legacy_cache = $legacy_site_option ? get_site_option($legacy_option, array()) : get_option($legacy_option, array());
+		$legacy_scope = $legacy_cache;
+
+		if ($blog_id !== false && $legacy_site_option) {
+			$blog_id = (int) $blog_id;
+			$legacy_scope = isset($legacy_cache[$blog_id]) && is_array($legacy_cache[$blog_id]) ? $legacy_cache[$blog_id] : array();
+		}
+
+		if (!is_array($legacy_scope) || !isset($legacy_scope[$legacy_key])) {
+			return;
+		}
+
+		if (isset($scope[$target_key])) {
+			rsssl_upgrade_delete_legacy_cache_entry($legacy_option, $legacy_key, $legacy_cache, $legacy_site_option, $blog_id);
+			return;
+		}
+
+		if (!is_array($legacy_scope[$legacy_key])) {
+			rsssl_upgrade_delete_legacy_cache_entry($legacy_option, $legacy_key, $legacy_cache, $legacy_site_option, $blog_id);
+			return;
+		}
+
+		$data = $legacy_scope[$legacy_key];
+		$expires = isset($data['expires']) ? (int) $data['expires'] : 0;
+		if ($expires === 0 || $expires > time()) {
+			rsssl_set_cache_entry($cache, $target_key, $group, $data, $blog_id);
+			rsssl_update_cache($cache);
+			rsssl_upgrade_delete_legacy_cache_entry($legacy_option, $legacy_key, $legacy_cache, $legacy_site_option, $blog_id);
+			return;
+		}
+
+		rsssl_upgrade_delete_legacy_cache_entry($legacy_option, $legacy_key, $legacy_cache, $legacy_site_option, $blog_id);
+	}
+}
+
+if (!function_exists('rsssl_upgrade_delete_legacy_cache_entry')) {
+	function rsssl_upgrade_delete_legacy_cache_entry( string $legacy_option, string $legacy_key, array $legacy_cache, bool $legacy_site_option = true, $blog_id = false ) {
+		if ($blog_id !== false && $legacy_site_option) {
+			$blog_id = (int) $blog_id;
+			if (isset($legacy_cache[$blog_id]) && is_array($legacy_cache[$blog_id])) {
+				unset($legacy_cache[$blog_id][$legacy_key]);
+				if (empty($legacy_cache[$blog_id])) {
+					unset($legacy_cache[$blog_id]);
+				}
+			}
+		} else {
+			unset($legacy_cache[$legacy_key]);
+		}
+
+		if ($legacy_site_option) {
+			update_site_option($legacy_option, $legacy_cache);
+		} else {
+			update_option($legacy_option, $legacy_cache, false);
+		}
+	}
+}
+
+if (!function_exists('rsssl_upgrade_delete_legacy_cache_option')) {
+	function rsssl_upgrade_delete_legacy_cache_option( string $legacy_option, bool $legacy_site_option = true ) {
+		$legacy_cache = $legacy_site_option ? get_site_option($legacy_option, array()) : get_option($legacy_option, array());
+		if (is_array($legacy_cache) && empty($legacy_cache)) {
+			if ($legacy_site_option) {
+				delete_site_option($legacy_option);
+			} else {
+				delete_option($legacy_option);
+			}
+		}
+	}
+}
+
 /**
  * Check if we should treat the plugin as networkwide or not.
  * Note that this function returns false for single sites! Always use icw is_multisite()

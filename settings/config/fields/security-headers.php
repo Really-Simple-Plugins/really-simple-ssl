@@ -2,6 +2,9 @@
 defined( 'ABSPATH' ) or die();
 
 add_filter( 'rsssl_fields', function( $fields ) {
+	$wpContentNotWritable = ! is_writable( WP_CONTENT_DIR );
+	$headersDisabledTooltip = __( "Security headers require the wp-content folder to be writable.", "really-simple-ssl" );
+
 	return array_merge( $fields,
 		[
 			[
@@ -16,7 +19,8 @@ add_filter( 'rsssl_fields', function( $fields ) {
 					'one'        => "1",
 					'mode_block' => "1; mode=block",
 				],
-				'disabled' => false,
+				'disabled' => $wpContentNotWritable,
+				'disabledTooltipText' => $headersDisabledTooltip,
 				'default'  => 'zero',
 				'help'     => [
 					'label' => 'default',
@@ -32,7 +36,8 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'group_id' => 'recommended_security_headers',
 				'type'     => 'checkbox',
 				'label'    => "X-Content-Type options",
-				'disabled' => false,
+				'disabled' => $wpContentNotWritable,
+				'disabledTooltipText' => $headersDisabledTooltip,
 				'default'  => false,
 			],
 			[
@@ -46,7 +51,8 @@ add_filter( 'rsssl_fields', function( $fields ) {
 					'SAMEORIGIN' => 'SAMEORIGIN',
 				],
 				'label'    => "X-Frame options",
-				'disabled' => defined('rsssl_pro'),
+				'disabled' => $wpContentNotWritable || defined('rsssl_pro'),
+				'disabledTooltipText' => $wpContentNotWritable ? $headersDisabledTooltip : '',
 				'comment' => defined('rsssl_pro') ? __("This option is handled by the Content Security Policy/frame-ancestors setting.", "really-simple-ssl") : "",
 				'default'  => false,
 			],
@@ -68,7 +74,8 @@ add_filter( 'rsssl_fields', function( $fields ) {
 					'same-origin'                     => 'same-origin',
 				],
 				'label'    => "Referrer Policy",
-				'disabled' => false,
+				'disabled' => $wpContentNotWritable,
+				'disabledTooltipText' => $headersDisabledTooltip,
 				'default'  => 'strict-origin-when-cross-origin',
 			],
 			[
@@ -77,7 +84,8 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'group_id'         => 'hsts',
 				'type'             => 'checkbox',
 				'label'            => __("HTTP Strict Transport Security", "really-simple-ssl"),
-				'disabled'         => false,
+				'disabled'         => $wpContentNotWritable || ! rsssl_get_option( 'site_has_ssl' ),
+				'disabledTooltipText' => $wpContentNotWritable ? $headersDisabledTooltip : __( "HSTS requires your site to have SSL enabled. Please enable SSL first.", "really-simple-ssl" ),
 				'default'          => false,
 				'help'             => [
 					'label' => 'default',
@@ -89,7 +97,7 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'react_conditions' => [
 					'relation' => 'AND',
 					[
-						'ssl_enabled' => '1',
+						'site_has_ssl' => '1',
 					]
 				],
 			],
@@ -115,7 +123,8 @@ add_filter( 'rsssl_fields', function( $fields ) {
 						'hsts_max_age'    => 63072000,
 					]
 				],
-				'disabled'                => false,
+				'disabled'                => $wpContentNotWritable,
+				'disabledTooltipText'     => $headersDisabledTooltip,
 				'default'                 => false,
 			],
 			[
@@ -130,7 +139,8 @@ add_filter( 'rsssl_fields', function( $fields ) {
 						'hsts' => true,
 					]
 				],
-				'disabled'         => false,
+				'disabled'         => $wpContentNotWritable,
+				'disabledTooltipText' => $headersDisabledTooltip,
 				'default'          => false,
 			],
 			[
@@ -150,7 +160,8 @@ add_filter( 'rsssl_fields', function( $fields ) {
 						'hsts' => true,
 					]
 				],
-				'disabled'         => false,
+				'disabled'         => $wpContentNotWritable,
+				'disabledTooltipText' => $headersDisabledTooltip,
 				'default'          => '63072000',
 			],
 			[
@@ -172,7 +183,8 @@ add_filter( 'rsssl_fields', function( $fields ) {
 						'really-simple-ssl'),
 				],
 				'label'    => __("Cross Origin Opener Policy", "really-simple-ssl"),
-				'disabled' => false,
+				'disabled' => $wpContentNotWritable,
+				'disabledTooltipText' => $headersDisabledTooltip,
 				'default'  => 'disabled',
 			],
 			[
@@ -187,7 +199,8 @@ add_filter( 'rsssl_fields', function( $fields ) {
 					'cross-origin' => 'cross-origin',
 				],
 				'label'    => __("Cross Origin Resource Policy", "really-simple-ssl"),
-				'disabled' => false,
+				'disabled' => $wpContentNotWritable,
+				'disabledTooltipText' => $headersDisabledTooltip,
 				'default'  => 'disabled',
 			],
 			[
@@ -202,7 +215,8 @@ add_filter( 'rsssl_fields', function( $fields ) {
 					'unsafe-none'  => 'unsafe-none',
 				],
 				'label'    => __("Cross Origin Embedder Policy", "really-simple-ssl"),
-				'disabled' => false,
+				'disabled' => $wpContentNotWritable,
+				'disabledTooltipText' => $headersDisabledTooltip,
 				'default'  => 'disabled',
 			],
 
@@ -213,7 +227,8 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'type'     => 'permissionspolicy',
 				'options'  => [ '*' => __( "Allow", "really-simple-ssl" ), '()' => __( "Disable", "really-simple-ssl" ), 'self' => __( "Self (Default)", "really-simple-ssl" ) ],
 				'label'    => __( "Permissions Policy", 'really-simple-ssl' ),
-				'disabled' => false,
+				'disabled' => $wpContentNotWritable,
+				'disabledTooltipText' => $headersDisabledTooltip,
 				'help'     => [
 					'label' => 'default',
 					'url'   => 'definition/what-is-a-permissions-policy',
@@ -301,7 +316,7 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'group_id' => 'permissions_policy',
 				'type'     => 'hidden',
 				'label'    => __( "Enable Permissions Policy", 'really-simple-ssl' ),
-				'disabled' => false,
+				'disabled' => $wpContentNotWritable,
 				'default'  => false,
 			],
 			[
@@ -310,13 +325,14 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'group_id' => 'upgrade_insecure_requests',
 				'type'     => 'checkbox',
 				'label'    => __( "Serve encrypted and authenticated responses", 'really-simple-ssl' ),
-				'disabled' => false,
+				'disabled' => $wpContentNotWritable,
+				'disabledTooltipText' => $headersDisabledTooltip,
 				'default'  => false,
 				'help'     => [
 					'label' => 'default',
 					'url'   => 'definition/what-is-a-content-security-policy',
 					'title' => __( "About the Content Security Policy", 'really-simple-ssl' ),
-					'text'  => __( 'The content security policy has many options, so we always recommend starting in ‘learning mode’ to see what files and scripts are loaded.', 'really-simple-ssl' ),
+					'text'  => __( 'The content security policy has many options, so we always recommend starting in learning mode to see what files and scripts are loaded.', 'really-simple-ssl' ),
 				],
 				'react_conditions' => [
 					'relation' => 'AND',
@@ -336,7 +352,8 @@ add_filter( 'rsssl_fields', function( $fields ) {
 					'self'     => __("Self (Default)", "really-simple-ssl"),
 				],
 				'label'    => __( "Allow your domain to be embedded", "really-simple-ssl" ),
-				'disabled' => false,
+				'disabled' => $wpContentNotWritable,
+				'disabledTooltipText' => $headersDisabledTooltip,
 				'default'  => 'self',
 			],
 			[
@@ -345,7 +362,8 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'group_id' => 'frame_ancestors',
 				'type'     => 'textarea',
 				'label'    => __( "Add additional domains which can embed your website, if needed. Comma separated.", "really-simple-ssl" ),
-				'disabled' => maybe_disable_frame_ancestors_url_field(),
+				'disabled' => $wpContentNotWritable || maybe_disable_frame_ancestors_url_field(),
+				'disabledTooltipText' => $wpContentNotWritable ? $headersDisabledTooltip : '',
 				'default'  => false,
 				'react_conditions'        => [
 					'relation' => 'AND',
@@ -360,7 +378,7 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'group_id' => 'content_security_policy_source_directives',
 				'type'     => 'hidden',
 				'label'    => '',
-				'disabled' => false,
+				'disabled' => $wpContentNotWritable,
 				'default'  => false,
 			],
 			[
@@ -369,7 +387,7 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'group_id' => 'content_security_policy_source_directives',
 				'type'     => 'hidden',
 				'label'    => '',
-				'disabled' => false,
+				'disabled' => $wpContentNotWritable,
 				'default'  => false,
 			],
 			[
@@ -379,7 +397,8 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'group_id'      => 'content_security_policy_source_directives',
 				'type'          => 'learningmode',
 				'label'         => "Content Security Policy",
-				'disabled'      => false,
+				'disabled'      => $wpContentNotWritable,
+				'disabledTooltipText' => $headersDisabledTooltip,
 				'default'       => false,
 				'columns'       => [
 					[
@@ -406,16 +425,9 @@ add_filter( 'rsssl_fields', function( $fields ) {
 					[
 						'name'     => __( '', 'really-simple-ssl' ),
 						'sortable' => false,
-						'column'   => 'statusControl',
+						'column'   => 'grouped',
 						'grow'     => 1,
-                        'width'    => '10%',
-					],
-					[
-						'name'     => __('', 'really-simple-ssl'),
-						'sortable' => false,
-						'column'   => 'deleteControl',
-						'grow'     => 1,
-                        'width'    => '10%',
+                        'width'    => '20%',
 					],
 //					[   //placeholder until we have resolved the columns
 //						'name'     => '',
