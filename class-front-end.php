@@ -20,10 +20,6 @@ if ( ! class_exists( 'rsssl_front_end' ) ) {
 			add_action( 'rest_api_init', array( $this, 'wp_rest_api_force_ssl' ), ~PHP_INT_MAX );
 		}
 
-		public static function this() {
-			return self::$_this;
-		}
-
 		/**
 		 * PHP redirect, when ssl is true.
 		 *

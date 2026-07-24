@@ -54,21 +54,6 @@ class Rsssl_Test_404 {
 		}
 	}
 
-	// Function to check homepage and handle 404s
-	public static function homepage_contains_404_resources() {
-		$found_404_option_value = get_option( 'rsssl_homepage_contains_404_resources', false );
-		if ( $found_404_option_value === true || $found_404_option_value === "true" ) {
-			return true;
-		}
-
-		$resources = get_option( 'rsssl_404_resources_to_check' );
-		if ( ! empty( $resources ) ) {
-			// If resources are available to check, process them immediately
-			return self::get_instance()->process_404_resources_chunk();
-		}
-
-	}
-
 	// Function to fetch homepage resources and check for 404 errors
 	public function fetch_and_check_homepage_resources() {
 

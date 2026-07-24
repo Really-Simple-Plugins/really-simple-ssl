@@ -61,9 +61,6 @@ class rsssl_admin {
 		add_action( 'admin_init', array( $this, 'listen_for_deactivation' ), 40 );
 		add_action( 'plugins_loaded', array( $this, 'maybe_redirect_old_settings_url' ), 10 );
 
-		//callbacks for the ajax dismiss buttons
-		add_action( 'wp_ajax_rsssl_dismiss_review_notice', array( $this, 'dismiss_review_notice_callback' ) );
-
 		//handle notices
 		add_action( 'admin_notices', array( $this, 'show_notices' ) );
 		//show review notice, only to free users
@@ -93,10 +90,6 @@ class rsssl_admin {
 		add_action( 'wp_initialize_site', array( $this, 'run_table_init_hook'), 10, 1);
 		add_action( "rsssl_after_save_field", array($this, 'maybe_delete_permission_detection_option'), 101, 4 );
     }
-
-	public static function this() {
-		return self::$_this;
-	}
 
     /**
      * Simply fixes the .htaccess file of the wordpress installation.
@@ -386,18 +379,6 @@ class rsssl_admin {
 	}
 
 	/**
-	 * Check if we're in the middle of wp rocket deactivation
-	 *
-	 * @return bool
-	 */
-	public function is_deactivating_wprocket() {
-		//default deactivating
-		$is_deactivating = isset( $_GET['action'] ) && 'deactivate' === $_GET['action'] && isset( $_GET['plugin'] ) && strpos( $_GET['plugin'], 'wp-rocket.php' ) !== false;
-		//deactivating with modal
-		return $is_deactivating || ( isset( $_GET['action'] ) && 'rocket_deactivation' === $_GET['action'] );
-	}
-
-	/**
 	 * Deactivate the plugin while keeping SSL
 	 * Activated when the 'uninstall_keep_ssl' button is clicked in the settings tab
 	 *
@@ -497,23 +478,6 @@ class rsssl_admin {
         }
 
         return false;
-	}
-
-	/**
-	 * Check if site uses an htaccess.conf file, used in bitnami installations
-	 *
-	 * @Since 3.1
-	 */
-
-	public function uses_htaccess_conf() {
-		$htaccess_conf_file = dirname( ABSPATH ) . '/conf/htaccess.conf';
-		// conf/htaccess.conf can be outside of open_basedir, return false if so.
-		$open_basedir = ini_get( 'open_basedir' );
-		if ( ! empty( $open_basedir ) ) {
-			return false;
-		}
-
-		return is_file( $htaccess_conf_file );
 	}
 
 	/**
@@ -670,6 +634,7 @@ class rsssl_admin {
 				.rsssl-notice {
 					display:flex;
 					margin:15px;
+					padding:10px 0;
                     flex-direction: column;
 				}
                 .rsssl-notice-logo {
@@ -1786,35 +1751,6 @@ class rsssl_admin {
 	}
 
 	/**
-	 *
-	 * @return bool
-	 * since 3.1
-	 * Check if there are already .well-known rules in .htaccess file
-	 * @access public
-	 *
-	 */
-
-	public function has_well_known_needle() {
-		$htaccess_path = $this->htaccess_file_manager->determineExistingRootHtaccessFilePath();
-		if ( $htaccess_path === '' ) {
-			return false;
-		}
-
-		if ( ! $this->htaccess_file_manager->is_valid_htaccess_file_path( $htaccess_path ) ) {
-			return false;
-		}
-
-		$htaccess = $this->htaccess_file_manager->get_htaccess_content_for_path( $htaccess_path );
-		if ( ! is_string( $htaccess ) ) {
-			return false;
-		}
-
-		$well_known_needle = 'RewriteCond %{REQUEST_URI} !^/\.well-known/acme-challenge/';
-
-		return strpos( $htaccess, $well_known_needle ) !== false;
-	}
-
-	/**
 	 * Shows a notice, asking users for a review.
 	 */
 
@@ -2135,7 +2071,6 @@ class rsssl_admin {
 		);
 
 		$curl_error            = get_transient( 'rsssl_curl_error' );
-		$current_plugin_folder = $this->get_current_rsssl_dirname();
 
 		//get expiry date, if we have one.
 		$certinfo    = get_transient( 'rsssl_certinfo' );
@@ -2502,24 +2437,6 @@ class rsssl_admin {
 			        ),
 		        ),
 	        ),
-            'upgraded_to_nine' => array(
-                'condition' => array(
-                    'rsssl_show_upgrade_to_nine_notice',
-                ),
-                'callback' => '_true_',
-                'output' => array(
-                    'true' => array(
-	                    'msg'              => rsssl_upgrade_to_nine_notice(),
-	                    'icon'             => 'open',
-	                    'admin_notice'     => true,
-	                    'logo'             => true,
-	                    'dashboard_button' => true,
-	                    'dismissible'      => true,
-	                    'plusone'          => true,
-                    ),
-                ),
-            ),
-
             'pro_trial' => array(
                 'condition' => array(
                     'rsssl_show_pro_trial_notice',
@@ -2705,23 +2622,6 @@ class rsssl_admin {
 		}
 
 		return $notices;
-	}
-
-	private function is_upgraded_to_6() {
-		return get_option( 'rsssl_show_onboarding' ) && ! get_option( 'rsssl_6_notice_dismissed' );
-	}
-
-	private function is_upgraded() {
-		$previous_version = get_option( 'rsssl_previous_version' );
-		//if there's no first version yet, we assume it's not upgraded
-		if ( ! $previous_version ) {
-			return false;
-		}
-		//if the previous version is below current, we just upgraded.
-		if ( version_compare( $previous_version, rsssl_version, '<' ) ) {
-			return true;
-		}
-		return false;
 	}
 
 	/**
@@ -3450,39 +3350,6 @@ if ( ! function_exists('maybe_disable_frame_ancestors_url_field' ) ) {
 }
 
 /**
- * Upgraded to nine notice text
- */
-if ( ! function_exists('rsssl_upgrade_to_nine_notice' ) ) {
-	function rsssl_upgrade_to_nine_notice() {
-
-		$link = rsssl_link('our-journey-towards-really-simple-security');
-		$msg = sprintf(
-		       /* translators: %1$s: opening bold tag, %2$s: closing bold tag */
-			       __( 'Really Simple SSL is now %1$sReally Simple Security!%2$s', 'really-simple-ssl' ),
-			       '<b>',
-			       '</b>' )
-		       . "<br>" .
-		       sprintf(
-			       "<a href='%s'>%s</a>",
-			       $link,
-			       __( "Read about our journey towards Really Simple Security", 'really-simple-ssl' )
-		       );
-
-		if ( ! defined( 'rsssl_pro' ) ) {
-			$link = rsssl_link( 'checkout/?edd_action=add_to_cart&download_id=860&edd_options%5Bprice_id%5D=1&currency=EUR', 'notification', 'free', 'REALLYSIMPLESECURITY' );
-			$msg  .= "<br>" . sprintf(
-					__( "Experience all powerful features of Really Simple Security Pro using this %slimited time discount%s: %s", 'really-simple-ssl' ),
-					'<strong>',
-					'</strong>',
-					"<a href='$link'>REALLYSIMPLESECURITY</a>"
-				);
-		}
-
-		return $msg;
-	}
-}
-
-/**
  * RSSSL Pro Trial Notice
  */
 if ( ! function_exists('rsssl_pro_trial_notice' ) ) {
@@ -3532,17 +3399,4 @@ if (!function_exists('rsssl_show_pro_trial_notice')) {
 
     return false;
     }
-}
-
-/**
- * Do not show notice after 2024-10-01
- */
-if ( ! function_exists('rsssl_show_upgrade_to_nine_notice' ) ) {
-	function rsssl_show_upgrade_to_nine_notice() {
-		if ( time() >= strtotime('2024-10-01') ) {
-			return false;
-		}
-
-        return true;
-	}
 }

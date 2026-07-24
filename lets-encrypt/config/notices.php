@@ -10,7 +10,8 @@ function rsssl_le_get_notices_list($notices) {
 	//these notices are also loaded if Lets Encrypt is not loaded. To prevent errors, notices which require LE functionality are not loaded
 	if ( rsssl_generated_by_rsssl() && rsssl_letsencrypt_generation_allowed() ) {
 		//expiration date requests are cached.
-		$valid    = RSSSL()->certificate->is_valid();
+		// Warm rsssl_certinfo transient for the get_transient call below.
+		RSSSL()->certificate->is_valid();
 		$certinfo = get_transient( 'rsssl_certinfo' );
 		$end_date = isset( $certinfo['validTo_time_t'] ) ? $certinfo['validTo_time_t'] : false;
 		//if the certificate expires within the grace period, allow renewal

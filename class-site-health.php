@@ -13,11 +13,6 @@ if ( ! class_exists( 'rsssl_site_health' ) ) {
 			self::$_this = $this;
 		}
 
-		public static function this() {
-			return self::$_this;
-		}
-
-
 		/**
 		 * Add SSL dedicated health check
 		 * @param array $tests
@@ -43,6 +38,12 @@ if ( ! class_exists( 'rsssl_site_health' ) ) {
 						'test' => array( $this, 'site_health_debug_log_test' ),
 					);
 				}
+
+//				if ( defined( 'WP_DEBUG' ) && WP_DEBUG && defined( 'WP_DEBUG_DISPLAY' ) && WP_DEBUG_DISPLAY ) {
+//					$tests['direct']['rsssl_debug_display'] = array(
+//						'test' => array( $this, 'site_health_debug_display_test' ),
+//					);
+//				}
 
 				if ( rsssl_maybe_disable_404_blocking() ) {
 					$tests['direct']['rsssl_404_test'] = array(

@@ -143,7 +143,7 @@ class rsssl_cPanel
 			'You appear to be logging in from an unknown location',
 			'unrecognized IP address',
 		];
-		foreach($triggers as $key => $trigger ) {
+		foreach($triggers as $trigger ) {
 			if (strpos($raw,$trigger)!==false) {
 				return true;
 			}
@@ -162,7 +162,7 @@ class rsssl_cPanel
 			'input-field-login icon password',
 			'name="pass" id="pass"',
 		];
-		foreach($triggers as $key => $trigger ) {
+		foreach($triggers as $trigger ) {
 			if (strpos($raw,$trigger)!==false) {
 				return true;
 			}
@@ -237,9 +237,6 @@ class rsssl_cPanel
 
         // Make the call, and then terminate the cURL caller object.
         $curl_response = curl_exec($ch);
-	    if (curl_errno($ch)) {
-		    $error_msg = curl_error($ch);
-	    }
         curl_close($ch);
 
         //return output.

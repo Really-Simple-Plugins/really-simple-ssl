@@ -397,21 +397,9 @@ class Rsssl_Two_Factor_Settings {
 		return $return;
 	}
 
-	/**
-	 * Validate if the role status and user status are valid.
-	 *
-	 * @param string $role_status // The role status to check.
-	 * @param string $user_status // The user status to check.
-	 *
-	 * @return bool // Returns true if the role status and user status are valid, otherwise false.
-	 */
-	public static function is_role_and_user_status_valid( string $role_status, string $user_status ): bool {
-		return ( 'forced' === $role_status || 'optional' === $role_status ) && ( 'active' === $user_status || 'open' === $user_status );
-	}
-
-	/**
-	 * Get the status for a user, based on the method.
-	 *
+		/**
+		 * Get the status for a user, based on the method.
+		 *
 	 * @param string $method //the method to check.
 	 * @param int    $user_id //the user id to get the roles for.
 	 *
@@ -664,34 +652,6 @@ class Rsssl_Two_Factor_Settings {
 	 *
 	 * @return string
 	 */
-	public static function get_enabled_method( int $user_id ): string {
-		$user_id       = absint( $user_id ); // make sure an integer and not a float, negative value.
-		$enabled_roles = self::get_enabled_roles( $user_id ) ?? array();
-		$enabled_totp  = rsssl_get_option( 'two_fa_enabled_roles_totp', [] );
-		$enabled_email = rsssl_get_option( 'two_fa_enabled_roles_email', [] );
-
-		$totp  = array_intersect( $enabled_roles, $enabled_totp );
-		$email = array_intersect( $enabled_roles, $enabled_email );
-
-		if ( ! empty( $totp ) && ! empty( $email ) ) {
-			$enabled_method = __( 'not set', 'really-simple-ssl' );
-		}
-
-		if ( ! empty( $totp ) ) {
-			$enabled_method = __( 'Authenticator App', 'really-simple-ssl' );
-		}
-
-		if ( ! empty( $email ) ) {
-			$enabled_method = __( 'Email', 'really-simple-ssl' );
-		}
-
-		if ( ! isset( $enabled_method ) ) {
-			$enabled_method = __( 'None', 'really-simple-ssl' );
-		}
-
-		return $enabled_method;
-	}
-
 	/**
 	 * Get the configured provider for a user based on their ID.
 	 *
@@ -850,16 +810,6 @@ class Rsssl_Two_Factor_Settings {
      *
      * @return array // The user status per method
      */
-    public static function get_user_status_per_method(int $user_id): array
-    {
-        $methods = self::get_available_methods();
-        $result = [];
-        foreach ($methods as $method) {
-            $result[$method] = self::get_user_status($method, $user_id);
-        }
-        return $result;
-    }
-
     private static function get_available_methods(): array
     {
         if(defined('rsssl_pro') && !rsssl_pro ) {

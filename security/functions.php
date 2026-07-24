@@ -2242,15 +2242,6 @@ function rsssl_get_send_notifications_email_block_reason(): string {
 	return __( "Please verify your email address first before enabling email notifications.", "really-simple-ssl" );
 }
 
-function rsssl_remove_prefix_from_version($version) {
-    return preg_replace('/^[^\d]*(?=\d)/', '', $version);
-}
-function rsssl_version_compare($version, $compare_to, $operator = null) {
-    $version = rsssl_remove_prefix_from_version($version);
-    $compare_to = rsssl_remove_prefix_from_version($compare_to);
-    return version_compare($version, $compare_to, $operator);
-}
-
 function rsssl_maybe_disable_404_blocking() {
     $option_value = get_option( 'rsssl_homepage_contains_404_resources', false );
     // Explicitly check for boolean true or string "true"

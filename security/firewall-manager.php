@@ -368,8 +368,7 @@ class rsssl_firewall_manager {
 	 * @return string
 	 */
 	private function get_contents( string $file ): string {
-		// Validate that file path is not empty
-		if ( empty( $file ) ) {
+		if ( ! $this->is_readable( $file ) ) {
 			return '';
 		}
 
@@ -671,7 +670,7 @@ PHP;
 	}
 
 	/**
-	 * Wrapper function
+	 * Check if a file exists and is readable without triggering filesystem warnings.
 	 *
 	 * @param string $file // filename, including path.
 	 *
@@ -682,6 +681,24 @@ PHP;
 
 		// Use WP Filesystem if available, otherwise fall back to direct operations
 		return $wp_filesystem ? $wp_filesystem->is_writable( $file ) : is_writable( $file );//phpcs:ignore
+	}
+
+	/**
+	 * Wrapper function
+	 *
+	 * @param string $file // filename, including path.
+	 *
+	 * @return bool
+	 */
+	private function is_readable( string $file ): bool {
+		if ( empty( $file ) || ! $this->file_exists( $file ) ) {
+			return false;
+		}
+
+		$wp_filesystem = $this->get_file_system();
+
+		// Readability checks can emit warnings for missing files, so file_exists() is checked first.
+		return $wp_filesystem ? $wp_filesystem->is_readable( $file ) : is_readable( $file );//phpcs:ignore
 	}
 
 	/**
@@ -1062,6 +1079,11 @@ auto_prepend_file = '%s'
 		if ( empty( $userIniPath ) ) {
 			return;
 		}
+
+		if ( ! $this->is_readable( $userIniPath ) ) {
+			return;
+		}
+
 		$userIniContent = $this->get_contents( $userIniPath );
 		$updatedUserIniContent = preg_replace(
 			'/; BEGIN Really Simple Auto Prepend File.*?; END Really Simple Auto Prepend File/is',

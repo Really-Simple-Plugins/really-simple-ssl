@@ -371,7 +371,7 @@ if (!function_exists('rsssl_check_if_email_essential_feature')) {
         );
 
         // Check if the current feature is in the essential features array
-        foreach ( $essential_features as $feature => $is_essential ) {
+        foreach ( $essential_features as $is_essential ) {
             if ( $is_essential ) {
                 return true;
             }

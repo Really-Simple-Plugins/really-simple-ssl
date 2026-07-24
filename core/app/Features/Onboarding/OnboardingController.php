@@ -300,7 +300,7 @@ class OnboardingController implements FeatureInterface, DoActionInterface
     {
         $queuedItems = $this->service->getQueuedItems();
 
-        foreach ($queuedItems as $key => &$item) {
+        foreach ($queuedItems as &$item) {
             if (!isset($item['status'], $item['action']) || $item['status'] !== 'pending') {
                 continue;
             }

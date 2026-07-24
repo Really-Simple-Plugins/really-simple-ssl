@@ -24,11 +24,6 @@ if (!class_exists('rsssl_admin_mixed_content_fixer')) {
             }
         }
 
-        static function this()
-        {
-            return self::$_this;
-        }
-
         /**
          *
          * add action hooks at the start and at the end of the WP process.
@@ -183,4 +178,3 @@ if (!class_exists('rsssl_admin_mixed_content_fixer')) {
 
     }
 }
-

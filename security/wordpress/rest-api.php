@@ -42,13 +42,4 @@ function authorize_rest_api_requests( $response, $handler, WP_REST_Request $requ
 
 }
 
-/**
- * @return void
- * Disable REST API
- */
-function rsssl_disable_rest_api() {
-    add_filter('json_enabled', '__return_false');
-    add_filter('json_jsonp_enabled', '__return_false');
-}
-
 add_filter( 'rest_request_before_callbacks', 'authorize_rest_api_requests', 10, 3 );

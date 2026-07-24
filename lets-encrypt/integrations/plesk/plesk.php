@@ -77,7 +77,7 @@ class rsssl_plesk
 		try {
 			$client = new Client($this->host);
 			$client->setCredentials($this->login, $this->password);
-			$response = $client->certificate()->install($domains, [
+			$client->certificate()->install($domains, [
 				'csr' => '',
 				'pvt' => file_get_contents($key_file),
 				'cert' => file_get_contents($cert_file),
@@ -98,4 +98,3 @@ class rsssl_plesk
 	}
 
 }
-

@@ -35,18 +35,6 @@ class Rsssl_Two_Fa_Status {
 	 *               The status can be one of the following: 'disabled' if the method is disabled for the user,
 	 *               'enabled' if the method is enabled for the user, or 'unknown' if the status could not be determined.
 	 */
-	public static function get_user_two_fa_status( WP_User $user ): array {
-        $loader = Rsssl_Provider_Loader::get_loader();
-		$two_fa_providers  = $loader::TWO_FA_PROVIDERS; // Assume this function returns all available methods.
-		$statuses = array();
-
-		foreach ( $two_fa_providers as $two_fa_provider ) {
-			$status              = self::get_user_status( $two_fa_provider, $user->ID );
-			$statuses[ $two_fa_provider ] = $status ?: 'disabled';
-		}
-		return $statuses;
-	}
-
 	/**
 	 * Get the user's two-factor authentication status.
 	 *

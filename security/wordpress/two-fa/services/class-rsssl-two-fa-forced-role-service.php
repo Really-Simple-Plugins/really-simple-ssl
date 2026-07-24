@@ -48,29 +48,4 @@ class Rsssl_Two_Fa_Forced_Role_Service implements Rsssl_Has_Processing_Interface
         return array_diff($newForcedRoles, $oldForcedRoles);
     }
 
-    /**
-     * Reset the status of the forced users when the forced roles are added.
-     */
-    public function maybeResetForcedUsersWhenDisabled(array $changedRoles): void
-    {
-
-        $collection = $this->userRepository->getForcedTwoFaUsersWithDisabledStatus($this->params, $changedRoles);
-        foreach ($collection->getUsers() as $user) {
-            $user->resetStatus();
-        }
-    }
-
-    /**
-     * Reset the status of the forced users when the forced roles are added.
-     */
-    public function maybeResetForcedUsersWhenExpired(array $changedRoles): void
-    {
-
-        $collection = $this->userRepository->getForcedTwoFaUsersWithExpiredStatus($this->params, $changedRoles);
-        foreach ($collection->getUsers() as $user) {
-            $user->resetStatus();
-        }
-    }
-
-
 }

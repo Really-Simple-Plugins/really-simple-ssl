@@ -154,14 +154,6 @@ class Rsssl_Two_Fa_User_Repository implements Rsssl_Two_Fa_User_Repository_Inter
 
 
 	/**
-	 * Retrieve two-factor authentication users that are disabled.
-	 */
-	public function getTwoFaDisabledUsers(Rsssl_Two_FA_Data_Parameters $params): Rsssl_Two_Fa_User_Collection
-	{
-		return $this->fetchBy($params, fn($b) => $b->addDisabled());
-	}
-
-	/**
 	 * Execute the WP_User_Query with the given arguments and convert the results
 	 * to a Rsssl_Two_Fa_User_Collection.
 	 */
@@ -175,10 +167,10 @@ class Rsssl_Two_Fa_User_Repository implements Rsssl_Two_Fa_User_Repository_Inter
 		}
 		// 1) Gather raw WP_User results, either network-wide or single-site
 		if ( is_multisite() ) {
-			$args = $this->buildMultiSiteBaseQuery($args, $params);
+			$args = $this->buildMultiSiteBaseQuery($args);
 		} else {
 			// single site installation
-			$args = $this->buildSingleSiteBaseQuery($args, $params);
+			$args = $this->buildSingleSiteBaseQuery($args);
 		}
 
 		$query   = new WP_User_Query( $args );
@@ -220,8 +212,12 @@ class Rsssl_Two_Fa_User_Repository implements Rsssl_Two_Fa_User_Repository_Inter
 
 	/**
 	 * Build the base WP_User_Query for single-site installations.
+	 *
+	 * @param array $args WP_User_Query arguments.
+	 *
+	 * @return array
 	 */
-	private function buildSingleSiteBaseQuery(array $args, Rsssl_Two_FA_Data_Parameters $params): array
+	private function buildSingleSiteBaseQuery(array $args): array
 	{
 	    // Ensure we only look at the current blog and keep the query lean.
 	    $args['blog_id']     = get_current_blog_id();
@@ -245,8 +241,12 @@ class Rsssl_Two_Fa_User_Repository implements Rsssl_Two_Fa_User_Repository_Inter
 	 * combined with `meta_value LIKE` per role, deduped in SQL. The union of
 	 * user IDs is fed into the final query via `include`. Downstream 2FA
 	 * status meta filters operate on global meta keys and remain untouched.
+	 *
+	 * @param array $args WP_User_Query arguments.
+	 *
+	 * @return array
 	 */
-	private function buildMultiSiteBaseQuery(array $args, Rsssl_Two_FA_Data_Parameters $params): array
+	private function buildMultiSiteBaseQuery(array $args): array
 	{
 	    // Query users across the entire network (ignore site membership constraint).
 	    // `blog_id` = 0 makes WP_User_Query ignore per-site membership filtering in multisite.

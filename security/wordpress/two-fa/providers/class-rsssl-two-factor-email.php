@@ -578,7 +578,7 @@ class Rsssl_Two_Factor_Email extends Rsssl_Two_Factor_Provider implements Rsssl_
 		// Normalize the preferred method to always be an array.
 		$preferred_methods = is_array( $preferred_method_meta ) ? $preferred_method_meta : (array) $preferred_method_meta;
 		// Check if 'Rsssl_Two_Factor_Email' is the preferred method.
-		$is_preferred      = in_array( 'Rsssl_Two_Factor_Email', $preferred_methods, true );
+		in_array( 'Rsssl_Two_Factor_Email', $preferred_methods, true );
 		$is_enabled        = (bool) get_user_meta( $user->ID, self::SECRET_META_KEY, true );
 		$badge_class       = $is_enabled ? 'badge-enabled' : 'badge-default';
 		$enabled_text      = $is_enabled ? esc_html__( 'Enabled', 'really-simple-ssl' ) : esc_html__( 'Disabled', 'really-simple-ssl' );
