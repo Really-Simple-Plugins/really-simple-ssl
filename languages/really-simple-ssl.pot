@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Really Simple Security Pro 9.6.1\n"
+"Project-Id-Version: Really Simple Security Pro 9.7.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/really-simple-ssl-pro\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-06-30T08:17:37+00:00\n"
+"POT-Creation-Date: 2026-07-15T09:21:30+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: really-simple-ssl\n"
@@ -41,8 +41,8 @@ msgstr ""
 
 #: assets/templates/two_fa/expired.php:3
 #: assets/templates/two_fa/onboarding.php:44
-#: class-admin.php:3503
-#: class-site-health.php:54
+#: class-admin.php:3370
+#: class-site-health.php:55
 #: core/app/Services/SettingsConfigService.php:63
 #: core/app/Services/SettingsConfigService.php:138
 #: settings/config/menu.php:302
@@ -83,7 +83,7 @@ msgstr ""
 
 #: assets/templates/two_fa/onboarding.php:118
 #: assets/templates/two_fa/profile-settings.php:117
-#: pro/security/wordpress/two-fa/class-rsssl-two-factor-backup-codes.php:370
+#: pro/security/wordpress/two-fa/class-rsssl-two-factor-backup-codes.php:360
 #: security/wordpress/two-fa/providers/class-rsssl-two-factor-email.php:378
 msgid "Verification Code:"
 msgstr ""
@@ -151,8 +151,8 @@ msgstr ""
 
 #: assets/templates/two_fa/profile-settings.php:52
 #: assets/templates/two_fa/totp-config.php:23
-#: pro/security/wordpress/two-fa/providers/class-rsssl-two-factor-totp.php:676
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1602
+#: pro/security/wordpress/two-fa/providers/class-rsssl-two-factor-totp.php:656
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1601
 msgid "Download Backup Codes"
 msgstr ""
 
@@ -171,7 +171,7 @@ msgstr ""
 
 #: assets/templates/two_fa/profile-settings.php:97
 #: assets/templates/two_fa/totp-config.php:42
-#: pro/security/wordpress/two-fa/providers/class-rsssl-two-factor-totp.php:446
+#: pro/security/wordpress/two-fa/providers/class-rsssl-two-factor-totp.php:432
 msgid "Authentication Code:"
 msgstr ""
 
@@ -201,46 +201,46 @@ msgid "Use your authenticator app like Google Authenticator to scan the QR code 
 msgstr ""
 
 #: assets/templates/two_fa/totp-config.php:54
-#: pro/security/wordpress/two-fa/class-rsssl-two-factor-backup-codes.php:374
+#: pro/security/wordpress/two-fa/class-rsssl-two-factor-backup-codes.php:364
 msgid "Submit"
 msgstr ""
 
-#: class-admin.php:195
-#: class-admin.php:197
+#: class-admin.php:188
+#: class-admin.php:190
 #: settings/config/menu.php:17
 #: settings/config/menu.php:394
-#: settings/build/366.cdae799ade6d811e7edd.js:1
+#: settings/build/366.0d5cd85e5385919f12a4.js:1
 #: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:263
 #: settings/src/Dashboard/Vulnerabilities/VulnerabilitiesFooter.js:21
 msgid "Settings"
 msgstr ""
 
-#: class-admin.php:202
-#: settings/build/index.80ae3fc27802e7eb112c.js:1
+#: class-admin.php:195
+#: settings/build/index.8a738e7fc52f3a6e7f2a.js:1
 #: settings/src/Header.js:45
 msgid "Support"
 msgstr ""
 
-#: class-admin.php:207
+#: class-admin.php:200
 msgid "Improve security - Upgrade"
 msgstr ""
 
 #. translators: %s is replaced with the hyperlink
-#: class-admin.php:252
+#: class-admin.php:245
 #, php-format
 msgid "Really Simple Security and Really Simple Security add-ons do not process any personal identifiable information, so the GDPR does not apply to these plugins or usage of these plugins on your website. You can find our privacy policy <a href=\"%s\" rel=\"noopener noreferrer\" target=\"_blank\">here</a>."
 msgstr ""
 
-#: class-admin.php:714
+#: class-admin.php:679
 msgid "View Dashboard"
 msgstr ""
 
-#: class-admin.php:723
+#: class-admin.php:688
 msgid "Dismiss"
 msgstr ""
 
-#: class-admin.php:727
-#: settings/build/366.cdae799ade6d811e7edd.js:1
+#: class-admin.php:692
+#: settings/build/366.0d5cd85e5385919f12a4.js:1
 #: settings/build/536.a59728be12baf4673c92.js:1
 #: settings/build/635.b035afd7cc3020bda9bb.js:1
 #: settings/src/Dashboard/TaskElement.js:72
@@ -249,8 +249,8 @@ msgstr ""
 msgid "View"
 msgstr ""
 
-#: class-admin.php:727
-#: settings/build/366.cdae799ade6d811e7edd.js:1
+#: class-admin.php:692
+#: settings/build/366.0d5cd85e5385919f12a4.js:1
 #: settings/build/536.a59728be12baf4673c92.js:1
 #: settings/build/635.b035afd7cc3020bda9bb.js:1
 #: settings/build/995.1951bdba4c61ca45e7ca.js:1
@@ -260,513 +260,498 @@ msgid "More info"
 msgstr ""
 
 #. translators: %1$ and %2$ are replaced with opening and closing a tag containing hyperlink
-#: class-admin.php:1903
+#: class-admin.php:1839
 #, php-format
 msgid "Hi, Really Simple Security has kept your site secure for some time now, awesome! If you have a moment, please consider leaving a review on WordPress.org to spread the word. We greatly appreciate it! If you have any questions or feedback, leave us a %1$smessage%2$s."
 msgstr ""
 
 #. translators: %1$ and %2$ are replaced with opening and closing a tag containing hyperlink
-#: class-admin.php:1910
+#: class-admin.php:1846
 #, php-format
 msgid "Hi, Really Simple Security has kept your site secure for a month now, awesome! If you have a moment, please consider leaving a review on WordPress.org to spread the word. We greatly appreciate it! If you have any questions or feedback, leave us a %1$smessage%2$s."
 msgstr ""
 
-#: class-admin.php:1926
+#: class-admin.php:1862
 msgid "Leave a review"
 msgstr ""
 
-#: class-admin.php:1930
+#: class-admin.php:1866
 msgid "Maybe later"
 msgstr ""
 
-#: class-admin.php:1935
+#: class-admin.php:1871
 msgid "Don't show again"
 msgstr ""
 
-#: class-admin.php:2088
+#: class-admin.php:2024
 msgid "Completed"
 msgstr ""
 
-#: class-admin.php:2089
-#: pro/class-licensing.php:603
+#: class-admin.php:2025
+#: pro/class-licensing.php:599
 #: settings/build/536.a59728be12baf4673c92.js:1
 #: settings/src/Settings/MixedContentScan/MixedContentScan.js:58
 msgid "Warning"
 msgstr ""
 
-#: class-admin.php:2090
-#: pro/class-licensing.php:604
-#: pro/security/wordpress/class-rsssl-geo-block.php:1419
+#: class-admin.php:2026
+#: pro/class-licensing.php:600
+#: pro/security/wordpress/class-rsssl-geo-block.php:1387
 msgid "Open"
 msgstr ""
 
-#: class-admin.php:2091
-#: settings/build/366.cdae799ade6d811e7edd.js:1
+#: class-admin.php:2027
+#: settings/build/366.0d5cd85e5385919f12a4.js:1
 #: settings/src/Dashboard/OtherPlugins/OtherPlugins.js:21
 msgid "Upgrade"
 msgstr ""
 
-#: class-admin.php:2128
+#: class-admin.php:2064
 msgid "No recommended redirect rules detected."
 msgstr ""
 
-#: class-admin.php:2143
-#: lets-encrypt/class-letsencrypt-handler.php:331
+#: class-admin.php:2078
+#: lets-encrypt/class-letsencrypt-handler.php:327
 msgid "(unknown)"
 msgstr ""
 
-#: class-admin.php:2152
+#: class-admin.php:2087
 msgid "Your wp-config.php has to be edited, but is not writable."
 msgstr ""
 
-#: class-admin.php:2153
-#: class-admin.php:2174
+#: class-admin.php:2088
+#: class-admin.php:2109
 msgid "Set your wp-config.php to writable and reload this page."
 msgstr ""
 
-#: class-admin.php:2154
+#: class-admin.php:2089
 msgid "To safely enable SSL on your server configuration, you should add the following line of code to your wp-config.php."
 msgstr ""
 
-#: class-admin.php:2174
+#: class-admin.php:2109
 msgid "A definition of a site url or home url was detected in your wp-config.php, but the file is not writable."
 msgstr ""
 
-#: class-admin.php:2189
+#: class-admin.php:2124
 msgid "The 'force-deactivate.php' file has to be renamed to .txt. Otherwise your ssl can be deactivated by anyone on the internet."
 msgstr ""
 
-#: class-admin.php:2190
+#: class-admin.php:2125
 #: settings/build/635.b035afd7cc3020bda9bb.js:1
 #: settings/src/Onboarding/Items/ListItem.js:46
 msgid "Check again"
 msgstr ""
 
-#: class-admin.php:2206
+#: class-admin.php:2141
 msgid "SSL is now activated. Follow the three steps in this article to check if your website is secure."
 msgstr ""
 
-#: class-admin.php:2218
+#: class-admin.php:2153
 msgid "SSL is enabled on your site."
 msgstr ""
 
-#: class-admin.php:2222
+#: class-admin.php:2157
 msgid "SSL is not enabled yet."
 msgstr ""
 
-#: class-admin.php:2239
+#: class-admin.php:2174
 msgid "The wp-config.php file is not writable, and needs to be edited. Please set this file to writable."
 msgstr ""
 
-#: class-admin.php:2243
-#: class-site-health.php:337
+#: class-admin.php:2178
+#: class-site-health.php:338
 msgid "No SSL detected"
 msgstr ""
 
-#: class-admin.php:2244
+#: class-admin.php:2179
 msgid "No SSL detected. Use the retry button to check again."
 msgstr ""
 
-#: class-admin.php:2248
-#: class-admin.php:2258
-#: class-admin.php:2273
+#: class-admin.php:2183
+#: class-admin.php:2193
+#: class-admin.php:2208
 msgid "Install SSL certificate"
 msgstr ""
 
-#: class-admin.php:2249
+#: class-admin.php:2184
 msgid "Retry"
 msgstr ""
 
-#: class-admin.php:2254
+#: class-admin.php:2189
 #: core/app/Features/Onboarding/OnboardingStepsGenerator.php:107
 msgid "Could not test certificate"
 msgstr ""
 
-#: class-admin.php:2255
+#: class-admin.php:2190
 #: core/app/Features/Onboarding/OnboardingStepsGenerator.php:107
 msgid "Automatic certificate detection is not possible on your server."
 msgstr ""
 
-#: class-admin.php:2259
+#: class-admin.php:2194
 msgid "Check manually"
 msgstr ""
 
-#: class-admin.php:2264
+#: class-admin.php:2199
 msgid "Your SSL certificate will expire soon."
 msgstr ""
 
 #. translators: %s is replaced with date.
-#: class-admin.php:2267
+#: class-admin.php:2202
 #, php-format
 msgid "SSL certificate will expire on %s."
 msgstr ""
 
 #. translators: %s is replaced with date.
-#: class-admin.php:2267
+#: class-admin.php:2202
 msgid "If your hosting provider auto-renews your certificate, no action is required. Alternatively, you have the option to generate an SSL certificate with Really Simple Security."
 msgstr ""
 
 #. translators: %1$ and %2$s are replaced with the opening and closing tag with link.
-#: class-admin.php:2269
+#: class-admin.php:2204
 #, php-format
 msgid "Depending on your hosting provider, %1$smanual installation%2$s may be required."
 msgstr ""
 
-#: class-admin.php:2274
-#: settings/build/366.cdae799ade6d811e7edd.js:1
+#: class-admin.php:2209
+#: settings/build/366.0d5cd85e5385919f12a4.js:1
 #: settings/build/536.a59728be12baf4673c92.js:1
 #: settings/build/635.b035afd7cc3020bda9bb.js:1
 #: settings/src/Dashboard/TaskElement.js:66
 msgid "Re-check"
 msgstr ""
 
-#: class-admin.php:2287
+#: class-admin.php:2222
 msgid "Really Simple Security has received no response from the webpage."
 msgstr ""
 
-#: class-admin.php:2294
+#: class-admin.php:2229
 msgid "The mixed content fixer is active, but was not detected on the frontpage."
 msgstr ""
 
-#: class-admin.php:2299
+#: class-admin.php:2234
 msgid "Error occurred when retrieving the webpage."
 msgstr ""
 
-#: class-admin.php:2305
+#: class-admin.php:2240
 msgid "Mixed content fixer not enabled. Enable the option to fix mixed content on your site."
 msgstr ""
 
 #. translators: %s is replaced with the error description.
-#: class-admin.php:2312
+#: class-admin.php:2247
 #, php-format
 msgid "The mixed content fixer could not be detected due to a cURL error: %s. cURL errors are often caused by an outdated version of PHP or cURL and don't affect the front-end of your site. Contact your hosting provider for a fix."
 msgstr ""
 
-#: class-admin.php:2325
+#: class-admin.php:2260
 msgid "301 redirect to https set."
 msgstr ""
 
-#: class-admin.php:2329
+#: class-admin.php:2264
 msgid "No 301 redirect is set. Enable the WordPress 301 redirect in the settings to get a 301 permanent redirect."
 msgstr ""
 
-#: class-admin.php:2344
-#: class-admin.php:2350
+#: class-admin.php:2279
+#: class-admin.php:2285
 msgid "301 .htaccess redirect"
 msgstr ""
 
-#: class-admin.php:2345
+#: class-admin.php:2280
 msgid "The 301 redirect with .htaccess to HTTPS is now enabled."
 msgstr ""
 
-#: class-admin.php:2351
+#: class-admin.php:2286
 msgid "WordPress 301 redirect enabled. We recommend to enable a 301 .htaccess redirect."
 msgstr ""
 
-#: class-admin.php:2358
+#: class-admin.php:2293
 msgid "Enable a .htaccess redirect or PHP redirect in the settings to create a 301 redirect."
 msgstr ""
 
-#: class-admin.php:2363
+#: class-admin.php:2298
 msgid ".htaccess redirect."
 msgstr ""
 
-#: class-admin.php:2365
+#: class-admin.php:2300
 msgid "The .htaccess redirect rules selected by this plugin failed in the test. Set manually or dismiss to leave on PHP redirect."
 msgstr ""
 
-#: class-admin.php:2380
+#: class-admin.php:2315
 msgid "Your site uses Elementor. This can require some additional steps before getting the secure lock."
 msgstr ""
 
-#: class-admin.php:2394
+#: class-admin.php:2329
 msgid "Your site uses Divi. This can require some additional steps before getting the secure lock."
 msgstr ""
 
-#: class-admin.php:2405
+#: class-admin.php:2340
 msgid "See which recommended security headers are not present on your website."
 msgstr ""
 
-#: class-admin.php:2414
+#: class-admin.php:2349
 msgid "Recommended security headers enabled."
 msgstr ""
 
-#: class-admin.php:2425
+#: class-admin.php:2360
 msgid "Implement Two-Factor Authentication or Passkey login."
 msgstr ""
 
-#: class-admin.php:2437
+#: class-admin.php:2372
 msgid "Protect your login form with Limit Login Attempts."
 msgstr ""
 
-#: class-admin.php:2449
+#: class-admin.php:2384
 msgid "Protect your site with a performant Firewall."
 msgstr ""
 
 #. translators: %s is replaced with the plugin name.
-#: class-admin.php:2461
+#: class-admin.php:2396
 #, php-format
 msgid "We have detected the %s plugin on your website."
 msgstr ""
 
 #. translators: %s is replaced with the plugin name.
-#: class-admin.php:2461
+#: class-admin.php:2396
 msgid "As Really Simple Security handles all the functionality this plugin provides, we recommend to disable this plugin to prevent unexpected behavior."
 msgstr ""
 
-#: class-admin.php:2475
+#: class-admin.php:2410
 msgid "Black Friday sale! Get 40% Off Really Simple Security Pro"
 msgstr ""
 
-#: class-admin.php:2488
+#: class-admin.php:2423
 msgid "Complete email validation and enable notifications to make sure you will receive security warnings."
 msgstr ""
 
-#: class-admin.php:2496
+#: class-admin.php:2431
 msgid "Email address successfully verified."
 msgstr ""
 
-#: class-admin.php:2548
+#: class-admin.php:2465
 #: settings/config/fields/firewall.php:106
 #: settings/config/fields/firewall.php:128
 #: settings/config/fields/firewall.php:150
 msgid "404 errors detected on your homepage. 404 blocking is unavailable, to prevent blocking of legitimate visitors. It is strongly recommended to resolve these errors."
 msgstr ""
 
-#. translators: %1$s: opening bold tag, %2$s: closing bold tag
-#: class-admin.php:3461
-#, php-format
-msgid "Really Simple SSL is now %1$sReally Simple Security!%2$s"
-msgstr ""
-
-#: class-admin.php:3468
-msgid "Read about our journey towards Really Simple Security"
-msgstr ""
-
-#: class-admin.php:3474
-#, php-format
-msgid "Experience all powerful features of Really Simple Security Pro using this %slimited time discount%s: %s"
-msgstr ""
-
-#: class-admin.php:3493
+#: class-admin.php:3360
 #, php-format
 msgid "Thank you for being a long-time user! As a token of our gratitude, we want to offer you %s6 months Really Simple Security Pro, 100%% Free!%s"
 msgstr ""
 
-#: class-admin.php:3498
+#: class-admin.php:3365
 msgid "Discover:"
 msgstr ""
 
-#: class-admin.php:3501
+#: class-admin.php:3368
 msgid "Performant Firewall"
 msgstr ""
 
-#: class-admin.php:3502
+#: class-admin.php:3369
 #: settings/config/menu.php:254
 msgid "Advanced Hardening"
 msgstr ""
 
-#: class-admin.php:3504
+#: class-admin.php:3371
 #: core/app/Services/SettingsConfigService.php:85
 #: core/app/Services/SettingsConfigService.php:161
 #: settings/config/menu.php:98
 msgid "Security Headers"
 msgstr ""
 
-#: class-admin.php:3505
+#: class-admin.php:3372
 msgid "And many more powerful Security features.."
 msgstr ""
 
-#: class-admin.php:3508
+#: class-admin.php:3375
 msgid "Claim your 6 Free months"
 msgstr ""
 
-#: class-multisite.php:79
+#: class-multisite.php:74
 msgid "SSL is enabled networkwide."
 msgstr ""
 
-#: class-multisite.php:83
+#: class-multisite.php:78
 msgid "SSL is not enabled on your network"
 msgstr ""
 
-#: class-multisite.php:96
+#: class-multisite.php:91
 msgid "You run a Multisite installation with subfolders, which prevents this plugin from fixing your missing server variable in the wp-config.php."
 msgstr ""
 
-#: class-multisite.php:97
+#: class-multisite.php:92
 msgid "Because the $_SERVER[\"HTTPS\"] variable is not set, your website may experience redirect loops."
 msgstr ""
 
-#: class-multisite.php:98
+#: class-multisite.php:93
 msgid "Activate networkwide to fix this."
 msgstr ""
 
-#: class-multisite.php:110
+#: class-multisite.php:105
 msgid "SSL activation in progress"
 msgstr ""
 
-#: class-multisite.php:111
+#: class-multisite.php:106
 msgid "A networkwide SSL activation process has been started, but has not been completed. Please go to the SSL settings page to complete the process."
 msgstr ""
 
-#: class-multisite.php:112
+#: class-multisite.php:107
 msgid "View settings page"
 msgstr ""
 
-#: class-multisite.php:126
+#: class-multisite.php:121
 msgid "You run a Multisite installation with subdomains, but your site doesn't have a wildcard certificate."
 msgstr ""
 
-#: class-multisite.php:127
+#: class-multisite.php:122
 msgid "This leads to issues when activating SSL networkwide since subdomains will be forced over SSL as well while they don't have a valid certificate."
 msgstr ""
 
-#: class-multisite.php:128
+#: class-multisite.php:123
 msgid "Activate SSL per site or install a wildcard certificate to fix this."
 msgstr ""
 
-#: class-multisite.php:239
-#: class-multisite.php:240
-#: class-site-health.php:93
-#: class-site-health.php:124
-#: class-site-health.php:155
+#: class-multisite.php:234
+#: class-multisite.php:235
+#: class-site-health.php:94
+#: class-site-health.php:125
+#: class-site-health.php:156
 #: settings/settings.php:226
 #: settings/settings.php:227
 #: settings/settings.php:259
 msgid "Security"
 msgstr ""
 
-#: class-site-health.php:31
+#: class-site-health.php:26
 msgid "SSL Status Test"
 msgstr ""
 
-#: class-site-health.php:36
+#: class-site-health.php:31
 msgid "Security Headers Test"
 msgstr ""
 
-#: class-site-health.php:60
+#: class-site-health.php:61
 msgid "Limit Login Attempts Protection"
 msgstr ""
 
-#: class-site-health.php:66
+#: class-site-health.php:67
 msgid "Firewall Protection"
 msgstr ""
 
-#: class-site-health.php:81
+#: class-site-health.php:82
 #: pro/security/notices.php:48
 msgid "We recommend to enable Two-Factor Authentication at least for administrators."
 msgstr ""
 
-#: class-site-health.php:86
+#: class-site-health.php:87
 msgid "Your site is protected by Two-Factor Authentication (2FA)."
 msgstr ""
 
-#: class-site-health.php:90
+#: class-site-health.php:91
 msgid "Protect your user logins with Two-Factor Authentication (at least for Administrator accounts)"
 msgstr ""
 
-#: class-site-health.php:100
-#: class-site-health.php:131
-#: class-site-health.php:162
-#: class-site-health.php:248
-#: class-site-health.php:290
+#: class-site-health.php:101
+#: class-site-health.php:132
+#: class-site-health.php:163
+#: class-site-health.php:249
+#: class-site-health.php:291
 #: settings/config/fields/vulnerability-detection.php:238
-#: settings/build/366.cdae799ade6d811e7edd.js:1
+#: settings/build/366.0d5cd85e5385919f12a4.js:1
 #: settings/build/536.a59728be12baf4673c92.js:1
 #: settings/src/Dashboard/SslLabs/SslLabs.js:320
 #: settings/src/LetsEncrypt/DnsVerification.js:57
 msgid "Read more"
 msgstr ""
 
-#: class-site-health.php:112
+#: class-site-health.php:113
 #: pro/security/notices.php:67
 msgid "Enable Limit Login Attempts to protect the login form against brute-force attacks."
 msgstr ""
 
-#: class-site-health.php:117
+#: class-site-health.php:118
 msgid "Your site is protected by Limit Login Attempts."
 msgstr ""
 
-#: class-site-health.php:121
+#: class-site-health.php:122
 msgid "Protect your login form with Limit Login Attempts"
 msgstr ""
 
-#: class-site-health.php:143
+#: class-site-health.php:144
 #: pro/security/notices.php:86
 msgid "Secure your site with the performant Firewall."
 msgstr ""
 
-#: class-site-health.php:148
+#: class-site-health.php:149
 msgid "Your site is protected by a firewall."
 msgstr ""
 
-#: class-site-health.php:152
+#: class-site-health.php:153
 msgid "Secure your site with a Firewall"
 msgstr ""
 
-#: class-site-health.php:182
+#: class-site-health.php:183
 msgid "The value, WP_DEBUG_LOG, has been added to this website’s configuration file. This means any errors on the site will be written to a file which is potentially available to all users."
 msgstr ""
 
-#: class-site-health.php:188
+#: class-site-health.php:189
 msgid "Remove from public location with Really Simple Security"
 msgstr ""
 
-#: class-site-health.php:204
+#: class-site-health.php:205
 msgid "Your site is set to display errors on your website"
 msgstr ""
 
-#: class-site-health.php:212
+#: class-site-health.php:213
 msgid "The value, WP_DEBUG_DISPLAY, has either been enabled by WP_DEBUG or added to your configuration file. This will make errors display on the front end of your site."
 msgstr ""
 
-#: class-site-health.php:218
+#: class-site-health.php:219
 msgid "Read more about security concerns with debug display enabled"
 msgstr ""
 
-#: class-site-health.php:234
+#: class-site-health.php:235
 #: settings/config/disable-fields-filter.php:80
 msgid "404 errors detected on your homepage"
 msgstr ""
 
-#: class-site-health.php:242
+#: class-site-health.php:243
 msgid "404 errors detected on your homepage. This means that the page requests images, scripts or other resources that are no longer available. It can interfere with your Firewall as well."
 msgstr ""
 
-#: class-site-health.php:265
+#: class-site-health.php:266
 msgid "Essential security headers installed"
 msgstr ""
 
-#: class-site-health.php:273
+#: class-site-health.php:274
 msgid "The essential security headers are detected on your site."
 msgstr ""
 
-#: class-site-health.php:285
+#: class-site-health.php:286
 msgid "Not all essential security headers are installed"
 msgstr ""
 
-#: class-site-health.php:286
+#: class-site-health.php:287
 msgid "Your website does not send all essential security headers."
 msgstr ""
 
-#: class-site-health.php:305
+#: class-site-health.php:306
 msgid "301 SSL redirect enabled"
 msgstr ""
 
-#: class-site-health.php:313
+#: class-site-health.php:314
 msgid "You have set a 301 redirect to SSL. This is important for SEO purposes"
 msgstr ""
 
-#: class-site-health.php:322
+#: class-site-health.php:323
 msgid "SSL is not enabled."
 msgstr ""
 
-#: class-site-health.php:325
+#: class-site-health.php:326
 msgid "Really Simple Security detected an SSL certificate, but has not been configured to enforce SSL."
 msgstr ""
 
-#: class-site-health.php:333
-#: settings/build/366.cdae799ade6d811e7edd.js:1
+#: class-site-health.php:334
+#: settings/build/366.0d5cd85e5385919f12a4.js:1
 #: settings/build/536.a59728be12baf4673c92.js:1
 #: settings/build/635.b035afd7cc3020bda9bb.js:1
 #: settings/src/Dashboard/Progress/ProgressFooter.js:24
@@ -775,31 +760,31 @@ msgstr ""
 msgid "Activate SSL"
 msgstr ""
 
-#: class-site-health.php:340
+#: class-site-health.php:341
 msgid "Really Simple Security is installed, but no valid SSL certificate is detected."
 msgstr ""
 
-#: class-site-health.php:346
+#: class-site-health.php:347
 msgid "No 301 redirect to SSL enabled."
 msgstr ""
 
-#: class-site-health.php:349
+#: class-site-health.php:350
 msgid "To ensure all traffic passes through SSL, please enable a 301 redirect."
 msgstr ""
 
-#: class-site-health.php:354
+#: class-site-health.php:355
 msgid "Enable 301 redirect"
 msgstr ""
 
-#: class-site-health.php:358
+#: class-site-health.php:359
 msgid "301 .htaccess redirect is not enabled."
 msgstr ""
 
-#: class-site-health.php:361
+#: class-site-health.php:362
 msgid "The 301 .htaccess redirect is the fastest and most reliable redirect option."
 msgstr ""
 
-#: class-site-health.php:366
+#: class-site-health.php:367
 msgid "Enable 301 .htaccess redirect"
 msgstr ""
 
@@ -812,255 +797,255 @@ msgstr ""
 msgid "It seems that no valid license key is activated for this domain. Activate your license key using the `%s` command, or purchase a valid license key via https://really-simple-ssl.com/pro"
 msgstr ""
 
-#: class-wp-cli.php:1336
+#: class-wp-cli.php:1293
 #, php-format
 msgid "Failed to reach %s. The site does not appear to be accessible over HTTPS. Please ensure your server is configured for SSL."
 msgstr ""
 
-#: class-wp-cli.php:1352
+#: class-wp-cli.php:1309
 #, php-format
 msgid "Failed to reach %s. The site does not appear to be accessible over HTTPS (Error: %s). Check debug logs for details."
 msgstr ""
 
-#: class-wp-cli.php:1374
+#: class-wp-cli.php:1331
 #, php-format
 msgid "Reached %s, but received an error response code: %d. HTTPS is not properly configured."
 msgstr ""
 
-#: class-wp-cli.php:1390
+#: class-wp-cli.php:1347
 #, php-format
 msgid ".htaccess file (%s) is not writable. Redirects cannot be configured automatically."
 msgstr ""
 
-#: class-wp-cli.php:1397
+#: class-wp-cli.php:1354
 msgid "Pre-flight checks passed."
 msgstr ""
 
-#: class-wp-cli.php:1409
+#: class-wp-cli.php:1366
 msgid "Activate SSL on the site."
 msgstr ""
 
-#: class-wp-cli.php:1414
+#: class-wp-cli.php:1371
 msgid "Deactivate SSL on the site."
 msgstr ""
 
-#: class-wp-cli.php:1419
+#: class-wp-cli.php:1376
 msgid "Update a Really Simple Security option. Usage: wp rsssl update_option --name=option_name --value=option_value. Use 0 and 1 for booleans."
 msgstr ""
 
-#: class-wp-cli.php:1425
+#: class-wp-cli.php:1382
 msgid "Name of the option to update."
 msgstr ""
 
-#: class-wp-cli.php:1431
+#: class-wp-cli.php:1388
 msgid "Value to set for the option."
 msgstr ""
 
-#: class-wp-cli.php:1437
+#: class-wp-cli.php:1394
 msgid "Activate all recommended features."
 msgstr ""
 
-#: class-wp-cli.php:1442
+#: class-wp-cli.php:1399
 msgid "Deactivate all recommended features."
 msgstr ""
 
-#: class-wp-cli.php:1447
+#: class-wp-cli.php:1404
 msgid "Activate essential security headers."
 msgstr ""
 
-#: class-wp-cli.php:1452
+#: class-wp-cli.php:1409
 msgid "Deactivate essential security headers."
 msgstr ""
 
-#: class-wp-cli.php:1457
+#: class-wp-cli.php:1414
 msgid "Activate the firewall."
 msgstr ""
 
-#: class-wp-cli.php:1462
+#: class-wp-cli.php:1419
 msgid "Deactivate the firewall."
 msgstr ""
 
-#: class-wp-cli.php:1467
+#: class-wp-cli.php:1424
 msgid "Activate Two-Factor Authentication."
 msgstr ""
 
-#: class-wp-cli.php:1472
+#: class-wp-cli.php:1429
 msgid "Deactivate Two-Factor Authentication."
 msgstr ""
 
-#: class-wp-cli.php:1477
+#: class-wp-cli.php:1434
 msgid "Activate password security features."
 msgstr ""
 
-#: class-wp-cli.php:1482
+#: class-wp-cli.php:1439
 msgid "Deactivate password security features."
 msgstr ""
 
-#: class-wp-cli.php:1487
+#: class-wp-cli.php:1444
 msgid "Activate limit login attempts."
 msgstr ""
 
-#: class-wp-cli.php:1492
+#: class-wp-cli.php:1449
 msgid "Deactivate limit login attempts."
 msgstr ""
 
-#: class-wp-cli.php:1497
+#: class-wp-cli.php:1454
 msgid "Activate vulnerability scanning."
 msgstr ""
 
-#: class-wp-cli.php:1502
+#: class-wp-cli.php:1459
 msgid "Deactivate vulnerability scanning."
 msgstr ""
 
-#: class-wp-cli.php:1507
+#: class-wp-cli.php:1464
 msgid "Activate a license key. Usage: wp rsssl activate_license YOUR_LICENSE_KEY."
 msgstr ""
 
-#: class-wp-cli.php:1513
+#: class-wp-cli.php:1470
 msgid "The license key to activate."
 msgstr ""
 
-#: class-wp-cli.php:1519
+#: class-wp-cli.php:1476
 msgid "Deactivate the license."
 msgstr ""
 
-#: class-wp-cli.php:1524
+#: class-wp-cli.php:1481
 msgid "Add a lock file for safe mode."
 msgstr ""
 
-#: class-wp-cli.php:1529
+#: class-wp-cli.php:1486
 msgid "Remove the lock file for safe mode."
 msgstr ""
 
-#: class-wp-cli.php:1534
+#: class-wp-cli.php:1491
 msgid "Reset the 2FA status and methods for a user."
 msgstr ""
 
-#: class-wp-cli.php:1540
+#: class-wp-cli.php:1497
 msgid "The user ID to reset 2FA for."
 msgstr ""
 
-#: class-wp-cli.php:1546
+#: class-wp-cli.php:1503
 msgid "Preview users in scope for 2FA reminders (dry-run)."
 msgstr ""
 
-#: class-wp-cli.php:1548
-#: class-wp-cli.php:1559
+#: class-wp-cli.php:1505
+#: class-wp-cli.php:1516
 msgid "Filter by user role (default: all)."
 msgstr ""
 
-#: class-wp-cli.php:1549
-#: class-wp-cli.php:1560
+#: class-wp-cli.php:1506
+#: class-wp-cli.php:1517
 msgid "Limit to a single blog_id (multisite)."
 msgstr ""
 
-#: class-wp-cli.php:1550
-#: class-wp-cli.php:1561
+#: class-wp-cli.php:1507
+#: class-wp-cli.php:1518
 msgid "Traverse all subsites in the network."
 msgstr ""
 
-#: class-wp-cli.php:1551
+#: class-wp-cli.php:1508
 msgid "Output format: table|json|csv (default: table)."
 msgstr ""
 
-#: class-wp-cli.php:1552
+#: class-wp-cli.php:1509
 msgid "Reset rsssl_two_fa_reminder_sent meta for a clean run."
 msgstr ""
 
-#: class-wp-cli.php:1557
+#: class-wp-cli.php:1514
 msgid "Send 2FA reminders for the current selection."
 msgstr ""
 
-#: class-wp-cli.php:1562
+#: class-wp-cli.php:1519
 msgid "Reset rsssl_two_fa_reminder_sent meta before sending."
 msgstr ""
 
-#: class-wp-cli.php:1567
+#: class-wp-cli.php:1524
 msgid "Update the advanced-headers.php with the latest rules."
 msgstr ""
 
-#: class-wp-cli.php:1572
+#: class-wp-cli.php:1529
 msgid "Add IP block."
 msgstr ""
 
-#: class-wp-cli.php:1578
-#: class-wp-cli.php:1639
-#: class-wp-cli.php:1657
+#: class-wp-cli.php:1535
+#: class-wp-cli.php:1596
+#: class-wp-cli.php:1614
 msgid "The IP to block."
 msgstr ""
 
-#: class-wp-cli.php:1584
-#: class-wp-cli.php:1645
-#: class-wp-cli.php:1663
-#: class-wp-cli.php:1691
+#: class-wp-cli.php:1541
+#: class-wp-cli.php:1602
+#: class-wp-cli.php:1620
+#: class-wp-cli.php:1648
 msgid "Flag to add a permanent block."
 msgstr ""
 
-#: class-wp-cli.php:1590
+#: class-wp-cli.php:1547
 msgid "Optional note for the block."
 msgstr ""
 
-#: class-wp-cli.php:1596
+#: class-wp-cli.php:1553
 msgid "Remove IP block."
 msgstr ""
 
-#: class-wp-cli.php:1602
+#: class-wp-cli.php:1559
 msgid "The IP to remove the block for."
 msgstr ""
 
-#: class-wp-cli.php:1608
+#: class-wp-cli.php:1565
 msgid "Show blocked IP's."
 msgstr ""
 
-#: class-wp-cli.php:1613
+#: class-wp-cli.php:1570
 msgid "Add a trusted IP to the firewall."
 msgstr ""
 
-#: class-wp-cli.php:1618
+#: class-wp-cli.php:1575
 msgid "Remove a trusted IP from the firewall."
 msgstr ""
 
-#: class-wp-cli.php:1623
+#: class-wp-cli.php:1580
 msgid "Add a trusted IP to the limit login attempts table."
 msgstr ""
 
-#: class-wp-cli.php:1628
+#: class-wp-cli.php:1585
 msgid "Remove a trusted IP from the limit login attempts table."
 msgstr ""
 
-#: class-wp-cli.php:1633
+#: class-wp-cli.php:1590
 msgid "Add a blocked IP to the limit login attempts table."
 msgstr ""
 
-#: class-wp-cli.php:1651
+#: class-wp-cli.php:1608
 msgid "Remove a blocked IP from the limit login attempts table."
 msgstr ""
 
-#: class-wp-cli.php:1669
+#: class-wp-cli.php:1626
 msgid "Add a trusted username to the limit login attempts table."
 msgstr ""
 
-#: class-wp-cli.php:1674
+#: class-wp-cli.php:1631
 msgid "Remove a trusted username from the limit login attempts table."
 msgstr ""
 
-#: class-wp-cli.php:1679
+#: class-wp-cli.php:1636
 msgid "Add a blocked username to the limit login attempts table."
 msgstr ""
 
-#: class-wp-cli.php:1685
+#: class-wp-cli.php:1642
 msgid "The username to block."
 msgstr ""
 
-#: class-wp-cli.php:1697
+#: class-wp-cli.php:1654
 msgid "Remove a blocked username from the limit login attempts table."
 msgstr ""
 
-#: class-wp-cli.php:1703
+#: class-wp-cli.php:1660
 msgid "The username to remove the block for."
 msgstr ""
 
-#: class-wp-cli.php:1709
+#: class-wp-cli.php:1666
 msgid "Flag to remove a permanent block."
 msgstr ""
 
@@ -1120,7 +1105,7 @@ msgid "Essential security"
 msgstr ""
 
 #: core/app/Features/Onboarding/OnboardingStepsGenerator.php:162
-#: settings/build/366.cdae799ade6d811e7edd.js:1
+#: settings/build/366.0d5cd85e5385919f12a4.js:1
 #: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:145
 msgid "Enable"
 msgstr ""
@@ -1131,7 +1116,7 @@ msgstr ""
 
 #: core/app/Features/Onboarding/OnboardingStepsGenerator.php:184
 #: settings/config/menu.php:755
-#: settings/build/366.cdae799ade6d811e7edd.js:1
+#: settings/build/366.0d5cd85e5385919f12a4.js:1
 #: settings/build/536.a59728be12baf4673c92.js:1
 #: settings/build/635.b035afd7cc3020bda9bb.js:1
 #: settings/src/Dashboard/OtherPlugins/OtherPluginsData.js:74
@@ -1148,7 +1133,7 @@ msgstr ""
 #: core/app/Features/Onboarding/OnboardingStepsGenerator.php:222
 #: upgrade/upgrade-to-pro.php:132
 #: upgrade/upgrade-to-pro.php:145
-#: settings/build/366.cdae799ade6d811e7edd.js:1
+#: settings/build/366.0d5cd85e5385919f12a4.js:1
 #: settings/src/Dashboard/OtherPlugins/OtherPluginsData.js:73
 msgid "Install"
 msgstr ""
@@ -1345,7 +1330,7 @@ msgstr ""
 
 #: core/app/Features/Vulnerability/Controllers/PluginController.php:68
 #: settings/config/menu.php:182
-#: settings/build/366.cdae799ade6d811e7edd.js:1
+#: settings/build/366.0d5cd85e5385919f12a4.js:1
 #: settings/src/Dashboard/Vulnerabilities/VulnerabilitiesHeader.js:15
 msgid "Vulnerabilities"
 msgstr ""
@@ -1411,7 +1396,7 @@ msgstr ""
 #: core/app/Features/Vulnerability/Services/VulnerabilityEmailService.php:86
 #: mailer/class-mail.php:33
 #: mailer/class-mail.php:37
-#: settings/build/366.cdae799ade6d811e7edd.js:1
+#: settings/build/366.0d5cd85e5385919f12a4.js:1
 #: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:218
 msgid "Learn more"
 msgstr ""
@@ -1473,7 +1458,7 @@ msgstr ""
 #: core/app/Services/SettingsConfigService.php:25
 #: settings/config/menu.php:187
 #: settings/config/menu.php:192
-#: settings/build/366.cdae799ade6d811e7edd.js:1
+#: settings/build/366.0d5cd85e5385919f12a4.js:1
 #: settings/src/Dashboard/Progress/ProgressFooter.js:58
 #: settings/src/Dashboard/Progress/ProgressFooter.js:62
 msgid "Vulnerability scan"
@@ -1493,14 +1478,14 @@ msgstr ""
 
 #: core/app/Services/SettingsConfigService.php:56
 #: core/app/Services/SettingsConfigService.php:131
-#: security/firewall-manager.php:760
-#: security/firewall-manager.php:766
-#: security/firewall-manager.php:782
+#: security/firewall-manager.php:777
+#: security/firewall-manager.php:783
+#: security/firewall-manager.php:799
 #: settings/config/menu.php:529
 #: settings/config/menu.php:547
 #: modal/build/index.dc39341c6b0a7592427c.js:1
 #: modal/src/components/DeactivationModal/DeactivationModal.js:76
-#: settings/build/366.cdae799ade6d811e7edd.js:1
+#: settings/build/366.0d5cd85e5385919f12a4.js:1
 #: settings/src/Dashboard/Progress/ProgressFooter.js:44
 #: settings/src/Dashboard/Progress/ProgressFooter.js:48
 msgid "Firewall"
@@ -1528,12 +1513,12 @@ msgid "Strong Password policy"
 msgstr ""
 
 #: core/config/related.php:18
-#: settings/settings.php:551
+#: settings/settings.php:545
 msgid "Social Media Management"
 msgstr ""
 
 #: core/config/related.php:25
-#: settings/settings.php:557
+#: settings/settings.php:551
 msgid "Online Booking System"
 msgstr ""
 
@@ -1546,408 +1531,408 @@ msgstr ""
 msgid "Terms & Conditions"
 msgstr ""
 
-#: functions.php:764
+#: functions.php:640
 msgid "Sending..."
 msgstr ""
 
-#: functions.php:775
+#: functions.php:651
 msgid "Email sent!"
 msgstr ""
 
-#: functions.php:777
-#: functions.php:783
-#: functions.php:791
+#: functions.php:653
+#: functions.php:659
+#: functions.php:667
 msgid "Resend verification email"
 msgstr ""
 
-#: functions.php:781
+#: functions.php:657
 msgid "Failed to send"
 msgstr ""
 
-#: functions.php:789
+#: functions.php:665
 msgid "Error occurred"
 msgstr ""
 
-#: lets-encrypt/class-le-restapi.php:166
-#: lets-encrypt/class-le-restapi.php:227
+#: lets-encrypt/class-le-restapi.php:155
+#: lets-encrypt/class-le-restapi.php:216
 msgid "Permission denied."
 msgstr ""
 
-#: lets-encrypt/class-le-restapi.php:235
+#: lets-encrypt/class-le-restapi.php:224
 msgid "Test not found."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:249
+#: lets-encrypt/class-letsencrypt-handler.php:245
 msgid "It is not possible to install Let's Encrypt on a localhost environment."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:254
+#: lets-encrypt/class-letsencrypt-handler.php:250
 msgid "It is not possible to install Let's Encrypt on a subsite. Please go to the main site of your website."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:259
+#: lets-encrypt/class-letsencrypt-handler.php:255
 msgid "It is not possible to install Let's Encrypt on a subfolder configuration."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:263
+#: lets-encrypt/class-letsencrypt-handler.php:259
 msgid "Please adjust the CAA records via your DNS provider to allow Let’s Encrypt SSL certificates"
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:267
+#: lets-encrypt/class-letsencrypt-handler.php:263
 msgid "Your domain meets the requirements for Let's Encrypt."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:337
+#: lets-encrypt/class-letsencrypt-handler.php:333
 #, php-format
 msgid "Your certificate will expire on %s."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:337
+#: lets-encrypt/class-letsencrypt-handler.php:333
 msgid "Continue to renew."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:341
+#: lets-encrypt/class-letsencrypt-handler.php:337
 msgid "You already have a valid SSL certificate."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:347
+#: lets-encrypt/class-letsencrypt-handler.php:343
 msgid "SSL certificate should be generated and installed."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:378
+#: lets-encrypt/class-letsencrypt-handler.php:356
 msgid "The Hosting Panel software was not recognized. Depending on your hosting provider, the generated certificate may need to be installed manually."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:382
+#: lets-encrypt/class-letsencrypt-handler.php:360
 msgid "CPanel recognized. Possibly the certificate can be installed automatically."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:385
+#: lets-encrypt/class-letsencrypt-handler.php:363
 msgid "Plesk recognized. Possibly the certificate can be installed automatically."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:388
+#: lets-encrypt/class-letsencrypt-handler.php:366
 msgid "DirectAdmin recognized. Possibly the certificate can be installed automatically."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:404
+#: lets-encrypt/class-letsencrypt-handler.php:382
 msgid "The PHP function CURL is not available on your server, which is required. Please contact your hosting provider."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:408
+#: lets-encrypt/class-letsencrypt-handler.php:386
 msgid "The PHP function CURL has successfully been detected."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:428
+#: lets-encrypt/class-letsencrypt-handler.php:406
 msgid "Successfully retrieved account"
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:435
+#: lets-encrypt/class-letsencrypt-handler.php:413
 msgid "The used domain for your email address is not allowed."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:436
+#: lets-encrypt/class-letsencrypt-handler.php:414
 #, php-format
 msgid "Please change your email address %shere%s and try again."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:444
+#: lets-encrypt/class-letsencrypt-handler.php:422
 msgid "The email address was not set. Please set the email address"
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:482
-#: lets-encrypt/class-letsencrypt-handler.php:490
+#: lets-encrypt/class-letsencrypt-handler.php:460
+#: lets-encrypt/class-letsencrypt-handler.php:468
 msgid "Token successfully retrieved. Click the refresh button if it's not visible yet."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:497
+#: lets-encrypt/class-letsencrypt-handler.php:475
 msgid "Token not received yet."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:509
-#: lets-encrypt/class-letsencrypt-handler.php:512
-#: lets-encrypt/class-letsencrypt-handler.php:530
+#: lets-encrypt/class-letsencrypt-handler.php:487
+#: lets-encrypt/class-letsencrypt-handler.php:490
+#: lets-encrypt/class-letsencrypt-handler.php:508
 msgid "DNS token not retrieved."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:509
-#: lets-encrypt/class-letsencrypt-handler.php:530
+#: lets-encrypt/class-letsencrypt-handler.php:487
+#: lets-encrypt/class-letsencrypt-handler.php:508
 msgid "There are existing keys, the order had to be cleared first."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:509
-#: lets-encrypt/class-letsencrypt-handler.php:530
+#: lets-encrypt/class-letsencrypt-handler.php:487
+#: lets-encrypt/class-letsencrypt-handler.php:508
 msgid "Please start at the previous step."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:512
-#: lets-encrypt/class-letsencrypt-handler.php:843
+#: lets-encrypt/class-letsencrypt-handler.php:490
+#: lets-encrypt/class-letsencrypt-handler.php:821
 msgid "The order is invalid, possibly due to too many failed authorization attempts. Please start at the previous step."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:516
+#: lets-encrypt/class-letsencrypt-handler.php:494
 msgid "Order ID mismatch, regenerate order."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:519
+#: lets-encrypt/class-letsencrypt-handler.php:497
 msgid "If you entered your DNS records before, they need to be changed."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:547
+#: lets-encrypt/class-letsencrypt-handler.php:525
 msgid "Configured for HTTP challenge"
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:591
+#: lets-encrypt/class-letsencrypt-handler.php:569
 #: lets-encrypt/integrations/cpanel/functions.php:47
 msgid "Token not generated. Please complete the previous step."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:624
-#: lets-encrypt/class-letsencrypt-handler.php:669
-#: lets-encrypt/class-letsencrypt-handler.php:678
+#: lets-encrypt/class-letsencrypt-handler.php:602
+#: lets-encrypt/class-letsencrypt-handler.php:647
+#: lets-encrypt/class-letsencrypt-handler.php:656
 msgid "Successfully verified DNS records"
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:641
+#: lets-encrypt/class-letsencrypt-handler.php:619
 #, php-format
 msgid "The DNS response for %s was %s, while it should be %s."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:647
+#: lets-encrypt/class-letsencrypt-handler.php:625
 #, php-format
 msgid "Please wait %s before trying again, as this is the expiration of the DNS record currently."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:656
+#: lets-encrypt/class-letsencrypt-handler.php:634
 #, php-format
 msgid "Could not verify TXT record for domain %s"
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:699
+#: lets-encrypt/class-letsencrypt-handler.php:677
 #, php-format
 msgid "%d:%02d:%02d hours"
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:703
+#: lets-encrypt/class-letsencrypt-handler.php:681
 #, php-format
 msgid "%d:%02d minutes"
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:705
+#: lets-encrypt/class-letsencrypt-handler.php:683
 #, php-format
 msgid "%d seconds"
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:737
+#: lets-encrypt/class-letsencrypt-handler.php:715
 msgid "The certificate generation was rate limited for 5 minutes because the authorization failed."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:739
+#: lets-encrypt/class-letsencrypt-handler.php:717
 msgid "Please double check your DNS txt record."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:753
+#: lets-encrypt/class-letsencrypt-handler.php:731
 msgid "DNS records were not verified yet. Please complete the previous step."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:792
+#: lets-encrypt/class-letsencrypt-handler.php:770
 msgid "Certificate already generated. It was renewed if required."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:798
-#: lets-encrypt/class-letsencrypt-handler.php:874
+#: lets-encrypt/class-letsencrypt-handler.php:776
+#: lets-encrypt/class-letsencrypt-handler.php:852
 msgid "Files not created yet..."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:822
+#: lets-encrypt/class-letsencrypt-handler.php:800
 msgid "Authorization not completed yet."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:839
+#: lets-encrypt/class-letsencrypt-handler.php:817
 msgid "Due to a change in challenge type, the order had to be reset. Please start at the previous step."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:843
+#: lets-encrypt/class-letsencrypt-handler.php:821
 msgid "Certificate not created."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:846
+#: lets-encrypt/class-letsencrypt-handler.php:824
 msgid "As your order will be regenerated, you'll need to update your DNS text records."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:854
+#: lets-encrypt/class-letsencrypt-handler.php:832
 msgid "OCSP not supported, the certificate will be generated without OCSP."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:868
+#: lets-encrypt/class-letsencrypt-handler.php:846
 msgid "Successfully generated certificate."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:882
+#: lets-encrypt/class-letsencrypt-handler.php:860
 msgid "Bundle not available yet..."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:963
+#: lets-encrypt/class-letsencrypt-handler.php:941
 msgid "Failed retrieving account."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:972
+#: lets-encrypt/class-letsencrypt-handler.php:950
 msgid "Order successfully created."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:988
+#: lets-encrypt/class-letsencrypt-handler.php:966
 msgid "Order successfully retrieved."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1136
+#: lets-encrypt/class-letsencrypt-handler.php:1103
 msgid "Terms & Conditions are accepted."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1140
+#: lets-encrypt/class-letsencrypt-handler.php:1107
 msgid "The Terms & Conditions were not accepted. Please accept in the general settings."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1249
+#: lets-encrypt/class-letsencrypt-handler.php:1191
 #, php-format
 msgid "Please complete the following step(s) first: %s"
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1265
+#: lets-encrypt/class-letsencrypt-handler.php:1207
 msgid "The following directories do not have the necessary writing permissions."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1265
+#: lets-encrypt/class-letsencrypt-handler.php:1207
 msgid "Set permissions to 644 to enable SSL generation."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1272
+#: lets-encrypt/class-letsencrypt-handler.php:1214
 msgid "The required directories have the necessary writing permissions."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1285
+#: lets-encrypt/class-letsencrypt-handler.php:1227
 msgid "We have not detected any known hosting limitations."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1293
+#: lets-encrypt/class-letsencrypt-handler.php:1235
 #: lets-encrypt/functions.php:401
 #, php-format
 msgid "According to our information, your hosting provider does not allow any kind of SSL installation, other than their own paid certificate. For an alternative hosting provider with SSL, see this %sarticle%s."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1300
+#: lets-encrypt/class-letsencrypt-handler.php:1242
 #: lets-encrypt/functions.php:391
 #, php-format
 msgid "According to our information, your hosting provider supplies your account with an SSL certificate by default. Please contact your %shosting support%s if this is not the case."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1301
+#: lets-encrypt/class-letsencrypt-handler.php:1243
 msgid "After completing the installation, you can let Really Simple Security automatically configure your site for SSL by using the 'Activate SSL' button."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1316
+#: lets-encrypt/class-letsencrypt-handler.php:1258
 msgid "The challenge directory is not created yet."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1320
+#: lets-encrypt/class-letsencrypt-handler.php:1262
 msgid "The challenge directory was successfully created."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1333
+#: lets-encrypt/class-letsencrypt-handler.php:1275
 msgid "The key directory is not created yet."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1337
+#: lets-encrypt/class-letsencrypt-handler.php:1279
 msgid "Trying to create directory in root of website."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1345
+#: lets-encrypt/class-letsencrypt-handler.php:1287
 msgid "The key directory was successfully created."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1359
+#: lets-encrypt/class-letsencrypt-handler.php:1301
 msgid "The certs directory is not created yet."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1363
+#: lets-encrypt/class-letsencrypt-handler.php:1305
 msgid "The certs directory was successfully created."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1421
-#: lets-encrypt/class-letsencrypt-handler.php:1973
+#: lets-encrypt/class-letsencrypt-handler.php:1363
+#: lets-encrypt/class-letsencrypt-handler.php:1915
 msgid "no response"
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1425
+#: lets-encrypt/class-letsencrypt-handler.php:1367
 #, php-format
 msgid "Could not reach challenge directory over %s."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1431
+#: lets-encrypt/class-letsencrypt-handler.php:1373
 msgid "Challenge directory not writable."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1445
-#: lets-encrypt/class-letsencrypt-handler.php:1449
-#: lets-encrypt/class-letsencrypt-handler.php:2036
+#: lets-encrypt/class-letsencrypt-handler.php:1387
+#: lets-encrypt/class-letsencrypt-handler.php:1391
+#: lets-encrypt/class-letsencrypt-handler.php:1978
 #, php-format
 msgid "Error code %s"
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1456
-#: lets-encrypt/class-letsencrypt-handler.php:1996
-#: lets-encrypt/class-letsencrypt-handler.php:2047
+#: lets-encrypt/class-letsencrypt-handler.php:1398
+#: lets-encrypt/class-letsencrypt-handler.php:1938
+#: lets-encrypt/class-letsencrypt-handler.php:1989
 msgid "Successfully verified alias domain."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1931
+#: lets-encrypt/class-letsencrypt-handler.php:1873
 msgid "This is a multisite configuration with subdomains. You should generate a wildcard certificate on the root domain."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1936
+#: lets-encrypt/class-letsencrypt-handler.php:1878
 msgid "No subdomain setup detected."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1966
+#: lets-encrypt/class-letsencrypt-handler.php:1908
 msgid "Alias domain check is not relevant for a subdomain"
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1985
+#: lets-encrypt/class-letsencrypt-handler.php:1927
 msgid "Please check if the non www version of your site also points to this website."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1987
+#: lets-encrypt/class-letsencrypt-handler.php:1929
 msgid "Please check if the www version of your site also points to this website."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1989
+#: lets-encrypt/class-letsencrypt-handler.php:1931
 msgid "Could not verify alias domain."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1989
+#: lets-encrypt/class-letsencrypt-handler.php:1931
 msgid "If this is not the case, don't add this alias to your certificate."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:2018
+#: lets-encrypt/class-letsencrypt-handler.php:1960
 msgid "Could not create test folder and file."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:2019
+#: lets-encrypt/class-letsencrypt-handler.php:1961
 msgid "Please create a folder 'rsssl' in the uploads directory, with 644 permissions."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:2115
+#: lets-encrypt/class-letsencrypt-handler.php:2057
 msgid "The certificate installation was rate limited. Please try again later."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:2145
+#: lets-encrypt/class-letsencrypt-handler.php:2087
 msgid "Not recognized server."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:2150
+#: lets-encrypt/class-letsencrypt-handler.php:2092
 msgid "Installation failed."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:2155
+#: lets-encrypt/class-letsencrypt-handler.php:2097
 #: lets-encrypt/integrations/cloudways/functions.php:22
 #: lets-encrypt/integrations/cpanel/functions.php:17
 #: lets-encrypt/integrations/cpanel/functions.php:35
@@ -2035,7 +2020,7 @@ msgid "OCSP stapling is configured as enabled by default. You can disable this o
 msgstr ""
 
 #: lets-encrypt/config/fields.php:134
-#: lets-encrypt/config/notices.php:51
+#: lets-encrypt/config/notices.php:52
 #: settings/build/536.a59728be12baf4673c92.js:1
 #: settings/src/LetsEncrypt/DnsVerification.js:62
 msgid "Domain"
@@ -2191,61 +2176,61 @@ msgstr ""
 msgid "Checking for subdomain setup..."
 msgstr ""
 
-#: lets-encrypt/config/notices.php:28
+#: lets-encrypt/config/notices.php:29
 msgid "Your Key and Certificate directories are not properly protected."
 msgstr ""
 
-#: lets-encrypt/config/notices.php:41
+#: lets-encrypt/config/notices.php:42
 msgid "The non-www version of your site does not point to this website. This is recommended, as it will allow you to add it to the certificate as well."
 msgstr ""
 
-#: lets-encrypt/config/notices.php:43
+#: lets-encrypt/config/notices.php:44
 msgid "The www version of your site does not point to this website. This is recommended, as it will allow you to add it to the certificate as well."
 msgstr ""
 
-#: lets-encrypt/config/notices.php:71
+#: lets-encrypt/config/notices.php:72
 #, php-format
 msgid "Your certificate is valid until: %s"
 msgstr ""
 
-#: lets-encrypt/config/notices.php:75
+#: lets-encrypt/config/notices.php:76
 #, php-format
 msgid "Your certificate will expire on %s. You can renew it %shere%s."
 msgstr ""
 
-#: lets-encrypt/config/notices.php:90
+#: lets-encrypt/config/notices.php:91
 #, php-format
 msgid "The automatic installation of your certificate has failed. Please check your credentials, and retry the %sinstallation%s."
 msgstr ""
 
-#: lets-encrypt/config/notices.php:97
+#: lets-encrypt/config/notices.php:98
 #, php-format
 msgid "The SSL certificate has been renewed, and requires manual %sinstallation%s in your hosting dashboard."
 msgstr ""
 
-#: lets-encrypt/config/notices.php:104
+#: lets-encrypt/config/notices.php:105
 #, php-format
 msgid "Automatic renewal of your certificate was not possible. The SSL certificate should be %srenewed%s manually."
 msgstr ""
 
-#: lets-encrypt/config/notices.php:111
+#: lets-encrypt/config/notices.php:112
 msgid "Your certificate will be renewed and installed automatically."
 msgstr ""
 
-#: lets-encrypt/config/notices.php:128
+#: lets-encrypt/config/notices.php:129
 msgid "Your server provides shell functionality, which offers additional methods to install SSL. If installing SSL using the default methods is not possible, you can install the shell add on."
 msgstr ""
 
-#: lets-encrypt/config/notices.php:144
+#: lets-encrypt/config/notices.php:145
 msgid "You are using the Really Simple Security Shell Exec add on, but your current version needs to be updated."
 msgstr ""
 
-#: lets-encrypt/config/notices.php:166
+#: lets-encrypt/config/notices.php:167
 msgid "Renew installation"
 msgstr ""
 
-#: lets-encrypt/config/notices.php:169
-#: lets-encrypt/config/notices.php:172
+#: lets-encrypt/config/notices.php:170
+#: lets-encrypt/config/notices.php:173
 msgid "Renew certificate"
 msgstr ""
 
@@ -2369,21 +2354,21 @@ msgstr ""
 msgid "Errors were reported during installation."
 msgstr ""
 
-#: lets-encrypt/integrations/cpanel/cpanel.php:294
+#: lets-encrypt/integrations/cpanel/cpanel.php:291
 msgid "Unable to connect to cPanel"
 msgstr ""
 
-#: lets-encrypt/integrations/cpanel/cpanel.php:298
+#: lets-encrypt/integrations/cpanel/cpanel.php:295
 msgid "Login credentials incorrect"
 msgstr ""
 
-#: lets-encrypt/integrations/cpanel/cpanel.php:306
-#: lets-encrypt/integrations/cpanel/cpanel.php:325
+#: lets-encrypt/integrations/cpanel/cpanel.php:303
+#: lets-encrypt/integrations/cpanel/cpanel.php:322
 msgid "Successfully added TXT record."
 msgstr ""
 
-#: lets-encrypt/integrations/cpanel/cpanel.php:310
-#: lets-encrypt/integrations/cpanel/cpanel.php:329
+#: lets-encrypt/integrations/cpanel/cpanel.php:307
+#: lets-encrypt/integrations/cpanel/cpanel.php:326
 msgid "Could not automatically add TXT record. Please proceed manually, following the steps below."
 msgstr ""
 
@@ -2517,81 +2502,80 @@ msgstr ""
 msgid "Email notification error"
 msgstr ""
 
-#: placeholders/class-placeholder.php:327
-#: pro/class-scan.php:1659
+#: placeholders/class-placeholder.php:317
+#: pro/class-scan.php:1611
 #, php-format
 msgid "Mixed content in PHP file in %s"
 msgstr ""
 
-#: placeholders/class-placeholder.php:331
-#: placeholders/class-placeholder.php:348
-#: placeholders/class-placeholder.php:372
-#: placeholders/class-placeholder.php:389
-#: placeholders/class-placeholder.php:415
-#: placeholders/class-placeholder.php:440
-#: pro/class-scan.php:1663
-#: pro/class-scan.php:1696
-#: pro/class-scan.php:1734
-#: pro/class-scan.php:1771
-#: pro/class-scan.php:1809
-#: pro/class-scan.php:1856
+#: placeholders/class-placeholder.php:321
+#: placeholders/class-placeholder.php:338
+#: placeholders/class-placeholder.php:362
+#: placeholders/class-placeholder.php:379
+#: placeholders/class-placeholder.php:405
+#: placeholders/class-placeholder.php:430
+#: pro/class-scan.php:1615
+#: pro/class-scan.php:1648
+#: pro/class-scan.php:1686
+#: pro/class-scan.php:1723
+#: pro/class-scan.php:1761
+#: pro/class-scan.php:1808
 #: settings/build/536.a59728be12baf4673c92.js:1
 #: settings/src/Settings/MixedContentScan/MixedContentScan.js:90
 #: settings/src/Settings/Vulnerability/VulnerabilityDatatable.js:106
 msgid "Details"
 msgstr ""
 
-#: placeholders/class-placeholder.php:343
-#: pro/class-scan.php:1691
+#: placeholders/class-placeholder.php:333
+#: pro/class-scan.php:1643
 #, php-format
 msgid "Mixed content in %s"
 msgstr ""
 
-#: placeholders/class-placeholder.php:356
-#: placeholders/class-placeholder.php:397
-#: placeholders/class-placeholder.php:423
-#: placeholders/class-placeholder.php:448
-#: pro/class-scan.php:1704
-#: pro/class-scan.php:1779
-#: pro/class-scan.php:1817
-#: pro/class-scan.php:1864
+#: placeholders/class-placeholder.php:346
+#: placeholders/class-placeholder.php:387
+#: placeholders/class-placeholder.php:413
+#: placeholders/class-placeholder.php:438
+#: pro/class-scan.php:1656
+#: pro/class-scan.php:1731
+#: pro/class-scan.php:1769
+#: pro/class-scan.php:1816
 msgid "Import and insert file"
 msgstr ""
 
-#: placeholders/class-placeholder.php:357
-#: placeholders/class-placeholder.php:398
-#: placeholders/class-placeholder.php:424
-#: placeholders/class-placeholder.php:449
-#: pro/class-scan.php:1705
-#: pro/class-scan.php:1780
-#: pro/class-scan.php:1818
-#: pro/class-scan.php:1865
-#: pro/class-scan.php:2192
+#: placeholders/class-placeholder.php:347
+#: placeholders/class-placeholder.php:388
+#: placeholders/class-placeholder.php:414
+#: placeholders/class-placeholder.php:439
+#: pro/class-scan.php:1657
+#: pro/class-scan.php:1732
+#: pro/class-scan.php:1770
+#: pro/class-scan.php:1817
 msgid "Copyright warning!"
 msgstr ""
 
-#: placeholders/class-placeholder.php:368
-#: pro/class-scan.php:1730
+#: placeholders/class-placeholder.php:358
+#: pro/class-scan.php:1682
 msgid "Mixed content in CSS/JS file from another domain"
 msgstr ""
 
-#: placeholders/class-placeholder.php:385
-#: pro/class-scan.php:1767
+#: placeholders/class-placeholder.php:375
+#: pro/class-scan.php:1719
 #, php-format
 msgid "Mixed content in post: %s"
 msgstr ""
 
-#: placeholders/class-placeholder.php:410
-#: pro/class-scan.php:1797
+#: placeholders/class-placeholder.php:400
+#: pro/class-scan.php:1749
 msgid "Mixed content in the postmeta table"
 msgstr ""
 
-#: placeholders/class-placeholder.php:431
+#: placeholders/class-placeholder.php:421
 msgid "Widget area"
 msgstr ""
 
-#: placeholders/class-placeholder.php:436
-#: pro/class-scan.php:1852
+#: placeholders/class-placeholder.php:426
+#: pro/class-scan.php:1804
 msgid "Widget with mixed content"
 msgstr ""
 
@@ -2627,123 +2611,107 @@ msgstr ""
 msgid "%s is a singleton class and you cannot create a second instance."
 msgstr ""
 
-#: pro/class-admin.php:152
-msgid "You have installed Really Simple Security Pro. We have deactivated and removed the free plugin."
-msgstr ""
-
-#: pro/class-admin.php:165
+#: pro/class-admin.php:167
 #: settings/config/fields/general.php:211
 #: settings/config/menu.php:51
 msgid "Premium Support"
 msgstr ""
 
-#: pro/class-admin.php:621
+#: pro/class-admin.php:617
+msgid "You have installed Really Simple Security Pro. We have deactivated and removed the free plugin."
+msgstr ""
+
+#: pro/class-admin.php:631
 msgid "Elementor mixed content successfully converted."
 msgstr ""
 
-#: pro/class-admin.php:634
-#: pro/class-admin.php:639
+#: pro/class-admin.php:644
+#: pro/class-admin.php:649
 msgid "Potential redirect loop."
 msgstr ""
 
-#: pro/class-admin.php:635
+#: pro/class-admin.php:645
 msgid "No redirect to http detected."
 msgstr ""
 
-#: pro/class-admin.php:640
+#: pro/class-admin.php:650
 msgid "A redirect to http was detected. This might result in redirect loops."
 msgstr ""
 
-#: pro/class-admin.php:656
+#: pro/class-admin.php:666
 msgid "TLS version"
 msgstr ""
 
-#: pro/class-admin.php:657
+#: pro/class-admin.php:667
 msgid "Your site uses an outdated version of TLS. Upgrade to TLS 1.2 or TLS 1.3 to keep your site secure."
 msgstr ""
 
-#: pro/class-admin.php:671
+#: pro/class-admin.php:681
 msgid "Your site redirects 404 pages to the http:// version of your homepage. This can cause mixed content issues with images."
 msgstr ""
 
-#: pro/class-admin.php:684
+#: pro/class-admin.php:694
 msgid "You are using W3 Total Cache with Disk: Enhanced setting. This can prevent Security headers from being properly loaded."
 msgstr ""
 
-#: pro/class-headers.php:250
-#: pro/class-headers.php:459
+#: pro/class-headers.php:246
+#: pro/class-headers.php:455
 #, php-format
 msgid "The %s security header is not set by Really Simple Security, but has a non-recommended value: \"%s\"."
 msgstr ""
 
-#: pro/class-headers.php:270
-#: pro/class-headers.php:276
+#: pro/class-headers.php:266
+#: pro/class-headers.php:272
 msgid "HSTS Preload"
 msgstr ""
 
-#: pro/class-headers.php:271
+#: pro/class-headers.php:267
 #, php-format
 msgid "Your site has been configured for the HSTS preload list. If you have submitted your site, it will be preloaded. Click %shere%s to submit."
 msgstr ""
 
-#: pro/class-headers.php:277
+#: pro/class-headers.php:273
 msgid "Your site is not yet configured for the HSTS preload list."
 msgstr ""
 
-#: pro/class-headers.php:283
+#: pro/class-headers.php:279
 msgid "HSTS not enabled"
 msgstr ""
 
-#: pro/class-headers.php:284
+#: pro/class-headers.php:280
 msgid "Your site is not configured for HSTS yet."
 msgstr ""
 
-#: pro/class-headers.php:490
+#: pro/class-headers.php:486
 #, php-format
 msgid "The following essential security headers have not been set: %s"
 msgstr ""
 
-#: pro/class-importer.php:61
-msgid "Roll back file changes"
-msgstr ""
-
-#: pro/class-importer.php:93
-msgid "Something went wrong. If this doesn't work, you can put the original files back by changing files named 'rsssl-bkp-filename' to filename."
-msgstr ""
-
-#: pro/class-importer.php:105
-msgid "Your files were restored."
-msgstr ""
-
-#: pro/class-importer.php:107
-msgid "Your files already were restored."
-msgstr ""
-
-#: pro/class-importer.php:121
-#: pro/class-importer.php:162
-#: pro/class-importer.php:200
-#: pro/class-importer.php:242
-#: pro/class-importer.php:278
+#: pro/class-importer.php:55
+#: pro/class-importer.php:95
+#: pro/class-importer.php:132
+#: pro/class-importer.php:174
+#: pro/class-importer.php:210
 msgid "Something went wrong. Please refresh the page and try again, or fix manually."
 msgstr ""
 
-#: pro/class-importer.php:136
+#: pro/class-importer.php:69
 msgid "There was a problem editing the file. Please try manually."
 msgstr ""
 
-#: pro/class-importer.php:179
+#: pro/class-importer.php:111
 msgid "The file could not be downloaded. It might not exist, or downloading is blocked. Fix manually."
 msgstr ""
 
-#: pro/class-importer.php:221
-#: pro/class-importer.php:258
-#: pro/class-importer.php:297
+#: pro/class-importer.php:153
+#: pro/class-importer.php:190
+#: pro/class-importer.php:229
 msgid "The file could not be downloaded. The file might not exist, or downloading is be blocked by the server. Fix manually."
 msgstr ""
 
-#: pro/class-importer.php:537
-#: settings/build/index.80ae3fc27802e7eb112c.js:1
-#: settings/src/Settings/FieldsData.js:184
+#: pro/class-importer.php:447
+#: settings/build/index.8a738e7fc52f3a6e7f2a.js:1
+#: settings/src/Settings/FieldsData.js:185
 msgid "Something went wrong"
 msgstr ""
 
@@ -2751,387 +2719,364 @@ msgstr ""
 msgid "Activate your license for automatic updates."
 msgstr ""
 
-#: pro/class-licensing.php:184
-#: pro/class-licensing.php:206
-#: pro/class-licensing.php:672
-#: pro/class-licensing.php:679
-#: pro/class-licensing.php:686
-#: pro/class-licensing.php:693
-#: pro/class-licensing.php:700
-#: pro/class-licensing.php:715
+#: pro/class-licensing.php:180
+#: pro/class-licensing.php:202
+#: pro/class-licensing.php:668
+#: pro/class-licensing.php:675
+#: pro/class-licensing.php:682
+#: pro/class-licensing.php:689
+#: pro/class-licensing.php:696
+#: pro/class-licensing.php:711
 msgid "License"
 msgstr ""
 
-#: pro/class-licensing.php:185
+#: pro/class-licensing.php:181
 msgid "Manage your license here."
 msgstr ""
 
-#: pro/class-licensing.php:468
+#: pro/class-licensing.php:464
 msgid "unlimited"
 msgstr ""
 
-#: pro/class-licensing.php:475
+#: pro/class-licensing.php:471
 msgid "You have a lifetime license."
 msgstr ""
 
-#: pro/class-licensing.php:475
+#: pro/class-licensing.php:471
 #, php-format
 msgid "Valid until %s."
 msgstr ""
 
-#: pro/class-licensing.php:481
+#: pro/class-licensing.php:477
 #, php-format
 msgid "Upgrade to a %s5 sites or Agency%s license."
 msgstr ""
 
-#: pro/class-licensing.php:484
+#: pro/class-licensing.php:480
 #, php-format
 msgid "Upgrade to an %sAgency%s license."
 msgstr ""
 
-#: pro/class-licensing.php:487
+#: pro/class-licensing.php:483
 #, php-format
 msgid "You can renew your license on your %saccount%s."
 msgstr ""
 
-#: pro/class-licensing.php:492
+#: pro/class-licensing.php:488
 msgid "Unlimited activations available."
 msgstr ""
 
-#: pro/class-licensing.php:495
-#: pro/class-licensing.php:591
+#: pro/class-licensing.php:491
+#: pro/class-licensing.php:587
 #, php-format
 msgid "%s/%s activations available."
 msgstr ""
 
-#: pro/class-licensing.php:511
+#: pro/class-licensing.php:507
 #, php-format
 msgid "Valid license for %s."
 msgstr ""
 
-#: pro/class-licensing.php:536
+#: pro/class-licensing.php:532
 #, php-format
 msgid "Multisite detected. Please upgrade to %smultisite%s."
 msgstr ""
 
-#: pro/class-licensing.php:544
+#: pro/class-licensing.php:540
 msgid "The license information could not be retrieved at this moment. Please try again at a later time."
 msgstr ""
 
-#: pro/class-licensing.php:550
+#: pro/class-licensing.php:546
 #, php-format
 msgid "Please enter your license key. Available in your %saccount%s."
 msgstr ""
 
-#: pro/class-licensing.php:558
+#: pro/class-licensing.php:554
 msgid "Please activate your license key."
 msgstr ""
 
-#: pro/class-licensing.php:564
+#: pro/class-licensing.php:560
 #, php-format
 msgid "Your license has been revoked. Please contact %ssupport%s."
 msgstr ""
 
-#: pro/class-licensing.php:570
+#: pro/class-licensing.php:566
 #, php-format
 msgid "Your license could not be found in our system. Please contact %ssupport%s."
 msgstr ""
 
-#: pro/class-licensing.php:577
+#: pro/class-licensing.php:573
 #, php-format
 msgid "This license is not valid. Find out why on your %saccount%s."
 msgstr ""
 
-#: pro/class-licensing.php:584
+#: pro/class-licensing.php:580
 #, php-format
 msgid "This license is not valid for this product. Find out why on your %saccount%s."
 msgstr ""
 
-#: pro/class-licensing.php:597
+#: pro/class-licensing.php:593
 #, php-format
 msgid "Your license key has expired. Please renew your license key on your %saccount%s."
 msgstr ""
 
-#: pro/class-licensing.php:605
+#: pro/class-licensing.php:601
 msgid "Success"
 msgstr ""
 
-#: pro/class-licensing.php:606
+#: pro/class-licensing.php:602
 msgid "Premium"
 msgstr ""
 
-#: pro/class-licensing.php:649
+#: pro/class-licensing.php:645
 msgid "Your Really Simple Security Pro license hasn't been activated."
 msgstr ""
 
-#: pro/class-licensing.php:650
+#: pro/class-licensing.php:646
 msgid "Your Really Simple Security Pro license is not valid."
 msgstr ""
 
-#: pro/class-licensing.php:664
+#: pro/class-licensing.php:660
 #, php-format
 msgid "%sActivate%s your license."
 msgstr ""
 
-#: pro/class-licensing.php:666
+#: pro/class-licensing.php:662
 #, php-format
 msgid "You can upgrade on your %saccount%s."
 msgstr ""
 
-#: pro/class-licensing.php:673
+#: pro/class-licensing.php:669
 msgid "Your Really Simple Security Pro license key has expired. Please renew your license to continue receiving updates and premium support."
 msgstr ""
 
-#: pro/class-licensing.php:680
+#: pro/class-licensing.php:676
 msgid "Your Really Simple Security Pro license key is not activated. Please activate your license to continue receiving updates and premium support."
 msgstr ""
 
-#: pro/class-licensing.php:687
+#: pro/class-licensing.php:683
 msgid "This domain is not activated for this Really Simple Security Pro license. Please activate the license for this domain."
 msgstr ""
 
-#: pro/class-licensing.php:694
+#: pro/class-licensing.php:690
 msgid "You do not have any activations left on your Really Simple Security Pro license. Please upgrade your plan for additional activations."
 msgstr ""
 
-#: pro/class-licensing.php:701
+#: pro/class-licensing.php:697
 msgid "Your Really Simple Security Pro license key hasn't been activated yet. You can activate your license key on the license tab."
 msgstr ""
 
-#: pro/class-licensing.php:716
+#: pro/class-licensing.php:712
 msgid "You are using Really Simple Security Pro single site on a multisite environment. Please install Really Simple Security multisite networkwide for multisite support."
 msgstr ""
 
-#: pro/class-scan.php:142
+#: pro/class-scan.php:117
 msgid "The last scan was completed with errors. Only migrate if you are sure the found errors are not a problem for your site."
 msgstr ""
 
-#: pro/class-scan.php:147
+#: pro/class-scan.php:122
 msgid "The last Mixed Content Scan was completed with errors. Are you sure these issues don't impact your site?"
 msgstr ""
 
-#: pro/class-scan.php:208
-#: pro/class-scan.php:1927
-msgid "Never"
-msgstr ""
-
-#: pro/class-scan.php:214
-#, php-format
-msgctxt "'date' at 'time'"
-msgid "%s at %s"
-msgstr ""
-
-#: pro/class-scan.php:247
+#: pro/class-scan.php:202
 msgid "Generating web page list"
 msgstr ""
 
-#: pro/class-scan.php:260
+#: pro/class-scan.php:215
 #, php-format
 msgid "Searching for js and css files and links to external resources in website, %d of %d"
 msgstr ""
 
-#: pro/class-scan.php:275
+#: pro/class-scan.php:230
 #, php-format
 msgid "Searching for mixed content in css and js files, %s of %s"
 msgstr ""
 
-#: pro/class-scan.php:289
+#: pro/class-scan.php:244
 msgid "Generating file list"
 msgstr ""
 
-#: pro/class-scan.php:303
+#: pro/class-scan.php:258
 #, php-format
 msgid "Checking posts for external URLs, %s of %s"
 msgstr ""
 
-#: pro/class-scan.php:316
+#: pro/class-scan.php:271
 msgid "Checking widgets for external URLs"
 msgstr ""
 
-#: pro/class-scan.php:327
+#: pro/class-scan.php:282
 msgid "Checking which postmeta contain external resources"
 msgstr ""
 
-#: pro/class-scan.php:340
+#: pro/class-scan.php:295
 #, php-format
 msgid "Checking which resources can't load over ssl, %s of %s"
 msgstr ""
 
-#: pro/class-scan.php:355
+#: pro/class-scan.php:310
 #, php-format
 msgid "Checking if external js or css files contain http links, %s of %s"
 msgstr ""
 
-#: pro/class-scan.php:370
+#: pro/class-scan.php:325
 #, php-format
 msgid "Looking up blocked resources in files, %s of %s"
 msgstr ""
 
-#: pro/class-scan.php:384
+#: pro/class-scan.php:339
 msgid "Looking up blocked resources in posts"
 msgstr ""
 
-#: pro/class-scan.php:397
+#: pro/class-scan.php:352
 msgid "Looking up blocked resources in postmeta"
 msgstr ""
 
-#: pro/class-scan.php:412
+#: pro/class-scan.php:367
 msgid "Looking up blocked resources in widgets"
 msgstr ""
 
-#: pro/class-scan.php:420
+#: pro/class-scan.php:375
 msgid "Finished scan"
 msgstr ""
 
-#: pro/class-scan.php:1607
+#: pro/class-scan.php:1559
 msgid "theme file"
 msgstr ""
 
-#: pro/class-scan.php:1609
+#: pro/class-scan.php:1561
 msgid "mu plugin file"
 msgstr ""
 
-#: pro/class-scan.php:1611
+#: pro/class-scan.php:1563
 msgid "plugin file"
 msgstr ""
 
-#: pro/class-scan.php:1613
+#: pro/class-scan.php:1565
 msgid "uploads file, possibly generated by plugin or theme"
 msgstr ""
 
-#: pro/class-scan.php:1615
+#: pro/class-scan.php:1567
 msgid "cached file, deactivate cache to see the actual source"
 msgstr ""
 
-#: pro/class-scan.php:1617
+#: pro/class-scan.php:1569
 msgid "file"
 msgstr ""
 
-#: pro/class-scan.php:1632
+#: pro/class-scan.php:1584
 msgid "Downloading files from other websites can cause serious copyright issues! It is always illegal to use images, files, or any copyright protected material on your own site without the consent of the copyright holder. Please ask the copyright holder for permission. Use this function at your own risk."
 msgstr ""
 
-#: pro/class-scan.php:1633
+#: pro/class-scan.php:1585
 msgid "This downloads the file from the domain without SSL, inserts it into WP media, and changes the URL to the new URL."
 msgstr ""
 
-#: pro/class-scan.php:1654
-#: pro/class-scan.php:1685
-#: pro/class-scan.php:1761
-#: pro/class-scan.php:1798
-#: pro/class-scan.php:1847
+#: pro/class-scan.php:1606
+#: pro/class-scan.php:1637
+#: pro/class-scan.php:1713
+#: pro/class-scan.php:1750
+#: pro/class-scan.php:1799
 #, php-format
 msgid "Blocked URL: %s"
 msgstr ""
 
-#: pro/class-scan.php:1654
+#: pro/class-scan.php:1606
 msgid "You can edit the source file manually by pressing the edit button."
 msgstr ""
 
-#: pro/class-scan.php:1686
+#: pro/class-scan.php:1638
 msgid "Can be fixed manually by editing the respective mu-plugin file in the /wp-content/mu-plugins/ directory."
 msgstr ""
 
-#: pro/class-scan.php:1686
+#: pro/class-scan.php:1638
 msgid "Can be fixed automatically by pressing the Fix button. If fixing fails, the source file can be edited manually by pressing the Edit button."
 msgstr ""
 
-#: pro/class-scan.php:1724
+#: pro/class-scan.php:1676
 msgid "Cannot be fixed automatically, as the mixed content is coming from an external domain. Contact the owner of the domain to update the CSS/JS file"
 msgstr ""
 
-#: pro/class-scan.php:1725
+#: pro/class-scan.php:1677
 #, php-format
 msgid "Mixed content resources: %s"
 msgstr ""
 
-#: pro/class-scan.php:1762
+#: pro/class-scan.php:1714
 msgid "Mixed content found in in a post. Can be fixed automatically by pressing the fix button. Pressing the edit button allows you to update the link in the post manually."
 msgstr ""
 
-#: pro/class-scan.php:1797
+#: pro/class-scan.php:1749
 msgid "iFrame in the wp_postmeta database table"
 msgstr ""
 
-#: pro/class-scan.php:1799
+#: pro/class-scan.php:1751
 msgid "Mixed content from a postmeta table in your database. Usually won't cause any mixed content on the front-end. Check the post if it causes mixed content. If so, the link can be replaced directly in the database."
 msgstr ""
 
-#: pro/class-scan.php:1842
+#: pro/class-scan.php:1794
 #, php-format
 msgid "Widget area \"%s\""
 msgstr ""
 
-#: pro/class-scan.php:1847
+#: pro/class-scan.php:1799
 msgid "Mixed content found in a widget. Press the edit link to edit the widget manually."
 msgstr ""
 
-#: pro/class-scan.php:2191
-msgid "Roll back changes made to your files"
+#: pro/class-scan.php:1853
+msgid "Never"
 msgstr ""
 
-#: pro/class-scan.php:2195
-msgid "This will put the files back that were changed by the fix option in Really Simple Security Pro."
-msgstr ""
-
-#: pro/class-scan.php:2197
-msgid "Please note that any changes you have made since to your current files, will be lost."
-msgstr ""
-
-#: pro/class-scan.php:2202
-msgid "Restore files"
-msgstr ""
-
-#: pro/csp-violation-endpoint.php:72
+#: pro/csp-violation-endpoint.php:67
 msgid "Unknown directive given."
 msgstr ""
 
-#: pro/csp-violation-endpoint.php:80
+#: pro/csp-violation-endpoint.php:75
 msgid "Could not recognize given URI."
 msgstr ""
 
-#: pro/csp-violation-endpoint.php:89
+#: pro/csp-violation-endpoint.php:84
 msgid "CSP entry already exists!"
 msgstr ""
 
-#: pro/csp-violation-endpoint.php:94
+#: pro/csp-violation-endpoint.php:89
 msgid "Manual"
 msgstr ""
 
-#: pro/csp-violation-endpoint.php:99
+#: pro/csp-violation-endpoint.php:94
 msgid "CSP entry added successfully!"
 msgstr ""
 
-#: pro/csp-violation-endpoint.php:100
+#: pro/csp-violation-endpoint.php:95
 msgid "CSP entry could not be added. Try again."
 msgstr ""
 
-#: pro/csp-violation-endpoint.php:195
+#: pro/csp-violation-endpoint.php:190
 msgid "A required database table is missing. Please check if you have permissions to add this database table."
 msgstr ""
 
-#: pro/csp-violation-endpoint.php:217
+#: pro/csp-violation-endpoint.php:212
 #, php-format
 msgid "Learning Mode is active for your Content Security Policy and will complete in %s days."
 msgstr ""
 
-#: pro/csp-violation-endpoint.php:229
+#: pro/csp-violation-endpoint.php:224
 msgid "Follow these steps to complete the setup:"
 msgstr ""
 
-#: pro/csp-violation-endpoint.php:231
+#: pro/csp-violation-endpoint.php:226
 msgid "Review the detected configuration in 'Content Security Policy'."
 msgstr ""
 
-#: pro/csp-violation-endpoint.php:232
+#: pro/csp-violation-endpoint.php:227
 msgid "Click 'Enforce' to enforce the configuration on your site."
 msgstr ""
 
-#: pro/csp-violation-endpoint.php:256
+#: pro/csp-violation-endpoint.php:251
 msgid "Content Security Policy maximum size exceeded"
 msgstr ""
 
-#: pro/csp-violation-endpoint.php:257
+#: pro/csp-violation-endpoint.php:252
 msgid "Your site has exceeded the maximum size for HTTP headers. To prevent issues, the Content Security Policy won't be added to your HTTP headers."
 msgstr ""
 
@@ -3165,6 +3110,16 @@ msgstr ""
 
 #: pro/security/notices.php:106
 msgid "Permalink settings"
+msgstr ""
+
+#: pro/security/passkey-frontend-functions.php:10
+#: settings/config/fields/two-fa.php:62
+#: settings/config/fields/two-fa.php:66
+msgid "Passkeys require HTTPS to function. Please enable SSL on your site first."
+msgstr ""
+
+#: pro/security/passkey-frontend-functions.php:14
+msgid "Passkey login requires the REST API to be accessible for logged-out users. Please ensure the REST API is not blocked."
 msgstr ""
 
 #: pro/security/wordpress/block-admin-creation.php:379
@@ -3229,21 +3184,20 @@ msgid "Your access has been denied due to too many failed login attempts."
 msgstr ""
 
 #: pro/security/wordpress/class-rsssl-event-listener.php:265
-#: pro/security/wordpress/class-rsssl-event-listener.php:320
+#: pro/security/wordpress/class-rsssl-event-listener.php:310
 msgid "Your access has been denied, too many login attempts"
 msgstr ""
 
-#: pro/security/wordpress/class-rsssl-event-listener.php:287
-#: pro/security/wordpress/class-rsssl-event-listener.php:313
+#: pro/security/wordpress/class-rsssl-event-listener.php:303
 msgid "Your access has been denied, please contact the webmaster for support"
 msgstr ""
 
-#: pro/security/wordpress/class-rsssl-event-listener.php:328
+#: pro/security/wordpress/class-rsssl-event-listener.php:318
 #: security/wordpress/two-fa/class-rsssl-two-factor.php:573
 msgid "Security nonce invalid or expired."
 msgstr ""
 
-#: pro/security/wordpress/class-rsssl-event-log.php:263
+#: pro/security/wordpress/class-rsssl-event-log.php:261
 msgid "unknown"
 msgstr ""
 
@@ -3299,7 +3253,7 @@ msgstr ""
 
 #: pro/security/wordpress/class-rsssl-geo-block.php:625
 #: pro/security/wordpress/class-rsssl-geo-block.php:672
-#: pro/security/wordpress/class-rsssl-geo-block.php:835
+#: pro/security/wordpress/class-rsssl-geo-block.php:834
 msgid "Missing or invalid country data."
 msgstr ""
 
@@ -3320,9 +3274,9 @@ msgstr ""
 
 #: pro/security/wordpress/class-rsssl-geo-block.php:651
 #: pro/security/wordpress/class-rsssl-geo-block.php:697
-#: pro/security/wordpress/class-rsssl-geo-block.php:812
-#: pro/security/wordpress/class-rsssl-geo-block.php:858
-#: pro/security/wordpress/class-rsssl-geo-block.php:1352
+#: pro/security/wordpress/class-rsssl-geo-block.php:811
+#: pro/security/wordpress/class-rsssl-geo-block.php:857
+#: pro/security/wordpress/class-rsssl-geo-block.php:1339
 msgid "An error occurred: "
 msgstr ""
 
@@ -3341,50 +3295,50 @@ msgid "An error occurred while adding countries to the list."
 msgstr ""
 
 #: pro/security/wordpress/class-rsssl-geo-block.php:779
-#: pro/security/wordpress/class-rsssl-geo-block.php:1665
-#: pro/security/wordpress/class-rsssl-geo-block.php:1712
-#: pro/security/wordpress/class-rsssl-geo-block.php:1820
+#: pro/security/wordpress/class-rsssl-geo-block.php:1633
+#: pro/security/wordpress/class-rsssl-geo-block.php:1680
+#: pro/security/wordpress/class-rsssl-geo-block.php:1788
 msgid "Invalid data provided."
 msgstr ""
 
 #. translators: %s: Name of the country that was removed from the blocked list.
-#: pro/security/wordpress/class-rsssl-geo-block.php:800
-#: pro/security/wordpress/class-rsssl-geo-block.php:848
+#: pro/security/wordpress/class-rsssl-geo-block.php:799
+#: pro/security/wordpress/class-rsssl-geo-block.php:847
 #, php-format
 msgid "%s not in the list."
 msgstr ""
 
 #. translators: %s: Name of the country that was removed from the blocked list.
-#: pro/security/wordpress/class-rsssl-geo-block.php:824
+#: pro/security/wordpress/class-rsssl-geo-block.php:823
 #, php-format
 msgid "Access from %s is now allowed."
 msgstr ""
 
-#: pro/security/wordpress/class-rsssl-geo-block.php:866
+#: pro/security/wordpress/class-rsssl-geo-block.php:865
 msgid "Access from the selected countries is now allowed."
 msgstr ""
 
-#: pro/security/wordpress/class-rsssl-geo-block.php:872
+#: pro/security/wordpress/class-rsssl-geo-block.php:871
 msgid "An error occurred while removing countries from the list."
 msgstr ""
 
-#: pro/security/wordpress/class-rsssl-geo-block.php:903
+#: pro/security/wordpress/class-rsssl-geo-block.php:902
 #, php-format
 msgid "Failed to delete %s from the list."
 msgstr ""
 
-#: pro/security/wordpress/class-rsssl-geo-block.php:995
+#: pro/security/wordpress/class-rsssl-geo-block.php:994
 #: settings/config/menu.php:659
 msgid "Permanent"
 msgstr ""
 
-#: pro/security/wordpress/class-rsssl-geo-block.php:1256
-#: pro/security/wordpress/class-rsssl-geo-block.php:1292
+#: pro/security/wordpress/class-rsssl-geo-block.php:1243
+#: pro/security/wordpress/class-rsssl-geo-block.php:1279
 #: pro/security/wordpress/limitlogin/class-rsssl-admin-config-countries.php:165
 msgid "Missing filter value."
 msgstr ""
 
-#: pro/security/wordpress/class-rsssl-geo-block.php:1379
+#: pro/security/wordpress/class-rsssl-geo-block.php:1366
 #: settings/config/fields/firewall.php:170
 #: settings/config/fields/firewall.php:215
 #: settings/config/fields/limit-login-attempts.php:139
@@ -3398,25 +3352,25 @@ msgstr ""
 msgid "Blocked"
 msgstr ""
 
-#: pro/security/wordpress/class-rsssl-geo-block.php:1670
+#: pro/security/wordpress/class-rsssl-geo-block.php:1638
 msgid "Invalid IP address format."
 msgstr ""
 
 #. translators: %s: Name of the country that was removed from the blocked list.
-#: pro/security/wordpress/class-rsssl-geo-block.php:1697
+#: pro/security/wordpress/class-rsssl-geo-block.php:1665
 #, php-format
 msgid "IP address %s is now %s."
 msgstr ""
 
-#: pro/security/wordpress/class-rsssl-geo-block.php:1726
+#: pro/security/wordpress/class-rsssl-geo-block.php:1694
 msgid "IP removed from list."
 msgstr ""
 
-#: pro/security/wordpress/class-rsssl-geo-block.php:1814
+#: pro/security/wordpress/class-rsssl-geo-block.php:1782
 msgid "User agent added."
 msgstr ""
 
-#: pro/security/wordpress/class-rsssl-geo-block.php:1852
+#: pro/security/wordpress/class-rsssl-geo-block.php:1820
 msgid "User agent removed from current list."
 msgstr ""
 
@@ -3539,7 +3493,7 @@ msgid "Login by %s failed (incorrect credentials)"
 msgstr ""
 
 #: pro/security/wordpress/eventlog/class-rsssl-event-type.php:258
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:605
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:563
 msgid "REST API authentication successful"
 msgstr ""
 
@@ -3547,25 +3501,25 @@ msgstr ""
 #: pro/security/wordpress/eventlog/class-rsssl-event-type.php:263
 #: pro/security/wordpress/eventlog/class-rsssl-event-type.php:268
 #: pro/security/wordpress/eventlog/class-rsssl-event-type.php:273
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:605
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:610
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:615
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:620
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:563
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:568
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:573
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:578
 msgid "Authentication"
 msgstr ""
 
 #: pro/security/wordpress/eventlog/class-rsssl-event-type.php:263
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:610
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:568
 msgid "REST API authentication failed"
 msgstr ""
 
 #: pro/security/wordpress/eventlog/class-rsssl-event-type.php:268
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:615
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:573
 msgid "XML-RPC authentication successful"
 msgstr ""
 
 #: pro/security/wordpress/eventlog/class-rsssl-event-type.php:273
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:620
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:578
 msgid "XML-RPC authentication failed"
 msgstr ""
 
@@ -3702,218 +3656,163 @@ msgstr ""
 msgid "MFA setup required"
 msgstr ""
 
-#. translators: %s is replaced with the country name.
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:368
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:369
 #, php-format
-msgid "Country %s was added to the block list"
+msgid "%s was added to the block list"
 msgstr ""
 
-#. translators: %s is replaced with the country name.
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:371
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:375
 #, php-format
-msgid "Country %s was removed from the block list"
+msgid "%s was removed from the block list"
 msgstr ""
 
-#. translators: %s is replaced with the region name.
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:374
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:410
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:381
 #, php-format
 msgid "All countries in the region %s were added to the block list"
 msgstr ""
 
-#. translators: %s is replaced with the region name.
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:377
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:416
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:387
 #, php-format
 msgid "All countries from %s were removed from the block list"
 msgstr ""
 
 #. translators: %s is replaced with the IP address.
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:380
-#, php-format
-msgid "IP address %s exceeded the 404 threshold"
-msgstr ""
-
-#. translators: %s is replaced with the IP address.
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:383
-#, php-format
-msgid "IP address %s was blocked by the administrator"
-msgstr ""
-
-#. translators: %s is replaced with the IP address.
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:386
-#, php-format
-msgid "IP address %s was removed from the block list"
-msgstr ""
-
-#. translators: %s is replaced with the IP address.
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:389
-#, php-format
-msgid "IP address %s was added to the allowlist"
-msgstr ""
-
-#. translators: %s is replaced with the IP address.
 #: pro/security/wordpress/eventlog/class-rsssl-event-type.php:392
-#, php-format
-msgid "IP address %s was removed from the allowlist"
-msgstr ""
-
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:398
-#, php-format
-msgid "%s was added to the block list"
-msgstr ""
-
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:404
-#, php-format
-msgid "%s was removed from the block list"
-msgstr ""
-
-#. translators: %s is replaced with the IP address.
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:421
 #, php-format
 msgid "IP address: %s exceeded the 404 threshold"
 msgstr ""
 
 #. translators: %s is replaced with the IP address.
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:424
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:395
 #, php-format
 msgid "IP address: %s was blocked by the administrator"
 msgstr ""
 
 #. translators: %s is replaced with the IP address.
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:427
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:398
 #, php-format
 msgid "IP address: %s was removed from the block list"
 msgstr ""
 
 #. translators: %s is replaced with the IP address.
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:430
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:401
 #, php-format
 msgid "IP address: %s was added to the allowlist"
 msgstr ""
 
 #. translators: %s is replaced with the IP address.
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:433
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:404
 #, php-format
 msgid "IP address: %s was removed from the allowlist"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:436
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:700
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:407
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:638
 msgid "Unknown event"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:601
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:559
 msgid "Login successful"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:603
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:561
 msgid "Login failed"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:625
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:583
 msgid "User locked out"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:628
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:586
 msgid "User removed from blocklist"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:630
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:588
 msgid "User added to blocklist"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:632
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:590
 msgid "User added to trusted list"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:634
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:592
 msgid "User removed from trusted list"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:636
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:594
 msgid "IP address locked-out"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:639
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:597
 msgid "IP removed from blocklist"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:641
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:599
 msgid "IP added to blocklist"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:643
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:601
 msgid "IP added to trusted list"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:645
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:603
 msgid "IP removed from trusted list"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:648
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:606
 msgid "Geo-IP blocklist changed"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:650
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:608
 msgid "Unblock link sent"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:653
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:611
 msgid "Login blocked by username"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:656
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:614
 msgid "Login blocked by IP address"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:658
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:616
 msgid "Login blocked by Geo-IP list"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:661
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:681
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:619
 msgid "Country added to block list"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:663
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:683
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:621
 msgid "Country removed from block list"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:665
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:685
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:623
 msgid "Region added to block list"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:667
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:687
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:625
 msgid "Region removed from block list"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:669
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:689
-#: pro/security/wordpress/firewall/models/class-rsssl-404-block.php:186
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:627
+#: pro/security/wordpress/firewall/models/class-rsssl-404-block.php:185
 msgid "404 threshold exceeded"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:671
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:691
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:629
 msgid "IP added to block list"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:673
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:693
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:631
 msgid "IP removed from block list"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:675
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:695
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:633
 msgid "IP added to allowlist"
 msgstr ""
 
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:677
-#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:697
+#: pro/security/wordpress/eventlog/class-rsssl-event-type.php:635
 msgid "IP removed from allowlist"
 msgstr ""
 
@@ -3979,11 +3878,11 @@ msgstr ""
 msgid "All"
 msgstr ""
 
-#: pro/security/wordpress/limitlogin/class-rsssl-geo-location.php:82
+#: pro/security/wordpress/limitlogin/class-rsssl-geo-location.php:84
 msgid "MaxMind GeoIP database not installed"
 msgstr ""
 
-#: pro/security/wordpress/limitlogin/class-rsssl-geo-location.php:84
+#: pro/security/wordpress/limitlogin/class-rsssl-geo-location.php:86
 #, php-format
 msgid "You have enabled GEO IP, but the GEO IP database hasn't been downloaded automatically. If you continue to see this message, download the file from %1$sReally Simple Security CDN%2$s, unzip it, and put it in the %3$s folder in your WordPress uploads directory"
 msgstr ""
@@ -3997,19 +3896,19 @@ msgid "Enable Passkey login"
 msgstr ""
 
 #: pro/security/wordpress/passkey/class-rsssl-passkey.php:364
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1622
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1621
 msgid "Failed to create a login nonce."
 msgstr ""
 
-#: pro/security/wordpress/passkey/class-rsssl-passkey.php:399
+#: pro/security/wordpress/passkey/class-rsssl-passkey.php:400
 msgid "Passkey Setup"
 msgstr ""
 
-#: pro/security/wordpress/passkey/class-rsssl-passkey.php:442
+#: pro/security/wordpress/passkey/class-rsssl-passkey.php:443
 msgid "Your account has been temporarily locked due to security policies. Please contact the administrator to regain access."
 msgstr ""
 
-#: pro/security/wordpress/passkey/class-rsssl-passkey.php:458
+#: pro/security/wordpress/passkey/class-rsssl-passkey.php:459
 msgid "Your account has been configured for passkey and is enforced please login using passkey."
 msgstr ""
 
@@ -4102,1049 +4001,1048 @@ msgid "Anguilla"
 msgstr ""
 
 #: pro/security/wordpress/traits/trait-rsssl-country.php:38
-#: pro/security/wordpress/traits/trait-rsssl-country.php:293
-msgid "Antarctica"
-msgstr ""
-
-#: pro/security/wordpress/traits/trait-rsssl-country.php:39
 msgid "Antigua and Barbuda"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:40
+#: pro/security/wordpress/traits/trait-rsssl-country.php:39
 msgid "Argentina"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:41
+#: pro/security/wordpress/traits/trait-rsssl-country.php:40
 msgid "Armenia"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:42
+#: pro/security/wordpress/traits/trait-rsssl-country.php:41
 msgid "Aruba"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:43
+#: pro/security/wordpress/traits/trait-rsssl-country.php:42
 msgid "Australia"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:44
+#: pro/security/wordpress/traits/trait-rsssl-country.php:43
 msgid "Austria"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:45
+#: pro/security/wordpress/traits/trait-rsssl-country.php:44
 msgid "Azerbaijan"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:46
+#: pro/security/wordpress/traits/trait-rsssl-country.php:45
 msgid "Bahamas"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:47
+#: pro/security/wordpress/traits/trait-rsssl-country.php:46
 msgid "Bahrain"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:48
+#: pro/security/wordpress/traits/trait-rsssl-country.php:47
 msgid "Bangladesh"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:49
+#: pro/security/wordpress/traits/trait-rsssl-country.php:48
 msgid "Barbados"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:50
+#: pro/security/wordpress/traits/trait-rsssl-country.php:49
 msgid "Belarus"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:51
+#: pro/security/wordpress/traits/trait-rsssl-country.php:50
 msgid "Belgium"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:52
+#: pro/security/wordpress/traits/trait-rsssl-country.php:51
 msgid "Belize"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:53
+#: pro/security/wordpress/traits/trait-rsssl-country.php:52
 msgid "Benin"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:54
+#: pro/security/wordpress/traits/trait-rsssl-country.php:53
 msgid "Bermuda"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:55
+#: pro/security/wordpress/traits/trait-rsssl-country.php:54
 msgid "Bhutan"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:56
+#: pro/security/wordpress/traits/trait-rsssl-country.php:55
 msgid "Bolivia"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:57
+#: pro/security/wordpress/traits/trait-rsssl-country.php:56
 msgid "Bonaire, Sint Eustatius and Saba"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:58
+#: pro/security/wordpress/traits/trait-rsssl-country.php:57
 msgid "Bosnia and Herzegovina"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:59
+#: pro/security/wordpress/traits/trait-rsssl-country.php:58
 msgid "Botswana"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:60
+#: pro/security/wordpress/traits/trait-rsssl-country.php:59
 msgid "Bouvet Island"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:61
+#: pro/security/wordpress/traits/trait-rsssl-country.php:60
 msgid "Brazil"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:62
+#: pro/security/wordpress/traits/trait-rsssl-country.php:61
 msgid "British Indian Ocean Territory"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:63
+#: pro/security/wordpress/traits/trait-rsssl-country.php:62
 msgid "Brunei Darussalam"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:64
+#: pro/security/wordpress/traits/trait-rsssl-country.php:63
 msgid "Bulgaria"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:65
+#: pro/security/wordpress/traits/trait-rsssl-country.php:64
 msgid "Burkina Faso"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:66
+#: pro/security/wordpress/traits/trait-rsssl-country.php:65
 msgid "Burundi"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:67
+#: pro/security/wordpress/traits/trait-rsssl-country.php:66
 msgid "Cambodia"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:68
+#: pro/security/wordpress/traits/trait-rsssl-country.php:67
 msgid "Cameroon"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:69
+#: pro/security/wordpress/traits/trait-rsssl-country.php:68
 msgid "Canada"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:70
+#: pro/security/wordpress/traits/trait-rsssl-country.php:69
 msgid "Cape Verde"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:71
+#: pro/security/wordpress/traits/trait-rsssl-country.php:70
 msgid "Cayman Islands"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:72
+#: pro/security/wordpress/traits/trait-rsssl-country.php:71
 msgid "Central African Republic"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:73
+#: pro/security/wordpress/traits/trait-rsssl-country.php:72
 msgid "Chad"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:74
+#: pro/security/wordpress/traits/trait-rsssl-country.php:73
 msgid "Chile"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:75
+#: pro/security/wordpress/traits/trait-rsssl-country.php:74
 msgid "China"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:76
+#: pro/security/wordpress/traits/trait-rsssl-country.php:75
 msgid "Christmas Island"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:77
+#: pro/security/wordpress/traits/trait-rsssl-country.php:76
 msgid "Cocos (Keeling) Islands"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:78
+#: pro/security/wordpress/traits/trait-rsssl-country.php:77
 msgid "Colombia"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:79
+#: pro/security/wordpress/traits/trait-rsssl-country.php:78
 msgid "Comoros"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:80
+#: pro/security/wordpress/traits/trait-rsssl-country.php:79
 msgid "Congo"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:81
+#: pro/security/wordpress/traits/trait-rsssl-country.php:80
 msgid "Congo, Democratic Republic of the Congo"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:82
+#: pro/security/wordpress/traits/trait-rsssl-country.php:81
 msgid "Cook Islands"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:83
+#: pro/security/wordpress/traits/trait-rsssl-country.php:82
 msgid "Costa Rica"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:84
+#: pro/security/wordpress/traits/trait-rsssl-country.php:83
 msgid "Cote D'Ivoire"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:85
+#: pro/security/wordpress/traits/trait-rsssl-country.php:84
 msgid "Croatia"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:86
+#: pro/security/wordpress/traits/trait-rsssl-country.php:85
 msgid "Cuba"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:87
+#: pro/security/wordpress/traits/trait-rsssl-country.php:86
 msgid "Curacao"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:88
+#: pro/security/wordpress/traits/trait-rsssl-country.php:87
 msgid "Cyprus"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:89
+#: pro/security/wordpress/traits/trait-rsssl-country.php:88
 msgid "Czech Republic"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:90
+#: pro/security/wordpress/traits/trait-rsssl-country.php:89
 msgid "Denmark"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:91
+#: pro/security/wordpress/traits/trait-rsssl-country.php:90
 msgid "Djibouti"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:92
+#: pro/security/wordpress/traits/trait-rsssl-country.php:91
 msgid "Dominica"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:93
+#: pro/security/wordpress/traits/trait-rsssl-country.php:92
 msgid "Dominican Republic"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:94
+#: pro/security/wordpress/traits/trait-rsssl-country.php:93
 msgid "Ecuador"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:95
+#: pro/security/wordpress/traits/trait-rsssl-country.php:94
 msgid "Egypt"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:96
+#: pro/security/wordpress/traits/trait-rsssl-country.php:95
 msgid "El Salvador"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:97
+#: pro/security/wordpress/traits/trait-rsssl-country.php:96
 msgid "Equatorial Guinea"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:98
+#: pro/security/wordpress/traits/trait-rsssl-country.php:97
 msgid "Eritrea"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:99
+#: pro/security/wordpress/traits/trait-rsssl-country.php:98
 msgid "Estonia"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:100
+#: pro/security/wordpress/traits/trait-rsssl-country.php:99
 msgid "Ethiopia"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:101
+#: pro/security/wordpress/traits/trait-rsssl-country.php:100
 msgid "Falkland Islands (Malvinas)"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:102
+#: pro/security/wordpress/traits/trait-rsssl-country.php:101
 msgid "Faroe Islands"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:103
+#: pro/security/wordpress/traits/trait-rsssl-country.php:102
 msgid "Fiji"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:104
+#: pro/security/wordpress/traits/trait-rsssl-country.php:103
 msgid "Finland"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:105
+#: pro/security/wordpress/traits/trait-rsssl-country.php:104
 msgid "France"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:106
+#: pro/security/wordpress/traits/trait-rsssl-country.php:105
 msgid "French Guiana"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:107
+#: pro/security/wordpress/traits/trait-rsssl-country.php:106
 msgid "French Polynesia"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:108
+#: pro/security/wordpress/traits/trait-rsssl-country.php:107
 msgid "French Southern Territories"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:109
+#: pro/security/wordpress/traits/trait-rsssl-country.php:108
 msgid "Gabon"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:110
+#: pro/security/wordpress/traits/trait-rsssl-country.php:109
 msgid "Gambia"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:111
+#: pro/security/wordpress/traits/trait-rsssl-country.php:110
 msgid "Georgia"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:112
+#: pro/security/wordpress/traits/trait-rsssl-country.php:111
 msgid "Germany"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:113
+#: pro/security/wordpress/traits/trait-rsssl-country.php:112
 msgid "Ghana"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:114
+#: pro/security/wordpress/traits/trait-rsssl-country.php:113
 msgid "Gibraltar"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:115
+#: pro/security/wordpress/traits/trait-rsssl-country.php:114
 msgid "Greece"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:116
+#: pro/security/wordpress/traits/trait-rsssl-country.php:115
 msgid "Greenland"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:117
+#: pro/security/wordpress/traits/trait-rsssl-country.php:116
 msgid "Grenada"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:118
+#: pro/security/wordpress/traits/trait-rsssl-country.php:117
 msgid "Guadeloupe"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:119
+#: pro/security/wordpress/traits/trait-rsssl-country.php:118
 msgid "Guam"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:120
+#: pro/security/wordpress/traits/trait-rsssl-country.php:119
 msgid "Guatemala"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:121
+#: pro/security/wordpress/traits/trait-rsssl-country.php:120
 msgid "Guernsey"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:122
+#: pro/security/wordpress/traits/trait-rsssl-country.php:121
 msgid "Guinea"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:123
+#: pro/security/wordpress/traits/trait-rsssl-country.php:122
 msgid "Guinea-Bissau"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:124
+#: pro/security/wordpress/traits/trait-rsssl-country.php:123
 msgid "Guyana"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:125
+#: pro/security/wordpress/traits/trait-rsssl-country.php:124
 msgid "Haiti"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:126
+#: pro/security/wordpress/traits/trait-rsssl-country.php:125
 msgid "Heard Island and McDonald Islands"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:127
+#: pro/security/wordpress/traits/trait-rsssl-country.php:126
 msgid "Holy See (Vatican City State)"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:128
+#: pro/security/wordpress/traits/trait-rsssl-country.php:127
 msgid "Honduras"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:129
+#: pro/security/wordpress/traits/trait-rsssl-country.php:128
 msgid "Hong Kong"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:130
+#: pro/security/wordpress/traits/trait-rsssl-country.php:129
 msgid "Hungary"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:131
+#: pro/security/wordpress/traits/trait-rsssl-country.php:130
 msgid "Iceland"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:132
+#: pro/security/wordpress/traits/trait-rsssl-country.php:131
 msgid "India"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:133
+#: pro/security/wordpress/traits/trait-rsssl-country.php:132
 msgid "Indonesia"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:134
+#: pro/security/wordpress/traits/trait-rsssl-country.php:133
 msgid "Iran, Islamic Republic of"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:135
+#: pro/security/wordpress/traits/trait-rsssl-country.php:134
 msgid "Iraq"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:136
+#: pro/security/wordpress/traits/trait-rsssl-country.php:135
 msgid "Ireland"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:137
+#: pro/security/wordpress/traits/trait-rsssl-country.php:136
 msgid "Isle of Man"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:138
+#: pro/security/wordpress/traits/trait-rsssl-country.php:137
 msgid "Israel"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:139
+#: pro/security/wordpress/traits/trait-rsssl-country.php:138
 msgid "Italy"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:140
+#: pro/security/wordpress/traits/trait-rsssl-country.php:139
 msgid "Jamaica"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:141
+#: pro/security/wordpress/traits/trait-rsssl-country.php:140
 msgid "Japan"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:142
+#: pro/security/wordpress/traits/trait-rsssl-country.php:141
 msgid "Jersey"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:143
+#: pro/security/wordpress/traits/trait-rsssl-country.php:142
 msgid "Jordan"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:144
+#: pro/security/wordpress/traits/trait-rsssl-country.php:143
 msgid "Kazakhstan"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:145
+#: pro/security/wordpress/traits/trait-rsssl-country.php:144
 msgid "Kenya"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:146
+#: pro/security/wordpress/traits/trait-rsssl-country.php:145
 msgid "Kiribati"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:147
+#: pro/security/wordpress/traits/trait-rsssl-country.php:146
 msgid "Korea, Democratic People's Republic of"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:148
+#: pro/security/wordpress/traits/trait-rsssl-country.php:147
 msgid "Korea, Republic of"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:149
+#: pro/security/wordpress/traits/trait-rsssl-country.php:148
 msgid "Kosovo"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:150
+#: pro/security/wordpress/traits/trait-rsssl-country.php:149
 msgid "Kuwait"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:151
+#: pro/security/wordpress/traits/trait-rsssl-country.php:150
 msgid "Kyrgyzstan"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:152
+#: pro/security/wordpress/traits/trait-rsssl-country.php:151
 msgid "Lao People's Democratic Republic"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:153
+#: pro/security/wordpress/traits/trait-rsssl-country.php:152
 msgid "Latvia"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:154
+#: pro/security/wordpress/traits/trait-rsssl-country.php:153
 msgid "Lebanon"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:155
+#: pro/security/wordpress/traits/trait-rsssl-country.php:154
 msgid "Lesotho"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:156
+#: pro/security/wordpress/traits/trait-rsssl-country.php:155
 msgid "Liberia"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:157
+#: pro/security/wordpress/traits/trait-rsssl-country.php:156
 msgid "Libyan Arab Jamahiriya"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:158
+#: pro/security/wordpress/traits/trait-rsssl-country.php:157
 msgid "Liechtenstein"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:159
+#: pro/security/wordpress/traits/trait-rsssl-country.php:158
 msgid "Lithuania"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:160
+#: pro/security/wordpress/traits/trait-rsssl-country.php:159
 msgid "Luxembourg"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:161
+#: pro/security/wordpress/traits/trait-rsssl-country.php:160
 msgid "Macao"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:162
+#: pro/security/wordpress/traits/trait-rsssl-country.php:161
 msgid "North Macedonia, Republic of"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:163
+#: pro/security/wordpress/traits/trait-rsssl-country.php:162
 msgid "Madagascar"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:164
+#: pro/security/wordpress/traits/trait-rsssl-country.php:163
 msgid "Malawi"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:165
+#: pro/security/wordpress/traits/trait-rsssl-country.php:164
 msgid "Malaysia"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:166
+#: pro/security/wordpress/traits/trait-rsssl-country.php:165
 msgid "Maldives"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:167
+#: pro/security/wordpress/traits/trait-rsssl-country.php:166
 msgid "Mali"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:168
+#: pro/security/wordpress/traits/trait-rsssl-country.php:167
 msgid "Malta"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:169
+#: pro/security/wordpress/traits/trait-rsssl-country.php:168
 msgid "Marshall Islands"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:170
+#: pro/security/wordpress/traits/trait-rsssl-country.php:169
 msgid "Martinique"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:171
+#: pro/security/wordpress/traits/trait-rsssl-country.php:170
 msgid "Mauritania"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:172
+#: pro/security/wordpress/traits/trait-rsssl-country.php:171
 msgid "Mauritius"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:173
+#: pro/security/wordpress/traits/trait-rsssl-country.php:172
 msgid "Mayotte"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:174
+#: pro/security/wordpress/traits/trait-rsssl-country.php:173
 msgid "Mexico"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:175
+#: pro/security/wordpress/traits/trait-rsssl-country.php:174
 msgid "Micronesia, Federated States of"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:176
+#: pro/security/wordpress/traits/trait-rsssl-country.php:175
 msgid "Moldova, Republic of"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:177
+#: pro/security/wordpress/traits/trait-rsssl-country.php:176
 msgid "Monaco"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:178
+#: pro/security/wordpress/traits/trait-rsssl-country.php:177
 msgid "Mongolia"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:179
+#: pro/security/wordpress/traits/trait-rsssl-country.php:178
 msgid "Montenegro"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:180
+#: pro/security/wordpress/traits/trait-rsssl-country.php:179
 msgid "Montserrat"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:181
+#: pro/security/wordpress/traits/trait-rsssl-country.php:180
 msgid "Morocco"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:182
+#: pro/security/wordpress/traits/trait-rsssl-country.php:181
 msgid "Mozambique"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:183
+#: pro/security/wordpress/traits/trait-rsssl-country.php:182
 msgid "Myanmar"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:184
+#: pro/security/wordpress/traits/trait-rsssl-country.php:183
 msgid "Namibia"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:185
+#: pro/security/wordpress/traits/trait-rsssl-country.php:184
 msgid "Nauru"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:186
+#: pro/security/wordpress/traits/trait-rsssl-country.php:185
 msgid "Nepal"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:187
+#: pro/security/wordpress/traits/trait-rsssl-country.php:186
 msgid "Netherlands"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:188
+#: pro/security/wordpress/traits/trait-rsssl-country.php:187
 msgid "Netherlands Antilles"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:189
+#: pro/security/wordpress/traits/trait-rsssl-country.php:188
 msgid "New Caledonia"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:190
+#: pro/security/wordpress/traits/trait-rsssl-country.php:189
 msgid "New Zealand"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:191
+#: pro/security/wordpress/traits/trait-rsssl-country.php:190
 msgid "Nicaragua"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:192
+#: pro/security/wordpress/traits/trait-rsssl-country.php:191
 msgid "Niger"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:193
+#: pro/security/wordpress/traits/trait-rsssl-country.php:192
 msgid "Nigeria"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:194
+#: pro/security/wordpress/traits/trait-rsssl-country.php:193
 msgid "Niue"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:195
+#: pro/security/wordpress/traits/trait-rsssl-country.php:194
 msgid "Norfolk Island"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:196
+#: pro/security/wordpress/traits/trait-rsssl-country.php:195
 msgid "Northern Mariana Islands"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:197
+#: pro/security/wordpress/traits/trait-rsssl-country.php:196
 msgid "Norway"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:198
+#: pro/security/wordpress/traits/trait-rsssl-country.php:197
 msgid "Oman"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:199
+#: pro/security/wordpress/traits/trait-rsssl-country.php:198
 msgid "Pakistan"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:200
+#: pro/security/wordpress/traits/trait-rsssl-country.php:199
 msgid "Palau"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:201
+#: pro/security/wordpress/traits/trait-rsssl-country.php:200
 msgid "Palestinian Territory, Occupied"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:202
+#: pro/security/wordpress/traits/trait-rsssl-country.php:201
 msgid "Panama"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:203
+#: pro/security/wordpress/traits/trait-rsssl-country.php:202
 msgid "Papua New Guinea"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:204
+#: pro/security/wordpress/traits/trait-rsssl-country.php:203
 msgid "Paraguay"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:205
+#: pro/security/wordpress/traits/trait-rsssl-country.php:204
 msgid "Peru"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:206
+#: pro/security/wordpress/traits/trait-rsssl-country.php:205
 msgid "Philippines"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:207
+#: pro/security/wordpress/traits/trait-rsssl-country.php:206
 msgid "Pitcairn"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:208
+#: pro/security/wordpress/traits/trait-rsssl-country.php:207
 msgid "Poland"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:209
+#: pro/security/wordpress/traits/trait-rsssl-country.php:208
 msgid "Portugal"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:210
+#: pro/security/wordpress/traits/trait-rsssl-country.php:209
 msgid "Puerto Rico"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:211
+#: pro/security/wordpress/traits/trait-rsssl-country.php:210
 msgid "Qatar"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:212
+#: pro/security/wordpress/traits/trait-rsssl-country.php:211
 msgid "Reunion"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:213
+#: pro/security/wordpress/traits/trait-rsssl-country.php:212
 msgid "Romania"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:214
+#: pro/security/wordpress/traits/trait-rsssl-country.php:213
 msgid "Russian Federation"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:215
+#: pro/security/wordpress/traits/trait-rsssl-country.php:214
 msgid "Rwanda"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:216
+#: pro/security/wordpress/traits/trait-rsssl-country.php:215
 msgid "Saint Barthelemy"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:217
+#: pro/security/wordpress/traits/trait-rsssl-country.php:216
 msgid "Saint Helena"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:218
+#: pro/security/wordpress/traits/trait-rsssl-country.php:217
 msgid "Saint Kitts and Nevis"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:219
+#: pro/security/wordpress/traits/trait-rsssl-country.php:218
 msgid "Saint Lucia"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:220
+#: pro/security/wordpress/traits/trait-rsssl-country.php:219
 msgid "Saint Martin"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:221
+#: pro/security/wordpress/traits/trait-rsssl-country.php:220
 msgid "Saint Pierre and Miquelon"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:222
+#: pro/security/wordpress/traits/trait-rsssl-country.php:221
 msgid "Saint Vincent and the Grenadines"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:223
+#: pro/security/wordpress/traits/trait-rsssl-country.php:222
 msgid "Samoa"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:224
+#: pro/security/wordpress/traits/trait-rsssl-country.php:223
 msgid "San Marino"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:225
+#: pro/security/wordpress/traits/trait-rsssl-country.php:224
 msgid "Sao Tome and Principe"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:226
+#: pro/security/wordpress/traits/trait-rsssl-country.php:225
 msgid "Saudi Arabia"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:227
+#: pro/security/wordpress/traits/trait-rsssl-country.php:226
 msgid "Senegal"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:228
+#: pro/security/wordpress/traits/trait-rsssl-country.php:227
 msgid "Serbia"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:229
+#: pro/security/wordpress/traits/trait-rsssl-country.php:228
 msgid "Serbia; Montenegro"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:230
+#: pro/security/wordpress/traits/trait-rsssl-country.php:229
 msgid "Seychelles"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:231
+#: pro/security/wordpress/traits/trait-rsssl-country.php:230
 msgid "Sierra Leone"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:232
+#: pro/security/wordpress/traits/trait-rsssl-country.php:231
 msgid "Singapore"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:233
+#: pro/security/wordpress/traits/trait-rsssl-country.php:232
 msgid "St Martin"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:234
+#: pro/security/wordpress/traits/trait-rsssl-country.php:233
 msgid "Slovakia"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:235
+#: pro/security/wordpress/traits/trait-rsssl-country.php:234
 msgid "Slovenia"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:236
+#: pro/security/wordpress/traits/trait-rsssl-country.php:235
 msgid "Solomon Islands"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:237
+#: pro/security/wordpress/traits/trait-rsssl-country.php:236
 msgid "Somalia"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:238
+#: pro/security/wordpress/traits/trait-rsssl-country.php:237
 msgid "South Africa"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:239
+#: pro/security/wordpress/traits/trait-rsssl-country.php:238
 msgid "South Georgia and the South Sandwich Islands"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:240
+#: pro/security/wordpress/traits/trait-rsssl-country.php:239
 msgid "South Sudan"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:241
+#: pro/security/wordpress/traits/trait-rsssl-country.php:240
 msgid "Spain"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:242
+#: pro/security/wordpress/traits/trait-rsssl-country.php:241
 msgid "Sri Lanka"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:243
+#: pro/security/wordpress/traits/trait-rsssl-country.php:242
 msgid "Sudan"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:244
+#: pro/security/wordpress/traits/trait-rsssl-country.php:243
 msgid "Suriname"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:245
+#: pro/security/wordpress/traits/trait-rsssl-country.php:244
 msgid "Svalbard and Jan Mayen"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:246
+#: pro/security/wordpress/traits/trait-rsssl-country.php:245
 msgid "Swaziland"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:247
+#: pro/security/wordpress/traits/trait-rsssl-country.php:246
 msgid "Sweden"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:248
+#: pro/security/wordpress/traits/trait-rsssl-country.php:247
 msgid "Switzerland"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:249
+#: pro/security/wordpress/traits/trait-rsssl-country.php:248
 msgid "Syrian Arab Republic"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:250
+#: pro/security/wordpress/traits/trait-rsssl-country.php:249
 msgid "Taiwan, Province of China"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:251
+#: pro/security/wordpress/traits/trait-rsssl-country.php:250
 msgid "Tajikistan"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:252
+#: pro/security/wordpress/traits/trait-rsssl-country.php:251
 msgid "Tanzania, United Republic of"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:253
+#: pro/security/wordpress/traits/trait-rsssl-country.php:252
 msgid "Thailand"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:254
+#: pro/security/wordpress/traits/trait-rsssl-country.php:253
 msgid "Timor-Leste"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:255
+#: pro/security/wordpress/traits/trait-rsssl-country.php:254
 msgid "Togo"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:256
+#: pro/security/wordpress/traits/trait-rsssl-country.php:255
 msgid "Tokelau"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:257
+#: pro/security/wordpress/traits/trait-rsssl-country.php:256
 msgid "Tonga"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:258
+#: pro/security/wordpress/traits/trait-rsssl-country.php:257
 msgid "Trinidad and Tobago"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:259
+#: pro/security/wordpress/traits/trait-rsssl-country.php:258
 msgid "Tunisia"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:260
+#: pro/security/wordpress/traits/trait-rsssl-country.php:259
 msgid "Turkey"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:261
+#: pro/security/wordpress/traits/trait-rsssl-country.php:260
 msgid "Turkmenistan"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:262
+#: pro/security/wordpress/traits/trait-rsssl-country.php:261
 msgid "Turks and Caicos Islands"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:263
+#: pro/security/wordpress/traits/trait-rsssl-country.php:262
 msgid "Tuvalu"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:264
+#: pro/security/wordpress/traits/trait-rsssl-country.php:263
 msgid "Uganda"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:265
+#: pro/security/wordpress/traits/trait-rsssl-country.php:264
 msgid "Ukraine"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:266
+#: pro/security/wordpress/traits/trait-rsssl-country.php:265
 msgid "United Arab Emirates"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:267
+#: pro/security/wordpress/traits/trait-rsssl-country.php:266
 msgid "United Kingdom"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:268
+#: pro/security/wordpress/traits/trait-rsssl-country.php:267
 msgid "United States"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:269
+#: pro/security/wordpress/traits/trait-rsssl-country.php:268
 msgid "United States Minor Outlying Islands"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:270
+#: pro/security/wordpress/traits/trait-rsssl-country.php:269
 msgid "Uruguay"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:271
+#: pro/security/wordpress/traits/trait-rsssl-country.php:270
 msgid "Uzbekistan"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:272
+#: pro/security/wordpress/traits/trait-rsssl-country.php:271
 msgid "Vanuatu"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:273
+#: pro/security/wordpress/traits/trait-rsssl-country.php:272
 msgid "Venezuela"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:274
+#: pro/security/wordpress/traits/trait-rsssl-country.php:273
 msgid "Viet Nam"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:275
+#: pro/security/wordpress/traits/trait-rsssl-country.php:274
 msgid "Virgin Islands, British"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:276
+#: pro/security/wordpress/traits/trait-rsssl-country.php:275
 msgid "Virgin Islands, U.s."
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:277
+#: pro/security/wordpress/traits/trait-rsssl-country.php:276
 msgid "Wallis and Futuna"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:278
+#: pro/security/wordpress/traits/trait-rsssl-country.php:277
 msgid "Western Sahara"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:279
+#: pro/security/wordpress/traits/trait-rsssl-country.php:278
 msgid "Yemen"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:280
+#: pro/security/wordpress/traits/trait-rsssl-country.php:279
 msgid "Zambia"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:281
+#: pro/security/wordpress/traits/trait-rsssl-country.php:280
 msgid "Zimbabwe"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:292
+#: pro/security/wordpress/traits/trait-rsssl-country.php:291
 msgid "Africa"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:294
+#: pro/security/wordpress/traits/trait-rsssl-country.php:292
+msgid "Antarctica"
+msgstr ""
+
+#: pro/security/wordpress/traits/trait-rsssl-country.php:293
 msgid "Asia"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:295
+#: pro/security/wordpress/traits/trait-rsssl-country.php:294
 msgid "Europe"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:296
+#: pro/security/wordpress/traits/trait-rsssl-country.php:295
 msgid "North America"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:297
+#: pro/security/wordpress/traits/trait-rsssl-country.php:296
 msgid "Oceania"
 msgstr ""
 
-#: pro/security/wordpress/traits/trait-rsssl-country.php:298
+#: pro/security/wordpress/traits/trait-rsssl-country.php:297
 msgid "South America"
 msgstr ""
 
 #. translators: %s: URL for code regeneration
-#: pro/security/wordpress/two-fa/class-rsssl-two-factor-backup-codes.php:146
+#: pro/security/wordpress/two-fa/class-rsssl-two-factor-backup-codes.php:136
 #, php-format
 msgid "Two-Factor: You are out of backup codes and need to <a href=\"%s\">regenerate!</a>"
 msgstr ""
 
-#: pro/security/wordpress/two-fa/class-rsssl-two-factor-backup-codes.php:164
+#: pro/security/wordpress/two-fa/class-rsssl-two-factor-backup-codes.php:154
 msgctxt "Provider Label"
 msgid "Backup Verification Codes (Single Use)"
 msgstr ""
 
-#: pro/security/wordpress/two-fa/class-rsssl-two-factor-backup-codes.php:195
+#: pro/security/wordpress/two-fa/class-rsssl-two-factor-backup-codes.php:185
 msgid "Generate Verification Codes"
 msgstr ""
 
 #. translators: %s: count
-#: pro/security/wordpress/two-fa/class-rsssl-two-factor-backup-codes.php:202
-#: pro/security/wordpress/two-fa/class-rsssl-two-factor-backup-codes.php:325
+#: pro/security/wordpress/two-fa/class-rsssl-two-factor-backup-codes.php:192
+#: pro/security/wordpress/two-fa/class-rsssl-two-factor-backup-codes.php:315
 #, php-format
 msgid "%s unused code remaining."
 msgid_plural "%s unused codes remaining."
 msgstr[0] ""
 msgstr[1] ""
 
-#: pro/security/wordpress/two-fa/class-rsssl-two-factor-backup-codes.php:211
+#: pro/security/wordpress/two-fa/class-rsssl-two-factor-backup-codes.php:201
 msgid "Write these down!  Once you navigate away from this page, you will not be able to view these codes again."
 msgstr ""
 
-#: pro/security/wordpress/two-fa/class-rsssl-two-factor-backup-codes.php:213
+#: pro/security/wordpress/two-fa/class-rsssl-two-factor-backup-codes.php:203
 msgid "Download Codes"
 msgstr ""
 
 #. translators: %s: the site's domain
-#: pro/security/wordpress/two-fa/class-rsssl-two-factor-backup-codes.php:309
+#: pro/security/wordpress/two-fa/class-rsssl-two-factor-backup-codes.php:299
 #, php-format
 msgid "Two-Factor Backup Codes for %s"
 msgstr ""
 
-#: pro/security/wordpress/two-fa/class-rsssl-two-factor-backup-codes.php:329
+#: pro/security/wordpress/two-fa/class-rsssl-two-factor-backup-codes.php:319
 msgid "Unable to enable Backup Codes provider for this user."
 msgstr ""
 
-#: pro/security/wordpress/two-fa/class-rsssl-two-factor-backup-codes.php:368
+#: pro/security/wordpress/two-fa/class-rsssl-two-factor-backup-codes.php:358
 msgid "Enter a backup verification code."
 msgstr ""
 
@@ -5351,13 +5249,13 @@ msgid "Validate Using Passkey"
 msgstr ""
 
 #: pro/security/wordpress/two-fa/providers/class-rsssl-two-factor-passkey.php:220
-#: pro/security/wordpress/two-fa/providers/class-rsssl-two-factor-totp.php:602
+#: pro/security/wordpress/two-fa/providers/class-rsssl-two-factor-totp.php:582
 #: security/wordpress/two-fa/providers/class-rsssl-two-factor-email.php:584
 msgid "Enabled"
 msgstr ""
 
 #: pro/security/wordpress/two-fa/providers/class-rsssl-two-factor-passkey.php:220
-#: pro/security/wordpress/two-fa/providers/class-rsssl-two-factor-totp.php:605
+#: pro/security/wordpress/two-fa/providers/class-rsssl-two-factor-totp.php:585
 #: security/wordpress/two-fa/providers/class-rsssl-two-factor-email.php:584
 #: settings/config/fields/firewall.php:103
 #: settings/config/fields/firewall.php:108
@@ -5404,77 +5302,82 @@ msgstr ""
 msgid "Unable to save Two Factor Authentication code. Please re-scan the QR code and enter the code provided by your application."
 msgstr ""
 
-#: pro/security/wordpress/two-fa/providers/class-rsssl-two-factor-totp.php:443
+#: pro/security/wordpress/two-fa/providers/class-rsssl-two-factor-totp.php:429
 msgid "Please enter the code generated by your authenticator app."
 msgstr ""
 
-#: pro/security/wordpress/two-fa/providers/class-rsssl-two-factor-totp.php:459
+#: pro/security/wordpress/two-fa/providers/class-rsssl-two-factor-totp.php:445
 msgid "Authenticate"
 msgstr ""
 
-#: pro/security/wordpress/two-fa/providers/class-rsssl-two-factor-totp.php:622
+#: pro/security/wordpress/two-fa/providers/class-rsssl-two-factor-totp.php:602
 msgid "Authenticator app"
 msgstr ""
 
-#: pro/security/wordpress/two-fa/providers/class-rsssl-two-factor-totp.php:623
+#: pro/security/wordpress/two-fa/providers/class-rsssl-two-factor-totp.php:603
 msgid "Use an authenticator app on your mobile device to generate a code."
 msgstr ""
 
-#: pro/security/wordpress/two-fa/providers/class-rsssl-two-factor-totp.php:677
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1603
+#: pro/security/wordpress/two-fa/providers/class-rsssl-two-factor-totp.php:657
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1602
 msgid "Key copied"
 msgstr ""
 
-#: pro/security/wordpress/two-fa/providers/class-rsssl-two-factor-totp.php:678
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1604
+#: pro/security/wordpress/two-fa/providers/class-rsssl-two-factor-totp.php:658
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1603
 msgid "Could not copy text: "
 msgstr ""
 
-#: pro/settings/sync-settings.php:90
-#: pro/settings/sync-settings.php:97
+#: pro/settings/sync-settings.php:88
+#: pro/settings/sync-settings.php:95
 msgid "Login URL already changed by something else than Really Simple Security"
 msgstr ""
 
-#: progress/class-progress.php:83
+#: pro/settings/sync-settings.php:184
+#: settings/config/disable-fields-filter.php:61
+msgid "REST API blocked"
+msgstr ""
+
+#: progress/class-progress.php:79
 #, php-format
 msgid "Security configuration not completed yet. You still have %s task open."
 msgid_plural "You still have %s tasks open."
 msgstr[0] ""
 msgstr[1] ""
 
-#: progress/class-progress.php:86
+#: progress/class-progress.php:82
 msgid "Security configuration completed!"
 msgstr ""
 
-#: progress/class-progress.php:90
+#: progress/class-progress.php:86
 msgid "Basic security configuration completed!"
 msgstr ""
 
-#: progress/class-progress.php:93
+#: progress/class-progress.php:89
 msgid "SSL is not yet enabled on this site."
 msgstr ""
 
-#: security/firewall-manager.php:761
+#: security/firewall-manager.php:778
 msgid "A firewall rule was enabled, but the wp-config.php is not writable."
 msgstr ""
 
-#: security/firewall-manager.php:761
+#: security/firewall-manager.php:778
 msgid "Please set the wp-config.php to writable until the rule has been written."
 msgstr ""
 
-#: security/firewall-manager.php:767
+#: security/firewall-manager.php:784
 msgid "A firewall rule was enabled, but /the wp-content/ folder is not writable."
 msgstr ""
 
-#: security/firewall-manager.php:767
+#: security/firewall-manager.php:784
 msgid "Please set the wp-content folder to writable:"
 msgstr ""
 
-#: security/firewall-manager.php:783
+#: security/firewall-manager.php:800
 msgid "A firewall rule was enabled, but the firewall does not seem to get loaded correctly."
 msgstr ""
 
-#: security/firewall-manager.php:783
+#: security/firewall-manager.php:800
 msgid "Please check if the advanced-headers.php file is included in the wp-config.php, and exists in the wp-content folder."
 msgstr ""
 
@@ -5486,25 +5389,25 @@ msgstr ""
 msgid "Please verify your email address first before enabling email notifications."
 msgstr ""
 
-#: security/functions.php:2279
+#: security/functions.php:2270
 msgid "The firewall requires wp-content to be writable, and at least one writable early-loading method: wp-config.php, .htaccess, or user.ini."
 msgstr ""
 
-#: security/functions.php:2358
+#: security/functions.php:2349
 #: settings/config/fields/security-headers.php:6
 msgid "Security headers require the wp-content folder to be writable."
 msgstr ""
 
-#: security/functions.php:2362
+#: security/functions.php:2353
 #: settings/config/fields/security-headers.php:88
 msgid "HSTS requires your site to have SSL enabled. Please enable SSL first."
 msgstr ""
 
-#: security/functions.php:2404
+#: security/functions.php:2395
 msgid "Warning: Active application passwords were detected. Disabling this feature may break existing integrations."
 msgstr ""
 
-#: security/functions.php:2455
+#: security/functions.php:2446
 #: settings/config/fields/hardening-basic.php:149
 #, php-format
 msgid "Warning: The following plugins may use XML-RPC: %s. Disabling XML-RPC could break their functionality."
@@ -5514,56 +5417,56 @@ msgstr ""
 msgid "We detected suspected bots triggering large numbers of 404 errors on your site."
 msgstr ""
 
-#: security/notices.php:41
-#: security/notices.php:53
+#: security/notices.php:43
+#: security/notices.php:55
 msgid "Failed to update .htaccess"
 msgstr ""
 
-#: security/notices.php:42
-msgid "Failed to update security setting in your .htaccess file: file is not writable."
-msgstr ""
-
-#: security/notices.php:43
-#: security/notices.php:55
-#: security/notices.php:78
-msgid "Resolution:"
-msgstr ""
-
 #: security/notices.php:44
-msgid "1. Update file permissions to make .htaccess writable, or"
+msgid "Failed to update security setting in your .htaccess file: file is not writable."
 msgstr ""
 
 #: security/notices.php:45
 #: security/notices.php:57
 #: security/notices.php:80
+msgid "Resolution:"
+msgstr ""
+
+#: security/notices.php:46
+msgid "1. Update file permissions to make .htaccess writable, or"
+msgstr ""
+
+#: security/notices.php:47
+#: security/notices.php:59
+#: security/notices.php:82
 msgid "2. Add the following code manually:"
 msgstr ""
 
-#: security/notices.php:54
+#: security/notices.php:56
 msgid "Failed to update security setting in your .htaccess file: file is not readable."
 msgstr ""
 
-#: security/notices.php:56
+#: security/notices.php:58
 msgid "1. Update file permissions to make .htaccess readable and writable, or"
 msgstr ""
 
-#: security/notices.php:76
+#: security/notices.php:78
 msgid "Failed to update uploads .htaccess"
 msgstr ""
 
-#: security/notices.php:77
+#: security/notices.php:79
 msgid "Failed to update security setting in your uploads .htaccess file: file is not writable."
 msgstr ""
 
-#: security/notices.php:79
+#: security/notices.php:81
 msgid "1. Update file permissions to make the uploads .htaccess writable, or"
 msgstr ""
 
-#: security/notices.php:99
+#: security/notices.php:101
 msgid "We have detected administrator roles where the login and display names are the same."
 msgstr ""
 
-#: security/notices.php:113
+#: security/notices.php:115
 #: settings/config/fields/limit-login-attempts.php:153
 #: settings/config/fields/two-fa.php:184
 #: settings/build/536.a59728be12baf4673c92.js:1
@@ -5571,58 +5474,43 @@ msgstr ""
 msgid "Username"
 msgstr ""
 
-#: security/notices.php:114
+#: security/notices.php:116
 msgid "Rename admin user enabled: Please choose a new username of at least 3 characters, which is not in use yet."
 msgstr ""
 
-#: security/notices.php:130
+#: security/notices.php:132
 msgid "Enable the Vulnerability scan to detect possible vulnerabilities."
 msgstr ""
 
-#: security/notices.php:137
+#: security/notices.php:139
 msgid "Vulnerability scanning is enabled."
 msgstr ""
 
-#: security/notices.php:150
+#: security/notices.php:152
 #, php-format
 msgid "You have %s open hardening feature."
 msgid_plural "You have %s open hardening features."
 msgstr[0] ""
 msgstr[1] ""
 
-#: security/notices.php:162
+#: security/notices.php:164
 msgid "All recommended hardening features enabled."
 msgstr ""
 
-#: security/notices.php:173
+#: security/notices.php:175
 msgid "The Firewall, LLA and 2FA are currently inactive, as you have activated Safe Mode with the rsssl-safe-mode.lock file. Remove the file from your /wp-content folder after you have finished debugging."
 msgstr ""
 
-#: security/sync-settings.php:42
+#: security/sync-settings.php:37
 msgid "Debug.log"
 msgstr ""
 
-#: security/sync-settings.php:43
+#: security/sync-settings.php:38
 msgid "Changed debug.log location to:"
-msgstr ""
-
-#: security/sync-settings.php:146
-#: settings/config/disable-fields-filter.php:61
-msgid "REST API blocked"
 msgstr ""
 
 #: security/two-fa-frontend-functions.php:117
 msgid "Two-Factor Authentication requires the REST API to be accessible for logged-out users. Please ensure the REST API is not blocked."
-msgstr ""
-
-#: security/two-fa-frontend-functions.php:130
-#: settings/config/fields/two-fa.php:62
-#: settings/config/fields/two-fa.php:66
-msgid "Passkeys require HTTPS to function. Please enable SSL on your site first."
-msgstr ""
-
-#: security/two-fa-frontend-functions.php:134
-msgid "Passkey login requires the REST API to be accessible for logged-out users. Please ensure the REST API is not blocked."
 msgstr ""
 
 #: security/wordpress/block-code-execution-uploads.php:14
@@ -5659,22 +5547,18 @@ msgid "The user ID is not valid."
 msgstr ""
 
 #: security/wordpress/two-fa/class-rsssl-parameter-validation.php:57
-msgid "The preferred method is not set."
-msgstr ""
-
-#: security/wordpress/two-fa/class-rsssl-parameter-validation.php:76
 msgid "The user object is not valid."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-parameter-validation.php:95
+#: security/wordpress/two-fa/class-rsssl-parameter-validation.php:76
 msgid "The selected provider is not valid."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-parameter-validation.php:114
+#: security/wordpress/two-fa/class-rsssl-parameter-validation.php:95
 msgid "The authentication code is not valid."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-parameter-validation.php:133
+#: security/wordpress/two-fa/class-rsssl-parameter-validation.php:114
 msgid "The key is not valid."
 msgstr ""
 
@@ -5745,23 +5629,7 @@ msgstr ""
 msgid "The Two-Factor Authentication setup for email failed. Please try again."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor-settings.php:677
-msgid "not set"
-msgstr ""
-
-#: security/wordpress/two-fa/class-rsssl-two-factor-settings.php:681
-msgid "Authenticator App"
-msgstr ""
-
-#: security/wordpress/two-fa/class-rsssl-two-factor-settings.php:685
-#: security/wordpress/two-fa/providers/class-rsssl-two-factor-email.php:586
-#: settings/config/fields/vulnerability-detection.php:110
-#: settings/config/menu.php:35
-msgid "Email"
-msgstr ""
-
-#: security/wordpress/two-fa/class-rsssl-two-factor-settings.php:689
-#: security/wordpress/two-fa/class-rsssl-two-factor-settings.php:707
+#: security/wordpress/two-fa/class-rsssl-two-factor-settings.php:667
 #: settings/config/fields/vulnerability-detection.php:60
 #: settings/config/fields/vulnerability-detection.php:82
 #: settings/config/fields/vulnerability-detection.php:104
@@ -5770,7 +5638,7 @@ msgid "None"
 msgstr ""
 
 #: security/wordpress/two-fa/class-rsssl-two-factor.php:549
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1400
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1399
 msgid "Your 2FA grace period expired. Please contact your site administrator to regain access and to configure 2FA."
 msgstr ""
 
@@ -5795,41 +5663,41 @@ msgstr[1] ""
 msgid "Your password was reset because of too many failed Two Factor attempts. You will need to <a href=\"%s\">create a new password</a> to regain access. Please check your email for more information."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1058
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1057
 msgid "Authentication provider not specified or invalid."
 msgstr ""
 
 #. translators: %s: time delay between login attempts
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1088
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1087
 #, php-format
 msgid "Too many invalid verification codes, you can try again in %s. This limit protects your account against automated attacks."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1150
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1149
 msgid "Invalid verification code."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1337
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1336
 msgid "There have been too many failed two-factor authentication attempts, which often indicates that the password has been compromised. The password has been reset in order to protect the account."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1341
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1340
 msgid "If you are the owner of this account, please check your email for instructions on regaining access."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1348
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1347
 msgid "Password Reset"
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1432
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1431
 msgid "Invalid user."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1459
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1458
 msgid "Your Two-Factor Authentication configuration is corrupted. Please contact your site administrator to regain access."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1519
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1518
 msgid "Two-Factor Authentication Setup"
 msgstr ""
 
@@ -5916,6 +5784,12 @@ msgstr ""
 #: security/wordpress/two-fa/providers/class-rsssl-two-factor-email.php:484
 #, php-format
 msgid "Authentication codes will be sent to %s."
+msgstr ""
+
+#: security/wordpress/two-fa/providers/class-rsssl-two-factor-email.php:586
+#: settings/config/fields/vulnerability-detection.php:110
+#: settings/config/menu.php:35
+msgid "Email"
 msgstr ""
 
 #: security/wordpress/two-fa/providers/class-rsssl-two-factor-email.php:587
@@ -6319,7 +6193,7 @@ msgstr ""
 #: settings/config/fields/limit-login-attempts.php:206
 #: settings/config/fields/limit-login-attempts.php:266
 #: settings/config/fields/two-fa.php:208
-#: settings/build/366.cdae799ade6d811e7edd.js:1
+#: settings/build/366.0d5cd85e5385919f12a4.js:1
 #: settings/src/Dashboard/SslLabs/SslLabsHeader.js:5
 msgid "Status"
 msgstr ""
@@ -7091,7 +6965,7 @@ msgid "Debugging with Really Simple Security"
 msgstr ""
 
 #: settings/config/menu.php:68
-#: settings/build/index.80ae3fc27802e7eb112c.js:1
+#: settings/build/index.8a738e7fc52f3a6e7f2a.js:1
 #: settings/src/Header.js:32
 msgid "Let's Encrypt"
 msgstr ""
@@ -7200,7 +7074,7 @@ msgid "Maintain peace of mind with our simple, but effective automated measures 
 msgstr ""
 
 #: settings/config/menu.php:233
-#: settings/build/366.cdae799ade6d811e7edd.js:1
+#: settings/build/366.0d5cd85e5385919f12a4.js:1
 #: settings/src/Dashboard/Vulnerabilities/VulnerabilitiesHeader.js:15
 msgid "Hardening"
 msgstr ""
@@ -7527,11 +7401,11 @@ msgstr ""
 msgid "Below you will find the instructions for different hosting environments and configurations. If you start the process with the necessary instructions and credentials the next steps will be done in no time."
 msgstr ""
 
-#: settings/settings.php:564
+#: settings/settings.php:558
 msgid "Complianz - Consent Management as it should be"
 msgstr ""
 
-#: settings/settings.php:572
+#: settings/settings.php:566
 msgid "Terms and Conditions"
 msgstr ""
 
@@ -7612,7 +7486,7 @@ msgid "Easily improve site security with WordPress Hardening, Two-Factor Authent
 msgstr ""
 
 #: upgrade/upgrade-to-pro.php:156
-#: settings/build/366.cdae799ade6d811e7edd.js:1
+#: settings/build/366.0d5cd85e5385919f12a4.js:1
 #: settings/src/Dashboard/OtherPlugins/OtherPlugins.js:24
 msgid "Installed"
 msgstr ""
@@ -7770,7 +7644,7 @@ msgid "Ignore"
 msgstr ""
 
 #: settings/build/91.b0f863c7b47144cb4cdf.js:1
-#: settings/build/366.cdae799ade6d811e7edd.js:1
+#: settings/build/366.0d5cd85e5385919f12a4.js:1
 #: settings/build/536.a59728be12baf4673c92.js:1
 #: settings/build/635.b035afd7cc3020bda9bb.js:1
 #: settings/src/Dashboard/TaskElement.js:68
@@ -7780,22 +7654,22 @@ msgstr ""
 msgid "Fix"
 msgstr ""
 
-#: settings/build/366.cdae799ade6d811e7edd.js:1
+#: settings/build/366.0d5cd85e5385919f12a4.js:1
 #: settings/src/Dashboard/Progress/ProgressBlockHeader.js:37
 msgid "Progress"
 msgstr ""
 
-#: settings/build/366.cdae799ade6d811e7edd.js:1
+#: settings/build/366.0d5cd85e5385919f12a4.js:1
 #: settings/src/Dashboard/Progress/ProgressBlockHeader.js:41
 msgid "All tasks"
 msgstr ""
 
-#: settings/build/366.cdae799ade6d811e7edd.js:1
+#: settings/build/366.0d5cd85e5385919f12a4.js:1
 #: settings/src/Dashboard/Progress/ProgressBlockHeader.js:45
 msgid "Remaining tasks"
 msgstr ""
 
-#: settings/build/366.cdae799ade6d811e7edd.js:1
+#: settings/build/366.0d5cd85e5385919f12a4.js:1
 #: settings/build/536.a59728be12baf4673c92.js:1
 #: settings/src/Dashboard/Progress/ProgressBlock.js:41
 #: settings/src/Dashboard/Progress/ProgressBlock.js:47
@@ -7807,157 +7681,157 @@ msgstr ""
 msgid "Loading..."
 msgstr ""
 
-#: settings/build/366.cdae799ade6d811e7edd.js:1
+#: settings/build/366.0d5cd85e5385919f12a4.js:1
 #: settings/src/Dashboard/Progress/ProgressFooter.js:14
 msgid "SSL"
 msgstr ""
 
-#: settings/build/366.cdae799ade6d811e7edd.js:1
+#: settings/build/366.0d5cd85e5385919f12a4.js:1
 #: settings/build/995.1951bdba4c61ca45e7ca.js:1
-#: settings/build/index.80ae3fc27802e7eb112c.js:1
+#: settings/build/index.8a738e7fc52f3a6e7f2a.js:1
 #: settings/src/Dashboard/Progress/ProgressFooter.js:29
 #: settings/src/Header.js:54
 #: settings/src/Settings/PremiumOverlay.js:9
 msgid "Go Pro"
 msgstr ""
 
-#: settings/build/366.cdae799ade6d811e7edd.js:1
+#: settings/build/366.0d5cd85e5385919f12a4.js:1
 #: settings/src/Dashboard/SslLabs/SslLabsHeader.js:7
 msgid "Powered by Qualys"
 msgstr ""
 
-#: settings/build/366.cdae799ade6d811e7edd.js:1
+#: settings/build/366.0d5cd85e5385919f12a4.js:1
 #: settings/src/Dashboard/SslLabs/SslLabs.js:255
 msgid "No test started yet"
 msgstr ""
 
-#: settings/build/366.cdae799ade6d811e7edd.js:1
+#: settings/build/366.0d5cd85e5385919f12a4.js:1
 #: settings/src/Dashboard/SslLabs/SslLabs.js:281
 msgid "Not available on localhost"
 msgstr ""
 
-#: settings/build/366.cdae799ade6d811e7edd.js:1
+#: settings/build/366.0d5cd85e5385919f12a4.js:1
 #: settings/src/Dashboard/SslLabs/SslLabs.js:178
 msgid "Cipher strength"
 msgstr ""
 
-#: settings/build/366.cdae799ade6d811e7edd.js:1
+#: settings/build/366.0d5cd85e5385919f12a4.js:1
 #: settings/src/Dashboard/SslLabs/SslLabs.js:317
 msgid "What does my score mean?"
 msgstr ""
 
-#: settings/build/366.cdae799ade6d811e7edd.js:1
+#: settings/build/366.0d5cd85e5385919f12a4.js:1
 #: settings/src/Dashboard/SslLabs/SslLabs.js:326
 msgid "Last check:"
 msgstr ""
 
-#: settings/build/366.cdae799ade6d811e7edd.js:1
+#: settings/build/366.0d5cd85e5385919f12a4.js:1
 #: settings/src/Dashboard/SslLabs/SslLabs.js:333
 msgid "View detailed report on Qualys SSL Labs"
 msgstr ""
 
-#: settings/build/366.cdae799ade6d811e7edd.js:1
+#: settings/build/366.0d5cd85e5385919f12a4.js:1
 #: settings/src/Dashboard/SslLabs/SslLabsFooter.js:9
 msgid "Continue SSL Health check"
 msgstr ""
 
-#: settings/build/366.cdae799ade6d811e7edd.js:1
+#: settings/build/366.0d5cd85e5385919f12a4.js:1
 #: settings/src/Dashboard/SslLabs/SslLabsFooter.js:10
 msgid "Check SSL Health"
 msgstr ""
 
-#: settings/build/366.cdae799ade6d811e7edd.js:1
-#: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:41
+#: settings/build/366.0d5cd85e5385919f12a4.js:1
+#: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:35
 msgid "vulnerability"
 msgstr ""
 
-#: settings/build/366.cdae799ade6d811e7edd.js:1
-#: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:42
+#: settings/build/366.0d5cd85e5385919f12a4.js:1
+#: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:36
 msgid "vulnerabilities"
 msgstr ""
 
-#: settings/build/366.cdae799ade6d811e7edd.js:1
-#: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:51
+#: settings/build/366.0d5cd85e5385919f12a4.js:1
+#: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:45
 msgid "update"
 msgstr ""
 
-#: settings/build/366.cdae799ade6d811e7edd.js:1
-#: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:52
+#: settings/build/366.0d5cd85e5385919f12a4.js:1
+#: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:46
 msgid "updates"
 msgstr ""
 
-#: settings/build/366.cdae799ade6d811e7edd.js:1
-#: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:60
+#: settings/build/366.0d5cd85e5385919f12a4.js:1
+#: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:54
 #, js-format
 msgid "You have %s update pending"
 msgid_plural "You have %s updates pending"
 msgstr[0] ""
 msgstr[1] ""
 
-#: settings/build/366.cdae799ade6d811e7edd.js:1
-#: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:66
+#: settings/build/366.0d5cd85e5385919f12a4.js:1
+#: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:60
 msgid "hardening feature"
 msgstr ""
 
-#: settings/build/366.cdae799ade6d811e7edd.js:1
-#: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:67
+#: settings/build/366.0d5cd85e5385919f12a4.js:1
+#: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:61
 msgid "hardening features"
 msgstr ""
 
-#: settings/build/366.cdae799ade6d811e7edd.js:1
+#: settings/build/366.0d5cd85e5385919f12a4.js:1
 #: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:261
 #, js-format
 msgid "You have %s open %d"
 msgstr ""
 
-#: settings/build/366.cdae799ade6d811e7edd.js:1
+#: settings/build/366.0d5cd85e5385919f12a4.js:1
 #: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:271
 msgid "Hardening features are configured"
 msgstr ""
 
-#: settings/build/366.cdae799ade6d811e7edd.js:1
+#: settings/build/366.0d5cd85e5385919f12a4.js:1
 #: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:144
 msgid "Enable vulnerability detection"
 msgstr ""
 
-#: settings/build/366.cdae799ade6d811e7edd.js:1
+#: settings/build/366.0d5cd85e5385919f12a4.js:1
 #: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:213
 #: settings/src/Dashboard/Vulnerabilities/Vulnerabilities.js:228
 #, js-format
 msgid "You have %s %d"
 msgstr ""
 
-#: settings/build/366.cdae799ade6d811e7edd.js:1
-#: settings/build/index.80ae3fc27802e7eb112c.js:1
+#: settings/build/366.0d5cd85e5385919f12a4.js:1
+#: settings/build/index.8a738e7fc52f3a6e7f2a.js:1
 #: settings/src/Dashboard/TipsTricks/TipsTricksFooter.js:9
 #: settings/src/Header.js:30
 msgid "Documentation"
 msgstr ""
 
-#: settings/build/366.cdae799ade6d811e7edd.js:1
+#: settings/build/366.0d5cd85e5385919f12a4.js:1
 #: settings/src/Dashboard/OtherPlugins/OtherPluginsHeader.js:5
 msgid "Other Plugins"
 msgstr ""
 
-#: settings/build/366.cdae799ade6d811e7edd.js:1
+#: settings/build/366.0d5cd85e5385919f12a4.js:1
 #: settings/build/536.a59728be12baf4673c92.js:1
 #: settings/src/Dashboard/OtherPlugins/OtherPluginsData.js:75
 #: settings/src/LetsEncrypt/Activate.js:89
 msgid "Activating..."
 msgstr ""
 
-#: settings/build/366.cdae799ade6d811e7edd.js:1
+#: settings/build/366.0d5cd85e5385919f12a4.js:1
 #: settings/src/Dashboard/OtherPlugins/OtherPluginsData.js:76
 #: settings/src/Dashboard/OtherPlugins/OtherPluginsData.js:77
 msgid "Downloading..."
 msgstr ""
 
-#: settings/build/366.cdae799ade6d811e7edd.js:1
+#: settings/build/366.0d5cd85e5385919f12a4.js:1
 #: settings/src/Dashboard/DashboardPage.js:47
 msgid "Tips & Tricks"
 msgstr ""
 
-#: settings/build/366.cdae799ade6d811e7edd.js:1
+#: settings/build/366.0d5cd85e5385919f12a4.js:1
 #: settings/build/536.a59728be12baf4673c92.js:1
 #: settings/build/635.b035afd7cc3020bda9bb.js:1
 #: settings/src/Dashboard/TaskElement.js:48
@@ -8880,86 +8754,86 @@ msgstr ""
 msgid "Collapse all"
 msgstr ""
 
-#: settings/build/index.80ae3fc27802e7eb112c.js:1
+#: settings/build/index.8a738e7fc52f3a6e7f2a.js:1
 #: settings/src/Onboarding/OnboardingData.js:83
 msgid "Updating email preferences.."
 msgstr ""
 
-#: settings/build/index.80ae3fc27802e7eb112c.js:1
+#: settings/build/index.8a738e7fc52f3a6e7f2a.js:1
 #: settings/src/Onboarding/OnboardingData.js:130
 #, js-format
 msgid "Installing %d..."
 msgstr ""
 
-#: settings/build/index.80ae3fc27802e7eb112c.js:1
+#: settings/build/index.8a738e7fc52f3a6e7f2a.js:1
 #: settings/src/Onboarding/OnboardingData.js:136
 #, js-format
 msgid "Activating %d..."
 msgstr ""
 
-#: settings/build/index.80ae3fc27802e7eb112c.js:1
+#: settings/build/index.8a738e7fc52f3a6e7f2a.js:1
 #: settings/src/Onboarding/OnboardingData.js:202
 msgid "Re-checking SSL certificate, please wait..."
 msgstr ""
 
-#: settings/build/index.80ae3fc27802e7eb112c.js:1
-#: settings/src/Settings/FieldsData.js:182
+#: settings/build/index.8a738e7fc52f3a6e7f2a.js:1
+#: settings/src/Settings/FieldsData.js:183
 msgid "Saving settings..."
 msgstr ""
 
-#: settings/build/index.80ae3fc27802e7eb112c.js:1
-#: settings/src/Settings/FieldsData.js:183
-#: settings/src/Settings/FieldsData.js:205
-#: settings/src/Settings/FieldsData.js:289
+#: settings/build/index.8a738e7fc52f3a6e7f2a.js:1
+#: settings/src/Settings/FieldsData.js:184
+#: settings/src/Settings/FieldsData.js:208
+#: settings/src/Settings/FieldsData.js:292
 msgid "Settings saved"
 msgstr ""
 
-#: settings/build/index.80ae3fc27802e7eb112c.js:1
+#: settings/build/index.8a738e7fc52f3a6e7f2a.js:1
 #: settings/src/utils/Error.js:12
 msgid "Please check if security settings on the server or a plugin is blocking the requests from Really Simple Security."
 msgstr ""
 
-#: settings/build/index.80ae3fc27802e7eb112c.js:1
+#: settings/build/index.8a738e7fc52f3a6e7f2a.js:1
 #: settings/src/utils/Error.js:20
 msgid "The Really Simple Security Rest API is disabled."
 msgstr ""
 
-#: settings/build/index.80ae3fc27802e7eb112c.js:1
+#: settings/build/index.8a738e7fc52f3a6e7f2a.js:1
 #: settings/src/utils/Error.js:22
 msgid "The Really Simple Security Rest API returned a not found."
 msgstr ""
 
-#: settings/build/index.80ae3fc27802e7eb112c.js:1
+#: settings/build/index.8a738e7fc52f3a6e7f2a.js:1
 #: settings/src/utils/Error.js:24
 msgid "The Really Simple Security Rest API returned a 403 forbidden error."
 msgstr ""
 
-#: settings/build/index.80ae3fc27802e7eb112c.js:1
+#: settings/build/index.8a738e7fc52f3a6e7f2a.js:1
 #: settings/src/utils/Error.js:35
 msgid "A problem was detected during the loading of the settings"
 msgstr ""
 
-#: settings/build/index.80ae3fc27802e7eb112c.js:1
+#: settings/build/index.8a738e7fc52f3a6e7f2a.js:1
 #: settings/src/utils/Error.js:41
 msgid "The request returned the following errors:"
 msgstr ""
 
-#: settings/build/index.80ae3fc27802e7eb112c.js:1
+#: settings/build/index.8a738e7fc52f3a6e7f2a.js:1
 #: settings/src/utils/Error.js:43
 msgid "Response code:"
 msgstr ""
 
-#: settings/build/index.80ae3fc27802e7eb112c.js:1
+#: settings/build/index.8a738e7fc52f3a6e7f2a.js:1
 #: settings/src/utils/Error.js:44
 msgid "Status code:"
 msgstr ""
 
-#: settings/build/index.80ae3fc27802e7eb112c.js:1
+#: settings/build/index.8a738e7fc52f3a6e7f2a.js:1
 #: settings/src/utils/Error.js:45
 msgid "Server response:"
 msgstr ""
 
-#: settings/build/index.80ae3fc27802e7eb112c.js:1
+#: settings/build/index.8a738e7fc52f3a6e7f2a.js:1
 #: settings/src/utils/Error.js:48
 msgid "More information"
 msgstr ""

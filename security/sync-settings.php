@@ -10,12 +10,7 @@ defined('ABSPATH') or die();
  */
 
 function rsssl_disable_fields( $field, $field_id ) {
-	$current_field_value = $field['value'] ?? false;
-	$field_is_checkbox = ( $field['type'] ?? '' ) === 'checkbox';
-	$field_value_is_disabled_placeholder = $current_field_value === 'disabled';
-	$field_has_enabled_checkbox_value = $field_is_checkbox
-		&& ! $field_value_is_disabled_placeholder
-		&& in_array( $current_field_value, [ true, 1, '1' ], true );
+	$field_has_enabled_checkbox_value = rsssl_field_has_enabled_checkbox_value( $field );
 
 	/**
 	 * If a feature is already enabled, but not by RSSSL, we can simply check for that feature, and if the option in RSSSL is active.
@@ -48,13 +43,6 @@ function rsssl_disable_fields( $field, $field_id ) {
 
 	}
 
-	if ( $field_id === 'disable_anyone_can_register' ) {
-		if ( ! get_option( 'users_can_register' ) && ! $field_has_enabled_checkbox_value ) {
-			$field['value']    = true;
-			$field['disabled'] = true;
-		}
-	}
-
 	if ( $field_id === 'disable_http_methods' ) {
 		if ( ! rsssl_http_methods_allowed() && ! $field_has_enabled_checkbox_value ) {
 			$field['value']    = true;
@@ -79,20 +67,12 @@ function rsssl_disable_fields( $field, $field_id ) {
 
 	if ( $field_id === 'send_notifications_email' ) {
 		$send_notifications_email_block_reason = rsssl_get_send_notifications_email_block_reason();
-		if ( $send_notifications_email_block_reason !== '' && ! $field_has_enabled_checkbox_value ) {
-			$field['disabled']             = true;
-			$field['disabledTooltipText']  = $send_notifications_email_block_reason;
-			$field['prerequisite_blocker'] = true;
-		}
+		$field = rsssl_maybe_disable_blocked_checkbox_field( $field, $send_notifications_email_block_reason );
 	}
 
 	if ( $field_id === 'enable_firewall' ) {
 		$firewall_block_reason = rsssl_get_enable_firewall_block_reason();
-		if ( $firewall_block_reason !== '' && ! $field_has_enabled_checkbox_value ) {
-			$field['disabled']             = true;
-			$field['disabledTooltipText']  = $firewall_block_reason;
-			$field['prerequisite_blocker'] = true;
-		}
+		$field = rsssl_maybe_disable_blocked_checkbox_field( $field, $firewall_block_reason );
 	}
 
 	if ( $field_id === 'disable_xmlrpc' ) {
@@ -104,12 +84,7 @@ function rsssl_disable_fields( $field, $field_id ) {
 		$xmlrpc_block_reason = rsssl_get_disable_xmlrpc_block_reason();
 		if ( $xmlrpc_block_reason !== '' ) {
 			$field['warning'] = true;
-
-			if ( ! $field_has_enabled_checkbox_value ) {
-				$field['disabled']             = true;
-				$field['disabledTooltipText']  = $xmlrpc_block_reason;
-				$field['prerequisite_blocker'] = true;
-			}
+			$field = rsssl_maybe_disable_blocked_checkbox_field( $field, $xmlrpc_block_reason );
 		}
 	}
 
@@ -117,42 +92,13 @@ function rsssl_disable_fields( $field, $field_id ) {
 		$application_passwords_block_reason = rsssl_get_disable_application_passwords_block_reason();
 		if ( $application_passwords_block_reason !== '' ) {
 			$field['warning'] = true;
-
-			if ( ! $field_has_enabled_checkbox_value ) {
-				$field['disabled']             = true;
-				$field['disabledTooltipText']  = $application_passwords_block_reason;
-				$field['prerequisite_blocker'] = true;
-			}
+			$field = rsssl_maybe_disable_blocked_checkbox_field( $field, $application_passwords_block_reason );
 		}
 	}
 
 	if ( $field_id === 'login_protection_enabled' ) {
 		$login_protection_block_reason = rsssl_get_login_protection_enable_block_reason();
-		if ( $login_protection_block_reason !== '' && ! $field_has_enabled_checkbox_value ) {
-			$field['disabled']             = true;
-			$field['disabledTooltipText']  = $login_protection_block_reason;
-			$field['prerequisite_blocker'] = true;
-		}
-	}
-
-	if ( $field_id === 'enable_passkey_login' ) {
-		$passkey_block_reason = rsssl_get_passkey_login_enable_block_reason();
-		$ssl_ready_for_passkeys = rsssl_get_option( 'ssl_enabled' ) && rsssl_get_option( 'site_has_ssl' );
-		$rest_api_blocked = $ssl_ready_for_passkeys && $passkey_block_reason !== '';
-
-		if ( $rest_api_blocked ) {
-			$field['help'] = [
-				'label' => 'warning',
-				'title' => __( 'REST API blocked', 'really-simple-ssl' ),
-				'text'  => $passkey_block_reason,
-			];
-		}
-
-		if ( $passkey_block_reason !== '' && ! $field_has_enabled_checkbox_value ) {
-			$field['disabled']             = true;
-			$field['disabledTooltipText']  = $passkey_block_reason;
-			$field['prerequisite_blocker'] = true;
-		}
+		$field = rsssl_maybe_disable_blocked_checkbox_field( $field, $login_protection_block_reason );
 	}
 
 	if ( $field_id === 'rename_db_prefix' ) {
@@ -166,16 +112,60 @@ function rsssl_disable_fields( $field, $field_id ) {
 }
 add_filter('rsssl_field', 'rsssl_disable_fields', 10, 2);
 
+function rsssl_field_has_enabled_checkbox_value( array $field ): bool {
+	$current_field_value = $field['value'] ?? false;
+	$field_is_checkbox = ( $field['type'] ?? '' ) === 'checkbox';
+	$field_value_is_disabled_placeholder = $current_field_value === 'disabled';
+
+	return $field_is_checkbox
+		&& ! $field_value_is_disabled_placeholder
+		&& in_array( $current_field_value, [ true, 1, '1' ], true );
+}
+
+function rsssl_maybe_disable_blocked_checkbox_field( array $field, string $block_reason ): array {
+	if (
+		$block_reason === ''
+		|| ( $field['type'] ?? '' ) !== 'checkbox'
+		|| rsssl_field_has_enabled_checkbox_value( $field )
+	) {
+		return $field;
+	}
+
+	$field['disabled']             = true;
+	$field['disabledTooltipText']  = $block_reason;
+	$field['prerequisite_blocker'] = true;
+
+	return $field;
+}
+
+function rsssl_get_rest_api_accessible_cache_clear_fields(): array {
+	$cache_clear_fields = (array) apply_filters( 'rsssl_rest_api_accessible_cache_clear_fields', [
+		'login_protection_enabled',
+	] );
+
+	// Normalize here so filter consumers only need to append field ids.
+	return array_values( array_unique( array_filter( $cache_clear_fields, 'is_string' ) ) );
+}
+
 function rsssl_clear_rest_api_accessible_cache_on_security_option_change( string $field_id ): void {
 	if ( ! function_exists( 'rsssl_clear_rest_api_accessible_cache' ) ) {
 		return;
 	}
 
-	if ( in_array( $field_id, [ 'login_protection_enabled', 'enable_passkey_login' ], true ) ) {
+	$cache_clear_fields = rsssl_get_rest_api_accessible_cache_clear_fields();
+
+	if ( in_array( $field_id, $cache_clear_fields, true ) ) {
 		rsssl_clear_rest_api_accessible_cache();
 	}
 }
-add_action( 'rsssl_before_save_option', 'rsssl_clear_rest_api_accessible_cache_on_security_option_change', 10, 1 );
+
+function rsssl_clear_rest_api_accessible_cache_before_security_field_value_check( $value, string $field_id ) {
+	rsssl_clear_rest_api_accessible_cache_on_security_option_change( $field_id );
+
+	return $value;
+}
+// Run before blocked-feature validation so REST API checks use a fresh probe result.
+add_filter( 'rsssl_fieldvalue', 'rsssl_clear_rest_api_accessible_cache_before_security_field_value_check', 5, 2 );
 
 function rsssl_maybe_disable_htaccess_managed_field( array $field, string $field_id ): array {
 	if ( $field['value'] ?? false ) {
@@ -214,22 +204,18 @@ function rsssl_prevent_enabling_blocked_security_features( $value, string $field
 		return $value;
 	}
 
-	$field_block_reason_callbacks = [
-		'send_notifications_email'   => 'rsssl_get_send_notifications_email_block_reason',
+	$field_block_reason_callbacks = (array) apply_filters( 'rsssl_blocked_security_feature_callbacks', [
+		'send_notifications_email'      => 'rsssl_get_send_notifications_email_block_reason',
 		'disable_application_passwords' => 'rsssl_get_disable_application_passwords_block_reason',
-		'disable_xmlrpc'             => 'rsssl_get_disable_xmlrpc_block_reason',
-		'enable_firewall'            => 'rsssl_get_enable_firewall_block_reason',
-		'hsts'                       => 'rsssl_get_hsts_enable_block_reason',
-		'login_protection_enabled'   => 'rsssl_get_login_protection_enable_block_reason',
-		'enable_passkey_login'       => 'rsssl_get_passkey_login_enable_block_reason',
-	];
-
-	if ( in_array( $field_id, [ 'login_protection_enabled', 'enable_passkey_login' ], true ) && function_exists( 'rsssl_clear_rest_api_accessible_cache' ) ) {
-		rsssl_clear_rest_api_accessible_cache();
-	}
+		'disable_xmlrpc'                => 'rsssl_get_disable_xmlrpc_block_reason',
+		'enable_firewall'               => 'rsssl_get_enable_firewall_block_reason',
+		'hsts'                          => 'rsssl_get_hsts_enable_block_reason',
+		'login_protection_enabled'      => 'rsssl_get_login_protection_enable_block_reason',
+	] );
 
 	if (
 		isset( $field_block_reason_callbacks[ $field_id ] )
+		&& is_callable( $field_block_reason_callbacks[ $field_id ] )
 		&& $field_block_reason_callbacks[ $field_id ]() !== ''
 	) {
 		return 0;

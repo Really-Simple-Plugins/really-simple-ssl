@@ -748,7 +748,7 @@ class Rsssl_Two_Factor
     public static function show_two_factor_login(WP_User $user): void
     {
 	    $redirect_to = isset($_REQUEST['redirect_to']) ? wp_validate_redirect(wp_unslash($_REQUEST['redirect_to']), admin_url()) : admin_url();
-        $provider = Rsssl_Two_Factor_Settings::get_login_action($user->ID);
+        Rsssl_Two_Factor_Settings::get_login_action($user->ID);
 		$login_nonce = Rsssl_Two_Fa_Authentication::create_login_nonce($user->ID)['rsssl_key'];
 
         self::login_html($user, $login_nonce ,$redirect_to);
@@ -884,7 +884,6 @@ class Rsssl_Two_Factor
         $provider_class = $provider::get_instance();
 
 
-        $available_providers = self::get_available_providers_for_user($user);
 //        $backup_providers = array_diff_key($available_providers, array($provider => null));
         $interim_login = isset($_REQUEST['interim-login']); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 

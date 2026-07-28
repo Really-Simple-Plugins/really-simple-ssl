@@ -182,17 +182,6 @@ class Rsssl_Two_Factor_Admin {
         }
     }
 
-    /**
-     * Checks if the user can use two-factor authentication (2FA).
-     *
-     * @return bool Returns true if the user can use 2FA, false otherwise.
-     */
-    public function can_i_use_2fa(): bool
-    {
-        return rsssl_get_option('login_protection_enabled');
-    }
-
-
 	/**
 	 * Creates a captcha notice array.
 	 *
@@ -222,33 +211,6 @@ class Rsssl_Two_Factor_Admin {
 			),
 		);
 	}
-
-	/**
-	 * Reset the two-factor authentication for a user.
-	 *
-	 * @param array  $response The response array.
-	 * @param string $action The action being performed.
-	 * @param array  $data The data array.
-	 *
-	 * @return array The updated response array.
-	 */
-	public static function reset_user_two_fa( array $response, string $action, array $data ): array {
-		if ( ! rsssl_user_can_manage() ) {
-			return $response;
-		}
-		if ( 'two_fa_table' === $action ) {
-			// if the user has been disabled, it needs to reset the two-factor authentication.
-			$user = get_user_by( 'id', $data['user_id'] );
-			if ( $user ) {
-				// Delete all 2fa related user meta.
-				Rsssl_Two_Fa_Status::delete_two_fa_meta( $user->ID );
-				// Set the last login to now, so the user will be forced to use 2fa.
-				update_user_meta( $user->ID, 'rsssl_two_fa_last_login', gmdate( 'Y-m-d H:i:s' ) );
-			}
-		}
-		return $response;
-	}
-
 
     /**
      * Generates the two-factor authentication table data based on the action and data parameters.

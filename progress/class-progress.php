@@ -11,10 +11,6 @@ class rsssl_progress {
 		add_action( 'admin_init', array( $this, 'dismiss_from_admin_notice') );
 	}
 
-	static function this() {
-		return self::$_this;
-	}
-
 	public function get() {
 		return [
 			'text' => $this->get_text(),
@@ -53,7 +49,7 @@ class rsssl_progress {
 		$notices = RSSSL()->admin->get_notices_list(array(
 			'status' => ['open','warning','completed','premium'],
 		));
-		foreach ( $notices as $id => $notice ) {
+		foreach ( $notices as $notice ) {
 			if (isset( $notice['score'] )) {
 				// Only items matching condition will show in the dashboard. Only use these to determine max count.
 				$max_score += (int) $notice['score'];
@@ -94,15 +90,6 @@ class rsssl_progress {
 		}
 		do_action('rsssl_progress_feedback');
 		return ob_get_clean();
-	}
-
-	/**
-	 * Count number of premium notices we have in the list.
-	 * @return int
-	 */
-	public function get_lowest_possible_task_count() {
-		$premium_notices = RSSSL()->admin->get_notices_list(array('premium_only'=>true));
-		return count($premium_notices) ;
 	}
 
 	/**

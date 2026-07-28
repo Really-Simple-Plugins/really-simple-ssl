@@ -120,20 +120,3 @@ if ( ! function_exists( 'rsssl_get_login_protection_enable_block_reason' ) ) {
 		return '';
 	}
 }
-
-if ( ! function_exists( 'rsssl_get_passkey_login_enable_block_reason' ) ) {
-	/**
-	 * Return the blocker message when passkey login cannot be enabled.
-	 */
-	function rsssl_get_passkey_login_enable_block_reason(): string {
-		if ( ! rsssl_get_option( 'ssl_enabled' ) || ! rsssl_get_option( 'site_has_ssl' ) ) {
-			return __( "Passkeys require HTTPS to function. Please enable SSL on your site first.", "really-simple-ssl" );
-		}
-
-		if ( ! rsssl_rest_api_accessible_for_logged_out_users() ) {
-			return __( "Passkey login requires the REST API to be accessible for logged-out users. Please ensure the REST API is not blocked.", "really-simple-ssl" );
-		}
-
-		return '';
-	}
-}

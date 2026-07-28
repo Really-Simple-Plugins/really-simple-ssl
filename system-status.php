@@ -349,7 +349,7 @@ function rsssl_system_status_get_installed_plugins() {
 	$plugin_list = array();
 
 	// Loop through plugins to format the list with name and version
-	foreach ( $all_plugins as $plugin_path => $plugin_data ) {
+	foreach ( $all_plugins as $plugin_data ) {
 		$plugin_list[] = $plugin_data['Name'] . ' (' . $plugin_data['Version'] . ')';
 	}
 

@@ -26,9 +26,11 @@ function rsssl_parse_htaccess_to_html( string $code): string {
 }
 
 function rsssl_general_security_notices( $notices ) {
-	$code                 = rsssl_parse_htaccess_to_html( get_site_option( 'rsssl_htaccess_rules', '' ) );
-	$uploads_code         = rsssl_parse_htaccess_to_html( get_site_option( 'rsssl_uploads_htaccess_rules', '' ) );
-	$open_hardening_count = rsssl_count_open_hardening_features();
+	$code                              = rsssl_parse_htaccess_to_html( get_site_option( 'rsssl_htaccess_rules', '' ) );
+	$uploads_code                      = rsssl_parse_htaccess_to_html( get_site_option( 'rsssl_uploads_htaccess_rules', '' ) );
+	$open_hardening_features           = rsssl_get_open_hardening_feature_ids();
+	$open_hardening_count              = count( $open_hardening_features );
+	$open_hardening_highlight_field_id = reset( $open_hardening_features ) ?: '';
 
 	// Unified error message format for .htaccess issues
 	// Note: 'not-supported' (file doesn't exist) is handled silently - no notice shown
@@ -145,7 +147,7 @@ function rsssl_general_security_notices( $notices ) {
 		'score'    => 5,
 		'output'   => array(
 			'true'  => array(
-				'highlight_field_id' => 'disable_anyone_can_register',
+				'highlight_field_id' => $open_hardening_highlight_field_id,
 				'msg'                => sprintf(
 					_n(
 						"You have %s open hardening feature.",

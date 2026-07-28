@@ -402,12 +402,6 @@ function rsssl_do_action($request, $ajax_data = false)
             $response = apply_filters("rsssl_do_action", [], $action, $data);
 	}
 
-	// Backward compatibility: some legacy actions returned the payload at the top-level,
-	// while older Settings code expects it under `data`.
-	if (in_array($action, ['hardening_data'], true) && is_array($response) && !isset($response['data'])) {
-		$response = array_merge(['data' => $response], $response);
-	}
-
 	if (is_array($response)) {
 		$response['request_success'] = true;
 	}
@@ -426,7 +420,7 @@ function rsssl_clear_test_caches($data)
 		return [];
 	}
 
-	$cache_id = sanitize_title($data['cache_id']);
+	sanitize_title($data['cache_id']);
 
 	do_action('rsssl_clear_test_caches', $data);
 	return [];
@@ -594,7 +588,7 @@ function rsssl_other_plugins_data($slug = false)
 	}
 
 	if ($slug) {
-		foreach ($plugins as $key => $plugin) {
+		foreach ($plugins as $plugin) {
 			if ($plugin['slug'] === $slug) {
 				return $plugin;
 			}
@@ -980,7 +974,7 @@ function rsssl_sanitize_permissions_policy($value, $type, $field_name)
 			}
 
 			//Ensure that all required keys are set with at least an empty value
-			foreach ($possible_keys as $key => $data_type) {
+			foreach (array_keys($possible_keys) as $key) {
 				if (!isset($value[$row_index][$key])) {
 					$value[$row_index][$key] = false;
 				}
@@ -999,7 +993,7 @@ function rsssl_sanitize_permissions_policy($value, $type, $field_name)
 
 	//if the default contains items not in the setting (newly added), add them.
 	if (count($value) < count($default)) {
-		foreach ($default as $def_row_index => $def_row) {
+		foreach ($default as $def_row) {
 			//check if it is available in the array. If not, add
 			if (!in_array($def_row['id'], $stored_ids)) {
 				$value[] = $def_row;
@@ -1054,7 +1048,7 @@ function rsssl_sanitize_datatable($value, $type, $field_name)
 			}
 
 			//Ensure that all required keys are set with at least an empty value
-			foreach ($possible_keys as $key => $data_type) {
+			foreach (array_keys($possible_keys) as $key) {
 				if (!isset($value[$row_index][$key])) {
 					$value[$row_index][$key] = false;
 				}

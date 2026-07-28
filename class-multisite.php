@@ -35,11 +35,6 @@ if (!class_exists('rsssl_multisite')) {
 	        add_filter('rsssl_notices', array($this, 'add_multisite_notices'));
         }
 
-        static function this()
-        {
-            return self::$_this;
-        }
-
 	    /**
 	     * Redirect to the new settings page
 	     *

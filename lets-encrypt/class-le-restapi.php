@@ -15,12 +15,6 @@ if ( ! class_exists( "rsssl_le_restapi" ) ) {
 			add_action( 'rsssl_after_save_field', array( $this, 'after_save_field' ), 10, 4 );
 		}
 
-		static function this() {
-			return self::$_this;
-		}
-
-
-
 		/**
          * Switch to DNS verification
          * @param array $data
@@ -142,11 +136,6 @@ if ( ! class_exists( "rsssl_le_restapi" ) ) {
 				'stop',
 				''
 			);
-		}
-
-		public function clean_up(){
-			//clean up stored pw, if requested
-			RSSSL_LE()->letsencrypt_handler->cleanup_on_ssl_activation();
 		}
 
 		/**

@@ -98,7 +98,10 @@ if ( isset( $rsssl_settings['delete_data_on_uninstall'] ) && $rsssl_settings['de
 		global $wp_filesystem;
 		if ($wp_filesystem->is_dir($dir)) {
 			$objects = $wp_filesystem->dirlist($dir);
-			foreach ($objects as $object => $objectdata) {
+			if (!is_array($objects)) {
+				return;
+			}
+			foreach (array_keys($objects) as $object) {
 				if ($wp_filesystem->is_dir($dir . "/" . $object)) {
 					rsssl_delete_directory_wpfilesystem($dir . "/" . $object);
 				}

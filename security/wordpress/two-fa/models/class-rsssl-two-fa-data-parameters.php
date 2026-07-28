@@ -104,21 +104,4 @@ class Rsssl_Two_FA_Data_Parameters {
         return $this;
     }
 
-    public function toArray() {
-        return [
-            'currentPage'       => $this->page,
-            'currentRowsPerPage' => $this->page_size,
-            'search'            => $this->search_term,
-            'filterValue'       => $this->filter_value,
-            'filterColumn'      => $this->filter_column,
-            'sortColumn'        => $this->sort_column,
-            'sortDirection'     => $this->sort_direction,
-            'method'            => $this->method,
-            'number'            => $this->number,
-            'offset'            => $this->offset,
-            'negative_count'    => $this->negative_count,
-            'role_filter'       => $this->role_filter,
-        ];
-
-    }
 }

@@ -447,7 +447,6 @@ namespace RSSSL\Security {
 
             if (! $this->can_start_atomic_write($operations)) {
                 return $this->fail_write_operation(
-                    $this->htaccess_file_path,
                     $this->get_last_error_message('Atomic .htaccess write preconditions failed.')
                 );
             }
@@ -460,7 +459,6 @@ namespace RSSSL\Security {
                 }
 
                 return $this->fail_write_operation(
-                    $this->htaccess_file_path,
                     $this->get_last_error_message('Unable to open and lock .htaccess for atomic write.')
                 );
             }
@@ -507,31 +505,31 @@ namespace RSSSL\Security {
         {
             // Some hosts do not support reliable advisory locking; keep the same safety gates even when we degrade the write path.
             if (! $this->can_start_atomic_write()) {
-                return $this->fail_write_operation($this->htaccess_file_path, 'Lockless atomic .htaccess write preconditions failed.');
+                return $this->fail_write_operation('Lockless atomic .htaccess write preconditions failed.');
             }
 
             $originalHtaccess = $this->get_htaccess_content_for_path($this->htaccess_file_path);
             if ($this->is_effectively_empty($originalHtaccess) && ! $allowEmptyOriginal) {
-                return $this->fail_write_operation($this->htaccess_file_path, 'Refusing lockless atomic write because .htaccess is effectively empty.');
+                return $this->fail_write_operation('Refusing lockless atomic write because .htaccess is effectively empty.');
             }
 
             $updatedHtaccess = $this->apply_atomic_operations((string) $originalHtaccess, $operations);
             if ($updatedHtaccess === null) {
-                return $this->fail_write_operation($this->htaccess_file_path, 'Failed to apply lockless atomic .htaccess operations.');
+                return $this->fail_write_operation('Failed to apply lockless atomic .htaccess operations.');
             }
             if ($updatedHtaccess === $originalHtaccess) {
                 return true;
             }
 
             if ($this->is_effectively_empty($updatedHtaccess)) {
-                return $this->fail_write_operation($this->htaccess_file_path, 'Refusing lockless atomic write because resulting .htaccess would be empty.');
+                return $this->fail_write_operation('Refusing lockless atomic write because resulting .htaccess would be empty.');
             }
             if ($this->should_block_root_only_rsssl_result($updatedHtaccess)) {
-                return $this->fail_write_operation($this->htaccess_file_path, 'Refusing lockless atomic write because resulting .htaccess would only contain RSSSL markers.');
+                return $this->fail_write_operation('Refusing lockless atomic write because resulting .htaccess would only contain RSSSL markers.');
             }
 
             if (! $this->write_content_with_temp_swap($this->htaccess_file_path, $updatedHtaccess)) {
-                return $this->fail_write_operation($this->htaccess_file_path, 'Lockless atomic .htaccess write failed.');
+                return $this->fail_write_operation('Lockless atomic .htaccess write failed.');
             }
 
             return true;
@@ -1172,7 +1170,7 @@ namespace RSSSL\Security {
 
             $this->reset_last_error_message();
             if ($htaccessPath === '') {
-                $this->fail_write_operation($htaccessPath, 'Uploads .htaccess path is empty.');
+                $this->fail_write_operation('Uploads .htaccess path is empty.');
                 return $result;
             }
 
@@ -1187,13 +1185,12 @@ namespace RSSSL\Security {
             }
 
             if (is_link($htaccessPath)) {
-                $this->fail_write_operation($htaccessPath, 'Uploads .htaccess path is a symlink. Refusing write.');
+                $this->fail_write_operation('Uploads .htaccess path is a symlink. Refusing write.');
                 return $result;
             }
 
             if (! $this->ensure_uploads_htaccess_is_ready($htaccessPath)) {
                 $this->fail_write_operation(
-                    $htaccessPath,
                     $this->get_last_error_message('Uploads .htaccess file is not ready for atomic write.')
                 );
                 return $result;
@@ -1207,7 +1204,6 @@ namespace RSSSL\Security {
                 }
 
                 $this->fail_write_operation(
-                    $htaccessPath,
                     $this->get_last_error_message('Unable to open and lock uploads .htaccess for atomic write.')
                 );
                 return $result;
@@ -1216,7 +1212,6 @@ namespace RSSSL\Security {
             $originalContent = $this->read_locked_content_allow_empty($handle);
             if ($originalContent === null) {
                 $this->fail_write_operation(
-                    $htaccessPath,
                     $this->get_last_error_message('Failed to read uploads .htaccess content while lock was held.')
                 );
             } else {
@@ -1226,7 +1221,6 @@ namespace RSSSL\Security {
                     $result['success'] = true;
                 } elseif (! $this->write_locked_htaccess_content($handle, $updatedContent, $htaccessPath)) {
                     $this->fail_write_operation(
-                        $htaccessPath,
                         $this->get_last_error_message('Uploads .htaccess atomic write failed.')
                     );
                 } else {
@@ -1258,7 +1252,7 @@ namespace RSSSL\Security {
         {
             $this->reset_last_error_message();
             if ($htaccessPath === '') {
-                return $this->fail_write_operation($htaccessPath, 'Uploads .htaccess path is empty.');
+                return $this->fail_write_operation('Uploads .htaccess path is empty.');
             }
 
             if ($this->should_skip_current_htaccess_write()) {
@@ -1271,12 +1265,11 @@ namespace RSSSL\Security {
             }
 
             if (is_link($htaccessPath)) {
-                return $this->fail_write_operation($htaccessPath, 'Uploads .htaccess path is a symlink. Refusing write.');
+                return $this->fail_write_operation('Uploads .htaccess path is a symlink. Refusing write.');
             }
 
             if (! $this->ensure_uploads_htaccess_is_ready($htaccessPath)) {
                 return $this->fail_write_operation(
-                    $htaccessPath,
                     $this->get_last_error_message('Uploads .htaccess file is not ready for atomic write.')
                 );
             }
@@ -1289,7 +1282,6 @@ namespace RSSSL\Security {
                 }
 
                 return $this->fail_write_operation(
-                    $htaccessPath,
                     $this->get_last_error_message('Unable to open and lock uploads .htaccess for atomic write.')
                 );
             }
@@ -1298,14 +1290,12 @@ namespace RSSSL\Security {
             $originalContent = $this->read_locked_content_allow_empty($handle);
             if ($originalContent === null) {
                 $success = $this->fail_write_operation(
-                    $htaccessPath,
                     $this->get_last_error_message('Failed to read uploads .htaccess content while lock was held.')
                 );
             } else {
                 $updatedContent = $this->build_uploads_htaccess_content($originalContent, $rulesContent);
                 if ($updatedContent !== $originalContent && ! $this->write_locked_htaccess_content($handle, $updatedContent, $htaccessPath)) {
                     $success = $this->fail_write_operation(
-                        $htaccessPath,
                         $this->get_last_error_message('Uploads .htaccess atomic write failed.')
                     );
                 }
@@ -1335,18 +1325,18 @@ namespace RSSSL\Security {
             ];
 
             if ($htaccessPath === '' || is_link($htaccessPath)) {
-                $this->fail_write_operation($htaccessPath, 'Uploads lockless atomic write aborted because the path is invalid or a symlink.');
+                $this->fail_write_operation('Uploads lockless atomic write aborted because the path is invalid or a symlink.');
                 return $result;
             }
 
             if (! $this->ensure_uploads_htaccess_is_ready($htaccessPath)) {
-                $this->fail_write_operation($htaccessPath, 'Uploads .htaccess file is not ready for lockless atomic write.');
+                $this->fail_write_operation('Uploads .htaccess file is not ready for lockless atomic write.');
                 return $result;
             }
 
             $originalContent = $this->read_file_content_or_empty($htaccessPath);
             if ($originalContent === null) {
-                $this->fail_write_operation($htaccessPath, 'Failed to read uploads .htaccess content before lockless atomic write.');
+                $this->fail_write_operation('Failed to read uploads .htaccess content before lockless atomic write.');
                 return $result;
             }
 
@@ -1358,7 +1348,7 @@ namespace RSSSL\Security {
             }
 
             if (! $this->write_content_with_temp_swap($htaccessPath, $updatedContent)) {
-                $this->fail_write_operation($htaccessPath, 'Lockless atomic uploads .htaccess write failed.');
+                $this->fail_write_operation('Lockless atomic uploads .htaccess write failed.');
                 return $result;
             }
 
@@ -1373,16 +1363,16 @@ namespace RSSSL\Security {
         {
             // Mirror the atomic uploads behavior for hosts where flock() is not usable.
             if ($htaccessPath === '' || is_link($htaccessPath)) {
-                return $this->fail_write_operation($htaccessPath, 'Uploads lockless atomic write aborted because the path is invalid or a symlink.');
+                return $this->fail_write_operation('Uploads lockless atomic write aborted because the path is invalid or a symlink.');
             }
 
             if (! $this->ensure_uploads_htaccess_is_ready($htaccessPath)) {
-                return $this->fail_write_operation($htaccessPath, 'Uploads .htaccess file is not ready for lockless atomic write.');
+                return $this->fail_write_operation('Uploads .htaccess file is not ready for lockless atomic write.');
             }
 
             $originalContent = $this->read_file_content_or_empty($htaccessPath);
             if ($originalContent === null) {
-                return $this->fail_write_operation($htaccessPath, 'Failed to read uploads .htaccess content before lockless atomic write.');
+                return $this->fail_write_operation('Failed to read uploads .htaccess content before lockless atomic write.');
             }
 
             $updatedContent = $this->build_uploads_htaccess_content($originalContent, $rulesContent);
@@ -1391,7 +1381,7 @@ namespace RSSSL\Security {
             }
 
             if (! $this->write_content_with_temp_swap($htaccessPath, $updatedContent)) {
-                return $this->fail_write_operation($htaccessPath, 'Lockless atomic uploads .htaccess write failed.');
+                return $this->fail_write_operation('Lockless atomic uploads .htaccess write failed.');
             }
 
             return true;
@@ -2160,8 +2150,10 @@ namespace RSSSL\Security {
 
         /**
          * Keep failure exits consistent so callers only need one log-and-return path.
+         *
+         * @param string $errorMessage The error message to log.
          */
-        private function fail_write_operation(string $path, string $errorMessage): bool
+        private function fail_write_operation(string $errorMessage): bool
         {
             $this->log_error($errorMessage);
             return false;

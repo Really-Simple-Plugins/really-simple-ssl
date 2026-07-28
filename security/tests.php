@@ -198,18 +198,6 @@ function rsssl_new_username_valid(): bool {
 }
 
 /**
- * For backward compatibility we need to wrap this function, as older versions do not have this function (<5.6)
- * @return bool
- */
-function rsssl_wp_is_application_passwords_available(){
-	if ( function_exists('wp_is_application_passwords_available') ) {
-		return wp_is_application_passwords_available();
-	}
-
-	return false;
-}
-
-/**
  * Get users where display name is the same as login
  *
  * @param bool $return_users
@@ -407,27 +395,6 @@ function rsssl_directory_indexing_allowed() {
 }
 
 /**
- * Check if file editing is allowed
- * @return bool
- */
-function rsssl_file_editing_allowed()
-{
-	if ( function_exists('wp_is_block_theme') && wp_is_block_theme() ) {
-		return false;
-	}
-	return !defined('DISALLOW_FILE_EDIT' ) || !DISALLOW_FILE_EDIT;
-}
-
-/**
- * Check if user registration is allowed
- * @return bool
- */
-function rsssl_user_registration_allowed()
-{
-	return get_option( 'users_can_register' );
-}
-
-/**
  * Check if page source contains WordPress version information
  * @return bool
  */
@@ -464,24 +431,27 @@ function rsssl_src_contains_wp_version() {
 }
 
 /**
- * Count the number of open hardening features
- * @return int
+ * Get recommended hardening field IDs that still need attention.
+ *
+ * @return string[]
  */
-function rsssl_count_open_hardening_features() {
-	$open   = 0;
+function rsssl_get_open_hardening_feature_ids(): array {
+	$open   = [];
 	$fields = rsssl_fields( false );
 
+	// TODO: Cache this with wp_cache_* once hardening setting changes reliably clear the cache.
 	// Filter out unused fields
 	$recommended_hardening_fields = array_filter($fields, function($field){
 		return isset($field['recommended']) && $field['recommended'];
 	});
 
-	// Create $hardening_options dynamically based on recommended field IDs
-	$hardening_options = array_map(function($field) {
-		return $field['id'];
-	}, $recommended_hardening_fields);
+	foreach ( $recommended_hardening_fields as $field ) {
+		$option = $field['id'] ?? '';
 
-	foreach ( $hardening_options as $option ) {
+		if ( $option === '' ) {
+			continue;
+		}
+
 		if ( rsssl_get_option( $option ) === true ) {
 			continue;
 		}
@@ -490,30 +460,52 @@ function rsssl_count_open_hardening_features() {
 			continue;
 		}
 
-		// Get the field
-		$field = array_filter( $fields, function ( $f ) use ( $option ) {
-			return $f['id'] === $option;
-		} );
+		// Apply the rsssl_disable_fields filter
+		$field = apply_filters( 'rsssl_field', $field, $option );
 
-		if ( ! empty( $field ) ) {
-			$field = reset( $field );
-			// Apply the rsssl_disable_fields filter
-			$field = apply_filters( 'rsssl_field', $field, $field['id'] );
-
-			// Check if the option is not set to true and the field is not disabled
-			if ( ( ! isset( $field['disabled'] ) || $field['disabled'] !== true ) &&
-			     ( ! isset( $field['value'] ) || $field['value'] !== true ) ) {
-				$open ++;
-			}
+		// Check if the option is not set to true and the field is not disabled
+		if ( ( ! isset( $field['disabled'] ) || $field['disabled'] !== true ) &&
+		     ( ! isset( $field['value'] ) || $field['value'] !== true ) ) {
+			$open[] = $option;
 		}
 	}
 
 	return $open;
 }
 
+/**
+ * Count the number of open hardening features.
+ *
+ * @return int
+ */
+function rsssl_count_open_hardening_features() {
+	return count( rsssl_get_open_hardening_feature_ids() );
+}
+
 function rsssl_has_open_hardening_features() {
 	return rsssl_count_open_hardening_features() > 0;
 }
+
+/**
+ * Get hardening data for dashboard consumers.
+ *
+ * @param array  $response Existing action response.
+ * @param string $action   Requested action.
+ *
+ * @return array
+ */
+function rsssl_get_hardening_data( array $response, string $action ): array {
+	if ( $action !== 'hardening_data' ) {
+		return $response;
+	}
+
+	return [
+		'data' => [
+			'openHardeningFeatures' => rsssl_count_open_hardening_features(),
+		],
+	];
+}
+add_filter( 'rsssl_do_action', 'rsssl_get_hardening_data', 10, 2 );
 
 /**
  * Check whether a recommended hardening field is already enforced outside RSSSL.
@@ -529,6 +521,10 @@ function rsssl_is_recommended_hardening_feature_already_active( string $option )
 
 	if ( $option === 'block_code_execution_uploads' ) {
 		return ! rsssl_code_execution_allowed();
+	}
+
+	if ( $option === 'disable_anyone_can_register' ) {
+		return ! (bool) get_option( 'users_can_register' );
 	}
 
 	return false;

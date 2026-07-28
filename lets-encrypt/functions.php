@@ -484,16 +484,6 @@ if ( ! function_exists( 'rsssl_get_domain' ) ) {
     }
 }
 
-function rsssl_insert_after_key($array, $key, $items){
-	$keys = array_keys($array);
-	$key = array_search($key, $keys);
-	$array = array_slice($array, 0, $key, true) +
-	$items +
-	array_slice($array, 3, count($array)-3, true);
-
-	return $array;
-}
-
 if ( !function_exists('rsssl_wildcard_certificate_required') ) {
 	/**
 	 * Check if the site requires a wildcard

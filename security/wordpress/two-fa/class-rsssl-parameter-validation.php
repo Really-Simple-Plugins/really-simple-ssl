@@ -41,25 +41,6 @@ class Rsssl_Parameter_Validation
     }
 
     /**
-     * Validates post data.
-     *
-     * @param array $post_data The post data to validate.
-     *
-     * @return void
-     */
-    public static function validate_post_data(array $post_data): void
-    {
-        if (!isset($post_data['preferred_method'])) {
-            // Create an error message for the profile page.
-            add_settings_error(
-                'two-factor-authentication',
-                'rsssl-two-factor-authentication-error',
-                __('The preferred method is not set.', 'really-simple-ssl')
-            );
-        }
-    }
-
-    /**
      * Validate user object.
      *
      * @param mixed $user The user object to validate.

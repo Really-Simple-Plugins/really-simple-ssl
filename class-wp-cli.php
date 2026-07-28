@@ -353,49 +353,6 @@ class rsssl_wp_cli {
 	}
 
 	/**
-	 * Activate all recommended hardening features via CLI
-	 *
-	 * return void
-	 */
-	public function activate_recommended_hardening_features() {
-		if ( ! $this->check_pro_command_preconditions() ) return;
-		try {
-            if (isset(RSSSL()->settingsConfigService)) {
-                $recommended_hardening_fields = RSSSL()->settingsConfigService->getRecommendedHardeningSettings();
-                foreach ( $recommended_hardening_fields as $field ) {
-                    rsssl_update_option( $field, true );
-                }
-            }
-			rsssl_request_managed_rule_rebuild();
-			WP_CLI::success( 'Recommended hardening features activated.' );
-		} catch ( Exception $e ) {
-			WP_CLI::error( 'Failed to activate recommended hardening features: ' . $e->getMessage() );
-		}
-	}
-
-	/**
-	 * Deactivate all recommended features via CLI
-	 *
-	 * return void
-	 */
-	public function deactivate_recommended_hardening_features() {
-		if ( ! $this->check_pro_command_preconditions() ) return;
-		try {
-            if (isset(RSSSL()->settingsConfigService)) {
-                $recommended_hardening_fields = RSSSL()->settingsConfigService->getRecommendedHardeningSettings();
-                foreach ( $recommended_hardening_fields as $field ) {
-                    rsssl_update_option( $field, false );
-                }
-            }
-			rsssl_request_managed_rule_rebuild();
-			WP_CLI::success( 'Recommended hardening features deactivated.' );
-		} catch ( Exception $e ) {
-			WP_CLI::error( 'Failed to deactivate recommended hardening features: ' . $e->getMessage() );
-		}
-	}
-
-
-	/**
 	 * Activate recommended security headers via CLI
 	 */
 	public function activate_security_headers() {

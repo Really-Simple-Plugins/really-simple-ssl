@@ -147,16 +147,6 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
 			return $data;
 		}
 
-        public function demo_vulnerabilities_data() {
-            $data[] = [
-                'id'          => 1,
-                'component'   => 'wordpress',
-                'risk'        => 'high',
-                'date'        => '2020-01-01',
-
-                ];
-        }
-
         public function limit_login_attempts_data( array $response, string $action, $data ): array
         {
             if ( ! rsssl_user_can_manage() ) {
@@ -455,16 +445,6 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
 
 			return [ 'data' => $data, 'progress' => 80, 'state' => 'stop', 'action' => '', 'nonce' => wp_create_nonce( 'fix_mixed_content' ) ];
 		}
-
-		/**
-		 * @return void
-		 *
-		 * Dummy data for two factor Email block
-		 */
-		public function two_factor_email_data() {
-
-		}
-
 
 		/**
 		 * @return array

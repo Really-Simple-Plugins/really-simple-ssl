@@ -75,10 +75,6 @@ class rsssl_letsencrypt_handler {
 		self::$_this = $this;
 	}
 
-	public static function this() {
-		return self::$_this;
-	}
-
 		/**
 		 * Queue a root `.htaccess` refresh when the ACME HTTP-01 bypass block is missing or stale.
 		 *
@@ -183,7 +179,7 @@ class rsssl_letsencrypt_handler {
 				return isset( $i['type'] ) && $i['type'] === 'password';
 			});
 			$options = get_option( 'rsssl_options' );
-			foreach ($le_fields as $index => $field ) {
+			foreach ($le_fields as $field ) {
 				unset($options[$field['id']]);
 			}
 			update_option( 'rsssl_options', $options, false );
@@ -348,24 +344,6 @@ class rsssl_letsencrypt_handler {
 	    }
 	    return new RSSSL_RESPONSE($status, $action, $message);
     }
-
-	/**
-	 * Check if the certifiate is to expire in max rsssl_le_manual_generation_renewal_check days.
-	 * Used in notices list
-	 * @return bool
-	 */
-
-	public function certificate_about_to_expire() {
-		$about_to_expire = RSSSL()->certificate->about_to_expire();
-		if ( !$about_to_expire ) {
-			//if the certificate is valid, stop any attempt to renew.
-			delete_option('rsssl_le_start_renewal');
-			delete_option('rsssl_le_start_installation');
-			return false;
-		} else {
-			return true;
-		}
-	}
 
     /**
      * Test for server software
@@ -1035,17 +1013,6 @@ class rsssl_letsencrypt_handler {
         return true;
     }
 
-	/**
-	 * Check if the manual renewal should start.
-	 */
-    public function should_start_manual_installation_renewal(): bool
-    {
-	    if ( !$this->should_start_manual_ssl_generation() && get_option( "rsssl_le_start_installation" ) ) {
-			return true;
-	    }
-	    return false;
-    }
-
 	public function should_start_manual_ssl_generation()
     {
 		return get_option( "rsssl_le_start_renewal" );
@@ -1192,31 +1159,6 @@ class rsssl_letsencrypt_handler {
 		}
 
 	    return apply_filters('rsssl_le_subjects', $subjects);
-	}
-
-	/**
-     * Check if we're ready for the next step.
-	 * @param string $item
-	 *
-	 * @return array | bool
-	 */
-	public function is_ready_for($item)
-    {
-		if ( !rsssl_do_local_lets_encrypt_generation() ) {
-			rsssl_progress_add('directories');
-			rsssl_progress_add('generation');
-			rsssl_progress_add('dns-verification');
-		}
-
-		if ( !rsssl_dns_verification_required() ) {
-			rsssl_progress_add('dns-verification');
-		}
-
-		if (empty(rsssl_get_not_completed_steps($item))){
-            return true;
-        }
-
-        return false;
 	}
 
 	/**
@@ -2071,7 +2013,7 @@ class rsssl_letsencrypt_handler {
 		    //check for subproblems
 		    if (isset($e->getRawResponse()->body['subproblems'])){
 			    $error .= '<ul>';
-		        foreach($e->getRawResponse()->body['subproblems'] as $index => $problem) {
+		        foreach(array_keys($e->getRawResponse()->body['subproblems']) as $index) {
 			        $error .= '<li>'. $this->cleanup_error_message($e->getRawResponse()->body['subproblems'][$index]['detail']).'</li>';
 		        }
 			    $error .= '</ul>';

@@ -13,10 +13,6 @@ if ( ! class_exists( 'rsssl_server' ) ) {
 			self::$_this = $this;
 		}
 
-		public static function this() {
-			return self::$_this;
-		}
-
 		/**
 		 * @Since 2.5.1
 		 * Checks if the server uses .htaccess

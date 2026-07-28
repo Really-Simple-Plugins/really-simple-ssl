@@ -12,10 +12,6 @@ if ( ! class_exists( 'rsssl_cache' ) ) {
 			self::$_this = $this;
 		}
 
-		public static function this() {
-			return self::$_this;
-		}
-
 		/**
 		 * Flushes the cache for popular caching plugins to prevent mixed content errors
 		 * When .htaccess is changed, all traffic should flow over https, so clear cache when possible.

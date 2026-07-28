@@ -286,36 +286,9 @@ class Rsssl_Two_Fa_User_Query_Builder implements Rsssl_Two_Fa_User_Query_Builder
 		return $this;
 	}
 
-	/**
-	 * Add condition to find users with unconfigured 2FA.
-	 *
-	 */
-	public function addUnconfigured2FAConditionToArgs( array $args ): array {
-		$metaQuery = [];
-		foreach ( $this->statusKeys as $key ) {
-			$metaQuery[] = [
-				'relation' => 'OR',
-				[
-					'key'     => $key,
-					'value'   => 'active',
-					'compare' => '!='
-				],
-				[
-					'key'     => $key,
-					'compare' => 'NOT EXISTS',
-				]
-			];
-		}
-
-		// Use AND relation to ensure ALL methods are not active
-		$args['meta_query'] = array_merge( [ 'relation' => 'AND' ], $metaQuery );
-
-		return $args;
-	}
-
-	/**
-	 * Add nearing expiry condition to the query arguments.
-	 *
+		/**
+		 * Add nearing expiry condition to the query arguments.
+		 *
 	 * @param int $reminderBeforeClosingPeriod
 	 *
 	 * @return $this
