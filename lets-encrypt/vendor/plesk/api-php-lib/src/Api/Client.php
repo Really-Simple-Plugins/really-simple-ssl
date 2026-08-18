@@ -79,7 +79,7 @@ class Client
      *
      * @param callable|null $function
      */
-    public function setVerifyResponse(callable $function = null)
+    public function setVerifyResponse(?callable $function = null)
     {
         $this->_verifyResponseCallback = $function;
     }
@@ -194,7 +194,11 @@ class Client
             throw new Client\Exception(curl_error($curl), curl_errno($curl));
         }
 
-        curl_close($curl);
+        if (PHP_VERSION_ID >= 80000) {
+            unset($curl);
+        } else {
+            curl_close($curl);
+        }
 
         $xml = new XmlResponse($result);
 

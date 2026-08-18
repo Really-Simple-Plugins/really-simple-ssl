@@ -18,8 +18,16 @@ if ( ! function_exists( 'rsssl_rest_api_accessible_for_logged_out_users' ) ) {
 	 *
 	 * Uses a short option-backed cache to avoid generating a loopback request to
 	 * /wp-json/ on every settings request.
+	 * When live checks are disabled, an unknown result is treated as accessible
+	 * so display-only callers do not block while configuration is being built.
+	 *
+	 * @param bool $perform_check Whether to perform a live check when no result is cached.
 	 */
-	function rsssl_rest_api_accessible_for_logged_out_users(): bool {
+	function rsssl_rest_api_accessible_for_logged_out_users( bool $perform_check = true ): bool {
+		if ( defined( 'RSSSL_SKIP_REST_API_ACCESSIBLE_CHECK' ) && RSSSL_SKIP_REST_API_ACCESSIBLE_CHECK ) {
+			return true;
+		}
+
 		$is_accessible_for_request = rsssl_rest_api_accessible_runtime_cache();
 		if ( $is_accessible_for_request !== null ) {
 			return $is_accessible_for_request;
@@ -38,12 +46,19 @@ if ( ! function_exists( 'rsssl_rest_api_accessible_for_logged_out_users' ) ) {
 			delete_option( $cache_key );
 		}
 
+		if ( ! $perform_check ) {
+			return true;
+		}
+
 		// sslverify disabled: loopback requests to the site itself often fail SSL
 		// verification due to server configuration issues even when browsers work.
 		$response = wp_remote_get(
 			rest_url(),
 			[
-				'sslverify' => false,
+				'limit_response_size' => 1,
+				'redirection'          => 1,
+				'sslverify'            => false,
+				'timeout'              => 5,
 			]
 		);
 
@@ -111,9 +126,11 @@ if ( ! function_exists( 'rsssl_clear_rest_api_accessible_cache' ) ) {
 if ( ! function_exists( 'rsssl_get_login_protection_enable_block_reason' ) ) {
 	/**
 	 * Return the blocker message when two-factor authentication cannot be enabled.
+	 *
+	 * @param bool $rest_api_check Whether to perform a live REST API check when no result is cached.
 	 */
-	function rsssl_get_login_protection_enable_block_reason(): string {
-		if ( ! rsssl_rest_api_accessible_for_logged_out_users() ) {
+	function rsssl_get_login_protection_enable_block_reason( bool $rest_api_check = true ): string {
+		if ( ! rsssl_rest_api_accessible_for_logged_out_users( $rest_api_check ) ) {
 			return __( "Two-Factor Authentication requires the REST API to be accessible for logged-out users. Please ensure the REST API is not blocked.", "really-simple-ssl" );
 		}
 

@@ -1164,7 +1164,7 @@ class Rsssl_Two_Factor
 		// Authenticate the user.
 		wp_set_auth_cookie($user->ID, $rememberme);
 
-		do_action('rsssl_two_factor_user_authenticated', $user);
+		do_action('rsssl_two_factor_user_authenticated', $user->user_login, $user);
 
 		$redirect_to = apply_filters('login_redirect', $redirect_to, $redirect_to, $user);
 		if (function_exists('\RSSSL\Pro\Security\WordPress\rsssl_maybe_get_expired_password_redirect')) {

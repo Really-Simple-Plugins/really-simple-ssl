@@ -65,7 +65,7 @@ class AccountResponse extends AbstractKeyValuableCache {
         return $response;
     }
 
-    public function set(Account $account, Response\Account\AbstractAccount $response = null) : void {
+    public function set(Account $account, ?Response\Account\AbstractAccount $response = null) : void {
 
         $accountIdentifier = $this->_getObjectIdentifier($account);
 

@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Really Simple Security Pro 9.7.0\n"
+"Project-Id-Version: Really Simple Security Pro 9.8.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/really-simple-ssl-pro\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-15T09:21:30+00:00\n"
+"POT-Creation-Date: 2026-08-11T10:54:12+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: really-simple-ssl\n"
@@ -1131,8 +1131,8 @@ msgstr ""
 
 #: core/app/Features/Onboarding/OnboardingStepsGenerator.php:200
 #: core/app/Features/Onboarding/OnboardingStepsGenerator.php:222
-#: upgrade/upgrade-to-pro.php:132
-#: upgrade/upgrade-to-pro.php:145
+#: upgrade/upgrade-to-pro.php:125
+#: upgrade/upgrade-to-pro.php:138
 #: settings/build/366.0d5cd85e5385919f12a4.js:1
 #: settings/src/Dashboard/OtherPlugins/OtherPluginsData.js:73
 msgid "Install"
@@ -2295,25 +2295,25 @@ msgstr ""
 msgid "You can follow these %sinstructions%s."
 msgstr ""
 
-#: lets-encrypt/integrations/cloudways/cloudways.php:161
+#: lets-encrypt/integrations/cloudways/cloudways.php:166
 msgid "Failed retrieving access token"
 msgstr ""
 
-#: lets-encrypt/integrations/cloudways/cloudways.php:181
-#: lets-encrypt/integrations/cloudways/cloudways.php:187
+#: lets-encrypt/integrations/cloudways/cloudways.php:186
+#: lets-encrypt/integrations/cloudways/cloudways.php:192
 msgid "Successfully installed Let's Encrypt"
 msgstr ""
 
-#: lets-encrypt/integrations/cloudways/cloudways.php:196
+#: lets-encrypt/integrations/cloudways/cloudways.php:201
 msgid "Error enabling auto renew for Let's Encrypt"
 msgstr ""
 
-#: lets-encrypt/integrations/cloudways/cloudways.php:212
-#: lets-encrypt/integrations/cloudways/cloudways.php:245
+#: lets-encrypt/integrations/cloudways/cloudways.php:217
+#: lets-encrypt/integrations/cloudways/cloudways.php:250
 msgid "Successfully retrieved server id and app id"
 msgstr ""
 
-#: lets-encrypt/integrations/cloudways/cloudways.php:252
+#: lets-encrypt/integrations/cloudways/cloudways.php:257
 msgid "Could not retrieve server list"
 msgstr ""
 
@@ -2354,21 +2354,21 @@ msgstr ""
 msgid "Errors were reported during installation."
 msgstr ""
 
-#: lets-encrypt/integrations/cpanel/cpanel.php:291
+#: lets-encrypt/integrations/cpanel/cpanel.php:300
 msgid "Unable to connect to cPanel"
 msgstr ""
 
-#: lets-encrypt/integrations/cpanel/cpanel.php:295
+#: lets-encrypt/integrations/cpanel/cpanel.php:304
 msgid "Login credentials incorrect"
 msgstr ""
 
-#: lets-encrypt/integrations/cpanel/cpanel.php:303
-#: lets-encrypt/integrations/cpanel/cpanel.php:322
+#: lets-encrypt/integrations/cpanel/cpanel.php:312
+#: lets-encrypt/integrations/cpanel/cpanel.php:331
 msgid "Successfully added TXT record."
 msgstr ""
 
-#: lets-encrypt/integrations/cpanel/cpanel.php:307
-#: lets-encrypt/integrations/cpanel/cpanel.php:326
+#: lets-encrypt/integrations/cpanel/cpanel.php:316
+#: lets-encrypt/integrations/cpanel/cpanel.php:335
 msgid "Could not automatically add TXT record. Please proceed manually, following the steps below."
 msgstr ""
 
@@ -2493,8 +2493,8 @@ msgid "Email could not be sent."
 msgstr ""
 
 #: mailer/class-mail.php:218
-#: upgrade/upgrade-to-pro.php:341
-#: upgrade/upgrade-to-pro.php:342
+#: upgrade/upgrade-to-pro.php:333
+#: upgrade/upgrade-to-pro.php:334
 msgid "An error occurred:"
 msgstr ""
 
@@ -2617,40 +2617,40 @@ msgstr ""
 msgid "Premium Support"
 msgstr ""
 
-#: pro/class-admin.php:617
+#: pro/class-admin.php:625
 msgid "You have installed Really Simple Security Pro. We have deactivated and removed the free plugin."
 msgstr ""
 
-#: pro/class-admin.php:631
+#: pro/class-admin.php:639
 msgid "Elementor mixed content successfully converted."
 msgstr ""
 
-#: pro/class-admin.php:644
-#: pro/class-admin.php:649
+#: pro/class-admin.php:652
+#: pro/class-admin.php:657
 msgid "Potential redirect loop."
 msgstr ""
 
-#: pro/class-admin.php:645
+#: pro/class-admin.php:653
 msgid "No redirect to http detected."
 msgstr ""
 
-#: pro/class-admin.php:650
+#: pro/class-admin.php:658
 msgid "A redirect to http was detected. This might result in redirect loops."
 msgstr ""
 
-#: pro/class-admin.php:666
+#: pro/class-admin.php:674
 msgid "TLS version"
 msgstr ""
 
-#: pro/class-admin.php:667
+#: pro/class-admin.php:675
 msgid "Your site uses an outdated version of TLS. Upgrade to TLS 1.2 or TLS 1.3 to keep your site secure."
 msgstr ""
 
-#: pro/class-admin.php:681
+#: pro/class-admin.php:689
 msgid "Your site redirects 404 pages to the http:// version of your homepage. This can cause mixed content issues with images."
 msgstr ""
 
-#: pro/class-admin.php:694
+#: pro/class-admin.php:702
 msgid "You are using W3 Total Cache with Disk: Enhanced setting. This can prevent Security headers from being properly loaded."
 msgstr ""
 
@@ -3112,13 +3112,13 @@ msgstr ""
 msgid "Permalink settings"
 msgstr ""
 
-#: pro/security/passkey-frontend-functions.php:10
+#: pro/security/passkey-frontend-functions.php:12
 #: settings/config/fields/two-fa.php:62
 #: settings/config/fields/two-fa.php:66
 msgid "Passkeys require HTTPS to function. Please enable SSL on your site first."
 msgstr ""
 
-#: pro/security/passkey-frontend-functions.php:14
+#: pro/security/passkey-frontend-functions.php:16
 msgid "Passkey login requires the REST API to be accessible for logged-out users. Please ensure the REST API is not blocked."
 msgstr ""
 
@@ -3175,24 +3175,24 @@ msgstr ""
 msgid "Captcha was not verified successfully. Please try again."
 msgstr ""
 
-#: pro/security/wordpress/class-rsssl-event-listener.php:185
+#: pro/security/wordpress/class-rsssl-event-listener.php:210
 msgid "<strong>Error</strong>: Captcha validation failed."
 msgstr ""
 
-#: pro/security/wordpress/class-rsssl-event-listener.php:201
+#: pro/security/wordpress/class-rsssl-event-listener.php:327
 msgid "Your access has been denied due to too many failed login attempts."
 msgstr ""
 
-#: pro/security/wordpress/class-rsssl-event-listener.php:265
-#: pro/security/wordpress/class-rsssl-event-listener.php:310
+#: pro/security/wordpress/class-rsssl-event-listener.php:391
+#: pro/security/wordpress/class-rsssl-event-listener.php:436
 msgid "Your access has been denied, too many login attempts"
 msgstr ""
 
-#: pro/security/wordpress/class-rsssl-event-listener.php:303
+#: pro/security/wordpress/class-rsssl-event-listener.php:429
 msgid "Your access has been denied, please contact the webmaster for support"
 msgstr ""
 
-#: pro/security/wordpress/class-rsssl-event-listener.php:318
+#: pro/security/wordpress/class-rsssl-event-listener.php:444
 #: security/wordpress/two-fa/class-rsssl-two-factor.php:573
 msgid "Security nonce invalid or expired."
 msgstr ""
@@ -5333,7 +5333,7 @@ msgstr ""
 msgid "Login URL already changed by something else than Really Simple Security"
 msgstr ""
 
-#: pro/settings/sync-settings.php:184
+#: pro/settings/sync-settings.php:188
 #: settings/config/disable-fields-filter.php:61
 msgid "REST API blocked"
 msgstr ""
@@ -5509,7 +5509,7 @@ msgstr ""
 msgid "Changed debug.log location to:"
 msgstr ""
 
-#: security/two-fa-frontend-functions.php:117
+#: security/two-fa-frontend-functions.php:134
 msgid "Two-Factor Authentication requires the REST API to be accessible for logged-out users. Please ensure the REST API is not blocked."
 msgstr ""
 
@@ -7434,80 +7434,68 @@ msgid "License invalid"
 msgstr ""
 
 #: upgrade/upgrade-to-pro.php:91
-msgid "Retrieving package information..."
-msgstr ""
-
-#: upgrade/upgrade-to-pro.php:92
-msgid "Package information retrieved"
-msgstr ""
-
-#: upgrade/upgrade-to-pro.php:93
-msgid "Failed to gather package information"
-msgstr ""
-
-#: upgrade/upgrade-to-pro.php:98
 msgid "Installing plugin..."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:99
+#: upgrade/upgrade-to-pro.php:92
 msgid "Plugin installed"
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:100
+#: upgrade/upgrade-to-pro.php:93
 msgid "Failed to install plugin"
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:105
+#: upgrade/upgrade-to-pro.php:98
 msgid "Activating plugin..."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:106
+#: upgrade/upgrade-to-pro.php:99
 msgid "Plugin activated"
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:107
+#: upgrade/upgrade-to-pro.php:100
 msgid "Failed to activate plugin"
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:130
+#: upgrade/upgrade-to-pro.php:123
 msgid "GDPR/CCPA Privacy Suite"
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:134
+#: upgrade/upgrade-to-pro.php:127
 msgid "Configure your Cookie Notice, Consent Management and Cookie Policy with our Wizard and Cookie Scan. Supports GDPR, DSGVO, TTDSG, LGPD, POPIA, RGPD, CCPA and PIPEDA."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:143
+#: upgrade/upgrade-to-pro.php:136
 msgid "One click SSL optimization"
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:147
+#: upgrade/upgrade-to-pro.php:140
 msgid "Easily improve site security with WordPress Hardening, Two-Factor Authentication (2FA), Login Protection, Vulnerability Detection and SSL certificate generation."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:156
+#: upgrade/upgrade-to-pro.php:149
 #: settings/build/366.0d5cd85e5385919f12a4.js:1
 #: settings/src/Dashboard/OtherPlugins/OtherPlugins.js:24
 msgid "Installed"
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:199
+#: upgrade/upgrade-to-pro.php:191
 msgid "Installation finished"
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:300
+#: upgrade/upgrade-to-pro.php:292
 msgid "Recommended by Really Simple Plugins"
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:325
+#: upgrade/upgrade-to-pro.php:317
 msgid "Installing"
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:336
+#: upgrade/upgrade-to-pro.php:328
 msgid "Visit Dashboard"
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:339
+#: upgrade/upgrade-to-pro.php:331
 #: modal/build/433.db1479f1e30c6b53cbd8.js:1
 #: modal/src/components/Modal/RssslModal.js:68
 #: settings/build/536.a59728be12baf4673c92.js:1
@@ -7520,56 +7508,68 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:341
+#: upgrade/upgrade-to-pro.php:333
 #, php-format
 msgid "Install %sManually%s."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:342
+#: upgrade/upgrade-to-pro.php:334
 #, php-format
 msgid "Check your %slicense%s."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:405
+#: upgrade/upgrade-to-pro.php:399
 msgid "Unknown plugin encountered."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:428
+#: upgrade/upgrade-to-pro.php:420
 msgid "Could not rename folder!"
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:528
-#: upgrade/upgrade-to-pro.php:560
+#: upgrade/upgrade-to-pro.php:520
+#: upgrade/upgrade-to-pro.php:552
 msgid "An error occurred, please try again."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:536
+#: upgrade/upgrade-to-pro.php:528
 #, php-format
 msgid "Your license key expired on %s."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:542
+#: upgrade/upgrade-to-pro.php:534
 msgid "Your license key has been disabled."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:545
+#: upgrade/upgrade-to-pro.php:537
 msgid "Missing license."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:548
+#: upgrade/upgrade-to-pro.php:540
 msgid "Invalid license."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:551
+#: upgrade/upgrade-to-pro.php:543
 msgid "Your license is not active for this URL."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:554
+#: upgrade/upgrade-to-pro.php:546
 msgid "This appears to be an invalid license key for this plugin."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:557
+#: upgrade/upgrade-to-pro.php:549
 msgid "Your license key has reached its activation limit."
+msgstr ""
+
+#: upgrade/upgrade-to-pro.php:593
+msgid "Insufficient permissions to install plugins."
+msgstr ""
+
+#: upgrade/upgrade-to-pro.php:600
+msgid "Security check failed. Please refresh the page and try again."
+msgstr ""
+
+#: upgrade/upgrade-to-pro.php:611
+msgid "Failed to retrieve download link from license server."
 msgstr ""
 
 #: modal/build/index.dc39341c6b0a7592427c.js:1

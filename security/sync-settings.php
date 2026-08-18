@@ -97,7 +97,7 @@ function rsssl_disable_fields( $field, $field_id ) {
 	}
 
 	if ( $field_id === 'login_protection_enabled' ) {
-		$login_protection_block_reason = rsssl_get_login_protection_enable_block_reason();
+		$login_protection_block_reason = rsssl_get_login_protection_enable_block_reason( false );
 		$field = rsssl_maybe_disable_blocked_checkbox_field( $field, $login_protection_block_reason );
 	}
 

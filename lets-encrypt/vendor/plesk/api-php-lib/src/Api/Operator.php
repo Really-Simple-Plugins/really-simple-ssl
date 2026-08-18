@@ -68,7 +68,7 @@ class Operator
      *
      * @return mixed
      */
-    protected function _getItems($structClass, $infoTag, $field = null, $value = null, callable $filter = null)
+    protected function _getItems($structClass, $infoTag, $field = null, $value = null, ?callable $filter = null)
     {
         $packet = $this->_client->getPacket();
         $getTag = $packet->addChild($this->_wrapperTag)->addChild('get');

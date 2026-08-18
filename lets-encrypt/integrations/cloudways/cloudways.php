@@ -84,16 +84,21 @@ class rsssl_Cloudways {
 			$output = curl_exec( $ch );
 
 			$httpcode = curl_getinfo( $ch, CURLINFO_HTTP_CODE );
-			if ($output && isset($output->error_description)) {
-				return new RSSSL_RESPONSE( 'error', 'stop', $output->error_description, false );
-			} else if ($httpcode != '200' && $output && isset($output->message) ){
-				return new RSSSL_RESPONSE( 'error', 'stop', $output->message );
+			$decoded = json_decode( $output );
+			if ( is_object( $decoded ) && isset( $decoded->error_description ) ) {
+				return new RSSSL_RESPONSE( 'error', 'stop', $decoded->error_description, false );
+			} else if ( $httpcode != '200' && is_object( $decoded ) && isset( $decoded->message ) ) {
+				return new RSSSL_RESPONSE( 'error', 'stop', $decoded->message );
 			} else if ( $httpcode != '200' ) {
 				$message = $httpcode . ' output: ' . substr( $output, 0, 10000 );
 				return new RSSSL_RESPONSE( 'error', 'stop', $message );
 			}
-			curl_close( $ch );
-			return new RSSSL_RESPONSE( 'success', 'continue', '', json_decode( $output ) );
+			if ( PHP_VERSION_ID >= 80000 ) {
+				unset( $ch );
+			} else {
+				curl_close( $ch );
+			}
+			return new RSSSL_RESPONSE( 'success', 'continue', '', $decoded );
 		} catch(Exception $e) {
 			return new RSSSL_RESPONSE( 'error', 'stop', $e->getMessage() );
 		}

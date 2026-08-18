@@ -133,7 +133,10 @@ register_deactivation_hook( rsssl_file, 'rsssl_clear_scheduled_hooks' );
  * Multisite cron
  */
 
-add_action('plugins_loaded', 'rsssl_multisite_schedule_cron', 15);
+if ( is_multisite() ) {
+	add_action( 'plugins_loaded', 'rsssl_multisite_schedule_cron', 15 );
+}
+
 function rsssl_multisite_schedule_cron()
 {
 	if ( get_site_option('rsssl_ssl_activation_active') ) {
