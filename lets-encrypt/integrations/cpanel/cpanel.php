@@ -237,7 +237,11 @@ class rsssl_cPanel
 
         // Make the call, and then terminate the cURL caller object.
         $curl_response = curl_exec($ch);
-        curl_close($ch);
+        if (PHP_VERSION_ID >= 80000) {
+            unset($ch);
+        } else {
+            curl_close($ch);
+        }
 
         //return output.
         return $curl_response;
@@ -285,10 +289,15 @@ class rsssl_cPanel
 		curl_setopt($curl, CURLOPT_POST, 1);
 
 		$response = curl_exec($curl);
-		curl_close($curl);
+		$error    = curl_error( $curl );
+		if (PHP_VERSION_ID >= 80000) {
+			unset($curl);
+		} else {
+			curl_close($curl);
+		}
 
 		if (false === $response) {
-			return new RSSSL_RESPONSE('error', 'stop', __("Unable to connect to cPanel", "really-simple-ssl").' '.curl_error($curl));
+			return new RSSSL_RESPONSE('error', 'stop', __("Unable to connect to cPanel", "really-simple-ssl").' '.$error);
 		}
 
 		if (true === stristr($response, '<html>')) {

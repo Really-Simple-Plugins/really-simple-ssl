@@ -212,7 +212,7 @@ if (!class_exists('Rsssl_Two_Factor_Profile_Settings')) {
                 return;
             }
 
-            if (isset($_POST['rsssl_two_fa_nonce']) && !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['rsssl_two_fa_nonce'])), 'update_user_two_fa_settings')) {
+            if (!isset($_POST['rsssl_two_fa_nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['rsssl_two_fa_nonce'])), 'update_user_two_fa_settings')) {
                 return;
             }
 

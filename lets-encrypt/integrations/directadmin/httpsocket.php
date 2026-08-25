@@ -393,7 +393,11 @@ class HTTPSocket
 		$this->result_body		= substr($this->result, $header_size);
 		$this->result_status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-		curl_close($ch);
+		if (PHP_VERSION_ID >= 80000) {
+			unset($ch);
+		} else {
+			curl_close($ch);
+		}
 
 		$this->query_cache[] = $this->remote_host.':'.$this->remote_port.$request;
 

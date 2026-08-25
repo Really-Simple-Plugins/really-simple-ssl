@@ -121,7 +121,11 @@ function rsssl_http_methods_allowed()
 					}
 					$tested['allowed'][] = $method;
 				}
-				curl_close( $ch );
+				if ( PHP_VERSION_ID >= 80000 ) {
+					unset( $ch );
+				} else {
+					curl_close( $ch );
+				}
 				update_option( 'rsssl_http_methods_allowed', $tested, false );
 			}
 		}

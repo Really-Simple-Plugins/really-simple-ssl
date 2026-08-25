@@ -10,7 +10,7 @@ class InvalidResponse extends AbstractException {
     private $_rawResponse;
     private $_responseStatus;
 
-    public function __construct(RawResponse $rawResponse, string $responseStatus = null) {
+    public function __construct(RawResponse $rawResponse, ?string $responseStatus = null) {
 
         $this->_rawResponse = $rawResponse;
         $this->_responseStatus = $responseStatus;

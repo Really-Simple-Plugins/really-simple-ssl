@@ -92,7 +92,7 @@ class OrderResponse extends AbstractKeyValuableCache {
         );
     }
 
-    public function set(Order $order, Response\Order\AbstractOrder $response = null) : void {
+    public function set(Order $order, ?Response\Order\AbstractOrder $response = null) : void {
 
         $accountIdentifier = $this->_getObjectIdentifier($order->getAccount());
         $orderIdentifier = $this->_getObjectIdentifier($order);

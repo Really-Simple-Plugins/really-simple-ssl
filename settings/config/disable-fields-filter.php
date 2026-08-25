@@ -52,7 +52,7 @@ function rsssl_modify_fields($fields){
 	}
 
 	// Show REST API blocked warning for 2FA.
-	if ( ! rsssl_rest_api_accessible_for_logged_out_users() ) {
+	if ( ! rsssl_rest_api_accessible_for_logged_out_users( false ) ) {
 		$index = array_search( 'login_protection_enabled', array_column( $fields, 'id' ), true );
 		if ( $index !== false ) {
 			$fields[$index]['help'] = [

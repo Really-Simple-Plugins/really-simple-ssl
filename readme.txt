@@ -4,9 +4,9 @@ Donate link: https://www.paypal.me/reallysimplessl
 Tags: security, https, 2fa, vulnerabilities, two factor
 Requires at least: 6.6
 License: GPL2
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 9.7.0
+Stable tag: 9.8.0
 
 Easily improve site security with WordPress Hardening, Two-Factor Authentication (2FA), Login Protection, Vulnerability Detection and SSL certificate.
 
@@ -160,6 +160,13 @@ Yes. The plugin enforces HTTPS and handles all necessary redirects, optionally u
 Really Simple Security and WordFence greatly overlap in term of functionality. If you like to use specific features from both plugins, we strongly recommend not to enable similar features twice. The benefit of Really Simple Security is that disabled features don't load any code, so won't have an impact on site performance.
 
 == Changelog ==
+= 9.8.0 - 2026-08-25 =
+* Fixed: Other plugin installation now retrieves the download link correctly.
+* Fixed: PHP 8.5 compatibility issues.
+* Fixed: The 2FA grace period was not always handled correctly.
+* Changed: REST API checks are faster and run only when needed.
+* Changed: Tested up to WordPress 7.1.
+
 = 9.7.0 - 2026-07-29 =
 * Fixed: Alignment of the e-mail validation status icon.
 * Fixed: Vulnerability data is included in uninstall cleanup.

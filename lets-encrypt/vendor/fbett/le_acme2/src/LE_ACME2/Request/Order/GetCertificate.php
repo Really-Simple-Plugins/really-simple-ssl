@@ -20,7 +20,7 @@ class GetCertificate extends AbstractRequest {
     private $_alternativeUrl = null;
 
     public function __construct(Order $order, Response\Order\AbstractOrder $orderResponse,
-                                string $alternativeUrl = null
+                                ?string $alternativeUrl = null
     ) {
         $this->_order = $order;
         $this->_orderResponse = $orderResponse;
