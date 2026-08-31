@@ -161,9 +161,9 @@ Really Simple Security and WordFence greatly overlap in term of functionality. I
 
 == Changelog ==
 = 9.8.1 - 2026-09-01 =
-* Security: Prevented deletion of the login nonce.
-* Security: Prevented changing the 2FA status from active to open.
-* Security: Prevented XML-RPC login without 2FA for users with 2FA configured.
+* Security: Prevented unexpected deletion of the login nonce.
+* Security: Prevented a bug that incorrectly changed the 2FA status from active to open.
+* Security: Prevent XML-RPC logins without 2FA for users with 2FA configured.
 
 = 9.8.0 - 2026-08-25 =
 * Fixed: Other plugin installation now retrieves the download link correctly.
