@@ -169,6 +169,16 @@ final class Rsssl_Email_Controller extends Rsssl_Abstract_Controller
             return new WP_REST_Response(['message' => $e->getMessage()], 403);
         }
 
+		// This endpoint may only complete a new email setup.
+		if ( Rsssl_Two_Factor_Email::is_configured( $user ) ) {
+			return new WP_REST_Response(
+				array(
+					'error' => __( 'Two-Factor Authentication must be completed before it can be changed.', 'really-simple-ssl' ),
+				),
+				403
+			);
+		}
+
 		// Email may finish only its own challenge; it may not replace another active method.
 		if ( $this->has_configured_provider_other_than( $user, 'email' ) ) {
 			return new WP_REST_Response(

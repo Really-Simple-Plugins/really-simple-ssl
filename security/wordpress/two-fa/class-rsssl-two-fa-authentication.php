@@ -52,14 +52,18 @@ class Rsssl_Two_Fa_Authentication {
 		$unverified_hash = self::hash_login_nonce( $unverified_nonce );
 		$hashes_match    = $unverified_hash && hash_equals( $login_nonce['rsssl_key'], $unverified_hash );
 
-		if ( $hashes_match && time() < $login_nonce['rsssl_expiration'] ) {
-			return true;
+		if ( ! $hashes_match ) {
+			return false;
 		}
 
-		// Require a fresh nonce if verification fails.
-		self::delete_login_nonce( $user_id );
+		if ( time() >= $login_nonce['rsssl_expiration'] ) {
+			// The nonce was known but has expired, so require a fresh one.
+			self::delete_login_nonce( $user_id );
 
-		return false;
+			return false;
+		}
+
+		return true;
 	}
 
 	/**

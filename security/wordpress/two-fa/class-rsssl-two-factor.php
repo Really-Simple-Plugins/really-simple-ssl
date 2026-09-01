@@ -158,8 +158,8 @@ class Rsssl_Two_Factor
 
         add_action('init', array(__CLASS__, 'rsssl_collect_auth_cookie_tokens'));
 
-        // Run only after the core wp_authenticate_username_password() check.
-        add_filter('authenticate', array(__CLASS__, 'rsssl_filter_authenticate'));
+        // Run only after the core password and application password authentication checks.
+        add_filter('authenticate', array(__CLASS__, 'rsssl_filter_authenticate'), 31);
 
         // Run as late as possible to prevent other plugins from unintentionally bypassing.
         add_filter('authenticate', array(__CLASS__, 'rsssl_filter_authenticate_block_cookies'), PHP_INT_MAX);
@@ -608,6 +608,7 @@ class Rsssl_Two_Factor
             case 'totp':
             case 'email':
             case 'passkey':
+                self::destroy_current_session_for_user($user);
                 wp_clear_auth_cookie();
                 self::show_two_factor_login($user);
                 exit;
@@ -716,7 +717,11 @@ class Rsssl_Two_Factor
      */
     public static function is_user_api_login_enabled(int $user_id): bool
     {
-        return (bool)apply_filters('rsssl_two_factor_user_api_login_enable', false, $user_id);
+        return (bool) apply_filters(
+            'rsssl_two_factor_user_api_login_enable',
+            (bool) did_action('application_password_did_authenticate'),
+            $user_id
+        );
     }
 
     /**
@@ -1229,7 +1234,9 @@ class Rsssl_Two_Factor
         $wp_auth_id = self::sanitize_request_data('rsssl-wp-auth-id', 0, 'absint');
         $nonce = self::sanitize_request_data('rsssl-wp-auth-nonce', '', 'wp_unslash');
         $provider = self::sanitize_request_data('provider', false, 'wp_unslash');
-        $redirect_to = self::sanitize_request_data('redirect_to', '', 'wp_unslash');
+        $redirect_to = isset($_REQUEST['redirect_to']) && is_string($_REQUEST['redirect_to'])
+            ? wp_validate_redirect(wp_unslash($_REQUEST['redirect_to']), admin_url())
+            : '';
         return array($wp_auth_id, $nonce, $provider, $redirect_to);
     }
 

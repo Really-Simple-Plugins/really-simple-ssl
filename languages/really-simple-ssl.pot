@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Really Simple Security Pro 9.8.0\n"
+"Project-Id-Version: Really Simple Security Pro 9.8.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/really-simple-ssl-pro\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-11T10:54:12+00:00\n"
+"POT-Creation-Date: 2026-08-31T12:21:40+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: really-simple-ssl\n"
@@ -76,7 +76,7 @@ msgid "Please make sure to configure a method, access to your account will be de
 msgstr ""
 
 #: assets/templates/two_fa/onboarding.php:116
-#: security/wordpress/two-fa/controllers/class-rsssl-email-controller.php:245
+#: security/wordpress/two-fa/controllers/class-rsssl-email-controller.php:255
 #: security/wordpress/two-fa/providers/class-rsssl-two-factor-email.php:376
 msgid "A verification code has been sent to the email address associated with your account."
 msgstr ""
@@ -152,7 +152,7 @@ msgstr ""
 #: assets/templates/two_fa/profile-settings.php:52
 #: assets/templates/two_fa/totp-config.php:23
 #: pro/security/wordpress/two-fa/providers/class-rsssl-two-factor-totp.php:656
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1601
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1608
 msgid "Download Backup Codes"
 msgstr ""
 
@@ -3896,7 +3896,7 @@ msgid "Enable Passkey login"
 msgstr ""
 
 #: pro/security/wordpress/passkey/class-rsssl-passkey.php:364
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1621
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1628
 msgid "Failed to create a login nonce."
 msgstr ""
 
@@ -5052,6 +5052,7 @@ msgstr ""
 #: security/wordpress/two-fa/controllers/class-rsssl-email-controller.php:92
 #: security/wordpress/two-fa/controllers/class-rsssl-email-controller.php:129
 #: security/wordpress/two-fa/controllers/class-rsssl-email-controller.php:176
+#: security/wordpress/two-fa/controllers/class-rsssl-email-controller.php:186
 msgid "Two-Factor Authentication must be completed before it can be changed."
 msgstr ""
 
@@ -5059,7 +5060,7 @@ msgstr ""
 #: security/wordpress/two-fa/controllers/class-rsssl-email-controller.php:100
 #: security/wordpress/two-fa/controllers/class-rsssl-email-controller.php:137
 #: security/wordpress/two-fa/controllers/class-rsssl-email-controller.php:163
-#: security/wordpress/two-fa/controllers/class-rsssl-email-controller.php:219
+#: security/wordpress/two-fa/controllers/class-rsssl-email-controller.php:229
 msgid "Invalid provider"
 msgstr ""
 
@@ -5319,12 +5320,12 @@ msgid "Use an authenticator app on your mobile device to generate a code."
 msgstr ""
 
 #: pro/security/wordpress/two-fa/providers/class-rsssl-two-factor-totp.php:657
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1602
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1609
 msgid "Key copied"
 msgstr ""
 
 #: pro/security/wordpress/two-fa/providers/class-rsssl-two-factor-totp.php:658
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1603
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1610
 msgid "Could not copy text: "
 msgstr ""
 
@@ -5638,7 +5639,7 @@ msgid "None"
 msgstr ""
 
 #: security/wordpress/two-fa/class-rsssl-two-factor.php:549
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1399
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1406
 msgid "Your 2FA grace period expired. Please contact your site administrator to regain access and to configure 2FA."
 msgstr ""
 
@@ -5646,11 +5647,11 @@ msgstr ""
 msgid "Security token invalid or expired."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:679
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:680
 msgid "API login for user disabled."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:776
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:781
 #, php-format
 msgid "Warning: There has been %1$s failed login attempt on your account without providing a valid two-factor token. The last failed login occurred %2$s ago. If this wasn't you, you should reset your password."
 msgid_plural "Warning: %1$s failed login attempts have been detected on your account without providing a valid two-factor token. The last failed login occurred %2$s ago. If this wasn't you, you should reset your password."
@@ -5658,46 +5659,46 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %s: URL to reset password
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:831
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:836
 #, php-format
 msgid "Your password was reset because of too many failed Two Factor attempts. You will need to <a href=\"%s\">create a new password</a> to regain access. Please check your email for more information."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1057
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1062
 msgid "Authentication provider not specified or invalid."
 msgstr ""
 
 #. translators: %s: time delay between login attempts
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1087
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1092
 #, php-format
 msgid "Too many invalid verification codes, you can try again in %s. This limit protects your account against automated attacks."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1149
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1154
 msgid "Invalid verification code."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1336
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1343
 msgid "There have been too many failed two-factor authentication attempts, which often indicates that the password has been compromised. The password has been reset in order to protect the account."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1340
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1347
 msgid "If you are the owner of this account, please check your email for instructions on regaining access."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1347
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1354
 msgid "Password Reset"
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1431
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1438
 msgid "Invalid user."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1458
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1465
 msgid "Your Two-Factor Authentication configuration is corrupted. Please contact your site administrator to regain access."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1518
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1525
 msgid "Two-Factor Authentication Setup"
 msgstr ""
 
@@ -5717,21 +5718,21 @@ msgstr ""
 msgid "Two-Factor Authentication setup is required for this account."
 msgstr ""
 
-#: security/wordpress/two-fa/controllers/class-rsssl-email-controller.php:190
+#: security/wordpress/two-fa/controllers/class-rsssl-email-controller.php:200
 msgid "Code was invalid, try \"Resend Code\""
 msgstr ""
 
-#: security/wordpress/two-fa/controllers/class-rsssl-email-controller.php:233
+#: security/wordpress/two-fa/controllers/class-rsssl-email-controller.php:243
 msgid "Email authentication is not active for this user"
 msgstr ""
 
-#: security/wordpress/two-fa/controllers/class-rsssl-email-controller.php:306
-#: security/wordpress/two-fa/controllers/class-rsssl-email-controller.php:324
-#: security/wordpress/two-fa/controllers/class-rsssl-email-controller.php:354
+#: security/wordpress/two-fa/controllers/class-rsssl-email-controller.php:316
+#: security/wordpress/two-fa/controllers/class-rsssl-email-controller.php:334
+#: security/wordpress/two-fa/controllers/class-rsssl-email-controller.php:364
 msgid "Access denied."
 msgstr ""
 
-#: security/wordpress/two-fa/controllers/class-rsssl-email-controller.php:341
+#: security/wordpress/two-fa/controllers/class-rsssl-email-controller.php:351
 msgid "Too many attempts. Please try again later."
 msgstr ""
 
@@ -6402,23 +6403,6 @@ msgstr ""
 
 #: settings/config/fields/hardening-extended.php:60
 msgid "Disable HTTP methods"
-msgstr ""
-
-#: settings/config/fields/hardening-extended.php:69
-msgid "Settings update: Database prefix changed"
-msgstr ""
-
-#: settings/config/fields/hardening-extended.php:70
-msgid "Security through obscurity. Your site is no longer using the default wp_ prefix for database tables. The process has been designed to only complete and replace the tables after all wp_ tables are successfully renamed. In the unlikely event that this does lead to database issues on your site, please navigate to our troubleshooting article."
-msgstr ""
-
-#: settings/config/fields/hardening-extended.php:73
-#: settings/config/fields/hardening-extended.php:74
-msgid "This will permanently change your database prefixes and you can NOT rollback this feature. Please make sure you have a back-up."
-msgstr ""
-
-#: settings/config/fields/hardening-extended.php:76
-msgid "Rename and randomize your database prefix"
 msgstr ""
 
 #: settings/config/fields/hardening-extended.php:85
