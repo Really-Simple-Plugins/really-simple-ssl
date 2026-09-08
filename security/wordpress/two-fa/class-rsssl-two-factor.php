@@ -124,6 +124,7 @@ class Rsssl_Two_Factor
         add_filter('wp_login_errors', array(__CLASS__, 'maybe_add_login_error_notice'));
         add_filter('wp_login_errors', array(__CLASS__, 'rsssl_maybe_show_reset_password_notice'));
         add_action('after_password_reset', array(__CLASS__, 'rsssl_clear_password_reset_notice'));
+        add_action('login_form_rsssl_onboarding', array(__CLASS__, 'rsssl_login_form_onboarding'));
         add_action('login_form_validate_2fa', array(__CLASS__, 'rsssl_login_form_validate_2fa'));
         // Loading the styles.
         add_action('login_enqueue_scripts', array(__CLASS__, 'enqueue_onboarding_styles'));
@@ -597,6 +598,10 @@ class Rsssl_Two_Factor
 
         switch (Rsssl_Two_Factor_Settings::get_login_action($user->ID)) {
             case 'onboarding':
+                if ( ! did_action( 'login_init' ) ) {
+                    self::redirect_to_onboarding( $user );
+                }
+
                 self::is_onboarding_complete($user);
                 exit;
             case 'expired':
@@ -616,6 +621,56 @@ class Rsssl_Two_Factor
             default:
                 break;
         }
+    }
+
+    /**
+     * Render onboarding from the dedicated WordPress login request.
+     *
+     * @throws Exception If the onboarding screen template cannot be loaded.
+     */
+    public static function rsssl_login_form_onboarding(): void
+    {
+        $request_data = self::get_request_data();
+        $user_id = $request_data['user_id'];
+        $login_nonce = $request_data['login_nonce'];
+        $redirect_to = $request_data['redirect_to'];
+        $user = get_userdata( $user_id );
+
+        if ( ! $user instanceof WP_User || ! Rsssl_Two_Fa_Authentication::verify_login_nonce( $user_id, $login_nonce ) ) {
+            self::redirect_to_login_error( 'nonce_invalid', $redirect_to );
+        }
+
+        self::is_onboarding_complete( $user, $login_nonce );
+        wp_safe_redirect( wp_validate_redirect( $redirect_to, admin_url() ) );
+        exit;
+    }
+
+    /**
+     * Restart onboarding in a fresh login request so login_init runs before rendering.
+     * Clears the current authentication state, redirects, and exits.
+     *
+     * @param WP_User $user User being onboarded.
+     */
+    private static function redirect_to_onboarding( WP_User $user ): void
+    {
+        $login_nonce = self::generate_login_nonce_for_user( $user->ID );
+        $redirect_to = isset( $_REQUEST['redirect_to'] )
+            ? wp_validate_redirect( wp_unslash( $_REQUEST['redirect_to'] ), admin_url() )
+            : admin_url();
+
+        self::destroy_current_session_for_user( $user );
+        wp_clear_auth_cookie();
+        wp_safe_redirect(
+            self::login_url(
+                array(
+                    'action'               => 'rsssl_onboarding',
+                    'rsssl-wp-auth-id'     => $user->ID,
+                    'rsssl-wp-auth-nonce'  => $login_nonce,
+                    'redirect_to'          => $redirect_to,
+                )
+            )
+        );
+        exit;
     }
 
     /**
@@ -1031,7 +1086,11 @@ class Rsssl_Two_Factor
 	 * @throws Exception
 	 */
 	public static function rsssl_login_form_validate_2fa(): void {
-		[$wp_auth_id, $nonce, $provider_key, $redirect_to] = self::get_request_data();
+		$request_data = self::get_request_data();
+		$wp_auth_id = $request_data['user_id'];
+		$nonce = $request_data['login_nonce'];
+		$provider_key = $request_data['provider'];
+		$redirect_to = $request_data['redirect_to'];
 
 		if (isset($_SERVER['REQUEST_METHOD']) && 'POST' === strtoupper((sanitize_text_field(wp_unslash($_SERVER['REQUEST_METHOD']))))) {
 			$is_post_request = true;
@@ -1227,17 +1286,18 @@ class Rsssl_Two_Factor
     /**
      * Get the request data for two-factor authentication.
      *
-     * @return array An array containing the sanitized values of wp_auth_id, nonce, and provider.
+     * @return array Sanitized user ID, login nonce, provider, and redirect URL.
      */
     private static function get_request_data(): array
     {
-        $wp_auth_id = self::sanitize_request_data('rsssl-wp-auth-id', 0, 'absint');
-        $nonce = self::sanitize_request_data('rsssl-wp-auth-nonce', '', 'wp_unslash');
-        $provider = self::sanitize_request_data('provider', false, 'wp_unslash');
-        $redirect_to = isset($_REQUEST['redirect_to']) && is_string($_REQUEST['redirect_to'])
-            ? wp_validate_redirect(wp_unslash($_REQUEST['redirect_to']), admin_url())
-            : '';
-        return array($wp_auth_id, $nonce, $provider, $redirect_to);
+        return array(
+            'user_id'      => self::sanitize_request_data('rsssl-wp-auth-id', 0, 'absint'),
+            'login_nonce'  => self::sanitize_request_data('rsssl-wp-auth-nonce', '', 'wp_unslash'),
+            'provider'     => self::sanitize_request_data('provider', false, 'wp_unslash'),
+            'redirect_to'  => isset($_REQUEST['redirect_to']) && is_string($_REQUEST['redirect_to'])
+                ? wp_validate_redirect(wp_unslash($_REQUEST['redirect_to']), admin_url())
+                : '',
+        );
     }
 
     /**
@@ -1375,16 +1435,17 @@ class Rsssl_Two_Factor
      * Check if the user has completed the onboarding process.
      *
      * @param WP_User $user The WP_User object representing the user.
+     * @param string $login_nonce Existing login nonce for redirected onboarding.
      *
      * @return void
      * @throws Exception If the onboarding screen template cannot be loaded.
      */
-    private static function is_onboarding_complete(WP_User $user): void
+    private static function is_onboarding_complete(WP_User $user, string $login_nonce = ''): void
     {
         // If the user has not completed the onboarding process, they should be shown the onboarding screen.
         $onboarding_complete = get_user_meta($user->ID, self::RSSSL_USER_META_ONBOARDING_COMPLETE, true);
         if (!$onboarding_complete) {
-            self::onboarding_user_html($user);
+            self::onboarding_user_html($user, $login_nonce);
         }
     }
 
@@ -1470,11 +1531,12 @@ class Rsssl_Two_Factor
      * Generate the HTML for the onboarding screen for a given user.
      *
      * @param WP_User $user The user object.
+     * @param string $login_nonce Existing login nonce for redirected onboarding.
      *
      * @return void
      * @throws Exception If the onboarding screen template cannot be loaded.
      */
-    private static function onboarding_user_html(WP_User $user): void
+    private static function onboarding_user_html(WP_User $user, string $login_nonce = ''): void
     {
         $passkey_onboarding = get_user_meta($user->ID, 'rsssl_two_fa_status_passkey', true) === 'open';
         // Variables needed for the template and scripts
@@ -1483,7 +1545,7 @@ class Rsssl_Two_Factor
         $provider = self::get_primary_provider_for_user($user);
         $redirect_to = isset($_REQUEST['redirect_to']) ? wp_validate_redirect(wp_unslash($_REQUEST['redirect_to']), admin_url()) : admin_url();
         $enabled_providers = $provider_loader::get_user_enabled_providers($user);
-        $login_nonce = self::generate_login_nonce_for_user($user->ID);
+        $login_nonce = $login_nonce ?: self::generate_login_nonce_for_user($user->ID);
         $is_forced = Rsssl_Two_Factor_Settings::is_user_forced_to_use_2fa($user->ID);
         $grace_period = Rsssl_Two_Factor_Settings::is_user_in_grace_period($user);
         $is_today = Rsssl_Two_Factor_Settings::is_today($user);

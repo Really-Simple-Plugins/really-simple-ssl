@@ -459,6 +459,25 @@
 }
 
 .rsssl-content_security_policy_source_directives {
+  // Data rows are separate flex containers. Long values must be allowed to shrink,
+  // otherwise one row can negotiate different column widths than the header.
+  .rdt_TableCell:not(:first-child):not(:last-child),
+  .rdt_TableCol:not(:first-child):not(:last-child) {
+    contain: inline-size;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .rdt_TableCell:not(:first-child):not(:last-child) > div {
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
   .rdt_TableCell:last-child {
     .rsssl-status-allowed,
     .rsssl-status-revoked,
@@ -472,6 +491,14 @@
     .rsssl-action-buttons__button {
       min-width: var(--rsssl-policy-action-button-min-width);
     }
+  }
+}
+
+.rsssl-firewall_list_listing {
+  .rsssl-field-wrap .rdt_TableHeadRow .rdt_TableCol:last-child,
+  .rsssl-field-wrap .rdt_TableRow .rdt_TableCell:last-child {
+    margin-left: auto;
+    min-width: 180px;
   }
 }
 

@@ -191,35 +191,7 @@ if (!class_exists('Rsssl_Two_Factor_Profile_Settings')) {
                 return;
             }
 
-            // Handle reset action
-            if (isset($_POST['change_2fa_config_field'])) {
-                if (
-                    isset($_POST['reset_two_fa_nonce']) &&
-                    wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['reset_two_fa_nonce'])), 'reset_two_fa_settings')
-                ) {
-                    $reset_input = filter_var($_POST['change_2fa_config_field'], FILTER_VALIDATE_BOOLEAN);
-                    $this->maybe_the_user_resets_config($user_id, $reset_input);
-                    add_settings_error(
-                        'two-factor-authentication',
-                        'rsssl-two-factor-authentication-reset',
-                        __('Two-Factor Authentication settings have been reset.', 'really-simple-ssl'),
-                        'updated'
-                    );
-                    // Redirect to avoid form resubmission
-                    wp_redirect(add_query_arg('settings-updated', 'true'));
-                    exit;
-                }
-                return;
-            }
-
             if (!isset($_POST['rsssl_two_fa_nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['rsssl_two_fa_nonce'])), 'update_user_two_fa_settings')) {
-                return;
-            }
-
-            if (isset($_POST['change_2fa_config_field'])) {
-                // We sanitize the input needs to be a boolean.
-                $reset_input = filter_var($_POST['change_2fa_config_field'], FILTER_VALIDATE_BOOLEAN);
-                $this->maybe_the_user_resets_config($user_id, $reset_input);
                 return;
             }
 
@@ -229,6 +201,9 @@ if (!class_exists('Rsssl_Two_Factor_Profile_Settings')) {
             $params::validate_user($user);
 
             if (!isset($_POST['two-factor-authentication'])) {
+                if (Rsssl_Two_Factor_Settings::is_user_forced_to_use_2fa($user->ID)) {
+                    return;
+                }
                 // reset the user's 2fa settings.
                 // Delete all 2fa related user meta.
                 Rsssl_Two_Fa_Status::delete_two_fa_meta($user->ID);
@@ -316,6 +291,9 @@ if (!class_exists('Rsssl_Two_Factor_Profile_Settings')) {
                     }
                     break;
                 case 'none':
+                    if (Rsssl_Two_Factor_Settings::is_user_forced_to_use_2fa($user->ID)) {
+                        return;
+                    }
                     // We disable the Two-Factor Authentication.
                     Rsssl_Two_Fa_Status::delete_two_fa_meta($user->ID);
                     break;
@@ -478,25 +456,6 @@ if (!class_exists('Rsssl_Two_Factor_Profile_Settings')) {
             $path = trailingslashit(rsssl_url) . 'assets/features/two-fa/styles.css';
             $file_path = trailingslashit(rsssl_path) . 'assets/features/two-fa/styles.css';
             wp_enqueue_style('rsssl-profile-style', $path, array(), filemtime($file_path));
-        }
-
-        /**
-         * Checks if the user resets the configuration and actually reset everything.
-         *
-         * @param int $user_id The ID of the user.
-         * @param $reset_input
-         *
-         * @return bool
-         */
-        private function maybe_the_user_resets_config(int $user_id, $reset_input): bool
-        {
-            // If the reset is true, we do the reset.
-            if ($reset_input && $user_id) {
-                // We reset the user's Two-Factor Authentication settings.
-                Rsssl_Two_Fa_Status::delete_two_fa_meta($user_id);
-            }
-
-            return $reset_input;
         }
 
         /**

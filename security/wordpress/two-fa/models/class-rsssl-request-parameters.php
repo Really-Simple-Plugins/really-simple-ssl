@@ -25,14 +25,14 @@ class Rsssl_Request_Parameters {
 	 *
 	 * @var int
 	 */
-	public int $user_id;
+	public int $user_id = 0;
 
 	/**
 	 * Login nonce.
 	 *
 	 * @var string
 	 */
-	public string $login_nonce;
+	public string $login_nonce = '';
 
 	/**
 	 * User object.
@@ -46,109 +46,109 @@ class Rsssl_Request_Parameters {
 	 *
 	 * @var string|object
 	 */
-	public string $provider;
+	public string $provider = '';
 
 	/**
 	 * Redirect URL.
 	 *
 	 * @var string
 	 */
-	public string $redirect_to;
+	public string $redirect_to = '';
 
 	/**
 	 * Authentication code.
 	 *
 	 * @var string
 	 */
-	public string $code;
+	public string $code = '';
 
 	/**
 	 * Authentication key.
 	 *
 	 * @var string
 	 */
-	public string $key;
+	public string $key = '';
 
 	/**
 	 * Nonce value.
 	 *
 	 * @var mixed|null
 	 */
-	public string $nonce;
+	public string $nonce = '';
 
 	/**
 	 * Authentication token.
 	 *
 	 * @var string
 	 */
-	public string $token;
+	public string $token = '';
 
 	/**
 	 * Passkey ID.
 	 *
 	 * @var string
 	 */
-	public string $id;
+	public string $id = '';
 
 	/**
 	 * Raw ID for passkey.
 	 *
 	 * @var string
 	 */
-	public string $rawId;
+	public string $rawId = '';
 
 	/**
 	 * Response data.
 	 *
 	 * @var array
 	 */
-	public array $response;
+	public array $response = [];
 
 	/**
 	 * Request type.
 	 *
 	 * @var string
 	 */
-	public string $type;
+	public string $type = '';
 
 	/**
 	 * Unique browser identifier.
 	 *
 	 * @var string
 	 */
-	public string $unique_browser_identifier;
+	public string $unique_browser_identifier = '';
 
 	/**
 	 * User login.
 	 *
 	 * @var string
 	 */
-	public string $user_login;
+	public string $user_login = '';
 
 	/**
 	 * User handle.
 	 *
 	 * @var mixed|null
 	 */
-	public string $user_handle;
+	public string $user_handle = '';
 
 	/**
 	 * Onboarding flag.
 	 *
 	 * @var bool
 	 */
-	public bool $onboarding;
+	public bool $onboarding = false;
 
 	/**
 	 * Auth device ID.
 	 *
 	 * @var string
 	 */
-	public string $auth_device_id;
+	public string $auth_device_id = '';
 
-	public int $entry_id;
+	public int $entry_id = 0;
 
-	public bool $profile;
+	public bool $profile = false;
 
 	public array $forced_roles = [];
 
@@ -170,11 +170,15 @@ class Rsssl_Request_Parameters {
 	 */
 	private function initialize_parameters( WP_REST_Request $request ): void {
 		$allowed_providers = array( 'passkey', 'email', 'totp', 'passkey_register' );
-		$this->nonce       = sanitize_text_field( $request->get_header( 'X-WP-Nonce' ) );
-		$this->redirect_to = $request->get_param( 'redirect_to' ) ? wp_validate_redirect( $request->get_param( 'redirect_to' ), admin_url() ) : admin_url();
-		$this->login_nonce = sanitize_text_field( $request->get_param( 'login_nonce' ) );
-		$provider          = $request->get_param( 'provider' );
-		$this->forced_roles = rsssl_get_option( 'two_fa_forced_role' , [] );
+		$redirect_to       = $request->get_param( 'redirect_to' );
+		$provider          = $this->sanitize_string_value( $request->get_param( 'provider' ) );
+
+		$this->nonce       = $this->sanitize_string_value( $request->get_header( 'X-WP-Nonce' ) );
+		$this->redirect_to = is_string( $redirect_to ) && $redirect_to !== ''
+			? wp_validate_redirect( $redirect_to, admin_url() )
+			: admin_url();
+		$this->login_nonce    = $this->sanitize_string_value( $request->get_param( 'login_nonce' ) );
+		$this->forced_roles   = rsssl_get_option( 'two_fa_forced_role', [] );
 		$this->days_threshold = rsssl_get_option( 'two_fa_days_threshold', 0 );
 
 		if ( ! in_array( $provider, $allowed_providers, true ) ) {
@@ -184,38 +188,40 @@ class Rsssl_Request_Parameters {
 		if ( $request->has_param( 'credential' ) || $request->has_param( 'credentials' ) ) {
 			$this->initialize_passkey_parameters( $request );
 		} else {
-			$this->user_id  = $request->get_param( 'user_id' )?? 0;
-			$this->provider = $provider?? 'none';
-			$user = get_user_by( 'id', $this->user_id );
-			if ($user) {
+			$this->user_id  = $this->sanitize_integer_value( $request->get_param( 'user_id' ) );
+			$this->provider = $provider ?? 'none';
+			$user           = get_user_by( 'id', $this->user_id );
+			if ( $user ) {
 				$this->user = $user;
 			}
-			if ($request->has_param('entry_id')) {
-				$this->entry_id = (int) $request->get_param('entry_id');
+			if ( $request->has_param( 'entry_id' ) ) {
+				$this->entry_id = $this->sanitize_integer_value( $request->get_param( 'entry_id' ) );
 			}
 		}
 
 		if ( $provider === 'totp' ) {
-			$this->code = sanitize_text_field( wp_unslash( $request->get_param( 'two-factor-totp-authcode' ) ) );
-			$this->key  = sanitize_text_field( wp_unslash( $request->get_param( 'key' ) ) );
+			$this->code = $this->sanitize_string_value( $request->get_param( 'two-factor-totp-authcode' ) );
+			$this->key  = $this->sanitize_string_value( $request->get_param( 'key' ) );
 		}
 
 		if ( $provider === 'email' ) {
-			$this->token   = sanitize_text_field( wp_unslash( $request->get_param( 'token' ) ) );
-			$this->profile = wp_unslash( $request->get_param( 'profile' ) ?? false );
+			$profile       = $request->get_param( 'profile' );
+			$this->token   = $this->sanitize_string_value( $request->get_param( 'token' ) );
+			$this->profile = is_scalar( $profile ) ? rest_sanitize_boolean( $profile ) : false;
 		}
 
-		$this->unique_browser_identifier = sanitize_text_field( $request->get_param( 'unique_browser_identifier' ) );
-		$this->user_login                = sanitize_user( wp_unslash( $request->get_param( 'user_login' ) ) );
+		$this->unique_browser_identifier = $this->sanitize_string_value( $request->get_param( 'unique_browser_identifier' ) );
+		$this->user_login                = sanitize_user( $this->sanitize_string_value( $request->get_param( 'user_login' ) ) );
 
-		$this->user_handle    = sanitize_text_field( $request->get_param( 'userHandle' ) );
-		$this->onboarding     = (bool) $request->get_param( 'onboarding' );
-		$this->auth_device_id = sanitize_text_field( $request->get_param( 'device_name' ) ?? 'unknown' );
+		$onboarding = $request->get_param( 'onboarding' );
+		$this->user_handle    = $this->sanitize_string_value( $request->get_param( 'userHandle' ) );
+		$this->onboarding     = is_scalar( $onboarding ) ? rest_sanitize_boolean( $onboarding ) : false;
+		$this->auth_device_id = $this->sanitize_string_value( $request->get_param( 'device_name' ), 'unknown' );
 
 		// If user_id is set, we try to get the user object.
 		if ( $this->user_id ) {
 			$user = get_user_by( 'id', $this->user_id );
-			if ($user) {
+			if ( $user ) {
 				$this->user = $user;
 			}
 			return;
@@ -238,15 +244,56 @@ class Rsssl_Request_Parameters {
 	 * @param WP_REST_Request $request The WordPress REST request object.
 	 */
 	private function initialize_passkey_parameters( WP_REST_Request $request ): void {
-		$this->user_id  = $request->get_param( 'user_id' ) ? absint( $request->get_param( 'user_id' ) ) : get_current_user_id();
-		$this->provider = Rsssl_Two_Factor_Passkey::class;
-		$this->id       = sanitize_text_field( $request->get_param( 'id' ) );
-		$this->rawId    = sanitize_text_field( $request->get_param( 'rawId' ) );
-		if( !$request->has_param( 'credentials' ) ) {
-			//To do regex sanitation
-			$this->response = $request->get_param( 'credential' );
+		$user_id = $request->get_param( 'user_id' );
+
+		// Only fall back to the current user when user_id is absent. Cast a supplied
+		// value to a non-negative integer to prevent TypeErrors in permission callbacks.
+		if ( ! $request->has_param( 'user_id' ) ) {
+			$this->user_id = get_current_user_id();
+		} else {
+			$this->user_id = $this->sanitize_integer_value( $user_id );
 		}
-		$this->type     = sanitize_text_field( $request->get_param( 'type' ) );
-		$this->entry_id = (int) $request->get_param( 'entry_id' );
+
+		$this->provider = Rsssl_Two_Factor_Passkey::class;
+		$this->id       = $this->sanitize_string_value( $request->get_param( 'id' ) );
+		$this->rawId    = $this->sanitize_string_value( $request->get_param( 'rawId' ) );
+		if ( ! $request->has_param( 'credentials' ) ) {
+			$response       = $request->get_param( 'credential' );
+			$this->response = is_array( $response ) ? $response : [];
+		}
+		$this->type     = $this->sanitize_string_value( $request->get_param( 'type' ) );
+		$this->entry_id = $this->sanitize_integer_value( $request->get_param( 'entry_id' ) );
+	}
+
+	/**
+	 * Sanitize a request value without passing compound values to scalar-only
+	 * WordPress sanitizers.
+	 *
+	 * @param mixed  $value   Request value.
+	 * @param string $fallback Default value for invalid input.
+	 *
+	 * @return string
+	 */
+	private function sanitize_string_value( $value, string $fallback = '' ): string {
+		if ( ! is_scalar( $value ) ) {
+			return $fallback;
+		}
+
+		return sanitize_text_field( wp_unslash( (string) $value ) );
+	}
+
+	/**
+	 * Convert a scalar request value to a non-negative integer.
+	 *
+	 * @param mixed $value Request value.
+	 *
+	 * @return int
+	 */
+	private function sanitize_integer_value( $value ): int {
+		if ( ! is_scalar( $value ) ) {
+			return 0;
+		}
+
+		return absint( $value );
 	}
 }
