@@ -160,8 +160,8 @@ Yes. The plugin enforces HTTPS and handles all necessary redirects, optionally u
 Really Simple Security and WordFence greatly overlap in term of functionality. If you like to use specific features from both plugins, we strongly recommend not to enable similar features twice. The benefit of Really Simple Security is that disabled features don't load any code, so won't have an impact on site performance.
 
 == Changelog ==
-= 9.8.2 - 2026-09-15 =
-* Fixed: Users required to use 2FA could extend their own grace period.
+= 9.8.2 - 2026-09-14 =
+* Security: Users required to use 2FA could extend their own grace period.
 * Fixed: 2FA onboarding after logging in through WooCommerce.
 * Fixed: The firewall could reference `advanced-headers.php` when the file did not exist.
 * Fixed: Possible fatal errors caused by invalid data in public CSP and 2FA requests.
