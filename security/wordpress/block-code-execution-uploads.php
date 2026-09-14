@@ -11,17 +11,17 @@ function rsssl_code_execution_errors_notice( $notices ) {
 		'score' => 5,
 		'output' => array(
 			'file-not-found' => array(
-				'msg' => __("Could not find code execution test file.", "really-simple-ssl"),
+				'msg' => __("Could not find code execution test file", "really-simple-ssl"),
 				'icon' => 'open',
 				'dismissible' => true,
 			),
 			'uploads-folder-not-writable' => array(
-				'msg' => __("Uploads folder not writable.", "really-simple-ssl"),
+				'msg' => __("Uploads folder not writable", "really-simple-ssl"),
 				'icon' => 'open',
 				'dismissible' => true,
 			),
 			'could-not-create-test-file' => array(
-				'msg' => __("Could not copy code execution test file.", "really-simple-ssl"),
+				'msg' => __("Could not copy code execution test file", "really-simple-ssl"),
 				'icon' => 'open',
 				'dismissible' => true,
 			),

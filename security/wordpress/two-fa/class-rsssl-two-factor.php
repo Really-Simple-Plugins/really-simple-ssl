@@ -88,6 +88,15 @@ class Rsssl_Two_Factor
     private static array $password_auth_tokens = array();
 
     /**
+     * ID of the user authenticated with an application password during the
+     * current wp_authenticate() call. Reset per call, because XML-RPC
+     * system.multicall runs several authentications in one request.
+     *
+     * @var int
+     */
+    private static int $application_password_user_id = 0;
+
+    /**
      * Set up filters and actions.
      *
      * @param object $compat A compatibility layer for plugins.
@@ -158,6 +167,10 @@ class Rsssl_Two_Factor
         }
 
         add_action('init', array(__CLASS__, 'rsssl_collect_auth_cookie_tokens'));
+
+        // Reset per wp_authenticate() call, before any core authentication handler runs.
+        add_filter('authenticate', array(__CLASS__, 'rsssl_reset_application_password_user'), 0);
+        add_action('application_password_did_authenticate', array(__CLASS__, 'rsssl_record_application_password_user'));
 
         // Run only after the core password and application password authentication checks.
         add_filter('authenticate', array(__CLASS__, 'rsssl_filter_authenticate'), 31);
@@ -764,7 +777,36 @@ class Rsssl_Two_Factor
     }
 
     /**
+     * Clear the application-password user at the start of each wp_authenticate() call.
+     *
+     * @param WP_User|WP_Error|null $user Current authenticate filter value.
+     *
+     * @return WP_User|WP_Error|null
+     */
+    public static function rsssl_reset_application_password_user($user)
+    {
+        self::$application_password_user_id = 0;
+
+        return $user;
+    }
+
+    /**
+     * Remember which user was authenticated with an application password.
+     *
+     * @param WP_User $user The user who was authenticated.
+     *
+     * @return void
+     */
+    public static function rsssl_record_application_password_user(WP_User $user): void
+    {
+        self::$application_password_user_id = $user->ID;
+    }
+
+    /**
      * If the current user can log in via API requests such as XML-RPC and REST.
+     *
+     * Only true when this exact user was authenticated with an application
+     * password in the current wp_authenticate() call.
      *
      * @param integer $user_id User ID.
      *
@@ -774,7 +816,7 @@ class Rsssl_Two_Factor
     {
         return (bool) apply_filters(
             'rsssl_two_factor_user_api_login_enable',
-            (bool) did_action('application_password_did_authenticate'),
+            self::$application_password_user_id > 0 && self::$application_password_user_id === $user_id,
             $user_id
         );
     }

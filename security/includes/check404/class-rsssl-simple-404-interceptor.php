@@ -3,8 +3,9 @@ namespace RSSSL\Security\Includes\Check404;
 
 class Rsssl_Simple_404_Interceptor {
 
-    private $attempts = 10; // Default attempts threshold
-    private $time_span = 5; // Time span in seconds (5 seconds)
+    private $warning_threshold = 10; // Warn when more than this many 404s happen within the window
+    private $window_seconds = 5;
+    private $max_addresses = 20; // Hard cap on tracked addresses, so the option stays a few KB at most
     private $option_name = 'rsssl_404_cache';
     private $notice_option = 'rsssl_404_notice_shown';
 
@@ -23,77 +24,94 @@ class Rsssl_Simple_404_Interceptor {
 		add_action( 'template_redirect', array( $this, 'detect_404' ) );
 	}
     /**
-     * Detect and handle 404 errors.
+     * Records a 404 for the client address and sets the notice when the threshold is exceeded
      */
     public function detect_404(): void {
-        if (is_404()) {
-            if ( get_option( $this->notice_option ) ) {
-                return;
-            }
-            $ip_address = $this->get_ip_address();
-            $current_time = time();
-
-            // Prevent the option from becoming too large
-            $cache = get_option($this->option_name, []);
-
-            if (!isset($cache[$ip_address])) {
-                $cache[$ip_address] = [];
-            }
-
-            $cache[$ip_address][] = $current_time;
-            $cache[$ip_address] = $this->clean_up_old_entries($cache[$ip_address]);
-
-            if (count($cache[$ip_address]) > $this->attempts && !get_option($this->notice_option)) {
-                update_option($this->notice_option, true, false);
-
-                return;
-            }
-
-            update_option($this->option_name, $cache, false);
+        if (!is_404()) {
+            return;
         }
+
+        if ( get_option( $this->notice_option ) ) {
+            return;
+        }
+
+        $ip_address = $this->get_ip_address();
+        if ($ip_address === '') {
+            return;
+        }
+
+        $now = time();
+        $cache = get_option($this->option_name, []);
+        if (!is_array($cache)) {
+            $cache = [];
+        }
+
+        $cache = $this->clean_stale_timestamps($cache, $now);
+
+        $timestamps = $cache[$ip_address] ?? [];
+        unset($cache[$ip_address]);
+
+        $timestamps[] = $now;
+        $cache[$ip_address] = $timestamps;
+        $cache = array_slice($cache, -$this->max_addresses, null, true);
+
+        if (count($timestamps) > $this->warning_threshold) {
+            update_option($this->notice_option, true, false);
+            delete_option($this->option_name);
+
+            return;
+        }
+
+        update_option($this->option_name, $cache, false);
     }
 
     /**
-     * Cleans up old entries based on the given timestamps.
-     *
-     * This method filters the given timestamps array and only keeps the entries where the difference between the current time
-     * and the timestamp is less than the specified time span.
-     *
-     * @param array $timestamps An array of timestamps.
-     *
-     * @return array The cleaned up timestamps array.
+     * Returns valid addresses with recent timestamps, capped at the warning
+     * threshold per address.
      */
-    private function clean_up_old_entries($timestamps): array {
-        $current_time = time();
-        return array_filter($timestamps, function($timestamp) use ($current_time) {
-            return ($current_time - $timestamp) < $this->time_span;
-        });
+    private function clean_stale_timestamps(array $cache, int $now): array {
+        $cleaned = [];
+        foreach ($cache as $ip_address => $timestamps) {
+            if (!is_string($ip_address) || filter_var($ip_address, FILTER_VALIDATE_IP) === false) {
+                continue;
+            }
+            if (!is_array($timestamps)) {
+                continue;
+            }
+
+            $recent_timestamps = [];
+            foreach ($timestamps as $timestamp) {
+                if (is_int($timestamp) && ($now - $timestamp) < $this->window_seconds) {
+                    $recent_timestamps[] = $timestamp;
+                }
+            }
+
+            if (empty($recent_timestamps)) {
+                continue;
+            }
+
+            $cleaned[$ip_address] = array_slice($recent_timestamps, -$this->warning_threshold);
+        }
+
+        return $cleaned;
     }
 
     /**
-     * Retrieves the IP address of the client.
+     * Retrieves the validated IP address of the client.
      *
-     * This method checks for the IP address in the following order:
-     * 1. HTTP_CLIENT_IP: Represents the IP address of the client if the client is a shared internet device.
-     * 2. HTTP_X_FORWARDED_FOR: Represents the IP address of the client if the client is accessing the server through a proxy server.
-     * 3. REMOTE_ADDR: Represents the IP address of the client if the client is accessing the server directly.
+     * Only REMOTE_ADDR is used. Forwarding headers such as Client-IP and X-Forwarded-For are chosen by the
+     * client and would let it pick the cache key, so they are ignored here.
      *
-     * @return string The IP address of the client.
+     * @return string The IP address, or an empty string when it is missing or invalid.
      */
     private function get_ip_address(): string {
-        if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-            return $_SERVER['HTTP_CLIENT_IP'];
+        $ip_address = $_SERVER['REMOTE_ADDR'] ?? '';
+
+        if (!is_string($ip_address) || filter_var($ip_address, FILTER_VALIDATE_IP) === false) {
+            return '';
         }
 
-        if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-            return $_SERVER['HTTP_X_FORWARDED_FOR'];
-        }
-
-        if (!empty($_SERVER['REMOTE_ADDR'])) {
-            return $_SERVER['REMOTE_ADDR'];
-        }
-
-        return 'UNKNOWN';
+        return $ip_address;
     }
 
     /**
@@ -105,7 +123,7 @@ class Rsssl_Simple_404_Interceptor {
      */
     public function show_help_notices(array $notices): array {
         if (get_option($this->notice_option)) {
-            $message = __('We detected suspected bots triggering large numbers of 404 errors on your site.', 'really-simple-ssl');
+            $message = __('We detected suspected bots triggering large numbers of 404 errors on your site', 'really-simple-ssl');
             $notice = [
                 'callback' => '_true_',
                 'score' => 1,
