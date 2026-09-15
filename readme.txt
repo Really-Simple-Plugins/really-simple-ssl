@@ -160,7 +160,7 @@ Yes. The plugin enforces HTTPS and handles all necessary redirects, optionally u
 Really Simple Security and WordFence greatly overlap in term of functionality. If you like to use specific features from both plugins, we strongly recommend not to enable similar features twice. The benefit of Really Simple Security is that disabled features don't load any code, so won't have an impact on site performance.
 
 == Changelog ==
-= 9.8.3 - 2026-09-14 =
+= 9.8.3 - 2026-09-15 =
 * Security: Fixed a remaining 2FA bypass in XML-RPC authentication.
 * Security: Fixed an issue where unauthenticated visitors could bloat the database via the 404 interceptor. Thanks to Naoki Kawahigashi via WPScan for reporting.
 * Fixed: A possible error when processing plugins that were no longer available in Other Plugins.
