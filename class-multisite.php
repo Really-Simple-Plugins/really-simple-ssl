@@ -71,7 +71,7 @@ if (!class_exists('rsssl_multisite')) {
 		        'score' => 30,
 		        'output' => array(
 			        'true' => array(
-				        'msg' =>__('SSL is enabled networkwide.', 'really-simple-ssl'),
+				        'msg' =>__('SSL is enabled networkwide', 'really-simple-ssl'),
 				        'icon' => 'success'
 			        ),
 			        'false' => array(
@@ -88,9 +88,9 @@ if (!class_exists('rsssl_multisite')) {
 		        'score' => 30,
 		        'output' => array(
 			        'no-server-variable' => array(
-				        'msg' => __('You run a Multisite installation with subfolders, which prevents this plugin from fixing your missing server variable in the wp-config.php.', 'really-simple-ssl') . " "
-                                .__('Because the $_SERVER["HTTPS"] variable is not set, your website may experience redirect loops.', 'really-simple-ssl') . " "
-                                .__('Activate networkwide to fix this.', 'really-simple-ssl'),
+				        'msg' => __('You run a Multisite installation with subfolders, which prevents this plugin from fixing your missing server variable in the wp-config.php', 'really-simple-ssl') . " "
+                                .__('Because the $_SERVER["HTTPS"] variable is not set, your website may experience redirect loops', 'really-simple-ssl') . " "
+                                .__('Activate networkwide to fix this', 'really-simple-ssl'),
 				        'icon' => 'warning',
 				        'plusone' => true,
 			        ),
@@ -103,7 +103,7 @@ if (!class_exists('rsssl_multisite')) {
 		        'output' => array(
 			        'true' => array(
 				        'title' => __("SSL activation in progress", "really-simple-ssl"),
-				        'msg' => __('A networkwide SSL activation process has been started, but has not been completed. Please go to the SSL settings page to complete the process.', 'really-simple-ssl').'&nbsp;'.
+				        'msg' => __('A networkwide SSL activation process has been started, but has not been completed. Please go to the SSL settings page to complete the process', 'really-simple-ssl').'&nbsp;'.
 				                 '<a href="'.add_query_arg(['page'=>'really-simple-security'], network_admin_url('settings.php') ).'">'.__('View settings page','really-simple-ssl').'</a>',
 				        'icon' => 'warning',
 				        'plusone' => true,
@@ -120,7 +120,7 @@ if (!class_exists('rsssl_multisite')) {
 			        'subdomains-no-wildcard' => array(
 				        'msg' => __("You run a Multisite installation with subdomains, but your site doesn't have a wildcard certificate.", 'really-simple-ssl') . " "
 				                 . __("This leads to issues when activating SSL networkwide since subdomains will be forced over SSL as well while they don't have a valid certificate.", 'really-simple-ssl') . " "
-				                 . __("Activate SSL per site or install a wildcard certificate to fix this.", 'really-simple-ssl'),
+				                 . __("Activate SSL per site or install a wildcard certificate to fix this", 'really-simple-ssl'),
 				        'icon' => 'warning',
 				        'dismissible' => true,
 				        'plusone' => true,

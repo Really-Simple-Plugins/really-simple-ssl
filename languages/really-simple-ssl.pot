@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Really Simple Security Pro 9.8.2\n"
+"Project-Id-Version: Really Simple Security Pro 9.8.3\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/really-simple-ssl-pro\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-08T07:29:43+00:00\n"
+"POT-Creation-Date: 2026-09-14T12:15:54+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: really-simple-ssl\n"
@@ -152,7 +152,7 @@ msgstr ""
 #: assets/templates/two_fa/profile-settings.php:52
 #: assets/templates/two_fa/totp-config.php:23
 #: pro/security/wordpress/two-fa/providers/class-rsssl-two-factor-totp.php:656
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1670
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1712
 msgid "Download Backup Codes"
 msgstr ""
 
@@ -307,7 +307,7 @@ msgid "Upgrade"
 msgstr ""
 
 #: class-admin.php:2064
-msgid "No recommended redirect rules detected."
+msgid "No recommended redirect rules detected"
 msgstr ""
 
 #: class-admin.php:2078
@@ -320,20 +320,23 @@ msgid "Your wp-config.php has to be edited, but is not writable."
 msgstr ""
 
 #: class-admin.php:2088
-#: class-admin.php:2109
 msgid "Set your wp-config.php to writable and reload this page."
 msgstr ""
 
 #: class-admin.php:2089
-msgid "To safely enable SSL on your server configuration, you should add the following line of code to your wp-config.php."
+msgid "To safely enable SSL on your server configuration, you should add the following line of code to your wp-config.php"
 msgstr ""
 
 #: class-admin.php:2109
 msgid "A definition of a site url or home url was detected in your wp-config.php, but the file is not writable."
 msgstr ""
 
+#: class-admin.php:2109
+msgid "Set your wp-config.php to writable and reload this page"
+msgstr ""
+
 #: class-admin.php:2124
-msgid "The 'force-deactivate.php' file has to be renamed to .txt. Otherwise your ssl can be deactivated by anyone on the internet."
+msgid "The 'force-deactivate.php' file has to be renamed to .txt. Otherwise your ssl can be deactivated by anyone on the internet"
 msgstr ""
 
 #: class-admin.php:2125
@@ -343,19 +346,19 @@ msgid "Check again"
 msgstr ""
 
 #: class-admin.php:2141
-msgid "SSL is now activated. Follow the three steps in this article to check if your website is secure."
+msgid "SSL is now activated. Follow the three steps in this article to check if your website is secure"
 msgstr ""
 
 #: class-admin.php:2153
-msgid "SSL is enabled on your site."
+msgid "SSL is enabled on your site"
 msgstr ""
 
 #: class-admin.php:2157
-msgid "SSL is not enabled yet."
+msgid "SSL is not enabled yet"
 msgstr ""
 
 #: class-admin.php:2174
-msgid "The wp-config.php file is not writable, and needs to be edited. Please set this file to writable."
+msgid "The wp-config.php file is not writable, and needs to be edited. Please set this file to writable"
 msgstr ""
 
 #: class-admin.php:2178
@@ -364,7 +367,7 @@ msgid "No SSL detected"
 msgstr ""
 
 #: class-admin.php:2179
-msgid "No SSL detected. Use the retry button to check again."
+msgid "No SSL detected. Use the retry button to check again"
 msgstr ""
 
 #: class-admin.php:2183
@@ -383,8 +386,7 @@ msgid "Could not test certificate"
 msgstr ""
 
 #: class-admin.php:2190
-#: core/app/Features/Onboarding/OnboardingStepsGenerator.php:107
-msgid "Automatic certificate detection is not possible on your server."
+msgid "Automatic certificate detection is not possible on your server"
 msgstr ""
 
 #: class-admin.php:2194
@@ -392,7 +394,7 @@ msgid "Check manually"
 msgstr ""
 
 #: class-admin.php:2199
-msgid "Your SSL certificate will expire soon."
+msgid "Your SSL certificate will expire soon"
 msgstr ""
 
 #. translators: %s is replaced with date.
@@ -409,7 +411,7 @@ msgstr ""
 #. translators: %1$ and %2$s are replaced with the opening and closing tag with link.
 #: class-admin.php:2204
 #, php-format
-msgid "Depending on your hosting provider, %1$smanual installation%2$s may be required."
+msgid "Depending on your hosting provider, %1$smanual installation%2$s may be required"
 msgstr ""
 
 #: class-admin.php:2209
@@ -421,33 +423,33 @@ msgid "Re-check"
 msgstr ""
 
 #: class-admin.php:2222
-msgid "Really Simple Security has received no response from the webpage."
+msgid "Really Simple Security has received no response from the webpage"
 msgstr ""
 
 #: class-admin.php:2229
-msgid "The mixed content fixer is active, but was not detected on the frontpage."
+msgid "The mixed content fixer is active, but was not detected on the frontpage"
 msgstr ""
 
 #: class-admin.php:2234
-msgid "Error occurred when retrieving the webpage."
+msgid "Error occurred when retrieving the webpage"
 msgstr ""
 
 #: class-admin.php:2240
-msgid "Mixed content fixer not enabled. Enable the option to fix mixed content on your site."
+msgid "Mixed content fixer not enabled. Enable the option to fix mixed content on your site"
 msgstr ""
 
 #. translators: %s is replaced with the error description.
 #: class-admin.php:2247
 #, php-format
-msgid "The mixed content fixer could not be detected due to a cURL error: %s. cURL errors are often caused by an outdated version of PHP or cURL and don't affect the front-end of your site. Contact your hosting provider for a fix."
+msgid "The mixed content fixer could not be detected due to a cURL error: %s. cURL errors are often caused by an outdated version of PHP or cURL and don't affect the front-end of your site. Contact your hosting provider for a fix"
 msgstr ""
 
 #: class-admin.php:2260
-msgid "301 redirect to https set."
+msgid "301 redirect to https set"
 msgstr ""
 
 #: class-admin.php:2264
-msgid "No 301 redirect is set. Enable the WordPress 301 redirect in the settings to get a 301 permanent redirect."
+msgid "No 301 redirect is set. Enable the WordPress 301 redirect in the settings to get a 301 permanent redirect"
 msgstr ""
 
 #: class-admin.php:2279
@@ -456,51 +458,52 @@ msgid "301 .htaccess redirect"
 msgstr ""
 
 #: class-admin.php:2280
-msgid "The 301 redirect with .htaccess to HTTPS is now enabled."
+msgid "The 301 redirect with .htaccess to HTTPS is now enabled"
 msgstr ""
 
 #: class-admin.php:2286
-msgid "WordPress 301 redirect enabled. We recommend to enable a 301 .htaccess redirect."
+msgid "WordPress 301 redirect enabled. We recommend to enable a 301 .htaccess redirect"
 msgstr ""
 
 #: class-admin.php:2293
-msgid "Enable a .htaccess redirect or PHP redirect in the settings to create a 301 redirect."
+msgid "Enable a .htaccess redirect or PHP redirect in the settings to create a 301 redirect"
 msgstr ""
 
 #: class-admin.php:2298
-msgid ".htaccess redirect."
+msgid ".htaccess redirect"
 msgstr ""
 
 #: class-admin.php:2300
-msgid "The .htaccess redirect rules selected by this plugin failed in the test. Set manually or dismiss to leave on PHP redirect."
+msgid "The .htaccess redirect rules selected by this plugin failed in the test. Set manually or dismiss to leave on PHP redirect"
 msgstr ""
 
 #: class-admin.php:2315
-msgid "Your site uses Elementor. This can require some additional steps before getting the secure lock."
+msgid "Your site uses Elementor. This can require some additional steps before getting the secure lock"
 msgstr ""
 
 #: class-admin.php:2329
-msgid "Your site uses Divi. This can require some additional steps before getting the secure lock."
+msgid "Your site uses Divi. This can require some additional steps before getting the secure lock"
 msgstr ""
 
 #: class-admin.php:2340
-msgid "See which recommended security headers are not present on your website."
+msgid "See which recommended security headers are not present on your website"
 msgstr ""
 
 #: class-admin.php:2349
-msgid "Recommended security headers enabled."
+msgid "Recommended security headers enabled"
 msgstr ""
 
 #: class-admin.php:2360
-msgid "Implement Two-Factor Authentication or Passkey login."
+msgid "Implement Two-Factor Authentication or Passkey login"
 msgstr ""
 
 #: class-admin.php:2372
-msgid "Protect your login form with Limit Login Attempts."
+#: class-site-health.php:122
+msgid "Protect your login form with Limit Login Attempts"
 msgstr ""
 
 #: class-admin.php:2384
-msgid "Protect your site with a performant Firewall."
+msgid "Protect your site with a performant Firewall"
 msgstr ""
 
 #. translators: %s is replaced with the plugin name.
@@ -511,7 +514,7 @@ msgstr ""
 
 #. translators: %s is replaced with the plugin name.
 #: class-admin.php:2396
-msgid "As Really Simple Security handles all the functionality this plugin provides, we recommend to disable this plugin to prevent unexpected behavior."
+msgid "As Really Simple Security handles all the functionality this plugin provides, we recommend to disable this plugin to prevent unexpected behavior"
 msgstr ""
 
 #: class-admin.php:2410
@@ -519,18 +522,15 @@ msgid "Black Friday sale! Get 40% Off Really Simple Security Pro"
 msgstr ""
 
 #: class-admin.php:2423
-msgid "Complete email validation and enable notifications to make sure you will receive security warnings."
+msgid "Complete email validation and enable notifications to make sure you will receive security warnings"
 msgstr ""
 
 #: class-admin.php:2431
-msgid "Email address successfully verified."
+msgid "Email address successfully verified"
 msgstr ""
 
 #: class-admin.php:2465
-#: settings/config/fields/firewall.php:106
-#: settings/config/fields/firewall.php:128
-#: settings/config/fields/firewall.php:150
-msgid "404 errors detected on your homepage. 404 blocking is unavailable, to prevent blocking of legitimate visitors. It is strongly recommended to resolve these errors."
+msgid "404 errors detected on your homepage. 404 blocking is unavailable, to prevent blocking of legitimate visitors. It is strongly recommended to resolve these errors"
 msgstr ""
 
 #: class-admin.php:3360
@@ -567,7 +567,7 @@ msgid "Claim your 6 Free months"
 msgstr ""
 
 #: class-multisite.php:74
-msgid "SSL is enabled networkwide."
+msgid "SSL is enabled networkwide"
 msgstr ""
 
 #: class-multisite.php:78
@@ -575,15 +575,15 @@ msgid "SSL is not enabled on your network"
 msgstr ""
 
 #: class-multisite.php:91
-msgid "You run a Multisite installation with subfolders, which prevents this plugin from fixing your missing server variable in the wp-config.php."
+msgid "You run a Multisite installation with subfolders, which prevents this plugin from fixing your missing server variable in the wp-config.php"
 msgstr ""
 
 #: class-multisite.php:92
-msgid "Because the $_SERVER[\"HTTPS\"] variable is not set, your website may experience redirect loops."
+msgid "Because the $_SERVER[\"HTTPS\"] variable is not set, your website may experience redirect loops"
 msgstr ""
 
 #: class-multisite.php:93
-msgid "Activate networkwide to fix this."
+msgid "Activate networkwide to fix this"
 msgstr ""
 
 #: class-multisite.php:105
@@ -591,7 +591,7 @@ msgid "SSL activation in progress"
 msgstr ""
 
 #: class-multisite.php:106
-msgid "A networkwide SSL activation process has been started, but has not been completed. Please go to the SSL settings page to complete the process."
+msgid "A networkwide SSL activation process has been started, but has not been completed. Please go to the SSL settings page to complete the process"
 msgstr ""
 
 #: class-multisite.php:107
@@ -607,7 +607,7 @@ msgid "This leads to issues when activating SSL networkwide since subdomains wil
 msgstr ""
 
 #: class-multisite.php:123
-msgid "Activate SSL per site or install a wildcard certificate to fix this."
+msgid "Activate SSL per site or install a wildcard certificate to fix this"
 msgstr ""
 
 #: class-multisite.php:234
@@ -638,7 +638,6 @@ msgid "Firewall Protection"
 msgstr ""
 
 #: class-site-health.php:82
-#: pro/security/notices.php:48
 msgid "We recommend to enable Two-Factor Authentication at least for administrators."
 msgstr ""
 
@@ -664,7 +663,6 @@ msgid "Read more"
 msgstr ""
 
 #: class-site-health.php:113
-#: pro/security/notices.php:67
 msgid "Enable Limit Login Attempts to protect the login form against brute-force attacks."
 msgstr ""
 
@@ -672,12 +670,7 @@ msgstr ""
 msgid "Your site is protected by Limit Login Attempts."
 msgstr ""
 
-#: class-site-health.php:122
-msgid "Protect your login form with Limit Login Attempts"
-msgstr ""
-
 #: class-site-health.php:144
-#: pro/security/notices.php:86
 msgid "Secure your site with the performant Firewall."
 msgstr ""
 
@@ -1069,6 +1062,10 @@ msgstr ""
 msgid "An SSL certificate has been detected"
 msgstr ""
 
+#: core/app/Features/Onboarding/OnboardingStepsGenerator.php:107
+msgid "Automatic certificate detection is not possible on your server."
+msgstr ""
+
 #: core/app/Features/Onboarding/OnboardingStepsGenerator.php:114
 msgid "No SSL certificate has been detected."
 msgstr ""
@@ -1340,7 +1337,7 @@ msgid "Really Simple Security detected a vulnerability in this theme"
 msgstr ""
 
 #: core/app/Features/Vulnerability/Controllers/VulnerabilityNoticeController.php:113
-msgid "Please take appropriate action."
+msgid "Please take appropriate action"
 msgstr ""
 
 #: core/app/Features/Vulnerability/Controllers/VulnerabilityNoticeController.php:143
@@ -1517,16 +1514,11 @@ msgstr ""
 msgid "Social Media Management"
 msgstr ""
 
-#: core/config/related.php:25
-#: settings/settings.php:551
-msgid "Online Booking System"
-msgstr ""
-
-#: core/config/related.php:33
+#: core/config/related.php:26
 msgid "Consent Management as it should be"
 msgstr ""
 
-#: core/config/related.php:40
+#: core/config/related.php:33
 #: lets-encrypt/config/fields.php:111
 msgid "Terms & Conditions"
 msgstr ""
@@ -2177,15 +2169,15 @@ msgid "Checking for subdomain setup..."
 msgstr ""
 
 #: lets-encrypt/config/notices.php:29
-msgid "Your Key and Certificate directories are not properly protected."
+msgid "Your Key and Certificate directories are not properly protected"
 msgstr ""
 
 #: lets-encrypt/config/notices.php:42
-msgid "The non-www version of your site does not point to this website. This is recommended, as it will allow you to add it to the certificate as well."
+msgid "The non-www version of your site does not point to this website. This is recommended, as it will allow you to add it to the certificate as well"
 msgstr ""
 
 #: lets-encrypt/config/notices.php:44
-msgid "The www version of your site does not point to this website. This is recommended, as it will allow you to add it to the certificate as well."
+msgid "The www version of your site does not point to this website. This is recommended, as it will allow you to add it to the certificate as well"
 msgstr ""
 
 #: lets-encrypt/config/notices.php:72
@@ -2195,34 +2187,34 @@ msgstr ""
 
 #: lets-encrypt/config/notices.php:76
 #, php-format
-msgid "Your certificate will expire on %s. You can renew it %shere%s."
+msgid "Your certificate will expire on %s. You can renew it %shere%s"
 msgstr ""
 
 #: lets-encrypt/config/notices.php:91
 #, php-format
-msgid "The automatic installation of your certificate has failed. Please check your credentials, and retry the %sinstallation%s."
+msgid "The automatic installation of your certificate has failed. Please check your credentials, and retry the %sinstallation%s"
 msgstr ""
 
 #: lets-encrypt/config/notices.php:98
 #, php-format
-msgid "The SSL certificate has been renewed, and requires manual %sinstallation%s in your hosting dashboard."
+msgid "The SSL certificate has been renewed, and requires manual %sinstallation%s in your hosting dashboard"
 msgstr ""
 
 #: lets-encrypt/config/notices.php:105
 #, php-format
-msgid "Automatic renewal of your certificate was not possible. The SSL certificate should be %srenewed%s manually."
+msgid "Automatic renewal of your certificate was not possible. The SSL certificate should be %srenewed%s manually"
 msgstr ""
 
 #: lets-encrypt/config/notices.php:112
-msgid "Your certificate will be renewed and installed automatically."
+msgid "Your certificate will be renewed and installed automatically"
 msgstr ""
 
 #: lets-encrypt/config/notices.php:129
-msgid "Your server provides shell functionality, which offers additional methods to install SSL. If installing SSL using the default methods is not possible, you can install the shell add on."
+msgid "Your server provides shell functionality, which offers additional methods to install SSL. If installing SSL using the default methods is not possible, you can install the shell add on"
 msgstr ""
 
 #: lets-encrypt/config/notices.php:145
-msgid "You are using the Really Simple Security Shell Exec add on, but your current version needs to be updated."
+msgid "You are using the Really Simple Security Shell Exec add on, but your current version needs to be updated"
 msgstr ""
 
 #: lets-encrypt/config/notices.php:167
@@ -2618,24 +2610,24 @@ msgid "Premium Support"
 msgstr ""
 
 #: pro/class-admin.php:625
-msgid "You have installed Really Simple Security Pro. We have deactivated and removed the free plugin."
+msgid "You have installed Really Simple Security Pro. We have deactivated and removed the free plugin"
 msgstr ""
 
 #: pro/class-admin.php:639
-msgid "Elementor mixed content successfully converted."
+msgid "Elementor mixed content successfully converted"
 msgstr ""
 
 #: pro/class-admin.php:652
 #: pro/class-admin.php:657
-msgid "Potential redirect loop."
+msgid "Potential redirect loop"
 msgstr ""
 
 #: pro/class-admin.php:653
-msgid "No redirect to http detected."
+msgid "No redirect to http detected"
 msgstr ""
 
 #: pro/class-admin.php:658
-msgid "A redirect to http was detected. This might result in redirect loops."
+msgid "A redirect to http was detected. This might result in redirect loops"
 msgstr ""
 
 #: pro/class-admin.php:674
@@ -2643,19 +2635,18 @@ msgid "TLS version"
 msgstr ""
 
 #: pro/class-admin.php:675
-msgid "Your site uses an outdated version of TLS. Upgrade to TLS 1.2 or TLS 1.3 to keep your site secure."
+msgid "Your site uses an outdated version of TLS. Upgrade to TLS 1.2 or TLS 1.3 to keep your site secure"
 msgstr ""
 
 #: pro/class-admin.php:689
-msgid "Your site redirects 404 pages to the http:// version of your homepage. This can cause mixed content issues with images."
+msgid "Your site redirects 404 pages to the http:// version of your homepage. This can cause mixed content issues with images"
 msgstr ""
 
 #: pro/class-admin.php:702
-msgid "You are using W3 Total Cache with Disk: Enhanced setting. This can prevent Security headers from being properly loaded."
+msgid "You are using W3 Total Cache with Disk: Enhanced setting. This can prevent Security headers from being properly loaded"
 msgstr ""
 
 #: pro/class-headers.php:246
-#: pro/class-headers.php:455
 #, php-format
 msgid "The %s security header is not set by Really Simple Security, but has a non-recommended value: \"%s\"."
 msgstr ""
@@ -2667,11 +2658,11 @@ msgstr ""
 
 #: pro/class-headers.php:267
 #, php-format
-msgid "Your site has been configured for the HSTS preload list. If you have submitted your site, it will be preloaded. Click %shere%s to submit."
+msgid "Your site has been configured for the HSTS preload list. If you have submitted your site, it will be preloaded. Click %shere%s to submit"
 msgstr ""
 
 #: pro/class-headers.php:273
-msgid "Your site is not yet configured for the HSTS preload list."
+msgid "Your site is not yet configured for the HSTS preload list"
 msgstr ""
 
 #: pro/class-headers.php:279
@@ -2679,7 +2670,12 @@ msgid "HSTS not enabled"
 msgstr ""
 
 #: pro/class-headers.php:280
-msgid "Your site is not configured for HSTS yet."
+msgid "Your site is not configured for HSTS yet"
+msgstr ""
+
+#: pro/class-headers.php:455
+#, php-format
+msgid "The %s security header is not set by Really Simple Security, but has a non-recommended value: \"%s\""
 msgstr ""
 
 #: pro/class-headers.php:486
@@ -2838,40 +2834,40 @@ msgstr ""
 
 #: pro/class-licensing.php:660
 #, php-format
-msgid "%sActivate%s your license."
+msgid "%sActivate%s your license"
 msgstr ""
 
 #: pro/class-licensing.php:662
 #, php-format
-msgid "You can upgrade on your %saccount%s."
+msgid "You can upgrade on your %saccount%s"
 msgstr ""
 
 #: pro/class-licensing.php:669
-msgid "Your Really Simple Security Pro license key has expired. Please renew your license to continue receiving updates and premium support."
+msgid "Your Really Simple Security Pro license key has expired. Please renew your license to continue receiving updates and premium support"
 msgstr ""
 
 #: pro/class-licensing.php:676
-msgid "Your Really Simple Security Pro license key is not activated. Please activate your license to continue receiving updates and premium support."
+msgid "Your Really Simple Security Pro license key is not activated. Please activate your license to continue receiving updates and premium support"
 msgstr ""
 
 #: pro/class-licensing.php:683
-msgid "This domain is not activated for this Really Simple Security Pro license. Please activate the license for this domain."
+msgid "This domain is not activated for this Really Simple Security Pro license. Please activate the license for this domain"
 msgstr ""
 
 #: pro/class-licensing.php:690
-msgid "You do not have any activations left on your Really Simple Security Pro license. Please upgrade your plan for additional activations."
+msgid "You do not have any activations left on your Really Simple Security Pro license. Please upgrade your plan for additional activations"
 msgstr ""
 
 #: pro/class-licensing.php:697
-msgid "Your Really Simple Security Pro license key hasn't been activated yet. You can activate your license key on the license tab."
+msgid "Your Really Simple Security Pro license key hasn't been activated yet. You can activate your license key on the license tab"
 msgstr ""
 
 #: pro/class-licensing.php:712
-msgid "You are using Really Simple Security Pro single site on a multisite environment. Please install Really Simple Security multisite networkwide for multisite support."
+msgid "You are using Really Simple Security Pro single site on a multisite environment. Please install Really Simple Security multisite networkwide for multisite support"
 msgstr ""
 
 #: pro/class-scan.php:117
-msgid "The last scan was completed with errors. Only migrate if you are sure the found errors are not a problem for your site."
+msgid "The last scan was completed with errors. Only migrate if you are sure the found errors are not a problem for your site"
 msgstr ""
 
 #: pro/class-scan.php:122
@@ -3052,12 +3048,12 @@ msgid "CSP entry could not be added. Try again."
 msgstr ""
 
 #: pro/csp-violation-endpoint.php:190
-msgid "A required database table is missing. Please check if you have permissions to add this database table."
+msgid "A required database table is missing. Please check if you have permissions to add this database table"
 msgstr ""
 
 #: pro/csp-violation-endpoint.php:212
 #, php-format
-msgid "Learning Mode is active for your Content Security Policy and will complete in %s days."
+msgid "Learning Mode is active for your Content Security Policy and will complete in %s days"
 msgstr ""
 
 #: pro/csp-violation-endpoint.php:224
@@ -3065,11 +3061,11 @@ msgid "Follow these steps to complete the setup:"
 msgstr ""
 
 #: pro/csp-violation-endpoint.php:226
-msgid "Review the detected configuration in 'Content Security Policy'."
+msgid "Review the detected configuration in 'Content Security Policy'"
 msgstr ""
 
 #: pro/csp-violation-endpoint.php:227
-msgid "Click 'Enforce' to enforce the configuration on your site."
+msgid "Click 'Enforce' to enforce the configuration on your site"
 msgstr ""
 
 #: pro/csp-violation-endpoint.php:251
@@ -3077,27 +3073,39 @@ msgid "Content Security Policy maximum size exceeded"
 msgstr ""
 
 #: pro/csp-violation-endpoint.php:252
-msgid "Your site has exceeded the maximum size for HTTP headers. To prevent issues, the Content Security Policy won't be added to your HTTP headers."
+msgid "Your site has exceeded the maximum size for HTTP headers. To prevent issues, the Content Security Policy won't be added to your HTTP headers"
 msgstr ""
 
 #: pro/security/notices.php:13
-msgid "You have enabled the \"Rename and randomize your database prefix\" option, but the attempt to do this has failed. The option has been disabled."
+msgid "You have enabled the \"Rename and randomize your database prefix\" option, but the attempt to do this has failed. The option has been disabled"
 msgstr ""
 
 #: pro/security/notices.php:34
-msgid "Block admin creation was disabled, because the registration of admin users has failed."
+msgid "Block admin creation was disabled, because the registration of admin users has failed"
+msgstr ""
+
+#: pro/security/notices.php:48
+msgid "We recommend to enable Two-Factor Authentication at least for administrators"
 msgstr ""
 
 #: pro/security/notices.php:55
-msgid "Two-Factor Authentication enabled for administrators."
+msgid "Two-Factor Authentication enabled for administrators"
+msgstr ""
+
+#: pro/security/notices.php:67
+msgid "Enable Limit Login Attempts to protect the login form against brute-force attacks"
 msgstr ""
 
 #: pro/security/notices.php:74
-msgid "Limit Login Attempts enabled."
+msgid "Limit Login Attempts enabled"
+msgstr ""
+
+#: pro/security/notices.php:86
+msgid "Secure your site with the performant Firewall"
 msgstr ""
 
 #: pro/security/notices.php:93
-msgid "Performant Firewall enabled."
+msgid "Performant Firewall enabled"
 msgstr ""
 
 #: pro/security/notices.php:104
@@ -3105,7 +3113,7 @@ msgid "Warning: We noticed that you changed your permalinks settings to Plain. I
 msgstr ""
 
 #: pro/security/notices.php:105
-msgid "Please change your permalink settings back to a different value if you wish to re-activate a custom login URL."
+msgid "Please change your permalink settings back to a different value if you wish to re-activate a custom login URL"
 msgstr ""
 
 #: pro/security/notices.php:106
@@ -3193,7 +3201,7 @@ msgid "Your access has been denied, please contact the webmaster for support"
 msgstr ""
 
 #: pro/security/wordpress/class-rsssl-event-listener.php:444
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:574
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:587
 msgid "Security nonce invalid or expired."
 msgstr ""
 
@@ -3896,7 +3904,7 @@ msgid "Enable Passkey login"
 msgstr ""
 
 #: pro/security/wordpress/passkey/class-rsssl-passkey.php:364
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1690
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1732
 msgid "Failed to create a login nonce."
 msgstr ""
 
@@ -3956,12 +3964,12 @@ msgid "This is a security warning from Really Simple Security for %s."
 msgstr ""
 
 #: pro/security/wordpress/permission-detection/permission-detection.php:431
-msgid "Insecure file permissions detected."
+msgid "Insecure file permissions detected"
 msgstr ""
 
 #: pro/security/wordpress/permission-detection/permission-detection.php:432
 #, php-format
-msgid " Insecure file permissions detected on your server. Click “Fix” to let Really Simple Security resolve this, or %sdownload%s the affected files list, to resolve this manually."
+msgid " Insecure file permissions detected on your server. Click “Fix” to let Really Simple Security resolve this, or %sdownload%s the affected files list, to resolve this manually"
 msgstr ""
 
 #: pro/security/wordpress/traits/trait-rsssl-api-toolbox.php:104
@@ -5320,12 +5328,12 @@ msgid "Use an authenticator app on your mobile device to generate a code."
 msgstr ""
 
 #: pro/security/wordpress/two-fa/providers/class-rsssl-two-factor-totp.php:657
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1671
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1713
 msgid "Key copied"
 msgstr ""
 
 #: pro/security/wordpress/two-fa/providers/class-rsssl-two-factor-totp.php:658
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1672
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1714
 msgid "Could not copy text: "
 msgstr ""
 
@@ -5363,7 +5371,7 @@ msgid "A firewall rule was enabled, but the wp-config.php is not writable."
 msgstr ""
 
 #: security/firewall-manager.php:782
-msgid "Please set the wp-config.php to writable until the rule has been written."
+msgid "Please set the wp-config.php to writable until the rule has been written"
 msgstr ""
 
 #: security/firewall-manager.php:788
@@ -5379,7 +5387,7 @@ msgid "A firewall rule was enabled, but the firewall does not seem to get loaded
 msgstr ""
 
 #: security/firewall-manager.php:804
-msgid "Please check if the advanced-headers.php file is included in the wp-config.php, and exists in the wp-content folder."
+msgid "Please check if the advanced-headers.php file is included in the wp-config.php, and exists in the wp-content folder"
 msgstr ""
 
 #: security/functions.php:722
@@ -5414,8 +5422,8 @@ msgstr ""
 msgid "Warning: The following plugins may use XML-RPC: %s. Disabling XML-RPC could break their functionality."
 msgstr ""
 
-#: security/includes/check404/class-rsssl-simple-404-interceptor.php:108
-msgid "We detected suspected bots triggering large numbers of 404 errors on your site."
+#: security/includes/check404/class-rsssl-simple-404-interceptor.php:126
+msgid "We detected suspected bots triggering large numbers of 404 errors on your site"
 msgstr ""
 
 #: security/notices.php:43
@@ -5464,7 +5472,7 @@ msgid "1. Update file permissions to make the uploads .htaccess writable, or"
 msgstr ""
 
 #: security/notices.php:101
-msgid "We have detected administrator roles where the login and display names are the same."
+msgid "We have detected administrator roles where the login and display names are the same"
 msgstr ""
 
 #: security/notices.php:115
@@ -5476,30 +5484,30 @@ msgid "Username"
 msgstr ""
 
 #: security/notices.php:116
-msgid "Rename admin user enabled: Please choose a new username of at least 3 characters, which is not in use yet."
+msgid "Rename admin user enabled: Please choose a new username of at least 3 characters, which is not in use yet"
 msgstr ""
 
 #: security/notices.php:132
-msgid "Enable the Vulnerability scan to detect possible vulnerabilities."
+msgid "Enable the Vulnerability scan to detect possible vulnerabilities"
 msgstr ""
 
 #: security/notices.php:139
-msgid "Vulnerability scanning is enabled."
+msgid "Vulnerability scanning is enabled"
 msgstr ""
 
 #: security/notices.php:152
 #, php-format
-msgid "You have %s open hardening feature."
-msgid_plural "You have %s open hardening features."
+msgid "You have %s open hardening feature"
+msgid_plural "You have %s open hardening features"
 msgstr[0] ""
 msgstr[1] ""
 
 #: security/notices.php:164
-msgid "All recommended hardening features enabled."
+msgid "All recommended hardening features enabled"
 msgstr ""
 
 #: security/notices.php:175
-msgid "The Firewall, LLA and 2FA are currently inactive, as you have activated Safe Mode with the rsssl-safe-mode.lock file. Remove the file from your /wp-content folder after you have finished debugging."
+msgid "The Firewall, LLA and 2FA are currently inactive, as you have activated Safe Mode with the rsssl-safe-mode.lock file. Remove the file from your /wp-content folder after you have finished debugging"
 msgstr ""
 
 #: security/sync-settings.php:37
@@ -5515,15 +5523,15 @@ msgid "Two-Factor Authentication requires the REST API to be accessible for logg
 msgstr ""
 
 #: security/wordpress/block-code-execution-uploads.php:14
-msgid "Could not find code execution test file."
+msgid "Could not find code execution test file"
 msgstr ""
 
 #: security/wordpress/block-code-execution-uploads.php:19
-msgid "Uploads folder not writable."
+msgid "Uploads folder not writable"
 msgstr ""
 
 #: security/wordpress/block-code-execution-uploads.php:24
-msgid "Could not copy code execution test file."
+msgid "Could not copy code execution test file"
 msgstr ""
 
 #: security/wordpress/block-code-execution-uploads.php:37
@@ -5531,7 +5539,7 @@ msgid "The code to block code execution in the uploads folder cannot be added au
 msgstr ""
 
 #: security/wordpress/file-editing.php:28
-msgid "The DISALLOW_FILE_EDIT constant is defined and set to false. You can remove it from your wp-config.php."
+msgid "The DISALLOW_FILE_EDIT constant is defined and set to false. You can remove it from your wp-config.php"
 msgstr ""
 
 #: security/wordpress/prevent-login-info-leakage.php:9
@@ -5634,20 +5642,20 @@ msgstr ""
 msgid "None"
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:550
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1467
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:563
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1509
 msgid "Your 2FA grace period expired. Please contact your site administrator to regain access and to configure 2FA."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:579
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:592
 msgid "Security token invalid or expired."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:735
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:748
 msgid "API login for user disabled."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:836
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:878
 #, php-format
 msgid "Warning: There has been %1$s failed login attempt on your account without providing a valid two-factor token. The last failed login occurred %2$s ago. If this wasn't you, you should reset your password."
 msgid_plural "Warning: %1$s failed login attempts have been detected on your account without providing a valid two-factor token. The last failed login occurred %2$s ago. If this wasn't you, you should reset your password."
@@ -5655,46 +5663,46 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %s: URL to reset password
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:891
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:933
 #, php-format
 msgid "Your password was reset because of too many failed Two Factor attempts. You will need to <a href=\"%s\">create a new password</a> to regain access. Please check your email for more information."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1121
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1163
 msgid "Authentication provider not specified or invalid."
 msgstr ""
 
 #. translators: %s: time delay between login attempts
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1151
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1193
 #, php-format
 msgid "Too many invalid verification codes, you can try again in %s. This limit protects your account against automated attacks."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1213
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1255
 msgid "Invalid verification code."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1403
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1445
 msgid "There have been too many failed two-factor authentication attempts, which often indicates that the password has been compromised. The password has been reset in order to protect the account."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1407
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1449
 msgid "If you are the owner of this account, please check your email for instructions on regaining access."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1414
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1456
 msgid "Password Reset"
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1499
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1541
 msgid "Invalid user."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1526
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1568
 msgid "Your Two-Factor Authentication configuration is corrupted. Please contact your site administrator to regain access."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1587
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1629
 msgid "Two-Factor Authentication Setup"
 msgstr ""
 
@@ -6098,6 +6106,12 @@ msgstr ""
 #: settings/config/fields/firewall.php:103
 #, php-format
 msgid "A lockout will occur if an IP address exceeds the threshold within the given timeframe. Select ‘%s’ if you want to disable 404 blocking."
+msgstr ""
+
+#: settings/config/fields/firewall.php:106
+#: settings/config/fields/firewall.php:128
+#: settings/config/fields/firewall.php:150
+msgid "404 errors detected on your homepage. 404 blocking is unavailable, to prevent blocking of legitimate visitors. It is strongly recommended to resolve these errors."
 msgstr ""
 
 #: settings/config/fields/firewall.php:109
@@ -7381,11 +7395,11 @@ msgstr ""
 msgid "Below you will find the instructions for different hosting environments and configurations. If you start the process with the necessary instructions and credentials the next steps will be done in no time."
 msgstr ""
 
-#: settings/settings.php:558
+#: settings/settings.php:552
 msgid "Complianz - Consent Management as it should be"
 msgstr ""
 
-#: settings/settings.php:566
+#: settings/settings.php:560
 msgid "Terms and Conditions"
 msgstr ""
 

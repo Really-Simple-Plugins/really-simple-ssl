@@ -98,7 +98,7 @@ function rsssl_general_security_notices( $notices ) {
 		'output'    => array(
 			'true' => array(
 				'url'         => 'manual/login-and-display-names-should-be-different-for-wordpress/',
-				'msg'         => __( "We have detected administrator roles where the login and display names are the same.", "really-simple-ssl" ) . "&nbsp;<b>" . rsssl_list_users_where_display_name_is_login_name() . "</b>",
+				'msg'         => __( "We have detected administrator roles where the login and display names are the same", "really-simple-ssl" ) . "&nbsp;<b>" . rsssl_list_users_where_display_name_is_login_name() . "</b>",
 				'icon'        => 'open',
 				'dismissible' => true,
 			),
@@ -113,7 +113,7 @@ function rsssl_general_security_notices( $notices ) {
 			'true' => array(
 				'highlight_field_id' => 'rename_admin_user',
 				'title'              => __( "Username", "really-simple-ssl" ),
-				'msg'                => __( "Rename admin user enabled: Please choose a new username of at least 3 characters, which is not in use yet.", "really-simple-ssl" ),
+				'msg'                => __( "Rename admin user enabled: Please choose a new username of at least 3 characters, which is not in use yet", "really-simple-ssl" ),
 				'icon'               => 'warning',
 				'dismissible'        => true,
 			),
@@ -129,14 +129,14 @@ function rsssl_general_security_notices( $notices ) {
 		'output'   => array(
 			'false' => array(
 				'highlight_field_id' => 'enable_vulnerability_scanner',
-				'msg'                => __( "Enable the Vulnerability scan to detect possible vulnerabilities.", 'really-simple-ssl' ),
+				'msg'                => __( "Enable the Vulnerability scan to detect possible vulnerabilities", 'really-simple-ssl' ),
 				'icon'               => 'open',
 				'admin_notice'       => false,
 				'dismissible'        => true,
 				'plusone'            => false,
 			),
 			'true'  => array(
-				'msg'  => __( "Vulnerability scanning is enabled.", 'really-simple-ssl' ),
+				'msg'  => __( "Vulnerability scanning is enabled", 'really-simple-ssl' ),
 				'icon' => 'success',
 			),
 		),
@@ -150,8 +150,8 @@ function rsssl_general_security_notices( $notices ) {
 				'highlight_field_id' => $open_hardening_highlight_field_id,
 				'msg'                => sprintf(
 					_n(
-						"You have %s open hardening feature.",
-						"You have %s open hardening features.",
+						"You have %s open hardening feature",
+						"You have %s open hardening features",
 						$open_hardening_count,
 						"really-simple-ssl"
 					),
@@ -161,7 +161,7 @@ function rsssl_general_security_notices( $notices ) {
 				'dismissible'        => true,
 			),
 			'false' => array(
-				'msg'  => __( "All recommended hardening features enabled.", "really-simple-ssl" ),
+				'msg'  => __( "All recommended hardening features enabled", "really-simple-ssl" ),
 				'icon' => 'success',
 			),
 		),
@@ -172,7 +172,7 @@ function rsssl_general_security_notices( $notices ) {
         'score'    => 5,
         'output'   => array(
             'true'  => array(
-                'msg'  => __( 'The Firewall, LLA and 2FA are currently inactive, as you have activated Safe Mode with the rsssl-safe-mode.lock file. Remove the file from your /wp-content folder after you have finished debugging.', 'really-simple-ssl' ),
+                'msg'  => __( 'The Firewall, LLA and 2FA are currently inactive, as you have activated Safe Mode with the rsssl-safe-mode.lock file. Remove the file from your /wp-content folder after you have finished debugging', 'really-simple-ssl' ),
                 'icon' => 'warning',
             ),
         ),

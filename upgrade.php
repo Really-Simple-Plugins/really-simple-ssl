@@ -279,6 +279,11 @@ function rsssl_upgrade() {
 		}
 	}
 
+	// Remove the 404 cache written by older versions, which could grow without bound. The interceptor rebuilds it bounded.
+	if ( $prev_version && version_compare( $prev_version, '9.8.2', '<=' ) ) {
+		delete_option( 'rsssl_404_cache' );
+	}
+
 	//don't clear on each update.
 	//RSSSL()->admin->clear_admin_notices_cache();
 

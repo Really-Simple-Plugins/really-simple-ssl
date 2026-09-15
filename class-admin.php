@@ -2061,7 +2061,7 @@ class rsssl_admin {
 			$rules       = str_replace( $arr_search, $arr_replace, $rules );
 			$rules       = substr( $rules, 4, -4 );
 		} else {
-			$rules = __( 'No recommended redirect rules detected.', 'really-simple-ssl' );
+			$rules = __( 'No recommended redirect rules detected', 'really-simple-ssl' );
 		}
 		$rules = '<br><code>' . $rules . '</code><br>';
 
@@ -2086,7 +2086,7 @@ class rsssl_admin {
 					'true' => array(
 						'msg'          => __( 'Your wp-config.php has to be edited, but is not writable.', 'really-simple-ssl' ) . ' ' .
 								__( 'Set your wp-config.php to writable and reload this page.', 'really-simple-ssl' ) . ' ' .
-								__( 'To safely enable SSL on your server configuration, you should add the following line of code to your wp-config.php.', 'really-simple-ssl' ) .
+								__( 'To safely enable SSL on your server configuration, you should add the following line of code to your wp-config.php', 'really-simple-ssl' ) .
 								'<br><code>
                                 //Begin Really Simple Security Server variable fix<br>
                                 &nbsp;&nbsp; $_SERVER["HTTPS"] = "on";<br>
@@ -2106,7 +2106,7 @@ class rsssl_admin {
 				'score'     => 30,
 				'output'    => array(
 					'true' => array(
-						'msg'          => __( 'A definition of a site url or home url was detected in your wp-config.php, but the file is not writable.', 'really-simple-ssl' ) . ' ' . __( 'Set your wp-config.php to writable and reload this page.', 'really-simple-ssl' ),
+						'msg'          => __( 'A definition of a site url or home url was detected in your wp-config.php, but the file is not writable.', 'really-simple-ssl' ) . ' ' . __( 'Set your wp-config.php to writable and reload this page', 'really-simple-ssl' ),
 						'icon'         => 'warning',
 						'admin_notice' => true,
 						'plusone'      => true,
@@ -2121,7 +2121,7 @@ class rsssl_admin {
 				'score'    => 30,
 				'output'   => array(
 					'true' => array(
-						'msg'          => __( "The 'force-deactivate.php' file has to be renamed to .txt. Otherwise your ssl can be deactivated by anyone on the internet.", 'really-simple-ssl' ) . ' ' .
+						'msg'          => __( "The 'force-deactivate.php' file has to be renamed to .txt. Otherwise your ssl can be deactivated by anyone on the internet", 'really-simple-ssl' ) . ' ' .
 								'<a href="' . rsssl_admin_url(). '">' . __( 'Check again', 'really-simple-ssl' ) . '</a>',
 						'icon'         => 'warning',
 						'admin_notice' => true,
@@ -2138,7 +2138,7 @@ class rsssl_admin {
 				'output'             => array(
 					'true' => array(
 						'url'         => 'steps-after-activating-ssl',
-						'msg'         => __( 'SSL is now activated. Follow the three steps in this article to check if your website is secure.', 'really-simple-ssl' ),
+						'msg'         => __( 'SSL is now activated. Follow the three steps in this article to check if your website is secure', 'really-simple-ssl' ),
 						'icon'        => 'open',
 						'dismissible' => true,
 						'plusone'     => true,
@@ -2150,11 +2150,11 @@ class rsssl_admin {
 				'score'    => 30,
 				'output'   => array(
 					'true'  => array(
-						'msg'  => __( 'SSL is enabled on your site.', 'really-simple-ssl' ),
+						'msg'  => __( 'SSL is enabled on your site', 'really-simple-ssl' ),
 						'icon' => 'success',
 					),
 					'false' => array(
-						'msg'     => __( 'SSL is not enabled yet.', 'really-simple-ssl' ),
+						'msg'     => __( 'SSL is not enabled yet', 'really-simple-ssl' ),
 						'title'   => 'SSL',
 						'icon'    => 'warning',
 						'plusone' => true,
@@ -2171,12 +2171,12 @@ class rsssl_admin {
 				'output'    => array(
 					'fail'            => array(
 						'url'  => 'wp-config-fix-needed',
-						'msg'  => __( 'The wp-config.php file is not writable, and needs to be edited. Please set this file to writable.', 'really-simple-ssl' ),
+						'msg'  => __( 'The wp-config.php file is not writable, and needs to be edited. Please set this file to writable', 'really-simple-ssl' ),
 						'icon' => 'warning',
 					),
 					'no-ssl-detected' => array(
 						'title'       => __( 'No SSL detected', 'really-simple-ssl' ),
-						'msg'         => __( 'No SSL detected. Use the retry button to check again.', 'really-simple-ssl' ) .
+						'msg'         => __( 'No SSL detected. Use the retry button to check again', 'really-simple-ssl' ) .
 								'<form class="rsssl-task-form"  action="" method="POST">' .
                             wp_nonce_field( 'rsssl_recheck_nonce', 'rsssl_recheck_nonce_field', true, false ) .
                             '<a href="' . rsssl_admin_url(['letsencrypt' => '1'], '#letsencrypt')
@@ -2187,7 +2187,7 @@ class rsssl_admin {
 					),
 					'no-response'     => array(
 						'title'       => __( 'Could not test certificate', 'really-simple-ssl' ),
-						'msg'         => __( 'Automatic certificate detection is not possible on your server.', 'really-simple-ssl' ) . '<br>' .
+						'msg'         => __( 'Automatic certificate detection is not possible on your server', 'really-simple-ssl' ) . '<br>' .
 								'<a href="' .
 									rsssl_admin_url(['letsencrypt' => 1], '#letsencrypt')
 								 . '" type="submit" class="button button-default  rsssl-button-small">' . __( 'Install SSL certificate', 'really-simple-ssl' ) . '</a>' .
@@ -2196,12 +2196,12 @@ class rsssl_admin {
 						'dismissible' => true,
 					),
 					'about-to-expire' => array(
-						'title' => __( 'Your SSL certificate will expire soon.', 'really-simple-ssl' ),
+						'title' => __( 'Your SSL certificate will expire soon', 'really-simple-ssl' ),
 						'msg'   =>
 							// translators: %s is replaced with date.
 							sprintf( __( 'SSL certificate will expire on %s.', 'really-simple-ssl' ), $expiry_date ) . '&nbsp;' . __( 'If your hosting provider auto-renews your certificate, no action is required. Alternatively, you have the option to generate an SSL certificate with Really Simple Security.', 'really-simple-ssl' ) . '&nbsp;' .
 							// translators: %1$ and %2$s are replaced with the opening and closing tag with link.
-							sprintf( __( 'Depending on your hosting provider, %1$smanual installation%2$s may be required.', 'really-simple-ssl' ), '<a target="_blank" rel="noopener noreferrer" href="https://really-simple-ssl.com/install-ssl-certificate">', '</a>' ) .
+							sprintf( __( 'Depending on your hosting provider, %1$smanual installation%2$s may be required', 'really-simple-ssl' ), '<a target="_blank" rel="noopener noreferrer" href="https://really-simple-ssl.com/install-ssl-certificate">', '</a>' ) .
 
 								'<br><br><form action="" method="POST"><a href="' .
 									rsssl_admin_url(['letsencrypt' => 1], '#letsencrypt')
@@ -2219,32 +2219,32 @@ class rsssl_admin {
 				'output'    => array(
 					'no-response' => array(
 						'url'         => 'knowledge-base/how-to-fix-no-response-from-webpage-warning/',
-						'msg'         => __( 'Really Simple Security has received no response from the webpage.', 'really-simple-ssl' ),
+						'msg'         => __( 'Really Simple Security has received no response from the webpage', 'really-simple-ssl' ),
 						'icon'        => 'open',
 						'dismissible' => true,
 						'plusone'     => true,
 					),
 					'not-found'   => array(
 						'url'         => 'knowledge-base/how-to-check-if-the-mixed-content-fixer-is-active',
-						'msg'         => __( 'The mixed content fixer is active, but was not detected on the frontpage.', 'really-simple-ssl' ),
+						'msg'         => __( 'The mixed content fixer is active, but was not detected on the frontpage', 'really-simple-ssl' ),
 						'icon'        => 'open',
 						'dismissible' => true,
 					),
 					'error'       => array(
-						'msg'         => __( 'Error occurred when retrieving the webpage.', 'really-simple-ssl' ),
+						'msg'         => __( 'Error occurred when retrieving the webpage', 'really-simple-ssl' ),
 						'icon'        => 'open',
 						'dismissible' => true,
 					),
 					'not-enabled' => array(
 						'highlight_field_id' => 'mixed_content_fixer',
-						'msg'                => __( 'Mixed content fixer not enabled. Enable the option to fix mixed content on your site.', 'really-simple-ssl' ),
+						'msg'                => __( 'Mixed content fixer not enabled. Enable the option to fix mixed content on your site', 'really-simple-ssl' ),
 						'icon'               => 'open',
 						'dismissible'        => true,
 					),
 					'curl-error'  => array(
 						'url'         => 'knowledge-base/curl-errors',
 						'msg'         => // translators: %s is replaced with the error description.
-										sprintf( __( "The mixed content fixer could not be detected due to a cURL error: %s. cURL errors are often caused by an outdated version of PHP or cURL and don't affect the front-end of your site. Contact your hosting provider for a fix.", 'really-simple-ssl' ), '<b>' . $curl_error . '</b>' ),
+										sprintf( __( "The mixed content fixer could not be detected due to a cURL error: %s. cURL errors are often caused by an outdated version of PHP or cURL and don't affect the front-end of your site. Contact your hosting provider for a fix", 'really-simple-ssl' ), '<b>' . $curl_error . '</b>' ),
 						'icon'        => 'open',
 						'dismissible' => true,
 					),
@@ -2257,11 +2257,11 @@ class rsssl_admin {
 				'score'     => 10,
 				'output'    => array(
 					'true'  => array(
-						'msg'  => __( '301 redirect to https set.', 'really-simple-ssl' ),
+						'msg'  => __( '301 redirect to https set', 'really-simple-ssl' ),
 						'icon' => 'success',
 					),
 					'false' => array(
-						'msg'  => __( 'No 301 redirect is set. Enable the WordPress 301 redirect in the settings to get a 301 permanent redirect.', 'really-simple-ssl' ),
+						'msg'  => __( 'No 301 redirect is set. Enable the WordPress 301 redirect in the settings to get a 301 permanent redirect', 'really-simple-ssl' ),
 						'icon' => 'open',
 					),
 				),
@@ -2277,27 +2277,27 @@ class rsssl_admin {
 				'output'            => array(
 					'htaccess-redirect-set'      => array(
 						'title' => __( '301 .htaccess redirect', 'really-simple-ssl' ),
-						'msg'   => __( 'The 301 redirect with .htaccess to HTTPS is now enabled.', 'really-simple-ssl' ),
+						'msg'   => __( 'The 301 redirect with .htaccess to HTTPS is now enabled', 'really-simple-ssl' ),
 						'icon'  => 'success',
 					),
 					'wp-redirect-to-htaccess'    => array(
 						'highlight_field_id' => 'redirect',
 						'title'              => __( '301 .htaccess redirect', 'really-simple-ssl' ),
-						'msg'                => __( 'WordPress 301 redirect enabled. We recommend to enable a 301 .htaccess redirect.', 'really-simple-ssl' ),
+						'msg'                => __( 'WordPress 301 redirect enabled. We recommend to enable a 301 .htaccess redirect', 'really-simple-ssl' ),
 						'icon'               => 'open',
 						'plusone'            => RSSSL()->server->uses_htaccess(),
 						'dismissible'        => true,
 					),
 					'no-redirect-set'            => array(
 						'highlight_field_id' => 'redirect',
-						'msg'                => __( 'Enable a .htaccess redirect or PHP redirect in the settings to create a 301 redirect.', 'really-simple-ssl' ),
+						'msg'                => __( 'Enable a .htaccess redirect or PHP redirect in the settings to create a 301 redirect', 'really-simple-ssl' ),
 						'icon'               => 'open',
 						'dismissible'        => false,
 					),
 					'htaccess-rules-test-failed' => array(
-						'title'       => __( '.htaccess redirect.', 'really-simple-ssl' ),
+						'title'       => __( '.htaccess redirect', 'really-simple-ssl' ),
 						'url'         => 'knowledge-base/manually-insert-htaccess-redirect-http-to-https',
-						'msg'         => __( 'The .htaccess redirect rules selected by this plugin failed in the test. Set manually or dismiss to leave on PHP redirect.', 'really-simple-ssl' ) . $rules,
+						'msg'         => __( 'The .htaccess redirect rules selected by this plugin failed in the test. Set manually or dismiss to leave on PHP redirect', 'really-simple-ssl' ) . $rules,
 						'icon'        => 'warning',
 						'dismissible' => true,
 						'plusone'     => true,
@@ -2312,7 +2312,7 @@ class rsssl_admin {
 				'output'    => array(
 					'true' => array(
 						'url'         => 'knowledge-base/how-to-fix-mixed-content-in-elementor-after-moving-to-ssl',
-						'msg'         => __( 'Your site uses Elementor. This can require some additional steps before getting the secure lock.', 'really-simple-ssl' ),
+						'msg'         => __( 'Your site uses Elementor. This can require some additional steps before getting the secure lock', 'really-simple-ssl' ),
 						'icon'        => 'open',
 						'dismissible' => true,
 					),
@@ -2326,7 +2326,7 @@ class rsssl_admin {
 				'output'    => array(
 					'true' => array(
 						'url'         => 'knowledge-base/mixed-content-when-using-divi-theme/',
-						'msg'         => __( 'Your site uses Divi. This can require some additional steps before getting the secure lock.', 'really-simple-ssl' ),
+						'msg'         => __( 'Your site uses Divi. This can require some additional steps before getting the secure lock', 'really-simple-ssl' ),
 						'icon'        => 'open',
 						'dismissible' => true,
 					),
@@ -2337,7 +2337,7 @@ class rsssl_admin {
 				'score'    => 5,
 				'output'   => array(
 					'false' => array(
-						'msg'         => __( 'See which recommended security headers are not present on your website.', 'really-simple-ssl' ),
+						'msg'         => __( 'See which recommended security headers are not present on your website', 'really-simple-ssl' ),
 						'icon'        => 'premium',
 						'dismissible' => false,
 						'url' => add_query_arg(
@@ -2346,7 +2346,7 @@ class rsssl_admin {
 						),
 					),
 					'true'  => array(
-						'msg'  => __( 'Recommended security headers enabled.', 'really-simple-ssl' ),
+						'msg'  => __( 'Recommended security headers enabled', 'really-simple-ssl' ),
 						'icon' => 'success',
 					),
 				),
@@ -2357,7 +2357,7 @@ class rsssl_admin {
 				'output'   => array(
 					'false' => array(
 						'highlight_field_id' => 'login_protection_enabled',
-						'msg'                => __( 'Implement Two-Factor Authentication or Passkey login.', 'really-simple-ssl' ),
+						'msg'                => __( 'Implement Two-Factor Authentication or Passkey login', 'really-simple-ssl' ),
 						'icon'               => 'premium',
                         'url'                => 'login-protection',
 					),
@@ -2369,7 +2369,7 @@ class rsssl_admin {
                 'output'   => array(
                     'false' => array(
                         'highlight_field_id' => 'enable_limited_login_attempts',
-                        'msg'                => __( 'Protect your login form with Limit Login Attempts.', 'really-simple-ssl' ),
+                        'msg'                => __( 'Protect your login form with Limit Login Attempts', 'really-simple-ssl' ),
                         'icon'               => 'premium',
                         'url'                => 'login-protection',
 				    ),
@@ -2381,7 +2381,7 @@ class rsssl_admin {
                 'output'   => array(
                     'false' => array(
                         'highlight_field_id' => 'enable_firewall',
-                        'msg'                => __( 'Protect your site with a performant Firewall.', 'really-simple-ssl' ),
+                        'msg'                => __( 'Protect your site with a performant Firewall', 'really-simple-ssl' ),
                         'icon'               => 'premium',
                         'url'                => 'firewall',
                     ),
@@ -2393,7 +2393,7 @@ class rsssl_admin {
 				'output'    => array(
 					'true' => array(
 						'msg'         => // translators: %s is replaced with the plugin name.
-										sprintf( __( 'We have detected the %s plugin on your website.', 'really-simple-ssl' ), rsssl_detected_duplicate_ssl_plugin( true ) ) . '&nbsp;' . __( 'As Really Simple Security handles all the functionality this plugin provides, we recommend to disable this plugin to prevent unexpected behavior.', 'really-simple-ssl' ),
+										sprintf( __( 'We have detected the %s plugin on your website.', 'really-simple-ssl' ), rsssl_detected_duplicate_ssl_plugin( true ) ) . '&nbsp;' . __( 'As Really Simple Security handles all the functionality this plugin provides, we recommend to disable this plugin to prevent unexpected behavior', 'really-simple-ssl' ),
 						'icon'        => 'warning',
 						'dismissible' => true,
 						'plusone'     => true,
@@ -2420,7 +2420,7 @@ class rsssl_admin {
 		        'output' => array(
 			        'false' => array(
 				        'highlight_field_id' => 'notifications_email_address',
-				        'msg' => __( "Complete email validation and enable notifications to make sure you will receive security warnings.", 'really-simple-ssl' ),
+				        'msg' => __( "Complete email validation and enable notifications to make sure you will receive security warnings", 'really-simple-ssl' ),
 				        'icon' => 'open',
 				        'admin_notice' => false,
 				        'url' => 'instructions/email-verification',
@@ -2428,7 +2428,7 @@ class rsssl_admin {
 				        'plusone' => true,
 			        ),
 			        'true' => array(
-				        'msg' => __( "Email address successfully verified.", 'really-simple-ssl' ),
+				        'msg' => __( "Email address successfully verified", 'really-simple-ssl' ),
 				        'icon' => 'success',
 				        'admin_notice' => false,
 				        'url' => 'instructions/email-verification',
@@ -2462,7 +2462,7 @@ class rsssl_admin {
 				'callback' => '_true_',
 				'output'   => array(
 					'true' => array(
-						'msg'         => __("404 errors detected on your homepage. 404 blocking is unavailable, to prevent blocking of legitimate visitors. It is strongly recommended to resolve these errors.", 'really-simple-ssl'),
+						'msg'         => __("404 errors detected on your homepage. 404 blocking is unavailable, to prevent blocking of legitimate visitors. It is strongly recommended to resolve these errors", 'really-simple-ssl'),
 						'url'         => '404-not-found-errors',
 						'icon'        => 'warning',
 						'dismissible' => true,

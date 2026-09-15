@@ -18,13 +18,6 @@ return [
             'title' => 'Metricool - ' . (did_action('init') ? esc_html__('Social Media Management', 'really-simple-ssl') : 'Social Media Management'),
             "pre_checked" => false,
         ],
-        'simplybook' => [
-            'slug' => 'simplybook',
-            'activation_slug' => 'simplybook/simplybook.php',
-            'upgrade_url' => 'https://simplybook.me/en/pricing',
-            'title' => 'SimplyBook.me - ' . (did_action('init') ? esc_html__('Online Booking System', 'really-simple-ssl') : 'Online Booking System'),
-            "pre_checked" => false,
-        ],
         'complianz-gdpr' => [
             'slug' => 'complianz-gdpr',
             'activation_slug' => 'complianz-gdpr/complianz-gpdr.php',

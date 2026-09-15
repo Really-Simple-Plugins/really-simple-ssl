@@ -545,12 +545,6 @@ function rsssl_other_plugins_data($slug = false)
 			'title' => 'Metricool - ' . __("Social Media Management", "really-simple-ssl"),
 		],
 		[
-			'slug' => 'simplybook',
-			'wordpress_url' => 'https://wordpress.org/plugins/simplybook/',
-			'upgrade_url' => 'https://simplybook.me/en/pricing',
-			'title' => 'SimplyBook.me - ' . __("Online Booking System", "really-simple-ssl"),
-		],
-		[
 			'slug' => 'complianz-gdpr',
 			'constant_premium' => 'cmplz_premium',
 			'wordpress_url' => 'https://wordpress.org/plugins/complianz-gdpr/',

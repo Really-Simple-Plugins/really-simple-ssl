@@ -26,7 +26,7 @@ function rsssl_le_get_notices_list($notices) {
 					'score'     => 10,
 					'output'    => array(
 						'true' => array(
-							'msg'         => __( "Your Key and Certificate directories are not properly protected.", "really-simple-ssl" ),
+							'msg'         => __( "Your Key and Certificate directories are not properly protected", "really-simple-ssl" ),
 							'url'         => rsssl_link( "protect-ssl-generation-directories"),
 							'icon'        => 'warning',
 							'plusone'     => true,
@@ -39,9 +39,9 @@ function rsssl_le_get_notices_list($notices) {
 
 		if ( rsssl_letsencrypt_generation_allowed() ) {
 			if ( strpos(site_url(), 'www.') !== false ) {
-				$text = __( "The non-www version of your site does not point to this website. This is recommended, as it will allow you to add it to the certificate as well.", 'really-simple-ssl' );
+				$text = __( "The non-www version of your site does not point to this website. This is recommended, as it will allow you to add it to the certificate as well", 'really-simple-ssl' );
 			} else {
-				$text = __( "The www version of your site does not point to this website. This is recommended, as it will allow you to add it to the certificate as well.", 'really-simple-ssl' );
+				$text = __( "The www version of your site does not point to this website. This is recommended, as it will allow you to add it to the certificate as well", 'really-simple-ssl' );
 			}
 			$notices['alias_domain_notice'] = array(
 				'condition'         => array( 'NOT rsssl_is_subdomain' ),
@@ -73,7 +73,7 @@ function rsssl_le_get_notices_list($notices) {
 						'icon' => 'success'
 					),
 					'true'  => array(
-						'msg'         => sprintf( __( "Your certificate will expire on %s. You can renew it %shere%s.", "really-simple-ssl" ), $expiry_date, '<a href="' . rsssl_letsencrypt_wizard_url() . '">', '</a>' ),
+						'msg'         => sprintf( __( "Your certificate will expire on %s. You can renew it %shere%s", "really-simple-ssl" ), $expiry_date, '<a href="' . rsssl_letsencrypt_wizard_url() . '">', '</a>' ),
 						'icon'        => 'open',
 						'plusone'     => true,
 						'dismissible' => false,
@@ -88,28 +88,28 @@ function rsssl_le_get_notices_list($notices) {
 			'score'     => 10,
 			'output'    => array(
 				'automatic-installation-failed' => array(
-					'msg'         => sprintf( __( "The automatic installation of your certificate has failed. Please check your credentials, and retry the %sinstallation%s.",
+					'msg'         => sprintf( __( "The automatic installation of your certificate has failed. Please check your credentials, and retry the %sinstallation%s",
 						"really-simple-ssl" ), '<a href="' . rsssl_letsencrypt_wizard_url() . '">', '</a>' ),
 					'icon'        => 'open',
 					'plusone'     => true,
 					'dismissible' => false,
 				),
 				'manual-installation'           => array(
-					'msg'         => sprintf( __( "The SSL certificate has been renewed, and requires manual %sinstallation%s in your hosting dashboard.", "really-simple-ssl" ),
+					'msg'         => sprintf( __( "The SSL certificate has been renewed, and requires manual %sinstallation%s in your hosting dashboard", "really-simple-ssl" ),
 						'<a href="' . rsssl_letsencrypt_wizard_url('le-installation') . '">', '</a>' ),
 					'icon'        => 'open',
 					'plusone'     => true,
 					'dismissible' => false,
 				),
 				'manual-generation'             => array(
-					'msg'         => sprintf( __( "Automatic renewal of your certificate was not possible. The SSL certificate should be %srenewed%s manually.", "really-simple-ssl" ),
+					'msg'         => sprintf( __( "Automatic renewal of your certificate was not possible. The SSL certificate should be %srenewed%s manually", "really-simple-ssl" ),
 						'<a href="' . rsssl_letsencrypt_wizard_url() . '">', '</a>' ),
 					'icon'        => 'open',
 					'plusone'     => true,
 					'dismissible' => false,
 				),
 				'automatic'                     => array(
-					'msg'         => __( "Your certificate will be renewed and installed automatically.", "really-simple-ssl" ),
+					'msg'         => __( "Your certificate will be renewed and installed automatically", "really-simple-ssl" ),
 					'icon'        => 'open',
 					'plusone'     => true,
 					'dismissible' => false,
@@ -126,7 +126,7 @@ function rsssl_le_get_notices_list($notices) {
 			'score'     => 10,
 			'output'    => array(
 				'true' => array(
-					'msg'         => __( "Your server provides shell functionality, which offers additional methods to install SSL. If installing SSL using the default methods is not possible, you can install the shell add on.", "really-simple-ssl" ),
+					'msg'         => __( "Your server provides shell functionality, which offers additional methods to install SSL. If installing SSL using the default methods is not possible, you can install the shell add on", "really-simple-ssl" ),
 					'icon'        => 'open',
 					'url'         => "installing-ssl-using-shell-functions",
 					'plusone'     => true,
@@ -142,7 +142,7 @@ function rsssl_le_get_notices_list($notices) {
 				'score'     => 10,
 				'output'    => array(
 					'true' => array(
-						'msg'         => __( "You are using the Really Simple Security Shell Exec add on, but your current version needs to be updated.", "really-simple-ssl" ),
+						'msg'         => __( "You are using the Really Simple Security Shell Exec add on, but your current version needs to be updated", "really-simple-ssl" ),
 						'icon'        => 'warning',
 						'url'         => "installing-ssl-using-shell-functions",
 						'plusone'     => true,
