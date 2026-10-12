@@ -379,13 +379,31 @@ class rsssl_admin {
 	}
 
 	/**
+	 * On multisite, the deactivation changes the plugin state and the options
+	 * of all sites. Only a network administrator or WP-CLI can do this.
+	 * listen_for_deactivation(), deactivate_multisite_network() and
+	 * modal/modal.php use this check.
+	 */
+	public function user_can_deactivate_plugin(): bool {
+		if ( ! rsssl_user_can_manage() ) {
+			return false;
+		}
+
+		if ( ! is_multisite() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
+			return true;
+		}
+
+		return current_user_can( 'manage_network_plugins' );
+	}
+
+	/**
 	 * Deactivate the plugin while keeping SSL
 	 * Activated when the 'uninstall_keep_ssl' button is clicked in the settings tab
 	 *
 	 */
 
 	public function listen_for_deactivation() {
-		if ( ! rsssl_user_can_manage() ) {
+		if ( ! $this->user_can_deactivate_plugin() ) {
 			return;
 		}
 
@@ -1039,7 +1057,7 @@ class rsssl_admin {
 	 * @return void
 	 */
 	private function deactivate_multisite_network( bool $ssl_was_enabled, bool $revert_to_http = false ) {
-		if ( ! rsssl_user_can_manage() ) {
+		if ( ! $this->user_can_deactivate_plugin() ) {
 			return;
 		}
 

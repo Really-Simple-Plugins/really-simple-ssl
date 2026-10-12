@@ -52,7 +52,6 @@ abstract class Rsssl_Provider_Loader {
 	/**
      * Get the configured providers for the user.
      *
-     *
      * @return array
      */
     public static function get_configured_providers_for_user( WP_User $user ): array {

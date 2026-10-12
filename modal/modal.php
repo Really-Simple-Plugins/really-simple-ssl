@@ -10,6 +10,10 @@ if ( ! function_exists('rsssl_plugin_plugin_page_scripts')) {
             return;
         }
 
+		if ( ! RSSSL()->admin->user_can_deactivate_plugin() ) {
+			return;
+		}
+
 		$js_data = rsssl_get_chunk_translations( 'modal/build' );
 		if (empty($js_data)) {
 			return;

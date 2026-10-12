@@ -19,6 +19,12 @@ use WP_User;
 abstract class Rsssl_Two_Factor_Provider {
 
 	/**
+	 * The priority of the method when a user has more than one configured method.
+	 * A lower number is a stronger method.
+	 */
+	public const PRIORITY = 100;
+
+	/**
 	 *  The instance of the provider.
 	 *
 	 * @var Rsssl_Two_Factor_Provider

@@ -155,8 +155,8 @@ function rsssl_upgrade() {
 		}
 	}
 
-	#ensure administrators have the manage_security capability
-	if ( version_compare( $prev_version, '6.0.10', '<' ) ) {
+	#on upgrade from a version before 6.0.10 only, give administrators the manage_security capability
+	if ( $prev_version && version_compare( $prev_version, '6.0.10', '<' ) ) {
 		rsssl_add_manage_security_capability();
 	}
 

@@ -59,6 +59,11 @@ class Rsssl_Two_Factor_Email extends Rsssl_Two_Factor_Provider implements Rsssl_
 	public const NAME = 'Email';
 
 	/**
+	 * Email is the weakest method.
+	 */
+	public const PRIORITY = 30;
+
+	/**
 	 * Ensures only one instance of this class exists in memory at any one time.
 	 *
 	 * @since 0.1-dev

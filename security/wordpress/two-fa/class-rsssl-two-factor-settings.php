@@ -279,76 +279,45 @@ class Rsssl_Two_Factor_Settings {
 		$user = get_userdata( $user_id );
 		$loader = Rsssl_Provider_Loader::get_loader();
 		$available_providers = $loader::available_providers();
-		$ProvidersWithStatus = self::addStatusToProviders($available_providers, $user);
 
-		// first we filter if the array gas an active status.
-		$active = array_filter( $ProvidersWithStatus, function ( $provider ) {
-			return 'active' === $provider['status'];
-		} );
-
-		// if the array is not empty, we return the first key.
-		if ( ! empty( $active ) ) {
-			$active = array_keys( $active );
-			return reset( $active );
+		$primary_provider = Rsssl_Two_Factor::get_primary_provider_for_user( $user );
+		if ( '' !== $primary_provider ) {
+			return $primary_provider::METHOD;
 		}
 
-		foreach ($available_providers as $method => $provider_class ) {
-			if ( $provider_class::is_enabled( $user ) ) {
-				$user_status = self::get_user_status( $method, $user_id );
-				$role_status = self::get_role_status( $method, $user_id );
-				if ( 'active' === $user_status && ( 'forced' === $role_status
-                        || 'optional' === $role_status )
-                ) {
-					return $method; // Return the method directly if active and role status matches.
-				}
+        $enabled_providers = array_filter( $available_providers, function( $provider_class ) use ( $user ) {
+            return $provider_class::is_enabled( $user );
+        });
 
-				if ( 'open' === $user_status && ( 'forced' === $role_status
-                        || 'optional' === $role_status )
-                ) {
-					$grace_period = self::is_user_in_grace_period( $user );
+        // Handle onboarding and fallback to enabled but not configured providers.
+		foreach ($enabled_providers as $method => $provider_class ) {
+            $user_status = self::get_user_status( $method, $user_id );
+            $role_status = self::get_role_status( $method, $user_id );
 
-					if ( $grace_period > 0 && 'forced' === $role_status ) {
-						return 'onboarding';
-					}
+            if ( 'open' === $user_status && ( 'forced' === $role_status
+                    || 'optional' === $role_status )
+            ) {
+                $grace_period = self::is_user_in_grace_period( $user );
 
-					if ( 'optional' === $role_status ) {
-						return 'onboarding';
-					}
+                if ( $grace_period > 0 && 'forced' === $role_status ) {
+                    return 'onboarding';
+                }
 
-					return 'expired';
-				}
+                if ( 'optional' === $role_status ) {
+                    return 'onboarding';
+                }
 
-				// If role is forced and status isn't disabled, return onboarding.
-				if ( 'forced' === $role_status && 'disabled' !== $user_status ) {
-					return 'onboarding';
-				}
-			}
+                return 'expired';
+            }
+
+            // If role is forced and status isn't disabled, return onboarding.
+            if ( 'forced' === $role_status && 'disabled' !== $user_status ) {
+                return 'onboarding';
+            }
 		}
 
-		return self::get_email_method_action( $user_id ); // Fallback to email or other default behavior.
-	}
-
-	public static function addStatusToProviders( array $providers, $user ): array {
-		$filtered_providers = [];
-		foreach ( $providers as $method => $provider_class ) {
-			if ( $provider_class::is_enabled( $user ) ) {
-				$user_status = self::get_user_status( $method, $user->ID );
-				$role_status = self::get_role_status( $method, $user->ID  );
-
-				$filtered_providers[ $method ] = array(
-					'status' => $user_status,
-					'role'   => $role_status,
-					'class'  => $provider_class,
-				);
-			} else {
-				$filtered_providers[ $method ] = array(
-					'status' => 'disabled',
-					'role'   => 'disabled',
-					'class'  => $provider_class,
-				);
-			}
-		}
-		return $filtered_providers;
+        // Fallback to email when no onboarding is required.
+		return self::get_email_method_action( $user_id );
 	}
 
 	/**
