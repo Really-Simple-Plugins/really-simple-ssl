@@ -255,7 +255,7 @@ class Rsssl_Two_Factor_Settings {
         }
 
         //if the method = 'passkey' and the role is enabled, return optional.
-        if ('passkey' === $method && $enabled) {
+        if ('passkey' === $method && $enabled && ! $forced) {
             $return = 'optional';
         }
 
