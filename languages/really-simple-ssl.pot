@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-15T11:51:13+00:00\n"
+"POT-Creation-Date: 2026-10-21T07:31:46+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: really-simple-ssl\n"
@@ -96,7 +96,7 @@ msgstr ""
 
 #: assets/templates/two_fa/onboarding.php:140
 #: pro/assets/templates/passkey/onboarding.php:66
-#: settings/build/635.2445ddf6c673790497e2.js:1
+#: settings/build/635.7636d9063ab2094156f3.js:1
 #: settings/src/Onboarding/OnboardingControls.js:203
 msgid "Skip"
 msgstr ""
@@ -152,7 +152,7 @@ msgstr ""
 #: assets/templates/two_fa/profile-settings.php:52
 #: assets/templates/two_fa/totp-config.php:23
 #: pro/security/wordpress/two-fa/providers/class-rsssl-two-factor-totp.php:661
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1708
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1712
 msgid "Download Backup Codes"
 msgstr ""
 
@@ -216,7 +216,7 @@ msgid "Settings"
 msgstr ""
 
 #: class-admin.php:195
-#: settings/build/index.f4d093f99e7739b510b9.js:1
+#: settings/build/index.70db3a26ef2fc393d331.js:1
 #: settings/src/Header.js:45
 msgid "Support"
 msgstr ""
@@ -241,7 +241,7 @@ msgstr ""
 
 #: class-admin.php:710
 #: settings/build/366.0d5cd85e5385919f12a4.js:1
-#: settings/build/635.2445ddf6c673790497e2.js:1
+#: settings/build/635.7636d9063ab2094156f3.js:1
 #: settings/build/737.1b7de7763b0381e2e3d2.js:1
 #: settings/src/Dashboard/TaskElement.js:72
 #: settings/src/Dashboard/TaskElement.js:76
@@ -251,7 +251,7 @@ msgstr ""
 
 #: class-admin.php:710
 #: settings/build/366.0d5cd85e5385919f12a4.js:1
-#: settings/build/635.2445ddf6c673790497e2.js:1
+#: settings/build/635.7636d9063ab2094156f3.js:1
 #: settings/build/737.1b7de7763b0381e2e3d2.js:1
 #: settings/build/995.7c608e363fddf57926d6.js:1
 #: settings/src/Dashboard/TaskElement.js:65
@@ -340,7 +340,7 @@ msgid "The 'force-deactivate.php' file has to be renamed to .txt. Otherwise your
 msgstr ""
 
 #: class-admin.php:2143
-#: settings/build/635.2445ddf6c673790497e2.js:1
+#: settings/build/635.7636d9063ab2094156f3.js:1
 #: settings/src/Onboarding/Items/ListItem.js:46
 msgid "Check again"
 msgstr ""
@@ -416,7 +416,7 @@ msgstr ""
 
 #: class-admin.php:2227
 #: settings/build/366.0d5cd85e5385919f12a4.js:1
-#: settings/build/635.2445ddf6c673790497e2.js:1
+#: settings/build/635.7636d9063ab2094156f3.js:1
 #: settings/build/737.1b7de7763b0381e2e3d2.js:1
 #: settings/src/Dashboard/TaskElement.js:66
 msgid "Re-check"
@@ -745,7 +745,7 @@ msgstr ""
 
 #: class-site-health.php:334
 #: settings/build/366.0d5cd85e5385919f12a4.js:1
-#: settings/build/635.2445ddf6c673790497e2.js:1
+#: settings/build/635.7636d9063ab2094156f3.js:1
 #: settings/build/737.1b7de7763b0381e2e3d2.js:1
 #: settings/src/Dashboard/Progress/ProgressFooter.js:24
 #: settings/src/LetsEncrypt/Activate.js:46
@@ -1114,7 +1114,7 @@ msgstr ""
 #: core/app/Features/Onboarding/OnboardingStepsGenerator.php:184
 #: settings/config/menu.php:755
 #: settings/build/366.0d5cd85e5385919f12a4.js:1
-#: settings/build/635.2445ddf6c673790497e2.js:1
+#: settings/build/635.7636d9063ab2094156f3.js:1
 #: settings/build/737.1b7de7763b0381e2e3d2.js:1
 #: settings/src/Dashboard/OtherPlugins/OtherPluginsData.js:74
 #: settings/src/Onboarding/OnboardingControls.js:194
@@ -2706,7 +2706,7 @@ msgid "The file could not be downloaded. The file might not exist, or downloadin
 msgstr ""
 
 #: pro/class-importer.php:499
-#: settings/build/index.f4d093f99e7739b510b9.js:1
+#: settings/build/index.70db3a26ef2fc393d331.js:1
 #: settings/src/Settings/FieldsData.js:185
 msgid "Something went wrong"
 msgstr ""
@@ -3201,7 +3201,7 @@ msgid "Your access has been denied, please contact the webmaster for support"
 msgstr ""
 
 #: pro/security/wordpress/class-rsssl-event-listener.php:444
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:591
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:595
 msgid "Security nonce invalid or expired."
 msgstr ""
 
@@ -3904,7 +3904,7 @@ msgid "Enable Passkey login"
 msgstr ""
 
 #: pro/security/wordpress/passkey/class-rsssl-passkey.php:452
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1728
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1732
 msgid "Failed to create a login nonce."
 msgstr ""
 
@@ -5328,12 +5328,12 @@ msgid "Use an authenticator app on your mobile device to generate a code."
 msgstr ""
 
 #: pro/security/wordpress/two-fa/providers/class-rsssl-two-factor-totp.php:662
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1709
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1713
 msgid "Key copied"
 msgstr ""
 
 #: pro/security/wordpress/two-fa/providers/class-rsssl-two-factor-totp.php:663
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1710
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1714
 msgid "Could not copy text: "
 msgstr ""
 
@@ -5642,20 +5642,20 @@ msgstr ""
 msgid "None"
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:567
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1505
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:571
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1509
 msgid "Your 2FA grace period expired. Please contact your site administrator to regain access and to configure 2FA."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:596
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:600
 msgid "Security token invalid or expired."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:752
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:756
 msgid "API login for user disabled."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:882
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:886
 #, php-format
 msgid "Warning: There has been %1$s failed login attempt on your account without providing a valid two-factor token. The last failed login occurred %2$s ago. If this wasn't you, you should reset your password."
 msgid_plural "Warning: %1$s failed login attempts have been detected on your account without providing a valid two-factor token. The last failed login occurred %2$s ago. If this wasn't you, you should reset your password."
@@ -5663,46 +5663,46 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %s: URL to reset password
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:937
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:941
 #, php-format
 msgid "Your password was reset because of too many failed Two Factor attempts. You will need to <a href=\"%s\">create a new password</a> to regain access. Please check your email for more information."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1163
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1167
 msgid "Authentication provider not specified or invalid."
 msgstr ""
 
 #. translators: %s: time delay between login attempts
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1195
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1199
 #, php-format
 msgid "Too many invalid verification codes, you can try again in %s. This limit protects your account against automated attacks."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1252
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1256
 msgid "Invalid verification code."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1441
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1445
 msgid "There have been too many failed two-factor authentication attempts, which often indicates that the password has been compromised. The password has been reset in order to protect the account."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1445
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1449
 msgid "If you are the owner of this account, please check your email for instructions on regaining access."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1452
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1456
 msgid "Password Reset"
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1537
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1541
 msgid "Invalid user."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1564
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1568
 msgid "Your Two-Factor Authentication configuration is corrupted. Please contact your site administrator to regain access."
 msgstr ""
 
-#: security/wordpress/two-fa/class-rsssl-two-factor.php:1625
+#: security/wordpress/two-fa/class-rsssl-two-factor.php:1629
 msgid "Two-Factor Authentication Setup"
 msgstr ""
 
@@ -6960,7 +6960,7 @@ msgid "Debugging with Really Simple Security"
 msgstr ""
 
 #: settings/config/menu.php:68
-#: settings/build/index.f4d093f99e7739b510b9.js:1
+#: settings/build/index.70db3a26ef2fc393d331.js:1
 #: settings/src/Header.js:32
 msgid "Let's Encrypt"
 msgstr ""
@@ -7493,7 +7493,7 @@ msgstr ""
 #: upgrade/upgrade-to-pro.php:331
 #: modal/build/433.db1479f1e30c6b53cbd8.js:1
 #: modal/src/components/Modal/RssslModal.js:68
-#: settings/build/635.2445ddf6c673790497e2.js:1
+#: settings/build/635.7636d9063ab2094156f3.js:1
 #: settings/build/737.1b7de7763b0381e2e3d2.js:1
 #: settings/src/Settings/firewall/UserAgentModal.js:151
 #: settings/src/Settings/GeoBlockList/TrustIpAddressModal.js:142
@@ -7601,7 +7601,7 @@ msgstr ""
 
 #: modal/build/index.dc39341c6b0a7592427c.js:1
 #: modal/src/components/DeactivationModal/DeactivationModal.js:129
-#: settings/build/635.2445ddf6c673790497e2.js:1
+#: settings/build/635.7636d9063ab2094156f3.js:1
 #: settings/build/737.1b7de7763b0381e2e3d2.js:1
 #: settings/src/Settings/License/License.js:48
 msgid "Deactivate"
@@ -7640,7 +7640,7 @@ msgstr ""
 
 #: settings/build/91.b0f863c7b47144cb4cdf.js:1
 #: settings/build/366.0d5cd85e5385919f12a4.js:1
-#: settings/build/635.2445ddf6c673790497e2.js:1
+#: settings/build/635.7636d9063ab2094156f3.js:1
 #: settings/build/737.1b7de7763b0381e2e3d2.js:1
 #: settings/src/Dashboard/TaskElement.js:68
 #: settings/src/Modal/Modal.js:66
@@ -7683,7 +7683,7 @@ msgstr ""
 
 #: settings/build/366.0d5cd85e5385919f12a4.js:1
 #: settings/build/995.7c608e363fddf57926d6.js:1
-#: settings/build/index.f4d093f99e7739b510b9.js:1
+#: settings/build/index.70db3a26ef2fc393d331.js:1
 #: settings/src/Dashboard/Progress/ProgressFooter.js:29
 #: settings/src/Header.js:54
 #: settings/src/Settings/PremiumOverlay.js:9
@@ -7797,7 +7797,7 @@ msgid "You have %s %d"
 msgstr ""
 
 #: settings/build/366.0d5cd85e5385919f12a4.js:1
-#: settings/build/index.f4d093f99e7739b510b9.js:1
+#: settings/build/index.70db3a26ef2fc393d331.js:1
 #: settings/src/Dashboard/TipsTricks/TipsTricksFooter.js:9
 #: settings/src/Header.js:30
 msgid "Documentation"
@@ -7827,7 +7827,7 @@ msgid "Tips & Tricks"
 msgstr ""
 
 #: settings/build/366.0d5cd85e5385919f12a4.js:1
-#: settings/build/635.2445ddf6c673790497e2.js:1
+#: settings/build/635.7636d9063ab2094156f3.js:1
 #: settings/build/737.1b7de7763b0381e2e3d2.js:1
 #: settings/src/Dashboard/TaskElement.js:48
 msgid "Re-started test"
@@ -7845,97 +7845,97 @@ msgstr ""
 msgid "New"
 msgstr ""
 
-#: settings/build/635.2445ddf6c673790497e2.js:1
+#: settings/build/635.7636d9063ab2094156f3.js:1
 #: settings/src/Onboarding/OnboardingControls.js:68
 msgid "Starting SSL health scan..."
 msgstr ""
 
-#: settings/build/635.2445ddf6c673790497e2.js:1
+#: settings/build/635.7636d9063ab2094156f3.js:1
 #: settings/src/Onboarding/OnboardingControls.js:84
 #: settings/src/Onboarding/OnboardingControls.js:133
 msgid "Activating options..."
 msgstr ""
 
-#: settings/build/635.2445ddf6c673790497e2.js:1
+#: settings/build/635.7636d9063ab2094156f3.js:1
 #: settings/src/Onboarding/OnboardingControls.js:87
 msgid "Initializing vulnerability detection..."
 msgstr ""
 
-#: settings/build/635.2445ddf6c673790497e2.js:1
+#: settings/build/635.7636d9063ab2094156f3.js:1
 #: settings/src/Onboarding/OnboardingControls.js:88
 msgid "Scanning for vulnerabilities..."
 msgstr ""
 
-#: settings/build/635.2445ddf6c673790497e2.js:1
+#: settings/build/635.7636d9063ab2094156f3.js:1
 #: settings/src/Onboarding/OnboardingControls.js:93
 #: settings/src/Onboarding/OnboardingControls.js:136
 msgid "Updating dashboard..."
 msgstr ""
 
-#: settings/build/635.2445ddf6c673790497e2.js:1
+#: settings/build/635.7636d9063ab2094156f3.js:1
 #: settings/build/737.1b7de7763b0381e2e3d2.js:1
 #: settings/src/LetsEncrypt/Activate.js:45
 #: settings/src/Onboarding/OnboardingControls.js:170
 msgid "Activate SSL networkwide"
 msgstr ""
 
-#: settings/build/635.2445ddf6c673790497e2.js:1
+#: settings/build/635.7636d9063ab2094156f3.js:1
 #: settings/src/Onboarding/OnboardingControls.js:176
 msgid "Install SSL"
 msgstr ""
 
-#: settings/build/635.2445ddf6c673790497e2.js:1
+#: settings/build/635.7636d9063ab2094156f3.js:1
 #: settings/src/Onboarding/OnboardingControls.js:213
 msgid "Get 40% off"
 msgstr ""
 
-#: settings/build/635.2445ddf6c673790497e2.js:1
+#: settings/build/635.7636d9063ab2094156f3.js:1
 #: settings/src/Onboarding/OnboardingControls.js:213
 msgid "Get Pro"
 msgstr ""
 
-#: settings/build/635.2445ddf6c673790497e2.js:1
+#: settings/build/635.7636d9063ab2094156f3.js:1
 #: settings/src/Onboarding/OnboardingControls.js:222
 msgid "Finish"
 msgstr ""
 
-#: settings/build/635.2445ddf6c673790497e2.js:1
+#: settings/build/635.7636d9063ab2094156f3.js:1
 #: settings/src/Onboarding/Steps/StepEmail.js:40
 msgid "Your email address"
 msgstr ""
 
-#: settings/build/635.2445ddf6c673790497e2.js:1
+#: settings/build/635.7636d9063ab2094156f3.js:1
 #: settings/src/Onboarding/Steps/StepEmail.js:51
 msgid "Include 6 Tips & Tricks to get started with Really Simple Security."
 msgstr ""
 
-#: settings/build/635.2445ddf6c673790497e2.js:1
+#: settings/build/635.7636d9063ab2094156f3.js:1
 #: settings/src/Onboarding/Steps/StepEmail.js:57
 msgid "Privacy Statement"
 msgstr ""
 
-#: settings/build/635.2445ddf6c673790497e2.js:1
+#: settings/build/635.7636d9063ab2094156f3.js:1
 #: settings/src/Onboarding/Items/ListItem.js:58
 msgid "Override SSL detection."
 msgstr ""
 
-#: settings/build/635.2445ddf6c673790497e2.js:1
-#: settings/src/Onboarding/Onboarding.js:61
+#: settings/build/635.7636d9063ab2094156f3.js:1
+#: settings/src/Onboarding/Onboarding.js:54
 msgid "Fetching next step..."
 msgstr ""
 
-#: settings/build/635.2445ddf6c673790497e2.js:1
+#: settings/build/635.7636d9063ab2094156f3.js:1
 #: settings/src/Onboarding/OnboardingModal.js:33
 msgid "Please wait while we detect your setup"
 msgstr ""
 
-#: settings/build/635.2445ddf6c673790497e2.js:1
+#: settings/build/635.7636d9063ab2094156f3.js:1
 #: settings/build/737.1b7de7763b0381e2e3d2.js:1
 #: settings/src/Settings/Host/Host.js:36
 msgid "Optional - Select your hosting provider."
 msgstr ""
 
-#: settings/build/635.2445ddf6c673790497e2.js:1
+#: settings/build/635.7636d9063ab2094156f3.js:1
 #: settings/build/995.7c608e363fddf57926d6.js:1
 #: settings/src/Settings/License/LicenseData.js:16
 msgid "Loading"
@@ -8749,86 +8749,86 @@ msgstr ""
 msgid "Collapse all"
 msgstr ""
 
-#: settings/build/index.f4d093f99e7739b510b9.js:1
+#: settings/build/index.70db3a26ef2fc393d331.js:1
 #: settings/src/Onboarding/OnboardingData.js:83
 msgid "Updating email preferences.."
 msgstr ""
 
-#: settings/build/index.f4d093f99e7739b510b9.js:1
+#: settings/build/index.70db3a26ef2fc393d331.js:1
 #: settings/src/Onboarding/OnboardingData.js:130
 #, js-format
 msgid "Installing %d..."
 msgstr ""
 
-#: settings/build/index.f4d093f99e7739b510b9.js:1
+#: settings/build/index.70db3a26ef2fc393d331.js:1
 #: settings/src/Onboarding/OnboardingData.js:136
 #, js-format
 msgid "Activating %d..."
 msgstr ""
 
-#: settings/build/index.f4d093f99e7739b510b9.js:1
+#: settings/build/index.70db3a26ef2fc393d331.js:1
 #: settings/src/Onboarding/OnboardingData.js:202
 msgid "Re-checking SSL certificate, please wait..."
 msgstr ""
 
-#: settings/build/index.f4d093f99e7739b510b9.js:1
+#: settings/build/index.70db3a26ef2fc393d331.js:1
 #: settings/src/Settings/FieldsData.js:183
 msgid "Saving settings..."
 msgstr ""
 
-#: settings/build/index.f4d093f99e7739b510b9.js:1
+#: settings/build/index.70db3a26ef2fc393d331.js:1
 #: settings/src/Settings/FieldsData.js:184
 #: settings/src/Settings/FieldsData.js:208
 #: settings/src/Settings/FieldsData.js:292
 msgid "Settings saved"
 msgstr ""
 
-#: settings/build/index.f4d093f99e7739b510b9.js:1
+#: settings/build/index.70db3a26ef2fc393d331.js:1
 #: settings/src/utils/Error.js:12
 msgid "Please check if security settings on the server or a plugin is blocking the requests from Really Simple Security."
 msgstr ""
 
-#: settings/build/index.f4d093f99e7739b510b9.js:1
+#: settings/build/index.70db3a26ef2fc393d331.js:1
 #: settings/src/utils/Error.js:20
 msgid "The Really Simple Security Rest API is disabled."
 msgstr ""
 
-#: settings/build/index.f4d093f99e7739b510b9.js:1
+#: settings/build/index.70db3a26ef2fc393d331.js:1
 #: settings/src/utils/Error.js:22
 msgid "The Really Simple Security Rest API returned a not found."
 msgstr ""
 
-#: settings/build/index.f4d093f99e7739b510b9.js:1
+#: settings/build/index.70db3a26ef2fc393d331.js:1
 #: settings/src/utils/Error.js:24
 msgid "The Really Simple Security Rest API returned a 403 forbidden error."
 msgstr ""
 
-#: settings/build/index.f4d093f99e7739b510b9.js:1
+#: settings/build/index.70db3a26ef2fc393d331.js:1
 #: settings/src/utils/Error.js:35
 msgid "A problem was detected during the loading of the settings"
 msgstr ""
 
-#: settings/build/index.f4d093f99e7739b510b9.js:1
+#: settings/build/index.70db3a26ef2fc393d331.js:1
 #: settings/src/utils/Error.js:41
 msgid "The request returned the following errors:"
 msgstr ""
 
-#: settings/build/index.f4d093f99e7739b510b9.js:1
+#: settings/build/index.70db3a26ef2fc393d331.js:1
 #: settings/src/utils/Error.js:43
 msgid "Response code:"
 msgstr ""
 
-#: settings/build/index.f4d093f99e7739b510b9.js:1
+#: settings/build/index.70db3a26ef2fc393d331.js:1
 #: settings/src/utils/Error.js:44
 msgid "Status code:"
 msgstr ""
 
-#: settings/build/index.f4d093f99e7739b510b9.js:1
+#: settings/build/index.70db3a26ef2fc393d331.js:1
 #: settings/src/utils/Error.js:45
 msgid "Server response:"
 msgstr ""
 
-#: settings/build/index.f4d093f99e7739b510b9.js:1
+#: settings/build/index.70db3a26ef2fc393d331.js:1
 #: settings/src/utils/Error.js:48
 msgid "More information"
 msgstr ""

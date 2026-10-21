@@ -255,6 +255,10 @@ class Rsssl_Two_Factor
             }
 
             if (function_exists('rsssl_update_option')) {
+                // This runs on plugins_loaded, before $wp_rewrite exists, so the REST API check would fatal on rest_url().
+                if (!defined('RSSSL_SKIP_REST_API_ACCESSIBLE_CHECK')) {
+                    define('RSSSL_SKIP_REST_API_ACCESSIBLE_CHECK', true);
+                }
                 // Update the enabled roles for only email.
                 rsssl_update_option('two_fa_enabled_roles_email', $enabled_roles);
                 rsssl_update_option('two_fa_enabled_roles_totp', ['administrator']);

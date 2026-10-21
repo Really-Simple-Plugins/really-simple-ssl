@@ -162,7 +162,6 @@ Really Simple Security and WordFence greatly overlap in term of functionality. I
 == Changelog ==
 = 9.8.4 - 2026-10-20 =
 * Security: On multisite, only network admins can now deactivate the plugin network-wide.
-* Fixed: "Activate SSL networkwide" on multisite now also activates SSL on all subsites, not just the main site.
 
 = 9.8.3 - 2026-09-15 =
 * Security: Fixed a remaining 2FA bypass in XML-RPC authentication.
