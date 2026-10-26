@@ -160,7 +160,7 @@ Yes. The plugin enforces HTTPS and handles all necessary redirects, optionally u
 Really Simple Security and WordFence greatly overlap in term of functionality. If you like to use specific features from both plugins, we strongly recommend not to enable similar features twice. The benefit of Really Simple Security is that disabled features don't load any code, so won't have an impact on site performance.
 
 == Changelog ==
-= 9.8.4 - 2026-10-20 =
+= 9.8.4 - 2026-10-26 =
 * Security: On multisite, only network admins can now deactivate the plugin network-wide.
 
 = 9.8.3 - 2026-09-15 =
