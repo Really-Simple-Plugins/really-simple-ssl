@@ -22,6 +22,10 @@
       min-width: 110px;
 
     }
+    .rsssl-mixed-content-datatable .rdt_TableRow .rdt_TableCell:last-child,
+    .rsssl-mixed-content-datatable .rdt_TableHeadRow .rdt_TableCol:last-child {
+      min-width: 110px;
+    }
   }
 
   .rsssl-progress-container {
@@ -41,6 +45,13 @@
   button.button{
     line-height: 1.5;
     min-height: 10px;
+  }
+  .rdt_ExpanderRow .rsssl-container .button {
+    line-height: 1.5;
+    min-height: 10px;
+    &.button-red {
+      border: 1px solid var(--rsp-red);
+    }
   }
   .rsssl-grid-item-content-footer{
     display: flex;

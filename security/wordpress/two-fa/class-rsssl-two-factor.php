@@ -19,6 +19,7 @@ use RSSSL\Security\WordPress\Two_Fa\Services\Rsssl_Two_Factor_Reset_Service;
 use RSSSL\Security\WordPress\Two_Fa\Providers\Rsssl_Provider_Loader;
 use RSSSL\Security\WordPress\Two_Fa\Providers\Rsssl_Two_Factor_Provider;
 use RSSSL\Security\WordPress\Two_Fa\Providers\Rsssl_Two_Factor_Provider_Interface;
+use RSSSL\Security\WordPress\Two_Fa\Providers\Rsssl_Two_Factor_Email;
 use RSSSL\Security\WordPress\Two_Fa\Traits\Rsssl_Email_Trait;
 use WP_Error;
 use WP_Session_Tokens;
@@ -254,6 +255,10 @@ class Rsssl_Two_Factor
             }
 
             if (function_exists('rsssl_update_option')) {
+                // This runs on plugins_loaded, before $wp_rewrite exists, so the REST API check would fatal on rest_url().
+                if (!defined('RSSSL_SKIP_REST_API_ACCESSIBLE_CHECK')) {
+                    define('RSSSL_SKIP_REST_API_ACCESSIBLE_CHECK', true);
+                }
                 // Update the enabled roles for only email.
                 rsssl_update_option('two_fa_enabled_roles_email', $enabled_roles);
                 rsssl_update_option('two_fa_enabled_roles_totp', ['administrator']);
@@ -303,6 +308,13 @@ class Rsssl_Two_Factor
 
                 // Delete the transient to invalidate the token.
                 delete_transient('skip_two_fa_token_' . $user_id);
+
+				// The email link may not replace a stronger method.
+				$primary_provider = self::get_primary_provider_for_user( $user );
+				if ( '' !== $primary_provider && Rsssl_Two_Factor_Email::class !== $primary_provider ) {
+					wp_safe_redirect( wp_login_url() . '?login_error=token_invalid' );
+					exit;
+				}
 
                 $status = get_user_meta($user->ID, 'rsssl_two_fa_status_email', true);
 
@@ -460,6 +472,8 @@ class Rsssl_Two_Factor
     /**
      * Gets the Two-Factor Auth provider for the specified|current user.
      *
+     * When the user has more than one configured provider, the provider with the lowest priority number wins.
+     *
      * @param WP_User $user Optional. User ID, or WP_User object of the user. Defaults to current user.
      *
      * @return string
@@ -468,28 +482,22 @@ class Rsssl_Two_Factor
     public static function get_primary_provider_for_user(WP_User $user): string
     {
         $loader = Rsssl_Provider_Loader::get_loader();
+
+        // Get the providers that pass the is_enabled($user) and is_configured($user) checks
         $available_providers = $loader::get_configured_providers_for_user($user);
-        // If there's only one available provider, force that to be the primary.
+
         if (empty($available_providers)) {
             return '';
         }
 
-        if (1 === count($available_providers)) {
-            $provider = key($available_providers);
-        } else {
-            $provider = Rsssl_Provider_Loader::get_user_enabled_providers($user);
-            // Check if already a provider is active.
+		$primary = reset( $available_providers );
+		foreach ( $available_providers as $provider ) {
+			if ( $provider::PRIORITY < $primary::PRIORITY ) {
+				$primary = $provider;
+			}
+		}
 
-            // If the provider specified isn't enabled, just grab the first one that is based on the Weight.
-            $best_valued_provider = 'totp';
-            if (isset($available_providers[$best_valued_provider]) && $available_providers[$best_valued_provider]::is_enabled($user)) {
-                $provider = $best_valued_provider;
-            } else {
-                $provider = key($available_providers);
-            }
-        }
-
-        return get_class($available_providers[$provider]) ??  '';
+		return get_class( $primary );
     }
 
     /**
@@ -1131,7 +1139,6 @@ class Rsssl_Two_Factor
 		$request_data = self::get_request_data();
 		$wp_auth_id = $request_data['user_id'];
 		$nonce = $request_data['login_nonce'];
-		$provider_key = $request_data['provider'];
 		$redirect_to = $request_data['redirect_to'];
 
 		if (isset($_SERVER['REQUEST_METHOD']) && 'POST' === strtoupper((sanitize_text_field(wp_unslash($_SERVER['REQUEST_METHOD']))))) {
@@ -1154,32 +1161,31 @@ class Rsssl_Two_Factor
 			self::redirect_to_login_error('nonce_invalid', $redirect_to);
 		}
 
-		$loader = Rsssl_Provider_Loader::get_loader();
-		// Get the provider
-		$providers = $loader::get_enabled_providers_for_user($user);
-		if ($provider_key && isset($providers[$provider_key])) {
-			$provider_class = get_class($providers[$provider_key]);
-		} else {
+		// Use the provider that the login page shows for this user.
+		$provider = self::get_primary_provider_for_user( $user );
+		if ( '' === $provider ) {
 			wp_die(esc_html__('Authentication provider not specified or invalid.', 'really-simple-ssl'), 403);
 		}
 
 		/** @var Rsssl_Two_Factor_Provider $provider_instance */
-		$provider_instance = $provider_class::get_instance();
+		$provider_instance = $provider::get_instance();
 
 		// Check for corrupted/empty TOTP key before attempting authentication
-		self::validate_totp_key_exists( $user, $provider_key );
+		self::validate_totp_key_exists( $user, $provider::METHOD );
 
-		// Allow the provider to re-send codes, etc.
-		if ( ( 'email' === $provider_key ) && true === $provider_instance->pre_process_authentication( $user ) ) {
+		// Send a new email code when the user asks for it.
+		if ( ( Rsssl_Two_Factor_Email::METHOD === $provider::METHOD ) && true === $provider_instance->pre_process_authentication( $user ) ) {
 			// Always generate a new nonce.
 			$new_nonce = self::generate_login_nonce_for_user($user->ID);
-			self::login_html($user, $new_nonce, $redirect_to, '', $provider_class);
+
+			// Show the email code form.
+			self::login_html($user, $new_nonce, $redirect_to, '', $provider);
 			exit;
 		}
 
 		// If the form hasn't been submitted, just display the auth form.
 		if (!$is_post_request) {
-			self::handle_not_post_request($user, $provider_class);
+			self::handle_not_post_request($user, $provider);
 			exit;
 		}
 		if (self::is_user_rate_limited($user)) {
@@ -1201,18 +1207,13 @@ class Rsssl_Two_Factor
 			do_action('rsssl_wp_login_failed', $user->user_login, $error);
 
 			// Display the login form with an error message
-			self::login_html(
-				$user,
-				$redirect_to,
-				esc_html($error->get_error_message()),
-				$provider_key
-			);
+			self::login_html( $user, $nonce, $redirect_to, esc_html( $error->get_error_message() ), $provider );
 			exit;
 		}
 		// Validate authentication
 		if (!$provider_instance->validate_authentication($user)) {
 			// Handle rate limiting and failed attempts
-			self::handle_failed_attempt($user, $provider_class, $redirect_to, $nonce);
+			self::handle_failed_attempt($user, $provider, $redirect_to, $nonce);
 			exit;
 		}
 
@@ -1328,14 +1329,13 @@ class Rsssl_Two_Factor
     /**
      * Get the request data for two-factor authentication.
      *
-     * @return array Sanitized user ID, login nonce, provider, and redirect URL.
+     * @return array Sanitized user ID, login nonce, and redirect URL.
      */
     private static function get_request_data(): array
     {
         return array(
             'user_id'      => self::sanitize_request_data('rsssl-wp-auth-id', 0, 'absint'),
             'login_nonce'  => self::sanitize_request_data('rsssl-wp-auth-nonce', '', 'wp_unslash'),
-            'provider'     => self::sanitize_request_data('provider', false, 'wp_unslash'),
             'redirect_to'  => isset($_REQUEST['redirect_to']) && is_string($_REQUEST['redirect_to'])
                 ? wp_validate_redirect(wp_unslash($_REQUEST['redirect_to']), admin_url())
                 : '',

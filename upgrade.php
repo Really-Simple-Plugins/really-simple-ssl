@@ -16,6 +16,12 @@ function rsssl_upgrade() {
 	if ( $prev_version && version_compare( $prev_version, rsssl_version, '==' ) ) {
 		return;
 	}
+
+	// The upgrade runs on plugins_loaded, before $wp_rewrite exists, so the REST API check would fatal on rest_url().
+	if ( ! defined( 'RSSSL_SKIP_REST_API_ACCESSIBLE_CHECK' ) ) {
+		define( 'RSSSL_SKIP_REST_API_ACCESSIBLE_CHECK', true );
+	}
+
 	//dismiss notices that should be dismissed on plugin upgrade
 	if ( $prev_version && version_compare( $prev_version, rsssl_version, '!=' ) ) {
 		// $dismiss_options = RSSSL()->admin->get_notices_list(
@@ -155,8 +161,8 @@ function rsssl_upgrade() {
 		}
 	}
 
-	#ensure administrators have the manage_security capability
-	if ( version_compare( $prev_version, '6.0.10', '<' ) ) {
+	#on upgrade from a version before 6.0.10 only, give administrators the manage_security capability
+	if ( $prev_version && version_compare( $prev_version, '6.0.10', '<' ) ) {
 		rsssl_add_manage_security_capability();
 	}
 
