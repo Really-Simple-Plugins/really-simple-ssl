@@ -252,18 +252,29 @@ if ( ! function_exists('rsssl_add_manage_security_capability')){
 if ( ! function_exists( 'rsssl_user_can_manage' ) ) {
     /**
      * Check if user has required capability
+     *
+     * On a network activation, the settings are network-wide. A subsite
+     * administrator can keep manage_security from a previous per-site
+     * activation, so the user must also be able to manage network options.
+     *
      * @return bool
      */
     function rsssl_user_can_manage() {
-        if ( current_user_can('manage_security') ) {
+        #allow wp-cli access to activate ssl
+        if ( defined( 'WP_CLI' ) && WP_CLI ) {
             return true;
         }
 
-        #allow wp-cli access to activate ssl
-        if ( defined( 'WP_CLI' ) && WP_CLI ){
-            return true;
+        if ( ! current_user_can( 'manage_security' ) ) {
+            return false;
         }
-        return false;
+
+        $networkwide = function_exists( 'rsssl_is_networkwide_active' ) && rsssl_is_networkwide_active();
+        if ( $networkwide ) {
+            return current_user_can( 'manage_network_options' );
+        }
+
+        return true;
     }
 }
 
