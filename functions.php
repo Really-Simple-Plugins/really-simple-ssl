@@ -5,6 +5,27 @@ defined( 'ABSPATH' ) or die();
  */
 
 /**
+ * A link to our website, tagged so the click shows up in analytics.
+ *
+ * See UTM_CAMPAIGNS in \ReallySimplePlugins\RSS\Core\Services\OutboundUrlService
+ * for valid campaign keys. $utm_content identifies where in the plugin the user
+ * clicks the link. Make it unique and never change it once shipped.
+ *
+ * $path is a page on our website relative to the root, for example "pro".
+ * Use "/" for the website root. A trailing slash is added when missing.
+ *
+ * @throws \InvalidArgumentException When the campaign is not a known key.
+ */
+function rsssl_tracked_url( string $path, string $campaign, string $utm_content ): string {
+	/** @var \ReallySimplePlugins\RSS\Core\Services\OutboundUrlService $service */
+	$service = \ReallySimplePlugins\RSS\Core\Bootstrap\App::getInstance()->get(
+		\ReallySimplePlugins\RSS\Core\Services\OutboundUrlService::class
+	);
+
+	return $service->getTrackedUrl( $path, $campaign, $utm_content );
+}
+
+/**
  * Get a Really Simple Security option by name
  *
  * @param string $name The name of the option to retrieve.

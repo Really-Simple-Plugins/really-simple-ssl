@@ -72,7 +72,7 @@ if ( ! class_exists( 'rsssl_mailer' ) ) {
 				[
 					'title'   => __( "About notifications", "really-simple-ssl" ),
 					'message' => __( "Email notifications are only sent for important updates, security notices or when certain features are enabled.", "really-simple-ssl" ),
-					'url'     => rsssl_link('email-notifications/'),
+					'url'     => rsssl_tracked_url( 'email-notifications/', 'documentation', 'email_test_notifications_read_more' ),
 				]
 			];
 
@@ -188,6 +188,7 @@ if ( ! class_exists( 'rsssl_mailer' ) ) {
 					'{what_now}',
 					'{sent_to_text}',
 					'{sent_by_text}',
+					'{incorrect-email-content-url}',
 				],
 				[
 					sanitize_text_field( $this->title ),
@@ -202,6 +203,7 @@ if ( ! class_exists( 'rsssl_mailer' ) ) {
 					$this->what_now_text,
 					$this->sent_to_text,
 					$this->sent_by_text,
+					esc_url_raw( rsssl_tracked_url( 'incorrect-email-content/', 'documentation', 'email_footer_notification_explanation' ) ),
 				], $template );
 			$success   = wp_mail( $this->to, sanitize_text_field( $this->subject ), $body, array( 'Content-Type: text/html; charset=UTF-8' ) );
 			if ( $success ) {

@@ -27,7 +27,7 @@ function rsssl_modify_fields($fields){
 				'label' => 'warning',
 				'title' => esc_html__( "Redirect method", 'really-simple-ssl' ),
 				'text'  => esc_html__( 'Enable .htaccess only if you know how to regain access in case of issues.', 'really-simple-ssl' ) . ' ' . esc_html__( 'Redirects your site to https with a SEO friendly 301 redirect if it is requested over http.', 'really-simple-ssl' ),
-				'url'   => 'remove-htaccess-redirect-site-lockout',
+				'url'   => rsssl_tracked_url( 'remove-htaccess-redirect-site-lockout', 'documentation', 'settings_redirect_help' ),
 			];
 		}
 	}
@@ -40,13 +40,13 @@ function rsssl_modify_fields($fields){
 	// 2FA and LLA e-mail verification help texts
 	if ( ! rsssl_is_email_verified() ) {
 		$index = array_search( 'send_verification_email', array_column( $fields, 'id' ), true );
-		$fields[$index]['help'] = rsssl_email_help_text();
+		$fields[$index]['help'] = rsssl_email_help_text( 'send_verification_email' );
 		$fields = array_values($fields);
 	}
 
 	if ( ! rsssl_is_email_verified() && rsssl_get_option('login_protection_enabled') == '1' ) {
 		$index = array_search( 'login_protection_enabled', array_column( $fields, 'id' ), true );
-		$fields[$index]['help'] = rsssl_email_help_text();
+		$fields[$index]['help'] = rsssl_email_help_text( 'login_protection_enabled' );
 //		$fields[$index]['disabled'] = true;
 		$fields = array_values($fields);
 	}
@@ -57,7 +57,7 @@ function rsssl_modify_fields($fields){
 		if ( $index !== false ) {
 			$fields[$index]['help'] = [
 				'label' => 'warning',
-				'url'   => 'instructions/two-factor-authentication',
+				'url'   => rsssl_tracked_url( 'instructions/two-factor-authentication', 'documentation', 'settings_login_protection_enabled_rest_api_help' ),
 				'title' => __( 'REST API blocked', 'really-simple-ssl' ),
 				'text'  => __( 'Two-Factor Authentication requires the REST API to be accessible for logged-out users. A plugin that blocks the REST API has been detected. Disable it and make sure your logged-out users can access the REST API on your site.', 'really-simple-ssl' ),
 			];
@@ -67,7 +67,7 @@ function rsssl_modify_fields($fields){
 
 	if ( ! rsssl_is_email_verified() && rsssl_get_option('enable_vulnerability_scanner') == '1' ) {
 		$index = array_search( 'vulnerability_notification_email_admin', array_column( $fields, 'id' ), true );
-		$fields[$index]['help'] = rsssl_email_help_text();
+		$fields[$index]['help'] = rsssl_email_help_text( 'vulnerability_notification_email_admin' );
 		$fields = array_values($fields);
 	}
 
@@ -78,7 +78,7 @@ function rsssl_modify_fields($fields){
 			$fields[$index]['help'] = [
 				'label' => 'warning',
 				'title' => esc_html__( "404 errors detected on your homepage", 'really-simple-ssl' ),
-				'url'   => '404-not-found-errors',
+				'url'   => rsssl_tracked_url( '404-not-found-errors', 'documentation', 'settings_404_blocking_threshold_help' ),
 				'text'  => '404 errors detected on your homepage. 404 blocking is unavailable, to prevent blocking of legitimate visitors. It is strongly recommended to resolve these errors.',
 			];
 
@@ -93,7 +93,7 @@ function rsssl_modify_fields($fields){
 			'title' => esc_html__( "Verification email sent", 'really-simple-ssl' ),
 			'text' => sprintf(
 				esc_html__( 'Please check your inbox and click the confirm button to confirm that your site is correctly configured to send emails. Didn\'t receive the e-mail? %1$s, or try to: %2$s %3$s %4$s', 'really-simple-ssl' ),
-				'<a href="https://really-simple-ssl.com/email-notifications/" target="_blank">' . esc_html__( 'Check your site\'s SMTP settings', 'really-simple-ssl' ) . '</a>',
+				'<a href="' . esc_url( rsssl_tracked_url( 'email-notifications/', 'documentation', 'settings_email_notifications_smtp_help' ) ) . '" target="_blank">' . esc_html__( 'Check your site\'s SMTP settings', 'really-simple-ssl' ) . '</a>',
 				'<br><br>',
 				'<a class="rsssl-text-link" id="rsssl-resend-verification">' . esc_html__( 'Resend email', 'really-simple-ssl' ) . '</a>',
 				'<a class="rsssl-text-link" id="rsssl-force-confirm">' . esc_html__( 'Force confirm email', 'really-simple-ssl' ) . '</a>'
@@ -105,7 +105,7 @@ function rsssl_modify_fields($fields){
 }
 add_filter('rsssl_fields', 'rsssl_modify_fields', 500, 1);
 
-function rsssl_email_help_text() {
+function rsssl_email_help_text( string $field_id ) {
 	$verifiedText = esc_html__("Email validation completed", 'really-simple-ssl');
 	$nonVerifiedText = esc_html__("Email not verified yet. Verify your email address to get the most out of Really Simple Security.", "really-simple-ssl");
 
@@ -118,7 +118,7 @@ function rsssl_email_help_text() {
 	return [
 		'label' => rsssl_is_email_verified() ? 'success' : 'warning',
 		'title' => esc_html__("Email validation", 'really-simple-ssl'),
-		'url'   => 'instructions/email-verification',
+		'url'   => rsssl_tracked_url( 'instructions/email-verification', 'documentation', 'settings_' . $field_id . '_help' ),
 		'text'  => wp_kses_post($text),
 	];
 }

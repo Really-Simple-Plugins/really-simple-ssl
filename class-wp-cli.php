@@ -66,7 +66,10 @@ class rsssl_wp_cli {
 		// Check if Pro is active (redundant check, but safe)
 		if ( ! defined( 'rsssl_pro' ) ) {
 			WP_CLI::error(
-				__( 'This command is related to functionality available in Really Simple Security Pro, please consider upgrading to unlock all powerful security features. Read more: https://really-simple-ssl.com/pro', 'really-simple-ssl' ),
+				sprintf(
+					__( 'This command is related to functionality available in Really Simple Security Pro, please consider upgrading to unlock all powerful security features. Read more: %s', 'really-simple-ssl' ),
+					rsssl_tracked_url( 'pro', 'upgrade', 'cli_pro_command_upgrade' )
+				),
 				true // Exit after error
 			);
 			return false; // Should not be reached
@@ -84,8 +87,9 @@ class rsssl_wp_cli {
 			}
 			WP_CLI::error(
 				sprintf(
-					__( 'It seems that no valid license key is activated for this domain. Activate your license key using the `%s` command, or purchase a valid license key via https://really-simple-ssl.com/pro', 'really-simple-ssl' ),
-					$activate_command
+					__( 'It seems that no valid license key is activated for this domain. Activate your license key using the `%1$s` command, or purchase a valid license key via %2$s', 'really-simple-ssl' ),
+					$activate_command,
+					rsssl_tracked_url( 'pro', 'upgrade', 'cli_license_purchase' )
 				),
 				true // Exit after error
 			);
@@ -585,13 +589,13 @@ class rsssl_wp_cli {
 			if ( $status === 'valid' ) {
 				WP_CLI::success( 'License activated successfully.' );
 			} elseif ( $status === 'invalid' || $status === 'missing' ) {
-				WP_CLI::error( 'Invalid license key. You can find your license key on https://really-simple-ssl.com/account' );
+				WP_CLI::error( 'Invalid license key. You can find your license key on ' . rsssl_tracked_url( 'account', 'support', 'cli_invalid_license_account' ) );
 			} elseif ( $status === 'expired' ) {
-				WP_CLI::error( 'License has expired. Please renew via https://really-simple-ssl.com/account/subscriptions' );
+				WP_CLI::error( 'License has expired. Please renew via ' . rsssl_tracked_url( 'account/subscriptions', 'support', 'cli_expired_license_account' ) );
 			} elseif ( $status === 'no_activations_left' ) {
-				WP_CLI::error( 'No activations left. Please upgrade your license via https://really-simple-ssl.com/account/subscriptions' );
+				WP_CLI::error( 'No activations left. Please upgrade your license via ' . rsssl_tracked_url( 'account/subscriptions', 'support', 'cli_activation_limit_account' ) );
 			} elseif ( $status === 'disabled' ) {
-				WP_CLI::error( 'This license is not valid. Find out why on your account page at https://really-simple-ssl.com/account' );
+				WP_CLI::error( 'This license is not valid. Find out why on your account page at ' . rsssl_tracked_url( 'account', 'support', 'cli_disabled_license_account' ) );
 			}
 		} catch ( Exception $e ) {
 			WP_CLI::error( 'Failed to activate license: ' . $e->getMessage() );

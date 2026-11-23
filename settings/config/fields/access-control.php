@@ -15,7 +15,7 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'tooltip'  => __( "This adds extra requirements for strong passwords for new users and updated passwords.", 'really-simple-ssl' ),
 				'help'     => [
 					'label' => 'default',
-					'url'   => 'instructions/password-security',
+					'url'   => rsssl_tracked_url( 'instructions/password-security', 'documentation', 'settings_enforce_password_security_enabled_help' ),
 					'title' => __( "Enforce strong passwords", 'really-simple-ssl' ),
 					'text'  => __( 'Improve the default WordPress password strength check. You can also enforce frequent password changes for user roles.', 'really-simple-ssl' ).' '.__('They might be misused if you don’t actively tell the browser to disable these features.', 'really-simple-ssl' ),
 				],

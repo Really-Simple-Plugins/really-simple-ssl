@@ -32,14 +32,9 @@ class rsssl_admin {
 			wp_die( 'cannot create a second instance.' );
 		}
 
-		if ( defined( 'rsssl_pro' ) ) {
-			if ( is_multisite() ) {
-				$this->plugin_dir      = 'really-simple-ssl-pro-multisite';
-				$this->plugin_filename = 'really-simple-ssl-pro-multisite.php';
-			} else {
-				$this->plugin_dir      = 'really-simple-ssl-pro';
-				$this->plugin_filename = 'really-simple-ssl-pro.php';
-			}
+		if ( defined( 'rsssl_plugin' ) ) {
+			$this->plugin_dir      = dirname( rsssl_plugin );
+			$this->plugin_filename = basename( rsssl_plugin );
 		}
 
 		self::$_this    = $this;
@@ -83,6 +78,7 @@ class rsssl_admin {
 		$plugin = rsssl_plugin;
 		add_filter( "plugin_action_links_$plugin", array( $this, 'plugin_settings_link' ) );
 		add_filter( "network_admin_plugin_action_links_$plugin", array($this,'plugin_settings_link' ) );
+		add_filter( 'plugin_row_meta', [ $this, 'plugin_row_meta_links' ], 10, 3 );
 		add_filter( 'rsssl_clear_test_caches', array( $this, 'clear_404_test_cache'), 10, 1 );
 
 		add_action( 'rsssl_upgrade', array( $this, 'run_table_init_hook'), 10, 1);
@@ -196,7 +192,7 @@ class rsssl_admin {
 		array_unshift( $links, $support );
 
 		if ( ! defined( 'rsssl_pro' ) ) {
-			$upgrade_link = '<a style="color:#2271b1;font-weight:bold" target="_blank" rel="noopener noreferrer" href="' .rsssl_link() . '">'
+			$upgrade_link = '<a style="color:#2271b1;font-weight:bold" target="_blank" rel="noopener noreferrer" href="' . esc_url( rsssl_tracked_url( 'pro', 'upgrade', 'plugin_row_upgrade' ) ) . '">'
 			                . __( 'Improve security - Upgrade', 'really-simple-ssl' ) . '</a>';
 			array_unshift( $links, $upgrade_link );
 		}
@@ -209,6 +205,32 @@ class rsssl_admin {
 				'/<a /',
 				'<a id="' . esc_attr( $deactivate_link_id ) . '" ',
 				$links['deactivate']
+			);
+		}
+
+		return $links;
+	}
+
+	/**
+	 * Add attribution to the website links WordPress generates from our
+	 * Plugin URI and Author URI headers. Other links in the row stay as they are.
+	 */
+	public function plugin_row_meta_links( array $links, string $plugin_file, array $plugin_data = array() ): array {
+		if ( rsssl_plugin !== $plugin_file ) {
+			return $links;
+		}
+
+		$tracked_urls = array(
+			$plugin_data['PluginURI'] ?? '' => rsssl_tracked_url( '/', 'documentation', 'plugin_row_plugin_website' ),
+			$plugin_data['AuthorURI'] ?? '' => rsssl_tracked_url( 'about-us', 'documentation', 'plugin_row_author_website' ),
+		);
+		unset( $tracked_urls[''] );
+
+		foreach ( $tracked_urls as $header_url => $tracked_url ) {
+			$links = str_replace(
+				'href="' . esc_url( $header_url ) . '"',
+				'href="' . esc_url( $tracked_url ) . '"',
+				$links
 			);
 		}
 
@@ -243,7 +265,7 @@ class rsssl_admin {
 			sprintf(
 				// translators: %s is replaced with the hyperlink
 				__( 'Really Simple Security and Really Simple Security add-ons do not process any personal identifiable information, so the GDPR does not apply to these plugins or usage of these plugins on your website. You can find our privacy policy <a href="%s" rel="noopener noreferrer" target="_blank">here</a>.', 'really-simple-ssl' ),
-				'https://really-simple-ssl.com/privacy-statement/'
+				rsssl_tracked_url( 'privacy-statement/', 'documentation', 'wordpress_privacy_policy_read_more' )
 			);
 
 		wp_add_privacy_policy_content(
@@ -1854,14 +1876,14 @@ class rsssl_admin {
 							<p>
 								<?php
 								// translators: %1$ and %2$ are replaced with opening and closing a tag containing hyperlink
-								echo wp_kses_post( sprintf( __( 'Hi, Really Simple Security has kept your site secure for some time now, awesome! If you have a moment, please consider leaving a review on WordPress.org to spread the word. We greatly appreciate it! If you have any questions or feedback, leave us a %1$smessage%2$s.', 'really-simple-ssl' ), '<a href="https://really-simple-ssl.com/contact" rel="noopener noreferrer" target="_blank">', '</a>' ) );
+								echo wp_kses_post( sprintf( __( 'Hi, Really Simple Security has kept your site secure for some time now, awesome! If you have a moment, please consider leaving a review on WordPress.org to spread the word. We greatly appreciate it! If you have any questions or feedback, leave us a %1$smessage%2$s.', 'really-simple-ssl' ), '<a href="' . esc_url( rsssl_tracked_url( 'contact', 'support', 'notice_review_contact' ) ) . '" rel="noopener noreferrer" target="_blank">', '</a>' ) );
 								?>
                             </p>
 						<?php } else { ?>
                             <p>
 								<?php
 								// translators: %1$ and %2$ are replaced with opening and closing a tag containing hyperlink
-								echo wp_kses_post( sprintf( __( 'Hi, Really Simple Security has kept your site secure for a month now, awesome! If you have a moment, please consider leaving a review on WordPress.org to spread the word. We greatly appreciate it! If you have any questions or feedback, leave us a %1$smessage%2$s.', 'really-simple-ssl' ), '<a href="https://really-simple-ssl.com/contact" rel="noopener noreferrer" target="_blank">', '</a>' ) );
+								echo wp_kses_post( sprintf( __( 'Hi, Really Simple Security has kept your site secure for a month now, awesome! If you have a moment, please consider leaving a review on WordPress.org to spread the word. We greatly appreciate it! If you have any questions or feedback, leave us a %1$smessage%2$s.', 'really-simple-ssl' ), '<a href="' . esc_url( rsssl_tracked_url( 'contact', 'support', 'notice_review_contact' ) ) . '" rel="noopener noreferrer" target="_blank">', '</a>' ) );
 								?>
                             </p>
 						<?php }
@@ -2114,7 +2136,7 @@ class rsssl_admin {
 						'admin_notice' => true,
 						'plusone'      => true,
 						'dismissible'  => false,
-						'url'          => 'knowledge-base/htaccess-wp-config-files-not-writable/',
+						'url'          => rsssl_tracked_url( 'knowledge-base/htaccess-wp-config-files-not-writable/', 'documentation', 'notice_load_balancer_fix_read_more' ),
 					),
 				),
 			),
@@ -2129,7 +2151,7 @@ class rsssl_admin {
 						'admin_notice' => true,
 						'plusone'      => true,
 						'dismissible'  => true,
-						'url'          => 'knowledge-base/htaccess-wp-config-files-not-writable',
+						'url'          => rsssl_tracked_url( 'knowledge-base/htaccess-wp-config-files-not-writable', 'documentation', 'notice_site_url_in_wpconfig_read_more' ),
 					),
 				),
 			),
@@ -2155,7 +2177,7 @@ class rsssl_admin {
 				'score'              => 5,
 				'output'             => array(
 					'true' => array(
-						'url'         => 'steps-after-activating-ssl',
+						'url'         => rsssl_tracked_url( 'steps-after-activating-ssl', 'documentation', 'notice_mixed_content_scan_read_more' ),
 						'msg'         => __( 'SSL is now activated. Follow the three steps in this article to check if your website is secure', 'really-simple-ssl' ),
 						'icon'        => 'open',
 						'dismissible' => true,
@@ -2188,7 +2210,7 @@ class rsssl_admin {
 				'score'     => 30,
 				'output'    => array(
 					'fail'            => array(
-						'url'  => 'wp-config-fix-needed',
+						'url'  => rsssl_tracked_url( 'wp-config-fix-needed', 'documentation', 'notice_ssl_detected_read_more' ),
 						'msg'  => __( 'The wp-config.php file is not writable, and needs to be edited. Please set this file to writable', 'really-simple-ssl' ),
 						'icon' => 'warning',
 					),
@@ -2219,7 +2241,7 @@ class rsssl_admin {
 							// translators: %s is replaced with date.
 							sprintf( __( 'SSL certificate will expire on %s.', 'really-simple-ssl' ), $expiry_date ) . '&nbsp;' . __( 'If your hosting provider auto-renews your certificate, no action is required. Alternatively, you have the option to generate an SSL certificate with Really Simple Security.', 'really-simple-ssl' ) . '&nbsp;' .
 							// translators: %1$ and %2$s are replaced with the opening and closing tag with link.
-							sprintf( __( 'Depending on your hosting provider, %1$smanual installation%2$s may be required', 'really-simple-ssl' ), '<a target="_blank" rel="noopener noreferrer" href="https://really-simple-ssl.com/install-ssl-certificate">', '</a>' ) .
+							sprintf( __( 'Depending on your hosting provider, %1$smanual installation%2$s may be required', 'really-simple-ssl' ), '<a target="_blank" rel="noopener noreferrer" href="' . esc_url( rsssl_tracked_url( 'install-ssl-certificate', 'documentation', 'notice_certificate_manual_install' ) ) . '">', '</a>' ) .
 
 								'<br><br><form action="" method="POST"><a href="' .
 									rsssl_admin_url(['letsencrypt' => 1], '#letsencrypt')
@@ -2236,14 +2258,14 @@ class rsssl_admin {
 				'score'     => 10,
 				'output'    => array(
 					'no-response' => array(
-						'url'         => 'knowledge-base/how-to-fix-no-response-from-webpage-warning/',
+						'url'         => rsssl_tracked_url( 'knowledge-base/how-to-fix-no-response-from-webpage-warning/', 'documentation', 'notice_mixed_content_fixer_detected_read_more' ),
 						'msg'         => __( 'Really Simple Security has received no response from the webpage', 'really-simple-ssl' ),
 						'icon'        => 'open',
 						'dismissible' => true,
 						'plusone'     => true,
 					),
 					'not-found'   => array(
-						'url'         => 'knowledge-base/how-to-check-if-the-mixed-content-fixer-is-active',
+						'url'         => rsssl_tracked_url( 'knowledge-base/how-to-check-if-the-mixed-content-fixer-is-active', 'documentation', 'notice_mixed_content_fixer_detected_read_more' ),
 						'msg'         => __( 'The mixed content fixer is active, but was not detected on the frontpage', 'really-simple-ssl' ),
 						'icon'        => 'open',
 						'dismissible' => true,
@@ -2260,7 +2282,7 @@ class rsssl_admin {
 						'dismissible'        => true,
 					),
 					'curl-error'  => array(
-						'url'         => 'knowledge-base/curl-errors',
+						'url'         => rsssl_tracked_url( 'knowledge-base/curl-errors', 'documentation', 'notice_mixed_content_fixer_detected_read_more' ),
 						'msg'         => // translators: %s is replaced with the error description.
 										sprintf( __( "The mixed content fixer could not be detected due to a cURL error: %s. cURL errors are often caused by an outdated version of PHP or cURL and don't affect the front-end of your site. Contact your hosting provider for a fix", 'really-simple-ssl' ), '<b>' . $curl_error . '</b>' ),
 						'icon'        => 'open',
@@ -2314,7 +2336,7 @@ class rsssl_admin {
 					),
 					'htaccess-rules-test-failed' => array(
 						'title'       => __( '.htaccess redirect', 'really-simple-ssl' ),
-						'url'         => 'knowledge-base/manually-insert-htaccess-redirect-http-to-https',
+						'url'         => rsssl_tracked_url( 'knowledge-base/manually-insert-htaccess-redirect-http-to-https', 'documentation', 'notice_check_redirect_read_more' ),
 						'msg'         => __( 'The .htaccess redirect rules selected by this plugin failed in the test. Set manually or dismiss to leave on PHP redirect', 'really-simple-ssl' ) . $rules,
 						'icon'        => 'warning',
 						'dismissible' => true,
@@ -2329,7 +2351,7 @@ class rsssl_admin {
 				'score'     => 5,
 				'output'    => array(
 					'true' => array(
-						'url'         => 'knowledge-base/how-to-fix-mixed-content-in-elementor-after-moving-to-ssl',
+						'url'         => rsssl_tracked_url( 'knowledge-base/how-to-fix-mixed-content-in-elementor-after-moving-to-ssl', 'documentation', 'notice_elementor_read_more' ),
 						'msg'         => __( 'Your site uses Elementor. This can require some additional steps before getting the secure lock', 'really-simple-ssl' ),
 						'icon'        => 'open',
 						'dismissible' => true,
@@ -2343,7 +2365,7 @@ class rsssl_admin {
 				'score'     => 5,
 				'output'    => array(
 					'true' => array(
-						'url'         => 'knowledge-base/mixed-content-when-using-divi-theme/',
+						'url'         => rsssl_tracked_url( 'knowledge-base/mixed-content-when-using-divi-theme/', 'documentation', 'notice_divi_read_more' ),
 						'msg'         => __( 'Your site uses Divi. This can require some additional steps before getting the secure lock', 'really-simple-ssl' ),
 						'icon'        => 'open',
 						'dismissible' => true,
@@ -2377,7 +2399,7 @@ class rsssl_admin {
 						'highlight_field_id' => 'login_protection_enabled',
 						'msg'                => __( 'Implement Two-Factor Authentication or Passkey login', 'really-simple-ssl' ),
 						'icon'               => 'premium',
-                        'url'                => 'login-protection',
+						'url'                 => rsssl_tracked_url( 'login-protection', 'upgrade', 'notice_two_factor_upgrade' ),
 					),
 				),
 			),
@@ -2389,7 +2411,7 @@ class rsssl_admin {
                         'highlight_field_id' => 'enable_limited_login_attempts',
                         'msg'                => __( 'Protect your login form with Limit Login Attempts', 'really-simple-ssl' ),
                         'icon'               => 'premium',
-                        'url'                => 'login-protection',
+                        'url'                 => rsssl_tracked_url( 'login-protection', 'upgrade', 'notice_limit_login_attempts_upgrade' ),
 				    ),
 			    ),
 		    ),
@@ -2401,7 +2423,7 @@ class rsssl_admin {
                         'highlight_field_id' => 'enable_firewall',
                         'msg'                => __( 'Protect your site with a performant Firewall', 'really-simple-ssl' ),
                         'icon'               => 'premium',
-                        'url'                => 'firewall',
+                        'url'                 => rsssl_tracked_url( 'firewall', 'upgrade', 'notice_firewall_upgrade' ),
                     ),
                 ),
 			),
@@ -2427,7 +2449,7 @@ class rsssl_admin {
 					'true' => array(
 						'msg'         => __( 'Black Friday sale! Get 40% Off Really Simple Security Pro', 'really-simple-ssl' ),
 						'icon'        => 'premium',
-						'url'         => 'pro',
+						'url'             => rsssl_tracked_url( 'pro', 'upgrade', 'notice_black_friday_upgrade' ),
 						'dismissible' => true,
 						'plusone'     => true,
 					),
@@ -2441,7 +2463,7 @@ class rsssl_admin {
 				        'msg' => __( "Complete email validation and enable notifications to make sure you will receive security warnings", 'really-simple-ssl' ),
 				        'icon' => 'open',
 				        'admin_notice' => false,
-				        'url' => 'instructions/email-verification',
+				        'url' => rsssl_tracked_url( 'instructions/email-verification', 'documentation', 'notice_email_verification_not_verified_read_more' ),
 				        'dismissible' => true,
 				        'plusone' => true,
 			        ),
@@ -2449,7 +2471,7 @@ class rsssl_admin {
 				        'msg' => __( "Email address successfully verified", 'really-simple-ssl' ),
 				        'icon' => 'success',
 				        'admin_notice' => false,
-				        'url' => 'instructions/email-verification',
+				        'url' => rsssl_tracked_url( 'instructions/email-verification', 'documentation', 'notice_email_verification_not_verified_read_more' ),
 				        'dismissible' => true,
 				        'plusone' => false,
 			        ),
@@ -2481,7 +2503,7 @@ class rsssl_admin {
 				'output'   => array(
 					'true' => array(
 						'msg'         => __("404 errors detected on your homepage. 404 blocking is unavailable, to prevent blocking of legitimate visitors. It is strongly recommended to resolve these errors", 'really-simple-ssl'),
-						'url'         => '404-not-found-errors',
+						'url'         => rsssl_tracked_url( '404-not-found-errors', 'documentation', 'notice_test_404s_read_more' ),
 						'icon'        => 'warning',
 						'dismissible' => true,
 						'plusone'     => false,
@@ -2531,13 +2553,6 @@ class rsssl_admin {
 				unset( $notices[ $id ] );
 				continue;
 			}
-
-            if ( isset($notice['output'][ $output ]['url'] ) ) {
-                $url = $notice['output'][ $output ]['url'];
-                if ( strpos( $url, 'https://') ===false && strpos( $url, 'http://') === false ) {
-	                $notice['output'][ $output ]['url'] = rsssl_link($url);
-                }
-            }
 
 			$notices[ $id ]['output']           = $notice['output'][ $output ];
 			$notices[ $id ]['output']['status'] = 'success' === $notices[ $id ]['output']['icon'] ? 'completed' : $notices[ $id ]['output']['icon'];
@@ -3373,7 +3388,11 @@ if ( ! function_exists('maybe_disable_frame_ancestors_url_field' ) ) {
 if ( ! function_exists('rsssl_pro_trial_notice' ) ) {
 	function rsssl_pro_trial_notice() {
 
-        $link = rsssl_link( 'checkout/?edd_action=add_to_cart&download_id=860&edd_options%5Bprice_id%5D=4&currency=EUR', 'notification', 'free' );
+        $link = rsssl_tracked_url(
+            'checkout/?edd_action=add_to_cart&download_id=860&edd_options%5Bprice_id%5D=4&currency=EUR',
+            'trial',
+            'notice_pro_trial_checkout'
+        );
         $msg  = sprintf(
                 __( "Thank you for being a long-time user! As a token of our gratitude, we want to offer you %s6 months Really Simple Security Pro, 100%% Free!%s", 'really-simple-ssl' ),
                 '<strong>',

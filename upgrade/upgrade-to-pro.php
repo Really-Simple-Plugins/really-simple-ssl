@@ -55,8 +55,8 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
                     $this->prefix = "rsssl_";
                     $this->api_url = "https://really-simple-ssl.com";
                     $this->dashboard_url = add_query_arg(["page" => "really-simple-security"], $rsssl_admin_url );
-                    $this->account_url = 'https://really-simple-ssl.com/account';
-                    $this->instructions = 'https://really-simple-ssl.com/knowledge-base/install-really-simple-ssl-pro';
+                    $this->account_url = rsssl_tracked_url( 'account', 'support', 'upgrade_install_account' );
+                    $this->instructions = rsssl_tracked_url( 'knowledge-base/install-really-simple-ssl-pro', 'documentation', 'upgrade_install_instructions' );
                     break;
                 case "cmplz_pro":
                 default:

@@ -35,10 +35,5 @@ function rsssl_fields( $load_values = true ) {
 	}
 
 	$fields = apply_filters( 'rsssl_fields_values', $fields );
-	foreach ( $fields as $key => $field ) {
-		if (isset($field['help']['url'])) {
-			$fields[ $key ]['help']['url'] = rsssl_link( $field['help']['url'], 'instructions', $field['id'] );
-		}
-	}
 	return array_values( $fields );
 }

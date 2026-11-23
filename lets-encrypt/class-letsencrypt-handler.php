@@ -252,11 +252,11 @@ class rsssl_letsencrypt_handler {
 		    rsssl_progress_remove('system-status');
 		    $action = 'stop';
 		    $status = 'error';
-		    $message = __("It is not possible to install Let's Encrypt on a subfolder configuration.", "really-simple-ssl" ).rsssl_le_read_more(rsssl_link('install-ssl-on-subfolders') );
+		    $message = __("It is not possible to install Let's Encrypt on a subfolder configuration.", "really-simple-ssl" ).rsssl_le_read_more( rsssl_tracked_url( 'install-ssl-on-subfolders', 'documentation', 'lets_encrypt_subfolder_read_more' ) );
 	    } elseif ( rsssl_caa_record_prevents_le() ) {
 		    $action = 'stop';
 		    $status = 'error';
-		    $message = __("Please adjust the CAA records via your DNS provider to allow Let’s Encrypt SSL certificates", "really-simple-ssl" ).rsssl_le_read_more(rsssl_link('instructions/edit-dns-caa-records-to-allow-lets-encrypt-ssl-certificates/') );
+		    $message = __("Please adjust the CAA records via your DNS provider to allow Let’s Encrypt SSL certificates", "really-simple-ssl" ).rsssl_le_read_more( rsssl_tracked_url( 'instructions/edit-dns-caa-records-to-allow-lets-encrypt-ssl-certificates/', 'documentation', 'lets_encrypt_caa_records_read_more' ) );
 	    } else {
 		    $action = 'continue';
 		    $status = 'success';
@@ -272,7 +272,7 @@ class rsssl_letsencrypt_handler {
 
     public function search_ssl_installation_url(){
     	//start with most generic, then more specific if possible.
-	    $url = rsssl_link('install-ssl-certificate');
+	    $url = rsssl_tracked_url( 'install-ssl-certificate', 'documentation', 'lets_encrypt_installation_read_more' );
 	    $host = 'enter-your-dashboard-url-here';
 
 	    if (function_exists('wp_get_direct_update_https_url') && !empty(wp_get_direct_update_https_url())) {
@@ -1232,7 +1232,7 @@ class rsssl_letsencrypt_handler {
 			if ( $known_hosts[$host]['free_ssl_available'] === 'paid_only' ) {
 				$action = 'stop';
 				$status = 'error';
-				$message = sprintf(__("According to our information, your hosting provider does not allow any kind of SSL installation, other than their own paid certificate. For an alternative hosting provider with SSL, see this %sarticle%s.","really-simple-ssl"), '<a target="_blank" href="https://really-simple-ssl.com/hosting-providers-with-free-ssl">', '</a>');
+				$message = sprintf(__("According to our information, your hosting provider does not allow any kind of SSL installation, other than their own paid certificate. For an alternative hosting provider with SSL, see this %sarticle%s.","really-simple-ssl"), '<a target="_blank" href="' . esc_url( rsssl_tracked_url( 'hosting-providers-with-free-ssl', 'documentation', 'lets_encrypt_hosting_alternative_read_more' ) ) . '">', '</a>');
 			}
 
 			if ( $known_hosts[$host]['free_ssl_available'] === 'activated_by_default' ) {
@@ -1870,7 +1870,12 @@ class rsssl_letsencrypt_handler {
 		if ($is_subdomain) {
 			$status  = 'error';
 			$action  = 'stop';
-			$message = sprintf(__("This is a multisite configuration with subdomains. You should generate a wildcard certificate on the root domain.",'really-simple-ssl'), '<a href="'.rsssl_link('pro','error', 'letsencrypt').'" target="_blank">','</a>');
+			$message = sprintf(
+				// translators: %1$s and %2$s are the opening and closing link tags.
+				__( 'This is a multisite configuration with subdomains. You should generate a %1$swildcard certificate on the root domain%2$s.', 'really-simple-ssl' ),
+				'<a href="' . esc_url( rsssl_tracked_url( 'pro', 'upgrade', 'lets_encrypt_multisite_upgrade' ) ) . '" target="_blank" rel="noopener noreferrer">',
+				'</a>'
+			);
 			rsssl_progress_remove('system-status');
 		} else {
 			$status  = 'success';

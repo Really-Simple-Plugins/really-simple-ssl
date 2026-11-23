@@ -18,7 +18,7 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'default'            => false,
 				'help'               => [
 					'label' => 'default',
-					'url'   => 'definition/what-are-hardening-features',
+					'url'   => rsssl_tracked_url( 'definition/what-are-hardening-features', 'documentation', 'settings_disable_anyone_can_register_help' ),
 					'title' => __( "About Hardening", 'really-simple-ssl' ),
 					'text'  => __( 'Hardening features limit the possibility of potential weaknesses and vulnerabilities which can be misused.', 'really-simple-ssl' ),
 				],
@@ -105,7 +105,7 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'email'              => [
 					'title'   => __( "Settings update: Username 'admin' renamed", 'really-simple-ssl' ),
 					'message' => sprintf(__( "As a security precaution, the username ‘admin’ has been changed on %s. From now on, you can login with '%s' or an email address.", 'really-simple-ssl' ), '{site_url}','{username}'),
-					'url'     => 'https://really-simple-ssl.com/instructions/locked-out-after-renaming-the-admin-username',
+					'url'     => rsssl_tracked_url( 'instructions/locked-out-after-renaming-the-admin-username', 'documentation', 'email_rename_admin_user_read_more' ),
 					'condition'    => 'rsssl_username_admin_changed',
 				],
 				'tooltip'            => __( "If the username 'admin' currently exists, you can rename it here. Please note that you can no longer use this username, and should use the new username or an email address",

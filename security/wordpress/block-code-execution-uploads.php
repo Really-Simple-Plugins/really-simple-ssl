@@ -60,11 +60,13 @@ function rsssl_disable_code_execution_rules($rules)
 		return $rules;
 	}
 
+	$regex = rsssl_get_uploads_php_extensions_regex();
+
 	// Use IfModule to let Apache decide which syntax to use based on loaded modules.
 	// mod_authz_core is available in Apache 2.4+, mod_access in Apache 2.2.
 	$rule = <<<HTACCESS
 
-<Files *.php>
+<FilesMatch "(?i)$regex">
 <IfModule mod_authz_core.c>
 Require all denied
 </IfModule>
@@ -72,18 +74,25 @@ Require all denied
 Order deny,allow
 Deny from all
 </IfModule>
-</Files>
+</FilesMatch>
 HTACCESS;
 
-	$rules[] = ['rules' => $rule, 'identifier' => 'Require all denied'];
+	$rules[] = ['rules' => $rule, 'identifier' => trim( $rule )];
 	return $rules;
 }
 add_filter('rsssl_htaccess_security_rules_uploads', 'rsssl_disable_code_execution_rules');
 
-
+/**
+ * Regex matching every extension a web server commonly maps to the PHP handler.
+ *
+ * @return string
+ */
+function rsssl_get_uploads_php_extensions_regex(): string {
+	return '\.(?:php\d*|phtml|phar|pht|phps)$';
+}
 
 function rsssl_get_nginx_code_code_execution_uploads() {
-    $code = '<code>location ~* /uploads/.*\.php$ {' . "<br>";
+    $code = '<code>location ~* /uploads/.*' . rsssl_get_uploads_php_extensions_regex() . ' {' . "<br>";
     $code .= '&nbsp;&nbsp;&nbsp;&nbsp;return 503;' . "<br>";
     $code .= '}</code>' . "<br>";
 

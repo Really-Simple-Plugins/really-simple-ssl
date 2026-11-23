@@ -309,47 +309,52 @@ function rsssl_code_execution_allowed()
 		$code_execution_allowed = 'not-allowed';
 		set_transient( 'rsssl_code_execution_allowed_status', $code_execution_allowed, DAY_IN_SECONDS );
 
-		$test_file = $upload_dir['basedir'] . '/' . 'code-execution.php';
-		if ( is_writable($upload_dir['basedir'] ) && ! file_exists( $test_file ) ) {
-			try {
-				copy( rsssl_path . 'security/tests/code-execution.php', $test_file );
-			} catch (Exception $e) {
-				$code_execution_allowed = 'not-allowed';
+		foreach ( [ 'php', 'phtml', 'phar' ] as $extension ) {
+			$executes = rsssl_uploads_file_executes( $upload_dir, 'code-execution.' . $extension );
+			if ( $executes ) {
+				$code_execution_allowed = 'allowed';
 			}
-		}
-
-		if ( file_exists( $test_file ) ) {
-			$uploads    = wp_upload_dir();
-			$upload_url = trailingslashit($uploads['baseurl']).'code-execution.php';
-			$response = wp_remote_get($upload_url);
-			if ( !is_wp_error($response) ) {
-				if ( is_array( $response ) ) {
-					$status = wp_remote_retrieve_response_code( $response );
-					$web_source = wp_remote_retrieve_body( $response );
-				}
-
-				if ( $status != 200 ) {
-					//Could not connect to website
-					$code_execution_allowed = 'not-allowed';
-				} elseif ( strpos( $web_source, "RSSSL CODE EXECUTION MARKER" ) === false ) {
-					//Mixed content fixer marker not found in the websource
-					$code_execution_allowed = 'not-allowed';
-				} else {
-					$code_execution_allowed = 'allowed';
-				}
-			} else {
-				$code_execution_allowed = 'not-allowed';
+			// Stop once execution is confirmed, or when the site cannot reach itself, to avoid stacking timeouts.
+			if ( $executes !== false ) {
+				break;
 			}
-		}
-
-		//clean up file again
-		if ( file_exists($test_file) ) {
-			unlink($test_file);
 		}
 		set_transient('rsssl_code_execution_allowed_status', $code_execution_allowed, DAY_IN_SECONDS);
 	}
 
 	return $code_execution_allowed === 'allowed';
+}
+
+/**
+ * Copy the code execution test file into uploads under the given name and check if the web server executes it.
+ *
+ * @param array  $upload_dir Result of wp_get_upload_dir().
+ * @param string $file_name  Test file name, including extension.
+ *
+ * @return bool|null Null when the website could not be reached.
+ */
+function rsssl_uploads_file_executes( array $upload_dir, string $file_name ): ?bool {
+	$executes  = false;
+	$test_file = $upload_dir['basedir'] . '/' . $file_name;
+	if ( is_writable( $upload_dir['basedir'] ) && ! file_exists( $test_file ) ) {
+		copy( rsssl_path . 'security/tests/code-execution.php', $test_file );
+	}
+
+	if ( file_exists( $test_file ) ) {
+		$response = wp_remote_get( trailingslashit( $upload_dir['baseurl'] ) . $file_name );
+		//Could not connect to website, or marker not found in the websource
+		$executes = is_wp_error( $response ) ? null : (
+			(int) wp_remote_retrieve_response_code( $response ) === 200
+			&& strpos( wp_remote_retrieve_body( $response ), 'RSSSL CODE EXECUTION MARKER' ) !== false
+		);
+	}
+
+	//clean up file again
+	if ( file_exists( $test_file ) ) {
+		unlink( $test_file );
+	}
+
+	return $executes;
 }
 
 /**
@@ -547,7 +552,8 @@ function rsssl_is_htaccess_field_externally_managed( string $field_id ): bool {
 	}
 
 	if ( $field_id === 'block_code_execution_uploads' ) {
-		return rsssl_has_external_uploads_code_execution_rule();
+		// A php-only rule still lets .phtml or .phar execute, so also require the self-test to pass.
+		return rsssl_has_external_uploads_code_execution_rule() && ! rsssl_code_execution_allowed();
 	}
 
 	return false;
@@ -588,6 +594,7 @@ function rsssl_has_external_uploads_code_execution_rule(): bool {
 	}
 
 	$content = rsssl_strip_uploads_htaccess_marker_block_for_detection( $content );
+	// Matches deny rules written by others (e.g. a host's <Files *.php>); our own block is stripped above.
 	return preg_match( '/<Files(?:Match)?[^>]*php[^>]*>.*?(Require\s+all\s+denied|Deny\s+from\s+all).*?<\/Files(?:Match)?>/is', $content ) === 1;
 }
 

@@ -290,6 +290,24 @@ function rsssl_upgrade() {
 		delete_option( 'rsssl_404_cache' );
 	}
 
+	if ( $prev_version && version_compare( $prev_version, '9.8.4', '<=' ) ) {
+		// Older scans flagged host default permissions like 664/775, so discard their results and rescan.
+		delete_option( 'rsssl_permission_check_completed' );
+		delete_option( 'rsssl_files_with_wrong_permissions' );
+		delete_option( 'rsssl_permission_check_next_index' );
+		if ( rsssl_get_option( 'permission_detection' ) ) {
+			wp_schedule_single_event( time() + MINUTE_IN_SECONDS, 'rsssl_permissions_check_cron' );
+		}
+
+		// Re-test code execution after the uploads rules are rewritten to block .phtml, .phar and other PHP handler extensions.
+		// The notice cache is shared by both checks. Clear it on shutdown, after the upgrade ran, so no notice is built from the discarded results.
+		add_action( 'shutdown', static function () {
+			delete_transient( 'rsssl_code_execution_allowed_status' );
+			delete_option( 'rsssl_admin_notices' );
+			delete_option( 'rsssl_plusone_count' );
+		}, 1 );
+	}
+
 	//don't clear on each update.
 	//RSSSL()->admin->clear_admin_notices_cache();
 

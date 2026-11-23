@@ -49,7 +49,7 @@ function rsssl_general_security_notices( $notices ) {
 				'icon'        => 'warning',
 				'dismissible' => true,
 				'plusone'     => true,
-				'url'         => 'manual/editing-htaccess/',
+				'url'         => rsssl_tracked_url( 'manual/editing-htaccess/', 'documentation', 'notice_htaccess_status_read_more' ),
 			),
 			RSSSL_Htaccess_File_Manager::ERROR_NOT_READABLE => array(
 				'title'       => __( "Failed to update .htaccess", "really-simple-ssl" ),
@@ -61,7 +61,7 @@ function rsssl_general_security_notices( $notices ) {
 				'icon'        => 'warning',
 				'dismissible' => true,
 				'plusone'     => true,
-				'url'         => 'manual/editing-htaccess/',
+				'url'         => rsssl_tracked_url( 'manual/editing-htaccess/', 'documentation', 'notice_htaccess_status_read_more' ),
 			),
 		),
 		'show_with_options' => [
@@ -83,7 +83,7 @@ function rsssl_general_security_notices( $notices ) {
 				'icon'        => 'warning',
 				'dismissible' => true,
 				'plusone'     => true,
-				'url'         => 'manual/editing-htaccess/',
+				'url'         => rsssl_tracked_url( 'manual/editing-htaccess/', 'documentation', 'notice_htaccess_status_uploads_read_more' ),
 			),
 		),
 		'show_with_options' => [
@@ -97,7 +97,7 @@ function rsssl_general_security_notices( $notices ) {
 		'score'     => 5,
 		'output'    => array(
 			'true' => array(
-				'url'         => 'manual/login-and-display-names-should-be-different-for-wordpress/',
+				'url'         => rsssl_tracked_url( 'manual/login-and-display-names-should-be-different-for-wordpress/', 'documentation', 'notice_display_name_is_login_exists_read_more' ),
 				'msg'         => __( "We have detected administrator roles where the login and display names are the same", "really-simple-ssl" ) . "&nbsp;<b>" . rsssl_list_users_where_display_name_is_login_name() . "</b>",
 				'icon'        => 'open',
 				'dismissible' => true,

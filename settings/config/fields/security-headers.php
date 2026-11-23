@@ -24,7 +24,7 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'default'  => 'zero',
 				'help'     => [
 					'label' => 'default',
-					'url'   => 'definition/about-recommended-security-headers',
+					'url'   => rsssl_tracked_url( 'definition/about-recommended-security-headers', 'documentation', 'settings_x_xss_protection_help' ),
 					'title' => __("About Essential Security Headers", 'really-simple-ssl'),
 					'text'  => __('These security headers are the fundamental security measures to protect your website visitors while visiting your website.',
 						'really-simple-ssl'),
@@ -89,7 +89,7 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'default'          => false,
 				'help'             => [
 					'label' => 'default',
-					'url'   => 'definition/what-is-hsts/',
+					'url'   => rsssl_tracked_url( 'definition/what-is-hsts/', 'documentation', 'settings_hsts_help' ),
 					'title' => __("About HTTP Strict Transport Security", 'really-simple-ssl'),
 					'text'  => __('Leveraging your SSL certificate with HSTS is a staple for every website. Force your website over SSL, mitigating risks of malicious counterfeit websites in your name.',
 						'really-simple-ssl'),
@@ -177,7 +177,7 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				],
 				'help'     => [
 					'label' => 'default',
-					'url'   => 'definition/what-is-a-cross-origin-policy/',
+					'url'   => rsssl_tracked_url( 'definition/what-is-a-cross-origin-policy/', 'documentation', 'settings_cross_origin_opener_policy_help' ),
 					'title' => __("About Cross Origin Policies", 'really-simple-ssl'),
 					'text'  => __('One of the most powerful features, and therefore the most complex are the Cross-Origin headers that can isolate your website so any data leaks are minimized.',
 						'really-simple-ssl'),
@@ -231,7 +231,7 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'disabledTooltipText' => $headersDisabledTooltip,
 				'help'     => [
 					'label' => 'default',
-					'url'   => 'definition/what-is-a-permissions-policy',
+					'url'   => rsssl_tracked_url( 'definition/what-is-a-permissions-policy', 'documentation', 'settings_permissions_policy_help' ),
 					'title' => __( "About the Permission Policy", 'really-simple-ssl' ),
 					'text'  => __( 'Browser features are plentiful, but most are not needed on your website.', 'really-simple-ssl' ).' '.__('They might be misused if you don’t actively tell the browser to disable these features.', 'really-simple-ssl' ),
 				],
@@ -330,7 +330,7 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'default'  => false,
 				'help'     => [
 					'label' => 'default',
-					'url'   => 'definition/what-is-a-content-security-policy',
+					'url'   => rsssl_tracked_url( 'definition/what-is-a-content-security-policy', 'documentation', 'settings_upgrade_insecure_requests_help' ),
 					'title' => __( "About the Content Security Policy", 'really-simple-ssl' ),
 					'text'  => __( 'The content security policy has many options, so we always recommend starting in learning mode to see what files and scripts are loaded.', 'really-simple-ssl' ),
 				],

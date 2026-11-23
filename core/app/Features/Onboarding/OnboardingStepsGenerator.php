@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace ReallySimplePlugins\RSS\Core\Features\Onboarding;
 
 use ReallySimplePlugins\RSS\Core\Services\CertificateService;
+use ReallySimplePlugins\RSS\Core\Services\OutboundUrlService;
 use ReallySimplePlugins\RSS\Core\Services\RelatedPluginService;
 use ReallySimplePlugins\RSS\Core\Services\SettingsConfigService;
-use ReallySimplePlugins\RSS\Core\Support\Helpers\Storages\UriConfig;
 
 class OnboardingStepsGenerator
 {
@@ -17,18 +17,18 @@ class OnboardingStepsGenerator
     private RelatedPluginService $pluginService;
     private SettingsConfigService $settingsService;
     private CertificateService $certificateService;
-    private UriConfig $uriConfig;
+    private OutboundUrlService $outboundUrls;
 
     public function __construct(
         RelatedPluginService $pluginService,
         SettingsConfigService $settingsService,
         CertificateService $certificateService,
-        UriConfig $uriConfig
+        OutboundUrlService $outboundUrls
     ) {
-        $this->uriConfig = $uriConfig;
         $this->pluginService = $pluginService;
         $this->settingsService = $settingsService;
         $this->certificateService = $certificateService;
+        $this->outboundUrls = $outboundUrls;
 
         $this->proPluginEnabled = defined('rsssl_pro');
     }
@@ -144,9 +144,10 @@ class OnboardingStepsGenerator
         $subtitle = esc_html__('Instantly configure these essential features.', 'really-simple-ssl');
 
         if ($this->proPluginEnabled === false) {
+            $upgradeUrl = $this->outboundUrls->getTrackedUrl('pro', 'upgrade', 'onboarding_features_upgrade');
             $subtitle .= ' ' . sprintf(
                 wp_kses_post(__('Please %sconsider upgrading to Pro%s to enjoy all simple and performant security features.', 'really-simple-ssl')),
-                '<a href="' . $this->uriConfig->getUrl('rsp.upgrade_from_free') . '" target="_blank">',
+                '<a href="' . esc_url($upgradeUrl) . '" target="_blank">',
                 '</a>'
             );
         }

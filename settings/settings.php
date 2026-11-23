@@ -166,8 +166,7 @@ function rsssl_plugin_admin_scripts()
 				'dashboard_url' => rsssl_admin_url(),
 				'letsencrypt_url' => rsssl_letsencrypt_wizard_url(),
 				'le_generated_by_rsssl' => rsssl_generated_by_rsssl(),
-				'upgrade_link' => rsssl_link('pro', 'upgrade' ),
-				'ref' => rsssl_get_url_ref(),
+				'tracked_urls' => require rsssl_path . 'settings/config/tracked-js-urls.php',
 				'plugin_url' => rsssl_url,
 				'network_link' => network_site_url('plugins.php'),
 				'pro_plugin_active' => defined('rsssl_pro'),
@@ -1177,26 +1176,6 @@ function rsssl_get_roles( ): array {
 
 	return $roles;
 }
-
-/**
- * @param $response
- * @param $user
- * @param $request
- *
- * @return mixed
- *
- * Add user roles to /users endpoint
- */
-function rsssl_add_user_role_to_api_response( $response, $user, $request ) {
-	if ( rsssl_is_logged_in_rest() ) {
-		$data          = $response->get_data();
-		$data['roles'] = $user->roles;
-		$response->set_data( $data );
-	}
-
-	return $response;
-}
-add_filter( 'rest_prepare_user', 'rsssl_add_user_role_to_api_response', 10, 3 );
 
 if ( ! function_exists('rsssl_change_email_status_on_email_change' ) ) {
 	function rsssl_change_email_status_on_email_change(string $field_id, $new_value, $previous_value) {
