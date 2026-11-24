@@ -290,15 +290,11 @@ if ( ! function_exists( 'rsssl_is_logged_in_rest' ) ) {
             return false;
         }
 
-        if ( isset( $_GET['rest_route'] ) && ! is_string( $_GET['rest_route'] ) ) {
-            return false;
-        }
-
         $namespace = 'really-simple-security/v1/';
 
         // WordPress gives an explicit rest_route precedence over the URL path.
         if ( isset( $_GET['rest_route'] ) ) {
-            $route = wp_unslash( $_GET['rest_route'] );
+            $route = is_string( $_GET['rest_route'] ) ? wp_unslash( $_GET['rest_route'] ) : '';
             $route = ltrim( $route, '/' );
             $route = trailingslashit( $route );
 
@@ -312,18 +308,28 @@ if ( ! function_exists( 'rsssl_is_logged_in_rest' ) ) {
         $request_uri = wp_unslash( $_SERVER['REQUEST_URI'] );
         $path = (string) wp_parse_url( $request_uri, PHP_URL_PATH );
         $path = trailingslashit( $path );
-        $rest_route = rest_get_url_prefix() . '/' . $namespace;
-
-        // WordPress registers both forms; rest_url() needs WP_Rewrite, which is unavailable at plugins_loaded.
-        foreach ( [ $rest_route, 'index.php/' . $rest_route ] as $route ) {
-            $rest_url = home_url( '/' . $route );
-            $rest_path = (string) wp_parse_url( $rest_url, PHP_URL_PATH );
-            if ( strpos( $path, $rest_path ) === 0 ) {
-                return true;
-            }
+        $home_path = trailingslashit( (string) wp_parse_url( home_url( '/' ), PHP_URL_PATH ) );
+        if ( strpos( $path, $home_path ) !== 0 ) {
+            return false;
         }
 
-        return false;
+        $relative_path = substr( $path, strlen( $home_path ) );
+        $rest_route = rest_get_url_prefix() . '/' . $namespace;
+        if ( strpos( $relative_path, $rest_route ) === 0 || strpos( $relative_path, 'index.php/' . $rest_route ) === 0 ) {
+            return true;
+        }
+
+        // A theme or plugin may set the REST prefix after plugins_loaded.
+        // Take the part before the plugin namespace. For example,
+        // 'changed_prefix/really-simple-security/v1/fields/get' gives 'changed_prefix'.
+        $base = strstr( $relative_path, '/' . $namespace, true );
+        if ( $base === false ) {
+            return false;
+        }
+
+        $rules = get_option( 'rewrite_rules' );
+        // Check whether WordPress has a saved REST rule for this prefix.
+        return ( $rules[ '^' . $base . '/(.*)?' ] ?? null ) === 'index.php?rest_route=/$matches[1]';
     }
 }
 
