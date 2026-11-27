@@ -3,7 +3,7 @@
  * Plugin Name: Really Simple Security
  * Plugin URI: https://really-simple-ssl.com
  * Description: Easily improve site security with WordPress Hardening, Two-Factor Authentication (2FA), Login Protection, Vulnerability Detection and SSL certificate generation.
- * Version: 9.8.4
+ * Version: 9.8.5
  * Requires at least: 6.6
  * Requires PHP: 7.4
  * Author: Really Simple Security
@@ -74,9 +74,6 @@ if ( ! class_exists( 'REALLY_SIMPLE_SSL' ) ) {
 
         private function __construct()
         {
-            if (isset($_GET['rsssl_apitoken']) && $_GET['rsssl_apitoken'] == get_option('rsssl_csp_report_token') ) {
-                if ( !defined('RSSSL_LEARNING_MODE') ) define( 'RSSSL_LEARNING_MODE' , true );
-            }
         }
 
         public static function instance()
@@ -119,7 +116,7 @@ if ( ! class_exists( 'REALLY_SIMPLE_SSL' ) ) {
             define('rsssl_url', plugin_dir_url(__FILE__));
             define('rsssl_path', trailingslashit(plugin_dir_path(__FILE__)));
             define('rsssl_template_path', trailingslashit(plugin_dir_path(__FILE__)).'grid/templates/');
-            define('rsssl_version', '9.8.4');
+            define('rsssl_version', '9.8.5');
             define('rsssl_le_cron_generation_renewal_check', 20);
             define('rsssl_le_manual_generation_renewal_check', 15);
         }
@@ -288,26 +285,51 @@ if ( !function_exists('rsssl_admin_logged_in')){
 
 
 if ( ! function_exists( 'rsssl_is_logged_in_rest' ) ) {
-    function rsssl_is_logged_in_rest() {
-        // Check if the request URI is valid
-        if (!isset($_SERVER['REQUEST_URI'])) {
+    function rsssl_is_logged_in_rest(): bool {
+        if ( ! rsssl_user_can_manage() ) {
             return false;
         }
 
-        $request_uri = $_SERVER['REQUEST_URI'];
+        $namespace = 'really-simple-security/v1/';
 
-        // Check for a direct REST API path
-        if (strpos($request_uri, '/really-simple-security/v1/') !== false) {
-            return is_user_logged_in();
+        // WordPress gives an explicit rest_route precedence over the URL path.
+        if ( isset( $_GET['rest_route'] ) ) {
+            $route = is_string( $_GET['rest_route'] ) ? wp_unslash( $_GET['rest_route'] ) : '';
+            $route = ltrim( $route, '/' );
+            $route = trailingslashit( $route );
+
+            return strpos( $route, $namespace ) === 0;
         }
 
-        // Check for rest_route parameter with really-simple-security (plain permalinks)
-        if (strpos($request_uri, 'rest_route=') !== false &&
-            strpos($request_uri, 'really-simple-security') !== false) {
-            return is_user_logged_in();
+        if ( ! isset( $_SERVER['REQUEST_URI'] ) ) {
+            return false;
         }
 
-        return false;
+        $request_uri = wp_unslash( $_SERVER['REQUEST_URI'] );
+        $path = (string) wp_parse_url( $request_uri, PHP_URL_PATH );
+        $path = trailingslashit( $path );
+        $home_path = trailingslashit( (string) wp_parse_url( home_url( '/' ), PHP_URL_PATH ) );
+        if ( strpos( $path, $home_path ) !== 0 ) {
+            return false;
+        }
+
+        $relative_path = substr( $path, strlen( $home_path ) );
+        $rest_route = rest_get_url_prefix() . '/' . $namespace;
+        if ( strpos( $relative_path, $rest_route ) === 0 || strpos( $relative_path, 'index.php/' . $rest_route ) === 0 ) {
+            return true;
+        }
+
+        // A theme or plugin may set the REST prefix after plugins_loaded.
+        // Take the part before the plugin namespace. For example,
+        // 'changed_prefix/really-simple-security/v1/fields/get' gives 'changed_prefix'.
+        $base = strstr( $relative_path, '/' . $namespace, true );
+        if ( $base === false ) {
+            return false;
+        }
+
+        $rules = get_option( 'rewrite_rules' );
+        // Check whether WordPress has a saved REST rule for this prefix.
+        return ( $rules[ '^' . $base . '/(.*)?' ] ?? null ) === 'index.php?rest_route=/$matches[1]';
     }
 }
 

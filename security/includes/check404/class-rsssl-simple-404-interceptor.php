@@ -137,7 +137,7 @@ class Rsssl_Simple_404_Interceptor {
                         'admin_notice' => false,
                         'highlight_field_id' => 'enable_firewall',
                         'plusone' => true,
-                        'url' => 'https://really-simple-ssl.com/suspected-bots-causing-404-errors/',
+                        'url' => rsssl_tracked_url( 'suspected-bots-causing-404-errors/', 'documentation', 'notice_404_detection_warning_read_more' ),
                     ]
                 ]
             ];

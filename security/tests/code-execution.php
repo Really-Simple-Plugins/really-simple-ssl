@@ -4,4 +4,5 @@
  *
  */
 
-echo "RSSSL CODE EXECUTION MARKER";
+// Split so the marker only appears when executed, not when the source is served as plain text.
+echo 'RSSSL CODE EXECUTION ' . 'MARKER';

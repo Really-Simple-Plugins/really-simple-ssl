@@ -13,7 +13,7 @@ add_filter( 'rsssl_fields', function( $fields ) {
 				'label'    => __('Enable Limit Login Attempts', 'really-simple-ssl'),
 				'help'     => [
 					'label' => 'default',
-					'url'   => 'instructions/limit-login-attempts',
+					'url'   => rsssl_tracked_url( 'instructions/limit-login-attempts', 'documentation', 'settings_enable_limited_login_attempts_help' ),
 					'title' => __( "About Limit Login Attempts", 'really-simple-ssl' ),
 					'text'  => __( 'Limit Login Attempts protects your site from login attempts by unauthorized users. When you enable Limit Login Attempts, all login attempts are logged and repeated attempts to login with invalid credentials will be blocked automatically.', 'really-simple-ssl' ),
 				],

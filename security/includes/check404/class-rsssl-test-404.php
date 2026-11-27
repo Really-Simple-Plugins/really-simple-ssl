@@ -88,7 +88,11 @@ class Rsssl_Test_404 {
 			if ( preg_match_all( $pattern, $body, $matches ) ) {
 				foreach ( $matches[2] as $resource_url ) {
 					$resource_url = esc_url_raw( $resource_url );
-					if ( strpos( $resource_url, $site_url ) !== false ) {
+					if ( strpos( $resource_url, '//' ) === 0 ) {
+						$resource_url = wp_parse_url( $site_url, PHP_URL_SCHEME ) . ':' . $resource_url;
+					}
+					if ( wp_parse_url( $resource_url, PHP_URL_HOST ) === wp_parse_url( $site_url, PHP_URL_HOST )
+						&& wp_http_validate_url( $resource_url ) ) {
 						$resources[] = $resource_url;
 					}
 				}
@@ -115,7 +119,7 @@ class Rsssl_Test_404 {
 		$not_found_resources = array();
 
 		foreach ( $resources as $resource_url ) {
-			$resource_response = wp_remote_head( $resource_url );
+			$resource_response = wp_safe_remote_head( $resource_url );
 			if ( is_wp_error( $resource_response ) ) {
 				$not_found_resources[] = $resource_url . ' (Error: ' . $resource_response->get_error_message() . ')';
 			} else {
